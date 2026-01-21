@@ -1,0 +1,17 @@
+{
+  "$schema": "./schema/page-schema.json",
+  "id": "component-tree-builder-page",
+  "name": "Component Tree Builder",
+  "description": "Build component hierarchies",
+  "icon": "Tree",
+  "layout": {
+    "$ref": "./layouts/single-column.json"
+  },
+  "components": [
+    {
+      "id": "component-tree-builder-component",
+      "type": "ComponentTreeBuilder",
+      "props": {}
+    }
+  ]
+}

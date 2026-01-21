@@ -1,0 +1,16 @@
+{
+  "type": "div",
+  "props": {
+    "className": "w-64 border-r border-border bg-card"
+  },
+  "children": [
+    {
+      "type": "ComponentPalette",
+      "bindings": {
+        "onDragStart": {
+          "source": "bindings.onDragStart"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "pwa-install-prompt",
+  "type": "div",
+  "props": {
+    "className": "pwa-install-prompt"
+  },
+  "children": []
+}

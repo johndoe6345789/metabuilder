@@ -1,0 +1,122 @@
+{
+  "id": "modal-overlay",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": "isOpen",
+      "transform": "data ? 'fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm animate-in fade-in-0' : 'hidden'"
+    },
+    "onClick": {
+      "source": "onClose",
+      "transform": "data"
+    },
+    "_if": {
+      "source": "isOpen",
+      "transform": "data"
+    }
+  },
+  "children": [
+    {
+      "id": "modal-content",
+      "type": "div",
+      "bindings": {
+        "className": {
+          "source": ["size", "className"],
+          "transform": "const size = data[0] || 'md'; const customClass = data[1] || ''; const sizeStyles = { sm: 'max-w-sm', md: 'max-w-md', lg: 'max-w-lg', xl: 'max-w-xl', full: 'max-w-full m-4' }; return `relative w-full bg-card border border-border rounded-lg shadow-lg animate-in zoom-in-95 ${sizeStyles[size]} ${customClass}`.trim()"
+        },
+        "onClick": {
+          "source": null,
+          "transform": "(e) => e.stopPropagation()"
+        }
+      },
+      "children": [
+        {
+          "id": "modal-header",
+          "type": "div",
+          "bindings": {
+            "className": {
+              "source": null,
+              "transform": "'flex items-center justify-between p-6 border-b border-border'"
+            },
+            "_if": {
+              "source": ["title", "showCloseButton"],
+              "transform": "!!data[0] || data[1] !== false"
+            }
+          },
+          "children": [
+            {
+              "id": "modal-title",
+              "type": "h2",
+              "bindings": {
+                "className": {
+                  "source": null,
+                  "transform": "'text-lg font-semibold'"
+                },
+                "children": {
+                  "source": "title",
+                  "transform": "data"
+                },
+                "_if": {
+                  "source": "title",
+                  "transform": "!!data"
+                }
+              }
+            },
+            {
+              "id": "modal-close-button",
+              "type": "button",
+              "bindings": {
+                "className": {
+                  "source": null,
+                  "transform": "'ml-auto p-1 rounded-md hover:bg-accent transition-colors'"
+                },
+                "onClick": {
+                  "source": "onClose",
+                  "transform": "data"
+                },
+                "aria-label": {
+                  "source": null,
+                  "transform": "'Close modal'"
+                },
+                "_if": {
+                  "source": "showCloseButton",
+                  "transform": "data !== false"
+                }
+              },
+              "children": [
+                {
+                  "id": "modal-close-icon",
+                  "type": "span",
+                  "bindings": {
+                    "className": {
+                      "source": null,
+                      "transform": "'w-5 h-5'"
+                    },
+                    "children": {
+                      "source": null,
+                      "transform": "'✕'"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "modal-body",
+          "type": "div",
+          "bindings": {
+            "className": {
+              "source": null,
+              "transform": "'p-6'"
+            },
+            "children": {
+              "source": "children",
+              "transform": "data"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

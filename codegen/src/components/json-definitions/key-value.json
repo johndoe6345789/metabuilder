@@ -1,0 +1,40 @@
+{
+  "id": "key-value-container",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": ["orientation", "className"],
+      "transform": "const orientation = data[0] || 'horizontal'; const customClass = data[1] || ''; const orientationClass = orientation === 'vertical' ? 'flex-col' : 'flex-row items-center justify-between'; return `flex gap-2 ${orientationClass} ${customClass}`.trim()"
+    }
+  },
+  "children": [
+    {
+      "id": "key-value-label",
+      "type": "span",
+      "bindings": {
+        "className": {
+          "source": "labelClassName",
+          "transform": "const customClass = data || ''; return `text-sm text-muted-foreground ${customClass}`.trim()"
+        },
+        "children": {
+          "source": "label",
+          "transform": "data"
+        }
+      }
+    },
+    {
+      "id": "key-value-value",
+      "type": "span",
+      "bindings": {
+        "className": {
+          "source": "valueClassName",
+          "transform": "const customClass = data || ''; return `text-sm font-medium ${customClass}`.trim()"
+        },
+        "children": {
+          "source": "value",
+          "transform": "data"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,298 @@
+{
+  "id": "component-tree",
+  "name": "Component Tree Manager",
+  "layout": {
+    "type": "single"
+  },
+  "dataSources": [
+    {
+      "id": "trees",
+      "type": "kv",
+      "key": "app-component-trees",
+      "defaultValue": []
+    },
+    {
+      "id": "selectedTreeId",
+      "type": "static",
+      "defaultValue": null
+    },
+    {
+      "id": "createDialogOpen",
+      "type": "static",
+      "defaultValue": false
+    },
+    {
+      "id": "newTreeName",
+      "type": "static",
+      "defaultValue": ""
+    },
+    {
+      "id": "newTreeDescription",
+      "type": "static",
+      "defaultValue": ""
+    },
+    {
+      "id": "selectedTree",
+      "type": "static",
+      "expression": "data.trees.find(id === data.selectedTreeId)",
+      "dependencies": [
+        "trees",
+        "selectedTreeId"
+      ]
+    },
+    {
+      "id": "treeCount",
+      "type": "static",
+      "expression": "data.trees.length",
+      "dependencies": [
+        "trees"
+      ]
+    }
+  ],
+  "components": [
+    {
+      "id": "root",
+      "type": "div",
+      "props": {
+        "className": "h-full flex bg-gradient-to-br from-background via-background to-accent/5"
+      },
+      "children": [
+        {
+          "id": "sidebar",
+          "type": "div",
+          "props": {
+            "className": "w-80 border-r border-border bg-card/50 backdrop-blur flex flex-col"
+          },
+          "children": [
+            {
+              "id": "sidebar-header",
+              "type": "div",
+              "props": {
+                "className": "p-4 border-b border-border"
+              },
+              "children": [
+                {
+                  "id": "header-content",
+                  "type": "div",
+                  "props": {
+                    "className": "flex items-center justify-between mb-3"
+                  },
+                  "children": [
+                    {
+                      "id": "header-title",
+                      "type": "Heading",
+                      "props": {
+                        "className": "text-xl font-bold",
+                        "children": "Component Trees"
+                      }
+                    },
+                    {
+                      "id": "tree-count-badge",
+                      "type": "Badge",
+                      "props": {
+                        "variant": "secondary"
+                      },
+                      "bindings": {
+                        "children": {
+                          "source": "treeCount"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "create-button",
+                  "type": "Button",
+                  "props": {
+                    "className": "w-full",
+                    "children": "Create Tree"
+                  },
+                  "events": [
+                    {
+                      "event": "click",
+                      "actions": [
+                        {
+                          "id": "open-create-dialog",
+                          "type": "set-value",
+                          "target": "createDialogOpen",
+                          "value": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "tree-list",
+              "type": "div",
+              "props": {
+                "className": "flex-1 overflow-auto p-4 space-y-2"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "main-content",
+          "type": "div",
+          "props": {
+            "className": "flex-1 flex flex-col"
+          },
+          "children": [
+            {
+              "id": "tree-selection-state",
+              "type": "div",
+              "conditional": {
+                "if": "selectedTree != null",
+                "then": {
+                  "id": "tree-editor",
+                  "type": "div",
+                  "props": {
+                    "className": "flex-1 p-6 overflow-auto"
+                  },
+                  "children": [
+                    {
+                      "id": "tree-header",
+                      "type": "div",
+                      "props": {
+                        "className": "mb-6"
+                      },
+                      "children": [
+                        {
+                          "id": "tree-name",
+                          "type": "Heading",
+                          "props": {
+                            "className": "text-3xl font-bold mb-2"
+                          },
+                          "bindings": {
+                            "children": {
+                              "source": "selectedTree",
+                              "path": "name"
+                            }
+                          }
+                        },
+                        {
+                          "id": "tree-description",
+                          "type": "Text",
+                          "props": {
+                            "className": "text-muted-foreground"
+                          },
+                          "bindings": {
+                            "children": {
+                              "source": "selectedTree",
+                              "path": "description"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "id": "tree-canvas",
+                      "type": "Card",
+                      "props": {
+                        "className": "min-h-[500px]"
+                      },
+                      "children": [
+                        {
+                          "id": "canvas-header",
+                          "type": "CardHeader",
+                          "children": [
+                            {
+                              "id": "canvas-title",
+                              "type": "CardTitle",
+                              "props": {
+                                "children": "Component Hierarchy"
+                              }
+                            },
+                            {
+                              "id": "canvas-description",
+                              "type": "CardDescription",
+                              "props": {
+                                "children": "Build your component tree structure"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "id": "canvas-content",
+                          "type": "CardContent",
+                          "children": [
+                            {
+                              "id": "canvas-placeholder",
+                              "type": "div",
+                              "props": {
+                                "className": "text-center text-muted-foreground py-12 border-2 border-dashed border-border rounded-lg",
+                                "children": "Component tree builder - Add components to build your hierarchy"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "else": {
+                  "id": "empty-state",
+                  "type": "div",
+                  "props": {
+                    "className": "flex-1 flex items-center justify-center"
+                  },
+                  "children": [
+                    {
+                      "id": "empty-state-content",
+                      "type": "div",
+                      "props": {
+                        "className": "text-center space-y-4"
+                      },
+                      "children": [
+                        {
+                          "id": "empty-state-title",
+                          "type": "Heading",
+                          "props": {
+                            "className": "text-2xl font-bold text-muted-foreground",
+                            "children": "No Tree Selected"
+                          }
+                        },
+                        {
+                          "id": "empty-state-description",
+                          "type": "Text",
+                          "props": {
+                            "className": "text-muted-foreground",
+                            "children": "Select a component tree from the sidebar or create a new one"
+                          }
+                        },
+                        {
+                          "id": "empty-state-button",
+                          "type": "Button",
+                          "props": {
+                            "variant": "default",
+                            "children": "Create Your First Tree"
+                          },
+                          "events": [
+                            {
+                              "event": "click",
+                              "actions": [
+                                {
+                                  "id": "open-create-from-empty",
+                                  "type": "set-value",
+                                  "target": "createDialogOpen",
+                                  "value": true
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "globalActions": []
+}

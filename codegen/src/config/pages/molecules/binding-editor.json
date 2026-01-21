@@ -1,0 +1,7 @@
+{
+  "type": "Label",
+  "props": {
+    "onChange": "> void",
+    "prop": "> {"
+  }
+}

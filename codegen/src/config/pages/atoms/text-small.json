@@ -1,0 +1,7 @@
+{
+  "id": "text-small",
+  "type": "Text",
+  "props": {
+    "variant": "small"
+  }
+}

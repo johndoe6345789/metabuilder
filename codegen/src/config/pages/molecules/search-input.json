@@ -1,0 +1,7 @@
+{
+  "type": "Input",
+  "props": {
+    "onChange": "> void",
+    "onClear": "> void"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "id": "radio-group-root",
+  "type": "RadioGroup",
+  "props": {
+    "value": "value",
+    "onValueChange": "onValueChange"
+  },
+  "bindings": {
+    "disabled": "disabled",
+    "className": "className"
+  },
+  "children": "children"
+}

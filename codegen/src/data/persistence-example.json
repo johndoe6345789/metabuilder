@@ -1,0 +1,57 @@
+{
+  "title": "Persistence Middleware Example",
+  "description": "Demonstrates automatic persistence of Redux state to IndexedDB and Flask API",
+  "editor": {
+    "titleCreate": "Create File",
+    "titleEdit": "Edit File",
+    "editingBadge": "Editing",
+    "fileNameLabel": "File Name",
+    "fileNamePlaceholder": "example.js",
+    "contentLabel": "Content",
+    "contentPlaceholder": "console.log('Hello, world!')",
+    "saveButton": "Save File",
+    "updateButton": "Update File",
+    "cancelButton": "Cancel"
+  },
+  "info": {
+    "automaticTitle": "Automatic Persistence",
+    "automaticDescription": "Data is automatically saved to IndexedDB with 300ms debounce",
+    "flaskTitle": "Flask Sync",
+    "flaskDescription": "Changes are synced to Flask API backend automatically"
+  },
+  "files": {
+    "title": "Saved Files",
+    "countLabel": "files",
+    "emptyTitle": "No files yet",
+    "emptyDescription": "Create your first file to see it appear here",
+    "updatedLabel": "Updated:",
+    "editButton": "Edit",
+    "deleteButton": "Delete"
+  },
+  "howItWorks": {
+    "title": "How It Works",
+    "steps": [
+      {
+        "title": "1. Redux Action",
+        "description": "When you save or delete a file, a Redux action is dispatched"
+      },
+      {
+        "title": "2. Middleware Intercepts",
+        "description": "Persistence middleware automatically intercepts the action and queues the operation"
+      },
+      {
+        "title": "3. Auto-Sync",
+        "description": "After 300ms debounce, data is saved to IndexedDB and synced to Flask API"
+      }
+    ]
+  },
+  "toasts": {
+    "fileNameRequired": "File name is required",
+    "saveSuccess": "File \"{{name}}\" saved automatically!",
+    "saveDescription": "Synced to IndexedDB and Flask API",
+    "saveErrorTitle": "Failed to save file",
+    "deleteSuccess": "File \"{{name}}\" deleted",
+    "deleteDescription": "Automatically synced to storage",
+    "deleteErrorTitle": "Failed to delete file"
+  }
+}

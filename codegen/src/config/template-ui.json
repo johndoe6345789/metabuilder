@@ -1,0 +1,76 @@
+{
+  "explorer": {
+    "title": "Template Explorer",
+    "description": "Browse and inspect template structures",
+    "buttons": {
+      "exportCurrentData": "Export Current Data",
+      "download": "Download"
+    },
+    "tabs": {
+      "overview": "Overview",
+      "structure": "Structure",
+      "json": "JSON"
+    },
+    "sections": {
+      "features": "Features"
+    },
+    "labels": {
+      "configuration": "Configuration",
+      "object": "object",
+      "itemsSuffix": "items",
+      "morePrefix": "... and",
+      "moreSuffix": "more"
+    },
+    "toasts": {
+      "copySuccess": "Copied to clipboard",
+      "downloadSuccess": "Template downloaded",
+      "exportSuccess": "Current project data exported"
+    }
+  },
+  "selector": {
+    "tabs": {
+      "templates": "Load Templates",
+      "explorer": "Explore Templates"
+    },
+    "header": {
+      "title": "Project Templates",
+      "description": "Start your project with pre-configured templates including models, components, and workflows"
+    },
+    "buttons": {
+      "loadTemplate": "Load Template",
+      "merge": "Merge",
+      "cancel": "Cancel",
+      "replaceAllData": "Replace All Data",
+      "mergeData": "Merge Data"
+    },
+    "alerts": {
+      "loadTitle": "Load Template:",
+      "loadDescription": "Replaces all existing data with the selected template.",
+      "mergeTitle": "Merge:",
+      "mergeDescription": "Adds template data to your existing project without removing current data."
+    },
+    "dialog": {
+      "replaceTitle": "Replace Project Data?",
+      "mergeTitle": "Merge Template Data?",
+      "replace": {
+        "prefix": "This will",
+        "emphasis": "delete all existing data",
+        "middle": "and load the",
+        "suffix": "template. This action cannot be undone."
+      },
+      "merge": {
+        "prefix": "This will",
+        "emphasis": "add",
+        "middle": "the",
+        "suffix": "template data to your existing project without removing current data."
+      }
+    },
+    "toasts": {
+      "successTitle": "Template loaded successfully!",
+      "replaceDescription": "Replaced with {template} template",
+      "mergeDescription": "Merged with {template} template",
+      "errorTitle": "Failed to load template",
+      "errorDescription": "Please try again or check the console for errors"
+    }
+  }
+}

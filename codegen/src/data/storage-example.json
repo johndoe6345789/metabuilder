@@ -1,0 +1,36 @@
+{
+  "title": "Storage Example",
+  "description": "Demonstrates IndexedDB + Spark KV hybrid storage",
+  "counter": {
+    "title": "Simple Counter (useStorage)",
+    "incrementButton": "Increment",
+    "helper": "This counter persists across page refreshes using hybrid storage"
+  },
+  "todo": {
+    "title": "Todo List (useStorage)",
+    "placeholder": "Enter todo...",
+    "addButton": "Add",
+    "emptyState": "No todos yet. Add one above!",
+    "deleteButton": "Delete",
+    "footer": "Todos are stored in IndexedDB with Spark KV fallback"
+  },
+  "howItWorks": {
+    "title": "How It Works",
+    "steps": [
+      {
+        "title": "1. Primary: IndexedDB",
+        "description": "Data is first saved to IndexedDB for fast, structured storage with indexes"
+      },
+      {
+        "title": "2. Fallback: Spark KV",
+        "description": "If IndexedDB fails or is unavailable, Spark KV is used automatically"
+      },
+      {
+        "title": "3. Sync Both",
+        "description": "Data is kept in sync between both storage systems for redundancy"
+      }
+    ],
+    "codeExampleTitle": "Code Example:",
+    "codeSample": "import { useStorage } from '@/hooks/use-storage'\n\n// Replaces useKV from Spark\nconst [todos, setTodos] = useStorage('todos', [])\n\n// Use functional updates for safety\nsetTodos((current) => [...current, newTodo])"
+  }
+}

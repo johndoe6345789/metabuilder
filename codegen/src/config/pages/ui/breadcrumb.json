@@ -1,0 +1,13 @@
+{
+  "type": "breadcrumb",
+  "jsonCompatible": false,
+  "wrapperRequired": true,
+  "load": {
+    "path": "@/components/ui/breadcrumb",
+    "export": "breadcrumb"
+  },
+  "props": {},
+  "metadata": {
+    "notes": "Complex logic - needs wrapper"
+  }
+}

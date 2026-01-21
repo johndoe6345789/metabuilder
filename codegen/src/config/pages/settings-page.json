@@ -1,0 +1,121 @@
+{
+  "id": "settings-page",
+  "name": "Project Settings",
+  "description": "Configure your project",
+  "icon": "Gear",
+  "layout": {
+    "$ref": "./layouts/single-column.json"
+  },
+  "dataSources": [
+    {
+      "id": "settings",
+      "$ref": "./data-sources/kv-storage.json",
+      "key": "project-settings",
+      "defaultValue": {
+        "projectName": "",
+        "description": "",
+        "version": "1.0.0"
+      }
+    }
+  ],
+  "components": [
+    {
+      "id": "settings-header",
+      "type": "div",
+      "props": {
+        "className": "p-6"
+      },
+      "children": [
+        {
+          "id": "settings-title",
+          "type": "Heading",
+          "props": {
+            "level": 1,
+            "children": "Settings"
+          }
+        },
+        {
+          "id": "settings-description",
+          "type": "Text",
+          "props": {
+            "children": "Configure your project settings",
+            "className": "text-muted-foreground mt-2"
+          }
+        }
+      ]
+    },
+    {
+      "id": "settings-form",
+      "type": "Card",
+      "props": {
+        "className": "m-6"
+      },
+      "children": [
+        {
+          "id": "settings-card-content",
+          "type": "CardContent",
+          "props": {
+            "className": "space-y-6 pt-6"
+          },
+          "children": [
+            {
+              "id": "project-name-field",
+              "$ref": "./components/form-input.json",
+              "children": [
+                {
+                  "id": "name-label",
+                  "type": "Label",
+                  "props": {
+                    "children": "Project Name"
+                  }
+                },
+                {
+                  "id": "name-input",
+                  "type": "Input",
+                  "props": {
+                    "placeholder": "My Awesome Project"
+                  },
+                  "dataBinding": {
+                    "source": "settings",
+                    "path": "projectName"
+                  },
+                  "events": {
+                    "onChange": {
+                      "actions": [
+                        {
+                          "$ref": "./actions/update-action.json",
+                          "target": "settings",
+                          "path": "projectName",
+                          "expression": "event.target.value"
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "id": "save-button",
+              "$ref": "./components/button-primary.json",
+              "props": {
+                "children": "Save Settings",
+                "className": "w-full"
+              },
+              "events": {
+                "onClick": {
+                  "actions": [
+                    {
+                      "type": "show-toast",
+                      "message": "Settings saved successfully",
+                      "variant": "success"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

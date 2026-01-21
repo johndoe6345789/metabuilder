@@ -1,0 +1,300 @@
+{
+  "pages": [
+    {
+      "id": "dashboard",
+      "title": "Dashboard",
+      "description": "Project overview and quick stats",
+      "icon": "House",
+      "component": "ProjectDashboard",
+      "layout": {
+        "type": "single"
+      },
+      "shortcuts": [
+        { "key": "1", "ctrl": true, "action": "navigate" }
+      ]
+    },
+    {
+      "id": "code-editor",
+      "title": "Code Editor",
+      "description": "Edit project files with AI assistance",
+      "icon": "Code",
+      "component": "CodeEditorPage",
+      "layout": {
+        "type": "split",
+        "direction": "horizontal",
+        "defaultSizes": [20, 80],
+        "panels": [
+          {
+            "id": "file-tree",
+            "component": "FileExplorer",
+            "minSize": 15,
+            "maxSize": 40
+          },
+          {
+            "id": "editor",
+            "component": "CodeEditor",
+            "minSize": 60
+          }
+        ]
+      },
+      "features": [
+        { "id": "ai-improve", "enabled": true },
+        { "id": "ai-explain", "enabled": true },
+        { "id": "syntax-validation", "enabled": true }
+      ],
+      "shortcuts": [
+        { "key": "2", "ctrl": true, "action": "navigate" }
+      ]
+    },
+    {
+      "id": "models",
+      "title": "Database Models",
+      "description": "Design Prisma database schemas",
+      "icon": "Database",
+      "component": "ModelDesigner",
+      "layout": {
+        "type": "single"
+      },
+      "features": [
+        { "id": "ai-generation", "enabled": true },
+        { "id": "ai-suggestions", "enabled": true }
+      ],
+      "shortcuts": [
+        { "key": "3", "ctrl": true, "action": "navigate" }
+      ]
+    },
+    {
+      "id": "components",
+      "title": "Components",
+      "description": "Build React component structures",
+      "icon": "Cube",
+      "component": "ComponentTreeBuilder",
+      "layout": {
+        "type": "single"
+      },
+      "features": [
+        { "id": "ai-generation", "enabled": true }
+      ],
+      "shortcuts": [
+        { "key": "4", "ctrl": true, "action": "navigate" }
+      ]
+    },
+    {
+      "id": "component-trees",
+      "title": "Component Trees",
+      "description": "Manage multiple component hierarchies",
+      "icon": "TreeStructure",
+      "component": "ComponentTreeManager",
+      "layout": {
+        "type": "single"
+      },
+      "shortcuts": [
+        { "key": "5", "ctrl": true, "action": "navigate" }
+      ]
+    },
+    {
+      "id": "workflows",
+      "title": "Workflows",
+      "description": "Design automation workflows visually",
+      "icon": "Flow",
+      "component": "WorkflowDesigner",
+      "layout": {
+        "type": "single"
+      },
+      "shortcuts": [
+        { "key": "6", "ctrl": true, "action": "navigate" }
+      ]
+    },
+    {
+      "id": "lambdas",
+      "title": "Lambdas",
+      "description": "Create serverless functions",
+      "icon": "Lightning",
+      "component": "LambdaDesigner",
+      "layout": {
+        "type": "single"
+      },
+      "shortcuts": [
+        { "key": "7", "ctrl": true, "action": "navigate" }
+      ]
+    },
+    {
+      "id": "styling",
+      "title": "Styling",
+      "description": "Configure Material UI themes",
+      "icon": "Palette",
+      "component": "StyleDesigner",
+      "layout": {
+        "type": "single"
+      },
+      "features": [
+        { "id": "ai-theme-generation", "enabled": true }
+      ],
+      "shortcuts": [
+        { "key": "8", "ctrl": true, "action": "navigate" }
+      ]
+    },
+    {
+      "id": "favicon",
+      "title": "Favicon Designer",
+      "description": "Design custom favicons with drawing tools",
+      "icon": "Image",
+      "component": "FaviconDesigner",
+      "layout": {
+        "type": "single"
+      },
+      "shortcuts": [
+        { "key": "9", "ctrl": true, "action": "navigate" }
+      ]
+    },
+    {
+      "id": "ideas",
+      "title": "Feature Ideas",
+      "description": "Brainstorm and connect ideas visually",
+      "icon": "Lightbulb",
+      "component": "FeatureIdeaCloud",
+      "layout": {
+        "type": "single"
+      },
+      "features": [
+        { "id": "connections", "enabled": true },
+        { "id": "groups", "enabled": true },
+        { "id": "colors", "enabled": true }
+      ]
+    },
+    {
+      "id": "flask",
+      "title": "Flask API",
+      "description": "Design Python Flask backends",
+      "icon": "Flask",
+      "component": "FlaskDesigner",
+      "layout": {
+        "type": "single"
+      }
+    },
+    {
+      "id": "playwright",
+      "title": "E2E Tests",
+      "description": "Design Playwright tests",
+      "icon": "TestTube",
+      "component": "PlaywrightDesigner",
+      "layout": {
+        "type": "single"
+      },
+      "features": [
+        { "id": "ai-generation", "enabled": true }
+      ]
+    },
+    {
+      "id": "storybook",
+      "title": "Storybook",
+      "description": "Document component stories",
+      "icon": "Book",
+      "component": "StorybookDesigner",
+      "layout": {
+        "type": "single"
+      },
+      "features": [
+        { "id": "ai-generation", "enabled": true }
+      ]
+    },
+    {
+      "id": "unit-tests",
+      "title": "Unit Tests",
+      "description": "Create unit test suites",
+      "icon": "FileCode",
+      "component": "UnitTestDesigner",
+      "layout": {
+        "type": "single"
+      },
+      "features": [
+        { "id": "ai-generation", "enabled": true }
+      ]
+    },
+    {
+      "id": "errors",
+      "title": "Error Repair",
+      "description": "Auto-detect and fix code errors",
+      "icon": "Wrench",
+      "component": "ErrorPanel",
+      "layout": {
+        "type": "single"
+      },
+      "features": [
+        { "id": "auto-repair", "enabled": true },
+        { "id": "batch-repair", "enabled": true }
+      ]
+    },
+    {
+      "id": "docs",
+      "title": "Documentation",
+      "description": "View project documentation",
+      "icon": "FileText",
+      "component": "DocumentationView",
+      "layout": {
+        "type": "single"
+      }
+    },
+    {
+      "id": "json-conversion-showcase",
+      "title": "JSON Conversion Showcase",
+      "description": "JSON conversion showcase overview",
+      "icon": "BookOpen",
+      "component": "JSONConversionShowcase",
+      "layout": {
+        "type": "single"
+      }
+    },
+    {
+      "id": "json-ui-schema",
+      "title": "JSON UI (Schema)",
+      "description": "Render JSON UI from a schema file",
+      "icon": "Code",
+      "type": "json",
+      "schemaPath": "json-ui-page.json",
+      "layout": {
+        "type": "single"
+      }
+    },
+    {
+      "id": "sass",
+      "title": "Sass Styles",
+      "description": "Explore custom Sass components",
+      "icon": "Palette",
+      "component": "SassStylesShowcase",
+      "layout": {
+        "type": "single"
+      }
+    },
+    {
+      "id": "settings",
+      "title": "Project Settings",
+      "description": "Configure Next.js and npm",
+      "icon": "Gear",
+      "component": "ProjectSettingsDesigner",
+      "layout": {
+        "type": "single"
+      }
+    },
+    {
+      "id": "pwa",
+      "title": "PWA Settings",
+      "description": "Progressive Web App configuration",
+      "icon": "DeviceMobile",
+      "component": "PWASettings",
+      "layout": {
+        "type": "single"
+      }
+    },
+    {
+      "id": "features",
+      "title": "Feature Toggles",
+      "description": "Enable or disable application features",
+      "icon": "ToggleRight",
+      "component": "FeatureToggleSettings",
+      "layout": {
+        "type": "single"
+      }
+    }
+  ]
+}

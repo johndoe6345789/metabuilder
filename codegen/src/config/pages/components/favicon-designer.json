@@ -1,0 +1,10 @@
+{
+  "type": "FaviconDesigner",
+  "jsonCompatible": false,
+  "wrapperRequired": true,
+  "load": {
+    "path": "@/components/FaviconDesigner",
+    "export": "FaviconDesigner"
+  },
+  "props": {}
+}

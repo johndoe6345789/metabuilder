@@ -1,0 +1,15 @@
+{
+  "type": "Popover",
+  "jsonCompatible": false,
+  "wrapperRequired": true,
+  "load": {
+    "path": "@/components/atoms/Popover",
+    "export": "Popover"
+  },
+  "props": {
+    "event": "> {"
+  },
+  "metadata": {
+    "notes": "Contains hooks - needs wrapper"
+  }
+}

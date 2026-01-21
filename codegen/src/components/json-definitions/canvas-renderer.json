@@ -1,0 +1,99 @@
+{
+  "id": "canvas-renderer",
+  "type": "Div",
+  "props": {
+    "className": "h-full w-full overflow-auto p-8 bg-gradient-to-br from-background via-muted/10 to-muted/20"
+  },
+  "children": [
+    {
+      "id": "canvas-main",
+      "type": "Div",
+      "props": {
+        "className": "min-h-full bg-card border border-border rounded-lg shadow-lg p-8"
+      },
+      "children": [
+        {
+          "id": "canvas-content",
+          "type": "ConditionalRender",
+          "props": {
+            "condition": {
+              "source": "components",
+              "transform": "data && data.length > 0"
+            }
+          },
+          "children": [
+            {
+              "id": "canvas-components",
+              "type": "Div",
+              "props": {
+                "className": "space-y-4"
+              },
+              "bindings": {
+                "children": {
+                  "source": "components",
+                  "transform": "data ? data.map(comp => ({id: `canvas-comp-${comp.id}`, type: 'CanvasRendererItem', props: {component: comp, selectedId: window.selectedId, hoveredId: window.hoveredId, draggedOverId: window.draggedOverId, dropPosition: window.dropPosition, onSelect: window.onSelect, onHover: window.onHover, onHoverEnd: window.onHoverEnd, onDragOver: window.onDragOver, onDragLeave: window.onDragLeave, onDrop: window.onDrop}})) : []"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "canvas-empty",
+          "type": "ConditionalRender",
+          "props": {
+            "condition": {
+              "source": "components",
+              "transform": "!data || data.length === 0"
+            }
+          },
+          "children": [
+            {
+              "id": "canvas-empty-state",
+              "type": "Div",
+              "props": {
+                "className": "h-96 flex items-center justify-center text-muted-foreground border-2 border-dashed border-border rounded-lg"
+              },
+              "children": [
+                {
+                  "id": "canvas-empty-content",
+                  "type": "Div",
+                  "props": {
+                    "className": "text-center"
+                  },
+                  "children": [
+                    {
+                      "id": "canvas-empty-title",
+                      "type": "Paragraph",
+                      "props": {
+                        "className": "text-lg font-medium mb-2"
+                      },
+                      "children": [
+                        {
+                          "type": "text",
+                          "content": "Drop components here"
+                        }
+                      ]
+                    },
+                    {
+                      "id": "canvas-empty-subtitle",
+                      "type": "Paragraph",
+                      "props": {
+                        "className": "text-sm"
+                      },
+                      "children": [
+                        {
+                          "type": "text",
+                          "content": "Drag components from the palette to start building"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

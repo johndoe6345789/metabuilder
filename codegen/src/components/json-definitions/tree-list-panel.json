@@ -1,0 +1,346 @@
+{
+  "id": "tree-list-panel-container",
+  "type": "div",
+  "props": {
+    "className": "w-80 border-r border-border bg-card p-4 flex flex-col gap-4"
+  },
+  "children": [
+    {
+      "id": "tree-list-header",
+      "type": "div",
+      "props": { "className": "space-y-3" },
+      "children": [
+        {
+          "id": "header-flex",
+          "type": "div",
+          "props": { "className": "flex items-center justify-between" },
+          "children": [
+            {
+              "id": "header-title",
+              "type": "div",
+              "props": { "className": "flex items-center gap-2" },
+              "children": [
+                {
+                  "id": "tree-icon",
+                  "type": "TreeIcon",
+                  "props": { "size": 20 }
+                },
+                {
+                  "id": "title-heading",
+                  "type": "h2",
+                  "props": { "className": "text-lg font-semibold" },
+                  "children": "Component Trees"
+                }
+              ]
+            },
+            {
+              "id": "create-button",
+              "type": "IconButton",
+              "props": {
+                "size": "sm"
+              },
+              "bindings": {
+                "onClick": {
+                  "source": "onCreateNew",
+                  "transform": "() => onCreateNew?.()"
+                }
+              },
+              "children": [
+                {
+                  "id": "add-icon",
+                  "type": "ActionIcon",
+                  "props": {
+                    "action": "add",
+                    "size": 16
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "action-buttons",
+          "type": "div",
+          "props": { "className": "flex gap-2" },
+          "children": [
+            {
+              "id": "import-button",
+              "type": "Button",
+              "props": {
+                "size": "sm",
+                "variant": "outline",
+                "className": "flex-1 text-xs"
+              },
+              "bindings": {
+                "onClick": {
+                  "source": "onImportJson",
+                  "transform": "() => onImportJson?.()"
+                }
+              },
+              "children": [
+                {
+                  "id": "upload-icon",
+                  "type": "ActionIcon",
+                  "props": {
+                    "action": "upload",
+                    "size": 14
+                  }
+                },
+                {
+                  "id": "import-text",
+                  "type": "span",
+                  "children": "Import JSON"
+                }
+              ]
+            },
+            {
+              "id": "export-button",
+              "type": "Button",
+              "props": {
+                "size": "sm",
+                "variant": "outline",
+                "className": "flex-1 text-xs"
+              },
+              "bindings": {
+                "onClick": {
+                  "source": "onExportJson",
+                  "transform": "() => onExportJson?.()"
+                },
+                "disabled": {
+                  "source": "selectedTreeId",
+                  "transform": "!selectedTreeId"
+                }
+              },
+              "children": [
+                {
+                  "id": "download-icon",
+                  "type": "ActionIcon",
+                  "props": {
+                    "action": "download",
+                    "size": 14
+                  }
+                },
+                {
+                  "id": "export-text",
+                  "type": "span",
+                  "children": "Export JSON"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "trees-list-wrapper",
+      "type": "div",
+      "conditional": { "if": "trees.length === 0" },
+      "props": { "className": "flex-1 flex flex-col items-center justify-center" },
+      "children": [
+        {
+          "id": "empty-state",
+          "type": "EmptyState",
+          "props": {
+            "title": "No component trees yet",
+            "description": "Create your first tree to get started",
+            "action": {
+              "label": "Create First Tree"
+            }
+          },
+          "bindings": {
+            "onAction": {
+              "source": "onCreateNew",
+              "transform": "() => onCreateNew?.()"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "trees-scroll-area",
+      "type": "ScrollArea",
+      "props": { "className": "flex-1" },
+      "conditional": { "if": "trees.length > 0" },
+      "children": [
+        {
+          "id": "trees-list",
+          "type": "div",
+          "props": { "className": "space-y-2" },
+          "children": [
+            {
+              "id": "tree-cards",
+              "type": "list",
+              "bindings": {
+                "items": "trees",
+                "keyPath": "id"
+              },
+              "itemTemplate": {
+                "id": "tree-card-item",
+                "type": "Card",
+                "bindings": {
+                  "className": {
+                    "source": "selectedTreeId,item.id",
+                    "transform": "item.id === selectedTreeId ? 'cursor-pointer transition-all p-4 ring-2 ring-primary bg-accent' : 'cursor-pointer transition-all p-4 hover:bg-accent/50'"
+                  },
+                  "onClick": {
+                    "source": "onTreeSelect,item.id",
+                    "transform": "() => onTreeSelect?.(item.id)"
+                  }
+                },
+                "children": [
+                  {
+                    "id": "card-content",
+                    "type": "div",
+                    "props": { "className": "space-y-3" },
+                    "children": [
+                      {
+                        "id": "card-header",
+                        "type": "div",
+                        "props": { "className": "flex items-start justify-between gap-2" },
+                        "children": [
+                          {
+                            "id": "card-title-wrapper",
+                            "type": "div",
+                            "props": { "className": "flex-1 min-w-0" },
+                            "children": [
+                              {
+                                "id": "card-title",
+                                "type": "h4",
+                                "props": { "className": "text-sm truncate font-semibold" },
+                                "bindings": { "children": "item.name" }
+                              },
+                              {
+                                "id": "card-description",
+                                "type": "p",
+                                "props": { "className": "text-xs text-muted-foreground line-clamp-2" },
+                                "bindings": { "children": "item.description" },
+                                "conditional": { "if": "item.description" }
+                              },
+                              {
+                                "id": "card-badge",
+                                "type": "div",
+                                "props": { "className": "mt-2" },
+                                "children": [
+                                  {
+                                    "id": "component-count-badge",
+                                    "type": "Badge",
+                                    "props": { "variant": "outline", "className": "text-xs" },
+                                    "bindings": {
+                                      "children": {
+                                        "source": "item.rootNodes.length",
+                                        "transform": "`${item.rootNodes.length} components`"
+                                      }
+                                    }
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "id": "card-actions",
+                        "type": "div",
+                        "props": { "className": "mt-2 flex gap-1" },
+                        "bindings": {
+                          "onClick": {
+                            "source": "none",
+                            "transform": "(e) => e.stopPropagation()"
+                          }
+                        },
+                        "children": [
+                          {
+                            "id": "edit-button",
+                            "type": "IconButton",
+                            "props": {
+                              "variant": "ghost",
+                              "size": "sm",
+                              "title": "Edit tree"
+                            },
+                            "bindings": {
+                              "onClick": {
+                                "source": "onTreeEdit,item",
+                                "transform": "(e) => { e.stopPropagation(); onTreeEdit?.(item); }"
+                              }
+                            },
+                            "children": [
+                              {
+                                "id": "edit-icon",
+                                "type": "ActionIcon",
+                                "props": {
+                                  "action": "edit",
+                                  "size": 14
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "id": "duplicate-button",
+                            "type": "IconButton",
+                            "props": {
+                              "variant": "ghost",
+                              "size": "sm",
+                              "title": "Duplicate tree"
+                            },
+                            "bindings": {
+                              "onClick": {
+                                "source": "onTreeDuplicate,item",
+                                "transform": "(e) => { e.stopPropagation(); onTreeDuplicate?.(item); }"
+                              }
+                            },
+                            "children": [
+                              {
+                                "id": "duplicate-icon",
+                                "type": "ActionIcon",
+                                "props": {
+                                  "action": "duplicate",
+                                  "size": 14
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "id": "delete-button",
+                            "type": "IconButton",
+                            "props": {
+                              "variant": "ghost",
+                              "size": "sm"
+                            },
+                            "bindings": {
+                              "onClick": {
+                                "source": "onTreeDelete,item.id",
+                                "transform": "(e) => { e.stopPropagation(); onTreeDelete?.(item.id); }"
+                              },
+                              "disabled": {
+                                "source": "trees.length",
+                                "transform": "trees.length === 1"
+                              },
+                              "title": {
+                                "source": "trees.length",
+                                "transform": "trees.length === 1 ? \"Can't delete last tree\" : \"Delete tree\""
+                              }
+                            },
+                            "children": [
+                              {
+                                "id": "delete-icon",
+                                "type": "ActionIcon",
+                                "props": {
+                                  "action": "delete",
+                                  "size": 14
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

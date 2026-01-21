@@ -1,0 +1,19 @@
+{
+  "id": "search-empty-state-container",
+  "type": "Box",
+  "className": "flex flex-col items-center gap-2 py-6",
+  "children": [
+    {
+      "type": "Icon",
+      "name": "MagnifyingGlass",
+      "size": 48,
+      "weight": "duotone",
+      "className": "text-muted-foreground"
+    },
+    {
+      "type": "Paragraph",
+      "className": "text-sm text-muted-foreground",
+      "children": [{ "type": "Text", "value": "No results found" }]
+    }
+  ]
+}

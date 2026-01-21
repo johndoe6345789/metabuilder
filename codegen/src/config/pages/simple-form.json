@@ -1,0 +1,113 @@
+{
+  "id": "simple-form",
+  "name": "Simple Form Example",
+  "description": "Example JSON-driven form page",
+  "icon": "Note",
+  "layout": {
+    "type": "single"
+  },
+  "dataSources": [
+    {
+      "id": "formData",
+      "type": "kv",
+      "key": "simple-form-data",
+      "defaultValue": {
+        "title": "",
+        "description": "",
+        "category": ""
+      }
+    }
+  ],
+  "components": [
+    {
+      "id": "form-card",
+      "type": "Card",
+      "props": {
+        "className": "max-w-2xl mx-auto mt-8"
+      },
+      "children": [
+        {
+          "id": "card-header",
+          "type": "CardHeader",
+          "children": [
+            {
+              "id": "card-title",
+              "type": "CardTitle",
+              "props": {
+                "children": "Create New Item"
+              }
+            },
+            {
+              "id": "card-desc",
+              "type": "CardDescription",
+              "props": {
+                "children": "Fill out the form below to create a new item"
+              }
+            }
+          ]
+        },
+        {
+          "id": "card-content",
+          "type": "CardContent",
+          "props": {
+            "className": "space-y-4"
+          },
+          "children": [
+            {
+              "id": "title-input",
+              "type": "Input",
+              "props": {
+                "placeholder": "Enter title",
+                "className": "w-full"
+              },
+              "dataBinding": "formData.title",
+              "eventHandlers": {
+                "onChange": "update-title"
+              }
+            },
+            {
+              "id": "description-textarea",
+              "type": "Textarea",
+              "props": {
+                "placeholder": "Enter description",
+                "rows": 4
+              },
+              "dataBinding": "formData.description",
+              "eventHandlers": {
+                "onChange": "update-description"
+              }
+            },
+            {
+              "id": "submit-button",
+              "type": "Button",
+              "props": {
+                "children": "Submit",
+                "className": "w-full"
+              },
+              "eventHandlers": {
+                "onClick": "submit-form"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "id": "update-title",
+      "type": "update",
+      "target": "formData"
+    },
+    {
+      "id": "update-description",
+      "type": "update",
+      "target": "formData"
+    },
+    {
+      "id": "submit-form",
+      "type": "custom",
+      "handler": "handleFormSubmit"
+    }
+  ]
+}

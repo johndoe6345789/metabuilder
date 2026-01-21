@@ -1,0 +1,50 @@
+{
+  "header": {
+    "title": "Files"
+  },
+  "dialog": {
+    "title": "Add New File",
+    "tabs": {
+      "manual": "Manual",
+      "ai": "AI Generate"
+    },
+    "fields": {
+      "fileName": "File Name",
+      "language": "Language",
+      "fileType": "File Type",
+      "description": "Description"
+    },
+    "placeholders": {
+      "manualFileName": "example.tsx",
+      "aiFileName": "UserCard.tsx",
+      "description": "Describe what this file should do..."
+    },
+    "buttons": {
+      "addFile": "Add File",
+      "generate": "Generate with AI",
+      "generating": "Generating..."
+    }
+  },
+  "options": {
+    "languages": {
+      "typescript": "TypeScript",
+      "javascript": "JavaScript",
+      "css": "CSS",
+      "json": "JSON",
+      "prisma": "Prisma"
+    },
+    "fileTypes": {
+      "component": "Component",
+      "page": "Page",
+      "api": "API Route",
+      "utility": "Utility"
+    }
+  },
+  "toast": {
+    "missingFields": "Please provide both a filename and description",
+    "generating": "Generating code with AI...",
+    "generated": "File generated successfully!",
+    "generationFailed": "AI generation failed. Please try again.",
+    "generationError": "Failed to generate file"
+  }
+}

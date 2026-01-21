@@ -1,0 +1,25 @@
+{
+  "id": "conflict-resolution-demo",
+  "type": "div",
+  "props": {
+    "className": "space-y-6 p-6"
+  },
+  "children": [
+    {
+      "id": "demo-title",
+      "type": "h2",
+      "props": {
+        "className": "text-2xl font-bold mb-2"
+      },
+      "children": [
+        {
+          "id": "demo-title-text",
+          "type": "span",
+          "props": {
+            "children": "Conflict Resolution Demo"
+          }
+        }
+      ]
+    }
+  ]
+}

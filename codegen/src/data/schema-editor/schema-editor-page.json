@@ -1,0 +1,18 @@
+{
+  "schema": {
+    "id": "custom-page",
+    "name": "Custom Page",
+    "layout": {
+      "type": "single"
+    }
+  },
+  "export": {
+    "fileName": "schema.json"
+  },
+  "import": {
+    "accept": ".json"
+  },
+  "preview": {
+    "message": "Preview mode coming soon"
+  }
+}

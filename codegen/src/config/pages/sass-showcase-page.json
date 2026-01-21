@@ -1,0 +1,17 @@
+{
+  "$schema": "./schema/page-schema.json",
+  "id": "sass-showcase-page",
+  "name": "SASS Styles Showcase",
+  "description": "Preview SASS styles",
+  "icon": "PaintBrush",
+  "layout": {
+    "$ref": "./layouts/single-column.json"
+  },
+  "components": [
+    {
+      "id": "sass-showcase-component",
+      "type": "SassStylesShowcase",
+      "props": {}
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "$schema": "./schema/page-schema.json",
+  "id": "documentation-view-page",
+  "name": "Documentation",
+  "description": "View project documentation",
+  "icon": "Book",
+  "layout": {
+    "$ref": "./layouts/single-column.json"
+  },
+  "components": [
+    {
+      "id": "documentation-view-component",
+      "type": "DocumentationView",
+      "props": {}
+    }
+  ]
+}

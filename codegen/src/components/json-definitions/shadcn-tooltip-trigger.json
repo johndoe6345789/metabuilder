@@ -1,0 +1,16 @@
+{
+  "id": "shadcn-tooltip-trigger",
+  "type": "ShadcnTooltipTrigger",
+  "bindings": {
+    "className": {
+      "source": "className",
+      "transform": "data"
+    }
+  },
+  "children": [
+    {
+      "type": "slot",
+      "source": "children"
+    }
+  ]
+}

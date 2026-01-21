@@ -1,0 +1,6 @@
+{
+  "type": "ActionBar",
+  "props": {
+    "onClick": "> void"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "id": "shadcn-tabs-list",
+  "type": "ShadcnTabsList",
+  "bindings": {
+    "className": {
+      "source": "className",
+      "transform": "data"
+    }
+  },
+  "children": [
+    {
+      "type": "slot",
+      "source": "children"
+    }
+  ]
+}

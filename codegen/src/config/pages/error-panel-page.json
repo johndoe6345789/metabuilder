@@ -1,0 +1,17 @@
+{
+  "$schema": "./schema/page-schema.json",
+  "id": "error-panel-page",
+  "name": "Error Panel",
+  "description": "View application errors",
+  "icon": "Warning",
+  "layout": {
+    "$ref": "./layouts/single-column.json"
+  },
+  "components": [
+    {
+      "id": "error-panel-component",
+      "type": "ErrorPanel",
+      "props": {}
+    }
+  ]
+}

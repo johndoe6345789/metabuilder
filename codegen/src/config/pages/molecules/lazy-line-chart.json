@@ -1,0 +1,6 @@
+{
+  "type": "Skeleton",
+  "props": {
+    "library": "useRecharts()"
+  }
+}

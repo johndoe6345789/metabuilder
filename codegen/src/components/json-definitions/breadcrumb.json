@@ -1,0 +1,122 @@
+{
+  "id": "breadcrumb",
+  "type": "nav",
+  "bindings": {
+    "aria-label": {
+      "source": null,
+      "transform": "'Breadcrumb'"
+    },
+    "className": {
+      "source": ["items", "className"],
+      "transform": "const cn = (classes) => classes.filter(Boolean).join(' '); const className = data[1] || ''; return cn(['flex items-center gap-2', className])"
+    }
+  },
+  "children": [
+    {
+      "id": "breadcrumb-items",
+      "type": "Fragment",
+      "_map": {
+        "source": "items",
+        "itemVar": "item",
+        "indexVar": "index"
+      },
+      "children": [
+        {
+          "id": "breadcrumb-item",
+          "type": "div",
+          "bindings": {
+            "className": {
+              "source": null,
+              "transform": "'flex items-center gap-2'"
+            }
+          },
+          "children": [
+            {
+              "id": "breadcrumb-link",
+              "type": "a",
+              "bindings": {
+                "_if": {
+                  "source": "item.href",
+                  "transform": "data"
+                },
+                "href": {
+                  "source": "item.href",
+                  "transform": "data || '#'"
+                },
+                "onClick": {
+                  "source": "item.onClick",
+                  "transform": "data"
+                },
+                "className": {
+                  "source": ["item", "items"],
+                  "transform": "const cn = (classes) => classes.filter(Boolean).join(' '); const item = data[0]; const items = data[1] || []; const isLast = items.indexOf(item) === items.length - 1; const baseClass = 'text-sm transition-colors'; const styleClass = isLast ? 'text-foreground font-medium' : 'text-muted-foreground hover:text-foreground'; return cn([baseClass, styleClass])"
+                }
+              },
+              "children": [
+                {
+                  "id": "link-text",
+                  "type": "span",
+                  "children": [{"type": "text", "content": {"source": "item.label"}}]
+                }
+              ]
+            },
+            {
+              "id": "breadcrumb-button",
+              "type": "button",
+              "bindings": {
+                "_if": {
+                  "source": ["item.href", "item.onClick"],
+                  "transform": "!data[0] && data[1]"
+                },
+                "onClick": {
+                  "source": "item.onClick",
+                  "transform": "data"
+                },
+                "className": {
+                  "source": ["item", "items"],
+                  "transform": "const cn = (classes) => classes.filter(Boolean).join(' '); const item = data[0]; const items = data[1] || []; const isLast = items.indexOf(item) === items.length - 1; const baseClass = 'text-sm transition-colors'; const styleClass = isLast ? 'text-foreground font-medium' : 'text-muted-foreground hover:text-foreground'; return cn([baseClass, styleClass])"
+                }
+              },
+              "children": [
+                {
+                  "id": "button-text",
+                  "type": "span",
+                  "children": [{"type": "text", "content": {"source": "item.label"}}]
+                }
+              ]
+            },
+            {
+              "id": "breadcrumb-span",
+              "type": "span",
+              "bindings": {
+                "_if": {
+                  "source": ["item.href", "item.onClick"],
+                  "transform": "!data[0] && !data[1]"
+                },
+                "className": {
+                  "source": ["item", "items"],
+                  "transform": "const cn = (classes) => classes.filter(Boolean).join(' '); const item = data[0]; const items = data[1] || []; const isLast = items.indexOf(item) === items.length - 1; const baseClass = 'text-sm'; const styleClass = isLast ? 'text-foreground font-medium' : 'text-muted-foreground'; return cn([baseClass, styleClass])"
+                }
+              },
+              "children": [{"type": "text", "content": {"source": "item.label"}}]
+            },
+            {
+              "id": "separator",
+              "type": "CaretRight",
+              "bindings": {
+                "_if": {
+                  "source": ["item", "items"],
+                  "transform": "const item = data[0]; const items = data[1] || []; return items.indexOf(item) < items.length - 1"
+                },
+                "className": {
+                  "source": null,
+                  "transform": "'w-4 h-4 text-muted-foreground'"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,106 @@
+{
+  "panel": {
+    "title": "Storage Settings",
+    "description": "Manage your local data storage preferences",
+    "loadingDescription": "Detecting storage backend...",
+    "currentBackendLabel": "Current Backend:",
+    "switchTitle": "Switch Storage Backend",
+    "flaskUrlLabel": "Flask Backend URL (Optional)",
+    "flaskUrlPlaceholder": "http://localhost:5001",
+    "flaskUrlHelp": "Enter Flask backend URL or set VITE_FLASK_BACKEND_URL environment variable",
+    "switchHelp": "IndexedDB is the default and works offline. Flask backend enables cross-device sync.",
+    "dataTitle": "Data Management",
+    "dataHelp": "Export your data as a JSON file or import from a previous backup",
+    "buttons": {
+      "indexeddb": "IndexedDB (Default)",
+      "flask": "Flask Backend",
+      "sqlite": "SQLite",
+      "export": "Export Data",
+      "import": "Import Data"
+    },
+    "exportFilenamePrefix": "codeforge-data"
+  },
+  "molecule": {
+    "title": "Storage Backend",
+    "description": "Choose where your data is stored",
+    "currentBackendLabel": "Current backend:",
+    "flaskUrlLabel": "Flask Backend URL",
+    "flaskUrlPlaceholder": "http://localhost:5001",
+    "flaskHelp": "Store data on a Flask server (persistent across devices)",
+    "dataTitle": "Data Management",
+    "dataDescription": "Export or import your data",
+    "dataHelp": "Backup your data to a JSON file or restore from a previous backup",
+    "buttons": {
+      "flaskActive": "Active",
+      "flaskUse": "Use Flask",
+      "indexeddbActive": "Active",
+      "indexeddbUse": "Use IndexedDB",
+      "sqliteActive": "Active",
+      "sqliteUse": "Use SQLite",
+      "export": "Export Data",
+      "import": "Import Data"
+    },
+    "backendDetails": {
+      "indexeddb": "IndexedDB (Default): Browser storage, large capacity, works offline",
+      "sqlite": "SQLite: Browser storage with SQL queries, requires sql.js package",
+      "flask": "Flask: Server storage, persistent across devices, requires backend"
+    },
+    "exportFilenamePrefix": "codeforge-backup"
+  },
+  "backends": {
+    "flask": {
+      "panelLabel": "Flask Backend (Remote)",
+      "panelDescription": "Data stored on Flask server with SQLite (cross-device sync)",
+      "moleculeLabel": "Flask Backend",
+      "badgeLabel": "Flask"
+    },
+    "sqlite": {
+      "panelLabel": "SQLite (On-disk)",
+      "panelDescription": "Data stored in SQLite database persisted to localStorage",
+      "moleculeLabel": "SQLite",
+      "badgeLabel": "SQLite"
+    },
+    "indexeddb": {
+      "panelLabel": "IndexedDB (Browser) - Default",
+      "panelDescription": "Data stored in browser IndexedDB (default, recommended for most users)",
+      "moleculeLabel": "IndexedDB",
+      "badgeLabel": "IndexedDB"
+    },
+    "sparkkv": {
+      "panelLabel": "Spark KV (Cloud)",
+      "panelDescription": "Data stored in Spark cloud key-value store",
+      "moleculeLabel": "Spark KV",
+      "badgeLabel": "Spark KV"
+    },
+    "unknown": {
+      "panelLabel": "Unknown",
+      "panelDescription": "No storage backend detected",
+      "moleculeLabel": "Unknown",
+      "badgeLabel": "Unknown"
+    }
+  },
+  "toasts": {
+    "alreadyUsing": {
+      "flask": "Already using Flask backend",
+      "sqlite": "Already using SQLite",
+      "indexeddb": "Already using IndexedDB"
+    },
+    "errors": {
+      "missingFlaskUrl": "Please enter a Flask backend URL"
+    },
+    "success": {
+      "switchFlask": "Switched to Flask backend",
+      "switchSQLite": "Switched to SQLite storage",
+      "switchIndexedDB": "Switched to IndexedDB storage (default)",
+      "export": "Data exported successfully",
+      "import": "Data imported successfully"
+    },
+    "failure": {
+      "switchFlask": "Failed to switch to Flask",
+      "switchSQLite": "Failed to switch to SQLite",
+      "switchIndexedDB": "Failed to switch to IndexedDB",
+      "export": "Failed to export data",
+      "import": "Failed to import data"
+    }
+  }
+}

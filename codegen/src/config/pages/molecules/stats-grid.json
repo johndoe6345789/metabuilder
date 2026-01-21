@@ -1,0 +1,18 @@
+{
+  "id": "stats-grid",
+  "type": "div",
+  "props": {
+    "className": "grid grid-cols-1 md:grid-cols-3 gap-4 p-6"
+  },
+  "children": [
+    {
+      "$ref": "./stat-card-files.json"
+    },
+    {
+      "$ref": "./stat-card-models.json"
+    },
+    {
+      "$ref": "./stat-card-components.json"
+    }
+  ]
+}

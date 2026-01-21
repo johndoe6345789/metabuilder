@@ -1,0 +1,11 @@
+{
+  "id": "error-panel-header",
+  "type": "Box",
+  "className": "border-b border-border bg-card px-6 py-4",
+  "bindings": {
+    "children": {
+      "source": "props",
+      "type": "template"
+    }
+  }
+}

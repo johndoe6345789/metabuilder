@@ -1,0 +1,24 @@
+{
+  "id": "shadcn-select-content",
+  "type": "ShadcnSelectContent",
+  "bindings": {
+    "position": {
+      "source": "position",
+      "transform": "data || 'popper'"
+    },
+    "sideOffset": {
+      "source": "sideOffset",
+      "transform": "data"
+    },
+    "className": {
+      "source": "className",
+      "transform": "data"
+    }
+  },
+  "children": [
+    {
+      "type": "slot",
+      "source": "children"
+    }
+  ]
+}

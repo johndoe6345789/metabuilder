@@ -1,0 +1,8 @@
+{
+  "id": "feature-idea-cloud",
+  "type": "div",
+  "props": {
+    "className": "feature-idea-cloud"
+  },
+  "children": []
+}

@@ -1,0 +1,171 @@
+{
+  "id": "conflict-resolution-stats-container",
+  "type": "Box",
+  "className": "grid grid-cols-1 md:grid-cols-4 gap-4",
+  "children": [
+    {
+      "id": "stats-total",
+      "type": "Card",
+      "children": [
+        {
+          "type": "CardContent",
+          "className": "pt-6",
+          "children": [
+            {
+              "type": "Flex",
+              "align": "center",
+              "justify": "between",
+              "children": [
+                {
+                  "type": "Box",
+                  "children": [
+                    {
+                      "type": "Box",
+                      "className": "text-2xl font-bold",
+                      "children": [{ "type": "Text", "value": "{totalConflicts}" }]
+                    },
+                    {
+                      "type": "Box",
+                      "className": "text-xs text-muted-foreground",
+                      "children": [{ "type": "Text", "value": "{totalLabel}" }]
+                    }
+                  ]
+                },
+                {
+                  "type": "Icon",
+                  "name": "Warning",
+                  "size": 24,
+                  "weight": "duotone",
+                  "className": "text-destructive"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "stats-files",
+      "type": "Card",
+      "children": [
+        {
+          "type": "CardContent",
+          "className": "pt-6",
+          "children": [
+            {
+              "type": "Flex",
+              "align": "center",
+              "justify": "between",
+              "children": [
+                {
+                  "type": "Box",
+                  "children": [
+                    {
+                      "type": "Box",
+                      "className": "text-2xl font-bold",
+                      "children": [{ "type": "Text", "value": "{fileConflicts}" }]
+                    },
+                    {
+                      "type": "Box",
+                      "className": "text-xs text-muted-foreground",
+                      "children": [{ "type": "Text", "value": "{fileLabel}" }]
+                    }
+                  ]
+                },
+                {
+                  "type": "Icon",
+                  "name": "Database",
+                  "size": 24,
+                  "weight": "duotone",
+                  "className": "text-primary"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "stats-models",
+      "type": "Card",
+      "children": [
+        {
+          "type": "CardContent",
+          "className": "pt-6",
+          "children": [
+            {
+              "type": "Flex",
+              "align": "center",
+              "justify": "between",
+              "children": [
+                {
+                  "type": "Box",
+                  "children": [
+                    {
+                      "type": "Box",
+                      "className": "text-2xl font-bold",
+                      "children": [{ "type": "Text", "value": "{modelConflicts}" }]
+                    },
+                    {
+                      "type": "Box",
+                      "className": "text-xs text-muted-foreground",
+                      "children": [{ "type": "Text", "value": "{modelLabel}" }]
+                    }
+                  ]
+                },
+                {
+                  "type": "Icon",
+                  "name": "Database",
+                  "size": 24,
+                  "weight": "duotone",
+                  "className": "text-accent"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "stats-other",
+      "type": "Card",
+      "children": [
+        {
+          "type": "CardContent",
+          "className": "pt-6",
+          "children": [
+            {
+              "type": "Flex",
+              "align": "center",
+              "justify": "between",
+              "children": [
+                {
+                  "type": "Box",
+                  "children": [
+                    {
+                      "type": "Box",
+                      "className": "text-2xl font-bold",
+                      "children": [{ "type": "Text", "value": "{otherConflicts}" }]
+                    },
+                    {
+                      "type": "Box",
+                      "className": "text-xs text-muted-foreground",
+                      "children": [{ "type": "Text", "value": "{otherLabel}" }]
+                    }
+                  ]
+                },
+                {
+                  "type": "Icon",
+                  "name": "Cloud",
+                  "size": 24,
+                  "weight": "duotone",
+                  "className": "text-muted-foreground"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

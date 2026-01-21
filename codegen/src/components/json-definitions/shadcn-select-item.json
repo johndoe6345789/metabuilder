@@ -1,0 +1,30 @@
+{
+  "id": "shadcn-select-item",
+  "type": "ShadcnSelectItem",
+  "bindings": {
+    "value": {
+      "source": "value",
+      "transform": "data"
+    },
+    "disabled": {
+      "source": "disabled",
+      "transform": "data || false"
+    },
+    "textValue": {
+      "source": "textValue",
+      "transform": "data"
+    },
+    "className": {
+      "source": "className",
+      "transform": "data"
+    }
+  },
+  "children": [
+    {
+      "type": "text",
+      "content": {
+        "source": "children"
+      }
+    }
+  ]
+}

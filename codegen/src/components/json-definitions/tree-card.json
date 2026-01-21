@@ -1,0 +1,63 @@
+{
+  "id": "tree-card-container",
+  "type": "Card",
+  "bindings": {
+    "className": {
+      "source": "isSelected",
+      "transform": "data ? 'cursor-pointer transition-all p-4 ring-2 ring-primary bg-accent' : 'cursor-pointer transition-all p-4 hover:bg-accent/50'"
+    }
+  },
+  "children": [
+    {
+      "id": "tree-card-content",
+      "type": "Stack",
+      "props": { "spacing": "sm" },
+      "children": [
+        {
+          "id": "tree-card-header",
+          "type": "Flex",
+          "props": { "justify": "between", "align": "start", "gap": "sm" },
+          "children": [
+            {
+              "id": "tree-card-info",
+              "type": "Stack",
+              "props": { "spacing": "xs", "className": "flex-1 min-w-0" },
+              "children": [
+                {
+                  "id": "tree-card-name",
+                  "type": "Heading",
+                  "props": { "level": 4, "className": "text-sm truncate" },
+                  "bindings": { "children": "tree.name" }
+                },
+                {
+                  "id": "tree-card-description",
+                  "type": "Text",
+                  "props": { "variant": "caption", "className": "line-clamp-2" },
+                  "bindings": { "children": "tree.description" },
+                  "conditional": { "if": "tree.description" }
+                },
+                {
+                  "id": "tree-card-badge-container",
+                  "type": "div",
+                  "children": [
+                    {
+                      "id": "tree-card-badge",
+                      "type": "Badge",
+                      "props": { "variant": "outline", "className": "text-xs" },
+                      "bindings": {
+                        "children": {
+                          "source": "tree.rootNodes.length",
+                          "transform": "`${data} components`"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

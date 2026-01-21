@@ -1,0 +1,15 @@
+{
+  "id": "form-root",
+  "type": "Form",
+  "bindings": {
+    "className": "data.className",
+    "onSubmit": "handlers.handleSubmit"
+  },
+  "children": [
+    {
+      "id": "form-content",
+      "type": "slot",
+      "slot": "children"
+    }
+  ]
+}

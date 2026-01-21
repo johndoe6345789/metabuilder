@@ -1,0 +1,6 @@
+{
+  "type": "Form as ShadcnForm,\n  FormControl,\n  FormDescription,\n  FormField,\n  FormItem,\n  FormLabel,\n  FormMessage,",
+  "props": {
+    "onSubmit": "> void | Promise<void>"
+  }
+}

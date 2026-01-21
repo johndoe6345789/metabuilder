@@ -1,0 +1,61 @@
+{
+  "id": "tips-card",
+  "type": "Card",
+  "bindings": {
+    "className": "bg-yellow-500/10 border-yellow-500/20"
+  },
+  "children": [
+    {
+      "id": "tips-card-header",
+      "type": "CardHeader",
+      "children": [
+        {
+          "id": "tips-card-title",
+          "type": "CardTitle",
+          "bindings": {
+            "className": "flex items-center gap-2"
+          },
+          "children": [
+            {
+              "type": "Icon",
+              "bindings": {
+                "name": "warning",
+                "weight": "duotone",
+                "size": 24,
+                "className": "text-yellow-500"
+              }
+            },
+            {
+              "type": "Text",
+              "bindings": {
+                "content": "Quick Tips"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tips-card-content",
+      "type": "CardContent",
+      "bindings": {
+        "className": "space-y-2 text-sm"
+      },
+      "children": [
+        {
+          "type": "forEach",
+          "source": "tips",
+          "condition": "item.show",
+          "children": [
+            {
+              "type": "Text",
+              "bindings": {
+                "content": "• {item.message}"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

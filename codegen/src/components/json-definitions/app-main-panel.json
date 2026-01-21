@@ -1,0 +1,99 @@
+{
+  "id": "app-main-panel",
+  "type": "div",
+  "children": [
+    {
+      "id": "pwa-status-bar-suspense",
+      "type": "Suspense",
+      "props": {
+        "fallback": {
+          "type": "div",
+          "className": "h-1 bg-primary animate-pulse"
+        }
+      },
+      "children": [
+        {
+          "type": "PWAStatusBar"
+        }
+      ]
+    },
+    {
+      "id": "pwa-update-prompt-suspense",
+      "type": "Suspense",
+      "props": {
+        "fallback": null
+      },
+      "children": [
+        {
+          "type": "PWAUpdatePrompt"
+        }
+      ]
+    },
+    {
+      "id": "app-header",
+      "type": "AppHeader",
+      "bindings": {
+        "activeTab": {
+          "source": "props.currentPage"
+        },
+        "onTabChange": {
+          "source": "props.navigateToPage"
+        },
+        "featureToggles": {
+          "source": "props.featureToggles"
+        },
+        "errorCount": {
+          "source": "props.errorCount"
+        },
+        "lastSaved": {
+          "source": "props.lastSaved"
+        },
+        "currentProject": {
+          "source": "props.currentProject"
+        },
+        "onProjectLoad": {
+          "source": "props.onProjectLoad"
+        },
+        "onSearch": {
+          "source": "props.onSearch"
+        },
+        "onShowShortcuts": {
+          "source": "props.onShowShortcuts"
+        },
+        "onGenerateAI": {
+          "source": "props.onGenerateAI"
+        },
+        "onExport": {
+          "source": "props.onExport"
+        },
+        "onPreview": {
+          "source": "props.onPreview"
+        },
+        "onShowErrors": {
+          "source": "props.onShowErrors"
+        }
+      }
+    },
+    {
+      "id": "main-content",
+      "type": "div",
+      "className": "flex-1 overflow-hidden",
+      "children": [
+        {
+          "type": "RouterProvider",
+          "bindings": {
+            "featureToggles": {
+              "source": "props.featureToggles"
+            },
+            "stateContext": {
+              "source": "props.stateContext"
+            },
+            "actionContext": {
+              "source": "props.actionContext"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

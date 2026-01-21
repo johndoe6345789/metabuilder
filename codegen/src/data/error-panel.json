@@ -1,0 +1,47 @@
+{
+  "header": {
+    "title": "Error Detection & Repair",
+    "scan": "Scan",
+    "scanning": "Scanning...",
+    "repairAll": "Repair All",
+    "repairing": "Repairing..."
+  },
+  "counts": {
+    "errorSingular": "Error",
+    "errorPlural": "Errors",
+    "warningSingular": "Warning",
+    "warningPlural": "Warnings",
+    "issueSingular": "issue",
+    "issuePlural": "issues"
+  },
+  "actions": {
+    "open": "Open",
+    "repair": "Repair",
+    "fixed": "Fixed",
+    "showCode": "Show code",
+    "hideCode": "Hide code"
+  },
+  "labels": {
+    "line": "Line"
+  },
+  "emptyStates": {
+    "noIssuesTitle": "No Issues Found",
+    "noIssuesDescription": "All files are looking good! Click 'Scan' to check again.",
+    "scanningTitle": "Scanning Files...",
+    "scanningDescription": "Analyzing your code for errors and issues"
+  },
+  "toast": {
+    "noErrorsFound": "No errors found!",
+    "foundIssues": "Found {count} issue{plural}",
+    "scanFailed": "Error scanning failed",
+    "fixedSingle": "Fixed: {message}",
+    "repairErrorFailed": "Failed to repair error",
+    "repairFailed": "Repair failed",
+    "repairedFiles": "Repaired {count} file{plural}",
+    "noFilesRepaired": "No files could be repaired",
+    "batchRepairFailed": "Batch repair failed",
+    "repairedFile": "Repaired {fileName}",
+    "repairFileFailed": "Failed to repair file",
+    "contextRepairFailed": "Context-aware repair failed"
+  }
+}

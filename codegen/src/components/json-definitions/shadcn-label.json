@@ -1,0 +1,22 @@
+{
+  "id": "shadcn-label",
+  "type": "ShadcnLabel",
+  "bindings": {
+    "htmlFor": {
+      "source": "htmlFor",
+      "transform": "data"
+    },
+    "className": {
+      "source": "className",
+      "transform": "data"
+    }
+  },
+  "children": [
+    {
+      "type": "text",
+      "content": {
+        "source": "children"
+      }
+    }
+  ]
+}

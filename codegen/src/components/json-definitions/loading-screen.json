@@ -1,0 +1,51 @@
+{
+  "id": "loading-screen-container",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": null,
+      "transform": "'fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm'"
+    }
+  },
+  "children": [
+    {
+      "id": "loading-screen-content",
+      "type": "div",
+      "bindings": {
+        "className": {
+          "source": null,
+          "transform": "'flex flex-col items-center justify-center gap-4'"
+        }
+      },
+      "children": [
+        {
+          "id": "loading-screen-spinner",
+          "type": "Loader2",
+          "bindings": {
+            "className": {
+              "source": null,
+              "transform": "'animate-spin text-primary'"
+            }
+          },
+          "props": {
+            "size": 48
+          }
+        },
+        {
+          "id": "loading-screen-text",
+          "type": "p",
+          "bindings": {
+            "className": {
+              "source": null,
+              "transform": "'text-sm font-medium text-muted-foreground'"
+            },
+            "children": {
+              "source": "message",
+              "transform": "data || 'Loading...'"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

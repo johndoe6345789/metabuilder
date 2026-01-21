@@ -1,0 +1,217 @@
+{
+  "id": "seed-data-manager-card",
+  "type": "Card",
+  "children": [
+    {
+      "id": "card-header",
+      "type": "CardHeader",
+      "children": [
+        {
+          "id": "card-title",
+          "type": "CardTitle",
+          "props": { "className": "flex items-center gap-2" },
+          "children": [
+            {
+              "id": "title-icon",
+              "type": "PhosphorIcon",
+              "props": { "icon": "Database", "size": 24, "weight": "duotone" }
+            },
+            {
+              "id": "title-text",
+              "type": "text",
+              "bindings": { "children": "title" }
+            }
+          ]
+        },
+        {
+          "id": "card-description",
+          "type": "CardDescription",
+          "bindings": { "children": "description" }
+        }
+      ]
+    },
+    {
+      "id": "card-content",
+      "type": "CardContent",
+      "props": { "className": "flex flex-col gap-4" },
+      "children": [
+        {
+          "id": "loaded-alert",
+          "type": "Alert",
+          "conditional": { "if": "isLoaded" },
+          "children": [
+            {
+              "id": "alert-icon",
+              "type": "PhosphorIcon",
+              "props": { "icon": "CheckCircle", "className": "h-4 w-4", "weight": "fill" }
+            },
+            {
+              "id": "alert-description",
+              "type": "AlertDescription",
+              "children": [{ "type": "text", "children": "Seed data is loaded and available" }]
+            }
+          ]
+        },
+        {
+          "id": "buttons-container",
+          "type": "div",
+          "props": { "className": "flex flex-col gap-3" },
+          "children": [
+            {
+              "id": "buttons-row",
+              "type": "div",
+              "props": { "className": "flex gap-2 flex-wrap" },
+              "children": [
+                {
+                  "id": "load-button",
+                  "type": "Button",
+                  "bindings": {
+                    "onClick": "onLoadSeedData",
+                    "disabled": {
+                      "source": "isLoading,isLoaded",
+                      "transform": "isLoading || isLoaded"
+                    }
+                  },
+                  "props": { "variant": "default" },
+                  "children": [
+                    {
+                      "id": "load-button-content",
+                      "type": "conditional-group",
+                      "conditional": { "if": "isLoading" },
+                      "children": [
+                        {
+                          "type": "PhosphorIcon",
+                          "props": { "icon": "CircleNotch", "className": "animate-spin", "size": 16 }
+                        },
+                        {
+                          "type": "text",
+                          "bindings": { "children": "loadingLabel" }
+                        }
+                      ],
+                      "else": [
+                        {
+                          "type": "PhosphorIcon",
+                          "props": { "icon": "Database", "size": 16, "weight": "fill" }
+                        },
+                        {
+                          "type": "text",
+                          "bindings": { "children": "loadLabel" }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "reset-button",
+                  "type": "Button",
+                  "bindings": {
+                    "onClick": "onResetSeedData",
+                    "disabled": "isLoading"
+                  },
+                  "props": { "variant": "outline" },
+                  "children": [
+                    {
+                      "id": "reset-button-content",
+                      "type": "conditional-group",
+                      "conditional": { "if": "isLoading" },
+                      "children": [
+                        {
+                          "type": "PhosphorIcon",
+                          "props": { "icon": "CircleNotch", "className": "animate-spin", "size": 16 }
+                        },
+                        {
+                          "type": "text",
+                          "bindings": { "children": "resettingLabel" }
+                        }
+                      ],
+                      "else": [
+                        {
+                          "type": "PhosphorIcon",
+                          "props": { "icon": "ArrowClockwise", "size": 16, "weight": "bold" }
+                        },
+                        {
+                          "type": "text",
+                          "bindings": { "children": "resetLabel" }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "clear-button",
+                  "type": "Button",
+                  "bindings": {
+                    "onClick": "onClearAllData",
+                    "disabled": "isLoading"
+                  },
+                  "props": { "variant": "destructive" },
+                  "children": [
+                    {
+                      "id": "clear-button-content",
+                      "type": "conditional-group",
+                      "conditional": { "if": "isLoading" },
+                      "children": [
+                        {
+                          "type": "PhosphorIcon",
+                          "props": { "icon": "CircleNotch", "className": "animate-spin", "size": 16 }
+                        },
+                        {
+                          "type": "text",
+                          "bindings": { "children": "clearingLabel" }
+                        }
+                      ],
+                      "else": [
+                        {
+                          "type": "PhosphorIcon",
+                          "props": { "icon": "Trash", "size": 16, "weight": "fill" }
+                        },
+                        {
+                          "type": "text",
+                          "bindings": { "children": "clearLabel" }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "helper-text",
+              "type": "div",
+              "props": { "className": "text-sm text-muted-foreground space-y-1" },
+              "children": [
+                {
+                  "id": "load-help",
+                  "type": "p",
+                  "conditional": { "if": "helperText.load" },
+                  "children": [
+                    { "type": "strong", "children": "Load Seed Data: " },
+                    { "type": "text", "bindings": { "children": "helperText.load" } }
+                  ]
+                },
+                {
+                  "id": "reset-help",
+                  "type": "p",
+                  "conditional": { "if": "helperText.reset" },
+                  "children": [
+                    { "type": "strong", "children": "Reset to Defaults: " },
+                    { "type": "text", "bindings": { "children": "helperText.reset" } }
+                  ]
+                },
+                {
+                  "id": "clear-help",
+                  "type": "p",
+                  "conditional": { "if": "helperText.clear" },
+                  "children": [
+                    { "type": "strong", "children": "Clear All Data: " },
+                    { "type": "text", "bindings": { "children": "helperText.clear" } }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

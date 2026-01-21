@@ -1,0 +1,7 @@
+{
+  "id": "timeline-root",
+  "type": "div",
+  "props": {
+    "className": "space-y-4"
+  }
+}

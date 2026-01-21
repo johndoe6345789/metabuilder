@@ -1,0 +1,18 @@
+{
+  "id": "button-group-root",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": "orientation",
+      "transform": "(() => { const orientation = data || 'horizontal'; const baseClasses = 'inline-flex [&>button]:rounded-none [&>button:not(:last-child)]:border-r-0'; const directionClasses = orientation === 'horizontal' ? 'flex-row [&>button:first-child]:rounded-l-md [&>button:last-child]:rounded-r-md' : 'flex-col [&>button:first-child]:rounded-t-md [&>button:first-child]:rounded-l-none [&>button:last-child]:rounded-b-md [&>button:last-child]:rounded-r-none [&>button:not(:last-child)]:border-b-0 [&>button:not(:last-child)]:border-r'; const userClass = $props.className || ''; return baseClasses + ' ' + directionClasses + ' ' + userClass; })()"
+    }
+  },
+  "children": [
+    {
+      "id": "button-group-content",
+      "bindings": {
+        "children": "children"
+      }
+    }
+  ]
+}

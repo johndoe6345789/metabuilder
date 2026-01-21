@@ -1,0 +1,18 @@
+{
+  "type": "FileUpload",
+  "jsonCompatible": false,
+  "wrapperRequired": true,
+  "load": {
+    "path": "@/components/atoms/FileUpload",
+    "export": "FileUpload"
+  },
+  "props": {
+    "onFilesSelected": "> void",
+    "files": "> {",
+    "e": "> {",
+    "index": "> {"
+  },
+  "metadata": {
+    "notes": "Contains hooks - needs wrapper"
+  }
+}

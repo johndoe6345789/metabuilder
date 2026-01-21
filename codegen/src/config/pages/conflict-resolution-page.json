@@ -1,0 +1,17 @@
+{
+  "$schema": "./schema/page-schema.json",
+  "id": "conflict-resolution-page",
+  "name": "Conflict Resolution",
+  "description": "Resolve merge conflicts",
+  "icon": "GitMerge",
+  "layout": {
+    "$ref": "./layouts/single-column.json"
+  },
+  "components": [
+    {
+      "id": "conflict-resolution-component",
+      "type": "ConflictResolutionPage",
+      "props": {}
+    }
+  ]
+}

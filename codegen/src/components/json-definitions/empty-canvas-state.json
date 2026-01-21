@@ -1,0 +1,94 @@
+{
+  "id": "empty-canvas-state",
+  "type": "Stack",
+  "bindings": {
+    "direction": { "value": "vertical" },
+    "spacing": { "value": "none" },
+    "className": { "value": "h-full flex flex-col items-center justify-center p-8 bg-muted/20" }
+  },
+  "children": [
+    {
+      "id": "empty-state",
+      "type": "EmptyState",
+      "props": {
+        "icon": {
+          "type": "Icon",
+          "props": {
+            "name": "Folder",
+            "size": 64,
+            "weight": "duotone"
+          }
+        },
+        "title": "Empty Canvas",
+        "description": "Start building your UI by dragging components from the left panel, or import an existing schema."
+      },
+      "children": [
+        {
+          "id": "actions-container",
+          "type": "Stack",
+          "props": {
+            "direction": "horizontal",
+            "spacing": "md",
+            "className": "mt-4"
+          },
+          "children": [
+            {
+              "id": "import-button",
+              "type": "ActionButton",
+              "props": {
+                "icon": {
+                  "type": "Icon",
+                  "props": {
+                    "name": "Folder",
+                    "size": 16
+                  }
+                },
+                "label": "Import Schema",
+                "variant": "outline"
+              },
+              "events": {
+                "onClick": {
+                  "type": "callback",
+                  "name": "onImportSchema"
+                }
+              },
+              "bindings": {
+                "hidden": {
+                  "source": "!onImportSchema",
+                  "transform": "!data"
+                }
+              }
+            },
+            {
+              "id": "add-button",
+              "type": "ActionButton",
+              "props": {
+                "icon": {
+                  "type": "Icon",
+                  "props": {
+                    "name": "Plus",
+                    "size": 16
+                  }
+                },
+                "label": "Add Component",
+                "variant": "default"
+              },
+              "events": {
+                "onClick": {
+                  "type": "callback",
+                  "name": "onAddFirstComponent"
+                }
+              },
+              "bindings": {
+                "hidden": {
+                  "source": "!onAddFirstComponent",
+                  "transform": "!data"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

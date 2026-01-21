@@ -1,0 +1,72 @@
+{
+  "id": "progress-bar-wrapper",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": null,
+      "transform": "'w-full'"
+    }
+  },
+  "children": [
+    {
+      "id": "progress-bar-container",
+      "type": "div",
+      "bindings": {
+        "className": {
+          "source": ["value", "max", "size", "variant", "className"],
+          "transform": "const value = data[0] || 0; const max = data[1] || 100; const size = data[2] || 'md'; const variant = data[3] || 'default'; const className = data[4] || ''; const sizeClasses = { sm: 'h-1', md: 'h-2', lg: 'h-3' }; const variantClasses = { default: 'bg-primary', accent: 'bg-accent', destructive: 'bg-destructive' }; const baseClass = 'relative w-full bg-secondary rounded-full overflow-hidden'; return `${baseClass} ${sizeClasses[size]} ${className}`.trim()"
+        },
+        "role": {
+          "source": null,
+          "transform": "'progressbar'"
+        },
+        "aria-valuenow": {
+          "source": "value",
+          "transform": "data"
+        },
+        "aria-valuemin": {
+          "source": null,
+          "transform": "0"
+        },
+        "aria-valuemax": {
+          "source": "max",
+          "transform": "data || 100"
+        }
+      },
+      "children": [
+        {
+          "id": "progress-bar-fill",
+          "type": "div",
+          "bindings": {
+            "className": {
+              "source": "variant",
+              "transform": "const variantClasses = { default: 'bg-primary', accent: 'bg-accent', destructive: 'bg-destructive' }; return `h-full transition-all duration-300 ease-out ${variantClasses[data] || variantClasses['default']}`"
+            },
+            "style": {
+              "source": ["value", "max"],
+              "transform": "const value = data[0] || 0; const max = data[1] || 100; const percentage = Math.min(Math.max((value / max) * 100, 0), 100); return { width: `${percentage}%` }"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "progress-bar-label",
+      "type": "span",
+      "bindings": {
+        "className": {
+          "source": null,
+          "transform": "'text-xs text-muted-foreground mt-1 block'"
+        },
+        "children": {
+          "source": ["value", "max"],
+          "transform": "const value = data[0] || 0; const max = data[1] || 100; const percentage = Math.min(Math.max((value / max) * 100, 0), 100); return `${Math.round(percentage)}%`"
+        },
+        "_if": {
+          "source": "showLabel",
+          "transform": "!!data"
+        }
+      }
+    }
+  ]
+}

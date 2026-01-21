@@ -1,0 +1,46 @@
+{
+  "type": "div",
+  "props": {
+    "className": "flex-1 flex flex-col"
+  },
+  "children": [
+    {
+      "type": "CanvasRenderer",
+      "bindings": {
+        "components": {
+          "source": "data.components"
+        },
+        "selectedId": {
+          "source": "data.selectedId"
+        },
+        "hoveredId": {
+          "source": "data.hoveredId"
+        },
+        "draggedOverId": {
+          "source": "data.draggedOverId"
+        },
+        "dropPosition": {
+          "source": "data.dropPosition"
+        },
+        "onSelect": {
+          "source": "bindings.onSelect"
+        },
+        "onHover": {
+          "source": "bindings.onHover"
+        },
+        "onHoverEnd": {
+          "source": "bindings.onHoverEnd"
+        },
+        "onDragOver": {
+          "source": "bindings.onDragOver"
+        },
+        "onDragLeave": {
+          "source": "bindings.onDragLeave"
+        },
+        "onDrop": {
+          "source": "bindings.onDrop"
+        }
+      }
+    }
+  ]
+}

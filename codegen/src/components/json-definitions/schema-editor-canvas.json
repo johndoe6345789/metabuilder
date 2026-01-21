@@ -1,0 +1,26 @@
+{
+  "id": "schema-editor-canvas",
+  "type": "div",
+  "props": {
+    "className": "flex-1 flex flex-col"
+  },
+  "children": [
+    {
+      "id": "canvas-renderer-container",
+      "type": "CanvasRenderer",
+      "bindings": {
+        "components": { "source": "components" },
+        "selectedId": { "source": "selectedId" },
+        "hoveredId": { "source": "hoveredId" },
+        "draggedOverId": { "source": "draggedOverId" },
+        "dropPosition": { "source": "dropPosition" },
+        "onSelect": { "source": "onSelect" },
+        "onHover": { "source": "onHover" },
+        "onHoverEnd": { "source": "onHoverEnd" },
+        "onDragOver": { "source": "onDragOver" },
+        "onDragLeave": { "source": "onDragLeave" },
+        "onDrop": { "source": "onDrop" }
+      }
+    }
+  ]
+}

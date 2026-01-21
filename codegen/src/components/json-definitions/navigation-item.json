@@ -1,0 +1,38 @@
+{
+  "id": "nav-item-button",
+  "type": "button",
+  "bindings": {
+    "className": {
+      "source": "isActive",
+      "transform": "data ? 'w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors bg-primary text-primary-foreground' : 'w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors hover:bg-muted text-foreground'"
+    },
+    "onClick": "onClick"
+  },
+  "children": [
+    {
+      "id": "nav-item-icon",
+      "type": "IconWrapper",
+      "bindings": {
+        "icon": "icon",
+        "variant": { "source": "isActive", "transform": "data ? 'default' : 'muted'" }
+      },
+      "props": { "size": "md" }
+    },
+    {
+      "id": "nav-item-label",
+      "type": "Text",
+      "props": { "className": "flex-1 text-left font-medium", "variant": "small" },
+      "bindings": { "children": "label" }
+    },
+    {
+      "id": "nav-item-badge",
+      "type": "Badge",
+      "bindings": {
+        "variant": { "source": "isActive", "transform": "data ? 'secondary' : 'destructive'" },
+        "children": "badge"
+      },
+      "props": { "className": "ml-auto" },
+      "conditional": { "if": "badge !== undefined && badge > 0" }
+    }
+  ]
+}

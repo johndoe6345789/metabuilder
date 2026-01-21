@@ -1,0 +1,14 @@
+{
+  "id": "helper-text",
+  "type": "p",
+  "bindings": {
+    "className": {
+      "source": ["variant", "className"],
+      "transform": "const variant = data[0] || 'default'; const className = data[1] || ''; const baseClass = 'text-xs mt-1'; const variantClasses = { default: 'text-muted-foreground', error: 'text-destructive', success: 'text-green-600' }; return `${baseClass} ${variantClasses[variant]} ${className}`.trim()"
+    },
+    "children": {
+      "source": "children",
+      "transform": "data"
+    }
+  }
+}

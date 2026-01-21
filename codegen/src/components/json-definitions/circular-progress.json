@@ -1,0 +1,111 @@
+{
+  "id": "circular-progress-root",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": "className",
+      "transform": "(() => { const userClass = data || ''; return 'relative inline-flex items-center justify-center ' + userClass; })()"
+    }
+  },
+  "children": [
+    {
+      "id": "circular-progress-svg",
+      "type": "svg",
+      "bindings": {
+        "width": {
+          "source": "size",
+          "transform": "(() => { const sizeMap = { sm: 48, md: 64, lg: 96, xl: 128 }; return sizeMap[data || 'md']; })()"
+        },
+        "height": {
+          "source": "size",
+          "transform": "(() => { const sizeMap = { sm: 48, md: 64, lg: 96, xl: 128 }; return sizeMap[data || 'md']; })()"
+        }
+      },
+      "props": {
+        "className": "transform -rotate-90"
+      },
+      "children": [
+        {
+          "id": "circular-progress-background-circle",
+          "type": "circle",
+          "bindings": {
+            "cx": {
+              "source": "size",
+              "transform": "(() => { const sizeMap = { sm: 24, md: 32, lg: 48, xl: 64 }; return sizeMap[data || 'md']; })()"
+            },
+            "cy": {
+              "source": "size",
+              "transform": "(() => { const sizeMap = { sm: 24, md: 32, lg: 48, xl: 64 }; return sizeMap[data || 'md']; })()"
+            },
+            "r": {
+              "source": "size",
+              "transform": "(() => { const strokeWidth = $props.strokeWidth; const sizeMap = { sm: { dim: 48, stroke: 4 }, md: { dim: 64, stroke: 5 }, lg: { dim: 96, stroke: 6 }, xl: { dim: 128, stroke: 8 } }; const size = sizeMap[data || 'md']; const actualStroke = strokeWidth || size.stroke; return (size.dim - actualStroke) / 2; })()"
+            },
+            "strokeWidth": {
+              "source": "size",
+              "transform": "(() => { const strokeWidth = $props.strokeWidth; const sizeMap = { sm: 4, md: 5, lg: 6, xl: 8 }; return strokeWidth || sizeMap[data || 'md']; })()"
+            }
+          },
+          "props": {
+            "stroke": "currentColor",
+            "fill": "none",
+            "className": "text-muted opacity-20"
+          }
+        },
+        {
+          "id": "circular-progress-active-circle",
+          "type": "circle",
+          "bindings": {
+            "cx": {
+              "source": "size",
+              "transform": "(() => { const sizeMap = { sm: 24, md: 32, lg: 48, xl: 64 }; return sizeMap[data || 'md']; })()"
+            },
+            "cy": {
+              "source": "size",
+              "transform": "(() => { const sizeMap = { sm: 24, md: 32, lg: 48, xl: 64 }; return sizeMap[data || 'md']; })()"
+            },
+            "r": {
+              "source": "size",
+              "transform": "(() => { const strokeWidth = $props.strokeWidth; const sizeMap = { sm: { dim: 48, stroke: 4 }, md: { dim: 64, stroke: 5 }, lg: { dim: 96, stroke: 6 }, xl: { dim: 128, stroke: 8 } }; const size = sizeMap[data || 'md']; const actualStroke = strokeWidth || size.stroke; return (size.dim - actualStroke) / 2; })()"
+            },
+            "strokeWidth": {
+              "source": "size",
+              "transform": "(() => { const strokeWidth = $props.strokeWidth; const sizeMap = { sm: 4, md: 5, lg: 6, xl: 8 }; return strokeWidth || sizeMap[data || 'md']; })()"
+            },
+            "strokeDasharray": {
+              "source": "size",
+              "transform": "(() => { const strokeWidth = $props.strokeWidth; const sizeMap = { sm: { dim: 48, stroke: 4 }, md: { dim: 64, stroke: 5 }, lg: { dim: 96, stroke: 6 }, xl: { dim: 128, stroke: 8 } }; const size = sizeMap[data || 'md']; const actualStroke = strokeWidth || size.stroke; const radius = (size.dim - actualStroke) / 2; return radius * 2 * Math.PI; })()"
+            },
+            "strokeDashoffset": {
+              "source": "value",
+              "transform": "(() => { const value = data; const max = $props.max || 100; const percentage = Math.min((value / max) * 100, 100); const strokeWidth = $props.strokeWidth; const sizeMap = { sm: { dim: 48, stroke: 4 }, md: { dim: 64, stroke: 5 }, lg: { dim: 96, stroke: 6 }, xl: { dim: 128, stroke: 8 } }; const size = sizeMap[$props.size || 'md']; const actualStroke = strokeWidth || size.stroke; const radius = (size.dim - actualStroke) / 2; const circumference = radius * 2 * Math.PI; return circumference - (percentage / 100) * circumference; })()"
+            }
+          },
+          "props": {
+            "stroke": "currentColor",
+            "fill": "none",
+            "strokeLinecap": "round",
+            "className": "text-primary transition-all duration-300"
+          }
+        }
+      ]
+    },
+    {
+      "id": "circular-progress-label",
+      "type": "span",
+      "bindings": {
+        "children": {
+          "source": "value",
+          "transform": "(() => { const value = data; const max = $props.max || 100; const percentage = Math.min((value / max) * 100, 100); return Math.round(percentage) + '%'; })()"
+        },
+        "className": {
+          "source": "size",
+          "transform": "(() => { const sizeMap = { sm: 'text-xs', md: 'text-sm', lg: 'text-base', xl: 'text-lg' }; return 'absolute font-semibold ' + (sizeMap[data || 'md'] || sizeMap.md); })()"
+        }
+      },
+      "conditional": {
+        "if": "showLabel"
+      }
+    }
+  ]
+}

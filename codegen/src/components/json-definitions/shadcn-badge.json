@@ -1,0 +1,22 @@
+{
+  "id": "shadcn-badge",
+  "type": "ShadcnBadge",
+  "bindings": {
+    "variant": {
+      "source": "variant",
+      "transform": "data || 'default'"
+    },
+    "className": {
+      "source": "className",
+      "transform": "data"
+    }
+  },
+  "children": [
+    {
+      "type": "text",
+      "content": {
+        "source": "children"
+      }
+    }
+  ]
+}

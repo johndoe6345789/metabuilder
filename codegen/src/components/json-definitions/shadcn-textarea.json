@@ -1,0 +1,30 @@
+{
+  "id": "shadcn-textarea",
+  "type": "ShadcnTextarea",
+  "bindings": {
+    "placeholder": {
+      "source": "placeholder",
+      "transform": "data"
+    },
+    "value": {
+      "source": "value",
+      "transform": "data"
+    },
+    "disabled": {
+      "source": "disabled",
+      "transform": "data || false"
+    },
+    "className": {
+      "source": "className",
+      "transform": "data"
+    },
+    "onChange": {
+      "source": "onChange",
+      "transform": "data"
+    },
+    "rows": {
+      "source": "rows",
+      "transform": "data"
+    }
+  }
+}

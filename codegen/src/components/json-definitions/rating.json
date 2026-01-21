@@ -1,0 +1,36 @@
+{
+  "id": "rating-root",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": "className",
+      "transform": "data ? data + ' flex items-center gap-2' : 'flex items-center gap-2'"
+    }
+  },
+  "children": [
+    {
+      "id": "rating-stars",
+      "type": "div",
+      "props": {
+        "className": "flex items-center gap-0.5"
+      },
+      "children": "(() => { const max = max || 5; return Array.from({ length: max }, (_, idx) => ({ id: `star-${idx}`, type: 'button', props: { className: 'transition-colors', 'data-rating': idx + 1 }, bindings: { onClick: `() => onChange(${idx + 1})` } })); })()"
+    },
+    {
+      "id": "rating-value",
+      "type": "span",
+      "props": {
+        "className": "text-sm font-medium text-muted-foreground"
+      },
+      "bindings": {
+        "children": {
+          "source": "value",
+          "transform": "data ? `${data.toFixed(1)} / ${max || 5}` : ''"
+        }
+      },
+      "conditional": {
+        "if": "showValue"
+      }
+    }
+  ]
+}

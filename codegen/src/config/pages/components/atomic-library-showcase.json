@@ -1,0 +1,10 @@
+{
+  "type": "AtomicLibraryShowcase",
+  "jsonCompatible": false,
+  "wrapperRequired": true,
+  "load": {
+    "path": "@/components/AtomicLibraryShowcase",
+    "export": "AtomicLibraryShowcase"
+  },
+  "props": {}
+}

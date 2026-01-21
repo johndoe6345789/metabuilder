@@ -1,0 +1,13 @@
+{
+  "shortcuts": {
+    "search": "Search",
+    "shortcuts": "Shortcuts",
+    "preview": "Preview"
+  },
+  "messages": {
+    "loading": "Loading CodeForge...",
+    "projectLoaded": "Project loaded",
+    "aiComingSoon": "AI generation coming soon",
+    "exportComingSoon": "Export coming soon"
+  }
+}

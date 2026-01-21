@@ -1,0 +1,32 @@
+{
+  "id": "loading-container",
+  "type": "div",
+  "props": {
+    "className": "flex items-center justify-center h-full w-full"
+  },
+  "children": [
+    {
+      "id": "loading-content",
+      "type": "div",
+      "props": {
+        "className": "flex flex-col items-center gap-3"
+      },
+      "children": [
+        {
+          "id": "loading-spinner",
+          "type": "LoadingSpinner"
+        },
+        {
+          "id": "loading-message",
+          "type": "p",
+          "props": {
+            "className": "text-sm text-muted-foreground"
+          },
+          "bindings": {
+            "children": "message"
+          }
+        }
+      ]
+    }
+  ]
+}

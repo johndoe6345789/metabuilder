@@ -1,0 +1,16 @@
+{
+  "id": "shadcn-select-trigger",
+  "type": "ShadcnSelectTrigger",
+  "bindings": {
+    "className": {
+      "source": "className",
+      "transform": "data"
+    }
+  },
+  "children": [
+    {
+      "type": "slot",
+      "source": "children"
+    }
+  ]
+}

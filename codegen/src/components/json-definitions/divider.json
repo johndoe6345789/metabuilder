@@ -1,0 +1,18 @@
+{
+  "id": "divider",
+  "type": "div",
+  "bindings": {
+    "role": {
+      "source": "decorative",
+      "transform": "data ? 'presentation' : 'separator'"
+    },
+    "aria-orientation": {
+      "source": "orientation",
+      "transform": "data || 'horizontal'"
+    },
+    "className": {
+      "source": ["orientation", "className"],
+      "transform": "const orientation = data[0] || 'horizontal'; const className = data[1] || ''; const baseClass = 'bg-border'; const sizeClass = orientation === 'horizontal' ? 'h-[1px] w-full' : 'w-[1px] h-full'; return `${baseClass} ${sizeClass} ${className}`.trim()"
+    }
+  }
+}

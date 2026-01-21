@@ -1,0 +1,17 @@
+{
+  "$schema": "./schema/page-schema.json",
+  "id": "docker-build-debugger-page",
+  "name": "Docker Build Debugger",
+  "description": "Debug Docker builds",
+  "icon": "Bug",
+  "layout": {
+    "$ref": "./layouts/single-column.json"
+  },
+  "components": [
+    {
+      "id": "docker-build-debugger-component",
+      "type": "DockerBuildDebugger",
+      "props": {}
+    }
+  ]
+}

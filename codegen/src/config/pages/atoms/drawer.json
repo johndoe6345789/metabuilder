@@ -1,0 +1,9 @@
+{
+  "type": "Drawer",
+  "props": {
+    "onClose": "> void",
+    "sm": "== ",
+    "md": "== ",
+    "lg": "== "
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "id": "badge-root",
+  "type": "Badge",
+  "bindings": {
+    "variant": "variant",
+    "className": {
+      "source": "size",
+      "transform": "(() => { const sizeClasses = { sm: 'text-xs px-2 py-0.5', md: 'text-sm px-2.5 py-0.5', lg: 'text-base px-3 py-1' }; return 'inline-flex items-center gap-1.5 ' + (sizeClasses[data] || sizeClasses.md); })()"
+    }
+  },
+  "children": [
+    {
+      "id": "badge-icon",
+      "type": "span",
+      "props": {
+        "className": "flex-shrink-0"
+      },
+      "bindings": {
+        "children": "icon"
+      },
+      "conditional": {
+        "if": "icon"
+      }
+    },
+    {
+      "id": "badge-content",
+      "type": "span",
+      "bindings": {
+        "children": "children"
+      }
+    }
+  ]
+}

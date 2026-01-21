@@ -1,0 +1,17 @@
+{
+  "$schema": "./schema/page-schema.json",
+  "id": "json-component-tree-manager-page",
+  "name": "JSON Component Tree Manager",
+  "description": "Manage JSON component trees",
+  "icon": "Tree",
+  "layout": {
+    "$ref": "./layouts/single-column.json"
+  },
+  "components": [
+    {
+      "id": "json-component-tree-manager-component",
+      "type": "JSONComponentTreeManager",
+      "props": {}
+    }
+  ]
+}

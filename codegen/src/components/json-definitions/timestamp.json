@@ -1,0 +1,7 @@
+{
+  "id": "timestamp-root",
+  "type": "time",
+  "props": {
+    "className": "text-sm text-muted-foreground"
+  }
+}

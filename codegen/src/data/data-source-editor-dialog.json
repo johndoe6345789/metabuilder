@@ -1,0 +1,25 @@
+{
+  "title": "Edit Data Source",
+  "description": "Configure the data source settings",
+  "fields": {
+    "id": {
+      "label": "ID",
+      "placeholder": "unique-id"
+    }
+  },
+  "kv": {
+    "keyLabel": "KV Store Key",
+    "keyPlaceholder": "storage-key",
+    "keyHelp": "Key used for persistent storage in the KV store",
+    "defaultLabel": "Default Value (JSON)",
+    "defaultPlaceholder": "{\"key\": \"value\"}"
+  },
+  "static": {
+    "valueLabel": "Value (JSON)",
+    "valuePlaceholder": "{\"key\": \"value\"}"
+  },
+  "actions": {
+    "cancel": "Cancel",
+    "save": "Save Changes"
+  }
+}

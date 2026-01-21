@@ -1,0 +1,20 @@
+{
+  "id": "shadcn-tabs-content",
+  "type": "ShadcnTabsContent",
+  "bindings": {
+    "value": {
+      "source": "value",
+      "transform": "data"
+    },
+    "className": {
+      "source": "className",
+      "transform": "data"
+    }
+  },
+  "children": [
+    {
+      "type": "slot",
+      "source": "children"
+    }
+  ]
+}

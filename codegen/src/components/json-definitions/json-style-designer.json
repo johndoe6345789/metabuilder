@@ -1,0 +1,7 @@
+{
+  "id": "json-style-designer",
+  "type": "JSONPageRenderer",
+  "props": {
+    "schema": "styleDesignerConfig"
+  }
+}

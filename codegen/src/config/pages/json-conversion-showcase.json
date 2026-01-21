@@ -1,0 +1,341 @@
+{
+  "id": "json-conversion-showcase",
+  "name": "JSON Conversion Showcase",
+  "layout": {
+    "type": "single"
+  },
+  "dataSources": [
+    {
+      "id": "batches",
+      "type": "static",
+      "defaultValue": [
+        {
+          "title": "Phase 1",
+          "summary": "Models, Component Trees, Workflows",
+          "stats": [
+            { "label": "Pages Converted", "value": "3" },
+            { "label": "JSON Schema Lines", "value": "~900" },
+            { "label": "Code Reduction", "value": "~60%" }
+          ],
+          "pages": [
+            {
+              "name": "Models Designer",
+              "pageId": "models-json",
+              "schema": "src/config/pages/model-designer.json",
+              "dataStore": "app-models"
+            },
+            {
+              "name": "Component Trees Manager",
+              "pageId": "component-trees-json",
+              "schema": "src/config/pages/component-tree.json",
+              "dataStore": "app-component-trees"
+            },
+            {
+              "name": "Workflows Designer",
+              "pageId": "workflows-json",
+              "schema": "src/config/pages/workflow-designer.json",
+              "dataStore": "app-workflows"
+            }
+          ],
+          "seedHighlights": [
+            "3 model records (User, Post, Comment)",
+            "2 component trees (Dashboard, Profile)",
+            "3 workflow definitions (Registration, Processing, Payment)"
+          ]
+        },
+        {
+          "title": "Phase 2",
+          "summary": "Lambdas, Styling, Flask API",
+          "stats": [
+            { "label": "Pages Converted", "value": "3" },
+            { "label": "JSON Schema Lines", "value": "~2,100" },
+            { "label": "Seed Records", "value": "8" }
+          ],
+          "pages": [
+            {
+              "name": "Lambda Designer",
+              "pageId": "lambdas-json",
+              "schema": "src/config/pages/lambda-designer.json",
+              "dataStore": "app-lambdas"
+            },
+            {
+              "name": "Style Designer",
+              "pageId": "styling-json",
+              "schema": "src/config/pages/style-designer.json",
+              "dataStore": "app-theme"
+            },
+            {
+              "name": "Flask API Designer",
+              "pageId": "flask-json",
+              "schema": "src/config/pages/flask-designer.json",
+              "dataStore": "app-flask-config"
+            }
+          ],
+          "seedHighlights": [
+            "3 serverless functions seeded with triggers",
+            "2 theme variants with custom palettes",
+            "3 Flask blueprints covering 7 endpoints"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "patterns",
+      "type": "static",
+      "defaultValue": [
+        "Sidebar + detail layout pattern",
+        "Computed counters for live totals",
+        "KV-backed data sources for persistence",
+        "Declarative empty states and actions"
+      ]
+    }
+  ],
+  "components": [
+    {
+      "id": "root",
+      "type": "div",
+      "props": {
+        "className": "h-full overflow-auto bg-background p-6"
+      },
+      "children": [
+        {
+          "id": "header",
+          "type": "div",
+          "props": { "className": "space-y-2" },
+          "children": [
+            {
+              "id": "title",
+              "type": "Heading",
+              "props": {
+                "className": "text-3xl font-bold",
+                "children": "JSON Conversion Showcase"
+              }
+            },
+            {
+              "id": "subtitle",
+              "type": "Text",
+              "props": {
+                "className": "text-muted-foreground",
+                "children": "One-page overview of JSON conversion phases and their deliverables."
+              }
+            }
+          ]
+        },
+        {
+          "id": "phase-grid",
+          "type": "div",
+          "props": { "className": "mt-8 space-y-8" },
+          "loop": {
+            "source": "batches",
+            "itemVar": "batch"
+          },
+          "children": [
+            {
+              "id": "phase-card",
+              "type": "Card",
+              "children": [
+                {
+                  "id": "phase-header",
+                  "type": "CardHeader",
+                  "children": [
+                    {
+                      "id": "phase-title",
+                      "type": "CardTitle",
+                      "bindings": {
+                        "children": { "source": "batch", "sourceType": "bindings", "path": "title" }
+                      }
+                    },
+                    {
+                      "id": "phase-description",
+                      "type": "CardDescription",
+                      "bindings": {
+                        "children": { "source": "batch", "sourceType": "bindings", "path": "summary" }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "phase-content",
+                  "type": "CardContent",
+                  "props": { "className": "space-y-6" },
+                  "children": [
+                    {
+                      "id": "stats-grid",
+                      "type": "div",
+                      "props": {
+                        "className": "grid gap-3 md:grid-cols-3"
+                      },
+                      "loop": {
+                        "source": "batch.stats",
+                        "itemVar": "stat"
+                      },
+                      "children": [
+                        {
+                          "id": "stat-item",
+                          "type": "div",
+                          "props": { "className": "rounded-lg border border-border p-3" },
+                          "children": [
+                            {
+                              "id": "stat-label",
+                              "type": "Text",
+                              "props": { "className": "text-xs text-muted-foreground" },
+                              "bindings": {
+                                "children": { "source": "stat", "sourceType": "bindings", "path": "label" }
+                              }
+                            },
+                            {
+                              "id": "stat-value",
+                              "type": "Text",
+                              "props": { "className": "text-lg font-semibold" },
+                              "bindings": {
+                                "children": { "source": "stat", "sourceType": "bindings", "path": "value" }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "id": "pages-section",
+                      "type": "div",
+                      "props": { "className": "space-y-3" },
+                      "children": [
+                        {
+                          "id": "pages-title",
+                          "type": "Heading",
+                          "props": { "className": "text-base font-semibold", "children": "Converted Pages" }
+                        },
+                        {
+                          "id": "pages-grid",
+                          "type": "div",
+                          "props": { "className": "grid gap-3 md:grid-cols-3" },
+                          "loop": {
+                            "source": "batch.pages",
+                            "itemVar": "page"
+                          },
+                          "children": [
+                            {
+                              "id": "page-item",
+                              "type": "Card",
+                              "children": [
+                                {
+                                  "id": "page-item-header",
+                                  "type": "CardHeader",
+                                  "children": [
+                                    {
+                                      "id": "page-item-title",
+                                      "type": "CardTitle",
+                                      "bindings": {
+                                        "children": { "source": "page", "sourceType": "bindings", "path": "name" }
+                                      }
+                                    },
+                                    {
+                                      "id": "page-item-description",
+                                      "type": "CardDescription",
+                                      "bindings": {
+                                        "children": { "source": "page", "sourceType": "bindings", "path": "schema" }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "id": "page-item-content",
+                                  "type": "CardContent",
+                                  "props": { "className": "space-y-2" },
+                                  "children": [
+                                    {
+                                      "id": "page-id",
+                                      "type": "Badge",
+                                      "bindings": {
+                                        "children": { "source": "page", "sourceType": "bindings", "path": "pageId" }
+                                      }
+                                    },
+                                    {
+                                      "id": "page-store",
+                                      "type": "Text",
+                                      "props": { "className": "text-xs text-muted-foreground" },
+                                      "bindings": {
+                                        "children": { "source": "page", "sourceType": "bindings", "path": "dataStore" }
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "id": "seed-section",
+                      "type": "div",
+                      "props": { "className": "space-y-2" },
+                      "children": [
+                        {
+                          "id": "seed-title",
+                          "type": "Heading",
+                          "props": { "className": "text-base font-semibold", "children": "Seed Data Highlights" }
+                        },
+                        {
+                          "id": "seed-list",
+                          "type": "div",
+                          "props": { "className": "space-y-1" },
+                          "loop": {
+                            "source": "batch.seedHighlights",
+                            "itemVar": "seed"
+                          },
+                          "children": [
+                            {
+                              "id": "seed-item",
+                              "type": "Text",
+                              "props": { "className": "text-sm" },
+                              "bindings": {
+                                "children": { "source": "seed", "sourceType": "bindings" }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "patterns-section",
+          "type": "div",
+          "props": { "className": "mt-8" },
+          "children": [
+            {
+              "id": "patterns-title",
+              "type": "Heading",
+              "props": { "className": "text-xl font-semibold", "children": "Reusable Patterns" }
+            },
+            {
+              "id": "patterns-list",
+              "type": "div",
+              "props": { "className": "mt-3 space-y-2" },
+              "loop": {
+                "source": "patterns",
+                "itemVar": "pattern"
+              },
+              "children": [
+                {
+                  "id": "pattern-item",
+                  "type": "Text",
+                  "props": { "className": "text-sm" },
+                  "bindings": {
+                    "children": { "source": "pattern", "sourceType": "bindings" }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "globalActions": []
+}

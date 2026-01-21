@@ -1,0 +1,227 @@
+{
+  "page": {
+    "title": "Custom Material UI Sass Styles",
+    "description": "Non-standard Material UI CSS components built with Sass"
+  },
+  "tabOrder": ["buttons", "inputs", "cards", "chips", "layout", "animations"],
+  "tabs": {
+    "buttons": {
+      "label": "Buttons",
+      "title": "Custom Button Styles",
+      "rows": [
+        [
+          {
+            "label": "Primary Button",
+            "className": "mui-custom-button mui-custom-button--primary"
+          },
+          {
+            "label": "Secondary Button",
+            "className": "mui-custom-button mui-custom-button--secondary"
+          },
+          {
+            "label": "Accent Button",
+            "className": "mui-custom-button mui-custom-button--accent"
+          }
+        ],
+        [
+          {
+            "label": "Outline Button",
+            "className": "mui-custom-button mui-custom-button--outline"
+          },
+          {
+            "label": "Ghost Button",
+            "className": "mui-custom-button mui-custom-button--ghost"
+          }
+        ]
+      ],
+      "codeSample": "<button className=\"mui-custom-button mui-custom-button--primary\">\n  Primary Button\n</button>\n\n<button className=\"mui-custom-button mui-custom-button--accent\">\n  Accent Button\n</button>"
+    },
+    "inputs": {
+      "label": "Inputs",
+      "title": "Custom Input Styles",
+      "fields": [
+        {
+          "placeholder": "Default input",
+          "className": "mui-custom-input w-full"
+        },
+        {
+          "placeholder": "Error state",
+          "className": "mui-custom-input mui-custom-input--error w-full"
+        },
+        {
+          "placeholder": "Success state",
+          "className": "mui-custom-input mui-custom-input--success w-full"
+        }
+      ],
+      "codeSample": "<input\n  className=\"mui-custom-input\"\n  placeholder=\"Your input\"\n/>\n\n<input\n  className=\"mui-custom-input mui-custom-input--error\"\n  placeholder=\"Error state\"\n/>"
+    },
+    "cards": {
+      "label": "Cards",
+      "title": "Custom Card Styles",
+      "items": [
+        {
+          "title": "Standard Card",
+          "description": "Basic card with elevation and hover effect",
+          "className": "mui-custom-card p-6",
+          "descriptionClassName": "text-sm text-muted-foreground"
+        },
+        {
+          "title": "Gradient Card",
+          "description": "Card with gradient background",
+          "className": "mui-custom-card mui-custom-card--gradient p-6",
+          "descriptionClassName": "text-sm opacity-90"
+        },
+        {
+          "title": "Glass Card",
+          "description": "Glassmorphism effect card",
+          "className": "mui-custom-card mui-custom-card--glass p-6",
+          "descriptionClassName": "text-sm text-muted-foreground"
+        }
+      ],
+      "codeSample": "<div className=\"mui-custom-card\">\n  Standard Card\n</div>\n\n<div className=\"mui-custom-card mui-custom-card--gradient\">\n  Gradient Card\n</div>\n\n<div className=\"mui-custom-card mui-custom-card--glass\">\n  Glass Card\n</div>"
+    },
+    "chips": {
+      "label": "Chips",
+      "chipCardTitle": "Custom Chip/Badge Styles",
+      "chips": [
+        {
+          "label": "Primary",
+          "className": "mui-custom-chip mui-custom-chip--primary"
+        },
+        {
+          "label": "Secondary",
+          "className": "mui-custom-chip mui-custom-chip--secondary"
+        },
+        {
+          "label": "Accent",
+          "className": "mui-custom-chip mui-custom-chip--accent"
+        },
+        {
+          "label": "Success",
+          "className": "mui-custom-chip mui-custom-chip--success",
+          "showIcon": true
+        },
+        {
+          "label": "Error",
+          "className": "mui-custom-chip mui-custom-chip--error"
+        },
+        {
+          "label": "Warning",
+          "className": "mui-custom-chip mui-custom-chip--warning"
+        }
+      ],
+      "codeSample": "<span className=\"mui-custom-chip mui-custom-chip--primary\">\n  Primary\n</span>\n\n<span className=\"mui-custom-chip mui-custom-chip--success\">\n  <CheckCircle size={14} />\n  Success\n</span>",
+      "tagCardTitle": "Custom Tags",
+      "tags": [
+        {
+          "label": "Default",
+          "className": "custom-mui-tag"
+        },
+        {
+          "label": "Small",
+          "className": "custom-mui-tag custom-mui-tag--sm"
+        },
+        {
+          "label": "Large",
+          "className": "custom-mui-tag custom-mui-tag--lg"
+        }
+      ]
+    },
+    "layout": {
+      "label": "Layout",
+      "title": "Custom Layout Components",
+      "sections": [
+        {
+          "title": "Custom Stack",
+          "containerClassName": "custom-mui-stack custom-mui-stack--gap-3",
+          "itemTag": "div",
+          "items": [
+            {
+              "label": "Item 1",
+              "className": "p-4 bg-card border rounded"
+            },
+            {
+              "label": "Item 2",
+              "className": "p-4 bg-card border rounded"
+            },
+            {
+              "label": "Item 3",
+              "className": "p-4 bg-card border rounded"
+            }
+          ]
+        },
+        {
+          "title": "Custom Grid (Responsive)",
+          "containerClassName": "custom-mui-grid custom-mui-grid--responsive",
+          "itemTag": "div",
+          "items": [
+            {
+              "label": "Grid 1",
+              "className": "p-4 bg-card border rounded"
+            },
+            {
+              "label": "Grid 2",
+              "className": "p-4 bg-card border rounded"
+            },
+            {
+              "label": "Grid 3",
+              "className": "p-4 bg-card border rounded"
+            },
+            {
+              "label": "Grid 4",
+              "className": "p-4 bg-card border rounded"
+            }
+          ]
+        },
+        {
+          "title": "Custom Surface",
+          "containerClassName": "custom-mui-surface custom-mui-surface--interactive",
+          "itemTag": "p",
+          "items": [
+            {
+              "label": "Interactive surface with hover effects"
+            }
+          ]
+        }
+      ],
+      "codeSample": "<div className=\"custom-mui-stack custom-mui-stack--gap-3\">\n  <div>Item 1</div>\n  <div>Item 2</div>\n</div>\n\n<div className=\"custom-mui-grid custom-mui-grid--responsive\">\n  <div>Grid Item</div>\n</div>"
+    },
+    "animations": {
+      "label": "Animations",
+      "title": "Animation Classes",
+      "items": [
+        {
+          "label": "Fade In",
+          "className": "p-4 bg-card border rounded animate-fade-in"
+        },
+        {
+          "label": "Slide Up",
+          "className": "p-4 bg-card border rounded animate-slide-in-up"
+        },
+        {
+          "label": "Scale In",
+          "className": "p-4 bg-card border rounded animate-scale-in"
+        },
+        {
+          "label": "Pulse",
+          "className": "p-4 bg-card border rounded animate-pulse"
+        },
+        {
+          "label": "Bounce",
+          "className": "p-4 bg-card border rounded animate-bounce"
+        },
+        {
+          "label": "Float",
+          "className": "p-4 bg-card border rounded animate-float"
+        }
+      ],
+      "codeSample": "<div className=\"animate-fade-in\">Fade In</div>\n<div className=\"animate-slide-in-up\">Slide Up</div>\n<div className=\"animate-pulse\">Pulse</div>\n<div className=\"animate-bounce\">Bounce</div>",
+      "skeletonTitle": "Skeleton Loading",
+      "skeletonClasses": [
+        "mui-custom-skeleton mui-custom-skeleton--text",
+        "mui-custom-skeleton mui-custom-skeleton--text",
+        "mui-custom-skeleton mui-custom-skeleton--rect"
+      ]
+    }
+  }
+}

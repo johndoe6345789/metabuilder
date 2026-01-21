@@ -1,0 +1,66 @@
+{
+  "defaultExampleKey": "dashboard",
+  "header": {
+    "title": "JSON UI System",
+    "description": "Build complex UIs from declarative JSON configurations",
+    "badge": "EXPERIMENTAL"
+  },
+  "tabs": {
+    "showJsonLabel": "Show JSON",
+    "showPreviewLabel": "Show Preview",
+    "jsonTitle": "JSON Configuration"
+  },
+  "examples": [
+    {
+      "key": "dashboard",
+      "name": "Dashboard",
+      "description": "Complete dashboard with stats, activity feed, and quick actions",
+      "iconId": "ChartBar",
+      "configPath": "/src/config/ui-examples/dashboard.json"
+    },
+    {
+      "key": "form",
+      "name": "Form",
+      "description": "Dynamic form with validation and data binding",
+      "iconId": "ListBullets",
+      "configPath": "/src/config/ui-examples/form.json"
+    },
+    {
+      "key": "table",
+      "name": "Data Table",
+      "description": "Interactive table with row actions and looping",
+      "iconId": "Table",
+      "configPath": "/src/config/ui-examples/table.json"
+    },
+    {
+      "key": "bindings",
+      "name": "Bindings",
+      "description": "List, table, and timeline bindings with shared data sources",
+      "iconId": "Clock",
+      "configPath": "/src/config/ui-examples/list-table-timeline.json"
+    },
+    {
+      "key": "settings",
+      "name": "Settings",
+      "description": "Tabbed settings panel with switches and selections",
+      "iconId": "Gear",
+      "configPath": "/src/config/ui-examples/settings.json"
+    }
+  ],
+  "footer": {
+    "items": [
+      {
+        "label": "Fully declarative - no React code needed",
+        "colorClass": "bg-green-500"
+      },
+      {
+        "label": "Data binding with automatic updates",
+        "colorClass": "bg-blue-500"
+      },
+      {
+        "label": "Event handlers and actions",
+        "colorClass": "bg-purple-500"
+      }
+    ]
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "id": "select-root",
+  "type": "Container",
+  "bindings": {
+    "className": {
+      "source": "className",
+      "transform": "data ? data + ' w-full' : 'w-full'"
+    }
+  },
+  "children": [
+    {
+      "id": "select-label",
+      "type": "label",
+      "props": {
+        "className": "block text-sm font-medium mb-1.5 text-foreground"
+      },
+      "bindings": {
+        "children": "label"
+      },
+      "conditional": {
+        "if": "label"
+      }
+    },
+    {
+      "id": "select-input",
+      "type": "select",
+      "bindings": {
+        "value": "value",
+        "onChange": {
+          "source": "onChange",
+          "transform": "(handler) => (e) => handler(e.target.value)"
+        },
+        "disabled": "disabled",
+        "className": {
+          "source": "error",
+          "transform": "error ? 'flex h-10 w-full rounded-md border bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 transition-colors border-destructive focus-visible:ring-destructive' : 'flex h-10 w-full rounded-md border bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 transition-colors border-input'"
+        }
+      },
+      "children": [
+        {
+          "id": "select-placeholder",
+          "type": "option",
+          "props": {
+            "value": "",
+            "disabled": true
+          },
+          "bindings": {
+            "children": "placeholder"
+          },
+          "conditional": {
+            "if": "placeholder"
+          }
+        },
+        {
+          "id": "select-options",
+          "type": "option",
+          "bindings": {
+            "value": "options",
+            "disabled": "options"
+          },
+          "repeat": {
+            "items": "options",
+            "as": "option"
+          }
+        }
+      ]
+    },
+    {
+      "id": "select-helper",
+      "type": "p",
+      "bindings": {
+        "className": {
+          "source": "error",
+          "transform": "error ? 'text-xs mt-1.5 text-destructive' : 'text-xs mt-1.5 text-muted-foreground'"
+        },
+        "children": "helperText"
+      },
+      "conditional": {
+        "if": "helperText"
+      }
+    }
+  ]
+}

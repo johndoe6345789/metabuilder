@@ -1,0 +1,32 @@
+{
+  "id": "shadcn-tabs",
+  "type": "ShadcnTabs",
+  "bindings": {
+    "defaultValue": {
+      "source": "defaultValue",
+      "transform": "data"
+    },
+    "value": {
+      "source": "value",
+      "transform": "data"
+    },
+    "onValueChange": {
+      "source": "onValueChange",
+      "transform": "data"
+    },
+    "orientation": {
+      "source": "orientation",
+      "transform": "data || 'horizontal'"
+    },
+    "className": {
+      "source": "className",
+      "transform": "data"
+    }
+  },
+  "children": [
+    {
+      "type": "slot",
+      "source": "children"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "id": "comprehensive-demo-header-container",
+  "type": "Box",
+  "className": "space-y-2",
+  "children": [
+    {
+      "type": "Heading",
+      "level": 1,
+      "className": "text-4xl font-bold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent",
+      "children": [{ "type": "Text", "value": "{title}" }]
+    },
+    {
+      "type": "Paragraph",
+      "className": "text-muted-foreground",
+      "children": [{ "type": "Text", "value": "{subtitle}" }]
+    }
+  ]
+}

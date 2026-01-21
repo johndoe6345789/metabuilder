@@ -1,0 +1,30 @@
+{
+  "id": "pagination-wrapper",
+  "type": "nav",
+  "bindings": {
+    "role": {
+      "source": null,
+      "transform": "'navigation'"
+    },
+    "aria-label": {
+      "source": null,
+      "transform": "'pagination'"
+    },
+    "data-slot": {
+      "source": null,
+      "transform": "'pagination'"
+    },
+    "className": {
+      "source": "className",
+      "transform": "const baseClass = 'mx-auto flex w-full justify-center'; return data ? `${baseClass} ${data}`.trim() : baseClass"
+    },
+    "_spreadProps": {
+      "source": "_spreadProps",
+      "transform": "data"
+    },
+    "children": {
+      "source": "children",
+      "transform": "data"
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "$schema": "./schema/page-schema.json",
+  "id": "persistence-example-page",
+  "name": "Persistence Example",
+  "description": "Example of data persistence",
+  "icon": "Database",
+  "layout": {
+    "$ref": "./layouts/single-column.json"
+  },
+  "components": [
+    {
+      "id": "persistence-example-component",
+      "type": "PersistenceExample",
+      "props": {}
+    }
+  ]
+}

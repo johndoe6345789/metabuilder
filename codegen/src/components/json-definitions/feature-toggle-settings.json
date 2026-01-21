@@ -1,0 +1,66 @@
+{
+  "id": "feature-toggle-settings",
+  "type": "div",
+  "className": "h-full p-6 bg-background",
+  "children": [
+    {
+      "id": "feature-toggle-header",
+      "type": "div",
+      "className": "mb-6",
+      "children": [
+        {
+          "id": "feature-toggle-title",
+          "type": "h2",
+          "className": "text-2xl font-bold mb-2",
+          "children": "Feature Toggles"
+        },
+        {
+          "id": "feature-toggle-description",
+          "type": "p",
+          "className": "text-muted-foreground",
+          "children": [
+            "Enable or disable features to customize your workspace. ",
+            {
+              "type": "span",
+              "bindings": {
+                "children": {
+                  "source": "enabledCount",
+                  "transform": "data"
+                }
+              }
+            },
+            " of ",
+            {
+              "type": "span",
+              "bindings": {
+                "children": {
+                  "source": "totalCount",
+                  "transform": "data"
+                }
+              }
+            },
+            " features enabled."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "feature-toggle-scroll-area",
+      "type": "ScrollArea",
+      "className": "h-[calc(100vh-200px)]",
+      "children": [
+        {
+          "id": "feature-toggle-grid",
+          "type": "div",
+          "className": "grid grid-cols-1 lg:grid-cols-2 gap-4 pr-4",
+          "bindings": {
+            "children": {
+              "source": "items",
+              "transform": "data.map((item, index) => ({ id: `feature-${item.key}`, key: item.key, item: item, index: index }))"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

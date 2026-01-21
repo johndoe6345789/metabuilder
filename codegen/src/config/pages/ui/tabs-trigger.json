@@ -1,0 +1,9 @@
+{
+  "type": "TabsTrigger",
+  "source": "ui",
+  "load": {
+    "path": "@/components/ui/tabs",
+    "export": "TabsTrigger"
+  },
+  "props": {}
+}

@@ -1,0 +1,625 @@
+{
+  "organisms": [
+    {
+      "id": "org-tree-1",
+      "name": "AppHeader",
+      "description": "Main application header with navigation and actions",
+      "category": "organism",
+      "rootNodes": [
+        {
+          "id": "app-header-root",
+          "type": "header",
+          "name": "AppHeaderContainer",
+          "props": {
+            "className": "sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+          },
+          "children": [
+            {
+              "id": "header-wrapper",
+              "type": "div",
+              "name": "HeaderWrapper",
+              "props": {
+                "className": "flex h-14 items-center px-4 gap-4"
+              },
+              "children": [
+                {
+                  "id": "app-logo",
+                  "type": "AppLogo",
+                  "name": "AppLogo",
+                  "props": {},
+                  "children": []
+                },
+                {
+                  "id": "navigation-tabs",
+                  "type": "Tabs",
+                  "name": "NavigationTabs",
+                  "props": {
+                    "className": "flex-1"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "header-actions",
+                  "type": "div",
+                  "name": "HeaderActions",
+                  "props": {
+                    "className": "flex items-center gap-2"
+                  },
+                  "children": [
+                    {
+                      "id": "search-button",
+                      "type": "Button",
+                      "name": "SearchButton",
+                      "props": {
+                        "variant": "ghost",
+                        "size": "sm"
+                      },
+                      "children": []
+                    },
+                    {
+                      "id": "notifications-button",
+                      "type": "Button",
+                      "name": "NotificationsButton",
+                      "props": {
+                        "variant": "ghost",
+                        "size": "sm"
+                      },
+                      "children": []
+                    },
+                    {
+                      "id": "user-menu",
+                      "type": "DropdownMenu",
+                      "name": "UserMenu",
+                      "props": {},
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "createdAt": 1704067200000,
+      "updatedAt": 1704067200000
+    },
+    {
+      "id": "org-tree-2",
+      "name": "NavigationMenu",
+      "description": "Sidebar navigation menu with hierarchical structure",
+      "category": "organism",
+      "rootNodes": [
+        {
+          "id": "nav-menu-root",
+          "type": "nav",
+          "name": "NavigationMenuContainer",
+          "props": {
+            "className": "flex flex-col h-full w-64 border-r bg-muted/40"
+          },
+          "children": [
+            {
+              "id": "nav-header",
+              "type": "div",
+              "name": "NavHeader",
+              "props": {
+                "className": "p-4 border-b"
+              },
+              "children": [
+                {
+                  "id": "nav-title",
+                  "type": "Heading",
+                  "name": "NavTitle",
+                  "props": {
+                    "level": 3,
+                    "className": "font-semibold"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "nav-content",
+              "type": "ScrollArea",
+              "name": "NavContent",
+              "props": {
+                "className": "flex-1"
+              },
+              "children": [
+                {
+                  "id": "nav-groups",
+                  "type": "div",
+                  "name": "NavGroups",
+                  "props": {
+                    "className": "py-2"
+                  },
+                  "children": [
+                    {
+                      "id": "nav-group",
+                      "type": "div",
+                      "name": "NavGroup",
+                      "props": {
+                        "className": "px-3 py-2"
+                      },
+                      "children": [
+                        {
+                          "id": "group-header",
+                          "type": "div",
+                          "name": "GroupHeader",
+                          "props": {
+                            "className": "mb-2 px-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider"
+                          },
+                          "children": []
+                        },
+                        {
+                          "id": "nav-items",
+                          "type": "div",
+                          "name": "NavItems",
+                          "props": {
+                            "className": "space-y-1"
+                          },
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "nav-footer",
+              "type": "div",
+              "name": "NavFooter",
+              "props": {
+                "className": "p-4 border-t"
+              },
+              "children": []
+            }
+          ]
+        }
+      ],
+      "createdAt": 1704067200000,
+      "updatedAt": 1704067200000
+    },
+    {
+      "id": "org-tree-3",
+      "name": "SchemaEditorCanvas",
+      "description": "Main canvas for visual schema editing with drag and drop",
+      "category": "organism",
+      "rootNodes": [
+        {
+          "id": "canvas-root",
+          "type": "div",
+          "name": "CanvasContainer",
+          "props": {
+            "className": "relative h-full w-full bg-background"
+          },
+          "children": [
+            {
+              "id": "canvas-grid",
+              "type": "div",
+              "name": "CanvasGrid",
+              "props": {
+                "className": "absolute inset-0 bg-grid-pattern opacity-5"
+              },
+              "children": []
+            },
+            {
+              "id": "canvas-content",
+              "type": "div",
+              "name": "CanvasContent",
+              "props": {
+                "className": "relative z-10 h-full p-8"
+              },
+              "children": [
+                {
+                  "id": "canvas-elements",
+                  "type": "div",
+                  "name": "CanvasElements",
+                  "props": {
+                    "className": "space-y-4"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "canvas-toolbar",
+              "type": "div",
+              "name": "CanvasToolbar",
+              "props": {
+                "className": "absolute top-4 right-4 flex gap-2"
+              },
+              "children": [
+                {
+                  "id": "zoom-controls",
+                  "type": "div",
+                  "name": "ZoomControls",
+                  "props": {
+                    "className": "flex items-center gap-1 bg-background border rounded-lg p-1 shadow-lg"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "view-controls",
+                  "type": "div",
+                  "name": "ViewControls",
+                  "props": {
+                    "className": "flex items-center gap-1 bg-background border rounded-lg p-1 shadow-lg"
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "createdAt": 1704067200000,
+      "updatedAt": 1704067200000
+    },
+    {
+      "id": "org-tree-4",
+      "name": "TreeListPanel",
+      "description": "Panel for displaying and managing tree structures",
+      "category": "organism",
+      "rootNodes": [
+        {
+          "id": "tree-panel-root",
+          "type": "div",
+          "name": "TreePanelContainer",
+          "props": {
+            "className": "flex flex-col h-full"
+          },
+          "children": [
+            {
+              "id": "panel-header",
+              "type": "div",
+              "name": "PanelHeader",
+              "props": {
+                "className": "flex items-center justify-between p-4 border-b"
+              },
+              "children": [
+                {
+                  "id": "panel-title",
+                  "type": "Heading",
+                  "name": "PanelTitle",
+                  "props": {
+                    "level": 3,
+                    "className": "font-semibold"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "panel-actions",
+                  "type": "div",
+                  "name": "PanelActions",
+                  "props": {
+                    "className": "flex gap-2"
+                  },
+                  "children": [
+                    {
+                      "id": "add-tree-button",
+                      "type": "Button",
+                      "name": "AddTreeButton",
+                      "props": {
+                        "size": "sm",
+                        "variant": "default"
+                      },
+                      "children": []
+                    },
+                    {
+                      "id": "refresh-button",
+                      "type": "Button",
+                      "name": "RefreshButton",
+                      "props": {
+                        "size": "sm",
+                        "variant": "ghost"
+                      },
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "search-section",
+              "type": "div",
+              "name": "SearchSection",
+              "props": {
+                "className": "p-4 border-b"
+              },
+              "children": [
+                {
+                  "id": "search-input",
+                  "type": "SearchInput",
+                  "name": "TreeSearch",
+                  "props": {
+                    "placeholder": "Search trees..."
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "tree-list",
+              "type": "ScrollArea",
+              "name": "TreeList",
+              "props": {
+                "className": "flex-1"
+              },
+              "children": [
+                {
+                  "id": "tree-items",
+                  "type": "div",
+                  "name": "TreeItems",
+                  "props": {
+                    "className": "p-4 space-y-2"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "panel-footer",
+              "type": "div",
+              "name": "PanelFooter",
+              "props": {
+                "className": "p-4 border-t bg-muted/40"
+              },
+              "children": [
+                {
+                  "id": "footer-stats",
+                  "type": "div",
+                  "name": "FooterStats",
+                  "props": {
+                    "className": "flex items-center justify-between text-xs text-muted-foreground"
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "createdAt": 1704067200000,
+      "updatedAt": 1704067200000
+    },
+    {
+      "id": "org-tree-5",
+      "name": "DataTable",
+      "description": "Complex data table with sorting, filtering, and pagination",
+      "category": "organism",
+      "rootNodes": [
+        {
+          "id": "data-table-root",
+          "type": "div",
+          "name": "DataTableContainer",
+          "props": {
+            "className": "flex flex-col gap-4"
+          },
+          "children": [
+            {
+              "id": "table-toolbar",
+              "type": "div",
+              "name": "TableToolbar",
+              "props": {
+                "className": "flex items-center justify-between gap-4"
+              },
+              "children": [
+                {
+                  "id": "table-search",
+                  "type": "SearchInput",
+                  "name": "TableSearch",
+                  "props": {
+                    "placeholder": "Filter results...",
+                    "className": "max-w-sm"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "table-actions",
+                  "type": "div",
+                  "name": "TableActions",
+                  "props": {
+                    "className": "flex items-center gap-2"
+                  },
+                  "children": [
+                    {
+                      "id": "filter-button",
+                      "type": "Button",
+                      "name": "FilterButton",
+                      "props": {
+                        "variant": "outline",
+                        "size": "sm"
+                      },
+                      "children": []
+                    },
+                    {
+                      "id": "export-button",
+                      "type": "Button",
+                      "name": "ExportButton",
+                      "props": {
+                        "variant": "outline",
+                        "size": "sm"
+                      },
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "table-wrapper",
+              "type": "div",
+              "name": "TableWrapper",
+              "props": {
+                "className": "rounded-lg border bg-background"
+              },
+              "children": [
+                {
+                  "id": "table",
+                  "type": "Table",
+                  "name": "DataTable",
+                  "props": {},
+                  "children": [
+                    {
+                      "id": "table-header",
+                      "type": "TableHeader",
+                      "name": "TableHeader",
+                      "props": {},
+                      "children": []
+                    },
+                    {
+                      "id": "table-body",
+                      "type": "TableBody",
+                      "name": "TableBody",
+                      "props": {},
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "table-pagination",
+              "type": "div",
+              "name": "TablePagination",
+              "props": {
+                "className": "flex items-center justify-between"
+              },
+              "children": [
+                {
+                  "id": "pagination-info",
+                  "type": "Text",
+                  "name": "PaginationInfo",
+                  "props": {
+                    "className": "text-sm text-muted-foreground"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "pagination-controls",
+                  "type": "div",
+                  "name": "PaginationControls",
+                  "props": {
+                    "className": "flex items-center gap-2"
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "createdAt": 1704067200000,
+      "updatedAt": 1704067200000
+    },
+    {
+      "id": "org-tree-6",
+      "name": "SchemaEditorSidebar",
+      "description": "Sidebar with component palette and properties panel",
+      "category": "organism",
+      "rootNodes": [
+        {
+          "id": "sidebar-root",
+          "type": "aside",
+          "name": "SidebarContainer",
+          "props": {
+            "className": "w-80 border-l bg-muted/20 flex flex-col h-full"
+          },
+          "children": [
+            {
+              "id": "sidebar-tabs",
+              "type": "Tabs",
+              "name": "SidebarTabs",
+              "props": {
+                "className": "flex-1 flex flex-col",
+                "defaultValue": "components"
+              },
+              "children": [
+                {
+                  "id": "tabs-list",
+                  "type": "TabsList",
+                  "name": "TabsList",
+                  "props": {
+                    "className": "w-full grid grid-cols-2 p-1 m-1"
+                  },
+                  "children": [
+                    {
+                      "id": "components-tab",
+                      "type": "TabsTrigger",
+                      "name": "ComponentsTab",
+                      "props": {
+                        "value": "components"
+                      },
+                      "children": []
+                    },
+                    {
+                      "id": "properties-tab",
+                      "type": "TabsTrigger",
+                      "name": "PropertiesTab",
+                      "props": {
+                        "value": "properties"
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "id": "components-content",
+                  "type": "TabsContent",
+                  "name": "ComponentsContent",
+                  "props": {
+                    "value": "components",
+                    "className": "flex-1 mt-0"
+                  },
+                  "children": [
+                    {
+                      "id": "components-search",
+                      "type": "div",
+                      "name": "ComponentsSearch",
+                      "props": {
+                        "className": "p-4 border-b"
+                      },
+                      "children": []
+                    },
+                    {
+                      "id": "components-list",
+                      "type": "ScrollArea",
+                      "name": "ComponentsList",
+                      "props": {
+                        "className": "flex-1"
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "id": "properties-content",
+                  "type": "TabsContent",
+                  "name": "PropertiesContent",
+                  "props": {
+                    "value": "properties",
+                    "className": "flex-1 mt-0"
+                  },
+                  "children": [
+                    {
+                      "id": "properties-panel",
+                      "type": "ScrollArea",
+                      "name": "PropertiesPanel",
+                      "props": {
+                        "className": "flex-1"
+                      },
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "createdAt": 1704067200000,
+      "updatedAt": 1704067200000
+    }
+  ]
+}

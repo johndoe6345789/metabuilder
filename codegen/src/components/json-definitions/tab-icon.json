@@ -1,0 +1,16 @@
+{
+  "id": "tab-icon",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": "variant",
+      "transform": "data === 'gradient' ? 'w-10 h-10 rounded-lg bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center text-primary shrink-0' : ''"
+    }
+  },
+  "children": [
+    {
+      "type": "slot",
+      "name": "icon"
+    }
+  ]
+}

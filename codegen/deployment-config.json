@@ -1,0 +1,342 @@
+{
+  "$schema": "./schemas/deployment-schema.json",
+  "version": "1.0.0",
+  "platforms": {
+    "caprover": {
+      "enabled": true,
+      "appName": "codeforge",
+      "containerHttpPort": 80,
+      "instanceCount": 1,
+      "captainDefinitionRelativePath": "./captain-definition.json",
+      "healthCheck": {
+        "enabled": true,
+        "path": "/health",
+        "interval": 30,
+        "timeout": 10,
+        "retries": 3,
+        "startPeriod": 10
+      },
+      "envVars": {
+        "NODE_ENV": "production",
+        "PORT": "80"
+      },
+      "buildOptimizations": {
+        "simplifiedChunks": true,
+        "aggressiveMinification": true,
+        "inlineSmallAssets": true,
+        "chunkSizeLimit": 2000,
+        "dropConsole": true,
+        "sourcemaps": false
+      },
+      "serverOptimizations": {
+        "startupDelay": 5000,
+        "healthCheckDelay": 10000,
+        "gracefulShutdownTimeout": 30000
+      },
+      "pwa": {
+        "clearCacheOnDeploy": true,
+        "serviceWorkerScope": "/",
+        "updateOnReload": true
+      },
+      "resources": {
+        "memory": "512M",
+        "cpuShares": 1024
+      },
+      "volumes": [],
+      "notes": [
+        "CapRover requires PORT environment variable",
+        "Health check endpoint must respond within timeout",
+        "Simplified chunking reduces asset loading issues",
+        "PWA cache is cleared on each deployment to prevent stale assets"
+      ]
+    },
+    "docker-compose": {
+      "enabled": true,
+      "serviceName": "app",
+      "port": 3000,
+      "containerPort": 80,
+      "restart": "unless-stopped",
+      "healthCheck": {
+        "enabled": true,
+        "test": ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"],
+        "interval": "30s",
+        "timeout": "3s",
+        "retries": 3,
+        "startPeriod": "5s"
+      },
+      "labels": {
+        "traefik.enable": "true",
+        "traefik.http.routers.codeforge.rule": "Host(`codeforge.example.com`)",
+        "traefik.http.services.codeforge.loadbalancer.server.port": "80"
+      },
+      "networks": ["codeforge-network"],
+      "envVars": {
+        "NODE_ENV": "production"
+      }
+    },
+    "heroku": {
+      "enabled": false,
+      "appName": "codeforge-app",
+      "buildpack": "heroku/nodejs",
+      "stack": "heroku-22",
+      "region": "us",
+      "dynoType": "web",
+      "procfile": "web: npm run preview",
+      "envVars": {
+        "NODE_ENV": "production",
+        "NPM_CONFIG_PRODUCTION": "false"
+      },
+      "addons": [],
+      "notes": [
+        "Heroku uses PORT environment variable dynamically",
+        "Preview server automatically binds to Heroku's PORT"
+      ]
+    },
+    "vercel": {
+      "enabled": false,
+      "framework": "vite",
+      "buildCommand": "npm run build",
+      "outputDirectory": "dist",
+      "installCommand": "npm ci",
+      "devCommand": "npm run dev",
+      "routes": [
+        {
+          "src": "/(.*)",
+          "dest": "/index.html"
+        }
+      ],
+      "headers": [
+        {
+          "source": "/(.*)",
+          "headers": [
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            },
+            {
+              "key": "X-XSS-Protection",
+              "value": "1; mode=block"
+            }
+          ]
+        }
+      ],
+      "envVars": {},
+      "notes": [
+        "Vercel automatically handles SPA routing",
+        "Static file serving optimized by CDN"
+      ]
+    },
+    "netlify": {
+      "enabled": false,
+      "buildCommand": "npm run build",
+      "publishDirectory": "dist",
+      "functionsDirectory": "netlify/functions",
+      "redirects": [
+        {
+          "from": "/*",
+          "to": "/index.html",
+          "status": 200
+        }
+      ],
+      "headers": [
+        {
+          "for": "/*",
+          "values": {
+            "X-Content-Type-Options": "nosniff",
+            "X-Frame-Options": "DENY",
+            "X-XSS-Protection": "1; mode=block"
+          }
+        }
+      ],
+      "envVars": {},
+      "notes": [
+        "Netlify automatically handles SPA routing via _redirects",
+        "Edge functions available for serverless endpoints"
+      ]
+    },
+    "aws-ecs": {
+      "enabled": false,
+      "taskDefinitionFamily": "codeforge",
+      "containerName": "codeforge-app",
+      "cpu": "256",
+      "memory": "512",
+      "port": 80,
+      "healthCheck": {
+        "command": ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost/health || exit 1"],
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
+        "startPeriod": 10
+      },
+      "logging": {
+        "driver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/codeforge",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "envVars": {
+        "NODE_ENV": "production",
+        "PORT": "80"
+      }
+    },
+    "kubernetes": {
+      "enabled": false,
+      "deploymentName": "codeforge",
+      "namespace": "default",
+      "replicas": 2,
+      "containerPort": 80,
+      "servicePort": 80,
+      "serviceType": "ClusterIP",
+      "resources": {
+        "requests": {
+          "cpu": "100m",
+          "memory": "256Mi"
+        },
+        "limits": {
+          "cpu": "500m",
+          "memory": "512Mi"
+        }
+      },
+      "livenessProbe": {
+        "httpGet": {
+          "path": "/health",
+          "port": 80
+        },
+        "initialDelaySeconds": 10,
+        "periodSeconds": 30,
+        "timeoutSeconds": 5,
+        "successThreshold": 1,
+        "failureThreshold": 3
+      },
+      "readinessProbe": {
+        "httpGet": {
+          "path": "/health",
+          "port": 80
+        },
+        "initialDelaySeconds": 5,
+        "periodSeconds": 10,
+        "timeoutSeconds": 3,
+        "successThreshold": 1,
+        "failureThreshold": 3
+      },
+      "envVars": {
+        "NODE_ENV": "production",
+        "PORT": "80"
+      }
+    }
+  },
+  "commonOptimizations": {
+    "production": {
+      "minify": true,
+      "treeshake": true,
+      "splitChunks": "optimal",
+      "compression": "gzip",
+      "cache": true,
+      "sourcemaps": false
+    },
+    "staging": {
+      "minify": true,
+      "treeshake": true,
+      "splitChunks": "balanced",
+      "compression": "gzip",
+      "cache": true,
+      "sourcemaps": true
+    },
+    "development": {
+      "minify": false,
+      "treeshake": false,
+      "splitChunks": "minimal",
+      "compression": "none",
+      "cache": false,
+      "sourcemaps": true
+    }
+  },
+  "buildProfiles": {
+    "caprover-optimized": {
+      "description": "Optimized build for CapRover deployment with simplified chunking",
+      "platform": "caprover",
+      "chunks": {
+        "strategy": "simple",
+        "groups": {
+          "vendor": ["node_modules"],
+          "app": ["src"]
+        }
+      },
+      "minification": {
+        "enabled": true,
+        "options": {
+          "compress": {
+            "drop_console": true,
+            "drop_debugger": true,
+            "pure_funcs": ["console.log", "console.time", "console.timeEnd"]
+          }
+        }
+      },
+      "assets": {
+        "inlineLimit": 8192,
+        "assetsInlineLimit": 4096
+      }
+    },
+    "cdn-optimized": {
+      "description": "Optimized for CDN deployment with aggressive chunking",
+      "platform": ["vercel", "netlify"],
+      "chunks": {
+        "strategy": "granular",
+        "maxSize": 500000,
+        "groups": {
+          "react-vendor": ["react", "react-dom"],
+          "ui-core": ["@radix-ui"],
+          "code-editor": ["@monaco-editor"],
+          "data-viz": ["d3", "recharts"],
+          "icons": ["@phosphor-icons", "lucide-react"]
+        }
+      },
+      "minification": {
+        "enabled": true,
+        "options": {
+          "compress": {
+            "drop_console": true,
+            "drop_debugger": true
+          }
+        }
+      },
+      "assets": {
+        "inlineLimit": 4096,
+        "assetsInlineLimit": 2048
+      }
+    }
+  },
+  "monitoring": {
+    "enabled": false,
+    "healthCheckEndpoint": "/health",
+    "metricsEndpoint": "/metrics",
+    "readinessEndpoint": "/ready",
+    "livenessEndpoint": "/live"
+  },
+  "security": {
+    "headers": {
+      "X-Content-Type-Options": "nosniff",
+      "X-Frame-Options": "DENY",
+      "X-XSS-Protection": "1; mode=block",
+      "Referrer-Policy": "strict-origin-when-cross-origin",
+      "Permissions-Policy": "geolocation=(), microphone=(), camera=()"
+    },
+    "csp": {
+      "enabled": false,
+      "directives": {
+        "default-src": ["'self'"],
+        "script-src": ["'self'", "'unsafe-inline'"],
+        "style-src": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+        "font-src": ["'self'", "https://fonts.gstatic.com"],
+        "img-src": ["'self'", "data:", "https:"],
+        "connect-src": ["'self'"]
+      }
+    }
+  }
+}

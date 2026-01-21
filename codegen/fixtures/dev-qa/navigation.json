@@ -1,0 +1,42 @@
+{
+  "id": "smoke-navigation",
+  "name": "Smoke Navigation",
+  "layout": {
+    "type": "single"
+  },
+  "dataSources": [],
+  "components": [
+    {
+      "id": "navigation-section",
+      "type": "section",
+      "children": [
+        {
+          "id": "navigation-heading",
+          "type": "Heading",
+          "props": {
+            "level": 3,
+            "children": "Navigation Smoke Check"
+          }
+        },
+        {
+          "id": "navigation-link",
+          "type": "Link",
+          "props": {
+            "href": "/qa",
+            "children": "Go to QA overview"
+          }
+        },
+        {
+          "id": "navigation-breadcrumb",
+          "type": "Breadcrumb",
+          "props": {
+            "items": [
+              { "label": "Home", "href": "/" },
+              { "label": "QA" }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

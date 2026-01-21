@@ -1,0 +1,40 @@
+{
+  "id": "shadcn-select",
+  "type": "ShadcnSelect",
+  "bindings": {
+    "value": {
+      "source": "value",
+      "transform": "data"
+    },
+    "onValueChange": {
+      "source": "onValueChange",
+      "transform": "data"
+    },
+    "defaultValue": {
+      "source": "defaultValue",
+      "transform": "data"
+    },
+    "disabled": {
+      "source": "disabled",
+      "transform": "data || false"
+    },
+    "open": {
+      "source": "open",
+      "transform": "data"
+    },
+    "onOpenChange": {
+      "source": "onOpenChange",
+      "transform": "data"
+    },
+    "className": {
+      "source": "className",
+      "transform": "data"
+    }
+  },
+  "children": [
+    {
+      "type": "slot",
+      "source": "children"
+    }
+  ]
+}

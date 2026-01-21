@@ -1,0 +1,24 @@
+{
+  "id": "shadcn-dialog",
+  "type": "ShadcnDialog",
+  "bindings": {
+    "open": {
+      "source": "open",
+      "transform": "data"
+    },
+    "onOpenChange": {
+      "source": "onOpenChange",
+      "transform": "data"
+    },
+    "className": {
+      "source": "className",
+      "transform": "data"
+    }
+  },
+  "children": [
+    {
+      "type": "slot",
+      "source": "children"
+    }
+  ]
+}

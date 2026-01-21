@@ -1,0 +1,4897 @@
+{
+  "$schema": "./schemas/json-components-registry-schema.json",
+  "version": "2.0.0",
+  "description": "Registry of all components in the application",
+  "lastUpdated": "2026-01-21T04:44:15.096836Z",
+  "categories": {
+    "layout": "Layout and container components",
+    "input": "Form inputs and interactive controls",
+    "display": "Display and presentation components",
+    "navigation": "Navigation and routing components",
+    "feedback": "Alerts, notifications, and status indicators",
+    "data": "Data display and visualization components",
+    "custom": "Custom domain-specific components"
+  },
+  "sourceRoots": {
+    "atoms": [
+      "@/components/atoms/*.tsx"
+    ],
+    "molecules": [
+      "@/components/molecules/*.tsx"
+    ],
+    "organisms": [
+      "@/components/organisms/*.tsx"
+    ],
+    "ui": [
+      "@/components/ui/**/*.{ts,tsx}"
+    ],
+    "wrappers": [
+      "@/lib/json-ui/wrappers/*.tsx"
+    ],
+    "icons": []
+  },
+  "components": [
+    {
+      "type": "Accordion",
+      "name": "Accordion",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "Collapsible content sections",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true
+    },
+    {
+      "type": "ActionBar",
+      "name": "ActionBar",
+      "category": "custom",
+      "canHaveChildren": false,
+      "description": "Action button toolbar",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionPriority": "high",
+        "notes": "JSON-ready: stateless layout molecule; bindings/events supported in json-ui component types."
+      }
+    },
+    {
+      "type": "ActionButton",
+      "name": "ActionButton",
+      "category": "input",
+      "canHaveChildren": true,
+      "description": "Button with action icon",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "ActionCard",
+      "name": "ActionCard",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "ActionCard component",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "ActionIcon",
+      "name": "ActionIcon",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "ActionIcon component",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Alert",
+      "name": "Alert",
+      "category": "feedback",
+      "canHaveChildren": true,
+      "description": "Alert notification message",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "AlertCircle",
+      "name": "AlertCircle",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "AlertCircle icon",
+      "status": "supported",
+      "source": "icons",
+      "load": {
+        "export": "WarningCircle"
+      }
+    },
+    {
+      "type": "AlertDialog",
+      "name": "AlertDialog",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "AlertDialog component",
+      "status": "supported",
+      "source": "ui"
+    },
+    {
+      "type": "AppBranding",
+      "name": "AppBranding",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "AppBranding component",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "AppBranding",
+      "name": "AppBranding",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Application branding component with logo and name",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "AppDialogs",
+      "source": "app",
+      "jsonCompatible": true
+    },
+    {
+      "type": "AppHeader",
+      "name": "AppHeader",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "AppHeader organism component",
+      "status": "supported",
+      "source": "organisms",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "AppLayout",
+      "source": "app",
+      "jsonCompatible": true
+    },
+    {
+      "type": "AppLogo",
+      "name": "AppLogo",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "AppLogo component",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "AppMainPanel",
+      "source": "app",
+      "jsonCompatible": true
+    },
+    {
+      "type": "AppRouterLayout",
+      "source": "app",
+      "jsonCompatible": true
+    },
+    {
+      "type": "ArrowLeft",
+      "name": "ArrowLeft",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "ArrowLeft icon",
+      "status": "supported",
+      "source": "icons",
+      "load": {
+        "export": "ArrowLeft"
+      }
+    },
+    {
+      "type": "ArrowRight",
+      "name": "ArrowRight",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "ArrowRight icon",
+      "status": "supported",
+      "source": "icons",
+      "load": {
+        "export": "ArrowRight"
+      }
+    },
+    {
+      "type": "AspectRatio",
+      "name": "AspectRatio",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "AspectRatio component",
+      "status": "supported",
+      "source": "ui"
+    },
+    {
+      "type": "AtomicLibraryShowcase",
+      "name": "AtomicLibraryShowcase",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Display component",
+      "status": "supported",
+      "source": "custom",
+      "jsonCompatible": false,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      },
+      "load": {
+        "path": "@/components/AtomicLibraryShowcase",
+        "export": "AtomicLibraryShowcase"
+      }
+    },
+    {
+      "type": "Avatar",
+      "name": "Avatar",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "User avatar image",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "AvatarGroup",
+      "name": "AvatarGroup",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Group of user avatars",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Badge",
+      "name": "Badge",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Small status or count indicator",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Badge as ShadcnBadge",
+      "name": "Badge as ShadcnBadge",
+      "category": "feedback",
+      "canHaveChildren": false,
+      "description": "Feedback and status component",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "Bell",
+      "name": "Bell",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Bell icon",
+      "status": "supported",
+      "source": "icons",
+      "load": {
+        "export": "Bell"
+      }
+    },
+    {
+      "type": "BindingEditor",
+      "name": "BindingEditor",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "BindingEditor component",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": true
+    },
+    {
+      "type": "BindingIndicator",
+      "name": "BindingIndicator",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "BindingIndicator component",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Breadcrumb",
+      "name": "Breadcrumb",
+      "category": "navigation",
+      "canHaveChildren": false,
+      "description": "Navigation breadcrumb trail using the atoms/BreadcrumbNav JSON-safe items prop",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "converted": true
+      },
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Button",
+      "name": "Button",
+      "category": "input",
+      "canHaveChildren": true,
+      "description": "Interactive button element",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "converted": true
+      },
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Button as ShadcnButton, ButtonProps as ShadcnButtonProps",
+      "name": "Button as ShadcnButton, ButtonProps as ShadcnButtonProps",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Display component",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "Button, ButtonProps",
+      "name": "Button, ButtonProps",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Display component",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "Button, buttonVariants",
+      "name": "Button, buttonVariants",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Display component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "ButtonGroup",
+      "name": "ButtonGroup",
+      "category": "input",
+      "canHaveChildren": true,
+      "description": "Group of related buttons",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Calendar",
+      "name": "Calendar",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Calendar icon",
+      "status": "supported",
+      "source": "icons",
+      "load": {
+        "export": "Calendar"
+      },
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Calendar",
+      "name": "Calendar",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "Calendar date selector",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "converted": true
+      },
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Calendar as ShadcnCalendar",
+      "name": "Calendar as ShadcnCalendar",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Display component",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "CanvasRenderer",
+      "name": "CanvasRenderer",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "CanvasRenderer component",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "CanvasRenderer",
+      "name": "CanvasRenderer",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Canvas renderer for displaying and editing UI components",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Card",
+      "name": "Card",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "Container card with optional header, content, and footer",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "converted": true
+      },
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Card, CardContent",
+      "name": "Card, CardContent",
+      "category": "data",
+      "canHaveChildren": true,
+      "description": "Data display component",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "Card, CardContent",
+      "name": "Card, CardContent",
+      "category": "data",
+      "canHaveChildren": true,
+      "description": "Data display component",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "Card, CardContent",
+      "name": "Card, CardContent",
+      "category": "data",
+      "canHaveChildren": true,
+      "description": "Data display component",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "Card, CardContent",
+      "name": "Card, CardContent",
+      "category": "data",
+      "canHaveChildren": true,
+      "description": "Data display component",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "Card, CardContent, CardDescription, CardHeader, CardTitle",
+      "name": "Card, CardContent, CardDescription, CardHeader, CardTitle",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "Layout container component",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "Card, CardContent, CardDescription, CardHeader, CardTitle",
+      "name": "Card, CardContent, CardDescription, CardHeader, CardTitle",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "Layout container component",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "Card, CardContent, CardDescription, CardHeader, CardTitle",
+      "name": "Card, CardContent, CardDescription, CardHeader, CardTitle",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "Layout container component",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "Card, CardContent, CardDescription, CardHeader, CardTitle",
+      "name": "Card, CardContent, CardDescription, CardHeader, CardTitle",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "Layout container component",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "Card, CardContent, CardDescription, CardHeader, CardTitle",
+      "name": "Card, CardContent, CardDescription, CardHeader, CardTitle",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "Layout container component",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "Card, CardContent, CardHeader",
+      "name": "Card, CardContent, CardHeader",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "Layout container component",
+      "status": "supported",
+      "source": "organisms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "Card, CardContent, CardHeader, CardTitle",
+      "name": "Card, CardContent, CardHeader, CardTitle",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "Layout container component",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "CardContent",
+      "name": "CardContent",
+      "category": "data",
+      "canHaveChildren": true,
+      "description": "Data display component",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "CardDescription",
+      "name": "CardDescription",
+      "category": "data",
+      "canHaveChildren": true,
+      "description": "Data display component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      },
+      "load": {
+        "path": "@/components/ui/card",
+        "export": "CardDescription"
+      }
+    },
+    {
+      "type": "CardFooter",
+      "name": "CardFooter",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "Layout container component",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "CardHeader",
+      "name": "CardHeader",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "Layout container component",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "CardTitle",
+      "name": "CardTitle",
+      "category": "data",
+      "canHaveChildren": true,
+      "description": "Data display component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      },
+      "load": {
+        "path": "@/components/ui/card",
+        "export": "CardTitle"
+      }
+    },
+    {
+      "type": "Carousel",
+      "name": "Carousel",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "Carousel component",
+      "status": "supported",
+      "source": "ui"
+    },
+    {
+      "type": "Chart",
+      "name": "Chart",
+      "category": "data",
+      "canHaveChildren": true,
+      "description": "Chart component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": false
+    },
+    {
+      "type": "Check",
+      "name": "Check",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Check icon",
+      "status": "supported",
+      "source": "icons",
+      "load": {
+        "export": "Check"
+      }
+    },
+    {
+      "type": "Checkbox",
+      "name": "Checkbox",
+      "category": "input",
+      "canHaveChildren": false,
+      "description": "Checkbox toggle control",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "converted": true
+      },
+      "deleteOldTSX": true
+    },
+    {
+      "type": "ChevronDown",
+      "name": "ChevronDown",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "ChevronDown icon",
+      "status": "supported",
+      "source": "icons",
+      "load": {
+        "export": "CaretDown"
+      }
+    },
+    {
+      "type": "ChevronLeft",
+      "name": "ChevronLeft",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "ChevronLeft icon",
+      "status": "supported",
+      "source": "icons",
+      "load": {
+        "export": "CaretLeft"
+      }
+    },
+    {
+      "type": "ChevronRight",
+      "name": "ChevronRight",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "ChevronRight icon",
+      "status": "supported",
+      "source": "icons",
+      "load": {
+        "export": "CaretRight"
+      }
+    },
+    {
+      "type": "ChevronUp",
+      "name": "ChevronUp",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "ChevronUp icon",
+      "status": "supported",
+      "source": "icons",
+      "load": {
+        "export": "CaretUp"
+      }
+    },
+    {
+      "type": "Chip",
+      "name": "Chip",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "Compact element for tags or selections",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "CircularProgress",
+      "name": "CircularProgress",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Circular progress indicator",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Clock",
+      "name": "Clock",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Clock icon",
+      "status": "supported",
+      "source": "icons",
+      "load": {
+        "export": "Clock"
+      }
+    },
+    {
+      "type": "Code",
+      "name": "Code",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Inline or block code display",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "CodeExplanationDialog",
+      "name": "CodeExplanationDialog",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "CodeExplanationDialog component",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "CodeExplanationDialog",
+      "name": "CodeExplanationDialog",
+      "category": "feedback",
+      "canHaveChildren": false,
+      "description": "Dialog for displaying AI-generated code explanations",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Collapsible",
+      "name": "Collapsible",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "Collapsible component",
+      "status": "supported",
+      "source": "ui"
+    },
+    {
+      "type": "CollapsibleTrigger",
+      "name": "CollapsibleTrigger",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "Custom component",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "ColorSwatch",
+      "name": "ColorSwatch",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "ColorSwatch component",
+      "status": "supported",
+      "source": "atoms",
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Command",
+      "name": "Command",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "Command component",
+      "status": "supported",
+      "source": "ui"
+    },
+    {
+      "type": "Command,\n  CommandDialog,\n  CommandEmpty,\n  CommandGroup,\n  CommandInput,\n  CommandItem,\n  CommandList,",
+      "name": "Command,\n  CommandDialog,\n  CommandEmpty,\n  CommandGroup,\n  CommandInput,\n  CommandItem,\n  CommandList,",
+      "category": "input",
+      "canHaveChildren": false,
+      "description": "Form input component",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "CommandPalette",
+      "name": "CommandPalette",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "Command search and execution",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "CompletionCard",
+      "name": "CompletionCard",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "CompletionCard component",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "ComponentBindingDialog",
+      "name": "ComponentBindingDialog",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "ComponentBindingDialog component",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": false,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "ComponentBindingDialogWrapper",
+      "name": "ComponentBindingDialogWrapper",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "JSON wrapper for component binding dialog with props-driven bindings",
+      "status": "json-compatible",
+      "source": "wrappers",
+      "jsonCompatible": true,
+      "wrapperFor": "ComponentBindingDialog",
+      "load": {
+        "export": "ComponentBindingDialogWrapper"
+      }
+    },
+    {
+      "type": "ComponentPalette",
+      "name": "ComponentPalette",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "ComponentPalette component",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "ComponentPalette",
+      "name": "ComponentPalette",
+      "category": "navigation",
+      "canHaveChildren": true,
+      "description": "Component palette with tabs for dragging components to canvas",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "ComponentPaletteItem",
+      "name": "ComponentPaletteItem",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "ComponentPaletteItem component",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "ComponentTree",
+      "name": "ComponentTree",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "ComponentTree component",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": false,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "ComponentTreeBuilder",
+      "name": "ComponentTreeBuilder",
+      "category": "data",
+      "canHaveChildren": true,
+      "description": "Data display component",
+      "status": "supported",
+      "source": "custom",
+      "jsonCompatible": false,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      },
+      "load": {
+        "path": "@/components/ComponentTreeBuilder",
+        "export": "ComponentTreeBuilder"
+      }
+    },
+    {
+      "type": "ComponentTreeManager",
+      "name": "ComponentTreeManager",
+      "category": "data",
+      "canHaveChildren": true,
+      "description": "Data display component",
+      "status": "supported",
+      "source": "custom",
+      "jsonCompatible": false,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      },
+      "load": {
+        "path": "@/components/JSONComponentTreeManager",
+        "export": "ComponentTreeManager"
+      }
+    },
+    {
+      "type": "ComponentTreeNode",
+      "name": "ComponentTreeNode",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "ComponentTreeNode component",
+      "status": "supported",
+      "source": "atoms",
+      "deleteOldTSX": true
+    },
+    {
+      "type": "ComponentTreeWrapper",
+      "name": "ComponentTreeWrapper",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "JSON wrapper for a props-driven component tree view",
+      "status": "json-compatible",
+      "source": "wrappers",
+      "jsonCompatible": true,
+      "wrapperFor": "ComponentTree",
+      "load": {
+        "export": "ComponentTreeWrapper"
+      }
+    },
+    {
+      "type": "ConfirmButton",
+      "name": "ConfirmButton",
+      "category": "input",
+      "canHaveChildren": true,
+      "description": "ConfirmButton component",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "ConditionalWrapper",
+      "name": "ConditionalWrapper",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "Conditionally renders children or fallback based on condition prop",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "ConflictResolutionPage",
+      "name": "ConflictResolutionPage",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Display component",
+      "status": "supported",
+      "source": "custom",
+      "jsonCompatible": false,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      },
+      "load": {
+        "path": "@/components/ConflictResolutionPage",
+        "export": "ConflictResolutionPage"
+      }
+    },
+    {
+      "type": "Container",
+      "name": "Container",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "Centered container with max-width",
+      "status": "supported",
+      "source": "atoms",
+      "deleteOldTSX": true
+    },
+    {
+      "type": "ContextMenu",
+      "name": "ContextMenu",
+      "category": "navigation",
+      "canHaveChildren": true,
+      "description": "Right-click context menu",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "converted": true
+      },
+      "deleteOldTSX": true
+    },
+    {
+      "type": "ContextMenu as ShadcnContextMenu,\n  ContextMenuContent,\n  ContextMenuItem,\n  ContextMenuTrigger,\n  ContextMenuSeparator,\n  ContextMenuSub,\n  ContextMenuSubContent,\n  ContextMenuSubTrigger,",
+      "name": "ContextMenu as ShadcnContextMenu,\n  ContextMenuContent,\n  ContextMenuItem,\n  ContextMenuTrigger,\n  ContextMenuSeparator,\n  ContextMenuSub,\n  ContextMenuSubContent,\n  ContextMenuSubTrigger,",
+      "category": "navigation",
+      "canHaveChildren": false,
+      "description": "Navigation component",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "Copy",
+      "name": "Copy",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Copy icon",
+      "status": "supported",
+      "source": "icons",
+      "load": {
+        "export": "Copy"
+      }
+    },
+    {
+      "type": "CopyButton",
+      "name": "CopyButton",
+      "category": "input",
+      "canHaveChildren": true,
+      "description": "CopyButton component",
+      "status": "supported",
+      "source": "atoms"
+    },
+    {
+      "type": "CountBadge",
+      "name": "CountBadge",
+      "category": "feedback",
+      "canHaveChildren": true,
+      "description": "CountBadge component",
+      "status": "supported",
+      "source": "atoms",
+      "deleteOldTSX": true
+    },
+    {
+      "type": "DataCard",
+      "name": "DataCard",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "Data display card with icon, title, and description",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionPriority": "high",
+        "notes": "JSON-based: presentational card with slot for children; icon rendering supported via custom transform."
+      }
+    },
+    {
+      "type": "DataList",
+      "name": "DataList",
+      "category": "data",
+      "canHaveChildren": false,
+      "description": "Styled data list",
+      "status": "supported",
+      "source": "atoms",
+      "deleteOldTSX": true
+    },
+    {
+      "type": "DataSourceBadge",
+      "name": "DataSourceBadge",
+      "category": "feedback",
+      "canHaveChildren": true,
+      "description": "DataSourceBadge component",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "DataSourceCard",
+      "name": "DataSourceCard",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "DataSourceCard component",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "DataSourceCard",
+      "name": "DataSourceCard",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Card component displaying a data source with edit/delete actions",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "DataSourceEditorDialog",
+      "name": "DataSourceEditorDialog",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "DataSourceEditorDialog component",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": false,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "DataSourceEditorDialogWrapper",
+      "name": "DataSourceEditorDialogWrapper",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "JSON wrapper for data source editor dialog with props-driven fields",
+      "status": "json-compatible",
+      "source": "wrappers",
+      "jsonCompatible": true,
+      "wrapperFor": "DataSourceEditorDialog",
+      "load": {
+        "export": "DataSourceEditorDialogWrapper"
+      }
+    },
+    {
+      "type": "DataSourceManager",
+      "name": "DataSourceManager",
+      "category": "data",
+      "canHaveChildren": true,
+      "description": "DataSourceManager organism component",
+      "status": "supported",
+      "source": "organisms",
+      "jsonCompatible": true
+    },
+    {
+      "type": "DataTable",
+      "name": "DataTable",
+      "category": "data",
+      "canHaveChildren": false,
+      "description": "Advanced data table with sorting and filtering",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "DatePicker",
+      "name": "DatePicker",
+      "category": "input",
+      "canHaveChildren": false,
+      "description": "Date selection input",
+      "status": "supported",
+      "source": "atoms",
+      "deleteOldTSX": true
+    },
+    {
+      "type": "DetailRow",
+      "name": "DetailRow",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "DetailRow component",
+      "status": "supported",
+      "source": "atoms",
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Dialog",
+      "name": "Dialog",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "Modal dialog overlay",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": true
+    },
+    {
+      "type": "Dialog,\n  DialogContent,\n  DialogDescription,\n  DialogHeader,\n  DialogTitle,",
+      "name": "Dialog,\n  DialogContent,\n  DialogDescription,\n  DialogHeader,\n  DialogTitle,",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "Layout container component",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle",
+      "name": "Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "Layout container component",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle",
+      "name": "Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "Layout container component",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "DynamicText",
+      "name": "DynamicText",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Text with dynamic formatting (number, currency, date, time, boolean)",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "notes": "JSON component with useFormatValue hook for formatting values"
+      }
+    },
+    {
+      "type": "Divider",
+      "name": "Divider",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Visual section divider",
+      "status": "supported",
+      "source": "atoms",
+      "deleteOldTSX": true
+    },
+    {
+      "type": "DockerBuildDebugger",
+      "name": "DockerBuildDebugger",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Display component",
+      "status": "supported",
+      "source": "custom",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "phase": "Batch C migration",
+        "autoGenerated": false
+      },
+      "load": {
+        "path": "@/lib/json-ui/json-components",
+        "export": "DockerBuildDebugger"
+      }
+    },
+    {
+      "type": "DocumentationView",
+      "name": "DocumentationView",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Display component",
+      "status": "supported",
+      "source": "custom",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "phase": "Batch C migration",
+        "autoGenerated": false
+      },
+      "load": {
+        "path": "@/lib/json-ui/json-components",
+        "export": "DocumentationView"
+      }
+    },
+    {
+      "type": "Dot",
+      "name": "Dot",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "Dot component",
+      "status": "supported",
+      "source": "atoms",
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Download",
+      "name": "Download",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Download icon",
+      "status": "supported",
+      "source": "icons",
+      "load": {
+        "export": "Download"
+      }
+    },
+    {
+      "type": "Drawer",
+      "name": "Drawer",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "Sliding panel overlay",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "DropdownMenu",
+      "name": "DropdownMenu",
+      "category": "navigation",
+      "canHaveChildren": true,
+      "description": "DropdownMenu component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": true
+    },
+    {
+      "type": "Edit",
+      "name": "Edit",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Edit icon",
+      "status": "supported",
+      "source": "icons",
+      "load": {
+        "export": "PencilSimple"
+      }
+    },
+    {
+      "type": "EditorActions",
+      "name": "EditorActions",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "EditorActions component",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "EditorToolbar",
+      "name": "EditorToolbar",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "EditorToolbar component",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "EmptyCanvasState",
+      "name": "EmptyCanvasState",
+      "category": "feedback",
+      "canHaveChildren": true,
+      "description": "EmptyCanvasState organism component",
+      "status": "supported",
+      "source": "organisms",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "EmptyEditorState",
+      "name": "EmptyEditorState",
+      "category": "feedback",
+      "canHaveChildren": true,
+      "description": "EmptyEditorState component",
+      "status": "json-compatible",
+      "source": "molecules",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "EmptyMessage",
+      "name": "EmptyMessage",
+      "category": "feedback",
+      "canHaveChildren": true,
+      "description": "EmptyMessage component",
+      "status": "supported",
+      "source": "atoms",
+      "deleteOldTSX": true
+    },
+    {
+      "type": "EmptyState",
+      "name": "EmptyState",
+      "category": "feedback",
+      "canHaveChildren": true,
+      "description": "Empty state placeholder",
+      "status": "supported",
+      "source": "atoms",
+      "deleteOldTSX": true
+    },
+    {
+      "type": "EmptyStateIcon",
+      "name": "EmptyStateIcon",
+      "category": "feedback",
+      "canHaveChildren": true,
+      "description": "EmptyStateIcon component",
+      "status": "supported",
+      "source": "atoms",
+      "deleteOldTSX": true
+    },
+    {
+      "type": "ErrorBadge",
+      "name": "ErrorBadge",
+      "category": "feedback",
+      "canHaveChildren": false,
+      "description": "Error state badge",
+      "status": "supported",
+      "source": "atoms",
+      "deleteOldTSX": true
+    },
+    {
+      "type": "ErrorPanel",
+      "name": "Error Panel",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "Layout container component",
+      "status": "supported",
+      "source": "custom",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "phase": "Batch C migration",
+        "autoGenerated": false
+      },
+      "load": {
+        "path": "@/lib/json-ui/json-components",
+        "export": "ErrorPanelMain"
+      }
+    },
+    {
+      "type": "Eye",
+      "name": "Eye",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Eye icon",
+      "status": "supported",
+      "source": "icons",
+      "load": {
+        "export": "Eye"
+      }
+    },
+    {
+      "type": "EyeOff",
+      "name": "EyeOff",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "EyeOff icon",
+      "status": "supported",
+      "source": "icons",
+      "load": {
+        "export": "EyeClosed"
+      }
+    },
+    {
+      "type": "FaviconDesigner",
+      "name": "FaviconDesigner",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Display component",
+      "status": "supported",
+      "source": "custom",
+      "jsonCompatible": false,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      },
+      "load": {
+        "path": "@/components/FaviconDesigner",
+        "export": "FaviconDesigner"
+      }
+    },
+    {
+      "type": "FeatureIdeaCloud",
+      "name": "Feature Idea Cloud",
+      "category": "page",
+      "canHaveChildren": true,
+      "description": "Visual idea management tool",
+      "status": "supported",
+      "source": "custom",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "phase": "Batch C migration",
+        "autoGenerated": false
+      },
+      "load": {
+        "path": "@/lib/json-ui/json-components",
+        "export": "FeatureIdeaCloud"
+      }
+    },
+    {
+      "type": "FeatureToggleSettings",
+      "name": "FeatureToggleSettings",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Display component",
+      "status": "supported",
+      "source": "custom",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "phase": "Batch C migration",
+        "autoGenerated": false
+      },
+      "load": {
+        "path": "@/lib/json-ui/json-components",
+        "export": "FeatureToggleSettings"
+      }
+    },
+    {
+      "type": "FileIcon",
+      "name": "FileIcon",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "FileIcon component",
+      "status": "supported",
+      "source": "atoms",
+      "deleteOldTSX": true
+    },
+    {
+      "type": "FileTabs",
+      "name": "FileTabs",
+      "category": "navigation",
+      "canHaveChildren": true,
+      "description": "FileTabs component",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "FileUpload",
+      "name": "FileUpload",
+      "category": "input",
+      "canHaveChildren": false,
+      "description": "File upload control",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true
+    },
+    {
+      "type": "Filter",
+      "name": "Filter",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Filter icon",
+      "status": "supported",
+      "source": "icons",
+      "load": {
+        "export": "Funnel"
+      }
+    },
+    {
+      "type": "FilterInput",
+      "name": "FilterInput",
+      "category": "input",
+      "canHaveChildren": true,
+      "description": "FilterInput component",
+      "status": "supported",
+      "source": "atoms"
+    },
+    {
+      "type": "Flex",
+      "name": "Flex",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "Flexible box layout container",
+      "status": "supported",
+      "source": "atoms",
+      "deleteOldTSX": true
+    },
+    {
+      "type": "FlexLayout",
+      "name": "FlexLayout",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "Flexible box layout with direction, alignment, justify, gap, and wrap props",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true
+    },
+    {
+      "type": "Form",
+      "name": "Form",
+      "category": "input",
+      "canHaveChildren": true,
+      "description": "Form container component",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Form as ShadcnForm,\n  FormControl,\n  FormDescription,\n  FormField,\n  FormItem,\n  FormLabel,\n  FormMessage,",
+      "name": "Form as ShadcnForm,\n  FormControl,\n  FormDescription,\n  FormField,\n  FormItem,\n  FormLabel,\n  FormMessage,",
+      "category": "input",
+      "canHaveChildren": true,
+      "description": "Form input component",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "FormField",
+      "jsonCompatible": true,
+      "source": "atoms"
+    },
+    {
+      "type": "GitHubBuildStatus",
+      "name": "GitHubBuildStatus",
+      "category": "feedback",
+      "canHaveChildren": true,
+      "description": "GitHubBuildStatus component",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": false,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "GitHubBuildStatusWrapper",
+      "name": "GitHubBuildStatusWrapper",
+      "category": "feedback",
+      "canHaveChildren": false,
+      "description": "JSON wrapper for props-driven GitHub build status summary",
+      "status": "json-compatible",
+      "source": "wrappers",
+      "jsonCompatible": true,
+      "wrapperFor": "GitHubBuildStatus",
+      "load": {
+        "export": "GitHubBuildStatusWrapper"
+      }
+    },
+    {
+      "type": "GlowCard",
+      "name": "GlowCard",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "GlowCard component",
+      "status": "supported",
+      "source": "atoms",
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Grid",
+      "name": "Grid",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "Responsive grid layout",
+      "status": "supported",
+      "source": "atoms",
+      "deleteOldTSX": true
+    },
+    {
+      "type": "GridLayout",
+      "name": "GridLayout",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "Responsive grid layout with responsive column configuration",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true
+    },
+    {
+      "type": "Heading",
+      "name": "Heading",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Heading text with level (h1-h6)",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Heart",
+      "name": "Heart",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Heart icon",
+      "status": "supported",
+      "source": "icons",
+      "load": {
+        "export": "Heart"
+      }
+    },
+    {
+      "type": "HelpCircle",
+      "name": "HelpCircle",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "HelpCircle icon",
+      "status": "supported",
+      "source": "icons",
+      "load": {
+        "export": "Question"
+      }
+    },
+    {
+      "type": "HelperText",
+      "name": "HelperText",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "HelperText component",
+      "status": "supported",
+      "source": "atoms",
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Home",
+      "name": "Home",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Home icon",
+      "status": "supported",
+      "source": "icons",
+      "load": {
+        "export": "House"
+      }
+    },
+    {
+      "type": "HoverCard",
+      "name": "HoverCard",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "Card shown on hover",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "HoverCard as ShadcnHoverCard,\n  HoverCardContent,\n  HoverCardTrigger,",
+      "name": "HoverCard as ShadcnHoverCard,\n  HoverCardContent,\n  HoverCardTrigger,",
+      "category": "data",
+      "canHaveChildren": true,
+      "description": "Data display component",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "Icon",
+      "name": "Icon",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Display component",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "IconRenderer",
+      "name": "IconRenderer",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Dynamic icon renderer using Phosphor icons",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "notes": "Pure JSON component - renders Phosphor icons dynamically by name"
+      }
+    },
+    {
+      "type": "IconButton",
+      "name": "IconButton",
+      "category": "input",
+      "canHaveChildren": true,
+      "description": "Button with icon only",
+      "status": "supported",
+      "source": "atoms",
+      "deleteOldTSX": true
+    },
+    {
+      "type": "IconText",
+      "name": "IconText",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "IconText component",
+      "status": "supported",
+      "source": "atoms",
+      "deleteOldTSX": true
+    },
+    {
+      "type": "IconWrapper",
+      "name": "IconWrapper",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "IconWrapper component",
+      "status": "supported",
+      "source": "atoms",
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Image",
+      "name": "Image",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Image element with loading states",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true
+    },
+    {
+      "type": "Info",
+      "name": "Info",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Info icon",
+      "status": "supported",
+      "source": "icons",
+      "load": {
+        "export": "Info"
+      }
+    },
+    {
+      "type": "InfoBox",
+      "name": "InfoBox",
+      "category": "feedback",
+      "canHaveChildren": true,
+      "description": "Information box with icon",
+      "status": "supported",
+      "source": "atoms"
+    },
+    {
+      "type": "InfoPanel",
+      "name": "InfoPanel",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "InfoPanel component",
+      "status": "supported",
+      "source": "atoms",
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Input",
+      "name": "Input",
+      "category": "input",
+      "canHaveChildren": false,
+      "description": "Text input field",
+      "status": "supported",
+      "source": "atoms"
+    },
+    {
+      "type": "InputOTP",
+      "jsonCompatible": true,
+      "source": "atoms"
+    },
+    {
+      "type": "InputOtp",
+      "name": "InputOtp",
+      "category": "input",
+      "canHaveChildren": true,
+      "description": "InputOtp component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": true
+    },
+    {
+      "type": "JSONComponentTreeManager",
+      "name": "JSONComponentTreeManager",
+      "category": "data",
+      "canHaveChildren": true,
+      "description": "Data display component",
+      "status": "supported",
+      "source": "custom",
+      "jsonCompatible": false,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      },
+      "load": {
+        "path": "@/components/JSONComponentTreeManager",
+        "export": "JSONComponentTreeManager"
+      }
+    },
+    {
+      "type": "JSONLambdaDesigner",
+      "name": "JSONLambdaDesigner",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Display component",
+      "status": "supported",
+      "source": "custom",
+      "jsonCompatible": false,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "JSONModelDesigner",
+      "name": "JSONModelDesigner",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Display component",
+      "status": "supported",
+      "source": "custom",
+      "jsonCompatible": false,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "JSONUIShowcase",
+      "name": "JSONUIShowcase",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "JSONUIShowcase organism component",
+      "status": "supported",
+      "source": "organisms",
+      "jsonCompatible": false
+    },
+    {
+      "type": "Kbd",
+      "name": "Kbd",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "Keyboard key display",
+      "status": "supported",
+      "source": "atoms",
+      "deleteOldTSX": true
+    },
+    {
+      "type": "KeyValue",
+      "name": "KeyValue",
+      "category": "data",
+      "canHaveChildren": false,
+      "description": "Key-value pair display",
+      "status": "supported",
+      "source": "atoms"
+    },
+    {
+      "type": "Label",
+      "name": "Label",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Form label element",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true
+    },
+    {
+      "type": "LabelWithBadge",
+      "name": "LabelWithBadge",
+      "category": "feedback",
+      "canHaveChildren": true,
+      "description": "LabelWithBadge component",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": true
+    },
+    {
+      "type": "LazyBarChart",
+      "name": "LazyBarChart",
+      "category": "data",
+      "canHaveChildren": true,
+      "description": "Lazy-loaded Recharts bar chart with runtime library loading",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": false,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "LazyBarChartWrapper",
+      "name": "LazyBarChartWrapper",
+      "category": "data",
+      "canHaveChildren": true,
+      "description": "JSON wrapper for a props-driven bar chart (no lazy hooks)",
+      "status": "json-compatible",
+      "source": "wrappers",
+      "jsonCompatible": true,
+      "wrapperFor": "LazyBarChart",
+      "load": {
+        "export": "LazyBarChartWrapper"
+      }
+    },
+    {
+      "type": "LazyD3BarChart",
+      "name": "LazyD3BarChart",
+      "category": "data",
+      "canHaveChildren": true,
+      "description": "Lazy-loaded D3 bar chart with runtime library loading",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": false,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "LazyD3BarChartWrapper",
+      "name": "LazyD3BarChartWrapper",
+      "category": "data",
+      "canHaveChildren": true,
+      "description": "JSON wrapper for a simple SVG bar chart (no D3 hooks)",
+      "status": "json-compatible",
+      "source": "wrappers",
+      "jsonCompatible": true,
+      "wrapperFor": "LazyD3BarChart",
+      "load": {
+        "export": "LazyD3BarChartWrapper"
+      }
+    },
+    {
+      "type": "LazyInlineMonacoEditor",
+      "name": "LazyInlineMonacoEditor",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "LazyInlineMonacoEditor component",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "LazyLineChart",
+      "name": "LazyLineChart",
+      "category": "data",
+      "canHaveChildren": true,
+      "description": "Lazy-loaded Recharts line chart with runtime library loading",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": false,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "LazyLineChartWrapper",
+      "name": "LazyLineChartWrapper",
+      "category": "data",
+      "canHaveChildren": true,
+      "description": "JSON wrapper for a props-driven line chart (no lazy hooks)",
+      "status": "json-compatible",
+      "source": "wrappers",
+      "jsonCompatible": true,
+      "wrapperFor": "LazyLineChart",
+      "load": {
+        "export": "LazyLineChartWrapper"
+      }
+    },
+    {
+      "type": "LazyMonacoEditor",
+      "name": "LazyMonacoEditor",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "LazyMonacoEditor component",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Link",
+      "name": "Link",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Link icon",
+      "status": "supported",
+      "source": "icons",
+      "load": {
+        "export": "LinkSimple"
+      },
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Link",
+      "name": "Link",
+      "category": "navigation",
+      "canHaveChildren": true,
+      "description": "Hyperlink element",
+      "status": "supported",
+      "source": "atoms",
+      "deleteOldTSX": true
+    },
+    {
+      "type": "List",
+      "name": "List",
+      "category": "data",
+      "canHaveChildren": false,
+      "description": "Generic list renderer with custom items",
+      "status": "supported",
+      "source": "atoms"
+    },
+    {
+      "type": "ListItem",
+      "name": "ListItem",
+      "category": "data",
+      "canHaveChildren": true,
+      "description": "ListItem component",
+      "status": "supported",
+      "source": "atoms"
+    },
+    {
+      "type": "LiveIndicator",
+      "name": "LiveIndicator",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "LiveIndicator component",
+      "status": "supported",
+      "source": "atoms"
+    },
+    {
+      "type": "LoadingFallback",
+      "name": "LoadingFallback",
+      "category": "feedback",
+      "canHaveChildren": true,
+      "description": "LoadingFallback component",
+      "status": "json-compatible",
+      "source": "molecules",
+      "jsonCompatible": true
+    },
+    {
+      "type": "LoadingSpinner",
+      "name": "LoadingSpinner",
+      "category": "feedback",
+      "canHaveChildren": true,
+      "description": "LoadingSpinner component",
+      "status": "supported",
+      "source": "atoms"
+    },
+    {
+      "type": "LoadingState",
+      "name": "LoadingState",
+      "category": "feedback",
+      "canHaveChildren": true,
+      "description": "LoadingState component",
+      "status": "supported",
+      "source": "atoms"
+    },
+    {
+      "type": "Mail",
+      "name": "Mail",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Mail icon",
+      "status": "supported",
+      "source": "icons",
+      "load": {
+        "export": "Envelope"
+      }
+    },
+    {
+      "type": "Menu",
+      "name": "Menu",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Menu icon",
+      "status": "supported",
+      "source": "icons",
+      "load": {
+        "export": "List"
+      },
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Menu",
+      "name": "Menu",
+      "category": "navigation",
+      "canHaveChildren": true,
+      "description": "Menu component",
+      "status": "supported",
+      "source": "atoms",
+      "deleteOldTSX": true,
+      "jsonCompatible": true
+    },
+    {
+      "type": "Menubar",
+      "name": "Menubar",
+      "category": "navigation",
+      "canHaveChildren": true,
+      "description": "Menubar component",
+      "status": "supported",
+      "source": "ui"
+    },
+    {
+      "type": "MetricCard",
+      "name": "MetricCard",
+      "category": "data",
+      "canHaveChildren": false,
+      "description": "Metric display card",
+      "status": "supported",
+      "source": "atoms",
+      "deleteOldTSX": true
+    },
+    {
+      "type": "MetricDisplay",
+      "name": "MetricDisplay",
+      "category": "data",
+      "canHaveChildren": true,
+      "description": "MetricDisplay component",
+      "status": "supported",
+      "source": "atoms"
+    },
+    {
+      "type": "Minus",
+      "name": "Minus",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Minus icon",
+      "status": "supported",
+      "source": "icons",
+      "load": {
+        "export": "Minus"
+      }
+    },
+    {
+      "type": "Modal",
+      "name": "Modal",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "Modal dialog overlay",
+      "status": "supported",
+      "source": "atoms"
+    },
+    {
+      "type": "MonacoEditorPanel",
+      "name": "MonacoEditorPanel",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "MonacoEditorPanel component",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "MoreHorizontal",
+      "name": "MoreHorizontal",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "MoreHorizontal icon",
+      "status": "supported",
+      "source": "icons",
+      "load": {
+        "export": "DotsThree"
+      }
+    },
+    {
+      "type": "MoreVertical",
+      "name": "MoreVertical",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "MoreVertical icon",
+      "status": "supported",
+      "source": "icons",
+      "load": {
+        "export": "DotsThreeVertical"
+      }
+    },
+    {
+      "type": "NavigationGroupHeader",
+      "name": "NavigationGroupHeader",
+      "category": "navigation",
+      "canHaveChildren": true,
+      "description": "NavigationGroupHeader component",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "NavigationItem",
+      "name": "NavigationItem",
+      "category": "navigation",
+      "canHaveChildren": true,
+      "description": "NavigationItem component",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": true
+    },
+    {
+      "type": "NavigationMenu",
+      "source": "organisms",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Notification",
+      "name": "Notification",
+      "category": "feedback",
+      "canHaveChildren": true,
+      "description": "Toast notification",
+      "status": "supported",
+      "source": "atoms"
+    },
+    {
+      "type": "NumberInput",
+      "name": "NumberInput",
+      "category": "input",
+      "canHaveChildren": false,
+      "description": "Numeric input with increment/decrement",
+      "status": "supported",
+      "source": "atoms"
+    },
+    {
+      "type": "PWASettings",
+      "name": "PWASettings",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Display component",
+      "status": "supported",
+      "source": "custom",
+      "jsonCompatible": false,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      },
+      "load": {
+        "path": "@/components/PWASettings",
+        "export": "PWASettings"
+      }
+    },
+    {
+      "type": "PageHeader",
+      "name": "PageHeader",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "PageHeader component",
+      "status": "migrated",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "PageHeaderContent",
+      "name": "PageHeaderContent",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "PageHeaderContent component",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": true
+    },
+    {
+      "type": "Pagination",
+      "name": "Pagination",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "Pagination component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": true
+    },
+    {
+      "type": "Panel",
+      "name": "Panel",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "Container panel with optional header, title, description, and actions",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "PanelHeader",
+      "name": "PanelHeader",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "PanelHeader component",
+      "status": "supported",
+      "source": "atoms",
+      "deleteOldTSX": true
+    },
+    {
+      "type": "PasswordInput",
+      "name": "PasswordInput",
+      "category": "input",
+      "canHaveChildren": true,
+      "description": "Password input with visibility toggle",
+      "status": "supported",
+      "source": "atoms"
+    },
+    {
+      "type": "PersistenceDashboard",
+      "name": "PersistenceDashboard",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Display component",
+      "status": "supported",
+      "source": "custom",
+      "jsonCompatible": false,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      },
+      "load": {
+        "path": "@/components/PersistenceDashboard",
+        "export": "PersistenceDashboard"
+      }
+    },
+    {
+      "type": "PersistenceExample",
+      "name": "PersistenceExample",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Display component",
+      "status": "supported",
+      "source": "custom",
+      "jsonCompatible": false,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      },
+      "load": {
+        "path": "@/components/PersistenceExample",
+        "export": "PersistenceExample"
+      }
+    },
+    {
+      "type": "Plus",
+      "name": "Plus",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Plus icon",
+      "status": "supported",
+      "source": "icons",
+      "load": {
+        "export": "Plus"
+      }
+    },
+    {
+      "type": "Popover",
+      "name": "Popover",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "Popover overlay content",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true
+    },
+    {
+      "type": "Popover, PopoverContent, PopoverTrigger",
+      "name": "Popover, PopoverContent, PopoverTrigger",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Display component",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "Progress",
+      "name": "Progress",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Progress bar indicator",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": true
+    },
+    {
+      "type": "ProgressBar",
+      "name": "ProgressBar",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Linear progress bar",
+      "status": "migrated",
+      "source": "atoms",
+      "jsonCompatible": true
+    },
+    {
+      "type": "ProjectDashboard",
+      "name": "ProjectDashboard",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Display component",
+      "status": "supported",
+      "source": "custom",
+      "jsonCompatible": false,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      },
+      "load": {
+        "path": "@/components/ProjectDashboard",
+        "export": "ProjectDashboard"
+      }
+    },
+    {
+      "type": "PropertyEditor",
+      "name": "PropertyEditor",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "PropertyEditor component",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "PropertyEditorField",
+      "name": "PropertyEditorField",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "PropertyEditorField component",
+      "status": "supported",
+      "source": "atoms",
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Pulse",
+      "name": "Pulse",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "Pulse component",
+      "status": "migrated",
+      "source": "atoms",
+      "jsonCompatible": true
+    },
+    {
+      "type": "QuickActionButton",
+      "name": "QuickActionButton",
+      "category": "input",
+      "canHaveChildren": true,
+      "description": "QuickActionButton component",
+      "status": "migrated",
+      "source": "atoms",
+      "jsonCompatible": true
+    },
+    {
+      "type": "Radio",
+      "name": "Radio",
+      "category": "input",
+      "canHaveChildren": false,
+      "description": "Radio button selection",
+      "status": "migrated",
+      "source": "atoms",
+      "jsonCompatible": true
+    },
+    {
+      "type": "RadioGroup",
+      "name": "RadioGroup",
+      "category": "input",
+      "canHaveChildren": true,
+      "description": "RadioGroup component",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true
+    },
+    {
+      "type": "RangeSlider",
+      "name": "RangeSlider",
+      "category": "input",
+      "canHaveChildren": true,
+      "description": "RangeSlider component",
+      "status": "migrated",
+      "source": "atoms",
+      "jsonCompatible": true
+    },
+    {
+      "type": "Rating",
+      "name": "Rating",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "Star rating component",
+      "status": "migrated",
+      "source": "atoms",
+      "jsonCompatible": true
+    },
+    {
+      "type": "RepeatWrapper",
+      "name": "RepeatWrapper",
+      "category": "layout",
+      "canHaveChildren": false,
+      "description": "Wrapper component for rendering arrays of items with custom render function",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionPriority": "high",
+        "notes": "JSON-based: iteration component with useRepeatWrapper hook for array rendering and empty state handling."
+      }
+    },
+    {
+      "type": "RefreshCw",
+      "name": "RefreshCw",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "RefreshCw icon",
+      "status": "supported",
+      "source": "icons",
+      "load": {
+        "export": "ArrowClockwise"
+      }
+    },
+    {
+      "type": "Resizable",
+      "name": "Resizable",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "Resizable component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": false
+    },
+    {
+      "type": "ResponsiveGrid",
+      "name": "ResponsiveGrid",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "ResponsiveGrid component",
+      "status": "supported",
+      "source": "atoms",
+      "deleteOldTSX": true
+    },
+    {
+      "type": "SassStylesShowcase",
+      "name": "SassStylesShowcase",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Display component",
+      "status": "supported",
+      "source": "custom",
+      "jsonCompatible": false,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      },
+      "load": {
+        "path": "@/components/SassStylesShowcase",
+        "export": "SassStylesShowcase"
+      }
+    },
+    {
+      "type": "Save",
+      "name": "Save",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Save icon",
+      "status": "supported",
+      "source": "icons",
+      "load": {
+        "export": "FloppyDisk"
+      }
+    },
+    {
+      "type": "SaveIndicator",
+      "name": "SaveIndicator",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "Save status indicator with hook-driven state",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": false,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "SaveIndicatorWrapper",
+      "name": "SaveIndicatorWrapper",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "JSON wrapper for save status indicator with pure-props API",
+      "status": "json-compatible",
+      "source": "wrappers",
+      "jsonCompatible": true,
+      "wrapperFor": "SaveIndicator",
+      "load": {
+        "export": "SaveIndicatorWrapper"
+      }
+    },
+    {
+      "type": "SchemaCodeViewer",
+      "name": "SchemaCodeViewer",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "SchemaCodeViewer organism component",
+      "status": "supported",
+      "source": "organisms",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "SchemaEditorCanvas",
+      "name": "SchemaEditorCanvas",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "SchemaEditorCanvas organism component",
+      "status": "supported",
+      "source": "organisms",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "SchemaEditorLayout",
+      "name": "SchemaEditorLayout",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "SchemaEditorLayout organism component",
+      "status": "supported",
+      "source": "organisms",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "SchemaEditorPropertiesPanel",
+      "name": "SchemaEditorPropertiesPanel",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "SchemaEditorPropertiesPanel organism component",
+      "status": "supported",
+      "source": "organisms",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "SchemaEditorSidebar",
+      "name": "SchemaEditorSidebar",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "SchemaEditorSidebar organism component",
+      "status": "supported",
+      "source": "organisms",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "SchemaEditorStatusBar",
+      "name": "SchemaEditorStatusBar",
+      "category": "feedback",
+      "canHaveChildren": true,
+      "description": "SchemaEditorStatusBar organism component",
+      "status": "supported",
+      "source": "organisms",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "SchemaEditorToolbar",
+      "name": "SchemaEditorToolbar",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "SchemaEditorToolbar organism component",
+      "status": "supported",
+      "source": "organisms",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "ScrollArea",
+      "name": "ScrollArea",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "Scrollable container area",
+      "status": "migrated",
+      "source": "atoms",
+      "jsonCompatible": true
+    },
+    {
+      "type": "ScrollAreaThumb",
+      "name": "ScrollAreaThumb",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "ScrollArea thumb indicator",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true
+    },
+    {
+      "type": "Search",
+      "name": "Search",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Search icon",
+      "status": "supported",
+      "source": "icons",
+      "load": {
+        "export": "MagnifyingGlass"
+      }
+    },
+    {
+      "type": "SearchBar",
+      "name": "SearchBar",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "SearchBar component",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "SearchInput",
+      "name": "SearchInput",
+      "category": "custom",
+      "canHaveChildren": false,
+      "description": "Search input with icon",
+      "status": "migrated",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Section",
+      "name": "Section",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "Section component",
+      "status": "supported",
+      "source": "atoms",
+      "deleteOldTSX": true
+    },
+    {
+      "type": "SeedDataManager",
+      "name": "SeedDataManager",
+      "category": "data",
+      "canHaveChildren": true,
+      "description": "Seed data management with app-level hook state",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": false,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "SeedDataManagerWrapper",
+      "name": "SeedDataManagerWrapper",
+      "category": "data",
+      "canHaveChildren": true,
+      "description": "JSON wrapper for seed data management with props-driven state",
+      "status": "json-compatible",
+      "source": "wrappers",
+      "jsonCompatible": true,
+      "wrapperFor": "SeedDataManager",
+      "load": {
+        "export": "SeedDataManagerWrapper"
+      }
+    },
+    {
+      "type": "SeedDataStatus",
+      "name": "SeedDataStatus",
+      "category": "feedback",
+      "canHaveChildren": true,
+      "description": "SeedDataStatus component",
+      "status": "migrated",
+      "source": "atoms",
+      "jsonCompatible": true
+    },
+    {
+      "type": "Select",
+      "name": "Select",
+      "category": "input",
+      "canHaveChildren": false,
+      "description": "Dropdown select control",
+      "status": "migrated",
+      "source": "atoms",
+      "jsonCompatible": true
+    },
+    {
+      "type": "Separator",
+      "name": "Separator",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Visual divider line",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Separator as ShadcnSeparator",
+      "name": "Separator as ShadcnSeparator",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Display component",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "Settings",
+      "name": "Settings",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Settings icon",
+      "status": "supported",
+      "source": "icons",
+      "load": {
+        "export": "Gear"
+      }
+    },
+    {
+      "type": "Share",
+      "name": "Share",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Share icon",
+      "status": "supported",
+      "source": "icons",
+      "load": {
+        "export": "ShareNetwork"
+      }
+    },
+    {
+      "type": "Sheet",
+      "name": "Sheet",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "Sheet component",
+      "status": "supported",
+      "source": "ui"
+    },
+    {
+      "type": "Sidebar",
+      "name": "Sidebar",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "Sidebar component",
+      "status": "supported",
+      "source": "ui"
+    },
+    {
+      "type": "SidebarTrigger",
+      "name": "SidebarTrigger",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "Layout container component",
+      "status": "supported",
+      "source": "organisms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "Skeleton",
+      "name": "Skeleton",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Loading skeleton placeholder",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Slider",
+      "name": "Slider",
+      "category": "input",
+      "canHaveChildren": false,
+      "description": "Numeric range slider",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "autoGenerated": true
+      },
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Sonner",
+      "name": "Sonner",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "Sonner component",
+      "status": "supported",
+      "source": "ui"
+    },
+    {
+      "type": "Spacer",
+      "name": "Spacer",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "Spacer component",
+      "status": "supported",
+      "source": "atoms",
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Sparkle",
+      "name": "Sparkle",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "Sparkle component",
+      "status": "migrated",
+      "source": "atoms",
+      "jsonCompatible": true
+    },
+    {
+      "type": "Spinner",
+      "name": "Spinner",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Loading spinner",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "autoGenerated": true
+      },
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Stack",
+      "name": "Stack",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "Vertical or horizontal stack layout",
+      "status": "supported",
+      "source": "atoms",
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Star",
+      "name": "Star",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Star icon",
+      "status": "supported",
+      "source": "icons",
+      "load": {
+        "export": "Star"
+      }
+    },
+    {
+      "type": "StatCard",
+      "name": "StatCard",
+      "category": "data",
+      "canHaveChildren": false,
+      "description": "Statistic card display",
+      "status": "supported",
+      "source": "atoms",
+      "deleteOldTSX": true
+    },
+    {
+      "type": "StatusBadge",
+      "name": "StatusBadge",
+      "category": "feedback",
+      "canHaveChildren": false,
+      "description": "Status indicator badge",
+      "status": "supported",
+      "source": "atoms",
+      "deleteOldTSX": true
+    },
+    {
+      "type": "StatusIcon",
+      "name": "StatusIcon",
+      "category": "feedback",
+      "canHaveChildren": false,
+      "description": "Status indicator icon",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "autoGenerated": true
+      },
+      "deleteOldTSX": true
+    },
+    {
+      "type": "StepIndicator",
+      "name": "StepIndicator",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "StepIndicator component",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "autoGenerated": true
+      },
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Stepper",
+      "name": "Stepper",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "Step-by-step navigation",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "autoGenerated": true
+      },
+      "deleteOldTSX": true
+    },
+    {
+      "type": "StorageSettings",
+      "name": "StorageSettings",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "Storage settings controls with hook-driven state",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": false,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "StorageSettingsWrapper",
+      "name": "StorageSettingsWrapper",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "JSON wrapper for storage settings controls with props-driven state",
+      "status": "json-compatible",
+      "source": "wrappers",
+      "jsonCompatible": true,
+      "wrapperFor": "StorageSettings",
+      "load": {
+        "export": "StorageSettingsWrapper"
+      }
+    },
+    {
+      "type": "StyleDesigner",
+      "name": "StyleDesigner",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Display component",
+      "status": "supported",
+      "source": "custom",
+      "jsonCompatible": false,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "Switch",
+      "name": "Switch",
+      "category": "input",
+      "canHaveChildren": false,
+      "description": "Toggle switch control",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "autoGenerated": true
+      },
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Switch as ShadcnSwitch",
+      "name": "Switch as ShadcnSwitch",
+      "category": "input",
+      "canHaveChildren": false,
+      "description": "Form input component",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "TabIcon",
+      "name": "TabIcon",
+      "category": "navigation",
+      "canHaveChildren": true,
+      "description": "TabIcon component",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "Table",
+      "name": "Table",
+      "category": "data",
+      "canHaveChildren": false,
+      "description": "Data table",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "autoGenerated": true
+      },
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Table,\n  TableBody,\n  TableCell,\n  TableHead,\n  TableHeader,\n  TableRow,",
+      "name": "Table,\n  TableBody,\n  TableCell,\n  TableHead,\n  TableHeader,\n  TableRow,",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "Layout container component",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "TableBody",
+      "name": "TableBody",
+      "category": "data",
+      "canHaveChildren": true,
+      "description": "Table body wrapper",
+      "status": "supported",
+      "source": "ui"
+    },
+    {
+      "type": "TableCell",
+      "name": "TableCell",
+      "category": "data",
+      "canHaveChildren": true,
+      "description": "Table body cell",
+      "status": "supported",
+      "source": "ui"
+    },
+    {
+      "type": "TableHead",
+      "name": "TableHead",
+      "category": "data",
+      "canHaveChildren": true,
+      "description": "Table header cell",
+      "status": "supported",
+      "source": "ui"
+    },
+    {
+      "type": "TableHeader",
+      "name": "TableHeader",
+      "category": "data",
+      "canHaveChildren": true,
+      "description": "Table header wrapper",
+      "status": "supported",
+      "source": "ui"
+    },
+    {
+      "type": "TableRow",
+      "name": "TableRow",
+      "category": "data",
+      "canHaveChildren": true,
+      "description": "Table row container",
+      "status": "supported",
+      "source": "ui"
+    },
+    {
+      "type": "Tabs",
+      "name": "Tabs",
+      "category": "navigation",
+      "canHaveChildren": true,
+      "description": "Tabbed interface container",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "autoGenerated": true
+      },
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Tabs, TabsContent, TabsList, TabsTrigger",
+      "name": "Tabs, TabsContent, TabsList, TabsTrigger",
+      "category": "navigation",
+      "canHaveChildren": true,
+      "description": "Navigation component",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "Tabs, TabsContent, TabsList, TabsTrigger",
+      "name": "Tabs, TabsContent, TabsList, TabsTrigger",
+      "category": "navigation",
+      "canHaveChildren": true,
+      "description": "Navigation component",
+      "status": "supported",
+      "source": "organisms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "TabsContent",
+      "name": "TabsContent",
+      "category": "navigation",
+      "canHaveChildren": true,
+      "description": "Navigation component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      },
+      "load": {
+        "path": "@/components/ui/tabs",
+        "export": "TabsContent"
+      }
+    },
+    {
+      "type": "TabsList",
+      "name": "TabsList",
+      "category": "navigation",
+      "canHaveChildren": true,
+      "description": "Navigation component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      },
+      "load": {
+        "path": "@/components/ui/tabs",
+        "export": "TabsList"
+      }
+    },
+    {
+      "type": "TabsTrigger",
+      "name": "TabsTrigger",
+      "category": "navigation",
+      "canHaveChildren": true,
+      "description": "Navigation component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      },
+      "load": {
+        "path": "@/components/ui/tabs",
+        "export": "TabsTrigger"
+      }
+    },
+    {
+      "type": "Tag",
+      "name": "Tag",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Removable tag or chip",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "autoGenerated": true
+      },
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Text",
+      "name": "Text",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Text content with typography variants",
+      "status": "supported",
+      "source": "atoms",
+      "deleteOldTSX": true
+    },
+    {
+      "type": "TextArea",
+      "name": "TextArea",
+      "category": "input",
+      "canHaveChildren": false,
+      "description": "Multi-line text input",
+      "status": "deprecated",
+      "source": "atoms",
+      "deprecated": {
+        "replacedBy": "Textarea",
+        "message": "Prefer the shadcn/ui Textarea component for JSON schemas."
+      },
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "autoGenerated": true
+      },
+      "deleteOldTSX": true
+    },
+    {
+      "type": "TextGradient",
+      "name": "TextGradient",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "TextGradient component",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "autoGenerated": true
+      },
+      "deleteOldTSX": true
+    },
+    {
+      "type": "TextHighlight",
+      "name": "TextHighlight",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "TextHighlight component",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "autoGenerated": true
+      },
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Textarea",
+      "name": "Textarea",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Textarea component",
+      "status": "supported",
+      "source": "ui"
+    },
+    {
+      "type": "Timeline",
+      "name": "Timeline",
+      "category": "data",
+      "canHaveChildren": false,
+      "description": "Timeline visualization",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "autoGenerated": true
+      },
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Timestamp",
+      "name": "Timestamp",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "Timestamp component",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "autoGenerated": true
+      },
+      "deleteOldTSX": true
+    },
+    {
+      "type": "TipsCard",
+      "name": "TipsCard",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "TipsCard component",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "Toggle",
+      "name": "Toggle",
+      "category": "input",
+      "canHaveChildren": true,
+      "description": "Toggle button control",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "autoGenerated": true
+      },
+      "deleteOldTSX": true
+    },
+    {
+      "type": "ToggleGroup",
+      "name": "ToggleGroup",
+      "category": "input",
+      "canHaveChildren": true,
+      "description": "ToggleGroup component",
+      "status": "supported",
+      "source": "ui"
+    },
+    {
+      "type": "ToolbarActions",
+      "name": "ToolbarActions",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "ToolbarActions organism component",
+      "status": "supported",
+      "source": "organisms",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "ToolbarButton",
+      "name": "ToolbarButton",
+      "category": "input",
+      "canHaveChildren": true,
+      "description": "ToolbarButton component",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Tooltip",
+      "name": "Tooltip",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "Tooltip overlay text",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "autoGenerated": true
+      },
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Tooltip as TooltipPrimitive,\n  TooltipContent,\n  TooltipProvider,\n  TooltipTrigger,",
+      "name": "Tooltip as TooltipPrimitive,\n  TooltipContent,\n  TooltipProvider,\n  TooltipTrigger,",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Display component",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "Tooltip, TooltipContent, TooltipProvider, TooltipTrigger",
+      "name": "Tooltip, TooltipContent, TooltipProvider, TooltipTrigger",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Display component",
+      "status": "supported",
+      "source": "atoms",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "TooltipContent, TooltipTrigger",
+      "name": "TooltipContent, TooltipTrigger",
+      "category": "custom",
+      "canHaveChildren": true,
+      "description": "Custom component",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "Trash",
+      "name": "Trash",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Trash icon",
+      "status": "supported",
+      "source": "icons",
+      "load": {
+        "export": "Trash"
+      }
+    },
+    {
+      "type": "TreeCard",
+      "name": "TreeCard",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "TreeCard component",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": true
+    },
+    {
+      "type": "TreeFormDialog",
+      "name": "TreeFormDialog",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "TreeFormDialog component",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "TreeIcon",
+      "name": "TreeIcon",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "TreeIcon component",
+      "status": "supported",
+      "source": "atoms",
+      "deleteOldTSX": true
+    },
+    {
+      "type": "TreeListHeader",
+      "name": "TreeListHeader",
+      "category": "data",
+      "canHaveChildren": true,
+      "description": "TreeListHeader component",
+      "status": "supported",
+      "source": "molecules",
+      "jsonCompatible": true
+    },
+    {
+      "type": "TreeListPanel",
+      "name": "TreeListPanel",
+      "category": "data",
+      "canHaveChildren": true,
+      "description": "TreeListPanel organism component",
+      "status": "supported",
+      "source": "organisms",
+      "jsonCompatible": true,
+      "deleteOldTSX": true
+    },
+    {
+      "type": "Upload",
+      "name": "Upload",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Upload icon",
+      "status": "supported",
+      "source": "icons",
+      "load": {
+        "export": "Upload"
+      }
+    },
+    {
+      "type": "User",
+      "name": "User",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "User icon",
+      "status": "supported",
+      "source": "icons",
+      "load": {
+        "export": "User"
+      }
+    },
+    {
+      "type": "X",
+      "name": "X",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "X icon",
+      "status": "supported",
+      "source": "icons",
+      "load": {
+        "export": "X"
+      }
+    },
+    {
+      "type": "accordion",
+      "name": "accordion",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Display component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "alert",
+      "name": "alert",
+      "category": "feedback",
+      "canHaveChildren": true,
+      "description": "Feedback and status component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "article",
+      "name": "article",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "Semantic article container",
+      "status": "supported",
+      "source": "primitive"
+    },
+    {
+      "type": "aspect-ratio",
+      "name": "aspect-ratio",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Display component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "avatar",
+      "name": "avatar",
+      "category": "data",
+      "canHaveChildren": true,
+      "description": "Data display component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "badge",
+      "name": "badge",
+      "category": "feedback",
+      "canHaveChildren": false,
+      "description": "Feedback and status component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "breadcrumb",
+      "name": "breadcrumb",
+      "category": "navigation",
+      "canHaveChildren": true,
+      "description": "Navigation component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": false,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true,
+        "notes": "Complex logic - needs wrapper"
+      },
+      "load": {
+        "path": "@/components/ui/breadcrumb",
+        "export": "breadcrumb"
+      }
+    },
+    {
+      "type": "button",
+      "name": "button",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Display component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "buttonVariants",
+      "name": "buttonVariants",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Display component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "card",
+      "name": "card",
+      "category": "data",
+      "canHaveChildren": true,
+      "description": "Data display component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "checkbox",
+      "name": "checkbox",
+      "category": "input",
+      "canHaveChildren": false,
+      "description": "Form input component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "collapsible",
+      "name": "collapsible",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Display component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "create",
+      "source": "actions",
+      "jsonCompatible": true
+    },
+    {
+      "type": "delete",
+      "source": "actions",
+      "jsonCompatible": true
+    },
+    {
+      "type": "dialog",
+      "name": "dialog",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Display component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": false,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true,
+        "notes": "Complex logic - needs wrapper"
+      },
+      "load": {
+        "path": "@/components/ui/dialog",
+        "export": "dialog"
+      }
+    },
+    {
+      "type": "div",
+      "name": "div",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "Generic block container",
+      "status": "supported",
+      "source": "primitive"
+    },
+    {
+      "type": "drawer",
+      "name": "drawer",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Display component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": false,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true,
+        "notes": "Complex logic - needs wrapper"
+      },
+      "load": {
+        "path": "@/components/ui/drawer",
+        "export": "drawer"
+      }
+    },
+    {
+      "type": "footer",
+      "name": "footer",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "Semantic footer container",
+      "status": "supported",
+      "source": "primitive"
+    },
+    {
+      "type": "header",
+      "name": "header",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "Semantic header container",
+      "status": "supported",
+      "source": "primitive"
+    },
+    {
+      "type": "hover-card",
+      "name": "hover-card",
+      "category": "data",
+      "canHaveChildren": true,
+      "description": "Data display component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "input",
+      "name": "input",
+      "category": "input",
+      "canHaveChildren": false,
+      "description": "Form input component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "input-otp",
+      "name": "input-otp",
+      "category": "input",
+      "canHaveChildren": false,
+      "description": "Form input component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": false,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true,
+        "notes": "Contains hooks - needs wrapper"
+      },
+      "load": {
+        "path": "@/components/ui/input-otp",
+        "export": "input-otp"
+      }
+    },
+    {
+      "type": "kv",
+      "source": "dataSources",
+      "jsonCompatible": true
+    },
+    {
+      "type": "label",
+      "name": "label",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Display component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "main",
+      "name": "main",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "Semantic main container",
+      "status": "supported",
+      "source": "primitive"
+    },
+    {
+      "type": "navigate",
+      "source": "actions",
+      "jsonCompatible": true
+    },
+    {
+      "type": "popover",
+      "name": "popover",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Display component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "progress",
+      "name": "progress",
+      "category": "feedback",
+      "canHaveChildren": false,
+      "description": "Feedback and status component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "radio-group",
+      "name": "radio-group",
+      "category": "input",
+      "canHaveChildren": false,
+      "description": "Form input component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "resizable",
+      "name": "resizable",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Display component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "scroll-area",
+      "name": "scroll-area",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Display component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "section",
+      "name": "section",
+      "category": "layout",
+      "canHaveChildren": true,
+      "description": "Semantic section container",
+      "status": "supported",
+      "source": "primitive"
+    },
+    {
+      "type": "separator",
+      "name": "separator",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Display component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "sheet",
+      "name": "sheet",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Display component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": false,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true,
+        "notes": "Complex logic - needs wrapper"
+      },
+      "load": {
+        "path": "@/components/ui/sheet",
+        "export": "sheet"
+      }
+    },
+    {
+      "type": "single",
+      "source": "layouts",
+      "jsonCompatible": true
+    },
+    {
+      "type": "skeleton",
+      "name": "skeleton",
+      "category": "feedback",
+      "canHaveChildren": true,
+      "description": "Feedback and status component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "slider",
+      "name": "slider",
+      "category": "input",
+      "canHaveChildren": false,
+      "description": "Form input component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": false,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true,
+        "notes": "Contains hooks - needs wrapper"
+      },
+      "load": {
+        "path": "@/components/ui/slider",
+        "export": "slider"
+      }
+    },
+    {
+      "type": "sonner",
+      "name": "sonner",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Display component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": false,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true,
+        "notes": "Contains hooks - needs wrapper"
+      },
+      "load": {
+        "path": "@/components/ui/sonner",
+        "export": "sonner"
+      }
+    },
+    {
+      "type": "switch",
+      "name": "switch",
+      "category": "input",
+      "canHaveChildren": false,
+      "description": "Form input component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "table",
+      "name": "table",
+      "category": "navigation",
+      "canHaveChildren": true,
+      "description": "Navigation component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": false,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true,
+        "notes": "Complex logic - needs wrapper"
+      },
+      "load": {
+        "path": "@/components/ui/table",
+        "export": "table"
+      }
+    },
+    {
+      "type": "tabs",
+      "name": "tabs",
+      "category": "navigation",
+      "canHaveChildren": true,
+      "description": "Navigation component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "textarea",
+      "name": "textarea",
+      "category": "input",
+      "canHaveChildren": true,
+      "description": "Form input component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "toggle",
+      "name": "toggle",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Display component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "toggleVariants",
+      "name": "toggleVariants",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Display component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "tooltip",
+      "name": "tooltip",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Display component",
+      "status": "supported",
+      "source": "ui",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-18",
+        "autoGenerated": true
+      }
+    },
+    {
+      "type": "update",
+      "source": "actions",
+      "jsonCompatible": true
+    },
+    {
+      "type": "ErrorPanelHeader",
+      "name": "ErrorPanelHeader",
+      "category": "custom",
+      "canHaveChildren": false,
+      "description": "Error panel header with action buttons",
+      "status": "supported",
+      "source": "feature-components",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "phase": "9",
+        "feature": "error-panel",
+        "notes": "Reusable header component"
+      }
+    },
+    {
+      "type": "ErrorPanelEmptyState",
+      "name": "ErrorPanelEmptyState",
+      "category": "feedback",
+      "canHaveChildren": false,
+      "description": "Error panel empty state with conditional rendering",
+      "status": "supported",
+      "source": "feature-components",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "phase": "9",
+        "feature": "error-panel"
+      }
+    },
+    {
+      "type": "PWAUpdateSection",
+      "name": "PWAUpdateSection",
+      "category": "custom",
+      "canHaveChildren": false,
+      "description": "PWA update settings section",
+      "status": "supported",
+      "source": "feature-components",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "phase": "9",
+        "feature": "pwa-settings"
+      }
+    },
+    {
+      "type": "PWACacheSection",
+      "name": "PWACacheSection",
+      "category": "custom",
+      "canHaveChildren": false,
+      "description": "PWA cache settings section",
+      "status": "supported",
+      "source": "feature-components",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "phase": "9",
+        "feature": "pwa-settings"
+      }
+    },
+    {
+      "type": "ConflictResolutionStats",
+      "name": "ConflictResolutionStats",
+      "category": "data",
+      "canHaveChildren": false,
+      "description": "Conflict resolution statistics cards",
+      "status": "supported",
+      "source": "feature-components",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "phase": "9",
+        "feature": "conflict-resolution"
+      }
+    },
+    {
+      "type": "HowItWorksCard",
+      "name": "HowItWorksCard",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Instructional card with numbered steps",
+      "status": "supported",
+      "source": "feature-components",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "phase": "9",
+        "feature": "data-binding-designer"
+      }
+    },
+    {
+      "type": "SearchResults",
+      "name": "SearchResults",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Search results list with categories",
+      "status": "supported",
+      "source": "feature-components",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "phase": "9",
+        "feature": "global-search"
+      }
+    },
+    {
+      "type": "SearchEmptyState",
+      "name": "SearchEmptyState",
+      "category": "feedback",
+      "canHaveChildren": false,
+      "description": "Search empty state message",
+      "status": "supported",
+      "source": "feature-components",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "phase": "9",
+        "feature": "global-search"
+      }
+    },
+    {
+      "type": "ComprehensiveDemoHeader",
+      "name": "ComprehensiveDemoHeader",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Feature demo header with gradient text",
+      "status": "supported",
+      "source": "feature-components",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "phase": "9",
+        "feature": "comprehensive-demo"
+      }
+    },
+    {
+      "type": "ComprehensiveDemoStatsRow",
+      "name": "ComprehensiveDemoStatsRow",
+      "category": "data",
+      "canHaveChildren": false,
+      "description": "Statistics cards for task tracking",
+      "status": "supported",
+      "source": "feature-components",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "phase": "9",
+        "feature": "comprehensive-demo"
+      }
+    },
+    {
+      "type": "ConfigCard",
+      "name": "ConfigCard",
+      "category": "custom",
+      "canHaveChildren": false,
+      "description": "Configuration input card",
+      "status": "supported",
+      "source": "feature-components",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "phase": "9",
+        "feature": "project-settings",
+        "notes": "Reusable configuration pattern"
+      }
+    },
+    {
+      "type": "StatusCard",
+      "name": "StatusCard",
+      "category": "feedback",
+      "canHaveChildren": false,
+      "description": "Status indicator card with icon",
+      "status": "supported",
+      "source": "feature-components",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "phase": "9",
+        "notes": "Reusable status pattern"
+      }
+    },
+    {
+      "type": "InfoSection",
+      "name": "InfoSection",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "Information section with key-value pairs",
+      "status": "supported",
+      "source": "feature-components",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "phase": "9",
+        "notes": "Reusable info display pattern"
+      }
+    },
+    {
+      "type": "ListHeader",
+      "name": "ListHeader",
+      "category": "display",
+      "canHaveChildren": false,
+      "description": "List header with count badge",
+      "status": "supported",
+      "source": "feature-components",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "phase": "9",
+        "notes": "Reusable list header pattern"
+      }
+    },
+    {
+      "type": "SchemaEditorPage",
+      "name": "Schema Editor Page",
+      "category": "layout",
+      "canHaveChildren": false,
+      "description": "Schema editor page wrapper",
+      "status": "supported",
+      "source": "components",
+      "jsonCompatible": true
+    },
+    {
+      "type": "KeyboardShortcutsDialog",
+      "name": "Keyboard Shortcuts Dialog",
+      "category": "feedback",
+      "canHaveChildren": false,
+      "description": "Dialog for displaying keyboard shortcuts",
+      "status": "supported",
+      "source": "components",
+      "jsonCompatible": true
+    },
+    {
+      "type": "PreloadIndicator",
+      "name": "Preload Indicator",
+      "category": "feedback",
+      "canHaveChildren": false,
+      "description": "Route preload status indicator",
+      "status": "supported",
+      "source": "components",
+      "jsonCompatible": true
+    },
+    {
+      "type": "PWAStatusBar",
+      "name": "PWA Status Bar",
+      "category": "feedback",
+      "canHaveChildren": false,
+      "description": "PWA status bar component",
+      "status": "supported",
+      "source": "components",
+      "jsonCompatible": true
+    },
+    {
+      "type": "PWAUpdatePrompt",
+      "name": "PWA Update Prompt",
+      "category": "feedback",
+      "canHaveChildren": false,
+      "description": "PWA update prompt dialog",
+      "status": "supported",
+      "source": "components",
+      "jsonCompatible": true
+    },
+    {
+      "type": "PWAInstallPrompt",
+      "name": "PWA Install Prompt",
+      "category": "feedback",
+      "canHaveChildren": false,
+      "description": "PWA installation prompt",
+      "status": "supported",
+      "source": "components",
+      "jsonCompatible": true
+    },
+    {
+      "type": "ConflictCard",
+      "name": "Conflict Card",
+      "category": "display",
+      "canHaveChildren": true,
+      "description": "Card for displaying conflict information",
+      "status": "supported",
+      "source": "components",
+      "jsonCompatible": true
+    },
+    {
+      "type": "ConflictIndicator",
+      "name": "Conflict Indicator",
+      "category": "feedback",
+      "canHaveChildren": false,
+      "description": "Indicator for conflicts",
+      "status": "supported",
+      "source": "components",
+      "jsonCompatible": true
+    },
+    {
+      "type": "PreviewDialog",
+      "name": "Preview Dialog",
+      "category": "layout",
+      "canHaveChildren": false,
+      "description": "Dialog for previewing content",
+      "status": "supported",
+      "source": "components",
+      "jsonCompatible": true
+    },
+    {
+      "type": "NotFoundPage",
+      "name": "Not Found Page",
+      "category": "layout",
+      "canHaveChildren": false,
+      "description": "404 page component",
+      "status": "supported",
+      "source": "components",
+      "jsonCompatible": true
+    },
+    {
+      "type": "GlobalSearch",
+      "name": "Global Search",
+      "category": "input",
+      "canHaveChildren": false,
+      "description": "Global search dialog",
+      "status": "supported",
+      "source": "components",
+      "jsonCompatible": true
+    },
+    {
+      "type": "AtomicComponentShowcase",
+      "name": "Atomic Component Showcase",
+      "category": "layout",
+      "canHaveChildren": false,
+      "description": "Showcase for atomic components",
+      "status": "supported",
+      "source": "components",
+      "jsonCompatible": true
+    },
+    {
+      "type": "JSONUIShowcasePage",
+      "name": "JSON UI Showcase Page",
+      "category": "layout",
+      "canHaveChildren": false,
+      "description": "JSON UI showcase page",
+      "status": "supported",
+      "source": "components",
+      "jsonCompatible": true
+    },
+    {
+      "type": "JSONDemoPage",
+      "name": "JSON Demo Page",
+      "category": "layout",
+      "canHaveChildren": false,
+      "description": "JSON demo page",
+      "status": "supported",
+      "source": "components",
+      "jsonCompatible": true
+    },
+    {
+      "type": "DashboardDemoPage",
+      "name": "Dashboard Demo Page",
+      "category": "layout",
+      "canHaveChildren": false,
+      "description": "Dashboard demo page",
+      "status": "supported",
+      "source": "components",
+      "jsonCompatible": true
+    },
+    {
+      "type": "ComprehensiveDemoPage",
+      "name": "Comprehensive Demo Page",
+      "category": "layout",
+      "canHaveChildren": false,
+      "description": "Comprehensive demo page",
+      "status": "supported",
+      "source": "components",
+      "jsonCompatible": true
+    },
+    {
+      "type": "TemplateExplorer",
+      "name": "Template Explorer",
+      "category": "layout",
+      "canHaveChildren": false,
+      "description": "Template explorer component",
+      "status": "supported",
+      "source": "components",
+      "jsonCompatible": true
+    },
+    {
+      "type": "ProjectManager",
+      "name": "Project Manager",
+      "category": "layout",
+      "canHaveChildren": false,
+      "description": "Project manager interface",
+      "status": "supported",
+      "source": "components",
+      "jsonCompatible": true
+    },
+    {
+      "type": "StorageSettingsPanel",
+      "name": "Storage Settings Panel",
+      "category": "layout",
+      "canHaveChildren": false,
+      "description": "Panel for storage settings",
+      "status": "supported",
+      "source": "components",
+      "jsonCompatible": true
+    },
+    {
+      "type": "ComponentTreeDemoPage",
+      "name": "Component Tree Demo Page",
+      "category": "page",
+      "canHaveChildren": true,
+      "description": "Demo page for component tree visualization",
+      "status": "supported",
+      "source": "components",
+      "jsonCompatible": true
+    },
+    {
+      "type": "JsonFlaskDesigner",
+      "name": "JSON Flask Designer",
+      "category": "page",
+      "canHaveChildren": true,
+      "description": "Designer for Flask application configuration using JSON",
+      "status": "supported",
+      "source": "components",
+      "jsonCompatible": true
+    },
+    {
+      "type": "JsonStyleDesigner",
+      "name": "JSON Style Designer",
+      "category": "page",
+      "canHaveChildren": true,
+      "description": "Designer for styling configuration using JSON",
+      "status": "supported",
+      "source": "components",
+      "jsonCompatible": true
+    },
+    {
+      "type": "DataBindingDesigner",
+      "name": "Data Binding Designer",
+      "category": "page",
+      "canHaveChildren": true,
+      "description": "Designer for data binding configuration",
+      "status": "supported",
+      "source": "custom",
+      "jsonCompatible": true,
+      "metadata": {
+        "conversionDate": "2026-01-21",
+        "phase": "Batch C migration",
+        "autoGenerated": false
+      },
+      "load": {
+        "path": "@/lib/json-ui/json-components",
+        "export": "DataBindingDesigner"
+      }
+    }
+  ],
+  "statistics": {
+    "total": 376,
+    "jsonCompatible": 226,
+    "coverage": "60%"
+  }
+}

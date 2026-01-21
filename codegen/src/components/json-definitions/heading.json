@@ -1,0 +1,15 @@
+{
+  "id": "heading-root",
+  "type": "Heading",
+  "bindings": {
+    "level": "data.level || 1",
+    "className": "data.className"
+  },
+  "children": [
+    {
+      "id": "heading-content",
+      "type": "slot",
+      "slot": "children"
+    }
+  ]
+}

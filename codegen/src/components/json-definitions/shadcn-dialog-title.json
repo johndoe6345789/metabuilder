@@ -1,0 +1,18 @@
+{
+  "id": "shadcn-dialog-title",
+  "type": "ShadcnDialogTitle",
+  "bindings": {
+    "className": {
+      "source": "className",
+      "transform": "data"
+    }
+  },
+  "children": [
+    {
+      "type": "text",
+      "content": {
+        "source": "children"
+      }
+    }
+  ]
+}

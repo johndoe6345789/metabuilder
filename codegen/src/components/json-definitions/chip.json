@@ -1,0 +1,49 @@
+{
+  "id": "chip-root",
+  "type": "span",
+  "bindings": {
+    "className": {
+      "source": "variant",
+      "transform": "(() => { const variant = data || 'default'; const variantMap = { default: 'bg-secondary text-secondary-foreground', primary: 'bg-primary text-primary-foreground', accent: 'bg-accent text-accent-foreground', muted: 'bg-muted text-muted-foreground' }; const variantClass = variantMap[variant] || variantMap.default; const size = $props.size || 'md'; const sizeMap = { sm: 'px-2 py-0.5 text-xs', md: 'px-3 py-1 text-sm' }; const sizeClass = sizeMap[size] || sizeMap.md; const userClass = $props.className || ''; return 'inline-flex items-center gap-1 rounded-full font-medium ' + variantClass + ' ' + sizeClass + ' ' + userClass; })()"
+    }
+  },
+  "children": [
+    {
+      "id": "chip-content",
+      "bindings": {
+        "children": "children"
+      }
+    },
+    {
+      "id": "chip-remove-button",
+      "type": "button",
+      "props": {
+        "type": "button",
+        "className": "inline-flex items-center justify-center hover:bg-black/10 rounded-full transition-colors",
+        "aria-label": "Remove"
+      },
+      "bindings": {
+        "onClick": "onRemove"
+      },
+      "conditional": {
+        "if": "onRemove"
+      },
+      "children": [
+        {
+          "id": "chip-remove-icon",
+          "type": "Icon",
+          "bindings": {
+            "name": "X",
+            "props": {
+              "weight": "bold",
+              "className": {
+                "source": "size",
+                "transform": "data === 'sm' ? 'w-3 h-3' : 'w-3.5 h-3.5'"
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

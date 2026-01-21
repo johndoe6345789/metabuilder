@@ -1,0 +1,10 @@
+{
+  "type": "FeatureIdeaCloud",
+  "jsonCompatible": false,
+  "wrapperRequired": true,
+  "load": {
+    "path": "@/components/FeatureIdeaCloud",
+    "export": "FeatureIdeaCloud"
+  },
+  "props": {}
+}

@@ -1,0 +1,74 @@
+{
+  "id": "filter-input-container",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": "className",
+      "transform": "data ? `relative ${data}` : 'relative'"
+    }
+  },
+  "children": [
+    {
+      "id": "filter-input-icon",
+      "type": "MagnifyingGlass",
+      "bindings": {
+        "className": {
+          "source": "focusState.isFocused",
+          "transform": "data ? 'absolute left-3 top-1/2 -translate-y-1/2 transition-colors text-primary' : 'absolute left-3 top-1/2 -translate-y-1/2 transition-colors text-muted-foreground'"
+        }
+      },
+      "props": {
+        "size": 16
+      }
+    },
+    {
+      "id": "filter-input-field",
+      "type": "Input",
+      "bindings": {
+        "value": "value",
+        "placeholder": "placeholder",
+        "onFocus": {
+          "source": "focusState.setFocused",
+          "transform": "() => data(true)"
+        },
+        "onBlur": {
+          "source": "focusState.setFocused",
+          "transform": "() => data(false)"
+        },
+        "onChange": {
+          "source": "onChange",
+          "transform": "(e) => data(e.target.value)"
+        }
+      },
+      "props": {
+        "className": "pl-9 pr-9"
+      }
+    },
+    {
+      "id": "filter-input-clear",
+      "type": "button",
+      "conditional": {
+        "if": "value"
+      },
+      "bindings": {
+        "onClick": {
+          "source": "onChange",
+          "transform": "() => data('')"
+        }
+      },
+      "props": {
+        "className": "absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors",
+        "type": "button"
+      },
+      "children": [
+        {
+          "id": "filter-input-clear-icon",
+          "type": "X",
+          "props": {
+            "size": 16
+          }
+        }
+      ]
+    }
+  ]
+}

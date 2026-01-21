@@ -1,0 +1,6 @@
+{
+  "type": "Breadcrumb",
+  "props": {
+    "onClick": "> void"
+  }
+}

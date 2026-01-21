@@ -1,0 +1,44 @@
+{
+  "id": "label-wrapper",
+  "type": "label",
+  "bindings": {
+    "htmlFor": {
+      "source": "htmlFor",
+      "transform": "data"
+    },
+    "className": {
+      "source": ["required", "className"],
+      "transform": "const required = data[0]; const className = data[1] || ''; const baseClasses = 'text-sm font-medium text-foreground leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'; return required ? `${baseClasses} ${className}`.trim() : `${baseClasses} ${className}`.trim()"
+    },
+    "children": [
+      {
+        "id": "label-content",
+        "type": "span",
+        "bindings": {
+          "children": {
+            "source": "children",
+            "transform": "data"
+          }
+        }
+      },
+      {
+        "id": "label-required-indicator",
+        "type": "span",
+        "bindings": {
+          "className": {
+            "source": null,
+            "transform": "'text-destructive ml-1'"
+          },
+          "children": {
+            "source": null,
+            "transform": "'*'"
+          },
+          "_if": {
+            "source": "required",
+            "transform": "data"
+          }
+        }
+      }
+    ]
+  }
+}

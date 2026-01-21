@@ -1,0 +1,17 @@
+{
+  "id": "form-input",
+  "type": "div",
+  "props": {
+    "className": "space-y-2"
+  },
+  "children": [
+    {
+      "id": "input-label",
+      "type": "Label"
+    },
+    {
+      "id": "input-field",
+      "type": "Input"
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "type": "alert",
+  "props": {
+    "destructive": "alert-description]:text-destructive/90"
+  }
+}

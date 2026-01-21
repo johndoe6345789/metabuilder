@@ -1,0 +1,16 @@
+{
+  "id": "schema-editor-sidebar",
+  "type": "div",
+  "props": {
+    "className": "w-64 border-r border-border bg-card"
+  },
+  "children": [
+    {
+      "id": "component-palette-container",
+      "type": "ComponentPalette",
+      "bindings": {
+        "onDragStart": { "source": "onDragStart" }
+      }
+    }
+  ]
+}

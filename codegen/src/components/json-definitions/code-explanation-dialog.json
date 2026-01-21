@@ -1,0 +1,126 @@
+{
+  "id": "code-explanation-dialog",
+  "type": "Dialog",
+  "props": {
+    "open": {
+      "source": "open"
+    },
+    "onOpenChange": {
+      "action": "call",
+      "target": "onOpenChange"
+    }
+  },
+  "children": [
+    {
+      "id": "code-explanation-content",
+      "type": "DialogContent",
+      "props": {
+        "className": "max-w-2xl"
+      },
+      "children": [
+        {
+          "id": "code-explanation-header",
+          "type": "DialogHeader",
+          "children": [
+            {
+              "id": "code-explanation-title",
+              "type": "DialogTitle",
+              "children": [
+                {
+                  "type": "text",
+                  "content": "Code Explanation"
+                }
+              ]
+            },
+            {
+              "id": "code-explanation-description",
+              "type": "DialogDescription",
+              "bindings": {
+                "children": {
+                  "source": "fileName",
+                  "transform": "data ? `AI-generated explanation of ${data}` : 'AI-generated explanation'"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "code-explanation-scroll",
+          "type": "ScrollArea",
+          "props": {
+            "className": "max-h-96"
+          },
+          "children": [
+            {
+              "id": "code-explanation-content-box",
+              "type": "Div",
+              "props": {
+                "className": "p-4 bg-muted rounded-lg"
+              },
+              "children": [
+                {
+                  "id": "code-explanation-content-conditional",
+                  "type": "ConditionalRender",
+                  "props": {
+                    "condition": {
+                      "source": "isLoading"
+                    }
+                  },
+                  "children": [
+                    {
+                      "id": "code-explanation-loading",
+                      "type": "Flex",
+                      "props": {
+                        "align": "center",
+                        "gap": "2",
+                        "className": "text-muted-foreground"
+                      },
+                      "children": [
+                        {
+                          "id": "code-explanation-loading-icon",
+                          "type": "Icon",
+                          "props": {
+                            "name": "Sparkle",
+                            "className": "animate-pulse"
+                          }
+                        },
+                        {
+                          "type": "text",
+                          "content": "Analyzing code..."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "code-explanation-content-text",
+                  "type": "ConditionalRender",
+                  "props": {
+                    "condition": {
+                      "source": "isLoading",
+                      "transform": "!data"
+                    }
+                  },
+                  "children": [
+                    {
+                      "id": "code-explanation-text",
+                      "type": "Paragraph",
+                      "props": {
+                        "className": "whitespace-pre-wrap text-sm"
+                      },
+                      "bindings": {
+                        "children": {
+                          "source": "explanation"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

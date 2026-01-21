@@ -1,0 +1,16 @@
+{
+  "id": "shadcn-card-content",
+  "type": "ShadcnCardContent",
+  "bindings": {
+    "className": {
+      "source": "className",
+      "transform": "data"
+    }
+  },
+  "children": [
+    {
+      "type": "slot",
+      "source": "children"
+    }
+  ]
+}

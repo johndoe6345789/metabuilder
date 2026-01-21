@@ -1,0 +1,7 @@
+{
+  "type": "Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle",
+  "props": {
+    "onOpenChange": "> void",
+    "onSave": "> void"
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "id": "command-palette-root",
+  "type": "CommandDialog",
+  "bindings": {
+    "open": "open",
+    "onOpenChange": "onOpenChange"
+  },
+  "children": [
+    {
+      "id": "command-palette-input",
+      "type": "CommandInput",
+      "bindings": {
+        "placeholder": "placeholder"
+      }
+    },
+    {
+      "id": "command-palette-list",
+      "type": "CommandList",
+      "children": [
+        {
+          "id": "command-palette-empty",
+          "type": "CommandEmpty",
+          "bindings": {
+            "children": "emptyMessage"
+          }
+        },
+        {
+          "id": "command-palette-groups",
+          "type": "forEach",
+          "bindings": {
+            "items": "groups",
+            "children": {
+              "id": "command-palette-group",
+              "type": "CommandGroup",
+              "bindings": {
+                "heading": "heading"
+              },
+              "children": [
+                {
+                  "id": "command-palette-items",
+                  "type": "forEach",
+                  "bindings": {
+                    "items": "items",
+                    "children": {
+                      "id": "command-palette-item",
+                      "type": "CommandItem",
+                      "bindings": {
+                        "value": "value",
+                        "onSelect": {
+                          "transform": "(() => { return () => { data.onSelect?.(); $props.onOpenChange(false); }; })()"
+                        }
+                      },
+                      "children": [
+                        {
+                          "id": "command-palette-item-icon",
+                          "type": "span",
+                          "props": {
+                            "className": "mr-2"
+                          },
+                          "bindings": {
+                            "children": "icon"
+                          },
+                          "conditional": {
+                            "if": "icon"
+                          }
+                        },
+                        {
+                          "id": "command-palette-item-label",
+                          "type": "span",
+                          "bindings": {
+                            "children": "label"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

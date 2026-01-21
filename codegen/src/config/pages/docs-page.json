@@ -1,0 +1,23 @@
+{
+  "id": "docs-page",
+  "name": "Documentation",
+  "description": "Project docs",
+  "icon": "Book",
+  "layout": {
+    "$ref": "./layouts/single-column.json"
+  },
+  "dataSources": [],
+  "components": [
+    {
+      "$ref": "./molecules/page-header-standard.json",
+      "children": [
+        {
+          "$ref": "./atoms/heading-1.json",
+          "props": {
+            "children": "Documentation"
+          }
+        }
+      ]
+    }
+  ]
+}

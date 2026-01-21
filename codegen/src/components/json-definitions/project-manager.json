@@ -1,0 +1,8 @@
+{
+  "id": "project-manager",
+  "type": "div",
+  "props": {
+    "className": "project-manager"
+  },
+  "children": []
+}

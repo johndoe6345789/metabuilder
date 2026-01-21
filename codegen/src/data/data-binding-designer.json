@@ -1,0 +1,78 @@
+{
+  "header": {
+    "title": "Data Binding Designer",
+    "description": "Connect UI components to KV storage and static data"
+  },
+  "bindingsCard": {
+    "title": "Component Bindings",
+    "description": "Example components with data bindings",
+    "emptyState": "No bindings configured",
+    "actionLabel": "Bind"
+  },
+  "howItWorks": {
+    "title": "How It Works",
+    "steps": [
+      "Create data sources (KV store for persistence, static for constants)",
+      "Bind component properties to data sources for reactive updates"
+    ]
+  },
+  "seed": {
+    "dataSources": [
+      {
+        "id": "userProfile",
+        "type": "kv",
+        "key": "user-profile",
+        "defaultValue": {
+          "name": "John Doe",
+          "email": "john@example.com"
+        }
+      },
+      {
+        "id": "counter",
+        "type": "kv",
+        "key": "app-counter",
+        "defaultValue": 0
+      }
+    ],
+    "components": [
+      {
+        "id": "title",
+        "type": "Heading",
+        "props": {
+          "className": "text-2xl font-bold"
+        },
+        "bindings": {
+          "children": {
+            "source": "userProfile",
+            "path": "name"
+          }
+        }
+      },
+      {
+        "id": "counter-display",
+        "type": "Text",
+        "props": {
+          "className": "text-lg"
+        },
+        "bindings": {
+          "children": {
+            "source": "counter"
+          }
+        }
+      },
+      {
+        "id": "email-input",
+        "type": "Input",
+        "props": {
+          "placeholder": "Enter email"
+        },
+        "bindings": {
+          "value": {
+            "source": "userProfile",
+            "path": "email"
+          }
+        }
+      }
+    ]
+  }
+}

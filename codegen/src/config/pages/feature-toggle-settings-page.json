@@ -1,0 +1,17 @@
+{
+  "$schema": "./schema/page-schema.json",
+  "id": "feature-toggle-settings-page",
+  "name": "Feature Toggle Settings",
+  "description": "Manage feature toggles",
+  "icon": "ToggleLeft",
+  "layout": {
+    "$ref": "./layouts/single-column.json"
+  },
+  "components": [
+    {
+      "id": "feature-toggle-settings-component",
+      "type": "FeatureToggleSettings",
+      "props": {}
+    }
+  ]
+}

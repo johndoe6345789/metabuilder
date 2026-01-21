@@ -1,0 +1,22 @@
+{
+  "id": "error-badge",
+  "type": "Badge",
+  "bindings": {
+    "variant": {
+      "source": "variant",
+      "transform": "data || 'destructive'"
+    },
+    "className": {
+      "source": ["count", "size"],
+      "transform": "const count = data[0]; const size = data[1] || 'md'; const sizeClasses = { sm: 'h-5 w-5 text-[10px]', md: 'h-6 w-6 text-xs' }; return `${sizeClasses[size]} p-0 flex items-center justify-center absolute -top-1 -right-1`"
+    },
+    "children": {
+      "source": "count",
+      "transform": "data"
+    },
+    "_if": {
+      "source": "count",
+      "transform": "data !== 0"
+    }
+  }
+}

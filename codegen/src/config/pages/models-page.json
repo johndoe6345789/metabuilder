@@ -1,0 +1,119 @@
+{
+  "id": "models-page",
+  "name": "Models Designer",
+  "description": "Design your database models",
+  "icon": "Database",
+  "layout": {
+    "$ref": "./layouts/single-column.json"
+  },
+  "dataSources": [
+    {
+      "id": "models",
+      "$ref": "./data-sources/kv-storage.json",
+      "key": "models",
+      "defaultValue": []
+    }
+  ],
+  "components": [
+    {
+      "id": "models-header",
+      "type": "div",
+      "props": {
+        "className": "p-6"
+      },
+      "children": [
+        {
+          "id": "models-title",
+          "type": "Heading",
+          "props": {
+            "level": 1,
+            "children": "Database Models"
+          }
+        },
+        {
+          "id": "models-description",
+          "type": "Text",
+          "props": {
+            "children": "Define your Prisma database schemas",
+            "className": "text-muted-foreground mt-2"
+          }
+        }
+      ]
+    },
+    {
+      "id": "models-toolbar",
+      "type": "div",
+      "props": {
+        "className": "flex justify-between items-center p-6 border-b"
+      },
+      "children": [
+        {
+          "id": "model-count",
+          "type": "Text",
+          "props": {
+            "className": "text-sm text-muted-foreground"
+          },
+          "children": [
+            {
+              "type": "span",
+              "dataBinding": {
+                "source": "models",
+                "transform": "data => `${data.length} models`"
+              }
+            }
+          ]
+        },
+        {
+          "id": "add-model-button",
+          "$ref": "./components/button-primary.json",
+          "props": {
+            "children": "Add Model"
+          },
+          "events": {
+            "onClick": {
+              "actions": [
+                {
+                  "$ref": "./actions/create-action.json",
+                  "target": "models",
+                  "value": {
+                    "id": "",
+                    "name": "NewModel",
+                    "fields": []
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "models-list",
+      "type": "div",
+      "props": {
+        "className": "p-6 space-y-4"
+      },
+      "children": [],
+      "loop": {
+        "source": "models",
+        "itemVar": "model",
+        "template": {
+          "id": "model-card-${model.id}",
+          "$ref": "./components/card-container.json",
+          "children": [
+            {
+              "type": "div",
+              "props": {
+                "className": "font-semibold"
+              },
+              "dataBinding": {
+                "source": "model",
+                "path": "name"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

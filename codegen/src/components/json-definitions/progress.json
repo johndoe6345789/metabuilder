@@ -1,0 +1,54 @@
+{
+  "id": "progress-root",
+  "type": "div",
+  "bindings": {
+    "data-slot": {
+      "source": null,
+      "transform": "'progress'"
+    },
+    "role": {
+      "source": null,
+      "transform": "'progressbar'"
+    },
+    "aria-valuemin": {
+      "source": null,
+      "transform": "0"
+    },
+    "aria-valuemax": {
+      "source": null,
+      "transform": "100"
+    },
+    "aria-valuenow": {
+      "source": "value",
+      "transform": "data || 0"
+    },
+    "className": {
+      "source": "className",
+      "transform": "const baseClass = 'bg-primary/20 relative h-2 w-full overflow-hidden rounded-full'; return data ? `${baseClass} ${data}`.trim() : baseClass"
+    },
+    "_spreadProps": {
+      "source": "_spreadProps",
+      "transform": "data"
+    },
+    "children": [
+      {
+        "id": "progress-indicator",
+        "type": "div",
+        "bindings": {
+          "data-slot": {
+            "source": null,
+            "transform": "'progress-indicator'"
+          },
+          "className": {
+            "source": null,
+            "transform": "'bg-primary h-full w-full flex-1 transition-all'"
+          },
+          "style": {
+            "source": "value",
+            "transform": "const percent = (data || 0); return { transform: `translateX(-${100 - percent}%)` }"
+          }
+        }
+      }
+    ]
+  }
+}

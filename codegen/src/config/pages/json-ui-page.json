@@ -1,0 +1,23 @@
+{
+  "id": "json-ui-page",
+  "name": "JSON UI Showcase",
+  "description": "JSON UI components",
+  "icon": "Code",
+  "layout": {
+    "$ref": "./layouts/single-column.json"
+  },
+  "dataSources": [],
+  "components": [
+    {
+      "$ref": "./molecules/page-header-standard.json",
+      "children": [
+        {
+          "$ref": "./atoms/heading-1.json",
+          "props": {
+            "children": "JSON UI Showcase"
+          }
+        }
+      ]
+    }
+  ]
+}

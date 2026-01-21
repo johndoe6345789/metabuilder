@@ -1,0 +1,51 @@
+{
+  "id": "app-router-layout",
+  "type": "div",
+  "className": "h-screen flex flex-col bg-background",
+  "children": [
+    {
+      "id": "main-panel",
+      "type": "AppMainPanel",
+      "bindings": {
+        "currentPage": { "source": "hookData.currentPage" },
+        "navigateToPage": { "source": "hookData.navigateToPage" },
+        "featureToggles": { "source": "hookData.featureToggles" },
+        "errorCount": { "source": "hookData.errorCount" },
+        "lastSaved": { "source": "hookData.lastSaved" },
+        "currentProject": { "source": "hookData.currentProject" },
+        "onProjectLoad": { "source": "hookData.handleProjectLoad" },
+        "onSearch": { "source": "hookData.setSearchOpen", "transform": "() => setSearchOpen(true)" },
+        "onShowShortcuts": { "source": "hookData.setShortcutsOpen", "transform": "() => setShortcutsOpen(true)" },
+        "onGenerateAI": { "source": "hookData.onGenerateAI" },
+        "onExport": { "source": "hookData.onExport" },
+        "onPreview": { "source": "hookData.setPreviewOpen", "transform": "() => setPreviewOpen(true)" },
+        "onShowErrors": { "source": "hookData.navigateToPage", "transform": "() => navigateToPage('errors')" },
+        "stateContext": { "source": "hookData.stateContext" },
+        "actionContext": { "source": "hookData.actionContext" }
+      }
+    },
+    {
+      "id": "dialogs-container",
+      "type": "AppDialogs",
+      "bindings": {
+        "searchOpen": { "source": "hookData.searchOpen" },
+        "onSearchOpenChange": { "source": "hookData.setSearchOpen" },
+        "shortcutsOpen": { "source": "hookData.shortcutsOpen" },
+        "onShortcutsOpenChange": { "source": "hookData.setShortcutsOpen" },
+        "previewOpen": { "source": "hookData.previewOpen" },
+        "onPreviewOpenChange": { "source": "hookData.setPreviewOpen" },
+        "files": { "source": "hookData.files" },
+        "models": { "source": "hookData.models" },
+        "components": { "source": "hookData.components" },
+        "componentTrees": { "source": "hookData.componentTrees" },
+        "workflows": { "source": "hookData.workflows" },
+        "lambdas": { "source": "hookData.lambdas" },
+        "playwrightTests": { "source": "hookData.playwrightTests" },
+        "storybookStories": { "source": "hookData.storybookStories" },
+        "unitTests": { "source": "hookData.unitTests" },
+        "onNavigate": { "source": "hookData.navigateToPage" },
+        "onFileSelect": { "source": "hookData.onFileSelect" }
+      }
+    }
+  ]
+}

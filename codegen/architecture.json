@@ -1,0 +1,51 @@
+{
+  "pages": {
+    "dashboard": {
+      "renderer": "json",
+      "schema": "./pages/dashboard.json",
+      "dataBindings": [
+        "files",
+        "models",
+        "components",
+        "workflows",
+        "theme",
+        "playwrightTests",
+        "storybookStories",
+        "unitTests",
+        "flaskConfig",
+        "nextjsConfig"
+      ]
+    },
+    "components": {
+      "renderer": "react",
+      "component": "ComponentTreeBuilder"
+    }
+  },
+  "hooks": {
+    "data": [
+      "useDataSource",
+      "useCRUD",
+      "useSearchFilter",
+      "useSort",
+      "usePagination",
+      "useSelection"
+    ],
+    "forms": [
+      "useFormField",
+      "useForm"
+    ],
+    "ui": [
+      "useDialog",
+      "useToggle",
+      "useKeyboardShortcuts"
+    ]
+  },
+  "atomicComponents": {
+    "maxLOC": 150,
+    "categories": {
+      "atoms": ["DataList", "StatCard", "ActionButton", "LoadingState", "EmptyState"],
+      "molecules": ["SearchBar", "DataCard", "FormField"],
+      "organisms": ["DataTable", "Dashboard", "FormBuilder"]
+    }
+  }
+}

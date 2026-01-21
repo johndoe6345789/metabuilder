@@ -1,0 +1,273 @@
+version: 2.1
+
+orbs:
+  node: circleci/node@5.2.0
+  node-executor:
+      - image: cimg/node:20.11
+
+  playwrig
+  node-executor:
+    docker:
+      - image: cimg/node:20.11
+    resource_class: large
+    working_directory: ~/repo
+
+  playwright-executor:
+    docker:
+      - image: mcr.microsoft.com/playwright:v1.57.0-jammy
+    resource_class: large
+    working_directory: ~/repo
+
+    descr
+  restore-dependencies:
+    description: 'Restore npm dependencies from cache'
+    steps:
+  save-dependencies:
+          keys:
+            - v1-dependencies-{{ checksum "package-lock.json" }}
+            - v1-dependencies-
+
+  install-dependencies:
+    description: 'Install npm dependencies'
+    steps:
+      - run:
+      - run:
+          command: npm run lint || echo "No lint 
+
+      - notify-slack
+  test:
+    steps:
+      - restore-dep
+      - save-dep
+          name: Run unit t
+      - store_test_results:
+
+          destination: 
+
+    execut
+      - checkout
+      - install-depen
+      - run:
+
+          root: .
+            - dist
+          
+      - notify-slack-
+  e2e-test:
+    steps:
+
+     
+       
+          name: Install Pla
+      - ru
+          comman
+          path: playwright-r
+          path: playwright-r
+      - store_artifacts:
+          de
+
+    executor: node-executor
+      - chec
+      - install-dependencies
+      - run:
+          command: npm audit
+
+  test:
+            sudo apt-get up
+    steps:
+          comman
+          path: trivy-report
+      - notify-slack-on-fail
+  docker-build-and-push:
+    steps:
+      - setup_remote_docker:
+      - attach_workspace:
+      - store_test_results:
+          command: |
+      - run:
+          command: |
+            docker buildx inspe
+          name: Build multi-
+
+        
+              --tag ghcr.io
+          
+      - checkout
+                --tag ghcr.i
+                .
+      - notify-slack-on-f
+      - run:
+    steps:
+      - run:
+          command: |
+          root: .
+              -H
+            - dist
+
+    executor: node-e
+      - checkout
+          name: Deploy to pr
+
+  e2e-test:
+              -d "{\"image\":\"gh
+    steps:
+workflows:
+  build-test-deploy:
+      - lint
+          requires:
+      - build:
+            - t
+          re
+      - security-scan:
+            - build
+          re
+            - test
+          filters:
+              only:
+          path: playwright-report
+      - store_artifacts:
+          path: playwright-report
+          destination: e2e-report
+      - store_artifacts:
+          path: test-results
+          destination: test-results
+      - notify-slack-on-fail
+
+  security-scan:
+    executor: node-executor
+    steps:
+      - checkout
+      - restore-dependencies
+      - install-dependencies
+      - save-dependencies
+      - run:
+          name: Run npm audit
+          command: npm audit --audit-level=moderate || true
+      - run:
+          name: Install Trivy
+          command: |
+            wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+            echo "deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
+            sudo apt-get update
+            sudo apt-get install trivy -y
+      - run:
+          name: Run Trivy scan
+          command: trivy fs --exit-code 0 --no-progress --format json --output trivy-report.json .
+      - store_artifacts:
+          path: trivy-report.json
+          destination: security/trivy-report.json
+      - notify-slack-on-fail
+
+  docker-build-and-push:
+    executor: docker/docker
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - attach_workspace:
+          at: .
+      - run:
+          name: Install QEMU
+          command: |
+            docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+      - run:
+          name: Set up Docker Buildx
+          command: |
+            docker buildx create --name multiarch --driver docker-container --use
+            docker buildx inspect --bootstrap
+      - run:
+          name: Build multi-arch Docker image
+          command: |
+            echo $DOCKER_PASSWORD | docker login ghcr.io -u $DOCKER_USERNAME --password-stdin
+            docker buildx build \
+              --platform linux/amd64,linux/arm64 \
+              --tag ghcr.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$CIRCLE_BRANCH \
+              --tag ghcr.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$CIRCLE_BRANCH-$CIRCLE_SHA1 \
+              --push \
+              .
+            if [ "$CIRCLE_BRANCH" = "main" ]; then
+              docker buildx build \
+                --platform linux/amd64,linux/arm64 \
+                --tag ghcr.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:latest \
+                --push \
+                .
+            fi
+      - notify-slack-on-fail
+
+  deploy-staging:
+    executor: node-executor
+    steps:
+      - checkout
+      - run:
+          name: Deploy to staging
+          command: |
+            echo "Deploying to staging environment..."
+            echo "Image: ghcr.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:develop-$CIRCLE_SHA1"
+            curl -X POST $STAGING_WEBHOOK_URL \
+              -H "Content-Type: application/json" \
+              -d "{\"image\":\"ghcr.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:develop\",\"sha\":\"$CIRCLE_SHA1\"}"
+      - notify-slack-on-success
+      - notify-slack-on-fail
+
+  deploy-production:
+    executor: node-executor
+    steps:
+      - checkout
+      - run:
+          name: Deploy to production
+          command: |
+            echo "Deploying to production environment..."
+            echo "Image: ghcr.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:latest"
+            curl -X POST $PRODUCTION_WEBHOOK_URL \
+              -H "Content-Type: application/json" \
+              -d "{\"image\":\"ghcr.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:latest\",\"sha\":\"$CIRCLE_SHA1\"}"
+      - notify-slack-on-success
+      - notify-slack-on-fail
+
+workflows:
+  version: 2
+  build-test-deploy:
+    jobs:
+      - lint
+      - test:
+
+            - lint
+      - build:
+
+            - test
+      - e2e-test:
+          requires:
+            - build
+      - security-scan:
+          requires:
+            - build
+      - docker-build-and-push:
+          requires:
+            - build
+            - test
+            - security-scan
+          filters:
+            branches:
+              only:
+                - main
+                - develop
+      - deploy-staging:
+          requires:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

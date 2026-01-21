@@ -1,0 +1,22 @@
+{
+  "id": "file-icon",
+  "type": "FileIconWrapper",
+  "bindings": {
+    "type": {
+      "source": "type",
+      "transform": "data || 'code'"
+    },
+    "size": {
+      "source": "size",
+      "transform": "data || 20"
+    },
+    "weight": {
+      "source": "weight",
+      "transform": "data || 'regular'"
+    },
+    "className": {
+      "source": "className",
+      "transform": "data || ''"
+    }
+  }
+}

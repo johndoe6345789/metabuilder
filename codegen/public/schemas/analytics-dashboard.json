@@ -1,0 +1,418 @@
+{
+  "$schema": "../types/page-schema.json",
+  "id": "analytics-dashboard",
+  "name": "Analytics Dashboard",
+  "description": "View project analytics and metrics",
+  "layout": {
+    "type": "single"
+  },
+  "dataSources": [
+    {
+      "id": "metrics",
+      "type": "kv",
+      "key": "analytics-metrics",
+      "defaultValue": {
+        "totalFiles": 42,
+        "totalModels": 8,
+        "totalComponents": 156,
+        "totalTests": 23
+      }
+    },
+    {
+      "id": "recentActivity",
+      "type": "kv",
+      "key": "recent-activity",
+      "defaultValue": [
+        {
+          "id": 1,
+          "action": "Created file",
+          "file": "User.tsx",
+          "timestamp": "2026-01-17T10:30:00Z"
+        },
+        {
+          "id": 2,
+          "action": "Updated model",
+          "file": "schema.prisma",
+          "timestamp": "2026-01-17T09:15:00Z"
+        }
+      ]
+    },
+    {
+      "id": "trends",
+      "type": "static",
+      "defaultValue": {
+        "filesGrowth": 12,
+        "modelsGrowth": -3,
+        "componentsGrowth": 8,
+        "testsGrowth": 15
+      }
+    }
+  ],
+  "components": [
+    {
+      "id": "root",
+      "type": "div",
+      "props": {
+        "className": "h-full overflow-auto"
+      },
+      "children": [
+        {
+          "id": "header-section",
+          "type": "div",
+          "props": {
+            "className": "bg-gradient-to-br from-primary/10 via-background to-accent/10 p-6 border-b"
+          },
+          "children": [
+            {
+              "id": "header-content",
+              "type": "Container",
+              "props": {
+                "maxWidth": "xl"
+              },
+              "children": [
+                {
+                  "id": "header-stack",
+                  "type": "Stack",
+                  "props": {
+                    "direction": "vertical",
+                    "spacing": "sm"
+                  },
+                  "children": [
+                    {
+                      "id": "title",
+                      "type": "Heading",
+                      "props": {
+                        "level": 1,
+                        "className": "text-4xl font-bold",
+                        "children": "Analytics Dashboard"
+                      }
+                    },
+                    {
+                      "id": "subtitle",
+                      "type": "Text",
+                      "props": {
+                        "variant": "muted",
+                        "children": "Monitor your project's growth and activity"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "content",
+          "type": "Container",
+          "props": {
+            "maxWidth": "xl",
+            "className": "py-6"
+          },
+          "children": [
+            {
+              "id": "main-stack",
+              "type": "Stack",
+              "props": {
+                "direction": "vertical",
+                "spacing": "lg"
+              },
+              "children": [
+                {
+                  "id": "metrics-section",
+                  "type": "div",
+                  "children": [
+                    {
+                      "id": "metrics-title",
+                      "type": "Heading",
+                      "props": {
+                        "level": 2,
+                        "className": "text-2xl font-semibold mb-4",
+                        "children": "Key Metrics"
+                      }
+                    },
+                    {
+                      "id": "metrics-grid",
+                      "type": "ResponsiveGrid",
+                      "props": {
+                        "columns": 4,
+                        "gap": "md"
+                      },
+                      "children": [
+                        {
+                          "id": "files-metric",
+                          "type": "Card",
+                          "props": {
+                            "className": "bg-gradient-to-br from-blue-500/10 to-blue-500/5 border-blue-500/20"
+                          },
+                          "children": [
+                            {
+                              "id": "files-metric-content",
+                              "type": "CardContent",
+                              "props": {
+                                "className": "p-6"
+                              },
+                              "children": [
+                                {
+                                  "id": "files-display",
+                                  "type": "MetricDisplay",
+                                  "props": {
+                                    "label": "Total Files",
+                                    "variant": "primary"
+                                  },
+                                  "bindings": {
+                                    "value": {
+                                      "source": "metrics",
+                                      "path": "totalFiles"
+                                    },
+                                    "trend": {
+                                      "source": "trends",
+                                      "transform": "(t) => ({ value: t.filesGrowth, direction: t.filesGrowth > 0 ? 'up' : 'down' })"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "id": "models-metric",
+                          "type": "Card",
+                          "props": {
+                            "className": "bg-gradient-to-br from-green-500/10 to-green-500/5 border-green-500/20"
+                          },
+                          "children": [
+                            {
+                              "id": "models-metric-content",
+                              "type": "CardContent",
+                              "props": {
+                                "className": "p-6"
+                              },
+                              "children": [
+                                {
+                                  "id": "models-display",
+                                  "type": "MetricDisplay",
+                                  "props": {
+                                    "label": "Data Models",
+                                    "variant": "accent"
+                                  },
+                                  "bindings": {
+                                    "value": {
+                                      "source": "metrics",
+                                      "path": "totalModels"
+                                    },
+                                    "trend": {
+                                      "source": "trends",
+                                      "transform": "(t) => ({ value: Math.abs(t.modelsGrowth), direction: t.modelsGrowth > 0 ? 'up' : 'down' })"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "id": "components-metric",
+                          "type": "Card",
+                          "props": {
+                            "className": "bg-gradient-to-br from-purple-500/10 to-purple-500/5 border-purple-500/20"
+                          },
+                          "children": [
+                            {
+                              "id": "components-metric-content",
+                              "type": "CardContent",
+                              "props": {
+                                "className": "p-6"
+                              },
+                              "children": [
+                                {
+                                  "id": "components-display",
+                                  "type": "MetricDisplay",
+                                  "props": {
+                                    "label": "Components",
+                                    "variant": "primary"
+                                  },
+                                  "bindings": {
+                                    "value": {
+                                      "source": "metrics",
+                                      "path": "totalComponents"
+                                    },
+                                    "trend": {
+                                      "source": "trends",
+                                      "transform": "(t) => ({ value: t.componentsGrowth, direction: 'up' })"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "id": "tests-metric",
+                          "type": "Card",
+                          "props": {
+                            "className": "bg-gradient-to-br from-orange-500/10 to-orange-500/5 border-orange-500/20"
+                          },
+                          "children": [
+                            {
+                              "id": "tests-metric-content",
+                              "type": "CardContent",
+                              "props": {
+                                "className": "p-6"
+                              },
+                              "children": [
+                                {
+                                  "id": "tests-display",
+                                  "type": "MetricDisplay",
+                                  "props": {
+                                    "label": "Test Coverage",
+                                    "variant": "accent"
+                                  },
+                                  "bindings": {
+                                    "value": {
+                                      "source": "metrics",
+                                      "path": "totalTests"
+                                    },
+                                    "trend": {
+                                      "source": "trends",
+                                      "transform": "(t) => ({ value: t.testsGrowth, direction: 'up' })"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "activity-section",
+                  "type": "div",
+                  "children": [
+                    {
+                      "id": "activity-title",
+                      "type": "Heading",
+                      "props": {
+                        "level": 2,
+                        "className": "text-2xl font-semibold mb-4",
+                        "children": "Recent Activity"
+                      }
+                    },
+                    {
+                      "id": "activity-card",
+                      "type": "Card",
+                      "children": [
+                        {
+                          "id": "activity-content",
+                          "type": "CardContent",
+                          "props": {
+                            "className": "p-6"
+                          },
+                          "children": [
+                            {
+                              "id": "activity-list",
+                              "type": "Stack",
+                              "props": {
+                                "direction": "vertical",
+                                "spacing": "sm"
+                              },
+                              "repeat": {
+                                "items": "recentActivity",
+                                "itemVar": "activity",
+                                "indexVar": "index"
+                              },
+                              "children": [
+                                {
+                                  "id": "activity-item",
+                                  "type": "ListItem",
+                                  "bindings": {
+                                    "children": {
+                                      "source": "activity",
+                                      "transform": "(a) => `${a.action}: ${a.file}`"
+                                    },
+                                    "endContent": {
+                                      "source": "activity",
+                                      "path": "timestamp",
+                                      "component": "DynamicText",
+                                      "componentProps": {
+                                        "format": "datetime",
+                                        "className": "text-xs text-muted-foreground"
+                                      }
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "quick-actions",
+                  "type": "div",
+                  "children": [
+                    {
+                      "id": "actions-title",
+                      "type": "Heading",
+                      "props": {
+                        "level": 2,
+                        "className": "text-2xl font-semibold mb-4",
+                        "children": "Quick Actions"
+                      }
+                    },
+                    {
+                      "id": "actions-grid",
+                      "type": "ResponsiveGrid",
+                      "props": {
+                        "columns": 3,
+                        "gap": "md"
+                      },
+                      "children": [
+                        {
+                          "id": "create-file-action",
+                          "type": "ActionCard",
+                          "props": {
+                            "title": "Create New File",
+                            "description": "Add a new code file to your project"
+                          },
+                          "events": {
+                            "onClick": "createFile"
+                          }
+                        },
+                        {
+                          "id": "create-model-action",
+                          "type": "ActionCard",
+                          "props": {
+                            "title": "Design Data Model",
+                            "description": "Create a new database schema"
+                          },
+                          "events": {
+                            "onClick": "createModel"
+                          }
+                        },
+                        {
+                          "id": "run-tests-action",
+                          "type": "ActionCard",
+                          "props": {
+                            "title": "Run Tests",
+                            "description": "Execute your test suite"
+                          },
+                          "events": {
+                            "onClick": "runTests"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

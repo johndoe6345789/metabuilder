@@ -1,0 +1,17 @@
+{
+  "$schema": "./schema/page-schema.json",
+  "id": "style-designer-page",
+  "name": "Style Designer",
+  "description": "Design your application styles",
+  "icon": "PaintBrush",
+  "layout": {
+    "$ref": "./layouts/single-column.json"
+  },
+  "components": [
+    {
+      "id": "style-designer-component",
+      "type": "StyleDesigner",
+      "props": {}
+    }
+  ]
+}

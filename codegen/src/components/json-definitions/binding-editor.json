@@ -1,0 +1,290 @@
+{
+  "id": "binding-editor-container",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": null,
+      "transform": "'space-y-4'"
+    }
+  },
+  "children": [
+    {
+      "id": "bound-properties-section",
+      "type": "div",
+      "bindings": {
+        "className": {
+          "source": null,
+          "transform": "'space-y-2'"
+        }
+      },
+      "children": [
+        {
+          "id": "bound-properties-label",
+          "type": "Label",
+          "bindings": {
+            "className": {
+              "source": null,
+              "transform": "'text-sm font-medium'"
+            },
+            "children": {
+              "source": null,
+              "transform": "'Bound Properties'"
+            }
+          }
+        },
+        {
+          "id": "no-bindings-message",
+          "type": "p",
+          "bindings": {
+            "className": {
+              "source": null,
+              "transform": "'text-sm text-muted-foreground'"
+            },
+            "children": {
+              "source": null,
+              "transform": "'No bindings yet'"
+            },
+            "_if": {
+              "source": "bindings",
+              "transform": "Object.keys(data || {}).length === 0"
+            }
+          }
+        },
+        {
+          "id": "bindings-list",
+          "type": "div",
+          "bindings": {
+            "className": {
+              "source": null,
+              "transform": "'space-y-2'"
+            },
+            "_if": {
+              "source": "bindings",
+              "transform": "Object.keys(data || {}).length > 0"
+            }
+          },
+          "children": [
+            {
+              "id": "bindings-repeat",
+              "type": "_repeat",
+              "bindings": {
+                "_items": {
+                  "source": "bindings",
+                  "transform": "Object.keys(data || {})"
+                },
+                "_renderItem": {
+                  "source": ["bindings", "editorState.removeBinding"],
+                  "transform": "(prop) => { const bindings = data[0] || {}; const removeBinding = data[1]; const binding = bindings[prop]; return { _element: 'div', _key: prop, _props: { className: 'flex items-center justify-between p-2 bg-muted/30 rounded border border-border' }, _children: [{ _element: 'div', _props: { className: 'flex items-center gap-2' }, _children: [{ _element: 'span', _props: { className: 'text-sm font-mono' }, _children: [prop] }, { _element: 'span', _props: { className: 'text-muted-foreground' }, _children: ['→'] }, { _element: 'BindingIndicator', _props: { sourceId: binding.source, path: binding.path } }] }, { _element: 'Button', _props: { size: 'sm', variant: 'ghost', onClick: () => removeBinding(prop), className: 'h-6 w-6 p-0' }, _children: [{ _element: 'X', _props: { className: 'w-3 h-3' } }] }] }; }"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "add-binding-section",
+      "type": "div",
+      "bindings": {
+        "className": {
+          "source": null,
+          "transform": "'space-y-3 pt-3 border-t border-border'"
+        },
+        "_if": {
+          "source": ["bindings", "availableProps"],
+          "transform": "const boundProps = Object.keys(data[0] || {}); const availableProps = data[1] || []; const unboundProps = availableProps.filter(p => !boundProps.includes(p)); return unboundProps.length > 0"
+        }
+      },
+      "children": [
+        {
+          "id": "add-binding-label",
+          "type": "Label",
+          "bindings": {
+            "className": {
+              "source": null,
+              "transform": "'text-sm font-medium'"
+            },
+            "children": {
+              "source": null,
+              "transform": "'Add New Binding'"
+            }
+          }
+        },
+        {
+          "id": "property-source-grid",
+          "type": "div",
+          "bindings": {
+            "className": {
+              "source": null,
+              "transform": "'grid grid-cols-2 gap-2'"
+            }
+          },
+          "children": [
+            {
+              "id": "property-select-container",
+              "type": "div",
+              "bindings": {
+                "className": {
+                  "source": null,
+                  "transform": "'space-y-1'"
+                }
+              },
+              "children": [
+                {
+                  "id": "property-label",
+                  "type": "Label",
+                  "bindings": {
+                    "className": {
+                      "source": null,
+                      "transform": "'text-xs text-muted-foreground'"
+                    },
+                    "children": {
+                      "source": null,
+                      "transform": "'Property'"
+                    }
+                  }
+                },
+                {
+                  "id": "property-select",
+                  "type": "Select",
+                  "bindings": {
+                    "value": {
+                      "source": "editorState.selectedProp",
+                      "transform": "data"
+                    },
+                    "onValueChange": {
+                      "source": "editorState.setSelectedProp",
+                      "transform": "data"
+                    },
+                    "children": {
+                      "source": ["bindings", "availableProps"],
+                      "transform": "const boundProps = Object.keys(data[0] || {}); const availableProps = data[1] || []; const unboundProps = availableProps.filter(p => !boundProps.includes(p)); return [{ _element: 'SelectTrigger', _props: { className: 'h-9' }, _children: [{ _element: 'SelectValue', _props: { placeholder: 'Select property' } }] }, { _element: 'SelectContent', _children: unboundProps.map(prop => ({ _element: 'SelectItem', _key: prop, _props: { value: prop }, _children: [prop] })) }]"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "id": "source-select-container",
+              "type": "div",
+              "bindings": {
+                "className": {
+                  "source": null,
+                  "transform": "'space-y-1'"
+                }
+              },
+              "children": [
+                {
+                  "id": "source-label",
+                  "type": "Label",
+                  "bindings": {
+                    "className": {
+                      "source": null,
+                      "transform": "'text-xs text-muted-foreground'"
+                    },
+                    "children": {
+                      "source": null,
+                      "transform": "'Data Source'"
+                    }
+                  }
+                },
+                {
+                  "id": "source-select",
+                  "type": "Select",
+                  "bindings": {
+                    "value": {
+                      "source": "editorState.selectedSource",
+                      "transform": "data"
+                    },
+                    "onValueChange": {
+                      "source": "editorState.setSelectedSource",
+                      "transform": "data"
+                    },
+                    "children": {
+                      "source": "dataSources",
+                      "transform": "[{ _element: 'SelectTrigger', _props: { className: 'h-9' }, _children: [{ _element: 'SelectValue', _props: { placeholder: 'Select source' } }] }, { _element: 'SelectContent', _children: (data || []).map(ds => ({ _element: 'SelectItem', _key: ds.id, _props: { value: ds.id }, _children: [ds.id] })) }]"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "path-input-container",
+          "type": "div",
+          "bindings": {
+            "className": {
+              "source": null,
+              "transform": "'space-y-1'"
+            }
+          },
+          "children": [
+            {
+              "id": "path-label",
+              "type": "Label",
+              "bindings": {
+                "className": {
+                  "source": null,
+                  "transform": "'text-xs text-muted-foreground'"
+                },
+                "children": {
+                  "source": null,
+                  "transform": "'Path (optional)'"
+                }
+              }
+            },
+            {
+              "id": "path-input",
+              "type": "Input",
+              "bindings": {
+                "placeholder": {
+                  "source": null,
+                  "transform": "'e.g., user.name'"
+                },
+                "value": {
+                  "source": "editorState.path",
+                  "transform": "data"
+                },
+                "onChange": {
+                  "source": "editorState.setPath",
+                  "transform": "(e) => data(e.target.value)"
+                },
+                "className": {
+                  "source": null,
+                  "transform": "'h-9 font-mono text-sm'"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "add-button",
+          "type": "Button",
+          "bindings": {
+            "size": {
+              "source": null,
+              "transform": "'sm'"
+            },
+            "onClick": {
+              "source": "editorState.addBinding",
+              "transform": "data"
+            },
+            "disabled": {
+              "source": ["editorState.selectedProp", "editorState.selectedSource"],
+              "transform": "!data[0] || !data[1]"
+            },
+            "className": {
+              "source": null,
+              "transform": "'w-full'"
+            },
+            "children": {
+              "source": null,
+              "transform": "[{ _element: 'Plus', _props: { className: 'w-4 h-4 mr-2' } }, 'Add Binding']"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

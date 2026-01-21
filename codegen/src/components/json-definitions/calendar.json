@@ -1,0 +1,26 @@
+{
+  "id": "calendar",
+  "type": "Calendar",
+  "bindings": {
+    "mode": {
+      "source": "mode",
+      "transform": "data || 'single'"
+    },
+    "selected": {
+      "source": "selected",
+      "transform": "data"
+    },
+    "onSelect": {
+      "source": "onSelect",
+      "transform": "data"
+    },
+    "disabled": {
+      "source": "disabled",
+      "transform": "data"
+    },
+    "className": {
+      "source": "className",
+      "transform": "const cn = (classes) => classes.filter(Boolean).join(' '); return cn(['rounded-md border', data || ''])"
+    }
+  }
+}

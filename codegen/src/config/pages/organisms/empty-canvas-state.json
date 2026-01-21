@@ -1,0 +1,7 @@
+{
+  "type": "EmptyCanvasState",
+  "props": {
+    "onAddFirstComponent": "> void",
+    "onImportSchema": "> void"
+  }
+}

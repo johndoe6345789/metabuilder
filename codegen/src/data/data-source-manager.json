@@ -1,0 +1,27 @@
+{
+  "header": {
+    "title": "Data Sources",
+    "description": "Manage KV storage and static data"
+  },
+  "actions": {
+    "add": "Add Data Source"
+  },
+  "menu": {
+    "kv": "KV Store",
+    "static": "Static Data"
+  },
+  "emptyState": {
+    "title": "No data sources yet",
+    "description": "Create your first data source to start binding data to components"
+  },
+  "groups": {
+    "kv": "KV Store",
+    "static": "Static Data"
+  },
+  "toasts": {
+    "deleteBlockedTitle": "Cannot delete",
+    "deleteBlockedDescription": "This source is used by {count} dependent {noun}",
+    "deleted": "Data source deleted",
+    "updated": "Data source updated"
+  }
+}

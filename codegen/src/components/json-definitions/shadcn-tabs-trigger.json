@@ -1,0 +1,26 @@
+{
+  "id": "shadcn-tabs-trigger",
+  "type": "ShadcnTabsTrigger",
+  "bindings": {
+    "value": {
+      "source": "value",
+      "transform": "data"
+    },
+    "disabled": {
+      "source": "disabled",
+      "transform": "data || false"
+    },
+    "className": {
+      "source": "className",
+      "transform": "data"
+    }
+  },
+  "children": [
+    {
+      "type": "text",
+      "content": {
+        "source": "children"
+      }
+    }
+  ]
+}

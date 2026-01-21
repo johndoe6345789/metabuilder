@@ -1,0 +1,26 @@
+{
+  "id": "shadcn-tooltip-content",
+  "type": "ShadcnTooltipContent",
+  "bindings": {
+    "sideOffset": {
+      "source": "sideOffset",
+      "transform": "data"
+    },
+    "side": {
+      "source": "side",
+      "transform": "data || 'top'"
+    },
+    "className": {
+      "source": "className",
+      "transform": "data"
+    }
+  },
+  "children": [
+    {
+      "type": "text",
+      "content": {
+        "source": "children"
+      }
+    }
+  ]
+}

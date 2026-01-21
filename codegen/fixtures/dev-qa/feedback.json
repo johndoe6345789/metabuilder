@@ -1,0 +1,40 @@
+{
+  "id": "smoke-feedback",
+  "name": "Smoke Feedback",
+  "layout": {
+    "type": "single"
+  },
+  "dataSources": [],
+  "components": [
+    {
+      "id": "feedback-section",
+      "type": "section",
+      "children": [
+        {
+          "id": "feedback-heading",
+          "type": "Heading",
+          "props": {
+            "level": 3,
+            "children": "Feedback Smoke Check"
+          }
+        },
+        {
+          "id": "feedback-alert",
+          "type": "Alert",
+          "props": {
+            "variant": "info",
+            "children": "QA info alert rendered."
+          }
+        },
+        {
+          "id": "feedback-status",
+          "type": "StatusBadge",
+          "props": {
+            "status": "active",
+            "children": "Active"
+          }
+        }
+      ]
+    }
+  ]
+}

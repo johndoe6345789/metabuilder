@@ -1,0 +1,9 @@
+{
+  "type": "TreeCard",
+  "props": {
+    "onSelect": "> void",
+    "onEdit": "> void",
+    "onDuplicate": "> void",
+    "onDelete": "> void"
+  }
+}

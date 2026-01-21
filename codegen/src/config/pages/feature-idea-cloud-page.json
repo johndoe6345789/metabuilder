@@ -1,0 +1,17 @@
+{
+  "$schema": "./schema/page-schema.json",
+  "id": "feature-idea-cloud-page",
+  "name": "Feature Ideas",
+  "description": "Browse and manage feature ideas",
+  "icon": "Lightbulb",
+  "layout": {
+    "$ref": "./layouts/single-column.json"
+  },
+  "components": [
+    {
+      "id": "feature-idea-cloud-component",
+      "type": "FeatureIdeaCloud",
+      "props": {}
+    }
+  ]
+}

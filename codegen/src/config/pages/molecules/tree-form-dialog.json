@@ -1,0 +1,9 @@
+{
+  "type": "Button",
+  "props": {
+    "onOpenChange": "> void",
+    "onNameChange": "> void",
+    "onDescriptionChange": "> void",
+    "onSubmit": "> void"
+  }
+}

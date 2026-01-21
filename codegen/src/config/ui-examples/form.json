@@ -1,0 +1,307 @@
+{
+  "id": "form-builder-ui",
+  "title": "Form Builder",
+  "description": "Dynamic form example with validation",
+  "layout": {
+    "type": "flex",
+    "direction": "column",
+    "gap": "6",
+    "padding": "6",
+    "className": "h-full bg-background max-w-2xl mx-auto",
+    "children": [
+      {
+        "id": "form-header",
+        "type": "div",
+        "children": [
+          {
+            "id": "form-title",
+            "type": "h1",
+            "className": "text-3xl font-bold mb-2",
+            "children": "User Registration"
+          },
+          {
+            "id": "form-description",
+            "type": "p",
+            "className": "text-muted-foreground",
+            "children": "Create a new account by filling out the form below"
+          }
+        ]
+      },
+      {
+        "id": "form-card",
+        "type": "Card",
+        "children": [
+          {
+            "id": "form-card-content",
+            "type": "CardContent",
+            "className": "pt-6",
+            "children": [
+              {
+                "id": "user-form",
+                "type": "div",
+                "className": "space-y-4",
+                "children": [
+                  {
+                    "id": "name-field",
+                    "type": "div",
+                    "className": "space-y-2",
+                    "children": [
+                      {
+                        "id": "name-label",
+                        "type": "Label",
+                        "props": {
+                          "htmlFor": "name"
+                        },
+                        "children": "Full Name"
+                      },
+                      {
+                        "id": "name-input",
+                        "type": "Input",
+                        "props": {
+                          "id": "name",
+                          "name": "name",
+                          "placeholder": "John Doe",
+                          "required": true
+                        },
+                        "dataBinding": "formData.name",
+                        "events": {
+                          "onChange": "update-field"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "id": "email-field",
+                    "type": "div",
+                    "className": "space-y-2",
+                    "children": [
+                      {
+                        "id": "email-label",
+                        "type": "Label",
+                        "props": {
+                          "htmlFor": "email"
+                        },
+                        "children": "Email Address"
+                      },
+                      {
+                        "id": "email-input",
+                        "type": "Input",
+                        "props": {
+                          "id": "email",
+                          "name": "email",
+                          "type": "email",
+                          "placeholder": "john@example.com",
+                          "required": true
+                        },
+                        "dataBinding": "formData.email",
+                        "events": {
+                          "onChange": "update-field"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "id": "password-field",
+                    "type": "div",
+                    "className": "space-y-2",
+                    "children": [
+                      {
+                        "id": "password-label",
+                        "type": "Label",
+                        "props": {
+                          "htmlFor": "password"
+                        },
+                        "children": "Password"
+                      },
+                      {
+                        "id": "password-input",
+                        "type": "Input",
+                        "props": {
+                          "id": "password",
+                          "name": "password",
+                          "type": "password",
+                          "placeholder": "••••••••",
+                          "required": true
+                        },
+                        "dataBinding": "formData.password",
+                        "events": {
+                          "onChange": "update-field"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "id": "birthdate-field",
+                    "type": "div",
+                    "className": "space-y-2",
+                    "children": [
+                      {
+                        "id": "birthdate-label",
+                        "type": "Label",
+                        "props": {
+                          "htmlFor": "birthDate"
+                        },
+                        "children": "Birth date"
+                      },
+                      {
+                        "id": "birthdate-input",
+                        "type": "DatePicker",
+                        "props": {
+                          "placeholder": "Select a date",
+                          "disabled": false
+                        },
+                        "dataBinding": "formData.birthDate",
+                        "events": {
+                          "onChange": {
+                            "action": "update-date",
+                            "payload": {
+                              "field": "birthDate"
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "id": "bio-field",
+                    "type": "div",
+                    "className": "space-y-2",
+                    "children": [
+                      {
+                        "id": "bio-label",
+                        "type": "Label",
+                        "props": {
+                          "htmlFor": "bio"
+                        },
+                        "children": "Bio"
+                      },
+                      {
+                        "id": "bio-input",
+                        "type": "Textarea",
+                        "props": {
+                          "id": "bio",
+                          "name": "bio",
+                          "placeholder": "Tell us about yourself...",
+                          "rows": 4
+                        },
+                        "dataBinding": "formData.bio",
+                        "events": {
+                          "onChange": "update-field"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "id": "resume-field",
+                    "type": "div",
+                    "className": "space-y-2",
+                    "children": [
+                      {
+                        "id": "resume-label",
+                        "type": "Label",
+                        "props": {
+                          "htmlFor": "resume"
+                        },
+                        "children": "Resume"
+                      },
+                      {
+                        "id": "resume-upload",
+                        "type": "FileUpload",
+                        "props": {
+                          "accept": ".pdf,.doc,.docx",
+                          "multiple": false,
+                          "maxSize": 10485760
+                        },
+                        "events": {
+                          "onFilesSelected": {
+                            "action": "update-files",
+                            "payload": {
+                              "field": "resumeFiles"
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "id": "subscribe-field",
+                    "type": "div",
+                    "className": "flex items-center gap-2",
+                    "children": [
+                      {
+                        "id": "subscribe-checkbox",
+                        "type": "Checkbox",
+                        "props": {
+                          "id": "subscribe",
+                          "name": "subscribe"
+                        },
+                        "dataBinding": "formData.subscribe",
+                        "events": {
+                          "onCheckedChange": "update-checkbox"
+                        }
+                      },
+                      {
+                        "id": "subscribe-label",
+                        "type": "Label",
+                        "props": {
+                          "htmlFor": "subscribe"
+                        },
+                        "className": "text-sm font-normal cursor-pointer",
+                        "children": "Subscribe to newsletter"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "form-actions",
+                    "type": "div",
+                    "className": "flex gap-3 pt-2",
+                    "children": [
+                      {
+                        "id": "submit-button",
+                        "type": "Button",
+                        "props": {
+                          "type": "submit"
+                        },
+                        "className": "flex-1",
+                        "events": {
+                          "onClick": "submit-form"
+                        },
+                        "children": "Create Account"
+                      },
+                      {
+                        "id": "cancel-button",
+                        "type": "Button",
+                        "props": {
+                          "variant": "outline"
+                        },
+                        "className": "flex-1",
+                        "events": {
+                          "onClick": "cancel-form"
+                        },
+                        "children": "Cancel"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "dataSources": {
+    "formData": {
+      "type": "static",
+      "config": {
+        "name": "",
+        "email": "",
+        "password": "",
+        "bio": "",
+        "birthDate": null,
+        "resumeFiles": [],
+        "subscribe": false
+      }
+    }
+  }
+}

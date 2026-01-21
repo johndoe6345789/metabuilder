@@ -1,0 +1,18 @@
+{
+  "type": "Image",
+  "jsonCompatible": false,
+  "wrapperRequired": true,
+  "load": {
+    "path": "@/components/atoms/Image",
+    "export": "Image"
+  },
+  "props": {
+    "onLoad": "> void",
+    "onError": "> void",
+    "width": "== ",
+    "height": "== "
+  },
+  "metadata": {
+    "notes": "Contains hooks - needs wrapper"
+  }
+}

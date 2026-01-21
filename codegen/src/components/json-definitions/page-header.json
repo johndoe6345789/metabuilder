@@ -1,0 +1,74 @@
+{
+  "id": "page-header-wrapper",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": "className",
+      "transform": "const baseClass = 'flex items-start justify-between mb-6'; return data ? `${baseClass} ${data}` : baseClass"
+    }
+  },
+  "children": [
+    {
+      "id": "page-header-content",
+      "type": "div",
+      "bindings": {
+        "className": {
+          "source": null,
+          "transform": "'space-y-1'"
+        }
+      },
+      "children": [
+        {
+          "id": "page-header-title",
+          "type": "h1",
+          "bindings": {
+            "className": {
+              "source": null,
+              "transform": "'text-3xl font-bold tracking-tight'"
+            },
+            "children": {
+              "source": "title",
+              "transform": "data"
+            }
+          }
+        },
+        {
+          "id": "page-header-description",
+          "type": "p",
+          "bindings": {
+            "className": {
+              "source": null,
+              "transform": "'text-muted-foreground'"
+            },
+            "children": {
+              "source": "description",
+              "transform": "data"
+            },
+            "_if": {
+              "source": "description",
+              "transform": "!!data"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "page-header-actions",
+      "type": "div",
+      "bindings": {
+        "className": {
+          "source": null,
+          "transform": "'flex gap-2'"
+        },
+        "children": {
+          "source": "actions",
+          "transform": "data"
+        },
+        "_if": {
+          "source": "actions",
+          "transform": "!!data"
+        }
+      }
+    }
+  ]
+}

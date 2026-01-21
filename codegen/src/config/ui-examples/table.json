@@ -1,0 +1,286 @@
+{
+  "id": "table-list-ui",
+  "title": "Data Table",
+  "description": "Interactive data table with sorting and actions",
+  "layout": {
+    "type": "flex",
+    "direction": "column",
+    "gap": "6",
+    "padding": "6",
+    "className": "h-full bg-background",
+    "children": [
+      {
+        "id": "table-header",
+        "type": "div",
+        "className": "flex justify-between items-center",
+        "children": [
+          {
+            "id": "table-title",
+            "type": "h1",
+            "className": "text-3xl font-bold",
+            "children": "Projects"
+          },
+          {
+            "id": "add-button",
+            "type": "Button",
+            "props": {
+              "size": "sm"
+            },
+            "className": "gap-2",
+            "events": {
+              "onClick": "add-project"
+            },
+            "children": [
+              {
+                "id": "add-icon",
+                "type": "Plus",
+                "props": {
+                  "size": 16
+                }
+              },
+              {
+                "id": "add-text",
+                "type": "span",
+                "children": "New Project"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "table-card",
+        "type": "Card",
+        "children": [
+          {
+            "id": "table-content",
+            "type": "CardContent",
+            "className": "p-0",
+            "children": [
+              {
+                "id": "projects-table",
+                "type": "Table",
+                "children": [
+                  {
+                    "id": "table-header-row",
+                    "type": "TableHeader",
+                    "children": [
+                      {
+                        "id": "header-row",
+                        "type": "TableRow",
+                        "children": [
+                          {
+                            "id": "header-name",
+                            "type": "TableHead",
+                            "children": "Name"
+                          },
+                          {
+                            "id": "header-status",
+                            "type": "TableHead",
+                            "children": "Status"
+                          },
+                          {
+                            "id": "header-date",
+                            "type": "TableHead",
+                            "children": "Last Updated"
+                          },
+                          {
+                            "id": "header-actions",
+                            "type": "TableHead",
+                            "className": "text-right",
+                            "children": "Actions"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "id": "table-body",
+                    "type": "TableBody",
+                    "loop": {
+                      "source": "projects",
+                      "itemVar": "project",
+                      "indexVar": "index"
+                    },
+                    "children": [
+                      {
+                        "id": "data-row",
+                        "type": "TableRow",
+                        "children": [
+                          {
+                            "id": "cell-name",
+                            "type": "TableCell",
+                            "className": "font-medium",
+                            "children": [
+                              {
+                                "id": "project-name",
+                                "type": "span",
+                                "dataBinding": "project.name"
+                              }
+                            ]
+                          },
+                          {
+                            "id": "cell-status",
+                            "type": "TableCell",
+                            "children": [
+                              {
+                                "id": "status-badge",
+                                "type": "Badge",
+                                "props": {
+                                  "variant": "secondary"
+                                },
+                                "dataBinding": "project.status"
+                              }
+                            ]
+                          },
+                          {
+                            "id": "cell-date",
+                            "type": "TableCell",
+                            "children": [
+                              {
+                                "id": "project-date",
+                                "type": "span",
+                                "className": "text-sm text-muted-foreground",
+                                "dataBinding": "project.lastUpdated"
+                              }
+                            ]
+                          },
+                          {
+                            "id": "cell-actions",
+                            "type": "TableCell",
+                            "className": "text-right",
+                            "children": [
+                              {
+                                "id": "actions-container",
+                                "type": "div",
+                                "className": "flex gap-2 justify-end",
+                                "children": [
+                                  {
+                                    "id": "view-button",
+                                    "type": "Button",
+                                    "props": {
+                                      "variant": "ghost",
+                                      "size": "sm"
+                                    },
+                                    "events": {
+                                      "onClick": {
+                                        "action": "view-project",
+                                        "params": {
+                                          "projectId": "project.id"
+                                        }
+                                      }
+                                    },
+                                    "children": [
+                                      {
+                                        "id": "view-icon",
+                                        "type": "Eye",
+                                        "props": {
+                                          "size": 16
+                                        }
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "id": "edit-button",
+                                    "type": "Button",
+                                    "props": {
+                                      "variant": "ghost",
+                                      "size": "sm"
+                                    },
+                                    "events": {
+                                      "onClick": {
+                                        "action": "edit-project",
+                                        "params": {
+                                          "projectId": "project.id"
+                                        }
+                                      }
+                                    },
+                                    "children": [
+                                      {
+                                        "id": "edit-icon",
+                                        "type": "Edit",
+                                        "props": {
+                                          "size": 16
+                                        }
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "id": "delete-button",
+                                    "type": "Button",
+                                    "props": {
+                                      "variant": "ghost",
+                                      "size": "sm"
+                                    },
+                                    "events": {
+                                      "onClick": {
+                                        "action": "delete-project",
+                                        "params": {
+                                          "projectId": "project.id"
+                                        }
+                                      }
+                                    },
+                                    "children": [
+                                      {
+                                        "id": "delete-icon",
+                                        "type": "Trash",
+                                        "props": {
+                                          "size": 16
+                                        },
+                                        "className": "text-destructive"
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "dataSources": {
+    "projects": {
+      "type": "static",
+      "config": [
+        {
+          "id": "1",
+          "name": "E-commerce Platform",
+          "status": "Active",
+          "lastUpdated": "2 hours ago"
+        },
+        {
+          "id": "2",
+          "name": "Blog CMS",
+          "status": "In Progress",
+          "lastUpdated": "1 day ago"
+        },
+        {
+          "id": "3",
+          "name": "Analytics Dashboard",
+          "status": "Active",
+          "lastUpdated": "3 days ago"
+        },
+        {
+          "id": "4",
+          "name": "Mobile App API",
+          "status": "Planning",
+          "lastUpdated": "1 week ago"
+        },
+        {
+          "id": "5",
+          "name": "Customer Portal",
+          "status": "Active",
+          "lastUpdated": "2 weeks ago"
+        }
+      ]
+    }
+  }
+}

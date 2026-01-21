@@ -1,0 +1,44 @@
+{
+  "title": "GitHub Actions",
+  "loading": {
+    "description": "Recent workflow runs"
+  },
+  "error": {
+    "description": "Unable to fetch workflow status",
+    "retry": "Try Again"
+  },
+  "empty": {
+    "description": "No workflow runs found",
+    "body": "No GitHub Actions workflows have been run yet."
+  },
+  "header": {
+    "description": "Build status badges and recent workflow runs",
+    "refresh": "Refresh"
+  },
+  "tabs": {
+    "badges": "Status Badges",
+    "runs": "Recent Runs"
+  },
+  "sections": {
+    "workflowBadges": "Workflow Badges",
+    "branchBadges": "Branch-Specific Badges"
+  },
+  "actions": {
+    "viewAllWorkflows": "View All Workflows"
+  },
+  "toast": {
+    "badgeCopied": "Badge markdown copied to clipboard"
+  },
+  "status": {
+    "success": "Success",
+    "failed": "Failed",
+    "cancelled": "Cancelled",
+    "running": "Running"
+  },
+  "time": {
+    "daysAgo": "{count}d ago",
+    "hoursAgo": "{count}h ago",
+    "minutesAgo": "{count}m ago",
+    "justNow": "just now"
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "id": "schema-editor-status-bar",
+  "type": "div",
+  "props": {
+    "className": "border-t border-border px-4 py-2 bg-card flex items-center justify-between"
+  },
+  "bindings": {
+    "className": {
+      "source": "className",
+      "transform": "className ? `border-t border-border px-4 py-2 bg-card flex items-center justify-between ${className}` : 'border-t border-border px-4 py-2 bg-card flex items-center justify-between'"
+    }
+  },
+  "children": [
+    {
+      "id": "status-info",
+      "type": "div",
+      "props": { "className": "flex items-center gap-4 text-sm" },
+      "children": [
+        {
+          "id": "component-count",
+          "type": "span",
+          "props": { "className": "text-muted-foreground" },
+          "children": [
+            {
+              "type": "span",
+              "props": { "className": "font-medium text-foreground" },
+              "bindings": { "children": "componentCount" }
+            },
+            {
+              "type": "span",
+              "bindings": {
+                "children": {
+                  "source": "componentCount",
+                  "transform": "componentCount !== 1 ? ' components' : ' component'"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "selected-type",
+          "type": "span",
+          "props": { "className": "text-muted-foreground" },
+          "conditional": { "if": "selectedComponentType" },
+          "bindings": {
+            "children": {
+              "source": "selectedComponentType",
+              "transform": "`Type: ${selectedComponentType}`"
+            }
+          }
+        },
+        {
+          "id": "unsaved-indicator",
+          "type": "span",
+          "props": { "className": "text-amber-600 font-medium" },
+          "conditional": { "if": "hasUnsavedChanges" },
+          "bindings": { "children": "'Unsaved changes'" }
+        }
+      ]
+    }
+  ]
+}

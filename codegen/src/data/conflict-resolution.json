@@ -1,0 +1,65 @@
+{
+  "header": {
+    "title": "Conflict Resolution",
+    "description": "Manage sync conflicts between local and remote data"
+  },
+  "buttons": {
+    "detect": "Detect Conflicts",
+    "clearAll": "Clear All",
+    "keepAllLocal": "Keep All Local",
+    "keepAllRemote": "Keep All Remote",
+    "mergeAll": "Merge All",
+    "checkAgain": "Check Again"
+  },
+  "stats": {
+    "total": "Total Conflicts",
+    "files": "Files",
+    "models": "Models",
+    "other": "Other"
+  },
+  "bulk": {
+    "title": "Bulk Resolution",
+    "description": "Apply a resolution strategy to all conflicts at once",
+    "autoResolveLabel": "Auto-resolve:",
+    "autoResolveOptions": {
+      "none": "Disabled",
+      "local": "Always Local",
+      "remote": "Always Remote",
+      "merge": "Always Merge"
+    }
+  },
+  "filters": {
+    "label": "Filter by type:",
+    "allTypes": "All Types",
+    "files": "Files",
+    "models": "Models",
+    "components": "Components",
+    "workflows": "Workflows",
+    "lambdas": "Lambdas",
+    "componentTrees": "Component Trees"
+  },
+  "badges": {
+    "conflictCount": "{count} {label}"
+  },
+  "emptyStates": {
+    "filtered": "No conflicts found for this filter",
+    "noConflictsTitle": "No Conflicts Detected",
+    "noConflictsDescription": "Your local and remote data are in sync"
+  },
+  "labels": {
+    "conflictSingular": "conflict",
+    "conflictPlural": "conflicts"
+  },
+  "toasts": {
+    "noConflictsDetected": "No conflicts detected",
+    "foundConflicts": "Found {count} {label}",
+    "detectFailed": "Failed to detect conflicts",
+    "resolved": "Conflict resolved using {strategy} version",
+    "resolveFailed": "Failed to resolve conflict",
+    "resolvedAll": "All conflicts resolved using {strategy} version",
+    "resolveAllFailed": "Failed to resolve all conflicts"
+  },
+  "error": {
+    "title": "Error"
+  }
+}

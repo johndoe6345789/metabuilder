@@ -1,0 +1,98 @@
+{
+  "id": "schema-editor-toolbar",
+  "type": "div",
+  "props": {
+    "className": "border-b border-border px-6 py-3 bg-card"
+  },
+  "children": [
+    {
+      "id": "toolbar-content",
+      "type": "div",
+      "props": { "className": "flex justify-between items-center" },
+      "children": [
+        {
+          "id": "toolbar-left",
+          "type": "div",
+          "props": { "className": "flex flex-col gap-1" },
+          "children": [
+            {
+              "id": "toolbar-title",
+              "type": "span",
+              "props": {
+                "className": "text-lg font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent"
+              },
+              "bindings": { "children": "'Schema Editor'" }
+            }
+          ]
+        },
+        {
+          "id": "toolbar-actions",
+          "type": "div",
+          "props": { "className": "flex gap-2" },
+          "children": [
+            {
+              "id": "import-button",
+              "type": "Button",
+              "props": {
+                "variant": "outline",
+                "size": "sm"
+              },
+              "bindings": {
+                "onClick": { "source": "onImport" },
+                "children": "'Import'"
+              }
+            },
+            {
+              "id": "export-button",
+              "type": "Button",
+              "props": {
+                "variant": "outline",
+                "size": "sm"
+              },
+              "bindings": {
+                "onClick": { "source": "onExport" },
+                "children": "'Export'"
+              }
+            },
+            {
+              "id": "copy-button",
+              "type": "Button",
+              "props": {
+                "variant": "outline",
+                "size": "sm"
+              },
+              "bindings": {
+                "onClick": { "source": "onCopy" },
+                "children": "'Copy'"
+              }
+            },
+            {
+              "id": "preview-button",
+              "type": "Button",
+              "props": {
+                "variant": "outline",
+                "size": "sm"
+              },
+              "bindings": {
+                "onClick": { "source": "onPreview" },
+                "children": "'Preview'"
+              }
+            },
+            {
+              "id": "clear-button",
+              "type": "Button",
+              "props": {
+                "variant": "destructive",
+                "size": "sm"
+              },
+              "bindings": {
+                "onClick": { "source": "onClear" },
+                "children": "'Clear'"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

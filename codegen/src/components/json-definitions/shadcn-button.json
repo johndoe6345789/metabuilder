@@ -1,0 +1,34 @@
+{
+  "id": "shadcn-button",
+  "type": "ShadcnButton",
+  "bindings": {
+    "variant": {
+      "source": "variant",
+      "transform": "data || 'default'"
+    },
+    "size": {
+      "source": "size",
+      "transform": "data || 'default'"
+    },
+    "disabled": {
+      "source": "disabled",
+      "transform": "data || false"
+    },
+    "className": {
+      "source": "className",
+      "transform": "data"
+    },
+    "onClick": {
+      "source": "onClick",
+      "transform": "data"
+    }
+  },
+  "children": [
+    {
+      "type": "text",
+      "content": {
+        "source": "children"
+      }
+    }
+  ]
+}

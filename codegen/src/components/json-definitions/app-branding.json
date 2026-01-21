@@ -1,0 +1,31 @@
+{
+  "id": "app-branding-container",
+  "type": "Flex",
+  "props": {
+    "gap": "2",
+    "align": "center"
+  },
+  "children": [
+    {
+      "id": "app-branding-logo",
+      "type": "AppLogo",
+      "props": {
+        "size": "sm"
+      }
+    },
+    {
+      "id": "app-branding-text",
+      "type": "Heading",
+      "props": {
+        "level": 1,
+        "className": "font-semibold text-lg"
+      },
+      "children": [
+        {
+          "type": "text",
+          "content": "Spark"
+        }
+      ]
+    }
+  ]
+}

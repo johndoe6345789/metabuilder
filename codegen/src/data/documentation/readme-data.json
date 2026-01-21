@@ -1,0 +1,152 @@
+{
+  "title": "CodeForge",
+  "subtitle": "Low-Code Next.js App Builder with AI",
+  "sections": {
+    "overviewTitle": "Overview",
+    "featuresTitle": "Key Features",
+    "gettingStartedTitle": "Getting Started",
+    "aiFeaturesTitle": "AI-Powered Features",
+    "aiFeaturesDescription": "CodeForge integrates OpenAI across every designer to accelerate development:",
+    "techStackTitle": "Technology Stack",
+    "techStackFrontendTitle": "Frontend",
+    "techStackBackendTitle": "Backend & Tools",
+    "proTipsTitle": "Pro Tips"
+  },
+  "overview": "CodeForge is a comprehensive visual low-code platform for generating production-ready Next.js applications. It combines the power of visual designers with direct code editing, AI-powered generation, and a complete full-stack development toolkit.",
+  "features": [
+    {
+      "icon": "Code",
+      "title": "Monaco Code Editor",
+      "description": "Full-featured code editor with syntax highlighting, autocomplete, and AI-powered improvements"
+    },
+    {
+      "icon": "Database",
+      "title": "Prisma Schema Designer",
+      "description": "Visual database model designer with automatic schema generation and AI assistance"
+    },
+    {
+      "icon": "Tree",
+      "title": "Component Tree Builder",
+      "description": "Hierarchical component structure builder with drag-and-drop and AI generation"
+    },
+    {
+      "icon": "PaintBrush",
+      "title": "Theme Designer",
+      "description": "Material UI theme customizer with multiple variants, custom colors, and AI theme generation"
+    },
+    {
+      "icon": "Flask",
+      "title": "Flask Backend Designer",
+      "description": "Visual Python Flask API designer with blueprints, endpoints, and CORS configuration"
+    },
+    {
+      "icon": "Play",
+      "title": "Playwright Test Designer",
+      "description": "E2E test builder with step configuration and AI test generation"
+    },
+    {
+      "icon": "Cube",
+      "title": "Unit Test Designer",
+      "description": "Comprehensive test suite builder for components, functions, hooks, and integration tests"
+    },
+    {
+      "icon": "Wrench",
+      "title": "Auto Error Repair",
+      "description": "Automated error detection and AI-powered code repair system"
+    },
+    {
+      "icon": "Gear",
+      "title": "Project Settings",
+      "description": "Configure Next.js options, npm packages, scripts, and build settings"
+    },
+    {
+      "icon": "Sparkle",
+      "title": "AI Integration",
+      "description": "OpenAI-powered generation across all features for rapid development"
+    }
+  ],
+  "gettingStarted": [
+    {
+      "step": 1,
+      "title": "Create Your First Model",
+      "description": "Navigate to the Models tab and create your database schema using the visual designer or describe your data model to the AI."
+    },
+    {
+      "step": 2,
+      "title": "Design Your Components",
+      "description": "Use the Components tab to build your UI hierarchy visually or let the AI generate component structures based on your requirements."
+    },
+    {
+      "step": 3,
+      "title": "Customize Your Theme",
+      "description": "Head to the Styling tab to create custom color palettes, manage theme variants (light/dark), and configure typography."
+    },
+    {
+      "step": 4,
+      "title": "Build Your Backend",
+      "description": "Configure your Flask API in the Flask API tab by creating blueprints and endpoints with full CORS and authentication support."
+    },
+    {
+      "step": 5,
+      "title": "Export Your Project",
+      "description": "Click Export Project to generate all files including Next.js pages, Prisma schemas, Flask backend, tests, and configuration files ready for deployment."
+    }
+  ],
+  "aiFeatures": [
+    {
+      "title": "Complete App Generation",
+      "description": "Describe your application and get a full project structure with models, components, and styling"
+    },
+    {
+      "title": "Model Generation",
+      "description": "Generate Prisma models with fields and relations from natural language descriptions"
+    },
+    {
+      "title": "Component Creation",
+      "description": "Build complex React components with proper structure and Material UI integration"
+    },
+    {
+      "title": "Theme Generation",
+      "description": "Create beautiful, accessible color palettes that match your brand or description"
+    },
+    {
+      "title": "Test Generation",
+      "description": "Generate comprehensive E2E, unit, and integration tests with proper assertions"
+    },
+    {
+      "title": "Code Explanation",
+      "description": "Get detailed explanations of any code snippet to understand implementation details"
+    },
+    {
+      "title": "Code Improvement",
+      "description": "Automatically optimize code for performance, readability, and best practices"
+    },
+    {
+      "title": "Error Repair",
+      "description": "Automatically detect and fix syntax, type, import, and lint errors with context-aware fixes"
+    }
+  ],
+  "techStack": {
+    "frontend": [
+      "Next.js 14 with App Router",
+      "React 18 with TypeScript",
+      "Material UI 5",
+      "Monaco Editor",
+      "Tailwind CSS"
+    ],
+    "backend": [
+      "Flask REST API",
+      "Prisma ORM",
+      "Playwright E2E Testing",
+      "Vitest & React Testing Library",
+      "Storybook for Components"
+    ]
+  },
+  "proTips": [
+    "💡 Use the AI Generate feature to quickly scaffold entire applications from descriptions",
+    "💡 The Error Repair tab automatically scans and fixes common issues - check it before exporting",
+    "💡 Create multiple theme variants (light, dark, custom) in the Styling tab for complete theme support",
+    "💡 Test your components with Storybook stories before writing full E2E tests",
+    "💡 Flask blueprints help organize your API endpoints by feature or resource"
+  ]
+}

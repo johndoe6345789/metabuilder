@@ -1,0 +1,27 @@
+{
+  "muiComponents": [
+    "Box",
+    "Container",
+    "Grid",
+    "Stack",
+    "Paper",
+    "Card",
+    "CardContent",
+    "CardActions",
+    "Button",
+    "TextField",
+    "Typography",
+    "AppBar",
+    "Toolbar",
+    "List",
+    "ListItem",
+    "ListItemText",
+    "Divider",
+    "Avatar",
+    "Chip",
+    "IconButton"
+  ],
+  "prompts": {
+    "generateComponentDescription": "Describe the component you want to create:"
+  }
+}

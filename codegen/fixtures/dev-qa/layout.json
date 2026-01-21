@@ -1,0 +1,67 @@
+{
+  "id": "smoke-layout",
+  "name": "Smoke Layout",
+  "layout": {
+    "type": "single"
+  },
+  "dataSources": [],
+  "components": [
+    {
+      "id": "layout-container",
+      "type": "Container",
+      "props": {
+        "className": "py-6"
+      },
+      "children": [
+        {
+          "id": "layout-stack",
+          "type": "Stack",
+          "props": {
+            "gap": 4
+          },
+          "children": [
+            {
+              "id": "layout-card",
+              "type": "Card",
+              "children": [
+                {
+                  "id": "layout-card-header",
+                  "type": "CardHeader",
+                  "children": [
+                    {
+                      "id": "layout-card-title",
+                      "type": "CardTitle",
+                      "props": {
+                        "children": "Layout Smoke Check"
+                      }
+                    },
+                    {
+                      "id": "layout-card-description",
+                      "type": "CardDescription",
+                      "props": {
+                        "children": "Ensures layout primitives render in QA."
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "layout-card-content",
+                  "type": "CardContent",
+                  "children": [
+                    {
+                      "id": "layout-card-text",
+                      "type": "Text",
+                      "props": {
+                        "children": "This card is wrapped in Container and Stack components."
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

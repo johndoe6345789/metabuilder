@@ -1,0 +1,32 @@
+{
+  "id": "pulse-wrapper",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": ["variant", "size", "speed", "className"],
+      "transform": "const variant = data[0] || 'primary'; const size = data[1] || 'md'; const speed = data[2] || 'normal'; const className = data[3] || ''; const sizeClasses = { sm: 'w-2 h-2', md: 'w-3 h-3', lg: 'w-4 h-4' }; const variantClasses = { primary: 'bg-primary', accent: 'bg-accent', success: 'bg-green-500', warning: 'bg-yellow-500', error: 'bg-red-500' }; const speedClasses = { slow: 'animate-pulse [animation-duration:3s]', normal: 'animate-pulse', fast: 'animate-pulse [animation-duration:0.5s]' }; const baseClass = 'relative inline-flex'; return `${baseClass} ${className}`.trim()"
+    }
+  },
+  "children": [
+    {
+      "id": "pulse-inner-1",
+      "type": "span",
+      "bindings": {
+        "className": {
+          "source": ["variant", "size", "speed"],
+          "transform": "const variant = data[0] || 'primary'; const size = data[1] || 'md'; const speed = data[2] || 'normal'; const sizeClasses = { sm: 'w-2 h-2', md: 'w-3 h-3', lg: 'w-4 h-4' }; const variantClasses = { primary: 'bg-primary', accent: 'bg-accent', success: 'bg-green-500', warning: 'bg-yellow-500', error: 'bg-red-500' }; const speedClasses = { slow: 'animate-pulse [animation-duration:3s]', normal: 'animate-pulse', fast: 'animate-pulse [animation-duration:0.5s]' }; return `inline-flex rounded-full opacity-75 ${sizeClasses[size]} ${variantClasses[variant]} ${speedClasses[speed]}`"
+        }
+      }
+    },
+    {
+      "id": "pulse-inner-2",
+      "type": "span",
+      "bindings": {
+        "className": {
+          "source": ["variant", "size", "speed"],
+          "transform": "const variant = data[0] || 'primary'; const size = data[1] || 'md'; const speed = data[2] || 'normal'; const sizeClasses = { sm: 'w-2 h-2', md: 'w-3 h-3', lg: 'w-4 h-4' }; const variantClasses = { primary: 'bg-primary', accent: 'bg-accent', success: 'bg-green-500', warning: 'bg-yellow-500', error: 'bg-red-500' }; const speedClasses = { slow: 'animate-pulse [animation-duration:3s]', normal: 'animate-pulse', fast: 'animate-pulse [animation-duration:0.5s]' }; return `absolute inline-flex rounded-full opacity-75 ${sizeClasses[size]} ${variantClasses[variant]} ${speedClasses[speed]}`"
+        }
+      }
+    }
+  ]
+}

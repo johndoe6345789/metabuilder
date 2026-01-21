@@ -1,0 +1,112 @@
+{
+  "id": "action-button-root",
+  "type": "div",
+  "props": {
+    "className": "inline-flex"
+  },
+  "conditional": {
+    "if": "tooltip",
+    "then": {
+      "id": "action-button-with-tooltip",
+      "type": "div",
+      "children": [
+        {
+          "id": "action-button-tooltip-provider",
+          "type": "TooltipProvider",
+          "children": [
+            {
+              "id": "action-button-tooltip",
+              "type": "Tooltip",
+              "children": [
+                {
+                  "id": "action-button-trigger",
+                  "type": "TooltipTrigger",
+                  "props": {
+                    "asChild": true
+                  },
+                  "children": [
+                    {
+                      "id": "action-button-element",
+                      "type": "Button",
+                      "props": {
+                        "disabled": "disabled",
+                        "className": "className"
+                      },
+                      "bindings": {
+                        "variant": "variant",
+                        "size": "size"
+                      },
+                      "children": [
+                        {
+                          "id": "action-button-icon",
+                          "type": "span",
+                          "props": {
+                            "className": "mr-2"
+                          },
+                          "bindings": {
+                            "children": "icon"
+                          },
+                          "conditional": {
+                            "if": "icon"
+                          }
+                        },
+                        {
+                          "id": "action-button-label",
+                          "type": "span",
+                          "bindings": {
+                            "children": "label"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "action-button-tooltip-content",
+                  "type": "TooltipContent",
+                  "bindings": {
+                    "children": "tooltip"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "else": {
+      "id": "action-button-direct",
+      "type": "Button",
+      "props": {
+        "disabled": "disabled",
+        "className": "className"
+      },
+      "bindings": {
+        "variant": "variant",
+        "size": "size"
+      },
+      "children": [
+        {
+          "id": "action-button-icon-direct",
+          "type": "span",
+          "props": {
+            "className": "mr-2"
+          },
+          "bindings": {
+            "children": "icon"
+          },
+          "conditional": {
+            "if": "icon"
+          }
+        },
+        {
+          "id": "action-button-label-direct",
+          "type": "span",
+          "bindings": {
+            "children": "label"
+          }
+        }
+      ]
+    }
+  }
+}

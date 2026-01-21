@@ -1,0 +1,108 @@
+{
+  "id": "notification-container",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": ["type", "className"],
+      "transform": "const type = data[0]; const customClass = data[1] || ''; const config = { info: { bg: 'bg-blue-500/10', border: 'border-blue-500/20', color: 'text-blue-500' }, success: { bg: 'bg-accent/10', border: 'border-accent/20', color: 'text-accent' }, warning: { bg: 'bg-yellow-500/10', border: 'border-yellow-500/20', color: 'text-yellow-500' }, error: { bg: 'bg-destructive/10', border: 'border-destructive/20', color: 'text-destructive' } }; const c = config[type]; return `flex gap-3 p-4 rounded-lg border ${c.bg} ${c.border} ${customClass}`.trim()"
+    }
+  },
+  "children": [
+    {
+      "id": "notification-icon",
+      "type": "div",
+      "bindings": {
+        "className": {
+          "source": "type",
+          "transform": "const type = data; const colors = { info: 'text-blue-500', success: 'text-accent', warning: 'text-yellow-500', error: 'text-destructive' }; return `w-5 h-5 flex-shrink-0 ${colors[type]}`.trim()"
+        },
+        "children": {
+          "source": "type",
+          "transform": "const type = data; const icons = { info: 'ℹ', success: '✓', warning: '⚠', error: '✕' }; return icons[type]"
+        }
+      }
+    },
+    {
+      "id": "notification-content",
+      "type": "div",
+      "bindings": {
+        "className": {
+          "source": null,
+          "transform": "'flex-1 min-w-0'"
+        }
+      },
+      "children": [
+        {
+          "id": "notification-title",
+          "type": "h4",
+          "bindings": {
+            "className": {
+              "source": null,
+              "transform": "'font-medium text-sm'"
+            },
+            "children": {
+              "source": "title",
+              "transform": "data"
+            }
+          }
+        },
+        {
+          "id": "notification-message",
+          "type": "p",
+          "bindings": {
+            "className": {
+              "source": null,
+              "transform": "'text-sm text-muted-foreground mt-1'"
+            },
+            "children": {
+              "source": "message",
+              "transform": "data"
+            },
+            "_if": {
+              "source": "message",
+              "transform": "!!data"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "notification-close",
+      "type": "button",
+      "bindings": {
+        "className": {
+          "source": null,
+          "transform": "'flex-shrink-0 text-muted-foreground hover:text-foreground transition-colors'"
+        },
+        "onClick": {
+          "source": "onClose",
+          "transform": "data"
+        },
+        "aria-label": {
+          "source": null,
+          "transform": "'Close notification'"
+        },
+        "_if": {
+          "source": "onClose",
+          "transform": "!!data"
+        }
+      },
+      "children": [
+        {
+          "id": "notification-close-icon",
+          "type": "span",
+          "bindings": {
+            "className": {
+              "source": null,
+              "transform": "'w-4 h-4'"
+            },
+            "children": {
+              "source": null,
+              "transform": "'✕'"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

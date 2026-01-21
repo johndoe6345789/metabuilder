@@ -1,0 +1,65 @@
+{
+  "header": {
+    "title": "Advanced Task Manager",
+    "subtitle": "Demonstrating atomic components, custom hooks, and reactive state management"
+  },
+  "stats": {
+    "total": "Total Tasks",
+    "completed": "Completed",
+    "pending": "Pending",
+    "completion": "Completion"
+  },
+  "taskCard": {
+    "title": "Your Tasks",
+    "description": "Manage your tasks with advanced features",
+    "addTask": "Add Task",
+    "searchPlaceholder": "Search tasks...",
+    "empty": {
+      "noMatch": "No tasks match your search",
+      "noTasks": "No tasks yet. Click \"Add Task\" to get started!"
+    },
+    "deleteTitle": "Delete task"
+  },
+  "architecture": {
+    "title": "Architecture Highlights",
+    "description": "What makes this demo special",
+    "items": [
+      {
+        "title": "Custom Hooks",
+        "description": "useCRUD for data management, useSearch for filtering, useDialog for modals"
+      },
+      {
+        "title": "Atomic Components",
+        "description": "ActionButton, IconButton, DataList, SearchBar - all under 150 LOC"
+      },
+      {
+        "title": "KV Persistence",
+        "description": "All data persists between sessions using the Spark KV store"
+      },
+      {
+        "title": "Reactive State",
+        "description": "Computed stats update automatically when todos change"
+      }
+    ]
+  },
+  "dialog": {
+    "title": "Add New Task",
+    "description": "Create a new task with priority",
+    "taskDescriptionLabel": "Task Description",
+    "taskDescriptionPlaceholder": "What needs to be done?",
+    "priorityLabel": "Priority",
+    "addButton": "Add Task",
+    "cancelButton": "Cancel"
+  },
+  "priorityLabels": {
+    "low": "low",
+    "medium": "medium",
+    "high": "high"
+  },
+  "toast": {
+    "added": "Task added successfully!",
+    "pending": "Task marked as pending",
+    "completed": "Task completed!",
+    "deleted": "Task deleted"
+  }
+}

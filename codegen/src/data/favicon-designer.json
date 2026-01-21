@@ -1,0 +1,120 @@
+{
+  "toolbar": {
+    "newDesign": "New Design",
+    "duplicate": "Duplicate",
+    "delete": "Delete"
+  },
+  "modes": {
+    "select": "Select",
+    "draw": "Draw",
+    "erase": "Erase"
+  },
+  "toasts": {
+    "designDuplicated": "Design duplicated",
+    "cannotDeleteLast": "Cannot delete the last design",
+    "designDeleted": "Design deleted",
+    "exportedPng": "Exported as {size}x{size} PNG",
+    "exportedIco": "Exported as ICO",
+    "exportedSvg": "Exported as SVG",
+    "exportAll": "Exporting all sizes..."
+  },
+  "canvas": {
+    "exportPresetTitle": "Export {size}x{size}",
+    "brushBadge": "{effect}: {size}px",
+    "eraserBadge": "Eraser: {size}px",
+    "presetLabel": "{size}px"
+  },
+  "export": {
+    "png": "Export PNG",
+    "svg": "Export SVG",
+    "all": "Export All Sizes"
+  },
+  "design": {
+    "nameLabel": "Design Name",
+    "namePlaceholder": "My Favicon",
+    "newDesignName": "Favicon {count}",
+    "duplicateSuffix": " (Copy)",
+    "selectLabel": "Select Design",
+    "sizeLabel": "Canvas Size",
+    "backgroundLabel": "Background Color",
+    "backgroundPlaceholder": "#7c3aed",
+    "filterLabel": "Image Filter",
+    "filterIntensity": "Filter Intensity: {value}%"
+  },
+  "filters": {
+    "none": "None",
+    "blur": "Blur",
+    "brightness": "Brightness",
+    "contrast": "Contrast",
+    "grayscale": "Grayscale",
+    "sepia": "Sepia",
+    "invert": "Invert",
+    "saturate": "Saturate",
+    "hue-rotate": "Hue Rotate",
+    "pixelate": "Pixelate"
+  },
+  "elements": {
+    "addTitle": "Add Elements",
+    "selectHint": "Switch to Select mode to add elements",
+    "listTitle": "Elements ({count})",
+    "empty": "No elements yet. Add some or start drawing!"
+  },
+  "brush": {
+    "settingsTitle": "Brush Settings",
+    "eraserSettingsTitle": "Eraser Settings",
+    "effectLabel": "Brush Effect",
+    "colorLabel": "Brush Color",
+    "gradientColorLabel": "Gradient End Color",
+    "glowIntensity": "Glow Intensity: {value}px",
+    "sizeLabel": "{mode} Size: {size}px"
+  },
+  "inspector": {
+    "title": "Edit Element",
+    "strokeColor": "Stroke Color",
+    "strokeWidth": "Stroke Width: {value}px",
+    "textLabel": "Text",
+    "textPlaceholder": "Enter text",
+    "emojiLabel": "Emoji",
+    "emojiPlaceholder": "😀",
+    "fontSize": "Font Size: {value}px",
+    "fontWeight": "Font Weight",
+    "width": "Width: {value}px",
+    "height": "Height: {value}px",
+    "xPosition": "X Position: {value}px",
+    "yPosition": "Y Position: {value}px",
+    "rotation": "Rotation: {value}°",
+    "color": "Color"
+  },
+  "effects": {
+    "solid": "Solid",
+    "gradient": "Gradient",
+    "spray": "Spray Paint",
+    "glow": "Glow"
+  },
+  "fontWeights": {
+    "normal": "Normal",
+    "bold": "Bold",
+    "lighter": "Light"
+  },
+  "elementTypes": {
+    "circle": "Circle",
+    "square": "Square",
+    "triangle": "Triangle",
+    "star": "Star",
+    "heart": "Heart",
+    "polygon": "Polygon",
+    "text": "Text",
+    "emoji": "Emoji",
+    "freehand": "Freehand"
+  },
+  "defaults": {
+    "designName": "My Favicon",
+    "designText": "CF",
+    "newText": "A",
+    "newEmoji": "😀"
+  },
+  "placeholders": {
+    "color": "#ffffff",
+    "gradient": "#ff00ff"
+  }
+}

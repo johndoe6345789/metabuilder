@@ -1,0 +1,17 @@
+{
+  "$schema": "./schema/page-schema.json",
+  "id": "json-ui-showcase-page",
+  "name": "JSON UI Showcase",
+  "description": "Showcase of JSON UI components",
+  "icon": "Stack",
+  "layout": {
+    "$ref": "./layouts/single-column.json"
+  },
+  "components": [
+    {
+      "id": "json-ui-showcase-component",
+      "type": "JSONUIShowcase",
+      "props": {}
+    }
+  ]
+}

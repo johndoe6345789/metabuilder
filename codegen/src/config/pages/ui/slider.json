@@ -1,0 +1,15 @@
+{
+  "type": "slider",
+  "jsonCompatible": false,
+  "wrapperRequired": true,
+  "load": {
+    "path": "@/components/ui/slider",
+    "export": "slider"
+  },
+  "props": {
+    "length": "> ("
+  },
+  "metadata": {
+    "notes": "Contains hooks - needs wrapper"
+  }
+}

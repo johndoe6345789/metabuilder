@@ -1,0 +1,7 @@
+{
+  "type": "Calendar as ShadcnCalendar",
+  "props": {
+    "onSelect": "> void",
+    "disabled": "> boolean)"
+  }
+}

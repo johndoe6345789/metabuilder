@@ -1,0 +1,26 @@
+{
+  "id": "accordion-container",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": "className",
+      "transform": "const base = 'space-y-2'; return data ? `${base} ${data}` : base"
+    }
+  },
+  "children": [
+    {
+      "id": "accordion-items-repeat",
+      "type": "_repeat",
+      "bindings": {
+        "_items": {
+          "source": "items",
+          "transform": "data || []"
+        },
+        "_renderItem": {
+          "source": ["accordionState.toggleItem", "accordionState.isOpen"],
+          "transform": "(item) => { const toggleItem = data[0]; const isOpen = data[1]; const itemIsOpen = isOpen(item.id); return { _element: 'div', _key: item.id, _props: { className: 'border border-border rounded-lg overflow-hidden' }, _children: [{ _element: 'button', _props: { onClick: () => !item.disabled && toggleItem(item.id), disabled: item.disabled, className: `w-full flex items-center justify-between p-4 bg-card text-card-foreground font-medium transition-colors hover:bg-accent hover:text-accent-foreground ${item.disabled ? 'opacity-50 cursor-not-allowed' : ''}` }, _children: [{ _element: 'span', _children: [item.title] }, { _element: 'CaretDown', _props: { className: `w-5 h-5 transition-transform ${itemIsOpen ? 'rotate-180' : ''}` } }] }, itemIsOpen ? { _element: 'div', _props: { className: 'p-4 bg-card border-t border-border animate-in slide-in-from-top-2' }, _children: [item.content] } : null].filter(Boolean) }; }"
+        }
+      }
+    }
+  ]
+}

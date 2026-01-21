@@ -1,0 +1,76 @@
+{
+  "page": {
+    "title": "Redux Integration Demo",
+    "description": "Comprehensive Redux Toolkit integration with IndexedDB and Flask API synchronization"
+  },
+  "cards": {
+    "indexedDb": {
+      "title": "IndexedDB Status",
+      "description": "Local browser storage",
+      "labels": {
+        "files": "Files",
+        "componentTrees": "Component Trees",
+        "createTestFile": "Create Test File"
+      }
+    },
+    "flask": {
+      "title": "Flask API Status",
+      "description": "Remote server connection",
+      "labels": {
+        "connection": "Connection",
+        "totalKeys": "Total Keys",
+        "storageSize": "Storage Size",
+        "storageUnit": "KB",
+        "checkConnection": "Check Connection"
+      },
+      "status": {
+        "connected": "Connected",
+        "disconnected": "Disconnected"
+      }
+    },
+    "sync": {
+      "title": "Sync Status",
+      "description": "Data synchronization",
+      "labels": {
+        "status": "Status",
+        "autoSync": "Auto Sync",
+        "lastSync": "Last Sync",
+        "push": "Push",
+        "pull": "Pull"
+      },
+      "status": {
+        "idle": "Idle",
+        "syncing": "Syncing...",
+        "success": "Success",
+        "error": "Error"
+      },
+      "autoSync": {
+        "enabled": "Enabled",
+        "disabled": "Disabled"
+      }
+    }
+  },
+  "files": {
+    "title": "Files in Redux Store",
+    "description": "Files managed by Redux and synced with IndexedDB/Flask",
+    "empty": "No files yet. Create a test file to get started.",
+    "updatedLabel": "Updated"
+  },
+  "componentTrees": {
+    "title": "Component Trees in Redux Store",
+    "description": "JSON component trees loaded from components.json",
+    "empty": "No component trees loaded yet."
+  },
+  "danger": {
+    "title": "Danger Zone",
+    "description": "Irreversible operations - use with caution",
+    "clearButton": "Clear Flask Storage"
+  },
+  "toast": {
+    "createTestFile": "Test file created and saved to IndexedDB",
+    "deleteFile": "File deleted from IndexedDB",
+    "syncUp": "Syncing to Flask API...",
+    "syncDown": "Syncing from Flask API...",
+    "clearFlask": "Clearing Flask storage..."
+  }
+}

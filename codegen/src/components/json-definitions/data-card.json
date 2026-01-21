@@ -1,0 +1,82 @@
+{
+  "id": "data-card-container",
+  "type": "Card",
+  "bindings": {
+    "className": {
+      "source": ["gradient", "className"],
+      "transform": "const gradient = data[0]; const className = data[1] || ''; const gradientClass = gradient ? `bg-gradient-to-br ${gradient} border-primary/20` : ''; return `${gradientClass} ${className}`.trim()"
+    }
+  },
+  "children": [
+    {
+      "id": "data-card-header",
+      "type": "CardHeader",
+      "children": [
+        {
+          "id": "data-card-title",
+          "type": "CardTitle",
+          "bindings": {
+            "className": {
+              "source": null,
+              "transform": "'flex items-center gap-2'"
+            },
+            "children": [
+              {
+                "id": "data-card-icon",
+                "type": "span",
+                "bindings": {
+                  "className": {
+                    "source": null,
+                    "transform": "'text-primary'"
+                  },
+                  "children": {
+                    "source": "icon",
+                    "transform": "data"
+                  },
+                  "_if": {
+                    "source": "icon",
+                    "transform": "!!data"
+                  }
+                }
+              },
+              {
+                "id": "data-card-title-text",
+                "type": "span",
+                "bindings": {
+                  "children": {
+                    "source": "title",
+                    "transform": "data"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "data-card-description",
+          "type": "CardDescription",
+          "bindings": {
+            "children": {
+              "source": "description",
+              "transform": "data"
+            },
+            "_if": {
+              "source": "description",
+              "transform": "!!data"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "data-card-content",
+      "type": "CardContent",
+      "children": [
+        {
+          "type": "slot",
+          "source": "children"
+        }
+      ]
+    }
+  ]
+}

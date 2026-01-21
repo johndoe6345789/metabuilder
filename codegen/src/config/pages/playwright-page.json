@@ -1,0 +1,36 @@
+{
+  "id": "playwright-page",
+  "name": "Playwright Tests",
+  "description": "E2E test designer",
+  "icon": "TestTube",
+  "layout": {
+    "$ref": "./layouts/single-column.json"
+  },
+  "dataSources": [
+    {
+      "id": "tests",
+      "$ref": "./data-sources/kv-storage.json",
+      "key": "playwright-tests",
+      "defaultValue": []
+    }
+  ],
+  "components": [
+    {
+      "$ref": "./molecules/page-header-standard.json",
+      "children": [
+        {
+          "$ref": "./atoms/heading-1.json",
+          "props": {
+            "children": "Playwright Tests"
+          }
+        },
+        {
+          "$ref": "./atoms/text-muted.json",
+          "props": {
+            "children": "Create end-to-end tests"
+          }
+        }
+      ]
+    }
+  ]
+}

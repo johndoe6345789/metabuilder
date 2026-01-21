@@ -1,0 +1,97 @@
+{
+  "id": "checkbox",
+  "type": "label",
+  "bindings": {
+    "className": {
+      "source": ["disabled", "className"],
+      "transform": "const cn = (classes) => classes.filter(Boolean).join(' '); const disabled = data[0]; const className = data[1] || ''; const disabledClass = disabled ? 'opacity-50 cursor-not-allowed' : ''; return cn(['flex items-center gap-2 cursor-pointer', disabledClass, className])"
+    }
+  },
+  "children": [
+    {
+      "id": "checkbox-button",
+      "type": "button",
+      "bindings": {
+        "type": {
+          "source": null,
+          "transform": "'button'"
+        },
+        "role": {
+          "source": null,
+          "transform": "'checkbox'"
+        },
+        "aria-checked": {
+          "source": ["indeterminate", "checked"],
+          "transform": "data[0] ? 'mixed' : (data[1] ? 'true' : 'false')"
+        },
+        "disabled": {
+          "source": "disabled",
+          "transform": "data"
+        },
+        "onClick": {
+          "source": ["disabled", "checked", "onChange"],
+          "transform": "const disabled = data[0]; const checked = data[1]; const onChange = data[2]; return !disabled ? () => onChange(!checked) : undefined"
+        },
+        "className": {
+          "source": ["size", "checked", "indeterminate"],
+          "transform": "const cn = (classes) => classes.filter(Boolean).join(' '); const size = data[0] || 'md'; const checked = data[1]; const indeterminate = data[2]; const sizeStyles = { sm: 'w-4 h-4', md: 'w-5 h-5', lg: 'w-6 h-6' }; const stateClass = (checked || indeterminate) ? 'bg-primary border-primary text-primary-foreground' : 'bg-background border-input hover:border-ring'; return cn(['flex items-center justify-center rounded border-2 transition-colors', sizeStyles[size], stateClass])"
+        }
+      },
+      "children": [
+        {
+          "id": "indeterminate-icon",
+          "type": "Minus",
+          "bindings": {
+            "_if": {
+              "source": "indeterminate",
+              "transform": "data"
+            },
+            "size": {
+              "source": "size",
+              "transform": "const iconSize = { sm: 12, md: 16, lg: 20 }; return iconSize[data || 'md']"
+            },
+            "weight": {
+              "source": null,
+              "transform": "'bold'"
+            }
+          }
+        },
+        {
+          "id": "check-icon",
+          "type": "Check",
+          "bindings": {
+            "_if": {
+              "source": ["checked", "indeterminate"],
+              "transform": "data[0] && !data[1]"
+            },
+            "size": {
+              "source": "size",
+              "transform": "const iconSize = { sm: 12, md: 16, lg: 20 }; return iconSize[data || 'md']"
+            },
+            "weight": {
+              "source": null,
+              "transform": "'bold'"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "label-text",
+      "type": "span",
+      "bindings": {
+        "_if": {
+          "source": "label",
+          "transform": "data"
+        },
+        "className": {
+          "source": null,
+          "transform": "'text-sm font-medium select-none'"
+        }
+      },
+      "children": [
+        {"type": "text", "content": {"source": "label"}}
+      ]
+    }
+  ]
+}

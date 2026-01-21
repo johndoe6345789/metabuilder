@@ -1,0 +1,7 @@
+{
+  "type": "Heading",
+  "props": {
+    "level": 2,
+    "className": "text-2xl font-semibold"
+  }
+}

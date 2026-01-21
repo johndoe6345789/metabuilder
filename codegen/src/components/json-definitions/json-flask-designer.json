@@ -1,0 +1,7 @@
+{
+  "id": "json-flask-designer",
+  "type": "JSONPageRenderer",
+  "props": {
+    "schema": "flaskDesignerConfig"
+  }
+}

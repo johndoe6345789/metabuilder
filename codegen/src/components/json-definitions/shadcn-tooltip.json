@@ -1,0 +1,20 @@
+{
+  "id": "shadcn-tooltip",
+  "type": "ShadcnTooltip",
+  "bindings": {
+    "delayDuration": {
+      "source": "delayDuration",
+      "transform": "data"
+    },
+    "className": {
+      "source": "className",
+      "transform": "data"
+    }
+  },
+  "children": [
+    {
+      "type": "slot",
+      "source": "children"
+    }
+  ]
+}

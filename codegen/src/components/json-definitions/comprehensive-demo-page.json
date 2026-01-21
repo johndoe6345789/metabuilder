@@ -1,0 +1,8 @@
+{
+  "id": "comprehensive-demo-page",
+  "type": "div",
+  "props": {
+    "className": "comprehensive-demo-page"
+  },
+  "children": []
+}

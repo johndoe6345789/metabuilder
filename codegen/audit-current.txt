@@ -1,0 +1,81 @@
+
+> spark-template@0.0.0 audit:json
+> tsx scripts/audit-json-components.ts
+
+🔍 Starting JSON component audit...
+
+📊 Found 338 JSON files in config/pages
+📊 Found 538 TSX files in src/components
+📊 Found 119 JSON definitions
+📊 Found 353 registry entries
+
+🔍 Checking for TSX files that could be replaced with JSON...
+🔍 Checking for orphaned JSON files...
+🔍 Checking for obsolete wrapper references...
+🔍 Checking for broken load paths...
+🔍 Checking molecules without JSON definitions...
+
+================================================================================
+📋 AUDIT REPORT
+================================================================================
+
+📅 Generated: 2026-01-21T02:21:07.891Z
+
+📈 Statistics:
+   • Total JSON files: 338
+   • Total TSX files: 538
+   • Registry entries: 353
+   • Orphaned JSON: 0
+   • Obsolete wrapper refs: 0
+   • Duplicate implementations: 125
+
+
+⚠️ WARNING (125)
+--------------------------------------------------------------------------------
+
+  DUPLICATE IMPLEMENTATION (125):
+    • /Users/rmac/Documents/GitHub/low-code-react-app-b/src/components/organisms/AppHeader.tsx
+      TSX file has JSON equivalent at src/config/pages/organisms/app-header.json
+      💡 Consider removing TSX and routing through JSON renderer
+    • /Users/rmac/Documents/GitHub/low-code-react-app-b/src/components/organisms/EmptyCanvasState.tsx
+      TSX file has JSON equivalent at src/config/pages/organisms/empty-canvas-state.json
+      💡 Consider removing TSX and routing through JSON renderer
+    • /Users/rmac/Documents/GitHub/low-code-react-app-b/src/components/organisms/NavigationMenu.tsx
+      TSX file has JSON equivalent at src/config/pages/organisms/navigation-menu.json
+      💡 Consider removing TSX and routing through JSON renderer
+    • /Users/rmac/Documents/GitHub/low-code-react-app-b/src/components/organisms/PageHeader.tsx
+      TSX file has JSON equivalent at src/config/pages/organisms/page-header.json
+      💡 Consider removing TSX and routing through JSON renderer
+    • /Users/rmac/Documents/GitHub/low-code-react-app-b/src/components/organisms/SchemaCodeViewer.tsx
+      TSX file has JSON equivalent at src/config/pages/organisms/schema-code-viewer.json
+      💡 Consider removing TSX and routing through JSON renderer
+    ... and 120 more
+
+ℹ️ INFO (20)
+--------------------------------------------------------------------------------
+
+  POTENTIAL CONVERSION (20):
+    • /Users/rmac/Documents/GitHub/low-code-react-app-b/src/components/molecules/AppBranding.tsx
+      Molecule "AppBranding" could potentially be converted to JSON
+      💡 Evaluate if AppBranding can be expressed as pure JSON
+    • /Users/rmac/Documents/GitHub/low-code-react-app-b/src/components/molecules/CanvasRenderer.tsx
+      Molecule "CanvasRenderer" could potentially be converted to JSON
+      💡 Evaluate if CanvasRenderer can be expressed as pure JSON
+    • /Users/rmac/Documents/GitHub/low-code-react-app-b/src/components/molecules/CodeExplanationDialog.tsx
+      Molecule "CodeExplanationDialog" could potentially be converted to JSON
+      💡 Evaluate if CodeExplanationDialog can be expressed as pure JSON
+    • /Users/rmac/Documents/GitHub/low-code-react-app-b/src/components/molecules/ComponentPalette.tsx
+      Molecule "ComponentPalette" could potentially be converted to JSON
+      💡 Evaluate if ComponentPalette can be expressed as pure JSON
+    • /Users/rmac/Documents/GitHub/low-code-react-app-b/src/components/molecules/DataSourceCard.tsx
+      Molecule "DataSourceCard" could potentially be converted to JSON
+      💡 Evaluate if DataSourceCard can be expressed as pure JSON
+    ... and 15 more
+
+================================================================================
+Total issues found: 145
+================================================================================
+
+📄 Full report written to: /Users/rmac/Documents/GitHub/low-code-react-app-b/audit-report.json
+
+✅ Audit completed successfully

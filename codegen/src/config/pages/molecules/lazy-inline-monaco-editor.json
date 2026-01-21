@@ -1,0 +1,6 @@
+{
+  "type": "LazyInlineMonacoEditor",
+  "props": {
+    "onChange": "> void"
+  }
+}

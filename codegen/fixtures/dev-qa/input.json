@@ -1,0 +1,45 @@
+{
+  "id": "smoke-input",
+  "name": "Smoke Input",
+  "layout": {
+    "type": "single"
+  },
+  "dataSources": [],
+  "components": [
+    {
+      "id": "input-section",
+      "type": "section",
+      "children": [
+        {
+          "id": "input-heading",
+          "type": "Heading",
+          "props": {
+            "level": 2,
+            "children": "Input Smoke Check"
+          }
+        },
+        {
+          "id": "input-control",
+          "type": "Input",
+          "props": {
+            "placeholder": "Enter QA value..."
+          }
+        },
+        {
+          "id": "input-toggle",
+          "type": "Switch",
+          "props": {
+            "checked": true
+          }
+        },
+        {
+          "id": "input-button",
+          "type": "Button",
+          "props": {
+            "children": "Submit"
+          }
+        }
+      ]
+    }
+  ]
+}

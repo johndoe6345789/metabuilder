@@ -1,0 +1,269 @@
+{
+  "$schema": "./schemas/app-config-schema.json",
+  "app": {
+    "name": "CodeForge",
+    "title": "CodeForge - Low-Code Development Platform",
+    "description": "Comprehensive low-code platform for rapid application development",
+    "version": "6.0.0",
+    "themeColor": "#8b5cf6"
+  },
+  "branding": {
+    "fonts": {
+      "body": {
+        "family": "IBM Plex Sans",
+        "weights": [400, 500, 600],
+        "url": "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+      },
+      "heading": {
+        "family": "JetBrains Mono",
+        "weights": [400, 500, 700],
+        "url": "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap"
+      },
+      "code": {
+        "family": "JetBrains Mono",
+        "weights": [400, 500, 700],
+        "url": "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap"
+      }
+    },
+    "favicon": {
+      "default": "/favicon.ico",
+      "svg": "/favicon.svg",
+      "appleTouchIcon": "/apple-touch-icon.png",
+      "sizes": [16, 32, 192, 512]
+    }
+  },
+  "server": {
+    "development": {
+      "host": "0.0.0.0",
+      "port": 5000,
+      "strictPort": false
+    },
+    "production": {
+      "host": "0.0.0.0",
+      "port": 80,
+      "strictPort": false,
+      "basePath": "./"
+    }
+  },
+  "build": {
+    "outDir": "dist",
+    "emptyOutDir": true,
+    "sourcemap": false,
+    "minify": "terser",
+    "chunkSizeWarningLimit": 1000,
+    "terserOptions": {
+      "compress": {
+        "drop_console": true,
+        "drop_debugger": true,
+        "pure_funcs": ["console.log", "console.time", "console.timeEnd"]
+      }
+    },
+    "chunks": {
+      "react-vendor": ["react", "react-dom"],
+      "ui-core": [
+        "@radix-ui/react-dialog",
+        "@radix-ui/react-dropdown-menu",
+        "@radix-ui/react-tabs",
+        "@radix-ui/react-select",
+        "@radix-ui/react-popover"
+      ],
+      "ui-extended": [
+        "@radix-ui/react-accordion",
+        "@radix-ui/react-alert-dialog",
+        "@radix-ui/react-context-menu",
+        "@radix-ui/react-hover-card",
+        "@radix-ui/react-menubar",
+        "@radix-ui/react-navigation-menu",
+        "@radix-ui/react-scroll-area"
+      ],
+      "form-components": ["react-hook-form", "@hookform/resolvers", "zod"],
+      "code-editor": ["@monaco-editor/react"],
+      "data-viz": ["d3", "recharts"],
+      "workflow": ["reactflow"],
+      "icons": ["@phosphor-icons/react", "lucide-react"],
+      "utils": ["clsx", "tailwind-merge", "date-fns", "uuid"]
+    },
+    "optimizeDeps": {
+      "include": [
+        "react",
+        "react-dom",
+        "@radix-ui/react-dialog",
+        "@radix-ui/react-tabs"
+      ],
+      "exclude": ["@github/spark"]
+    }
+  },
+  "features": {
+    "useRouter": false,
+    "routerBasedNavigation": false,
+    "preloadCriticalComponents": true,
+    "bundleMetrics": true,
+    "enablePreloading": true
+  },
+  "performance": {
+    "preloadDelay": 100,
+    "seedDataTimeout": 100,
+    "logLevel": "info"
+  },
+  "docker": {
+    "baseImage": "node:lts-alpine",
+    "workdir": "/app",
+    "port": 80,
+    "healthCheck": {
+      "enabled": true,
+      "endpoint": "/health",
+      "interval": "30s",
+      "timeout": "3s",
+      "retries": 3,
+      "startPeriod": "5s"
+    }
+  },
+  "nginx": {
+    "enabled": false,
+    "port": 80,
+    "serverName": "_",
+    "rootDir": "/usr/share/nginx/html",
+    "gzip": {
+      "enabled": true,
+      "minLength": 1024,
+      "types": [
+        "text/plain",
+        "text/css",
+        "text/xml",
+        "text/javascript",
+        "application/javascript",
+        "application/json",
+        "application/xml+rss"
+      ]
+    },
+    "cache": {
+      "staticAssets": {
+        "extensions": ["js", "css", "png", "jpg", "jpeg", "gif", "ico", "svg", "woff", "woff2", "ttf", "eot"],
+        "expires": "1y",
+        "cacheControl": "public, immutable"
+      }
+    }
+  },
+  "pwa": {
+    "enabled": true,
+    "registerType": "autoUpdate",
+    "workbox": {
+      "globPatterns": ["**/*.{js,css,html,ico,png,svg,woff,woff2}"],
+      "runtimeCaching": [
+        {
+          "urlPattern": "/api/.*",
+          "handler": "NetworkFirst"
+        },
+        {
+          "urlPattern": "/.*",
+          "handler": "NetworkFirst"
+        }
+      ]
+    }
+  },
+  "ci": {
+    "github": {
+      "enabled": true,
+      "workflows": ["build", "test", "deploy"],
+      "nodeVersion": "20.x"
+    },
+    "gitlab": {
+      "enabled": true,
+      "stages": ["build", "test", "deploy"],
+      "dockerImage": "node:20-alpine"
+    },
+    "jenkins": {
+      "enabled": true,
+      "agent": "docker",
+      "nodeVersion": "20"
+    },
+    "circleci": {
+      "enabled": true,
+      "dockerImage": "cimg/node:20.11",
+      "workflowName": "build-test-deploy"
+    }
+  },
+  "atomicComponents": {
+    "maxLOC": 150,
+    "categories": {
+      "atoms": [
+        "AppLogo",
+        "StatusIcon",
+        "ErrorBadge",
+        "LoadingState",
+        "EmptyState",
+        "DataList",
+        "StatCard",
+        "ActionButton"
+      ],
+      "molecules": [
+        "SaveIndicator",
+        "ToolbarButton",
+        "SearchBar",
+        "DataCard",
+        "FormField",
+        "TabNavigation",
+        "NotificationBadge",
+        "ProgressIndicator",
+        "PreloadIndicator",
+        "LoadingFallback"
+      ],
+      "organisms": [
+        "AppHeader",
+        "NavigationMenu",
+        "PageHeader",
+        "ErrorBoundary"
+      ]
+    }
+  },
+  "theme": {
+    "configFile": "./theme.json",
+    "cssVariables": true,
+    "darkMode": ["selector", "[data-appearance=\"dark\"]"]
+  },
+  "testing": {
+    "e2e": {
+      "framework": "playwright",
+      "browsers": ["chromium", "firefox", "webkit"],
+      "baseURL": "http://localhost:5000",
+      "timeout": 30000,
+      "retries": 2
+    },
+    "unit": {
+      "framework": "vitest",
+      "coverage": {
+        "enabled": true,
+        "threshold": 80
+      }
+    }
+  },
+  "deployment": {
+    "platforms": {
+      "caprover": {
+        "enabled": true,
+        "port": 80,
+        "healthCheck": "/health"
+      },
+      "heroku": {
+        "enabled": false,
+        "buildpack": "heroku/nodejs"
+      },
+      "vercel": {
+        "enabled": false,
+        "framework": "vite"
+      },
+      "netlify": {
+        "enabled": false,
+        "publish": "dist"
+      }
+    }
+  },
+  "paths": {
+    "src": "./src",
+    "components": "./src/components",
+    "pages": "./src/config/pages",
+    "config": "./src/config",
+    "public": "./public",
+    "dist": "./dist"
+  }
+}

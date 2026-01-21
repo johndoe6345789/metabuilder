@@ -1,0 +1,14 @@
+{
+  "id": "skeleton-root",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": "variant",
+      "transform": "(() => { const variantClasses = { text: 'rounded h-4', rectangular: 'rounded-none', circular: 'rounded-full', rounded: 'rounded-lg' }; return 'bg-muted animate-pulse ' + (variantClasses[data] || variantClasses.rectangular); })()"
+    },
+    "style": {
+      "source": ["width", "height"],
+      "transform": "([w, h]) => ({ width: typeof w === 'number' ? `${w}px` : w, height: typeof h === 'number' ? `${h}px` : h })"
+    }
+  }
+}

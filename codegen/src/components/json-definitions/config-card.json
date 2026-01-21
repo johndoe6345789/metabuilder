@@ -1,0 +1,29 @@
+{
+  "id": "config-card-container",
+  "type": "Card",
+  "children": [
+    {
+      "type": "CardHeader",
+      "children": [
+        {
+          "type": "CardTitle",
+          "children": [{ "type": "Text", "value": "{title}" }]
+        },
+        {
+          "type": "CardDescription",
+          "children": [{ "type": "Text", "value": "{description}" }]
+        }
+      ]
+    },
+    {
+      "type": "CardContent",
+      "className": "space-y-4",
+      "bindings": {
+        "children": {
+          "source": "fields",
+          "transform": "source.map((field) => ({ id: `field-${field.id}`, type: 'Box', children: [{ type: 'Label', htmlFor: field.id, children: [{ type: 'Text', value: field.label }] }, { type: 'Input', id: field.id, placeholder: field.placeholder, value: `{${field.key}}`, onChange: `(e) => onFieldChange(${JSON.stringify(field)}, e.target.value)` }, ...(field.helper ? [{ type: 'Paragraph', className: 'text-xs text-muted-foreground mt-1', children: [{ type: 'Text', value: field.helper }] }] : []) ] }))"
+        }
+      }
+    }
+  ]
+}

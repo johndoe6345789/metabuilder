@@ -1,0 +1,351 @@
+{
+  "$schema": "./schemas/component-registry-schema.json",
+  "version": "1.0.0",
+  "components": [
+    {
+      "name": "ProjectDashboard",
+      "path": "@/components/ProjectDashboard",
+      "export": "ProjectDashboard",
+      "type": "feature",
+      "preload": true,
+      "preloadPriority": "high",
+      "category": "dashboard",
+      "description": "Main project dashboard with metrics and overview"
+    },
+    {
+      "name": "CodeEditor",
+      "path": "@/components/CodeEditor",
+      "export": "CodeEditor",
+      "type": "feature",
+      "preload": true,
+      "preloadPriority": "high",
+      "category": "editor",
+      "dependencies": ["monaco-editor"],
+      "preloadDependencies": ["preloadMonacoEditor"],
+      "description": "Monaco-based code editor with syntax highlighting"
+    },
+    {
+      "name": "FileExplorer",
+      "path": "@/components/FileExplorer",
+      "export": "FileExplorer",
+      "type": "feature",
+      "preload": true,
+      "preloadPriority": "high",
+      "category": "editor",
+      "description": "File tree navigation and management"
+    },
+    {
+      "name": "ModelDesigner",
+      "path": "@/components/JSONModelDesigner",
+      "export": "JSONModelDesigner",
+      "type": "feature",
+      "preload": false,
+      "category": "designer",
+      "description": "JSON-based model designer"
+    },
+    {
+      "name": "ComponentTreeBuilder",
+      "path": "@/components/ComponentTreeBuilder",
+      "export": "ComponentTreeBuilder",
+      "type": "feature",
+      "preload": false,
+      "category": "designer",
+      "description": "Visual component tree builder"
+    },
+    {
+      "name": "ComponentTreeManager",
+      "path": "@/components/JSONComponentTreeManager",
+      "export": "JSONComponentTreeManager",
+      "type": "feature",
+      "preload": false,
+      "category": "designer",
+      "description": "JSON-based component tree manager"
+    },
+    {
+      "name": "WorkflowDesigner",
+      "path": "@/components/JSONWorkflowDesigner",
+      "export": "JSONWorkflowDesigner",
+      "type": "feature",
+      "preload": false,
+      "category": "designer",
+      "dependencies": ["monaco-editor"],
+      "preloadDependencies": ["preloadMonacoEditor"],
+      "description": "JSON-based workflow designer"
+    },
+    {
+      "name": "LambdaDesigner",
+      "path": "@/components/JSONLambdaDesigner",
+      "export": "JSONLambdaDesigner",
+      "type": "feature",
+      "preload": false,
+      "category": "designer",
+      "dependencies": ["monaco-editor"],
+      "preloadDependencies": ["preloadMonacoEditor"],
+      "description": "JSON-based lambda designer"
+    },
+    {
+      "name": "StyleDesigner",
+      "path": "@/components/JSONStyleDesigner",
+      "export": "JSONStyleDesigner",
+      "type": "feature",
+      "preload": false,
+      "category": "designer",
+      "description": "JSON-based theme and styling designer"
+    },
+    {
+      "name": "PlaywrightDesigner",
+      "path": "@/components/PlaywrightDesigner",
+      "export": "PlaywrightDesigner",
+      "type": "feature",
+      "preload": false,
+      "category": "testing",
+      "description": "Visual E2E test builder with Playwright"
+    },
+    {
+      "name": "StorybookDesigner",
+      "path": "@/components/StorybookDesigner",
+      "export": "StorybookDesigner",
+      "type": "feature",
+      "preload": false,
+      "category": "testing",
+      "description": "Component story builder for Storybook"
+    },
+    {
+      "name": "UnitTestDesigner",
+      "path": "@/components/UnitTestDesigner",
+      "export": "UnitTestDesigner",
+      "type": "feature",
+      "preload": false,
+      "category": "testing",
+      "description": "Unit test suite builder"
+    },
+    {
+      "name": "FlaskDesigner",
+      "path": "@/components/JSONFlaskDesigner",
+      "export": "JSONFlaskDesigner",
+      "type": "feature",
+      "preload": false,
+      "category": "backend",
+      "description": "JSON-based Flask REST API designer"
+    },
+    {
+      "name": "ProjectSettingsDesigner",
+      "path": "@/components/ProjectSettingsDesigner",
+      "export": "ProjectSettingsDesigner",
+      "type": "feature",
+      "preload": false,
+      "category": "settings",
+      "description": "Next.js and npm package configuration"
+    },
+    {
+      "name": "ErrorPanel",
+      "path": "@/components/ErrorPanel",
+      "export": "ErrorPanel",
+      "type": "feature",
+      "preload": false,
+      "category": "debugging",
+      "description": "Error detection and auto-repair panel"
+    },
+    {
+      "name": "DocumentationView",
+      "path": "@/components/DocumentationView",
+      "export": "DocumentationView",
+      "type": "feature",
+      "preload": false,
+      "category": "documentation",
+      "description": "In-app documentation viewer"
+    },
+    {
+      "name": "SassStylesShowcase",
+      "path": "@/components/SassStylesShowcase",
+      "export": "SassStylesShowcase",
+      "type": "feature",
+      "preload": false,
+      "category": "styling",
+      "description": "SASS styles demonstration"
+    },
+    {
+      "name": "FeatureToggleSettings",
+      "path": "@/components/FeatureToggleSettings",
+      "export": "FeatureToggleSettings",
+      "type": "feature",
+      "preload": false,
+      "category": "settings",
+      "description": "Feature toggle management interface"
+    },
+    {
+      "name": "PWASettings",
+      "path": "@/components/PWASettings",
+      "export": "PWASettings",
+      "type": "feature",
+      "preload": false,
+      "category": "pwa",
+      "description": "Progressive Web App settings and status"
+    },
+    {
+      "name": "FaviconDesigner",
+      "path": "@/components/FaviconDesigner",
+      "export": "FaviconDesigner",
+      "type": "feature",
+      "preload": false,
+      "category": "designer",
+      "description": "Visual favicon and icon designer"
+    },
+    {
+      "name": "FeatureIdeaCloud",
+      "path": "@/components/FeatureIdeaCloud/index",
+      "export": "FeatureIdeaCloud",
+      "type": "feature",
+      "preload": false,
+      "category": "planning",
+      "description": "Interactive feature idea voting cloud"
+    },
+    {
+      "name": "TemplateSelector",
+      "path": "@/components/TemplateSelector",
+      "export": "TemplateSelector",
+      "type": "feature",
+      "preload": false,
+      "category": "templates",
+      "description": "Project template selection and preview"
+    },
+    {
+      "name": "PersistenceDashboard",
+      "path": "@/components/PersistenceDashboard",
+      "export": "PersistenceDashboard",
+      "type": "feature",
+      "preload": false,
+      "category": "database",
+      "description": "Redux persistence middleware monitoring and control dashboard"
+    },
+    {
+      "name": "PersistenceExample",
+      "path": "@/components/PersistenceExample",
+      "export": "PersistenceExample",
+      "type": "feature",
+      "preload": false,
+      "category": "database",
+      "description": "Interactive example demonstrating automatic persistence"
+    },
+    {
+      "name": "JSONUIShowcase",
+      "path": "@/components/JSONUIShowcasePage",
+      "export": "JSONUIShowcasePage",
+      "type": "feature",
+      "preload": false,
+      "category": "showcase",
+      "description": "JSON UI system demonstration"
+    },
+    {
+      "name": "JSONConversionShowcase",
+      "path": "@/components/JSONConversionShowcase",
+      "export": "JSONConversionShowcase",
+      "type": "feature",
+      "preload": false,
+      "category": "showcase",
+      "description": "JSON conversion showcase overview"
+    },
+    {
+      "name": "SchemaEditor",
+      "path": "@/components/SchemaEditorPage",
+      "export": "SchemaEditorPage",
+      "type": "feature",
+      "preload": false,
+      "category": "designer",
+      "description": "JSON schema editor and validator"
+    },
+    {
+      "name": "DataBindingDesigner",
+      "path": "@/components/DataBindingDesigner",
+      "export": "DataBindingDesigner",
+      "type": "feature",
+      "preload": false,
+      "category": "designer",
+      "description": "Data binding configuration designer"
+    },
+    {
+      "name": "DockerBuildDebugger",
+      "path": "@/components/DockerBuildDebugger",
+      "export": "DockerBuildDebugger",
+      "type": "feature",
+      "preload": false,
+      "category": "debugging",
+      "description": "Docker build analysis and debugging tools"
+    },
+    {
+      "name": "AtomicLibraryShowcase",
+      "path": "@/components/AtomicLibraryShowcase",
+      "export": "AtomicLibraryShowcase",
+      "type": "feature",
+      "preload": false,
+      "category": "showcase",
+      "description": "Atomic component library demonstration"
+    },
+    {
+      "name": "ConflictResolutionPage",
+      "path": "@/components/ConflictResolutionPage",
+      "export": "ConflictResolutionPage",
+      "type": "feature",
+      "preload": false,
+      "category": "sync",
+      "description": "Conflict resolution UI for handling sync conflicts between local and remote data"
+    }
+  ],
+  "dialogs": [
+    {
+      "name": "GlobalSearch",
+      "path": "@/components/GlobalSearch",
+      "export": "GlobalSearch",
+      "type": "dialog",
+      "preload": false,
+      "description": "Global search for files, models, components, etc."
+    },
+    {
+      "name": "KeyboardShortcutsDialog",
+      "path": "@/components/KeyboardShortcutsDialog",
+      "export": "KeyboardShortcutsDialog",
+      "type": "dialog",
+      "preload": false,
+      "description": "Keyboard shortcuts reference dialog"
+    },
+    {
+      "name": "PreviewDialog",
+      "path": "@/components/PreviewDialog",
+      "export": "PreviewDialog",
+      "type": "dialog",
+      "preload": false,
+      "description": "Live preview dialog for generated code"
+    }
+  ],
+  "pwa": [
+    {
+      "name": "PWAInstallPrompt",
+      "path": "@/components/PWAInstallPrompt",
+      "export": "PWAInstallPrompt",
+      "type": "pwa",
+      "preload": false,
+      "description": "PWA installation prompt component"
+    },
+    {
+      "name": "PWAUpdatePrompt",
+      "path": "@/components/PWAUpdatePrompt",
+      "export": "PWAUpdatePrompt",
+      "type": "pwa",
+      "preload": false,
+      "description": "PWA update notification prompt"
+    },
+    {
+      "name": "PWAStatusBar",
+      "path": "@/components/PWAStatusBar",
+      "export": "PWAStatusBar",
+      "type": "pwa",
+      "preload": false,
+      "description": "PWA status indicator bar"
+    }
+  ],
+  "preloadStrategy": {
+    "critical": ["ProjectDashboard", "FileExplorer", "CodeEditor"],
+    "onDemand": "all-others",
+    "preloadDelay": 100
+  }
+}

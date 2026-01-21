@@ -1,0 +1,9 @@
+{
+  "type": "EditorToolbar",
+  "props": {
+    "onFileSelect": "> void",
+    "onFileClose": "> void",
+    "onExplain": "> void",
+    "onImprove": "> void"
+  }
+}

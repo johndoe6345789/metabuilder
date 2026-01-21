@@ -1,0 +1,280 @@
+{
+  "id": "navigation-menu-container",
+  "type": "Sidebar",
+  "props": {
+    "side": "left",
+    "collapsible": "offcanvas"
+  },
+  "children": [
+    {
+      "id": "navigation-header",
+      "type": "SidebarHeader",
+      "props": {
+        "className": "px-4 py-4 border-b"
+      },
+      "children": [
+        {
+          "id": "nav-title",
+          "type": "h2",
+          "props": {
+            "className": "text-lg font-semibold"
+          },
+          "bindings": {
+            "children": {
+              "source": "navTitle",
+              "transform": "navTitle || 'Navigation'"
+            }
+          }
+        },
+        {
+          "id": "nav-controls",
+          "type": "div",
+          "props": {
+            "className": "flex gap-2 mt-4"
+          },
+          "children": [
+            {
+              "id": "expand-all-button",
+              "type": "Button",
+              "props": {
+                "variant": "outline",
+                "size": "sm",
+                "className": "flex-1"
+              },
+              "bindings": {
+                "onClick": {
+                  "source": "menuState.expandAll",
+                  "transform": "() => menuState.expandAll()"
+                },
+                "children": {
+                  "source": "expandAllLabel",
+                  "transform": "expandAllLabel || 'Expand All'"
+                }
+              }
+            },
+            {
+              "id": "collapse-all-button",
+              "type": "Button",
+              "props": {
+                "variant": "outline",
+                "size": "sm",
+                "className": "flex-1"
+              },
+              "bindings": {
+                "onClick": {
+                  "source": "menuState.collapseAll",
+                  "transform": "() => menuState.collapseAll()"
+                },
+                "children": {
+                  "source": "collapseAllLabel",
+                  "transform": "collapseAllLabel || 'Collapse All'"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sidebar-content",
+      "type": "SidebarContent",
+      "children": [
+        {
+          "id": "scroll-area",
+          "type": "ScrollArea",
+          "props": {
+            "className": "h-full px-4"
+          },
+          "children": [
+            {
+              "id": "groups-container",
+              "type": "div",
+              "props": {
+                "className": "space-y-2 py-4"
+              },
+              "children": [
+                {
+                  "id": "groups-list",
+                  "type": "list",
+                  "bindings": {
+                    "items": "navigationGroups",
+                    "keyPath": "id"
+                  },
+                  "itemTemplate": {
+                    "type": "Collapsible",
+                    "bindings": {
+                      "open": {
+                        "source": "item.id,menuState.expandedGroups",
+                        "transform": "menuState.expandedGroups.has(item.id)"
+                      },
+                      "onOpenChange": {
+                        "source": "item.id",
+                        "transform": "() => menuState.toggleGroup(item.id)"
+                      }
+                    },
+                    "children": [
+                      {
+                        "id": "group-trigger",
+                        "type": "CollapsibleTrigger",
+                        "props": {
+                          "className": "w-full flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-muted transition-colors group"
+                        },
+                        "children": [
+                          {
+                            "id": "group-caret",
+                            "type": "CaretDown",
+                            "props": {
+                              "size": 16,
+                              "weight": "bold"
+                            },
+                            "bindings": {
+                              "className": {
+                                "source": "menuState.expandedGroups",
+                                "transform": "menuState.expandedGroups.has(item.id) ? 'text-muted-foreground transition-transform rotate-0' : 'text-muted-foreground transition-transform -rotate-90'"
+                              }
+                            }
+                          },
+                          {
+                            "id": "group-label",
+                            "type": "h3",
+                            "props": {
+                              "className": "flex-1 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider"
+                            },
+                            "bindings": {
+                              "children": "item.label"
+                            }
+                          },
+                          {
+                            "id": "group-count",
+                            "type": "span",
+                            "props": {
+                              "className": "text-xs text-muted-foreground"
+                            },
+                            "bindings": {
+                              "children": {
+                                "source": "item.items,menuState.isItemVisible",
+                                "transform": "item.items.filter(it => menuState.isItemVisible(it)).length"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "id": "group-content",
+                        "type": "CollapsibleContent",
+                        "props": {
+                          "className": "mt-1"
+                        },
+                        "children": [
+                          {
+                            "id": "items-container",
+                            "type": "div",
+                            "props": {
+                              "className": "space-y-1 pl-2"
+                            },
+                            "children": [
+                              {
+                                "id": "items-list",
+                                "type": "list",
+                                "bindings": {
+                                  "items": "item.items",
+                                  "keyPath": "id"
+                                },
+                                "itemTemplate": {
+                                  "type": "div",
+                                  "bindings": {
+                                    "onMouseEnter": {
+                                      "source": "item.value",
+                                      "transform": "() => menuState.handleItemHover(item.value)"
+                                    },
+                                    "onMouseLeave": {
+                                      "source": "item.value",
+                                      "transform": "() => menuState.handleItemLeave(item.value)"
+                                    }
+                                  },
+                                  "conditional": {
+                                    "if": "menuState.isItemVisible(item)"
+                                  },
+                                  "children": [
+                                    {
+                                      "id": "nav-item-button",
+                                      "type": "button",
+                                      "props": {
+                                        "type": "button"
+                                      },
+                                      "bindings": {
+                                        "onClick": {
+                                          "source": "item.value,onTabChange",
+                                          "transform": "() => onTabChange(item.value)"
+                                        },
+                                        "className": {
+                                          "source": "item.value,activeTab",
+                                          "transform": "activeTab === item.value ? 'w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors bg-primary text-primary-foreground' : 'w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors hover:bg-muted text-foreground'"
+                                        }
+                                      },
+                                      "children": [
+                                        {
+                                          "id": "item-icon",
+                                          "type": "IconWrapper",
+                                          "props": {
+                                            "size": "md"
+                                          },
+                                          "bindings": {
+                                            "icon": "item.icon",
+                                            "variant": {
+                                              "source": "item.value,activeTab",
+                                              "transform": "activeTab === item.value ? 'default' : 'muted'"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "id": "item-label",
+                                          "type": "Text",
+                                          "props": {
+                                            "className": "flex-1 text-left font-medium",
+                                            "variant": "small"
+                                          },
+                                          "bindings": {
+                                            "children": "item.label"
+                                          }
+                                        },
+                                        {
+                                          "id": "item-badge",
+                                          "type": "Badge",
+                                          "props": {
+                                            "className": "ml-auto"
+                                          },
+                                          "bindings": {
+                                            "variant": {
+                                              "source": "item.id,activeTab,errorCount",
+                                              "transform": "activeTab === item.value ? 'secondary' : 'destructive'"
+                                            },
+                                            "children": {
+                                              "source": "item.id,errorCount,item.badge",
+                                              "transform": "item.id === 'errors' ? errorCount : item.badge"
+                                            }
+                                          },
+                                          "conditional": {
+                                            "if": "(item.id === 'errors' && errorCount > 0) || (item.id !== 'errors' && item.badge !== undefined && item.badge > 0)"
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

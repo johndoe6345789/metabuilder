@@ -1,0 +1,24 @@
+{
+  "id": "stat-card-base",
+  "type": "Card",
+  "props": {
+    "className": "p-6"
+  },
+  "children": [
+    {
+      "id": "stat-value",
+      "type": "div",
+      "props": {
+        "className": "text-2xl font-bold",
+        "children": "0"
+      }
+    },
+    {
+      "id": "stat-label",
+      "type": "div",
+      "props": {
+        "className": "text-sm text-muted-foreground mt-2"
+      }
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "id": "glow-card",
+  "type": "Card",
+  "bindings": {
+    "onClick": {
+      "source": "onClick",
+      "transform": "data"
+    },
+    "className": {
+      "source": ["glowColor", "intensity", "className", "onClick"],
+      "transform": "const glowColor = data[0] || 'primary'; const intensity = data[1] || 'medium'; const className = data[2] || ''; const hasClick = data[3]; const glowClasses = { primary: { low: 'shadow-primary/10', medium: 'shadow-primary/20 hover:shadow-primary/30', high: 'shadow-primary/30 hover:shadow-primary/50' }, accent: { low: 'shadow-accent/10', medium: 'shadow-accent/20 hover:shadow-accent/30', high: 'shadow-accent/30 hover:shadow-accent/50' }, success: { low: 'shadow-green-500/10', medium: 'shadow-green-500/20 hover:shadow-green-500/30', high: 'shadow-green-500/30 hover:shadow-green-500/50' }, warning: { low: 'shadow-yellow-500/10', medium: 'shadow-yellow-500/20 hover:shadow-yellow-500/30', high: 'shadow-yellow-500/30 hover:shadow-yellow-500/50' }, error: { low: 'shadow-red-500/10', medium: 'shadow-red-500/20 hover:shadow-red-500/30', high: 'shadow-red-500/30 hover:shadow-red-500/50' } }; const baseClasses = 'transition-all duration-300 shadow-lg'; const glow = glowClasses[glowColor][intensity]; const clickClass = hasClick ? 'cursor-pointer hover:scale-[1.02]' : ''; return `${baseClasses} ${glow} ${clickClass} ${className}`.trim()"
+    }
+  },
+  "children": {
+    "source": "children",
+    "transform": "data"
+  }
+}

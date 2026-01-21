@@ -1,0 +1,17 @@
+{
+  "$schema": "./schema/page-schema.json",
+  "id": "atomic-library-showcase-page",
+  "name": "Atomic Library Showcase",
+  "description": "Showcase of atomic design components",
+  "icon": "Atom",
+  "layout": {
+    "$ref": "./layouts/single-column.json"
+  },
+  "components": [
+    {
+      "id": "atomic-library-showcase-component",
+      "type": "AtomicLibraryShowcase",
+      "props": {}
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+$primary-color: #6366f1;
+$primary-light: #818cf8;
+$primary-dark: #4338ca;
+
+$secondary-color: #8b5cf6;
+$secondary-light: #a78bfa;
+$secondary-dark: #7c3aed;
+
+$accent-color: #06b6d4;
+$accent-light: #22d3ee;
+$accent-dark: #0891b2;
+
+$success-color: #10b981;
+$error-color: #ef4444;
+$warning-color: #f59e0b;
+$info-color: #3b82f6;
+
+$background-dark: #1a1d29;
+$background-card: #23273a;
+$background-elevated: #2d3348;
+$background-hover: rgba(255, 255, 255, 0.05);
+
+$text-primary: #e8eaed;
+$text-secondary: #a8abb5;
+$text-disabled: #6b6e7b;
+$text-inverse: #1a1d29;
+
+$border-color: rgba(255, 255, 255, 0.1);
+$border-color-strong: rgba(255, 255, 255, 0.2);
+$border-color-weak: rgba(255, 255, 255, 0.05);
+
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+$shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+$radius-sm: 0.25rem;
+$radius-md: 0.5rem;
+$radius-lg: 0.75rem;
+$radius-xl: 1rem;
+$radius-2xl: 1.5rem;
+$radius-full: 9999px;
+
+$spacing-xs: 0.25rem;
+$spacing-sm: 0.5rem;
+$spacing-md: 1rem;
+$spacing-lg: 1.5rem;
+$spacing-xl: 2rem;
+$spacing-2xl: 3rem;
+
+$font-family-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+$font-family-display: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+$font-family-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+
+$transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+$transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+$transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+
+$easing-linear: linear;
+$easing-ease: ease;
+$easing-ease-in: ease-in;
+$easing-ease-out: ease-out;
+$easing-ease-in-out: ease-in-out;
+$easing-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+$easing-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+$grid-columns: 12;
+$grid-gutter: 1rem;
+
+$container-max-width: 1280px;
+$container-padding: 1rem;

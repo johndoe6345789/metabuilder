@@ -1,0 +1,26 @@
+{
+  "id": "shadcn-checkbox",
+  "type": "ShadcnCheckbox",
+  "bindings": {
+    "checked": {
+      "source": "checked",
+      "transform": "data || false"
+    },
+    "onCheckedChange": {
+      "source": "onCheckedChange",
+      "transform": "data"
+    },
+    "disabled": {
+      "source": "disabled",
+      "transform": "data || false"
+    },
+    "required": {
+      "source": "required",
+      "transform": "data || false"
+    },
+    "className": {
+      "source": "className",
+      "transform": "data"
+    }
+  }
+}

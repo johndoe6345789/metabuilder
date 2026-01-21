@@ -1,0 +1,8 @@
+{
+  "type": "ScrollArea",
+  "props": {
+    "onUpdate": "> void",
+    "onDelete": "> void",
+    "key": "> {"
+  }
+}

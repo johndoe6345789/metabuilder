@@ -1,0 +1,6 @@
+{
+  "type": "Text",
+  "props": {
+    "className": "text-muted-foreground"
+  }
+}

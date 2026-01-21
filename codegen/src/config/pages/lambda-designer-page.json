@@ -1,0 +1,17 @@
+{
+  "$schema": "./schema/page-schema.json",
+  "id": "lambda-designer-page",
+  "name": "Lambda Designer",
+  "description": "Design serverless functions",
+  "icon": "Function",
+  "layout": {
+    "$ref": "./layouts/single-column.json"
+  },
+  "components": [
+    {
+      "id": "lambda-designer-component",
+      "type": "JSONLambdaDesigner",
+      "props": {}
+    }
+  ]
+}

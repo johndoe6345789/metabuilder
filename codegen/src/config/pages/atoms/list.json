@@ -1,0 +1,6 @@
+{
+  "type": "List",
+  "props": {
+    "renderItem": "> ReactNode"
+  }
+}

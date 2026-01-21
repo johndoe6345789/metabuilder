@@ -1,0 +1,148 @@
+{
+  "id": "number-input-container",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": "className",
+      "transform": "const customClass = data || ''; return `flex flex-col gap-2 ${customClass}`.trim()"
+    }
+  },
+  "children": [
+    {
+      "id": "number-input-label",
+      "type": "label",
+      "bindings": {
+        "className": {
+          "source": null,
+          "transform": "'text-sm font-medium text-foreground'"
+        },
+        "children": {
+          "source": "label",
+          "transform": "data"
+        },
+        "_if": {
+          "source": "label",
+          "transform": "!!data"
+        }
+      }
+    },
+    {
+      "id": "number-input-controls",
+      "type": "div",
+      "bindings": {
+        "className": {
+          "source": null,
+          "transform": "'flex items-center gap-2'"
+        }
+      },
+      "children": [
+        {
+          "id": "number-input-decrement",
+          "type": "button",
+          "bindings": {
+            "type": {
+              "source": null,
+              "transform": "'button'"
+            },
+            "className": {
+              "source": ["disabled", "min", "value"],
+              "transform": "const disabled = data[0]; const min = data[1]; const value = data[2]; const isAtMin = min !== undefined && value <= min; return `h-9 w-9 shrink-0 px-3 py-2 rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground disabled:opacity-50 disabled:cursor-not-allowed transition-colors ${disabled || isAtMin ? 'opacity-50 cursor-not-allowed' : ''}`.trim()"
+            },
+            "onClick": {
+              "source": null,
+              "transform": "() => { /* handleDecrement */ }"
+            },
+            "disabled": {
+              "source": ["disabled", "min", "value"],
+              "transform": "data[0] || (data[1] !== undefined && data[2] <= data[1])"
+            }
+          },
+          "children": [
+            {
+              "id": "number-input-decrement-icon",
+              "type": "span",
+              "bindings": {
+                "children": {
+                  "source": null,
+                  "transform": "'−'"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "number-input-field",
+          "type": "input",
+          "bindings": {
+            "type": {
+              "source": null,
+              "transform": "'number'"
+            },
+            "value": {
+              "source": "value",
+              "transform": "data"
+            },
+            "onChange": {
+              "source": null,
+              "transform": "(e) => { /* handleInputChange */ }"
+            },
+            "min": {
+              "source": "min",
+              "transform": "data"
+            },
+            "max": {
+              "source": "max",
+              "transform": "data"
+            },
+            "step": {
+              "source": "step",
+              "transform": "data || 1"
+            },
+            "disabled": {
+              "source": "disabled",
+              "transform": "data || false"
+            },
+            "className": {
+              "source": null,
+              "transform": "'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-center placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 transition-colors'"
+            }
+          }
+        },
+        {
+          "id": "number-input-increment",
+          "type": "button",
+          "bindings": {
+            "type": {
+              "source": null,
+              "transform": "'button'"
+            },
+            "className": {
+              "source": ["disabled", "max", "value"],
+              "transform": "const disabled = data[0]; const max = data[1]; const value = data[2]; const isAtMax = max !== undefined && value >= max; return `h-9 w-9 shrink-0 px-3 py-2 rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground disabled:opacity-50 disabled:cursor-not-allowed transition-colors ${disabled || isAtMax ? 'opacity-50 cursor-not-allowed' : ''}`.trim()"
+            },
+            "onClick": {
+              "source": null,
+              "transform": "() => { /* handleIncrement */ }"
+            },
+            "disabled": {
+              "source": ["disabled", "max", "value"],
+              "transform": "data[0] || (data[1] !== undefined && data[2] >= data[1])"
+            }
+          },
+          "children": [
+            {
+              "id": "number-input-increment-icon",
+              "type": "span",
+              "bindings": {
+                "children": {
+                  "source": null,
+                  "transform": "'+'"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

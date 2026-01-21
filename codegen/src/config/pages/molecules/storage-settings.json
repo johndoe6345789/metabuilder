@@ -1,0 +1,14 @@
+{
+  "type": "Card, CardContent, CardDescription, CardHeader, CardTitle",
+  "props": {
+    "backend": "> {",
+    "default": "w-5 h-5",
+    "onFlaskUrlChange": "> void",
+    "onSwitchToFlask": "> void",
+    "onSwitchToIndexedDB": "> void",
+    "onSwitchToSQLite": "> void",
+    "onExport": "> void",
+    "onImport": "> void",
+    "exportFilename": "> `${storageSettingsCopy.molecule.exportFilenamePrefix"
+  }
+}

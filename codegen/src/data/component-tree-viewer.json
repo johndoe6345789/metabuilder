@@ -1,0 +1,31 @@
+{
+  "header": {
+    "title": "Component Trees",
+    "subtitle": "Molecules and organisms loaded from JSON",
+    "loadedLabel": "trees loaded",
+    "reloadLabel": "Reload"
+  },
+  "tabs": {
+    "molecules": "Molecules",
+    "organisms": "Organisms",
+    "all": "All"
+  },
+  "status": {
+    "errorTitle": "Error loading component trees",
+    "selectPrompt": "Select a tree to view details"
+  },
+  "labels": {
+    "rootNodes": "root nodes",
+    "id": "ID",
+    "structureTitle": "Component Tree Structure",
+    "props": "Props"
+  },
+  "categories": {
+    "molecule": "molecule",
+    "organism": "organism"
+  },
+  "toast": {
+    "reloadSuccess": "Component trees reloaded from JSON",
+    "reloadError": "Failed to reload component trees"
+  }
+}

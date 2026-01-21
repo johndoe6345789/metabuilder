@@ -1,0 +1,143 @@
+{
+  "id": "data-table-root",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": "className",
+      "transform": "(() => { return 'rounded-md border ' + (data || ''); })()"
+    }
+  },
+  "children": [
+    {
+      "id": "data-table-wrapper",
+      "type": "Table",
+      "children": [
+        {
+          "id": "data-table-header",
+          "type": "TableHeader",
+          "children": [
+            {
+              "id": "data-table-header-row",
+              "type": "TableRow",
+              "children": [
+                {
+                  "id": "data-table-header-columns",
+                  "type": "forEach",
+                  "bindings": {
+                    "items": "columns",
+                    "children": {
+                      "id": "data-table-header-cell",
+                      "type": "TableHead",
+                      "bindings": {
+                        "style": {
+                          "transform": "(() => { return { width: data.width || 'auto' }; })()"
+                        },
+                        "className": {
+                          "transform": "(() => { return data.sortable ? 'cursor-pointer select-none' : ''; })()"
+                        }
+                      },
+                      "children": [
+                        {
+                          "id": "data-table-header-cell-content",
+                          "bindings": {
+                            "children": "header"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "data-table-body",
+          "type": "TableBody",
+          "children": [
+            {
+              "id": "data-table-rows",
+              "type": "conditional",
+              "conditional": {
+                "if": {
+                  "source": "data",
+                  "transform": "data.length === 0"
+                }
+              },
+              "children": [
+                {
+                  "id": "data-table-empty-row",
+                  "type": "TableRow",
+                  "children": [
+                    {
+                      "id": "data-table-empty-cell",
+                      "type": "TableCell",
+                      "bindings": {
+                        "colSpan": {
+                          "transform": "$props.columns.length"
+                        }
+                      },
+                      "props": {
+                        "className": "text-center py-8 text-muted-foreground"
+                      },
+                      "children": [
+                        {
+                          "id": "data-table-empty-message",
+                          "bindings": {
+                            "children": "emptyMessage"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "data-table-data-rows",
+              "type": "forEach",
+              "bindings": {
+                "items": "data"
+              },
+              "children": {
+                "id": "data-table-data-row",
+                "type": "TableRow",
+                "bindings": {
+                  "onClick": {
+                    "transform": "(() => { return () => $props.onRowClick?.(data); })()"
+                  },
+                  "className": {
+                    "transform": "$props.onRowClick ? 'cursor-pointer' : ''"
+                  }
+                },
+                "children": [
+                  {
+                    "id": "data-table-data-cells",
+                    "type": "forEach",
+                    "bindings": {
+                      "items": "columns"
+                    },
+                    "children": {
+                      "id": "data-table-data-cell",
+                      "type": "TableCell",
+                      "children": [
+                        {
+                          "id": "data-table-data-cell-content",
+                          "bindings": {
+                            "children": {
+                              "transform": "(() => { const column = data; const rowData = $root.data; const cellValue = rowData[column.key]; return column.cell ? column.cell(rowData) : cellValue; })()"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "type": "ComponentTreeManager",
+  "jsonCompatible": false,
+  "wrapperRequired": true,
+  "load": {
+    "path": "@/components/ComponentTreeManager",
+    "export": "ComponentTreeManager"
+  },
+  "props": {}
+}

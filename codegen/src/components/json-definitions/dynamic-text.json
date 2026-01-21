@@ -1,0 +1,16 @@
+{
+  "id": "dynamic-text-container",
+  "type": "span",
+  "bindings": {
+    "className": "className"
+  },
+  "children": [
+    {
+      "id": "dynamic-text-value",
+      "type": "text",
+      "bindings": {
+        "content": "formattedValue"
+      }
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "type": "Input",
+  "props": {
+    "onChange": "> void",
+    "e": "> {"
+  }
+}

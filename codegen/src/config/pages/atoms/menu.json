@@ -1,0 +1,17 @@
+{
+  "type": "Menu",
+  "jsonCompatible": false,
+  "wrapperRequired": true,
+  "load": {
+    "path": "@/components/atoms/Menu",
+    "export": "Menu"
+  },
+  "props": {
+    "onClick": "> void",
+    "event": "> {",
+    "item": "> {"
+  },
+  "metadata": {
+    "notes": "Contains hooks - needs wrapper"
+  }
+}

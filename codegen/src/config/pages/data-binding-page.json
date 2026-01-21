@@ -1,0 +1,23 @@
+{
+  "id": "data-binding-page",
+  "name": "Data Binding",
+  "description": "Data binding designer",
+  "icon": "Link",
+  "layout": {
+    "$ref": "./layouts/single-column.json"
+  },
+  "dataSources": [],
+  "components": [
+    {
+      "$ref": "./molecules/page-header-standard.json",
+      "children": [
+        {
+          "$ref": "./atoms/heading-1.json",
+          "props": {
+            "children": "Data Binding Designer"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "$schema": "./schema/page-schema.json",
+  "id": "persistence-dashboard-page",
+  "name": "Persistence Dashboard",
+  "description": "Manage data persistence",
+  "icon": "Database",
+  "layout": {
+    "$ref": "./layouts/single-column.json"
+  },
+  "components": [
+    {
+      "id": "persistence-dashboard-component",
+      "type": "PersistenceDashboard",
+      "props": {}
+    }
+  ]
+}

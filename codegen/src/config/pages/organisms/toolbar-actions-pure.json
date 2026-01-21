@@ -1,0 +1,122 @@
+{
+  "type": "Flex",
+  "props": {
+    "gap": "xs",
+    "shrink": true,
+    "className": "shrink-0"
+  },
+  "children": [
+    {
+      "type": "ToolbarButton",
+      "props": {
+        "icon": "MagnifyingGlass",
+        "label": "Search (Ctrl+K)",
+        "data-search-trigger": true
+      },
+      "bindings": {
+        "onClick": {
+          "source": "bindings.onSearch"
+        }
+      }
+    },
+    {
+      "type": "div",
+      "props": {
+        "className": "relative"
+      },
+      "condition": {
+        "source": "data.showErrorButton"
+      },
+      "conditional": {
+        "if": "data.errorCount > 0 && bindings.onShowErrors",
+        "then": [
+          {
+            "type": "ToolbarButton",
+            "props": {
+              "icon": "Wrench",
+              "variant": "outline",
+              "className": "border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground"
+            },
+            "bindings": {
+              "label": {
+                "source": "data.errorCount",
+                "transform": "count => `${count} ${count === 1 ? 'Error' : 'Errors'}`"
+              },
+              "onClick": {
+                "source": "bindings.onShowErrors"
+              }
+            },
+            "children": [
+              {
+                "type": "ErrorBadge",
+                "props": {
+                  "size": "sm"
+                },
+                "bindings": {
+                  "count": {
+                    "source": "data.errorCount"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "ToolbarButton",
+      "props": {
+        "icon": "Eye",
+        "label": "Preview (Ctrl+P)",
+        "variant": "outline"
+      },
+      "condition": {
+        "source": "bindings.onPreview"
+      },
+      "bindings": {
+        "onClick": {
+          "source": "bindings.onPreview"
+        }
+      }
+    },
+    {
+      "type": "ToolbarButton",
+      "props": {
+        "icon": "Keyboard",
+        "label": "Keyboard Shortcuts (Ctrl+/)",
+        "variant": "ghost",
+        "className": "hidden sm:flex"
+      },
+      "bindings": {
+        "onClick": {
+          "source": "bindings.onShowShortcuts"
+        }
+      }
+    },
+    {
+      "type": "ToolbarButton",
+      "props": {
+        "icon": "Sparkle",
+        "label": "AI Generate (Ctrl+Shift+G)"
+      },
+      "bindings": {
+        "onClick": {
+          "source": "bindings.onGenerateAI"
+        }
+      }
+    },
+    {
+      "type": "ToolbarButton",
+      "props": {
+        "icon": "Download",
+        "label": "Export Project (Ctrl+E)",
+        "variant": "default"
+      },
+      "bindings": {
+        "onClick": {
+          "source": "bindings.onExport"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "$schema": "./schema/page-schema.json",
+  "id": "favicon-designer-page",
+  "name": "Favicon Designer",
+  "description": "Design your application favicon",
+  "icon": "Image",
+  "layout": {
+    "$ref": "./layouts/single-column.json"
+  },
+  "components": [
+    {
+      "id": "favicon-designer-component",
+      "type": "FaviconDesigner",
+      "props": {}
+    }
+  ]
+}

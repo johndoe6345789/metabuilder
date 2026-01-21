@@ -1,0 +1,7 @@
+{
+  "id": "textarea-root",
+  "type": "div",
+  "props": {
+    "className": "w-full"
+  }
+}

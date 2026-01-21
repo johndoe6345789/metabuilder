@@ -1,0 +1,120 @@
+{
+  "header": {
+    "title": "Project Settings",
+    "description": "Configure Next.js and npm settings"
+  },
+  "tabs": {
+    "nextjs": "Next.js Config",
+    "packages": "NPM Packages",
+    "scripts": "Scripts",
+    "data": "Data"
+  },
+  "nextjs": {
+    "application": {
+      "title": "Application Settings",
+      "description": "Basic Next.js application configuration",
+      "fields": {
+        "appName": {
+          "label": "Application Name",
+          "placeholder": "my-nextjs-app"
+        },
+        "importAlias": {
+          "label": "Import Alias",
+          "placeholder": "@/*",
+          "helper": "Used for module imports (e.g., import { Button } from \"@/components\")"
+        }
+      }
+    },
+    "features": {
+      "title": "Features",
+      "description": "Enable or disable Next.js features",
+      "items": {
+        "typescript": {
+          "label": "TypeScript",
+          "description": "Use TypeScript for type safety"
+        },
+        "eslint": {
+          "label": "ESLint",
+          "description": "Code linting and formatting"
+        },
+        "tailwind": {
+          "label": "Tailwind CSS",
+          "description": "Utility-first CSS framework"
+        },
+        "srcDirectory": {
+          "label": "Use src/ Directory",
+          "description": "Organize code inside src/ folder"
+        },
+        "appRouter": {
+          "label": "App Router",
+          "description": "Use the new App Router (vs Pages Router)"
+        },
+        "turbopack": {
+          "label": "Turbopack (Beta)",
+          "description": "Faster incremental bundler"
+        }
+      }
+    }
+  },
+  "packages": {
+    "title": "NPM Packages",
+    "description": "Manage project dependencies",
+    "packageManager": {
+      "label": "Package Manager"
+    },
+    "dependencies": {
+      "title": "Dependencies",
+      "empty": "No dependencies added yet"
+    },
+    "devDependencies": {
+      "title": "Dev Dependencies",
+      "empty": "No dev dependencies added yet"
+    },
+    "dialog": {
+      "title": {
+        "add": "Add Package",
+        "edit": "Edit Package"
+      },
+      "description": "Configure npm package details",
+      "fields": {
+        "name": {
+          "label": "Package Name",
+          "placeholder": "e.g., react-query, axios"
+        },
+        "version": {
+          "label": "Version",
+          "placeholder": "latest, ^1.0.0, ~2.3.4"
+        },
+        "description": {
+          "label": "Description (Optional)",
+          "placeholder": "What is this package for?"
+        },
+        "devDependency": {
+          "label": "Development Dependency"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "title": "NPM Scripts",
+    "description": "Define custom commands for your project",
+    "empty": "No scripts defined yet",
+    "dialog": {
+      "title": {
+        "add": "Add Script",
+        "edit": "Edit Script"
+      },
+      "description": "Define a custom npm script command",
+      "fields": {
+        "name": {
+          "label": "Script Name",
+          "placeholder": "e.g., dev, build, test"
+        },
+        "command": {
+          "label": "Command",
+          "placeholder": "e.g., next dev, tsc --noEmit"
+        }
+      }
+    }
+  }
+}

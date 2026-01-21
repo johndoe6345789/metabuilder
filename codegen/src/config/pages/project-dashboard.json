@@ -1,0 +1,17 @@
+{
+  "$schema": "./schema/page-schema.json",
+  "id": "project-dashboard",
+  "name": "Project Dashboard",
+  "description": "Overview of your CodeForge project",
+  "icon": "House",
+  "layout": {
+    "$ref": "./layouts/single-column.json"
+  },
+  "components": [
+    {
+      "id": "dashboard-component",
+      "type": "ProjectDashboard",
+      "props": {}
+    }
+  ]
+}

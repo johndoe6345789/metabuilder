@@ -1,0 +1,10 @@
+{
+  "type": "SchemaEditorToolbar",
+  "props": {
+    "onImport": "> void",
+    "onExport": "> void",
+    "onCopy": "> void",
+    "onPreview": "> void",
+    "onClear": "> void"
+  }
+}

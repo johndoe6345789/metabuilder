@@ -1,0 +1,6 @@
+{
+  "type": "Checkbox",
+  "props": {
+    "onChange": "> void"
+  }
+}

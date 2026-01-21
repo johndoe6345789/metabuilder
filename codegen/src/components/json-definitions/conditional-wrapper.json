@@ -1,0 +1,26 @@
+{
+  "id": "conditional-wrapper-container",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": "className",
+      "transform": "data || ''"
+    },
+    "children": [
+      {
+        "id": "conditional-wrapper-content",
+        "type": "div",
+        "bindings": {
+          "children": {
+            "source": ["condition", "children", "fallback"],
+            "transform": "const condition = data[0]; const children = data[1]; const fallback = data[2]; return condition ? children : fallback"
+          },
+          "_if": {
+            "source": ["condition", "fallback"],
+            "transform": "const condition = data[0]; const fallback = data[1]; return condition || !!fallback"
+          }
+        }
+      }
+    ]
+  }
+}

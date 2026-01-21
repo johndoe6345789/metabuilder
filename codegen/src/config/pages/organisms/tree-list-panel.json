@@ -1,0 +1,12 @@
+{
+  "type": "ScrollArea",
+  "props": {
+    "onTreeSelect": "> void",
+    "onTreeEdit": "> void",
+    "onTreeDuplicate": "> void",
+    "onTreeDelete": "> void",
+    "onCreateNew": "> void",
+    "onImportJson": "> void",
+    "onExportJson": "> void"
+  }
+}

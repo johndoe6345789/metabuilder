@@ -1,0 +1,76 @@
+{
+  "id": "d3-bar-chart-svg",
+  "type": "svg",
+  "bindings": {
+    "width": "width",
+    "height": "height",
+    "className": {
+      "source": "className",
+      "transform": "className ? `overflow-visible ${className}` : 'overflow-visible'"
+    }
+  },
+  "children": [
+    {
+      "id": "chart-group",
+      "type": "g",
+      "bindings": {
+        "transform": {
+          "source": "chartData.translateX,chartData.translateY",
+          "transform": "`translate(${chartData.translateX},${chartData.translateY})`"
+        }
+      },
+      "children": [
+        {
+          "id": "bars-list",
+          "type": "list",
+          "bindings": {
+            "items": "chartData.bars",
+            "keyPath": "label"
+          },
+          "itemTemplate": {
+            "type": "g",
+            "children": [
+              {
+                "type": "rect",
+                "bindings": {
+                  "x": "item.x",
+                  "y": "item.y",
+                  "width": "item.width",
+                  "height": "item.height",
+                  "fill": "color"
+                },
+                "props": { "rx": 2 }
+              },
+              {
+                "type": "text",
+                "bindings": {
+                  "x": "item.labelX",
+                  "y": "item.labelY",
+                  "children": "item.label"
+                },
+                "props": {
+                  "textAnchor": "middle",
+                  "fill": "currentColor",
+                  "style": { "fontSize": 10 }
+                }
+              },
+              {
+                "type": "text",
+                "bindings": {
+                  "x": "item.valueX",
+                  "y": "item.valueY",
+                  "children": "item.value"
+                },
+                "props": {
+                  "textAnchor": "middle",
+                  "fill": "currentColor",
+                  "style": { "fontSize": 10 }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

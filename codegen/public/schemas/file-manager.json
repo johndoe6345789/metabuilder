@@ -1,0 +1,212 @@
+{
+  "$schema": "../types/page-schema.json",
+  "id": "file-manager",
+  "name": "File Manager",
+  "description": "Browse and manage project files",
+  "layout": {
+    "type": "single"
+  },
+  "dataSources": [
+    {
+      "id": "files",
+      "type": "kv",
+      "key": "project-files",
+      "defaultValue": []
+    },
+    {
+      "id": "selectedFile",
+      "type": "static",
+      "defaultValue": null
+    },
+    {
+      "id": "searchQuery",
+      "type": "static",
+      "defaultValue": ""
+    },
+    {
+      "id": "filteredFiles",
+      "type": "static",
+      "expression": "data.files",
+      "dependencies": [
+        "files",
+        "searchQuery"
+      ]
+    }
+  ],
+  "components": [
+    {
+      "id": "root",
+      "type": "div",
+      "props": {
+        "className": "h-full flex flex-col"
+      },
+      "children": [
+        {
+          "id": "header",
+          "type": "div",
+          "props": {
+            "className": "border-b p-4"
+          },
+          "children": [
+            {
+              "id": "header-stack",
+              "type": "Stack",
+              "props": {
+                "direction": "horizontal",
+                "spacing": "md",
+                "className": "items-center justify-between"
+              },
+              "children": [
+                {
+                  "id": "title-section",
+                  "type": "Stack",
+                  "props": {
+                    "direction": "vertical",
+                    "spacing": "xs"
+                  },
+                  "children": [
+                    {
+                      "id": "title",
+                      "type": "Heading",
+                      "props": {
+                        "level": 2,
+                        "className": "text-xl font-semibold",
+                        "children": "Files"
+                      }
+                    },
+                    {
+                      "id": "file-count",
+                      "type": "Text",
+                      "props": {
+                        "variant": "muted",
+                        "className": "text-sm"
+                      },
+                      "bindings": {
+                        "children": {
+                          "source": "files",
+                          "path": "length",
+                          "transform": "(count) => `${count} files`"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "search-input",
+                  "type": "BasicSearchInput",
+                  "props": {
+                    "placeholder": "Search files..."
+                  },
+                  "bindings": {
+                    "value": {
+                      "source": "searchQuery"
+                    }
+                  },
+                  "events": {
+                    "onChange": "updateSearchQuery"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "file-list",
+          "type": "div",
+          "props": {
+            "className": "flex-1 overflow-auto p-4"
+          },
+          "children": [
+            {
+              "id": "empty-state",
+              "type": "EmptyMessage",
+              "props": {
+                "title": "No files found",
+                "description": "Start by creating your first file",
+                "action": {
+                  "label": "Create File",
+                  "onClick": "createFile"
+                }
+              },
+              "condition": "!filteredFiles || filteredFiles.length === 0"
+            },
+            {
+              "id": "files-grid",
+              "type": "ResponsiveGrid",
+              "props": {
+                "columns": 3,
+                "gap": "md"
+              },
+              "condition": "filteredFiles && filteredFiles.length > 0",
+              "repeat": {
+                "items": "filteredFiles",
+                "itemVar": "file",
+                "indexVar": "index"
+              },
+              "children": [
+                {
+                  "id": "file-card",
+                  "type": "Card",
+                  "props": {
+                    "className": "cursor-pointer hover:shadow-md transition-shadow"
+                  },
+                  "events": {
+                    "onClick": "selectFile"
+                  },
+                  "children": [
+                    {
+                      "id": "file-card-content",
+                      "type": "CardContent",
+                      "props": {
+                        "className": "p-4"
+                      },
+                      "children": [
+                        {
+                          "id": "file-info",
+                          "type": "Stack",
+                          "props": {
+                            "direction": "vertical",
+                            "spacing": "xs"
+                          },
+                          "children": [
+                            {
+                              "id": "file-name",
+                              "type": "Text",
+                              "props": {
+                                "className": "font-medium truncate"
+                              },
+                              "bindings": {
+                                "children": {
+                                  "source": "file",
+                                  "path": "name"
+                                }
+                              }
+                            },
+                            {
+                              "id": "file-path",
+                              "type": "Text",
+                              "props": {
+                                "variant": "muted",
+                                "className": "text-xs truncate"
+                              },
+                              "bindings": {
+                                "children": {
+                                  "source": "file",
+                                  "path": "path"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

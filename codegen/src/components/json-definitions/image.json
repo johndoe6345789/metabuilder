@@ -1,0 +1,56 @@
+{
+  "id": "image-container",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": "className",
+      "transform": "const base = 'relative overflow-hidden'; return data ? `${base} ${data}` : base"
+    },
+    "style": {
+      "source": ["width", "height"],
+      "transform": "const width = data[0]; const height = data[1]; return { width: typeof width === 'number' ? `${width}px` : width, height: typeof height === 'number' ? `${height}px` : height }"
+    }
+  },
+  "children": [
+    {
+      "id": "image-loading",
+      "type": "div",
+      "bindings": {
+        "className": {
+          "source": null,
+          "transform": "'absolute inset-0 bg-muted animate-pulse'"
+        },
+        "_if": {
+          "source": "imageState.loading",
+          "transform": "data"
+        }
+      }
+    },
+    {
+      "id": "image-element",
+      "type": "img",
+      "bindings": {
+        "src": {
+          "source": ["imageState.error", "fallback", "src"],
+          "transform": "const error = data[0]; const fallback = data[1]; const src = data[2]; return (error && fallback) ? fallback : src"
+        },
+        "alt": {
+          "source": "alt",
+          "transform": "data"
+        },
+        "onLoad": {
+          "source": "imageState.handleLoad",
+          "transform": "data"
+        },
+        "onError": {
+          "source": "imageState.handleError",
+          "transform": "data"
+        },
+        "className": {
+          "source": ["imageState.loading", "fit"],
+          "transform": "const loading = data[0]; const fit = data[1] || 'cover'; const base = 'w-full h-full transition-opacity'; const opacity = loading ? 'opacity-0' : 'opacity-100'; return `${base} ${opacity} object-${fit}`"
+        }
+      }
+    }
+  ]
+}

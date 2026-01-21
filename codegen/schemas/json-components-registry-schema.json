@@ -1,0 +1,124 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "JSON Components Registry",
+  "type": "object",
+  "required": ["version", "description", "components"],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "lastUpdated": {
+      "type": "string"
+    },
+    "categories": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "sourceRoots": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "components": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "type",
+          "name",
+          "category",
+          "canHaveChildren",
+          "description",
+          "status",
+          "source"
+        ],
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "export": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "canHaveChildren": {
+            "type": "boolean"
+          },
+          "description": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string",
+            "enum": ["atoms", "molecules", "organisms", "ui", "wrappers", "icons"]
+          },
+          "jsonCompatible": {
+            "type": "boolean"
+          },
+          "wrapperRequired": {
+            "type": "boolean"
+          },
+          "wrapperComponent": {
+            "type": "string"
+          },
+          "wrapperFor": {
+            "type": "string"
+          },
+          "load": {
+            "type": "object",
+            "properties": {
+              "path": {
+                "type": "string"
+              },
+              "export": {
+                "type": "string"
+              }
+            },
+            "required": ["export"],
+            "additionalProperties": false
+          },
+          "deprecated": {
+            "type": "object",
+            "properties": {
+              "replacedBy": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "statistics": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

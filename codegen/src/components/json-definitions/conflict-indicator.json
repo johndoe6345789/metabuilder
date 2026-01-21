@@ -1,0 +1,114 @@
+{
+  "id": "conflict-indicator-wrapper",
+  "type": "AnimatePresence",
+  "conditional": {
+    "if": "hasConflicts"
+  },
+  "children": [
+    {
+      "id": "conflict-indicator-motion",
+      "type": "motion.div",
+      "props": {
+        "initial": { "opacity": 0, "x": -20 },
+        "animate": { "opacity": 1, "x": 0 },
+        "exit": { "opacity": 0, "x": -20 }
+      },
+      "children": [
+        {
+          "id": "conflict-indicator-badge-compact",
+          "type": "motion.button",
+          "conditional": {
+            "if": "variant === 'compact'"
+          },
+          "bindings": {
+            "onClick": {
+              "source": "onClick",
+              "transform": "data || (() => {})"
+            }
+          },
+          "props": {
+            "className": "relative",
+            "initial": { "scale": 0 },
+            "animate": { "scale": 1 },
+            "exit": { "scale": 0 }
+          },
+          "children": [
+            {
+              "id": "conflict-icon-compact",
+              "type": "Warning",
+              "props": {
+                "size": 20,
+                "weight": "fill",
+                "className": "text-destructive animate-pulse"
+              }
+            },
+            {
+              "id": "conflict-count-badge",
+              "type": "span",
+              "bindings": {
+                "children": {
+                  "source": "stats.totalConflicts"
+                }
+              },
+              "props": {
+                "className": "absolute -top-1 -right-1 bg-destructive text-destructive-foreground text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center"
+              }
+            }
+          ]
+        },
+        {
+          "id": "conflict-indicator-badge-full",
+          "type": "Badge",
+          "conditional": {
+            "if": "variant !== 'compact'"
+          },
+          "bindings": {
+            "onClick": {
+              "source": "onClick",
+              "transform": "data || (() => {})"
+            }
+          },
+          "props": {
+            "variant": "destructive",
+            "className": "cursor-pointer hover:bg-destructive/90 transition-colors gap-1.5 animate-pulse"
+          },
+          "children": [
+            {
+              "id": "conflict-icon-full",
+              "type": "Warning",
+              "props": {
+                "size": 14,
+                "weight": "fill"
+              }
+            },
+            {
+              "id": "conflict-label",
+              "type": "span",
+              "conditional": {
+                "if": "showLabel"
+              },
+              "bindings": {
+                "children": {
+                  "source": "stats.totalConflicts",
+                  "transform": "data === 1 ? `${data} Conflict` : `${data} Conflicts`"
+                }
+              }
+            },
+            {
+              "id": "conflict-count-only",
+              "type": "span",
+              "conditional": {
+                "if": "!showLabel"
+              },
+              "bindings": {
+                "children": {
+                  "source": "stats.totalConflicts"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

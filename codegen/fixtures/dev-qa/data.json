@@ -1,0 +1,46 @@
+{
+  "id": "smoke-data",
+  "name": "Smoke Data",
+  "layout": {
+    "type": "single"
+  },
+  "dataSources": [],
+  "components": [
+    {
+      "id": "data-section",
+      "type": "section",
+      "children": [
+        {
+          "id": "data-heading",
+          "type": "Heading",
+          "props": {
+            "level": 3,
+            "children": "Data Smoke Check"
+          }
+        },
+        {
+          "id": "data-list",
+          "type": "List",
+          "props": {
+            "items": ["QA record A", "QA record B", "QA record C"],
+            "emptyMessage": "No QA records"
+          }
+        },
+        {
+          "id": "data-table",
+          "type": "Table",
+          "props": {
+            "columns": [
+              { "key": "name", "header": "Name" },
+              { "key": "status", "header": "Status" }
+            ],
+            "data": [
+              { "name": "Smoke Run", "status": "Pass" },
+              { "name": "Regression", "status": "Pending" }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

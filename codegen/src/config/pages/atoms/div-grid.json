@@ -1,0 +1,6 @@
+{
+  "type": "div",
+  "props": {
+    "className": "grid"
+  }
+}

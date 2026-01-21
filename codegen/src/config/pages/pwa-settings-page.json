@@ -1,0 +1,17 @@
+{
+  "$schema": "./schema/page-schema.json",
+  "id": "pwa-settings-page",
+  "name": "PWA Settings",
+  "description": "Configure Progressive Web App settings",
+  "icon": "Gear",
+  "layout": {
+    "$ref": "./layouts/single-column.json"
+  },
+  "components": [
+    {
+      "id": "pwa-settings-component",
+      "type": "PWASettings",
+      "props": {}
+    }
+  ]
+}

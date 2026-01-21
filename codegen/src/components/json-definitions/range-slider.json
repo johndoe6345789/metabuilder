@@ -1,0 +1,69 @@
+{
+  "id": "range-slider-root",
+  "type": "Container",
+  "bindings": {
+    "className": {
+      "source": "className",
+      "transform": "data ? data + ' space-y-2' : 'space-y-2'"
+    }
+  },
+  "children": [
+    {
+      "id": "range-slider-header",
+      "type": "div",
+      "props": {
+        "className": "flex items-center justify-between"
+      },
+      "conditional": {
+        "if": "(() => { return label || showValue; })()"
+      },
+      "children": [
+        {
+          "id": "range-slider-label",
+          "type": "span",
+          "props": {
+            "className": "text-sm font-medium"
+          },
+          "bindings": {
+            "children": "label"
+          },
+          "conditional": {
+            "if": "label"
+          }
+        },
+        {
+          "id": "range-slider-value",
+          "type": "span",
+          "props": {
+            "className": "text-sm text-muted-foreground"
+          },
+          "bindings": {
+            "children": {
+              "source": "value",
+              "transform": "data ? `${data[0]} - ${data[1]}` : ''"
+            }
+          },
+          "conditional": {
+            "if": "showValue"
+          }
+        }
+      ]
+    },
+    {
+      "id": "range-slider-track",
+      "type": "Slider",
+      "bindings": {
+        "value": "value",
+        "onValueChange": "onChange"
+      },
+      "props": {
+        "minStepsBetweenThumbs": 1
+      },
+      "conditionalProps": {
+        "min": "min",
+        "max": "max",
+        "step": "step"
+      }
+    }
+  ]
+}

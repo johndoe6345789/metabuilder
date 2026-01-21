@@ -1,0 +1,18 @@
+{
+  "id": "shadcn-separator",
+  "type": "ShadcnSeparator",
+  "bindings": {
+    "orientation": {
+      "source": "orientation",
+      "transform": "data || 'horizontal'"
+    },
+    "decorative": {
+      "source": "decorative",
+      "transform": "data"
+    },
+    "className": {
+      "source": "className",
+      "transform": "data"
+    }
+  }
+}

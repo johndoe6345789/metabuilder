@@ -1,0 +1,268 @@
+{
+  "$schema": "./schemas/feature-toggles-schema.json",
+  "version": "1.0.0",
+  "defaults": {
+    "codeEditor": {
+      "enabled": true,
+      "description": "Monaco code editor with syntax highlighting and multi-file editing",
+      "category": "core",
+      "requiredForExport": true
+    },
+    "models": {
+      "enabled": true,
+      "description": "Visual Prisma model designer with relations and field configuration",
+      "category": "designer",
+      "requiredForExport": false
+    },
+    "modelsJSON": {
+      "enabled": false,
+      "description": "JSON-based model designer (experimental alternative to visual designer)",
+      "category": "experimental",
+      "experimental": true,
+      "requiredForExport": false
+    },
+    "components": {
+      "enabled": true,
+      "description": "Visual component tree builder for React components",
+      "category": "designer",
+      "requiredForExport": false
+    },
+    "componentTrees": {
+      "enabled": true,
+      "description": "Manage multiple named component trees for different app sections",
+      "category": "designer",
+      "requiredForExport": false
+    },
+    "componentTreesJSON": {
+      "enabled": false,
+      "description": "JSON-based component tree manager (experimental)",
+      "category": "experimental",
+      "experimental": true,
+      "requiredForExport": false
+    },
+    "workflows": {
+      "enabled": true,
+      "description": "n8n-style visual workflow designer with triggers and actions",
+      "category": "designer",
+      "requiredForExport": false
+    },
+    "workflowsJSON": {
+      "enabled": false,
+      "description": "JSON-based workflow designer (experimental)",
+      "category": "experimental",
+      "experimental": true,
+      "requiredForExport": false
+    },
+    "lambdas": {
+      "enabled": true,
+      "description": "Serverless function designer with multi-runtime support",
+      "category": "designer",
+      "requiredForExport": false
+    },
+    "styling": {
+      "enabled": true,
+      "description": "Visual theme designer with color palettes and typography",
+      "category": "designer",
+      "requiredForExport": false
+    },
+    "faviconDesigner": {
+      "enabled": true,
+      "description": "Visual favicon and icon designer with SVG export",
+      "category": "designer",
+      "requiredForExport": false
+    },
+    "ideaCloud": {
+      "enabled": true,
+      "description": "Interactive feature idea voting cloud for planning",
+      "category": "planning",
+      "requiredForExport": false
+    },
+    "flaskApi": {
+      "enabled": true,
+      "description": "Flask REST API designer with blueprints and CORS",
+      "category": "backend",
+      "requiredForExport": false
+    },
+    "playwright": {
+      "enabled": true,
+      "description": "Visual E2E test builder with Playwright",
+      "category": "testing",
+      "requiredForExport": false
+    },
+    "storybook": {
+      "enabled": true,
+      "description": "Component story builder for Storybook",
+      "category": "testing",
+      "requiredForExport": false
+    },
+    "unitTests": {
+      "enabled": true,
+      "description": "Comprehensive unit test suite builder",
+      "category": "testing",
+      "requiredForExport": false
+    },
+    "errorRepair": {
+      "enabled": true,
+      "description": "AI-powered error detection and auto-repair system",
+      "category": "quality",
+      "requiredForExport": false
+    },
+    "documentation": {
+      "enabled": true,
+      "description": "In-app documentation viewer with guides and API references",
+      "category": "help",
+      "requiredForExport": false
+    },
+    "sassStyles": {
+      "enabled": true,
+      "description": "SASS styles showcase with utilities and mixins",
+      "category": "styling",
+      "requiredForExport": false
+    },
+    "schemaEditor": {
+      "enabled": true,
+      "description": "JSON schema editor and validator for configuration files",
+      "category": "developer",
+      "requiredForExport": false
+    },
+    "dataBinding": {
+      "enabled": true,
+      "description": "Data binding configuration designer for reactive state",
+      "category": "developer",
+      "requiredForExport": false
+    },
+    "dockerDebugger": {
+      "enabled": true,
+      "description": "Docker build analysis and debugging tools",
+      "category": "deployment",
+      "requiredForExport": false
+    }
+  },
+  "categories": {
+    "core": {
+      "label": "Core Features",
+      "description": "Essential features required for basic functionality",
+      "icon": "StarFour"
+    },
+    "designer": {
+      "label": "Visual Designers",
+      "description": "Visual design tools for building application components",
+      "icon": "PaintBrush"
+    },
+    "experimental": {
+      "label": "Experimental Features",
+      "description": "Experimental features in development (may be unstable)",
+      "icon": "FlaskConical"
+    },
+    "backend": {
+      "label": "Backend Tools",
+      "description": "Backend API and server configuration tools",
+      "icon": "Server"
+    },
+    "testing": {
+      "label": "Testing Tools",
+      "description": "Test creation and management tools",
+      "icon": "TestTube"
+    },
+    "quality": {
+      "label": "Quality Tools",
+      "description": "Code quality and error management tools",
+      "icon": "CheckCircle"
+    },
+    "styling": {
+      "label": "Styling Tools",
+      "description": "Theme and style management tools",
+      "icon": "Palette"
+    },
+    "planning": {
+      "label": "Planning Tools",
+      "description": "Project planning and ideation tools",
+      "icon": "Lightbulb"
+    },
+    "deployment": {
+      "label": "Deployment Tools",
+      "description": "Build and deployment configuration tools",
+      "icon": "Rocket"
+    },
+    "developer": {
+      "label": "Developer Tools",
+      "description": "Advanced developer utilities and debugging",
+      "icon": "Code"
+    },
+    "help": {
+      "label": "Help & Documentation",
+      "description": "Documentation and help resources",
+      "icon": "BookOpen"
+    }
+  },
+  "environments": {
+    "development": {
+      "description": "Development environment with all experimental features enabled",
+      "overrides": {
+        "modelsJSON": true,
+        "componentTreesJSON": true,
+        "workflowsJSON": true,
+        "schemaEditor": true,
+        "dataBinding": true,
+        "dockerDebugger": true
+      }
+    },
+    "staging": {
+      "description": "Staging environment with stable features only",
+      "overrides": {
+        "modelsJSON": false,
+        "componentTreesJSON": false,
+        "workflowsJSON": false,
+        "dockerDebugger": true
+      }
+    },
+    "production": {
+      "description": "Production environment with only production-ready features",
+      "overrides": {
+        "modelsJSON": false,
+        "componentTreesJSON": false,
+        "workflowsJSON": false,
+        "schemaEditor": false,
+        "dataBinding": false,
+        "dockerDebugger": false
+      }
+    }
+  },
+  "profiles": {
+    "minimal": {
+      "description": "Minimal feature set for basic code editing",
+      "enabled": ["codeEditor", "documentation"]
+    },
+    "designer": {
+      "description": "Visual design tools without code editor",
+      "enabled": [
+        "models",
+        "components",
+        "componentTrees",
+        "styling",
+        "faviconDesigner",
+        "documentation"
+      ]
+    },
+    "developer": {
+      "description": "Full developer experience with all tools",
+      "enabled": "all"
+    },
+    "testing-focused": {
+      "description": "Testing and quality tools focus",
+      "enabled": [
+        "codeEditor",
+        "playwright",
+        "storybook",
+        "unitTests",
+        "errorRepair",
+        "documentation"
+      ]
+    }
+  },
+  "metadata": {
+    "lastModified": "2024-01-01T00:00:00Z",
+    "version": "6.0.0",
+    "compatibleWith": ">=6.0.0"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "type": "Stack",
+  "props": {
+    "direction": "vertical",
+    "spacing": "none",
+    "className": "border-b border-border bg-card px-4 sm:px-6 py-3 sm:py-4"
+  },
+  "conditional": {
+    "if": "data.tabInfo",
+    "then": [
+      {
+        "type": "PageHeaderContent",
+        "bindings": {
+          "title": {
+            "source": "data.tabInfo.title"
+          },
+          "icon": {
+            "source": "data.tabInfo.icon"
+          },
+          "description": {
+            "source": "data.tabInfo.description"
+          }
+        }
+      }
+    ]
+  }
+}

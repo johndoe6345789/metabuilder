@@ -1,0 +1,35 @@
+{
+  "id": "error-panel-main",
+  "type": "div",
+  "className": "h-full flex flex-col bg-background",
+  "children": [
+    {
+      "id": "error-panel-header-wrapper",
+      "type": "ErrorPanelHeader",
+      "bindings": {
+        "props": {
+          "source": "headerProps",
+          "transform": "data"
+        }
+      }
+    },
+    {
+      "id": "error-panel-content",
+      "type": "ScrollArea",
+      "className": "flex-1",
+      "children": [
+        {
+          "id": "error-panel-inner",
+          "type": "div",
+          "className": "p-6",
+          "bindings": {
+            "children": {
+              "source": "contentState",
+              "transform": "data"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

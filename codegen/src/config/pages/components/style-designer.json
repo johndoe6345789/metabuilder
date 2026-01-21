@@ -1,0 +1,10 @@
+{
+  "type": "StyleDesigner",
+  "jsonCompatible": false,
+  "wrapperRequired": true,
+  "load": {
+    "path": "@/components/StyleDesigner",
+    "export": "StyleDesigner"
+  },
+  "props": {}
+}

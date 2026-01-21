@@ -1,0 +1,91 @@
+{
+  "header": {
+    "title": "PWA Settings",
+    "description": "Configure Progressive Web App features and behavior"
+  },
+  "install": {
+    "title": "Installation Status",
+    "description": "Install the app for offline access and better performance",
+    "label": "App Installation",
+    "status": {
+      "installed": "Installed",
+      "available": "Available",
+      "notAvailable": "Not available"
+    },
+    "badge": {
+      "installed": "Installed",
+      "notAvailable": "Not Available"
+    },
+    "action": {
+      "install": "Install Now"
+    }
+  },
+  "connection": {
+    "title": "Connection Status",
+    "description": "Current network connectivity status",
+    "label": "Network Status",
+    "status": {
+      "online": "Connected to internet",
+      "offline": "Working offline"
+    },
+    "badge": {
+      "online": "Online",
+      "offline": "Offline"
+    }
+  },
+  "update": {
+    "title": "Update Available",
+    "description": "A new version of the app is ready to install",
+    "label": "App Update",
+    "status": "Update now for latest features",
+    "action": "Update Now"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "description": "Receive updates about your projects and builds",
+    "label": "Push Notifications",
+    "permissionLabel": "Permission:",
+    "blocked": "Notifications are blocked. Please enable them in your browser settings.",
+    "unsupported": "Notifications aren't supported in this browser."
+  },
+  "cache": {
+    "title": "Cache Management",
+    "description": "Manage offline storage and cached resources",
+    "labels": {
+      "size": "Cache Size",
+      "serviceWorker": "Service Worker"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "action": {
+      "clear": "Clear Cache & Reload"
+    },
+    "helper": "This will remove all cached files and reload the app",
+    "storageUnit": "MB"
+  },
+  "features": {
+    "title": "PWA Features",
+    "description": "Progressive Web App capabilities",
+    "items": {
+      "offline": "Offline Support",
+      "installable": "Installable",
+      "backgroundSync": "Background Sync",
+      "pushNotifications": "Push Notifications",
+      "shortcuts": "App Shortcuts"
+    }
+  },
+  "toasts": {
+    "installSuccess": "App installed successfully!",
+    "installCancelled": "Installation cancelled",
+    "update": "Updating app...",
+    "cacheCleared": "Cache cleared! Reloading...",
+    "notificationsEnabled": "Notifications enabled",
+    "notificationsDenied": "Notification permission denied"
+  },
+  "defaults": {
+    "cacheCalculating": "Calculating...",
+    "cacheUnavailable": "Unavailable"
+  }
+}

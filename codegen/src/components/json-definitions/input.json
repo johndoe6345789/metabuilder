@@ -1,0 +1,114 @@
+{
+  "id": "input-wrapper",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": null,
+      "transform": "'w-full'"
+    }
+  },
+  "children": [
+    {
+      "id": "input-label",
+      "type": "label",
+      "bindings": {
+        "className": {
+          "source": null,
+          "transform": "'block text-sm font-medium mb-1.5 text-foreground'"
+        },
+        "children": {
+          "source": "label",
+          "transform": "data"
+        },
+        "_if": {
+          "source": "label",
+          "transform": "!!data"
+        }
+      }
+    },
+    {
+      "id": "input-container",
+      "type": "div",
+      "bindings": {
+        "className": {
+          "source": null,
+          "transform": "'relative'"
+        }
+      },
+      "children": [
+        {
+          "id": "input-left-icon",
+          "type": "div",
+          "bindings": {
+            "className": {
+              "source": null,
+              "transform": "'absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground'"
+            },
+            "children": {
+              "source": "leftIcon",
+              "transform": "data"
+            },
+            "_if": {
+              "source": "leftIcon",
+              "transform": "!!data"
+            }
+          }
+        },
+        {
+          "id": "input-element",
+          "type": "input",
+          "bindings": {
+            "ref": {
+              "source": "_ref",
+              "transform": "data"
+            },
+            "className": {
+              "source": ["error", "leftIcon", "rightIcon", "className"],
+              "transform": "const error = data[0]; const leftIcon = data[1]; const rightIcon = data[2]; const className = data[3] || ''; const baseClasses = 'flex h-10 w-full rounded-md border bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 transition-colors'; const errorClass = error ? 'border-destructive focus-visible:ring-destructive' : 'border-input'; const leftIconClass = leftIcon ? 'pl-10' : ''; const rightIconClass = rightIcon ? 'pr-10' : ''; return `${baseClasses} ${errorClass} ${leftIconClass} ${rightIconClass} ${className}`.trim()"
+            },
+            "_spreadProps": {
+              "source": "_spreadProps",
+              "transform": "data"
+            }
+          }
+        },
+        {
+          "id": "input-right-icon",
+          "type": "div",
+          "bindings": {
+            "className": {
+              "source": null,
+              "transform": "'absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground'"
+            },
+            "children": {
+              "source": "rightIcon",
+              "transform": "data"
+            },
+            "_if": {
+              "source": "rightIcon",
+              "transform": "!!data"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "input-helper-text",
+      "type": "p",
+      "bindings": {
+        "className": {
+          "source": "error",
+          "transform": "const baseClass = 'text-xs mt-1.5'; return data ? `${baseClass} text-destructive` : `${baseClass} text-muted-foreground`"
+        },
+        "children": {
+          "source": "helperText",
+          "transform": "data"
+        },
+        "_if": {
+          "source": "helperText",
+          "transform": "!!data"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,126 @@
+{
+  "id": "seed-data-status-card",
+  "type": "Card",
+  "bindings": {
+    "className": {
+      "source": "className",
+      "transform": "data || ''"
+    }
+  },
+  "children": [
+    {
+      "id": "seed-data-status-header",
+      "type": "CardHeader",
+      "children": [
+        {
+          "id": "seed-data-status-title",
+          "type": "CardTitle",
+          "bindings": {
+            "className": {
+              "source": null,
+              "transform": "'flex items-center gap-2 text-lg'"
+            }
+          },
+          "children": [
+            {
+              "id": "seed-data-status-icon",
+              "type": "Database",
+              "bindings": {
+                "size": {
+                  "source": null,
+                  "transform": "20"
+                },
+                "weight": {
+                  "source": null,
+                  "transform": "'duotone'"
+                }
+              }
+            },
+            {
+              "id": "seed-data-status-text",
+              "type": "span",
+              "bindings": {
+                "children": {
+                  "source": null,
+                  "transform": "'Seed Data Available'"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "seed-data-status-description",
+          "type": "CardDescription",
+          "bindings": {
+            "children": {
+              "source": null,
+              "transform": "'Pre-configured data ready to load from database'"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "seed-data-status-content",
+      "type": "CardContent",
+      "children": [
+        {
+          "id": "seed-data-status-grid",
+          "type": "div",
+          "bindings": {
+            "className": {
+              "source": null,
+              "transform": "'grid grid-cols-2 md:grid-cols-3 gap-3'"
+            }
+          },
+          "children": [
+            {
+              "id": "seed-data-status-item",
+              "type": "div",
+              "bindings": {
+                "className": {
+                  "source": null,
+                  "transform": "'flex items-center justify-between p-3 rounded-lg border border-border bg-muted/50'"
+                }
+              },
+              "children": [
+                {
+                  "id": "seed-data-status-label",
+                  "type": "span",
+                  "bindings": {
+                    "className": {
+                      "source": null,
+                      "transform": "'text-sm font-medium'"
+                    },
+                    "children": {
+                      "source": "label",
+                      "transform": "data"
+                    }
+                  }
+                },
+                {
+                  "id": "seed-data-status-badge",
+                  "type": "Badge",
+                  "bindings": {
+                    "variant": {
+                      "source": null,
+                      "transform": "'secondary'"
+                    },
+                    "className": {
+                      "source": null,
+                      "transform": "'ml-2'"
+                    },
+                    "children": {
+                      "source": "count",
+                      "transform": "data"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

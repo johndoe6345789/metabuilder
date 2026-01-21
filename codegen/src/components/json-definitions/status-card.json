@@ -1,0 +1,42 @@
+{
+  "id": "status-card-container",
+  "type": "Card",
+  "children": [
+    {
+      "type": "CardContent",
+      "className": "pt-6",
+      "children": [
+        {
+          "type": "Flex",
+          "align": "center",
+          "justify": "between",
+          "children": [
+            {
+              "type": "Box",
+              "children": [
+                {
+                  "type": "Box",
+                  "className": "text-2xl font-bold",
+                  "children": [{ "type": "Text", "value": "{count}" }]
+                },
+                {
+                  "type": "Box",
+                  "className": "text-xs text-muted-foreground",
+                  "children": [{ "type": "Text", "value": "{label}" }]
+                }
+              ]
+            },
+            {
+              "type": "Icon",
+              "bindings": {
+                "name": { "source": "iconName" },
+                "size": { "source": "iconSize" },
+                "className": { "source": "iconClass" }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

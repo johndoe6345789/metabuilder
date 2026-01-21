@@ -1,0 +1,281 @@
+{
+  "id": "storage-settings-container",
+  "type": "div",
+  "props": { "className": "space-y-6" },
+  "children": [
+    {
+      "id": "backend-card",
+      "type": "Card",
+      "children": [
+        {
+          "id": "backend-header",
+          "type": "CardHeader",
+          "children": [
+            {
+              "id": "backend-title",
+              "type": "CardTitle",
+              "props": { "className": "flex items-center gap-2" },
+              "children": [
+                {
+                  "type": "PhosphorIcon",
+                  "bindings": {
+                    "icon": "backendInfo.iconName"
+                  },
+                  "props": { "className": "w-5 h-5" }
+                },
+                {
+                  "type": "text",
+                  "children": "Storage Backend"
+                }
+              ]
+            },
+            {
+              "id": "backend-description",
+              "type": "CardDescription",
+              "children": [{ "type": "text", "children": "Choose your storage backend for the application" }]
+            }
+          ]
+        },
+        {
+          "id": "backend-content",
+          "type": "CardContent",
+          "props": { "className": "space-y-4" },
+          "children": [
+            {
+              "id": "current-backend",
+              "type": "div",
+              "props": { "className": "flex items-center gap-2" },
+              "children": [
+                {
+                  "type": "span",
+                  "props": { "className": "text-sm text-muted-foreground" },
+                  "children": [{ "type": "text", "children": "Current Backend:" }]
+                },
+                {
+                  "type": "Badge",
+                  "props": { "variant": "secondary", "className": "flex items-center gap-1" },
+                  "children": [
+                    {
+                      "type": "PhosphorIcon",
+                      "bindings": { "icon": "backendInfo.iconName" },
+                      "props": { "className": "w-4 h-4" }
+                    },
+                    {
+                      "type": "text",
+                      "bindings": { "children": "backendInfo.moleculeLabel" }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "backend-options",
+              "type": "div",
+              "props": { "className": "grid gap-4" },
+              "children": [
+                {
+                  "id": "flask-section",
+                  "type": "div",
+                  "props": { "className": "space-y-2" },
+                  "children": [
+                    {
+                      "type": "Label",
+                      "props": { "htmlFor": "flask-url" },
+                      "children": [{ "type": "text", "children": "Flask Backend URL" }]
+                    },
+                    {
+                      "type": "div",
+                      "props": { "className": "flex gap-2" },
+                      "children": [
+                        {
+                          "type": "Input",
+                          "props": { "id": "flask-url" },
+                          "bindings": {
+                            "value": "flaskUrl",
+                            "onChange": {
+                              "source": "onFlaskUrlChange",
+                              "transform": "(e) => onFlaskUrlChange?.(e.target.value)"
+                            },
+                            "disabled": {
+                              "source": "isSwitching,isLoading",
+                              "transform": "isSwitching || isLoading"
+                            }
+                          }
+                        },
+                        {
+                          "type": "Button",
+                          "bindings": {
+                            "onClick": "onSwitchToFlask",
+                            "disabled": {
+                              "source": "isSwitching,isLoading,backend",
+                              "transform": "isSwitching || isLoading || backend === 'flask'"
+                            },
+                            "variant": {
+                              "source": "backend",
+                              "transform": "backend === 'flask' ? 'secondary' : 'default'"
+                            }
+                          },
+                          "children": [
+                            {
+                              "type": "PhosphorIcon",
+                              "props": { "icon": "Cpu", "className": "w-4 h-4 mr-2" }
+                            },
+                            {
+                              "type": "text",
+                              "bindings": {
+                                "children": {
+                                  "source": "backend",
+                                  "transform": "backend === 'flask' ? 'Active' : 'Use Flask'"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "other-backends",
+                  "type": "div",
+                  "props": { "className": "flex gap-2" },
+                  "children": [
+                    {
+                      "type": "Button",
+                      "bindings": {
+                        "onClick": "onSwitchToIndexedDB",
+                        "disabled": {
+                          "source": "isSwitching,isLoading,backend",
+                          "transform": "isSwitching || isLoading || backend === 'indexeddb'"
+                        },
+                        "variant": {
+                          "source": "backend",
+                          "transform": "backend === 'indexeddb' ? 'secondary' : 'outline'"
+                        }
+                      },
+                      "props": { "className": "flex-1" },
+                      "children": [
+                        {
+                          "type": "PhosphorIcon",
+                          "props": { "icon": "HardDrive", "className": "w-4 h-4 mr-2" }
+                        },
+                        {
+                          "type": "text",
+                          "bindings": {
+                            "children": {
+                              "source": "backend",
+                              "transform": "backend === 'indexeddb' ? 'Active' : 'Use IndexedDB'"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Button",
+                      "bindings": {
+                        "onClick": "onSwitchToSQLite",
+                        "disabled": {
+                          "source": "isSwitching,isLoading,backend",
+                          "transform": "isSwitching || isLoading || backend === 'sqlite'"
+                        },
+                        "variant": {
+                          "source": "backend",
+                          "transform": "backend === 'sqlite' ? 'secondary' : 'outline'"
+                        }
+                      },
+                      "props": { "className": "flex-1" },
+                      "children": [
+                        {
+                          "type": "PhosphorIcon",
+                          "props": { "icon": "Database", "className": "w-4 h-4 mr-2" }
+                        },
+                        {
+                          "type": "text",
+                          "bindings": {
+                            "children": {
+                              "source": "backend",
+                              "transform": "backend === 'sqlite' ? 'Active' : 'Use SQLite'"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "data-card",
+      "type": "Card",
+      "children": [
+        {
+          "id": "data-header",
+          "type": "CardHeader",
+          "children": [
+            {
+              "type": "CardTitle",
+              "children": [{ "type": "text", "children": "Import/Export Data" }]
+            },
+            {
+              "type": "CardDescription",
+              "children": [{ "type": "text", "children": "Backup or restore your application data" }]
+            }
+          ]
+        },
+        {
+          "id": "data-content",
+          "type": "CardContent",
+          "props": { "className": "space-y-4" },
+          "children": [
+            {
+              "type": "div",
+              "props": { "className": "flex gap-2" },
+              "children": [
+                {
+                  "type": "Button",
+                  "bindings": {
+                    "onClick": "onExport",
+                    "disabled": "isExporting"
+                  },
+                  "props": { "variant": "outline", "className": "flex-1" },
+                  "children": [
+                    {
+                      "type": "PhosphorIcon",
+                      "props": { "icon": "Download", "className": "w-4 h-4 mr-2" }
+                    },
+                    {
+                      "type": "text",
+                      "children": "Export"
+                    }
+                  ]
+                },
+                {
+                  "type": "Button",
+                  "bindings": {
+                    "onClick": "onImport",
+                    "disabled": "isImporting"
+                  },
+                  "props": { "variant": "outline", "className": "flex-1" },
+                  "children": [
+                    {
+                      "type": "PhosphorIcon",
+                      "props": { "icon": "Upload", "className": "w-4 h-4 mr-2" }
+                    },
+                    {
+                      "type": "text",
+                      "children": "Import"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

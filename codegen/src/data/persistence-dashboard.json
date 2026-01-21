@@ -1,0 +1,80 @@
+{
+  "title": "Persistence & Sync Dashboard",
+  "status": {
+    "disconnected": "Disconnected",
+    "syncing": "Syncing...",
+    "synced": "Synced",
+    "error": "Error",
+    "idle": "Idle"
+  },
+  "format": {
+    "never": "Never"
+  },
+  "cards": {
+    "connection": {
+      "title": "Connection Status",
+      "localStorageLabel": "Local Storage:",
+      "localStorageValue": "IndexedDB",
+      "remoteStorageLabel": "Remote Storage:",
+      "remoteStorageConnected": "Flask API",
+      "remoteStorageDisconnected": "Offline",
+      "lastSyncLabel": "Last Sync:"
+    },
+    "metrics": {
+      "title": "Sync Metrics",
+      "totalOperationsLabel": "Total Operations:",
+      "successRateLabel": "Success Rate:",
+      "avgDurationLabel": "Avg Duration:",
+      "failedLabel": "Failed:"
+    },
+    "autoSync": {
+      "title": "Auto-Sync",
+      "statusLabel": "Status:",
+      "statusEnabled": "Enabled",
+      "statusDisabled": "Disabled",
+      "changesPendingLabel": "Changes Pending:",
+      "nextSyncLabel": "Next Sync:",
+      "nextSyncNotAvailable": "N/A"
+    },
+    "manualSync": {
+      "title": "Manual Sync Operations",
+      "pushButton": "Push to Flask",
+      "pullButton": "Pull from Flask",
+      "triggerButton": "Trigger Auto-Sync",
+      "checkButton": "Check Connection"
+    },
+    "error": {
+      "title": "Sync Error"
+    },
+    "howItWorks": {
+      "title": "How Persistence Works",
+      "items": [
+        {
+          "title": "Automatic Persistence:",
+          "description": "All Redux state changes are automatically persisted to IndexedDB with a 300ms debounce."
+        },
+        {
+          "title": "Flask Sync:",
+          "description": "When connected, data is synced bidirectionally with the Flask API backend."
+        },
+        {
+          "title": "Auto-Sync:",
+          "description": "Enable auto-sync to automatically push changes to Flask at regular intervals (default: 30s)."
+        },
+        {
+          "title": "Conflict Resolution:",
+          "description": "When conflicts are detected during sync, you'll be notified to resolve them manually."
+        }
+      ]
+    }
+  },
+  "toasts": {
+    "syncToSuccess": "Successfully synced to Flask",
+    "syncFromSuccess": "Successfully synced from Flask",
+    "syncFailed": "Sync failed: {{error}}",
+    "autoSyncEnabled": "Auto-sync enabled",
+    "autoSyncDisabled": "Auto-sync disabled",
+    "manualSyncSuccess": "Manual sync completed",
+    "manualSyncFailed": "Manual sync failed: {{error}}"
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "id": "menu-container",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": null,
+      "transform": "'relative inline-block'"
+    }
+  },
+  "children": [
+    {
+      "id": "menu-trigger",
+      "type": "div",
+      "bindings": {
+        "ref": {
+          "source": "menuState.triggerRef",
+          "transform": "data"
+        },
+        "onClick": {
+          "source": "menuState.toggle",
+          "transform": "data"
+        },
+        "children": {
+          "source": "trigger",
+          "transform": "data"
+        }
+      }
+    },
+    {
+      "id": "menu-content",
+      "type": "div",
+      "bindings": {
+        "ref": {
+          "source": "menuState.popoverRef",
+          "transform": "data"
+        },
+        "className": {
+          "source": "className",
+          "transform": "const base = 'absolute z-50 mt-2 w-56 bg-popover text-popover-foreground border border-border rounded-lg shadow-lg overflow-hidden animate-in fade-in-0 zoom-in-95'; return data ? `${base} ${data}` : base"
+        },
+        "_if": {
+          "source": "menuState.isOpen",
+          "transform": "data"
+        }
+      },
+      "children": [
+        {
+          "id": "menu-items-container",
+          "type": "div",
+          "bindings": {
+            "className": {
+              "source": null,
+              "transform": "'py-1'"
+            }
+          },
+          "children": [
+            {
+              "id": "menu-items-repeat",
+              "type": "_repeat",
+              "bindings": {
+                "_items": {
+                  "source": "items",
+                  "transform": "data || []"
+                },
+                "_renderItem": {
+                  "source": ["menuState.handleItemClick"],
+                  "transform": "(item, index) => { if (item.divider) { return { _element: 'div', _key: index, _props: { className: 'my-1 h-px bg-border' } }; } return { _element: 'button', _key: item.id, _props: { onClick: () => data[0](item), disabled: item.disabled, className: `w-full flex items-center justify-between px-3 py-2 text-sm transition-colors hover:bg-accent hover:text-accent-foreground ${item.disabled ? 'opacity-50 cursor-not-allowed' : ''} ${item.danger ? 'text-destructive hover:bg-destructive hover:text-destructive-foreground' : ''}` }, _children: [{ _element: 'div', _props: { className: 'flex items-center gap-2' }, _children: [item.icon ? { _element: 'span', _props: { className: 'w-4 h-4' }, _children: [item.icon] } : null, { _element: 'span', _children: [item.label] }].filter(Boolean) }, { _element: 'div', _props: { className: 'flex items-center gap-2' }, _children: [item.shortcut ? { _element: 'span', _props: { className: 'text-xs text-muted-foreground' }, _children: [item.shortcut] } : null, item.selected ? { _element: 'Check', _props: { className: 'w-4 h-4' } } : null].filter(Boolean) }] }; }"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

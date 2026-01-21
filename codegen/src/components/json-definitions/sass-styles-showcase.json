@@ -1,0 +1,16 @@
+{
+  "id": "sass-styles-showcase",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": null,
+      "transform": "'h-full w-full overflow-auto bg-background'"
+    }
+  },
+  "children": [
+    {
+      "id": "sass-styles-content",
+      "type": "LayoutTab"
+    }
+  ]
+}

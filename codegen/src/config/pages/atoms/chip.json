@@ -1,0 +1,7 @@
+{
+  "type": "Chip",
+  "props": {
+    "12": "bold",
+    "onRemove": "> void"
+  }
+}

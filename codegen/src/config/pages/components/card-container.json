@@ -1,0 +1,14 @@
+{
+  "id": "card-container",
+  "type": "Card",
+  "children": [
+    {
+      "id": "card-header-slot",
+      "type": "CardHeader"
+    },
+    {
+      "id": "card-content-slot",
+      "type": "CardContent"
+    }
+  ]
+}

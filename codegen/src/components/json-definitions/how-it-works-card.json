@@ -1,0 +1,32 @@
+{
+  "id": "how-it-works-card-container",
+  "type": "Card",
+  "className": "bg-accent/5 border-accent/20",
+  "children": [
+    {
+      "type": "CardHeader",
+      "children": [
+        {
+          "type": "CardTitle",
+          "className": "text-base",
+          "children": [{ "type": "Text", "value": "{title}" }]
+        }
+      ]
+    },
+    {
+      "type": "CardContent",
+      "className": "space-y-2 text-sm",
+      "children": [
+        {
+          "type": "Box",
+          "bindings": {
+            "children": {
+              "source": "steps",
+              "transform": "source.map((step, index) => ({ id: `step-${index}`, type: 'Box', className: 'flex gap-2', children: [{ type: 'Box', className: 'w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-bold flex-shrink-0', children: [{ type: 'Text', value: String(index + 1) }] }, { type: 'Paragraph', className: 'text-muted-foreground', children: [{ type: 'Text', value: step }] }] }))"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

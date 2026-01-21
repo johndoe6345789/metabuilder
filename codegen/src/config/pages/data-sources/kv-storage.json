@@ -1,0 +1,5 @@
+{
+  "id": "kv-storage",
+  "type": "kv",
+  "defaultValue": {}
+}

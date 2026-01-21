@@ -1,0 +1,290 @@
+{
+  "id": "model-designer",
+  "name": "Model Designer",
+  "layout": {
+    "type": "single"
+  },
+  "dataSources": [
+    {
+      "id": "models",
+      "type": "kv",
+      "key": "app-models",
+      "defaultValue": []
+    },
+    {
+      "id": "selectedModelId",
+      "type": "static",
+      "defaultValue": null
+    },
+    {
+      "id": "createDialogOpen",
+      "type": "static",
+      "defaultValue": false
+    },
+    {
+      "id": "newModelName",
+      "type": "static",
+      "defaultValue": ""
+    },
+    {
+      "id": "selectedModel",
+      "type": "static",
+      "expression": "data.models.find(id === data.selectedModelId)",
+      "dependencies": [
+        "models",
+        "selectedModelId"
+      ]
+    },
+    {
+      "id": "modelCount",
+      "type": "static",
+      "expression": "data.models.length",
+      "dependencies": [
+        "models"
+      ]
+    }
+  ],
+  "components": [
+    {
+      "id": "root",
+      "type": "div",
+      "props": {
+        "className": "h-full flex bg-gradient-to-br from-background via-background to-primary/5"
+      },
+      "children": [
+        {
+          "id": "sidebar",
+          "type": "div",
+          "props": {
+            "className": "w-80 border-r border-border bg-card/50 backdrop-blur flex flex-col"
+          },
+          "children": [
+            {
+              "id": "sidebar-header",
+              "type": "div",
+              "props": {
+                "className": "p-4 border-b border-border"
+              },
+              "children": [
+                {
+                  "id": "header-content",
+                  "type": "div",
+                  "props": {
+                    "className": "flex items-center justify-between mb-3"
+                  },
+                  "children": [
+                    {
+                      "id": "header-title",
+                      "type": "Heading",
+                      "props": {
+                        "className": "text-xl font-bold",
+                        "children": "Data Models"
+                      }
+                    },
+                    {
+                      "id": "model-count-badge",
+                      "type": "Badge",
+                      "props": {
+                        "variant": "secondary"
+                      },
+                      "bindings": {
+                        "children": {
+                          "source": "modelCount"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "create-button",
+                  "type": "Button",
+                  "props": {
+                    "className": "w-full",
+                    "children": "Create Model"
+                  },
+                  "events": [
+                    {
+                      "event": "click",
+                      "actions": [
+                        {
+                          "id": "open-create-dialog",
+                          "type": "set-value",
+                          "target": "createDialogOpen",
+                          "value": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "model-list",
+              "type": "div",
+              "props": {
+                "className": "flex-1 overflow-auto p-4 space-y-2"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "main-content",
+          "type": "div",
+          "props": {
+            "className": "flex-1 flex flex-col"
+          },
+          "children": [
+            {
+              "id": "model-selection-state",
+              "type": "div",
+              "conditional": {
+                "if": "selectedModel != null",
+                "then": {
+                  "id": "model-editor",
+                  "type": "div",
+                  "props": {
+                    "className": "flex-1 p-6 overflow-auto"
+                  },
+                  "children": [
+                    {
+                      "id": "model-header",
+                      "type": "div",
+                      "props": {
+                        "className": "mb-6"
+                      },
+                      "children": [
+                        {
+                          "id": "model-name",
+                          "type": "Heading",
+                          "props": {
+                            "className": "text-3xl font-bold mb-2"
+                          },
+                          "bindings": {
+                            "children": {
+                              "source": "selectedModel",
+                              "path": "name"
+                            }
+                          }
+                        },
+                        {
+                          "id": "model-description",
+                          "type": "Text",
+                          "props": {
+                            "className": "text-muted-foreground"
+                          },
+                          "bindings": {
+                            "children": {
+                              "source": "selectedModel",
+                              "path": "description"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "id": "fields-card",
+                      "type": "Card",
+                      "children": [
+                        {
+                          "id": "fields-header",
+                          "type": "CardHeader",
+                          "children": [
+                            {
+                              "id": "fields-title",
+                              "type": "CardTitle",
+                              "props": {
+                                "children": "Model Fields"
+                              }
+                            },
+                            {
+                              "id": "fields-description",
+                              "type": "CardDescription",
+                              "props": {
+                                "children": "Define the fields and their types for this model"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "id": "fields-content",
+                          "type": "CardContent",
+                          "children": [
+                            {
+                              "id": "fields-placeholder",
+                              "type": "div",
+                              "props": {
+                                "className": "text-center text-muted-foreground py-8 border-2 border-dashed border-border rounded-lg",
+                                "children": "Add fields to define your data model"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "else": {
+                  "id": "empty-state",
+                  "type": "div",
+                  "props": {
+                    "className": "flex-1 flex items-center justify-center"
+                  },
+                  "children": [
+                    {
+                      "id": "empty-state-content",
+                      "type": "div",
+                      "props": {
+                        "className": "text-center space-y-4"
+                      },
+                      "children": [
+                        {
+                          "id": "empty-state-title",
+                          "type": "Heading",
+                          "props": {
+                            "className": "text-2xl font-bold text-muted-foreground",
+                            "children": "No Model Selected"
+                          }
+                        },
+                        {
+                          "id": "empty-state-description",
+                          "type": "Text",
+                          "props": {
+                            "className": "text-muted-foreground",
+                            "children": "Select a model from the sidebar or create a new one"
+                          }
+                        },
+                        {
+                          "id": "empty-state-button",
+                          "type": "Button",
+                          "props": {
+                            "variant": "default",
+                            "children": "Create Your First Model"
+                          },
+                          "events": [
+                            {
+                              "event": "click",
+                              "actions": [
+                                {
+                                  "id": "open-create-from-empty",
+                                  "type": "set-value",
+                                  "target": "createDialogOpen",
+                                  "value": true
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "globalActions": []
+}

@@ -1,0 +1,210 @@
+{
+  "id": "github-build-status-card",
+  "type": "Card",
+  "bindings": {
+    "className": "className"
+  },
+  "children": [
+    {
+      "id": "github-build-status-header",
+      "type": "CardHeader",
+      "children": [
+        {
+          "id": "github-build-status-title",
+          "type": "CardTitle",
+          "props": {
+            "className": "flex items-center gap-2"
+          },
+          "bindings": {
+            "children": "title"
+          }
+        },
+        {
+          "id": "github-build-status-description",
+          "type": "CardDescription",
+          "bindings": {
+            "children": "description"
+          }
+        }
+      ]
+    },
+    {
+      "id": "github-build-status-content",
+      "type": "CardContent",
+      "props": {
+        "className": "space-y-4"
+      },
+      "children": [
+        {
+          "id": "github-build-status-loading",
+          "type": "p",
+          "props": {
+            "className": "text-sm text-muted-foreground"
+          },
+          "bindings": {
+            "children": "loadingMessage"
+          },
+          "conditional": {
+            "if": "isLoading"
+          }
+        },
+        {
+          "id": "github-build-status-error",
+          "type": "div",
+          "props": {
+            "className": "flex items-center gap-2 text-sm text-red-500"
+          },
+          "conditional": {
+            "if": "errorMessage"
+          },
+          "children": [
+            {
+              "id": "github-build-status-error-text",
+              "type": "span",
+              "bindings": {
+                "children": "errorMessage"
+              }
+            }
+          ]
+        },
+        {
+          "id": "github-build-status-empty",
+          "type": "p",
+          "props": {
+            "className": "text-sm text-muted-foreground"
+          },
+          "bindings": {
+            "children": "emptyMessage"
+          },
+          "conditional": {
+            "if": "!isLoading && !errorMessage && !hasWorkflows"
+          }
+        },
+        {
+          "id": "github-build-status-list",
+          "type": "div",
+          "props": {
+            "className": "space-y-3"
+          },
+          "conditional": {
+            "if": "hasWorkflows"
+          },
+          "loop": {
+            "source": "workflows",
+            "itemVar": "workflow"
+          },
+          "children": [
+            {
+              "id": "github-build-status-item",
+              "type": "div",
+              "props": {
+                "className": "flex items-center justify-between gap-3 rounded-lg border border-border p-3"
+              },
+              "children": [
+                {
+                  "id": "github-build-status-item-info",
+                  "type": "div",
+                  "props": {
+                    "className": "min-w-0"
+                  },
+                  "children": [
+                    {
+                      "id": "github-build-status-item-row",
+                      "type": "div",
+                      "props": {
+                        "className": "flex items-center gap-2"
+                      },
+                      "children": [
+                        {
+                          "id": "github-build-status-item-name",
+                          "type": "p",
+                          "props": {
+                            "className": "text-sm font-medium truncate"
+                          },
+                          "bindings": {
+                            "children": "workflow.name"
+                          }
+                        },
+                        {
+                          "id": "github-build-status-item-badge",
+                          "type": "Badge",
+                          "bindings": {
+                            "className": "workflow.statusClass",
+                            "children": "workflow.statusLabel"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "id": "github-build-status-item-meta",
+                      "type": "div",
+                      "props": {
+                        "className": "text-xs text-muted-foreground truncate"
+                      },
+                      "bindings": {
+                        "children": "workflow.summaryLine"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "github-build-status-item-link",
+                  "type": "Button",
+                  "props": {
+                    "variant": "ghost",
+                    "size": "sm",
+                    "asChild": true
+                  },
+                  "conditional": {
+                    "if": "workflow.url"
+                  },
+                  "children": [
+                    {
+                      "id": "github-build-status-item-anchor",
+                      "type": "a",
+                      "bindings": {
+                        "href": "workflow.url"
+                      },
+                      "props": {
+                        "target": "_blank",
+                        "rel": "noopener noreferrer"
+                      },
+                      "children": "View"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "github-build-status-footer",
+          "type": "Button",
+          "props": {
+            "variant": "outline",
+            "size": "sm",
+            "asChild": true,
+            "className": "w-full"
+          },
+          "conditional": {
+            "if": "footerLinkUrl"
+          },
+          "children": [
+            {
+              "id": "github-build-status-footer-anchor",
+              "type": "a",
+              "bindings": {
+                "href": "footerLinkUrl",
+                "children": "footerLinkLabel"
+              },
+              "props": {
+                "target": "_blank",
+                "rel": "noopener noreferrer"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

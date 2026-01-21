@@ -1,0 +1,37 @@
+{
+  "id": "data-source-badge-root",
+  "type": "Badge",
+  "bindings": {
+    "variant": "outline",
+    "className": {
+      "source": "type",
+      "transform": "(() => { const typeMap = { kv: 'flex items-center gap-1 bg-accent/20 text-accent border-accent/30', static: 'flex items-center gap-1 bg-muted text-muted-foreground border-border' }; return (typeMap[data] || typeMap.static) + ' ' + ($props.className || ''); })()"
+    }
+  },
+  "children": [
+    {
+      "id": "data-source-badge-icon",
+      "type": "Icon",
+      "bindings": {
+        "name": {
+          "source": "type",
+          "transform": "data === 'kv' ? 'Database' : 'File'"
+        }
+      },
+      "props": {
+        "weight": "bold",
+        "className": "w-3 h-3"
+      }
+    },
+    {
+      "id": "data-source-badge-text",
+      "type": "span",
+      "bindings": {
+        "children": {
+          "source": "type",
+          "transform": "data === 'kv' ? 'KV Storage' : 'Static'"
+        }
+      }
+    }
+  ]
+}

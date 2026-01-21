@@ -1,0 +1,53 @@
+{
+  "id": "global-search-container",
+  "type": "CommandDialog",
+  "props": {
+    "open": "open",
+    "onOpenChange": "onOpenChange"
+  },
+  "children": [
+    {
+      "id": "global-search-input",
+      "type": "CommandInput",
+      "props": {
+        "placeholder": "Search features, files, models, components...",
+        "value": "searchQuery",
+        "onValueChange": "setSearchQuery"
+      }
+    },
+    {
+      "id": "global-search-list",
+      "type": "CommandList",
+      "children": [
+        {
+          "id": "global-search-empty",
+          "type": "EmptyState"
+        },
+        {
+          "id": "global-search-recent",
+          "type": "RecentSearches",
+          "conditions": {
+            "display": {
+              "source": "searchQuery",
+              "transform": "!data.trim() ? true : false"
+            }
+          },
+          "props": {
+            "recentSearches": "recentSearches",
+            "onClear": "clearHistory",
+            "onSelect": "handleHistorySelect",
+            "onRemove": "removeHistoryItem"
+          }
+        },
+        {
+          "id": "global-search-results",
+          "type": "SearchResults",
+          "props": {
+            "groupedResults": "groupedResults",
+            "onSelect": "handleSelect"
+          }
+        }
+      ]
+    }
+  ]
+}

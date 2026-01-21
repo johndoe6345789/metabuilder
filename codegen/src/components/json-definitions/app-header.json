@@ -1,0 +1,146 @@
+{
+  "id": "app-header",
+  "type": "header",
+  "bindings": {
+    "className": { "value": "border-b border-border bg-card" }
+  },
+  "children": [
+    {
+      "id": "header-stack",
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "spacing": "none"
+      },
+      "children": [
+        {
+          "id": "header-top",
+          "type": "Stack",
+          "props": {
+            "className": "px-4 sm:px-6 py-3 sm:py-4"
+          },
+          "children": [
+            {
+              "id": "header-flex",
+              "type": "Flex",
+              "props": {
+                "justify": "between",
+                "align": "center",
+                "gap": "sm"
+              },
+              "children": [
+                {
+                  "id": "header-left",
+                  "type": "Flex",
+                  "props": {
+                    "align": "center",
+                    "gap": "sm",
+                    "className": "flex-1 min-w-0"
+                  },
+                  "children": [
+                    {
+                      "id": "sidebar-trigger",
+                      "type": "SidebarTrigger"
+                    },
+                    {
+                      "id": "app-branding",
+                      "type": "AppBranding"
+                    },
+                    {
+                      "id": "save-indicator",
+                      "type": "SaveIndicator",
+                      "bindings": {
+                        "lastSaved": { "source": "lastSaved" }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "header-right",
+                  "type": "Flex",
+                  "props": {
+                    "gap": "xs",
+                    "shrink": true,
+                    "className": "shrink-0"
+                  },
+                  "children": [
+                    {
+                      "id": "project-manager",
+                      "type": "ProjectManager",
+                      "bindings": {
+                        "currentProject": { "source": "currentProject" }
+                      },
+                      "events": {
+                        "onProjectLoad": {
+                          "type": "callback",
+                          "name": "onProjectLoad"
+                        }
+                      }
+                    },
+                    {
+                      "id": "toolbar-actions",
+                      "type": "ToolbarActions",
+                      "bindings": {
+                        "errorCount": { "source": "errorCount" },
+                        "showErrorButton": {
+                          "source": "featureToggles,errorCount",
+                          "transform": "data && data.featureToggles && data.featureToggles.errorRepair && data.errorCount > 0"
+                        }
+                      },
+                      "events": {
+                        "onSearch": {
+                          "type": "callback",
+                          "name": "onSearch"
+                        },
+                        "onShowShortcuts": {
+                          "type": "callback",
+                          "name": "onShowShortcuts"
+                        },
+                        "onGenerateAI": {
+                          "type": "callback",
+                          "name": "onGenerateAI"
+                        },
+                        "onExport": {
+                          "type": "callback",
+                          "name": "onExport"
+                        },
+                        "onPreview": {
+                          "type": "callback",
+                          "name": "onPreview"
+                        },
+                        "onShowErrors": {
+                          "type": "callback",
+                          "name": "onShowErrors"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "separator",
+          "type": "Separator",
+          "props": {
+            "className": "opacity-50"
+          }
+        },
+        {
+          "id": "header-bottom",
+          "type": "Stack",
+          "props": {
+            "className": "px-4 sm:px-6 py-2"
+          },
+          "children": [
+            {
+              "id": "breadcrumb",
+              "type": "Breadcrumb"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

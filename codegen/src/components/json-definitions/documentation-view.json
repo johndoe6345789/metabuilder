@@ -1,0 +1,89 @@
+{
+  "id": "documentation-view",
+  "type": "div",
+  "className": "h-full flex flex-col bg-background",
+  "children": [
+    {
+      "id": "documentation-tabs",
+      "type": "Tabs",
+      "className": "flex-1 flex flex-col",
+      "bindings": {
+        "value": {
+          "source": "activeTab",
+          "transform": "data"
+        },
+        "onValueChange": {
+          "source": "setActiveTab",
+          "transform": "data"
+        }
+      },
+      "children": [
+        {
+          "id": "documentation-header",
+          "type": "div",
+          "className": "border-b border-border bg-card px-6 py-3 space-y-3",
+          "children": [
+            {
+              "id": "tabs-list",
+              "type": "TabsList",
+              "className": "bg-muted/50",
+              "bindings": {
+                "children": {
+                  "source": "tabsData",
+                  "transform": "data"
+                }
+              }
+            },
+            {
+              "id": "search-input-wrapper",
+              "type": "div",
+              "className": "relative",
+              "children": [
+                {
+                  "id": "search-icon",
+                  "type": "MagnifyingGlass",
+                  "className": "absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground",
+                  "size": 18
+                },
+                {
+                  "id": "search-input",
+                  "type": "Input",
+                  "placeholder": "Search documentation...",
+                  "className": "pl-10",
+                  "bindings": {
+                    "value": {
+                      "source": "searchQuery",
+                      "transform": "data"
+                    },
+                    "onChange": {
+                      "source": "handleSearchChange",
+                      "transform": "data"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "tabs-content",
+          "type": "ScrollArea",
+          "className": "flex-1",
+          "children": [
+            {
+              "id": "content-wrapper",
+              "type": "div",
+              "className": "max-w-5xl mx-auto p-8",
+              "bindings": {
+                "children": {
+                  "source": "activeTab",
+                  "transform": "data"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

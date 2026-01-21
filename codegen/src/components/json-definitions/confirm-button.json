@@ -1,0 +1,22 @@
+{
+  "id": "confirm-button-root",
+  "type": "Button",
+  "bindings": {
+    "onClick": {
+      "transform": "(() => { return async () => { if (window.confirm($props.confirmText || 'Are you sure?')) { await $props.onConfirm(); } }; })()"
+    },
+    "disabled": "isLoading",
+    "className": "className"
+  },
+  "children": [
+    {
+      "id": "confirm-button-content",
+      "bindings": {
+        "children": {
+          "source": "isLoading",
+          "transform": "data ? 'Loading...' : $props.children"
+        }
+      }
+    }
+  ]
+}

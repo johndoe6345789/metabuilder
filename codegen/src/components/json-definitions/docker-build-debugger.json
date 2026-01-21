@@ -1,0 +1,19 @@
+{
+  "id": "docker-build-debugger",
+  "type": "div",
+  "className": "space-y-6",
+  "children": [
+    {
+      "id": "docker-tabs",
+      "type": "Tabs",
+      "defaultValue": "analyzer",
+      "className": "space-y-6",
+      "bindings": {
+        "children": {
+          "source": "tabsContent",
+          "transform": "data"
+        }
+      }
+    }
+  ]
+}

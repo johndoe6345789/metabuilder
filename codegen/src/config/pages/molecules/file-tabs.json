@@ -1,0 +1,7 @@
+{
+  "type": "FileTabs",
+  "props": {
+    "onFileSelect": "> void",
+    "onFileClose": "> void"
+  }
+}

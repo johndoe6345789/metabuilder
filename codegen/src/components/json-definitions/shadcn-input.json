@@ -1,0 +1,30 @@
+{
+  "id": "shadcn-input",
+  "type": "ShadcnInput",
+  "bindings": {
+    "type": {
+      "source": "type",
+      "transform": "data || 'text'"
+    },
+    "placeholder": {
+      "source": "placeholder",
+      "transform": "data"
+    },
+    "value": {
+      "source": "value",
+      "transform": "data"
+    },
+    "disabled": {
+      "source": "disabled",
+      "transform": "data || false"
+    },
+    "className": {
+      "source": "className",
+      "transform": "data"
+    },
+    "onChange": {
+      "source": "onChange",
+      "transform": "data"
+    }
+  }
+}

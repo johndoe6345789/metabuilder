@@ -1,0 +1,99 @@
+{
+  "id": "component-palette",
+  "type": "Stack",
+  "props": {
+    "direction": "vertical",
+    "className": "h-full"
+  },
+  "children": [
+    {
+      "id": "component-palette-header",
+      "type": "Div",
+      "props": {
+        "className": "p-4"
+      },
+      "children": [
+        {
+          "id": "component-palette-panel-header",
+          "type": "PanelHeader",
+          "props": {
+            "title": "Components",
+            "subtitle": "Drag components to the canvas",
+            "icon": "Package",
+            "showSeparator": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "component-palette-tabs",
+      "type": "Tabs",
+      "props": {
+        "defaultValue": "layout",
+        "className": "flex-1 flex flex-col border-t border-border"
+      },
+      "children": [
+        {
+          "id": "component-palette-tab-list",
+          "type": "TabsList",
+          "props": {
+            "className": "w-full justify-start px-4 pt-2"
+          },
+          "bindings": {
+            "children": {
+              "source": "categories",
+              "transform": "data ? data.map(cat => ({id: `tab-trigger-${cat.id}`, type: 'TabsTrigger', props: {value: cat.id, className: 'text-xs'}, children: [{type: 'text', content: cat.label}]})) : []"
+            }
+          }
+        },
+        {
+          "id": "component-palette-content",
+          "type": "Map",
+          "props": {
+            "items": {
+              "source": "categories"
+            },
+            "keyField": "id",
+            "itemVariable": "category"
+          },
+          "children": [
+            {
+              "id": "component-palette-tab-content",
+              "type": "TabsContent",
+              "props": {
+                "value": {
+                  "source": "category.id"
+                },
+                "className": "flex-1 m-0 mt-2"
+              },
+              "children": [
+                {
+                  "id": "component-palette-scroll",
+                  "type": "ScrollArea",
+                  "props": {
+                    "className": "h-full px-4 pb-4"
+                  },
+                  "children": [
+                    {
+                      "id": "component-palette-grid",
+                      "type": "Div",
+                      "props": {
+                        "className": "grid grid-cols-2 gap-2"
+                      },
+                      "bindings": {
+                        "children": {
+                          "source": "category.id",
+                          "transform": "data ? window.getCategoryComponents(data).map(comp => ({id: `palette-item-${comp.type}`, type: 'ComponentPaletteItem', props: {component: comp}, events: {onDragStart: {action: 'call', target: 'onDragStart', args: [comp]}}})) : []"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

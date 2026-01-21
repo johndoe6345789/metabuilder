@@ -1,0 +1,25 @@
+{
+  "type": "CanvasRenderer",
+  "jsonCompatible": false,
+  "wrapperRequired": true,
+  "load": {
+    "path": "@/components/molecules/CanvasRenderer",
+    "export": "CanvasRenderer"
+  },
+  "props": {
+    "onSelect": "> void",
+    "onHover": "> void",
+    "onHoverEnd": "> void",
+    "onDragOver": "> {",
+    "onDragLeave": "> {",
+    "onDrop": "> {",
+    "comp": "> {",
+    "onClick": "> {",
+    "onMouseEnter": "> {",
+    "onMouseLeave": "> {",
+    "children": "null"
+  },
+  "metadata": {
+    "notes": "Complex logic - needs wrapper"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "id": "code-root",
+  "type": "code",
+  "bindings": {
+    "className": {
+      "source": "inline",
+      "transform": "(() => { if (data === false) { return 'p-4 rounded-lg bg-muted text-foreground font-mono text-sm overflow-x-auto'; } return 'px-1.5 py-0.5 rounded bg-muted text-foreground font-mono text-sm ' + ($props.className || ''); })()"
+    }
+  },
+  "children": [
+    {
+      "id": "code-content",
+      "bindings": {
+        "children": "children"
+      }
+    }
+  ]
+}

@@ -1,0 +1,172 @@
+{
+  "id": "toolbar-actions",
+  "type": "Flex",
+  "bindings": {
+    "gap": { "value": "xs" },
+    "shrink": { "value": true },
+    "className": { "value": "shrink-0" }
+  },
+  "children": [
+    {
+      "id": "search-button",
+      "type": "ToolbarButton",
+      "props": {
+        "icon": {
+          "type": "Icon",
+          "props": {
+            "name": "MagnifyingGlass",
+            "size": 18
+          }
+        },
+        "label": "Search (Ctrl+K)",
+        "data-search-trigger": true
+      },
+      "events": {
+        "onClick": {
+          "type": "callback",
+          "name": "onSearch"
+        }
+      }
+    },
+    {
+      "id": "error-button-wrapper",
+      "type": "Stack",
+      "bindings": {
+        "hidden": {
+          "source": "showErrorButton,errorCount",
+          "transform": "!(data.showErrorButton && data.errorCount > 0)"
+        }
+      },
+      "children": [
+        {
+          "id": "error-button",
+          "type": "ToolbarButton",
+          "props": {
+            "icon": {
+              "type": "Icon",
+              "props": {
+                "name": "Wrench",
+                "size": 18
+              }
+            },
+            "variant": "outline",
+            "className": "border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground relative"
+          },
+          "bindings": {
+            "label": {
+              "source": "errorCount",
+              "transform": "data ? `${data} ${data === 1 ? 'Error' : 'Errors'}` : 'Errors'"
+            }
+          },
+          "events": {
+            "onClick": {
+              "type": "callback",
+              "name": "onShowErrors"
+            }
+          }
+        },
+        {
+          "id": "error-badge",
+          "type": "ErrorBadge",
+          "bindings": {
+            "count": { "source": "errorCount" }
+          },
+          "props": {
+            "size": "sm"
+          }
+        }
+      ]
+    },
+    {
+      "id": "preview-button",
+      "type": "ToolbarButton",
+      "bindings": {
+        "hidden": {
+          "source": "!onPreview",
+          "transform": "!data"
+        }
+      },
+      "props": {
+        "icon": {
+          "type": "Icon",
+          "props": {
+            "name": "Eye",
+            "size": 18
+          }
+        },
+        "label": "Preview (Ctrl+P)",
+        "variant": "outline"
+      },
+      "events": {
+        "onClick": {
+          "type": "callback",
+          "name": "onPreview"
+        }
+      }
+    },
+    {
+      "id": "shortcuts-button",
+      "type": "ToolbarButton",
+      "props": {
+        "icon": {
+          "type": "Icon",
+          "props": {
+            "name": "Keyboard",
+            "size": 18
+          }
+        },
+        "label": "Keyboard Shortcuts (Ctrl+/)",
+        "variant": "ghost",
+        "className": "hidden sm:flex"
+      },
+      "events": {
+        "onClick": {
+          "type": "callback",
+          "name": "onShowShortcuts"
+        }
+      }
+    },
+    {
+      "id": "ai-button",
+      "type": "ToolbarButton",
+      "props": {
+        "icon": {
+          "type": "Icon",
+          "props": {
+            "name": "Sparkle",
+            "size": 18,
+            "weight": "duotone"
+          }
+        },
+        "label": "AI Generate (Ctrl+Shift+G)"
+      },
+      "events": {
+        "onClick": {
+          "type": "callback",
+          "name": "onGenerateAI"
+        }
+      }
+    },
+    {
+      "id": "export-button",
+      "type": "ToolbarButton",
+      "props": {
+        "icon": {
+          "type": "Icon",
+          "props": {
+            "name": "Download",
+            "size": 18
+          }
+        },
+        "label": "Export Project (Ctrl+E)",
+        "variant": "default"
+      },
+      "events": {
+        "onClick": {
+          "type": "callback",
+          "name": "onExport"
+        }
+      }
+    }
+  ]
+}

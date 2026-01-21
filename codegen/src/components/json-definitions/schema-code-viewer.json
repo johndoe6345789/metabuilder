@@ -1,0 +1,118 @@
+{
+  "id": "schema-code-viewer",
+  "type": "Stack",
+  "bindings": {
+    "direction": { "value": "vertical" },
+    "spacing": { "value": "none" },
+    "className": { "value": "h-full flex flex-col bg-card" }
+  },
+  "children": [
+    {
+      "id": "panel-header",
+      "type": "PanelHeader",
+      "props": {
+        "title": "Schema Output",
+        "icon": {
+          "type": "Icon",
+          "props": {
+            "name": "Code",
+            "size": 20,
+            "weight": "duotone"
+          }
+        }
+      }
+    },
+    {
+      "id": "tabs",
+      "type": "Tabs",
+      "props": {
+        "defaultValue": "json",
+        "className": "flex-1 flex flex-col"
+      },
+      "children": [
+        {
+          "id": "tabs-list",
+          "type": "TabsList",
+          "props": {
+            "className": "w-full justify-start px-4 pt-2"
+          },
+          "children": [
+            {
+              "id": "json-trigger",
+              "type": "TabsTrigger",
+              "props": {
+                "value": "json",
+                "children": "JSON"
+              }
+            },
+            {
+              "id": "preview-trigger",
+              "type": "TabsTrigger",
+              "props": {
+                "value": "preview",
+                "children": "Preview"
+              }
+            }
+          ]
+        },
+        {
+          "id": "json-content",
+          "type": "TabsContent",
+          "props": {
+            "value": "json",
+            "className": "flex-1 m-0 mt-2"
+          },
+          "children": [
+            {
+              "id": "scroll-area",
+              "type": "ScrollArea",
+              "props": {
+                "className": "h-full"
+              },
+              "children": [
+                {
+                  "id": "code-block",
+                  "type": "Code",
+                  "bindings": {
+                    "children": {
+                      "source": "schema",
+                      "transform": "data ? JSON.stringify(data, null, 2) : ''"
+                    },
+                    "className": { "value": "p-4 text-xs font-mono text-foreground" }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "preview-content",
+          "type": "TabsContent",
+          "props": {
+            "value": "preview",
+            "className": "flex-1 m-0 mt-2"
+          },
+          "children": [
+            {
+              "id": "preview-text",
+              "type": "Stack",
+              "props": {
+                "className": "p-4"
+              },
+              "children": [
+                {
+                  "id": "preview-message",
+                  "type": "Text",
+                  "props": {
+                    "variant": "muted",
+                    "children": "Live preview coming soon"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

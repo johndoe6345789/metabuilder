@@ -1,0 +1,89 @@
+{
+  "id": "action-card-root",
+  "type": "Card",
+  "props": {
+    "className": "cursor-pointer transition-all hover:shadow-md hover:border-primary/50"
+  },
+  "bindings": {
+    "className": {
+      "source": "disabled",
+      "transform": "data ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer transition-all hover:shadow-md hover:border-primary/50'"
+    }
+  },
+  "children": [
+    {
+      "id": "action-card-content",
+      "type": "CardContent",
+      "props": {
+        "className": "p-4"
+      },
+      "children": [
+        {
+          "id": "action-card-flex",
+          "type": "Flex",
+          "props": {
+            "justify": "start",
+            "align": "start",
+            "gap": "md",
+            "className": "items-start gap-3"
+          },
+          "children": [
+            {
+              "id": "action-card-icon-wrapper",
+              "type": "div",
+              "props": {
+                "className": "flex-shrink-0 p-2 rounded-lg bg-primary/10 text-primary"
+              },
+              "bindings": {
+                "children": "icon"
+              },
+              "conditional": {
+                "if": "icon"
+              }
+            },
+            {
+              "id": "action-card-text-container",
+              "type": "div",
+              "props": {
+                "className": "flex-1 min-w-0"
+              },
+              "children": [
+                {
+                  "id": "action-card-title",
+                  "type": "div",
+                  "props": {
+                    "className": "font-semibold text-sm mb-1"
+                  },
+                  "bindings": {
+                    "children": "title"
+                  }
+                },
+                {
+                  "id": "action-card-description",
+                  "type": "div",
+                  "props": {
+                    "className": "text-xs text-muted-foreground line-clamp-2"
+                  },
+                  "bindings": {
+                    "children": "description"
+                  },
+                  "conditional": {
+                    "if": "description"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "action-card-caret",
+              "type": "CaretRight",
+              "props": {
+                "size": 16,
+                "className": "flex-shrink-0 text-muted-foreground"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

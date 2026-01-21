@@ -1,0 +1,23 @@
+{
+  "type": "div",
+  "props": {
+    "className": "space-y-2"
+  },
+  "children": [
+    {
+      "id": "field-label",
+      "type": "Label"
+    },
+    {
+      "id": "field-input",
+      "$ref": "../atoms/input-text.json"
+    },
+    {
+      "id": "field-error",
+      "$ref": "../atoms/text-muted.json",
+      "props": {
+        "className": "text-destructive text-sm"
+      }
+    }
+  ]
+}

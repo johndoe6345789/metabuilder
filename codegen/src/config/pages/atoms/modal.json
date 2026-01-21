@@ -1,0 +1,6 @@
+{
+  "type": "Modal",
+  "props": {
+    "onClose": "> void"
+  }
+}

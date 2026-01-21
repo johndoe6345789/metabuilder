@@ -1,0 +1,11 @@
+{
+  "type": "Card, CardContent, CardHeader",
+  "props": {
+    "onChange": "> void",
+    "type": "> {",
+    "id": "> {",
+    "updatedSource": "> {",
+    "kv": "> ds.type === ",
+    "static": "> ds.type === "
+  }
+}

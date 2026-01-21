@@ -1,0 +1,42 @@
+{
+  "id": "shadcn-slider",
+  "type": "ShadcnSlider",
+  "bindings": {
+    "value": {
+      "source": "value",
+      "transform": "data"
+    },
+    "onValueChange": {
+      "source": "onValueChange",
+      "transform": "data"
+    },
+    "defaultValue": {
+      "source": "defaultValue",
+      "transform": "data"
+    },
+    "min": {
+      "source": "min",
+      "transform": "data || 0"
+    },
+    "max": {
+      "source": "max",
+      "transform": "data || 100"
+    },
+    "step": {
+      "source": "step",
+      "transform": "data || 1"
+    },
+    "disabled": {
+      "source": "disabled",
+      "transform": "data || false"
+    },
+    "orientation": {
+      "source": "orientation",
+      "transform": "data || 'horizontal'"
+    },
+    "className": {
+      "source": "className",
+      "transform": "data"
+    }
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "id": "list-item-container",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": ["onClick", "active", "className"],
+      "transform": "const onClick = data[0]; const active = data[1]; const customClass = data[2] || ''; const isInteractive = !!onClick; const interactiveClass = isInteractive ? 'cursor-pointer hover:bg-accent' : ''; const activeClass = active ? 'bg-accent' : ''; return `flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${interactiveClass} ${activeClass} ${customClass}`.trim()"
+    },
+    "onClick": {
+      "source": "onClick",
+      "transform": "data"
+    },
+    "role": {
+      "source": "onClick",
+      "transform": "data ? 'button' : undefined"
+    },
+    "tabIndex": {
+      "source": "onClick",
+      "transform": "data ? 0 : undefined"
+    }
+  },
+  "children": [
+    {
+      "id": "list-item-icon",
+      "type": "div",
+      "bindings": {
+        "className": {
+          "source": null,
+          "transform": "'flex-shrink-0 text-muted-foreground'"
+        },
+        "children": {
+          "source": "icon",
+          "transform": "data"
+        },
+        "_if": {
+          "source": "icon",
+          "transform": "!!data"
+        }
+      }
+    },
+    {
+      "id": "list-item-content",
+      "type": "div",
+      "bindings": {
+        "className": {
+          "source": null,
+          "transform": "'flex-1 min-w-0 text-sm'"
+        },
+        "children": {
+          "source": "children",
+          "transform": "data"
+        }
+      }
+    },
+    {
+      "id": "list-item-end-content",
+      "type": "div",
+      "bindings": {
+        "className": {
+          "source": null,
+          "transform": "'flex-shrink-0'"
+        },
+        "children": {
+          "source": "endContent",
+          "transform": "data"
+        },
+        "_if": {
+          "source": "endContent",
+          "transform": "!!data"
+        }
+      }
+    }
+  ]
+}

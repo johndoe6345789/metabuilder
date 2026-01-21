@@ -1,0 +1,16 @@
+{
+  "id": "shadcn-dialog-header",
+  "type": "ShadcnDialogHeader",
+  "bindings": {
+    "className": {
+      "source": "className",
+      "transform": "data"
+    }
+  },
+  "children": [
+    {
+      "type": "slot",
+      "source": "children"
+    }
+  ]
+}

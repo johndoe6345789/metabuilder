@@ -1,0 +1,248 @@
+{
+  "title": "CI/CD Guide",
+  "subtitle": "Complete deployment automation for multiple platforms",
+  "overviewTitle": "Overview",
+  "platformsTitle": "Available Configurations",
+  "platformsFeaturesLabel": "Key Features:",
+  "pipelineTitle": "Pipeline Stages",
+  "dockerTitle": "Docker Configuration",
+  "dockerDescription": "Containerization for production deployment",
+  "dockerFilesTitle": "Files Included",
+  "dockerCommandsTitle": "Docker Commands",
+  "dockerFeaturesTitle": "Features",
+  "envVarsTitle": "Environment Variables",
+  "envVarsDescription": "Required configuration for CI/CD platforms",
+  "envVarsColumns": ["Variable", "Description", "Required"],
+  "branchStrategyTitle": "Branch Strategy",
+  "quickStartTitle": "Quick Start",
+  "bestPracticesTitle": "Best Practices",
+  "resourcesTitle": "Additional Resources",
+  "overview": "CodeForge includes production-ready CI/CD configurations for GitHub Actions, GitLab CI, Jenkins, and CircleCI. Each pipeline includes linting, testing, security scanning, Docker image building, and automated deployment workflows.",
+  "platforms": [
+    {
+      "name": "GitHub Actions",
+      "file": ".github/workflows/ci.yml",
+      "description": "Complete CI/CD with GHCR Docker registry integration",
+      "features": [
+        "Parallel lint and test execution",
+        "E2E tests with Playwright",
+        "Docker build and push to GitHub Container Registry",
+        "Security scanning with Trivy",
+        "Automated staging and production deployments",
+        "Release workflow with versioned artifacts"
+      ]
+    },
+    {
+      "name": "GitLab CI",
+      "file": ".gitlab-ci.yml",
+      "description": "Multi-stage pipeline with GitLab Container Registry",
+      "features": [
+        "Dependency caching for faster builds",
+        "Coverage reporting with Cobertura",
+        "Docker-in-Docker builds",
+        "Manual production approval gates",
+        "Webhook-based deployment triggers"
+      ]
+    },
+    {
+      "name": "Jenkins",
+      "file": "Jenkinsfile",
+      "description": "Declarative pipeline with Slack notifications",
+      "features": [
+        "Node.js environment configuration",
+        "HTML report publishing for tests and coverage",
+        "Artifact archiving and fingerprinting",
+        "Manual production deployment approval",
+        "Slack integration for deployment notifications"
+      ]
+    },
+    {
+      "name": "CircleCI",
+      "file": ".circleci/config.yml",
+      "description": "Workflow orchestration with orb integrations",
+      "features": [
+        "Docker layer caching for optimization",
+        "Job dependency management",
+        "Test results and artifact storage",
+        "Approval workflows for production",
+        "Slack notifications via orb"
+      ]
+    }
+  ],
+  "pipeline": {
+    "intro": "All CI/CD configurations follow a similar multi-stage pipeline structure:",
+    "stages": [
+      {
+        "stage": "Lint",
+        "description": "ESLint and TypeScript type checking to ensure code quality",
+        "duration": "~1-2 min"
+      },
+      {
+        "stage": "Test",
+        "description": "Unit tests with coverage reporting and result artifacts",
+        "duration": "~2-3 min"
+      },
+      {
+        "stage": "Build",
+        "description": "Production build with artifact generation for deployment",
+        "duration": "~2-4 min"
+      },
+      {
+        "stage": "E2E Tests",
+        "description": "Playwright end-to-end tests with HTML reports",
+        "duration": "~3-5 min"
+      },
+      {
+        "stage": "Security",
+        "description": "npm audit and Trivy vulnerability scanning",
+        "duration": "~1-2 min"
+      },
+      {
+        "stage": "Docker Build",
+        "description": "Multi-stage Docker image build and push to registry",
+        "duration": "~3-5 min"
+      },
+      {
+        "stage": "Deploy",
+        "description": "Automated deployment to staging and production environments",
+        "duration": "~1-3 min"
+      }
+    ]
+  },
+  "docker": {
+    "files": [
+      {
+        "name": "Dockerfile",
+        "description": "Multi-stage build with Node.js builder and Nginx runtime"
+      },
+      {
+        "name": "nginx.conf",
+        "description": "Production Nginx configuration with health checks and caching"
+      },
+      {
+        "name": "docker-compose.yml",
+        "description": "Local development and deployment orchestration"
+      },
+      {
+        "name": ".dockerignore",
+        "description": "Optimized build context by excluding unnecessary files"
+      }
+    ],
+    "commands": "# Build image locally\ndocker build -t codeforge:local .\n\n# Run container\ndocker run -p 3000:80 codeforge:local\n\n# Use docker-compose\ndocker-compose up -d\n\n# Pull from registry\ndocker pull ghcr.io/<username>/<repo>:latest",
+    "features": [
+      "Multi-stage build reduces final image size to ~50MB",
+      "Nginx serves static files with gzip compression",
+      "Health check endpoint at /health for orchestration",
+      "Automatic cache headers for static assets",
+      "SPA routing support with fallback to index.html"
+    ]
+  },
+  "environmentVariables": [
+    {
+      "variable": "NODE_VERSION",
+      "description": "Node.js version (default: 20)",
+      "required": "No"
+    },
+    {
+      "variable": "REGISTRY",
+      "description": "Docker registry URL (default: ghcr.io)",
+      "required": "No"
+    },
+    {
+      "variable": "STAGING_WEBHOOK_URL",
+      "description": "Webhook for staging deployments",
+      "required": "Optional"
+    },
+    {
+      "variable": "PRODUCTION_WEBHOOK_URL",
+      "description": "Webhook for production deployments",
+      "required": "Optional"
+    },
+    {
+      "variable": "CODECOV_TOKEN",
+      "description": "Codecov integration token",
+      "required": "Optional"
+    },
+    {
+      "variable": "SLACK_WEBHOOK",
+      "description": "Slack webhook for notifications",
+      "required": "Optional"
+    }
+  ],
+  "branches": [
+    {
+      "name": "main",
+      "description": "Production branch - deploys to production environment (manual approval required)",
+      "tone": "green"
+    },
+    {
+      "name": "develop",
+      "description": "Development branch - automatically deploys to staging environment",
+      "tone": "blue"
+    },
+    {
+      "name": "feature/*",
+      "description": "Feature branches - runs tests only, no deployment",
+      "tone": "purple"
+    },
+    {
+      "name": "v* tags",
+      "description": "Version tags - triggers release workflow with artifacts and changelog",
+      "tone": "orange"
+    }
+  ],
+  "quickStart": [
+    {
+      "step": 1,
+      "title": "Choose Your Platform",
+      "description": "Select GitHub Actions, GitLab CI, Jenkins, or CircleCI based on your infrastructure"
+    },
+    {
+      "step": 2,
+      "title": "Configure Secrets",
+      "description": "Add required environment variables and secrets in your platform's settings"
+    },
+    {
+      "step": 3,
+      "title": "Push to Repository",
+      "description": "Push code to main or develop branch to trigger the CI/CD pipeline"
+    },
+    {
+      "step": 4,
+      "title": "Monitor Pipeline",
+      "description": "View pipeline status, test results, and deployment logs in your platform's dashboard"
+    }
+  ],
+  "bestPractices": [
+    "Never commit secrets - use environment variables and platform secret management",
+    "Enable branch protection on main and develop branches",
+    "Require code reviews and passing tests before merging",
+    "Use manual approval gates for production deployments",
+    "Monitor security scan results and fix vulnerabilities promptly",
+    "Keep dependencies updated with Dependabot or Renovate",
+    "Use semantic versioning for releases (v1.0.0, v1.1.0, etc.)",
+    "Configure Slack or email notifications for deployment status"
+  ],
+  "resources": [
+    {
+      "label": "CI_CD_GUIDE.md",
+      "description": "Detailed setup guide for all platforms"
+    },
+    {
+      "label": ".github/workflows/",
+      "description": "GitHub Actions workflows"
+    },
+    {
+      "label": ".gitlab-ci.yml",
+      "description": "GitLab CI configuration"
+    },
+    {
+      "label": "Jenkinsfile",
+      "description": "Jenkins pipeline definition"
+    },
+    {
+      "label": ".circleci/config.yml",
+      "description": "CircleCI configuration"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "id": "loading-spinner",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": ["size", "className"],
+      "transform": "const size = data[0] || 'md'; const customClass = data[1] || ''; const sizeClasses = { sm: 'w-4 h-4 border-2', md: 'w-6 h-6 border-2', lg: 'w-8 h-8 border-3' }; return `inline-block ${sizeClasses[size]} border-primary border-t-transparent rounded-full animate-spin ${customClass}`.trim()"
+    },
+    "role": {
+      "source": null,
+      "transform": "'status'"
+    },
+    "aria-label": {
+      "source": null,
+      "transform": "'Loading'"
+    }
+  }
+}

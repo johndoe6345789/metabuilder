@@ -1,0 +1,6 @@
+{
+  "type": "toggleVariants",
+  "props": {
+    "first": "outline]:border-l-0 data-[variant=outline]:first:border-l"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "id": "preload-indicator",
+  "type": "div",
+  "props": {
+    "className": "preload-indicator"
+  },
+  "children": []
+}

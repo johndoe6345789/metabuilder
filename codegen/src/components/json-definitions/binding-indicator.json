@@ -1,0 +1,74 @@
+{
+  "id": "binding-indicator-root",
+  "type": "TooltipProvider",
+  "children": [
+    {
+      "id": "binding-indicator-tooltip",
+      "type": "Tooltip",
+      "children": [
+        {
+          "id": "binding-indicator-trigger",
+          "type": "TooltipTrigger",
+          "props": {
+            "asChild": true
+          },
+          "children": [
+            {
+              "id": "binding-indicator-content",
+              "type": "div",
+              "bindings": {
+                "className": {
+                  "source": "className",
+                  "transform": "(() => { const path = $props.path; const sourceId = $props.sourceId; const baseClass = 'inline-flex items-center gap-1 px-2 py-1 rounded text-xs bg-accent/10 text-accent border border-accent/30'; return baseClass + ' ' + (data || ''); })()"
+                }
+              },
+              "children": [
+                {
+                  "id": "binding-indicator-icon",
+                  "type": "Icon",
+                  "props": {
+                    "name": "Link",
+                    "weight": "bold",
+                    "className": "w-3 h-3"
+                  }
+                },
+                {
+                  "id": "binding-indicator-text",
+                  "type": "span",
+                  "props": {
+                    "className": "font-mono"
+                  },
+                  "bindings": {
+                    "children": {
+                      "source": "sourceId",
+                      "transform": "(() => { const path = $props.path; return path ? $props.sourceId + '.' + path : $props.sourceId; })()"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "binding-indicator-tooltip-content",
+          "type": "TooltipContent",
+          "children": [
+            {
+              "id": "binding-indicator-tooltip-text",
+              "type": "p",
+              "props": {
+                "className": "text-xs"
+              },
+              "bindings": {
+                "children": {
+                  "source": "sourceId",
+                  "transform": "(() => { const path = $props.path; const bindingText = path ? $props.sourceId + '.' + path : $props.sourceId; return 'Bound to: ' + bindingText; })()"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

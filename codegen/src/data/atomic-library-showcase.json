@@ -1,0 +1,246 @@
+{
+  "pageHeader": {
+    "title": "Atomic Component Library",
+    "description": "Comprehensive collection of reusable atomic components"
+  },
+  "sections": {
+    "buttonsActions": {
+      "title": "Buttons & Actions",
+      "buttonVariantsLabel": "Button Variants",
+      "buttonVariants": [
+        { "label": "Default", "variant": "default" },
+        { "label": "Secondary", "variant": "secondary" },
+        { "label": "Outline", "variant": "outline" },
+        { "label": "Ghost", "variant": "ghost" },
+        { "label": "Destructive", "variant": "destructive" },
+        { "label": "Loading", "variant": "default", "loading": true },
+        { "label": "With Icon", "variant": "default", "icon": "plus", "iconPosition": "left" },
+        { "label": "Download", "variant": "default", "icon": "download", "iconPosition": "right" }
+      ],
+      "buttonGroupLabel": "Button Group",
+      "buttonGroupButtons": ["Left", "Middle", "Right"],
+      "iconButtonsLabel": "Icon Buttons",
+      "actionButtonsLabel": "Action Buttons",
+      "actionButtons": [
+        { "label": "Like", "tooltip": "Like this item", "variant": "default", "icon": "heart" },
+        { "label": "Favorite", "variant": "outline", "icon": "star" }
+      ]
+    },
+    "badgesIndicators": {
+      "title": "Badges & Indicators",
+      "badgesLabel": "Badges",
+      "badges": [
+        { "label": "Default", "variant": "default" },
+        { "label": "Secondary", "variant": "secondary" },
+        { "label": "Destructive", "variant": "destructive" },
+        { "label": "Outline", "variant": "outline" },
+        { "label": "With Icon", "variant": "default", "icon": "star" },
+        { "label": "Small", "variant": "default", "size": "sm" },
+        { "label": "Large", "variant": "default", "size": "lg" }
+      ],
+      "statusBadgesLabel": "Status Badges",
+      "chipsLabel": "Chips",
+      "chips": [
+        { "label": "React", "variant": "primary" },
+        { "label": "TypeScript", "variant": "accent" },
+        { "label": "Tailwind", "variant": "muted" },
+        { "label": "Removable", "variant": "default", "removable": true }
+      ],
+      "dotsLabel": "Dots",
+      "countBadgeLabel": "Count Badge",
+      "countItems": [
+        { "label": "Notifications", "count": 5 },
+        { "label": "Messages", "count": 99, "max": 99, "variant": "destructive" }
+      ]
+    },
+    "typography": {
+      "title": "Typography",
+      "headingsLabel": "Headings",
+      "headings": ["Heading 1", "Heading 2", "Heading 3", "Heading 4", "Heading 5", "Heading 6"],
+      "textVariantsLabel": "Text Variants",
+      "textVariants": [
+        "Body text - regular content",
+        "Caption text - smaller descriptive text",
+        "Muted text - less important information",
+        "Small text - compact information"
+      ],
+      "inlineElementsLabel": "Inline Elements",
+      "inlineElements": {
+        "kbd": {
+          "before": "Press",
+          "after": "to search",
+          "keys": ["Ctrl", "K"]
+        },
+        "code": {
+          "before": "Run",
+          "content": "npm install",
+          "after": "to get started"
+        },
+        "link": {
+          "before": "Visit",
+          "content": "our documentation",
+          "after": "to learn more"
+        }
+      }
+    },
+    "formControls": {
+      "title": "Form Controls",
+      "switchLabel": "Switch",
+      "switch": {
+        "label": "Enable notifications",
+        "description": "Receive updates about your account"
+      },
+      "datePickerLabel": "Date Picker",
+      "datePlaceholder": "Select a date",
+      "filterInputLabel": "Filter Input",
+      "filterPlaceholder": "Filter items...",
+      "ratingLabel": "Rating",
+      "rangeSliderLabel": "Range Slider",
+      "rangeSlider": {
+        "label": "Price Range"
+      }
+    },
+    "progressLoading": {
+      "title": "Progress & Loading",
+      "progressBarLabel": "Progress Bar",
+      "circularProgressLabel": "Circular Progress",
+      "skeletonLabel": "Skeleton Loading"
+    },
+    "feedback": {
+      "title": "Feedback",
+      "alerts": [
+        { "variant": "info", "title": "Information", "message": "This is an informational alert message." },
+        { "variant": "success", "title": "Success", "message": "Your changes have been saved successfully." },
+        { "variant": "warning", "title": "Warning", "message": "Please review your input before submitting." },
+        { "variant": "error", "title": "Error", "message": "Something went wrong. Please try again." }
+      ],
+      "infoPanels": [
+        { "variant": "info", "title": "Info Panel", "message": "This is an informational panel with helpful content." },
+        { "variant": "success", "title": "Success Panel", "message": "Operation completed successfully!" },
+        { "variant": "warning", "title": "Warning Panel", "message": "Please proceed with caution." },
+        { "variant": "error", "title": "Error Panel", "message": "An error has occurred." }
+      ]
+    },
+    "avatarsUserElements": {
+      "title": "Avatars & User Elements",
+      "avatarSizesLabel": "Avatar Sizes",
+      "avatarFallbacks": ["XS", "SM", "MD", "LG", "XL"],
+      "avatarGroupLabel": "Avatar Group",
+      "avatarGroup": [
+        { "fallback": "JD", "alt": "John Doe" },
+        { "fallback": "AS", "alt": "Alice Smith" },
+        { "fallback": "BJ", "alt": "Bob Jones" },
+        { "fallback": "MK", "alt": "Mary Kay" },
+        { "fallback": "TW", "alt": "Tom Wilson" },
+        { "fallback": "SB", "alt": "Sarah Brown" },
+        { "fallback": "PG", "alt": "Paul Green" }
+      ]
+    },
+    "cardsMetrics": {
+      "title": "Cards & Metrics",
+      "metrics": [
+        { "label": "Total Users", "value": "12,345", "icon": "user", "trend": { "value": 12, "direction": "up" } },
+        { "label": "Orders", "value": "1,234", "icon": "cart", "trend": { "value": 5, "direction": "up" } },
+        { "label": "Notifications", "value": "45", "icon": "bell" }
+      ]
+    },
+    "interactiveElements": {
+      "title": "Interactive Elements",
+      "hoverCardLabel": "Hover Card",
+      "hoverCardTrigger": "Hover over me",
+      "hoverCardTitle": "Additional Information",
+      "hoverCardDescription": "This is extra content shown in a hover card.",
+      "tooltipLabel": "Tooltip",
+      "tooltipContent": "This is a helpful tooltip",
+      "tooltipTrigger": "Hover for tooltip",
+      "colorSwatchesLabel": "Color Swatches",
+      "colorSwatches": [
+        { "label": "Primary", "color": "#8b5cf6" },
+        { "label": "Success", "color": "#10b981" },
+        { "label": "Error", "color": "#ef4444" },
+        { "label": "Warning", "color": "#f59e0b" }
+      ]
+    },
+    "layoutComponents": {
+      "title": "Layout Components",
+      "responsiveGridLabel": "Responsive Grid",
+      "gridItemLabel": "Item",
+      "flexLayoutLabel": "Flex Layout",
+      "flexLeft": "Left Content",
+      "flexCenter": "Center",
+      "flexRightAction": "Right Action",
+      "stackLayoutLabel": "Stack Layout",
+      "stackItems": ["Stacked Item 1", "Stacked Item 2", "Stacked Item 3"]
+    },
+    "enhancedComponents": {
+      "title": "Enhanced Components",
+      "panelHeader": {
+        "title": "Panel Header Component",
+        "subtitle": "A reusable header with optional icon and actions",
+        "actionLabel": "Action"
+      },
+      "numberInputLabel": "Number Input",
+      "numberInput": {
+        "label": "Quantity"
+      },
+      "textGradientLabel": "Text Gradient",
+      "textGradientText": "Beautiful Gradient Text",
+      "statusIndicatorsLabel": "Status Indicators",
+      "statusActiveLabel": "Active",
+      "statusFeaturedLabel": "Featured",
+      "quickActionButtonsLabel": "Quick Action Buttons",
+      "quickActionButtons": [
+        {
+          "label": "Code",
+          "description": "Edit files",
+          "variant": "primary",
+          "alertMessage": "Code clicked"
+        },
+        {
+          "label": "Deploy",
+          "description": "Launch app",
+          "variant": "accent",
+          "alertMessage": "Deploy clicked"
+        },
+        {
+          "label": "Favorite",
+          "description": "Save for later",
+          "variant": "default",
+          "alertMessage": "Favorite clicked"
+        },
+        {
+          "label": "Shop",
+          "description": "Browse items",
+          "variant": "muted",
+          "alertMessage": "Shop clicked"
+        }
+      ],
+      "glowCardsLabel": "Glow Cards",
+      "glowCards": [
+        {
+          "title": "Primary Glow",
+          "description": "Card with primary glow effect",
+          "glowColor": "primary",
+          "intensity": "medium"
+        },
+        {
+          "title": "Accent Glow",
+          "description": "Card with accent glow effect",
+          "glowColor": "accent",
+          "intensity": "high"
+        },
+        {
+          "title": "Success Glow",
+          "description": "Card with success glow effect",
+          "glowColor": "success",
+          "intensity": "medium"
+        }
+      ]
+    },
+    "summary": {
+      "title": "Summary",
+      "panelHeading": "Atomic Component Library Complete!",
+      "panelText": "The atomic component library includes 60+ production-ready components covering buttons, badges, typography, forms, progress indicators, feedback, avatars, cards, enhanced inputs, gradient effects, and layout utilities. All components are fully typed, accessible, and follow the design system."
+    }
+  }
+}

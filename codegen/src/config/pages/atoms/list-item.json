@@ -1,0 +1,6 @@
+{
+  "type": "ListItem",
+  "props": {
+    "onClick": "> void"
+  }
+}

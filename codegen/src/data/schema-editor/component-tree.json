@@ -1,0 +1,16 @@
+{
+  "icon": "tree",
+  "title": "Component Tree",
+  "subtitle": {
+    "singular": "component",
+    "plural": "components"
+  },
+  "tooltips": {
+    "expandAll": "Expand All",
+    "collapseAll": "Collapse All"
+  },
+  "emptyState": {
+    "title": "No components yet",
+    "description": "Drag components from the palette"
+  }
+}

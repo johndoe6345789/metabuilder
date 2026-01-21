@@ -1,0 +1,45 @@
+{
+  "id": "list-header-container",
+  "type": "Box",
+  "className": "border-b border-border bg-card px-6 py-4",
+  "children": [
+    {
+      "type": "Flex",
+      "align": "center",
+      "justify": "between",
+      "children": [
+        {
+          "type": "Box",
+          "children": [
+            {
+              "type": "Heading",
+              "level": 3,
+              "children": [{ "type": "Text", "value": "{title}" }]
+            },
+            {
+              "type": "Paragraph",
+              "className": "text-sm text-muted-foreground mt-1",
+              "bindings": {
+                "className": {
+                  "source": "subtitle",
+                  "transform": "data ? 'text-sm text-muted-foreground mt-1' : 'hidden'"
+                }
+              },
+              "children": [{ "type": "Text", "value": "{subtitle}" }]
+            }
+          ]
+        },
+        {
+          "type": "Badge",
+          "bindings": {
+            "children": [{ "type": "Text", "value": "{count}" }],
+            "className": {
+              "source": "count",
+              "transform": "data > 0 ? 'inline-flex' : 'hidden'"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

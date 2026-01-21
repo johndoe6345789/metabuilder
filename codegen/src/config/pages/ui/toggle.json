@@ -1,0 +1,6 @@
+{
+  "type": "toggle",
+  "props": {
+    "hover": "on]:bg-accent data-[state=on]:text-accent-foreground [&_svg]:pointer-events-none [&_svg:not([class*="
+  }
+}

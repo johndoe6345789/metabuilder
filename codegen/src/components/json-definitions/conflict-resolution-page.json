@@ -1,0 +1,322 @@
+{
+  "id": "conflict-resolution-page-container",
+  "type": "div",
+  "props": {
+    "className": "h-full flex flex-col bg-background"
+  },
+  "children": [
+    {
+      "id": "conflict-resolution-header-section",
+      "type": "div",
+      "props": {
+        "className": "flex-none border-b bg-card/50"
+      },
+      "children": [
+        {
+          "id": "conflict-resolution-header-content",
+          "type": "div",
+          "props": {
+            "className": "p-6 space-y-4"
+          },
+          "children": [
+            {
+              "id": "conflict-resolution-header",
+              "type": "div",
+              "children": [
+                {
+                  "id": "conflict-resolution-title",
+                  "type": "h1",
+                  "props": {
+                    "className": "text-3xl font-bold font-mono mb-2",
+                    "children": "Conflict Resolution"
+                  }
+                },
+                {
+                  "id": "conflict-resolution-description",
+                  "type": "p",
+                  "props": {
+                    "className": "text-muted-foreground",
+                    "children": "Manage and resolve conflicts between local and remote versions"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "conflict-resolution-stats",
+              "type": "div",
+              "props": {
+                "className": "grid grid-cols-3 gap-4"
+              },
+              "children": [
+                {
+                  "id": "stat-total",
+                  "type": "div",
+                  "props": {
+                    "className": "p-3 rounded-md bg-muted/50"
+                  },
+                  "children": [
+                    {
+                      "id": "stat-total-label",
+                      "type": "div",
+                      "props": {
+                        "className": "text-xs text-muted-foreground",
+                        "children": "Total Conflicts"
+                      }
+                    },
+                    {
+                      "id": "stat-total-value",
+                      "type": "div",
+                      "bindings": {
+                        "children": "pageState.stats.totalConflicts"
+                      },
+                      "props": {
+                        "className": "text-2xl font-bold mt-1"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "stat-files",
+                  "type": "div",
+                  "props": {
+                    "className": "p-3 rounded-md bg-muted/50"
+                  },
+                  "children": [
+                    {
+                      "id": "stat-files-label",
+                      "type": "div",
+                      "props": {
+                        "className": "text-xs text-muted-foreground",
+                        "children": "File Conflicts"
+                      }
+                    },
+                    {
+                      "id": "stat-files-value",
+                      "type": "div",
+                      "bindings": {
+                        "children": {
+                          "source": "pageState.stats.conflictsByType.files",
+                          "transform": "data || 0"
+                        }
+                      },
+                      "props": {
+                        "className": "text-2xl font-bold mt-1"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "stat-models",
+                  "type": "div",
+                  "props": {
+                    "className": "p-3 rounded-md bg-muted/50"
+                  },
+                  "children": [
+                    {
+                      "id": "stat-models-label",
+                      "type": "div",
+                      "props": {
+                        "className": "text-xs text-muted-foreground",
+                        "children": "Model Conflicts"
+                      }
+                    },
+                    {
+                      "id": "stat-models-value",
+                      "type": "div",
+                      "bindings": {
+                        "children": {
+                          "source": "pageState.stats.conflictsByType.models",
+                          "transform": "data || 0"
+                        }
+                      },
+                      "props": {
+                        "className": "text-2xl font-bold mt-1"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conflict-resolution-main-content",
+      "type": "div",
+      "props": {
+        "className": "flex-1 overflow-hidden p-6"
+      },
+      "children": [
+        {
+          "id": "conflict-resolution-content-wrapper",
+          "type": "div",
+          "props": {
+            "className": "h-full flex flex-col space-y-4"
+          },
+          "children": [
+            {
+              "id": "conflict-resolution-actions",
+              "type": "div",
+              "props": {
+                "className": "flex gap-2"
+              },
+              "children": [
+                {
+                  "id": "detect-button",
+                  "type": "Button",
+                  "bindings": {
+                    "onClick": "pageState.handleDetect",
+                    "disabled": "pageState.detectingConflicts"
+                  },
+                  "props": {
+                    "size": "sm"
+                  },
+                  "children": [
+                    {
+                      "id": "detect-icon",
+                      "type": "ArrowsClockwise",
+                      "props": {
+                        "size": 16
+                      }
+                    },
+                    {
+                      "id": "detect-text",
+                      "type": "span",
+                      "props": {
+                        "children": "Detect Conflicts"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "clear-button",
+                  "type": "Button",
+                  "conditional": {
+                    "if": "pageState.hasConflicts"
+                  },
+                  "bindings": {
+                    "onClick": "pageState.clear"
+                  },
+                  "props": {
+                    "size": "sm",
+                    "variant": "outline"
+                  },
+                  "children": [
+                    {
+                      "id": "clear-text",
+                      "type": "span",
+                      "props": {
+                        "children": "Clear All"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "conflict-list-container",
+              "type": "div",
+              "props": {
+                "className": "flex-1 overflow-auto rounded-md border"
+              },
+              "children": [
+                {
+                  "id": "empty-state",
+                  "type": "div",
+                  "conditional": {
+                    "if": "!pageState.hasConflicts"
+                  },
+                  "props": {
+                    "className": "h-full flex items-center justify-center p-6"
+                  },
+                  "children": [
+                    {
+                      "id": "empty-message",
+                      "type": "div",
+                      "props": {
+                        "className": "text-center"
+                      },
+                      "children": [
+                        {
+                          "id": "empty-icon",
+                          "type": "CheckCircle",
+                          "props": {
+                            "size": 48,
+                            "className": "mx-auto mb-2 text-muted-foreground"
+                          }
+                        },
+                        {
+                          "id": "empty-title",
+                          "type": "h2",
+                          "props": {
+                            "className": "text-lg font-semibold mb-1",
+                            "children": "No Conflicts"
+                          }
+                        },
+                        {
+                          "id": "empty-description",
+                          "type": "p",
+                          "props": {
+                            "className": "text-sm text-muted-foreground",
+                            "children": "Click \"Detect Conflicts\" to find conflicts between versions"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "conflicts-list",
+                  "type": "div",
+                  "conditional": {
+                    "if": "pageState.hasConflicts"
+                  },
+                  "props": {
+                    "className": "p-4 space-y-2"
+                  },
+                  "children": [
+                    {
+                      "id": "conflict-items",
+                      "type": "map",
+                      "bindings": {
+                        "data": "pageState.conflicts",
+                        "item": "conflict"
+                      },
+                      "children": [
+                        {
+                          "id": "conflict-item",
+                          "type": "ConflictCard",
+                          "bindings": {
+                            "conflict": "conflict",
+                            "onResolve": "pageState.handleResolve",
+                            "onViewDetails": "pageState.handleViewDetails",
+                            "isResolving": {
+                              "source": "pageState.resolvingConflict",
+                              "transform": "data === conflict.id"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conflict-details-dialog-component",
+      "type": "ConflictDetailsDialog",
+      "bindings": {
+        "conflict": "pageState.selectedConflict",
+        "open": "pageState.detailsDialogOpen",
+        "onOpenChange": "pageState.setDetailsDialogOpen",
+        "onResolve": "pageState.handleResolve",
+        "isResolving": "!!pageState.resolvingConflict"
+      }
+    }
+  ]
+}

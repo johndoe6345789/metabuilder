@@ -1,0 +1,441 @@
+{
+  "pages": [
+    {
+      "id": "home",
+      "title": "Home",
+      "icon": "House",
+      "component": "ProjectDashboard",
+      "enabled": true,
+      "isRoot": true,
+      "order": 0,
+      "props": {
+        "state": ["files", "models", "components", "theme", "playwrightTests", "storybookStories", "unitTests", "flaskConfig", "nextjsConfig"]
+      }
+    },
+    {
+      "id": "dashboard",
+      "title": "Dashboard",
+      "icon": "ChartBar",
+      "component": "ProjectDashboard",
+      "enabled": true,
+      "shortcut": "ctrl+1",
+      "order": 1,
+      "props": {
+        "state": ["files", "models", "components", "theme", "playwrightTests", "storybookStories", "unitTests", "flaskConfig", "nextjsConfig"]
+      }
+    },
+    {
+      "id": "code",
+      "title": "Code Editor",
+      "icon": "Code",
+      "component": "CodeEditor",
+      "enabled": true,
+      "toggleKey": "codeEditor",
+      "shortcut": "ctrl+2",
+      "order": 2,
+      "requiresResizable": true,
+      "props": {
+        "state": ["files", "activeFileId"],
+        "actions": ["onFileChange:handleFileChange", "onFileSelect:setActiveFileId", "onFileClose:handleFileClose"]
+      },
+      "resizableConfig": {
+        "leftComponent": "FileExplorer",
+        "leftProps": {
+          "state": ["files", "activeFileId"],
+          "actions": ["onFileSelect:setActiveFileId", "onFileAdd:handleFileAdd"]
+        },
+        "leftPanel": {
+          "defaultSize": 20,
+          "minSize": 15,
+          "maxSize": 30
+        },
+        "rightPanel": {
+          "defaultSize": 80
+        }
+      }
+    },
+    {
+      "id": "models",
+      "title": "Models",
+      "icon": "Database",
+      "component": "ModelDesigner",
+      "enabled": true,
+      "toggleKey": "models",
+      "shortcut": "ctrl+3",
+      "order": 3,
+      "props": {
+        "state": ["models"],
+        "actions": ["onModelsChange:setModels"]
+      }
+    },
+    {
+      "id": "models-json",
+      "title": "Models (JSON)",
+      "icon": "Database",
+      "component": "JSONModelDesigner",
+      "enabled": true,
+      "toggleKey": "modelsJSON",
+      "order": 3.5,
+      "props": {
+        "state": ["models"],
+        "actions": ["onModelsChange:setModels"]
+      }
+    },
+    {
+      "id": "components",
+      "title": "Components",
+      "icon": "Cube",
+      "component": "ComponentTreeBuilder",
+      "enabled": true,
+      "toggleKey": "components",
+      "shortcut": "ctrl+4",
+      "order": 4,
+      "props": {
+        "state": ["components"],
+        "actions": ["onComponentsChange:setComponents"]
+      }
+    },
+    {
+      "id": "component-trees",
+      "title": "Component Trees",
+      "icon": "Tree",
+      "component": "ComponentTreeManager",
+      "enabled": true,
+      "toggleKey": "componentTrees",
+      "shortcut": "ctrl+5",
+      "order": 5,
+      "props": {
+        "state": ["trees:componentTrees"],
+        "actions": ["onTreesChange:setComponentTrees"]
+      }
+    },
+    {
+      "id": "component-trees-json",
+      "title": "Component Trees (JSON)",
+      "icon": "Tree",
+      "component": "JSONComponentTreeManager",
+      "enabled": true,
+      "toggleKey": "componentTreesJSON",
+      "order": 5.5,
+      "props": {
+        "state": ["trees:componentTrees"],
+        "actions": ["onTreesChange:setComponentTrees"]
+      }
+    },
+    {
+      "id": "workflows",
+      "title": "Workflows",
+      "icon": "GitBranch",
+      "component": "WorkflowDesigner",
+      "enabled": true,
+      "toggleKey": "workflows",
+      "shortcut": "ctrl+6",
+      "order": 6,
+      "props": {
+        "state": ["workflows"],
+        "actions": ["onWorkflowsChange:setWorkflows"]
+      }
+    },
+    {
+      "id": "workflows-json",
+      "title": "Workflows (JSON)",
+      "icon": "GitBranch",
+      "component": "JSONWorkflowDesigner",
+      "enabled": true,
+      "toggleKey": "workflowsJSON",
+      "order": 6.5,
+      "props": {
+        "state": ["workflows"],
+        "actions": ["onWorkflowsChange:setWorkflows"]
+      }
+    },
+    {
+      "id": "lambdas",
+      "title": "Lambdas",
+      "icon": "Function",
+      "component": "LambdaDesigner",
+      "enabled": true,
+      "toggleKey": "lambdas",
+      "shortcut": "ctrl+7",
+      "order": 7,
+      "props": {
+        "state": ["lambdas"],
+        "actions": ["onLambdasChange:setLambdas"]
+      }
+    },
+    {
+      "id": "lambdas-json",
+      "title": "Lambdas (JSON)",
+      "icon": "Function",
+      "component": "JSONLambdaDesigner",
+      "enabled": true,
+      "toggleKey": "lambdasJSON",
+      "order": 7.5,
+      "props": {
+        "state": ["lambdas"],
+        "actions": ["onLambdasChange:setLambdas"]
+      }
+    },
+    {
+      "id": "styling",
+      "title": "Styling",
+      "icon": "Palette",
+      "component": "StyleDesigner",
+      "enabled": true,
+      "toggleKey": "styling",
+      "shortcut": "ctrl+8",
+      "order": 8,
+      "props": {
+        "state": ["theme"],
+        "actions": ["onThemeChange:setTheme"]
+      }
+    },
+    {
+      "id": "favicon",
+      "title": "Favicon Designer",
+      "icon": "Image",
+      "component": "FaviconDesigner",
+      "enabled": true,
+      "toggleKey": "faviconDesigner",
+      "shortcut": "ctrl+9",
+      "order": 9,
+      "props": {}
+    },
+    {
+      "id": "ideas",
+      "title": "Feature Ideas",
+      "icon": "Lightbulb",
+      "component": "FeatureIdeaCloud",
+      "enabled": true,
+      "toggleKey": "ideaCloud",
+      "order": 10,
+      "props": {}
+    },
+    {
+      "id": "flask",
+      "title": "Flask API",
+      "icon": "Flask",
+      "component": "FlaskDesigner",
+      "enabled": true,
+      "toggleKey": "flaskApi",
+      "order": 11,
+      "props": {
+        "state": ["config:flaskConfig"],
+        "actions": ["onConfigChange:setFlaskConfig"]
+      }
+    },
+    {
+      "id": "playwright",
+      "title": "Playwright",
+      "icon": "TestTube",
+      "component": "PlaywrightDesigner",
+      "enabled": true,
+      "toggleKey": "playwright",
+      "order": 12,
+      "props": {
+        "state": ["tests:playwrightTests"],
+        "actions": ["onTestsChange:setPlaywrightTests"]
+      }
+    },
+    {
+      "id": "storybook",
+      "title": "Storybook",
+      "icon": "Book",
+      "component": "StorybookDesigner",
+      "enabled": true,
+      "toggleKey": "storybook",
+      "order": 13,
+      "props": {
+        "state": ["stories:storybookStories"],
+        "actions": ["onStoriesChange:setStorybookStories"]
+      }
+    },
+    {
+      "id": "unit-tests",
+      "title": "Unit Tests",
+      "icon": "Bug",
+      "component": "UnitTestDesigner",
+      "enabled": true,
+      "toggleKey": "unitTests",
+      "order": 14,
+      "props": {
+        "state": ["tests:unitTests"],
+        "actions": ["onTestsChange:setUnitTests"]
+      }
+    },
+    {
+      "id": "errors",
+      "title": "Errors",
+      "icon": "Warning",
+      "component": "ErrorPanel",
+      "enabled": true,
+      "toggleKey": "errorRepair",
+      "order": 15,
+      "props": {
+        "state": ["files"],
+        "actions": ["onFileChange:handleFileChange", "onFileSelect:setActiveFileId"]
+      }
+    },
+    {
+      "id": "docs",
+      "title": "Documentation",
+      "icon": "BookOpen",
+      "component": "DocumentationView",
+      "enabled": true,
+      "toggleKey": "documentation",
+      "order": 16,
+      "props": {}
+    },
+    {
+      "id": "sass",
+      "title": "SASS Styles",
+      "icon": "Palette",
+      "component": "SassStylesShowcase",
+      "enabled": true,
+      "toggleKey": "sassStyles",
+      "order": 17,
+      "props": {}
+    },
+    {
+      "id": "settings",
+      "title": "Settings",
+      "icon": "Gear",
+      "component": "ProjectSettingsDesigner",
+      "enabled": true,
+      "order": 18,
+      "props": {
+        "state": ["nextjsConfig", "npmSettings"],
+        "actions": ["onNextjsConfigChange:setNextjsConfig", "onNpmSettingsChange:setNpmSettings"]
+      }
+    },
+    {
+      "id": "pwa",
+      "title": "PWA",
+      "icon": "DeviceMobile",
+      "component": "PWASettings",
+      "enabled": true,
+      "order": 19,
+      "props": {}
+    },
+    {
+      "id": "persistence",
+      "title": "Persistence",
+      "icon": "Database",
+      "component": "PersistenceDashboard",
+      "enabled": true,
+      "order": 20,
+      "props": {}
+    },
+    {
+      "id": "persistence-demo",
+      "title": "Persistence Demo",
+      "icon": "Lightning",
+      "component": "PersistenceExample",
+      "enabled": true,
+      "order": 21,
+      "props": {}
+    },
+    {
+      "id": "templates",
+      "title": "Templates",
+      "icon": "Package",
+      "component": "TemplateSelector",
+      "enabled": true,
+      "order": 20,
+      "props": {}
+    },
+    {
+      "id": "features",
+      "title": "Features",
+      "icon": "ToggleRight",
+      "component": "FeatureToggleSettings",
+      "enabled": true,
+      "order": 21,
+      "props": {
+        "state": ["features:featureToggles"],
+        "actions": ["onFeaturesChange:setFeatureToggles"]
+      }
+    },
+    {
+      "id": "json-ui",
+      "title": "JSON UI",
+      "icon": "Code",
+      "component": "JSONUIShowcase",
+      "enabled": true,
+      "order": 22,
+      "props": {}
+    },
+    {
+      "id": "json-ui-schema",
+      "title": "JSON UI (Schema)",
+      "icon": "Code",
+      "type": "json",
+      "schemaPath": "json-ui-page.json",
+      "enabled": true,
+      "order": 22.2,
+      "props": {}
+    },
+    {
+      "id": "json-conversion-showcase",
+      "title": "JSON Conversion Showcase",
+      "icon": "BookOpen",
+      "component": "JSONConversionShowcase",
+      "enabled": true,
+      "order": 22.1,
+      "props": {}
+    },
+    {
+      "id": "schema-editor",
+      "title": "Schema Editor",
+      "icon": "PencilRuler",
+      "component": "SchemaEditor",
+      "enabled": true,
+      "toggleKey": "schemaEditor",
+      "shortcut": "ctrl+shift+s",
+      "order": 23,
+      "props": {}
+    },
+    {
+      "id": "data-binding",
+      "title": "Data Binding",
+      "icon": "Link",
+      "component": "DataBindingDesigner",
+      "enabled": true,
+      "toggleKey": "dataBinding",
+      "shortcut": "ctrl+shift+d",
+      "order": 24,
+      "props": {}
+    },
+    {
+      "id": "docker-debugger",
+      "title": "Docker Debugger",
+      "icon": "Wrench",
+      "component": "DockerBuildDebugger",
+      "enabled": true,
+      "toggleKey": "dockerDebugger",
+      "order": 25,
+      "props": {}
+    },
+    {
+      "id": "atomic-library",
+      "title": "Atomic Components",
+      "icon": "Atom",
+      "component": "AtomicLibraryShowcase",
+      "enabled": true,
+      "shortcut": "ctrl+shift+a",
+      "order": 26,
+      "props": {}
+    },
+    {
+      "id": "conflicts",
+      "title": "Conflict Resolution",
+      "icon": "Warning",
+      "component": "ConflictResolutionPage",
+      "enabled": true,
+      "toggleKey": "conflictResolution",
+      "shortcut": "ctrl+shift+c",
+      "order": 27,
+      "props": {}
+    }
+  ]
+}

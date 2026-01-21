@@ -1,0 +1,42 @@
+{
+  "id": "save-indicator-container",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": "className",
+      "transform": "data ? `flex items-center gap-1.5 text-xs text-muted-foreground ${data}` : 'flex items-center gap-1.5 text-xs text-muted-foreground'"
+    }
+  },
+  "children": [
+    {
+      "id": "status-icon",
+      "type": "StatusIcon",
+      "bindings": {
+        "type": {
+          "source": "lastSaved",
+          "transform": "data ? (hookData.isRecent ? 'saved' : 'synced') : status"
+        },
+        "animate": {
+          "source": "animate",
+          "transform": "data !== undefined ? data : (lastSaved ? hookData.isRecent : status === 'saved')"
+        }
+      }
+    },
+    {
+      "id": "label-text",
+      "type": "span",
+      "props": {
+        "className": "hidden sm:inline"
+      },
+      "bindings": {
+        "children": {
+          "source": "label",
+          "transform": "data || (lastSaved ? (hookData.isRecent ? 'Saved' : hookData.timeAgo) : (status === 'saved' ? 'Saved' : 'Synced'))"
+        }
+      },
+      "conditional": {
+        "if": "showLabel !== false"
+      }
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "id": "page-header-container",
+  "type": "div",
+  "props": { "className": "flex items-center gap-3" },
+  "children": [
+    {
+      "id": "page-header-icon",
+      "type": "TabIcon",
+      "bindings": { "icon": "icon" },
+      "props": { "variant": "gradient" }
+    },
+    {
+      "id": "page-header-content",
+      "type": "div",
+      "props": { "className": "min-w-0" },
+      "children": [
+        {
+          "id": "page-header-title",
+          "type": "h2",
+          "props": { "className": "text-lg sm:text-xl font-bold truncate" },
+          "bindings": { "children": "title" }
+        },
+        {
+          "id": "page-header-description",
+          "type": "p",
+          "props": { "className": "text-xs sm:text-sm text-muted-foreground hidden sm:block" },
+          "bindings": { "children": "description" },
+          "conditional": { "if": "description" }
+        }
+      ]
+    }
+  ]
+}

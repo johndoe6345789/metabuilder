@@ -1,0 +1,51 @@
+{
+  "type": "div",
+  "props": {
+    "className": "flex items-center justify-between border-b px-6 py-4"
+  },
+  "children": [
+    {
+      "type": "div",
+      "props": {
+        "className": "flex flex-col gap-1"
+      },
+      "children": [
+        {
+          "type": "h1",
+          "props": {
+            "className": "text-2xl font-bold",
+            "children": "Test Page"
+          }
+        },
+        {
+          "type": "p",
+          "props": {
+            "className": "text-sm text-muted-foreground",
+            "children": "This is a pure JSON component"
+          }
+        }
+      ]
+    },
+    {
+      "type": "div",
+      "props": {
+        "className": "flex gap-2"
+      },
+      "children": [
+        {
+          "type": "Button",
+          "props": {
+            "variant": "outline",
+            "children": "Cancel"
+          }
+        },
+        {
+          "type": "Button",
+          "props": {
+            "children": "Save"
+          }
+        }
+      ]
+    }
+  ]
+}

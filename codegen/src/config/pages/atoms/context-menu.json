@@ -1,0 +1,7 @@
+{
+  "type": "ContextMenu as ShadcnContextMenu,\n  ContextMenuContent,\n  ContextMenuItem,\n  ContextMenuTrigger,\n  ContextMenuSeparator,\n  ContextMenuSub,\n  ContextMenuSubContent,\n  ContextMenuSubTrigger,",
+  "props": {
+    "onSelect": "> void",
+    "menuItems": "> {"
+  }
+}

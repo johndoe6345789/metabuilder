@@ -1,0 +1,526 @@
+{
+  "id": "settings-ui",
+  "title": "Settings",
+  "description": "Application settings panel",
+  "layout": {
+    "type": "flex",
+    "direction": "column",
+    "gap": "6",
+    "padding": "6",
+    "className": "h-full bg-background max-w-4xl mx-auto",
+    "children": [
+      {
+        "id": "settings-header",
+        "type": "div",
+        "children": [
+          {
+            "id": "settings-title",
+            "type": "h1",
+            "className": "text-3xl font-bold mb-2",
+            "children": "Settings"
+          },
+          {
+            "id": "settings-description",
+            "type": "p",
+            "className": "text-muted-foreground",
+            "children": "Manage your application preferences and account settings"
+          }
+        ]
+      },
+      {
+        "id": "settings-tabs",
+        "type": "Tabs",
+        "props": {
+          "defaultValue": "general"
+        },
+        "className": "w-full",
+        "children": [
+          {
+            "id": "tabs-list",
+            "type": "TabsList",
+            "className": "grid w-full grid-cols-3",
+            "children": [
+              {
+                "id": "tab-general",
+                "type": "TabsTrigger",
+                "props": {
+                  "value": "general"
+                },
+                "children": "General"
+              },
+              {
+                "id": "tab-notifications",
+                "type": "TabsTrigger",
+                "props": {
+                  "value": "notifications"
+                },
+                "children": "Notifications"
+              },
+              {
+                "id": "tab-security",
+                "type": "TabsTrigger",
+                "props": {
+                  "value": "security"
+                },
+                "children": "Security"
+              }
+            ]
+          },
+          {
+            "id": "tab-content-general",
+            "type": "TabsContent",
+            "props": {
+              "value": "general"
+            },
+            "children": [
+              {
+                "id": "general-card",
+                "type": "Card",
+                "children": [
+                  {
+                    "id": "general-header",
+                    "type": "CardHeader",
+                    "children": [
+                      {
+                        "id": "general-title",
+                        "type": "CardTitle",
+                        "children": "General Settings"
+                      },
+                      {
+                        "id": "general-description",
+                        "type": "CardDescription",
+                        "children": "Configure basic application preferences"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "general-content",
+                    "type": "CardContent",
+                    "className": "space-y-6",
+                    "children": [
+                      {
+                        "id": "theme-setting",
+                        "type": "div",
+                        "className": "flex items-center justify-between",
+                        "children": [
+                          {
+                            "id": "theme-info",
+                            "type": "div",
+                            "children": [
+                              {
+                                "id": "theme-label",
+                                "type": "Label",
+                                "className": "text-base",
+                                "children": "Dark Mode"
+                              },
+                              {
+                                "id": "theme-desc",
+                                "type": "p",
+                                "className": "text-sm text-muted-foreground",
+                                "children": "Use dark theme across the application"
+                              }
+                            ]
+                          },
+                          {
+                            "id": "theme-switch",
+                            "type": "Switch",
+                            "dataBinding": "settings.darkMode",
+                            "events": {
+                              "onCheckedChange": "toggle-dark-mode"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "id": "divider-1",
+                        "type": "Separator"
+                      },
+                      {
+                        "id": "language-setting",
+                        "type": "div",
+                        "className": "flex items-center justify-between",
+                        "children": [
+                          {
+                            "id": "language-info",
+                            "type": "div",
+                            "children": [
+                              {
+                                "id": "language-label",
+                                "type": "Label",
+                                "className": "text-base",
+                                "children": "Language"
+                              },
+                              {
+                                "id": "language-desc",
+                                "type": "p",
+                                "className": "text-sm text-muted-foreground",
+                                "children": "Select your preferred language"
+                              }
+                            ]
+                          },
+                          {
+                            "id": "language-select",
+                            "type": "Select",
+                            "dataBinding": "settings.language",
+                            "props": {
+                              "defaultValue": "en"
+                            },
+                            "children": [
+                              {
+                                "id": "language-trigger",
+                                "type": "SelectTrigger",
+                                "className": "w-[180px]",
+                                "children": [
+                                  {
+                                    "id": "language-value",
+                                    "type": "SelectValue",
+                                    "props": {
+                                      "placeholder": "Select language"
+                                    }
+                                  }
+                                ]
+                              },
+                              {
+                                "id": "language-content",
+                                "type": "SelectContent",
+                                "children": [
+                                  {
+                                    "id": "lang-en",
+                                    "type": "SelectItem",
+                                    "props": {
+                                      "value": "en"
+                                    },
+                                    "children": "English"
+                                  },
+                                  {
+                                    "id": "lang-es",
+                                    "type": "SelectItem",
+                                    "props": {
+                                      "value": "es"
+                                    },
+                                    "children": "Español"
+                                  },
+                                  {
+                                    "id": "lang-fr",
+                                    "type": "SelectItem",
+                                    "props": {
+                                      "value": "fr"
+                                    },
+                                    "children": "Français"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "id": "divider-2",
+                        "type": "Separator"
+                      },
+                      {
+                        "id": "auto-save-setting",
+                        "type": "div",
+                        "className": "flex items-center justify-between",
+                        "children": [
+                          {
+                            "id": "auto-save-info",
+                            "type": "div",
+                            "children": [
+                              {
+                                "id": "auto-save-label",
+                                "type": "Label",
+                                "className": "text-base",
+                                "children": "Auto-save"
+                              },
+                              {
+                                "id": "auto-save-desc",
+                                "type": "p",
+                                "className": "text-sm text-muted-foreground",
+                                "children": "Automatically save changes"
+                              }
+                            ]
+                          },
+                          {
+                            "id": "auto-save-switch",
+                            "type": "Switch",
+                            "dataBinding": "settings.autoSave",
+                            "events": {
+                              "onCheckedChange": "toggle-auto-save"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "tab-content-notifications",
+            "type": "TabsContent",
+            "props": {
+              "value": "notifications"
+            },
+            "children": [
+              {
+                "id": "notifications-card",
+                "type": "Card",
+                "children": [
+                  {
+                    "id": "notifications-header",
+                    "type": "CardHeader",
+                    "children": [
+                      {
+                        "id": "notifications-title",
+                        "type": "CardTitle",
+                        "children": "Notification Preferences"
+                      },
+                      {
+                        "id": "notifications-description",
+                        "type": "CardDescription",
+                        "children": "Choose what notifications you want to receive"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "notifications-content",
+                    "type": "CardContent",
+                    "className": "space-y-6",
+                    "children": [
+                      {
+                        "id": "email-notif",
+                        "type": "div",
+                        "className": "flex items-center justify-between",
+                        "children": [
+                          {
+                            "id": "email-notif-info",
+                            "type": "div",
+                            "children": [
+                              {
+                                "id": "email-notif-label",
+                                "type": "Label",
+                                "className": "text-base",
+                                "children": "Email Notifications"
+                              },
+                              {
+                                "id": "email-notif-desc",
+                                "type": "p",
+                                "className": "text-sm text-muted-foreground",
+                                "children": "Receive updates via email"
+                              }
+                            ]
+                          },
+                          {
+                            "id": "email-notif-switch",
+                            "type": "Switch",
+                            "dataBinding": "notifications.email",
+                            "events": {
+                              "onCheckedChange": "toggle-email-notifications"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "id": "divider-3",
+                        "type": "Separator"
+                      },
+                      {
+                        "id": "push-notif",
+                        "type": "div",
+                        "className": "flex items-center justify-between",
+                        "children": [
+                          {
+                            "id": "push-notif-info",
+                            "type": "div",
+                            "children": [
+                              {
+                                "id": "push-notif-label",
+                                "type": "Label",
+                                "className": "text-base",
+                                "children": "Push Notifications"
+                              },
+                              {
+                                "id": "push-notif-desc",
+                                "type": "p",
+                                "className": "text-sm text-muted-foreground",
+                                "children": "Receive browser push notifications"
+                              }
+                            ]
+                          },
+                          {
+                            "id": "push-notif-switch",
+                            "type": "Switch",
+                            "dataBinding": "notifications.push",
+                            "events": {
+                              "onCheckedChange": "toggle-push-notifications"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "tab-content-security",
+            "type": "TabsContent",
+            "props": {
+              "value": "security"
+            },
+            "children": [
+              {
+                "id": "security-card",
+                "type": "Card",
+                "children": [
+                  {
+                    "id": "security-header",
+                    "type": "CardHeader",
+                    "children": [
+                      {
+                        "id": "security-title",
+                        "type": "CardTitle",
+                        "children": "Security Settings"
+                      },
+                      {
+                        "id": "security-description",
+                        "type": "CardDescription",
+                        "children": "Manage security and privacy options"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "security-content",
+                    "type": "CardContent",
+                    "className": "space-y-6",
+                    "children": [
+                      {
+                        "id": "2fa-setting",
+                        "type": "div",
+                        "className": "flex items-center justify-between",
+                        "children": [
+                          {
+                            "id": "2fa-info",
+                            "type": "div",
+                            "children": [
+                              {
+                                "id": "2fa-label",
+                                "type": "Label",
+                                "className": "text-base",
+                                "children": "Two-Factor Authentication"
+                              },
+                              {
+                                "id": "2fa-desc",
+                                "type": "p",
+                                "className": "text-sm text-muted-foreground",
+                                "children": "Add an extra layer of security"
+                              }
+                            ]
+                          },
+                          {
+                            "id": "2fa-switch",
+                            "type": "Switch",
+                            "dataBinding": "security.twoFactor",
+                            "events": {
+                              "onCheckedChange": "toggle-2fa"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "id": "divider-4",
+                        "type": "Separator"
+                      },
+                      {
+                        "id": "session-setting",
+                        "type": "div",
+                        "className": "space-y-3",
+                        "children": [
+                          {
+                            "id": "session-label",
+                            "type": "Label",
+                            "className": "text-base",
+                            "children": "Active Sessions"
+                          },
+                          {
+                            "id": "session-desc",
+                            "type": "p",
+                            "className": "text-sm text-muted-foreground",
+                            "children": "Manage your active login sessions"
+                          },
+                          {
+                            "id": "logout-button",
+                            "type": "Button",
+                            "props": {
+                              "variant": "outline"
+                            },
+                            "events": {
+                              "onClick": "logout-all-sessions"
+                            },
+                            "children": "Logout All Other Sessions"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "save-actions",
+        "type": "div",
+        "className": "flex gap-3 pt-4",
+        "children": [
+          {
+            "id": "save-button",
+            "type": "Button",
+            "events": {
+              "onClick": "save-settings"
+            },
+            "children": "Save Changes"
+          },
+          {
+            "id": "reset-button",
+            "type": "Button",
+            "props": {
+              "variant": "outline"
+            },
+            "events": {
+              "onClick": "reset-settings"
+            },
+            "children": "Reset to Defaults"
+          }
+        ]
+      }
+    ]
+  },
+  "dataSources": {
+    "settings": {
+      "type": "static",
+      "config": {
+        "darkMode": true,
+        "language": "en",
+        "autoSave": true
+      }
+    },
+    "notifications": {
+      "type": "static",
+      "config": {
+        "email": true,
+        "push": false
+      }
+    },
+    "security": {
+      "type": "static",
+      "config": {
+        "twoFactor": false
+      }
+    }
+  }
+}

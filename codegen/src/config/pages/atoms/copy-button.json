@@ -1,0 +1,13 @@
+{
+  "type": "CopyButton",
+  "jsonCompatible": false,
+  "wrapperRequired": true,
+  "load": {
+    "path": "@/components/atoms/CopyButton",
+    "export": "CopyButton"
+  },
+  "props": {},
+  "metadata": {
+    "notes": "Contains hooks - needs wrapper"
+  }
+}

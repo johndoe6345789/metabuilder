@@ -1,0 +1,363 @@
+{
+  "molecules": [
+    {
+      "id": "mol-tree-1",
+      "name": "SearchInput",
+      "description": "Search input with icon and clear button",
+      "category": "molecule",
+      "rootNodes": [
+        {
+          "id": "search-root",
+          "type": "div",
+          "name": "SearchContainer",
+          "props": {
+            "className": "relative"
+          },
+          "children": [
+            {
+              "id": "search-icon",
+              "type": "Icon",
+              "name": "SearchIcon",
+              "props": {
+                "icon": "MagnifyingGlass",
+                "className": "absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+              },
+              "children": []
+            },
+            {
+              "id": "search-input",
+              "type": "Input",
+              "name": "SearchField",
+              "props": {
+                "placeholder": "Search...",
+                "className": "pl-10 pr-10"
+              },
+              "children": []
+            },
+            {
+              "id": "clear-button",
+              "type": "Button",
+              "name": "ClearButton",
+              "props": {
+                "variant": "ghost",
+                "size": "sm",
+                "className": "absolute right-1 top-1/2 -translate-y-1/2"
+              },
+              "children": []
+            }
+          ]
+        }
+      ],
+      "createdAt": 1704067200000,
+      "updatedAt": 1704067200000
+    },
+    {
+      "id": "mol-tree-2",
+      "name": "DataCard",
+      "description": "Card component for displaying data with header and content",
+      "category": "molecule",
+      "rootNodes": [
+        {
+          "id": "card-root",
+          "type": "Card",
+          "name": "DataCardContainer",
+          "props": {
+            "className": "overflow-hidden"
+          },
+          "children": [
+            {
+              "id": "card-header",
+              "type": "CardHeader",
+              "name": "DataCardHeader",
+              "props": {},
+              "children": [
+                {
+                  "id": "card-title",
+                  "type": "CardTitle",
+                  "name": "CardTitle",
+                  "props": {
+                    "className": "flex items-center gap-2"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "card-description",
+                  "type": "CardDescription",
+                  "name": "CardDescription",
+                  "props": {},
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "card-content",
+              "type": "CardContent",
+              "name": "DataCardContent",
+              "props": {},
+              "children": []
+            }
+          ]
+        }
+      ],
+      "createdAt": 1704067200000,
+      "updatedAt": 1704067200000
+    },
+    {
+      "id": "mol-tree-3",
+      "name": "StatCard",
+      "description": "Card for displaying statistics with label, value, and trend",
+      "category": "molecule",
+      "rootNodes": [
+        {
+          "id": "stat-card-root",
+          "type": "Card",
+          "name": "StatCardContainer",
+          "props": {
+            "className": "p-6"
+          },
+          "children": [
+            {
+              "id": "stat-header",
+              "type": "div",
+              "name": "StatHeader",
+              "props": {
+                "className": "flex items-center justify-between mb-2"
+              },
+              "children": [
+                {
+                  "id": "stat-label",
+                  "type": "Text",
+                  "name": "StatLabel",
+                  "props": {
+                    "className": "text-sm font-medium text-muted-foreground"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "stat-icon",
+                  "type": "Icon",
+                  "name": "StatIcon",
+                  "props": {
+                    "className": "text-muted-foreground"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "stat-value",
+              "type": "div",
+              "name": "StatValue",
+              "props": {
+                "className": "text-3xl font-bold"
+              },
+              "children": []
+            },
+            {
+              "id": "stat-trend",
+              "type": "div",
+              "name": "StatTrend",
+              "props": {
+                "className": "flex items-center gap-1 mt-2"
+              },
+              "children": [
+                {
+                  "id": "trend-icon",
+                  "type": "Icon",
+                  "name": "TrendIcon",
+                  "props": {
+                    "className": "text-xs"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "trend-text",
+                  "type": "Text",
+                  "name": "TrendText",
+                  "props": {
+                    "className": "text-xs text-muted-foreground"
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "createdAt": 1704067200000,
+      "updatedAt": 1704067200000
+    },
+    {
+      "id": "mol-tree-4",
+      "name": "ActionBar",
+      "description": "Toolbar with action buttons",
+      "category": "molecule",
+      "rootNodes": [
+        {
+          "id": "action-bar-root",
+          "type": "div",
+          "name": "ActionBarContainer",
+          "props": {
+            "className": "flex items-center gap-2 p-2 bg-muted/50 rounded-lg border"
+          },
+          "children": [
+            {
+              "id": "action-buttons",
+              "type": "div",
+              "name": "ActionButtons",
+              "props": {
+                "className": "flex gap-1"
+              },
+              "children": []
+            },
+            {
+              "id": "action-separator",
+              "type": "Separator",
+              "name": "ActionSeparator",
+              "props": {
+                "orientation": "vertical",
+                "className": "h-6"
+              },
+              "children": []
+            },
+            {
+              "id": "action-secondary",
+              "type": "div",
+              "name": "SecondaryActions",
+              "props": {
+                "className": "flex gap-1 ml-auto"
+              },
+              "children": []
+            }
+          ]
+        }
+      ],
+      "createdAt": 1704067200000,
+      "updatedAt": 1704067200000
+    },
+    {
+      "id": "mol-tree-5",
+      "name": "EmptyState",
+      "description": "Empty state component with icon, heading, and description",
+      "category": "molecule",
+      "rootNodes": [
+        {
+          "id": "empty-state-root",
+          "type": "div",
+          "name": "EmptyStateContainer",
+          "props": {
+            "className": "flex flex-col items-center justify-center py-12 px-4 text-center"
+          },
+          "children": [
+            {
+              "id": "empty-icon",
+              "type": "div",
+              "name": "EmptyIcon",
+              "props": {
+                "className": "mb-4 text-muted-foreground"
+              },
+              "children": []
+            },
+            {
+              "id": "empty-heading",
+              "type": "Heading",
+              "name": "EmptyHeading",
+              "props": {
+                "level": 3,
+                "className": "mb-2 font-semibold"
+              },
+              "children": []
+            },
+            {
+              "id": "empty-description",
+              "type": "Text",
+              "name": "EmptyDescription",
+              "props": {
+                "className": "text-muted-foreground mb-4 max-w-md"
+              },
+              "children": []
+            },
+            {
+              "id": "empty-action",
+              "type": "Button",
+              "name": "EmptyAction",
+              "props": {
+                "variant": "default"
+              },
+              "children": []
+            }
+          ]
+        }
+      ],
+      "createdAt": 1704067200000,
+      "updatedAt": 1704067200000
+    },
+    {
+      "id": "mol-tree-6",
+      "name": "FileTabs",
+      "description": "Tabbed interface for file navigation",
+      "category": "molecule",
+      "rootNodes": [
+        {
+          "id": "file-tabs-root",
+          "type": "div",
+          "name": "FileTabsContainer",
+          "props": {
+            "className": "flex items-center gap-1 bg-muted/30 px-2 overflow-x-auto"
+          },
+          "children": [
+            {
+              "id": "tab-list",
+              "type": "div",
+              "name": "TabList",
+              "props": {
+                "className": "flex gap-1"
+              },
+              "children": [
+                {
+                  "id": "tab-item",
+                  "type": "div",
+                  "name": "TabItem",
+                  "props": {
+                    "className": "flex items-center gap-2 px-3 py-2 rounded-t-md hover:bg-background cursor-pointer"
+                  },
+                  "children": [
+                    {
+                      "id": "tab-icon",
+                      "type": "FileIcon",
+                      "name": "TabIcon",
+                      "props": {},
+                      "children": []
+                    },
+                    {
+                      "id": "tab-label",
+                      "type": "Text",
+                      "name": "TabLabel",
+                      "props": {
+                        "className": "text-sm"
+                      },
+                      "children": []
+                    },
+                    {
+                      "id": "tab-close",
+                      "type": "Button",
+                      "name": "TabClose",
+                      "props": {
+                        "variant": "ghost",
+                        "size": "sm",
+                        "className": "h-4 w-4 p-0"
+                      },
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "createdAt": 1704067200000,
+      "updatedAt": 1704067200000
+    }
+  ]
+}

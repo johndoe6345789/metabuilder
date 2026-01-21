@@ -1,0 +1,17 @@
+{
+  "$schema": "./schema/page-schema.json",
+  "id": "workflow-designer-page",
+  "name": "Workflow Designer",
+  "description": "Design automated workflows",
+  "icon": "FlowArrow",
+  "layout": {
+    "$ref": "./layouts/single-column.json"
+  },
+  "components": [
+    {
+      "id": "workflow-designer-component",
+      "type": "JSONWorkflowDesigner",
+      "props": {}
+    }
+  ]
+}

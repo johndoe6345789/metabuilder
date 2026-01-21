@@ -1,0 +1,9 @@
+{
+  "type": "CardHeader",
+  "source": "ui",
+  "load": {
+    "path": "@/components/ui/card",
+    "export": "CardHeader"
+  },
+  "props": {}
+}

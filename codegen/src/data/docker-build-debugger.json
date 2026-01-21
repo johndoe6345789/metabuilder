@@ -1,0 +1,46 @@
+{
+  "tabs": {
+    "analyzer": {
+      "label": "Log Analyzer",
+      "shortLabel": "Analyze"
+    },
+    "knowledge": {
+      "label": "Knowledge Base",
+      "shortLabel": "Knowledge"
+    }
+  },
+  "analyzer": {
+    "title": "Paste Build Log",
+    "description": "Copy your Docker build output and paste it below for analysis",
+    "placeholder": "Paste your Docker build log here...\n\nExample:\n#30 50.69 Error: Cannot find module @rollup/rollup-linux-arm64-musl\n#30 ERROR: process '/bin/sh -c npm run build' did not complete successfully: exit code: 1",
+    "analyzeButton": "Analyze Log",
+    "clearButton": "Clear",
+    "emptyLogError": "Please paste a Docker build log first",
+    "noErrorsToast": "No errors detected in the log",
+    "errorsFoundToast": "Found {{count}} error{{plural}}"
+  },
+  "errors": {
+    "title": "Error #{{index}}",
+    "exitCodeLabel": "Exit Code:",
+    "contextTitle": "Error Context",
+    "solutionsTitle": "Recommended Solutions",
+    "copiedToast": "{{label}} copied to clipboard"
+  },
+  "knowledge": {
+    "title": "Search Knowledge Base",
+    "description": "Browse common Docker build errors and their solutions",
+    "searchPlaceholder": "Search errors, categories, or keywords...",
+    "noResults": "No results found for \"{{query}}\". Try different keywords.",
+    "closeButton": "Close",
+    "patternLabel": "Pattern:",
+    "explanationTitle": "Explanation",
+    "solutionsTitle": "Solutions"
+  },
+  "common": {
+    "stepsLabel": "Steps:",
+    "codeLabel": "Code:",
+    "codeCopyLabel": "Code",
+    "copyButton": "Copy",
+    "languageLabel": "Language:"
+  }
+}

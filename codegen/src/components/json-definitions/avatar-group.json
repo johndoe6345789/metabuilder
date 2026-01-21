@@ -1,0 +1,50 @@
+{
+  "id": "avatar-group-root",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": "className",
+      "transform": "data ? 'flex -space-x-2 ' + data : 'flex -space-x-2'"
+    }
+  },
+  "children": [
+    {
+      "id": "avatar-group-list",
+      "type": "AvatarList",
+      "bindings": {
+        "avatars": "avatars",
+        "max": "max",
+        "size": "size"
+      }
+    },
+    {
+      "id": "avatar-group-remainder",
+      "type": "div",
+      "bindings": {
+        "className": {
+          "source": "size",
+          "transform": "(() => { const sizeClasses = { xs: 'h-6 w-6 text-xs', sm: 'h-8 w-8 text-xs', md: 'h-10 w-10 text-sm', lg: 'h-12 w-12 text-base' }; return 'relative inline-flex items-center justify-center rounded-full border-2 border-background bg-muted ' + (sizeClasses[data] || sizeClasses.md); })()"
+        }
+      },
+      "conditional": {
+        "if": "remainingCount",
+        "transform": "avatars.length - (max || 5) > 0"
+      },
+      "children": [
+        {
+          "id": "avatar-group-count",
+          "type": "span",
+          "props": {
+            "className": "font-medium text-foreground"
+          },
+          "bindings": {
+            "children": {
+              "source": "avatars",
+              "transform": "`+${Math.max(data.length - (max || 5), 0)}`"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

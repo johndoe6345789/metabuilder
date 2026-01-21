@@ -1,0 +1,74 @@
+{
+  "id": "schema-editor-layout",
+  "type": "div",
+  "props": {
+    "className": "h-full flex flex-col bg-background"
+  },
+  "children": [
+    {
+      "id": "toolbar-section",
+      "type": "SchemaEditorToolbar",
+      "bindings": {
+        "onImport": { "source": "onImport" },
+        "onExport": { "source": "onExport" },
+        "onCopy": { "source": "onCopy" },
+        "onPreview": { "source": "onPreview" },
+        "onClear": { "source": "onClear" }
+      }
+    },
+    {
+      "id": "main-content",
+      "type": "div",
+      "props": {
+        "className": "flex-1 flex overflow-hidden"
+      },
+      "children": [
+        {
+          "id": "sidebar-section",
+          "type": "SchemaEditorSidebar",
+          "bindings": {
+            "onDragStart": { "source": "onComponentDragStart" }
+          }
+        },
+        {
+          "id": "canvas-section",
+          "type": "SchemaEditorCanvas",
+          "bindings": {
+            "components": { "source": "components" },
+            "selectedId": { "source": "selectedId" },
+            "hoveredId": { "source": "hoveredId" },
+            "draggedOverId": { "source": "draggedOverId" },
+            "dropPosition": { "source": "dropPosition" },
+            "onSelect": { "source": "onSelect" },
+            "onHover": { "source": "onHover" },
+            "onHoverEnd": { "source": "onHoverEnd" },
+            "onDragOver": { "source": "onDragOver" },
+            "onDragLeave": { "source": "onDragLeave" },
+            "onDrop": { "source": "onDrop" }
+          }
+        },
+        {
+          "id": "properties-section",
+          "type": "SchemaEditorPropertiesPanel",
+          "bindings": {
+            "components": { "source": "components" },
+            "selectedId": { "source": "selectedId" },
+            "hoveredId": { "source": "hoveredId" },
+            "draggedOverId": { "source": "draggedOverId" },
+            "dropPosition": { "source": "dropPosition" },
+            "selectedComponent": { "source": "selectedComponent" },
+            "onSelect": { "source": "onSelect" },
+            "onHover": { "source": "onHover" },
+            "onHoverEnd": { "source": "onHoverEnd" },
+            "onDragStart": { "source": "onTreeDragStart" },
+            "onDragOver": { "source": "onDragOver" },
+            "onDragLeave": { "source": "onDragLeave" },
+            "onDrop": { "source": "onDrop" },
+            "onUpdate": { "source": "onUpdate" },
+            "onDelete": { "source": "onDelete" }
+          }
+        }
+      ]
+    }
+  ]
+}

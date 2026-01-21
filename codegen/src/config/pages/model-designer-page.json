@@ -1,0 +1,17 @@
+{
+  "$schema": "./schema/page-schema.json",
+  "id": "model-designer-page",
+  "name": "Model Designer",
+  "description": "Design your data models",
+  "icon": "Database",
+  "layout": {
+    "$ref": "./layouts/single-column.json"
+  },
+  "components": [
+    {
+      "id": "model-designer-component",
+      "type": "JSONModelDesigner",
+      "props": {}
+    }
+  ]
+}

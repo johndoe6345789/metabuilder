@@ -1,0 +1,80 @@
+{
+  "id": "app-dialogs",
+  "type": "div",
+  "children": [
+    {
+      "id": "global-search-suspense",
+      "type": "Suspense",
+      "props": {
+        "fallback": null
+      },
+      "children": [
+        {
+          "id": "global-search",
+          "type": "GlobalSearch",
+          "bindings": {
+            "open": { "source": "props.searchOpen" },
+            "onOpenChange": { "source": "props.onSearchOpenChange" },
+            "files": { "source": "props.files" },
+            "models": { "source": "props.models" },
+            "components": { "source": "props.components" },
+            "componentTrees": { "source": "props.componentTrees" },
+            "workflows": { "source": "props.workflows" },
+            "lambdas": { "source": "props.lambdas" },
+            "playwrightTests": { "source": "props.playwrightTests" },
+            "storybookStories": { "source": "props.storybookStories" },
+            "unitTests": { "source": "props.unitTests" },
+            "onNavigate": { "source": "props.onNavigate" },
+            "onFileSelect": { "source": "props.onFileSelect" }
+          }
+        }
+      ]
+    },
+    {
+      "id": "shortcuts-dialog-suspense",
+      "type": "Suspense",
+      "props": {
+        "fallback": null
+      },
+      "children": [
+        {
+          "id": "shortcuts-dialog",
+          "type": "KeyboardShortcutsDialog",
+          "bindings": {
+            "open": { "source": "props.shortcutsOpen" },
+            "onOpenChange": { "source": "props.onShortcutsOpenChange" }
+          }
+        }
+      ]
+    },
+    {
+      "id": "preview-dialog-suspense",
+      "type": "Suspense",
+      "props": {
+        "fallback": null
+      },
+      "children": [
+        {
+          "id": "preview-dialog",
+          "type": "PreviewDialog",
+          "bindings": {
+            "open": { "source": "props.previewOpen" },
+            "onOpenChange": { "source": "props.onPreviewOpenChange" }
+          }
+        }
+      ]
+    },
+    {
+      "id": "pwa-install-suspense",
+      "type": "Suspense",
+      "props": {
+        "fallback": null
+      },
+      "children": [
+        {
+          "type": "PWAInstallPrompt"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "type": "ErrorPanel",
+  "jsonCompatible": false,
+  "wrapperRequired": true,
+  "load": {
+    "path": "@/components/ErrorPanel",
+    "export": "ErrorPanel"
+  },
+  "props": {}
+}

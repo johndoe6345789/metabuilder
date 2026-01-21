@@ -1,0 +1,55 @@
+{
+  "labels": {
+    "testSuites": "Test Suites",
+    "testSuiteConfiguration": "Test Suite Configuration",
+    "testSuiteDetails": "Test Suite Details",
+    "testSuiteName": "Test Suite Name",
+    "description": "Description",
+    "testType": "Test Type",
+    "targetFile": "Target File",
+    "testCases": "Test Cases",
+    "testCasesDescription": "Define individual test cases",
+    "case": "Case",
+    "caseDescription": "Description (it...)",
+    "setupCode": "Setup Code (optional)",
+    "assertions": "Assertions",
+    "teardownCode": "Teardown Code (optional)",
+    "runTests": "Run Tests",
+    "addTestCase": "Add Test Case",
+    "createTestSuite": "Create Test Suite",
+    "noTestSuiteSelected": "No test suite selected",
+    "noTestSuiteSelectedBody": "Create or select a test suite to configure",
+    "noTestSuitesYet": "No test suites yet. Click + to create one.",
+    "noTestCasesYet": "No test cases yet. Click \"Add Test Case\" to create one.",
+    "noFile": "No file",
+    "casesSuffix": "cases"
+  },
+  "placeholders": {
+    "testSuiteDescription": "What does this test suite cover?",
+    "targetFile": "/src/components/Button.tsx",
+    "caseDescription": "should render correctly",
+    "setupCode": "const { getByText } = render(<Component />)",
+    "assertion": "expect(...).toBe(...)",
+    "teardownCode": "cleanup()"
+  },
+  "defaults": {
+    "testSuiteName": "New Test Suite",
+    "testCaseDescription": "should work correctly",
+    "assertion": "expect(...).toBe(...)"
+  },
+  "prompts": {
+    "generateDescription": "Describe the component/function you want to test:",
+    "generatePromptTemplate": "You are a unit test generator. Create tests based on: \"{{description}}\"\n\nReturn a valid JSON object with a single property \"test\":\n{\n  \"test\": {\n    \"id\": \"unique-id\",\n    \"name\": \"ComponentName/FunctionName Tests\",\n    \"description\": \"Test suite description\",\n    \"testType\": \"component\" | \"function\" | \"hook\" | \"integration\",\n    \"targetFile\": \"/path/to/file.tsx\",\n    \"testCases\": [\n      {\n        \"id\": \"case-id\",\n        \"description\": \"should render correctly\",\n        \"assertions\": [\n          \"expect(screen.getByText('Hello')).toBeInTheDocument()\",\n          \"expect(result).toBe(true)\"\n        ],\n        \"setup\": \"const { getByText } = render(<Component />)\",\n        \"teardown\": \"cleanup()\"\n      }\n    ]\n  }\n}\n\nCreate comprehensive test cases with appropriate assertions for React Testing Library or Vitest."
+  },
+  "toasts": {
+    "generating": "Generating test with AI...",
+    "generateSuccess": "Test suite generated successfully!",
+    "generateError": "Failed to generate test"
+  },
+  "testTypes": {
+    "component": "Component",
+    "function": "Function",
+    "hook": "Hook",
+    "integration": "Integration"
+  }
+}
