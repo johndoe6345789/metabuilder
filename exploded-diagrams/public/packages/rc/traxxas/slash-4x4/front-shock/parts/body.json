@@ -1,0 +1,19 @@
+{
+  "id": "body",
+  "name": "Shock Body",
+  "partNumber": "TRA-5461",
+  "material": "aluminum",
+  "quantity": 1,
+  "weight": 45.0,
+  "weightUnit": "g",
+  "baseY": 465,
+  "description": "6061-T6 aluminum shock body with reservoir",
+  "geometry": [
+    {"type": "cylinder", "rx": 30, "ry": 10, "height": 100},
+    {"type": "cylinder", "rx": 8, "ry": 3, "height": 50, "offsetX": 36, "offsetY": -35},
+    {"type": "line", "x1": -28, "y1": -25, "x2": 26, "y2": -25, "stroke": "#bbb", "strokeWidth": 0.5},
+    {"type": "line", "x1": -28, "y1": 0, "x2": 26, "y2": 0, "stroke": "#bbb", "strokeWidth": 0.5},
+    {"type": "line", "x1": -28, "y1": 25, "x2": 26, "y2": 25, "stroke": "#bbb", "strokeWidth": 0.5},
+    {"type": "circle", "r": 4, "offsetX": 36, "offsetY": -15, "fill": "#888"}
+  ]
+}

@@ -9,13 +9,6 @@
   "baseY": 250,
   "description": "Progressive rate spring - Red (Firm)",
   "geometry": [
-    {
-      "type": "coilSpring",
-      "coils": 8,
-      "rx": 26,
-      "ry": 8,
-      "pitch": 18,
-      "strokeWidth": 7
-    }
+    {"type": "coilSpring", "coils": 8, "rx": 26, "ry": 8, "pitch": 18, "strokeWidth": 7}
   ]
 }

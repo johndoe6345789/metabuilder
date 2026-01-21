@@ -9,17 +9,7 @@
   "baseY": 600,
   "description": "Delrin shock bushing",
   "geometry": [
-    {
-      "type": "cylinder",
-      "rx": 20,
-      "ry": 7,
-      "height": 20
-    },
-    {
-      "type": "ellipse",
-      "rx": 8,
-      "ry": 3,
-      "fill": "#0a0a0a"
-    }
+    {"type": "cylinder", "rx": 20, "ry": 7, "height": 20},
+    {"type": "ellipse", "rx": 8, "ry": 3, "fill": "#0a0a0a"}
   ]
 }

@@ -1,0 +1,18 @@
+{
+  "id": "mount",
+  "name": "Shock Mount",
+  "partNumber": "TRA-5460",
+  "material": "aluminum",
+  "quantity": 1,
+  "weight": 15.2,
+  "weightUnit": "g",
+  "baseY": 660,
+  "description": "Aluminum lower shock mount bracket",
+  "geometry": [
+    {"type": "polygon", "points": [-35, 20, -20, -10, 20, -10, 35, 20]},
+    {"type": "circle", "r": 8, "offsetY": 2, "fill": "#888"},
+    {"type": "circle", "r": 5, "offsetY": 2, "fill": "#555"},
+    {"type": "circle", "r": 4, "offsetX": -22, "offsetY": 15, "fill": "#666"},
+    {"type": "circle", "r": 4, "offsetX": 22, "offsetY": 15, "fill": "#666"}
+  ]
+}

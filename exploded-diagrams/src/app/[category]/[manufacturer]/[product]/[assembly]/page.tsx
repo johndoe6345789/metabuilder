@@ -1,0 +1,152 @@
+'use client'
+
+import { useEffect, useState, useRef, useCallback } from 'react'
+import { useParams } from 'next/navigation'
+import Breadcrumb from '@/components/Breadcrumb'
+import DiagramRenderer from '@/components/DiagramRenderer'
+import Controls from '@/components/Controls'
+import Sidebar from '@/components/Sidebar'
+import Tooltip from '@/components/Tooltip'
+import { loadAssembly, loadMaterials } from '@/lib/loader'
+import type { Assembly, Materials, Part } from '@/lib/types'
+
+export default function AssemblyPage() {
+  const params = useParams()
+  const category = params.category as string
+  const manufacturer = params.manufacturer as string
+  const product = params.product as string
+  const assembly = params.assembly as string
+
+  const [data, setData] = useState<Assembly | null>(null)
+  const [materials, setMaterials] = useState<Materials>({})
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  const [explosion, setExplosion] = useState(50)
+  const [rotation, setRotation] = useState(0)
+  const [highlightedPart, setHighlightedPart] = useState<string | null>(null)
+  const [tooltip, setTooltip] = useState<{ part: Part; x: number; y: number } | null>(null)
+
+  useEffect(() => {
+    async function load() {
+      try {
+        const [assemblyData, materialsData] = await Promise.all([
+          loadAssembly(category, manufacturer, product, assembly),
+          loadMaterials()
+        ])
+        setData(assemblyData)
+        setMaterials(materialsData)
+        setLoading(false)
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load assembly')
+        setLoading(false)
+      }
+    }
+    load()
+  }, [category, manufacturer, product, assembly])
+
+  const handlePartHover = useCallback((partId: string | null, event?: MouseEvent) => {
+    setHighlightedPart(partId)
+    if (partId && data && event) {
+      const part = data.parts.find(p => p.id === partId)
+      if (part) {
+        setTooltip({ part, x: event.clientX, y: event.clientY })
+      }
+    } else {
+      setTooltip(null)
+    }
+  }, [data])
+
+  const handleAnimate = useCallback(() => {
+    const start = explosion
+    const target = start < 50 ? 100 : 0
+    const duration = 1200
+    const startTime = performance.now()
+
+    const tick = (now: number) => {
+      const elapsed = now - startTime
+      const progress = Math.min(elapsed / duration, 1)
+      const eased = 1 - Math.pow(1 - progress, 3)
+      const newVal = start + (target - start) * eased
+      setExplosion(newVal)
+
+      if (progress < 1) {
+        requestAnimationFrame(tick)
+      }
+    }
+
+    requestAnimationFrame(tick)
+  }, [explosion])
+
+  const handleExport = useCallback(() => {
+    const svg = document.querySelector('.diagram-container svg')
+    if (!svg) return
+
+    const blob = new Blob([svg.outerHTML], { type: 'image/svg+xml' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `${assembly}-exploded.svg`
+    a.click()
+    URL.revokeObjectURL(url)
+  }, [assembly])
+
+  if (loading) {
+    return (
+      <>
+        <Breadcrumb path={[category, manufacturer, product, assembly]} />
+        <div className="browser-section">
+          <p>Loading assembly...</p>
+        </div>
+      </>
+    )
+  }
+
+  if (error || !data) {
+    return (
+      <>
+        <Breadcrumb path={[category, manufacturer, product, assembly]} />
+        <div className="browser-section">
+          <p style={{ color: '#d94a4a' }}>Error: {error}</p>
+        </div>
+      </>
+    )
+  }
+
+  return (
+    <>
+      <Breadcrumb path={[category, manufacturer, product, assembly]} />
+
+      <Controls
+        explosion={explosion}
+        rotation={rotation}
+        onExplosionChange={setExplosion}
+        onRotationChange={setRotation}
+        onAnimate={handleAnimate}
+        onExport={handleExport}
+      />
+
+      <div className="main-layout">
+        <div className="diagram-container">
+          <DiagramRenderer
+            assembly={data}
+            materials={materials}
+            explosion={explosion}
+            rotation={rotation}
+            highlightedPart={highlightedPart}
+            onPartHover={handlePartHover}
+          />
+        </div>
+
+        <Sidebar
+          assembly={data}
+          materials={materials}
+          highlightedPart={highlightedPart}
+          onPartHover={handlePartHover}
+        />
+      </div>
+
+      <Tooltip tooltip={tooltip} materials={materials} />
+    </>
+  )
+}
