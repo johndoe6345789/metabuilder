@@ -249,3 +249,305 @@ All dimensions are in **millimeters**. The camera is positioned at `[150, 150, 1
 6. **View and iterate** - use the visual feedback loop
 
 The key insight: **What you see is what matters**. Internal features are functionally correct but visually invisible. Always add external surface details to make parts look realistic.
+
+---
+
+## Headless Development (No Browser Required)
+
+For faster iteration without opening a browser, use these CLI-based approaches.
+
+### 1. JSON Schema Validation
+
+Validate geometry3d structure before rendering:
+
+```bash
+# scripts/validate-geometry.ts
+npx tsx scripts/validate-geometry.ts public/packages/automotive/ford/fiesta/gearbox/parts/gear-case.json
+```
+
+```typescript
+// scripts/validate-geometry.ts
+import { readFileSync } from 'fs'
+
+const VALID_TYPES = ['box', 'cylinder', 'sphere', 'torus', 'cone', 'extrude', 'revolve']
+const REQUIRED_PROPS: Record<string, string[]> = {
+  box: ['width', 'height', 'depth'],
+  cylinder: ['r', 'height'],
+  sphere: ['r'],
+  torus: ['r', 'tubeR'],
+  cone: ['r1', 'r2', 'height'],
+}
+
+function validate(filePath: string) {
+  const data = JSON.parse(readFileSync(filePath, 'utf-8'))
+  const errors: string[] = []
+
+  if (!data.geometry3d || !Array.isArray(data.geometry3d)) {
+    errors.push('Missing or invalid geometry3d array')
+    return errors
+  }
+
+  data.geometry3d.forEach((geom: any, i: number) => {
+    if (!VALID_TYPES.includes(geom.type)) {
+      errors.push(`[${i}] Invalid type: ${geom.type}`)
+    }
+    const required = REQUIRED_PROPS[geom.type] || []
+    required.forEach(prop => {
+      if (geom[prop] === undefined) {
+        errors.push(`[${i}] Missing required prop: ${prop}`)
+      }
+    })
+  })
+
+  return errors
+}
+
+const file = process.argv[2]
+const errors = validate(file)
+if (errors.length) {
+  console.error('Validation errors:', errors)
+  process.exit(1)
+} else {
+  console.log('✓ Valid geometry3d')
+}
+```
+
+### 2. Geometry Statistics CLI
+
+Get metrics about the geometry without rendering:
+
+```typescript
+// scripts/geometry-stats.ts
+import { readFileSync } from 'fs'
+
+function analyzeGeometry(filePath: string) {
+  const data = JSON.parse(readFileSync(filePath, 'utf-8'))
+  const geoms = data.geometry3d || []
+
+  const stats = {
+    totalPrimitives: geoms.length,
+    byType: {} as Record<string, number>,
+    booleanOps: { subtract: 0, intersect: 0, union: 0 },
+    boundingBox: { minX: 0, maxX: 0, minY: 0, maxY: 0, minZ: 0, maxZ: 0 },
+    hasExternalFeatures: false,
+  }
+
+  geoms.forEach((g: any) => {
+    stats.byType[g.type] = (stats.byType[g.type] || 0) + 1
+    if (g.subtract) stats.booleanOps.subtract++
+    else if (g.intersect) stats.booleanOps.intersect++
+    else stats.booleanOps.union++
+
+    // Check for external features (things that extend beyond main body)
+    if (!g.subtract && !g.intersect && (g.offsetX || g.offsetY || g.offsetZ)) {
+      stats.hasExternalFeatures = true
+    }
+  })
+
+  return stats
+}
+
+const file = process.argv[2]
+const stats = analyzeGeometry(file)
+console.log(JSON.stringify(stats, null, 2))
+
+// Warnings
+if (!stats.hasExternalFeatures && stats.booleanOps.subtract > 0) {
+  console.warn('⚠ Warning: Has subtractions but no external features - may look like a "breeze block"')
+}
+```
+
+### 3. Export to STL for External Viewer
+
+Generate STL files that can be viewed in any 3D viewer (VS Code extensions, online viewers, etc.):
+
+```typescript
+// scripts/export-stl.ts
+import { readFileSync, writeFileSync } from 'fs'
+import * as jscad from '@jscad/modeling'
+
+// ... build geometry from JSON (same as jscad-to-three.ts)
+
+function exportSTL(filePath: string, outputPath: string) {
+  const data = JSON.parse(readFileSync(filePath, 'utf-8'))
+  const geometry = buildJscadGeometry(data.geometry3d)
+
+  // Convert to STL using @jscad/stl-serializer
+  const stlSerializer = require('@jscad/stl-serializer')
+  const stlData = stlSerializer.serialize({ binary: false }, geometry)
+
+  writeFileSync(outputPath, stlData.join(''))
+  console.log(`✓ Exported to ${outputPath}`)
+}
+```
+
+```bash
+# Install STL serializer
+npm install @jscad/stl-serializer
+
+# Export part to STL
+npx tsx scripts/export-stl.ts parts/gear-case.json gear-case.stl
+
+# View in VS Code with "3D Viewer" extension, or upload to online STL viewer
+```
+
+### 4. ASCII Art Preview
+
+Quick terminal-based preview showing bounding box and feature positions:
+
+```typescript
+// scripts/ascii-preview.ts
+function asciiPreview(filePath: string) {
+  const data = JSON.parse(readFileSync(filePath, 'utf-8'))
+  const geoms = data.geometry3d || []
+
+  // Create 40x20 character grid (top-down view: X/Z plane)
+  const grid: string[][] = Array(20).fill(null).map(() => Array(40).fill('.'))
+
+  // Scale factor
+  const scale = 0.2
+  const centerX = 20, centerZ = 10
+
+  geoms.forEach((g: any, i: number) => {
+    if (g.subtract) return // Skip subtractions
+
+    const x = Math.round((g.offsetX || 0) * scale + centerX)
+    const z = Math.round((g.offsetZ || 0) * scale + centerZ)
+
+    if (x >= 0 && x < 40 && z >= 0 && z < 20) {
+      const char = g.type[0].toUpperCase() // B=box, C=cylinder, S=sphere, T=torus
+      grid[z][x] = char
+    }
+  })
+
+  console.log('Top-down view (X/Z plane):')
+  console.log('┌' + '─'.repeat(40) + '┐')
+  grid.forEach(row => console.log('│' + row.join('') + '│'))
+  console.log('└' + '─'.repeat(40) + '┘')
+  console.log('Legend: B=box C=cylinder S=sphere T=torus .=empty')
+}
+```
+
+Output:
+```
+Top-down view (X/Z plane):
+┌────────────────────────────────────────┐
+│....................B...................│
+│..........C.........B.........C.........│
+│....................B...................│
+│....BBBBBBBBBBBBBBBBBBBBBBBBBBBBBB......│
+│....B..............B..............B.....│
+│....B..............B..............B.....│
+│....BBBBBBBBBBBBBBBBBBBBBBBBBBBBBB......│
+│....................C...................│
+└────────────────────────────────────────┘
+Legend: B=box C=cylinder S=sphere T=torus .=empty
+```
+
+### 5. Batch Validation
+
+Check all parts in an assembly at once:
+
+```bash
+# scripts/validate-assembly.sh
+#!/bin/bash
+ASSEMBLY_PATH=$1
+
+echo "Validating parts in $ASSEMBLY_PATH..."
+for file in "$ASSEMBLY_PATH"/parts/*.json; do
+  echo -n "$(basename $file): "
+  npx tsx scripts/validate-geometry.ts "$file" 2>&1
+done
+```
+
+```bash
+./scripts/validate-assembly.sh public/packages/automotive/ford/fiesta/gearbox
+```
+
+### 6. Complexity Score
+
+Calculate a "visual interest" score to detect bland geometry:
+
+```typescript
+// scripts/complexity-score.ts
+function complexityScore(filePath: string): number {
+  const data = JSON.parse(readFileSync(filePath, 'utf-8'))
+  const geoms = data.geometry3d || []
+
+  let score = 0
+
+  // Base score for primitive count
+  score += geoms.length * 5
+
+  // Bonus for variety of types
+  const types = new Set(geoms.map((g: any) => g.type))
+  score += types.size * 10
+
+  // Bonus for external features (non-subtractions with offsets)
+  const externalFeatures = geoms.filter((g: any) =>
+    !g.subtract && !g.intersect && (g.offsetX || g.offsetY || g.offsetZ)
+  )
+  score += externalFeatures.length * 15
+
+  // Bonus for color variations
+  const colors = new Set(geoms.map((g: any) => g.fill).filter(Boolean))
+  score += colors.size * 8
+
+  // Penalty if only subtractions (breeze block)
+  const onlySubtractions = geoms.filter((g: any) => !g.subtract).length <= 1
+  if (onlySubtractions) score -= 30
+
+  return Math.max(0, score)
+}
+
+const file = process.argv[2]
+const score = complexityScore(file)
+console.log(`Complexity score: ${score}`)
+if (score < 30) console.warn('⚠ Low score - likely looks like a breeze block')
+else if (score < 60) console.log('→ Moderate complexity')
+else console.log('✓ Good visual complexity')
+```
+
+### 7. Playwright Headless Rendering
+
+For automated screenshot generation without opening a visible browser:
+
+```typescript
+// scripts/headless-render.ts
+import { chromium } from 'playwright'
+
+async function renderPart(partId: string, outputPath: string) {
+  const browser = await chromium.launch({ headless: true })
+  const page = await browser.newPage()
+
+  await page.goto(`http://localhost:3000/automotive/ford/fiesta/gearbox`)
+  await page.click('text=3D Part View')
+  await page.click(`text=${partId}`)
+  await page.waitForTimeout(1000) // Wait for render
+
+  await page.screenshot({ path: outputPath })
+  console.log(`✓ Rendered to ${outputPath}`)
+
+  await browser.close()
+}
+
+renderPart(process.argv[2], process.argv[3] || 'render.png')
+```
+
+```bash
+# Render gear-case to PNG without visible browser
+npx tsx scripts/headless-render.ts "Gear Case" gear-case.png
+```
+
+---
+
+## Recommended Headless Workflow
+
+1. **Edit JSON** - Modify geometry3d in part file
+2. **Validate** - `npx tsx scripts/validate-geometry.ts <file>`
+3. **Check stats** - `npx tsx scripts/geometry-stats.ts <file>`
+4. **Score complexity** - `npx tsx scripts/complexity-score.ts <file>`
+5. **Quick preview** - `npx tsx scripts/ascii-preview.ts <file>`
+6. **Final render** (optional) - `npx tsx scripts/headless-render.ts <partName> output.png`
+
+This workflow provides feedback in ~100ms per iteration vs ~2-3s for browser refresh.
