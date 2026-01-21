@@ -33,5 +33,12 @@
     { "type": "circle", "r": 14, "fill": "#8B7355" },
     { "type": "rect", "width": 4, "height": 14, "offsetX": -20, "fill": "#666" },
     { "type": "rect", "width": 4, "height": 14, "offsetX": 20, "fill": "#666" }
+  ],
+  "geometry3d": [
+    { "type": "cylinder", "r": 28, "height": 15, "fill": "#777" },
+    { "type": "cylinder", "r": 24, "height": 18, "fill": "#888" },
+    { "type": "cylinder", "r": 18, "height": 15, "subtract": true },
+    { "type": "cylinder", "r": 26, "height": 3, "offsetZ": 6, "fill": "#666" },
+    { "type": "cylinder", "r": 26, "height": 3, "offsetZ": -6, "fill": "#666" }
   ]
 }

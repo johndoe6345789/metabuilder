@@ -13,14 +13,15 @@ export default function ThreeCanvas({ children }: ThreeCanvasProps) {
       style={{ width: '100%', height: '100%' }}
       camera={{ position: [5, 5, 5], fov: 50 }}
     >
-      <color attach="background" args={['#f0f0f0']} />
+      <color attach="background" args={['#1a1a2e']} />
 
       {/* Lighting */}
-      <ambientLight intensity={0.5} />
-      <directionalLight position={[10, 10, 5]} intensity={1} />
+      <ambientLight intensity={0.4} />
+      <directionalLight position={[10, 10, 5]} intensity={1} color="#ffffff" />
+      <directionalLight position={[-5, 5, -5]} intensity={0.3} color="#00d4ff" />
 
       {/* Ground plane grid */}
-      <gridHelper args={[20, 20, '#888888', '#cccccc']} />
+      <gridHelper args={[20, 20, '#00d4ff', '#2a2a4e']} />
 
       {/* Camera controls */}
       <OrbitControls makeDefault />

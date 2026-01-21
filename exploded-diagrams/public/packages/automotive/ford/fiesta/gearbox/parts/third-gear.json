@@ -29,5 +29,11 @@
     { "type": "gearRing", "teeth": 24, "outerRadius": 32, "toothHeight": 5 },
     { "type": "cylinder", "rx": 26, "ry": 8, "height": 16 },
     { "type": "circle", "r": 12, "fill": "#555" }
+  ],
+  "geometry3d": [
+    { "type": "cylinder", "r": 30, "height": 14, "fill": "#666" },
+    { "type": "cylinder", "r": 24, "height": 10, "offsetZ": 2, "fill": "#777" },
+    { "type": "cylinder", "r": 16, "height": 14, "subtract": true },
+    { "type": "torus", "r": 28, "tubeR": 2, "offsetZ": 6, "fill": "#555" }
   ]
 }

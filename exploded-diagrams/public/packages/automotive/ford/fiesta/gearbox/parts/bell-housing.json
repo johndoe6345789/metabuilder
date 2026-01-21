@@ -39,5 +39,15 @@
     { "type": "circle", "r": 6, "offsetX": 60, "offsetY": -20, "fill": "#666" },
     { "type": "circle", "r": 6, "offsetX": -60, "offsetY": 35, "fill": "#666" },
     { "type": "circle", "r": 6, "offsetX": 60, "offsetY": 35, "fill": "#666" }
+  ],
+  "geometry3d": [
+    { "type": "cylinder", "r": 70, "height": 8, "fill": "#555" },
+    { "type": "cone", "r1": 70, "r2": 45, "height": 60, "offsetZ": 34, "fill": "#666" },
+    { "type": "cylinder", "r": 45, "height": 20, "offsetZ": 74, "fill": "#666" },
+    { "type": "cylinder", "r": 25, "height": 88, "subtract": true },
+    { "type": "cylinder", "r": 5, "height": 10, "offsetX": 55, "subtract": true },
+    { "type": "cylinder", "r": 5, "height": 10, "offsetX": -55, "subtract": true },
+    { "type": "cylinder", "r": 5, "height": 10, "offsetY": 55, "subtract": true },
+    { "type": "cylinder", "r": 5, "height": 10, "offsetY": -55, "subtract": true }
   ]
 }

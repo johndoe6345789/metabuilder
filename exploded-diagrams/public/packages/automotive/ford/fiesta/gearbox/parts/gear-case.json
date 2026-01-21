@@ -41,5 +41,11 @@
     { "type": "circle", "r": 8, "offsetX": 65, "offsetY": 30, "fill": "#666" },
     { "type": "rect", "width": 30, "height": 15, "offsetX": -50, "offsetY": 50, "fill": "#888" },
     { "type": "text", "content": "IB5", "offsetY": 5, "fill": "#333", "fontSize": 12 }
+  ],
+  "geometry3d": [
+    { "type": "box", "width": 90, "height": 80, "depth": 120, "fill": "#555" },
+    { "type": "cylinder", "r": 30, "height": 82, "rotateX": 90, "offsetZ": -20, "subtract": true },
+    { "type": "cylinder", "r": 25, "height": 82, "rotateX": 90, "offsetZ": 20, "subtract": true },
+    { "type": "box", "width": 70, "height": 60, "depth": 100, "offsetY": 5, "subtract": true }
   ]
 }

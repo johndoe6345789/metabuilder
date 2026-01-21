@@ -34,5 +34,14 @@
     { "type": "gearRing", "teeth": 20, "outerRadius": 24, "toothHeight": 5, "offsetY": -15 },
     { "type": "gearRing", "teeth": 18, "outerRadius": 22, "toothHeight": 5, "offsetY": 10 },
     { "type": "gearRing", "teeth": 16, "outerRadius": 20, "toothHeight": 5, "offsetY": 35 }
+  ],
+  "geometry3d": [
+    { "type": "cylinder", "r": 10, "height": 140, "fill": "#888" },
+    { "type": "cylinder", "r": 28, "height": 12, "offsetZ": -55, "fill": "#666" },
+    { "type": "cylinder", "r": 24, "height": 12, "offsetZ": -35, "fill": "#666" },
+    { "type": "cylinder", "r": 20, "height": 12, "offsetZ": -15, "fill": "#666" },
+    { "type": "cylinder", "r": 18, "height": 12, "offsetZ": 5, "fill": "#666" },
+    { "type": "cylinder", "r": 16, "height": 12, "offsetZ": 25, "fill": "#666" },
+    { "type": "cylinder", "r": 30, "height": 14, "offsetZ": 50, "fill": "#555" }
   ]
 }
