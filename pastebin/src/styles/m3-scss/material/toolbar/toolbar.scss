@@ -1,0 +1,93 @@
+@use '@angular/cdk';
+@use '../core/style/variables';
+@use '../core/tokens/token-utils';
+@use './m3-toolbar';
+
+$row-padding: 16px !default;
+
+$fallbacks: m3-toolbar.get-tokens();
+
+// @deprecated @breaking-change 8.0.0
+// TODO: Remove once internal g3 apps no longer depend on this variable. Tracked with: COMP-303.
+$height-mobile-portrait: 56px !default;
+
+.mat-toolbar {
+  background: token-utils.slot(toolbar-container-background-color, $fallbacks);
+  color: token-utils.slot(toolbar-container-text-color, $fallbacks);
+
+  &, h1, h2, h3, h4, h5, h6 {
+    font-family: token-utils.slot(toolbar-title-text-font, $fallbacks);
+    font-size: token-utils.slot(toolbar-title-text-size, $fallbacks);
+    line-height: token-utils.slot(toolbar-title-text-line-height, $fallbacks);
+    font-weight: token-utils.slot(toolbar-title-text-weight, $fallbacks);
+    letter-spacing: token-utils.slot(toolbar-title-text-tracking, $fallbacks);
+    margin: 0;
+  }
+
+  @include cdk.high-contrast {
+    outline: solid 1px;
+  }
+
+  // Overrides so that components projected into the toolbar are visible.
+  .mat-form-field-underline,
+  .mat-form-field-ripple,
+  .mat-focused .mat-form-field-ripple {
+    background-color: currentColor;
+  }
+
+  .mat-form-field-label,
+  .mat-focused .mat-form-field-label,
+  .mat-select-value,
+  .mat-select-arrow,
+  .mat-form-field.mat-focused .mat-select-arrow {
+    color: inherit;
+  }
+
+  .mat-input-element {
+    caret-color: currentColor;
+  }
+
+  .mat-mdc-button-base.mat-mdc-button-base.mat-unthemed {
+    $color-token: token-utils.slot(toolbar-container-text-color, $fallbacks);
+    --mat-button-text-label-text-color: #{$color-token};
+    --mat-button-outlined-label-text-color: #{$color-token};
+  }
+}
+
+.mat-toolbar-row, .mat-toolbar-single-row {
+  display: flex;
+  box-sizing: border-box;
+
+  padding: 0 $row-padding;
+  width: 100%;
+
+  // Flexbox Vertical Alignment
+  flex-direction: row;
+  align-items: center;
+
+  // Per Material specs a toolbar cannot have multiple lines inside of a single row.
+  // Disable text wrapping inside of the toolbar. Developers are still able to overwrite it.
+  white-space: nowrap;
+
+  height: token-utils.slot(toolbar-standard-height, $fallbacks);
+
+  @media (variables.$xsmall) {
+    height: token-utils.slot(toolbar-mobile-height, $fallbacks);
+  }
+}
+
+.mat-toolbar-multiple-rows {
+  display: flex;
+  box-sizing: border-box;
+  flex-direction: column;
+  width: 100%;
+
+  min-height: token-utils.slot(toolbar-standard-height, $fallbacks);
+
+  // As per specs, toolbars should have a different height in mobile devices. This has been
+  // specified in the old guidelines and is still observable in the new specifications by
+  // looking at the spec images. See: https://material.io/design/components/app-bars-top.html#anatomy
+  @media (variables.$xsmall) {
+    min-height: token-utils.slot(toolbar-mobile-height, $fallbacks);
+  }
+}

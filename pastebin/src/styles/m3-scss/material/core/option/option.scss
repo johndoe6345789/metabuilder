@@ -1,0 +1,197 @@
+@use '@angular/cdk';
+@use './m3-option';
+@use '../../list/m3-list';
+@use '../tokens/token-utils';
+@use '../style/vendor-prefixes';
+@use '../style/layout-common';
+
+$fallbacks: m3-option.get-tokens();
+
+$_side-padding: 16px;
+
+.mat-mdc-option {
+  @include vendor-prefixes.user-select(none);
+  @include vendor-prefixes.smooth-font();
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: flex-start;
+  overflow: hidden;
+  min-height: 48px;
+  padding: 0 16px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+
+  color: token-utils.slot(option-label-text-color, $fallbacks);
+  font-family: token-utils.slot(option-label-text-font, $fallbacks);
+  line-height: token-utils.slot(option-label-text-line-height, $fallbacks);
+  font-size: token-utils.slot(option-label-text-size, $fallbacks);
+  letter-spacing: token-utils.slot(option-label-text-tracking, $fallbacks);
+  font-weight: token-utils.slot(option-label-text-weight, $fallbacks);
+
+  // Increase specificity to override styles from list theme.
+  &:hover:not(.mdc-list-item--disabled) {
+    background-color: token-utils.slot(option-hover-state-layer-color, $fallbacks);
+  }
+
+  &:focus.mdc-list-item,
+  &.mat-mdc-option-active.mdc-list-item {
+    background-color: token-utils.slot(option-focus-state-layer-color, $fallbacks);
+    outline: 0;
+  }
+
+  &.mdc-list-item--selected:not(.mdc-list-item--disabled) {
+    // Overide selected colors for non disabled list items except:
+    // - when active, focused, or hovered so still indicates that state to the user.
+    // - multiple mode since it already has the checkbox to show the selected state.
+    &:not(.mat-mdc-option-active,.mat-mdc-option-multiple,:focus,:hover) {
+      background-color: token-utils.slot(option-selected-state-layer-color, $fallbacks);
+      .mdc-list-item__primary-text {
+        color: token-utils.slot(option-selected-state-label-text-color, $fallbacks);
+      }
+    }
+  }
+
+  .mat-pseudo-checkbox {
+    --mat-pseudo-checkbox-minimal-selected-checkmark-color: #{
+        token-utils.slot(option-selected-state-label-text-color, $fallbacks)};
+  }
+
+  &.mdc-list-item {
+    // If the MDC list is loaded after the option, this gets overwritten which breaks the text
+    // alignment. Ideally we'd wrap all the MDC mixins above with this selector, but the increased
+    // specificity breaks some internal overrides.
+    align-items: center;
+
+    // List items in MDC have a default background color which can be different from the container
+    // in which the option is projected. Set the base background to transparent since options
+    // should always have the same color as their container.
+    background: transparent;
+  }
+
+  &.mdc-list-item--disabled {
+    // This is the same as `mdc-list-mixins.list-disabled-opacity` which
+    // we can't use directly, because it comes with some selectors.
+    cursor: default;
+
+    // Prevent clicking on disabled options with mouse. Support focusing on disabled option using
+    // keyboard, but not with mouse.
+    pointer-events: none;
+
+    // Give the visual content of this list item a lower opacity. This creates the "gray" appearance
+    // for disabled state. Set the opacity on the pseudo checkbox and projected content. Set
+    // opacity only on the visual content rather than the entire list-item so we don't affect the
+    // focus ring from `.mat-focus-indicator`.
+    //
+    // MatOption uses a child `<div>` element for its focus state to align with how ListItem does
+    // its focus state.
+    .mat-mdc-option-pseudo-checkbox, .mdc-list-item__primary-text, > mat-icon {
+      opacity: 0.38;
+    }
+  }
+
+  // Note that we bump the padding here, rather than padding inside the
+  // group so that ripples still reach to the edges of the panel.
+  .mat-mdc-optgroup &:not(.mat-mdc-option-multiple) {
+    padding-left: $_side-padding * 2;
+
+    [dir='rtl'] & {
+      padding-left: $_side-padding;
+      padding-right: $_side-padding * 2;
+    }
+  }
+
+  .mat-icon,
+  .mat-pseudo-checkbox-full {
+    margin-right: $_side-padding;
+    flex-shrink: 0;
+
+    [dir='rtl'] & {
+      margin-right: 0;
+      margin-left: $_side-padding;
+    }
+  }
+
+  .mat-pseudo-checkbox-minimal {
+    margin-left: $_side-padding;
+    flex-shrink: 0;
+
+    [dir='rtl'] & {
+      margin-right: $_side-padding;
+      margin-left: 0;
+    }
+  }
+
+  // Increase specificity because ripple styles are part of the `mat-core` mixin and can
+  // potentially overwrite the absolute position of the container.
+  .mat-mdc-option-ripple {
+    @include layout-common.fill;
+
+    // Disable pointer events for the ripple container because the container will overlay the
+    // user content and we don't want to disable mouse events on the user content.
+    // Pointer events can be safely disabled because the ripple trigger element is the host element.
+    pointer-events: none;
+  }
+
+  // Needs to be overwritten explicitly, because the style can
+  // leak in from the list and cause the text to truncate.
+  .mdc-list-item__primary-text {
+    white-space: normal;
+
+    // MDC assigns the typography to this element, rather than the option itself, which will break
+    // existing overrides. Set all of the typography-related properties to `inherit` so that any
+    // styles set on the host can propagate down.
+    font-size: inherit;
+    font-weight: inherit;
+    letter-spacing: inherit;
+    line-height: inherit;
+    font-family: inherit;
+    text-decoration: inherit;
+    text-transform: inherit;
+    margin-right: auto;
+
+    [dir='rtl'] & {
+      margin-right: 0;
+      margin-left: auto;
+    }
+  }
+
+  @include cdk.high-contrast {
+    // In single selection mode, the selected option is indicated by changing its
+    // background color, but that doesn't work in high contrast mode. We add an
+    // alternate indication by rendering out a circle.
+    &.mdc-list-item--selected:not(:has(.mat-mdc-option-pseudo-checkbox))::after {
+      $size: 10px;
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: $_side-padding;
+      transform: translateY(-50%);
+      width: $size;
+      height: 0;
+      border-bottom: solid $size;
+      border-radius: $size;
+    }
+
+    [dir='rtl'] &.mdc-list-item--selected:not(:has(.mat-mdc-option-pseudo-checkbox))::after {
+      right: auto;
+      left: $_side-padding;
+    }
+  }
+}
+
+$list-fallbacks: m3-list.get-tokens();
+
+.mat-mdc-option-multiple {
+  // Multi-select options in the selected state aren't supposed to change their background color,
+  // because the checkbox already indicates that they're selected. This happened to work in M2,
+  // due to `list-item-selected-container-color` being the same as `list-item-container-color`,
+  // but that's no longer the case in M3. This overrides ensures that the appearance is consistent.
+    --mat-list-list-item-selected-container-color: #{
+        token-utils.slot(list-list-item-container-color, $list-fallbacks, $fallback: transparent)};
+}
+
+// For options, render the focus indicator when the class .mat-mdc-option-active is present.
+.mat-mdc-option-active .mat-focus-indicator::before {
+  content: '';
+}

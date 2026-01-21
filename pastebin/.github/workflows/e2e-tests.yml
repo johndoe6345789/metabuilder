@@ -1,0 +1,197 @@
+name: E2E Tests - Batched
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # Batch 1: Core Functionality & Components (~5-7 min)
+  e2e-batch-1:
+    name: E2E - Functionality & Components
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Install Playwright
+        run: npx playwright install --with-deps
+
+      - name: Run E2E tests - Batch 1
+        run: npx playwright test --grep "Functionality Tests - Core Features|Component-Specific Tests"
+
+      - name: Upload blob report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: blob-report-batch-1
+          path: blob-report
+          retention-days: 30
+
+  # Batch 2: Responsive & Mobile (~8-10 min)
+  e2e-batch-2:
+    name: E2E - Responsive & Mobile
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Install Playwright
+        run: npx playwright install --with-deps
+
+      - name: Run E2E tests - Batch 2
+        run: npx playwright test --grep "Mobile and Responsive Tests"
+
+      - name: Upload blob report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: blob-report-batch-2
+          path: blob-report
+          retention-days: 30
+
+  # Batch 3: Visual & Styling (~10-12 min)
+  e2e-batch-3:
+    name: E2E - Visual & Styling
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Install Playwright
+        run: npx playwright install --with-deps
+
+      - name: Run E2E tests - Batch 3
+        run: npx playwright test --grep "Visual Regression Tests|Advanced Styling and CSS Tests"
+
+      - name: Upload blob report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: blob-report-batch-3
+          path: blob-report
+          retention-days: 30
+
+  # Batch 4: Cross-Platform & Misc (~6-8 min)
+  e2e-batch-4:
+    name: E2E - Cross-Platform & Misc
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Install Playwright
+        run: npx playwright install --with-deps
+
+      - name: Run E2E tests - Batch 4
+        run: npx playwright test --grep "Cross-Platform UI Consistency|home page"
+
+      - name: Upload blob report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: blob-report-batch-4
+          path: blob-report
+          retention-days: 30
+
+  # Merge and publish test results
+  e2e-results:
+    name: E2E Test Results
+    runs-on: ubuntu-latest
+    needs: [e2e-batch-1, e2e-batch-2, e2e-batch-3, e2e-batch-4]
+    if: always()
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Download all blob reports
+        uses: actions/download-artifact@v4
+        with:
+          path: all-blob-reports
+          pattern: blob-report-*
+
+      - name: Merge reports
+        run: |
+          npx playwright merge-reports --reporter html ./all-blob-reports
+
+      - name: Upload HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: html-report
+          path: playwright-report
+          retention-days: 30
+
+      - name: Publish test results summary
+        if: always()
+        run: |
+          echo "## E2E Test Results 🧪" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Batch 1:** Functionality & Components" >> $GITHUB_STEP_SUMMARY
+          echo "- **Batch 2:** Responsive & Mobile" >> $GITHUB_STEP_SUMMARY
+          echo "- **Batch 3:** Visual & Styling" >> $GITHUB_STEP_SUMMARY
+          echo "- **Batch 4:** Cross-Platform & Misc" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "📊 [View detailed HTML report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY
+
+      - name: Check job statuses
+        if: failure()
+        run: |
+          echo "❌ One or more test batches failed. Check individual batch logs above." >> $GITHUB_STEP_SUMMARY

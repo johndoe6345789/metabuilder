@@ -1,0 +1,83 @@
+@use '../core/style/vendor-prefixes';
+
+// Ensures that the internal chip container spans the entire outer container width, if the
+// outer container width is customized. This is used by some wrapper components in g3.
+.mat-mdc-chip-set {
+  display: flex;
+
+  &:focus {
+    outline: none;
+  }
+
+  .mdc-evolution-chip-set__chips {
+    min-width: 100%;
+    margin-left: -8px;
+    margin-right: 0;
+  }
+
+  .mdc-evolution-chip {
+    margin: 4px 0 4px 8px;
+  }
+
+  [dir='rtl'] & {
+    .mdc-evolution-chip-set__chips {
+      margin-left: 0;
+      margin-right: -8px;
+    }
+
+    .mdc-evolution-chip {
+      margin-left: 0;
+      margin-right: 8px;
+    }
+  }
+}
+
+.mdc-evolution-chip-set__chips {
+  display: flex;
+  flex-flow: wrap;
+  min-width: 0;
+}
+
+// Angular Material supports vertically-stacked chips, which MDC does not.
+.mat-mdc-chip-set-stacked {
+  flex-direction: column;
+  align-items: flex-start;
+
+  .mat-mdc-chip {
+    width: 100%;
+  }
+
+  .mdc-evolution-chip__graphic {
+    flex-grow: 0;
+  }
+
+  .mdc-evolution-chip__action--primary {
+    flex-basis: 100%;
+    justify-content: start;
+  }
+}
+
+input.mat-mdc-chip-input {
+  flex: 1 0 150px;
+  margin-left: 8px;
+
+  [dir='rtl'] & {
+    margin-left: 0;
+    margin-right: 8px;
+  }
+
+  // The form field hides the placeholder by default,
+  // but we actually want to show it if there are chips.
+  .mat-mdc-form-field:not(.mat-form-field-hide-placeholder) & {
+    @include vendor-prefixes.input-placeholder {
+      opacity: 1;
+    }
+  }
+
+  // The margin isn't necessary if the input is placed next to the chip set,
+  // because it'll be on the next line.
+  .mat-mdc-chip-set + & {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}

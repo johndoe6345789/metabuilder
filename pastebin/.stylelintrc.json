@@ -1,0 +1,22 @@
+{
+  "extends": ["stylelint-config-standard-scss"],
+  "plugins": ["stylelint-order"],
+  "rules": {
+    "color-no-hex": true,
+    "color-named": "never",
+    "value-keyword-case": "lower",
+    "no-duplicate-at-import-rules": true,
+    "declaration-block-no-redundant-longhand-properties": true,
+    "property-no-vendor-prefix": true,
+    "selector-no-vendor-prefix": true,
+    "media-feature-name-no-vendor-prefix": true,
+    "selector-class-pattern": "^[a-z0-9\\-]+$",
+    "selector-max-id": 0,
+    "selector-max-universal": 0,
+    "max-nesting-depth": 4,
+    "order/properties-alphabetical-order": true,
+    "color-function-notation": "modern",
+    "alpha-value-notation": "percentage",
+    "color-hex-length": "short"
+  }
+}

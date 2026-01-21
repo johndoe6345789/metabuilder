@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    volumes:
+      - snippet-data:/app/data
+    environment:
+      - DATABASE_PATH=/app/data/snippets.db
+      - CORS_ALLOWED_ORIGINS=http://localhost:3000
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: .
+      args:
+        - NEXT_PUBLIC_FLASK_BACKEND_URL=http://localhost:5000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  snippet-data:

@@ -1,0 +1,174 @@
+@import '../styles/m3-base.css';
+@import '../styles/tailwind-m3-compat.css';
+
+/* Material Design 3 CSS Custom Properties */
+/* Light theme (default) */
+:root {
+  /* Primary colors */
+  --mat-sys-primary: #6750a4;
+  --mat-sys-on-primary: #ffffff;
+  --mat-sys-primary-container: #eaddff;
+  --mat-sys-on-primary-container: #21005d;
+
+  /* Secondary colors */
+  --mat-sys-secondary: #625b71;
+  --mat-sys-on-secondary: #ffffff;
+  --mat-sys-secondary-container: #e8def8;
+  --mat-sys-on-secondary-container: #1d192b;
+
+  /* Tertiary colors */
+  --mat-sys-tertiary: #7d5260;
+  --mat-sys-on-tertiary: #ffffff;
+  --mat-sys-tertiary-container: #ffd8e4;
+  --mat-sys-on-tertiary-container: #31111d;
+
+  /* Background colors */
+  --mat-sys-background: #fffbfe;
+  --mat-sys-on-background: #1c1b1f;
+  --mat-sys-surface: #fffbfe;
+  --mat-sys-on-surface: #1c1b1f;
+  --mat-sys-surface-variant: #e7e0ec;
+  --mat-sys-on-surface-variant: #49454e;
+
+  /* Error colors */
+  --mat-sys-error: #b3261e;
+  --mat-sys-on-error: #ffffff;
+  --mat-sys-error-container: #f9dedc;
+  --mat-sys-on-error-container: #410e0b;
+
+  /* Outline colors */
+  --mat-sys-outline: #79747e;
+  --mat-sys-outline-variant: #cac7d0;
+
+  /* Accent color */
+  --mat-sys-accent: #6750a4;
+  --mat-sys-on-accent: #ffffff;
+
+  /* Corner radius */
+  --mat-sys-corner-extra-small: 4px;
+  --mat-sys-corner-small: 8px;
+  --mat-sys-corner-medium: 12px;
+  --mat-sys-corner-large: 16px;
+  --mat-sys-corner-extra-large: 28px;
+
+  /* Typography fonts */
+  --mat-sys-body-large-font: 'Inter', sans-serif;
+  --mat-sys-body-medium-font: 'Inter', sans-serif;
+  --mat-sys-body-small-font: 'Inter', sans-serif;
+  --mat-sys-label-large-font: 'Inter', sans-serif;
+  --mat-sys-label-medium-font: 'Inter', sans-serif;
+  --mat-sys-label-small-font: 'Inter', sans-serif;
+  --mat-sys-headline-large-font: 'Bricolage Grotesque', sans-serif;
+  --mat-sys-headline-medium-font: 'Bricolage Grotesque', sans-serif;
+  --mat-sys-headline-small-font: 'Bricolage Grotesque', sans-serif;
+  --mat-sys-title-large-font: 'Bricolage Grotesque', sans-serif;
+  --mat-sys-title-medium-font: 'Bricolage Grotesque', sans-serif;
+  --mat-sys-title-small-font: 'Bricolage Grotesque', sans-serif;
+  --mat-sys-display-large-font: 'Bricolage Grotesque', sans-serif;
+  --mat-sys-display-medium-font: 'Bricolage Grotesque', sans-serif;
+  --mat-sys-display-small-font: 'Bricolage Grotesque', sans-serif;
+}
+
+/* Dark theme */
+.dark {
+  /* Primary colors */
+  --mat-sys-primary: #d0bcff;
+  --mat-sys-on-primary: #371e55;
+  --mat-sys-primary-container: #4f378b;
+  --mat-sys-on-primary-container: #eaddff;
+
+  /* Secondary colors */
+  --mat-sys-secondary: #cbc7db;
+  --mat-sys-on-secondary: #322f37;
+  --mat-sys-secondary-container: #4a4458;
+  --mat-sys-on-secondary-container: #e8def8;
+
+  /* Tertiary colors */
+  --mat-sys-tertiary: #f8b500;
+  --mat-sys-on-tertiary: #4a2c42;
+  --mat-sys-tertiary-container: #633b48;
+  --mat-sys-on-tertiary-container: #ffd8e4;
+
+  /* Background colors */
+  --mat-sys-background: #1c1b1f;
+  --mat-sys-on-background: #e6e1e6;
+  --mat-sys-surface: #1c1b1f;
+  --mat-sys-on-surface: #e6e1e6;
+  --mat-sys-surface-variant: #49454e;
+  --mat-sys-on-surface-variant: #cac7d0;
+
+  /* Error colors */
+  --mat-sys-error: #f2b8b5;
+  --mat-sys-on-error: #601410;
+  --mat-sys-error-container: #8c1d18;
+  --mat-sys-on-error-container: #f9dedc;
+
+  /* Outline colors */
+  --mat-sys-outline: #938f99;
+  --mat-sys-outline-variant: #49454e;
+
+  /* Accent color */
+  --mat-sys-accent: #d0bcff;
+  --mat-sys-on-accent: #371e55;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  font-family: var(--mat-sys-body-large-font);
+  background-color: var(--mat-sys-background);
+  color: var(--mat-sys-on-background);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: var(--mat-sys-primary);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+code {
+  font-family: 'JetBrains Mono', monospace;
+  background-color: var(--mat-sys-surface-variant);
+  padding: 0.125rem 0.25rem;
+  border-radius: var(--mat-sys-corner-extra-small);
+  font-size: 0.875em;
+}
+
+pre {
+  font-family: 'JetBrains Mono', monospace;
+  background-color: var(--mat-sys-surface-variant);
+  padding: 1rem;
+  border-radius: var(--mat-sys-corner-small);
+  overflow-x: auto;
+}
+
+pre code {
+  background-color: transparent;
+  padding: 0;
+}
+
+button {
+  font-family: inherit;
+}
+
+input,
+textarea,
+select {
+  font-family: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--mat-sys-primary);
+  outline-offset: 2px;
+}

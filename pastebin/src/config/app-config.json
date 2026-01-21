@@ -1,0 +1,124 @@
+{
+  "languages": [
+    "JavaScript",
+    "TypeScript",
+    "JSX",
+    "TSX",
+    "Python",
+    "Java",
+    "C++",
+    "C#",
+    "Ruby",
+    "Go",
+    "Rust",
+    "PHP",
+    "Swift",
+    "Kotlin",
+    "HTML",
+    "CSS",
+    "SQL",
+    "Bash",
+    "Other"
+  ],
+  "languageColors": {
+    "JavaScript": {
+      "bg": "bg-yellow-500/20",
+      "text": "text-yellow-300",
+      "border": "border-yellow-500/30"
+    },
+    "TypeScript": {
+      "bg": "bg-blue-500/20",
+      "text": "text-blue-300",
+      "border": "border-blue-500/30"
+    },
+    "JSX": {
+      "bg": "bg-cyan-500/20",
+      "text": "text-cyan-300",
+      "border": "border-cyan-500/30"
+    },
+    "TSX": {
+      "bg": "bg-sky-500/20",
+      "text": "text-sky-300",
+      "border": "border-sky-500/30"
+    },
+    "Python": {
+      "bg": "bg-blue-400/20",
+      "text": "text-blue-200",
+      "border": "border-blue-400/30"
+    },
+    "Java": {
+      "bg": "bg-red-500/20",
+      "text": "text-orange-300",
+      "border": "border-red-500/30"
+    },
+    "C++": {
+      "bg": "bg-pink-500/20",
+      "text": "text-pink-300",
+      "border": "border-pink-500/30"
+    },
+    "C#": {
+      "bg": "bg-purple-500/20",
+      "text": "text-purple-300",
+      "border": "border-purple-500/30"
+    },
+    "Ruby": {
+      "bg": "bg-red-600/20",
+      "text": "text-red-300",
+      "border": "border-red-600/30"
+    },
+    "Go": {
+      "bg": "bg-cyan-500/20",
+      "text": "text-teal-300",
+      "border": "border-cyan-500/30"
+    },
+    "Rust": {
+      "bg": "bg-orange-600/20",
+      "text": "text-orange-300",
+      "border": "border-orange-600/30"
+    },
+    "PHP": {
+      "bg": "bg-indigo-500/20",
+      "text": "text-indigo-300",
+      "border": "border-indigo-500/30"
+    },
+    "Swift": {
+      "bg": "bg-orange-500/20",
+      "text": "text-orange-300",
+      "border": "border-orange-500/30"
+    },
+    "Kotlin": {
+      "bg": "bg-purple-600/20",
+      "text": "text-purple-300",
+      "border": "border-purple-600/30"
+    },
+    "HTML": {
+      "bg": "bg-orange-400/20",
+      "text": "text-orange-300",
+      "border": "border-orange-400/30"
+    },
+    "CSS": {
+      "bg": "bg-blue-600/20",
+      "text": "text-blue-300",
+      "border": "border-blue-600/30"
+    },
+    "SQL": {
+      "bg": "bg-teal-500/20",
+      "text": "text-teal-300",
+      "border": "border-teal-500/30"
+    },
+    "Bash": {
+      "bg": "bg-green-500/20",
+      "text": "text-green-300",
+      "border": "border-green-500/30"
+    },
+    "Other": {
+      "bg": "bg-gray-500/20",
+      "text": "text-gray-300",
+      "border": "border-gray-500/30"
+    }
+  },
+  "previewEnabledLanguages": ["JSX", "TSX", "JavaScript", "TypeScript", "Python"],
+  "defaultLanguage": "JavaScript",
+  "codePreviewMaxLength": 150,
+  "copiedTimeout": 2000
+}

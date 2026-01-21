@@ -1,0 +1,167 @@
+@use '../core/style/vendor-prefixes';
+@use '../core/tokens/token-utils';
+@use './m3-table';
+@use './table-flex-styles';
+
+$fallbacks: m3-table.get-tokens();
+
+.mat-mdc-table-sticky {
+  // Note that the table can either set this class or an inline style to make something sticky.
+  // We set the style as `!important` so that we get an identical specificity in both cases
+  // and to avoid cases where user styles have a higher specificity.
+  position: sticky !important;
+}
+
+@mixin _cell-border {
+  border-bottom-color: token-utils.slot(
+    table-row-item-outline-color,
+    $fallbacks,
+    rgba(0, 0, 0, 0.12)
+  );
+  border-bottom-width: token-utils.slot(table-row-item-outline-width, $fallbacks, 1px);
+  border-bottom-style: solid;
+}
+
+@include table-flex-styles.private-table-flex-styles();
+
+.mat-mdc-table {
+  min-width: 100%;
+  border: 0;
+  border-spacing: 0;
+  table-layout: auto;
+  white-space: normal;
+  background-color: token-utils.slot(table-background-color, $fallbacks);
+}
+
+// These styles already come from a similar class in the CDK,
+// but the `.mat-mdc-table` styles override them.
+.mat-table-fixed-layout {
+  table-layout: fixed;
+}
+
+.mdc-data-table__cell {
+  box-sizing: border-box;
+  overflow: hidden;
+  text-align: start;
+  text-overflow: ellipsis;
+}
+
+.mdc-data-table__cell,
+.mdc-data-table__header-cell {
+  padding: 0 16px;
+}
+
+// TODO(crisbeto): these tokens have default values in order to make the initial token
+// work easier to land in g3. Eventually we should remove them.
+.mat-mdc-header-row {
+  @include vendor-prefixes.smooth-font;
+  height: token-utils.slot(table-header-container-height, $fallbacks, 56px);
+  color: token-utils.slot(table-header-headline-color, $fallbacks, rgba(0, 0, 0, 0.87));
+  font-family: token-utils.slot(table-header-headline-font, $fallbacks, (Roboto, sans-serif));
+  line-height: token-utils.slot(table-header-headline-line-height, $fallbacks);
+  font-size: token-utils.slot(table-header-headline-size, $fallbacks, 14px);
+  font-weight: token-utils.slot(table-header-headline-weight, $fallbacks, 500);
+}
+
+.mat-mdc-row {
+  height: token-utils.slot(table-row-item-container-height, $fallbacks, 52px);
+  color: token-utils.slot(table-row-item-label-text-color, $fallbacks, rgba(0, 0, 0, 0.87));
+}
+
+// Note that while it's redundant to apply the typography both to the row
+// and the content element since the cell inherit from both of them,
+// applying it only to one results in sub-pixel differences in the
+// letter spacing which leads to a lot of internal screenshot diffs.
+.mat-mdc-row,
+.mdc-data-table__content {
+  @include vendor-prefixes.smooth-font;
+  font-family: token-utils.slot(table-row-item-label-text-font, $fallbacks, (Roboto, sans-serif));
+  line-height: token-utils.slot(table-row-item-label-text-line-height, $fallbacks);
+  font-size: token-utils.slot(table-row-item-label-text-size, $fallbacks, 14px);
+  font-weight: token-utils.slot(table-row-item-label-text-weight, $fallbacks);
+}
+
+.mat-mdc-footer-row {
+  @include vendor-prefixes.smooth-font;
+  height: token-utils.slot(table-footer-container-height, $fallbacks, 52px);
+  color: token-utils.slot(table-row-item-label-text-color, $fallbacks, rgba(0, 0, 0, 0.87));
+  font-family: token-utils.slot(
+    table-footer-supporting-text-font,
+    $fallbacks,
+    (Roboto, sans-serif)
+  );
+  line-height: token-utils.slot(table-footer-supporting-text-line-height, $fallbacks);
+  font-size: token-utils.slot(table-footer-supporting-text-size, $fallbacks, 14px);
+  font-weight: token-utils.slot(table-footer-supporting-text-weight, $fallbacks);
+  letter-spacing: token-utils.slot(table-footer-supporting-text-tracking, $fallbacks);
+}
+
+.mat-mdc-header-cell {
+  @include _cell-border;
+  letter-spacing: token-utils.slot(table-header-headline-tracking, $fallbacks);
+  font-weight: inherit;
+  line-height: inherit;
+  box-sizing: border-box;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  outline: none;
+  text-align: start;
+
+  .mdc-data-table__row:last-child > & {
+    border-bottom: none;
+  }
+}
+
+.mat-mdc-cell {
+  @include _cell-border;
+  letter-spacing: token-utils.slot(table-row-item-label-text-tracking, $fallbacks);
+  line-height: inherit;
+
+  .mdc-data-table__row:last-child > & {
+    border-bottom: none;
+  }
+}
+
+.mat-mdc-footer-cell {
+  letter-spacing: token-utils.slot(table-row-item-label-text-tracking, $fallbacks);
+}
+
+// MDC table rows are styled with a top border, whereas our legacy flex table styles rows with
+// a bottom border. Remove the bottom border style from the rows and let MDC display its top
+// border.
+mat-row.mat-mdc-row,
+mat-header-row.mat-mdc-header-row,
+mat-footer-row.mat-mdc-footer-row {
+  border-bottom: none;
+}
+
+// Cells need to inherit their background in order to overlap each other when sticky.
+// The background needs to be inherited from the table, tbody/tfoot, row, and cell.
+.mat-mdc-table tbody,
+.mat-mdc-table tfoot,
+.mat-mdc-table thead,
+.mat-mdc-cell,
+.mat-mdc-footer-cell,
+.mat-mdc-header-row,
+.mat-mdc-row,
+.mat-mdc-footer-row,
+.mat-mdc-table .mat-mdc-header-cell {
+  background: inherit;
+}
+
+// Flex rows should not set a definite height, but instead stretch to the height of their
+// children. Otherwise, the cells grow larger than the row and the layout breaks.
+.mat-mdc-table mat-header-row.mat-mdc-header-row,
+.mat-mdc-table mat-row.mat-mdc-row,
+.mat-mdc-table mat-footer-row.mat-mdc-footer-cell {
+  height: unset;
+}
+
+// Flex cells should stretch to the height of their parent. This was okay for the legacy
+// table since the cells were centered and the borders displayed on the rows, but the MDC
+// version displays borders on the cells and do not correctly line up with the row bottom.
+mat-header-cell.mat-mdc-header-cell,
+mat-cell.mat-mdc-cell,
+mat-footer-cell.mat-mdc-footer-cell {
+  align-self: stretch;
+}

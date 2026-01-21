@@ -1,0 +1,134 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FormFieldsSection Snapshot Tests should match snapshot 1`] = `
+<section
+  aria-label="Form field components"
+  class="space-y-6"
+  data-testid="form-fields-section"
+  role="region"
+>
+  <div>
+    <h2
+      class="text-3xl font-bold mb-2"
+    >
+      Form Fields
+    </h2>
+    <p
+      class="text-muted-foreground"
+    >
+      Input fields with labels and helper text
+    </p>
+  </div>
+  <div
+    data-testid="component-showcase"
+  >
+    <h3>
+      Form Field with Icon and Helper Text
+    </h3>
+    <p>
+      Complete form field with label, icon, and validation message
+    </p>
+    <div
+      class="mat-mdc-card mat-mdc-card-outlined p-6"
+      data-testid="card"
+      role="article"
+    >
+      <div
+        class="space-y-6 max-w-md"
+      >
+        <div
+          class="space-y-2"
+        >
+          <label
+            data-testid="label"
+            for="name"
+          >
+            Full Name
+          </label>
+          <input
+            class="mat-mdc-input-element mdc-text-field__input"
+            data-testid="input"
+            id="name"
+            placeholder="John Doe"
+            type="text"
+          />
+        </div>
+        <div
+          class="space-y-2"
+        >
+          <label
+            data-testid="label"
+            for="email"
+          >
+            Email Address
+          </label>
+          <div
+            class="relative"
+          >
+            <svg
+              class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground"
+              fill="currentColor"
+              height="1em"
+              viewBox="0 0 256 256"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M224,48H32a8,8,0,0,0-8,8V192a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A8,8,0,0,0,224,48Zm-96,85.15L52.57,64H203.43ZM98.71,128,40,181.81V74.19Zm11.84,10.85,12,11.05a8,8,0,0,0,10.82,0l12-11.05,58,53.15H52.57ZM157.29,128,216,74.18V181.82Z"
+              />
+            </svg>
+            <input
+              class="mat-mdc-input-element mdc-text-field__input pl-10"
+              data-testid="input"
+              id="email"
+              placeholder="john@example.com"
+              type="email"
+            />
+          </div>
+          <p
+            class="text-sm text-muted-foreground"
+          >
+            We'll never share your email with anyone else.
+          </p>
+        </div>
+        <div
+          class="space-y-2"
+        >
+          <label
+            data-testid="label"
+            for="password"
+          >
+            Password
+          </label>
+          <div
+            class="relative"
+          >
+            <svg
+              class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground"
+              fill="currentColor"
+              height="1em"
+              viewBox="0 0 256 256"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M208,80H176V56a48,48,0,0,0-96,0V80H48A16,16,0,0,0,32,96V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V96A16,16,0,0,0,208,80ZM96,56a32,32,0,0,1,64,0V80H96ZM208,208H48V96H208V208Zm-68-56a12,12,0,1,1-12-12A12,12,0,0,1,140,152Z"
+              />
+            </svg>
+            <input
+              class="mat-mdc-input-element mdc-text-field__input pl-10"
+              data-testid="input"
+              id="password"
+              placeholder="••••••••"
+              type="password"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <button>
+      Save Snippet
+    </button>
+  </div>
+</section>
+`;

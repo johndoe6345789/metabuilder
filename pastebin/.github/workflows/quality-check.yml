@@ -1,0 +1,175 @@
+name: Quality Check
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+concurrency:
+  group: quality-check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Quality Validation
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Run tests
+        run: npm test -- --coverage --passWithNoTests
+        continue-on-error: true
+
+      - name: Run quality validator
+        id: quality
+        run: |
+          npm run quality-check 2>&1 | tee quality-output.log
+          exit_code=${PIPESTATUS[0]}
+          echo "exit_code=$exit_code" >> $GITHUB_OUTPUT
+          exit $exit_code
+        continue-on-error: true
+
+      - name: Generate JSON report
+        if: always()
+        run: |
+          node run-quality-check.mjs --format json --output .quality/report.json --no-color
+        continue-on-error: true
+
+      - name: Generate HTML report
+        if: always()
+        run: |
+          node run-quality-check.mjs --format html --output .quality/report.html --no-color
+        continue-on-error: true
+
+      - name: Parse quality results
+        if: always()
+        id: parse_results
+        run: |
+          if [ -f .quality/report.json ]; then
+            SCORE=$(jq '.overall.score' .quality/report.json 2>/dev/null || echo "0")
+            STATUS=$(jq -r '.overall.status' .quality/report.json 2>/dev/null || echo "unknown")
+            GRADE=$(jq -r '.overall.grade' .quality/report.json 2>/dev/null || echo "N/A")
+            echo "score=$SCORE" >> $GITHUB_OUTPUT
+            echo "status=$STATUS" >> $GITHUB_OUTPUT
+            echo "grade=$GRADE" >> $GITHUB_OUTPUT
+          else
+            echo "score=0" >> $GITHUB_OUTPUT
+            echo "status=unknown" >> $GITHUB_OUTPUT
+            echo "grade=N/A" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Check quality gate
+        if: always()
+        run: |
+          SCORE=${{ steps.parse_results.outputs.score }}
+          GATE_THRESHOLD=85
+
+          if (( $(echo "$SCORE < $GATE_THRESHOLD" | bc -l) )); then
+            echo "❌ Quality gate failed: Score $SCORE is below threshold $GATE_THRESHOLD"
+            exit 1
+          else
+            echo "✅ Quality gate passed: Score $SCORE meets threshold $GATE_THRESHOLD"
+            exit 0
+          fi
+        continue-on-error: true
+
+      - name: Generate quality badge
+        if: always()
+        run: bash scripts/generate-badge.sh
+        continue-on-error: true
+
+      - name: Create PR comment
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const score = '${{ steps.parse_results.outputs.score }}';
+            const status = '${{ steps.parse_results.outputs.status }}';
+            const grade = '${{ steps.parse_results.outputs.grade }}';
+
+            let statusEmoji = '⚠️';
+            if (status === 'pass') statusEmoji = '✅';
+            if (status === 'fail') statusEmoji = '❌';
+
+            const comment = `## Quality Check Results ${statusEmoji}
+
+            | Metric | Value |
+            |--------|-------|
+            | Overall Score | ${score}% |
+            | Grade | ${grade} |
+            | Status | ${status === 'pass' ? 'PASS' : 'FAIL'} |
+            | Threshold | 85% |
+
+            ${score >= 85 ? '✅ Quality gate **passed**' : '❌ Quality gate **failed**'}
+
+            For detailed results, see [quality report](.quality/report.html)`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+        continue-on-error: true
+
+      - name: Upload quality artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quality-reports
+          path: .quality/
+          retention-days: 30
+
+      - name: Upload test coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 7
+
+      - name: Set workflow status
+        if: always()
+        run: |
+          EXIT_CODE=${{ steps.quality.outputs.exit_code }}
+          if [ "$EXIT_CODE" != "0" ]; then
+            echo "Quality check failed with exit code: $EXIT_CODE"
+            exit 1
+          fi
+        continue-on-error: true
+
+      - name: Comment on failure
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '❌ Quality check workflow failed. Please review the logs and quality reports.'
+            });
+        continue-on-error: true

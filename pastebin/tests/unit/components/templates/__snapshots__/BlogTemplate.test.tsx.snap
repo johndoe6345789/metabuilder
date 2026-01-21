@@ -1,0 +1,200 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BlogTemplate Snapshot Tests should match snapshot 1`] = `
+<div
+  aria-label="Blog template"
+  class="mat-mdc-card mat-mdc-card-outlined overflow-hidden"
+  data-testid="blog-template"
+  role="main"
+>
+  <div
+    class="border-b border-border bg-card p-4"
+  >
+    <div
+      class="flex items-center justify-between"
+    >
+      <h3
+        class="text-xl font-bold"
+      >
+        Blog
+      </h3>
+      <div
+        class="flex items-center gap-2"
+      >
+        <button
+          class="mat-mdc-button"
+          data-testid="button"
+        >
+          Articles
+        </button>
+        <button
+          class="mat-mdc-button"
+          data-testid="button"
+        >
+          Tutorials
+        </button>
+        <button
+          class="mat-mdc-button"
+          data-testid="button"
+        >
+          About
+        </button>
+      </div>
+    </div>
+  </div>
+  <div
+    class="p-8"
+  >
+    <div
+      class="max-w-4xl mx-auto"
+    >
+      <div
+        class="space-y-6 mb-8"
+      >
+        <div
+          class="flex gap-2"
+        >
+          <div
+            class="mat-badge"
+            data-testid="badge"
+            role="status"
+          >
+            Design
+          </div>
+          <div
+            class="mat-badge mat-accent"
+            data-testid="badge"
+            role="status"
+          >
+            Tutorial
+          </div>
+        </div>
+        <h1
+          class="text-5xl font-bold"
+        >
+          Building a Comprehensive Component Library
+        </h1>
+        <div
+          class="flex items-center gap-4"
+        >
+          <div
+            class="relative flex size-8 shrink-0 overflow-hidden rounded-full h-12 w-12"
+            data-slot="avatar"
+            data-testid="avatar"
+            role="img"
+          >
+            <img
+              class="aspect-square size-full object-cover"
+              data-slot="avatar-image"
+              data-testid="avatar-image"
+              src="https://i.pravatar.cc/150?img=5"
+            />
+            <div
+              class="flex size-full items-center justify-center rounded-full bg-gray-300 dark:bg-gray-600 text-sm font-medium text-gray-900 dark:text-gray-100"
+              data-slot="avatar-fallback"
+              data-testid="avatar-fallback"
+            >
+              AW
+            </div>
+          </div>
+          <div>
+            <p
+              class="font-medium"
+            >
+              Alex Writer
+            </p>
+            <p
+              class="text-sm text-muted-foreground"
+            >
+              March 15, 2024 · 10 min read
+            </p>
+          </div>
+        </div>
+      </div>
+      <hr
+        aria-orientation="horizontal"
+        class="mat-divider my-8"
+        data-testid="separator"
+        role="none"
+      />
+      <div
+        class="prose prose-invert max-w-none space-y-6"
+      >
+        <div
+          class="aspect-video rounded-lg bg-gradient-to-br from-primary to-accent"
+        />
+        <p
+          class="text-lg text-muted-foreground leading-relaxed"
+        >
+          Design systems have become an essential part of modern product development. They provide consistency, improve efficiency, and create a shared language between designers and developers.
+        </p>
+        <h2
+          class="text-3xl font-bold mt-12 mb-4"
+        >
+          Understanding Atomic Design
+        </h2>
+        <p
+          class="text-muted-foreground leading-relaxed"
+        >
+          The atomic design methodology consists of five distinct stages: atoms, molecules, organisms, templates, and pages. Each stage builds upon the previous, creating a comprehensive system that scales with your needs.
+        </p>
+        <div
+          class="mat-mdc-card mat-mdc-card-outlined p-6 my-8 bg-muted/50"
+          data-testid="card"
+          role="article"
+        >
+          <p
+            class="text-sm text-muted-foreground italic"
+          >
+            "A design system is never complete. It's a living, breathing ecosystem that evolves with your product and team."
+          </p>
+        </div>
+        <h2
+          class="text-3xl font-bold mt-12 mb-4"
+        >
+          Getting Started
+        </h2>
+        <p
+          class="text-muted-foreground leading-relaxed"
+        >
+          Begin by identifying the core components your product needs. Start small with basic atoms like buttons and inputs, then gradually build up to more complex organisms and templates.
+        </p>
+      </div>
+      <hr
+        aria-orientation="horizontal"
+        class="mat-divider my-12"
+        data-testid="separator"
+        role="none"
+      />
+      <div
+        class="flex items-center justify-between"
+      >
+        <button
+          class="mat-mdc-outlined-button"
+          data-testid="button"
+        >
+          Previous Article
+        </button>
+        <button
+          class="mat-mdc-unelevated-button"
+          data-testid="button"
+        >
+          Next Article
+          <svg
+            class="ml-2"
+            fill="currentColor"
+            height="1em"
+            viewBox="0 0 256 256"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
