@@ -29,5 +29,11 @@
     { "type": "circle", "r": 22, "fill": "#4a4a4a" },
     { "type": "circle", "r": 15, "fill": "#3a3a3a" },
     { "type": "circle", "r": 10, "fill": "#2a2a2a" }
+  ],
+  "geometry3d": [
+    { "type": "cylinder", "r": 22, "height": 18, "fill": "#444" },
+    { "type": "cylinder", "r": 18, "height": 12, "offsetZ": 3, "fill": "#555" },
+    { "type": "cylinder", "r": 12, "height": 18, "subtract": true },
+    { "type": "torus", "r": 15, "tubeR": 4, "fill": "#666" }
   ]
 }

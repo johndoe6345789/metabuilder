@@ -44,6 +44,54 @@ export interface Geometry {
   fontFamily?: string
 }
 
+// 3D Geometry types for WebGL viewer
+export interface Geometry3D {
+  type: 'cylinder' | 'box' | 'sphere' | 'torus' | 'cone' | 'extrude' | 'revolve'
+
+  // Positioning
+  offsetX?: number
+  offsetY?: number
+  offsetZ?: number
+  rotateX?: number  // degrees
+  rotateY?: number
+  rotateZ?: number
+
+  // Boolean operations
+  subtract?: boolean
+  intersect?: boolean
+
+  // Appearance
+  fill?: string
+  material?: string
+  opacity?: number
+
+  // Cylinder
+  r?: number
+  height?: number
+  segments?: number
+
+  // Box
+  width?: number
+  depth?: number
+  // height shared with cylinder
+
+  // Sphere
+  // r shared with cylinder
+
+  // Torus
+  tubeR?: number
+
+  // Cone/Frustum
+  r1?: number  // bottom radius
+  r2?: number  // top radius
+
+  // Extrude
+  points?: number[]  // [x1,y1, x2,y2, ...]
+
+  // Revolve
+  angle?: number  // default 360
+}
+
 export interface Tool {
   name: string
   size: string
@@ -82,6 +130,7 @@ export interface Part {
   quantity: number
   baseY: number
   geometry: Geometry[]
+  geometry3d?: Geometry3D[]
   installation?: Installation
 }
 

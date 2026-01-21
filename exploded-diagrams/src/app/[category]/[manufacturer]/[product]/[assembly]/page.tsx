@@ -7,6 +7,8 @@ import DiagramRenderer from '@/components/DiagramRenderer'
 import Controls from '@/components/Controls'
 import Sidebar from '@/components/Sidebar'
 import Tooltip from '@/components/Tooltip'
+import AssemblyTabs from '@/components/AssemblyTabs'
+import PartViewer3D from '@/components/PartViewer3D'
 import { loadAssembly, loadMaterials } from '@/lib/loader'
 import type { Assembly, Materials, Part } from '@/lib/types'
 
@@ -22,6 +24,7 @@ export default function AssemblyPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
+  const [activeTab, setActiveTab] = useState<'exploded' | '3d'>('exploded')
   const [explosion, setExplosion] = useState(50)
   const [rotation, setRotation] = useState(0)
   const [highlightedPart, setHighlightedPart] = useState<string | null>(null)
@@ -126,39 +129,46 @@ export default function AssemblyPage() {
   return (
     <>
       <Breadcrumb path={[category, manufacturer, product, assembly]} />
+      <AssemblyTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
-      <Controls
-        explosion={explosion}
-        rotation={rotation}
-        onExplosionChange={setExplosion}
-        onRotationChange={setRotation}
-        onAnimate={handleAnimate}
-        onExport={handleExport}
-      />
-
-      <div className="main-layout">
-        <div className="diagram-container">
-          <DiagramRenderer
-            assembly={data}
-            materials={materials}
+      {activeTab === 'exploded' ? (
+        <>
+          <Controls
             explosion={explosion}
             rotation={rotation}
-            highlightedPart={highlightedPart}
-            onPartHover={handlePartHover}
+            onExplosionChange={setExplosion}
+            onRotationChange={setRotation}
+            onAnimate={handleAnimate}
+            onExport={handleExport}
           />
-        </div>
 
-        <Sidebar
-          assembly={data}
-          materials={materials}
-          highlightedPart={highlightedPart}
-          selectedPart={selectedPart}
-          onPartHover={handlePartHover}
-          onPartSelect={handlePartSelect}
-        />
-      </div>
+          <div className="main-layout">
+            <div className="diagram-container">
+              <DiagramRenderer
+                assembly={data}
+                materials={materials}
+                explosion={explosion}
+                rotation={rotation}
+                highlightedPart={highlightedPart}
+                onPartHover={handlePartHover}
+              />
+            </div>
 
-      <Tooltip tooltip={tooltip} materials={materials} />
+            <Sidebar
+              assembly={data}
+              materials={materials}
+              highlightedPart={highlightedPart}
+              selectedPart={selectedPart}
+              onPartHover={handlePartHover}
+              onPartSelect={handlePartSelect}
+            />
+          </div>
+
+          <Tooltip tooltip={tooltip} materials={materials} />
+        </>
+      ) : (
+        <PartViewer3D parts={data.parts} materials={materials} />
+      )}
     </>
   )
 }
