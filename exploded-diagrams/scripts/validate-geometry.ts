@@ -206,6 +206,32 @@ function detectBogusPatterns(geoms: Geometry3D[], errors: string[], warnings: st
       warnings.push(`Shape [${i}] has very thin dimension (${minDim}mm) - may be invisible`)
     }
   })
+
+  // Pattern 9: Dominant torus (donut shape overwhelms part)
+  // A torus with tubeR > 10% of main body radius makes the part look like a donut
+  const torusShapes = geoms.filter(g => g.type === 'torus' && !g.subtract)
+  if (torusShapes.length > 0 && unionShapes.length > 0) {
+    const mainBody = unionShapes[0]
+    const mainDims = getShapeDimensions(mainBody)
+    const mainRadius = Math.max(...mainDims) / 2
+
+    torusShapes.forEach((torus) => {
+      const tubeR = torus.tubeR || 0
+      const torusR = torus.r || 0
+
+      // Warning if torus tube is thick relative to main body
+      if (tubeR > mainRadius * 0.15) {
+        const idx = geoms.indexOf(torus)
+        warnings.push(`DONUT SHAPE: Torus [${idx}] has thick tube (${tubeR}mm) relative to body (${mainRadius}mm radius) - part will look like a donut`)
+      }
+
+      // Warning if torus radius is close to or larger than main body
+      if (torusR > mainRadius * 0.9) {
+        const idx = geoms.indexOf(torus)
+        warnings.push(`DOMINANT TORUS: Torus [${idx}] radius (${torusR}mm) dominates body (${mainRadius}mm) - consider using cylinder rings instead`)
+      }
+    })
+  }
 }
 
 function getShapeBounds(geom: Geometry3D): { maxDim: number } {

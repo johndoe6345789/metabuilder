@@ -33,9 +33,12 @@
     { "type": "circle", "r": 16, "fill": "#555" }
   ],
   "geometry3d": [
-    { "type": "cylinder", "r": 38, "height": 18, "fill": "#666" },
-    { "type": "cylinder", "r": 32, "height": 14, "offsetZ": 2, "fill": "#777" },
-    { "type": "cylinder", "r": 16, "height": 18, "subtract": true },
-    { "type": "torus", "r": 36, "tubeR": 2, "offsetZ": 8, "fill": "#555" }
+    { "type": "cylinder", "r": 40, "height": 18, "fill": "#606570" },
+    { "type": "cylinder", "r": 38, "height": 16, "offsetY": 1, "fill": "#707580" },
+    { "type": "cylinder", "r": 32, "height": 12, "fill": "#808590" },
+    { "type": "cylinder", "r": 18, "height": 22, "fill": "#555560" },
+    { "type": "cylinder", "r": 16, "height": 24, "subtract": true },
+    { "type": "box", "width": 4, "height": 24, "depth": 34, "subtract": true },
+    { "type": "box", "width": 34, "height": 24, "depth": 4, "subtract": true }
   ]
 }

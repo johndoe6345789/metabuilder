@@ -41,9 +41,16 @@
     { "type": "text", "content": "DMF", "offsetY": 3, "fill": "#888", "fontSize": 10 }
   ],
   "geometry3d": [
-    { "type": "cylinder", "r": 55, "height": 25, "fill": "#555" },
-    { "type": "cylinder", "r": 50, "height": 20, "offsetZ": 2.5, "fill": "#666" },
-    { "type": "cylinder", "r": 12, "height": 25, "subtract": true },
-    { "type": "torus", "r": 53, "tubeR": 3, "offsetZ": 10, "fill": "#444" }
+    { "type": "cylinder", "r": 58, "height": 8, "fill": "#505560" },
+    { "type": "cylinder", "r": 55, "height": 25, "fill": "#606570" },
+    { "type": "cylinder", "r": 50, "height": 20, "offsetY": 2.5, "fill": "#707580" },
+    { "type": "cylinder", "r": 25, "height": 30, "fill": "#555560" },
+    { "type": "cylinder", "r": 15, "height": 35, "subtract": true },
+    { "type": "cylinder", "r": 5, "height": 30, "offsetX": 35, "subtract": true },
+    { "type": "cylinder", "r": 5, "height": 30, "offsetX": -35, "subtract": true },
+    { "type": "cylinder", "r": 5, "height": 30, "offsetY": 35, "subtract": true },
+    { "type": "cylinder", "r": 5, "height": 30, "offsetY": -35, "subtract": true },
+    { "type": "cylinder", "r": 5, "height": 30, "offsetX": 25, "offsetY": 25, "subtract": true },
+    { "type": "cylinder", "r": 5, "height": 30, "offsetX": -25, "offsetY": -25, "subtract": true }
   ]
 }
