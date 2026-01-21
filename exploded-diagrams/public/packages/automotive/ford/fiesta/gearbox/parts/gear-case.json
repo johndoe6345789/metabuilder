@@ -43,9 +43,39 @@
     { "type": "text", "content": "IB5", "offsetY": 5, "fill": "#333", "fontSize": 12 }
   ],
   "geometry3d": [
-    { "type": "box", "width": 90, "height": 80, "depth": 120, "fill": "#555" },
-    { "type": "cylinder", "r": 30, "height": 82, "rotateX": 90, "offsetZ": -20, "subtract": true },
-    { "type": "cylinder", "r": 25, "height": 82, "rotateX": 90, "offsetZ": 20, "subtract": true },
-    { "type": "box", "width": 70, "height": 60, "depth": 100, "offsetY": 5, "subtract": true }
+    { "type": "box", "width": 100, "height": 85, "depth": 130, "fill": "#606070" },
+    { "type": "box", "width": 80, "height": 65, "depth": 110, "offsetY": 5, "subtract": true },
+
+    { "type": "box", "width": 120, "height": 95, "depth": 12, "offsetZ": -65, "fill": "#707080" },
+
+    { "type": "cylinder", "r": 10, "height": 20, "offsetX": -50, "offsetY": -38, "offsetZ": -65, "fill": "#808090" },
+    { "type": "cylinder", "r": 10, "height": 20, "offsetX": 50, "offsetY": -38, "offsetZ": -65, "fill": "#808090" },
+    { "type": "cylinder", "r": 10, "height": 20, "offsetX": -50, "offsetY": 38, "offsetZ": -65, "fill": "#808090" },
+    { "type": "cylinder", "r": 10, "height": 20, "offsetX": 50, "offsetY": 38, "offsetZ": -65, "fill": "#808090" },
+    { "type": "cylinder", "r": 10, "height": 20, "offsetX": 0, "offsetY": -42, "offsetZ": -65, "fill": "#808090" },
+    { "type": "cylinder", "r": 10, "height": 20, "offsetX": 0, "offsetY": 42, "offsetZ": -65, "fill": "#808090" },
+
+    { "type": "cylinder", "r": 4, "height": 25, "offsetX": -50, "offsetY": -38, "offsetZ": -65, "subtract": true },
+    { "type": "cylinder", "r": 4, "height": 25, "offsetX": 50, "offsetY": -38, "offsetZ": -65, "subtract": true },
+    { "type": "cylinder", "r": 4, "height": 25, "offsetX": -50, "offsetY": 38, "offsetZ": -65, "subtract": true },
+    { "type": "cylinder", "r": 4, "height": 25, "offsetX": 50, "offsetY": 38, "offsetZ": -65, "subtract": true },
+    { "type": "cylinder", "r": 4, "height": 25, "offsetX": 0, "offsetY": -42, "offsetZ": -65, "subtract": true },
+    { "type": "cylinder", "r": 4, "height": 25, "offsetX": 0, "offsetY": 42, "offsetZ": -65, "subtract": true },
+
+    { "type": "box", "width": 8, "height": 70, "depth": 110, "offsetX": -42, "fill": "#555560" },
+    { "type": "box", "width": 8, "height": 70, "depth": 110, "offsetX": 42, "fill": "#555560" },
+    { "type": "box", "width": 8, "height": 70, "depth": 110, "offsetX": 0, "fill": "#555560" },
+
+    { "type": "cylinder", "r": 35, "height": 20, "rotateX": 90, "offsetZ": 55, "fill": "#707080" },
+    { "type": "cylinder", "r": 25, "height": 25, "rotateX": 90, "offsetZ": 55, "subtract": true },
+
+    { "type": "cylinder", "r": 38, "height": 15, "rotateX": 90, "offsetZ": -20, "fill": "#656575" },
+    { "type": "cylinder", "r": 30, "height": 90, "rotateX": 90, "offsetZ": -20, "subtract": true },
+
+    { "type": "cylinder", "r": 32, "height": 15, "rotateX": 90, "offsetZ": 20, "fill": "#656575" },
+    { "type": "cylinder", "r": 25, "height": 90, "rotateX": 90, "offsetZ": 20, "subtract": true },
+
+    { "type": "box", "width": 30, "height": 20, "depth": 25, "offsetX": -55, "offsetY": -30, "fill": "#606070" },
+    { "type": "cylinder", "r": 8, "height": 30, "offsetX": -55, "offsetY": -30, "subtract": true }
   ]
 }

@@ -19,13 +19,22 @@ interface PartMeshProps {
 
 function PartMesh({ part, materials }: PartMeshProps) {
   const geometry = useMemo(() => {
+    console.log('PartMesh rendering:', part.id, 'geometry3d:', part.geometry3d)
     if (part.geometry3d && part.geometry3d.length > 0) {
       // Convert geometry3d to Three.js BufferGeometry
-      return geometryToThree(part.geometry3d)
+      try {
+        const geom = geometryToThree(part.geometry3d)
+        console.log('Generated geometry:', geom, 'positions:', geom.attributes.position?.count)
+        return geom
+      } catch (err) {
+        console.error('Failed to convert geometry3d:', err)
+        return new THREE.BoxGeometry(2, 2, 2)
+      }
     }
     // Fallback to a simple box if no geometry3d present
+    console.log('No geometry3d, using fallback box')
     return new THREE.BoxGeometry(2, 2, 2)
-  }, [part.geometry3d])
+  }, [part.geometry3d, part.id])
 
   const materialColor = useMemo(() => {
     // Try to get color from first geometry3d fill, or material reference, or part material
