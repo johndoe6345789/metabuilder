@@ -13,11 +13,11 @@ import { getRoleLevel } from './role-levels'
  */
 export const mapUserToAuthUser = (user: User): AuthUser => {
   return {
-    id: user.id,
-    email: user.email,
+    id: user.id ?? '',
+    email: user.email ?? '',
     username: user.username,
     role: user.role as AuthUser['role'],
-    level: getRoleLevel(user.role),
+    level: getRoleLevel(user.role ?? 'public'),
     tenantId: (user.tenantId !== null && user.tenantId !== undefined && user.tenantId.length > 0) ? user.tenantId : undefined,
     profilePicture: user.profilePicture ?? undefined,
     bio: user.bio ?? undefined,

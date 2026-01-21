@@ -7,6 +7,8 @@ import { getPackagesDir } from '@/lib/packages/unified/get-packages-dir'
 import { getCurrentUser } from '@/lib/auth/get-current-user'
 import { AccessDenied } from '@/components/AccessDenied'
 import { JSONComponentRenderer } from '@/components/JSONComponentRenderer'
+import type { JSONComponent } from '@/lib/packages/json/types'
+import type { JsonValue } from '@/types/utility-types'
 
 /**
  * Root page handler with routing priority:
@@ -63,16 +65,16 @@ export default async function RootPage() {
 
           if (hasValidRender) {
             // Type-safe render object with required 'type' field
-            const safeRender: { type: string; template?: unknown } = {
-              type: renderObj.type,
-              template: renderObj.template,
-            }
-            const componentDef = {
-              id: parsed.id,
-              name: parsed.name,
+            // JSONComponent expects JsonValue for template, and parsed JSON is JsonValue-compatible
+            const componentDef: JSONComponent = {
+              id: parsed.id as string,
+              name: parsed.name as string,
               description: typeof parsed.description === 'string' ? parsed.description : undefined,
-              props: Array.isArray(parsed.props) ? parsed.props : undefined,
-              render: safeRender,
+              props: Array.isArray(parsed.props) ? (parsed.props as JSONComponent['props']) : undefined,
+              render: {
+                type: renderObj.type as string,
+                template: renderObj.template as JsonValue,
+              },
             }
             return <JSONComponentRenderer component={componentDef} />
           }

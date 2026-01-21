@@ -31,6 +31,7 @@ import {
   validatePackageRoute,
   validateTenantAccess,
 } from '@/lib/routing'
+import { applyRateLimit } from '@/lib/middleware'
 
 interface RouteParams {
   params: Promise<{ slug: string[] }>
@@ -44,7 +45,31 @@ async function handleRequest(
   { params }: RouteParams
 ): Promise<NextResponse> {
   const resolvedParams = await params
-  
+
+  // 0. Apply rate limiting based on endpoint type
+  // Determine endpoint type for appropriate rate limit
+  const pathMatch = request.url.match(/\/api\/v1\/[^/]+\/([^/]+)\/([^/]+)/)
+  const isLogin = pathMatch?.[1] === 'auth' && pathMatch?.[2] === 'login'
+  const isRegister = pathMatch?.[1] === 'auth' && pathMatch?.[2] === 'register'
+
+  // Determine which rate limiter to apply
+  let rateLimitType: 'login' | 'register' | 'list' | 'mutation' | 'public' = 'public'
+  if (isLogin) {
+    rateLimitType = 'login'
+  } else if (isRegister) {
+    rateLimitType = 'register'
+  } else if (request.method === 'GET') {
+    rateLimitType = 'list'
+  } else if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(request.method)) {
+    rateLimitType = 'mutation'
+  }
+
+  // Check rate limit and return 429 if exceeded
+  const rateLimitResponse = applyRateLimit(request, rateLimitType)
+  if (rateLimitResponse) {
+    return rateLimitResponse as unknown as NextResponse
+  }
+
   // 1. Parse the route
   const context = parseRestfulRequest(request, resolvedParams)
   if ('error' in context) {

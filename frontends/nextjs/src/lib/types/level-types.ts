@@ -6,10 +6,10 @@
 export type UserRole = 'public' | 'user' | 'moderator' | 'admin' | 'god' | 'supergod'
 
 export interface User {
-  id: string
-  username: string
-  email: string
-  role: string
+  id?: string
+  username?: string
+  email?: string
+  role?: string
   profilePicture?: string | null
   bio?: string | null
   createdAt: number | bigint

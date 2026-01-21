@@ -8,3 +8,14 @@ export type {
   AuthenticatedRequest,
   AuthResult,
 } from './auth-middleware'
+
+// Rate limiting
+export {
+  applyRateLimit,
+  createRateLimiter,
+  createCustomRateLimiter,
+  rateLimiters,
+  resetRateLimit,
+  getRateLimitStatus,
+} from './rate-limit'
+export type { RateLimitConfig, RateLimitStore } from './rate-limit'

@@ -12,7 +12,7 @@ import { lazy, ComponentType } from 'react'
 /**
  * Lazy-load a component with error boundary
  */
-const lazyComponent = (importFn: () => Promise<{ default: ComponentType<any> }>) => {
+const lazyComponent = (importFn: () => Promise<{ default: ComponentType<any> | any }>) => {
   return lazy(importFn)
 }
 

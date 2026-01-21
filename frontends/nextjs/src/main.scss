@@ -2,19 +2,11 @@
 // Main SCSS Entry Point
 // ========================================
 
-// TODO: Fix SCSS imports - causing build errors
-// @use './styles/core/theme.scss' as *;
-// @use './styles/variables.scss' as *;
-// @import '../../fakemui/styles/base.scss';
-// @import '../../fakemui/styles/components.scss';
+// Core theme - variables and color system
+@use './styles/core/variables' as *;
+@use './styles/core/base' as *;
+@use './styles/core/theme' as *;
 
-// Minimal styles for now
-body {
-  margin: 0;
-  padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+// FakeMUI component styles
+@import '../../../fakemui/styles/base.scss';
+@import '../../../fakemui/styles/components.scss';
