@@ -1,0 +1,29 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/tests.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "dbal_core",
+  "description": "Converted from validate-component-hierarchy-create.test.ts",
+  "imports": [
+    {
+      "from": "vitest",
+      "import": [
+        "describe",
+        "expect",
+        "it"
+      ]
+    },
+    {
+      "from": "../../../../../src/core/validation/validate-component-hierarchy-create",
+      "import": [
+        "validateComponentHierarchyCreate"
+      ]
+    }
+  ],
+  "testSuites": [
+    {
+      "id": "suite_0",
+      "name": "validateComponentHierarchyCreate",
+      "tests": []
+    }
+  ]
+}
