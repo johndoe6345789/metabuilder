@@ -1,0 +1,53 @@
+[
+  {
+    "id": "page_json_script_editor_home",
+    "packageId": "ui_json_script_editor",
+    "path": "/admin/json-script-editor",
+    "title": "JSON Script Editor",
+    "description": "Code editor and visual builder for JSON Script v2.2.0 automation workflows",
+    "component": "JSONScriptEditorLayout",
+    "level": 4,
+    "requiresAuth": true,
+    "isPublished": true,
+    "icon": "Code",
+    "breadcrumbs": [
+      { "label": "Admin", "href": "/admin" },
+      { "label": "JSON Script Editor", "href": "/admin/json-script-editor" }
+    ],
+    "layout": {
+      "type": "ThreeColumn",
+      "leftPanel": {
+        "width": 280,
+        "title": "Scripts",
+        "component": "ScriptLibrary"
+      },
+      "centerPanel": {
+        "title": "Editor",
+        "flex": 1,
+        "component": "ScriptEditor"
+      },
+      "rightPanel": {
+        "width": 320,
+        "title": "Output",
+        "component": "ExecutionOutput"
+      }
+    }
+  },
+  {
+    "id": "page_json_script_editor_visual",
+    "packageId": "ui_json_script_editor",
+    "path": "/admin/json-script-editor/visual",
+    "title": "Visual Builder",
+    "description": "No-code visual builder for JSON Script automation",
+    "component": "VisualScriptBuilder",
+    "level": 4,
+    "requiresAuth": true,
+    "isPublished": true,
+    "icon": "Workflow",
+    "breadcrumbs": [
+      { "label": "Admin", "href": "/admin" },
+      { "label": "JSON Script Editor", "href": "/admin/json-script-editor" },
+      { "label": "Visual Builder", "href": "/admin/json-script-editor/visual" }
+    ]
+  }
+]

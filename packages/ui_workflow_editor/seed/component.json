@@ -1,0 +1,213 @@
+[
+  {
+    "id": "comp_workflow_editor_layout",
+    "packageId": "ui_workflow_editor",
+    "name": "WorkflowEditorLayout",
+    "description": "Two-column layout: workflow library (left), canvas (right)",
+    "category": "layout",
+    "type": "WorkflowEditorLayout",
+    "props": {
+      "title": "Workflow Editor",
+      "subtitle": "Visual node-based automation builder",
+      "showGrid": true,
+      "snapToGrid": true
+    }
+  },
+  {
+    "id": "comp_workflow_library",
+    "packageId": "ui_workflow_editor",
+    "name": "WorkflowLibrary",
+    "description": "Left panel: list of workflows with search and management",
+    "category": "list",
+    "type": "WorkflowLibrary",
+    "props": {
+      "title": "Workflows",
+      "searchable": true,
+      "filterable": true,
+      "sortBy": ["name", "created", "modified", "status"],
+      "actions": ["create", "edit", "delete", "duplicate", "execute", "schedule"],
+      "tags": true,
+      "favorites": true,
+      "quickFilter": ["active", "draft", "archived"],
+      "pagination": 25
+    }
+  },
+  {
+    "id": "comp_workflow_canvas",
+    "packageId": "ui_workflow_editor",
+    "name": "WorkflowCanvas",
+    "description": "Main canvas for visual workflow building with nodes and connections",
+    "category": "builder",
+    "type": "WorkflowCanvas",
+    "props": {
+      "title": "Canvas",
+      "showGrid": true,
+      "gridSize": 20,
+      "snapToGrid": true,
+      "zoom": true,
+      "pan": true,
+      "minimap": true,
+      "nodeLibrary": true,
+      "autoLayout": true,
+      "exportFormat": "json"
+    }
+  },
+  {
+    "id": "comp_workflow_node_library",
+    "packageId": "ui_workflow_editor",
+    "name": "WorkflowNodeLibrary",
+    "description": "Palette of available workflow nodes (triggers, actions, conditions)",
+    "category": "palette",
+    "type": "WorkflowNodeLibrary",
+    "props": {
+      "title": "Nodes",
+      "searchable": true,
+      "categories": [
+        "triggers",
+        "actions",
+        "conditions",
+        "loops",
+        "data-transform",
+        "communication",
+        "database",
+        "api",
+        "logic",
+        "custom"
+      ],
+      "showCount": true,
+      "previewOnHover": true,
+      "dragDropSupport": true
+    }
+  },
+  {
+    "id": "comp_workflow_node",
+    "packageId": "ui_workflow_editor",
+    "name": "WorkflowNode",
+    "description": "Individual workflow node with configurable properties",
+    "category": "node",
+    "type": "WorkflowNode",
+    "props": {
+      "draggable": true,
+      "deletable": true,
+      "configurable": true,
+      "showPorts": true,
+      "portTypes": ["input", "output", "trigger", "condition"],
+      "previewData": true,
+      "statusIndicator": true
+    }
+  },
+  {
+    "id": "comp_workflow_connection",
+    "packageId": "ui_workflow_editor",
+    "name": "WorkflowConnection",
+    "description": "Connection between workflow nodes (control or data flow)",
+    "category": "connection",
+    "type": "WorkflowConnection",
+    "props": {
+      "connectionTypes": ["control", "data", "error"],
+      "editable": true,
+      "deletable": true,
+      "labelable": true,
+      "animateFlow": true,
+      "showMetadata": true
+    }
+  },
+  {
+    "id": "comp_workflow_template_gallery",
+    "packageId": "ui_workflow_editor",
+    "name": "WorkflowTemplateGallery",
+    "description": "Gallery of pre-built workflow templates",
+    "category": "gallery",
+    "type": "WorkflowTemplateGallery",
+    "props": {
+      "title": "Workflow Templates",
+      "layout": "grid",
+      "columns": 3,
+      "categories": [
+        "email",
+        "notifications",
+        "data-sync",
+        "reporting",
+        "approval",
+        "scheduling",
+        "monitoring"
+      ],
+      "searchable": true,
+      "previewable": true,
+      "duplicatable": true
+    }
+  },
+  {
+    "id": "comp_execution_history_viewer",
+    "packageId": "ui_workflow_editor",
+    "name": "ExecutionHistoryViewer",
+    "description": "View workflow execution history, logs, and results",
+    "category": "monitoring",
+    "type": "ExecutionHistoryViewer",
+    "props": {
+      "title": "Execution History",
+      "showTable": true,
+      "showGraph": true,
+      "showLogs": true,
+      "columns": [
+        "workflow",
+        "trigger",
+        "startTime",
+        "duration",
+        "status",
+        "result"
+      ],
+      "filters": {
+        "status": ["success", "failed", "running"],
+        "dateRange": true
+      },
+      "pagination": 50,
+      "sortBy": ["startTime", "duration", "status"]
+    }
+  },
+  {
+    "id": "comp_workflow_properties_panel",
+    "packageId": "ui_workflow_editor",
+    "name": "WorkflowPropertiesPanel",
+    "description": "Right panel for editing workflow and node properties",
+    "category": "form",
+    "type": "WorkflowPropertiesPanel",
+    "props": {
+      "title": "Properties",
+      "sections": [
+        "workflow-info",
+        "node-config",
+        "triggers",
+        "error-handling",
+        "scheduling",
+        "notifications"
+      ],
+      "showAdvanced": true,
+      "showValidation": true,
+      "autoSave": true
+    }
+  },
+  {
+    "id": "comp_workflow_trigger_editor",
+    "packageId": "ui_workflow_editor",
+    "name": "WorkflowTriggerEditor",
+    "description": "Configure workflow triggers (webhook, schedule, event, manual)",
+    "category": "form",
+    "type": "WorkflowTriggerEditor",
+    "props": {
+      "title": "Triggers",
+      "triggerTypes": [
+        "webhook",
+        "schedule",
+        "database-event",
+        "api-call",
+        "manual",
+        "email",
+        "form-submission"
+      ],
+      "showConditions": true,
+      "showFilters": true,
+      "testable": true
+    }
+  }
+]

@@ -1,0 +1,30 @@
+[
+  {
+    "id": "page_schema_editor_home",
+    "packageId": "ui_schema_editor",
+    "path": "/admin/schema-editor",
+    "title": "Schema Editor",
+    "description": "Visual entity builder - Create and edit database entities without code",
+    "component": "SchemaEditorLayout",
+    "level": 5,
+    "requiresAuth": true,
+    "isPublished": true,
+    "icon": "Schema",
+    "breadcrumbs": [
+      { "label": "Admin", "href": "/admin" },
+      { "label": "Schema Editor", "href": "/admin/schema-editor" }
+    ],
+    "layout": {
+      "type": "TwoColumn",
+      "leftPanel": {
+        "width": 300,
+        "title": "Entities",
+        "component": "EntityList"
+      },
+      "rightPanel": {
+        "title": "Entity Builder",
+        "component": "EntityBuilder"
+      }
+    }
+  }
+]

@@ -1,0 +1,207 @@
+[
+  {
+    "id": "comp_database_manager_layout",
+    "packageId": "ui_database_manager",
+    "name": "DatabaseManagerLayout",
+    "description": "Main layout with entity browser and data viewer",
+    "category": "layout",
+    "type": "DatabaseManagerLayout",
+    "props": {
+      "title": "Database Manager",
+      "subtitle": "Browse and edit database entities"
+    }
+  },
+  {
+    "id": "comp_entity_browser",
+    "packageId": "ui_database_manager",
+    "name": "EntityBrowser",
+    "description": "Left panel: list of all entities with categories",
+    "category": "navigator",
+    "type": "EntityBrowser",
+    "props": {
+      "title": "Entities",
+      "searchable": true,
+      "groupByCategory": true,
+      "showRecordCount": true,
+      "showSize": true,
+      "categories": [
+        "core",
+        "access",
+        "packages",
+        "content",
+        "custom"
+      ],
+      "actions": ["view", "schema", "stats"]
+    }
+  },
+  {
+    "id": "comp_data_viewer",
+    "packageId": "ui_database_manager",
+    "name": "DataViewer",
+    "description": "Main panel: table view of entity records",
+    "category": "table",
+    "type": "DataViewer",
+    "props": {
+      "title": "Records",
+      "showTable": true,
+      "columns": "auto",
+      "sortable": true,
+      "filterable": true,
+      "searchable": true,
+      "pagination": true,
+      "pageSize": 50,
+      "rowActions": ["view", "edit", "duplicate", "delete"],
+      "bulkActions": ["edit", "delete", "export"],
+      "virtualization": true
+    }
+  },
+  {
+    "id": "comp_record_editor",
+    "packageId": "ui_database_manager",
+    "name": "RecordEditor",
+    "description": "Form for editing individual records",
+    "category": "form",
+    "type": "RecordEditor",
+    "props": {
+      "title": "Record Editor",
+      "showHistory": true,
+      "autoSave": true,
+      "validateOnChange": true,
+      "showRelationships": true,
+      "tabs": [
+        "data",
+        "relationships",
+        "history",
+        "metadata"
+      ]
+    }
+  },
+  {
+    "id": "comp_advanced_filter",
+    "packageId": "ui_database_manager",
+    "name": "AdvancedFilter",
+    "description": "Complex filtering with multiple conditions",
+    "category": "form",
+    "type": "AdvancedFilter",
+    "props": {
+      "title": "Filters",
+      "operators": [
+        "equals",
+        "not-equals",
+        "contains",
+        "not-contains",
+        "starts-with",
+        "ends-with",
+        "greater-than",
+        "less-than",
+        "in-array",
+        "not-in-array",
+        "is-null",
+        "is-not-null"
+      ],
+      "logicalOperators": ["AND", "OR"],
+      "maxConditions": 10,
+      "presets": true
+    }
+  },
+  {
+    "id": "comp_import_export_manager",
+    "packageId": "ui_database_manager",
+    "name": "ImportExportManager",
+    "description": "Import and export records in multiple formats",
+    "category": "tool",
+    "type": "ImportExportManager",
+    "props": {
+      "title": "Import/Export",
+      "exportFormats": ["csv", "json", "excel", "yaml"],
+      "importFormats": ["csv", "json", "excel"],
+      "selectEntity": true,
+      "selectFields": true,
+      "filtering": true,
+      "mapping": true,
+      "preview": true,
+      "validation": true
+    }
+  },
+  {
+    "id": "comp_entity_statistics",
+    "packageId": "ui_database_manager",
+    "name": "EntityStatistics",
+    "description": "Statistics and analytics for entities",
+    "category": "display",
+    "type": "EntityStatistics",
+    "props": {
+      "title": "Statistics",
+      "metrics": [
+        "record-count",
+        "storage-size",
+        "last-modified",
+        "created-count",
+        "deleted-count"
+      ],
+      "showTrends": true,
+      "period": ["today", "week", "month"],
+      "exportable": true
+    }
+  },
+  {
+    "id": "comp_relationship_viewer",
+    "packageId": "ui_database_manager",
+    "name": "RelationshipViewer",
+    "description": "Visualize relationships between entities",
+    "category": "visualization",
+    "type": "RelationshipViewer",
+    "props": {
+      "title": "Relationships",
+      "showDiagram": true,
+      "interactiveNodes": true,
+      "zoom": true,
+      "pan": true,
+      "relationshipTypes": [
+        "one-to-one",
+        "one-to-many",
+        "many-to-many"
+      ]
+    }
+  },
+  {
+    "id": "comp_bulk_editor",
+    "packageId": "ui_database_manager",
+    "name": "BulkEditor",
+    "description": "Edit multiple records at once",
+    "category": "form",
+    "type": "BulkEditor",
+    "props": {
+      "title": "Bulk Edit",
+      "selectRecords": true,
+      "updateMode": ["set", "append", "remove", "increment"],
+      "preview": true,
+      "fieldsByType": true,
+      "maxRecords": 1000,
+      "confirmation": true
+    }
+  },
+  {
+    "id": "comp_change_history",
+    "packageId": "ui_database_manager",
+    "name": "ChangeHistory",
+    "description": "View audit log of record changes",
+    "category": "display",
+    "type": "ChangeHistory",
+    "props": {
+      "title": "Change History",
+      "showTable": true,
+      "columns": [
+        "timestamp",
+        "user",
+        "action",
+        "field",
+        "oldValue",
+        "newValue"
+      ],
+      "sortable": true,
+      "filterable": true,
+      "downloadable": true
+    }
+  }
+]

@@ -1,0 +1,17 @@
+{
+  "packageId": "ui_schema_editor",
+  "description": "Schema Editor - Visual entity and field builder for creating database entities",
+  "version": "1.0.0",
+  "features": [
+    "Visual entity builder with field editor",
+    "Type selector (String, Number, Boolean, Date, Array, Object)",
+    "Constraint editor (required, unique, indexed, default values)",
+    "Relationship mapping (foreign keys, one-to-many)",
+    "JSON schema export and validation",
+    "Supergod-only admin panel",
+    "Real-time schema preview"
+  ],
+  "seed": {
+    "schema": "page-config"
+  }
+}

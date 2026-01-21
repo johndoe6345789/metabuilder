@@ -1,0 +1,121 @@
+[
+  {
+    "id": "comp_schema_editor_layout",
+    "packageId": "ui_schema_editor",
+    "name": "SchemaEditorLayout",
+    "description": "Main layout for schema editor with entity list and builder panels",
+    "category": "layout",
+    "type": "SchemaEditorLayout",
+    "props": {
+      "title": "Schema Editor",
+      "subtitle": "Visual entity and field builder"
+    }
+  },
+  {
+    "id": "comp_entity_list",
+    "packageId": "ui_schema_editor",
+    "name": "EntityList",
+    "description": "List of all entities in the system",
+    "category": "list",
+    "type": "EntityList",
+    "props": {
+      "title": "Entities",
+      "searchable": true,
+      "sortable": true,
+      "actions": ["create", "edit", "delete", "view"]
+    }
+  },
+  {
+    "id": "comp_entity_builder",
+    "packageId": "ui_schema_editor",
+    "name": "EntityBuilder",
+    "description": "Visual builder for creating and editing entity fields",
+    "category": "form",
+    "type": "EntityBuilder",
+    "props": {
+      "title": "Entity Builder",
+      "showPreview": true,
+      "autoSave": true,
+      "validationLevel": "strict"
+    }
+  },
+  {
+    "id": "comp_field_editor",
+    "packageId": "ui_schema_editor",
+    "name": "FieldEditor",
+    "description": "Editor for individual entity fields",
+    "category": "form",
+    "type": "FieldEditor",
+    "props": {
+      "fieldTypes": [
+        "String",
+        "Number",
+        "Boolean",
+        "Date",
+        "DateTime",
+        "Array",
+        "Object",
+        "UUID",
+        "Email",
+        "URL",
+        "JSON",
+        "Text",
+        "Enum"
+      ],
+      "constraints": [
+        "required",
+        "unique",
+        "indexed",
+        "default",
+        "min",
+        "max",
+        "pattern",
+        "enum"
+      ]
+    }
+  },
+  {
+    "id": "comp_schema_preview",
+    "packageId": "ui_schema_editor",
+    "name": "SchemaPreview",
+    "description": "Live preview of generated JSON schema",
+    "category": "display",
+    "type": "SchemaPreview",
+    "props": {
+      "format": "json",
+      "copyable": true,
+      "downloadable": true,
+      "themes": ["light", "dark"]
+    }
+  },
+  {
+    "id": "comp_constraint_editor",
+    "packageId": "ui_schema_editor",
+    "name": "ConstraintEditor",
+    "description": "Visual editor for field constraints and validation rules",
+    "category": "form",
+    "type": "ConstraintEditor",
+    "props": {
+      "showHelp": true,
+      "validateAsYouGo": true,
+      "presets": ["email", "phone", "url", "uuid", "date", "number"]
+    }
+  },
+  {
+    "id": "comp_relationship_mapper",
+    "packageId": "ui_schema_editor",
+    "name": "RelationshipMapper",
+    "description": "Visual editor for entity relationships and foreign keys",
+    "category": "form",
+    "type": "RelationshipMapper",
+    "props": {
+      "relationshipTypes": [
+        "one-to-one",
+        "one-to-many",
+        "many-to-many"
+      ],
+      "cascadeOptions": ["RESTRICT", "SET NULL", "CASCADE", "NO ACTION"],
+      "indexForeignKeys": true
+    }
+  }
+]

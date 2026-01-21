@@ -1,0 +1,152 @@
+[
+  {
+    "id": "comp_json_script_editor_layout",
+    "packageId": "ui_json_script_editor",
+    "name": "JSONScriptEditorLayout",
+    "description": "Three-column layout: script library (left), editor (center), execution output (right)",
+    "category": "layout",
+    "type": "JSONScriptEditorLayout",
+    "props": {
+      "title": "JSON Script Editor",
+      "subtitle": "Code and visual editor with real-time execution feedback",
+      "showTabs": true,
+      "tabs": ["Code", "Visual", "Test"]
+    }
+  },
+  {
+    "id": "comp_script_library",
+    "packageId": "ui_json_script_editor",
+    "name": "ScriptLibrary",
+    "description": "Left sidebar: list of saved scripts with search, filter, and organization",
+    "category": "list",
+    "type": "ScriptLibrary",
+    "props": {
+      "title": "Scripts",
+      "searchable": true,
+      "filterable": true,
+      "sortBy": ["name", "created", "modified", "status"],
+      "actions": ["create", "edit", "delete", "duplicate", "share", "version-history"],
+      "tags": true,
+      "favorites": true,
+      "quickFilter": ["active", "testing", "archived"]
+    }
+  },
+  {
+    "id": "comp_script_editor",
+    "packageId": "ui_json_script_editor",
+    "name": "ScriptEditor",
+    "description": "Monaco code editor with JSON Script v2.2.0 syntax highlighting and validation",
+    "category": "editor",
+    "type": "ScriptEditor",
+    "props": {
+      "editorType": "monaco",
+      "language": "json-script",
+      "lineNumbers": true,
+      "wordWrap": true,
+      "minimap": true,
+      "theme": "dark",
+      "fontSize": 13,
+      "tabSize": 2,
+      "autoFormat": true,
+      "showValidation": true,
+      "showSuggestions": true,
+      "keybindings": ["vscode", "vim", "emacs"]
+    }
+  },
+  {
+    "id": "comp_execution_output",
+    "packageId": "ui_json_script_editor",
+    "name": "ExecutionOutput",
+    "description": "Right sidebar: execution results, logs, and debugging output",
+    "category": "display",
+    "type": "ExecutionOutput",
+    "props": {
+      "title": "Output",
+      "showConsole": true,
+      "showErrors": true,
+      "showLogs": true,
+      "showVariables": true,
+      "showMetrics": true,
+      "maxLines": 500,
+      "autoScroll": true,
+      "searchable": true,
+      "clearButton": true
+    }
+  },
+  {
+    "id": "comp_visual_script_builder",
+    "packageId": "ui_json_script_editor",
+    "name": "VisualScriptBuilder",
+    "description": "No-code visual builder with drag-and-drop nodes for script creation",
+    "category": "builder",
+    "type": "VisualScriptBuilder",
+    "props": {
+      "title": "Visual Script Builder",
+      "showGrid": true,
+      "snapToGrid": true,
+      "zoom": true,
+      "nodeLibrary": true,
+      "connectionTypes": ["data", "control", "condition"],
+      "autoLayout": true,
+      "exportFormat": "json-script"
+    }
+  },
+  {
+    "id": "comp_script_tester",
+    "packageId": "ui_json_script_editor",
+    "name": "ScriptTester",
+    "description": "Test script runner with sample data input and execution feedback",
+    "category": "form",
+    "type": "ScriptTester",
+    "props": {
+      "title": "Test Script",
+      "showSampleData": true,
+      "showInputOutput": true,
+      "showExecutionTime": true,
+      "showMemoryUsage": true,
+      "maxExecutionTime": 5000,
+      "presets": ["empty", "sample1", "sample2"],
+      "export": ["json", "csv"]
+    }
+  },
+  {
+    "id": "comp_json_script_reference",
+    "packageId": "ui_json_script_editor",
+    "name": "JSONScriptReference",
+    "description": "Interactive documentation and reference for JSON Script v2.2.0",
+    "category": "documentation",
+    "type": "JSONScriptReference",
+    "props": {
+      "title": "Reference",
+      "searchable": true,
+      "sections": [
+        "syntax",
+        "operators",
+        "functions",
+        "variables",
+        "control-flow",
+        "error-handling",
+        "best-practices"
+      ],
+      "showExamples": true,
+      "copyable": true
+    }
+  },
+  {
+    "id": "comp_script_debugger",
+    "packageId": "ui_json_script_editor",
+    "name": "ScriptDebugger",
+    "description": "Debugging panel with breakpoints, step execution, and variable inspection",
+    "category": "debugging",
+    "type": "ScriptDebugger",
+    "props": {
+      "title": "Debugger",
+      "breakpoints": true,
+      "stepExecution": true,
+      "variableInspection": true,
+      "callStack": true,
+      "conditionalBreakpoints": true,
+      "watchExpressions": true
+    }
+  }
+]
