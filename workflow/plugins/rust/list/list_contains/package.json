@@ -1,0 +1,14 @@
+{
+  "name": "@metabuilder/list_contains",
+  "version": "0.1.0",
+  "description": "Check if list contains value",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["list", "workflow", "plugin", "rust"],
+  "main": "src/lib.rs",
+  "metadata": {
+    "plugin_type": "list.contains",
+    "category": "list",
+    "runtime": "rust"
+  }
+}

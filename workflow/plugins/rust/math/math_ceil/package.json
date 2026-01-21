@@ -1,0 +1,14 @@
+{
+  "name": "@metabuilder/math_ceil",
+  "version": "0.1.0",
+  "description": "Ceil a number (round up)",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["math", "workflow", "plugin", "rust"],
+  "main": "src/lib.rs",
+  "metadata": {
+    "plugin_type": "math.ceil",
+    "category": "math",
+    "runtime": "rust"
+  }
+}

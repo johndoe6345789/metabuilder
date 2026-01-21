@@ -1,0 +1,14 @@
+{
+  "name": "@metabuilder/convert_to_string",
+  "version": "0.1.0",
+  "description": "Convert value to string",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["convert", "workflow", "plugin", "rust"],
+  "main": "src/lib.rs",
+  "metadata": {
+    "plugin_type": "convert.to_string",
+    "category": "convert",
+    "runtime": "rust"
+  }
+}

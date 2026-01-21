@@ -1,0 +1,14 @@
+{
+  "name": "@metabuilder/list_index_of",
+  "version": "0.1.0",
+  "description": "Find index of value in list",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["list", "workflow", "plugin", "rust"],
+  "main": "src/lib.rs",
+  "metadata": {
+    "plugin_type": "list.index_of",
+    "category": "list",
+    "runtime": "rust"
+  }
+}

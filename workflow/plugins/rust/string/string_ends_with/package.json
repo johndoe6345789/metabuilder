@@ -1,0 +1,14 @@
+{
+  "name": "@metabuilder/string_ends_with",
+  "version": "0.1.0",
+  "description": "Check if string ends with suffix",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["string", "workflow", "plugin", "rust"],
+  "main": "src/lib.rs",
+  "metadata": {
+    "plugin_type": "string.ends_with",
+    "category": "string",
+    "runtime": "rust"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "@metabuilder/convert_to_boolean",
+  "version": "0.1.0",
+  "description": "Convert value to boolean",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["convert", "workflow", "plugin", "rust"],
+  "main": "src/lib.rs",
+  "metadata": {
+    "plugin_type": "convert.to_boolean",
+    "category": "convert",
+    "runtime": "rust"
+  }
+}

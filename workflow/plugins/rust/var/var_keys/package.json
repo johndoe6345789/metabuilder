@@ -1,0 +1,14 @@
+{
+  "name": "@metabuilder/var_keys",
+  "version": "0.1.0",
+  "description": "Get all variable keys from workflow store",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["var", "workflow", "plugin", "rust"],
+  "main": "src/lib.rs",
+  "metadata": {
+    "plugin_type": "var.keys",
+    "category": "var",
+    "runtime": "rust"
+  }
+}

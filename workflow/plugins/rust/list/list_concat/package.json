@@ -1,0 +1,14 @@
+{
+  "name": "@metabuilder/list_concat",
+  "version": "0.1.0",
+  "description": "Concatenate multiple lists",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["list", "workflow", "plugin", "rust"],
+  "main": "src/lib.rs",
+  "metadata": {
+    "plugin_type": "list.concat",
+    "category": "list",
+    "runtime": "rust"
+  }
+}

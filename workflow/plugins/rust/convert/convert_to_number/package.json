@@ -1,0 +1,14 @@
+{
+  "name": "@metabuilder/convert_to_number",
+  "version": "0.1.0",
+  "description": "Convert value to number",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["convert", "workflow", "plugin", "rust"],
+  "main": "src/lib.rs",
+  "metadata": {
+    "plugin_type": "convert.to_number",
+    "category": "convert",
+    "runtime": "rust"
+  }
+}

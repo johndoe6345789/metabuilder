@@ -1,0 +1,14 @@
+{
+  "name": "@metabuilder/math_modulo",
+  "version": "0.1.0",
+  "description": "Calculate modulo of two numbers",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["math", "workflow", "plugin", "rust"],
+  "main": "src/lib.rs",
+  "metadata": {
+    "plugin_type": "math.modulo",
+    "category": "math",
+    "runtime": "rust"
+  }
+}

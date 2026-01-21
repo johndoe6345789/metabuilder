@@ -7,11 +7,12 @@
   "keywords": ["var", "workflow", "plugins", "cpp"],
   "metadata": {
     "category": "var",
-    "plugin_count": 3
+    "plugin_count": 4
   },
   "plugins": [
+    "var_delete",
+    "var_exists",
     "var_get",
-    "var_set",
-    "var_delete"
+    "var_set"
   ]
 }

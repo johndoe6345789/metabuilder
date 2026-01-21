@@ -1,0 +1,14 @@
+{
+  "name": "@metabuilder/string_replace",
+  "version": "0.1.0",
+  "description": "Replace occurrences in a string",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["string", "workflow", "plugin", "rust"],
+  "main": "src/lib.rs",
+  "metadata": {
+    "plugin_type": "string.replace",
+    "category": "string",
+    "runtime": "rust"
+  }
+}

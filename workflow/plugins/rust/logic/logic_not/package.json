@@ -1,0 +1,14 @@
+{
+  "name": "@metabuilder/logic_not",
+  "version": "0.1.0",
+  "description": "Logical NOT on a boolean value",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["logic", "workflow", "plugin", "rust"],
+  "main": "src/lib.rs",
+  "metadata": {
+    "plugin_type": "logic.not",
+    "category": "logic",
+    "runtime": "rust"
+  }
+}

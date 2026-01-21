@@ -1,0 +1,14 @@
+{
+  "name": "@metabuilder/string_trim",
+  "version": "0.1.0",
+  "description": "Trim whitespace from string",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["string", "workflow", "plugin", "rust"],
+  "main": "src/lib.rs",
+  "metadata": {
+    "plugin_type": "string.trim",
+    "category": "string",
+    "runtime": "rust"
+  }
+}

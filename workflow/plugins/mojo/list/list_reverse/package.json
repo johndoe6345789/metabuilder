@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/list_reverse",
+  "version": "1.0.0",
+  "description": "Reverse the order of items in a list",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["list", "workflow", "plugin"],
+  "main": "list_reverse.mojo",
+  "metadata": {
+    "plugin_type": "list.reverse",
+    "category": "list"
+  }
+}

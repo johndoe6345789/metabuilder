@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/dict_set",
+  "version": "1.0.0",
+  "description": "Set a value in a dictionary by key",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["dict", "workflow", "plugin"],
+  "main": "dict_set.go",
+  "metadata": {
+    "plugin_type": "dict.set",
+    "category": "dict"
+  }
+}

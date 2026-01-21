@@ -1,0 +1,14 @@
+{
+  "name": "@metabuilder/list_reverse",
+  "version": "0.1.0",
+  "description": "Reverse a list",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["list", "workflow", "plugin", "rust"],
+  "main": "src/lib.rs",
+  "metadata": {
+    "plugin_type": "list.reverse",
+    "category": "list",
+    "runtime": "rust"
+  }
+}

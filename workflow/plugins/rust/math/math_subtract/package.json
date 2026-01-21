@@ -1,0 +1,14 @@
+{
+  "name": "@metabuilder/math_subtract",
+  "version": "0.1.0",
+  "description": "Subtract numbers from the first number",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["math", "workflow", "plugin", "rust"],
+  "main": "src/lib.rs",
+  "metadata": {
+    "plugin_type": "math.subtract",
+    "category": "math",
+    "runtime": "rust"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "@metabuilder/list_at",
+  "version": "0.1.0",
+  "description": "Get element at index",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["list", "workflow", "plugin", "rust"],
+  "main": "src/lib.rs",
+  "metadata": {
+    "plugin_type": "list.at",
+    "category": "list",
+    "runtime": "rust"
+  }
+}

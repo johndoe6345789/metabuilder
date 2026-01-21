@@ -1,0 +1,14 @@
+{
+  "name": "@metabuilder/string_length",
+  "version": "0.1.0",
+  "description": "Get string length",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["string", "workflow", "plugin", "rust"],
+  "main": "src/lib.rs",
+  "metadata": {
+    "plugin_type": "string.length",
+    "category": "string",
+    "runtime": "rust"
+  }
+}

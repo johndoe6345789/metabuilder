@@ -7,12 +7,18 @@
   "keywords": ["logic", "workflow", "plugins", "cpp"],
   "metadata": {
     "category": "logic",
-    "plugin_count": 4
+    "plugin_count": 10
   },
   "plugins": [
     "logic_and",
-    "logic_or",
+    "logic_equals",
+    "logic_gt",
+    "logic_gte",
+    "logic_in",
+    "logic_lt",
+    "logic_lte",
     "logic_not",
-    "logic_equals"
+    "logic_or",
+    "logic_xor"
   ]
 }

@@ -1,90 +1,18 @@
 {
-  "name": "string",
+  "name": "@metabuilder/workflow-plugins-string",
   "version": "1.0.0",
-  "description": "String manipulation plugins for workflow processing",
+  "description": "String manipulation plugins",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["string", "workflow", "plugins"],
   "metadata": {
-    "plugin_type": "string",
-    "language": "mojo",
-    "category": "string"
+    "category": "string",
+    "plugin_count": 4
   },
   "plugins": [
-    {
-      "name": "string_concat",
-      "file": "string_concat.mojo",
-      "type": "string.concat",
-      "description": "Concatenate multiple strings with optional separator",
-      "inputs": {
-        "strings": {
-          "type": "array",
-          "items": "string",
-          "description": "List of strings to concatenate"
-        },
-        "separator": {
-          "type": "string",
-          "description": "Optional separator between strings",
-          "default": ""
-        }
-      },
-      "outputs": {
-        "result": {
-          "type": "string",
-          "description": "Concatenated string"
-        }
-      }
-    },
-    {
-      "name": "string_upper",
-      "file": "string_upper.mojo",
-      "type": "string.upper",
-      "description": "Convert a string to uppercase",
-      "inputs": {
-        "text": {
-          "type": "string",
-          "description": "String to convert to uppercase"
-        }
-      },
-      "outputs": {
-        "result": {
-          "type": "string",
-          "description": "Uppercase string"
-        }
-      }
-    },
-    {
-      "name": "string_lower",
-      "file": "string_lower.mojo",
-      "type": "string.lower",
-      "description": "Convert a string to lowercase",
-      "inputs": {
-        "text": {
-          "type": "string",
-          "description": "String to convert to lowercase"
-        }
-      },
-      "outputs": {
-        "result": {
-          "type": "string",
-          "description": "Lowercase string"
-        }
-      }
-    },
-    {
-      "name": "string_length",
-      "file": "string_length.mojo",
-      "type": "string.length",
-      "description": "Get the length of a string",
-      "inputs": {
-        "text": {
-          "type": "string",
-          "description": "String to measure"
-        }
-      },
-      "outputs": {
-        "result": {
-          "type": "integer",
-          "description": "Length of the string"
-        }
-      }
-    }
+    "string_concat",
+    "string_length",
+    "string_lower",
+    "string_upper"
   ]
 }

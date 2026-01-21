@@ -1,0 +1,14 @@
+{
+  "name": "@metabuilder/convert_to_json",
+  "version": "0.1.0",
+  "description": "Convert value to JSON string",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["convert", "workflow", "plugin", "rust"],
+  "main": "src/lib.rs",
+  "metadata": {
+    "plugin_type": "convert.to_json",
+    "category": "convert",
+    "runtime": "rust"
+  }
+}

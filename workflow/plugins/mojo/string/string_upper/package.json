@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/string_upper",
+  "version": "1.0.0",
+  "description": "Convert a string to uppercase",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["string", "workflow", "plugin"],
+  "main": "string_upper.mojo",
+  "metadata": {
+    "plugin_type": "string.upper",
+    "category": "string"
+  }
+}

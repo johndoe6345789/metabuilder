@@ -1,0 +1,14 @@
+{
+  "name": "@metabuilder/list_unique",
+  "version": "0.1.0",
+  "description": "Remove duplicates from list",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["list", "workflow", "plugin", "rust"],
+  "main": "src/lib.rs",
+  "metadata": {
+    "plugin_type": "list.unique",
+    "category": "list",
+    "runtime": "rust"
+  }
+}

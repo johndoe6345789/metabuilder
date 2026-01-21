@@ -1,0 +1,14 @@
+{
+  "name": "@metabuilder/math_power",
+  "version": "0.1.0",
+  "description": "Calculate power of a number",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["math", "workflow", "plugin", "rust"],
+  "main": "src/lib.rs",
+  "metadata": {
+    "plugin_type": "math.power",
+    "category": "math",
+    "runtime": "rust"
+  }
+}
