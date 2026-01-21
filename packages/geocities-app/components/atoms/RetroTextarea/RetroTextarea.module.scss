@@ -1,0 +1,25 @@
+.retroTextarea {
+  font-family: 'VT323', 'Courier New', monospace;
+  font-size: 16px;
+  padding: 8px;
+  background: #fff;
+  border: none;
+  resize: vertical;
+  width: 100%;
+  
+  box-shadow: 
+    inset 1px 1px #0a0a0a,
+    inset -1px -1px #ffffff,
+    inset 2px 2px #808080,
+    inset -2px -2px #dfdfdf;
+  
+  &:focus {
+    outline: none;
+    background: #ffffcc;
+  }
+  
+  &::placeholder {
+    color: #808080;
+    font-style: italic;
+  }
+}

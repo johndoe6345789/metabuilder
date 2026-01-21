@@ -1,0 +1,67 @@
+.retroButton {
+  font-family: 'VT323', 'MS Sans Serif', monospace;
+  cursor: pointer;
+  background: #c0c0c0;
+  border: none;
+  padding: 4px 16px;
+  position: relative;
+  
+  // Classic Windows 95/98 3D border effect
+  box-shadow: 
+    inset -1px -1px #0a0a0a,
+    inset 1px 1px #ffffff,
+    inset -2px -2px #808080,
+    inset 2px 2px #dfdfdf;
+  
+  &:active:not(:disabled) {
+    box-shadow: 
+      inset 1px 1px #0a0a0a,
+      inset -1px -1px #ffffff,
+      inset 2px 2px #808080,
+      inset -2px -2px #dfdfdf;
+    padding: 5px 15px 3px 17px;
+  }
+  
+  &:focus {
+    outline: 1px dotted #000;
+    outline-offset: -4px;
+  }
+  
+  &:disabled {
+    color: #808080;
+    cursor: not-allowed;
+  }
+  
+  // Sizes
+  &.small {
+    font-size: 14px;
+    padding: 2px 8px;
+  }
+  
+  &.medium {
+    font-size: 18px;
+    padding: 4px 16px;
+  }
+  
+  &.large {
+    font-size: 24px;
+    padding: 8px 32px;
+  }
+  
+  // Variants
+  &.primary {
+    background: linear-gradient(180deg, #c0c0c0 0%, #a0a0a0 100%);
+    color: #000;
+  }
+  
+  &.secondary {
+    background: linear-gradient(180deg, #d4d0c8 0%, #b4b0a8 100%);
+    color: #000080;
+  }
+  
+  &.danger {
+    background: linear-gradient(180deg, #ff6b6b 0%, #cc0000 100%);
+    color: #fff;
+    text-shadow: 1px 1px 0 #800000;
+  }
+}

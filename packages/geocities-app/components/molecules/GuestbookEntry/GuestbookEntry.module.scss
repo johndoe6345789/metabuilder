@@ -1,0 +1,52 @@
+.entry {
+  background: #ffffcc;
+  border: 2px solid #808000;
+  padding: 10px;
+  margin-bottom: 10px;
+  
+  &:nth-child(even) {
+    background: #ccffcc;
+    border-color: #008000;
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  padding-bottom: 5px;
+  border-bottom: 1px dashed #808080;
+}
+
+.name {
+  font-family: 'Comic Neue', 'Comic Sans MS', cursive;
+  font-weight: bold;
+  font-size: 1rem;
+  color: #000080;
+}
+
+.date {
+  font-family: 'VT323', monospace;
+  font-size: 0.9rem;
+  color: #808080;
+}
+
+.message {
+  font-family: 'Comic Neue', 'Comic Sans MS', cursive;
+  font-size: 0.95rem;
+  color: #333;
+  line-height: 1.4;
+  margin-bottom: 5px;
+}
+
+.email {
+  font-family: 'VT323', monospace;
+  font-size: 0.85rem;
+  color: #0000ff;
+  text-decoration: underline;
+  
+  &:hover {
+    color: #ff00ff;
+  }
+}

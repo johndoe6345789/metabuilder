@@ -1,0 +1,26 @@
+.blink {
+  animation-name: blink;
+  animation-iteration-count: infinite;
+  font-weight: bold;
+  
+  &.slow {
+    animation-duration: 1.5s;
+  }
+  
+  &.normal {
+    animation-duration: 1s;
+  }
+  
+  &.fast {
+    animation-duration: 0.5s;
+  }
+}
+
+@keyframes blink {
+  0%, 49% {
+    opacity: 1;
+  }
+  50%, 100% {
+    opacity: 0;
+  }
+}

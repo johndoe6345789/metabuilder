@@ -1,0 +1,48 @@
+.webRing {
+  background: linear-gradient(180deg, #000080 0%, #000040 100%);
+  border: 3px ridge #c0c0c0;
+  padding: 15px;
+  text-align: center;
+  margin: 20px auto;
+  max-width: 400px;
+}
+
+.title {
+  font-family: 'Comic Neue', 'Comic Sans MS', cursive;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #ffff00;
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 0 #800000;
+}
+
+.navigation {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.link {
+  font-family: 'VT323', monospace;
+  font-size: 1rem;
+  color: #00ffff;
+  text-decoration: none;
+  
+  &:hover {
+    color: #ff00ff;
+    text-decoration: underline;
+  }
+}
+
+.separator {
+  color: #808080;
+}
+
+.ringLogo {
+  font-family: 'VT323', monospace;
+  font-size: 0.8rem;
+  color: #808080;
+  font-style: italic;
+}

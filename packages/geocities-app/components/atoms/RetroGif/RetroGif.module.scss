@@ -1,0 +1,19 @@
+.retroGif {
+  image-rendering: pixelated;
+  vertical-align: middle;
+  
+  &.small {
+    height: 20px;
+    width: auto;
+  }
+  
+  &.medium {
+    height: 40px;
+    width: auto;
+  }
+  
+  &.large {
+    height: 80px;
+    width: auto;
+  }
+}
