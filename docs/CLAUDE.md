@@ -1,9 +1,10 @@
 # MetaBuilder Development Guide for AI Assistants
 
 **Last Updated**: 2026-01-21
-**Status**: Phase 2 Complete, Universal Platform Architecture Defined
+**Status**: Phase 2 Complete, Monorepo Consolidated
 **Overall Health**: 82/100
 **Vision**: Universal Platform - One cohesive system for code, 3D, graphics, media, and system administration
+**Structure**: Monorepo containing MetaBuilder core + 10 standalone projects
 
 ---
 
@@ -382,45 +383,86 @@ const query = "SELECT * FROM user"
 
 ## Repository Structure (Quick Reference)
 
-**Top-Level Directories:**
+**Monorepo Directory Tree:**
 ```
-/dbal/                    # Database Abstraction Layer (TypeScript)
-  /development/src/       # DBAL implementation
-  /shared/api/schema/     # YAML entity definitions (27 files - SOURCE OF TRUTH)
-  /shared/api/schema/operations/  # Operation specifications
-
-/frontends/               # Multiple frontend implementations
-  /nextjs/src/            # Primary web UI (Next.js)
-  /cli/                   # Command-line interface
-  /qt6/                   # Desktop application
-
-/packages/                # 62 feature packages
-  /admin_dialog/, /audit_log/, /dashboard/, ... (each has own structure)
-
-/schemas/                 # JSON validation schemas
-  /package-schemas/       # 27 JSON schema files + examples
-
-/docs/                    # Documentation (43+ guides, implementation specs)
-/deployment/              # Docker & infrastructure as code
-/e2e/                     # End-to-end Playwright tests
-/scripts/                 # Build and migration scripts
-/spec/                    # TLA+ formal specifications
-/prisma/                  # Prisma configuration
+metabuilder/
+├── cadquerywrapper/      # CadQuery 3D CAD wrapper (Python)
+├── caproverforge/        # CapRover mobile client (Android/Kotlin)
+├── codegen/              # Code generation tools
+├── config/               # Lint, test, misc configs
+├── dbal/                 # Database Abstraction Layer
+│   ├── development/      # DBAL TypeScript implementation
+│   ├── production/       # Production build
+│   └── shared/api/schema/# YAML entities (SOURCE OF TRUTH)
+├── deployment/           # Docker & infrastructure
+├── dockerterminal/       # Docker Swarm management (Next.js)
+├── docs/                 # Documentation (organized)
+│   ├── analysis/         # Status reports, assessments
+│   ├── architecture/     # System design docs
+│   ├── guides/           # Quick references, how-tos
+│   ├── implementation/   # Implementation details
+│   ├── packages/         # Package-specific docs
+│   ├── phases/           # Phase completion reports
+│   ├── testing/          # E2E and test docs
+│   └── workflow/         # Workflow engine docs
+├── e2e/                  # End-to-end Playwright tests
+├── fakemui/              # Material UI clone (React/QML)
+├── frontends/            # Multiple frontends
+│   ├── cli/              # Command-line interface
+│   ├── nextjs/           # Primary web UI
+│   └── qt6/              # Desktop application
+├── gameengine/           # SDL3 C++ game engine
+├── mojo/                 # Mojo examples (systems programming)
+│   └── examples/         # Official Modular examples
+├── packagerepo/          # Package repository service
+├── packages/             # 62+ feature packages
+├── pastebin/             # Snippet pastebin (Next.js)
+├── pcbgenerator/         # PCB design library (Python)
+├── postgres/             # PostgreSQL utilities
+├── repoforge/            # GitHub Android client (Kotlin)
+├── schemas/              # JSON validation schemas
+├── scripts/              # Build and migration scripts
+├── services/             # Background services
+├── smtprelay/            # SMTP relay (Python/Twisted)
+├── sparkos/              # Minimal Linux distro + Qt6 app
+├── storybook/            # Component stories
+├── workflow/             # Workflow engine
+│   ├── executor/         # Multi-language executors
+│   │   ├── ts/           # TypeScript core engine
+│   │   ├── python/       # Python executor
+│   │   └── cpp/          # C++ executor (planned)
+│   ├── examples/         # Workflow examples
+│   └── plugins/          # Workflow plugins
+└── [root files]          # CLAUDE.md, README.md, etc.
 ```
+
+**Standalone Projects in Monorepo:**
+| Project | Purpose | Tech Stack |
+|---------|---------|------------|
+| `cadquerywrapper/` | Parametric 3D CAD modeling | Python, CadQuery |
+| `caproverforge/` | CapRover PaaS mobile client | Android, Kotlin |
+| `dockerterminal/` | Docker Swarm management | Next.js, TypeScript |
+| `gameengine/` | 2D/3D game engine | C++, SDL3 |
+| `mojo/` | Systems programming examples | Mojo (Python superset) |
+| `pastebin/` | Code snippet sharing | Next.js, TypeScript |
+| `pcbgenerator/` | PCB design automation | Python |
+| `repoforge/` | GitHub client for Android | Kotlin, Compose |
+| `smtprelay/` | Email relay server | Python, Twisted |
+| `sparkos/` | Minimal Linux + Qt6 app | C++, Qt6, Linux |
 
 **Critical Root Files:**
-- `CLAUDE.md` - THIS FILE (core principles)
-- `AGENTS.md` - Domain-specific rules and AI instructions
-- `README.md` - Project overview
+- `CLAUDE.md` - THIS FILE (in docs/)
+- `AGENTS.md` - Domain-specific rules (in docs/)
+- `README.md` - Project overview (in docs/)
 - `package.json` - Workspace configuration
 - `playwright.config.ts` - E2E test config
-- `152+ .md files` - Phase reports, analysis, implementation guides
 
 **Understanding the Structure:**
 - **Schemas drive development**: YAML entities → Prisma schema → JSON validation → Code
 - **Packages are modular**: Each package is self-contained with its own structure
 - **Multi-layer architecture**: Database layer (DBAL) → API (Next.js) → Frontend (React/CLI/Qt6)
 - **Everything multi-tenant**: Every entity has `tenantId` - mandatory filtering
+- **Standalone projects**: Integrated into monorepo but maintain independence
 
 ---
 
