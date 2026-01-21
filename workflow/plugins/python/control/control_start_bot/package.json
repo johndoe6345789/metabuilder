@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/control_start_bot",
+  "version": "1.0.0",
+  "description": "control_start_bot plugin",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["control", "workflow", "plugin"],
+  "main": "control_start_bot.py",
+  "metadata": {
+    "plugin_type": "control.start_bot",
+    "category": "control"
+  }
+}

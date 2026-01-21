@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/control_switch",
+  "version": "1.0.0",
+  "description": "control_switch plugin",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["control", "workflow", "plugin"],
+  "main": "control_switch.py",
+  "metadata": {
+    "plugin_type": "control.switch",
+    "category": "control"
+  }
+}

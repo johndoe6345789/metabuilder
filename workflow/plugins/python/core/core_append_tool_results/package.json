@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/core_append_tool_results",
+  "version": "1.0.0",
+  "description": "core_append_tool_results plugin",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["core", "workflow", "plugin"],
+  "main": "core_append_tool_results.py",
+  "metadata": {
+    "plugin_type": "core.append_tool_results",
+    "category": "core"
+  }
+}

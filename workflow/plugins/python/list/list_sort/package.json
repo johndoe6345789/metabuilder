@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/list_sort",
+  "version": "1.0.0",
+  "description": "list_sort plugin",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["list", "workflow", "plugin"],
+  "main": "list_sort.py",
+  "metadata": {
+    "plugin_type": "list.sort",
+    "category": "list"
+  }
+}

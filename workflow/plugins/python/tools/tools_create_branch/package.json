@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/tools_create_branch",
+  "version": "1.0.0",
+  "description": "tools_create_branch plugin",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["tools", "workflow", "plugin"],
+  "main": "tools_create_branch.py",
+  "metadata": {
+    "plugin_type": "tools.create_branch",
+    "category": "tools"
+  }
+}

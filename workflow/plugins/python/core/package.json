@@ -1,0 +1,21 @@
+{
+  "name": "@metabuilder/workflow-plugins-core",
+  "version": "1.0.0",
+  "description": "Core AI/workflow operation plugins",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["core", "ai", "workflow", "plugins"],
+  "metadata": {
+    "category": "core",
+    "plugin_count": 7
+  },
+  "plugins": [
+    "core_ai_request",
+    "core_append_context_message",
+    "core_append_tool_results",
+    "core_append_user_instruction",
+    "core_load_context",
+    "core_run_tool_calls",
+    "core_seed_messages"
+  ]
+}

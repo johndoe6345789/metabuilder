@@ -1,0 +1,67 @@
+{
+  "name": "list",
+  "version": "1.0.0",
+  "description": "List operation plugins for workflow processing",
+  "metadata": {
+    "plugin_type": "list",
+    "language": "mojo",
+    "category": "list"
+  },
+  "plugins": [
+    {
+      "name": "list_concat",
+      "file": "list_concat.mojo",
+      "type": "list.concat",
+      "description": "Concatenate multiple lists into one",
+      "inputs": {
+        "lists": {
+          "type": "array",
+          "items": "array",
+          "description": "List of lists to concatenate"
+        }
+      },
+      "outputs": {
+        "result": {
+          "type": "array",
+          "description": "Concatenated list"
+        }
+      }
+    },
+    {
+      "name": "list_length",
+      "file": "list_length.mojo",
+      "type": "list.length",
+      "description": "Get the number of items in a list",
+      "inputs": {
+        "list": {
+          "type": "array",
+          "description": "List to measure"
+        }
+      },
+      "outputs": {
+        "result": {
+          "type": "integer",
+          "description": "Number of items in the list"
+        }
+      }
+    },
+    {
+      "name": "list_reverse",
+      "file": "list_reverse.mojo",
+      "type": "list.reverse",
+      "description": "Reverse the order of items in a list",
+      "inputs": {
+        "list": {
+          "type": "array",
+          "description": "List to reverse"
+        }
+      },
+      "outputs": {
+        "result": {
+          "type": "array",
+          "description": "Reversed list"
+        }
+      }
+    }
+  ]
+}

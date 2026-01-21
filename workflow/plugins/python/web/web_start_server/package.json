@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/web_start_server",
+  "version": "1.0.0",
+  "description": "web_start_server plugin",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["web", "workflow", "plugin"],
+  "main": "web_start_server.py",
+  "metadata": {
+    "plugin_type": "web.start_server",
+    "category": "web"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "name": "@metabuilder/workflow-plugins-logic",
+  "version": "1.0.0",
+  "description": "Boolean logic operation plugins",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["logic", "workflow", "plugins"],
+  "metadata": {
+    "category": "logic",
+    "plugin_count": 9
+  },
+  "plugins": [
+    "logic_and",
+    "logic_equals",
+    "logic_gt",
+    "logic_gte",
+    "logic_in",
+    "logic_lt",
+    "logic_lte",
+    "logic_or",
+    "logic_xor"
+  ]
+}

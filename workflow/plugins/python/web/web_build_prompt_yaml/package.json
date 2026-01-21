@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/web_build_prompt_yaml",
+  "version": "1.0.0",
+  "description": "web_build_prompt_yaml plugin",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["web", "workflow", "plugin"],
+  "main": "web_build_prompt_yaml.py",
+  "metadata": {
+    "plugin_type": "web.build_prompt_yaml",
+    "category": "web"
+  }
+}

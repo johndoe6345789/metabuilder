@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/dict_keys",
+  "version": "1.0.0",
+  "description": "dict_keys plugin",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["dict", "workflow", "plugin"],
+  "main": "dict_keys.py",
+  "metadata": {
+    "plugin_type": "dict.keys",
+    "category": "dict"
+  }
+}

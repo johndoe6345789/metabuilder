@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/math_multiply",
+  "version": "1.0.0",
+  "description": "math_multiply plugin",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["math", "workflow", "plugin"],
+  "main": "math_multiply.py",
+  "metadata": {
+    "plugin_type": "math.multiply",
+    "category": "math"
+  }
+}

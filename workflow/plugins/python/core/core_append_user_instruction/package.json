@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/core_append_user_instruction",
+  "version": "1.0.0",
+  "description": "core_append_user_instruction plugin",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["core", "workflow", "plugin"],
+  "main": "core_append_user_instruction.py",
+  "metadata": {
+    "plugin_type": "core.append_user_instruction",
+    "category": "core"
+  }
+}

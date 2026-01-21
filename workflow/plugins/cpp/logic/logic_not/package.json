@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/logic_not",
+  "version": "1.0.0",
+  "description": "Negate a boolean value",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["logic", "workflow", "plugin"],
+  "main": "logic_not.hpp",
+  "metadata": {
+    "plugin_type": "logic.not",
+    "category": "logic"
+  }
+}

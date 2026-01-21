@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/math_max",
+  "version": "1.0.0",
+  "description": "Find maximum of numbers",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["math", "workflow", "plugin"],
+  "main": "math_max.hpp",
+  "metadata": {
+    "plugin_type": "math.max",
+    "category": "math"
+  }
+}

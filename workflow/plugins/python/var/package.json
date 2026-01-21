@@ -1,0 +1,18 @@
+{
+  "name": "@metabuilder/workflow-plugins-var",
+  "version": "1.0.0",
+  "description": "Variable management plugins",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["var", "variable", "workflow", "plugins"],
+  "metadata": {
+    "category": "var",
+    "plugin_count": 4
+  },
+  "plugins": [
+    "var_delete",
+    "var_exists",
+    "var_get",
+    "var_set"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/utils_map_list",
+  "version": "1.0.0",
+  "description": "utils_map_list plugin",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["utils", "workflow", "plugin"],
+  "main": "utils_map_list.py",
+  "metadata": {
+    "plugin_type": "utils.map_list",
+    "category": "utils"
+  }
+}

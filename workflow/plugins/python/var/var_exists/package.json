@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/var_exists",
+  "version": "1.0.0",
+  "description": "var_exists plugin",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["var", "workflow", "plugin"],
+  "main": "var_exists.py",
+  "metadata": {
+    "plugin_type": "var.exists",
+    "category": "var"
+  }
+}

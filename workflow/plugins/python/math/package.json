@@ -1,0 +1,24 @@
+{
+  "name": "@metabuilder/workflow-plugins-math",
+  "version": "1.0.0",
+  "description": "Mathematical operation plugins",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["math", "workflow", "plugins"],
+  "metadata": {
+    "category": "math",
+    "plugin_count": 10
+  },
+  "plugins": [
+    "math_abs",
+    "math_add",
+    "math_divide",
+    "math_max",
+    "math_min",
+    "math_modulo",
+    "math_multiply",
+    "math_power",
+    "math_round",
+    "math_subtract"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/control_get_bot_status",
+  "version": "1.0.0",
+  "description": "control_get_bot_status plugin",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["control", "workflow", "plugin"],
+  "main": "control_get_bot_status.py",
+  "metadata": {
+    "plugin_type": "control.get_bot_status",
+    "category": "control"
+  }
+}

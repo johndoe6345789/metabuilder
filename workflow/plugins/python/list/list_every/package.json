@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/list_every",
+  "version": "1.0.0",
+  "description": "list_every plugin",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["list", "workflow", "plugin"],
+  "main": "list_every.py",
+  "metadata": {
+    "plugin_type": "list.every",
+    "category": "list"
+  }
+}

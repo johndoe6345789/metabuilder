@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/tools_run_lint",
+  "version": "1.0.0",
+  "description": "tools_run_lint plugin",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["tools", "workflow", "plugin"],
+  "main": "tools_run_lint.py",
+  "metadata": {
+    "plugin_type": "tools.run_lint",
+    "category": "tools"
+  }
+}

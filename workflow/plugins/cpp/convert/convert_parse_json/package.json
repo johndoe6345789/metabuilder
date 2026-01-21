@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/convert_parse_json",
+  "version": "1.0.0",
+  "description": "Parse a JSON string into an object",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["convert", "workflow", "plugin"],
+  "main": "convert_parse_json.hpp",
+  "metadata": {
+    "plugin_type": "convert.parse_json",
+    "category": "convert"
+  }
+}

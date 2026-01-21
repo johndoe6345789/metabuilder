@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/math_subtract",
+  "version": "1.0.0",
+  "description": "Subtract numbers from the first",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["math", "workflow", "plugin"],
+  "main": "math_subtract.hpp",
+  "metadata": {
+    "plugin_type": "math.subtract",
+    "category": "math"
+  }
+}

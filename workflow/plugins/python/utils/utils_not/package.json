@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/utils_not",
+  "version": "1.0.0",
+  "description": "utils_not plugin",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["utils", "workflow", "plugin"],
+  "main": "utils_not.py",
+  "metadata": {
+    "plugin_type": "utils.not",
+    "category": "utils"
+  }
+}

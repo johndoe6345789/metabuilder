@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/utils_branch_condition",
+  "version": "1.0.0",
+  "description": "utils_branch_condition plugin",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["utils", "workflow", "plugin"],
+  "main": "utils_branch_condition.py",
+  "metadata": {
+    "plugin_type": "utils.branch_condition",
+    "category": "utils"
+  }
+}

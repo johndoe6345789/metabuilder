@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/utils_filter_list",
+  "version": "1.0.0",
+  "description": "utils_filter_list plugin",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["utils", "workflow", "plugin"],
+  "main": "utils_filter_list.py",
+  "metadata": {
+    "plugin_type": "utils.filter_list",
+    "category": "utils"
+  }
+}

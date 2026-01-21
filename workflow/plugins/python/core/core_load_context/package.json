@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/core_load_context",
+  "version": "1.0.0",
+  "description": "core_load_context plugin",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["core", "workflow", "plugin"],
+  "main": "core_load_context.py",
+  "metadata": {
+    "plugin_type": "core.load_context",
+    "category": "core"
+  }
+}

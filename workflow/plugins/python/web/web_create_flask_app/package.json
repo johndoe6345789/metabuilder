@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/web_create_flask_app",
+  "version": "1.0.0",
+  "description": "web_create_flask_app plugin",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["web", "workflow", "plugin"],
+  "main": "web_create_flask_app.py",
+  "metadata": {
+    "plugin_type": "web.create_flask_app",
+    "category": "web"
+  }
+}

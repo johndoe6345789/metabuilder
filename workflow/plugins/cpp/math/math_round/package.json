@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/math_round",
+  "version": "1.0.0",
+  "description": "Round a number to specified decimals",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["math", "workflow", "plugin"],
+  "main": "math_round.hpp",
+  "metadata": {
+    "plugin_type": "math.round",
+    "category": "math"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/math_min",
+  "version": "1.0.0",
+  "description": "Find minimum of numbers",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["math", "workflow", "plugin"],
+  "main": "math_min.hpp",
+  "metadata": {
+    "plugin_type": "math.min",
+    "category": "math"
+  }
+}

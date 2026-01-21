@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/string_length",
+  "version": "1.0.0",
+  "description": "string_length plugin",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["string", "workflow", "plugin"],
+  "main": "string_length.py",
+  "metadata": {
+    "plugin_type": "string.length",
+    "category": "string"
+  }
+}

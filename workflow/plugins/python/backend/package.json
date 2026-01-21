@@ -1,0 +1,29 @@
+{
+  "name": "@metabuilder/workflow-plugins-backend",
+  "version": "1.0.0",
+  "description": "Backend infrastructure and initialization plugins",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["backend", "infrastructure", "workflow", "plugins"],
+  "metadata": {
+    "category": "backend",
+    "plugin_count": 15
+  },
+  "plugins": [
+    "backend_build_tool_map",
+    "backend_configure_logging",
+    "backend_create_discord",
+    "backend_create_github",
+    "backend_create_openai",
+    "backend_create_slack",
+    "backend_load_env",
+    "backend_load_messages",
+    "backend_load_metadata",
+    "backend_load_plugins",
+    "backend_load_prompt",
+    "backend_load_tool_policies",
+    "backend_load_tool_registry",
+    "backend_load_tools",
+    "backend_parse_cli_args"
+  ]
+}

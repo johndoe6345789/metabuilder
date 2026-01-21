@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/var_set",
+  "version": "1.0.0",
+  "description": "var_set plugin",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["var", "workflow", "plugin"],
+  "main": "var_set.py",
+  "metadata": {
+    "plugin_type": "var.set",
+    "category": "var"
+  }
+}

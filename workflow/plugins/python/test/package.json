@@ -1,0 +1,19 @@
+{
+  "name": "@metabuilder/workflow-plugins-test",
+  "version": "1.0.0",
+  "description": "Unit testing and assertion plugins",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["test", "assert", "workflow", "plugins"],
+  "metadata": {
+    "category": "test",
+    "plugin_count": 5
+  },
+  "plugins": [
+    "test_assert_equals",
+    "test_assert_exists",
+    "test_assert_true",
+    "test_run_suite",
+    "test_skip"
+  ]
+}

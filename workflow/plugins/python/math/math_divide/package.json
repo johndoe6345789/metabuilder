@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/math_divide",
+  "version": "1.0.0",
+  "description": "math_divide plugin",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["math", "workflow", "plugin"],
+  "main": "math_divide.py",
+  "metadata": {
+    "plugin_type": "math.divide",
+    "category": "math"
+  }
+}

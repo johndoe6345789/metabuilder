@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/core_ai_request",
+  "version": "1.0.0",
+  "description": "core_ai_request plugin",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["core", "workflow", "plugin"],
+  "main": "core_ai_request.py",
+  "metadata": {
+    "plugin_type": "core.ai_request",
+    "category": "core"
+  }
+}

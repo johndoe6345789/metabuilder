@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/math_add",
+  "version": "1.0.0",
+  "description": "math_add plugin",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["math", "workflow", "plugin"],
+  "main": "math_add.py",
+  "metadata": {
+    "plugin_type": "math.add",
+    "category": "math"
+  }
+}

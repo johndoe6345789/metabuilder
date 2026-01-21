@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/utils_check_mvp",
+  "version": "1.0.0",
+  "description": "utils_check_mvp plugin",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["utils", "workflow", "plugin"],
+  "main": "utils_check_mvp.py",
+  "metadata": {
+    "plugin_type": "utils.check_mvp",
+    "category": "utils"
+  }
+}

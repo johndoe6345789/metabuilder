@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/list_some",
+  "version": "1.0.0",
+  "description": "list_some plugin",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["list", "workflow", "plugin"],
+  "main": "list_some.py",
+  "metadata": {
+    "plugin_type": "list.some",
+    "category": "list"
+  }
+}

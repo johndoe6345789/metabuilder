@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/web_get_recent_logs",
+  "version": "1.0.0",
+  "description": "web_get_recent_logs plugin",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["web", "workflow", "plugin"],
+  "main": "web_get_recent_logs.py",
+  "metadata": {
+    "plugin_type": "web.get_recent_logs",
+    "category": "web"
+  }
+}

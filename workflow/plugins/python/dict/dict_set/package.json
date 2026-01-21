@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/dict_set",
+  "version": "1.0.0",
+  "description": "dict_set plugin",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["dict", "workflow", "plugin"],
+  "main": "dict_set.py",
+  "metadata": {
+    "plugin_type": "dict.set",
+    "category": "dict"
+  }
+}

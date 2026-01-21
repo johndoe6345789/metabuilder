@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/convert_to_dict",
+  "version": "1.0.0",
+  "description": "convert_to_dict plugin",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["convert", "workflow", "plugin"],
+  "main": "convert_to_dict.py",
+  "metadata": {
+    "plugin_type": "convert.to_dict",
+    "category": "convert"
+  }
+}

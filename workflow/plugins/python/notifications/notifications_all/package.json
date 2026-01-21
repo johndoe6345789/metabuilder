@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/notifications_all",
+  "version": "1.0.0",
+  "description": "notifications_all plugin",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["notifications", "workflow", "plugin"],
+  "main": "notifications_all.py",
+  "metadata": {
+    "plugin_type": "notifications.all",
+    "category": "notifications"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "@metabuilder/workflow-plugins-utils",
+  "version": "1.0.0",
+  "description": "Utility function plugins",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["utils", "utility", "workflow", "plugins"],
+  "metadata": {
+    "category": "utils",
+    "plugin_count": 7
+  },
+  "plugins": [
+    "utils_check_mvp",
+    "utils_filter_list",
+    "utils_format_date",
+    "utils_generate_uuid",
+    "utils_hash",
+    "utils_map_list",
+    "utils_sleep"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/string_split",
+  "version": "1.0.0",
+  "description": "string_split plugin",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["string", "workflow", "plugin"],
+  "main": "string_split.py",
+  "metadata": {
+    "plugin_type": "string.split",
+    "category": "string"
+  }
+}

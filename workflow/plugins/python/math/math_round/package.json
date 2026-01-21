@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/math_round",
+  "version": "1.0.0",
+  "description": "math_round plugin",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["math", "workflow", "plugin"],
+  "main": "math_round.py",
+  "metadata": {
+    "plugin_type": "math.round",
+    "category": "math"
+  }
+}

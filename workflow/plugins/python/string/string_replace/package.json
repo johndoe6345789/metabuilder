@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/string_replace",
+  "version": "1.0.0",
+  "description": "string_replace plugin",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["string", "workflow", "plugin"],
+  "main": "string_replace.py",
+  "metadata": {
+    "plugin_type": "string.replace",
+    "category": "string"
+  }
+}

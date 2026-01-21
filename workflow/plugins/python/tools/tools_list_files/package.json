@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/tools_list_files",
+  "version": "1.0.0",
+  "description": "tools_list_files plugin",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["tools", "workflow", "plugin"],
+  "main": "tools_list_files.py",
+  "metadata": {
+    "plugin_type": "tools.list_files",
+    "category": "tools"
+  }
+}

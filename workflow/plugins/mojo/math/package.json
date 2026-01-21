@@ -1,0 +1,92 @@
+{
+  "name": "math",
+  "version": "1.0.0",
+  "description": "Mathematical operation plugins for workflow processing",
+  "metadata": {
+    "plugin_type": "math",
+    "language": "mojo",
+    "category": "math"
+  },
+  "plugins": [
+    {
+      "name": "math_add",
+      "file": "math_add.mojo",
+      "type": "math.add",
+      "description": "Add two or more numbers together",
+      "inputs": {
+        "numbers": {
+          "type": "array",
+          "items": "number",
+          "description": "List of numbers to add"
+        }
+      },
+      "outputs": {
+        "result": {
+          "type": "number",
+          "description": "Sum of all input numbers"
+        }
+      }
+    },
+    {
+      "name": "math_subtract",
+      "file": "math_subtract.mojo",
+      "type": "math.subtract",
+      "description": "Subtract numbers sequentially from the first number",
+      "inputs": {
+        "numbers": {
+          "type": "array",
+          "items": "number",
+          "description": "List of numbers (first is minuend, rest are subtrahends)"
+        }
+      },
+      "outputs": {
+        "result": {
+          "type": "number",
+          "description": "Result of sequential subtraction"
+        }
+      }
+    },
+    {
+      "name": "math_multiply",
+      "file": "math_multiply.mojo",
+      "type": "math.multiply",
+      "description": "Multiply two or more numbers together",
+      "inputs": {
+        "numbers": {
+          "type": "array",
+          "items": "number",
+          "description": "List of numbers to multiply"
+        }
+      },
+      "outputs": {
+        "result": {
+          "type": "number",
+          "description": "Product of all input numbers"
+        }
+      }
+    },
+    {
+      "name": "math_divide",
+      "file": "math_divide.mojo",
+      "type": "math.divide",
+      "description": "Divide numbers sequentially from the first number",
+      "inputs": {
+        "numbers": {
+          "type": "array",
+          "items": "number",
+          "description": "List of numbers (first is dividend, rest are divisors)"
+        }
+      },
+      "outputs": {
+        "result": {
+          "type": "number",
+          "description": "Result of sequential division"
+        },
+        "error": {
+          "type": "string",
+          "description": "Error message if division by zero"
+        }
+      }
+    }
+  ]
+}
