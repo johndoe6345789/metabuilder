@@ -16,7 +16,7 @@ export interface ValidationResult {
 }
 
 export class TestValidator {
-  private ajv: Ajv;
+  private ajv: InstanceType<typeof Ajv>;
   private schema: any;
 
   constructor(schemaPath: string) {
@@ -24,8 +24,9 @@ export class TestValidator {
     try {
       const schemaContent = fs.readFileSync(schemaPath, 'utf-8');
       this.schema = JSON.parse(schemaContent);
-    } catch (err) {
-      throw new Error(`Failed to load schema from ${schemaPath}: ${err instanceof Error ? err.message : String(err)}`);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      throw new Error(`Failed to load schema from ${schemaPath}: ${message}`);
     }
   }
 
@@ -49,9 +50,9 @@ export class TestValidator {
       const isValid = validate(jsonContent);
 
       if (!isValid && validate.errors) {
-        result.errors = validate.errors.map(err => {
-          const path = err.instancePath || 'root';
-          return `${path}: ${err.message}`;
+        result.errors = validate.errors.map((err: any) => {
+          const errorPath = err.instancePath || 'root';
+          return `${errorPath}: ${err.message}`;
         });
       }
 
@@ -221,7 +222,7 @@ export async function validateTests(
 }
 
 // CLI support
-if (require.main === module) {
+if (process.argv[1]?.endsWith('validator.ts')) {
   const testPath = process.argv[2] || 'packages';
   const schemaPath = process.argv[3] || 'schemas/package-schemas/tests_schema.json';
 
