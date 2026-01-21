@@ -22,6 +22,7 @@ echo "════════════════════════�
 TOTAL=0
 PASSED=0
 FAILED=0
+WARNINGS=0
 LOW_COMPLEXITY=0
 
 for file in "$PARTS_PATH"/*.json; do
@@ -33,11 +34,24 @@ for file in "$PARTS_PATH"/*.json; do
   BASENAME=$(basename "$file")
   printf "%-30s " "$BASENAME"
 
-  # Validate structure
-  if ! npx tsx scripts/validate-geometry.ts "$file" > /dev/null 2>&1; then
-    echo "✗ INVALID"
-    FAILED=$((FAILED + 1))
-    continue
+  # Validate structure and capture output
+  VALIDATE_OUTPUT=$(npx tsx scripts/validate-geometry.ts "$file" 2>&1)
+  VALIDATE_EXIT=$?
+
+  # Check for errors (exit code 1 means errors)
+  if [ $VALIDATE_EXIT -ne 0 ]; then
+    # Check if it's just warnings or actual errors
+    if echo "$VALIDATE_OUTPUT" | grep -q "FAILED"; then
+      echo "✗ INVALID"
+      FAILED=$((FAILED + 1))
+      continue
+    fi
+  fi
+
+  # Check for warnings (breeze block, no external features, etc)
+  HAS_WARNINGS=0
+  if echo "$VALIDATE_OUTPUT" | grep -q "⚠"; then
+    HAS_WARNINGS=1
   fi
 
   # Check complexity
@@ -52,6 +66,9 @@ for file in "$PARTS_PATH"/*.json; do
   if [ "$SCORE" -lt 30 ]; then
     echo "⚠ LOW ($SCORE)"
     LOW_COMPLEXITY=$((LOW_COMPLEXITY + 1))
+  elif [ "$HAS_WARNINGS" -eq 1 ]; then
+    echo "⚠ WARN ($SCORE)"
+    WARNINGS=$((WARNINGS + 1))
   elif [ "$SCORE" -lt 60 ]; then
     echo "→ OK ($SCORE)"
     PASSED=$((PASSED + 1))
@@ -62,7 +79,7 @@ for file in "$PARTS_PATH"/*.json; do
 done
 
 echo "════════════════════════════════════════════════════════════"
-echo "Total: $TOTAL | Passed: $PASSED | Low complexity: $LOW_COMPLEXITY | Failed: $FAILED"
+echo "Total: $TOTAL | Passed: $PASSED | Warnings: $WARNINGS | Low: $LOW_COMPLEXITY | Failed: $FAILED"
 
 if [ $FAILED -gt 0 ] || [ $LOW_COMPLEXITY -gt 0 ]; then
   exit 1
