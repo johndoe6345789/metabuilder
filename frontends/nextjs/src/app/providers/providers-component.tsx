@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useEffect, useMemo, useState } from 'react'
 
 import { CssBaseline } from '@/fakemui'
+import { RetryableErrorBoundary } from '@/components/RetryableErrorBoundary'
 
 import { ThemeContext, type ThemeMode } from './theme-context'
 
@@ -51,7 +52,16 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <ThemeContext.Provider value={{ mode, resolvedMode, setMode, toggleTheme }}>
       <CssBaseline />
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        <RetryableErrorBoundary
+          componentName="Providers"
+          maxAutoRetries={3}
+          showSupportInfo
+          supportEmail="support@metabuilder.dev"
+        >
+          {children}
+        </RetryableErrorBoundary>
+      </QueryClientProvider>
     </ThemeContext.Provider>
   )
 }
