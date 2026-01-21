@@ -1,0 +1,49 @@
+# Git
+.git
+.gitignore
+.github
+
+# Documentation
+*.md
+!README.md
+ARCHITECTURE.md
+CONTRIBUTING.md
+LICENSE
+
+# Build artifacts
+init
+*.o
+*.a
+*.so
+*.img
+*.iso
+build/
+
+# Generated rootfs contents (we build our own in Docker)
+rootfs/bin/*
+rootfs/sbin/init
+rootfs/usr/
+rootfs/lib/
+rootfs/lib64/
+rootfs/boot/
+
+# Keep rootfs structure
+!rootfs/etc/
+!rootfs/root/
+!rootfs/home/
+
+# Temporary files
+*.tmp
+*.bak
+/tmp/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
