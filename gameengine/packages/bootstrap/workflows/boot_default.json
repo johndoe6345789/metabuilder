@@ -1,0 +1,113 @@
+{
+  "name": "Boot Default",
+  "nodes": [
+    {
+      "id": "load_config",
+      "name": "Load Config",
+      "type": "config.load",
+      "typeVersion": 1,
+      "position": [0, 0],
+      "parameters": {
+        "inputs": {
+          "path": "config.path"
+        },
+        "outputs": {
+          "document": "config.document"
+        }
+      }
+    },
+    {
+      "id": "validate_version",
+      "name": "Validate Version",
+      "type": "config.version.validate",
+      "typeVersion": 1,
+      "position": [260, 0],
+      "parameters": {
+        "inputs": {
+          "document": "config.document",
+          "path": "config.path"
+        },
+        "outputs": {
+          "version": "config.version"
+        }
+      }
+    },
+    {
+      "id": "migrate_version",
+      "name": "Migrate Version",
+      "type": "config.migrate",
+      "typeVersion": 1,
+      "position": [520, 0],
+      "parameters": {
+        "inputs": {
+          "document": "config.document",
+          "path": "config.path",
+          "version": "config.version"
+        },
+        "outputs": {
+          "document": "config.document",
+          "version": "config.version"
+        }
+      }
+    },
+    {
+      "id": "validate_schema",
+      "name": "Validate Schema",
+      "type": "config.schema.validate",
+      "typeVersion": 1,
+      "position": [780, 0],
+      "parameters": {
+        "inputs": {
+          "document": "config.document",
+          "path": "config.path"
+        }
+      }
+    },
+    {
+      "id": "build_runtime_config",
+      "name": "Build Runtime Config",
+      "type": "runtime.config.build",
+      "typeVersion": 1,
+      "position": [1040, 0],
+      "parameters": {
+        "inputs": {
+          "document": "config.document",
+          "path": "config.path"
+        },
+        "outputs": {
+          "runtime": "config.runtime"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Load Config": {
+      "main": {
+        "0": [
+          { "node": "Validate Version", "type": "main", "index": 0 }
+        ]
+      }
+    },
+    "Validate Version": {
+      "main": {
+        "0": [
+          { "node": "Migrate Version", "type": "main", "index": 0 }
+        ]
+      }
+    },
+    "Migrate Version": {
+      "main": {
+        "0": [
+          { "node": "Validate Schema", "type": "main", "index": 0 }
+        ]
+      }
+    },
+    "Validate Schema": {
+      "main": {
+        "0": [
+          { "node": "Build Runtime Config", "type": "main", "index": 0 }
+        ]
+      }
+    }
+  }
+}

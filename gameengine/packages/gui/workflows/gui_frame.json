@@ -1,0 +1,77 @@
+{
+  "name": "GUI Frame",
+  "nodes": [
+    {
+      "id": "gui_begin",
+      "name": "GUI Begin",
+      "type": "frame.begin",
+      "typeVersion": 1,
+      "position": [0, 0],
+      "parameters": {
+        "inputs": {
+          "delta": "frame.delta",
+          "elapsed": "frame.elapsed"
+        }
+      }
+    },
+    {
+      "id": "gui_layout",
+      "name": "GUI Layout",
+      "type": "frame.gui",
+      "typeVersion": 1,
+      "position": [260, 0],
+      "parameters": {
+        "inputs": {
+          "elapsed": "frame.elapsed"
+        }
+      }
+    },
+    {
+      "id": "render_ui",
+      "name": "Render UI",
+      "type": "frame.render",
+      "typeVersion": 1,
+      "position": [520, 0],
+      "parameters": {
+        "inputs": {
+          "elapsed": "frame.elapsed"
+        }
+      }
+    },
+    {
+      "id": "capture_ui",
+      "name": "Capture UI",
+      "type": "validation.tour.checkpoint",
+      "typeVersion": 1,
+      "position": [780, 0],
+      "parameters": {
+        "inputs": {
+          "checkpoint": "packages.gui_demo"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "GUI Begin": {
+      "main": {
+        "0": [
+          { "node": "GUI Layout", "type": "main", "index": 0 }
+        ]
+      }
+    },
+    "GUI Layout": {
+      "main": {
+        "0": [
+          { "node": "Render UI", "type": "main", "index": 0 }
+        ]
+      }
+    },
+    "Render UI": {
+      "main": {
+        "0": [
+          { "node": "Capture UI", "type": "main", "index": 0 }
+        ]
+      }
+    }
+  }
+}

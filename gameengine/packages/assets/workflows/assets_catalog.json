@@ -1,0 +1,45 @@
+{
+  "name": "Assets Catalog",
+  "nodes": [
+    {
+      "id": "asset_roots",
+      "name": "Asset Roots",
+      "type": "list.literal",
+      "typeVersion": 1,
+      "position": [0, 0],
+      "parameters": {
+        "items": [
+          "assets/audio",
+          "assets/fonts",
+          "assets/images"
+        ],
+        "type": "string",
+        "outputs": {
+          "list": "assets.roots"
+        }
+      }
+    },
+    {
+      "id": "assert_asset_roots",
+      "name": "Assert Asset Roots",
+      "type": "value.assert.type",
+      "typeVersion": 1,
+      "position": [260, 0],
+      "parameters": {
+        "inputs": {
+          "value": "assets.roots"
+        },
+        "type": "string_list"
+      }
+    }
+  ],
+  "connections": {
+    "Asset Roots": {
+      "main": {
+        "0": [
+          { "node": "Assert Asset Roots", "type": "main", "index": 0 }
+        ]
+      }
+    }
+  }
+}

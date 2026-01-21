@@ -1,0 +1,99 @@
+{
+  "name": "Frame Default",
+  "nodes": [
+    {
+      "id": "begin_frame",
+      "name": "Begin Frame",
+      "type": "frame.begin",
+      "typeVersion": 1,
+      "position": [0, 0],
+      "parameters": {
+        "inputs": {
+          "delta": "frame.delta",
+          "elapsed": "frame.elapsed"
+        }
+      }
+    },
+    {
+      "id": "step_physics",
+      "name": "Step Physics",
+      "type": "frame.physics",
+      "typeVersion": 1,
+      "position": [260, 0],
+      "parameters": {
+        "inputs": {
+          "delta": "frame.delta"
+        }
+      }
+    },
+    {
+      "id": "update_scene",
+      "name": "Update Scene",
+      "type": "frame.scene",
+      "typeVersion": 1,
+      "position": [520, 0],
+      "parameters": {
+        "inputs": {
+          "delta": "frame.delta"
+        }
+      }
+    },
+    {
+      "id": "render_frame",
+      "name": "Render Frame",
+      "type": "frame.render",
+      "typeVersion": 1,
+      "position": [780, 0],
+      "parameters": {
+        "inputs": {
+          "elapsed": "frame.elapsed"
+        }
+      }
+    },
+    {
+      "id": "update_audio",
+      "name": "Update Audio",
+      "type": "frame.audio",
+      "typeVersion": 1,
+      "position": [1040, -120]
+    },
+    {
+      "id": "dispatch_gui",
+      "name": "Dispatch GUI",
+      "type": "frame.gui",
+      "typeVersion": 1,
+      "position": [1040, 120]
+    }
+  ],
+  "connections": {
+    "Begin Frame": {
+      "main": {
+        "0": [
+          { "node": "Step Physics", "type": "main", "index": 0 }
+        ]
+      }
+    },
+    "Step Physics": {
+      "main": {
+        "0": [
+          { "node": "Update Scene", "type": "main", "index": 0 }
+        ]
+      }
+    },
+    "Update Scene": {
+      "main": {
+        "0": [
+          { "node": "Render Frame", "type": "main", "index": 0 }
+        ]
+      }
+    },
+    "Render Frame": {
+      "main": {
+        "0": [
+          { "node": "Update Audio", "type": "main", "index": 0 },
+          { "node": "Dispatch GUI", "type": "main", "index": 0 }
+        ]
+      }
+    }
+  }
+}

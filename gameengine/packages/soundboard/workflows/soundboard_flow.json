@@ -1,0 +1,124 @@
+{
+  "name": "Soundboard Flow",
+  "nodes": [
+    {
+      "id": "begin_frame",
+      "name": "Begin Frame",
+      "type": "frame.begin",
+      "typeVersion": 1,
+      "position": [0, 0],
+      "parameters": {
+        "inputs": {
+          "delta": "frame.delta",
+          "elapsed": "frame.elapsed"
+        }
+      }
+    },
+    {
+      "id": "catalog_scan",
+      "name": "Catalog Scan",
+      "type": "soundboard.catalog.scan",
+      "typeVersion": 1,
+      "position": [260, -120],
+      "parameters": {
+        "outputs": {
+          "catalog": "soundboard.catalog"
+        }
+      }
+    },
+    {
+      "id": "gui_render",
+      "name": "GUI Render",
+      "type": "soundboard.gui",
+      "typeVersion": 1,
+      "position": [520, -120],
+      "parameters": {
+        "inputs": {
+          "catalog": "soundboard.catalog"
+        },
+        "outputs": {
+          "selection": "soundboard.selection",
+          "gui_commands": "soundboard.gui.commands"
+        }
+      }
+    },
+    {
+      "id": "audio_dispatch",
+      "name": "Audio Dispatch",
+      "type": "soundboard.audio",
+      "typeVersion": 1,
+      "position": [780, -120],
+      "parameters": {
+        "inputs": {
+          "selection": "soundboard.selection"
+        },
+        "outputs": {
+          "status": "soundboard.status"
+        }
+      }
+    },
+    {
+      "id": "render_frame",
+      "name": "Render Frame",
+      "type": "frame.render",
+      "typeVersion": 1,
+      "position": [520, 120],
+      "parameters": {
+        "inputs": {
+          "elapsed": "frame.elapsed",
+          "gui_commands": "soundboard.gui.commands"
+        }
+      }
+    },
+    {
+      "id": "validation_capture",
+      "name": "Validation Capture",
+      "type": "validation.tour.checkpoint",
+      "typeVersion": 1,
+      "position": [780, 120],
+      "parameters": {
+        "inputs": {
+          "checkpoint": "packages.soundboard"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Begin Frame": {
+      "main": {
+        "0": [
+          { "node": "Catalog Scan", "type": "main", "index": 0 }
+        ]
+      }
+    },
+    "Catalog Scan": {
+      "main": {
+        "0": [
+          { "node": "GUI Render", "type": "main", "index": 0 }
+        ]
+      }
+    },
+    "GUI Render": {
+      "main": {
+        "0": [
+          { "node": "Audio Dispatch", "type": "main", "index": 0 },
+          { "node": "Render Frame", "type": "main", "index": 0 }
+        ]
+      }
+    },
+    "Audio Dispatch": {
+      "main": {
+        "0": [
+          { "node": "Validation Capture", "type": "main", "index": 0 }
+        ]
+      }
+    },
+    "Render Frame": {
+      "main": {
+        "0": [
+          { "node": "Validation Capture", "type": "main", "index": 0 }
+        ]
+      }
+    }
+  }
+}

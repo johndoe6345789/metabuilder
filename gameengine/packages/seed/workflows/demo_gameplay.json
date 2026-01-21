@@ -1,0 +1,119 @@
+{
+  "name": "Seed Demo Gameplay",
+  "nodes": [
+    {
+      "id": "begin_frame",
+      "name": "Begin Frame",
+      "type": "frame.begin",
+      "typeVersion": 1,
+      "position": [0, 0],
+      "parameters": {
+        "inputs": {
+          "delta": "frame.delta",
+          "elapsed": "frame.elapsed"
+        }
+      }
+    },
+    {
+      "id": "camera_control",
+      "name": "Camera Control",
+      "type": "frame.camera",
+      "typeVersion": 1,
+      "position": [260, 0],
+      "parameters": {
+        "inputs": {
+          "delta": "frame.delta"
+        },
+        "outputs": {
+          "view_state": "frame.view_state"
+        }
+      }
+    },
+    {
+      "id": "bullet_physics",
+      "name": "Bullet Physics",
+      "type": "frame.bullet_physics",
+      "typeVersion": 1,
+      "position": [520, 0],
+      "parameters": {
+        "inputs": {
+          "delta": "frame.delta"
+        }
+      }
+    },
+    {
+      "id": "scene",
+      "name": "Scene Update",
+      "type": "frame.scene",
+      "typeVersion": 1,
+      "position": [780, 0],
+      "parameters": {
+        "inputs": {
+          "delta": "frame.delta"
+        }
+      }
+    },
+    {
+      "id": "render",
+      "name": "Render Frame",
+      "type": "frame.render",
+      "typeVersion": 1,
+      "position": [1040, 0],
+      "parameters": {
+        "inputs": {
+          "elapsed": "frame.elapsed",
+          "view_state": "frame.view_state"
+        }
+      }
+    },
+    {
+      "id": "validate_capture",
+      "name": "Validate Capture",
+      "type": "validation.tour.checkpoint",
+      "typeVersion": 1,
+      "position": [1300, 0],
+      "parameters": {
+        "inputs": {
+          "checkpoint": "gameplay.startup_camera"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Begin Frame": {
+      "main": {
+        "0": [
+          { "node": "Camera Control", "type": "main", "index": 0 }
+        ]
+      }
+    },
+    "Camera Control": {
+      "main": {
+        "0": [
+          { "node": "Bullet Physics", "type": "main", "index": 0 }
+        ]
+      }
+    },
+    "Bullet Physics": {
+      "main": {
+        "0": [
+          { "node": "Scene Update", "type": "main", "index": 0 }
+        ]
+      }
+    },
+    "Scene Update": {
+      "main": {
+        "0": [
+          { "node": "Render Frame", "type": "main", "index": 0 }
+        ]
+      }
+    },
+    "Render Frame": {
+      "main": {
+        "0": [
+          { "node": "Validate Capture", "type": "main", "index": 0 }
+        ]
+      }
+    }
+  }
+}
