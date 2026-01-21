@@ -1,0 +1,23 @@
+{
+  "id": "servo-body",
+  "name": "Servo Body",
+  "partNumber": "TRA-2075X",
+  "material": "blackPlastic",
+  "quantity": 1,
+  "weight": 55.0,
+  "weightUnit": "g",
+  "baseY": 165,
+  "description": "Digital high-torque servo - 255oz-in",
+  "geometry": [
+    { "type": "rect", "width": 60, "height": 50, "rx": 3 },
+    { "type": "rect", "width": 80, "height": 8, "offsetY": -10 },
+    { "type": "circle", "r": 3, "offsetX": -35, "offsetY": -10, "fill": "#1a1a1a" },
+    { "type": "circle", "r": 3, "offsetX": 35, "offsetY": -10, "fill": "#1a1a1a" },
+    { "type": "rect", "width": 40, "height": 12, "offsetY": -18, "fill": "#2a2a2a" },
+    { "type": "text", "content": "2075X", "offsetY": -15, "fill": "#00d4ff", "fontSize": 7 },
+    { "type": "circle", "r": 8, "offsetY": -30, "material": "steel" },
+    { "type": "rect", "width": 12, "height": 20, "offsetX": 21, "offsetY": 10, "fill": "#333" },
+    { "type": "rect", "width": 3, "height": 14, "offsetX": 17, "offsetY": 10, "fill": "#d94a4a" },
+    { "type": "rect", "width": 3, "height": 14, "offsetX": 25, "offsetY": 10, "fill": "#d4a84a" }
+  ]
+}

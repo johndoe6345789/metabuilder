@@ -1,0 +1,11 @@
+{
+  "category": "rc",
+  "manufacturers": [
+    {
+      "id": "traxxas",
+      "name": "Traxxas",
+      "description": "The Fastest Name in Radio Control",
+      "meta": "USA • Founded 1986"
+    }
+  ]
+}

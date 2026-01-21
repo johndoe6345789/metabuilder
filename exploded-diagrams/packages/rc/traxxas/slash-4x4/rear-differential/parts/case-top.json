@@ -1,0 +1,17 @@
+{
+  "id": "case-top",
+  "name": "Diff Case (Top)",
+  "partNumber": "TRA-5381",
+  "material": "blackPlastic",
+  "quantity": 1,
+  "weight": 28.5,
+  "weightUnit": "g",
+  "baseY": 0,
+  "description": "Glass-filled nylon differential case half",
+  "geometry": [
+    { "type": "cylinder", "rx": 55, "ry": 20, "height": 15 },
+    { "type": "ellipse", "rx": 25, "ry": 9, "fill": "#1a1a1a" },
+    { "type": "circle", "r": 5, "offsetX": -35, "fill": "#2a2a2a" },
+    { "type": "circle", "r": 5, "offsetX": 35, "fill": "#2a2a2a" }
+  ]
+}

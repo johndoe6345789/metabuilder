@@ -1,0 +1,15 @@
+{
+  "id": "rear-differential",
+  "name": "Rear Differential Assembly",
+  "description": "Sealed gear differential with metal internals",
+  "category": "Drivetrain",
+  "version": "1.0.0",
+  "parts": [
+    "case-top",
+    "ring-gear",
+    "spider-gears",
+    "outdrives",
+    "bearings",
+    "case-bottom"
+  ]
+}

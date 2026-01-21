@@ -1,0 +1,16 @@
+{
+  "id": "horn-screw",
+  "name": "Horn Screw",
+  "partNumber": "TRA-2548",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 0.8,
+  "weightUnit": "g",
+  "baseY": 50,
+  "description": "M3 servo horn retaining screw",
+  "geometry": [
+    { "type": "circle", "r": 8, "offsetY": -8 },
+    { "type": "rect", "width": 6, "height": 25 },
+    { "type": "line", "x1": -4, "y1": -8, "x2": 4, "y2": -8, "stroke": "#444", "strokeWidth": 1.5 }
+  ]
+}

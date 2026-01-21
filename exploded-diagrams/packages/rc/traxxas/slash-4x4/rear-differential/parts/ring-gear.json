@@ -1,0 +1,16 @@
+{
+  "id": "ring-gear",
+  "name": "Ring Gear",
+  "partNumber": "TRA-5379",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 52.0,
+  "weightUnit": "g",
+  "baseY": 80,
+  "description": "Hardened steel ring gear - 43T",
+  "geometry": [
+    { "type": "gearRing", "teeth": 24, "outerRadius": 48, "toothHeight": 8 },
+    { "type": "cylinder", "rx": 45, "ry": 16, "height": 30 },
+    { "type": "ellipse", "rx": 25, "ry": 9, "fill": "#4a4a4a" }
+  ]
+}

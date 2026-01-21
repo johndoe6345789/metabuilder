@@ -1,0 +1,14 @@
+{
+  "id": "steering-servo",
+  "name": "Steering Servo Assembly",
+  "description": "High-torque digital servo with metal gear train",
+  "category": "Electronics",
+  "version": "1.0.0",
+  "parts": [
+    "servo-horn",
+    "horn-screw",
+    "output-gear",
+    "servo-body",
+    "servo-mount"
+  ]
+}

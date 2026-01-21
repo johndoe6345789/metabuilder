@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exploded Diagram Viewer</title>
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+  <div id="app">
+    <header>
+      <h1>EXPLODED DIAGRAMS</h1>
+      <p class="subtitle">Modular Technical Illustrations</p>
+    </header>
+    
+    <nav id="breadcrumb"></nav>
+    
+    <div class="controls" id="controls"></div>
+    
+    <main>
+      <div class="diagram-container">
+        <svg id="diagram" viewBox="0 0 900 750"></svg>
+      </div>
+      <aside id="sidebar"></aside>
+    </main>
+    
+    <div id="tooltip" class="tooltip"></div>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

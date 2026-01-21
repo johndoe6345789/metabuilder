@@ -1,0 +1,17 @@
+{
+  "id": "front-shock",
+  "name": "Front Shock Assembly",
+  "description": "GTR Long Shock - Oil-filled coilover with adjustable preload",
+  "category": "Suspension",
+  "version": "1.0.0",
+  "parts": [
+    "shock-cap",
+    "shaft",
+    "piston",
+    "spring",
+    "retainer",
+    "body",
+    "bushing",
+    "mount"
+  ]
+}

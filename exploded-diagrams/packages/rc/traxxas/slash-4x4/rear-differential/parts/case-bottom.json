@@ -1,0 +1,18 @@
+{
+  "id": "case-bottom",
+  "name": "Diff Case (Bottom)",
+  "partNumber": "TRA-5381B",
+  "material": "blackPlastic",
+  "quantity": 1,
+  "weight": 32.0,
+  "weightUnit": "g",
+  "baseY": 430,
+  "description": "Glass-filled nylon differential case half with output shaft bore",
+  "geometry": [
+    { "type": "cylinder", "rx": 55, "ry": 20, "height": 25 },
+    { "type": "ellipse", "rx": 25, "ry": 9, "fill": "#1a1a1a" },
+    { "type": "circle", "r": 5, "offsetX": -35, "fill": "#2a2a2a" },
+    { "type": "circle", "r": 5, "offsetX": 35, "fill": "#2a2a2a" },
+    { "type": "circle", "r": 8, "offsetY": 22, "fill": "#2a2a2a" }
+  ]
+}
