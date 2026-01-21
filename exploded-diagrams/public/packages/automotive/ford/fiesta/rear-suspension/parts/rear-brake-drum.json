@@ -1,0 +1,39 @@
+{
+  "id": "rear-brake-drum",
+  "name": "Rear Brake Drum",
+  "partNumber": "FD-1679350",
+  "material": "steel",
+  "quantity": 2,
+  "weight": 4200.0,
+  "weightUnit": "g",
+  "baseY": 450,
+  "description": "Rear brake drum - 200mm diameter",
+  "installation": {
+    "tools": [
+      { "name": "Drum puller", "size": "Universal", "required": false },
+      { "name": "Rubber mallet", "size": "-", "required": true },
+      { "name": "Brake adjuster tool", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Drum retaining screw", "spec": "M6x1.0x10", "qty": 1, "reusable": true }
+    ],
+    "torque": [],
+    "notes": [
+      "Back off adjuster before removal",
+      "Tap around edge to free stuck drum",
+      "Check for scoring or out-of-round",
+      "Min thickness stamped on drum",
+      "Clean dust with brake cleaner - asbestos risk"
+    ]
+  },
+  "geometry": [
+    { "type": "circle", "r": 50 },
+    { "type": "circle", "r": 42, "fill": "#555" },
+    { "type": "circle", "r": 25, "fill": "#666" },
+    { "type": "circle", "r": 18, "fill": "#777" },
+    { "type": "circle", "r": 5, "offsetX": -15, "offsetY": 0, "fill": "#444" },
+    { "type": "circle", "r": 5, "offsetX": 15, "offsetY": 0, "fill": "#444" },
+    { "type": "circle", "r": 5, "offsetX": 0, "offsetY": -15, "fill": "#444" },
+    { "type": "circle", "r": 5, "offsetX": 0, "offsetY": 15, "fill": "#444" }
+  ]
+}

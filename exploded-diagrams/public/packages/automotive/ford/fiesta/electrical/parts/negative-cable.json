@@ -1,0 +1,37 @@
+{
+  "id": "negative-cable",
+  "name": "Negative Battery Cable",
+  "partNumber": "FD-1870320",
+  "material": "copper",
+  "quantity": 1,
+  "weight": 380.0,
+  "weightUnit": "g",
+  "baseY": 210,
+  "description": "Main negative cable to body earth point",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "10mm", "required": true },
+      { "name": "Socket", "size": "13mm", "required": true },
+      { "name": "Wire brush", "size": "-", "required": false }
+    ],
+    "hardware": [
+      { "name": "Terminal nut", "spec": "M8", "qty": 1, "reusable": true },
+      { "name": "Earth bolt", "spec": "M10x20", "qty": 1, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Battery terminal", "value": 6, "unit": "Nm" },
+      { "fastener": "Earth bolt", "value": 12, "unit": "Nm" }
+    ],
+    "notes": [
+      "Clean earth point before fitting",
+      "Last cable to connect",
+      "Check for loose or corroded connection",
+      "Poor earth causes starting problems"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 80, "height": 12, "rx": 6, "fill": "#2c3e50" },
+    { "type": "circle", "r": 10, "offsetX": -45, "fill": "#1a252f" },
+    { "type": "circle", "r": 10, "offsetX": 45, "fill": "#1a252f" }
+  ]
+}

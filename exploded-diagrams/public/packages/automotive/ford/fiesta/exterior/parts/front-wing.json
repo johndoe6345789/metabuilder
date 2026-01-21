@@ -1,0 +1,35 @@
+{
+  "id": "front-wing",
+  "name": "Front Wing/Fender",
+  "partNumber": "FD-1873410",
+  "material": "steel",
+  "quantity": 2,
+  "weight": 4200.0,
+  "weightUnit": "g",
+  "baseY": 240,
+  "description": "Front quarter panel fender",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "10mm", "required": true },
+      { "name": "Torx socket", "size": "T30", "required": true }
+    ],
+    "hardware": [
+      { "name": "Wing bolt", "spec": "M6x1.0x15", "qty": 8, "reusable": true },
+      { "name": "Wing clip", "spec": "Push fit", "qty": 4, "reusable": false }
+    ],
+    "torque": [
+      { "fastener": "Wing bolts", "value": 8, "unit": "Nm", "sequence": "", "notes": "" }
+    ],
+    "notes": [
+      "Remove bumper and headlight first",
+      "Door alignment critical",
+      "Check rubber seal condition",
+      "Mark position before removal"
+    ]
+  },
+  "geometry": [
+    { "type": "polygon", "points": [-50, 0, 50, 0, 55, 40, 40, 60, -40, 60, -55, 40], "fill": "#2a5a8a" },
+    { "type": "ellipse", "rx": 30, "ry": 20, "offsetY": 35, "fill": "#1a4a7a" },
+    { "type": "ellipse", "rx": 22, "ry": 15, "offsetY": 35, "fill": "#222" }
+  ]
+}

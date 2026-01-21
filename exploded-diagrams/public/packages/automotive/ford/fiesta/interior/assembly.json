@@ -1,0 +1,17 @@
+{
+  "name": "Interior",
+  "description": "Dashboard, seats, and interior trim",
+  "category": "automotive",
+  "parts": [
+    "dashboard",
+    "steering-column",
+    "steering-wheel",
+    "instrument-cluster",
+    "center-console",
+    "front-seat",
+    "rear-seat",
+    "door-card",
+    "headliner",
+    "carpet"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "name": "Body Shell",
+  "description": "Bare monocoque shell fresh from paint - ready for component installation",
+  "category": "automotive",
+  "parts": [
+    "shell",
+    "front-subframe",
+    "rear-subframe",
+    "front-crossmember",
+    "steering-rack",
+    "pedal-box",
+    "brake-servo",
+    "master-cylinder",
+    "abs-module",
+    "wiring-loom-main",
+    "fuse-box",
+    "ecu-bracket"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "cooling-system",
+  "name": "Cooling System",
+  "description": "Engine cooling circuit - radiator, hoses, thermostat and expansion tank",
+  "parts": [
+    "radiator",
+    "expansion-tank",
+    "thermostat-housing",
+    "upper-radiator-hose",
+    "lower-radiator-hose",
+    "heater-hose-feed",
+    "heater-hose-return",
+    "radiator-fan",
+    "coolant-temp-sensor"
+  ]
+}

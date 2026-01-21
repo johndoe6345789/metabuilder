@@ -1,0 +1,34 @@
+{
+  "id": "body-earth-strap",
+  "name": "Body Earth Strap",
+  "partNumber": "FD-1870510",
+  "material": "copper",
+  "quantity": 1,
+  "weight": 120.0,
+  "weightUnit": "g",
+  "baseY": 350,
+  "description": "Braided copper earth strap - body to chassis",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "10mm", "required": true },
+      { "name": "Wire brush", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Earth bolt", "spec": "M8x20", "qty": 2, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Earth bolts", "value": 10, "unit": "Nm" }
+    ],
+    "notes": [
+      "Clean both mounting points to bare metal",
+      "Apply copper grease after fitting",
+      "Check for broken strands",
+      "Common cause of electrical gremlins"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 60, "height": 8, "rx": 2, "fill": "#b87333" },
+    { "type": "circle", "r": 8, "offsetX": -35, "fill": "#8b4513" },
+    { "type": "circle", "r": 8, "offsetX": 35, "fill": "#8b4513" }
+  ]
+}

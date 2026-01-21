@@ -8,6 +8,23 @@
   "weightUnit": "g",
   "baseY": 445,
   "description": "Fourth gear - 1.03:1 ratio",
+  "installation": {
+    "tools": [
+      { "name": "Snap ring pliers", "size": "External 28mm", "required": true },
+      { "name": "Soft-face mallet", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Needle bearing", "spec": "K18x22x10", "qty": 1, "reusable": false },
+      { "name": "Thrust washer", "spec": "19x28x1.5", "qty": 1, "reusable": true },
+      { "name": "Snap ring", "spec": "28mm external", "qty": 1, "reusable": true }
+    ],
+    "torque": [],
+    "notes": [
+      "Near 1:1 ratio - high load gear",
+      "Shares synchro hub with 3rd gear",
+      "Check for blue discoloration (overheating)"
+    ]
+  },
   "geometry": [
     { "type": "gearRing", "teeth": 22, "outerRadius": 28, "toothHeight": 4 },
     { "type": "cylinder", "rx": 22, "ry": 7, "height": 14 },

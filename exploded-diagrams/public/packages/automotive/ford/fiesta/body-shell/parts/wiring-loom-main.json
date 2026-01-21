@@ -1,0 +1,41 @@
+{
+  "id": "wiring-loom-main",
+  "name": "Main Wiring Loom",
+  "partNumber": "FD-1826340",
+  "material": "copper",
+  "quantity": 1,
+  "weight": 8500.0,
+  "weightUnit": "g",
+  "baseY": 680,
+  "description": "Engine bay to cabin main wiring harness",
+  "installation": {
+    "tools": [
+      { "name": "Trim removal tool", "size": "-", "required": true },
+      { "name": "Wire loom tape", "size": "19mm", "required": true },
+      { "name": "Cable ties", "size": "Various", "required": true },
+      { "name": "Multimeter", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Loom grommet", "spec": "Firewall", "qty": 1, "reusable": false },
+      { "name": "Loom clip", "spec": "Various", "qty": 25, "reusable": true },
+      { "name": "Bulkhead connector", "spec": "72-way", "qty": 1, "reusable": true }
+    ],
+    "torque": [],
+    "notes": [
+      "Route before installing engine",
+      "Do not kink or stretch loom",
+      "Apply dielectric grease to all connectors",
+      "Secure away from heat sources and moving parts",
+      "Take photos before disconnecting anything"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 120, "height": 12, "rx": 6, "fill": "#1a1a1a" },
+    { "type": "rect", "width": 8, "height": 40, "offsetX": -50, "offsetY": 20, "rx": 4, "fill": "#1a1a1a" },
+    { "type": "rect", "width": 8, "height": 35, "offsetX": -30, "offsetY": 18, "rx": 4, "fill": "#1a1a1a" },
+    { "type": "rect", "width": 8, "height": 45, "offsetX": 0, "offsetY": 22, "rx": 4, "fill": "#1a1a1a" },
+    { "type": "rect", "width": 8, "height": 30, "offsetX": 30, "offsetY": 15, "rx": 4, "fill": "#1a1a1a" },
+    { "type": "rect", "width": 8, "height": 50, "offsetX": 50, "offsetY": 25, "rx": 4, "fill": "#1a1a1a" },
+    { "type": "rect", "width": 25, "height": 15, "offsetX": -55, "offsetY": -15, "rx": 2, "fill": "#333" }
+  ]
+}

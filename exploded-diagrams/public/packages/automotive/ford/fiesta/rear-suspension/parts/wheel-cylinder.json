@@ -1,0 +1,38 @@
+{
+  "id": "wheel-cylinder",
+  "name": "Wheel Cylinder",
+  "partNumber": "FD-1679380",
+  "material": "aluminum",
+  "quantity": 2,
+  "weight": 220.0,
+  "weightUnit": "g",
+  "baseY": 520,
+  "description": "Rear drum brake wheel cylinder",
+  "installation": {
+    "tools": [
+      { "name": "Brake line wrench", "size": "10mm", "required": true },
+      { "name": "Socket", "size": "10mm", "required": true },
+      { "name": "Brake bleeding kit", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Wheel cylinder bolt", "spec": "M8x1.25x20", "qty": 2, "reusable": true },
+      { "name": "Brake line union", "spec": "M10x1.0", "qty": 1, "reusable": true },
+      { "name": "Bleed nipple", "spec": "M7x1.0", "qty": 1, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Brake line union", "value": 14, "unit": "Nm", "sequence": "", "notes": "Do not overtighten - flare seal" }
+    ],
+    "notes": [
+      "Bleed brakes after installation",
+      "Check for leaks around dust boots",
+      "Replace if pistons are corroded",
+      "Use correct brake fluid type"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 50, "height": 20, "rx": 3 },
+    { "type": "cylinder", "rx": 6, "ry": 3, "height": 12, "offsetX": -20, "offsetY": 10 },
+    { "type": "cylinder", "rx": 6, "ry": 3, "height": 12, "offsetX": 20, "offsetY": 10 },
+    { "type": "circle", "r": 4, "offsetY": -10, "fill": "#555" }
+  ]
+}

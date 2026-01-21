@@ -1,0 +1,25 @@
+{
+  "name": "1.0 EcoBoost Engine",
+  "description": "Ford 1.0L 3-cylinder turbocharged EcoBoost engine",
+  "category": "automotive",
+  "parts": [
+    "engine-block",
+    "crankshaft",
+    "piston-assembly",
+    "connecting-rod",
+    "cylinder-head",
+    "camshafts",
+    "timing-belt",
+    "turbocharger",
+    "intake-manifold",
+    "throttle-body",
+    "fuel-rail",
+    "injectors",
+    "ignition-coil",
+    "alternator",
+    "starter-motor",
+    "oil-pump",
+    "oil-filter",
+    "water-pump"
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "id": "center-console",
+  "name": "Center Console",
+  "partNumber": "FD-1834280",
+  "material": "blackPlastic",
+  "quantity": 1,
+  "weight": 4500.0,
+  "weightUnit": "g",
+  "baseY": 290,
+  "description": "Center console with gear selector and cup holders",
+  "installation": {
+    "tools": [
+      { "name": "Torx socket", "size": "T25", "required": true },
+      { "name": "Trim removal tool", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Console screw", "spec": "T25", "qty": 6, "reusable": true },
+      { "name": "Console clip", "spec": "Push fit", "qty": 4, "reusable": true }
+    ],
+    "torque": [],
+    "notes": [
+      "Remove gear knob first",
+      "Disconnect handbrake switch",
+      "Pull up and back to release clips",
+      "USB/12V connectors underneath"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 70, "height": 120, "rx": 8 },
+    { "type": "rect", "width": 55, "height": 30, "offsetY": -35, "rx": 5, "fill": "#333" },
+    { "type": "rect", "width": 30, "height": 50, "offsetY": 10, "rx": 3, "fill": "#222" },
+    { "type": "circle", "r": 12, "offsetX": 0, "offsetY": 50, "fill": "#333" }
+  ]
+}

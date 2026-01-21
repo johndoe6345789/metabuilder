@@ -1,0 +1,19 @@
+{
+  "name": "Exterior",
+  "description": "Body panels, glass, and exterior trim",
+  "category": "automotive",
+  "parts": [
+    "bonnet",
+    "front-bumper",
+    "rear-bumper",
+    "front-wing",
+    "door-shell",
+    "tailgate",
+    "windscreen",
+    "rear-glass",
+    "headlight",
+    "tail-light",
+    "mirror",
+    "wheel"
+  ]
+}

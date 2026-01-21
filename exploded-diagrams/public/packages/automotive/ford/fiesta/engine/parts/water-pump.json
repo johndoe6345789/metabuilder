@@ -1,0 +1,43 @@
+{
+  "id": "water-pump",
+  "name": "Water Pump",
+  "partNumber": "FD-CM5G-8501-FA",
+  "material": "aluminum",
+  "quantity": 1,
+  "weight": 1200.0,
+  "weightUnit": "g",
+  "baseY": 1260,
+  "description": "Belt-driven coolant pump with plastic impeller",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "10mm", "required": true },
+      { "name": "Torque wrench", "size": "8-15 Nm", "required": true },
+      { "name": "Coolant drain pan", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Water pump bolt", "spec": "M6x1.0x25", "qty": 5, "reusable": true },
+      { "name": "Water pump gasket", "spec": "Paper", "qty": 1, "reusable": false },
+      { "name": "Coolant", "spec": "OAT Orange", "qty": 1, "reusable": false }
+    ],
+    "torque": [
+      { "fastener": "Water pump bolts", "value": 10, "unit": "Nm", "sequence": "Crosshatch", "notes": "Aluminum housing - do not overtighten" }
+    ],
+    "notes": [
+      "Replace with timing belt",
+      "Use correct OAT coolant only",
+      "Bleed cooling system after installation",
+      "Check for weep hole leakage",
+      "Plastic impeller - inspect for erosion"
+    ]
+  },
+  "geometry": [
+    { "type": "circle", "r": 35 },
+    { "type": "circle", "r": 28, "fill": "#888" },
+    { "type": "circle", "r": 15, "fill": "#666" },
+    { "type": "rect", "width": 8, "height": 25, "offsetX": -30, "fill": "#777" },
+    { "type": "circle", "r": 5, "offsetX": -18, "offsetY": -18, "fill": "#444" },
+    { "type": "circle", "r": 5, "offsetX": 18, "offsetY": -18, "fill": "#444" },
+    { "type": "circle", "r": 5, "offsetX": -18, "offsetY": 18, "fill": "#444" },
+    { "type": "circle", "r": 5, "offsetX": 18, "offsetY": 18, "fill": "#444" }
+  ]
+}

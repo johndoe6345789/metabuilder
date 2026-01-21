@@ -1,0 +1,38 @@
+{
+  "id": "master-cylinder",
+  "name": "Brake Master Cylinder",
+  "partNumber": "FD-1695850",
+  "material": "aluminum",
+  "quantity": 1,
+  "weight": 1450.0,
+  "weightUnit": "g",
+  "baseY": 540,
+  "description": "Tandem brake master cylinder with reservoir",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "13mm", "required": true },
+      { "name": "Brake line wrench", "size": "11mm", "required": true },
+      { "name": "Brake bleeding kit", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Master cylinder nut", "spec": "M8", "qty": 2, "reusable": true },
+      { "name": "Brake line union", "spec": "M10x1.0", "qty": 2, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Master cylinder nuts", "value": 22, "unit": "Nm", "sequence": "", "notes": "" },
+      { "fastener": "Brake line unions", "value": 14, "unit": "Nm", "sequence": "", "notes": "Do not overtighten - flare seal" }
+    ],
+    "notes": [
+      "Bench bleed before installation",
+      "Fill reservoir immediately after connecting lines",
+      "Full system bleed required",
+      "Check fluid level after bedding in pads"
+    ]
+  },
+  "geometry": [
+    { "type": "cylinder", "rx": 18, "ry": 8, "height": 50 },
+    { "type": "rect", "width": 50, "height": 25, "rx": 3, "offsetY": -40, "fill": "#2a2a2a" },
+    { "type": "rect", "width": 6, "height": 15, "offsetX": -8, "offsetY": 30, "fill": "#555" },
+    { "type": "rect", "width": 6, "height": 15, "offsetX": 8, "offsetY": 30, "fill": "#555" }
+  ]
+}

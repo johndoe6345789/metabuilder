@@ -1,0 +1,34 @@
+{
+  "id": "brake-line-front-right",
+  "name": "Front Right Brake Line",
+  "partNumber": "FD-1850220",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 190.0,
+  "weightUnit": "g",
+  "baseY": 140,
+  "description": "Steel brake line from master cylinder to front right hose",
+  "installation": {
+    "tools": [
+      { "name": "Flare nut spanner", "size": "11mm", "required": true },
+      { "name": "Line clamp", "size": "-", "required": true },
+      { "name": "Brake bleeding kit", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Brake line clip", "spec": "P-clip", "qty": 4, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Flare nut", "value": 15, "unit": "Nm", "notes": "Do not overtighten" }
+    ],
+    "notes": [
+      "Longer line - crosses under master cylinder",
+      "Bleed system after replacement",
+      "Check routing through bulkhead grommet"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 140, "height": 4, "rx": 2, "fill": "#888" },
+    { "type": "circle", "r": 6, "offsetX": -70, "fill": "#666" },
+    { "type": "circle", "r": 6, "offsetX": 70, "fill": "#666" }
+  ]
+}

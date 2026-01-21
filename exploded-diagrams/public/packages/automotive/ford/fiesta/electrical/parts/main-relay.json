@@ -1,0 +1,31 @@
+{
+  "id": "main-relay",
+  "name": "Main Relay",
+  "partNumber": "FD-1870710",
+  "material": "blackPlastic",
+  "quantity": 1,
+  "weight": 45.0,
+  "weightUnit": "g",
+  "baseY": 560,
+  "description": "ECU power relay - supplies ignition power",
+  "installation": {
+    "tools": [
+      { "name": "Relay puller", "size": "-", "required": false }
+    ],
+    "hardware": [],
+    "torque": [],
+    "notes": [
+      "Located in engine bay fuse box",
+      "Click should be heard on ignition",
+      "Swap with known good relay to test",
+      "No start condition if faulty"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 25, "height": 30, "rx": 2, "fill": "#2a2a2a" },
+    { "type": "rect", "width": 20, "height": 25, "rx": 1, "fill": "#333" },
+    { "type": "rect", "width": 4, "height": 8, "offsetX": -6, "offsetY": 18, "fill": "#888" },
+    { "type": "rect", "width": 4, "height": 8, "offsetX": 0, "offsetY": 18, "fill": "#888" },
+    { "type": "rect", "width": 4, "height": 8, "offsetX": 6, "offsetY": 18, "fill": "#888" }
+  ]
+}

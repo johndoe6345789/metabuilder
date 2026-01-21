@@ -359,3 +359,189 @@ button {
     font-size: 1.5rem;
   }
 }
+
+// Installation Panel
+.installation-panel {
+  .panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+
+    h3 {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+      color: var(--text);
+      font-size: 1rem;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+  }
+
+  .close-btn {
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    font-size: 1.2rem;
+    line-height: 1;
+    background: rgba(255,255,255,0.1);
+    border: none;
+    border-radius: 50%;
+
+    &:hover {
+      background: rgba(255,100,100,0.3);
+      transform: none;
+      box-shadow: none;
+    }
+  }
+
+  .part-meta {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+
+    .pn {
+      font-family: monospace;
+      font-size: 0.75rem;
+      color: var(--accent);
+      background: rgba(0,212,255,0.1);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .material {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+  }
+}
+
+.install-section {
+  margin-bottom: 15px;
+
+  h4 {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent-alt);
+    margin-bottom: 8px;
+  }
+
+  ul {
+    list-style: none;
+  }
+}
+
+.tool-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 8px;
+  margin-bottom: 3px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  background: rgba(0,0,0,0.2);
+
+  &.required {
+    border-left: 2px solid var(--accent-alt);
+  }
+
+  &.optional {
+    border-left: 2px solid var(--text-dim);
+    opacity: 0.7;
+  }
+
+  .tool-name { color: var(--text); }
+  .tool-size { color: var(--text-muted); font-family: monospace; font-size: 0.75rem; }
+}
+
+.hardware-list li {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  gap: 8px;
+  align-items: center;
+  padding: 5px 8px;
+  margin-bottom: 3px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  background: rgba(0,0,0,0.2);
+
+  .hw-name { color: var(--text); }
+  .hw-spec { color: var(--text-muted); font-family: monospace; }
+  .hw-qty { color: var(--accent); font-weight: 600; }
+  .hw-replace {
+    color: #ff9800;
+    cursor: help;
+    font-size: 0.9rem;
+  }
+}
+
+.torque-list li {
+  padding: 8px;
+  margin-bottom: 5px;
+  border-radius: 4px;
+  background: rgba(0,0,0,0.2);
+  border-left: 2px solid #ff5722;
+
+  .torque-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+
+    .torque-fastener {
+      font-size: 0.8rem;
+      color: var(--text);
+    }
+
+    .torque-value {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #ff5722;
+      font-family: monospace;
+    }
+  }
+
+  .torque-sequence {
+    font-size: 0.7rem;
+    color: var(--accent);
+    margin-bottom: 2px;
+  }
+
+  .torque-notes {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+}
+
+.notes-list li {
+  position: relative;
+  padding: 4px 0 4px 15px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+
+  &::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+  }
+}
+
+.no-install-data {
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  font-style: italic;
+  text-align: center;
+  padding: 20px;
+}
+
+.hint {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  margin-bottom: 10px;
+  font-style: italic;
+}

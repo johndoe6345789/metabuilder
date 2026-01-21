@@ -1,0 +1,38 @@
+{
+  "id": "proportioning-valve",
+  "name": "Proportioning Valve",
+  "partNumber": "FD-1850410",
+  "material": "aluminum",
+  "quantity": 1,
+  "weight": 280.0,
+  "weightUnit": "g",
+  "baseY": 280,
+  "description": "Rear brake pressure proportioning valve",
+  "installation": {
+    "tools": [
+      { "name": "Flare nut spanner", "size": "11mm", "required": true },
+      { "name": "Socket", "size": "10mm", "required": true },
+      { "name": "Brake bleeding kit", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Mounting bolt", "spec": "M6x15", "qty": 2, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Mounting bolts", "value": 10, "unit": "Nm" },
+      { "fastener": "Line connections", "value": 15, "unit": "Nm" }
+    ],
+    "notes": [
+      "Note orientation before removal",
+      "Located on rear subframe",
+      "Bleed rear brakes after fitting",
+      "Check for internal valve damage if brakes pull"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 50, "height": 35, "rx": 3, "fill": "#aaa" },
+    { "type": "circle", "r": 5, "offsetX": -20, "offsetY": -10, "fill": "#888" },
+    { "type": "circle", "r": 5, "offsetX": 20, "offsetY": -10, "fill": "#888" },
+    { "type": "circle", "r": 5, "offsetX": -10, "offsetY": 10, "fill": "#888" },
+    { "type": "circle", "r": 5, "offsetX": 10, "offsetY": 10, "fill": "#888" }
+  ]
+}

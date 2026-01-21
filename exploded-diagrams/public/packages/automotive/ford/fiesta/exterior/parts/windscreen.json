@@ -1,0 +1,35 @@
+{
+  "id": "windscreen",
+  "name": "Windscreen",
+  "partNumber": "FD-1880110",
+  "material": "glass",
+  "quantity": 1,
+  "weight": 12000.0,
+  "weightUnit": "g",
+  "baseY": 510,
+  "description": "Laminated front windscreen with rain sensor zone",
+  "installation": {
+    "tools": [
+      { "name": "Windscreen removal wire", "size": "-", "required": true },
+      { "name": "Windscreen suction cups", "size": "-", "required": true },
+      { "name": "Polyurethane gun", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Windscreen adhesive", "spec": "Polyurethane", "qty": 1, "reusable": false },
+      { "name": "Primer", "spec": "Glass/Body", "qty": 1, "reusable": false }
+    ],
+    "torque": [],
+    "notes": [
+      "Specialist job - requires calibration equipment",
+      "ADAS camera may need recalibration",
+      "24-hour cure time before driving",
+      "Check rain sensor and mirror mount"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 140, "height": 70, "rx": 10, "fill": "#87ceeb" },
+    { "type": "rect", "width": 130, "height": 60, "rx": 8, "fill": "#add8e6" },
+    { "type": "rect", "width": 20, "height": 12, "offsetY": -22, "rx": 2, "fill": "#333" },
+    { "type": "rect", "width": 8, "height": 40, "offsetX": -60, "fill": "#222" }
+  ]
+}

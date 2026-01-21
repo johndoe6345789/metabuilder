@@ -1,0 +1,40 @@
+{
+  "id": "throttle-body",
+  "name": "Throttle Body",
+  "partNumber": "FD-CM5G-9F991-AA",
+  "material": "aluminum",
+  "quantity": 1,
+  "weight": 680.0,
+  "weightUnit": "g",
+  "baseY": 740,
+  "description": "Electronic throttle body - 48mm bore",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "8mm", "required": true },
+      { "name": "Torque wrench", "size": "5-15 Nm", "required": true }
+    ],
+    "hardware": [
+      { "name": "Throttle body bolt", "spec": "M6x1.0x25", "qty": 4, "reusable": true },
+      { "name": "Throttle body gasket", "spec": "48mm", "qty": 1, "reusable": false }
+    ],
+    "torque": [
+      { "fastener": "Throttle body bolts", "value": 10, "unit": "Nm", "sequence": "Crosshatch", "notes": "" }
+    ],
+    "notes": [
+      "Electronic throttle - no cable",
+      "Do not manually open throttle plate",
+      "Clean bore with throttle body cleaner only",
+      "May require relearn after battery disconnect"
+    ]
+  },
+  "geometry": [
+    { "type": "circle", "r": 28 },
+    { "type": "circle", "r": 22, "fill": "#666" },
+    { "type": "rect", "width": 4, "height": 40, "fill": "#888" },
+    { "type": "rect", "width": 35, "height": 20, "offsetX": 30, "rx": 3, "fill": "#555" },
+    { "type": "circle", "r": 4, "offsetX": -18, "offsetY": -18, "fill": "#444" },
+    { "type": "circle", "r": 4, "offsetX": 18, "offsetY": -18, "fill": "#444" },
+    { "type": "circle", "r": 4, "offsetX": -18, "offsetY": 18, "fill": "#444" },
+    { "type": "circle", "r": 4, "offsetX": 18, "offsetY": 18, "fill": "#444" }
+  ]
+}

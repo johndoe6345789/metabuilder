@@ -1,0 +1,43 @@
+{
+  "id": "front-subframe",
+  "name": "Front Subframe",
+  "partNumber": "FD-1752891",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 22500.0,
+  "weightUnit": "g",
+  "baseY": 100,
+  "description": "Front suspension subframe - carries engine, gearbox, steering, and suspension",
+  "installation": {
+    "tools": [
+      { "name": "Transmission jack", "size": "-", "required": true },
+      { "name": "Socket", "size": "18mm", "required": true },
+      { "name": "Torque wrench", "size": "100-200 Nm", "required": true },
+      { "name": "Alignment pins", "size": "M12", "required": true }
+    ],
+    "hardware": [
+      { "name": "Subframe bolt (front)", "spec": "M12x1.5x90", "grade": "10.9", "qty": 2, "reusable": false },
+      { "name": "Subframe bolt (rear)", "spec": "M12x1.5x110", "grade": "10.9", "qty": 2, "reusable": false },
+      { "name": "Cage nut", "spec": "M12", "qty": 4, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Subframe bolts", "value": 175, "unit": "Nm", "sequence": "Rear then front", "notes": "Vehicle must be at ride height for final torque" }
+    ],
+    "notes": [
+      "Install subframe before engine/gearbox",
+      "Align using body locating pins",
+      "Final torque with vehicle weight on wheels",
+      "Check steering geometry after installation"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 160, "height": 35, "rx": 3 },
+    { "type": "rect", "width": 30, "height": 50, "offsetX": -60, "offsetY": 10 },
+    { "type": "rect", "width": 30, "height": 50, "offsetX": 60, "offsetY": 10 },
+    { "type": "circle", "r": 8, "offsetX": -60, "offsetY": -10, "fill": "#444" },
+    { "type": "circle", "r": 8, "offsetX": 60, "offsetY": -10, "fill": "#444" },
+    { "type": "circle", "r": 6, "offsetX": -60, "offsetY": 30, "fill": "#444" },
+    { "type": "circle", "r": 6, "offsetX": 60, "offsetY": 30, "fill": "#444" },
+    { "type": "rect", "width": 100, "height": 8, "offsetY": 5, "fill": "#555" }
+  ]
+}

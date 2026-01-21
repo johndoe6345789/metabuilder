@@ -1,0 +1,16 @@
+{
+  "id": "electrical",
+  "name": "Electrical System",
+  "description": "Battery, charging system, and primary electrical components",
+  "parts": [
+    "battery",
+    "battery-tray",
+    "positive-cable",
+    "negative-cable",
+    "battery-fuse-box",
+    "body-earth-strap",
+    "engine-earth-strap",
+    "glow-plug-relay",
+    "main-relay"
+  ]
+}

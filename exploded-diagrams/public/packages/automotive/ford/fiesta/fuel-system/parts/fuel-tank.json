@@ -1,0 +1,36 @@
+{
+  "id": "fuel-tank",
+  "name": "Fuel Tank",
+  "partNumber": "FD-1880110",
+  "material": "blackPlastic",
+  "quantity": 1,
+  "weight": 8500.0,
+  "weightUnit": "g",
+  "baseY": 0,
+  "description": "42 litre plastic fuel tank",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "15mm", "required": true },
+      { "name": "Transmission jack", "size": "-", "required": true },
+      { "name": "Quick-connect tool", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Strap bolt", "spec": "M10x30", "qty": 4, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Strap bolts", "value": 35, "unit": "Nm" }
+    ],
+    "notes": [
+      "Drain tank before removal - siphon or run dry",
+      "Support tank with jack before removing straps",
+      "Disconnect all lines and electrical",
+      "Work in well-ventilated area - fire risk"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 140, "height": 50, "rx": 8, "fill": "#2a2a2a" },
+    { "type": "rect", "width": 130, "height": 40, "rx": 5, "fill": "#333" },
+    { "type": "circle", "r": 15, "offsetX": 40, "offsetY": 0, "fill": "#444" },
+    { "type": "rect", "width": 20, "height": 30, "offsetX": -60, "rx": 3, "fill": "#3a3a3a" }
+  ]
+}

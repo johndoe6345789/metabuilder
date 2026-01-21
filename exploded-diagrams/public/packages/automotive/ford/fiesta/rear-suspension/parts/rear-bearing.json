@@ -1,0 +1,34 @@
+{
+  "id": "rear-bearing",
+  "name": "Rear Wheel Bearing",
+  "partNumber": "FD-1762625",
+  "material": "steel",
+  "quantity": 2,
+  "weight": 680.0,
+  "weightUnit": "g",
+  "baseY": 380,
+  "description": "Sealed double-row rear wheel bearing",
+  "installation": {
+    "tools": [
+      { "name": "Bearing press", "size": "Universal", "required": true },
+      { "name": "Bearing puller", "size": "Universal", "required": true },
+      { "name": "Hydraulic press", "size": "10 ton", "required": true }
+    ],
+    "hardware": [
+      { "name": "Wheel bearing", "spec": "Sealed", "qty": 1, "reusable": false }
+    ],
+    "torque": [],
+    "notes": [
+      "Press fit - requires removal from vehicle",
+      "Do not hammer directly on bearing",
+      "Check for play before removal",
+      "Noise changes under load = bad bearing"
+    ]
+  },
+  "geometry": [
+    { "type": "circle", "r": 30 },
+    { "type": "circle", "r": 24, "fill": "#666" },
+    { "type": "circle", "r": 18, "fill": "#555" },
+    { "type": "circle", "r": 12, "fill": "#444" }
+  ]
+}

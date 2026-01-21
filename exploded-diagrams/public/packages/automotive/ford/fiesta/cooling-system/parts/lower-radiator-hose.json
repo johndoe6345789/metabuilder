@@ -1,0 +1,32 @@
+{
+  "id": "lower-radiator-hose",
+  "name": "Lower Radiator Hose",
+  "partNumber": "FD-1860420",
+  "material": "rubber",
+  "quantity": 1,
+  "weight": 320.0,
+  "weightUnit": "g",
+  "baseY": 310,
+  "description": "Moulded lower coolant hose to water pump",
+  "installation": {
+    "tools": [
+      { "name": "Pliers", "size": "-", "required": true },
+      { "name": "Quick-connect tool", "size": "-", "required": false }
+    ],
+    "hardware": [
+      { "name": "Spring clamp", "spec": "40mm", "qty": 2, "reusable": true }
+    ],
+    "torque": [],
+    "notes": [
+      "Positioned under engine - access from below",
+      "Contains internal spring to prevent collapse",
+      "Check for deterioration near clamps",
+      "Drain coolant first"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 90, "height": 20, "rx": 10, "fill": "#333" },
+    { "type": "ellipse", "rx": 14, "ry": 12, "offsetX": -50, "fill": "#444" },
+    { "type": "ellipse", "rx": 14, "ry": 12, "offsetX": 50, "fill": "#444" }
+  ]
+}

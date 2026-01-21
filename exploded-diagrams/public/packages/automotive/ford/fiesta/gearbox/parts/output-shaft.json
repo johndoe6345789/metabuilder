@@ -8,6 +8,29 @@
   "weightUnit": "g",
   "baseY": 550,
   "description": "Main output shaft to differential",
+  "installation": {
+    "tools": [
+      { "name": "Bearing puller", "size": "30-60mm", "required": true },
+      { "name": "Hydraulic press", "size": "10 ton", "required": true },
+      { "name": "Socket", "size": "30mm", "required": true },
+      { "name": "Torque wrench", "size": "100-200 Nm", "required": true }
+    ],
+    "hardware": [
+      { "name": "Output bearing", "spec": "6207-2RS", "qty": 1, "reusable": false },
+      { "name": "Speedometer drive gear", "spec": "18T", "qty": 1, "reusable": true },
+      { "name": "Shaft nut", "spec": "M20x1.5", "qty": 1, "reusable": false },
+      { "name": "Output shaft seal", "spec": "40x55x8", "qty": 1, "reusable": false }
+    ],
+    "torque": [
+      { "fastener": "Output shaft nut", "value": 175, "unit": "Nm", "sequence": "Single", "notes": "Use new nut, stake after torquing" }
+    ],
+    "notes": [
+      "Check splines for wear",
+      "Stake nut after torquing to prevent loosening",
+      "Ensure speedo drive gear meshes correctly",
+      "Apply sealant to shaft seal outer edge"
+    ]
+  },
   "geometry": [
     { "type": "cylinder", "rx": 16, "ry": 5, "height": 80 },
     { "type": "rect", "width": 24, "height": 6, "offsetY": 45, "fill": "#555" },

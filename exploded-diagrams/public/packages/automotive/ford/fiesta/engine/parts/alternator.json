@@ -1,0 +1,42 @@
+{
+  "id": "alternator",
+  "name": "Alternator",
+  "partNumber": "FD-CV6T-10300-BC",
+  "material": "aluminum",
+  "quantity": 1,
+  "weight": 5200.0,
+  "weightUnit": "g",
+  "baseY": 980,
+  "description": "150A smart charge alternator",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "13mm", "required": true },
+      { "name": "Socket", "size": "15mm", "required": true },
+      { "name": "Breaker bar", "size": "1/2\"", "required": true },
+      { "name": "Belt tensioner tool", "size": "3/8\" drive", "required": true }
+    ],
+    "hardware": [
+      { "name": "Alternator bolt (upper)", "spec": "M10x1.5x80", "qty": 1, "reusable": true },
+      { "name": "Alternator bolt (lower)", "spec": "M10x1.5x100", "qty": 1, "reusable": true },
+      { "name": "B+ terminal nut", "spec": "M8", "qty": 1, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Alternator bolts", "value": 48, "unit": "Nm", "sequence": "", "notes": "" },
+      { "fastener": "B+ terminal nut", "value": 10, "unit": "Nm", "sequence": "", "notes": "Disconnect battery first" }
+    ],
+    "notes": [
+      "Disconnect battery before removal",
+      "Smart charge system - voltage varies",
+      "Check belt condition while accessible",
+      "120A minimum charging current"
+    ]
+  },
+  "geometry": [
+    { "type": "circle", "r": 45 },
+    { "type": "circle", "r": 38, "fill": "#888" },
+    { "type": "circle", "r": 18, "fill": "#666" },
+    { "type": "rect", "width": 30, "height": 25, "offsetY": 40, "rx": 3, "fill": "#555" },
+    { "type": "circle", "r": 6, "offsetX": -30, "offsetY": 0, "fill": "#444" },
+    { "type": "circle", "r": 6, "offsetX": 30, "offsetY": 30, "fill": "#d4a84a" }
+  ]
+}

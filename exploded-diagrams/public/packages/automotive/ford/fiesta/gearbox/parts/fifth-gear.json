@@ -8,6 +8,26 @@
   "weightUnit": "g",
   "baseY": 490,
   "description": "Fifth gear - 0.82:1 overdrive ratio",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "24mm", "required": true },
+      { "name": "Torque wrench", "size": "60-100 Nm", "required": true },
+      { "name": "Lock tab pliers", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "5th gear nut", "spec": "M18x1.5", "qty": 1, "reusable": false },
+      { "name": "Lock washer", "spec": "18mm tabbed", "qty": 1, "reusable": false },
+      { "name": "Needle bearing", "spec": "K15x19x10", "qty": 1, "reusable": false }
+    ],
+    "torque": [
+      { "fastener": "5th gear nut", "value": 80, "unit": "Nm", "sequence": "Single", "notes": "Bend lock tab after torquing" }
+    ],
+    "notes": [
+      "Accessible without splitting case",
+      "Common failure point - inspect carefully",
+      "Bend lock tab fully against nut flat"
+    ]
+  },
   "geometry": [
     { "type": "gearRing", "teeth": 18, "outerRadius": 24, "toothHeight": 4 },
     { "type": "cylinder", "rx": 18, "ry": 6, "height": 12 },

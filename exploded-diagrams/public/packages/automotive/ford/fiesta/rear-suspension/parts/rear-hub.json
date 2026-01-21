@@ -1,0 +1,42 @@
+{
+  "id": "rear-hub",
+  "name": "Rear Hub Assembly",
+  "partNumber": "FD-1762610",
+  "material": "steel",
+  "quantity": 2,
+  "weight": 3200.0,
+  "weightUnit": "g",
+  "baseY": 310,
+  "description": "Rear wheel hub with ABS sensor ring",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "30mm", "required": true },
+      { "name": "Torque wrench", "size": "150-250 Nm", "required": true },
+      { "name": "Bearing puller", "size": "Universal", "required": false }
+    ],
+    "hardware": [
+      { "name": "Hub nut", "spec": "M20x1.5", "qty": 1, "reusable": false },
+      { "name": "Hub bolt", "spec": "M12x1.5x35", "qty": 4, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Hub nut", "value": 175, "unit": "Nm", "sequence": "", "notes": "Stake nut after torquing" },
+      { "fastener": "Hub bolts", "value": 65, "unit": "Nm", "sequence": "Star pattern", "notes": "" }
+    ],
+    "notes": [
+      "Integrated bearing - replace as assembly",
+      "Check ABS ring for damage",
+      "Support brake drum during removal",
+      "Do not reuse hub nut"
+    ]
+  },
+  "geometry": [
+    { "type": "circle", "r": 45 },
+    { "type": "circle", "r": 35, "fill": "#666" },
+    { "type": "circle", "r": 18, "fill": "#555" },
+    { "type": "circle", "r": 10, "fill": "#444" },
+    { "type": "circle", "r": 5, "offsetX": -28, "offsetY": 0, "fill": "#333" },
+    { "type": "circle", "r": 5, "offsetX": 28, "offsetY": 0, "fill": "#333" },
+    { "type": "circle", "r": 5, "offsetX": 0, "offsetY": -28, "fill": "#333" },
+    { "type": "circle", "r": 5, "offsetX": 0, "offsetY": 28, "fill": "#333" }
+  ]
+}

@@ -8,6 +8,23 @@
   "weightUnit": "g",
   "baseY": 340,
   "description": "Second gear - 1.95:1 ratio",
+  "installation": {
+    "tools": [
+      { "name": "Snap ring pliers", "size": "External 35mm", "required": true },
+      { "name": "Soft-face mallet", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Needle bearing", "spec": "K22x26x13", "qty": 1, "reusable": false },
+      { "name": "Thrust washer", "spec": "23x32x2", "qty": 1, "reusable": true },
+      { "name": "Snap ring", "spec": "35mm external", "qty": 1, "reusable": true }
+    ],
+    "torque": [],
+    "notes": [
+      "Shares synchro hub with 1st gear",
+      "Check needle bearing for flat spots",
+      "Inspect thrust washer for scoring"
+    ]
+  },
   "geometry": [
     { "type": "gearRing", "teeth": 28, "outerRadius": 38, "toothHeight": 5 },
     { "type": "cylinder", "rx": 32, "ry": 10, "height": 18 },

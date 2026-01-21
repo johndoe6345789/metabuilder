@@ -1,0 +1,38 @@
+{
+  "id": "front-bumper",
+  "name": "Front Bumper",
+  "partNumber": "FD-1876320",
+  "material": "blackPlastic",
+  "quantity": 1,
+  "weight": 6800.0,
+  "weightUnit": "g",
+  "baseY": 100,
+  "description": "Front bumper cover with grille and fog light apertures",
+  "installation": {
+    "tools": [
+      { "name": "Torx socket", "size": "T25", "required": true },
+      { "name": "Socket", "size": "10mm", "required": true },
+      { "name": "Trim removal tool", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Bumper bolt", "spec": "M6x1.0x20", "qty": 6, "reusable": true },
+      { "name": "Bumper clip", "spec": "Push fit", "qty": 10, "reusable": false },
+      { "name": "Undertray screw", "spec": "T25", "qty": 8, "reusable": true }
+    ],
+    "torque": [],
+    "notes": [
+      "Disconnect fog lights before removal",
+      "Remove wheel arch liners for access",
+      "Two-person job to avoid scratching",
+      "Check parking sensor connectors"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 160, "height": 45, "rx": 8 },
+    { "type": "rect", "width": 80, "height": 20, "offsetY": -5, "rx": 3, "fill": "#222" },
+    { "type": "ellipse", "rx": 12, "ry": 8, "offsetX": -55, "offsetY": 8, "fill": "#333" },
+    { "type": "ellipse", "rx": 12, "ry": 8, "offsetX": 55, "offsetY": 8, "fill": "#333" },
+    { "type": "rect", "width": 25, "height": 8, "offsetX": -50, "offsetY": -12, "rx": 2, "fill": "#444" },
+    { "type": "rect", "width": 25, "height": 8, "offsetX": 50, "offsetY": -12, "rx": 2, "fill": "#444" }
+  ]
+}

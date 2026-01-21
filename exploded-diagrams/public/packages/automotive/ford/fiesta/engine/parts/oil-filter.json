@@ -1,0 +1,35 @@
+{
+  "id": "oil-filter",
+  "name": "Oil Filter",
+  "partNumber": "FD-1717510",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 380.0,
+  "weightUnit": "g",
+  "baseY": 1200,
+  "description": "Spin-on oil filter - 10 micron",
+  "installation": {
+    "tools": [
+      { "name": "Oil filter wrench", "size": "76mm", "required": true },
+      { "name": "Drain pan", "size": "-", "required": true }
+    ],
+    "hardware": [],
+    "torque": [
+      { "fastener": "Oil filter", "value": 0, "unit": "hand tight + 3/4 turn", "sequence": "", "notes": "Do not overtighten - causes leaks" }
+    ],
+    "notes": [
+      "Pre-fill filter with oil before fitting",
+      "Lubricate gasket with fresh oil",
+      "Check old gasket removed with filter",
+      "Replace every oil change",
+      "Use genuine or quality equivalent"
+    ]
+  },
+  "geometry": [
+    { "type": "cylinder", "rx": 30, "ry": 12, "height": 50, "fill": "#2a5a8a" },
+    { "type": "ellipse", "rx": 30, "ry": 12, "offsetY": -25, "fill": "#3a6a9a" },
+    { "type": "circle", "r": 15, "offsetY": 25, "fill": "#1a4a7a" },
+    { "type": "circle", "r": 8, "offsetY": 25, "fill": "#0a3a6a" },
+    { "type": "text", "content": "FORD", "offsetY": -5, "fill": "#fff", "fontSize": 8 }
+  ]
+}

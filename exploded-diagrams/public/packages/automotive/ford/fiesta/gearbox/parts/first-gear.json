@@ -8,6 +8,25 @@
   "weightUnit": "g",
   "baseY": 280,
   "description": "First gear - 3.58:1 ratio",
+  "installation": {
+    "tools": [
+      { "name": "Snap ring pliers", "size": "External 40mm", "required": true },
+      { "name": "Soft-face mallet", "size": "-", "required": true },
+      { "name": "Bearing separator", "size": "-", "required": false }
+    ],
+    "hardware": [
+      { "name": "Needle bearing", "spec": "K25x30x17", "qty": 1, "reusable": false },
+      { "name": "Thrust washer", "spec": "26x36x2", "qty": 1, "reusable": true },
+      { "name": "Snap ring", "spec": "40mm external", "qty": 1, "reusable": true }
+    ],
+    "torque": [],
+    "notes": [
+      "Check gear teeth for chips or pitting",
+      "Ensure needle bearing rolls smoothly",
+      "Verify gear spins freely on shaft",
+      "Check synchro cone surface for wear"
+    ]
+  },
   "geometry": [
     { "type": "gearRing", "teeth": 32, "outerRadius": 45, "toothHeight": 6 },
     { "type": "cylinder", "rx": 38, "ry": 12, "height": 22 },

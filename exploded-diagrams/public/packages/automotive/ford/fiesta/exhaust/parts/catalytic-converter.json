@@ -1,0 +1,37 @@
+{
+  "id": "catalytic-converter",
+  "name": "Catalytic Converter",
+  "partNumber": "FD-CM5G-5F297-AC",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 5800.0,
+  "weightUnit": "g",
+  "baseY": 100,
+  "description": "Three-way catalytic converter with heat shield",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "15mm", "required": true },
+      { "name": "Exhaust cutter", "size": "-", "required": false },
+      { "name": "Lambda sensor socket", "size": "22mm", "required": true }
+    ],
+    "hardware": [
+      { "name": "Cat gasket", "spec": "2-bolt", "qty": 2, "reusable": false },
+      { "name": "Cat bolt", "spec": "M10x1.5x35", "grade": "A2-70", "qty": 4, "reusable": false }
+    ],
+    "torque": [
+      { "fastener": "Cat bolts", "value": 35, "unit": "Nm", "sequence": "", "notes": "Stainless - anti-seize" }
+    ],
+    "notes": [
+      "Theft target - consider cat clamp",
+      "Pre/post lambda sensors fitted here",
+      "Light-off temperature critical for emissions",
+      "Contains precious metals - recycle properly"
+    ]
+  },
+  "geometry": [
+    { "type": "ellipse", "rx": 35, "ry": 20, "offsetY": -30 },
+    { "type": "rect", "width": 55, "height": 70, "rx": 25 },
+    { "type": "ellipse", "rx": 30, "ry": 18, "offsetY": 45 },
+    { "type": "rect", "width": 65, "height": 80, "rx": 3, "fill": "#555", "opacity": 0.5 }
+  ]
+}

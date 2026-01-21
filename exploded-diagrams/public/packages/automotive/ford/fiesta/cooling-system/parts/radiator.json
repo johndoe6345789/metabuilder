@@ -1,0 +1,38 @@
+{
+  "id": "radiator",
+  "name": "Radiator",
+  "partNumber": "FD-1860110",
+  "material": "aluminum",
+  "quantity": 1,
+  "weight": 4500.0,
+  "weightUnit": "g",
+  "baseY": 0,
+  "description": "Aluminium core radiator with plastic tanks",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "10mm", "required": true },
+      { "name": "Pliers", "size": "-", "required": true },
+      { "name": "Drain pan", "size": "10L", "required": true }
+    ],
+    "hardware": [
+      { "name": "Upper mount bolt", "spec": "M6x20", "qty": 2, "reusable": true },
+      { "name": "Lower mount bush", "spec": "Rubber", "qty": 2, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Upper mount bolts", "value": 8, "unit": "Nm" }
+    ],
+    "notes": [
+      "Drain coolant before removal",
+      "Remove fan assembly first",
+      "Check lower bushes for deterioration",
+      "Refill with Ford Super Plus coolant"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 120, "height": 70, "rx": 3, "fill": "#444" },
+    { "type": "rect", "width": 110, "height": 60, "rx": 2, "fill": "#666" },
+    { "type": "rect", "width": 100, "height": 50, "rx": 1, "fill": "#888" },
+    { "type": "circle", "r": 8, "offsetX": -50, "offsetY": 0, "fill": "#333" },
+    { "type": "circle", "r": 8, "offsetX": 50, "offsetY": 0, "fill": "#333" }
+  ]
+}

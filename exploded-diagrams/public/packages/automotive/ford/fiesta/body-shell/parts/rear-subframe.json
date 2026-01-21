@@ -1,0 +1,36 @@
+{
+  "id": "rear-subframe",
+  "name": "Rear Subframe",
+  "partNumber": "FD-1752920",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 18200.0,
+  "weightUnit": "g",
+  "baseY": 180,
+  "description": "Rear twist-beam mounting subframe",
+  "installation": {
+    "tools": [
+      { "name": "Transmission jack", "size": "-", "required": true },
+      { "name": "Socket", "size": "18mm", "required": true },
+      { "name": "Torque wrench", "size": "100-200 Nm", "required": true }
+    ],
+    "hardware": [
+      { "name": "Subframe bolt", "spec": "M12x1.5x80", "grade": "10.9", "qty": 4, "reusable": false }
+    ],
+    "torque": [
+      { "fastener": "Subframe bolts", "value": 145, "unit": "Nm", "sequence": "Crosshatch pattern", "notes": "Final torque at ride height" }
+    ],
+    "notes": [
+      "Easier to install with rear axle pre-attached",
+      "Check fuel tank clearance before raising",
+      "Align with body locating holes"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 140, "height": 25, "rx": 3 },
+    { "type": "rect", "width": 20, "height": 40, "offsetX": -55, "offsetY": 15 },
+    { "type": "rect", "width": 20, "height": 40, "offsetX": 55, "offsetY": 15 },
+    { "type": "circle", "r": 6, "offsetX": -55, "offsetY": -5, "fill": "#444" },
+    { "type": "circle", "r": 6, "offsetX": 55, "offsetY": -5, "fill": "#444" }
+  ]
+}

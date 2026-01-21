@@ -1,0 +1,34 @@
+{
+  "id": "fuel-filler-neck",
+  "name": "Fuel Filler Neck",
+  "partNumber": "FD-1880410",
+  "material": "blackPlastic",
+  "quantity": 1,
+  "weight": 650.0,
+  "weightUnit": "g",
+  "baseY": 240,
+  "description": "Fuel filler pipe with breather",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "10mm", "required": true },
+      { "name": "Pliers", "size": "-", "required": true },
+      { "name": "Screwdriver", "size": "PH2", "required": true }
+    ],
+    "hardware": [
+      { "name": "Filler neck bolt", "spec": "M6x15", "qty": 3, "reusable": true },
+      { "name": "Hose clamp", "spec": "50mm", "qty": 1, "reusable": true }
+    ],
+    "torque": [],
+    "notes": [
+      "Access from wheel arch",
+      "Remove rear wheel for easier access",
+      "Check breather line connection",
+      "Inspect rubber hose for cracks"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 25, "height": 80, "rx": 5, "fill": "#333" },
+    { "type": "ellipse", "rx": 18, "ry": 12, "offsetY": -45, "fill": "#444" },
+    { "type": "ellipse", "rx": 15, "ry": 10, "offsetY": 45, "fill": "#3a3a3a" }
+  ]
+}

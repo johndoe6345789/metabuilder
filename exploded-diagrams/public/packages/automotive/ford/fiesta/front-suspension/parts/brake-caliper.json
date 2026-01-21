@@ -1,0 +1,44 @@
+{
+  "id": "brake-caliper",
+  "name": "Front Brake Caliper",
+  "partNumber": "FD-1679250",
+  "material": "castAluminum",
+  "quantity": 2,
+  "weight": 2900.0,
+  "weightUnit": "g",
+  "baseY": 780,
+  "description": "Single piston sliding caliper with bracket",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "13mm", "required": true },
+      { "name": "Allen key", "size": "7mm", "required": true },
+      { "name": "Brake line wrench", "size": "11mm", "required": true },
+      { "name": "Torque wrench", "size": "20-50 Nm", "required": true },
+      { "name": "C-clamp", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Caliper bracket bolt", "spec": "M10x1.5x45", "grade": "10.9", "qty": 2, "reusable": false },
+      { "name": "Caliper slide pin", "spec": "M10x50", "qty": 2, "reusable": true },
+      { "name": "Brake hose banjo bolt", "spec": "M10x1.0", "qty": 1, "reusable": false },
+      { "name": "Copper washer", "spec": "M10", "qty": 2, "reusable": false }
+    ],
+    "torque": [
+      { "fastener": "Caliper bracket bolts", "value": 48, "unit": "Nm", "sequence": "", "notes": "Thread lock recommended" },
+      { "fastener": "Banjo bolt", "value": 35, "unit": "Nm", "sequence": "", "notes": "New copper washers" }
+    ],
+    "notes": [
+      "Push piston back before fitting new pads",
+      "Grease slide pins with silicone grease",
+      "Bleed brakes after any hose disconnection",
+      "Check pad wear indicator",
+      "Never let caliper hang by hose"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 80, "height": 50, "rx": 5 },
+    { "type": "rect", "width": 65, "height": 35, "offsetX": -5, "fill": "#777" },
+    { "type": "circle", "r": 18, "offsetX": -20 },
+    { "type": "circle", "r": 12, "offsetX": -20, "fill": "#444" },
+    { "type": "rect", "width": 8, "height": 15, "offsetX": 30, "offsetY": -12, "fill": "#555" }
+  ]
+}

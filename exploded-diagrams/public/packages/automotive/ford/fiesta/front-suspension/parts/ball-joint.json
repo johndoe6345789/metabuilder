@@ -1,0 +1,37 @@
+{
+  "id": "ball-joint",
+  "name": "Ball Joint",
+  "partNumber": "FD-1751365",
+  "material": "steel",
+  "quantity": 2,
+  "weight": 420.0,
+  "weightUnit": "g",
+  "baseY": 370,
+  "description": "Lower ball joint - pressed into control arm",
+  "installation": {
+    "tools": [
+      { "name": "Ball joint press", "size": "Universal", "required": true },
+      { "name": "Ball joint separator", "size": "-", "required": true },
+      { "name": "Socket", "size": "21mm", "required": true }
+    ],
+    "hardware": [
+      { "name": "Ball joint pinch bolt", "spec": "M10x1.5x45", "grade": "10.9", "qty": 1, "reusable": false },
+      { "name": "Split pin", "spec": "3.2x25", "qty": 1, "reusable": false }
+    ],
+    "torque": [
+      { "fastener": "Ball joint nut", "value": 65, "unit": "Nm", "sequence": "", "notes": "Use new split pin" }
+    ],
+    "notes": [
+      "Check for play by levering with pry bar",
+      "Press fit into control arm - requires specialist tool",
+      "Never reuse rubber boot if damaged",
+      "Grease nipple if fitted"
+    ]
+  },
+  "geometry": [
+    { "type": "circle", "r": 22 },
+    { "type": "circle", "r": 15, "fill": "#4a4a4a" },
+    { "type": "cylinder", "rx": 8, "ry": 3, "height": 30, "offsetY": 20 },
+    { "type": "circle", "r": 6, "offsetY": 32, "fill": "#333" }
+  ]
+}

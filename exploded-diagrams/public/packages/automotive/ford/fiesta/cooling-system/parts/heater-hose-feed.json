@@ -1,0 +1,32 @@
+{
+  "id": "heater-hose-feed",
+  "name": "Heater Feed Hose",
+  "partNumber": "FD-1860510",
+  "material": "rubber",
+  "quantity": 1,
+  "weight": 180.0,
+  "weightUnit": "g",
+  "baseY": 380,
+  "description": "Hot coolant feed to heater matrix",
+  "installation": {
+    "tools": [
+      { "name": "Pliers", "size": "-", "required": true },
+      { "name": "Trim tool", "size": "-", "required": false }
+    ],
+    "hardware": [
+      { "name": "Spring clamp", "spec": "20mm", "qty": 2, "reusable": true }
+    ],
+    "torque": [],
+    "notes": [
+      "Routed through bulkhead",
+      "Check grommet seal",
+      "Hot coolant - wait for engine to cool",
+      "Test heater operation after fitting"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 70, "height": 12, "rx": 6, "fill": "#333" },
+    { "type": "ellipse", "rx": 8, "ry": 7, "offsetX": -38, "fill": "#444" },
+    { "type": "ellipse", "rx": 8, "ry": 7, "offsetX": 38, "fill": "#444" }
+  ]
+}

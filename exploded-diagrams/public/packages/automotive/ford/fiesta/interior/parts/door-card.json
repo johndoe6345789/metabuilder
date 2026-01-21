@@ -1,0 +1,34 @@
+{
+  "id": "door-card",
+  "name": "Door Card",
+  "partNumber": "FD-1851420",
+  "material": "blackPlastic",
+  "quantity": 4,
+  "weight": 2800.0,
+  "weightUnit": "g",
+  "baseY": 560,
+  "description": "Interior door trim panel",
+  "installation": {
+    "tools": [
+      { "name": "Trim removal tool", "size": "-", "required": true },
+      { "name": "Torx socket", "size": "T25", "required": true }
+    ],
+    "hardware": [
+      { "name": "Door card clip", "spec": "Push fit", "qty": 8, "reusable": false },
+      { "name": "Door card screw", "spec": "T25", "qty": 3, "reusable": true }
+    ],
+    "torque": [],
+    "notes": [
+      "Remove screw behind handle",
+      "Remove screw in door pull",
+      "Pry clips from bottom up",
+      "Disconnect window switch before lifting away"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 80, "height": 90, "rx": 5 },
+    { "type": "rect", "width": 60, "height": 15, "offsetY": -25, "rx": 3, "fill": "#333" },
+    { "type": "ellipse", "rx": 20, "ry": 8, "offsetY": 0, "fill": "#444" },
+    { "type": "rect", "width": 50, "height": 20, "offsetY": 30, "rx": 2, "fill": "#333" }
+  ]
+}

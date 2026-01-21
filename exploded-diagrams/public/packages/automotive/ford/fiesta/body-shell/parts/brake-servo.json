@@ -1,0 +1,38 @@
+{
+  "id": "brake-servo",
+  "name": "Brake Servo",
+  "partNumber": "FD-1695820",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 3800.0,
+  "weightUnit": "g",
+  "baseY": 470,
+  "description": "Vacuum brake booster servo unit",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "13mm", "required": true },
+      { "name": "Socket", "size": "15mm", "required": true },
+      { "name": "Brake line wrench", "size": "11mm", "required": true }
+    ],
+    "hardware": [
+      { "name": "Servo mounting nut", "spec": "M8", "qty": 4, "reusable": true },
+      { "name": "Pushrod clevis pin", "spec": "8mm", "qty": 1, "reusable": true },
+      { "name": "Vacuum hose", "spec": "12mm ID", "qty": 1, "reusable": false }
+    ],
+    "torque": [
+      { "fastener": "Servo mounting nuts", "value": 22, "unit": "Nm", "sequence": "Crosshatch", "notes": "Do not overtighten - firewall is thin" }
+    ],
+    "notes": [
+      "Mount from engine bay side",
+      "Connect vacuum hose to intake manifold",
+      "Check pushrod adjustment",
+      "Test brake feel before driving"
+    ]
+  },
+  "geometry": [
+    { "type": "circle", "r": 50 },
+    { "type": "circle", "r": 42, "fill": "#4a4a4a" },
+    { "type": "circle", "r": 15, "fill": "#333" },
+    { "type": "rect", "width": 8, "height": 30, "offsetY": -55, "fill": "#555" }
+  ]
+}

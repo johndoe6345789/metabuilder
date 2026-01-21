@@ -1,0 +1,34 @@
+{
+  "id": "headliner",
+  "name": "Headliner",
+  "partNumber": "FD-1854210",
+  "material": "blackPlastic",
+  "quantity": 1,
+  "weight": 4200.0,
+  "weightUnit": "g",
+  "baseY": 640,
+  "description": "Roof interior trim panel",
+  "installation": {
+    "tools": [
+      { "name": "Trim removal tool", "size": "-", "required": true },
+      { "name": "Torx socket", "size": "T20", "required": true }
+    ],
+    "hardware": [
+      { "name": "Headliner clip", "spec": "Push fit", "qty": 12, "reusable": false },
+      { "name": "Sun visor screw", "spec": "T20", "qty": 4, "reusable": true }
+    ],
+    "torque": [],
+    "notes": [
+      "Remove all A/B/C pillar trims first",
+      "Remove sun visors and interior lights",
+      "Flex to remove through rear door",
+      "Do not fold - permanent damage"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 140, "height": 70, "rx": 8, "fill": "#3a3a3a" },
+    { "type": "rect", "width": 25, "height": 10, "offsetX": -40, "offsetY": -20, "rx": 2, "fill": "#444" },
+    { "type": "rect", "width": 25, "height": 10, "offsetX": 40, "offsetY": -20, "rx": 2, "fill": "#444" },
+    { "type": "circle", "r": 8, "offsetY": 10, "fill": "#555" }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "id": "fuel-supply-line",
+  "name": "Fuel Supply Line",
+  "partNumber": "FD-1880610",
+  "material": "nylon",
+  "quantity": 1,
+  "weight": 280.0,
+  "weightUnit": "g",
+  "baseY": 390,
+  "description": "Low-pressure fuel line from tank to engine",
+  "installation": {
+    "tools": [
+      { "name": "Quick-connect tool", "size": "-", "required": true },
+      { "name": "Line clamp", "size": "-", "required": false }
+    ],
+    "hardware": [
+      { "name": "Line clip", "spec": "P-clip", "qty": 5, "reusable": true }
+    ],
+    "torque": [],
+    "notes": [
+      "Depressurize system before removal",
+      "Use quick-connect tool to avoid damage",
+      "Route away from heat sources",
+      "Check for chafing along route"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 150, "height": 8, "rx": 4, "fill": "#333" },
+    { "type": "ellipse", "rx": 8, "ry": 6, "offsetX": -80, "fill": "#444" },
+    { "type": "ellipse", "rx": 8, "ry": 6, "offsetX": 80, "fill": "#444" }
+  ]
+}

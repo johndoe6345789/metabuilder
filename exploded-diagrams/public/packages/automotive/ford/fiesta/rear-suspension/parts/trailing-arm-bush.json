@@ -1,0 +1,33 @@
+{
+  "id": "trailing-arm-bush",
+  "name": "Trailing Arm Bush",
+  "partNumber": "FD-1762485",
+  "material": "blackPlastic",
+  "quantity": 2,
+  "weight": 450.0,
+  "weightUnit": "g",
+  "baseY": 90,
+  "description": "Rear trailing arm pivot bush",
+  "installation": {
+    "tools": [
+      { "name": "Bush press", "size": "Universal", "required": true },
+      { "name": "Hydraulic press", "size": "10 ton", "required": true },
+      { "name": "Hacksaw", "size": "-", "required": false }
+    ],
+    "hardware": [
+      { "name": "Trailing arm bush", "spec": "OEM rubber", "qty": 1, "reusable": false }
+    ],
+    "torque": [],
+    "notes": [
+      "Press fit - requires special tools",
+      "May need to cut out old bush",
+      "Lubricate new bush for installation",
+      "Check bush orientation before pressing"
+    ]
+  },
+  "geometry": [
+    { "type": "ellipse", "rx": 25, "ry": 15 },
+    { "type": "ellipse", "rx": 18, "ry": 10, "fill": "#333" },
+    { "type": "ellipse", "rx": 10, "ry": 6, "fill": "#555" }
+  ]
+}

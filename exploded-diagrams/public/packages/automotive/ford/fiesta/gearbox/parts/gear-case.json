@@ -8,6 +8,29 @@
   "weightUnit": "g",
   "baseY": 760,
   "description": "Main gearbox housing - rear section",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "13mm", "required": true },
+      { "name": "Torque wrench", "size": "20-40 Nm", "required": true },
+      { "name": "Gasket scraper", "size": "-", "required": true },
+      { "name": "RTV sealant gun", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Case bolt", "spec": "M8x1.25x25", "grade": "8.8", "qty": 12, "reusable": true },
+      { "name": "Dowel pin", "spec": "8x12mm", "qty": 2, "reusable": true },
+      { "name": "Output shaft seal", "spec": "40x55x8", "qty": 1, "reusable": false },
+      { "name": "Case gasket", "spec": "IB5", "qty": 1, "reusable": false }
+    ],
+    "torque": [
+      { "fastener": "Case bolts", "value": 28, "unit": "Nm", "sequence": "Crosshatch pattern from center", "notes": "Apply RTV to mating surfaces" }
+    ],
+    "notes": [
+      "Clean all old sealant from mating surfaces",
+      "Apply thin bead of RTV - do not over-apply",
+      "Align dowels before fitting case",
+      "Fill with 2.3L MTF-94 gear oil after assembly"
+    ]
+  },
   "geometry": [
     { "type": "rect", "width": 160, "height": 90, "rx": 12 },
     { "type": "rect", "width": 140, "height": 70, "rx": 8, "fill": "#777" },

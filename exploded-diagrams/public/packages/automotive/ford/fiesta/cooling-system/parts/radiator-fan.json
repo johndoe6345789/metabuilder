@@ -1,0 +1,36 @@
+{
+  "id": "radiator-fan",
+  "name": "Radiator Fan Assembly",
+  "partNumber": "FD-1860610",
+  "material": "blackPlastic",
+  "quantity": 1,
+  "weight": 1800.0,
+  "weightUnit": "g",
+  "baseY": 520,
+  "description": "Electric cooling fan with shroud",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "10mm", "required": true },
+      { "name": "Trim tool", "size": "-", "required": false }
+    ],
+    "hardware": [
+      { "name": "Fan bolt", "spec": "M6x15", "qty": 4, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Fan mounting bolts", "value": 6, "unit": "Nm" }
+    ],
+    "notes": [
+      "Disconnect battery before removal",
+      "Note connector position",
+      "Fan may run after engine off",
+      "Check fan freeplay"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 100, "height": 60, "rx": 3, "fill": "#2a2a2a" },
+    { "type": "circle", "r": 25, "fill": "#444" },
+    { "type": "polygon", "points": [0, -20, 5, 0, 0, 20, -5, 0], "fill": "#555" },
+    { "type": "polygon", "points": [-20, 0, 0, 5, 20, 0, 0, -5], "fill": "#555" },
+    { "type": "circle", "r": 5, "fill": "#333" }
+  ]
+}

@@ -25,6 +25,7 @@ export default function AssemblyPage() {
   const [explosion, setExplosion] = useState(50)
   const [rotation, setRotation] = useState(0)
   const [highlightedPart, setHighlightedPart] = useState<string | null>(null)
+  const [selectedPart, setSelectedPart] = useState<Part | null>(null)
   const [tooltip, setTooltip] = useState<{ part: Part; x: number; y: number } | null>(null)
 
   useEffect(() => {
@@ -54,6 +55,15 @@ export default function AssemblyPage() {
       }
     } else {
       setTooltip(null)
+    }
+  }, [data])
+
+  const handlePartSelect = useCallback((partId: string | null) => {
+    if (partId && data) {
+      const part = data.parts.find(p => p.id === partId)
+      setSelectedPart(part || null)
+    } else {
+      setSelectedPart(null)
     }
   }, [data])
 
@@ -142,7 +152,9 @@ export default function AssemblyPage() {
           assembly={data}
           materials={materials}
           highlightedPart={highlightedPart}
+          selectedPart={selectedPart}
           onPartHover={handlePartHover}
+          onPartSelect={handlePartSelect}
         />
       </div>
 

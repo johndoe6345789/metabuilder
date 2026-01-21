@@ -1,0 +1,37 @@
+{
+  "id": "arb-link",
+  "name": "ARB Drop Link",
+  "partNumber": "FD-1751425",
+  "material": "steel",
+  "quantity": 2,
+  "weight": 280.0,
+  "weightUnit": "g",
+  "baseY": 500,
+  "description": "Anti-roll bar drop link with ball joints",
+  "installation": {
+    "tools": [
+      { "name": "Spanner", "size": "16mm", "required": true },
+      { "name": "Allen key", "size": "5mm", "required": true },
+      { "name": "Torque wrench", "size": "30-60 Nm", "required": true }
+    ],
+    "hardware": [
+      { "name": "Drop link nut", "spec": "M10", "qty": 2, "reusable": false }
+    ],
+    "torque": [
+      { "fastener": "Drop link nuts", "value": 48, "unit": "Nm", "sequence": "", "notes": "Hold ball joint with Allen key" }
+    ],
+    "notes": [
+      "Very common wear item - check for play",
+      "Knocking over bumps indicates worn links",
+      "Hold ball joint to prevent spinning",
+      "Replace in pairs"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 12, "height": 70, "rx": 3 },
+    { "type": "circle", "r": 10, "offsetY": -35 },
+    { "type": "circle", "r": 10, "offsetY": 35 },
+    { "type": "circle", "r": 5, "offsetY": -35, "fill": "#333" },
+    { "type": "circle", "r": 5, "offsetY": 35, "fill": "#333" }
+  ]
+}

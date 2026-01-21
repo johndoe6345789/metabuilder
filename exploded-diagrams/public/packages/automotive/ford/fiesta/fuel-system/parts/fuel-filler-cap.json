@@ -1,0 +1,28 @@
+{
+  "id": "fuel-filler-cap",
+  "name": "Fuel Filler Cap",
+  "partNumber": "FD-1880510",
+  "material": "blackPlastic",
+  "quantity": 1,
+  "weight": 85.0,
+  "weightUnit": "g",
+  "baseY": 320,
+  "description": "Locking fuel cap with pressure relief",
+  "installation": {
+    "tools": [],
+    "hardware": [],
+    "torque": [],
+    "notes": [
+      "Turn until clicks (3 clicks typical)",
+      "Check seal for damage",
+      "Faulty cap causes check engine light",
+      "Keep tether attached to avoid loss"
+    ]
+  },
+  "geometry": [
+    { "type": "circle", "r": 25, "fill": "#2a2a2a" },
+    { "type": "circle", "r": 20, "fill": "#333" },
+    { "type": "circle", "r": 8, "fill": "#444" },
+    { "type": "rect", "width": 15, "height": 3, "offsetY": 0, "fill": "#555" }
+  ]
+}

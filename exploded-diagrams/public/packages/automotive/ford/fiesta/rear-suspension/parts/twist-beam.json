@@ -1,0 +1,41 @@
+{
+  "id": "twist-beam",
+  "name": "Twist Beam Axle",
+  "partNumber": "FD-1762450",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 28500.0,
+  "weightUnit": "g",
+  "baseY": 0,
+  "description": "Rear twist beam axle assembly",
+  "installation": {
+    "tools": [
+      { "name": "Transmission jack", "size": "-", "required": true },
+      { "name": "Socket", "size": "21mm", "required": true },
+      { "name": "Socket", "size": "18mm", "required": true },
+      { "name": "Torque wrench", "size": "100-200 Nm", "required": true }
+    ],
+    "hardware": [
+      { "name": "Trailing arm bolt", "spec": "M14x1.5x100", "grade": "10.9", "qty": 2, "reusable": false },
+      { "name": "Shock lower bolt", "spec": "M12x1.5x60", "grade": "10.9", "qty": 2, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Trailing arm bolts", "value": 175, "unit": "Nm", "sequence": "", "notes": "Final torque at ride height" },
+      { "fastener": "Shock lower bolts", "value": 95, "unit": "Nm", "sequence": "", "notes": "" }
+    ],
+    "notes": [
+      "Support axle before disconnecting anything",
+      "Springs under tension - lower carefully",
+      "Check bushes for deterioration",
+      "Final torque all bushes at ride height"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 180, "height": 20, "rx": 3 },
+    { "type": "rect", "width": 25, "height": 60, "offsetX": -80, "offsetY": 30, "rx": 2 },
+    { "type": "rect", "width": 25, "height": 60, "offsetX": 80, "offsetY": 30, "rx": 2 },
+    { "type": "ellipse", "rx": 18, "ry": 10, "offsetX": -80, "offsetY": -15 },
+    { "type": "ellipse", "rx": 18, "ry": 10, "offsetX": 80, "offsetY": -15 },
+    { "type": "rect", "width": 120, "height": 8, "offsetY": 10, "rx": 2, "fill": "#555" }
+  ]
+}

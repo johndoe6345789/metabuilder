@@ -1,0 +1,41 @@
+{
+  "id": "fuse-box",
+  "name": "Engine Bay Fuse Box",
+  "partNumber": "FD-1829110",
+  "material": "blackPlastic",
+  "quantity": 1,
+  "weight": 850.0,
+  "weightUnit": "g",
+  "baseY": 750,
+  "description": "Main fuse and relay carrier - battery junction box",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "10mm", "required": true },
+      { "name": "Fuse puller", "size": "-", "required": true },
+      { "name": "Wire crimper", "size": "-", "required": false }
+    ],
+    "hardware": [
+      { "name": "Fuse box bolt", "spec": "M6x1.0x15", "qty": 2, "reusable": true },
+      { "name": "Battery cable bolt", "spec": "M8", "qty": 1, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Battery cable bolt", "value": 10, "unit": "Nm", "sequence": "", "notes": "Battery disconnected" }
+    ],
+    "notes": [
+      "Disconnect battery before installation",
+      "Check all fuse ratings match diagram",
+      "Ensure weatherproof seal is intact",
+      "Connect battery last"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 80, "height": 60, "rx": 4 },
+    { "type": "rect", "width": 70, "height": 45, "offsetY": 3, "fill": "#1a1a1a" },
+    { "type": "rect", "width": 6, "height": 8, "offsetX": -25, "offsetY": -5, "fill": "#d4a84a" },
+    { "type": "rect", "width": 6, "height": 8, "offsetX": -15, "offsetY": -5, "fill": "#d94a4a" },
+    { "type": "rect", "width": 6, "height": 8, "offsetX": -5, "offsetY": -5, "fill": "#4a90d9" },
+    { "type": "rect", "width": 6, "height": 8, "offsetX": 5, "offsetY": -5, "fill": "#4ad94a" },
+    { "type": "rect", "width": 6, "height": 8, "offsetX": 15, "offsetY": -5, "fill": "#d4a84a" },
+    { "type": "rect", "width": 6, "height": 8, "offsetX": 25, "offsetY": -5, "fill": "#d94a4a" }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "id": "rear-shock",
+  "name": "Rear Shock Absorber",
+  "partNumber": "FD-1762560",
+  "material": "steel",
+  "quantity": 2,
+  "weight": 2100.0,
+  "weightUnit": "g",
+  "baseY": 230,
+  "description": "Rear twin-tube shock absorber",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "18mm", "required": true },
+      { "name": "Socket", "size": "15mm", "required": true },
+      { "name": "Spanner", "size": "17mm", "required": true },
+      { "name": "Torque wrench", "size": "40-100 Nm", "required": true }
+    ],
+    "hardware": [
+      { "name": "Upper mount nut", "spec": "M10", "qty": 1, "reusable": true },
+      { "name": "Lower bolt", "spec": "M12x1.5x60", "qty": 1, "reusable": true },
+      { "name": "Upper bush", "spec": "Rubber", "qty": 2, "reusable": false },
+      { "name": "Lower bush", "spec": "Rubber", "qty": 2, "reusable": false }
+    ],
+    "torque": [
+      { "fastener": "Upper mount nut", "value": 48, "unit": "Nm", "sequence": "", "notes": "Hold shaft while torquing" },
+      { "fastener": "Lower bolt", "value": 95, "unit": "Nm", "sequence": "", "notes": "" }
+    ],
+    "notes": [
+      "Access upper mount from inside boot",
+      "Check for oil leaks - replace if leaking",
+      "Replace in pairs",
+      "Prime by cycling before installation"
+    ]
+  },
+  "geometry": [
+    { "type": "cylinder", "rx": 18, "ry": 7, "height": 100 },
+    { "type": "cylinder", "rx": 6, "ry": 2, "height": 35, "offsetY": -60 },
+    { "type": "rect", "width": 30, "height": 18, "offsetY": 50, "rx": 3, "fill": "#555" },
+    { "type": "circle", "r": 8, "offsetY": 55, "fill": "#444" }
+  ]
+}

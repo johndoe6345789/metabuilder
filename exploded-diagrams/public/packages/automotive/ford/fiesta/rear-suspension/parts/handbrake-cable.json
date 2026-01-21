@@ -1,0 +1,34 @@
+{
+  "id": "handbrake-cable",
+  "name": "Handbrake Cable",
+  "partNumber": "FD-1679420",
+  "material": "steel",
+  "quantity": 2,
+  "weight": 350.0,
+  "weightUnit": "g",
+  "baseY": 580,
+  "description": "Rear handbrake cable - left and right",
+  "installation": {
+    "tools": [
+      { "name": "Pliers", "size": "Long nose", "required": true },
+      { "name": "Cable lube", "size": "-", "required": true },
+      { "name": "Trim removal tool", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Cable clip", "spec": "Push fit", "qty": 3, "reusable": true },
+      { "name": "Adjuster nut", "spec": "M8", "qty": 1, "reusable": true }
+    ],
+    "torque": [],
+    "notes": [
+      "Adjust after installation - 5-7 clicks",
+      "Check for fraying or kinks",
+      "Lubricate cable before fitting",
+      "Route away from heat sources"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 100, "height": 6, "rx": 3, "fill": "#333" },
+    { "type": "rect", "width": 12, "height": 12, "offsetX": -50, "rx": 2, "fill": "#555" },
+    { "type": "circle", "r": 8, "offsetX": 50, "fill": "#555" }
+  ]
+}

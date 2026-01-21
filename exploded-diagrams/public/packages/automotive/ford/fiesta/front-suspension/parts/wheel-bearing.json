@@ -1,0 +1,42 @@
+{
+  "id": "wheel-bearing",
+  "name": "Front Wheel Bearing",
+  "partNumber": "FD-1751480",
+  "material": "steel",
+  "quantity": 2,
+  "weight": 1250.0,
+  "weightUnit": "g",
+  "baseY": 640,
+  "description": "Integrated hub and bearing assembly",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "32mm", "required": true },
+      { "name": "Torque wrench", "size": "200-280 Nm", "required": true },
+      { "name": "Hub puller", "size": "Universal", "required": false },
+      { "name": "Breaker bar", "size": "1/2\"", "required": true }
+    ],
+    "hardware": [
+      { "name": "Hub nut", "spec": "M24x1.5", "qty": 1, "reusable": false },
+      { "name": "Bearing bolt", "spec": "M10x1.5x35", "grade": "10.9", "qty": 3, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Hub nut", "value": 235, "unit": "Nm", "sequence": "", "notes": "New nut - stake after torquing" },
+      { "fastener": "Bearing bolts", "value": 65, "unit": "Nm", "sequence": "Star pattern", "notes": "" }
+    ],
+    "notes": [
+      "Humming noise indicates worn bearing",
+      "Noise changes with steering = front bearing",
+      "Check ABS reluctor ring condition",
+      "Do not hammer directly on hub face"
+    ]
+  },
+  "geometry": [
+    { "type": "circle", "r": 38 },
+    { "type": "circle", "r": 28, "fill": "#555" },
+    { "type": "circle", "r": 18, "fill": "#444" },
+    { "type": "gearRing", "teeth": 44, "outerRadius": 32, "toothHeight": 2 },
+    { "type": "circle", "r": 5, "offsetX": -22, "offsetY": 0, "fill": "#333" },
+    { "type": "circle", "r": 5, "offsetX": 11, "offsetY": -19, "fill": "#333" },
+    { "type": "circle", "r": 5, "offsetX": 11, "offsetY": 19, "fill": "#333" }
+  ]
+}

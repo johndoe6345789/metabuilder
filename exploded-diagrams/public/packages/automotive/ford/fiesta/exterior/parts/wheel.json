@@ -1,0 +1,48 @@
+{
+  "id": "wheel",
+  "name": "Alloy Wheel",
+  "partNumber": "FD-1894210",
+  "material": "aluminum",
+  "quantity": 4,
+  "weight": 9500.0,
+  "weightUnit": "g",
+  "baseY": 870,
+  "description": "16-inch alloy wheel with tyre",
+  "installation": {
+    "tools": [
+      { "name": "Wheel brace", "size": "17mm", "required": true },
+      { "name": "Torque wrench", "size": "80-140 Nm", "required": true },
+      { "name": "Jack", "size": "2 ton", "required": true },
+      { "name": "Axle stand", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Wheel bolt", "spec": "M12x1.5x26", "qty": 4, "reusable": true },
+      { "name": "Locking wheel bolt", "spec": "M12x1.5", "qty": 1, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Wheel bolts", "value": 120, "unit": "Nm", "sequence": "Star pattern", "notes": "Re-torque after 50km" }
+    ],
+    "notes": [
+      "Check tyre pressure after fitting",
+      "Torque in star pattern",
+      "Re-check torque after 50km",
+      "Keep locking bolt key in vehicle"
+    ]
+  },
+  "geometry": [
+    { "type": "circle", "r": 60, "fill": "#888" },
+    { "type": "circle", "r": 50, "fill": "#666" },
+    { "type": "circle", "r": 25, "fill": "#555" },
+    { "type": "circle", "r": 15, "fill": "#444" },
+    { "type": "circle", "r": 8, "offsetX": -35, "offsetY": 0, "fill": "#777" },
+    { "type": "circle", "r": 8, "offsetX": 35, "offsetY": 0, "fill": "#777" },
+    { "type": "circle", "r": 8, "offsetX": 0, "offsetY": -35, "fill": "#777" },
+    { "type": "circle", "r": 8, "offsetX": 0, "offsetY": 35, "fill": "#777" },
+    { "type": "circle", "r": 8, "offsetX": -25, "offsetY": -25, "fill": "#777" },
+    { "type": "circle", "r": 8, "offsetX": 25, "offsetY": 25, "fill": "#777" },
+    { "type": "circle", "r": 4, "offsetX": -15, "offsetY": 0, "fill": "#333" },
+    { "type": "circle", "r": 4, "offsetX": 15, "offsetY": 0, "fill": "#333" },
+    { "type": "circle", "r": 4, "offsetX": 0, "offsetY": -15, "fill": "#333" },
+    { "type": "circle", "r": 4, "offsetX": 0, "offsetY": 15, "fill": "#333" }
+  ]
+}

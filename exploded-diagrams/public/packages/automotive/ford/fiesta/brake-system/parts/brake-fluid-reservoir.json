@@ -1,0 +1,33 @@
+{
+  "id": "brake-fluid-reservoir",
+  "name": "Brake Fluid Reservoir",
+  "partNumber": "FD-1850110",
+  "material": "blackPlastic",
+  "quantity": 1,
+  "weight": 250.0,
+  "weightUnit": "g",
+  "baseY": 0,
+  "description": "DOT4 brake fluid reservoir with level sensor",
+  "installation": {
+    "tools": [
+      { "name": "Flathead screwdriver", "size": "-", "required": true },
+      { "name": "Brake fluid syringe", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Reservoir clip", "spec": "Spring clip", "qty": 2, "reusable": true }
+    ],
+    "torque": [],
+    "notes": [
+      "Drain fluid before removal",
+      "Use DOT4 fluid only",
+      "Check level sensor connector",
+      "Do not let fluid contact paintwork"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 60, "height": 40, "rx": 5, "fill": "#2a2a2a" },
+    { "type": "rect", "width": 50, "height": 30, "offsetY": -2, "rx": 3, "fill": "#3a3a3a" },
+    { "type": "rect", "width": 20, "height": 8, "offsetY": -20, "rx": 2, "fill": "#444" },
+    { "type": "circle", "r": 5, "offsetX": 20, "offsetY": 10, "fill": "#666" }
+  ]
+}

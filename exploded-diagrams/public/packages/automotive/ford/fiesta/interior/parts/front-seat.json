@@ -1,0 +1,36 @@
+{
+  "id": "front-seat",
+  "name": "Front Seat",
+  "partNumber": "FD-1842610",
+  "material": "steel",
+  "quantity": 2,
+  "weight": 22000.0,
+  "weightUnit": "g",
+  "baseY": 380,
+  "description": "Front bucket seat with side airbag",
+  "installation": {
+    "tools": [
+      { "name": "Torx socket", "size": "T50", "required": true },
+      { "name": "Socket", "size": "15mm", "required": true },
+      { "name": "Torque wrench", "size": "40-60 Nm", "required": true }
+    ],
+    "hardware": [
+      { "name": "Seat bolt", "spec": "M10x1.5x35", "grade": "10.9", "qty": 4, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Seat bolts", "value": 48, "unit": "Nm", "sequence": "", "notes": "Critical - occupant safety" }
+    ],
+    "notes": [
+      "SIDE AIRBAG - disconnect battery first",
+      "Yellow connector under seat",
+      "Slide seat fully back for rear bolts",
+      "Two-person lift recommended"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 55, "height": 80, "rx": 8 },
+    { "type": "rect", "width": 50, "height": 60, "offsetY": -50, "rx": 8, "fill": "#333" },
+    { "type": "rect", "width": 45, "height": 10, "offsetY": 35, "rx": 2, "fill": "#444" },
+    { "type": "rect", "width": 10, "height": 15, "offsetX": -30, "offsetY": -20, "rx": 2, "fill": "#555" }
+  ]
+}

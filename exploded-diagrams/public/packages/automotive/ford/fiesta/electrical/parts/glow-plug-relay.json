@@ -1,0 +1,32 @@
+{
+  "id": "glow-plug-relay",
+  "name": "Glow Plug Relay",
+  "partNumber": "FD-1870610",
+  "material": "blackPlastic",
+  "quantity": 1,
+  "weight": 180.0,
+  "weightUnit": "g",
+  "baseY": 490,
+  "description": "Glow plug timer relay (diesel models only)",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "10mm", "required": true }
+    ],
+    "hardware": [
+      { "name": "Mounting bolt", "spec": "M6x15", "qty": 1, "reusable": true }
+    ],
+    "torque": [],
+    "notes": [
+      "Diesel engines only",
+      "Located near battery",
+      "Controls glow plug heating time",
+      "Faulty relay causes hard cold starting"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 40, "height": 35, "rx": 3, "fill": "#333" },
+    { "type": "rect", "width": 35, "height": 30, "rx": 2, "fill": "#444" },
+    { "type": "circle", "r": 4, "offsetX": -10, "offsetY": 10, "fill": "#666" },
+    { "type": "circle", "r": 4, "offsetX": 10, "offsetY": 10, "fill": "#666" }
+  ]
+}

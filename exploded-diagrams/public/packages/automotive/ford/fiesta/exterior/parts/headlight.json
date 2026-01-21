@@ -1,0 +1,33 @@
+{
+  "id": "headlight",
+  "name": "Headlight Assembly",
+  "partNumber": "FD-1878210",
+  "material": "blackPlastic",
+  "quantity": 2,
+  "weight": 2800.0,
+  "weightUnit": "g",
+  "baseY": 660,
+  "description": "Halogen or LED headlight unit with DRL",
+  "installation": {
+    "tools": [
+      { "name": "Torx socket", "size": "T25", "required": true },
+      { "name": "Socket", "size": "10mm", "required": true }
+    ],
+    "hardware": [
+      { "name": "Headlight bolt", "spec": "M6x1.0x15", "qty": 3, "reusable": true }
+    ],
+    "torque": [],
+    "notes": [
+      "Remove bumper for full access",
+      "Disconnect bulb connectors carefully",
+      "Check beam alignment after fitting",
+      "Do not touch halogen bulbs with fingers"
+    ]
+  },
+  "geometry": [
+    { "type": "polygon", "points": [-35, 0, 35, 0, 45, 30, 25, 40, -25, 40, -45, 30], "fill": "#333" },
+    { "type": "ellipse", "rx": 20, "ry": 12, "offsetX": -10, "offsetY": 10, "fill": "#add8e6" },
+    { "type": "ellipse", "rx": 12, "ry": 8, "offsetX": 18, "offsetY": 15, "fill": "#ffeb3b" },
+    { "type": "rect", "width": 30, "height": 5, "offsetX": -5, "offsetY": 30, "rx": 2, "fill": "#fff" }
+  ]
+}

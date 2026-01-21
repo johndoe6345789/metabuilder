@@ -1,0 +1,42 @@
+{
+  "id": "pedal-box",
+  "name": "Pedal Box Assembly",
+  "partNumber": "FD-1748520",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 4200.0,
+  "weightUnit": "g",
+  "baseY": 400,
+  "description": "Brake, clutch, and accelerator pedal assembly",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "13mm", "required": true },
+      { "name": "Socket", "size": "10mm", "required": true },
+      { "name": "Torque wrench", "size": "10-30 Nm", "required": true },
+      { "name": "Trim removal tool", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Pedal box bolt", "spec": "M8x1.25x25", "grade": "8.8", "qty": 4, "reusable": true },
+      { "name": "Clutch master cylinder nut", "spec": "M10", "qty": 2, "reusable": true },
+      { "name": "Clevis pin", "spec": "8mm", "qty": 2, "reusable": true },
+      { "name": "Spring clip", "spec": "8mm", "qty": 2, "reusable": false }
+    ],
+    "torque": [
+      { "fastener": "Pedal box bolts", "value": 25, "unit": "Nm", "sequence": "Crosshatch", "notes": "" }
+    ],
+    "notes": [
+      "Install from inside cabin",
+      "Connect brake servo pushrod before final mounting",
+      "Check pedal free play after installation",
+      "Route clutch hydraulic line clear of steering column"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 60, "height": 80, "rx": 3 },
+    { "type": "rect", "width": 15, "height": 50, "offsetX": -15, "offsetY": 20, "fill": "#555" },
+    { "type": "rect", "width": 15, "height": 45, "offsetX": 5, "offsetY": 22, "fill": "#555" },
+    { "type": "rect", "width": 12, "height": 35, "offsetX": 22, "offsetY": 27, "fill": "#555" },
+    { "type": "circle", "r": 4, "offsetX": -20, "offsetY": -30, "fill": "#444" },
+    { "type": "circle", "r": 4, "offsetX": 20, "offsetY": -30, "fill": "#444" }
+  ]
+}

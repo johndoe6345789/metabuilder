@@ -1,0 +1,47 @@
+{
+  "id": "turbocharger",
+  "name": "Turbocharger",
+  "partNumber": "FD-CM5G-6K682-HB",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 5800.0,
+  "weightUnit": "g",
+  "baseY": 590,
+  "description": "BorgWarner KP39 turbocharger with wastegate",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "13mm", "required": true },
+      { "name": "Socket", "size": "10mm", "required": true },
+      { "name": "Torque wrench", "size": "15-50 Nm", "required": true },
+      { "name": "Oil primer", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Turbo stud", "spec": "M8x1.25x40", "grade": "A2-70", "qty": 3, "reusable": false },
+      { "name": "Turbo nut", "spec": "M8 copper", "qty": 3, "reusable": false },
+      { "name": "Oil feed banjo bolt", "spec": "M12x1.5", "qty": 1, "reusable": false },
+      { "name": "Oil drain gasket", "spec": "Paper", "qty": 1, "reusable": false },
+      { "name": "V-band clamp", "spec": "70mm", "qty": 1, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Turbo nuts", "value": 22, "unit": "Nm", "sequence": "Crosshatch", "notes": "Copper nuts - anti-seize on studs" },
+      { "fastener": "Oil feed banjo", "value": 25, "unit": "Nm", "sequence": "", "notes": "New copper washers" },
+      { "fastener": "V-band clamp", "value": 8, "unit": "Nm", "sequence": "", "notes": "Check orientation" }
+    ],
+    "notes": [
+      "Prime oil feed before first start",
+      "Do not rev engine immediately after start",
+      "Let turbo cool before shutdown (turbo timer)",
+      "Check oil feed line for blockage",
+      "Integrated into exhaust manifold on EcoBoost"
+    ]
+  },
+  "geometry": [
+    { "type": "ellipse", "rx": 40, "ry": 30 },
+    { "type": "circle", "r": 35, "offsetX": -25, "fill": "#666" },
+    { "type": "circle", "r": 25, "offsetX": -25, "fill": "#555" },
+    { "type": "circle", "r": 30, "offsetX": 30, "fill": "#777" },
+    { "type": "circle", "r": 20, "offsetX": 30, "fill": "#888" },
+    { "type": "rect", "width": 50, "height": 15, "offsetY": 30, "rx": 3, "fill": "#555" },
+    { "type": "text", "content": "KP39", "offsetY": 30, "fill": "#333", "fontSize": 6 }
+  ]
+}

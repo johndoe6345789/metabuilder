@@ -8,6 +8,24 @@
   "weightUnit": "g",
   "baseY": 680,
   "description": "Gear selector fork - 1st/2nd rail",
+  "installation": {
+    "tools": [
+      { "name": "Pin punch", "size": "4mm", "required": true },
+      { "name": "Ball peen hammer", "size": "8oz", "required": true },
+      { "name": "Feeler gauge", "size": "0.1-0.5mm", "required": true }
+    ],
+    "hardware": [
+      { "name": "Roll pin", "spec": "4x20mm", "qty": 1, "reusable": false },
+      { "name": "Selector fork pad", "spec": "IB5", "qty": 2, "reusable": false }
+    ],
+    "torque": [],
+    "notes": [
+      "Check fork pads for wear - max 0.5mm",
+      "Measure fork-to-groove clearance",
+      "Replace roll pin on reassembly",
+      "Ensure smooth rail movement after installation"
+    ]
+  },
   "geometry": [
     { "type": "rect", "width": 80, "height": 8, "rx": 2 },
     { "type": "rect", "width": 12, "height": 35, "offsetY": 18 },

@@ -1,0 +1,37 @@
+{
+  "id": "steering-column",
+  "name": "Steering Column",
+  "partNumber": "FD-1697320",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 6800.0,
+  "weightUnit": "g",
+  "baseY": 80,
+  "description": "Adjustable steering column with EPAS motor",
+  "installation": {
+    "tools": [
+      { "name": "Torx socket", "size": "T50", "required": true },
+      { "name": "Socket", "size": "13mm", "required": true },
+      { "name": "Torque wrench", "size": "20-50 Nm", "required": true }
+    ],
+    "hardware": [
+      { "name": "Column bolt", "spec": "M10x1.5x30", "qty": 2, "reusable": false },
+      { "name": "Column shear bolt", "spec": "Shear head", "qty": 2, "reusable": false }
+    ],
+    "torque": [
+      { "fastener": "Column bolts", "value": 25, "unit": "Nm", "sequence": "", "notes": "Shear bolts break off at torque" }
+    ],
+    "notes": [
+      "Disable airbag before removal",
+      "Do not rotate shaft with rack disconnected",
+      "Shear bolts are security feature - drill to remove",
+      "EPAS requires calibration after refit"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 50, "height": 80, "rx": 8 },
+    { "type": "cylinder", "rx": 15, "ry": 8, "height": 40, "offsetY": -50 },
+    { "type": "rect", "width": 30, "height": 20, "offsetY": 35, "rx": 3, "fill": "#555" },
+    { "type": "rect", "width": 40, "height": 25, "offsetX": -35, "offsetY": 10, "rx": 3, "fill": "#444" }
+  ]
+}

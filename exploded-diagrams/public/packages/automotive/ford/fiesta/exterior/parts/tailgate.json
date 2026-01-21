@@ -1,0 +1,36 @@
+{
+  "id": "tailgate",
+  "name": "Tailgate/Hatch",
+  "partNumber": "FD-1875110",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 22000.0,
+  "weightUnit": "g",
+  "baseY": 420,
+  "description": "Rear hatch with glass and wiper mechanism",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "13mm", "required": true },
+      { "name": "Torx socket", "size": "T30", "required": true }
+    ],
+    "hardware": [
+      { "name": "Tailgate hinge bolt", "spec": "M8x1.25x20", "qty": 4, "reusable": true },
+      { "name": "Gas strut pin", "spec": "8mm ball", "qty": 2, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Tailgate hinge bolts", "value": 22, "unit": "Nm", "sequence": "", "notes": "Support tailgate weight" }
+    ],
+    "notes": [
+      "Disconnect wiring first (wiper, lock, light)",
+      "Support with strut before disconnecting",
+      "Two-person job",
+      "Check gas strut force - common failure"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 120, "height": 70, "rx": 8, "fill": "#2a5a8a" },
+    { "type": "rect", "width": 100, "height": 45, "offsetY": -5, "rx": 5, "fill": "#87ceeb" },
+    { "type": "rect", "width": 30, "height": 8, "offsetY": 25, "rx": 2, "fill": "#1a4a7a" },
+    { "type": "rect", "width": 10, "height": 25, "offsetY": -10, "rx": 2, "fill": "#333" }
+  ]
+}

@@ -44,6 +44,35 @@ export interface Geometry {
   fontFamily?: string
 }
 
+export interface Tool {
+  name: string
+  size: string
+  required: boolean
+}
+
+export interface Hardware {
+  name: string
+  spec: string
+  qty: number
+  grade?: string
+  reusable: boolean
+}
+
+export interface TorqueSpec {
+  fastener: string
+  value: number
+  unit: string
+  sequence?: string
+  notes?: string
+}
+
+export interface Installation {
+  tools: Tool[]
+  hardware: Hardware[]
+  torque: TorqueSpec[]
+  notes: string[]
+}
+
 export interface Part {
   id: string
   name: string
@@ -53,6 +82,7 @@ export interface Part {
   quantity: number
   baseY: number
   geometry: Geometry[]
+  installation?: Installation
 }
 
 export interface Assembly {

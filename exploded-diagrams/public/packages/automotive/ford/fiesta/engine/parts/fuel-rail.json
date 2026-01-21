@@ -1,0 +1,40 @@
+{
+  "id": "fuel-rail",
+  "name": "Fuel Rail",
+  "partNumber": "FD-CM5G-9F792-BD",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 850.0,
+  "weightUnit": "g",
+  "baseY": 800,
+  "description": "High pressure fuel rail - 200 bar",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "8mm", "required": true },
+      { "name": "Line wrench", "size": "17mm", "required": true },
+      { "name": "Torque wrench", "size": "10-30 Nm", "required": true }
+    ],
+    "hardware": [
+      { "name": "Fuel rail bolt", "spec": "M6x1.0x20", "qty": 2, "reusable": true },
+      { "name": "High pressure line", "spec": "M12x1.5", "qty": 1, "reusable": false },
+      { "name": "O-ring (injector)", "spec": "Viton", "qty": 3, "reusable": false }
+    ],
+    "torque": [
+      { "fastener": "Fuel rail bolts", "value": 10, "unit": "Nm", "sequence": "", "notes": "" },
+      { "fastener": "HP fuel line", "value": 25, "unit": "Nm", "sequence": "", "notes": "New line fitting each time" }
+    ],
+    "notes": [
+      "Depressurize fuel system before removal",
+      "200 bar operating pressure - serious injury risk",
+      "Replace O-rings when removing injectors",
+      "Fuel pressure sensor on rail end"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 80, "height": 15, "rx": 7, "fill": "#5a5a5a" },
+    { "type": "rect", "width": 8, "height": 20, "offsetX": -25, "offsetY": 12, "fill": "#666" },
+    { "type": "rect", "width": 8, "height": 20, "offsetY": 12, "fill": "#666" },
+    { "type": "rect", "width": 8, "height": 20, "offsetX": 25, "offsetY": 12, "fill": "#666" },
+    { "type": "circle", "r": 8, "offsetX": 45, "fill": "#777" }
+  ]
+}
