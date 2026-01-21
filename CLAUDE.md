@@ -1,21 +1,126 @@
 # MetaBuilder Development Guide for AI Assistants
 
-**Last Updated**: 2026-01-21 (Added comprehensive exploration requirements)
-**Status**: Phase 2 Complete, Ready for Phase 3
+**Last Updated**: 2026-01-21
+**Status**: Phase 2 Complete, Universal Platform Architecture Defined
 **Overall Health**: 82/100
+**Vision**: Universal Platform - One cohesive system for code, 3D, graphics, media, and system administration
 
 ---
 
 ## Table of Contents
 
-1. [Before Starting Any Task](#before-starting-any-task)
-2. [Core Principles](#core-principles)
-3. [Architecture Overview](#architecture-overview)
-4. [JSON-First Philosophy](#json-first-philosophy)
-5. [Multi-Tenant & Security](#multi-tenant--security)
-6. [Code Organization](#code-organization)
-7. [What NOT to Do](#what-not-to-do)
-8. [Quick Reference](#quick-reference)
+1. [Universal Platform Vision](#universal-platform-vision)
+2. [Before Starting Any Task](#before-starting-any-task)
+3. [Core Principles](#core-principles)
+4. [Architecture Overview](#architecture-overview)
+5. [JSON-First Philosophy](#json-first-philosophy)
+6. [Multi-Tenant & Security](#multi-tenant--security)
+7. [Code Organization](#code-organization)
+8. [What NOT to Do](#what-not-to-do)
+9. [Quick Reference](#quick-reference)
+
+---
+
+## Universal Platform Vision
+
+MetaBuilder is evolving into a **Universal Platform** - a userland operating environment that provides everything through a unified data model and consistent interface.
+
+### The Premise
+
+Modern computing is fragmented. Users need dozens of apps, each with its own paradigms, file formats, and learning curves. MetaBuilder provides **one cohesive system** for code editing, 3D modeling, game development, graphics work, system administration, and media production.
+
+### System Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                              FRONTENDS                                       │
+├─────────────────┬─────────────────────┬─────────────────────────────────────┤
+│   CLI Frontend  │   Qt6 Frontend      │   Web Frontend (Next.js)            │
+│   (Commander)   │   (Native Desktop)  │   (Browser/Electron/Tauri)          │
+└────────┬────────┴──────────┬──────────┴──────────────────┬──────────────────┘
+         │                   │                              │
+         └───────────────────┼──────────────────────────────┘
+                             │
+                    ┌────────▼────────┐
+                    │  FRONTEND BUS   │
+                    │  (WebSocket/IPC)│
+                    └────────┬────────┘
+                             │
+┌────────────────────────────▼────────────────────────────────────────────────┐
+│                           METABUILDER CORE                                   │
+│  ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐        │
+│  │ State Machine│ │ Command Bus  │ │ Event Stream │ │ Entity Graph │        │
+│  │ (XState-like)│ │ (CQRS)       │ │ (Pub/Sub)    │ │ (DBAL)       │        │
+│  └──────────────┘ └──────────────┘ └──────────────┘ └──────────────┘        │
+│  ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐        │
+│  │ Undo/Redo    │ │ Job Scheduler│ │ Plugin Host  │ │ VFS Layer    │        │
+│  │ (Event Src)  │ │ (DAG Engine) │ │ (Registry)   │ │ (Abstraction)│        │
+│  └──────────────┘ └──────────────┘ └──────────────┘ └──────────────┘        │
+└─────────────────────────────────┬───────────────────────────────────────────┘
+                                  │
+┌─────────────────────────────────▼───────────────────────────────────────────┐
+│                        CAPABILITY MODULES                                    │
+├─────────────┬─────────────┬─────────────┬─────────────┬─────────────────────┤
+│   CODE      │   GRAPHICS  │    3D       │   MEDIA     │   SYSTEM            │
+│   ────      │   ────────  │    ──       │   ─────     │   ──────            │
+│ • Editor    │ • Raster    │ • Modeling  │ • Audio     │ • Files             │
+│ • LSP Host  │ • Vector    │ • Sculpting │ • Video     │ • Processes         │
+│ • Debugger  │ • Compositor│ • Animation │ • Streaming │ • Network           │
+│ • Builder   │ • Filters   │ • Physics   │ • Recording │ • Hardware          │
+│ • VCS       │ • AI Gen    │ • Rendering │ • Encoding  │ • Containers        │
+├─────────────┼─────────────┼─────────────┼─────────────┼─────────────────────┤
+│   GAME      │   DATA      │   DOCS      │   COMMS     │   AI                │
+│   ────      │   ────      │   ────      │   ─────     │   ──                │
+│ • Engine    │ • Database  │ • Writer    │ • Chat      │ • Local LLM         │
+│ • Physics   │ • Sheets    │ • Slides    │ • Email     │ • Image Gen         │
+│ • Audio     │ • Graphs    │ • Diagrams  │ • Calendar  │ • Code Assist       │
+│ • Assets    │ • ETL       │ • PDF       │ • Tasks     │ • Agents            │
+│ • Scripting │ • Analytics │ • Publishing│ • Contacts  │ • Embeddings        │
+└─────────────┴─────────────┴─────────────┴─────────────┴─────────────────────┘
+                                  │
+┌─────────────────────────────────▼───────────────────────────────────────────┐
+│                         RUNTIME LAYER                                        │
+│  ┌────────────┐ ┌────────────┐ ┌────────────┐ ┌────────────┐                │
+│  │ Native     │ │ WASM       │ │ Workflow   │ │ GPU        │                │
+│  │ (C++/TS)   │ │ (Portable) │ │ (JSON DAG) │ │ (Compute)  │                │
+│  └────────────┘ └────────────┘ └────────────┘ └────────────┘                │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### Mapping to Current Implementation
+
+| Architecture Layer | Current Component | Location |
+|-------------------|-------------------|----------|
+| Entity Graph | DBAL | `dbal/` |
+| Job Scheduler | DAG Executor | `workflow/executor/ts/executor/` |
+| Plugin Host | Node Executor Registry | `workflow/executor/ts/registry/` |
+| Workflow Runtime | Python/TS Plugins | `workflow/plugins/` |
+| Web Frontend | Next.js App | `frontends/nextjs/` |
+
+### Core Subsystems (To Build)
+
+| Subsystem | Purpose | Status |
+|-----------|---------|--------|
+| State Machine | Central state management (XState-like) | Planned |
+| Command Bus | CQRS command/query separation | Planned |
+| Event Stream | Pub/sub for cross-module communication | Planned |
+| VFS Layer | Virtual filesystem abstraction | Planned |
+| Frontend Bus | WebSocket/IPC for frontend sync | Planned |
+
+### Capability Categories
+
+- **Code**: Editor, LSP, debugger, builder, VCS
+- **Graphics**: Raster, vector, compositor, filters, AI generation
+- **3D**: Modeling, sculpting, animation, physics, rendering
+- **Media**: Audio, video, streaming, recording, encoding
+- **System**: Files, processes, network, hardware, containers
+- **Game**: Engine, physics, audio, assets, scripting
+- **Data**: Database, sheets, graphs, ETL, analytics
+- **Docs**: Writer, slides, diagrams, PDF, publishing
+- **Comms**: Chat, email, calendar, tasks, contacts
+- **AI**: Local LLM, image generation, code assist, agents, embeddings
+
+**Full architecture details**: See [docs/UNIVERSAL_PLATFORM_ARCHITECTURE.md](./docs/UNIVERSAL_PLATFORM_ARCHITECTURE.md)
 
 ---
 
@@ -747,5 +852,5 @@ http://localhost:3000/api/docs     # API docs
 ---
 
 **Status**: Production Ready (Phase 2 Complete)
-**Next**: Phase 3 - JSON-based Admin Tools
+**Next**: Universal Platform - Core Infrastructure (State Machine, Command Bus, Event Stream, VFS, Frontend Bus)
 
