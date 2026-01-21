@@ -1,0 +1,73 @@
+{
+  "id": "spool-holder",
+  "name": "Filament Spool Holder",
+  "partNumber": "BL-A1-006",
+  "material": "plastic",
+  "quantity": 1,
+  "weight": 85.0,
+  "weightUnit": "g",
+  "baseY": 220,
+  "description": "Injection molded filament spool holder arm - mounts to top beam rear, supports standard 1kg spools up to 200mm diameter with integrated runout sensor mount and smooth roller bearings",
+  "installation": {
+    "tools": [
+      { "name": "Hex key", "size": "2.5mm", "required": true },
+      { "name": "Phillips screwdriver", "size": "#1", "required": true }
+    ],
+    "hardware": [
+      { "name": "Mounting screw", "spec": "M4x12", "grade": "8.8", "qty": 2, "reusable": true },
+      { "name": "T-slot nut", "spec": "M4", "qty": 2, "reusable": true },
+      { "name": "Roller bearing", "spec": "608ZZ", "qty": 2, "reusable": true },
+      { "name": "Bearing spacer", "spec": "8x12x5mm", "qty": 1, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Mounting screws", "value": 1.5, "unit": "Nm", "sequence": "Both screws evenly", "notes": "Plastic threads - do not overtighten" }
+    ],
+    "notes": [
+      "Supports spools up to 1kg standard size",
+      "Roller bearings allow smooth spool rotation",
+      "Position with filament path clear to extruder",
+      "Runout sensor mounts on inner arm face"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 25, "height": 80, "rx": 3, "fill": "#303030" },
+    { "type": "rect", "width": 100, "height": 15, "offsetY": -30, "rx": 4, "fill": "#353535" },
+    { "type": "circle", "r": 8, "offsetX": -35, "offsetY": -30, "fill": "#252525" },
+    { "type": "circle", "r": 8, "offsetX": 40, "offsetY": -30, "fill": "#252525" },
+    { "type": "circle", "r": 4, "offsetY": 30, "fill": "#444" },
+    { "type": "circle", "r": 4, "offsetY": 15, "fill": "#444" }
+  ],
+  "geometry3d": [
+    { "type": "box", "width": 25, "height": 15, "depth": 30, "offsetY": 0, "fill": "#303030" },
+
+    { "type": "box", "width": 120, "height": 12, "depth": 20, "offsetX": 50, "offsetY": 0, "fill": "#353535" },
+
+    { "type": "cylinder", "r": 10, "height": 25, "offsetX": 100, "rotateZ": 90, "fill": "#404040" },
+    { "type": "cylinder", "r": 5, "height": 30, "offsetX": 100, "rotateZ": 90, "subtract": true },
+
+    { "type": "cylinder", "r": 8, "height": 8, "offsetX": 100, "offsetY": 10, "rotateZ": 90, "fill": "#606060" },
+    { "type": "cylinder", "r": 8, "height": 8, "offsetX": 100, "offsetY": -10, "rotateZ": 90, "fill": "#606060" },
+    { "type": "cylinder", "r": 4, "height": 10, "offsetX": 100, "offsetY": 10, "rotateZ": 90, "subtract": true },
+    { "type": "cylinder", "r": 4, "height": 10, "offsetX": 100, "offsetY": -10, "rotateZ": 90, "subtract": true },
+
+    { "type": "box", "width": 8, "height": 40, "depth": 25, "offsetX": 0, "offsetY": 25, "fill": "#383838" },
+
+    { "type": "cylinder", "r": 2.5, "height": 20, "offsetX": 0, "offsetY": 35, "rotateX": 90, "subtract": true },
+    { "type": "cylinder", "r": 2.5, "height": 20, "offsetX": 0, "offsetY": 20, "rotateX": 90, "subtract": true },
+
+    { "type": "box", "width": 20, "height": 8, "depth": 15, "offsetX": 25, "offsetY": 4, "fill": "#404040" },
+    { "type": "box", "width": 15, "height": 10, "depth": 10, "offsetX": 25, "offsetY": 4, "subtract": true },
+
+    { "type": "cylinder", "r": 6, "height": 30, "offsetX": 15, "rotateZ": 90, "fill": "#2a2a2a" },
+
+    { "type": "box", "width": 15, "height": 6, "depth": 12, "offsetX": 60, "offsetY": 8, "fill": "#505050" },
+    { "type": "cylinder", "r": 2, "height": 8, "offsetX": 55, "offsetY": 8, "subtract": true },
+    { "type": "cylinder", "r": 2, "height": 8, "offsetX": 65, "offsetY": 8, "subtract": true },
+
+    { "type": "box", "width": 6, "height": 18, "depth": 10, "offsetX": 110, "offsetY": 0, "fill": "#454545" },
+
+    { "type": "box", "width": 100, "height": 3, "depth": 15, "offsetX": 50, "offsetY": -6, "fill": "#252525" },
+
+    { "type": "cylinder", "r": 3, "height": 14, "offsetX": 80, "rotateZ": 90, "fill": "#505050" }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "id": "bed-insulation",
+  "name": "Thermal Insulation Layer",
+  "partNumber": "BL-A1-INS-001",
+  "material": "ceramicFiber",
+  "quantity": 1,
+  "weight": 45.0,
+  "weightUnit": "g",
+  "baseY": -60,
+  "description": "256x256mm ceramic fiber insulation mat with aluminum foil backing - reduces heat loss and protects electronics",
+  "installation": {
+    "tools": [
+      { "name": "Scissors", "size": "-", "required": true },
+      { "name": "Marker", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "High-temp adhesive tape", "spec": "Kapton", "qty": 1, "reusable": false }
+    ],
+    "torque": [],
+    "notes": [
+      "Cut holes for mounting screws before installation",
+      "Aluminum side faces toward heater",
+      "Do not compress insulation excessively",
+      "Check for gaps that could allow heat escape",
+      "Replace if damaged or contaminated with oils"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 170, "height": 170, "rx": 2, "fill": "#c0c0c0" },
+    { "type": "rect", "width": 160, "height": 160, "rx": 1, "fill": "#d0d0d0" },
+    { "type": "circle", "r": 5, "offsetX": -75, "offsetY": -75, "fill": "#999" },
+    { "type": "circle", "r": 5, "offsetX": 75, "offsetY": -75, "fill": "#999" },
+    { "type": "circle", "r": 5, "offsetX": -75, "offsetY": 75, "fill": "#999" },
+    { "type": "circle", "r": 5, "offsetX": 75, "offsetY": 75, "fill": "#999" }
+  ],
+  "geometry3d": [
+    { "type": "box", "width": 256, "height": 5, "depth": 256, "fill": "#e8e8e0" },
+    { "type": "box", "width": 254, "height": 0.3, "depth": 254, "offsetY": 2.65, "fill": "#c0c0c0" },
+    { "type": "box", "width": 254, "height": 4, "depth": 254, "offsetY": 0.15, "fill": "#f0f0e8" },
+
+    { "type": "box", "width": 250, "height": 1, "depth": 3, "offsetY": 0, "offsetZ": -80, "fill": "#d8d8d0" },
+    { "type": "box", "width": 250, "height": 1, "depth": 3, "offsetY": 0, "offsetZ": 0, "fill": "#d8d8d0" },
+    { "type": "box", "width": 250, "height": 1, "depth": 3, "offsetY": 0, "offsetZ": 80, "fill": "#d8d8d0" },
+    { "type": "box", "width": 3, "height": 1, "depth": 250, "offsetY": 0, "offsetX": -80, "fill": "#d8d8d0" },
+    { "type": "box", "width": 3, "height": 1, "depth": 250, "offsetY": 0, "offsetX": 80, "fill": "#d8d8d0" },
+
+    { "type": "cylinder", "r": 5, "height": 8, "offsetX": -118, "offsetY": 0, "offsetZ": -118, "subtract": true },
+    { "type": "cylinder", "r": 5, "height": 8, "offsetX": 118, "offsetY": 0, "offsetZ": -118, "subtract": true },
+    { "type": "cylinder", "r": 5, "height": 8, "offsetX": -118, "offsetY": 0, "offsetZ": 118, "subtract": true },
+    { "type": "cylinder", "r": 5, "height": 8, "offsetX": 118, "offsetY": 0, "offsetZ": 118, "subtract": true },
+
+    { "type": "box", "width": 50, "height": 8, "depth": 30, "offsetX": -90, "offsetY": 0, "offsetZ": 120, "subtract": true },
+
+    { "type": "box", "width": 256, "height": 0.2, "depth": 256, "offsetY": -2.6, "fill": "#d0d0c8" }
+  ]
+}

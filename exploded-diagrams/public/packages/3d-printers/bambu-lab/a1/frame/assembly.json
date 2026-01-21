@@ -1,0 +1,84 @@
+{
+  "name": "Frame Assembly",
+  "description": "Bambu Lab A1 structural frame assembly - aluminum extrusion base with vertical columns, horizontal beam, motor mounts, and peripheral mounting points for LCD and spool holder",
+  "category": "3d-printers",
+  "manufacturer": "Bambu Lab",
+  "model": "A1",
+  "parts": [
+    "base-frame",
+    "z-column-left",
+    "z-column-right",
+    "top-beam",
+    "z-motor-mount",
+    "spool-holder",
+    "footpad",
+    "lcd-mount"
+  ],
+  "assemblyOrder": [
+    {
+      "step": 1,
+      "part": "footpad",
+      "description": "Install all four footpads to base frame corner mounting points",
+      "quantity": 4
+    },
+    {
+      "step": 2,
+      "part": "base-frame",
+      "description": "Position base frame on level surface, verify stability"
+    },
+    {
+      "step": 3,
+      "part": "z-motor-mount",
+      "description": "Attach Z-motor mount to rear-right of base frame"
+    },
+    {
+      "step": 4,
+      "part": "z-column-left",
+      "description": "Mount left Z-column to base frame, verify perpendicular"
+    },
+    {
+      "step": 5,
+      "part": "z-column-right",
+      "description": "Mount right Z-column to base frame, verify parallel to left column"
+    },
+    {
+      "step": 6,
+      "part": "top-beam",
+      "description": "Install top horizontal beam connecting both columns, verify level"
+    },
+    {
+      "step": 7,
+      "part": "spool-holder",
+      "description": "Attach spool holder arm to rear of top beam"
+    },
+    {
+      "step": 8,
+      "part": "lcd-mount",
+      "description": "Mount LCD bracket to front-left of base frame"
+    }
+  ],
+  "totalWeight": {
+    "value": 4130,
+    "unit": "g",
+    "note": "Includes 4x footpads at 28g each"
+  },
+  "dimensions": {
+    "width": 280,
+    "depth": 240,
+    "height": 350,
+    "unit": "mm"
+  },
+  "materials": [
+    "aluminum",
+    "steel",
+    "plastic",
+    "rubber"
+  ],
+  "primaryColor": "#252525",
+  "notes": [
+    "All aluminum extrusions are 2020 profile",
+    "Frame must be assembled on level surface",
+    "Verify squareness at each step before proceeding",
+    "Z-columns must be perfectly perpendicular for accurate prints"
+  ]
+}

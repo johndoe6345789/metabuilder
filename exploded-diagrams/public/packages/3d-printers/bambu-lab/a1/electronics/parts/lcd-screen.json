@@ -1,0 +1,66 @@
+{
+  "id": "lcd-screen",
+  "name": "Touch Screen Display",
+  "partNumber": "BL-A1-LCD01",
+  "material": "glass",
+  "quantity": 1,
+  "weight": 125.0,
+  "weightUnit": "g",
+  "baseY": 160,
+  "description": "2.8 inch capacitive touch LCD display - IPS panel with RGB interface",
+  "installation": {
+    "tools": [
+      { "name": "Hex key", "size": "2mm", "required": true },
+      { "name": "Plastic spudger", "size": "-", "required": true },
+      { "name": "ESD wrist strap", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "M2.5 screw", "spec": "M2.5x5", "qty": 4, "reusable": true },
+      { "name": "FFC cable", "spec": "24-pin 0.5mm pitch", "qty": 1, "reusable": true },
+      { "name": "Foam gasket", "spec": "Display bezel", "qty": 1, "reusable": false }
+    ],
+    "torque": [
+      { "fastener": "M2.5 screws", "value": 0.3, "unit": "Nm", "sequence": "Diagonal pattern", "notes": "Very light torque - do not crack display" }
+    ],
+    "notes": [
+      "Handle display by edges only - avoid touching screen surface",
+      "FFC cable is fragile - lift connector lock before removing",
+      "Clean screen with microfiber cloth before reassembly",
+      "Check ribbon cable orientation - contacts face down"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 85, "height": 60, "rx": 3, "fill": "#1a1a1a" },
+    { "type": "rect", "width": 70, "height": 50, "rx": 1, "fill": "#0a2040" },
+    { "type": "rect", "width": 65, "height": 45, "fill": "#102050" },
+    { "type": "rect", "width": 20, "height": 8, "offsetY": 30, "fill": "#404040" }
+  ],
+  "geometry3d": [
+    { "type": "box", "width": 70, "height": 4, "depth": 50, "fill": "#1a1a1a" },
+
+    { "type": "box", "width": 62, "height": 1, "depth": 42, "offsetY": 2.5, "fill": "#0a1525" },
+
+    { "type": "box", "width": 60, "height": 0.5, "depth": 40, "offsetY": 3, "fill": "#102040" },
+
+    { "type": "box", "width": 72, "height": 6, "depth": 52, "offsetY": -1, "fill": "#252530" },
+    { "type": "box", "width": 64, "height": 8, "depth": 44, "offsetY": -1, "subtract": true },
+
+    { "type": "box", "width": 74, "height": 2, "depth": 54, "offsetY": -4, "fill": "#353540" },
+
+    { "type": "box", "width": 20, "height": 3, "depth": 6, "offsetY": -5.5, "offsetZ": 28, "fill": "#404045" },
+    { "type": "box", "width": 18, "height": 2, "depth": 2, "offsetY": -5, "offsetZ": 30, "fill": "#808080" },
+
+    { "type": "box", "width": 68, "height": 12, "depth": 5, "offsetY": -4, "offsetZ": -25, "fill": "#006030" },
+    { "type": "box", "width": 10, "height": 3, "depth": 10, "offsetY": 0, "offsetZ": -30, "fill": "#303030" },
+
+    { "type": "box", "width": 25, "height": 1.5, "depth": 8, "offsetY": -10, "offsetZ": -30, "fill": "#c0c0c0" },
+
+    { "type": "cylinder", "r": 1.3, "height": 8, "offsetX": -32, "offsetY": -2, "offsetZ": -22, "fill": "#606060" },
+    { "type": "cylinder", "r": 1.3, "height": 8, "offsetX": 32, "offsetY": -2, "offsetZ": -22, "fill": "#606060" },
+    { "type": "cylinder", "r": 1.3, "height": 8, "offsetX": -32, "offsetY": -2, "offsetZ": 22, "fill": "#606060" },
+    { "type": "cylinder", "r": 1.3, "height": 8, "offsetX": 32, "offsetY": -2, "offsetZ": 22, "fill": "#606060" },
+
+    { "type": "cylinder", "r": 2, "height": 3, "offsetX": -28, "offsetY": 0, "offsetZ": -18, "fill": "#202025" },
+    { "type": "cylinder", "r": 1.5, "height": 2, "offsetX": -28, "offsetY": 1.5, "offsetZ": -18, "fill": "#101015" }
+  ]
+}

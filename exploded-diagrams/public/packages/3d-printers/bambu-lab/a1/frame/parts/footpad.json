@@ -1,0 +1,69 @@
+{
+  "id": "footpad",
+  "name": "Vibration Dampening Footpad",
+  "partNumber": "BL-A1-007",
+  "material": "rubber",
+  "quantity": 4,
+  "weight": 28.0,
+  "weightUnit": "g",
+  "baseY": -15,
+  "description": "Molded rubber vibration dampening footpad - absorbs high-frequency vibrations from stepper motors and rapid movements, features threaded steel insert for secure frame attachment and non-slip base texture",
+  "installation": {
+    "tools": [
+      { "name": "Hex key", "size": "3mm", "required": true },
+      { "name": "Level", "size": "200mm", "required": true }
+    ],
+    "hardware": [
+      { "name": "Footpad screw", "spec": "M4x12", "grade": "8.8", "qty": 1, "reusable": true },
+      { "name": "Steel threaded insert", "spec": "M4", "qty": 1, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Footpad screw", "value": 1.8, "unit": "Nm", "sequence": "Hand tight then quarter turn", "notes": "Rubber compresses - do not overtighten" }
+    ],
+    "notes": [
+      "Install all four footpads before frame assembly",
+      "Use level to verify printer is stable on surface",
+      "Footpads may compress slightly during first weeks of use",
+      "Replace if rubber becomes hard or cracked"
+    ]
+  },
+  "geometry": [
+    { "type": "ellipse", "rx": 22, "ry": 18, "fill": "#252525" },
+    { "type": "ellipse", "rx": 18, "ry": 14, "fill": "#303030" },
+    { "type": "circle", "r": 5, "fill": "#404040" },
+    { "type": "circle", "r": 3, "fill": "#555" }
+  ],
+  "geometry3d": [
+    { "type": "cylinder", "r": 20, "height": 6, "offsetY": -8, "fill": "#252525" },
+
+    { "type": "cylinder", "r": 18, "height": 10, "offsetY": -2, "fill": "#303030" },
+
+    { "type": "cylinder", "r": 15, "height": 8, "offsetY": 6, "fill": "#353535" },
+
+    { "type": "cylinder", "r": 5, "height": 18, "fill": "#505050" },
+
+    { "type": "cylinder", "r": 2.5, "height": 22, "subtract": true },
+
+    { "type": "cylinder", "r": 4.5, "height": 6, "offsetY": 8, "fill": "#606060" },
+
+    { "type": "cylinder", "r": 22, "height": 2, "offsetY": -12, "fill": "#1a1a1a" },
+
+    { "type": "box", "width": 40, "height": 1, "depth": 3, "offsetY": -12, "fill": "#2a2a2a" },
+    { "type": "box", "width": 3, "height": 1, "depth": 40, "offsetY": -12, "fill": "#2a2a2a" },
+    { "type": "box", "width": 30, "height": 1, "depth": 3, "offsetY": -12, "offsetZ": 8, "fill": "#2a2a2a" },
+    { "type": "box", "width": 30, "height": 1, "depth": 3, "offsetY": -12, "offsetZ": -8, "fill": "#2a2a2a" },
+    { "type": "box", "width": 3, "height": 1, "depth": 30, "offsetY": -12, "offsetX": 8, "fill": "#2a2a2a" },
+    { "type": "box", "width": 3, "height": 1, "depth": 30, "offsetY": -12, "offsetX": -8, "fill": "#2a2a2a" },
+
+    { "type": "cylinder", "r": 17, "height": 3, "offsetY": -5, "fill": "#282828" },
+    { "type": "cylinder", "r": 14, "height": 4, "offsetY": -5, "fill": "#303030" },
+
+    { "type": "box", "width": 2, "height": 14, "depth": 2, "offsetX": 12, "offsetZ": 0, "fill": "#404040" },
+    { "type": "box", "width": 2, "height": 14, "depth": 2, "offsetX": -12, "offsetZ": 0, "fill": "#404040" },
+    { "type": "box", "width": 2, "height": 14, "depth": 2, "offsetX": 0, "offsetZ": 12, "fill": "#404040" },
+    { "type": "box", "width": 2, "height": 14, "depth": 2, "offsetX": 0, "offsetZ": -12, "fill": "#404040" },
+
+    { "type": "cylinder", "r": 8, "height": 4, "offsetY": 10, "fill": "#454545" },
+    { "type": "cylinder", "r": 6, "height": 2, "offsetY": 13, "fill": "#555555" }
+  ]
+}

@@ -1,0 +1,84 @@
+{
+  "id": "wiring-harness",
+  "name": "Main Cable Harness",
+  "partNumber": "BL-A1-WH001",
+  "material": "copper",
+  "quantity": 1,
+  "weight": 320.0,
+  "weightUnit": "g",
+  "baseY": 460,
+  "description": "Main wiring loom assembly - connects mainboard to all motors, sensors, and peripherals",
+  "installation": {
+    "tools": [
+      { "name": "Plastic spudger", "size": "-", "required": true },
+      { "name": "Cable ties", "size": "100mm", "required": true },
+      { "name": "Wire loom tape", "size": "19mm", "required": false },
+      { "name": "Multimeter", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Cable clip", "spec": "Self-adhesive 10mm", "qty": 12, "reusable": false },
+      { "name": "Spiral wrap", "spec": "6mm diameter", "qty": 1, "reusable": true },
+      { "name": "JST-XH connector", "spec": "Various", "qty": 8, "reusable": true }
+    ],
+    "torque": [],
+    "notes": [
+      "Photograph harness routing before removal",
+      "Label each connector before disconnecting",
+      "Do not kink or sharply bend cables",
+      "Keep away from heated components and moving parts",
+      "Check continuity on all wires after installation",
+      "Route cables through designated channels"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 140, "height": 12, "rx": 6, "fill": "#1a1a1a" },
+    { "type": "rect", "width": 8, "height": 35, "offsetX": -55, "offsetY": 18, "rx": 4, "fill": "#1a1a1a" },
+    { "type": "rect", "width": 8, "height": 40, "offsetX": -35, "offsetY": 20, "rx": 4, "fill": "#1a1a1a" },
+    { "type": "rect", "width": 8, "height": 30, "offsetX": -15, "offsetY": 15, "rx": 4, "fill": "#1a1a1a" },
+    { "type": "rect", "width": 8, "height": 45, "offsetX": 5, "offsetY": 22, "rx": 4, "fill": "#1a1a1a" },
+    { "type": "rect", "width": 8, "height": 35, "offsetX": 25, "offsetY": 18, "rx": 4, "fill": "#1a1a1a" },
+    { "type": "rect", "width": 8, "height": 50, "offsetX": 45, "offsetY": 25, "rx": 4, "fill": "#1a1a1a" },
+    { "type": "rect", "width": 8, "height": 25, "offsetX": 60, "offsetY": 12, "rx": 4, "fill": "#1a1a1a" },
+    { "type": "rect", "width": 20, "height": 10, "offsetX": -55, "offsetY": 38, "rx": 2, "fill": "#ffffff" },
+    { "type": "rect", "width": 20, "height": 10, "offsetX": 5, "offsetY": 48, "rx": 2, "fill": "#ffffff" },
+    { "type": "rect", "width": 20, "height": 10, "offsetX": 45, "offsetY": 53, "rx": 2, "fill": "#ffcc00" }
+  ],
+  "geometry3d": [
+    { "type": "box", "width": 120, "height": 10, "depth": 10, "fill": "#1a1a1a" },
+
+    { "type": "cylinder", "r": 4, "height": 30, "offsetX": -50, "offsetZ": 20, "fill": "#1a1a1a" },
+    { "type": "cylinder", "r": 4, "height": 35, "offsetX": -30, "offsetZ": 25, "fill": "#1a1a1a" },
+    { "type": "cylinder", "r": 4, "height": 25, "offsetX": -10, "offsetZ": 15, "fill": "#1a1a1a" },
+    { "type": "cylinder", "r": 4, "height": 40, "offsetX": 10, "offsetZ": 28, "fill": "#1a1a1a" },
+    { "type": "cylinder", "r": 4, "height": 30, "offsetX": 30, "offsetZ": 20, "fill": "#1a1a1a" },
+    { "type": "cylinder", "r": 4, "height": 45, "offsetX": 50, "offsetZ": 30, "fill": "#1a1a1a" },
+
+    { "type": "box", "width": 18, "height": 6, "depth": 8, "offsetX": -50, "offsetZ": 38, "fill": "#ffffff" },
+    { "type": "box", "width": 16, "height": 4, "depth": 5, "offsetX": -50, "offsetZ": 40, "subtract": true },
+
+    { "type": "box", "width": 18, "height": 6, "depth": 8, "offsetX": -30, "offsetZ": 46, "fill": "#ffffff" },
+    { "type": "box", "width": 16, "height": 4, "depth": 5, "offsetX": -30, "offsetZ": 48, "subtract": true },
+
+    { "type": "box", "width": 14, "height": 5, "depth": 6, "offsetX": -10, "offsetZ": 30, "fill": "#ffffff" },
+    { "type": "box", "width": 12, "height": 3, "depth": 4, "offsetX": -10, "offsetZ": 32, "subtract": true },
+
+    { "type": "box", "width": 22, "height": 8, "depth": 10, "offsetX": 10, "offsetZ": 52, "fill": "#ffffff" },
+    { "type": "box", "width": 20, "height": 6, "depth": 7, "offsetX": 10, "offsetZ": 54, "subtract": true },
+
+    { "type": "box", "width": 18, "height": 6, "depth": 8, "offsetX": 30, "offsetZ": 38, "fill": "#ffcc00" },
+    { "type": "box", "width": 16, "height": 4, "depth": 5, "offsetX": 30, "offsetZ": 40, "subtract": true },
+
+    { "type": "box", "width": 22, "height": 8, "depth": 10, "offsetX": 50, "offsetZ": 56, "fill": "#ffcc00" },
+    { "type": "box", "width": 20, "height": 6, "depth": 7, "offsetX": 50, "offsetZ": 58, "subtract": true },
+
+    { "type": "cylinder", "r": 2, "height": 12, "offsetX": -55, "offsetZ": -10, "fill": "#cc0000" },
+    { "type": "cylinder", "r": 2, "height": 12, "offsetX": -52, "offsetZ": -10, "fill": "#1a1a1a" },
+
+    { "type": "cylinder", "r": 2, "height": 15, "offsetX": 55, "offsetZ": -10, "fill": "#ffcc00" },
+    { "type": "cylinder", "r": 2, "height": 15, "offsetX": 52, "offsetZ": -10, "fill": "#1a1a1a" },
+
+    { "type": "box", "width": 3, "height": 3, "depth": 3, "offsetX": -40, "offsetY": 3, "fill": "#404045" },
+    { "type": "box", "width": 3, "height": 3, "depth": 3, "offsetX": 0, "offsetY": 3, "fill": "#404045" },
+    { "type": "box", "width": 3, "height": 3, "depth": 3, "offsetX": 40, "offsetY": 3, "fill": "#404045" }
+  ]
+}

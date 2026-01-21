@@ -1,0 +1,72 @@
+{
+  "id": "x-motor",
+  "name": "X-Axis Stepper Motor",
+  "partNumber": "BL-A1-MR004",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 180.0,
+  "weightUnit": "g",
+  "baseY": 220,
+  "description": "NEMA 17 stepper motor with integrated GT2 pulley for X-axis drive, 1.8 degree step angle",
+  "installation": {
+    "tools": [
+      { "name": "Hex key", "size": "3mm", "required": true },
+      { "name": "Hex key", "size": "1.5mm", "required": true },
+      { "name": "Torque screwdriver", "size": "1-4 Nm", "required": true }
+    ],
+    "hardware": [
+      { "name": "M3x10 socket head cap screw", "spec": "M3x0.5x10", "grade": "8.8", "qty": 4, "reusable": true },
+      { "name": "GT2 20T pulley", "spec": "5mm bore", "qty": 1, "reusable": true },
+      { "name": "Pulley set screw", "spec": "M3x4 grub", "qty": 2, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Motor mounting screws", "value": 1.2, "unit": "Nm", "sequence": "Diagonal pattern", "notes": "" },
+      { "fastener": "Pulley grub screws", "value": 0.5, "unit": "Nm", "sequence": "Alternate tightening", "notes": "One screw on shaft flat" }
+    ],
+    "notes": [
+      "Align pulley with belt path before tightening",
+      "Connect motor cable before mounting",
+      "Check for correct rotation direction",
+      "Verify pulley set screw on shaft flat"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 42, "height": 42, "rx": 3, "fill": "#303030" },
+    { "type": "circle", "r": 11, "fill": "#505050" },
+    { "type": "circle", "r": 2.5, "fill": "#404040" },
+    { "type": "circle", "r": 3, "offsetX": -15, "offsetY": -15, "fill": "#252525" },
+    { "type": "circle", "r": 3, "offsetX": 15, "offsetY": -15, "fill": "#252525" },
+    { "type": "circle", "r": 3, "offsetX": -15, "offsetY": 15, "fill": "#252525" },
+    { "type": "circle", "r": 3, "offsetX": 15, "offsetY": 15, "fill": "#252525" },
+    { "type": "circle", "r": 8, "offsetY": -28, "fill": "#707070" }
+  ],
+  "geometry3d": [
+    { "type": "box", "width": 42, "height": 40, "depth": 42, "fill": "#303030" },
+
+    { "type": "cylinder", "r": 11, "height": 3, "offsetY": 21, "fill": "#404040" },
+
+    { "type": "cylinder", "r": 2.5, "height": 24, "offsetY": 32, "fill": "#606060" },
+
+    { "type": "cylinder", "r": 8, "height": 12, "offsetY": 38, "fill": "#707070" },
+    { "type": "cylinder", "r": 6, "height": 14, "offsetY": 38, "fill": "#606060" },
+    { "type": "cylinder", "r": 2.6, "height": 16, "offsetY": 38, "subtract": true },
+
+    { "type": "box", "width": 3, "height": 4, "depth": 3, "offsetX": 0, "offsetY": 42, "offsetZ": 6, "fill": "#505050" },
+
+    { "type": "cylinder", "r": 1.5, "height": 45, "offsetX": -15.5, "offsetZ": -15.5, "subtract": true },
+    { "type": "cylinder", "r": 1.5, "height": 45, "offsetX": 15.5, "offsetZ": -15.5, "subtract": true },
+    { "type": "cylinder", "r": 1.5, "height": 45, "offsetX": -15.5, "offsetZ": 15.5, "subtract": true },
+    { "type": "cylinder", "r": 1.5, "height": 45, "offsetX": 15.5, "offsetZ": 15.5, "subtract": true },
+
+    { "type": "box", "width": 15, "height": 8, "depth": 10, "offsetY": -20, "offsetZ": -20, "fill": "#404040" },
+    { "type": "cylinder", "r": 2, "height": 5, "offsetY": -20, "offsetZ": -25, "rotateX": 90, "fill": "#808080" },
+    { "type": "cylinder", "r": 2, "height": 5, "offsetX": 4, "offsetY": -20, "offsetZ": -25, "rotateX": 90, "fill": "#808080" },
+    { "type": "cylinder", "r": 2, "height": 5, "offsetX": -4, "offsetY": -20, "offsetZ": -25, "rotateX": 90, "fill": "#808080" },
+    { "type": "cylinder", "r": 2, "height": 5, "offsetX": 8, "offsetY": -20, "offsetZ": -25, "rotateX": 90, "fill": "#808080" },
+
+    { "type": "cylinder", "r": 3, "height": 3, "offsetX": -15.5, "offsetZ": -15.5, "offsetY": 21, "fill": "#505050" },
+    { "type": "cylinder", "r": 3, "height": 3, "offsetX": 15.5, "offsetZ": -15.5, "offsetY": 21, "fill": "#505050" },
+    { "type": "cylinder", "r": 3, "height": 3, "offsetX": -15.5, "offsetZ": 15.5, "offsetY": 21, "fill": "#505050" },
+    { "type": "cylinder", "r": 3, "height": 3, "offsetX": 15.5, "offsetZ": 15.5, "offsetY": 21, "fill": "#505050" }
+  ]
+}

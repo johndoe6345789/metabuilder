@@ -1,0 +1,86 @@
+{
+  "id": "base-frame",
+  "name": "Base Frame",
+  "partNumber": "BL-A1-001",
+  "material": "aluminum",
+  "quantity": 1,
+  "weight": 1850.0,
+  "weightUnit": "g",
+  "baseY": 0,
+  "description": "Main aluminum extrusion base frame - provides structural foundation for entire printer assembly with integrated cable routing channels and mounting points for all major components",
+  "installation": {
+    "tools": [
+      { "name": "Hex key", "size": "2.5mm", "required": true },
+      { "name": "Hex key", "size": "3mm", "required": true },
+      { "name": "Level", "size": "300mm", "required": true },
+      { "name": "Soft mallet", "size": "-", "required": false }
+    ],
+    "hardware": [
+      { "name": "Frame corner bracket", "spec": "20x20mm", "qty": 8, "reusable": true },
+      { "name": "T-slot nut", "spec": "M4", "qty": 16, "reusable": true },
+      { "name": "Socket head cap screw", "spec": "M4x8", "grade": "12.9", "qty": 16, "reusable": true },
+      { "name": "Rubber bumper", "spec": "M4x10", "qty": 4, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Corner bracket screws", "value": 2.5, "unit": "Nm", "sequence": "Opposing corners first", "notes": "Do not overtighten - aluminum threads" },
+      { "fastener": "T-slot nuts", "value": 2.0, "unit": "Nm", "sequence": "Slide in before tightening", "notes": "Ensure nut is fully seated in slot" }
+    ],
+    "notes": [
+      "Base frame is the foundation - ensure perfect level before proceeding",
+      "Check all corner brackets for square alignment",
+      "Cable routing channels face inward",
+      "Footpad mounting holes are pre-threaded"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 200, "height": 180, "rx": 4, "fill": "#252525" },
+    { "type": "rect", "width": 180, "height": 160, "rx": 2, "fill": "#1a1a1a" },
+    { "type": "rect", "width": 20, "height": 180, "offsetX": -90, "fill": "#303030" },
+    { "type": "rect", "width": 20, "height": 180, "offsetX": 90, "fill": "#303030" },
+    { "type": "rect", "width": 200, "height": 20, "offsetY": -80, "fill": "#303030" },
+    { "type": "rect", "width": 200, "height": 20, "offsetY": 80, "fill": "#303030" },
+    { "type": "circle", "r": 5, "offsetX": -85, "offsetY": -75, "fill": "#444" },
+    { "type": "circle", "r": 5, "offsetX": 85, "offsetY": -75, "fill": "#444" },
+    { "type": "circle", "r": 5, "offsetX": -85, "offsetY": 75, "fill": "#444" },
+    { "type": "circle", "r": 5, "offsetX": 85, "offsetY": 75, "fill": "#444" }
+  ],
+  "geometry3d": [
+    { "type": "box", "width": 280, "height": 20, "depth": 40, "offsetZ": -100, "fill": "#252525" },
+    { "type": "box", "width": 280, "height": 20, "depth": 40, "offsetZ": 100, "fill": "#252525" },
+    { "type": "box", "width": 40, "height": 20, "depth": 200, "offsetX": -120, "fill": "#252525" },
+    { "type": "box", "width": 40, "height": 20, "depth": 200, "offsetX": 120, "fill": "#252525" },
+
+    { "type": "box", "width": 260, "height": 12, "depth": 20, "offsetZ": -100, "offsetY": 2, "fill": "#303030" },
+    { "type": "box", "width": 260, "height": 12, "depth": 20, "offsetZ": 100, "offsetY": 2, "fill": "#303030" },
+    { "type": "box", "width": 20, "height": 12, "depth": 180, "offsetX": -120, "offsetY": 2, "fill": "#303030" },
+    { "type": "box", "width": 20, "height": 12, "depth": 180, "offsetX": 120, "offsetY": 2, "fill": "#303030" },
+
+    { "type": "box", "width": 8, "height": 8, "depth": 200, "offsetX": -120, "offsetY": -4, "subtract": true },
+    { "type": "box", "width": 8, "height": 8, "depth": 200, "offsetX": 120, "offsetY": -4, "subtract": true },
+    { "type": "box", "width": 280, "height": 8, "depth": 8, "offsetZ": -100, "offsetY": -4, "subtract": true },
+    { "type": "box", "width": 280, "height": 8, "depth": 8, "offsetZ": 100, "offsetY": -4, "subtract": true },
+
+    { "type": "cylinder", "r": 3, "height": 25, "offsetX": -120, "offsetZ": -100, "subtract": true },
+    { "type": "cylinder", "r": 3, "height": 25, "offsetX": 120, "offsetZ": -100, "subtract": true },
+    { "type": "cylinder", "r": 3, "height": 25, "offsetX": -120, "offsetZ": 100, "subtract": true },
+    { "type": "cylinder", "r": 3, "height": 25, "offsetX": 120, "offsetZ": 100, "subtract": true },
+
+    { "type": "cylinder", "r": 6, "height": 8, "offsetX": -120, "offsetZ": -100, "offsetY": 8, "fill": "#404040" },
+    { "type": "cylinder", "r": 6, "height": 8, "offsetX": 120, "offsetZ": -100, "offsetY": 8, "fill": "#404040" },
+    { "type": "cylinder", "r": 6, "height": 8, "offsetX": -120, "offsetZ": 100, "offsetY": 8, "fill": "#404040" },
+    { "type": "cylinder", "r": 6, "height": 8, "offsetX": 120, "offsetZ": 100, "offsetY": 8, "fill": "#404040" },
+
+    { "type": "box", "width": 60, "height": 6, "depth": 180, "offsetX": 0, "offsetY": 8, "fill": "#353535" },
+
+    { "type": "box", "width": 40, "height": 5, "depth": 30, "offsetX": -80, "offsetZ": -85, "offsetY": 9, "fill": "#404040" },
+    { "type": "box", "width": 40, "height": 5, "depth": 30, "offsetX": 80, "offsetZ": -85, "offsetY": 9, "fill": "#404040" },
+
+    { "type": "cylinder", "r": 4, "height": 10, "offsetX": -80, "offsetZ": -85, "subtract": true },
+    { "type": "cylinder", "r": 4, "height": 10, "offsetX": 80, "offsetZ": -85, "subtract": true },
+
+    { "type": "box", "width": 15, "height": 15, "depth": 15, "offsetX": -105, "offsetZ": -85, "fill": "#383838" },
+    { "type": "box", "width": 15, "height": 15, "depth": 15, "offsetX": 105, "offsetZ": -85, "fill": "#383838" },
+    { "type": "box", "width": 15, "height": 15, "depth": 15, "offsetX": -105, "offsetZ": 85, "fill": "#383838" },
+    { "type": "box", "width": 15, "height": 15, "depth": 15, "offsetX": 105, "offsetZ": 85, "fill": "#383838" }
+  ]
+}

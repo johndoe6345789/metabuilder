@@ -1,0 +1,17 @@
+{
+  "name": "Bambu Lab A1 Printhead Assembly",
+  "description": "Complete printhead assembly for the Bambu Lab A1 3D printer featuring direct drive extrusion, all-metal hotend, integrated filament cutter, and dual cooling system. Designed for high-speed printing with AMS multi-material support.",
+  "category": "3d-printers",
+  "manufacturer": "Bambu Lab",
+  "model": "A1",
+  "parts": [
+    "hotend",
+    "extruder-motor",
+    "extruder-gears",
+    "cooling-fan",
+    "hotend-fan",
+    "toolhead-board",
+    "filament-cutter",
+    "nozzle"
+  ]
+}

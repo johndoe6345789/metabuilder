@@ -1,0 +1,65 @@
+{
+  "id": "belt-tensioner",
+  "name": "Belt Tensioner Assembly",
+  "partNumber": "BL-A1-MR007",
+  "material": "aluminum",
+  "quantity": 2,
+  "weight": 18.0,
+  "weightUnit": "g",
+  "baseY": 440,
+  "description": "Adjustable belt tensioner with idler pulley for GT2 belt tension adjustment",
+  "installation": {
+    "tools": [
+      { "name": "Hex key", "size": "2.5mm", "required": true },
+      { "name": "Hex key", "size": "3mm", "required": true },
+      { "name": "Belt tension gauge", "size": "GT2", "required": true }
+    ],
+    "hardware": [
+      { "name": "M3x20 socket head cap screw", "spec": "M3x0.5x20", "grade": "8.8", "qty": 1, "reusable": true },
+      { "name": "M3 nylock nut", "spec": "M3", "qty": 1, "reusable": false },
+      { "name": "F623ZZ bearing", "spec": "3x10x4mm flanged", "qty": 2, "reusable": true },
+      { "name": "Idler spacer", "spec": "3x5x6mm", "qty": 1, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Tensioner adjustment screw", "value": 0.3, "unit": "Nm", "sequence": "", "notes": "Adjust until target belt tension reached" },
+      { "fastener": "Idler axle screw", "value": 0.5, "unit": "Nm", "sequence": "", "notes": "Idler must spin freely" }
+    ],
+    "notes": [
+      "Set belt tension to 40-50Hz",
+      "Check tensioner does not bottom out",
+      "Verify idler spins freely without wobble",
+      "Re-check tension after 50 print hours"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 30, "height": 20, "rx": 3, "fill": "#606060" },
+    { "type": "circle", "r": 8, "offsetX": 8, "fill": "#505050" },
+    { "type": "circle", "r": 5, "offsetX": 8, "fill": "#707070" },
+    { "type": "rect", "width": 8, "height": 25, "offsetX": -12, "fill": "#505050" },
+    { "type": "circle", "r": 2, "offsetX": -12, "offsetY": 10, "fill": "#404040" }
+  ],
+  "geometry3d": [
+    { "type": "box", "width": 25, "height": 15, "depth": 20, "fill": "#606060" },
+
+    { "type": "box", "width": 8, "height": 25, "depth": 15, "offsetX": -12, "fill": "#505050" },
+
+    { "type": "cylinder", "r": 2, "height": 30, "offsetX": -12, "offsetY": 8, "subtract": true },
+
+    { "type": "cylinder", "r": 10, "height": 8, "offsetX": 10, "rotateX": 90, "fill": "#707070" },
+    { "type": "cylinder", "r": 8, "height": 6, "offsetX": 10, "rotateX": 90, "fill": "#808080" },
+
+    { "type": "cylinder", "r": 11, "height": 1, "offsetX": 10, "offsetZ": 4, "rotateX": 90, "fill": "#606060" },
+    { "type": "cylinder", "r": 11, "height": 1, "offsetX": 10, "offsetZ": -4, "rotateX": 90, "fill": "#606060" },
+
+    { "type": "cylinder", "r": 1.5, "height": 25, "offsetX": 10, "rotateX": 90, "fill": "#404040" },
+
+    { "type": "cylinder", "r": 5, "height": 3, "offsetX": 10, "offsetZ": -6, "rotateX": 90, "fill": "#505050" },
+    { "type": "cylinder", "r": 2, "height": 5, "offsetX": 10, "offsetZ": -8, "rotateX": 90, "fill": "#404040" },
+
+    { "type": "box", "width": 8, "height": 8, "depth": 25, "offsetX": -5, "offsetY": -5, "fill": "#555555" },
+    { "type": "cylinder", "r": 2.5, "height": 30, "offsetX": -5, "offsetY": -5, "rotateX": 90, "subtract": true },
+
+    { "type": "cylinder", "r": 4, "height": 3, "offsetX": -12, "offsetY": 12, "fill": "#707070" },
+    { "type": "cylinder", "r": 1.5, "height": 5, "offsetX": -12, "offsetY": 14, "fill": "#404040" }
+  ]
+}

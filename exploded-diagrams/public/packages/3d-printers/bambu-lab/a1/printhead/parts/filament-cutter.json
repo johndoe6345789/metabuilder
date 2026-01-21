@@ -1,0 +1,283 @@
+{
+  "id": "filament-cutter",
+  "name": "Integrated Filament Cutter",
+  "partNumber": "BL-A1-FC001",
+  "material": "Hardened Steel/Aluminum",
+  "quantity": 1,
+  "weight": 22,
+  "weightUnit": "g",
+  "baseY": 0,
+  "description": "Precision filament cutting mechanism for automated multi-color printing and filament changes. Features hardened steel blade with servo-actuated lever mechanism. Enables clean cuts for reliable tip shaping during AMS operations.",
+  "installation": {
+    "tools": [
+      "2mm hex key",
+      "1.5mm hex key",
+      "Tweezers"
+    ],
+    "hardware": [
+      "M2x6 socket head cap screw x3",
+      "Cutter lever spring",
+      "Blade retention clip"
+    ],
+    "torque": [
+      "Blade mounting: 0.2 Nm",
+      "Housing screws: 0.3 Nm"
+    ],
+    "notes": [
+      "Handle blade with care - extremely sharp",
+      "Verify blade alignment before final assembly",
+      "Test cutting action before full operation",
+      "Replace blade after 5000 cuts or if dull"
+    ]
+  },
+  "geometry": [
+    {
+      "type": "rect",
+      "x": 5,
+      "y": 5,
+      "width": 30,
+      "height": 25,
+      "fill": "#404040",
+      "stroke": "#303030",
+      "strokeWidth": 1
+    },
+    {
+      "type": "polygon",
+      "points": "10,15 25,15 25,20 15,25 10,20",
+      "fill": "#808080",
+      "stroke": "#606060",
+      "strokeWidth": 1
+    },
+    {
+      "type": "rect",
+      "x": 12,
+      "y": 8,
+      "width": 16,
+      "height": 4,
+      "fill": "#606060"
+    }
+  ],
+  "geometry3d": [
+    {
+      "type": "box",
+      "offsetX": 0,
+      "offsetY": 0,
+      "offsetZ": 0,
+      "fill": "#404040",
+      "width": 28,
+      "height": 20,
+      "depth": 18
+    },
+    {
+      "type": "box",
+      "offsetX": 0,
+      "offsetY": -8,
+      "offsetZ": 0,
+      "fill": "#353535",
+      "width": 24,
+      "height": 6,
+      "depth": 14
+    },
+    {
+      "type": "box",
+      "offsetX": 0,
+      "offsetY": 12,
+      "offsetZ": 0,
+      "fill": "#454545",
+      "width": 20,
+      "height": 4,
+      "depth": 12
+    },
+    {
+      "type": "box",
+      "offsetX": -8,
+      "offsetY": 0,
+      "offsetZ": 0,
+      "fill": "#808080",
+      "width": 4,
+      "height": 16,
+      "depth": 12
+    },
+    {
+      "type": "box",
+      "offsetX": -10,
+      "offsetY": -6,
+      "offsetZ": 0,
+      "fill": "#909090",
+      "width": 2,
+      "height": 8,
+      "depth": 10
+    },
+    {
+      "type": "box",
+      "offsetX": -6,
+      "offsetY": -8,
+      "offsetZ": 0,
+      "fill": "#707070",
+      "width": 6,
+      "height": 3,
+      "depth": 8
+    },
+    {
+      "type": "cylinder",
+      "height": 14,
+      "rotation": [
+        0,
+        0,
+        90
+      ],
+      "r": 2,
+      "offsetX": -8,
+      "offsetY": 6,
+      "offsetZ": 0,
+      "fill": "#606060"
+    },
+    {
+      "type": "box",
+      "offsetX": 6,
+      "offsetY": 0,
+      "offsetZ": 0,
+      "fill": "#505050",
+      "width": 8,
+      "height": 14,
+      "depth": 10
+    },
+    {
+      "type": "box",
+      "offsetX": 3,
+      "offsetY": -4,
+      "offsetZ": 0,
+      "fill": "#606060",
+      "width": 3,
+      "height": 8,
+      "depth": 8
+    },
+    {
+      "type": "cylinder",
+      "height": 20,
+      "r": 1.5,
+      "offsetX": 0,
+      "offsetY": 12,
+      "offsetZ": 0,
+      "fill": "#707070"
+    },
+    {
+      "type": "cylinder",
+      "height": 6,
+      "r": 2.5,
+      "offsetX": 0,
+      "offsetY": 0,
+      "offsetZ": 0,
+      "fill": "#555555"
+    },
+    {
+      "type": "box",
+      "offsetX": 10,
+      "offsetY": 4,
+      "offsetZ": 0,
+      "fill": "#303030",
+      "width": 10,
+      "height": 8,
+      "depth": 8
+    },
+    {
+      "type": "box",
+      "offsetX": 14,
+      "offsetY": 4,
+      "offsetZ": 0,
+      "fill": "#252525",
+      "width": 6,
+      "height": 6,
+      "depth": 6
+    },
+    {
+      "type": "cylinder",
+      "height": 3,
+      "r": 2,
+      "offsetX": 14,
+      "offsetY": 8,
+      "offsetZ": 0,
+      "fill": "#404040"
+    },
+    {
+      "type": "box",
+      "offsetX": 10,
+      "offsetY": 10,
+      "offsetZ": 0,
+      "fill": "#505050",
+      "width": 10,
+      "height": 2,
+      "depth": 3
+    },
+    {
+      "type": "box",
+      "offsetX": 0,
+      "offsetY": 8,
+      "offsetZ": 0,
+      "fill": "#454545",
+      "width": 12,
+      "height": 3,
+      "depth": 4
+    },
+    {
+      "type": "cylinder",
+      "height": 5,
+      "rotation": [
+        0,
+        0,
+        90
+      ],
+      "r": 1.5,
+      "offsetX": -4,
+      "offsetY": 8,
+      "offsetZ": 0,
+      "fill": "#606060"
+    },
+    {
+      "type": "cylinder",
+      "height": 20,
+      "r": 1.3,
+      "offsetX": -12,
+      "offsetY": 0,
+      "offsetZ": -6,
+      "fill": "#353535"
+    },
+    {
+      "type": "cylinder",
+      "height": 20,
+      "r": 1.3,
+      "offsetX": -12,
+      "offsetY": 0,
+      "offsetZ": 6,
+      "fill": "#353535"
+    },
+    {
+      "type": "cylinder",
+      "height": 20,
+      "r": 1.3,
+      "offsetX": 12,
+      "offsetY": 0,
+      "offsetZ": -6,
+      "fill": "#353535"
+    },
+    {
+      "type": "box",
+      "offsetX": -8,
+      "offsetY": 3,
+      "offsetZ": 6,
+      "fill": "#404040",
+      "width": 3,
+      "height": 2,
+      "depth": 4
+    },
+    {
+      "type": "cylinder",
+      "height": 6,
+      "r": 1,
+      "offsetX": -8,
+      "offsetY": 3,
+      "offsetZ": 8,
+      "fill": "#707070"
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "id": "x-axis-carriage",
+  "name": "X-Axis Carriage Block",
+  "partNumber": "BL-A1-MR002",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 28.0,
+  "weightUnit": "g",
+  "baseY": 140,
+  "description": "MGN12H carriage block with recirculating ball bearings for printhead mounting",
+  "installation": {
+    "tools": [
+      { "name": "Hex key", "size": "2mm", "required": true },
+      { "name": "Torque screwdriver", "size": "0.5-2 Nm", "required": true },
+      { "name": "Grease syringe", "size": "-", "required": false }
+    ],
+    "hardware": [
+      { "name": "M3x6 socket head cap screw", "spec": "M3x0.5x6", "grade": "12.9", "qty": 4, "reusable": true },
+      { "name": "Grease nipple", "spec": "M3", "qty": 1, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Printhead mounting screws", "value": 0.6, "unit": "Nm", "sequence": "Diagonal pattern", "notes": "Do not overtighten" }
+    ],
+    "notes": [
+      "Pre-lubricate with lithium grease before assembly",
+      "Slide carriage gently onto rail - do not force",
+      "Check for smooth movement without excessive play",
+      "Re-grease every 500 print hours"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 35, "height": 28, "rx": 3, "fill": "#505050" },
+    { "type": "rect", "width": 28, "height": 20, "offsetY": -2, "fill": "#606060" },
+    { "type": "circle", "r": 2, "offsetX": -10, "offsetY": -8, "fill": "#404040" },
+    { "type": "circle", "r": 2, "offsetX": 10, "offsetY": -8, "fill": "#404040" },
+    { "type": "circle", "r": 2, "offsetX": -10, "offsetY": 8, "fill": "#404040" },
+    { "type": "circle", "r": 2, "offsetX": 10, "offsetY": 8, "fill": "#404040" }
+  ],
+  "geometry3d": [
+    { "type": "box", "width": 27, "height": 13, "depth": 35, "fill": "#505050" },
+
+    { "type": "box", "width": 35, "height": 8, "depth": 28, "offsetY": 10, "fill": "#606060" },
+
+    { "type": "box", "width": 27, "height": 5, "depth": 12, "offsetY": -9, "fill": "#404040" },
+
+    { "type": "cylinder", "r": 1.5, "height": 10, "offsetX": -10, "offsetZ": -10, "offsetY": 10, "subtract": true },
+    { "type": "cylinder", "r": 1.5, "height": 10, "offsetX": 10, "offsetZ": -10, "offsetY": 10, "subtract": true },
+    { "type": "cylinder", "r": 1.5, "height": 10, "offsetX": -10, "offsetZ": 10, "offsetY": 10, "subtract": true },
+    { "type": "cylinder", "r": 1.5, "height": 10, "offsetX": 10, "offsetZ": 10, "offsetY": 10, "subtract": true },
+
+    { "type": "cylinder", "r": 3, "height": 2, "offsetX": -10, "offsetZ": -10, "offsetY": 15, "fill": "#707070" },
+    { "type": "cylinder", "r": 3, "height": 2, "offsetX": 10, "offsetZ": -10, "offsetY": 15, "fill": "#707070" },
+    { "type": "cylinder", "r": 3, "height": 2, "offsetX": -10, "offsetZ": 10, "offsetY": 15, "fill": "#707070" },
+    { "type": "cylinder", "r": 3, "height": 2, "offsetX": 10, "offsetZ": 10, "offsetY": 15, "fill": "#707070" },
+
+    { "type": "cylinder", "r": 2, "height": 4, "offsetX": 0, "offsetZ": 15, "offsetY": 8, "rotateX": 90, "fill": "#303030" },
+
+    { "type": "box", "width": 4, "height": 6, "depth": 30, "offsetX": -12, "offsetY": 4, "fill": "#555555" },
+    { "type": "box", "width": 4, "height": 6, "depth": 30, "offsetX": 12, "offsetY": 4, "fill": "#555555" },
+
+    { "type": "cylinder", "r": 1, "height": 28, "offsetX": -11, "offsetY": 4, "offsetZ": 0, "rotateX": 90, "fill": "#808080" },
+    { "type": "cylinder", "r": 1, "height": 28, "offsetX": 11, "offsetY": 4, "offsetZ": 0, "rotateX": 90, "fill": "#808080" }
+  ]
+}

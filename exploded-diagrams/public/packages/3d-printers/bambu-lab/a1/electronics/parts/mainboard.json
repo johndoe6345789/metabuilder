@@ -1,0 +1,88 @@
+{
+  "id": "mainboard",
+  "name": "Main Control Board (MCU)",
+  "partNumber": "BL-A1-MCB01",
+  "material": "pcb",
+  "quantity": 1,
+  "weight": 185.0,
+  "weightUnit": "g",
+  "baseY": 0,
+  "description": "ARM Cortex-M4 based main controller - handles motion control, temperature, and communication",
+  "installation": {
+    "tools": [
+      { "name": "Hex key", "size": "2.5mm", "required": true },
+      { "name": "ESD wrist strap", "size": "-", "required": true },
+      { "name": "Phillips screwdriver", "size": "PH1", "required": true },
+      { "name": "Multimeter", "size": "-", "required": false }
+    ],
+    "hardware": [
+      { "name": "M3 standoff", "spec": "M3x6", "qty": 4, "reusable": true },
+      { "name": "M3 screw", "spec": "M3x6", "qty": 4, "reusable": true },
+      { "name": "Thermal pad", "spec": "20x20x1mm", "qty": 1, "reusable": false }
+    ],
+    "torque": [
+      { "fastener": "M3 mounting screws", "value": 0.5, "unit": "Nm", "sequence": "Diagonal pattern", "notes": "Do not overtighten - PCB may crack" }
+    ],
+    "notes": [
+      "Disconnect all power before handling",
+      "Always use ESD protection when handling PCB",
+      "Note connector positions before removal",
+      "Check firmware version compatibility before replacement",
+      "Apply thermal paste between MCU and heatsink"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 120, "height": 85, "rx": 3, "fill": "#006030" },
+    { "type": "rect", "width": 110, "height": 75, "rx": 2, "fill": "#005528" },
+    { "type": "rect", "width": 18, "height": 18, "offsetX": -30, "offsetY": -15, "fill": "#303030" },
+    { "type": "rect", "width": 12, "height": 12, "offsetX": 15, "offsetY": -20, "fill": "#303030" },
+    { "type": "rect", "width": 35, "height": 8, "offsetX": -35, "offsetY": 30, "fill": "#c0c0c0" },
+    { "type": "rect", "width": 25, "height": 8, "offsetX": 10, "offsetY": 30, "fill": "#c0c0c0" },
+    { "type": "rect", "width": 15, "height": 8, "offsetX": 45, "offsetY": 30, "fill": "#c0c0c0" },
+    { "type": "circle", "r": 3, "offsetX": -52, "offsetY": -35, "fill": "#c0c0c0" },
+    { "type": "circle", "r": 3, "offsetX": 52, "offsetY": -35, "fill": "#c0c0c0" },
+    { "type": "circle", "r": 3, "offsetX": -52, "offsetY": 35, "fill": "#c0c0c0" },
+    { "type": "circle", "r": 3, "offsetX": 52, "offsetY": 35, "fill": "#c0c0c0" }
+  ],
+  "geometry3d": [
+    { "type": "box", "width": 100, "height": 2, "depth": 70, "fill": "#006030" },
+
+    { "type": "box", "width": 16, "height": 3.5, "depth": 16, "offsetX": -28, "offsetY": 2.75, "offsetZ": -12, "fill": "#1a1a1a" },
+    { "type": "box", "width": 14, "height": 1, "depth": 14, "offsetX": -28, "offsetY": 5, "offsetZ": -12, "fill": "#404040" },
+
+    { "type": "box", "width": 10, "height": 2.5, "depth": 10, "offsetX": 12, "offsetY": 2.25, "offsetZ": -18, "fill": "#1a1a1a" },
+
+    { "type": "box", "width": 8, "height": 2, "depth": 8, "offsetX": 32, "offsetY": 2, "offsetZ": -18, "fill": "#1a1a1a" },
+    { "type": "box", "width": 8, "height": 2, "depth": 8, "offsetX": 32, "offsetY": 2, "offsetZ": -5, "fill": "#1a1a1a" },
+    { "type": "box", "width": 8, "height": 2, "depth": 8, "offsetX": 32, "offsetY": 2, "offsetZ": 8, "fill": "#1a1a1a" },
+
+    { "type": "box", "width": 30, "height": 8, "depth": 6, "offsetX": -30, "offsetY": 5, "offsetZ": 28, "fill": "#c0c0c0" },
+    { "type": "box", "width": 28, "height": 6, "depth": 4, "offsetX": -30, "offsetY": 5, "offsetZ": 28, "subtract": true },
+
+    { "type": "box", "width": 22, "height": 8, "depth": 6, "offsetX": 8, "offsetY": 5, "offsetZ": 28, "fill": "#c0c0c0" },
+    { "type": "box", "width": 20, "height": 6, "depth": 4, "offsetX": 8, "offsetY": 5, "offsetZ": 28, "subtract": true },
+
+    { "type": "box", "width": 14, "height": 8, "depth": 6, "offsetX": 38, "offsetY": 5, "offsetZ": 28, "fill": "#c0c0c0" },
+    { "type": "box", "width": 12, "height": 6, "depth": 4, "offsetX": 38, "offsetY": 5, "offsetZ": 28, "subtract": true },
+
+    { "type": "cylinder", "r": 8, "height": 10, "offsetX": -38, "offsetY": 6, "offsetZ": 5, "fill": "#1a1a1a" },
+    { "type": "cylinder", "r": 7, "height": 8, "offsetX": -38, "offsetY": 8, "offsetZ": 5, "fill": "#303030" },
+
+    { "type": "cylinder", "r": 6, "height": 8, "offsetX": -20, "offsetY": 5, "offsetZ": 5, "fill": "#1a1a1a" },
+    { "type": "cylinder", "r": 5, "height": 6, "offsetX": -20, "offsetY": 6, "offsetZ": 5, "fill": "#303030" },
+
+    { "type": "box", "width": 3, "height": 4, "depth": 6, "offsetX": -5, "offsetY": 3, "offsetZ": 8, "fill": "#ffcc00" },
+    { "type": "box", "width": 3, "height": 4, "depth": 6, "offsetX": 0, "offsetY": 3, "offsetZ": 8, "fill": "#00cc00" },
+    { "type": "box", "width": 3, "height": 4, "depth": 6, "offsetX": 5, "offsetY": 3, "offsetZ": 8, "fill": "#cc0000" },
+
+    { "type": "box", "width": 12, "height": 6, "depth": 5, "offsetX": 20, "offsetY": 4, "offsetZ": -28, "fill": "#303030" },
+
+    { "type": "box", "width": 6, "height": 1.5, "depth": 10, "offsetX": -15, "offsetY": 1.75, "offsetZ": -25, "fill": "#505050" },
+    { "type": "box", "width": 6, "height": 1.5, "depth": 10, "offsetX": -5, "offsetY": 1.75, "offsetZ": -25, "fill": "#505050" },
+
+    { "type": "cylinder", "r": 1.6, "height": 4, "offsetX": -45, "offsetY": 0, "offsetZ": -30, "fill": "#c0c0c0" },
+    { "type": "cylinder", "r": 1.6, "height": 4, "offsetX": 45, "offsetY": 0, "offsetZ": -30, "fill": "#c0c0c0" },
+    { "type": "cylinder", "r": 1.6, "height": 4, "offsetX": -45, "offsetY": 0, "offsetZ": 30, "fill": "#c0c0c0" },
+    { "type": "cylinder", "r": 1.6, "height": 4, "offsetX": 45, "offsetY": 0, "offsetZ": 30, "fill": "#c0c0c0" }
+  ]
+}

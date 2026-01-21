@@ -1,0 +1,17 @@
+{
+  "id": "heatbed",
+  "name": "Heatbed Assembly",
+  "description": "Bambu Lab A1 256x256mm heated bed assembly with PEI build surface, silicone heater, and Y-axis carriage",
+  "category": "Print Bed",
+  "version": "1.0.0",
+  "parts": [
+    "y-carriage",
+    "bed-mount",
+    "bed-insulation",
+    "bed-heater",
+    "bed-thermistor",
+    "heatbed-plate",
+    "build-surface",
+    "purge-wiper"
+  ]
+}

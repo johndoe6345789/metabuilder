@@ -1,0 +1,56 @@
+{
+  "id": "build-surface",
+  "name": "PEI Textured Build Plate",
+  "partNumber": "BL-A1-PEI-001",
+  "material": "springSteel",
+  "quantity": 1,
+  "weight": 380.0,
+  "weightUnit": "g",
+  "baseY": 30,
+  "description": "256x256mm spring steel plate with textured PEI coating - magnetically attached for easy print removal",
+  "installation": {
+    "tools": [
+      { "name": "Isopropyl alcohol", "size": "99%", "required": true },
+      { "name": "Lint-free cloth", "size": "-", "required": true }
+    ],
+    "hardware": [],
+    "torque": [],
+    "notes": [
+      "Clean with IPA before each print for best adhesion",
+      "Ensure magnetic attachment is secure and flat",
+      "Flex plate to remove prints - do not use sharp tools",
+      "Replace when PEI coating is damaged or worn",
+      "Do not exceed 100C bed temperature to preserve PEI"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 175, "height": 175, "rx": 2, "fill": "#404040" },
+    { "type": "rect", "width": 165, "height": 165, "rx": 1, "fill": "#353535" },
+    { "type": "rect", "width": 40, "height": 12, "offsetY": -75, "fill": "#303030" },
+    { "type": "text", "content": "PEI", "offsetY": 0, "fill": "#505050", "fontSize": 12 }
+  ],
+  "geometry3d": [
+    { "type": "box", "width": 256, "height": 0.8, "depth": 256, "fill": "#404040" },
+    { "type": "box", "width": 254, "height": 0.3, "depth": 254, "offsetY": 0.5, "fill": "#353535" },
+
+    { "type": "box", "width": 250, "height": 0.2, "depth": 250, "offsetY": 0.6, "fill": "#383838" },
+
+    { "type": "box", "width": 60, "height": 1.2, "depth": 20, "offsetX": 0, "offsetY": 0, "offsetZ": -120, "fill": "#303030" },
+    { "type": "box", "width": 50, "height": 0.5, "depth": 15, "offsetX": 0, "offsetY": 0.7, "offsetZ": -120, "fill": "#282828" },
+
+    { "type": "box", "width": 40, "height": 1.5, "depth": 8, "offsetX": -100, "offsetY": 0, "offsetZ": -120, "fill": "#454545" },
+    { "type": "box", "width": 40, "height": 1.5, "depth": 8, "offsetX": 100, "offsetY": 0, "offsetZ": -120, "fill": "#454545" },
+
+    { "type": "box", "width": 256, "height": 0.1, "depth": 2, "offsetY": 0.55, "offsetZ": -64, "fill": "#484848" },
+    { "type": "box", "width": 256, "height": 0.1, "depth": 2, "offsetY": 0.55, "offsetZ": 0, "fill": "#484848" },
+    { "type": "box", "width": 256, "height": 0.1, "depth": 2, "offsetY": 0.55, "offsetZ": 64, "fill": "#484848" },
+    { "type": "box", "width": 2, "height": 0.1, "depth": 256, "offsetY": 0.55, "offsetX": -64, "fill": "#484848" },
+    { "type": "box", "width": 2, "height": 0.1, "depth": 256, "offsetY": 0.55, "offsetX": 0, "fill": "#484848" },
+    { "type": "box", "width": 2, "height": 0.1, "depth": 256, "offsetY": 0.55, "offsetX": 64, "fill": "#484848" },
+
+    { "type": "cylinder", "r": 3, "height": 1, "offsetX": -118, "offsetY": 0, "offsetZ": -118, "subtract": true },
+    { "type": "cylinder", "r": 3, "height": 1, "offsetX": 118, "offsetY": 0, "offsetZ": -118, "subtract": true },
+    { "type": "cylinder", "r": 3, "height": 1, "offsetX": -118, "offsetY": 0, "offsetZ": 118, "subtract": true },
+    { "type": "cylinder", "r": 3, "height": 1, "offsetX": 118, "offsetY": 0, "offsetZ": 118, "subtract": true }
+  ]
+}

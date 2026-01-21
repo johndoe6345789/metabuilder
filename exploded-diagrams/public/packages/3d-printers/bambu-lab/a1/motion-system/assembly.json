@@ -1,0 +1,18 @@
+{
+  "id": "motion-system",
+  "name": "Motion System Assembly",
+  "description": "CoreXY-style motion system with linear rails, stepper motors, GT2 belts, and resonance compensation for the Bambu Lab A1 3D printer",
+  "category": "Motion",
+  "version": "1.0.0",
+  "parts": [
+    "x-axis-rail",
+    "x-axis-carriage",
+    "y-axis-rail",
+    "x-motor",
+    "y-motor",
+    "xy-belt",
+    "belt-tensioner",
+    "x-axis-endstop",
+    "accelerometer"
+  ]
+}

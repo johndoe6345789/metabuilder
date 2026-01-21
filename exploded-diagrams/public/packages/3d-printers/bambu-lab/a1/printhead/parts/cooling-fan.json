@@ -1,0 +1,263 @@
+{
+  "id": "cooling-fan",
+  "name": "Part Cooling Blower Fan",
+  "partNumber": "BL-A1-CF001",
+  "material": "Plastic/Metal",
+  "quantity": 1,
+  "weight": 18,
+  "weightUnit": "g",
+  "baseY": 0,
+  "description": "High-performance 5015 radial blower fan for part cooling during printing. Features centrifugal design for high static pressure airflow directed at the print zone. PWM controlled for variable speed operation from 0-100%.",
+  "installation": {
+    "tools": [
+      "2mm hex key",
+      "Phillips screwdriver"
+    ],
+    "hardware": [
+      "M2.5x6 socket head cap screw x2",
+      "Fan duct adapter"
+    ],
+    "torque": [
+      "Fan mounting screws: 0.2 Nm"
+    ],
+    "notes": [
+      "Ensure fan outlet aligns with cooling duct",
+      "Verify fan spins freely before securing",
+      "Check wire routing to avoid hot components",
+      "Test PWM control after installation"
+    ]
+  },
+  "geometry": [
+    {
+      "type": "rect",
+      "x": 5,
+      "y": 5,
+      "width": 50,
+      "height": 15,
+      "rx": 2,
+      "fill": "#303030",
+      "stroke": "#202020",
+      "strokeWidth": 1
+    },
+    {
+      "type": "circle",
+      "cx": 20,
+      "cy": 12.5,
+      "r": 6,
+      "fill": "#404040",
+      "stroke": "#353535",
+      "strokeWidth": 1
+    },
+    {
+      "type": "rect",
+      "x": 40,
+      "y": 8,
+      "width": 12,
+      "height": 9,
+      "fill": "#252525"
+    }
+  ],
+  "geometry3d": [
+    {
+      "type": "box",
+      "offsetX": 0,
+      "offsetY": 0,
+      "offsetZ": 0,
+      "fill": "#303030",
+      "width": 51,
+      "height": 15,
+      "depth": 51
+    },
+    {
+      "type": "box",
+      "offsetX": 0,
+      "offsetY": 0,
+      "offsetZ": 0,
+      "fill": "#252525",
+      "width": 49,
+      "height": 13,
+      "depth": 49
+    },
+    {
+      "type": "cylinder",
+      "height": 12,
+      "r": 18,
+      "offsetX": -8,
+      "offsetY": 0,
+      "offsetZ": 0,
+      "fill": "#353535"
+    },
+    {
+      "type": "cylinder",
+      "height": 14,
+      "r": 12,
+      "offsetX": -8,
+      "offsetY": 0,
+      "offsetZ": 0,
+      "fill": "#404040"
+    },
+    {
+      "type": "cylinder",
+      "height": 16,
+      "r": 4,
+      "offsetX": -8,
+      "offsetY": 0,
+      "offsetZ": 0,
+      "fill": "#505050"
+    },
+    {
+      "type": "box",
+      "offsetX": -8,
+      "offsetY": 0,
+      "offsetZ": 10,
+      "fill": "#454545",
+      "width": 4,
+      "height": 10,
+      "depth": 16
+    },
+    {
+      "type": "box",
+      "offsetX": -8,
+      "offsetY": 0,
+      "offsetZ": -10,
+      "fill": "#454545",
+      "width": 4,
+      "height": 10,
+      "depth": 16
+    },
+    {
+      "type": "box",
+      "offsetX": 2,
+      "offsetY": 0,
+      "offsetZ": 0,
+      "fill": "#454545",
+      "width": 16,
+      "height": 10,
+      "depth": 4
+    },
+    {
+      "type": "box",
+      "offsetX": -18,
+      "offsetY": 0,
+      "offsetZ": 0,
+      "fill": "#454545",
+      "width": 16,
+      "height": 10,
+      "depth": 4
+    },
+    {
+      "type": "box",
+      "offsetX": -2,
+      "offsetY": 0,
+      "offsetZ": 8,
+      "fill": "#454545",
+      "width": 12,
+      "height": 10,
+      "depth": 4
+    },
+    {
+      "type": "box",
+      "offsetX": -14,
+      "offsetY": 0,
+      "offsetZ": -8,
+      "fill": "#454545",
+      "width": 12,
+      "height": 10,
+      "depth": 4
+    },
+    {
+      "type": "box",
+      "offsetX": 20,
+      "offsetY": 0,
+      "offsetZ": 0,
+      "fill": "#252525",
+      "width": 14,
+      "height": 12,
+      "depth": 16
+    },
+    {
+      "type": "box",
+      "offsetX": 28,
+      "offsetY": 0,
+      "offsetZ": 0,
+      "fill": "#202020",
+      "width": 6,
+      "height": 10,
+      "depth": 14
+    },
+    {
+      "type": "cylinder",
+      "height": 15,
+      "r": 1.5,
+      "offsetX": -20,
+      "offsetY": 0,
+      "offsetZ": 20,
+      "fill": "#404040"
+    },
+    {
+      "type": "cylinder",
+      "height": 15,
+      "r": 1.5,
+      "offsetX": -20,
+      "offsetY": 0,
+      "offsetZ": -20,
+      "fill": "#404040"
+    },
+    {
+      "type": "cylinder",
+      "height": 15,
+      "r": 1.5,
+      "offsetX": 20,
+      "offsetY": 0,
+      "offsetZ": 20,
+      "fill": "#404040"
+    },
+    {
+      "type": "cylinder",
+      "height": 15,
+      "r": 1.5,
+      "offsetX": 20,
+      "offsetY": 0,
+      "offsetZ": -20,
+      "fill": "#404040"
+    },
+    {
+      "type": "box",
+      "offsetX": 18,
+      "offsetY": 8,
+      "offsetZ": -18,
+      "fill": "#202020",
+      "width": 8,
+      "height": 4,
+      "depth": 6
+    },
+    {
+      "type": "box",
+      "offsetX": 18,
+      "offsetY": 10,
+      "offsetZ": -18,
+      "fill": "#f0f0f0",
+      "width": 6,
+      "height": 2,
+      "depth": 4
+    },
+    {
+      "type": "cylinder",
+      "height": 8,
+      "r": 2,
+      "offsetX": 23,
+      "offsetY": 8,
+      "offsetZ": -18,
+      "fill": "#e04000"
+    },
+    {
+      "type": "cylinder",
+      "height": 8,
+      "r": 2,
+      "offsetX": 23,
+      "offsetY": 8,
+      "offsetZ": -14,
+      "fill": "#303030"
+    }
+  ]
+}

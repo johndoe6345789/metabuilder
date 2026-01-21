@@ -1,0 +1,71 @@
+{
+  "id": "bed-heater",
+  "name": "Silicone Bed Heater",
+  "partNumber": "BL-A1-HTR-001",
+  "material": "silicone",
+  "quantity": 1,
+  "weight": 220.0,
+  "weightUnit": "g",
+  "baseY": -30,
+  "description": "256x256mm 350W silicone heating pad with integrated NTC thermistor and thermal fuse - AC powered",
+  "installation": {
+    "tools": [
+      { "name": "Isopropyl alcohol", "size": "99%", "required": true },
+      { "name": "Heat gun", "size": "-", "required": false },
+      { "name": "Roller", "size": "rubber", "required": true },
+      { "name": "Multimeter", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "3M VHB tape", "spec": "5952", "qty": 1, "reusable": false },
+      { "name": "Thermal fuse", "spec": "130C 10A", "qty": 1, "reusable": false },
+      { "name": "Wire connector", "spec": "XT60", "qty": 1, "reusable": true }
+    ],
+    "torque": [],
+    "notes": [
+      "DANGER: AC voltage present - disconnect power before servicing",
+      "Test heater resistance before installation (expect ~35-40 ohms)",
+      "Clean aluminum plate with IPA before applying heater",
+      "Press firmly and roll to remove air bubbles",
+      "Verify thermal fuse continuity after installation",
+      "Do not exceed 110C operating temperature"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 170, "height": 170, "rx": 3, "fill": "#e05000" },
+    { "type": "rect", "width": 160, "height": 160, "rx": 2, "fill": "#c04000" },
+    { "type": "line", "x1": -70, "y1": -60, "x2": 70, "y2": -60, "stroke": "#d06000", "strokeWidth": 2 },
+    { "type": "line", "x1": -70, "y1": -30, "x2": 70, "y2": -30, "stroke": "#d06000", "strokeWidth": 2 },
+    { "type": "line", "x1": -70, "y1": 0, "x2": 70, "y2": 0, "stroke": "#d06000", "strokeWidth": 2 },
+    { "type": "line", "x1": -70, "y1": 30, "x2": 70, "y2": 30, "stroke": "#d06000", "strokeWidth": 2 },
+    { "type": "line", "x1": -70, "y1": 60, "x2": 70, "y2": 60, "stroke": "#d06000", "strokeWidth": 2 },
+    { "type": "rect", "width": 30, "height": 20, "offsetX": -60, "offsetY": 70, "fill": "#333" }
+  ],
+  "geometry3d": [
+    { "type": "box", "width": 256, "height": 2, "depth": 256, "fill": "#e05000" },
+    { "type": "box", "width": 250, "height": 1.5, "depth": 250, "offsetY": 0.25, "fill": "#c04000" },
+
+    { "type": "box", "width": 240, "height": 0.5, "depth": 4, "offsetY": 0.75, "offsetZ": -100, "fill": "#d06000" },
+    { "type": "box", "width": 240, "height": 0.5, "depth": 4, "offsetY": 0.75, "offsetZ": -66, "fill": "#d06000" },
+    { "type": "box", "width": 240, "height": 0.5, "depth": 4, "offsetY": 0.75, "offsetZ": -33, "fill": "#d06000" },
+    { "type": "box", "width": 240, "height": 0.5, "depth": 4, "offsetY": 0.75, "offsetZ": 0, "fill": "#d06000" },
+    { "type": "box", "width": 240, "height": 0.5, "depth": 4, "offsetY": 0.75, "offsetZ": 33, "fill": "#d06000" },
+    { "type": "box", "width": 240, "height": 0.5, "depth": 4, "offsetY": 0.75, "offsetZ": 66, "fill": "#d06000" },
+    { "type": "box", "width": 240, "height": 0.5, "depth": 4, "offsetY": 0.75, "offsetZ": 100, "fill": "#d06000" },
+
+    { "type": "box", "width": 4, "height": 0.5, "depth": 220, "offsetY": 0.75, "offsetX": -115, "fill": "#d06000" },
+    { "type": "box", "width": 4, "height": 0.5, "depth": 220, "offsetY": 0.75, "offsetX": 115, "fill": "#d06000" },
+
+    { "type": "box", "width": 40, "height": 8, "depth": 25, "offsetX": -90, "offsetY": -5, "offsetZ": 120, "fill": "#333333" },
+    { "type": "box", "width": 35, "height": 6, "depth": 20, "offsetX": -90, "offsetY": -5, "offsetZ": 120, "fill": "#222222" },
+    { "type": "cylinder", "r": 3, "height": 15, "offsetX": -90, "offsetY": -10, "offsetZ": 135, "rotateX": 90, "fill": "#444444" },
+    { "type": "cylinder", "r": 3, "height": 15, "offsetX": -80, "offsetY": -10, "offsetZ": 135, "rotateX": 90, "fill": "#444444" },
+
+    { "type": "box", "width": 15, "height": 4, "depth": 10, "offsetX": 100, "offsetY": -3, "offsetZ": 115, "fill": "#555555" },
+    { "type": "cylinder", "r": 2, "height": 8, "offsetX": 100, "offsetY": -3, "offsetZ": 125, "rotateX": 90, "fill": "#666666" },
+
+    { "type": "cylinder", "r": 3, "height": 3, "offsetX": -118, "offsetY": 0, "offsetZ": -118, "subtract": true },
+    { "type": "cylinder", "r": 3, "height": 3, "offsetX": 118, "offsetY": 0, "offsetZ": -118, "subtract": true },
+    { "type": "cylinder", "r": 3, "height": 3, "offsetX": -118, "offsetY": 0, "offsetZ": 118, "subtract": true },
+    { "type": "cylinder", "r": 3, "height": 3, "offsetX": 118, "offsetY": 0, "offsetZ": 118, "subtract": true }
+  ]
+}

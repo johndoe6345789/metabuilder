@@ -1,0 +1,65 @@
+{
+  "id": "x-axis-rail",
+  "name": "X-Axis Linear Rail",
+  "partNumber": "BL-A1-MR001",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 85.0,
+  "weightUnit": "g",
+  "baseY": 100,
+  "description": "MGN12H linear rail for X-axis printhead movement, 220mm travel length",
+  "installation": {
+    "tools": [
+      { "name": "Hex key", "size": "2.5mm", "required": true },
+      { "name": "Torque screwdriver", "size": "0.5-2 Nm", "required": true },
+      { "name": "Level gauge", "size": "-", "required": true },
+      { "name": "Dial indicator", "size": "-", "required": false }
+    ],
+    "hardware": [
+      { "name": "M3x8 socket head cap screw", "spec": "M3x0.5x8", "grade": "12.9", "qty": 8, "reusable": true },
+      { "name": "Alignment dowel pin", "spec": "2x4mm", "qty": 2, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Rail mounting screws", "value": 0.8, "unit": "Nm", "sequence": "Center out alternating", "notes": "Apply threadlocker" }
+    ],
+    "notes": [
+      "Clean rail with isopropyl alcohol before installation",
+      "Apply light machine oil to rail surface",
+      "Check parallelism to Y-axis after mounting",
+      "Verify smooth carriage movement without binding"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 180, "height": 12, "rx": 2, "fill": "#606060" },
+    { "type": "rect", "width": 170, "height": 4, "offsetY": 0, "fill": "#505050" },
+    { "type": "circle", "r": 2, "offsetX": -80, "fill": "#404040" },
+    { "type": "circle", "r": 2, "offsetX": -60, "fill": "#404040" },
+    { "type": "circle", "r": 2, "offsetX": 60, "fill": "#404040" },
+    { "type": "circle", "r": 2, "offsetX": 80, "fill": "#404040" }
+  ],
+  "geometry3d": [
+    { "type": "box", "width": 220, "height": 8, "depth": 12, "fill": "#505050" },
+
+    { "type": "box", "width": 220, "height": 3, "depth": 4, "offsetY": 4, "fill": "#606060" },
+
+    { "type": "box", "width": 220, "height": 2, "depth": 2, "offsetY": 2, "offsetZ": 4, "fill": "#707070" },
+    { "type": "box", "width": 220, "height": 2, "depth": 2, "offsetY": 2, "offsetZ": -4, "fill": "#707070" },
+
+    { "type": "cylinder", "r": 1.5, "height": 10, "offsetX": -100, "subtract": true },
+    { "type": "cylinder", "r": 1.5, "height": 10, "offsetX": -75, "subtract": true },
+    { "type": "cylinder", "r": 1.5, "height": 10, "offsetX": -50, "subtract": true },
+    { "type": "cylinder", "r": 1.5, "height": 10, "offsetX": 50, "subtract": true },
+    { "type": "cylinder", "r": 1.5, "height": 10, "offsetX": 75, "subtract": true },
+    { "type": "cylinder", "r": 1.5, "height": 10, "offsetX": 100, "subtract": true },
+
+    { "type": "cylinder", "r": 3, "height": 2, "offsetX": -100, "offsetY": -4, "fill": "#404040" },
+    { "type": "cylinder", "r": 3, "height": 2, "offsetX": -75, "offsetY": -4, "fill": "#404040" },
+    { "type": "cylinder", "r": 3, "height": 2, "offsetX": -50, "offsetY": -4, "fill": "#404040" },
+    { "type": "cylinder", "r": 3, "height": 2, "offsetX": 50, "offsetY": -4, "fill": "#404040" },
+    { "type": "cylinder", "r": 3, "height": 2, "offsetX": 75, "offsetY": -4, "fill": "#404040" },
+    { "type": "cylinder", "r": 3, "height": 2, "offsetX": 100, "offsetY": -4, "fill": "#404040" },
+
+    { "type": "box", "width": 10, "height": 10, "depth": 14, "offsetX": -105, "fill": "#606060" },
+    { "type": "box", "width": 10, "height": 10, "depth": 14, "offsetX": 105, "fill": "#606060" }
+  ]
+}
