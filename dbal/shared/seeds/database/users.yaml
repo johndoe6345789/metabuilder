@@ -1,0 +1,50 @@
+# User seed data
+# DBAL entity: User
+# Schema reference: dbal/shared/api/schema/entities/core/user.yaml
+entity: User
+version: "1.0"
+description: "Default system users created during bootstrap"
+
+records:
+  - id: user_supergod_system
+    username: supergod
+    email: supergod@metabuilder.local
+    role: supergod
+    isInstanceOwner: true
+    profilePicture: null
+    bio: "System Super Administrator"
+    createdAt: 0
+    tenantId: null
+    passwordChangeTimestamp: null
+    firstLogin: false
+
+  - id: user_admin_system
+    username: admin
+    email: admin@metabuilder.local
+    role: admin
+    isInstanceOwner: false
+    profilePicture: null
+    bio: "System Administrator"
+    createdAt: 0
+    tenantId: null
+    passwordChangeTimestamp: null
+    firstLogin: false
+
+  - id: user_testuser
+    username: testuser
+    email: testuser@metabuilder.dev
+    role: user
+    isInstanceOwner: false
+    profilePicture: null
+    bio: "Test user for E2E tests and development"
+    createdAt: 0
+    tenantId: null
+    passwordChangeTimestamp: null
+    firstLogin: false
+
+# Metadata for seed process
+metadata:
+  bootstrap: true
+  skipIfExists: true
+  timestampField: createdAt
+  useCurrentTimestamp: true
