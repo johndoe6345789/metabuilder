@@ -1,0 +1,15 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10">
+  <line x1="0" y1="0" x2="5" y2="8" stroke="white"/>
+  <line x1="5" y1="8" x2="10" y2="0" stroke="white"/>
+  <line x1="10" y1="0" x2="0" y2="0" stroke="white"/>
+
+  <path d="M1,1 C2,3 4,3 5,1" stroke="white" fill="none"/>
+
+  <rect x="6" y="1" width="3" height="2" stroke="white" fill="none"/>
+
+  <ellipse cx="7" cy="6" rx="2" ry="1" stroke="white" fill="none"/>
+</svg>
+
+
+
