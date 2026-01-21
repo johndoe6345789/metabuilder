@@ -1,0 +1,14 @@
+{
+  "name": "@metabuilder/workflow-plugins-web",
+  "version": "1.0.0",
+  "description": "Web operation plugins for Go",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["web", "workflow", "plugins", "go"],
+  "metadata": {
+    "category": "web",
+    "language": "go",
+    "plugin_count": 0
+  },
+  "plugins": []
+}

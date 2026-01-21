@@ -1,0 +1,14 @@
+{
+  "name": "@metabuilder/workflow-plugins-dict-rust",
+  "version": "0.1.0",
+  "description": "Dictionary operation plugins (Rust)",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["dict", "workflow", "plugins", "rust"],
+  "metadata": {
+    "category": "dict",
+    "runtime": "rust",
+    "plugin_count": 0
+  },
+  "plugins": []
+}

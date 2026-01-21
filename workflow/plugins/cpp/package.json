@@ -1,0 +1,28 @@
+{
+  "name": "@metabuilder/workflow-plugins-cpp",
+  "version": "1.0.0",
+  "description": "C++ header-only workflow plugins for MetaBuilder",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "main": "plugin.hpp",
+  "metadata": {
+    "language": "cpp",
+    "runtime": "C++17"
+  },
+  "categories": [
+    "control",
+    "convert",
+    "core",
+    "dict",
+    "list",
+    "logic",
+    "math",
+    "notifications",
+    "string",
+    "test",
+    "tools",
+    "utils",
+    "var",
+    "web"
+  ]
+}

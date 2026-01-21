@@ -1,0 +1,14 @@
+{
+  "name": "@metabuilder/workflow-plugins-integration",
+  "version": "1.0.0",
+  "description": "Integration operation plugins for TypeScript",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["integration", "workflow", "plugins", "typescript"],
+  "metadata": {
+    "category": "integration",
+    "language": "typescript",
+    "plugin_count": 3
+  },
+  "plugins": ["email-send", "http-request", "webhook-response"]
+}

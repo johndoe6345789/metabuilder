@@ -1,0 +1,14 @@
+{
+  "name": "@metabuilder/workflow-plugins-list",
+  "version": "1.0.0",
+  "description": "List operation plugins (C++)",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["list", "workflow", "plugins", "cpp"],
+  "metadata": {
+    "category": "list",
+    "language": "cpp",
+    "plugin_count": 0
+  },
+  "plugins": []
+}

@@ -1,0 +1,14 @@
+{
+  "name": "@metabuilder/workflow-plugins-core",
+  "version": "1.0.0",
+  "description": "Core operation plugins (C++)",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["core", "workflow", "plugins", "cpp"],
+  "metadata": {
+    "category": "core",
+    "language": "cpp",
+    "plugin_count": 0
+  },
+  "plugins": []
+}

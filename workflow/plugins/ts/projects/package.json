@@ -1,0 +1,14 @@
+{
+  "name": "@metabuilder/workflow-plugins-projects",
+  "version": "1.0.0",
+  "description": "Projects operation plugins for TypeScript",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["projects", "workflow", "plugins", "typescript"],
+  "metadata": {
+    "category": "projects",
+    "language": "typescript",
+    "plugin_count": 8
+  },
+  "plugins": ["cadquery", "docker", "gameengine", "mojo", "pastebin", "pcb", "postgres", "smtp"]
+}

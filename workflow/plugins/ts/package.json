@@ -1,0 +1,21 @@
+{
+  "name": "@metabuilder/workflow-plugins-ts",
+  "version": "1.0.0",
+  "description": "TypeScript workflow plugins for MetaBuilder",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "main": "plugin.ts",
+  "metadata": {
+    "language": "typescript",
+    "runtime": "node18+"
+  },
+  "categories": [
+    "control-flow",
+    "dbal",
+    "dbal-read",
+    "dbal-write",
+    "integration",
+    "projects",
+    "utility"
+  ]
+}

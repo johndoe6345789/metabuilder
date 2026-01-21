@@ -1,0 +1,14 @@
+{
+  "name": "@metabuilder/workflow-plugins-control-flow",
+  "version": "1.0.0",
+  "description": "Control-flow operation plugins for TypeScript",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["control-flow", "workflow", "plugins", "typescript"],
+  "metadata": {
+    "category": "control-flow",
+    "language": "typescript",
+    "plugin_count": 1
+  },
+  "plugins": ["condition"]
+}

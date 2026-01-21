@@ -1,0 +1,14 @@
+{
+  "name": "@metabuilder/workflow-plugins-notifications-rust",
+  "version": "0.1.0",
+  "description": "Notifications operation plugins (Rust)",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["notifications", "workflow", "plugins", "rust"],
+  "metadata": {
+    "category": "notifications",
+    "runtime": "rust",
+    "plugin_count": 0
+  },
+  "plugins": []
+}

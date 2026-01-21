@@ -1,0 +1,14 @@
+{
+  "name": "@metabuilder/workflow-plugins-tools",
+  "version": "1.0.0",
+  "description": "Tools operation plugins for Go",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["tools", "workflow", "plugins", "go"],
+  "metadata": {
+    "category": "tools",
+    "language": "go",
+    "plugin_count": 0
+  },
+  "plugins": []
+}

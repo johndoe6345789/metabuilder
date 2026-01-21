@@ -1,0 +1,14 @@
+{
+  "name": "@metabuilder/workflow-plugins-notifications",
+  "version": "1.0.0",
+  "description": "Notifications operation plugins (C++)",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["notifications", "workflow", "plugins", "cpp"],
+  "metadata": {
+    "category": "notifications",
+    "language": "cpp",
+    "plugin_count": 0
+  },
+  "plugins": []
+}

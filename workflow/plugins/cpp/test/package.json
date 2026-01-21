@@ -1,0 +1,14 @@
+{
+  "name": "@metabuilder/workflow-plugins-test",
+  "version": "1.0.0",
+  "description": "Test operation plugins (C++)",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["test", "workflow", "plugins", "cpp"],
+  "metadata": {
+    "category": "test",
+    "language": "cpp",
+    "plugin_count": 0
+  },
+  "plugins": []
+}

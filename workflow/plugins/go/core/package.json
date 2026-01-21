@@ -1,0 +1,14 @@
+{
+  "name": "@metabuilder/workflow-plugins-core",
+  "version": "1.0.0",
+  "description": "Core operation plugins for Go",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["core", "workflow", "plugins", "go"],
+  "metadata": {
+    "category": "core",
+    "language": "go",
+    "plugin_count": 0
+  },
+  "plugins": []
+}

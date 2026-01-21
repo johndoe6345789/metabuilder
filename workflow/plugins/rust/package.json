@@ -1,0 +1,28 @@
+{
+  "name": "@metabuilder/workflow-plugins-rust",
+  "version": "1.0.0",
+  "description": "Rust workflow plugins for MetaBuilder",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "main": "plugin.rs",
+  "metadata": {
+    "language": "rust",
+    "runtime": "rustc 1.70+"
+  },
+  "categories": [
+    "control",
+    "convert",
+    "core",
+    "dict",
+    "list",
+    "logic",
+    "math",
+    "notifications",
+    "string",
+    "test",
+    "tools",
+    "utils",
+    "var",
+    "web"
+  ]
+}

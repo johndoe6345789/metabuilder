@@ -1,0 +1,17 @@
+{
+  "name": "@metabuilder/workflow-plugins-mojo",
+  "version": "1.0.0",
+  "description": "Mojo workflow plugins for MetaBuilder",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "main": "plugin.mojo",
+  "metadata": {
+    "language": "mojo",
+    "runtime": "mojo"
+  },
+  "categories": [
+    "list",
+    "math",
+    "string"
+  ]
+}
