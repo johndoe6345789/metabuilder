@@ -33,9 +33,34 @@
     { "type": "circle", "r": 3, "offsetX": 0, "offsetY": 40, "fill": "#333" }
   ],
   "geometry3d": [
-    { "type": "cylinder", "r": 50, "height": 8, "fill": "#8b4513" },
-    { "type": "cylinder", "r": 35, "height": 8, "subtract": true },
-    { "type": "cylinder", "r": 18, "height": 20, "fill": "#666" },
-    { "type": "cylinder", "r": 10, "height": 20, "subtract": true }
+    { "type": "cylinder", "r": 52, "height": 4, "fill": "#5a3d2b" },
+    { "type": "cylinder", "r": 52, "height": 2, "offsetY": 3, "fill": "#4a2d1b" },
+    { "type": "cylinder", "r": 52, "height": 2, "offsetY": -3, "fill": "#4a2d1b" },
+
+    { "type": "cylinder", "r": 38, "height": 6, "subtract": true },
+
+    { "type": "cylinder", "r": 36, "height": 3, "fill": "#606570" },
+
+    { "type": "cylinder", "r": 5, "height": 8, "offsetX": 28, "offsetY": 0, "fill": "#404550" },
+    { "type": "cylinder", "r": 5, "height": 8, "offsetX": -28, "offsetY": 0, "fill": "#404550" },
+    { "type": "cylinder", "r": 5, "height": 8, "offsetX": 0, "offsetY": 28, "fill": "#404550" },
+    { "type": "cylinder", "r": 5, "height": 8, "offsetX": 0, "offsetY": -28, "fill": "#404550" },
+    { "type": "cylinder", "r": 5, "height": 8, "offsetX": 20, "offsetY": 20, "fill": "#404550" },
+    { "type": "cylinder", "r": 5, "height": 8, "offsetX": -20, "offsetY": 20, "fill": "#404550" },
+    { "type": "cylinder", "r": 5, "height": 8, "offsetX": 20, "offsetY": -20, "fill": "#404550" },
+    { "type": "cylinder", "r": 5, "height": 8, "offsetX": -20, "offsetY": -20, "fill": "#404550" },
+
+    { "type": "box", "width": 6, "height": 4, "depth": 12, "offsetX": 28, "fill": "#505560" },
+    { "type": "box", "width": 6, "height": 4, "depth": 12, "offsetX": -28, "fill": "#505560" },
+    { "type": "box", "width": 12, "height": 4, "depth": 6, "offsetZ": 28, "fill": "#505560" },
+    { "type": "box", "width": 12, "height": 4, "depth": 6, "offsetZ": -28, "fill": "#505560" },
+
+    { "type": "cylinder", "r": 18, "height": 22, "fill": "#707580" },
+
+    { "type": "cylinder", "r": 20, "height": 3, "offsetY": 10, "fill": "#808590" },
+
+    { "type": "cylinder", "r": 10, "height": 25, "subtract": true },
+    { "type": "box", "width": 4, "height": 25, "depth": 22, "subtract": true },
+    { "type": "box", "width": 22, "height": 25, "depth": 4, "subtract": true }
   ]
 }

@@ -59,9 +59,9 @@ function validate(filePath: string): string[] {
       }
     })
 
-    // Validate fill color format
-    if (geom.fill && typeof geom.fill === 'string' && !geom.fill.match(/^#[0-9a-fA-F]{6}$/)) {
-      errors.push(`[${i}] Invalid fill color format: ${geom.fill} (expected #RRGGBB)`)
+    // Validate fill color format (accepts #RGB or #RRGGBB)
+    if (geom.fill && typeof geom.fill === 'string' && !geom.fill.match(/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/)) {
+      errors.push(`[${i}] Invalid fill color format: ${geom.fill} (expected #RGB or #RRGGBB)`)
     }
   })
 
