@@ -4,7 +4,7 @@
 **Status**: Phase 2 Complete, Monorepo Consolidated
 **Overall Health**: 82/100
 **Vision**: Universal Platform - One cohesive system for code, 3D, graphics, media, and system administration
-**Structure**: Monorepo containing MetaBuilder core + 13 standalone projects
+**Structure**: Monorepo containing MetaBuilder core + 15 standalone projects
 
 ---
 
@@ -449,9 +449,11 @@ metabuilder/
 | `packagerepo/` | Package repository service | Python, FastAPI |
 | `pastebin/` | Code snippet sharing | Next.js, TypeScript |
 | `pcbgenerator/` | PCB design automation | Python |
+| `postgres/` | PostgreSQL admin dashboard | Next.js, Drizzle ORM |
 | `repoforge/` | GitHub client for Android | Kotlin, Compose |
 | `smtprelay/` | Email relay server | Python, Twisted |
 | `sparkos/` | Minimal Linux + Qt6 app | C++, Qt6, Linux |
+| `storybook/` | Component documentation | React, Vite, Storybook |
 
 **Critical Root Files:**
 - `CLAUDE.md` - THIS FILE (in docs/)
