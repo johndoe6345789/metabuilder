@@ -36,7 +36,7 @@
     "dev": "tsc --watch",
     "test": "jest",
     "test:watch": "jest --watch",
-    "lint": "eslint core --ext .ts",
+    "lint": "eslint executor/ts --ext .ts",
     "type-check": "tsc --noEmit",
     "prepublish": "npm run build"
   },

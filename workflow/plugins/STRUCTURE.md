@@ -6,15 +6,13 @@ Plugins are organized by **language** first, then by **category**:
 
 ```
 workflow/
-├── core/                    # Core engine (TypeScript)
-│   ├── executor/            # DAG executor
-│   ├── registry/            # Plugin registry
-│   ├── utils/               # Priority queue, template engine
-│   ├── types.ts             # Type definitions
-│   └── index.ts             # Main exports
-│
 ├── executor/                # Language-specific runtimes
-│   ├── ts/                  # TypeScript executor (direct import)
+│   ├── ts/                  # TypeScript runtime + core engine
+│   │   ├── executor/        # DAG executor
+│   │   ├── registry/        # Plugin registry
+│   │   ├── utils/           # Priority queue, template engine
+│   │   ├── types.ts         # Type definitions
+│   │   └── index.ts         # Main exports
 │   ├── python/              # Python executor (child process)
 │   └── cpp/                 # C++ executor (native FFI)
 │
@@ -117,14 +115,14 @@ def run(_runtime, inputs):
 
 ```
 ┌─────────────────────────────────────────┐
-│  DAGExecutor (core/executor/)           │
+│  DAGExecutor (executor/ts/executor/)    │
 │  - Resolves node dependencies           │
 │  - Schedules execution                  │
 └─────────────────┬───────────────────────┘
                   │
                   ↓
 ┌─────────────────────────────────────────┐
-│  NodeExecutorRegistry (core/registry/)  │
+│  NodeExecutorRegistry (executor/ts/)    │
 │  - Looks up plugin by nodeType          │
 │  - Determines language from metadata    │
 └─────────────────┬───────────────────────┘

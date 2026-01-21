@@ -1,61 +1,57 @@
 /**
- * TypeScript Plugin Executor
+ * MetaBuilder Workflow Engine v3.0.0
+ * Enterprise-grade DAG workflow execution system
  *
- * Default runtime for TypeScript/JavaScript plugins.
- * Uses direct module import for maximum performance.
+ * @packageDocumentation
  */
 
-import type { INodeExecutor, WorkflowNode, WorkflowContext, ExecutionState, NodeResult } from '../../core/types';
+// Core exports
+export { DAGExecutor, ExecutionMetrics, NodeExecutorFn } from './executor/dag-executor';
+export * from './types';
 
-export interface TypeScriptPluginLoader {
-  load(pluginPath: string): Promise<INodeExecutor>;
-}
+// Registry and plugins
+export {
+  NodeExecutorRegistry,
+  NodeExecutorPlugin,
+  getNodeExecutorRegistry,
+  setNodeExecutorRegistry,
+  resetNodeExecutorRegistry
+} from './registry/node-executor-registry';
+export { registerBuiltInExecutors } from './plugins/index';
+
+// Utilities
+export { PriorityQueue, QueueItem } from './utils/priority-queue';
+export {
+  interpolateTemplate,
+  evaluateTemplate,
+  TemplateContext,
+  buildDefaultUtilities
+} from './utils/template-engine';
+
+// Built-in executors (for direct use)
+export {
+  dbalReadExecutor,
+  dbalWriteExecutor,
+  httpRequestExecutor,
+  conditionExecutor,
+  emailSendExecutor,
+  setEmailService,
+  webhookResponseExecutor,
+  transformExecutor,
+  waitExecutor,
+  setVariableExecutor
+} from './plugins/index';
 
 /**
- * Load a TypeScript plugin from path
+ * Initialize workflow engine with built-in executors
+ * Call this once at application startup
  */
-export async function loadTypeScriptPlugin(pluginPath: string): Promise<INodeExecutor> {
-  // Dynamic import for the plugin module
-  const module = await import(pluginPath);
-
-  // Find the executor class (convention: {PluginName}Executor)
-  const executorKey = Object.keys(module).find(key => key.endsWith('Executor'));
-  if (!executorKey) {
-    throw new Error(`No executor found in plugin: ${pluginPath}`);
-  }
-
-  const ExecutorClass = module[executorKey];
-  return new ExecutorClass();
+export function initializeWorkflowEngine() {
+  const { registerBuiltInExecutors } = require('./plugins/index');
+  registerBuiltInExecutors();
+  console.log('✓ MetaBuilder Workflow Engine v3.0.0 initialized');
 }
 
-/**
- * TypeScript plugin executor wrapper
- */
-export class TypeScriptExecutor {
-  private plugins: Map<string, INodeExecutor> = new Map();
-
-  async loadPlugin(nodeType: string, pluginPath: string): Promise<void> {
-    const executor = await loadTypeScriptPlugin(pluginPath);
-    this.plugins.set(nodeType, executor);
-  }
-
-  async execute(
-    node: WorkflowNode,
-    context: WorkflowContext,
-    state: ExecutionState
-  ): Promise<NodeResult> {
-    const executor = this.plugins.get(node.nodeType);
-    if (!executor) {
-      throw new Error(`No TypeScript executor registered for: ${node.nodeType}`);
-    }
-    return executor.execute(node, context, state);
-  }
-
-  hasPlugin(nodeType: string): boolean {
-    return this.plugins.has(nodeType);
-  }
-
-  listPlugins(): string[] {
-    return Array.from(this.plugins.keys());
-  }
-}
+// Version
+export const VERSION = '3.0.0';
+export const ENGINE_NAME = '@metabuilder/workflow';

@@ -4,7 +4,7 @@
     "module": "commonjs",
     "lib": ["ES2020"],
     "outDir": "./dist",
-    "rootDir": "./core",
+    "rootDir": "./executor/ts",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -23,6 +23,6 @@
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node"
   },
-  "include": ["core/**/*"],
+  "include": ["executor/ts/**/*"],
   "exclude": ["node_modules", "dist", "**/*.test.ts"]
 }
