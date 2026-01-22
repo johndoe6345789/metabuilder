@@ -1,0 +1,385 @@
+@use '@angular/cdk';
+@use './m3-slider';
+@use '../core/tokens/token-utils';
+@use '../core/style/vendor-prefixes';
+
+$mat-slider-min-size: 128px !default;
+$mat-slider-horizontal-margin: 8px !default;
+
+$fallbacks: m3-slider.get-tokens();
+
+.mdc-slider__track {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+  pointer-events: none;
+  height: token-utils.slot(slider-inactive-track-height, $fallbacks);
+}
+
+.mdc-slider__track--active,
+.mdc-slider__track--inactive {
+  display: flex;
+  height: 100%;
+  position: absolute;
+  width: 100%;
+}
+
+.mdc-slider__track--active {
+  overflow: hidden;
+  border-radius: token-utils.slot(slider-active-track-shape, $fallbacks);
+  $active-height-ref: token-utils.slot(slider-active-track-height, $fallbacks);
+  $inactive-height-ref: token-utils.slot(slider-inactive-track-height, $fallbacks);
+  height: $active-height-ref;
+  top: calc((#{$inactive-height-ref} - #{$active-height-ref}) / 2);
+}
+
+.mdc-slider__track--active_fill {
+  border-top-style: solid;
+  box-sizing: border-box;
+  height: 100%;
+  width: 100%;
+  position: relative;
+  transform-origin: left;
+  transition: transform 80ms ease;
+
+  border-color: token-utils.slot(slider-active-track-color, $fallbacks);
+  border-top-width: token-utils.slot(slider-active-track-height, $fallbacks);
+
+  .mdc-slider--disabled & {
+    border-color: token-utils.slot(slider-disabled-active-track-color, $fallbacks);
+  }
+
+  [dir='rtl'] & {
+    -webkit-transform-origin: right;
+    transform-origin: right;
+  }
+}
+
+.mdc-slider__track--inactive {
+  left: 0;
+  top: 0;
+  opacity: 0.24;
+
+  background-color: token-utils.slot(slider-inactive-track-color, $fallbacks);
+  height: token-utils.slot(slider-inactive-track-height, $fallbacks);
+  border-radius: token-utils.slot(slider-inactive-track-shape, $fallbacks);
+
+  .mdc-slider--disabled & {
+    background-color: token-utils.slot(slider-disabled-inactive-track-color, $fallbacks);
+    opacity: 0.24;
+  }
+
+  &::before {
+    position: absolute;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    border: 1px solid transparent;
+    border-radius: inherit;
+    content: '';
+    pointer-events: none;
+
+    @include cdk.high-contrast {
+      border-color: CanvasText;
+    }
+  }
+}
+
+.mdc-slider__value-indicator-container {
+  bottom: 44px;
+  left: 50%;
+  pointer-events: none;
+  position: absolute;
+  transform: token-utils.slot(slider-value-indicator-container-transform, $fallbacks);
+
+  .mdc-slider__thumb--with-indicator & {
+    pointer-events: auto;
+  }
+}
+
+.mdc-slider__value-indicator {
+  display: flex;
+  align-items: center;
+  transform: scale(0);
+  transform-origin: token-utils.slot(slider-value-indicator-transform-origin, $fallbacks);
+  transition: transform 100ms cubic-bezier(0.4, 0, 1, 1);
+
+  // Stop parent word-break from altering
+  // the word-break of the value indicator.
+  word-break: normal;
+
+  background-color: token-utils.slot(slider-label-container-color, $fallbacks);
+  color: token-utils.slot(slider-label-label-text-color, $fallbacks);
+
+  width: token-utils.slot(slider-value-indicator-width, $fallbacks);
+  height: token-utils.slot(slider-value-indicator-height, $fallbacks);
+  padding: token-utils.slot(slider-value-indicator-padding, $fallbacks);
+  opacity: token-utils.slot(slider-value-indicator-opacity, $fallbacks);
+  border-radius: token-utils.slot(slider-value-indicator-border-radius, $fallbacks);
+
+  .mdc-slider__thumb--with-indicator & {
+    transition: transform 100ms cubic-bezier(0, 0, 0.2, 1);
+    transform: scale(1);
+  }
+
+  &::before {
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid;
+    bottom: -5px;
+    content: '';
+    height: 0;
+    left: 50%;
+    position: absolute;
+    transform: translateX(-50%);
+    width: 0;
+    display: token-utils.slot(slider-value-indicator-caret-display, $fallbacks);
+    border-top-color: token-utils.slot(slider-label-container-color, $fallbacks);
+  }
+
+  &::after {
+    position: absolute;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    border: 1px solid transparent;
+    border-radius: inherit;
+    content: '';
+    pointer-events: none;
+
+    @include cdk.high-contrast {
+      border-color: CanvasText;
+    }
+  }
+}
+
+.mdc-slider__value-indicator-text {
+  text-align: center;
+  width: token-utils.slot(slider-value-indicator-width, $fallbacks);
+  transform: token-utils.slot(slider-value-indicator-text-transform, $fallbacks);
+  font-family: token-utils.slot(slider-label-label-text-font, $fallbacks);
+  font-size: token-utils.slot(slider-label-label-text-size, $fallbacks);
+  font-weight: token-utils.slot(slider-label-label-text-weight, $fallbacks);
+  line-height: token-utils.slot(slider-label-label-text-line-height, $fallbacks);
+  letter-spacing: token-utils.slot(slider-label-label-text-tracking, $fallbacks);
+}
+
+.mdc-slider__thumb {
+  @include vendor-prefixes.user-select(none);
+  display: flex;
+  left: -24px;
+  outline: none;
+  position: absolute;
+  height: 48px;
+  width: 48px;
+  pointer-events: none;
+
+  .mdc-slider--discrete & {
+    transition: transform 80ms ease;
+  }
+
+  .mdc-slider--disabled & {
+    pointer-events: none;
+  }
+}
+
+.mdc-slider__thumb--top {
+  z-index: 1;
+}
+
+.mdc-slider__thumb-knob {
+  position: absolute;
+  box-sizing: border-box;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-style: solid;
+
+  $width-ref: token-utils.slot(slider-handle-width, $fallbacks);
+  $height-ref: token-utils.slot(slider-handle-height, $fallbacks);
+  width: $width-ref;
+  height: $height-ref;
+  border-width: calc(#{$height-ref} / 2) calc(#{$width-ref} / 2);
+
+  box-shadow: token-utils.slot(slider-handle-elevation, $fallbacks);
+  background-color: token-utils.slot(slider-handle-color, $fallbacks);
+  border-color: token-utils.slot(slider-handle-color, $fallbacks);
+  border-radius: token-utils.slot(slider-handle-shape, $fallbacks);
+
+  .mdc-slider__thumb:hover & {
+    background-color: token-utils.slot(slider-hover-handle-color, $fallbacks);
+    border-color: token-utils.slot(slider-hover-handle-color, $fallbacks);
+  }
+
+  .mdc-slider__thumb--focused & {
+    background-color: token-utils.slot(slider-focus-handle-color, $fallbacks);
+    border-color: token-utils.slot(slider-focus-handle-color, $fallbacks);
+  }
+
+  .mdc-slider--disabled & {
+    background-color: token-utils.slot(slider-disabled-handle-color, $fallbacks);
+    border-color: token-utils.slot(slider-disabled-handle-color, $fallbacks);
+  }
+
+  .mdc-slider__thumb--top &,
+  .mdc-slider__thumb--top.mdc-slider__thumb:hover &,
+  .mdc-slider__thumb--top.mdc-slider__thumb--focused & {
+    border: solid 1px #fff;
+    box-sizing: content-box;
+    border-color: token-utils.slot(slider-with-overlap-handle-outline-color, $fallbacks);
+    border-width: token-utils.slot(slider-with-overlap-handle-outline-width, $fallbacks);
+  }
+}
+
+.mdc-slider__tick-marks {
+  align-items: center;
+  box-sizing: border-box;
+  display: flex;
+  height: 100%;
+  justify-content: space-between;
+  padding: 0 1px;
+  position: absolute;
+  width: 100%;
+}
+
+.mdc-slider__tick-mark--active,
+.mdc-slider__tick-mark--inactive {
+  width: token-utils.slot(slider-with-tick-marks-container-size, $fallbacks);
+  height: token-utils.slot(slider-with-tick-marks-container-size, $fallbacks);
+  border-radius: token-utils.slot(slider-with-tick-marks-container-shape, $fallbacks);
+}
+
+.mdc-slider__tick-mark--inactive {
+  opacity: token-utils.slot(slider-with-tick-marks-inactive-container-opacity, $fallbacks);
+  background-color: token-utils.slot(slider-with-tick-marks-inactive-container-color, $fallbacks);
+
+  .mdc-slider--disabled & {
+    opacity: token-utils.slot(slider-with-tick-marks-inactive-container-opacity, $fallbacks);
+    background-color: token-utils.slot(slider-with-tick-marks-disabled-container-color, $fallbacks);
+  }
+}
+
+.mdc-slider__tick-mark--active {
+  opacity: token-utils.slot(slider-with-tick-marks-active-container-opacity, $fallbacks);
+  background-color: token-utils.slot(slider-with-tick-marks-active-container-color, $fallbacks);
+}
+
+.mdc-slider__input {
+  cursor: pointer;
+  left: 2px;
+  margin: 0;
+  height: 44px;
+  opacity: 0;
+  position: absolute;
+  top: 2px;
+  width: 44px;
+
+  // It's common for apps to globally set `box-sizing: border-box` which messes up our
+  // measurements. Explicitly set `content-box` to avoid issues like #26246.
+  box-sizing: content-box;
+
+  &.mat-mdc-slider-input-no-pointer-events {
+    pointer-events: none;
+  }
+
+  &.mat-slider__right-input {
+    left: auto;
+    right: 0;
+  }
+}
+
+.mat-mdc-slider {
+  display: inline-block;
+  box-sizing: border-box;
+  outline: none;
+  vertical-align: middle;
+  cursor: pointer;
+  height: 48px;
+  margin: 0 $mat-slider-horizontal-margin;
+  position: relative;
+  touch-action: pan-y;
+
+  // Unset the default "width" property from the MDC slider class. We don't want
+  // the slider to automatically expand horizontally for backwards compatibility.
+  width: auto;
+  min-width: $mat-slider-min-size - (2 * $mat-slider-horizontal-margin);
+  -webkit-tap-highlight-color: transparent;
+
+  &.mdc-slider--disabled {
+    cursor: auto;
+    opacity: 0.38;
+
+    .mdc-slider__input {
+      cursor: auto;
+    }
+  }
+
+  .mdc-slider__thumb,
+  .mdc-slider__track--active_fill {
+    transition-duration: 0ms;
+  }
+
+  &.mat-mdc-slider-with-animation {
+    .mdc-slider__thumb,
+    .mdc-slider__track--active_fill {
+      transition-duration: 80ms;
+    }
+  }
+
+  // We need to repeat these styles to override discrete slider styling.
+  &.mdc-slider--discrete {
+    .mdc-slider__thumb,
+    .mdc-slider__track--active_fill {
+      transition-duration: 0ms;
+    }
+  }
+
+  &.mat-mdc-slider-with-animation {
+    .mdc-slider__thumb,
+    .mdc-slider__track--active_fill {
+      transition-duration: 80ms;
+    }
+  }
+
+  // Add slots for custom Angular Material slider tokens.
+  // The `.mat-ripple` wrapper here is redundant, but we need it to
+  // increase the specificity due to how some styles are setup in g3.
+  .mat-ripple {
+    .mat-ripple-element {
+      background-color: token-utils.slot(slider-ripple-color, $fallbacks);
+    }
+
+    .mat-mdc-slider-hover-ripple {
+      background-color: token-utils.slot(slider-hover-state-layer-color, $fallbacks);
+    }
+
+    .mat-mdc-slider-focus-ripple,
+    .mat-mdc-slider-active-ripple {
+      background-color: token-utils.slot(slider-focus-state-layer-color, $fallbacks);
+    }
+  }
+
+  &._mat-animation-noopable {
+    &.mdc-slider--discrete .mdc-slider__thumb,
+    &.mdc-slider--discrete .mdc-slider__track--active_fill,
+    .mdc-slider__value-indicator {
+      transition: none;
+    }
+  }
+
+  // Slider components have to set `border-radius: 50%` in order to support density scaling
+  // which will clip a square focus indicator so we have to turn it into a circle.
+  .mat-focus-indicator::before {
+    border-radius: 50%;
+  }
+}
+
+// In the MDC slider the focus indicator is inside the thumb.
+.mdc-slider__thumb--focused .mat-focus-indicator::before {
+  content: '';
+}

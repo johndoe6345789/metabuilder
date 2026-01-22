@@ -1,218 +1,243 @@
-// Slider component styles
-// Supports marks, value labels, orientations, colors, and sizes
+// Slider Atoms - Material Design 3
+// =================================
+// Flat selectors for slider styling using M3 tokens
+// https://m3.material.io/components/sliders/specs
 
-.fakemui-slider {
+// Slider container
+.slider {
   position: relative;
   display: inline-flex;
   align-items: center;
   cursor: pointer;
   touch-action: none;
-  
-  // Horizontal (default)
-  &--horizontal {
-    width: 100%;
-    height: 40px;
-    padding: 12px 0;
-  }
-  
-  // Vertical
-  &--vertical {
-    height: 100%;
-    min-height: 120px;
-    width: 40px;
-    padding: 0 12px;
-    flex-direction: column;
-  }
-  
-  // Disabled state
-  &--disabled {
-    cursor: not-allowed;
-    opacity: 0.5;
-    pointer-events: none;
-  }
-  
-  // Size variants
-  &--small {
-    .fakemui-slider-rail,
-    .fakemui-slider-track {
-      height: 2px;
-    }
-    
-    .fakemui-slider-thumb {
-      width: 12px;
-      height: 12px;
-    }
-    
-    &.fakemui-slider--vertical {
-      .fakemui-slider-rail,
-      .fakemui-slider-track {
-        width: 2px;
-        height: auto;
-      }
-    }
-  }
-  
-  &--medium {
-    .fakemui-slider-rail,
-    .fakemui-slider-track {
-      height: 4px;
-    }
-    
-    .fakemui-slider-thumb {
-      width: 20px;
-      height: 20px;
-    }
-    
-    &.fakemui-slider--vertical {
-      .fakemui-slider-rail,
-      .fakemui-slider-track {
-        width: 4px;
-        height: auto;
-      }
-    }
-  }
-  
-  // Color variants
-  &--primary {
-    --slider-color: var(--color-primary, #1976d2);
-  }
-  
-  &--secondary {
-    --slider-color: var(--color-secondary, #9c27b0);
-  }
-  
-  &--error {
-    --slider-color: var(--color-error, #d32f2f);
-  }
-  
-  &--warning {
-    --slider-color: var(--color-warning, #ed6c02);
-  }
-  
-  &--info {
-    --slider-color: var(--color-info, #0288d1);
-  }
-  
-  &--success {
-    --slider-color: var(--color-success, #2e7d32);
-  }
+}
+
+// Horizontal (default)
+.slider--horizontal {
+  width: 100%;
+  height: 40px;
+  padding: 12px 0;
+}
+
+// Vertical
+.slider--vertical {
+  height: 100%;
+  min-height: 120px;
+  width: 40px;
+  padding: 0 12px;
+  flex-direction: column;
+}
+
+// Disabled state
+.slider--disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.slider--disabled .slider-thumb {
+  background: color-mix(in srgb, var(--mat-sys-on-surface) 38%, transparent);
+}
+
+.slider--disabled .slider-track {
+  background: color-mix(in srgb, var(--mat-sys-on-surface) 12%, transparent);
+}
+
+.slider--disabled .slider-rail {
+  background: color-mix(in srgb, var(--mat-sys-on-surface) 12%, transparent);
+}
+
+// Size variants
+.slider--small .slider-rail,
+.slider--small .slider-track {
+  height: 4px;
+}
+
+.slider--small .slider-thumb {
+  width: 16px;
+  height: 16px;
+}
+
+.slider--small.slider--vertical .slider-rail,
+.slider--small.slider--vertical .slider-track {
+  width: 4px;
+  height: auto;
+}
+
+.slider--medium .slider-rail,
+.slider--medium .slider-track {
+  height: 4px;
+}
+
+.slider--medium .slider-thumb {
+  width: 20px;
+  height: 20px;
+}
+
+.slider--medium.slider--vertical .slider-rail,
+.slider--medium.slider--vertical .slider-track {
+  width: 4px;
+  height: auto;
+}
+
+// Color variants using M3 tokens
+.slider--primary {
+  --slider-color: var(--mat-sys-primary);
+  --slider-on-color: var(--mat-sys-on-primary);
+}
+
+.slider--secondary {
+  --slider-color: var(--mat-sys-secondary);
+  --slider-on-color: var(--mat-sys-on-secondary);
+}
+
+.slider--tertiary {
+  --slider-color: var(--mat-sys-tertiary);
+  --slider-on-color: var(--mat-sys-on-tertiary);
+}
+
+.slider--error {
+  --slider-color: var(--mat-sys-error);
+  --slider-on-color: var(--mat-sys-on-error);
 }
 
 // Rail (background track)
-.fakemui-slider-rail {
+.slider-rail {
   position: absolute;
   width: 100%;
-  background-color: var(--color-border, rgba(0, 0, 0, 0.26));
-  border-radius: 2px;
-  
-  .fakemui-slider--vertical & {
-    width: 4px;
-    height: 100%;
-  }
+  height: 4px;
+  background: var(--mat-sys-surface-container-highest);
+  border-radius: var(--mat-sys-corner-full);
+}
+
+.slider--vertical .slider-rail {
+  width: 4px;
+  height: 100%;
 }
 
 // Track (filled portion)
-.fakemui-slider-track {
+.slider-track {
   position: absolute;
-  background-color: var(--slider-color, var(--color-primary, #1976d2));
-  border-radius: 2px;
-  
-  .fakemui-slider--horizontal & {
-    left: 0;
-  }
-  
-  .fakemui-slider--vertical & {
-    bottom: 0;
-  }
-  
-  .fakemui-slider--track-inverted & {
-    .fakemui-slider--horizontal & {
-      left: auto;
-      right: 0;
-    }
-    
-    .fakemui-slider--vertical & {
-      bottom: auto;
-      top: 0;
-    }
-  }
+  height: 4px;
+  background: var(--slider-color, var(--mat-sys-primary));
+  border-radius: var(--mat-sys-corner-full);
 }
 
-// Thumb
-.fakemui-slider-thumb {
+.slider--horizontal .slider-track {
+  left: 0;
+}
+
+.slider--vertical .slider-track {
+  width: 4px;
+  height: auto;
+  bottom: 0;
+}
+
+// Track inverted
+.slider--track-inverted .slider--horizontal .slider-track {
+  left: auto;
+  right: 0;
+}
+
+.slider--track-inverted .slider--vertical .slider-track {
+  bottom: auto;
+  top: 0;
+}
+
+// Thumb (handle)
+.slider-thumb {
   position: absolute;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--slider-color, var(--color-primary, #1976d2));
-  border-radius: 50%;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  width: 20px;
+  height: 20px;
+  background: var(--slider-color, var(--mat-sys-primary));
+  border-radius: var(--mat-sys-corner-full);
+  box-shadow: var(--mat-sys-level1);
   transform: translate(-50%, -50%);
-  transition: box-shadow 0.15s ease;
+  transition: box-shadow var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
   z-index: 1;
-  
-  .fakemui-slider--horizontal & {
-    top: 50%;
-  }
-  
-  .fakemui-slider--vertical & {
-    left: 50%;
-    transform: translate(-50%, 50%);
-  }
-  
-  &:hover {
-    box-shadow: 0 0 0 8px rgba(var(--slider-color-rgb, 25, 118, 210), 0.16);
-  }
-  
-  .fakemui-slider:active & {
-    box-shadow: 0 0 0 12px rgba(var(--slider-color-rgb, 25, 118, 210), 0.24);
-  }
 }
 
-// Value label
-.fakemui-slider-value-label {
+.slider--horizontal .slider-thumb {
+  top: 50%;
+}
+
+.slider--vertical .slider-thumb {
+  left: 50%;
+  transform: translate(-50%, 50%);
+}
+
+// Thumb state layer
+.slider-thumb::before {
+  content: '';
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--mat-sys-corner-full);
+  background: transparent;
+  transition: background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+}
+
+.slider-thumb:hover::before {
+  background: color-mix(in srgb, var(--slider-color, var(--mat-sys-primary)) 8%, transparent);
+}
+
+.slider:focus-within .slider-thumb::before {
+  background: color-mix(in srgb, var(--slider-color, var(--mat-sys-primary)) 12%, transparent);
+}
+
+.slider:active .slider-thumb::before {
+  background: color-mix(in srgb, var(--slider-color, var(--mat-sys-primary)) 12%, transparent);
+}
+
+// Value label (tooltip)
+.slider-value-label {
   position: absolute;
   bottom: 100%;
   left: 50%;
-  transform: translateX(-50%) translateY(-4px);
-  padding: 2px 8px;
-  background-color: var(--color-text, #333);
-  color: var(--color-bg, #fff);
-  font-size: 0.75rem;
-  border-radius: 4px;
+  transform: translateX(-50%) translateY(-8px);
+  padding: 4px 12px;
+  background: var(--mat-sys-inverse-surface);
+  color: var(--mat-sys-inverse-on-surface);
+  font-family: var(--mat-sys-label-medium-font);
+  font-size: var(--mat-sys-label-medium-size);
+  font-weight: var(--mat-sys-label-medium-weight);
+  border-radius: var(--mat-sys-corner-small);
   white-space: nowrap;
   pointer-events: none;
-  
-  // Arrow
-  &::after {
-    content: '';
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    border: 4px solid transparent;
-    border-top-color: var(--color-text, #333);
-  }
-  
-  .fakemui-slider--vertical & {
-    bottom: auto;
-    left: 100%;
-    top: 50%;
-    transform: translateY(-50%) translateX(4px);
-    
-    &::after {
-      top: 50%;
-      left: auto;
-      right: 100%;
-      transform: translateY(-50%);
-      border: 4px solid transparent;
-      border-right-color: var(--color-text, #333);
-    }
-  }
+  box-shadow: var(--mat-sys-level2);
+}
+
+// Arrow
+.slider-value-label::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--mat-sys-inverse-surface);
+}
+
+.slider--vertical .slider-value-label {
+  bottom: auto;
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%) translateX(8px);
+}
+
+.slider--vertical .slider-value-label::after {
+  top: 50%;
+  left: auto;
+  right: 100%;
+  transform: translateY(-50%);
+  border: 6px solid transparent;
+  border-right-color: var(--mat-sys-inverse-surface);
 }
 
 // Marks container
-.fakemui-slider-marks {
+.slider-marks {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -220,50 +245,51 @@
 }
 
 // Mark container
-.fakemui-slider-mark-container {
+.slider-mark-container {
   position: absolute;
   display: flex;
   flex-direction: column;
   align-items: center;
-  
-  .fakemui-slider--horizontal & {
-    top: 50%;
-    transform: translateX(-50%);
-  }
-  
-  .fakemui-slider--vertical & {
-    left: 50%;
-    transform: translateY(50%);
-  }
+}
+
+.slider--horizontal .slider-mark-container {
+  top: 50%;
+  transform: translateX(-50%);
+}
+
+.slider--vertical .slider-mark-container {
+  left: 50%;
+  transform: translateY(50%);
 }
 
 // Mark dot
-.fakemui-slider-mark {
+.slider-mark {
   width: 4px;
   height: 4px;
-  border-radius: 50%;
-  background-color: var(--color-border, rgba(0, 0, 0, 0.26));
-  
-  &--active {
-    background-color: var(--slider-color, var(--color-primary, #1976d2));
-  }
+  border-radius: var(--mat-sys-corner-full);
+  background: var(--mat-sys-surface-container-highest);
+}
+
+.slider-mark--active {
+  background: var(--slider-color, var(--mat-sys-primary));
 }
 
 // Mark label
-.fakemui-slider-mark-label {
+.slider-mark-label {
   margin-top: 8px;
-  font-size: 0.75rem;
-  color: var(--color-text-secondary, rgba(0, 0, 0, 0.6));
+  font-family: var(--mat-sys-label-small-font);
+  font-size: var(--mat-sys-label-small-size);
+  color: var(--mat-sys-on-surface-variant);
   white-space: nowrap;
-  
-  .fakemui-slider--vertical & {
-    margin-top: 0;
-    margin-left: 8px;
-  }
+}
+
+.slider--vertical .slider-mark-label {
+  margin-top: 0;
+  margin-left: 8px;
 }
 
 // Hidden input for accessibility
-.fakemui-slider-input {
+.slider-input {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -271,4 +297,14 @@
   padding: 0;
   opacity: 0;
   cursor: inherit;
+}
+
+// Range slider (two thumbs)
+.slider--range .slider-track {
+  left: auto;
+}
+
+// Discrete slider with ticks
+.slider--discrete .slider-rail {
+  background: var(--mat-sys-surface-container-high);
 }

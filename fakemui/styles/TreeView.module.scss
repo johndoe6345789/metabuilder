@@ -1,3 +1,6 @@
+// TreeView Component - Material Design 3
+// Uses M3 surface, state layer, and typography tokens
+
 .treeView {
   margin: 0;
   padding: 0;
@@ -11,32 +14,33 @@
 .treeItemContent {
   display: flex;
   align-items: center;
-  padding: 8px 8px;
+  padding: 8px;
   cursor: pointer;
-  border-radius: var(--radius-sm, 4px);
-  transition: background-color 0.15s ease;
+  border-radius: var(--mat-sys-corner-full);
+  transition: background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
   user-select: none;
   min-height: 40px;
 
   &:hover:not(.disabled) {
-    background-color: var(--action-hover, rgba(0, 0, 0, 0.04));
+    background-color: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
   }
 
-  &:focus {
-    outline: 2px solid var(--primary-main, #1976d2);
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary);
     outline-offset: -2px;
   }
 
   &.selected {
-    background-color: var(--primary-selected, rgba(25, 118, 210, 0.12));
-    
+    background-color: var(--mat-sys-secondary-container);
+    color: var(--mat-sys-on-secondary-container);
+
     &:hover {
-      background-color: var(--primary-selected-hover, rgba(25, 118, 210, 0.2));
+      background-color: color-mix(in srgb, var(--mat-sys-on-secondary-container) 8%, var(--mat-sys-secondary-container));
     }
   }
 
   &.disabled {
-    opacity: 0.5;
+    opacity: 0.38;
     cursor: not-allowed;
   }
 
@@ -54,17 +58,17 @@
   height: 24px;
   margin-right: 4px;
   flex-shrink: 0;
-  color: var(--text-secondary, rgba(0, 0, 0, 0.6));
+  color: var(--mat-sys-on-surface-variant);
   cursor: pointer;
-  border-radius: 50%;
-  transition: background-color 0.15s ease;
+  border-radius: var(--mat-sys-corner-full);
+  transition: background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
 
   &:hover {
-    background-color: var(--action-hover, rgba(0, 0, 0, 0.04));
+    background-color: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
   }
 
   svg {
-    transition: transform 0.2s ease;
+    transition: transform var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
   }
 }
 
@@ -83,7 +87,7 @@
   height: 24px;
   margin-right: 8px;
   flex-shrink: 0;
-  color: var(--text-secondary, rgba(0, 0, 0, 0.6));
+  color: var(--mat-sys-on-surface-variant);
 }
 
 .treeItemLabel {
@@ -91,46 +95,18 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 0.875rem;
-  line-height: 1.43;
-  color: var(--text-primary, rgba(0, 0, 0, 0.87));
+  font-family: var(--mat-sys-body-large-font);
+  font-size: var(--mat-sys-body-large-size);
+  line-height: var(--mat-sys-body-large-line-height);
+  color: var(--mat-sys-on-surface);
+
+  .selected & {
+    color: var(--mat-sys-on-secondary-container);
+  }
 }
 
 .treeItemChildren {
   margin: 0;
   padding: 0;
   list-style: none;
-}
-
-// Dark mode support
-:global(.dark) {
-  .treeItemContent {
-    &:hover:not(.disabled) {
-      background-color: var(--action-hover-dark, rgba(255, 255, 255, 0.08));
-    }
-
-    &.selected {
-      background-color: var(--primary-selected-dark, rgba(144, 202, 249, 0.16));
-
-      &:hover {
-        background-color: var(--primary-selected-hover-dark, rgba(144, 202, 249, 0.24));
-      }
-    }
-  }
-
-  .treeItemIcon {
-    color: var(--text-secondary-dark, rgba(255, 255, 255, 0.7));
-
-    &:hover {
-      background-color: var(--action-hover-dark, rgba(255, 255, 255, 0.08));
-    }
-  }
-
-  .treeItemNodeIcon {
-    color: var(--text-secondary-dark, rgba(255, 255, 255, 0.7));
-  }
-
-  .treeItemLabel {
-    color: var(--text-primary-dark, #fff);
-  }
 }

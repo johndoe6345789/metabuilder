@@ -1,0 +1,119 @@
+.demo-list {
+  width: 500px;
+  max-width: 100%;
+  margin-bottom: 25px;
+  display: inline-block;
+  margin-right: 25px;
+  vertical-align: top;
+
+  [dir='rtl'] & {
+    margin-right: 0;
+    margin-left: 25px;
+  }
+}
+
+.demo-list-horizontal {
+  width: 1000px;
+  margin-right: 0;
+  margin-left: 0;
+}
+
+.demo-list-wrapping {
+  width: 600px;
+  margin-right: 25px;
+
+  .cdk-drop-list {
+    flex-wrap: wrap;
+    min-width: 100px;
+  }
+}
+
+.cdk-drop-list {
+  border: solid 1px #ccc;
+  min-height: 60px;
+  display: block;
+
+  .demo-list-horizontal & {
+    padding: 12px;
+    display: inline-flex;
+    flex-direction: row;
+  }
+}
+
+.cdk-drop-list-receiving {
+  border-style: dashed;
+}
+
+.cdk-drag {
+  padding: 20px 10px;
+  border-bottom: solid 1px #ccc;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+
+  .cdk-drop-list-dragging &:not(.cdk-drag-placeholder):not(.cdk-drag-preview) {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+
+  .cdk-drop-list &:last-child {
+    border: none;
+  }
+
+  .demo-list-horizontal & {
+    white-space: nowrap;
+    margin: 8px;
+
+    &, &:last-child {
+      border: solid 1px #ccc;
+    }
+  }
+}
+
+.cdk-drag-preview {
+  box-sizing: border-box;
+  opacity: 0.5;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.cdk-drag-handle {
+  cursor: move;
+  margin-left: 8px;
+
+  [dir='rtl'] & {
+    margin-left: 0;
+    margin-right: 8px;
+  }
+
+  svg {
+    fill: rgba(0, 0, 0, 0.5);
+  }
+}
+
+pre {
+  white-space: normal;
+}
+
+.demo-free-draggable {
+  width: 200px;
+  height: 200px;
+  border: solid 1px #ccc;
+  cursor: move;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.demo-constrain-box {
+  width: 600px;
+  height: 400px;
+  border: 1px solid black;
+}

@@ -1,39 +1,166 @@
-// Code preview / diff view atom
+// Code Preview Atoms - Material Design 3
+// ======================================
+// Flat selectors for code preview/diff styling using M3 tokens
 
+// Code preview container
 .code-preview {
-  padding: var(--spacing-sm);
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  font-family: var(--font-mono);
-  font-size: var(--font-size-xs);
+  padding: 12px;
+  background: var(--mat-sys-surface-container);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--mat-sys-corner-medium);
+  font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, monospace;
+  font-size: 0.75rem;
+  line-height: 1.5;
   overflow: hidden;
 }
 
+// Individual line
 .code-line {
-  padding: 2px 0;
   display: flex;
-  gap: var(--spacing-sm);
+  gap: 12px;
+  padding: 2px 0;
 }
 
+// Line number
 .code-line-num {
-  color: var(--color-text-secondary);
-  opacity: 0.6;
+  color: var(--mat-sys-on-surface-variant);
+  opacity: 0.5;
   font-size: 0.7rem;
   min-width: 24px;
+  text-align: right;
+  user-select: none;
 }
 
+// Line content
 .code-line-content {
   flex: 1;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: var(--mat-sys-on-surface);
 }
 
-.code-line-content--added {
-  color: var(--color-success);
+// Diff added line
+.code-line--added {
+  background: color-mix(in srgb, #4caf50 12%, transparent);
 }
 
-.code-line-content--removed {
-  color: var(--color-error);
+.code-line--added .code-line-content {
+  color: #4caf50;
+}
+
+.code-line--added::before {
+  content: '+';
+  color: #4caf50;
+  font-weight: 600;
+  margin-right: 8px;
+}
+
+// Diff removed line
+.code-line--removed {
+  background: color-mix(in srgb, var(--mat-sys-error) 12%, transparent);
+}
+
+.code-line--removed .code-line-content {
+  color: var(--mat-sys-error);
+}
+
+.code-line--removed::before {
+  content: '-';
+  color: var(--mat-sys-error);
+  font-weight: 600;
+  margin-right: 8px;
+}
+
+// Diff modified line
+.code-line--modified {
+  background: color-mix(in srgb, #ff9800 12%, transparent);
+}
+
+.code-line--modified .code-line-content {
+  color: #ff9800;
+}
+
+// Context line (unchanged)
+.code-line--context {
+  opacity: 0.7;
+}
+
+// Highlighted segment within line
+.code-highlight {
+  background: color-mix(in srgb, var(--mat-sys-primary) 20%, transparent);
+  border-radius: 2px;
+  padding: 0 2px;
+}
+
+// Diff header
+.code-preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  margin: -12px -12px 12px;
+  background: var(--mat-sys-surface-container-high);
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+
+.code-preview-filename {
+  font-family: var(--mat-sys-label-small-font);
+  font-size: var(--mat-sys-label-small-size);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+// Stats (e.g., +10 -5)
+.code-preview-stats {
+  display: flex;
+  gap: 8px;
+  font-family: var(--mat-sys-label-small-font);
+  font-size: var(--mat-sys-label-small-size);
+}
+
+.code-preview-stats--added {
+  color: #4caf50;
+}
+
+.code-preview-stats--removed {
+  color: var(--mat-sys-error);
+}
+
+// Expandable/collapsed indicator
+.code-preview--collapsed {
+  max-height: 150px;
+  overflow: hidden;
+  position: relative;
+}
+
+.code-preview--collapsed::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 48px;
+  background: linear-gradient(transparent, var(--mat-sys-surface-container));
+  pointer-events: none;
+}
+
+// Expand button
+.code-preview-expand {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 4px 12px;
+  background: var(--mat-sys-surface-container-high);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--mat-sys-corner-full);
+  font-family: var(--mat-sys-label-small-font);
+  font-size: var(--mat-sys-label-small-size);
+  color: var(--mat-sys-primary);
+  cursor: pointer;
+  z-index: 1;
+}
+
+.code-preview-expand:hover {
+  background: var(--mat-sys-surface-container-highest);
 }

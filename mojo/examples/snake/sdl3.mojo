@@ -41,53 +41,32 @@ struct SDL_FRect:
         self.h = h
 
 
-# SDL_Event is a 128-byte buffer - using array of UInt64 for trivial passability
+# SDL_Event is a 128-byte buffer - using two SIMD vectors for cleaner representation
 @register_passable("trivial")
 struct SDL_Event:
-    # 128 bytes = 16 x UInt64
-    var d0: UInt64
-    var d1: UInt64
-    var d2: UInt64
-    var d3: UInt64
-    var d4: UInt64
-    var d5: UInt64
-    var d6: UInt64
-    var d7: UInt64
-    var d8: UInt64
-    var d9: UInt64
-    var d10: UInt64
-    var d11: UInt64
-    var d12: UInt64
-    var d13: UInt64
-    var d14: UInt64
-    var d15: UInt64
+    """SDL event buffer using SIMD vectors for efficient storage.
+
+    128 bytes total = 2 x SIMD[DType.uint64, 8] (64 bytes each).
+    This is more idiomatic Mojo than 16 separate fields.
+    """
+    var _low: SIMD[DType.uint64, 8]   # Bytes 0-63
+    var _high: SIMD[DType.uint64, 8]  # Bytes 64-127
 
     fn __init__(out self):
-        self.d0 = 0
-        self.d1 = 0
-        self.d2 = 0
-        self.d3 = 0
-        self.d4 = 0
-        self.d5 = 0
-        self.d6 = 0
-        self.d7 = 0
-        self.d8 = 0
-        self.d9 = 0
-        self.d10 = 0
-        self.d11 = 0
-        self.d12 = 0
-        self.d13 = 0
-        self.d14 = 0
-        self.d15 = 0
+        """Initialize event buffer to zero."""
+        self._low = SIMD[DType.uint64, 8](0)
+        self._high = SIMD[DType.uint64, 8](0)
 
     fn get_type(self) -> UInt32:
-        """Get event type (first 4 bytes)."""
-        return UInt32(self.d0 & 0xFFFFFFFF)
+        """Get event type (first 4 bytes of the buffer)."""
+        return UInt32(self._low[0] & 0xFFFFFFFF)
 
     fn get_scancode(self) -> UInt32:
-        """Get scancode from keyboard event (at offset 24 = bytes 24-27)."""
-        # d3 starts at offset 24, scancode is first 4 bytes
-        return UInt32(self.d3 & 0xFFFFFFFF)
+        """Get scancode from keyboard event.
+
+        Scancode is at offset 24 bytes = index 3 in the _low vector.
+        """
+        return UInt32(self._low[3] & 0xFFFFFFFF)
 
 
 # Use raw Int for opaque pointers (pointer-sized integers)
@@ -166,10 +145,7 @@ struct SDL3:
     fn create_window(self, title: StringLiteral, width: Int32, height: Int32, flags: UInt64) -> SDL_Window:
         """Create an SDL window."""
         var ptr = title.unsafe_ptr()
-        print("[TRACE] SDL_CreateWindow width:", width, "height:", height)
-        var result = self._create_window(Int(ptr), width, height, flags)
-        print("[TRACE] SDL_CreateWindow result (window ptr):", result)
-        return result
+        return self._create_window(Int(ptr), width, height, flags)
 
     fn destroy_window(self, window: SDL_Window):
         """Destroy an SDL window."""
@@ -177,10 +153,7 @@ struct SDL3:
 
     fn create_renderer(self, window: SDL_Window) -> SDL_Renderer:
         """Create a renderer for a window."""
-        print("[TRACE] SDL_CreateRenderer window:", window)
-        var result = self._create_renderer(window, 0)  # 0 = null for default renderer
-        print("[TRACE] SDL_CreateRenderer result (renderer ptr):", result)
-        return result
+        return self._create_renderer(window, 0)  # 0 = null for default renderer
 
     fn destroy_renderer(self, renderer: SDL_Renderer):
         """Destroy a renderer."""

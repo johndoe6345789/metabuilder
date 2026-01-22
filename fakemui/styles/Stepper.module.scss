@@ -1,4 +1,5 @@
-@use '../styles/variables' as *;
+// Stepper Component - Material Design 3
+// Uses M3 surface, primary, and typography tokens
 
 .stepper {
   display: flex;
@@ -36,13 +37,13 @@
     cursor: pointer;
 
     &:hover .stepIcon {
-      background-color: var(--primary-light, #42a5f5);
+      background-color: color-mix(in srgb, var(--mat-sys-on-primary) 8%, var(--mat-sys-primary));
     }
   }
 
   &.error {
     .stepLabel {
-      color: var(--error-main, #d32f2f);
+      color: var(--mat-sys-error);
     }
   }
 }
@@ -58,24 +59,29 @@
   justify-content: center;
   width: 36px;
   height: 36px;
-  border-radius: 50%;
-  background-color: var(--text-disabled, rgba(0, 0, 0, 0.38));
-  color: #fff;
-  font-size: 0.875rem;
-  font-weight: 500;
+  border-radius: var(--mat-sys-corner-full);
+  background-color: var(--mat-sys-surface-container-highest);
+  color: var(--mat-sys-on-surface-variant);
+  font-family: var(--mat-sys-label-large-font);
+  font-size: var(--mat-sys-label-large-size);
+  font-weight: var(--mat-sys-label-large-weight);
   flex-shrink: 0;
-  transition: background-color 0.2s ease;
+  transition: background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard),
+              color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
 
   &.active {
-    background-color: var(--primary-main, #1976d2);
+    background-color: var(--mat-sys-primary);
+    color: var(--mat-sys-on-primary);
   }
 
   &.completed {
-    background-color: var(--primary-main, #1976d2);
+    background-color: var(--mat-sys-primary);
+    color: var(--mat-sys-on-primary);
   }
 
   &.error {
-    background-color: var(--error-main, #d32f2f);
+    background-color: var(--mat-sys-error);
+    color: var(--mat-sys-on-error);
   }
 }
 
@@ -86,31 +92,34 @@
 }
 
 .stepLabel {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--text-primary, rgba(0, 0, 0, 0.87));
-  line-height: 1.4;
+  font-family: var(--mat-sys-title-small-font);
+  font-size: var(--mat-sys-title-small-size);
+  font-weight: var(--mat-sys-title-small-weight);
+  line-height: var(--mat-sys-title-small-line-height);
+  color: var(--mat-sys-on-surface);
 
   .step.completed & {
-    color: var(--text-primary, rgba(0, 0, 0, 0.87));
+    color: var(--mat-sys-on-surface);
   }
 
   .step:not(.active):not(.completed) & {
-    color: var(--text-secondary, rgba(0, 0, 0, 0.6));
+    color: var(--mat-sys-on-surface-variant);
   }
 }
 
 .optional {
   display: block;
-  font-size: 0.75rem;
-  font-weight: 400;
-  color: var(--text-secondary, rgba(0, 0, 0, 0.6));
+  font-family: var(--mat-sys-body-small-font);
+  font-size: var(--mat-sys-body-small-size);
+  font-weight: var(--mat-sys-body-small-weight);
+  color: var(--mat-sys-on-surface-variant);
   margin-top: 2px;
 }
 
 .stepDescription {
-  font-size: 0.75rem;
-  color: var(--text-secondary, rgba(0, 0, 0, 0.6));
+  font-family: var(--mat-sys-body-small-font);
+  font-size: var(--mat-sys-body-small-size);
+  color: var(--mat-sys-on-surface-variant);
   margin-top: 4px;
 }
 
@@ -143,47 +152,10 @@
 }
 
 .connectorLine {
-  background-color: var(--divider, rgba(0, 0, 0, 0.12));
-  transition: background-color 0.2s ease;
+  background-color: var(--mat-sys-outline-variant);
+  transition: background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
 
   .connector.completed & {
-    background-color: var(--primary-main, #1976d2);
-  }
-}
-
-// Dark mode
-:global(.dark) {
-  .stepIcon {
-    background-color: var(--text-disabled-dark, rgba(255, 255, 255, 0.38));
-
-    &.active,
-    &.completed {
-      background-color: var(--primary-light, #90caf9);
-    }
-
-    &.error {
-      background-color: var(--error-light, #f44336);
-    }
-  }
-
-  .stepLabel {
-    color: var(--text-primary-dark, #fff);
-
-    .step:not(.active):not(.completed) & {
-      color: var(--text-secondary-dark, rgba(255, 255, 255, 0.7));
-    }
-  }
-
-  .optional,
-  .stepDescription {
-    color: var(--text-secondary-dark, rgba(255, 255, 255, 0.7));
-  }
-
-  .connectorLine {
-    background-color: var(--divider-dark, rgba(255, 255, 255, 0.12));
-
-    .connector.completed & {
-      background-color: var(--primary-light, #90caf9);
-    }
+    background-color: var(--mat-sys-primary);
   }
 }

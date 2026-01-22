@@ -1,17 +1,135 @@
-// Icon atoms - flat selectors
+// Icon Atoms - Material Design 3
+// ==============================
+// Flat selectors for icon styling using M3 tokens
 
+// Base icon
 .icon {
-  width: 20px;
-  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
   flex-shrink: 0;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+// Size variants (following M3 icon sizes)
+.icon--xs {
+  width: 16px;
+  height: 16px;
+  font-size: 16px;
 }
 
 .icon--sm {
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
+  font-size: 20px;
+}
+
+.icon--md {
+  width: 24px;
+  height: 24px;
+  font-size: 24px;
 }
 
 .icon--lg {
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
+  font-size: 32px;
+}
+
+.icon--xl {
+  width: 40px;
+  height: 40px;
+  font-size: 40px;
+}
+
+.icon--xxl {
+  width: 48px;
+  height: 48px;
+  font-size: 48px;
+}
+
+// Color variants
+.icon--primary {
+  color: var(--mat-sys-primary);
+}
+
+.icon--secondary {
+  color: var(--mat-sys-secondary);
+}
+
+.icon--tertiary {
+  color: var(--mat-sys-tertiary);
+}
+
+.icon--error {
+  color: var(--mat-sys-error);
+}
+
+.icon--success {
+  color: #4caf50;
+}
+
+.icon--warning {
+  color: #ff9800;
+}
+
+.icon--on-surface {
+  color: var(--mat-sys-on-surface);
+}
+
+.icon--on-surface-variant {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.icon--inverse {
+  color: var(--mat-sys-inverse-on-surface);
+}
+
+// Icon with background (icon button style)
+.icon--filled {
+  padding: 8px;
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+  border-radius: var(--mat-sys-corner-full);
+}
+
+.icon--filled-tonal {
+  padding: 8px;
+  background: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
+  border-radius: var(--mat-sys-corner-full);
+}
+
+.icon--outlined {
+  padding: 8px;
+  border: 1px solid var(--mat-sys-outline);
+  border-radius: var(--mat-sys-corner-full);
+}
+
+// Disabled state
+.icon--disabled {
+  color: color-mix(in srgb, var(--mat-sys-on-surface) 38%, transparent);
+  pointer-events: none;
+}
+
+// Icon in button context
+.icon--button {
+  cursor: pointer;
+  border-radius: var(--mat-sys-corner-full);
+  transition: background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+}
+
+.icon--button:hover {
+  background: color-mix(in srgb, var(--mat-sys-on-surface-variant) 8%, transparent);
+}
+
+.icon--button:focus-visible {
+  outline: none;
+  background: color-mix(in srgb, var(--mat-sys-on-surface-variant) 12%, transparent);
+}
+
+.icon--button:active {
+  background: color-mix(in srgb, var(--mat-sys-on-surface-variant) 12%, transparent);
 }

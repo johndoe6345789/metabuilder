@@ -1,19 +1,122 @@
-// Code block atom
+// Code Block Atoms - Material Design 3
+// ====================================
+// Flat selectors for code block styling using M3 tokens
 
+// Base code block
 .code-block {
-  background: rgba(0, 0, 0, 0.4);
-  padding: var(--spacing-md);
-  border-radius: var(--radius-sm);
+  background: var(--mat-sys-surface-container-highest);
+  padding: 16px;
+  border-radius: var(--mat-sys-corner-medium);
   overflow-x: auto;
-  margin-bottom: var(--spacing-md);
-  font-family: var(--font-mono);
+  margin-bottom: 16px;
+  font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, monospace;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--mat-sys-on-surface);
 }
 
 .code-block code {
   background: transparent;
   padding: 0;
+  font-family: inherit;
+  font-size: inherit;
 }
 
-[data-theme="light"] .code-block {
-  background: rgba(0, 0, 0, 0.05);
+// With header (filename, language badge)
+.code-block--with-header {
+  padding-top: 0;
+}
+
+.code-block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+
+.code-block-filename {
+  font-family: var(--mat-sys-label-small-font);
+  font-size: var(--mat-sys-label-small-size);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.code-block-language {
+  font-family: var(--mat-sys-label-small-font);
+  font-size: var(--mat-sys-label-small-size);
+  font-weight: var(--mat-sys-label-small-weight);
+  color: var(--mat-sys-primary);
+  text-transform: uppercase;
+}
+
+// Outlined variant
+.code-block--outlined {
+  background: var(--mat-sys-surface);
+  border: 1px solid var(--mat-sys-outline-variant);
+}
+
+// Elevated variant
+.code-block--elevated {
+  box-shadow: var(--mat-sys-level1);
+}
+
+// Line numbers
+.code-block--line-numbers {
+  padding-left: 0;
+}
+
+.code-block-lines {
+  display: grid;
+  grid-template-columns: auto 1fr;
+}
+
+.code-block-line-number {
+  padding: 0 16px;
+  color: var(--mat-sys-on-surface-variant);
+  opacity: 0.5;
+  font-size: 0.75rem;
+  text-align: right;
+  user-select: none;
+  border-right: 1px solid var(--mat-sys-outline-variant);
+  margin-right: 16px;
+}
+
+.code-block-line-content {
+  white-space: pre;
+}
+
+// Highlighted line
+.code-block-line--highlighted {
+  background: color-mix(in srgb, var(--mat-sys-primary) 12%, transparent);
+  margin: 0 -16px;
+  padding: 0 16px;
+}
+
+// Copy button
+.code-block-copy {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 8px;
+  background: var(--mat-sys-surface-container);
+  border: none;
+  border-radius: var(--mat-sys-corner-small);
+  color: var(--mat-sys-on-surface-variant);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+}
+
+.code-block:hover .code-block-copy {
+  opacity: 1;
+}
+
+.code-block-copy:hover {
+  background: var(--mat-sys-surface-container-high);
+}
+
+// Wrapper for positioning
+.code-block-wrapper {
+  position: relative;
 }

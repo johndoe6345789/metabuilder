@@ -1,34 +1,141 @@
-// Progress atoms - flat selectors
+// Progress Atoms - Material Design 3
+// ===================================
+// Flat selectors for progress indicators using M3 tokens
+// https://m3.material.io/components/progress-indicators/specs
 
+// Linear progress track
 .progress {
+  position: relative;
   height: 4px;
-  background: var(--color-bg-elevated);
-  border-radius: var(--radius-full);
+  background: var(--mat-sys-surface-container-highest);
+  border-radius: var(--mat-sys-corner-full);
   overflow: hidden;
 }
 
+// Progress bar (determinate fill)
 .progress-bar {
   height: 100%;
-  background: var(--color-primary);
-  transition: width 0.3s ease;
+  background: var(--mat-sys-primary);
+  border-radius: inherit;
+  transition: width var(--mat-sys-motion-duration-medium2) var(--mat-sys-motion-easing-standard);
 }
 
+// Size variants
 .progress--thin {
-  height: 3px;
+  height: 2px;
 }
 
 .progress--thick {
-  height: 6px;
+  height: 8px;
+}
+
+// Color variants
+.progress--secondary .progress-bar {
+  background: var(--mat-sys-secondary);
+}
+
+.progress--tertiary .progress-bar {
+  background: var(--mat-sys-tertiary);
 }
 
 .progress--success .progress-bar {
-  background: var(--color-success);
+  background: #4caf50;
 }
 
 .progress--warning .progress-bar {
-  background: var(--color-warning);
+  background: #ff9800;
 }
 
 .progress--error .progress-bar {
-  background: var(--color-error);
+  background: var(--mat-sys-error);
+}
+
+// Indeterminate animation
+.progress--indeterminate .progress-bar {
+  width: 100%;
+  animation: progress-indeterminate 2s ease-in-out infinite;
+  transform-origin: left;
+}
+
+@keyframes progress-indeterminate {
+  0% {
+    transform: translateX(-100%) scaleX(0.3);
+  }
+  50% {
+    transform: translateX(0%) scaleX(0.5);
+  }
+  100% {
+    transform: translateX(100%) scaleX(0.3);
+  }
+}
+
+// Buffer variant (shows buffer and progress)
+.progress--buffer {
+  background: transparent;
+}
+
+.progress--buffer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--mat-sys-primary) 30%, transparent);
+  border-radius: inherit;
+}
+
+.progress__buffer {
+  position: absolute;
+  height: 100%;
+  background: color-mix(in srgb, var(--mat-sys-primary) 40%, transparent);
+  border-radius: inherit;
+  transition: width var(--mat-sys-motion-duration-medium2) var(--mat-sys-motion-easing-standard);
+}
+
+// With label
+.progress-with-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.progress-with-label .progress {
+  flex: 1;
+}
+
+.progress-label {
+  font-family: var(--mat-sys-label-medium-font);
+  font-size: var(--mat-sys-label-medium-size);
+  font-weight: var(--mat-sys-label-medium-weight);
+  color: var(--mat-sys-on-surface-variant);
+  min-width: 40px;
+  text-align: right;
+}
+
+// Circular progress (determinate)
+.circular-progress-determinate {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.circular-progress-determinate svg {
+  transform: rotate(-90deg);
+}
+
+.circular-progress-determinate__track {
+  stroke: var(--mat-sys-surface-container-highest);
+}
+
+.circular-progress-determinate__indicator {
+  stroke: var(--mat-sys-primary);
+  stroke-linecap: round;
+  transition: stroke-dashoffset var(--mat-sys-motion-duration-medium2) var(--mat-sys-motion-easing-standard);
+}
+
+.circular-progress-determinate__label {
+  position: absolute;
+  font-family: var(--mat-sys-label-medium-font);
+  font-size: var(--mat-sys-label-medium-size);
+  font-weight: var(--mat-sys-label-medium-weight);
+  color: var(--mat-sys-on-surface);
 }

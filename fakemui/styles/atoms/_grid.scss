@@ -1,27 +1,167 @@
-// Grid atom - responsive grid layouts
+// Grid Atoms - Material Design 3
+// ==============================
+// Flat selectors for responsive grid layouts using M3 spacing
 
+// Base grid
 .grid {
   display: grid;
-  gap: var(--spacing-md);
+  gap: 16px;
 }
 
-.grid--sm { gap: var(--spacing-sm); }
-.grid--lg { gap: var(--spacing-lg); }
+// Gap variants
+.grid--gap-xs {
+  gap: 4px;
+}
 
-.grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
-.grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
-.grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+.grid--gap-sm {
+  gap: 8px;
+}
 
+.grid--gap-md {
+  gap: 16px;
+}
+
+.grid--gap-lg {
+  gap: 24px;
+}
+
+.grid--gap-xl {
+  gap: 32px;
+}
+
+// Fixed column grids
+.grid-cols-1 {
+  grid-template-columns: repeat(1, 1fr);
+}
+
+.grid-cols-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.grid-cols-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.grid-cols-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.grid-cols-5 {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.grid-cols-6 {
+  grid-template-columns: repeat(6, 1fr);
+}
+
+// Auto-fit grid (responsive)
 .auto-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: var(--spacing-md);
+  gap: 16px;
+}
+
+.auto-grid--xs {
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
 }
 
 .auto-grid--sm {
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
 }
 
+.auto-grid--md {
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+}
+
 .auto-grid--lg {
   grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+}
+
+.auto-grid--xl {
+  grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
+}
+
+// Masonry-like grid (using CSS columns)
+.masonry-grid {
+  column-count: 3;
+  column-gap: 16px;
+}
+
+.masonry-grid--2 {
+  column-count: 2;
+}
+
+.masonry-grid--4 {
+  column-count: 4;
+}
+
+.masonry-grid-item {
+  break-inside: avoid;
+  margin-bottom: 16px;
+}
+
+// Responsive grid breakpoints
+@media (max-width: 768px) {
+  .grid-cols-2,
+  .grid-cols-3,
+  .grid-cols-4,
+  .grid-cols-5,
+  .grid-cols-6 {
+    grid-template-columns: 1fr;
+  }
+
+  .masonry-grid {
+    column-count: 1;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .grid-cols-4,
+  .grid-cols-5,
+  .grid-cols-6 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .masonry-grid--4 {
+    column-count: 2;
+  }
+}
+
+// Grid item utilities
+.grid-span-2 {
+  grid-column: span 2;
+}
+
+.grid-span-3 {
+  grid-column: span 3;
+}
+
+.grid-span-full {
+  grid-column: 1 / -1;
+}
+
+.grid-row-span-2 {
+  grid-row: span 2;
+}
+
+// Alignment utilities
+.grid--items-start {
+  align-items: start;
+}
+
+.grid--items-center {
+  align-items: center;
+}
+
+.grid--items-end {
+  align-items: end;
+}
+
+.grid--items-stretch {
+  align-items: stretch;
+}
+
+// Dense grid (auto-placement fills gaps)
+.grid--dense {
+  grid-auto-flow: dense;
 }

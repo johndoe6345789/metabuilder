@@ -1,5 +1,6 @@
-// Progress component styles
-// LinearProgress and CircularProgress
+// Progress Components - Material Design 3
+// =======================================
+// Linear and Circular progress styling using M3 tokens
 
 // Linear Progress
 .linearProgress {
@@ -7,8 +8,8 @@
   width: 100%;
   overflow: hidden;
   position: relative;
-  background-color: var(--progress-track, rgba(var(--color-primary-rgb), 0.2));
-  border-radius: var(--radius-full);
+  background-color: var(--mat-sys-surface-container-highest);
+  border-radius: var(--mat-sys-corner-full);
 
   .bar,
   .bar2 {
@@ -21,7 +22,7 @@
   }
 
   .bar {
-    background-color: var(--progress-bar, var(--color-primary));
+    background-color: var(--mat-sys-primary);
   }
 
   .buffer {
@@ -29,7 +30,7 @@
     left: 0;
     top: 0;
     bottom: 0;
-    background-color: var(--progress-buffer, rgba(var(--color-primary-rgb), 0.3));
+    background-color: color-mix(in srgb, var(--mat-sys-primary) 30%, transparent);
     border-radius: inherit;
   }
 
@@ -40,8 +41,8 @@
     right: 0;
     bottom: 0;
     background-image: radial-gradient(
-      var(--progress-track, rgba(var(--color-primary-rgb), 0.2)) 0%,
-      var(--progress-track, rgba(var(--color-primary-rgb), 0.2)) 16%,
+      var(--mat-sys-surface-container-highest) 0%,
+      var(--mat-sys-surface-container-highest) 16%,
       transparent 42%
     );
     background-size: 10px 10px;
@@ -64,7 +65,7 @@
     }
 
     .bar2 {
-      background-color: var(--progress-bar, var(--color-primary));
+      background-color: var(--mat-sys-primary);
       animation: indeterminate-bar2 2.1s cubic-bezier(0.165, 0.84, 0.44, 1) 1.15s infinite;
     }
   }
@@ -77,46 +78,64 @@
     }
 
     .bar2 {
-      background-color: var(--progress-bar, var(--color-primary));
+      background-color: var(--mat-sys-primary);
       animation: indeterminate-bar2 2.1s cubic-bezier(0.165, 0.84, 0.44, 1) 1.15s infinite reverse;
     }
   }
 
-  // Color variants
+  // Color variants using M3 tokens
   &.primary {
-    --progress-bar: var(--color-primary);
-    --progress-track: rgba(var(--color-primary-rgb), 0.2);
-    --progress-buffer: rgba(var(--color-primary-rgb), 0.4);
+    .bar, .bar2 {
+      background-color: var(--mat-sys-primary);
+    }
+    .buffer {
+      background-color: color-mix(in srgb, var(--mat-sys-primary) 30%, transparent);
+    }
   }
 
   &.secondary {
-    --progress-bar: var(--color-secondary);
-    --progress-track: rgba(var(--color-secondary-rgb), 0.2);
-    --progress-buffer: rgba(var(--color-secondary-rgb), 0.4);
+    .bar, .bar2 {
+      background-color: var(--mat-sys-secondary);
+    }
+    .buffer {
+      background-color: color-mix(in srgb, var(--mat-sys-secondary) 30%, transparent);
+    }
   }
 
-  &.success {
-    --progress-bar: var(--color-success);
-    --progress-track: rgba(var(--color-success-rgb), 0.2);
-    --progress-buffer: rgba(var(--color-success-rgb), 0.4);
-  }
-
-  &.warning {
-    --progress-bar: var(--color-warning);
-    --progress-track: rgba(var(--color-warning-rgb), 0.2);
-    --progress-buffer: rgba(var(--color-warning-rgb), 0.4);
+  &.tertiary {
+    .bar, .bar2 {
+      background-color: var(--mat-sys-tertiary);
+    }
+    .buffer {
+      background-color: color-mix(in srgb, var(--mat-sys-tertiary) 30%, transparent);
+    }
   }
 
   &.error {
-    --progress-bar: var(--color-error);
-    --progress-track: rgba(var(--color-error-rgb), 0.2);
-    --progress-buffer: rgba(var(--color-error-rgb), 0.4);
+    .bar, .bar2 {
+      background-color: var(--mat-sys-error);
+    }
+    .buffer {
+      background-color: color-mix(in srgb, var(--mat-sys-error) 30%, transparent);
+    }
   }
 
-  &.info {
-    --progress-bar: var(--color-info);
-    --progress-track: rgba(var(--color-info-rgb), 0.2);
-    --progress-buffer: rgba(var(--color-info-rgb), 0.4);
+  &.success {
+    .bar, .bar2 {
+      background-color: #4caf50;
+    }
+    .buffer {
+      background-color: color-mix(in srgb, #4caf50 30%, transparent);
+    }
+  }
+
+  &.warning {
+    .bar, .bar2 {
+      background-color: #ff9800;
+    }
+    .buffer {
+      background-color: color-mix(in srgb, #ff9800 30%, transparent);
+    }
   }
 }
 
@@ -130,11 +149,11 @@
   }
 
   .track {
-    stroke: var(--circular-track, rgba(var(--color-primary-rgb), 0.2));
+    stroke: var(--mat-sys-surface-container-highest);
   }
 
   .circle {
-    stroke: var(--circular-bar, var(--color-primary));
+    stroke: var(--mat-sys-primary);
     stroke-linecap: round;
   }
 
@@ -166,42 +185,49 @@
     }
   }
 
-  // Color variants
+  // Color variants using M3 tokens
   &.circular-primary {
-    --circular-bar: var(--color-primary);
-    --circular-track: rgba(var(--color-primary-rgb), 0.2);
+    .circle {
+      stroke: var(--mat-sys-primary);
+    }
+    .track {
+      stroke: color-mix(in srgb, var(--mat-sys-primary) 20%, transparent);
+    }
   }
 
   &.circular-secondary {
-    --circular-bar: var(--color-secondary);
-    --circular-track: rgba(var(--color-secondary-rgb), 0.2);
+    .circle {
+      stroke: var(--mat-sys-secondary);
+    }
+    .track {
+      stroke: color-mix(in srgb, var(--mat-sys-secondary) 20%, transparent);
+    }
   }
 
-  &.circular-success {
-    --circular-bar: var(--color-success);
-    --circular-track: rgba(var(--color-success-rgb), 0.2);
-  }
-
-  &.circular-warning {
-    --circular-bar: var(--color-warning);
-    --circular-track: rgba(var(--color-warning-rgb), 0.2);
+  &.circular-tertiary {
+    .circle {
+      stroke: var(--mat-sys-tertiary);
+    }
+    .track {
+      stroke: color-mix(in srgb, var(--mat-sys-tertiary) 20%, transparent);
+    }
   }
 
   &.circular-error {
-    --circular-bar: var(--color-error);
-    --circular-track: rgba(var(--color-error-rgb), 0.2);
-  }
-
-  &.circular-info {
-    --circular-bar: var(--color-info);
-    --circular-track: rgba(var(--color-info-rgb), 0.2);
+    .circle {
+      stroke: var(--mat-sys-error);
+    }
+    .track {
+      stroke: color-mix(in srgb, var(--mat-sys-error) 20%, transparent);
+    }
   }
 
   &.circular-inherit {
-    --circular-bar: currentColor;
-    --circular-track: currentColor;
-
+    .circle {
+      stroke: currentColor;
+    }
     .track {
+      stroke: currentColor;
       opacity: 0.2;
     }
   }

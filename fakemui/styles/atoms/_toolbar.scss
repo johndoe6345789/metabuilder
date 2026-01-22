@@ -1,13 +1,87 @@
-// Toolbar atom - horizontal action bar
+// Toolbar Atoms - Material Design 3
+// =================================
+// Flat selectors for toolbar/action bar styling using M3 tokens
 
+// Base toolbar
 .toolbar {
   display: flex;
   align-items: center;
-  gap: var(--spacing-md);
+  gap: 16px;
   flex-wrap: wrap;
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: 24px;
 }
 
-.toolbar--sm { gap: var(--spacing-sm); margin-bottom: var(--spacing-md); }
-.toolbar--end { justify-content: flex-end; }
-.toolbar--between { justify-content: space-between; }
+// Size variants
+.toolbar--sm {
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.toolbar--lg {
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+// Alignment variants
+.toolbar--end {
+  justify-content: flex-end;
+}
+
+.toolbar--between {
+  justify-content: space-between;
+}
+
+.toolbar--center {
+  justify-content: center;
+}
+
+// Surface variant (with background)
+.toolbar--surface {
+  padding: 8px 16px;
+  background: var(--mat-sys-surface-container);
+  border-radius: var(--mat-sys-corner-medium);
+}
+
+// Elevated toolbar
+.toolbar--elevated {
+  padding: 8px 16px;
+  background: var(--mat-sys-surface-container-low);
+  border-radius: var(--mat-sys-corner-medium);
+  box-shadow: var(--mat-sys-level1);
+}
+
+// Dense toolbar
+.toolbar--dense {
+  gap: 8px;
+  padding: 4px 8px;
+}
+
+// Toolbar section (for grouping items)
+.toolbar-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+// Toolbar divider
+.toolbar-divider {
+  width: 1px;
+  height: 24px;
+  background: var(--mat-sys-outline-variant);
+  margin: 0 8px;
+}
+
+// Toolbar title
+.toolbar-title {
+  font-family: var(--mat-sys-title-medium-font);
+  font-size: var(--mat-sys-title-medium-size);
+  font-weight: var(--mat-sys-title-medium-weight);
+  line-height: var(--mat-sys-title-medium-line-height);
+  color: var(--mat-sys-on-surface);
+  margin: 0;
+}
+
+// Toolbar spacer (flex grow)
+.toolbar-spacer {
+  flex: 1;
+}

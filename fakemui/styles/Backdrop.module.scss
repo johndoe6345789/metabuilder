@@ -1,19 +1,28 @@
-@use '../styles/variables' as *;
+// Backdrop Component - Material Design 3
+// Uses M3 scrim and motion tokens
 
 .backdrop {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--mat-sys-scrim);
   -webkit-tap-highlight-color: transparent;
-  
+  z-index: var(--z-modal);
+  animation: backdropFadeIn var(--mat-sys-motion-duration-medium2) var(--mat-sys-motion-easing-standard);
+
   &.invisible {
     background-color: transparent;
+  }
+
+  &.centered {
+    align-items: center;
+  }
+
+  &.top {
+    align-items: flex-start;
+    padding-top: 10vh;
   }
 }
 
@@ -22,23 +31,11 @@
   z-index: 1;
 }
 
-// Animation
-.backdrop {
-  animation: backdropFadeIn 0.3s ease-in-out;
-}
-
 @keyframes backdropFadeIn {
   from {
     opacity: 0;
   }
   to {
     opacity: 1;
-  }
-}
-
-// Dark mode
-:global(.dark) {
-  .backdrop:not(.invisible) {
-    background-color: rgba(0, 0, 0, 0.7);
   }
 }

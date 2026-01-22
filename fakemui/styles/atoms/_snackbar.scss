@@ -1,26 +1,202 @@
-// Snackbar/Toast styles
+// Snackbar Atoms - Material Design 3
+// ===================================
+// Flat selectors for snackbar/toast styling using M3 tokens
+// https://m3.material.io/components/snackbar/specs
 
+// Snackbar container
 .snackbar {
   position: fixed;
-  bottom: var(--spacing-lg);
-  left: 50%;
-  transform: translateX(-50%);
-  padding: var(--spacing-md) var(--spacing-lg);
-  background: var(--color-bg-elevated);
-  color: var(--color-text);
-  border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-lg);
-  z-index: var(--z-toast);
-  animation: slideUp var(--transition-normal);
+  z-index: 1400;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 288px;
+  max-width: 560px;
+  padding: 14px 16px;
+  background: var(--mat-sys-inverse-surface);
+  color: var(--mat-sys-inverse-on-surface);
+  border-radius: var(--mat-sys-corner-extra-small);
+  box-shadow: var(--mat-sys-level3);
+  font-family: var(--mat-sys-body-medium-font);
+  font-size: var(--mat-sys-body-medium-size);
+  line-height: var(--mat-sys-body-medium-line-height);
+  animation: snackbar-enter var(--mat-sys-motion-duration-medium2) var(--mat-sys-motion-easing-emphasized-decelerate);
 }
 
-@keyframes slideUp {
-  from { 
+// Position variants
+.snackbar--bottom {
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.snackbar--bottom-left {
+  bottom: 24px;
+  left: 24px;
+  transform: none;
+}
+
+.snackbar--bottom-right {
+  bottom: 24px;
+  right: 24px;
+  left: auto;
+  transform: none;
+}
+
+.snackbar--top {
+  top: 24px;
+  bottom: auto;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.snackbar--top-left {
+  top: 24px;
+  bottom: auto;
+  left: 24px;
+  transform: none;
+}
+
+.snackbar--top-right {
+  top: 24px;
+  bottom: auto;
+  right: 24px;
+  left: auto;
+  transform: none;
+}
+
+// Snackbar content
+.snackbar__message {
+  flex: 1;
+  min-width: 0;
+}
+
+// Snackbar action button
+.snackbar__action {
+  flex-shrink: 0;
+  padding: 0 8px;
+  margin: -8px -8px -8px 0;
+  min-height: 36px;
+  border: none;
+  border-radius: var(--mat-sys-corner-full);
+  background: transparent;
+  color: var(--mat-sys-inverse-primary);
+  font-family: var(--mat-sys-label-large-font);
+  font-size: var(--mat-sys-label-large-size);
+  font-weight: var(--mat-sys-label-large-weight);
+  cursor: pointer;
+  transition: background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+}
+
+.snackbar__action:hover {
+  background: color-mix(in srgb, var(--mat-sys-inverse-primary) 8%, transparent);
+}
+
+.snackbar__action:focus-visible {
+  outline: 2px solid var(--mat-sys-inverse-primary);
+  outline-offset: 2px;
+}
+
+.snackbar__action:active {
+  background: color-mix(in srgb, var(--mat-sys-inverse-primary) 12%, transparent);
+}
+
+// Close button
+.snackbar__close {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  margin: -8px -8px -8px 0;
+  padding: 0;
+  border: none;
+  border-radius: var(--mat-sys-corner-full);
+  background: transparent;
+  color: var(--mat-sys-inverse-on-surface);
+  cursor: pointer;
+  transition: background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+}
+
+.snackbar__close:hover {
+  background: color-mix(in srgb, var(--mat-sys-inverse-on-surface) 8%, transparent);
+}
+
+.snackbar__close:focus-visible {
+  outline: 2px solid var(--mat-sys-inverse-primary);
+  outline-offset: 2px;
+}
+
+// Two-line snackbar
+.snackbar--two-line {
+  flex-wrap: wrap;
+  padding: 12px 16px;
+  min-height: 68px;
+}
+
+.snackbar--two-line .snackbar__message {
+  width: 100%;
+  margin-bottom: 4px;
+}
+
+.snackbar--two-line .snackbar__action {
+  margin-left: auto;
+}
+
+// Longer action button variant
+.snackbar--longer-action .snackbar__action {
+  margin: 0;
+}
+
+// Animation keyframes
+@keyframes snackbar-enter {
+  from {
     opacity: 0;
-    transform: translateX(-50%) translateY(10px);
+    transform: translateX(-50%) translateY(16px);
   }
   to {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
   }
+}
+
+// Exit animation class
+.snackbar--exiting {
+  animation: snackbar-exit var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized-accelerate) forwards;
+}
+
+@keyframes snackbar-exit {
+  from {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-50%) translateY(16px);
+  }
+}
+
+// Stacked snackbars
+.snackbar-container {
+  position: fixed;
+  z-index: 1400;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.snackbar-container--bottom {
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.snackbar-container .snackbar {
+  position: relative;
+  pointer-events: auto;
+  transform: none;
+  bottom: auto;
+  left: auto;
 }

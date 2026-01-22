@@ -1,0 +1,178 @@
+@use '@angular/cdk';
+@use '../core/style/layout-common';
+@use '../core/tokens/token-utils';
+@use './m3-stepper';
+@use './stepper-variables';
+
+$fallbacks: m3-stepper.get-tokens();
+
+.mat-step-header {
+  overflow: hidden;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+  box-sizing: content-box;
+  -webkit-tap-highlight-color: transparent;
+
+  // Stepper headers have the focus indicator as a descendant,
+  // because `::before` is used for other styling.
+  &:focus-visible .mat-focus-indicator::before {
+    content: '';
+  }
+
+  &:hover[aria-disabled='true'] {
+    cursor: default;
+  }
+
+
+  &:hover:not([aria-disabled]),
+  &:hover[aria-disabled='false'] {
+    background-color: token-utils.slot(stepper-header-hover-state-layer-color, $fallbacks);
+    border-radius: token-utils.slot(stepper-header-hover-state-layer-shape, $fallbacks);
+  }
+
+  &.cdk-keyboard-focused,
+  &.cdk-program-focused {
+    background-color: token-utils.slot(stepper-header-focus-state-layer-color, $fallbacks);
+    border-radius: token-utils.slot(stepper-header-focus-state-layer-shape, $fallbacks);
+  }
+
+  // On touch devices the :hover state will linger on the element after a tap.
+  // Reset it via `@media` after the declaration, because the media query isn't
+  // supported by all browsers yet.
+  @media (hover: none) {
+    &:hover {
+      background: none;
+    }
+  }
+
+  @include cdk.high-contrast {
+    outline: solid 1px;
+
+    &[aria-selected='true'] {
+      .mat-step-label {
+        text-decoration: underline;
+      }
+    }
+
+    // When a step header is disabled in high contrast mode, set the text color to the disabled
+    // color, which is (unintuitively) named "GrayText".
+    &[aria-disabled='true'] {
+      outline-color: GrayText;
+      .mat-step-label,
+      .mat-step-icon,
+      .mat-step-optional {
+        color: GrayText;
+      }
+    }
+  }
+}
+
+.mat-step-optional {
+  font-size: stepper-variables.$step-sub-label-font-size;
+  color: token-utils.slot(stepper-header-optional-label-text-color, $fallbacks);
+}
+
+.mat-step-sub-label-error {
+  font-size: stepper-variables.$step-sub-label-font-size;
+  font-weight: normal;
+}
+
+.mat-step-icon {
+  border-radius: 50%;
+  height: stepper-variables.$label-header-height;
+  width: stepper-variables.$label-header-height;
+  flex-shrink: 0;
+  position: relative;
+  color: token-utils.slot(stepper-header-icon-foreground-color, $fallbacks);
+  background-color: token-utils.slot(stepper-header-icon-background-color, $fallbacks);
+}
+
+.mat-step-icon-content {
+  // Use absolute positioning to center the content, because it works better with text.
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  // We aren't using any flex features here, but using the `display: flex` prevents
+  // the browser from adding extra whitespace at the bottom of the element.
+  display: flex;
+}
+
+.mat-step-icon .mat-icon {
+  font-size: stepper-variables.$step-header-icon-size;
+  height: stepper-variables.$step-header-icon-size;
+  width: stepper-variables.$step-header-icon-size;
+}
+
+.mat-step-icon-state-error {
+  background-color: token-utils.slot(stepper-header-error-state-icon-background-color, $fallbacks);
+  color: token-utils.slot(stepper-header-error-state-icon-foreground-color, $fallbacks);
+
+  .mat-icon {
+    font-size: stepper-variables.$step-header-icon-size + 8;
+    height: stepper-variables.$step-header-icon-size + 8;
+    width: stepper-variables.$step-header-icon-size + 8;
+  }
+}
+
+.mat-step-label {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: stepper-variables.$label-min-width;
+  vertical-align: middle;
+
+  font-family: token-utils.slot(stepper-header-label-text-font, $fallbacks);
+  font-size: token-utils.slot(stepper-header-label-text-size, $fallbacks);
+  font-weight: token-utils.slot(stepper-header-label-text-weight, $fallbacks);
+  color: token-utils.slot(stepper-header-label-text-color, $fallbacks);
+
+  &.mat-step-label-active {
+    color: token-utils.slot(stepper-header-selected-state-label-text-color, $fallbacks);
+  }
+
+  &.mat-step-label-error {
+    color: token-utils.slot(stepper-header-error-state-label-text-color, $fallbacks);
+    font-size: token-utils.slot(stepper-header-error-state-label-text-size, $fallbacks);
+  }
+
+  &.mat-step-label-selected {
+    font-size: token-utils.slot(stepper-header-selected-state-label-text-size, $fallbacks);
+    font-weight: token-utils.slot(stepper-header-selected-state-label-text-weight, $fallbacks);
+  }
+
+  .mat-step-header-empty-label & {
+    min-width: 0;
+  }
+}
+
+.mat-step-text-label {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+// Increase specificity because ripple styles are part of the `mat-core` mixin and can
+// potentially overwrite the absolute position of the container.
+.mat-step-header .mat-step-header-ripple {
+  @include layout-common.fill;
+  pointer-events: none;
+}
+
+.mat-step-icon-selected {
+  background-color: token-utils.slot(
+      stepper-header-selected-state-icon-background-color, $fallbacks);
+  color: token-utils.slot(stepper-header-selected-state-icon-foreground-color, $fallbacks);
+}
+
+.mat-step-icon-state-done {
+  background-color: token-utils.slot(stepper-header-done-state-icon-background-color, $fallbacks);
+  color: token-utils.slot(stepper-header-done-state-icon-foreground-color, $fallbacks);
+}
+
+.mat-step-icon-state-edit {
+  background-color: token-utils.slot(stepper-header-edit-state-icon-background-color, $fallbacks);
+  color: token-utils.slot(stepper-header-edit-state-icon-foreground-color, $fallbacks);
+}

@@ -1,8 +1,122 @@
-// Label atom - uppercase metadata key style
+// Label Atoms - Material Design 3
+// ===============================
+// Flat selectors for label/metadata styling using M3 typography tokens
 
+// Base label (label-medium)
 .label {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
+  font-family: var(--mat-sys-label-medium-font);
+  font-size: var(--mat-sys-label-medium-size);
+  font-weight: var(--mat-sys-label-medium-weight);
+  line-height: var(--mat-sys-label-medium-line-height);
+  letter-spacing: var(--mat-sys-label-medium-tracking);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+// Size variants
+.label--sm {
+  font-family: var(--mat-sys-label-small-font);
+  font-size: var(--mat-sys-label-small-size);
+  font-weight: var(--mat-sys-label-small-weight);
+  line-height: var(--mat-sys-label-small-line-height);
+  letter-spacing: var(--mat-sys-label-small-tracking);
+}
+
+.label--lg {
+  font-family: var(--mat-sys-label-large-font);
+  font-size: var(--mat-sys-label-large-size);
+  font-weight: var(--mat-sys-label-large-weight);
+  line-height: var(--mat-sys-label-large-line-height);
+  letter-spacing: var(--mat-sys-label-large-tracking);
+}
+
+// Uppercase variant (for section headers, metadata keys)
+.label--uppercase {
   text-transform: uppercase;
   letter-spacing: 0.5px;
+}
+
+// Color variants
+.label--primary {
+  color: var(--mat-sys-primary);
+}
+
+.label--secondary {
+  color: var(--mat-sys-secondary);
+}
+
+.label--error {
+  color: var(--mat-sys-error);
+}
+
+.label--success {
+  color: #4caf50;
+}
+
+.label--warning {
+  color: #ff9800;
+}
+
+.label--on-surface {
+  color: var(--mat-sys-on-surface);
+}
+
+// Required indicator
+.label--required::after {
+  content: ' *';
+  color: var(--mat-sys-error);
+}
+
+// Label with icon
+.label-with-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.label-with-icon .icon {
+  width: 16px;
+  height: 16px;
+}
+
+// Form field label
+.field-label {
+  display: block;
+  font-family: var(--mat-sys-body-small-font);
+  font-size: var(--mat-sys-body-small-size);
+  color: var(--mat-sys-on-surface-variant);
+  margin-bottom: 4px;
+}
+
+.field-label--error {
+  color: var(--mat-sys-error);
+}
+
+.field-label--focused {
+  color: var(--mat-sys-primary);
+}
+
+// Helper text (below form fields)
+.helper-text {
+  font-family: var(--mat-sys-body-small-font);
+  font-size: var(--mat-sys-body-small-size);
+  line-height: var(--mat-sys-body-small-line-height);
+  color: var(--mat-sys-on-surface-variant);
+  margin-top: 4px;
+}
+
+.helper-text--error {
+  color: var(--mat-sys-error);
+}
+
+// Counter text (character count)
+.counter-text {
+  font-family: var(--mat-sys-body-small-font);
+  font-size: var(--mat-sys-body-small-size);
+  color: var(--mat-sys-on-surface-variant);
+  text-align: right;
+  margin-top: 4px;
+}
+
+.counter-text--error {
+  color: var(--mat-sys-error);
 }

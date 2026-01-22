@@ -1,4 +1,6 @@
-// NativeSelect component styles
+// NativeSelect Component - Material Design 3
+// ===========================================
+// Native select dropdown styling using M3 tokens
 
 .native-select {
   position: relative;
@@ -11,17 +13,17 @@
   }
 
   &--disabled {
-    opacity: 0.6;
+    opacity: 0.38;
     pointer-events: none;
   }
 
   &--error {
     .native-select__input {
-      border-color: var(--color-error, #d32f2f);
+      border-color: var(--mat-sys-error);
 
       &:focus {
-        border-color: var(--color-error, #d32f2f);
-        box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.2);
+        border-color: var(--mat-sys-error);
+        box-shadow: 0 0 0 1px var(--mat-sys-error);
       }
     }
   }
@@ -29,30 +31,30 @@
   &__input {
     appearance: none;
     width: 100%;
-    padding: 10px 32px 10px 12px;
-    font-size: 1rem;
-    font-family: inherit;
-    line-height: 1.5;
-    color: var(--color-text-primary, rgba(0, 0, 0, 0.87));
+    padding: 12px 32px 12px 16px;
+    font-family: var(--mat-sys-body-large-font);
+    font-size: var(--mat-sys-body-large-size);
+    line-height: var(--mat-sys-body-large-line-height);
+    color: var(--mat-sys-on-surface);
     background-color: transparent;
-    border: 1px solid var(--color-divider, rgba(0, 0, 0, 0.23));
-    border-radius: var(--border-radius, 4px);
+    border: 1px solid var(--mat-sys-outline);
+    border-radius: var(--mat-sys-corner-small);
     cursor: pointer;
-    transition: border-color 150ms cubic-bezier(0.4, 0, 0.2, 1),
-                box-shadow 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    transition: border-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard),
+                box-shadow var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
 
     &:hover:not(:disabled) {
-      border-color: var(--color-text-primary, rgba(0, 0, 0, 0.87));
+      border-color: var(--mat-sys-on-surface);
     }
 
     &:focus {
       outline: none;
-      border-color: var(--color-primary, #1976d2);
-      box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+      border-color: var(--mat-sys-primary);
+      box-shadow: 0 0 0 1px var(--mat-sys-primary);
     }
 
     &:disabled {
-      color: var(--color-text-disabled, rgba(0, 0, 0, 0.38));
+      color: color-mix(in srgb, var(--mat-sys-on-surface) 38%, transparent);
       cursor: not-allowed;
     }
 
@@ -64,34 +66,39 @@
 
   &__icon {
     position: absolute;
-    right: 8px;
+    right: 12px;
     top: 50%;
     transform: translateY(-50%);
     pointer-events: none;
-    color: var(--color-text-secondary, rgba(0, 0, 0, 0.54));
+    color: var(--mat-sys-on-surface-variant);
+    width: 20px;
+    height: 20px;
   }
 
   // Variant: outlined (default)
   &--outlined {
     .native-select__input {
-      border: 1px solid var(--color-divider, rgba(0, 0, 0, 0.23));
+      border: 1px solid var(--mat-sys-outline);
     }
   }
 
   // Variant: filled
   &--filled {
     .native-select__input {
-      background-color: var(--color-fill-light, rgba(0, 0, 0, 0.06));
+      background-color: var(--mat-sys-surface-container-highest);
       border: none;
-      border-bottom: 1px solid var(--color-divider, rgba(0, 0, 0, 0.42));
-      border-radius: var(--border-radius, 4px) var(--border-radius, 4px) 0 0;
-      padding: 25px 32px 8px 12px;
+      border-bottom: 1px solid var(--mat-sys-on-surface-variant);
+      border-radius: var(--mat-sys-corner-extra-small) var(--mat-sys-corner-extra-small) 0 0;
+      padding: 24px 32px 8px 16px;
+
+      &:hover:not(:disabled) {
+        background-color: var(--mat-sys-surface-container-high);
+      }
 
       &:focus {
-        background-color: var(--color-fill-dark, rgba(0, 0, 0, 0.09));
         box-shadow: none;
         border-bottom-width: 2px;
-        border-bottom-color: var(--color-primary, #1976d2);
+        border-bottom-color: var(--mat-sys-primary);
       }
     }
   }
@@ -100,14 +107,14 @@
   &--standard {
     .native-select__input {
       border: none;
-      border-bottom: 1px solid var(--color-divider, rgba(0, 0, 0, 0.42));
+      border-bottom: 1px solid var(--mat-sys-on-surface-variant);
       border-radius: 0;
       padding: 4px 24px 5px 0;
 
       &:focus {
         box-shadow: none;
         border-bottom-width: 2px;
-        border-bottom-color: var(--color-primary, #1976d2);
+        border-bottom-color: var(--mat-sys-primary);
       }
     }
   }

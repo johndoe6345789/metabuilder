@@ -1,39 +1,89 @@
-// Interactive state mixins
+// Interactive state mixins - Material Design 3
+// Uses M3 state layer pattern with proper opacity values
 
 @mixin hover-lift {
-  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
-  
+  transition: transform var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard),
+              box-shadow var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+
   &:hover {
     transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--mat-sys-level2);
   }
 }
 
 @mixin clickable {
   cursor: pointer;
-  transition: background-color var(--transition-fast);
-  
+  position: relative;
+  transition: background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+
   &:hover {
-    background-color: var(--color-bg-hover);
+    background-color: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
   }
-  
+
   &:active {
-    opacity: 0.8;
+    background-color: color-mix(in srgb, var(--mat-sys-on-surface) 12%, transparent);
+  }
+}
+
+// M3 state layer mixin for interactive elements
+@mixin state-layer($color: var(--mat-sys-on-surface)) {
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background-color: transparent;
+    pointer-events: none;
+    transition: background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+  }
+
+  &:hover::before {
+    background-color: color-mix(in srgb, #{$color} 8%, transparent);
+  }
+
+  &:focus-visible::before,
+  &:active::before {
+    background-color: color-mix(in srgb, #{$color} 12%, transparent);
   }
 }
 
 @mixin focus-ring {
   &:focus {
     outline: none;
-    box-shadow: 0 0 0 2px var(--color-bg), 0 0 0 4px var(--color-primary);
   }
-  
+
   &:focus:not(:focus-visible) {
-    box-shadow: none;
-  }
-  
-  &:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 2px var(--color-bg), 0 0 0 4px var(--color-primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary);
+    outline-offset: 2px;
+  }
+}
+
+// M3 ripple effect placeholder (typically handled by JS)
+@mixin ripple-base {
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle, var(--mat-sys-on-surface) 10%, transparent 10.01%);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    transform: scale(10, 10);
+    opacity: 0;
+    transition: transform 0.5s, opacity 1s;
+  }
+
+  &:active::after {
+    transform: scale(0, 0);
+    opacity: 0.12;
+    transition: 0s;
   }
 }

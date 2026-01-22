@@ -1,36 +1,203 @@
-// Tabs atoms - flat selectors
+// Tabs Atoms - Material Design 3
+// ===============================
+// Flat selectors for tab styling using M3 tokens
+// https://m3.material.io/components/tabs/specs
 
+// Tab container
 .tabs {
   display: flex;
-  border-bottom: 1px solid var(--color-divider);
+  border-bottom: 1px solid var(--mat-sys-surface-variant);
+  overflow-x: auto;
+  scrollbar-width: none;
 }
 
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+
+// Individual tab
 .tab {
-  padding: var(--spacing-md);
-  border: none;
-  background: none;
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-sm);
-  font-weight: 500;
-  cursor: pointer;
   position: relative;
-  transition: color var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 90px;
+  height: 48px;
+  padding: 0 24px;
+  border: none;
+  background: transparent;
+  color: var(--mat-sys-on-surface-variant);
+  font-family: var(--mat-sys-title-small-font);
+  font-size: var(--mat-sys-title-small-size);
+  font-weight: var(--mat-sys-title-small-weight);
+  line-height: var(--mat-sys-title-small-line-height);
+  letter-spacing: var(--mat-sys-title-small-tracking);
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  transition:
+    color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard),
+    background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
 }
 
+// Active indicator (bottom bar)
+.tab::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: transparent;
+  border-radius: 3px 3px 0 0;
+  transition: background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+}
+
+// Hover state
 .tab:hover {
-  color: var(--color-text);
+  background: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
 }
 
+// Focus state
+.tab:focus-visible {
+  outline: none;
+  background: color-mix(in srgb, var(--mat-sys-on-surface) 12%, transparent);
+}
+
+// Active/pressed state
+.tab:active {
+  background: color-mix(in srgb, var(--mat-sys-on-surface) 12%, transparent);
+}
+
+// Active tab
 .tab--active {
-  color: var(--color-primary);
+  color: var(--mat-sys-primary);
 }
 
 .tab--active::after {
-  content: '';
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--color-primary);
+  background: var(--mat-sys-primary);
+}
+
+.tab--active:hover {
+  background: color-mix(in srgb, var(--mat-sys-primary) 8%, transparent);
+}
+
+.tab--active:focus-visible {
+  background: color-mix(in srgb, var(--mat-sys-primary) 12%, transparent);
+}
+
+.tab--active:active {
+  background: color-mix(in srgb, var(--mat-sys-primary) 12%, transparent);
+}
+
+// Disabled tab
+.tab:disabled,
+.tab--disabled {
+  color: color-mix(in srgb, var(--mat-sys-on-surface) 38%, transparent);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+// ============================================
+// Tab with Icon
+// ============================================
+
+.tab--with-icon {
+  flex-direction: column;
+  height: 64px;
+  padding: 12px 16px;
+  gap: 4px;
+}
+
+.tab__icon {
+  font-size: 1.25rem;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+// ============================================
+// Tab Variants
+// ============================================
+
+// Secondary tabs (pill style)
+.tabs--secondary {
+  border-bottom: none;
+  background: var(--mat-sys-surface-container);
+  border-radius: var(--mat-sys-corner-full);
+  padding: 4px;
+  gap: 4px;
+}
+
+.tabs--secondary .tab {
+  border-radius: var(--mat-sys-corner-full);
+  height: 40px;
+  min-width: auto;
+  padding: 0 16px;
+}
+
+.tabs--secondary .tab::after {
+  display: none;
+}
+
+.tabs--secondary .tab--active {
+  background: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
+}
+
+.tabs--secondary .tab--active:hover {
+  background: color-mix(in srgb, var(--mat-sys-secondary-container) calc(100% - 8%), var(--mat-sys-on-secondary-container));
+}
+
+// Full width tabs
+.tabs--full-width .tab {
+  flex: 1;
+  min-width: 0;
+}
+
+// Scrollable tabs
+.tabs--scrollable .tab {
+  flex-shrink: 0;
+}
+
+// Centered tabs
+.tabs--centered {
+  justify-content: center;
+}
+
+// ============================================
+// Tab Panel
+// ============================================
+
+.tab-panel {
+  animation: tab-fade-in var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized-decelerate);
+}
+
+@keyframes tab-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ============================================
+// Tab Badge
+// ============================================
+
+.tab__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  margin-left: 8px;
+  border-radius: var(--mat-sys-corner-full);
+  background: var(--mat-sys-error);
+  color: var(--mat-sys-on-error);
+  font-size: 0.625rem;
+  font-weight: 500;
 }

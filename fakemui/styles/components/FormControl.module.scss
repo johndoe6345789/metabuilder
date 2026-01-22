@@ -1,4 +1,6 @@
-// FormControl component styles
+// FormControl Component - Material Design 3
+// ==========================================
+// Form control wrapper styling using M3 tokens
 
 .form-control {
   display: inline-flex;
@@ -33,88 +35,140 @@
   // Size variants
   &--small {
     .form-control__label {
-      font-size: 0.875rem;
+      font-family: var(--mat-sys-body-small-font);
+      font-size: var(--mat-sys-body-small-size);
     }
   }
 
   &--medium {
     .form-control__label {
-      font-size: 1rem;
+      font-family: var(--mat-sys-body-medium-font);
+      font-size: var(--mat-sys-body-medium-size);
     }
   }
 
   // States
   &--disabled {
-    opacity: 0.6;
+    opacity: 0.38;
     pointer-events: none;
   }
 
   &--error {
     .form-control__label,
     .form-control__helper-text {
-      color: var(--color-error, #d32f2f);
+      color: var(--mat-sys-error);
     }
 
     input,
     textarea,
     select {
-      border-color: var(--color-error, #d32f2f);
+      border-color: var(--mat-sys-error);
 
       &:focus {
-        border-color: var(--color-error, #d32f2f);
-        box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.2);
+        border-color: var(--mat-sys-error);
+        box-shadow: 0 0 0 1px var(--mat-sys-error);
       }
     }
   }
 
   &--focused {
     .form-control__label {
-      color: var(--color-primary, #1976d2);
+      color: var(--mat-sys-primary);
     }
   }
 
   &--required {
     .form-control__label::after {
       content: " *";
-      color: var(--color-error, #d32f2f);
+      color: var(--mat-sys-error);
     }
   }
 
-  // Variant styles
+  // Variant styles - Outlined
   &--outlined {
     input,
     textarea,
     select {
-      border: 1px solid var(--color-divider, rgba(0, 0, 0, 0.23));
-      border-radius: var(--border-radius, 4px);
-      padding: 16.5px 14px;
-    }
-  }
+      border: 1px solid var(--mat-sys-outline);
+      border-radius: var(--mat-sys-corner-small);
+      padding: 16px 14px;
+      background: transparent;
+      color: var(--mat-sys-on-surface);
+      transition: border-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
 
-  &--filled {
-    input,
-    textarea,
-    select {
-      background-color: var(--color-fill-light, rgba(0, 0, 0, 0.06));
-      border: none;
-      border-bottom: 1px solid var(--color-divider, rgba(0, 0, 0, 0.42));
-      border-radius: var(--border-radius, 4px) var(--border-radius, 4px) 0 0;
-      padding: 25px 12px 8px;
+      &:hover:not(:disabled) {
+        border-color: var(--mat-sys-on-surface);
+      }
 
       &:focus {
-        background-color: var(--color-fill-dark, rgba(0, 0, 0, 0.09));
+        outline: none;
+        border-color: var(--mat-sys-primary);
+        box-shadow: 0 0 0 1px var(--mat-sys-primary);
       }
     }
   }
 
+  // Variant styles - Filled
+  &--filled {
+    input,
+    textarea,
+    select {
+      background-color: var(--mat-sys-surface-container-highest);
+      border: none;
+      border-bottom: 1px solid var(--mat-sys-on-surface-variant);
+      border-radius: var(--mat-sys-corner-extra-small) var(--mat-sys-corner-extra-small) 0 0;
+      padding: 24px 16px 8px;
+      color: var(--mat-sys-on-surface);
+      transition: background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard),
+                  border-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+
+      &:hover:not(:disabled) {
+        background-color: var(--mat-sys-surface-container-high);
+      }
+
+      &:focus {
+        outline: none;
+        border-bottom-width: 2px;
+        border-bottom-color: var(--mat-sys-primary);
+      }
+    }
+  }
+
+  // Variant styles - Standard (underline only)
   &--standard {
     input,
     textarea,
     select {
       border: none;
-      border-bottom: 1px solid var(--color-divider, rgba(0, 0, 0, 0.42));
+      border-bottom: 1px solid var(--mat-sys-on-surface-variant);
       border-radius: 0;
       padding: 4px 0 5px;
+      background: transparent;
+      color: var(--mat-sys-on-surface);
+      transition: border-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+
+      &:focus {
+        outline: none;
+        border-bottom-width: 2px;
+        border-bottom-color: var(--mat-sys-primary);
+      }
     }
   }
+}
+
+// Label
+.form-control__label {
+  font-family: var(--mat-sys-body-small-font);
+  font-size: var(--mat-sys-body-small-size);
+  color: var(--mat-sys-on-surface-variant);
+  margin-bottom: 4px;
+  transition: color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+}
+
+// Helper text
+.form-control__helper-text {
+  font-family: var(--mat-sys-body-small-font);
+  font-size: var(--mat-sys-body-small-size);
+  color: var(--mat-sys-on-surface-variant);
+  margin-top: 4px;
 }

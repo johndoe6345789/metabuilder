@@ -1,14 +1,117 @@
-// Empty state atom
+// Empty State Atoms - Material Design 3
+// =====================================
+// Flat selectors for empty state placeholder styling using M3 tokens
 
+// Base empty state
 .empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  padding: var(--spacing-xl);
-  color: var(--color-text-secondary);
+  padding: 48px 24px;
+  color: var(--mat-sys-on-surface-variant);
 }
 
+// Icon
+.empty-state-icon {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 16px;
+  color: var(--mat-sys-on-surface-variant);
+  opacity: 0.6;
+}
+
+.empty-state-icon--lg {
+  width: 96px;
+  height: 96px;
+}
+
+// Title
+.empty-state-title {
+  font-family: var(--mat-sys-title-medium-font);
+  font-size: var(--mat-sys-title-medium-size);
+  font-weight: var(--mat-sys-title-medium-weight);
+  line-height: var(--mat-sys-title-medium-line-height);
+  color: var(--mat-sys-on-surface);
+  margin: 0 0 8px;
+}
+
+// Description
+.empty-state-description {
+  font-family: var(--mat-sys-body-medium-font);
+  font-size: var(--mat-sys-body-medium-size);
+  line-height: var(--mat-sys-body-medium-line-height);
+  color: var(--mat-sys-on-surface-variant);
+  margin: 0;
+  max-width: 320px;
+}
+
+// Hint text (smaller, more subtle)
 .empty-state-hint {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
+  font-family: var(--mat-sys-body-small-font);
+  font-size: var(--mat-sys-body-small-size);
+  color: var(--mat-sys-on-surface-variant);
   opacity: 0.7;
-  margin-top: var(--spacing-sm);
+  margin-top: 8px;
+}
+
+// Actions (buttons)
+.empty-state-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+// Size variants
+.empty-state--sm {
+  padding: 24px 16px;
+}
+
+.empty-state--sm .empty-state-icon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 12px;
+}
+
+.empty-state--sm .empty-state-title {
+  font-family: var(--mat-sys-title-small-font);
+  font-size: var(--mat-sys-title-small-size);
+}
+
+.empty-state--lg {
+  padding: 64px 32px;
+}
+
+.empty-state--lg .empty-state-icon {
+  width: 96px;
+  height: 96px;
+  margin-bottom: 24px;
+}
+
+.empty-state--lg .empty-state-title {
+  font-family: var(--mat-sys-headline-small-font);
+  font-size: var(--mat-sys-headline-small-size);
+}
+
+// With illustration
+.empty-state-illustration {
+  width: 200px;
+  height: auto;
+  margin-bottom: 24px;
+  opacity: 0.8;
+}
+
+// Inline empty state (horizontal layout)
+.empty-state--inline {
+  flex-direction: row;
+  gap: 16px;
+  padding: 16px;
+  text-align: left;
+}
+
+.empty-state--inline .empty-state-icon {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 0;
 }

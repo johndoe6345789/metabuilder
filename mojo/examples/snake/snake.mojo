@@ -32,8 +32,31 @@ comptime GAME_SPEED_MS: UInt32 = 100  # milliseconds between updates
 
 
 @register_passable("trivial")
+struct Color:
+    """RGBA color for rendering."""
+    var r: UInt8
+    var g: UInt8
+    var b: UInt8
+    var a: UInt8
+
+    fn __init__(out self, r: UInt8, g: UInt8, b: UInt8, a: UInt8 = 255):
+        self.r = r
+        self.g = g
+        self.b = b
+        self.a = a
+
+    # Pre-defined colors for the snake game
+    comptime BACKGROUND = Color(30, 30, 30, 255)
+    comptime GRID_LINE = Color(40, 40, 40, 255)
+    comptime FOOD = Color(255, 50, 50, 255)
+    comptime SNAKE_HEAD = Color(100, 255, 100, 255)
+    comptime SNAKE_BODY = Color(50, 200, 50, 255)
+    comptime GAME_OVER_OVERLAY = Color(255, 0, 0, 128)
+
+
+@register_passable("trivial")
 struct Direction:
-    """Direction enum for snake movement."""
+    """Direction enum for snake movement with delta calculations."""
     var value: Int
 
     comptime NONE = Direction(0)
@@ -51,22 +74,49 @@ struct Direction:
     fn __ne__(self, other: Direction) -> Bool:
         return self.value != other.value
 
+    fn get_delta(self) -> (Int, Int):
+        """Get (dx, dy) movement delta for this direction.
+
+        Returns (0, 0) for NONE, allowing safe no-op moves.
+        """
+        if self == Direction.UP:
+            return (0, -1)
+        elif self == Direction.DOWN:
+            return (0, 1)
+        elif self == Direction.LEFT:
+            return (-1, 0)
+        elif self == Direction.RIGHT:
+            return (1, 0)
+        return (0, 0)  # NONE
+
     fn is_opposite(self, other: Direction) -> Bool:
-        """Check if this direction is opposite to another."""
-        if self == Direction.UP and other == Direction.DOWN:
-            return True
-        if self == Direction.DOWN and other == Direction.UP:
-            return True
-        if self == Direction.LEFT and other == Direction.RIGHT:
-            return True
-        if self == Direction.RIGHT and other == Direction.LEFT:
-            return True
-        return False
+        """Check if this direction is opposite to another.
+
+        Uses delta comparison: opposite directions sum to (0, 0).
+        """
+        if self == Direction.NONE or other == Direction.NONE:
+            return False
+        var d1 = self.get_delta()
+        var d2 = other.get_delta()
+        return d1[0] + d2[0] == 0 and d1[1] + d2[1] == 0
+
+    @staticmethod
+    fn from_scancode(scancode: UInt32) -> Direction:
+        """Convert SDL scancode to Direction. Returns NONE if not an arrow key."""
+        if scancode == SDL_SCANCODE_UP:
+            return Direction.UP
+        elif scancode == SDL_SCANCODE_DOWN:
+            return Direction.DOWN
+        elif scancode == SDL_SCANCODE_LEFT:
+            return Direction.LEFT
+        elif scancode == SDL_SCANCODE_RIGHT:
+            return Direction.RIGHT
+        return Direction.NONE
 
 
 @register_passable("trivial")
 struct Point:
-    """A 2D point on the grid."""
+    """A 2D point on the grid with arithmetic operations."""
     var x: Int
     var y: Int
 
@@ -79,6 +129,20 @@ struct Point:
 
     fn __ne__(self, other: Point) -> Bool:
         return self.x != other.x or self.y != other.y
+
+    fn __add__(self, other: Point) -> Point:
+        """Add two points."""
+        return Point(self.x + other.x, self.y + other.y)
+
+    fn __sub__(self, other: Point) -> Point:
+        """Subtract two points."""
+        return Point(self.x - other.x, self.y - other.y)
+
+    fn wrap(self, width: Int, height: Int) -> Point:
+        """Wrap point to stay within grid bounds."""
+        var new_x = self.x % width if self.x >= 0 else width - 1
+        var new_y = self.y % height if self.y >= 0 else height - 1
+        return Point(new_x, new_y)
 
 
 struct Snake:
@@ -110,29 +174,15 @@ struct Snake:
 
     fn move(mut self) -> Bool:
         """Move snake in current direction. Returns False if collision with self."""
-        var head = self.head()
-        var new_head: Point
+        var delta = self.direction.get_delta()
 
-        if self.direction == Direction.UP:
-            new_head = Point(head.x, head.y - 1)
-        elif self.direction == Direction.DOWN:
-            new_head = Point(head.x, head.y + 1)
-        elif self.direction == Direction.LEFT:
-            new_head = Point(head.x - 1, head.y)
-        elif self.direction == Direction.RIGHT:
-            new_head = Point(head.x + 1, head.y)
-        else:
-            return True  # No movement
+        # No movement if direction is NONE
+        if delta[0] == 0 and delta[1] == 0:
+            return True
 
-        # Wrap around edges
-        if new_head.x < 0:
-            new_head.x = GRID_WIDTH - 1
-        elif new_head.x >= GRID_WIDTH:
-            new_head.x = 0
-        if new_head.y < 0:
-            new_head.y = GRID_HEIGHT - 1
-        elif new_head.y >= GRID_HEIGHT:
-            new_head.y = 0
+        # Calculate new head position with wrapping
+        var delta_point = Point(delta[0], delta[1])
+        var new_head = (self.head() + delta_point).wrap(GRID_WIDTH, GRID_HEIGHT)
 
         # Check self-collision (skip tail if not growing)
         var check_length = len(self.body)
@@ -235,14 +285,11 @@ struct Game:
 
                 if scancode == SDL_SCANCODE_ESCAPE:
                     self.running = False
-                elif scancode == SDL_SCANCODE_UP:
-                    self.snake.set_direction(Direction.UP)
-                elif scancode == SDL_SCANCODE_DOWN:
-                    self.snake.set_direction(Direction.DOWN)
-                elif scancode == SDL_SCANCODE_LEFT:
-                    self.snake.set_direction(Direction.LEFT)
-                elif scancode == SDL_SCANCODE_RIGHT:
-                    self.snake.set_direction(Direction.RIGHT)
+                else:
+                    # Try to convert scancode to direction
+                    var new_dir = Direction.from_scancode(scancode)
+                    if new_dir != Direction.NONE:
+                        self.snake.set_direction(new_dir)
 
     fn update(mut self):
         """Update game state."""
@@ -262,18 +309,18 @@ struct Game:
             self.spawn_food()
             print("Score:", self.score)
 
+    fn set_color(self, color: Color):
+        """Helper to set render draw color from a Color struct."""
+        _ = self.sdl.set_render_draw_color(self.renderer, color.r, color.g, color.b, color.a)
+
     fn render(self):
         """Render the game."""
-        # Clear screen (dark gray background)
-        var ok = self.sdl.set_render_draw_color(self.renderer, 30, 30, 30, 255)
-        if not ok:
-            print("Failed to set draw color")
-        ok = self.sdl.render_clear(self.renderer)
-        if not ok:
-            print("Failed to clear")
+        # Clear screen
+        self.set_color(Color.BACKGROUND)
+        _ = self.sdl.render_clear(self.renderer)
 
-        # Draw grid lines (subtle)
-        _ = self.sdl.set_render_draw_color(self.renderer, 40, 40, 40, 255)
+        # Draw grid lines
+        self.set_color(Color.GRID_LINE)
         for i in range(GRID_WIDTH + 1):
             var x = Float32(i * CELL_SIZE)
             _ = self.sdl.render_fill_rect(self.renderer, x, 0, 1, Float32(WINDOW_HEIGHT))
@@ -281,8 +328,8 @@ struct Game:
             var y = Float32(i * CELL_SIZE)
             _ = self.sdl.render_fill_rect(self.renderer, 0, y, Float32(WINDOW_WIDTH), 1)
 
-        # Draw food (red)
-        _ = self.sdl.set_render_draw_color(self.renderer, 255, 50, 50, 255)
+        # Draw food
+        self.set_color(Color.FOOD)
         _ = self.sdl.render_fill_rect(
             self.renderer,
             Float32(self.food.x * CELL_SIZE + 2),
@@ -294,13 +341,7 @@ struct Game:
         # Draw snake
         for i in range(len(self.snake.body)):
             var segment = self.snake.body[i]
-
-            # Head is brighter green
-            if i == 0:
-                _ = self.sdl.set_render_draw_color(self.renderer, 100, 255, 100, 255)
-            else:
-                _ = self.sdl.set_render_draw_color(self.renderer, 50, 200, 50, 255)
-
+            self.set_color(Color.SNAKE_HEAD if i == 0 else Color.SNAKE_BODY)
             _ = self.sdl.render_fill_rect(
                 self.renderer,
                 Float32(segment.x * CELL_SIZE + 1),
@@ -311,7 +352,7 @@ struct Game:
 
         # Game over overlay
         if self.game_over:
-            _ = self.sdl.set_render_draw_color(self.renderer, 255, 0, 0, 128)
+            self.set_color(Color.GAME_OVER_OVERLAY)
             _ = self.sdl.render_fill_rect(self.renderer, 0, 0, Float32(WINDOW_WIDTH), Float32(WINDOW_HEIGHT))
 
         # Present

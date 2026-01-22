@@ -1,13 +1,108 @@
-// Divider atoms - flat selectors
+// Divider Atoms - Material Design 3
+// ==================================
+// Flat selectors for divider styling using M3 tokens
+// https://m3.material.io/components/divider/specs
 
+// Horizontal divider (default)
 .divider {
+  border: none;
   height: 1px;
-  background: var(--color-divider);
-  margin: var(--spacing-md) 0;
+  background: var(--mat-sys-outline-variant);
+  margin: 16px 0;
 }
 
+// Full-bleed (no margin)
+.divider--full-bleed {
+  margin: 0;
+}
+
+// Inset divider (indented left)
+.divider--inset {
+  margin-left: 16px;
+}
+
+.divider--inset-start {
+  margin-left: 72px; // Accounts for leading icon/avatar
+}
+
+.divider--inset-end {
+  margin-right: 16px;
+}
+
+.divider--inset-both {
+  margin-left: 16px;
+  margin-right: 16px;
+}
+
+// Middle inset (both sides)
+.divider--middle {
+  margin-left: 16px;
+  margin-right: 16px;
+}
+
+// Vertical divider
 .divider--vertical {
   width: 1px;
   height: auto;
-  margin: 0 var(--spacing-md);
+  min-height: 24px;
+  margin: 0 16px;
+  align-self: stretch;
+}
+
+// Flex container helper
+.divider--flex-item {
+  margin: 0 8px;
+}
+
+// Thicker divider
+.divider--thick {
+  height: 2px;
+}
+
+// Color variants
+.divider--light {
+  background: color-mix(in srgb, var(--mat-sys-outline-variant) 50%, transparent);
+}
+
+.divider--dark {
+  background: var(--mat-sys-outline);
+}
+
+// Divider with text/label
+.divider-with-text {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 16px 0;
+}
+
+.divider-with-text::before,
+.divider-with-text::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--mat-sys-outline-variant);
+}
+
+.divider-with-text--start::before {
+  flex: 0 0 24px;
+}
+
+.divider-with-text--end::after {
+  flex: 0 0 24px;
+}
+
+.divider__text {
+  font-family: var(--mat-sys-label-medium-font);
+  font-size: var(--mat-sys-label-medium-size);
+  font-weight: var(--mat-sys-label-medium-weight);
+  color: var(--mat-sys-on-surface-variant);
+  white-space: nowrap;
+}
+
+// Section divider (used to separate major sections)
+.divider--section {
+  height: 8px;
+  background: var(--mat-sys-surface-container);
+  margin: 0;
 }

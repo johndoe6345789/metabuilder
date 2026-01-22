@@ -1,95 +1,340 @@
-// Button atoms - flat selectors
+// Button Atoms - Material Design 3
+// =================================
+// Flat selectors for global button styling using M3 tokens
 
+// Base button
 .btn {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-sm) var(--spacing-md);
+  gap: 8px;
+  padding: 0 24px;
+  height: 40px;
   border: none;
-  border-radius: var(--radius-sm);
-  font-family: var(--font-family);
-  font-size: var(--font-size-sm);
-  font-weight: 500;
+  border-radius: var(--mat-sys-corner-full);
+  font-family: var(--mat-sys-label-large-font);
+  font-size: var(--mat-sys-label-large-size);
+  font-weight: var(--mat-sys-label-large-weight);
+  letter-spacing: var(--mat-sys-label-large-tracking);
+  line-height: var(--mat-sys-label-large-line-height);
   cursor: pointer;
-  transition: all var(--transition-fast);
+  user-select: none;
+  text-decoration: none;
+  transition:
+    background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard),
+    box-shadow var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard),
+    border-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
 }
 
 .btn:focus-visible {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--mat-sys-primary);
   outline-offset: 2px;
 }
 
-.btn:disabled {
-  opacity: 0.5;
+.btn:disabled,
+.btn[aria-disabled="true"] {
   cursor: not-allowed;
+  pointer-events: none;
 }
 
+// ============================================
+// Variant: Default (Text Button)
+// ============================================
+
+.btn--default,
+.btn:not([class*="btn--"]) {
+  background: transparent;
+  color: var(--mat-sys-primary);
+}
+
+.btn--default:hover:not(:disabled),
+.btn:not([class*="btn--"]):hover:not(:disabled) {
+  background: color-mix(in srgb, var(--mat-sys-primary) 8%, transparent);
+}
+
+.btn--default:active:not(:disabled),
+.btn:not([class*="btn--"]):active:not(:disabled) {
+  background: color-mix(in srgb, var(--mat-sys-primary) 12%, transparent);
+}
+
+// ============================================
+// Variant: Primary (Filled Button)
+// ============================================
+
 .btn--primary {
-  background: var(--color-primary);
-  color: white;
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
 }
 
 .btn--primary:hover:not(:disabled) {
-  background: var(--color-primary-dark);
+  background: color-mix(in srgb, var(--mat-sys-primary) calc(100% - 8%), var(--mat-sys-on-primary));
 }
 
+.btn--primary:active:not(:disabled) {
+  background: color-mix(in srgb, var(--mat-sys-primary) calc(100% - 12%), var(--mat-sys-on-primary));
+}
+
+.btn--primary:disabled {
+  background: color-mix(in srgb, var(--mat-sys-on-surface) 12%, transparent);
+  color: color-mix(in srgb, var(--mat-sys-on-surface) 38%, transparent);
+}
+
+// ============================================
+// Variant: Secondary (Tonal Button)
+// ============================================
+
 .btn--secondary {
-  background: transparent;
-  color: var(--color-text);
-  border: 1px solid var(--color-border);
+  background: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
 }
 
 .btn--secondary:hover:not(:disabled) {
-  background: var(--color-bg-hover);
+  background: color-mix(in srgb, var(--mat-sys-secondary-container) calc(100% - 8%), var(--mat-sys-on-secondary-container));
 }
+
+.btn--secondary:active:not(:disabled) {
+  background: color-mix(in srgb, var(--mat-sys-secondary-container) calc(100% - 12%), var(--mat-sys-on-secondary-container));
+}
+
+.btn--secondary:disabled {
+  background: color-mix(in srgb, var(--mat-sys-on-surface) 12%, transparent);
+  color: color-mix(in srgb, var(--mat-sys-on-surface) 38%, transparent);
+}
+
+// ============================================
+// Variant: Outline (Outlined Button)
+// ============================================
+
+.btn--outline {
+  background: transparent;
+  color: var(--mat-sys-primary);
+  border: 1px solid var(--mat-sys-outline);
+}
+
+.btn--outline:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--mat-sys-primary) 8%, transparent);
+}
+
+.btn--outline:focus-visible:not(:disabled) {
+  border-color: var(--mat-sys-primary);
+}
+
+.btn--outline:active:not(:disabled) {
+  background: color-mix(in srgb, var(--mat-sys-primary) 12%, transparent);
+}
+
+.btn--outline:disabled {
+  color: color-mix(in srgb, var(--mat-sys-on-surface) 38%, transparent);
+  border-color: color-mix(in srgb, var(--mat-sys-on-surface) 12%, transparent);
+}
+
+// ============================================
+// Variant: Ghost (Text Button - Low Emphasis)
+// ============================================
 
 .btn--ghost {
   background: transparent;
-  color: var(--color-text-secondary);
+  color: var(--mat-sys-on-surface-variant);
 }
 
 .btn--ghost:hover:not(:disabled) {
-  background: var(--color-bg-hover);
-  color: var(--color-text);
+  background: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
+  color: var(--mat-sys-on-surface);
 }
 
+.btn--ghost:active:not(:disabled) {
+  background: color-mix(in srgb, var(--mat-sys-on-surface) 12%, transparent);
+}
+
+.btn--ghost:disabled {
+  color: color-mix(in srgb, var(--mat-sys-on-surface) 38%, transparent);
+}
+
+// ============================================
+// Variant: Text (Equivalent to Ghost)
+// ============================================
+
+.btn--text {
+  background: transparent;
+  color: var(--mat-sys-primary);
+  padding: 0 12px;
+}
+
+.btn--text:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--mat-sys-primary) 8%, transparent);
+}
+
+.btn--text:active:not(:disabled) {
+  background: color-mix(in srgb, var(--mat-sys-primary) 12%, transparent);
+}
+
+.btn--text:disabled {
+  color: color-mix(in srgb, var(--mat-sys-on-surface) 38%, transparent);
+}
+
+// ============================================
+// Variant: Danger (Error Color)
+// ============================================
+
+.btn--danger {
+  background: var(--mat-sys-error);
+  color: var(--mat-sys-on-error);
+}
+
+.btn--danger:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--mat-sys-error) calc(100% - 8%), var(--mat-sys-on-error));
+}
+
+.btn--danger:active:not(:disabled) {
+  background: color-mix(in srgb, var(--mat-sys-error) calc(100% - 12%), var(--mat-sys-on-error));
+}
+
+.btn--danger:disabled {
+  background: color-mix(in srgb, var(--mat-sys-on-surface) 12%, transparent);
+  color: color-mix(in srgb, var(--mat-sys-on-surface) 38%, transparent);
+}
+
+// ============================================
+// Size Variants
+// ============================================
+
 .btn--sm {
-  padding: var(--spacing-xs) var(--spacing-sm);
-  font-size: var(--font-size-xs);
+  height: 32px;
+  padding: 0 16px;
+  font-size: 0.75rem;
+}
+
+.btn--md {
+  height: 40px;
+  padding: 0 24px;
 }
 
 .btn--lg {
-  padding: var(--spacing-md) var(--spacing-lg);
-  font-size: var(--font-size-md);
+  height: 48px;
+  padding: 0 32px;
+  font-size: 1rem;
 }
+
+// ============================================
+// Icon Button
+// ============================================
+
+.btn--icon {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: var(--mat-sys-corner-full);
+}
+
+.btn--icon.btn--sm {
+  width: 32px;
+  height: 32px;
+}
+
+.btn--icon.btn--lg {
+  width: 48px;
+  height: 48px;
+}
+
+// ============================================
+// Full Width
+// ============================================
+
+.btn--full-width {
+  width: 100%;
+}
+
+// ============================================
+// Loading State
+// ============================================
+
+.btn--loading {
+  pointer-events: none;
+}
+
+.btn__spinner {
+  display: inline-flex;
+  margin-right: 8px;
+}
+
+.btn__spinner-icon {
+  width: 1em;
+  height: 1em;
+  animation: btn-spin 1s linear infinite;
+}
+
+@keyframes btn-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.btn__content {
+  display: inline-flex;
+  align-items: center;
+}
+
+.btn__start-icon,
+.btn__end-icon {
+  display: inline-flex;
+  font-size: 1.125rem;
+}
+
+.btn__start-icon {
+  margin-right: 4px;
+}
+
+.btn__end-icon {
+  margin-left: 4px;
+}
+
+// ============================================
+// Icon Button (Standalone)
+// ============================================
 
 .icon-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   padding: 0;
   border: none;
-  border-radius: var(--radius-sm);
+  border-radius: var(--mat-sys-corner-full);
   background: transparent;
-  color: var(--color-text-secondary);
+  color: var(--mat-sys-on-surface-variant);
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition:
+    background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard),
+    color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
 }
 
 .icon-btn:focus-visible {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--mat-sys-primary);
   outline-offset: 2px;
 }
 
 .icon-btn:hover {
-  background: var(--color-bg-hover);
-  color: var(--color-text);
+  background: color-mix(in srgb, var(--mat-sys-on-surface-variant) 8%, transparent);
+  color: var(--mat-sys-on-surface);
+}
+
+.icon-btn:active {
+  background: color-mix(in srgb, var(--mat-sys-on-surface-variant) 12%, transparent);
+}
+
+.icon-btn:disabled {
+  color: color-mix(in srgb, var(--mat-sys-on-surface) 38%, transparent);
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 .icon-btn--sm {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
+}
+
+.icon-btn--lg {
+  width: 48px;
+  height: 48px;
 }

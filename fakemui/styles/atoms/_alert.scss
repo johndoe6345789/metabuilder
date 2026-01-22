@@ -1,29 +1,201 @@
-// Alert atoms - flat selectors
+// Alert Atoms - Material Design 3
+// ================================
+// Flat selectors for alert/banner styling using M3 tokens
 
+// Base alert
 .alert {
   display: flex;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-md);
-  border-radius: var(--radius-sm);
-  font-size: var(--font-size-sm);
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  border-radius: var(--mat-sys-corner-medium);
+  font-family: var(--mat-sys-body-medium-font);
+  font-size: var(--mat-sys-body-medium-size);
+  line-height: var(--mat-sys-body-medium-line-height);
+  background: var(--mat-sys-surface-container);
+  color: var(--mat-sys-on-surface);
 }
 
+// Alert icon
+.alert__icon {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// Alert content
+.alert__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.alert__title {
+  font-family: var(--mat-sys-title-small-font);
+  font-size: var(--mat-sys-title-small-size);
+  font-weight: var(--mat-sys-title-small-weight);
+  line-height: var(--mat-sys-title-small-line-height);
+  margin: 0 0 4px;
+}
+
+.alert__message {
+  margin: 0;
+}
+
+// Alert actions
+.alert__actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+// Close button
+.alert__close {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: var(--mat-sys-corner-full);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  transition: background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+}
+
+.alert__close:hover {
+  background: color-mix(in srgb, currentColor 8%, transparent);
+}
+
+.alert__close:focus-visible {
+  outline: 2px solid var(--mat-sys-primary);
+  outline-offset: 2px;
+}
+
+// ============================================
+// Severity Variants
+// ============================================
+
+// Error (high importance)
 .alert--error {
-  background: var(--color-error-bg);
-  color: var(--color-error);
+  background: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
 }
 
+.alert--error .alert__icon {
+  color: var(--mat-sys-error);
+}
+
+// Warning
 .alert--warning {
-  background: var(--color-warning-bg);
-  color: var(--color-warning);
+  background: color-mix(in srgb, #ff9800 12%, var(--mat-sys-surface));
+  color: var(--mat-sys-on-surface);
 }
 
+.alert--warning .alert__icon {
+  color: #e65100;
+}
+
+// Success
 .alert--success {
-  background: var(--color-success-bg);
-  color: var(--color-success);
+  background: color-mix(in srgb, #4caf50 12%, var(--mat-sys-surface));
+  color: var(--mat-sys-on-surface);
 }
 
+.alert--success .alert__icon {
+  color: #2e7d32;
+}
+
+// Info (default)
 .alert--info {
-  background: var(--color-info-bg);
-  color: var(--color-info);
+  background: var(--mat-sys-surface-container-high);
+  color: var(--mat-sys-on-surface);
+}
+
+.alert--info .alert__icon {
+  color: var(--mat-sys-primary);
+}
+
+// ============================================
+// Outlined Variants
+// ============================================
+
+.alert--outlined {
+  background: transparent;
+  border: 1px solid var(--mat-sys-outline);
+}
+
+.alert--outlined.alert--error {
+  border-color: var(--mat-sys-error);
+}
+
+.alert--outlined.alert--warning {
+  border-color: #ff9800;
+}
+
+.alert--outlined.alert--success {
+  border-color: #4caf50;
+}
+
+.alert--outlined.alert--info {
+  border-color: var(--mat-sys-primary);
+}
+
+// ============================================
+// Filled Variants (Higher Emphasis)
+// ============================================
+
+.alert--filled.alert--error {
+  background: var(--mat-sys-error);
+  color: var(--mat-sys-on-error);
+}
+
+.alert--filled.alert--error .alert__icon {
+  color: var(--mat-sys-on-error);
+}
+
+.alert--filled.alert--warning {
+  background: #ed6c02;
+  color: #fff;
+}
+
+.alert--filled.alert--warning .alert__icon {
+  color: #fff;
+}
+
+.alert--filled.alert--success {
+  background: #2e7d32;
+  color: #fff;
+}
+
+.alert--filled.alert--success .alert__icon {
+  color: #fff;
+}
+
+.alert--filled.alert--info {
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+}
+
+.alert--filled.alert--info .alert__icon {
+  color: var(--mat-sys-on-primary);
+}
+
+// ============================================
+// Dense variant
+// ============================================
+
+.alert--dense {
+  padding: 8px 12px;
+  gap: 8px;
+}
+
+.alert--dense .alert__icon {
+  width: 20px;
+  height: 20px;
 }

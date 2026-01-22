@@ -1,0 +1,22 @@
+.demo-list {
+  display: flex;
+  flex-flow: row wrap;
+
+  .mat-mdc-list-base {
+    border: 1px solid var(--mat-divider-color);
+    width: 350px;
+    margin: 20px 20px 0 0;
+  }
+
+  h2 {
+    margin-top: 20px;
+  }
+
+  &.demo-show-boxes .mat-mdc-list-item {
+    border: 1px solid grey;
+  }
+}
+
+.demo-secondary-text {
+  color: rgba(0, 0, 0, 0.54);
+}

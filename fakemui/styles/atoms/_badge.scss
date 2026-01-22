@@ -1,43 +1,173 @@
-// Badge atoms - flat selectors
+// Badge Atoms - Material Design 3
+// ================================
+// Flat selectors for badge styling using M3 tokens
+// https://m3.material.io/components/badges/specs
 
+// Base badge
 .badge {
   position: absolute;
-  top: -6px;
-  right: -6px;
-  min-width: 16px;
-  height: 16px;
-  padding: 0 4px;
-  border-radius: var(--radius-full);
-  background: var(--color-primary);
-  color: white;
-  font-size: 10px;
-  font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: var(--mat-sys-corner-full);
+  background: var(--mat-sys-error);
+  color: var(--mat-sys-on-error);
+  font-family: var(--mat-sys-label-small-font);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
 }
 
-.badge--warning {
-  background: var(--color-warning);
-  color: black;
+// Default position (top-right)
+.badge {
+  top: 0;
+  right: 0;
+  transform: translate(50%, -50%);
 }
 
-.badge--success {
-  background: var(--color-success);
+// Position variants
+.badge--top-left {
+  top: 0;
+  right: auto;
+  left: 0;
+  transform: translate(-50%, -50%);
 }
 
-.badge--error {
-  background: var(--color-error);
+.badge--bottom-right {
+  top: auto;
+  bottom: 0;
+  transform: translate(50%, 50%);
 }
 
+.badge--bottom-left {
+  top: auto;
+  right: auto;
+  bottom: 0;
+  left: 0;
+  transform: translate(-50%, 50%);
+}
+
+// Inline badge (no positioning)
+.badge--inline {
+  position: relative;
+  top: auto;
+  right: auto;
+  transform: none;
+}
+
+// Size variants
 .badge--sm {
-  min-width: 14px;
-  height: 14px;
-  font-size: 9px;
+  min-width: 8px;
+  height: 8px;
+  padding: 0;
+  font-size: 0;
 }
 
 .badge--lg {
   min-width: 20px;
   height: 20px;
-  font-size: 11px;
+  padding: 0 6px;
+  font-size: 12px;
+}
+
+// Color variants
+.badge--primary {
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+}
+
+.badge--secondary {
+  background: var(--mat-sys-secondary);
+  color: var(--mat-sys-on-secondary);
+}
+
+.badge--tertiary {
+  background: var(--mat-sys-tertiary);
+  color: var(--mat-sys-on-tertiary);
+}
+
+.badge--success {
+  background: #4caf50;
+  color: #fff;
+}
+
+.badge--warning {
+  background: #ff9800;
+  color: #000;
+}
+
+.badge--error {
+  background: var(--mat-sys-error);
+  color: var(--mat-sys-on-error);
+}
+
+.badge--surface {
+  background: var(--mat-sys-surface-container-high);
+  color: var(--mat-sys-on-surface);
+}
+
+// Outlined variant
+.badge--outlined {
+  background: transparent;
+  border: 1px solid currentColor;
+}
+
+.badge--outlined.badge--error {
+  color: var(--mat-sys-error);
+}
+
+.badge--outlined.badge--primary {
+  color: var(--mat-sys-primary);
+}
+
+// Dot badge (just a dot indicator)
+.badge--dot {
+  min-width: 8px;
+  width: 8px;
+  height: 8px;
+  padding: 0;
+}
+
+// Badge with max value (shows 99+)
+.badge--max::after {
+  content: '+';
+}
+
+// Invisible badge (for screen readers)
+.badge--invisible {
+  transform: scale(0);
+  transition: transform var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+}
+
+// Badge container
+.badge-container {
+  position: relative;
+  display: inline-flex;
+}
+
+// Pulsing animation for notifications
+.badge--pulse {
+  animation: badge-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes badge-pulse {
+  0%, 100% {
+    transform: translate(50%, -50%) scale(1);
+  }
+  50% {
+    transform: translate(50%, -50%) scale(1.1);
+  }
+}
+
+// Badge overlap adjustments for different shapes
+.badge-container--circular .badge {
+  transform: translate(25%, -25%);
+}
+
+.badge-container--rectangular .badge {
+  transform: translate(50%, -50%);
 }

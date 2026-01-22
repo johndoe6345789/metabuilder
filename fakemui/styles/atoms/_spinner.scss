@@ -1,25 +1,130 @@
-// Spinner atoms - flat selectors
+// Spinner Atoms - Material Design 3
+// ==================================
+// Flat selectors for loading spinner using M3 tokens
+// https://m3.material.io/components/progress-indicators/specs
 
+// Circular spinner (indeterminate)
 .spinner {
-  width: 24px;
-  height: 24px;
-  border: 2px solid var(--color-border);
-  border-top-color: var(--color-primary);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--mat-sys-surface-container-highest);
+  border-top-color: var(--mat-sys-primary);
+  border-radius: var(--mat-sys-corner-full);
+  animation: spinner-rotate 0.8s linear infinite;
+}
+
+// Size variants
+.spinner--xs {
+  width: 16px;
+  height: 16px;
+  border-width: 2px;
 }
 
 .spinner--sm {
-  width: 16px;
-  height: 16px;
+  width: 24px;
+  height: 24px;
+  border-width: 2px;
 }
 
-.spinner--lg {
+.spinner--md {
   width: 40px;
   height: 40px;
   border-width: 3px;
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
+.spinner--lg {
+  width: 56px;
+  height: 56px;
+  border-width: 4px;
+}
+
+.spinner--xl {
+  width: 72px;
+  height: 72px;
+  border-width: 4px;
+}
+
+// Color variants
+.spinner--secondary {
+  border-top-color: var(--mat-sys-secondary);
+}
+
+.spinner--tertiary {
+  border-top-color: var(--mat-sys-tertiary);
+}
+
+.spinner--error {
+  border-top-color: var(--mat-sys-error);
+}
+
+.spinner--on-primary {
+  border-color: color-mix(in srgb, var(--mat-sys-on-primary) 20%, transparent);
+  border-top-color: var(--mat-sys-on-primary);
+}
+
+.spinner--on-surface {
+  border-color: color-mix(in srgb, var(--mat-sys-on-surface) 20%, transparent);
+  border-top-color: var(--mat-sys-on-surface);
+}
+
+@keyframes spinner-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// M3-style circular progress (SVG-based)
+.circular-progress {
+  width: 40px;
+  height: 40px;
+  animation: circular-rotate 1.4s linear infinite;
+}
+
+.circular-progress__circle {
+  stroke: var(--mat-sys-primary);
+  stroke-linecap: round;
+  animation: circular-dash 1.4s ease-in-out infinite;
+}
+
+@keyframes circular-rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes circular-dash {
+  0% {
+    stroke-dasharray: 1, 150;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -124;
+  }
+}
+
+// Loading overlay
+.spinner-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--mat-sys-surface) 80%, transparent);
+  z-index: 10;
+}
+
+// Loading text
+.spinner-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--mat-sys-body-medium-font);
+  font-size: var(--mat-sys-body-medium-size);
+  color: var(--mat-sys-on-surface-variant);
 }

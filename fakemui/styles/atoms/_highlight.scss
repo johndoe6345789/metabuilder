@@ -1,18 +1,106 @@
-// Text highlight atom
+// Highlight Atoms - Material Design 3
+// ===================================
+// Flat selectors for text highlight styling using M3 tokens
 
+// Base highlight (uses tertiary for distinction)
 .highlight {
-  background: var(--color-warning);
-  color: black;
-  padding: 0 3px;
+  background: var(--mat-sys-tertiary-container);
+  color: var(--mat-sys-on-tertiary-container);
+  padding: 0 4px;
   border-radius: 2px;
 }
 
+// Color variants
+.highlight--primary {
+  background: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
+}
+
+.highlight--secondary {
+  background: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
+}
+
 .highlight--success {
-  background: var(--color-success);
-  color: white;
+  background: color-mix(in srgb, #4caf50 20%, var(--mat-sys-surface));
+  color: #2e7d32;
+}
+
+.highlight--warning {
+  background: color-mix(in srgb, #ff9800 20%, var(--mat-sys-surface));
+  color: #e65100;
 }
 
 .highlight--error {
-  background: var(--color-error);
-  color: white;
+  background: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
+}
+
+.highlight--info {
+  background: color-mix(in srgb, #2196f3 20%, var(--mat-sys-surface));
+  color: #0d47a1;
+}
+
+// Subtle variant (lower contrast)
+.highlight--subtle {
+  background: color-mix(in srgb, var(--mat-sys-primary) 8%, transparent);
+  color: inherit;
+}
+
+// Strong variant (inverse colors)
+.highlight--strong {
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+}
+
+// Search result highlight
+.highlight--search {
+  background: color-mix(in srgb, #ffeb3b 50%, transparent);
+  color: inherit;
+  box-shadow: 0 0 0 2px color-mix(in srgb, #ffeb3b 50%, transparent);
+}
+
+// Current/active search result
+.highlight--search-current {
+  background: #ffeb3b;
+  color: #000;
+  box-shadow: 0 0 0 2px #fbc02d;
+}
+
+// Selection highlight (for text selection styling)
+.highlight--selection {
+  background: color-mix(in srgb, var(--mat-sys-primary) 30%, transparent);
+}
+
+// Code/syntax highlighting markers
+.highlight--keyword {
+  color: var(--mat-sys-primary);
+  font-weight: 500;
+}
+
+.highlight--string {
+  color: var(--mat-sys-tertiary);
+}
+
+.highlight--number {
+  color: var(--mat-sys-secondary);
+}
+
+.highlight--comment {
+  color: var(--mat-sys-on-surface-variant);
+  font-style: italic;
+}
+
+// Animated highlight (for attention)
+.highlight--animated {
+  animation: highlight-pulse 2s ease-in-out;
+}
+
+@keyframes highlight-pulse {
+  0%, 100% {
+    background: transparent;
+  }
+  50% {
+    background: var(--mat-sys-tertiary-container);
+  }
 }

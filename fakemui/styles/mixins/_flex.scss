@@ -1,4 +1,4 @@
-// Flexbox mixins
+// Flexbox mixins - Layout utilities
 
 @mixin flex($direction: row, $justify: flex-start, $align: stretch, $gap: 0) {
   display: flex;
@@ -20,4 +20,26 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+@mixin flex-start {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+@mixin flex-end {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin flex-wrap {
+  display: flex;
+  flex-wrap: wrap;
 }

@@ -1,31 +1,147 @@
-// Stat badge atom - small colored indicators for counts/status
+// Stat Badge Atoms - Material Design 3
+// ====================================
+// Flat selectors for small stat/count indicators using M3 tokens
 
+// Base stat badge
 .stat-badge {
   display: inline-flex;
   align-items: center;
-  padding: 0 6px;
+  justify-content: center;
+  padding: 0 8px;
+  min-width: 20px;
   height: 20px;
-  border-radius: var(--radius-full);
+  border-radius: var(--mat-sys-corner-full);
+  font-family: var(--mat-sys-label-small-font);
   font-size: 11px;
   font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
 }
 
+// Status variants
 .stat-badge--pending {
-  background: var(--color-warning);
-  color: black;
+  background: color-mix(in srgb, #ff9800 20%, var(--mat-sys-surface));
+  color: #e65100;
 }
 
 .stat-badge--success {
-  background: var(--color-success);
-  color: white;
+  background: color-mix(in srgb, #4caf50 20%, var(--mat-sys-surface));
+  color: #2e7d32;
 }
 
 .stat-badge--error {
-  background: var(--color-error);
-  color: white;
+  background: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
+}
+
+.stat-badge--warning {
+  background: color-mix(in srgb, #ff9800 20%, var(--mat-sys-surface));
+  color: #e65100;
 }
 
 .stat-badge--info {
-  background: var(--color-info);
-  color: white;
+  background: color-mix(in srgb, #2196f3 20%, var(--mat-sys-surface));
+  color: #0d47a1;
+}
+
+// M3 color variants
+.stat-badge--primary {
+  background: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
+}
+
+.stat-badge--secondary {
+  background: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
+}
+
+.stat-badge--tertiary {
+  background: var(--mat-sys-tertiary-container);
+  color: var(--mat-sys-on-tertiary-container);
+}
+
+// Filled variants (stronger emphasis)
+.stat-badge--filled-success {
+  background: #4caf50;
+  color: #fff;
+}
+
+.stat-badge--filled-error {
+  background: var(--mat-sys-error);
+  color: var(--mat-sys-on-error);
+}
+
+.stat-badge--filled-warning {
+  background: #ff9800;
+  color: #000;
+}
+
+.stat-badge--filled-info {
+  background: #2196f3;
+  color: #fff;
+}
+
+.stat-badge--filled-primary {
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+}
+
+// Neutral/muted
+.stat-badge--neutral {
+  background: var(--mat-sys-surface-container-high);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+// Size variants
+.stat-badge--sm {
+  padding: 0 6px;
+  min-width: 16px;
+  height: 16px;
+  font-size: 10px;
+}
+
+.stat-badge--lg {
+  padding: 0 10px;
+  min-width: 24px;
+  height: 24px;
+  font-size: 12px;
+}
+
+// With icon
+.stat-badge-with-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.stat-badge-with-icon .icon {
+  width: 12px;
+  height: 12px;
+}
+
+// Dot indicator (no text)
+.stat-badge--dot {
+  width: 8px;
+  height: 8px;
+  min-width: 8px;
+  padding: 0;
+}
+
+// Pulsing animation (for live/active)
+.stat-badge--pulse {
+  animation: stat-badge-pulse 2s ease-in-out infinite;
+}
+
+@keyframes stat-badge-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+// Count overflow (99+)
+.stat-badge--overflow::after {
+  content: '+';
 }

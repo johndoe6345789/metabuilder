@@ -1,8 +1,10 @@
-// ButtonGroup component styles
+// ButtonGroup Component - Material Design 3
+// ==========================================
+// Grouped button styling using M3 tokens
 
 .btn-group {
   display: inline-flex;
-  border-radius: var(--border-radius, 4px);
+  border-radius: var(--mat-sys-corner-full);
 
   &--vertical {
     flex-direction: column;
@@ -59,6 +61,27 @@
     &:hover,
     &:focus {
       z-index: 1;
+    }
+  }
+
+  // Outlined variant
+  &--outlined {
+    .btn-group__btn {
+      border: 1px solid var(--mat-sys-outline);
+    }
+  }
+
+  // Contained variant
+  &--contained {
+    box-shadow: var(--mat-sys-level1);
+
+    .btn-group__btn {
+      border: none;
+
+      &:not(:first-child) {
+        margin-left: 0;
+        border-left: 1px solid color-mix(in srgb, var(--mat-sys-on-primary) 12%, transparent);
+      }
     }
   }
 }
