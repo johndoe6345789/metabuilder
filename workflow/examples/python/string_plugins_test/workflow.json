@@ -8,15 +8,23 @@
       "type": "string.concat",
       "typeVersion": 1,
       "position": [
-        0,
-        0
+        100,
+        100
       ],
       "parameters": {
-        "strings": [
-          "Hello",
-          "World"
+        "name": "Test Concat",
+        "typeVersion": 1,
+        "position": [
+          0,
+          0
         ],
-        "separator": " "
+        "parameters": {
+          "strings": [
+            "Hello",
+            "World"
+          ],
+          "separator": " "
+        }
       }
     },
     {
@@ -25,13 +33,21 @@
       "type": "test.assert_equals",
       "typeVersion": 1,
       "position": [
-        300,
-        0
+        400,
+        100
       ],
       "parameters": {
-        "actual": "$test_concat.result",
-        "expected": "Hello World",
-        "message": "string.concat should join strings"
+        "name": "Assert Concat",
+        "typeVersion": 1,
+        "position": [
+          300,
+          0
+        ],
+        "parameters": {
+          "actual": "$test_concat.result",
+          "expected": "Hello World",
+          "message": "string.concat should join strings"
+        }
       }
     },
     {
@@ -40,11 +56,19 @@
       "type": "string.upper",
       "typeVersion": 1,
       "position": [
-        0,
+        700,
         100
       ],
       "parameters": {
-        "text": "hello"
+        "name": "Test Upper",
+        "typeVersion": 1,
+        "position": [
+          0,
+          100
+        ],
+        "parameters": {
+          "text": "hello"
+        }
       }
     },
     {
@@ -53,13 +77,21 @@
       "type": "test.assert_equals",
       "typeVersion": 1,
       "position": [
-        300,
-        100
+        100,
+        300
       ],
       "parameters": {
-        "actual": "$test_upper.result",
-        "expected": "HELLO",
-        "message": "string.upper should uppercase text"
+        "name": "Assert Upper",
+        "typeVersion": 1,
+        "position": [
+          300,
+          100
+        ],
+        "parameters": {
+          "actual": "$test_upper.result",
+          "expected": "HELLO",
+          "message": "string.upper should uppercase text"
+        }
       }
     },
     {
@@ -68,11 +100,19 @@
       "type": "string.lower",
       "typeVersion": 1,
       "position": [
-        0,
-        200
+        400,
+        300
       ],
       "parameters": {
-        "text": "WORLD"
+        "name": "Test Lower",
+        "typeVersion": 1,
+        "position": [
+          0,
+          200
+        ],
+        "parameters": {
+          "text": "WORLD"
+        }
       }
     },
     {
@@ -81,13 +121,21 @@
       "type": "test.assert_equals",
       "typeVersion": 1,
       "position": [
-        300,
-        200
+        700,
+        300
       ],
       "parameters": {
-        "actual": "$test_lower.result",
-        "expected": "world",
-        "message": "string.lower should lowercase text"
+        "name": "Assert Lower",
+        "typeVersion": 1,
+        "position": [
+          300,
+          200
+        ],
+        "parameters": {
+          "actual": "$test_lower.result",
+          "expected": "world",
+          "message": "string.lower should lowercase text"
+        }
       }
     },
     {
@@ -96,12 +144,20 @@
       "type": "string.split",
       "typeVersion": 1,
       "position": [
-        0,
-        300
+        100,
+        500
       ],
       "parameters": {
-        "text": "a,b,c",
-        "separator": ","
+        "name": "Test Split",
+        "typeVersion": 1,
+        "position": [
+          0,
+          300
+        ],
+        "parameters": {
+          "text": "a,b,c",
+          "separator": ","
+        }
       }
     },
     {
@@ -110,26 +166,42 @@
       "type": "list.length",
       "typeVersion": 1,
       "position": [
-        300,
-        300
+        400,
+        500
       ],
       "parameters": {
-        "items": "$test_split.result"
+        "name": "Assert Split Length",
+        "typeVersion": 1,
+        "position": [
+          300,
+          300
+        ],
+        "parameters": {
+          "items": "$test_split.result"
+        }
       }
     },
     {
       "id": "assert_split",
-      "name": "Assert Split Count",
+      "name": "Assert Split",
       "type": "test.assert_equals",
       "typeVersion": 1,
       "position": [
-        600,
-        300
+        700,
+        500
       ],
       "parameters": {
-        "actual": "$assert_split_length.result",
-        "expected": 3,
-        "message": "string.split should split into array"
+        "name": "Assert Split Count",
+        "typeVersion": 1,
+        "position": [
+          600,
+          300
+        ],
+        "parameters": {
+          "actual": "$assert_split_length.result",
+          "expected": 3,
+          "message": "string.split should split into array"
+        }
       }
     },
     {
@@ -138,11 +210,19 @@
       "type": "string.length",
       "typeVersion": 1,
       "position": [
-        0,
-        400
+        100,
+        700
       ],
       "parameters": {
-        "text": "Hello"
+        "name": "Test Length",
+        "typeVersion": 1,
+        "position": [
+          0,
+          400
+        ],
+        "parameters": {
+          "text": "Hello"
+        }
       }
     },
     {
@@ -151,13 +231,21 @@
       "type": "test.assert_equals",
       "typeVersion": 1,
       "position": [
-        300,
-        400
+        400,
+        700
       ],
       "parameters": {
-        "actual": "$test_length.result",
-        "expected": 5,
-        "message": "string.length should return character count"
+        "name": "Assert Length",
+        "typeVersion": 1,
+        "position": [
+          300,
+          400
+        ],
+        "parameters": {
+          "actual": "$test_length.result",
+          "expected": 5,
+          "message": "string.length should return character count"
+        }
       }
     }
   ],
@@ -166,7 +254,7 @@
       "main": {
         "0": [
           {
-            "node": "Assert Concat",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -177,7 +265,7 @@
       "main": {
         "0": [
           {
-            "node": "Assert Upper",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -188,7 +276,7 @@
       "main": {
         "0": [
           {
-            "node": "Assert Lower",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -199,7 +287,7 @@
       "main": {
         "0": [
           {
-            "node": "Assert Split Length",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -210,7 +298,7 @@
       "main": {
         "0": [
           {
-            "node": "Assert Split Count",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -221,7 +309,7 @@
       "main": {
         "0": [
           {
-            "node": "Assert Length",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -229,14 +317,13 @@
       }
     }
   },
-  "triggers": [
-    {
-      "nodeId": "test_concat",
-      "kind": "manual",
-      "enabled": true,
-      "meta": {
-        "description": "Manually triggered String Plugins Test Suite workflow execution"
-      }
-    }
-  ]
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  }
 }

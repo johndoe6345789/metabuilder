@@ -1,0 +1,84 @@
+{
+  "name": "Package Repository Server",
+  "description": "Complete Flask server defined as a workflow",
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "create_app",
+      "type": "web.create_flask_app",
+      "parameters": {
+        "name": "packagerepo",
+        "config": {
+          "MAX_CONTENT_LENGTH": 2147483648
+        }
+      }
+    },
+    {
+      "id": "register_publish",
+      "type": "web.register_route",
+      "parameters": {
+        "path": "/v1/<namespace>/<name>/<version>/<variant>/blob",
+        "methods": ["PUT"],
+        "workflow": "publish_artifact",
+        "endpoint": "publish_artifact"
+      }
+    },
+    {
+      "id": "register_download",
+      "type": "web.register_route",
+      "parameters": {
+        "path": "/v1/<namespace>/<name>/<version>/<variant>/blob",
+        "methods": ["GET"],
+        "workflow": "download_artifact",
+        "endpoint": "download_artifact"
+      }
+    },
+    {
+      "id": "register_latest",
+      "type": "web.register_route",
+      "parameters": {
+        "path": "/v1/<namespace>/<name>/latest",
+        "methods": ["GET"],
+        "workflow": "resolve_latest",
+        "endpoint": "resolve_latest"
+      }
+    },
+    {
+      "id": "register_versions",
+      "type": "web.register_route",
+      "parameters": {
+        "path": "/v1/<namespace>/<name>/versions",
+        "methods": ["GET"],
+        "workflow": "list_versions",
+        "endpoint": "list_versions"
+      }
+    },
+    {
+      "id": "register_login",
+      "type": "web.register_route",
+      "parameters": {
+        "path": "/auth/login",
+        "methods": ["POST"],
+        "workflow": "auth_login",
+        "endpoint": "auth_login"
+      }
+    },
+    {
+      "id": "start_server",
+      "type": "web.start_server",
+      "parameters": {
+        "host": "0.0.0.0",
+        "port": 8080,
+        "debug": false
+      }
+    }
+  ],
+  "connections": {
+    "create_app": ["register_publish"],
+    "register_publish": ["register_download"],
+    "register_download": ["register_latest"],
+    "register_latest": ["register_versions"],
+    "register_versions": ["register_login"],
+    "register_login": ["start_server"]
+  }
+}

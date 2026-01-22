@@ -1,0 +1,131 @@
+{
+  "version": "2.2.0",
+  "name": "Fetch Dashboard Data",
+  "description": "Fetch all dashboard data in parallel (profile, stats, recent activity, notifications)",
+  "trigger": {
+    "type": "http",
+    "method": "GET",
+    "path": "/dashboard"
+  },
+  "nodes": [
+    {
+      "id": "validate_context",
+      "type": "operation",
+      "op": "validate",
+      "input": "{{ $context.user.id }}",
+      "validator": "required"
+    },
+    {
+      "id": "fetch_user_profile_parallel",
+      "type": "operation",
+      "op": "parallel",
+      "tasks": [
+        {
+          "id": "fetch_user",
+          "op": "database_read",
+          "entity": "User",
+          "params": {
+            "filter": {
+              "id": "{{ $context.user.id }}",
+              "tenantId": "{{ $context.tenantId }}"
+            }
+          }
+        },
+        {
+          "id": "fetch_unread_notifications",
+          "op": "database_count",
+          "entity": "Notification",
+          "params": {
+            "filter": {
+              "userId": "{{ $context.user.id }}",
+              "tenantId": "{{ $context.tenantId }}",
+              "isRead": false
+            }
+          }
+        },
+        {
+          "id": "fetch_recent_activity",
+          "op": "database_read",
+          "entity": "ForumPost",
+          "params": {
+            "filter": {
+              "authorId": "{{ $context.user.id }}",
+              "tenantId": "{{ $context.tenantId }}"
+            },
+            "sort": {"createdAt": -1},
+            "limit": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "fetch_statistics",
+      "type": "operation",
+      "op": "parallel",
+      "tasks": [
+        {
+          "id": "count_posts",
+          "op": "database_count",
+          "entity": "ForumPost",
+          "params": {
+            "filter": {
+              "authorId": "{{ $context.user.id }}",
+              "tenantId": "{{ $context.tenantId }}"
+            }
+          }
+        },
+        {
+          "id": "count_threads",
+          "op": "database_count",
+          "entity": "ForumThread",
+          "params": {
+            "filter": {
+              "authorId": "{{ $context.user.id }}",
+              "tenantId": "{{ $context.tenantId }}"
+            }
+          }
+        },
+        {
+          "id": "count_media",
+          "op": "database_count",
+          "entity": "MediaAsset",
+          "params": {
+            "filter": {
+              "uploadedBy": "{{ $context.user.id }}",
+              "tenantId": "{{ $context.tenantId }}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "format_response",
+      "type": "operation",
+      "op": "transform_data",
+      "output": {
+        "profile": {
+          "id": "{{ $steps.fetch_user_profile_parallel.tasks.fetch_user.output.id }}",
+          "email": "{{ $steps.fetch_user_profile_parallel.tasks.fetch_user.output.email }}",
+          "displayName": "{{ $steps.fetch_user_profile_parallel.tasks.fetch_user.output.displayName }}",
+          "avatar": "{{ $steps.fetch_user_profile_parallel.tasks.fetch_user.output.avatar }}"
+        },
+        "notifications": {
+          "unread": "{{ $steps.fetch_user_profile_parallel.tasks.fetch_unread_notifications.output }}"
+        },
+        "statistics": {
+          "posts": "{{ $steps.fetch_statistics.tasks.count_posts.output }}",
+          "threads": "{{ $steps.fetch_statistics.tasks.count_threads.output }}",
+          "mediaUploads": "{{ $steps.fetch_statistics.tasks.count_media.output }}"
+        },
+        "recentActivity": "{{ $steps.fetch_user_profile_parallel.tasks.fetch_recent_activity.output }}"
+      }
+    },
+    {
+      "id": "return_success",
+      "type": "action",
+      "action": "http_response",
+      "status": 200,
+      "body": "{{ $steps.format_response.output }}"
+    }
+  ]
+}

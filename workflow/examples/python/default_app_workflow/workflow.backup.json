@@ -1,0 +1,110 @@
+{
+  "version": "2.2.0",
+  "name": "default_app_workflow",
+  "description": "Default application workflow with backend bootstrap and iterative AI loop",
+  "active": false,
+  "trigger": {
+    "type": "manual",
+    "node": "load_messages"
+  },
+  "nodes": [
+    {
+      "id": "load_messages",
+      "type": "operation",
+      "op": "load_messages",
+      "description": "Load initial messages from storage"
+    },
+    {
+      "id": "load_metadata",
+      "type": "operation",
+      "op": "load_metadata",
+      "description": "Load workflow metadata and configuration"
+    },
+    {
+      "id": "load_prompts",
+      "type": "operation",
+      "op": "load_prompts",
+      "description": "Load prompt templates"
+    },
+    {
+      "id": "create_github_client",
+      "type": "operation",
+      "op": "create_github_client",
+      "description": "Initialize GitHub API client"
+    },
+    {
+      "id": "create_openai_client",
+      "type": "operation",
+      "op": "create_openai_client",
+      "description": "Initialize OpenAI API client"
+    },
+    {
+      "id": "load_tools",
+      "type": "operation",
+      "op": "load_tools",
+      "description": "Load available tool definitions"
+    },
+    {
+      "id": "load_plugins",
+      "type": "operation",
+      "op": "load_plugins",
+      "description": "Load and initialize plugins"
+    },
+    {
+      "id": "seed_context",
+      "type": "operation",
+      "op": "seed_context",
+      "description": "Initialize execution context"
+    },
+    {
+      "id": "seed_messages",
+      "type": "operation",
+      "op": "seed_messages",
+      "description": "Seed initial conversation messages"
+    },
+    {
+      "id": "append_user_instructions",
+      "type": "operation",
+      "op": "append_message",
+      "description": "Append user instructions to messages"
+    },
+    {
+      "id": "ai_loop",
+      "type": "loop",
+      "max_iterations": 10,
+      "when": "$no_tool_calls",
+      "nodes": [
+        {
+          "id": "ai_request",
+          "type": "operation",
+          "op": "ai_request",
+          "description": "Make request to AI model"
+        },
+        {
+          "id": "execute_tool_calls",
+          "type": "operation",
+          "op": "execute_tool_calls",
+          "description": "Execute any tool calls from AI response"
+        },
+        {
+          "id": "append_results",
+          "type": "operation",
+          "op": "append_results",
+          "description": "Append tool results to conversation"
+        }
+      ]
+    }
+  ],
+  "connections": [
+    { "from": "load_messages", "to": "load_metadata" },
+    { "from": "load_metadata", "to": "load_prompts" },
+    { "from": "load_prompts", "to": "create_github_client" },
+    { "from": "create_github_client", "to": "create_openai_client" },
+    { "from": "create_openai_client", "to": "load_tools" },
+    { "from": "load_tools", "to": "load_plugins" },
+    { "from": "load_plugins", "to": "seed_context" },
+    { "from": "seed_context", "to": "seed_messages" },
+    { "from": "seed_messages", "to": "append_user_instructions" },
+    { "from": "append_user_instructions", "to": "ai_loop" }
+  ]
+}

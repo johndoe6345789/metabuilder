@@ -119,11 +119,14 @@ interface N8NWorkflow {
  * @example idToName('parse_body') → 'Parse Body'
  * @example idToName('create-app') → 'Create App'
  */
-function idToName(id: string): string {
+function idToName(idInput: unknown): string {
+  // Handle non-string IDs
+  let id = typeof idInput === 'string' ? idInput : String(idInput ?? 'node')
+
   return id
     .replace(/[_-]/g, ' ')
     .split(' ')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join(' ')
 }
 

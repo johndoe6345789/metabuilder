@@ -1,0 +1,69 @@
+{
+  "version": "2.2.0",
+  "name": "Format Audit Log Entry",
+  "description": "Format audit log entries with user and entity details for display",
+  "trigger": {
+    "type": "operation",
+    "op": "transform"
+  },
+  "nodes": [
+    {
+      "id": "extract_log_id",
+      "type": "operation",
+      "op": "transform_data",
+      "input": "{{ $json }}",
+      "output": "{{ $json.id }}"
+    },
+    {
+      "id": "fetch_user_details",
+      "type": "operation",
+      "op": "database_read",
+      "entity": "User",
+      "params": {
+        "filter": {
+          "id": "{{ $json.userId }}",
+          "tenantId": "{{ $context.tenantId }}"
+        }
+      },
+      "output": "user"
+    },
+    {
+      "id": "format_timestamp",
+      "type": "operation",
+      "op": "transform_data",
+      "input": "{{ $json.timestamp }}",
+      "output": {
+        "iso": "{{ new Date($json.timestamp).toISOString() }}",
+        "formatted": "{{ new Date($json.timestamp).toLocaleString('en-US') }}",
+        "relative": "{{ Math.floor((Date.now() - new Date($json.timestamp).getTime()) / 1000) }} seconds ago"
+      }
+    },
+    {
+      "id": "format_entry",
+      "type": "operation",
+      "op": "transform_data",
+      "output": {
+        "id": "{{ $json.id }}",
+        "user": {
+          "id": "{{ $steps.fetch_user_details.output.id }}",
+          "email": "{{ $steps.fetch_user_details.output.email }}",
+          "displayName": "{{ $steps.fetch_user_details.output.displayName }}"
+        },
+        "action": "{{ $json.action }}",
+        "entity": "{{ $json.entity }}",
+        "entityId": "{{ $json.entityId }}",
+        "changes": "{{ $json.changes }}",
+        "timestamp": "{{ $steps.format_timestamp.output }}",
+        "ipAddress": "{{ $json.ipAddress }}",
+        "userAgent": "{{ $json.userAgent }}"
+      }
+    },
+    {
+      "id": "return_formatted",
+      "type": "action",
+      "action": "emit_event",
+      "event": "audit_formatted",
+      "data": "{{ $steps.format_entry.output }}"
+    }
+  ]
+}

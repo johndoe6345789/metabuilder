@@ -1,0 +1,87 @@
+{
+  "version": "2.2.0",
+  "name": "Mark Notification as Read",
+  "description": "Mark single or multiple notifications as read by user",
+  "trigger": {
+    "type": "http",
+    "method": "POST",
+    "path": "/notifications/mark-read"
+  },
+  "nodes": [
+    {
+      "id": "validate_context",
+      "type": "operation",
+      "op": "validate",
+      "input": "{{ $context.tenantId }}",
+      "validator": "required"
+    },
+    {
+      "id": "validate_user",
+      "type": "operation",
+      "op": "validate",
+      "input": "{{ $context.user.id }}",
+      "validator": "required"
+    },
+    {
+      "id": "check_bulk_vs_single",
+      "type": "operation",
+      "op": "condition",
+      "condition": "{{ Array.isArray($json.notificationIds) }}"
+    },
+    {
+      "id": "mark_single",
+      "type": "operation",
+      "op": "database_update",
+      "entity": "Notification",
+      "params": {
+        "filter": {
+          "id": "{{ $json.notificationId }}",
+          "userId": "{{ $context.user.id }}",
+          "tenantId": "{{ $context.tenantId }}"
+        },
+        "data": {
+          "isRead": true,
+          "readAt": "{{ new Date().toISOString() }}"
+        }
+      }
+    },
+    {
+      "id": "mark_bulk",
+      "type": "operation",
+      "op": "database_update_many",
+      "entity": "Notification",
+      "params": {
+        "filter": {
+          "id": {
+            "$in": "{{ $json.notificationIds }}"
+          },
+          "userId": "{{ $context.user.id }}",
+          "tenantId": "{{ $context.tenantId }}"
+        },
+        "data": {
+          "isRead": true,
+          "readAt": "{{ new Date().toISOString() }}"
+        }
+      }
+    },
+    {
+      "id": "emit_read_event",
+      "type": "action",
+      "action": "emit_event",
+      "event": "notification_read",
+      "channel": "{{ 'user:' + $context.user.id }}",
+      "data": {
+        "notificationIds": "{{ Array.isArray($json.notificationIds) ? $json.notificationIds : [$json.notificationId] }}"
+      }
+    },
+    {
+      "id": "return_success",
+      "type": "action",
+      "action": "http_response",
+      "status": 200,
+      "body": {
+        "message": "Notification(s) marked as read"
+      }
+    }
+  ]
+}

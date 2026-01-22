@@ -1,0 +1,123 @@
+{
+  "name": "meta.workflow_packages.game_tick_loop.label",
+  "active": false,
+  "nodes": [
+    {
+      "id": "seed_messages",
+      "name": "Seed Messages",
+      "type": "core.seed_messages",
+      "typeVersion": 1,
+      "position": [
+        0,
+        50
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "map_ticks",
+      "name": "Map Ticks",
+      "type": "utils.map_list",
+      "typeVersion": 1,
+      "position": [
+        300,
+        50
+      ],
+      "parameters": {
+        "items": [
+          "tick_start",
+          "tick_update",
+          "tick_render"
+        ],
+        "template": "Tick: {item}"
+      }
+    },
+    {
+      "id": "reduce_ticks",
+      "name": "Reduce Ticks",
+      "type": "utils.reduce_list",
+      "typeVersion": 1,
+      "position": [
+        600,
+        50
+      ],
+      "parameters": {
+        "items": "$tick_lines",
+        "separator": "\\n"
+      }
+    },
+    {
+      "id": "append_tick_context",
+      "name": "Append Tick Context",
+      "type": "core.append_context_message",
+      "typeVersion": 1,
+      "position": [
+        900,
+        50
+      ],
+      "parameters": {
+        "messages": "$messages",
+        "context": "$tick_context"
+      }
+    },
+    {
+      "id": "main_loop",
+      "name": "Main Loop",
+      "type": "control.loop",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        50
+      ],
+      "parameters": {
+        "max_iterations": 3,
+        "stop_when": "$no_tool_calls",
+        "stop_on": "true"
+      }
+    }
+  ],
+  "connections": {
+    "Map Ticks": {
+      "main": {
+        "0": [
+          {
+            "node": "Reduce Ticks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Append Tick Context": {
+      "main": {
+        "0": [
+          {
+            "node": "Append Tick Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Reduce Ticks": {
+      "main": {
+        "0": [
+          {
+            "node": "Append Tick Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    }
+  },
+  "triggers": [
+    {
+      "nodeId": "seed_messages",
+      "kind": "manual",
+      "enabled": true,
+      "meta": {
+        "description": "Manually triggered meta.workflow_packages.game_tick_loop.label workflow execution"
+      }
+    }
+  ]
+}

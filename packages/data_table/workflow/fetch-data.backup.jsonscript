@@ -1,0 +1,143 @@
+{
+  "version": "2.2.0",
+  "name": "Fetch Data for Table",
+  "description": "Fetch data with multi-tenant filtering, sorting, and pagination - CRITICAL for security",
+  "trigger": {
+    "type": "http",
+    "method": "POST",
+    "path": "/data-table/fetch"
+  },
+  "nodes": [
+    {
+      "id": "validate_tenant_critical",
+      "type": "operation",
+      "op": "validate",
+      "input": "{{ $context.tenantId }}",
+      "validator": "required",
+      "errorMessage": "tenantId is REQUIRED for multi-tenant safety - data leak prevention"
+    },
+    {
+      "id": "validate_user_critical",
+      "type": "operation",
+      "op": "validate",
+      "input": "{{ $context.user.id }}",
+      "validator": "required",
+      "errorMessage": "userId is REQUIRED for row-level ACL"
+    },
+    {
+      "id": "validate_input",
+      "type": "operation",
+      "op": "validate",
+      "input": "{{ $json }}",
+      "rules": {
+        "entity": "required|string",
+        "sortBy": "string",
+        "sortOrder": "string",
+        "limit": "number|max:500",
+        "page": "number|min:1"
+      }
+    },
+    {
+      "id": "extract_params",
+      "type": "operation",
+      "op": "transform_data",
+      "output": {
+        "entity": "{{ $json.entity }}",
+        "sortBy": "{{ $json.sortBy || 'createdAt' }}",
+        "sortOrder": "{{ $json.sortOrder === 'asc' ? 1 : -1 }}",
+        "limit": "{{ Math.min($json.limit || 50, 500) }}",
+        "page": "{{ $json.page || 1 }}"
+      }
+    },
+    {
+      "id": "calculate_offset",
+      "type": "operation",
+      "op": "transform_data",
+      "output": "{{ ($steps.extract_params.output.page - 1) * $steps.extract_params.output.limit }}"
+    },
+    {
+      "id": "build_filter",
+      "type": "operation",
+      "op": "transform_data",
+      "output": {
+        "tenantId": "{{ $context.tenantId }}",
+        "searchTerm": "{{ $json.search || null }}",
+        "filters": "{{ $json.filters || {} }}"
+      }
+    },
+    {
+      "id": "apply_user_acl",
+      "type": "operation",
+      "op": "condition",
+      "condition": "{{ $context.user.level >= 3 || $build_filter.output.filters.userId === $context.user.id }}"
+    },
+    {
+      "id": "fetch_data",
+      "type": "operation",
+      "op": "http_request",
+      "url": "{{ '/api/v1/' + $context.tenantId + '/' + $steps.extract_params.output.entity }}",
+      "method": "GET",
+      "queryParameters": {
+        "tenantId": "{{ $context.tenantId }}",
+        "sortBy": "{{ $steps.extract_params.output.sortBy }}",
+        "sortOrder": "{{ $steps.extract_params.output.sortOrder }}",
+        "limit": "{{ $steps.extract_params.output.limit }}",
+        "offset": "{{ $steps.calculate_offset.output }}",
+        "filters": "{{ JSON.stringify($steps.build_filter.output.filters) }}"
+      },
+      "headers": {
+        "Authorization": "{{ 'Bearer ' + $context.token }}"
+      }
+    },
+    {
+      "id": "validate_response",
+      "type": "operation",
+      "op": "condition",
+      "condition": "{{ $steps.fetch_data.output.status === 200 }}"
+    },
+    {
+      "id": "parse_response",
+      "type": "operation",
+      "op": "transform_data",
+      "input": "{{ $steps.fetch_data.output.body }}",
+      "output": {
+        "data": "{{ $steps.fetch_data.output.body.data }}",
+        "total": "{{ $steps.fetch_data.output.body.total }}"
+      }
+    },
+    {
+      "id": "format_response",
+      "type": "operation",
+      "op": "transform_data",
+      "output": {
+        "data": "{{ $steps.parse_response.output.data }}",
+        "pagination": {
+          "total": "{{ $steps.parse_response.output.total }}",
+          "page": "{{ $steps.extract_params.output.page }}",
+          "limit": "{{ $steps.extract_params.output.limit }}",
+          "totalPages": "{{ Math.ceil($steps.parse_response.output.total / $steps.extract_params.output.limit) }}"
+        },
+        "sorting": {
+          "sortBy": "{{ $steps.extract_params.output.sortBy }}",
+          "sortOrder": "{{ $steps.extract_params.output.sortOrder === 1 ? 'asc' : 'desc' }}"
+        }
+      }
+    },
+    {
+      "id": "return_success",
+      "type": "action",
+      "action": "http_response",
+      "status": 200,
+      "body": "{{ $steps.format_response.output }}"
+    }
+  ],
+  "errorHandler": {
+    "type": "action",
+    "action": "http_response",
+    "status": 400,
+    "body": {
+      "error": "Failed to fetch data",
+      "message": "{{ $error.message }}"
+    }
+  }
+}

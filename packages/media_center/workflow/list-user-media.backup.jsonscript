@@ -1,0 +1,98 @@
+{
+  "version": "2.2.0",
+  "name": "List User Media",
+  "description": "List all media assets for current user with filtering and sorting",
+  "trigger": {
+    "type": "http",
+    "method": "GET",
+    "path": "/media/my-assets"
+  },
+  "nodes": [
+    {
+      "id": "validate_context",
+      "type": "operation",
+      "op": "validate",
+      "input": "{{ $context.tenantId }}",
+      "validator": "required"
+    },
+    {
+      "id": "validate_user",
+      "type": "operation",
+      "op": "validate",
+      "input": "{{ $context.user.id }}",
+      "validator": "required"
+    },
+    {
+      "id": "extract_params",
+      "type": "operation",
+      "op": "transform_data",
+      "output": {
+        "type": "{{ $json.type || null }}",
+        "sortBy": "{{ $json.sortBy || 'createdAt' }}",
+        "sortOrder": "{{ $json.sortOrder || 'desc' }}",
+        "limit": "{{ Math.min($json.limit || 50, 500) }}",
+        "offset": "{{ ($json.page || 1 - 1) * ($json.limit || 50) }}"
+      }
+    },
+    {
+      "id": "build_filter",
+      "type": "operation",
+      "op": "transform_data",
+      "output": {
+        "tenantId": "{{ $context.tenantId }}",
+        "uploadedBy": "{{ $context.user.id }}",
+        "type": "{{ $steps.extract_params.output.type }}"
+      }
+    },
+    {
+      "id": "clean_filter",
+      "type": "operation",
+      "op": "transform_data",
+      "output": "{{ Object.entries($steps.build_filter.output).reduce((acc, [key, value]) => { if (value !== null && value !== undefined) acc[key] = value; return acc; }, {}) }}"
+    },
+    {
+      "id": "fetch_media",
+      "type": "operation",
+      "op": "database_read",
+      "entity": "MediaAsset",
+      "params": {
+        "filter": "{{ $steps.clean_filter.output }}",
+        "sort": {
+          "{{ $steps.extract_params.output.sortBy }}": "{{ $steps.extract_params.output.sortOrder === 'asc' ? 1 : -1 }}"
+        },
+        "limit": "{{ $steps.extract_params.output.limit }}",
+        "offset": "{{ $steps.extract_params.output.offset }}"
+      }
+    },
+    {
+      "id": "count_total",
+      "type": "operation",
+      "op": "database_count",
+      "entity": "MediaAsset",
+      "params": {
+        "filter": "{{ $steps.clean_filter.output }}"
+      }
+    },
+    {
+      "id": "format_response",
+      "type": "operation",
+      "op": "transform_data",
+      "output": {
+        "assets": "{{ $steps.fetch_media.output }}",
+        "pagination": {
+          "total": "{{ $steps.count_total.output }}",
+          "page": "{{ $json.page || 1 }}",
+          "limit": "{{ $steps.extract_params.output.limit }}",
+          "hasMore": "{{ $steps.count_total.output > ($steps.extract_params.output.offset + $steps.extract_params.output.limit) }}"
+        }
+      }
+    },
+    {
+      "id": "return_success",
+      "type": "action",
+      "action": "http_response",
+      "status": 200,
+      "body": "{{ $steps.format_response.output }}"
+    }
+  ]
+}

@@ -1,92 +1,147 @@
 {
-  "version": "2.2.0",
   "name": "Cleanup Expired Notifications",
-  "description": "Delete expired notifications and cleanup old read notifications",
-  "trigger": {
-    "type": "scheduled",
-    "schedule": "0 2 * * *"
-  },
+  "active": false,
   "nodes": [
     {
       "id": "get_current_time",
-      "type": "operation",
-      "op": "transform_data",
-      "output": "{{ new Date().toISOString() }}"
+      "name": "Get Current Time",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "output": "{{ new Date().toISOString() }}",
+        "operation": "transform_data"
+      }
     },
     {
       "id": "find_expired",
-      "type": "operation",
-      "op": "database_read",
-      "entity": "Notification",
-      "params": {
+      "name": "Find Expired",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
         "filter": {
           "expiresAt": {
             "$lt": "{{ $steps.get_current_time.output }}"
           }
         },
-        "limit": 10000
+        "limit": 10000,
+        "operation": "database_read",
+        "entity": "Notification"
       }
     },
     {
       "id": "delete_expired",
-      "type": "operation",
-      "op": "database_delete_many",
-      "entity": "Notification",
-      "params": {
+      "name": "Delete Expired",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
         "filter": {
           "expiresAt": {
             "$lt": "{{ $steps.get_current_time.output }}"
           }
-        }
+        },
+        "operation": "database_delete_many",
+        "entity": "Notification"
       }
     },
     {
       "id": "find_old_read",
-      "type": "operation",
-      "op": "database_read",
-      "entity": "Notification",
-      "params": {
+      "name": "Find Old Read",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
         "filter": {
           "isRead": true,
           "readAt": {
             "$lt": "{{ new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString() }}"
           }
         },
-        "limit": 10000
+        "limit": 10000,
+        "operation": "database_read",
+        "entity": "Notification"
       }
     },
     {
       "id": "delete_old_read",
-      "type": "operation",
-      "op": "database_delete_many",
-      "entity": "Notification",
-      "params": {
+      "name": "Delete Old Read",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
         "filter": {
           "isRead": true,
           "readAt": {
             "$lt": "{{ new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString() }}"
           }
-        }
+        },
+        "operation": "database_delete_many",
+        "entity": "Notification"
       }
     },
     {
       "id": "emit_cleanup_complete",
-      "type": "action",
-      "action": "emit_event",
-      "event": "cleanup_complete",
-      "channel": "admin",
-      "data": {
-        "expiredCount": "{{ $steps.find_expired.output.length }}",
-        "oldReadCount": "{{ $steps.find_old_read.output.length }}",
-        "timestamp": "{{ $steps.get_current_time.output }}"
+      "name": "Emit Cleanup Complete",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "data": {
+          "expiredCount": "{{ $steps.find_expired.output.length }}",
+          "oldReadCount": "{{ $steps.find_old_read.output.length }}",
+          "timestamp": "{{ $steps.get_current_time.output }}"
+        },
+        "action": "emit_event",
+        "event": "cleanup_complete",
+        "channel": "admin"
       }
     },
     {
       "id": "return_summary",
-      "type": "action",
-      "action": "log",
-      "level": "info",
-      "message": "Cleanup complete: {{ $steps.find_expired.output.length }} expired, {{ $steps.find_old_read.output.length }} old read notifications deleted"
+      "name": "Return Summary",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        100,
+        500
+      ],
+      "parameters": {
+        "action": "log",
+        "level": "info",
+        "message": "Cleanup complete: {{ $steps.find_expired.output.length }} expired, {{ $steps.find_old_read.output.length }} old read notifications deleted"
+      }
     }
-  ]
+  ],
+  "connections": {},
+  "staticData": {},
+  "meta": {
+    "description": "Delete expired notifications and cleanup old read notifications"
+  },
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  }
 }

@@ -1,0 +1,3 @@
+{
+  "version":"2.2.0","name":"Unsubscribe from Stream","description":"Remove user stream subscription","trigger":{"type":"http","method":"POST","path":"/streams/:channelId/unsubscribe"},"nodes":[{"id":"validate_context","type":"operation","op":"validate","input":"{{ $context.user.id }}","validator":"required"},{"id":"delete_subscription","type":"operation","op":"database_delete","entity":"StreamSubscription","params":{"filter":{"channelId":"{{ $json.channelId }}","userId":"{{ $context.user.id }}","tenantId":"{{ $context.tenantId }}"}}},{"id":"return_success","type":"action","action":"http_response","status":200,"body":{"message":"Unsubscribed successfully"}}]
+}

@@ -1,0 +1,135 @@
+{
+  "name": "Web Server with JSON Routes",
+  "active": true,
+  "nodes": [
+    {
+      "id": "configure_logging",
+      "name": "Configure Logging",
+      "type": "backend.configure_logging",
+      "typeVersion": 1,
+      "position": [0, 0],
+      "parameters": {}
+    },
+    {
+      "id": "load_env",
+      "name": "Load Environment",
+      "type": "backend.load_env",
+      "typeVersion": 1,
+      "position": [300, 0],
+      "parameters": {}
+    },
+    {
+      "id": "create_app",
+      "name": "Create Flask App",
+      "type": "web.create_flask_app",
+      "typeVersion": 1,
+      "position": [600, 0],
+      "parameters": {
+        "name": "autometabuilder",
+        "config": {
+          "JSON_SORT_KEYS": false
+        }
+      }
+    },
+    {
+      "id": "register_api_routes",
+      "name": "Register API Routes",
+      "type": "web.register_routes",
+      "typeVersion": 1,
+      "position": [900, 0],
+      "parameters": {
+        "blueprint_name": "api",
+        "routes": [
+          {
+            "path": "/api/navigation",
+            "methods": ["GET"],
+            "handler": "web.api_navigation",
+            "handler_type": "plugin"
+          },
+          {
+            "path": "/api/workflow/packages",
+            "methods": ["GET"],
+            "handler": "web.api_workflow_packages",
+            "handler_type": "plugin"
+          },
+          {
+            "path": "/api/workflow/plugins",
+            "methods": ["GET"],
+            "handler": "web.api_workflow_plugins",
+            "handler_type": "plugin"
+          },
+          {
+            "path": "/api/workflow/graph",
+            "methods": ["GET"],
+            "handler": "web.api_workflow_graph",
+            "handler_type": "plugin"
+          },
+          {
+            "path": "/api/translation-options",
+            "methods": ["GET"],
+            "handler": "web.api_translation_options",
+            "handler_type": "plugin"
+          }
+        ]
+      }
+    },
+    {
+      "id": "start_server",
+      "name": "Start Web Server",
+      "type": "web.start_server",
+      "typeVersion": 1,
+      "position": [1200, 0],
+      "parameters": {
+        "host": "0.0.0.0",
+        "port": 8000,
+        "debug": false
+      }
+    }
+  ],
+  "connections": {
+    "Configure Logging": {
+      "main": {
+        "0": [
+          {
+            "node": "Load Environment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Load Environment": {
+      "main": {
+        "0": [
+          {
+            "node": "Create Flask App",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Create Flask App": {
+      "main": {
+        "0": [
+          {
+            "node": "Register API Routes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Register API Routes": {
+      "main": {
+        "0": [
+          {
+            "node": "Start Web Server",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    }
+  }
+}

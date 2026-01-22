@@ -1,0 +1,111 @@
+{
+  "version": "2.2.0",
+  "name": "Extract Video Metadata",
+  "description": "Extract metadata (duration, codec, bitrate) from uploaded videos",
+  "trigger": {
+    "type": "http",
+    "method": "POST",
+    "path": "/media/extract/video-metadata"
+  },
+  "nodes": [
+    {
+      "id": "validate_context",
+      "type": "operation",
+      "op": "validate",
+      "input": "{{ $context.tenantId }}",
+      "validator": "required"
+    },
+    {
+      "id": "validate_input",
+      "type": "operation",
+      "op": "validate",
+      "input": "{{ $json }}",
+      "rules": {
+        "assetId": "required|string",
+        "filePath": "required|string"
+      }
+    },
+    {
+      "id": "fetch_asset",
+      "type": "operation",
+      "op": "database_read",
+      "entity": "MediaAsset",
+      "params": {
+        "filter": {
+          "id": "{{ $json.assetId }}",
+          "tenantId": "{{ $context.tenantId }}"
+        }
+      }
+    },
+    {
+      "id": "extract_video_info",
+      "type": "operation",
+      "op": "file_operation",
+      "operation": "analyze_video",
+      "filePath": "{{ $json.filePath }}",
+      "output": {
+        "duration": true,
+        "bitrate": true,
+        "codec": true,
+        "videoCodec": true,
+        "audioCodec": true,
+        "width": true,
+        "height": true,
+        "fps": true
+      }
+    },
+    {
+      "id": "format_duration",
+      "type": "operation",
+      "op": "transform_data",
+      "output": {
+        "seconds": "{{ $steps.extract_video_info.output.duration }}",
+        "formatted": "{{ Math.floor($steps.extract_video_info.output.duration / 3600) }}:{{ Math.floor(($steps.extract_video_info.output.duration % 3600) / 60).toString().padStart(2, '0') }}:{{ ($steps.extract_video_info.output.duration % 60).toString().padStart(2, '0') }}"
+      }
+    },
+    {
+      "id": "update_asset_metadata",
+      "type": "operation",
+      "op": "database_update",
+      "entity": "MediaAsset",
+      "params": {
+        "filter": {
+          "id": "{{ $json.assetId }}"
+        },
+        "data": {
+          "metadata": {
+            "duration": "{{ $steps.format_duration.output }}",
+            "bitrate": "{{ $steps.extract_video_info.output.bitrate }}",
+            "codec": "{{ $steps.extract_video_info.output.codec }}",
+            "videoCodec": "{{ $steps.extract_video_info.output.videoCodec }}",
+            "audioCodec": "{{ $steps.extract_video_info.output.audioCodec }}",
+            "resolution": {
+              "width": "{{ $steps.extract_video_info.output.width }}",
+              "height": "{{ $steps.extract_video_info.output.height }}"
+            },
+            "fps": "{{ $steps.extract_video_info.output.fps }}"
+          },
+          "extractedAt": "{{ new Date().toISOString() }}"
+        }
+      }
+    },
+    {
+      "id": "emit_complete",
+      "type": "action",
+      "action": "emit_event",
+      "event": "video_metadata_extracted",
+      "channel": "{{ 'media:' + $context.tenantId }}",
+      "data": {
+        "assetId": "{{ $json.assetId }}",
+        "duration": "{{ $steps.format_duration.output.formatted }}"
+      }
+    },
+    {
+      "id": "return_success",
+      "type": "action",
+      "action": "http_response",
+      "status": 200,
+      "body": "{{ $steps.update_asset_metadata.output }}"
+    }
+  ]
+}

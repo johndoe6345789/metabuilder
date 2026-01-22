@@ -1,36 +1,50 @@
 {
-  "version": "2.2.0",
   "name": "Calculate Audit Statistics",
-  "description": "Calculate audit log statistics (action counts, user activity)",
-  "trigger": {
-    "type": "http",
-    "method": "GET",
-    "path": "/audit-logs/stats"
-  },
+  "active": false,
   "nodes": [
     {
       "id": "validate_context",
-      "type": "operation",
-      "op": "validate",
-      "input": "{{ $context.tenantId }}",
-      "validator": "required",
-      "errorMessage": "tenantId is required"
+      "name": "Validate Context",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $context.tenantId }}",
+        "operation": "validate",
+        "validator": "required",
+        "errorMessage": "tenantId is required"
+      }
     },
     {
       "id": "get_date_range",
-      "type": "operation",
-      "op": "transform_data",
-      "output": {
-        "startDate": "{{ new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString() }}",
-        "endDate": "{{ new Date().toISOString() }}"
+      "name": "Get Date Range",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "output": {
+          "startDate": "{{ new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString() }}",
+          "endDate": "{{ new Date().toISOString() }}"
+        },
+        "operation": "transform_data"
       }
     },
     {
       "id": "count_by_action",
-      "type": "operation",
-      "op": "database_aggregate",
-      "entity": "AuditLog",
-      "params": {
+      "name": "Count By Action",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
         "filter": {
           "tenantId": "{{ $context.tenantId }}",
           "timestamp": {
@@ -41,16 +55,22 @@
         "groupBy": "action",
         "aggregations": {
           "count": "count"
-        }
-      },
-      "output": "actionStats"
+        },
+        "output": "actionStats",
+        "operation": "database_aggregate",
+        "entity": "AuditLog"
+      }
     },
     {
       "id": "count_by_entity",
-      "type": "operation",
-      "op": "database_aggregate",
-      "entity": "AuditLog",
-      "params": {
+      "name": "Count By Entity",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
         "filter": {
           "tenantId": "{{ $context.tenantId }}",
           "timestamp": {
@@ -61,27 +81,57 @@
         "groupBy": "entity",
         "aggregations": {
           "count": "count"
-        }
-      },
-      "output": "entityStats"
+        },
+        "output": "entityStats",
+        "operation": "database_aggregate",
+        "entity": "AuditLog"
+      }
     },
     {
       "id": "format_response",
-      "type": "operation",
-      "op": "transform_data",
-      "output": {
-        "dateRange": "{{ $steps.get_date_range.output }}",
-        "actionStatistics": "{{ $steps.count_by_action.output }}",
-        "entityStatistics": "{{ $steps.count_by_entity.output }}",
-        "totalEntries": "{{ $steps.count_by_action.output.reduce((sum, item) => sum + item.count, 0) }}"
+      "name": "Format Response",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "output": {
+          "dateRange": "{{ $steps.get_date_range.output }}",
+          "actionStatistics": "{{ $steps.count_by_action.output }}",
+          "entityStatistics": "{{ $steps.count_by_entity.output }}",
+          "totalEntries": "{{ $steps.count_by_action.output.reduce((sum, item) => sum + item.count, 0) }}"
+        },
+        "operation": "transform_data"
       }
     },
     {
       "id": "return_success",
-      "type": "action",
-      "action": "http_response",
-      "status": 200,
-      "body": "{{ $steps.format_response.output }}"
+      "name": "Return Success",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "action": "http_response",
+        "status": 200,
+        "body": "{{ $steps.format_response.output }}"
+      }
     }
-  ]
+  ],
+  "connections": {},
+  "staticData": {},
+  "meta": {
+    "description": "Calculate audit log statistics (action counts, user activity)"
+  },
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  }
 }

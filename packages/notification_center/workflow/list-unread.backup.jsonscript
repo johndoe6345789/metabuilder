@@ -1,0 +1,78 @@
+{
+  "version": "2.2.0",
+  "name": "List Unread Notifications",
+  "description": "Fetch all unread notifications for current user with pagination",
+  "trigger": {
+    "type": "http",
+    "method": "GET",
+    "path": "/notifications/unread"
+  },
+  "nodes": [
+    {
+      "id": "validate_context",
+      "type": "operation",
+      "op": "validate",
+      "input": "{{ $context.user.id }}",
+      "validator": "required"
+    },
+    {
+      "id": "extract_pagination",
+      "type": "operation",
+      "op": "transform_data",
+      "output": {
+        "limit": "{{ Math.min($json.limit || 50, 200) }}",
+        "offset": "{{ ($json.page || 1 - 1) * ($json.limit || 50) }}"
+      }
+    },
+    {
+      "id": "fetch_unread",
+      "type": "operation",
+      "op": "database_read",
+      "entity": "Notification",
+      "params": {
+        "filter": {
+          "userId": "{{ $context.user.id }}",
+          "tenantId": "{{ $context.tenantId }}",
+          "isRead": false
+        },
+        "sort": {"createdAt": -1},
+        "limit": "{{ $steps.extract_pagination.output.limit }}",
+        "offset": "{{ $steps.extract_pagination.output.offset }}"
+      }
+    },
+    {
+      "id": "count_unread",
+      "type": "operation",
+      "op": "database_count",
+      "entity": "Notification",
+      "params": {
+        "filter": {
+          "userId": "{{ $context.user.id }}",
+          "tenantId": "{{ $context.tenantId }}",
+          "isRead": false
+        }
+      }
+    },
+    {
+      "id": "format_response",
+      "type": "operation",
+      "op": "transform_data",
+      "output": {
+        "notifications": "{{ $steps.fetch_unread.output }}",
+        "unreadCount": "{{ $steps.count_unread.output }}",
+        "pagination": {
+          "page": "{{ $json.page || 1 }}",
+          "limit": "{{ $steps.extract_pagination.output.limit }}",
+          "hasMore": "{{ $steps.count_unread.output > ($steps.extract_pagination.output.offset + $steps.extract_pagination.output.limit) }}"
+        }
+      }
+    },
+    {
+      "id": "return_success",
+      "type": "action",
+      "action": "http_response",
+      "status": 200,
+      "body": "{{ $steps.format_response.output }}"
+    }
+  ]
+}

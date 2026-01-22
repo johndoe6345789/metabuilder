@@ -1,3 +1,103 @@
 {
-  "version":"2.2.0","name":"Join IRC Channel","description":"Add user to IRC channel with membership tracking","trigger":{"type":"http","method":"POST","path":"/irc/channels/:channelId/join"},"nodes":[{"id":"validate_context","type":"operation","op":"validate","input":"{{ $context.user.id }}","validator":"required"},{"id":"fetch_channel","type":"operation","op":"database_read","entity":"IRCChannel","params":{"filter":{"id":"{{ $json.channelId }}","tenantId":"{{ $context.tenantId }}"}}},{"id":"check_channel_mode","type":"operation","op":"condition","condition":"{{ $steps.fetch_channel.output.mode === 'public' || ($context.user.level >= 2 && $steps.fetch_channel.output.mode === 'private') }}"},{"id":"create_membership","type":"operation","op":"database_create","entity":"IRCMembership","data":{"channelId":"{{ $json.channelId }}","userId":"{{ $context.user.id }}","joinedAt":"{{ new Date().toISOString() }}"}},{"id":"emit_join","type":"action","action":"emit_event","event":"user_joined","channel":"{{ 'irc:' + $json.channelId }}","data":{"userId":"{{ $context.user.id }}","channelId":"{{ $json.channelId }}"}}]
+  "name": "Join IRC Channel",
+  "active": false,
+  "nodes": [
+    {
+      "id": "validate_context",
+      "name": "Validate Context",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $context.user.id }}",
+        "operation": "validate",
+        "validator": "required"
+      }
+    },
+    {
+      "id": "fetch_channel",
+      "name": "Fetch Channel",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "filter": {
+          "id": "{{ $json.channelId }}",
+          "tenantId": "{{ $context.tenantId }}"
+        },
+        "operation": "database_read",
+        "entity": "IRCChannel"
+      }
+    },
+    {
+      "id": "check_channel_mode",
+      "name": "Check Channel Mode",
+      "type": "metabuilder.condition",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "condition": "{{ $steps.fetch_channel.output.mode === 'public' || ($context.user.level >= 2 && $steps.fetch_channel.output.mode === 'private') }}",
+        "operation": "condition"
+      }
+    },
+    {
+      "id": "create_membership",
+      "name": "Create Membership",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "data": {
+          "channelId": "{{ $json.channelId }}",
+          "userId": "{{ $context.user.id }}",
+          "joinedAt": "{{ new Date().toISOString() }}"
+        },
+        "operation": "database_create",
+        "entity": "IRCMembership"
+      }
+    },
+    {
+      "id": "emit_join",
+      "name": "Emit Join",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "data": {
+          "userId": "{{ $context.user.id }}",
+          "channelId": "{{ $json.channelId }}"
+        },
+        "action": "emit_event",
+        "event": "user_joined",
+        "channel": "{{ 'irc:' + $json.channelId }}"
+      }
+    }
+  ],
+  "connections": {},
+  "staticData": {},
+  "meta": {
+    "description": "Add user to IRC channel with membership tracking"
+  },
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  }
 }

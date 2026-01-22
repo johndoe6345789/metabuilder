@@ -1,3 +1,122 @@
 {
-  "version":"2.2.0","name":"Handle Scene Transition","description":"Update stream scene and broadcast to viewers","trigger":{"type":"http","method":"POST","path":"/streams/:channelId/scenes/:sceneId/activate"},"nodes":[{"id":"validate_context","type":"operation","op":"validate","input":"{{ $context.user.id }}","validator":"required"},{"id":"check_authorization","type":"operation","op":"condition","condition":"{{ $context.user.level >= 2 }}"},{"id":"fetch_channel","type":"operation","op":"database_read","entity":"StreamChannel","params":{"filter":{"id":"{{ $json.channelId }}","tenantId":"{{ $context.tenantId }}"}}},{"id":"update_active_scene","type":"operation","op":"database_update","entity":"StreamChannel","params":{"filter":{"id":"{{ $json.channelId }}"},"data":{"activeSceneId":"{{ $json.sceneId }}","sceneChangedAt":"{{ new Date().toISOString() }}"}}},{"id":"emit_scene_change","type":"action","action":"emit_event","event":"scene_changed","channel":"{{ 'stream:' + $json.channelId }}","data":{"sceneId":"{{ $json.sceneId }}","transitionTime":"{{ new Date().toISOString() }}"}},{"id":"return_success","type":"action","action":"http_response","status":200,"body":{"message":"Scene updated"}}]
+  "name": "Handle Scene Transition",
+  "active": false,
+  "nodes": [
+    {
+      "id": "validate_context",
+      "name": "Validate Context",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $context.user.id }}",
+        "operation": "validate",
+        "validator": "required"
+      }
+    },
+    {
+      "id": "check_authorization",
+      "name": "Check Authorization",
+      "type": "metabuilder.condition",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "condition": "{{ $context.user.level >= 2 }}",
+        "operation": "condition"
+      }
+    },
+    {
+      "id": "fetch_channel",
+      "name": "Fetch Channel",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "filter": {
+          "id": "{{ $json.channelId }}",
+          "tenantId": "{{ $context.tenantId }}"
+        },
+        "operation": "database_read",
+        "entity": "StreamChannel"
+      }
+    },
+    {
+      "id": "update_active_scene",
+      "name": "Update Active Scene",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "filter": {
+          "id": "{{ $json.channelId }}"
+        },
+        "data": {
+          "activeSceneId": "{{ $json.sceneId }}",
+          "sceneChangedAt": "{{ new Date().toISOString() }}"
+        },
+        "operation": "database_update",
+        "entity": "StreamChannel"
+      }
+    },
+    {
+      "id": "emit_scene_change",
+      "name": "Emit Scene Change",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "data": {
+          "sceneId": "{{ $json.sceneId }}",
+          "transitionTime": "{{ new Date().toISOString() }}"
+        },
+        "action": "emit_event",
+        "event": "scene_changed",
+        "channel": "{{ 'stream:' + $json.channelId }}"
+      }
+    },
+    {
+      "id": "return_success",
+      "name": "Return Success",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "action": "http_response",
+        "status": 200,
+        "body": {
+          "message": "Scene updated"
+        }
+      }
+    }
+  ],
+  "connections": {},
+  "staticData": {},
+  "meta": {
+    "description": "Update stream scene and broadcast to viewers"
+  },
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  }
 }

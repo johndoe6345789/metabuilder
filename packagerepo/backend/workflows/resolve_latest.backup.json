@@ -1,0 +1,81 @@
+{
+  "name": "Resolve Latest Version",
+  "description": "Get the latest version of a package",
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "parse_path",
+      "type": "packagerepo.parse_path",
+      "parameters": {
+        "path": "$request.path",
+        "pattern": "/v1/:namespace/:name/latest",
+        "out": "entity"
+      }
+    },
+    {
+      "id": "normalize",
+      "type": "packagerepo.normalize_entity",
+      "parameters": {
+        "entity": "$entity",
+        "out": "normalized"
+      }
+    },
+    {
+      "id": "query_index",
+      "type": "packagerepo.index_query",
+      "parameters": {
+        "key": "$entity.namespace/$entity.name",
+        "out": "versions"
+      }
+    },
+    {
+      "id": "check_exists",
+      "type": "logic.if",
+      "parameters": {
+        "condition": "$versions == null || $versions.length == 0",
+        "then": "error_not_found",
+        "else": "find_latest"
+      }
+    },
+    {
+      "id": "find_latest",
+      "type": "packagerepo.resolve_latest_version",
+      "parameters": {
+        "versions": "$versions",
+        "out": "latest"
+      }
+    },
+    {
+      "id": "get_meta",
+      "type": "packagerepo.kv_get",
+      "parameters": {
+        "key": "artifact/$entity.namespace/$entity.name/$latest.version/$latest.variant",
+        "out": "metadata"
+      }
+    },
+    {
+      "id": "respond_json",
+      "type": "packagerepo.respond_json",
+      "parameters": {
+        "body": {
+          "namespace": "$entity.namespace",
+          "name": "$entity.name",
+          "version": "$latest.version",
+          "variant": "$latest.variant",
+          "digest": "$latest.digest",
+          "size": "$metadata.size",
+          "uploaded_at": "$metadata.uploaded_at"
+        },
+        "status": 200
+      }
+    },
+    {
+      "id": "error_not_found",
+      "type": "packagerepo.respond_error",
+      "parameters": {
+        "message": "Package not found",
+        "status": 404
+      }
+    }
+  ]
+}

@@ -8,11 +8,19 @@
       "type": "tools.list_files",
       "typeVersion": 1,
       "position": [
-        0,
-        50
+        100,
+        100
       ],
       "parameters": {
-        "path": "."
+        "name": "List Files",
+        "typeVersion": 1,
+        "position": [
+          0,
+          50
+        ],
+        "parameters": {
+          "path": "."
+        }
       }
     },
     {
@@ -21,13 +29,21 @@
       "type": "utils.filter_list",
       "typeVersion": 1,
       "position": [
-        300,
-        50
+        400,
+        100
       ],
       "parameters": {
-        "items": "$repo_files",
-        "mode": "regex",
-        "pattern": "\\.py$"
+        "name": "Filter Python",
+        "typeVersion": 1,
+        "position": [
+          300,
+          50
+        ],
+        "parameters": {
+          "items": "$repo_files",
+          "mode": "regex",
+          "pattern": "\\.py$"
+        }
       }
     },
     {
@@ -36,12 +52,20 @@
       "type": "utils.reduce_list",
       "typeVersion": 1,
       "position": [
-        600,
-        50
+        700,
+        100
       ],
       "parameters": {
-        "items": "$python_files",
-        "separator": "\\n"
+        "name": "Reduce Python",
+        "typeVersion": 1,
+        "position": [
+          600,
+          50
+        ],
+        "parameters": {
+          "items": "$python_files",
+          "separator": "\\n"
+        }
       }
     },
     {
@@ -50,10 +74,18 @@
       "type": "core.seed_messages",
       "typeVersion": 1,
       "position": [
-        900,
-        50
+        100,
+        300
       ],
-      "parameters": {}
+      "parameters": {
+        "name": "Seed Messages",
+        "typeVersion": 1,
+        "position": [
+          900,
+          50
+        ],
+        "parameters": {}
+      }
     },
     {
       "id": "append_repo_summary",
@@ -61,12 +93,20 @@
       "type": "core.append_context_message",
       "typeVersion": 1,
       "position": [
-        1200,
-        50
+        400,
+        300
       ],
       "parameters": {
-        "messages": "$messages",
-        "context": "$python_summary"
+        "name": "Append Repo Summary",
+        "typeVersion": 1,
+        "position": [
+          1200,
+          50
+        ],
+        "parameters": {
+          "messages": "$messages",
+          "context": "$python_summary"
+        }
       }
     },
     {
@@ -75,11 +115,19 @@
       "type": "core.append_user_instruction",
       "typeVersion": 1,
       "position": [
-        1500,
-        50
+        700,
+        300
       ],
       "parameters": {
-        "messages": "$messages"
+        "name": "Append User Instruction",
+        "typeVersion": 1,
+        "position": [
+          1500,
+          50
+        ],
+        "parameters": {
+          "messages": "$messages"
+        }
       }
     },
     {
@@ -88,11 +136,19 @@
       "type": "core.ai_request",
       "typeVersion": 1,
       "position": [
-        1800,
-        50
+        100,
+        500
       ],
       "parameters": {
-        "messages": "$messages"
+        "name": "Ai Request",
+        "typeVersion": 1,
+        "position": [
+          1800,
+          50
+        ],
+        "parameters": {
+          "messages": "$messages"
+        }
       }
     },
     {
@@ -101,11 +157,19 @@
       "type": "core.run_tool_calls",
       "typeVersion": 1,
       "position": [
-        2100,
-        50
+        400,
+        500
       ],
       "parameters": {
-        "response": "$llm_response"
+        "name": "Run Tool Calls",
+        "typeVersion": 1,
+        "position": [
+          2100,
+          50
+        ],
+        "parameters": {
+          "response": "$llm_response"
+        }
       }
     },
     {
@@ -114,12 +178,20 @@
       "type": "core.append_tool_results",
       "typeVersion": 1,
       "position": [
-        2400,
-        50
+        700,
+        500
       ],
       "parameters": {
-        "messages": "$messages",
-        "tool_results": "$tool_results"
+        "name": "Append Tool Results",
+        "typeVersion": 1,
+        "position": [
+          2400,
+          50
+        ],
+        "parameters": {
+          "messages": "$messages",
+          "tool_results": "$tool_results"
+        }
       }
     }
   ],
@@ -128,7 +200,7 @@
       "main": {
         "0": [
           {
-            "node": "Filter Python",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -139,7 +211,7 @@
       "main": {
         "0": [
           {
-            "node": "Reduce Python",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -150,22 +222,7 @@
       "main": {
         "0": [
           {
-            "node": "Append Repo Summary",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Append User Instruction",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Ai Request",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Append Tool Results",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -176,7 +233,7 @@
       "main": {
         "0": [
           {
-            "node": "Append Repo Summary",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -187,7 +244,7 @@
       "main": {
         "0": [
           {
-            "node": "Run Tool Calls",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -198,7 +255,7 @@
       "main": {
         "0": [
           {
-            "node": "Append Tool Results",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -206,14 +263,13 @@
       }
     }
   },
-  "triggers": [
-    {
-      "nodeId": "list_files",
-      "kind": "manual",
-      "enabled": true,
-      "meta": {
-        "description": "Manually triggered meta.workflow_packages.repo_scan_context.label workflow execution"
-      }
-    }
-  ]
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  }
 }

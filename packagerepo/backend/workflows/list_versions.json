@@ -1,71 +1,138 @@
 {
   "name": "List Package Versions",
-  "description": "List all versions of a package",
-  "version": "1.0.0",
+  "active": false,
   "nodes": [
     {
       "id": "parse_path",
+      "name": "Parse Path",
       "type": "packagerepo.parse_path",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
       "parameters": {
-        "path": "$request.path",
-        "pattern": "/v1/:namespace/:name/versions",
-        "out": "entity"
+        "parameters": {
+          "path": "$request.path",
+          "pattern": "/v1/:namespace/:name/versions",
+          "out": "entity"
+        }
       }
     },
     {
       "id": "normalize",
+      "name": "Normalize",
       "type": "packagerepo.normalize_entity",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
       "parameters": {
-        "entity": "$entity",
-        "out": "normalized"
+        "parameters": {
+          "entity": "$entity",
+          "out": "normalized"
+        }
       }
     },
     {
       "id": "query_index",
+      "name": "Query Index",
       "type": "packagerepo.index_query",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
       "parameters": {
-        "key": "$entity.namespace/$entity.name",
-        "out": "versions"
+        "parameters": {
+          "key": "$entity.namespace/$entity.name",
+          "out": "versions"
+        }
       }
     },
     {
       "id": "check_exists",
+      "name": "Check Exists",
       "type": "logic.if",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
       "parameters": {
-        "condition": "$versions == null",
-        "then": "error_not_found",
-        "else": "enrich_versions"
+        "parameters": {
+          "condition": "$versions == null",
+          "then": "error_not_found",
+          "else": "enrich_versions"
+        }
       }
     },
     {
       "id": "enrich_versions",
+      "name": "Enrich Versions",
       "type": "packagerepo.enrich_version_list",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
       "parameters": {
-        "namespace": "$entity.namespace",
-        "name": "$entity.name",
-        "versions": "$versions",
-        "out": "enriched"
+        "parameters": {
+          "namespace": "$entity.namespace",
+          "name": "$entity.name",
+          "versions": "$versions",
+          "out": "enriched"
+        }
       }
     },
     {
       "id": "respond_json",
+      "name": "Respond Json",
       "type": "packagerepo.respond_json",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ],
       "parameters": {
-        "body": {
-          "namespace": "$entity.namespace",
-          "name": "$entity.name",
-          "versions": "$enriched"
-        },
-        "status": 200
+        "parameters": {
+          "body": {
+            "namespace": "$entity.namespace",
+            "name": "$entity.name",
+            "versions": "$enriched"
+          },
+          "status": 200
+        }
       }
     },
     {
       "id": "error_not_found",
+      "name": "Error Not Found",
       "type": "packagerepo.respond_error",
+      "typeVersion": 1,
+      "position": [
+        100,
+        500
+      ],
       "parameters": {
-        "message": "Package not found",
-        "status": 404
+        "parameters": {
+          "message": "Package not found",
+          "status": 404
+        }
       }
     }
-  ]
+  ],
+  "connections": {},
+  "staticData": {},
+  "meta": {
+    "description": "List all versions of a package"
+  },
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  }
 }

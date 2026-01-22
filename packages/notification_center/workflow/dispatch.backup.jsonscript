@@ -1,0 +1,148 @@
+{
+  "version": "2.2.0",
+  "name": "Dispatch Notification",
+  "description": "Send notification via configured channels (in-app, email, push, webhook) with rate limiting",
+  "trigger": {
+    "type": "http",
+    "method": "POST",
+    "path": "/notifications/dispatch"
+  },
+  "nodes": [
+    {
+      "id": "validate_context",
+      "type": "operation",
+      "op": "validate",
+      "input": "{{ $context.tenantId }}",
+      "validator": "required"
+    },
+    {
+      "id": "validate_input",
+      "type": "operation",
+      "op": "validate",
+      "input": "{{ $json }}",
+      "rules": {
+        "userId": "required|string",
+        "type": "required|string",
+        "title": "required|string|maxLength:200",
+        "message": "required|string|maxLength:1000",
+        "channels": "required|array"
+      }
+    },
+    {
+      "id": "fetch_user_preferences",
+      "type": "operation",
+      "op": "database_read",
+      "entity": "NotificationPreference",
+      "params": {
+        "filter": {
+          "userId": "{{ $json.userId }}",
+          "tenantId": "{{ $context.tenantId }}"
+        }
+      }
+    },
+    {
+      "id": "create_notification_record",
+      "type": "operation",
+      "op": "database_create",
+      "entity": "Notification",
+      "data": {
+        "tenantId": "{{ $context.tenantId }}",
+        "userId": "{{ $json.userId }}",
+        "type": "{{ $json.type }}",
+        "title": "{{ $json.title }}",
+        "message": "{{ $json.message }}",
+        "isRead": false,
+        "metadata": "{{ $json.metadata || {} }}",
+        "createdAt": "{{ new Date().toISOString() }}",
+        "expiresAt": "{{ new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() }}"
+      }
+    },
+    {
+      "id": "dispatch_in_app",
+      "type": "operation",
+      "op": "condition",
+      "condition": "{{ $json.channels.includes('in_app') && $steps.fetch_user_preferences.output.enableInApp !== false }}"
+    },
+    {
+      "id": "emit_in_app_notification",
+      "type": "action",
+      "action": "emit_event",
+      "event": "notification_received",
+      "channel": "{{ 'user:' + $json.userId }}",
+      "data": {
+        "notificationId": "{{ $steps.create_notification_record.output.id }}",
+        "title": "{{ $json.title }}",
+        "message": "{{ $json.message }}",
+        "type": "{{ $json.type }}"
+      }
+    },
+    {
+      "id": "check_email_rate_limit",
+      "type": "operation",
+      "op": "condition",
+      "condition": "{{ $json.channels.includes('email') && $steps.fetch_user_preferences.output.enableEmail !== false }}"
+    },
+    {
+      "id": "apply_email_rate_limit",
+      "type": "operation",
+      "op": "rate_limit",
+      "key": "{{ 'email:' + $json.userId }}",
+      "limit": 10,
+      "window": 3600000
+    },
+    {
+      "id": "fetch_user_email",
+      "type": "operation",
+      "op": "database_read",
+      "entity": "User",
+      "params": {
+        "filter": {
+          "id": "{{ $json.userId }}",
+          "tenantId": "{{ $context.tenantId }}"
+        }
+      }
+    },
+    {
+      "id": "send_email",
+      "type": "operation",
+      "op": "email_send",
+      "to": "{{ $steps.fetch_user_email.output.email }}",
+      "subject": "{{ $json.title }}",
+      "body": "{{ $json.message }}",
+      "template": "{{ $json.emailTemplate || 'default' }}"
+    },
+    {
+      "id": "dispatch_push",
+      "type": "operation",
+      "op": "condition",
+      "condition": "{{ $json.channels.includes('push') && $steps.fetch_user_preferences.output.enablePush !== false }}"
+    },
+    {
+      "id": "send_push_notification",
+      "type": "operation",
+      "op": "http_request",
+      "url": "https://fcm.googleapis.com/fcm/send",
+      "method": "POST",
+      "headers": {
+        "Authorization": "{{ 'Bearer ' + $env.FCM_KEY }}"
+      },
+      "body": {
+        "to": "{{ $steps.fetch_user_email.output.fcmToken }}",
+        "notification": {
+          "title": "{{ $json.title }}",
+          "body": "{{ $json.message }}"
+        }
+      }
+    },
+    {
+      "id": "return_success",
+      "type": "action",
+      "action": "http_response",
+      "status": 202,
+      "body": {
+        "notificationId": "{{ $steps.create_notification_record.output.id }}",
+        "message": "Notification dispatched successfully"
+      }
+    }
+  ]
+}

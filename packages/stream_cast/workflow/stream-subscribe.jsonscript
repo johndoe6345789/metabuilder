@@ -1,3 +1,86 @@
 {
-  "version":"2.2.0","name":"Subscribe to Stream","description":"Subscribe user to stream updates via SSE","trigger":{"type":"http","method":"GET","path":"/streams/:channelId/subscribe"},"nodes":[{"id":"validate_context","type":"operation","op":"validate","input":"{{ $context.user.id }}","validator":"required"},{"id":"fetch_channel","type":"operation","op":"database_read","entity":"StreamChannel","params":{"filter":{"id":"{{ $json.channelId }}","tenantId":"{{ $context.tenantId }}"}}},{"id":"create_subscription","type":"operation","op":"database_create","entity":"StreamSubscription","data":{"channelId":"{{ $json.channelId }}","userId":"{{ $context.user.id }}","tenantId":"{{ $context.tenantId }}","subscribedAt":"{{ new Date().toISOString() }}"}},{"id":"setup_sse","type":"action","action":"sse_stream","channel":"{{ 'stream:' + $json.channelId }}","onConnect":"{{ { subscriptionId: $steps.create_subscription.output.id } }}"}]
+  "name": "Subscribe to Stream",
+  "active": false,
+  "nodes": [
+    {
+      "id": "validate_context",
+      "name": "Validate Context",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $context.user.id }}",
+        "operation": "validate",
+        "validator": "required"
+      }
+    },
+    {
+      "id": "fetch_channel",
+      "name": "Fetch Channel",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "filter": {
+          "id": "{{ $json.channelId }}",
+          "tenantId": "{{ $context.tenantId }}"
+        },
+        "operation": "database_read",
+        "entity": "StreamChannel"
+      }
+    },
+    {
+      "id": "create_subscription",
+      "name": "Create Subscription",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "data": {
+          "channelId": "{{ $json.channelId }}",
+          "userId": "{{ $context.user.id }}",
+          "tenantId": "{{ $context.tenantId }}",
+          "subscribedAt": "{{ new Date().toISOString() }}"
+        },
+        "operation": "database_create",
+        "entity": "StreamSubscription"
+      }
+    },
+    {
+      "id": "setup_sse",
+      "name": "Setup Sse",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "action": "sse_stream",
+        "channel": "{{ 'stream:' + $json.channelId }}",
+        "onConnect": "{{ { subscriptionId: $steps.create_subscription.output.id } }}"
+      }
+    }
+  ],
+  "connections": {},
+  "staticData": {},
+  "meta": {
+    "description": "Subscribe user to stream updates via SSE"
+  },
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  }
 }

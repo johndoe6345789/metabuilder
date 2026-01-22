@@ -1,0 +1,96 @@
+{
+  "version": "2.2.0",
+  "name": "Delete Forum Post",
+  "description": "Delete or soft-delete a forum post with authorization checks",
+  "trigger": {
+    "type": "http",
+    "method": "DELETE",
+    "path": "/forum/posts/:postId"
+  },
+  "nodes": [
+    {
+      "id": "validate_context",
+      "type": "operation",
+      "op": "validate",
+      "input": "{{ $context.tenantId }}",
+      "validator": "required"
+    },
+    {
+      "id": "fetch_post",
+      "type": "operation",
+      "op": "database_read",
+      "entity": "ForumPost",
+      "params": {
+        "filter": {
+          "id": "{{ $json.postId }}",
+          "tenantId": "{{ $context.tenantId }}"
+        }
+      }
+    },
+    {
+      "id": "check_authorization",
+      "type": "operation",
+      "op": "condition",
+      "condition": "{{ $steps.fetch_post.output.authorId === $context.user.id || $context.user.level >= 3 }}"
+    },
+    {
+      "id": "soft_delete_post",
+      "type": "operation",
+      "op": "database_update",
+      "entity": "ForumPost",
+      "params": {
+        "filter": {
+          "id": "{{ $json.postId }}"
+        },
+        "data": {
+          "isDeleted": true,
+          "deletedAt": "{{ new Date().toISOString() }}"
+        }
+      }
+    },
+    {
+      "id": "decrement_thread_count",
+      "type": "operation",
+      "op": "database_read",
+      "entity": "ForumThread",
+      "params": {
+        "filter": {
+          "id": "{{ $steps.fetch_post.output.threadId }}"
+        }
+      }
+    },
+    {
+      "id": "update_thread_count",
+      "type": "operation",
+      "op": "database_update",
+      "entity": "ForumThread",
+      "params": {
+        "filter": {
+          "id": "{{ $steps.fetch_post.output.threadId }}"
+        },
+        "data": {
+          "postCount": "{{ Math.max($steps.decrement_thread_count.output.postCount - 1, 0) }}"
+        }
+      }
+    },
+    {
+      "id": "emit_deleted",
+      "type": "action",
+      "action": "emit_event",
+      "event": "post_deleted",
+      "channel": "{{ 'forum:thread:' + $steps.fetch_post.output.threadId }}",
+      "data": {
+        "postId": "{{ $json.postId }}"
+      }
+    },
+    {
+      "id": "return_success",
+      "type": "action",
+      "action": "http_response",
+      "status": 200,
+      "body": {
+        "message": "Post deleted successfully"
+      }
+    }
+  ]
+}

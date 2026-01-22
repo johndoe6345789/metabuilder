@@ -1,0 +1,159 @@
+{
+  "name": "Backend Bootstrap",
+  "active": false,
+  "nodes": [
+    {
+      "id": "load_messages",
+      "name": "Load Messages",
+      "type": "backend.load_messages",
+      "typeVersion": 1,
+      "position": [0, 50],
+      "parameters": {}
+    },
+    {
+      "id": "load_metadata",
+      "name": "Load Metadata",
+      "type": "backend.load_metadata",
+      "typeVersion": 1,
+      "position": [300, 50],
+      "parameters": {}
+    },
+    {
+      "id": "load_prompt",
+      "name": "Load Prompt",
+      "type": "backend.load_prompt",
+      "typeVersion": 1,
+      "position": [600, 50],
+      "parameters": {}
+    },
+    {
+      "id": "create_github",
+      "name": "Create GitHub Client",
+      "type": "backend.create_github",
+      "typeVersion": 1,
+      "position": [900, 50],
+      "parameters": {}
+    },
+    {
+      "id": "create_openai",
+      "name": "Create OpenAI Client",
+      "type": "backend.create_openai",
+      "typeVersion": 1,
+      "position": [1200, 50],
+      "parameters": {}
+    },
+    {
+      "id": "load_tools",
+      "name": "Load Tools",
+      "type": "backend.load_tools",
+      "typeVersion": 1,
+      "position": [1500, 50],
+      "parameters": {}
+    },
+    {
+      "id": "build_tool_map",
+      "name": "Build Tool Map",
+      "type": "backend.build_tool_map",
+      "typeVersion": 1,
+      "position": [1800, 50],
+      "parameters": {}
+    },
+    {
+      "id": "load_plugins",
+      "name": "Load Plugins",
+      "type": "backend.load_plugins",
+      "typeVersion": 1,
+      "position": [2100, 50],
+      "parameters": {}
+    }
+  ],
+  "connections": {
+    "Load Messages": {
+      "main": {
+        "0": [
+          {
+            "node": "Load Metadata",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Load Metadata": {
+      "main": {
+        "0": [
+          {
+            "node": "Load Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Load Prompt": {
+      "main": {
+        "0": [
+          {
+            "node": "Create GitHub Client",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Create GitHub Client": {
+      "main": {
+        "0": [
+          {
+            "node": "Create OpenAI Client",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Create OpenAI Client": {
+      "main": {
+        "0": [
+          {
+            "node": "Load Tools",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Load Tools": {
+      "main": {
+        "0": [
+          {
+            "node": "Build Tool Map",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Build Tool Map": {
+      "main": {
+        "0": [
+          {
+            "node": "Load Plugins",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    }
+  },
+  "triggers": [
+    {
+      "nodeId": "load_messages",
+      "kind": "manual",
+      "enabled": true,
+      "meta": {
+        "description": "Initialize backend services and dependencies"
+      }
+    }
+  ]
+}

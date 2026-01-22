@@ -1,0 +1,65 @@
+{
+  "version": "2.2.0",
+  "name": "Fetch User Profile",
+  "description": "Fetch current user profile information including name, email, avatar",
+  "trigger": {
+    "type": "http",
+    "method": "GET",
+    "path": "/profile"
+  },
+  "nodes": [
+    {
+      "id": "validate_context",
+      "type": "operation",
+      "op": "validate",
+      "input": "{{ $context.user.id }}",
+      "validator": "required"
+    },
+    {
+      "id": "fetch_user",
+      "type": "operation",
+      "op": "database_read",
+      "entity": "User",
+      "params": {
+        "filter": {
+          "id": "{{ $context.user.id }}",
+          "tenantId": "{{ $context.tenantId }}"
+        }
+      }
+    },
+    {
+      "id": "fetch_preferences",
+      "type": "operation",
+      "op": "database_read",
+      "entity": "UserPreferences",
+      "params": {
+        "filter": {
+          "userId": "{{ $context.user.id }}",
+          "tenantId": "{{ $context.tenantId }}"
+        }
+      }
+    },
+    {
+      "id": "format_response",
+      "type": "operation",
+      "op": "transform_data",
+      "output": {
+        "id": "{{ $steps.fetch_user.output.id }}",
+        "email": "{{ $steps.fetch_user.output.email }}",
+        "displayName": "{{ $steps.fetch_user.output.displayName }}",
+        "avatar": "{{ $steps.fetch_user.output.avatar }}",
+        "bio": "{{ $steps.fetch_user.output.bio }}",
+        "createdAt": "{{ $steps.fetch_user.output.createdAt }}",
+        "lastLogin": "{{ $steps.fetch_user.output.lastLogin }}",
+        "preferences": "{{ $steps.fetch_preferences.output }}"
+      }
+    },
+    {
+      "id": "return_success",
+      "type": "action",
+      "action": "http_response",
+      "status": 200,
+      "body": "{{ $steps.format_response.output }}"
+    }
+  ]
+}

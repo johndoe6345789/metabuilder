@@ -1,0 +1,89 @@
+{
+  "version": "2.2.0",
+  "name": "Create Forum Thread",
+  "description": "Create a new forum thread with validation and slug generation",
+  "trigger": {
+    "type": "http",
+    "method": "POST",
+    "path": "/forum/threads"
+  },
+  "nodes": [
+    {
+      "id": "validate_tenant",
+      "type": "operation",
+      "op": "condition",
+      "condition": "{{ $context.tenantId !== undefined }}"
+    },
+    {
+      "id": "validate_user",
+      "type": "operation",
+      "op": "condition",
+      "condition": "{{ $context.user.id !== undefined }}"
+    },
+    {
+      "id": "validate_input",
+      "type": "operation",
+      "op": "validate",
+      "input": "{{ $json }}",
+      "rules": {
+        "categoryId": "required|string",
+        "title": "required|string|minLength:3|maxLength:200",
+        "content": "required|string|minLength:10|maxLength:5000"
+      }
+    },
+    {
+      "id": "generate_slug",
+      "type": "operation",
+      "op": "transform_data",
+      "output": "{{ $json.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') }}"
+    },
+    {
+      "id": "create_thread",
+      "type": "operation",
+      "op": "database_create",
+      "entity": "ForumThread",
+      "data": {
+        "tenantId": "{{ $context.tenantId }}",
+        "categoryId": "{{ $json.categoryId }}",
+        "authorId": "{{ $context.user.id }}",
+        "title": "{{ $json.title }}",
+        "slug": "{{ $steps.generate_slug.output }}",
+        "content": "{{ $json.content }}",
+        "viewCount": 0,
+        "postCount": 1,
+        "isLocked": false,
+        "isPinned": false,
+        "createdAt": "{{ new Date().toISOString() }}",
+        "updatedAt": "{{ new Date().toISOString() }}"
+      }
+    },
+    {
+      "id": "emit_created",
+      "type": "action",
+      "action": "emit_event",
+      "event": "thread_created",
+      "channel": "{{ 'forum:' + $context.tenantId }}",
+      "data": {
+        "threadId": "{{ $steps.create_thread.output.id }}",
+        "title": "{{ $json.title }}",
+        "authorId": "{{ $context.user.id }}"
+      }
+    },
+    {
+      "id": "return_success",
+      "type": "action",
+      "action": "http_response",
+      "status": 201,
+      "body": "{{ $steps.create_thread.output }}"
+    }
+  ],
+  "errorHandler": {
+    "type": "action",
+    "action": "http_response",
+    "status": 400,
+    "body": {
+      "error": "Failed to create thread",
+      "message": "{{ $error.message }}"
+    }
+  }
+}

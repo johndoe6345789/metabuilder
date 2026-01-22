@@ -1,0 +1,85 @@
+{
+  "version": "2.2.0",
+  "name": "Fetch User Comments",
+  "description": "Fetch recent comments/posts from current user with pagination",
+  "trigger": {
+    "type": "http",
+    "method": "GET",
+    "path": "/activity"
+  },
+  "nodes": [
+    {
+      "id": "validate_context",
+      "type": "operation",
+      "op": "validate",
+      "input": "{{ $context.user.id }}",
+      "validator": "required"
+    },
+    {
+      "id": "extract_pagination",
+      "type": "operation",
+      "op": "transform_data",
+      "output": {
+        "limit": "{{ Math.min($json.limit || 20, 100) }}",
+        "offset": "{{ ($json.page || 1 - 1) * ($json.limit || 20) }}"
+      }
+    },
+    {
+      "id": "fetch_comments",
+      "type": "operation",
+      "op": "database_read",
+      "entity": "ForumPost",
+      "params": {
+        "filter": {
+          "authorId": "{{ $context.user.id }}",
+          "tenantId": "{{ $context.tenantId }}",
+          "isDeleted": false
+        },
+        "sort": {"createdAt": -1},
+        "limit": "{{ $steps.extract_pagination.output.limit }}",
+        "offset": "{{ $steps.extract_pagination.output.offset }}"
+      }
+    },
+    {
+      "id": "enrich_with_thread_info",
+      "type": "operation",
+      "op": "transform_data",
+      "input": "{{ $steps.fetch_comments.output }}",
+      "output": "{{ $steps.fetch_comments.output.map(post => ({ ...post, threadUrl: '/forum/thread/' + post.threadId })) }}"
+    },
+    {
+      "id": "count_total",
+      "type": "operation",
+      "op": "database_count",
+      "entity": "ForumPost",
+      "params": {
+        "filter": {
+          "authorId": "{{ $context.user.id }}",
+          "tenantId": "{{ $context.tenantId }}",
+          "isDeleted": false
+        }
+      }
+    },
+    {
+      "id": "format_response",
+      "type": "operation",
+      "op": "transform_data",
+      "output": {
+        "comments": "{{ $steps.enrich_with_thread_info.output }}",
+        "pagination": {
+          "total": "{{ $steps.count_total.output }}",
+          "page": "{{ $json.page || 1 }}",
+          "limit": "{{ $steps.extract_pagination.output.limit }}",
+          "hasMore": "{{ $steps.count_total.output > ($steps.extract_pagination.output.offset + $steps.extract_pagination.output.limit) }}"
+        }
+      }
+    },
+    {
+      "id": "return_success",
+      "type": "action",
+      "action": "http_response",
+      "status": 200,
+      "body": "{{ $steps.format_response.output }}"
+    }
+  ]
+}

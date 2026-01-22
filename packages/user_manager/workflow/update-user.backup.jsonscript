@@ -1,0 +1,53 @@
+{
+  "version": "2.2.0",
+  "name": "Update User",
+  "description": "Update user information with tenant safety checks",
+  "trigger": {
+    "type": "http",
+    "method": "PUT",
+    "path": "/users/:userId"
+  },
+  "nodes": [
+    {
+      "id": "check_permission",
+      "type": "operation",
+      "op": "condition",
+      "condition": "{{ $context.user.level >= 3 || $context.user.id === $json.userId }}"
+    },
+    {
+      "id": "fetch_user",
+      "type": "operation",
+      "op": "database_read",
+      "entity": "User",
+      "params": {
+        "filter": {
+          "id": "{{ $json.userId }}",
+          "tenantId": "{{ $context.tenantId }}"
+        }
+      }
+    },
+    {
+      "id": "update_user",
+      "type": "operation",
+      "op": "database_update",
+      "entity": "User",
+      "params": {
+        "filter": {
+          "id": "{{ $json.userId }}"
+        },
+        "data": {
+          "displayName": "{{ $json.displayName || $steps.fetch_user.output.displayName }}",
+          "level": "{{ $context.user.level >= 3 ? ($json.level || $steps.fetch_user.output.level) : $steps.fetch_user.output.level }}",
+          "isActive": "{{ $json.isActive !== undefined ? $json.isActive : $steps.fetch_user.output.isActive }}"
+        }
+      }
+    },
+    {
+      "id": "return_success",
+      "type": "action",
+      "action": "http_response",
+      "status": 200,
+      "body": "{{ $steps.update_user.output }}"
+    }
+  ]
+}

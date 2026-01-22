@@ -1,3 +1,69 @@
 {
-  "version":"2.2.0","name":"Unsubscribe from Stream","description":"Remove user stream subscription","trigger":{"type":"http","method":"POST","path":"/streams/:channelId/unsubscribe"},"nodes":[{"id":"validate_context","type":"operation","op":"validate","input":"{{ $context.user.id }}","validator":"required"},{"id":"delete_subscription","type":"operation","op":"database_delete","entity":"StreamSubscription","params":{"filter":{"channelId":"{{ $json.channelId }}","userId":"{{ $context.user.id }}","tenantId":"{{ $context.tenantId }}"}}},{"id":"return_success","type":"action","action":"http_response","status":200,"body":{"message":"Unsubscribed successfully"}}]
+  "name": "Unsubscribe from Stream",
+  "active": false,
+  "nodes": [
+    {
+      "id": "validate_context",
+      "name": "Validate Context",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $context.user.id }}",
+        "operation": "validate",
+        "validator": "required"
+      }
+    },
+    {
+      "id": "delete_subscription",
+      "name": "Delete Subscription",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "filter": {
+          "channelId": "{{ $json.channelId }}",
+          "userId": "{{ $context.user.id }}",
+          "tenantId": "{{ $context.tenantId }}"
+        },
+        "operation": "database_delete",
+        "entity": "StreamSubscription"
+      }
+    },
+    {
+      "id": "return_success",
+      "name": "Return Success",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "action": "http_response",
+        "status": 200,
+        "body": {
+          "message": "Unsubscribed successfully"
+        }
+      }
+    }
+  ],
+  "connections": {},
+  "staticData": {},
+  "meta": {
+    "description": "Remove user stream subscription"
+  },
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  }
 }

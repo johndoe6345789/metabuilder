@@ -1,0 +1,45 @@
+{
+  "version": "2.2.0",
+  "name": "Handle Data Table Sorting",
+  "description": "Transform data based on sorting parameters",
+  "trigger": {
+    "type": "operation",
+    "op": "transform"
+  },
+  "nodes": [
+    {
+      "id": "extract_sort_params",
+      "type": "operation",
+      "op": "transform_data",
+      "input": "{{ $json }}",
+      "output": {
+        "sortBy": "{{ $json.sortBy || 'createdAt' }}",
+        "sortOrder": "{{ $json.sortOrder || 'desc' }}"
+      }
+    },
+    {
+      "id": "validate_sort_fields",
+      "type": "operation",
+      "op": "condition",
+      "condition": "{{ ['id', 'name', 'email', 'createdAt', 'updatedAt', 'status'].includes($steps.extract_sort_params.output.sortBy) }}"
+    },
+    {
+      "id": "apply_sort",
+      "type": "operation",
+      "op": "transform_data",
+      "input": "{{ $json.data }}",
+      "output": "{{ $json.data.sort((a, b) => { const aVal = a[$steps.extract_sort_params.output.sortBy]; const bVal = b[$steps.extract_sort_params.output.sortBy]; if ($steps.extract_sort_params.output.sortOrder === 'asc') return aVal > bVal ? 1 : -1; return aVal < bVal ? 1 : -1; }) }}"
+    },
+    {
+      "id": "return_sorted",
+      "type": "action",
+      "action": "emit_event",
+      "event": "data_sorted",
+      "data": {
+        "sortBy": "{{ $steps.extract_sort_params.output.sortBy }}",
+        "sortOrder": "{{ $steps.extract_sort_params.output.sortOrder }}",
+        "data": "{{ $steps.apply_sort.output }}"
+      }
+    }
+  ]
+}

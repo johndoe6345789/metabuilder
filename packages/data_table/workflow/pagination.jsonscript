@@ -1,56 +1,103 @@
 {
-  "version": "2.2.0",
   "name": "Handle Data Table Pagination",
-  "description": "Apply pagination logic to data results",
-  "trigger": {
-    "type": "operation",
-    "op": "transform"
-  },
+  "active": false,
   "nodes": [
     {
       "id": "extract_pagination_params",
-      "type": "operation",
-      "op": "transform_data",
-      "input": "{{ $json }}",
-      "output": {
-        "page": "{{ Math.max($json.page || 1, 1) }}",
-        "limit": "{{ Math.min($json.limit || 50, 500) }}"
+      "name": "Extract Pagination Params",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $json }}",
+        "output": {
+          "page": "{{ Math.max($json.page || 1, 1) }}",
+          "limit": "{{ Math.min($json.limit || 50, 500) }}"
+        },
+        "operation": "transform_data"
       }
     },
     {
       "id": "calculate_offset",
-      "type": "operation",
-      "op": "transform_data",
-      "output": "{{ ($steps.extract_pagination_params.output.page - 1) * $steps.extract_pagination_params.output.limit }}"
+      "name": "Calculate Offset",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "output": "{{ ($steps.extract_pagination_params.output.page - 1) * $steps.extract_pagination_params.output.limit }}",
+        "operation": "transform_data"
+      }
     },
     {
       "id": "slice_data",
-      "type": "operation",
-      "op": "transform_data",
-      "input": "{{ $json.data }}",
-      "output": "{{ $json.data.slice($steps.calculate_offset.output, $steps.calculate_offset.output + $steps.extract_pagination_params.output.limit) }}"
+      "name": "Slice Data",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $json.data }}",
+        "output": "{{ $json.data.slice($steps.calculate_offset.output, $steps.calculate_offset.output + $steps.extract_pagination_params.output.limit) }}",
+        "operation": "transform_data"
+      }
     },
     {
       "id": "calculate_total_pages",
-      "type": "operation",
-      "op": "transform_data",
-      "output": "{{ Math.ceil($json.data.length / $steps.extract_pagination_params.output.limit) }}"
+      "name": "Calculate Total Pages",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "output": "{{ Math.ceil($json.data.length / $steps.extract_pagination_params.output.limit) }}",
+        "operation": "transform_data"
+      }
     },
     {
       "id": "return_paginated",
-      "type": "action",
-      "action": "emit_event",
-      "event": "data_paginated",
-      "data": {
-        "data": "{{ $steps.slice_data.output }}",
-        "pagination": {
-          "page": "{{ $steps.extract_pagination_params.output.page }}",
-          "limit": "{{ $steps.extract_pagination_params.output.limit }}",
-          "total": "{{ $json.data.length }}",
-          "totalPages": "{{ $steps.calculate_total_pages.output }}",
-          "hasMore": "{{ $steps.extract_pagination_params.output.page < $steps.calculate_total_pages.output }}"
-        }
+      "name": "Return Paginated",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "data": {
+          "data": "{{ $steps.slice_data.output }}",
+          "pagination": {
+            "page": "{{ $steps.extract_pagination_params.output.page }}",
+            "limit": "{{ $steps.extract_pagination_params.output.limit }}",
+            "total": "{{ $json.data.length }}",
+            "totalPages": "{{ $steps.calculate_total_pages.output }}",
+            "hasMore": "{{ $steps.extract_pagination_params.output.page < $steps.calculate_total_pages.output }}"
+          }
+        },
+        "action": "emit_event",
+        "event": "data_paginated"
       }
     }
-  ]
+  ],
+  "connections": {},
+  "staticData": {},
+  "meta": {
+    "description": "Apply pagination logic to data results"
+  },
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  }
 }

@@ -8,10 +8,18 @@
       "type": "core.load_context",
       "typeVersion": 1,
       "position": [
-        0,
-        0
+        100,
+        100
       ],
-      "parameters": {}
+      "parameters": {
+        "name": "Load Context",
+        "typeVersion": 1,
+        "position": [
+          0,
+          0
+        ],
+        "parameters": {}
+      }
     },
     {
       "id": "seed_messages",
@@ -19,10 +27,18 @@
       "type": "core.seed_messages",
       "typeVersion": 1,
       "position": [
-        0,
+        400,
         100
       ],
-      "parameters": {}
+      "parameters": {
+        "name": "Seed Messages",
+        "typeVersion": 1,
+        "position": [
+          0,
+          100
+        ],
+        "parameters": {}
+      }
     },
     {
       "id": "append_context",
@@ -30,10 +46,18 @@
       "type": "core.append_context_message",
       "typeVersion": 1,
       "position": [
-        300,
-        50
+        700,
+        100
       ],
-      "parameters": {}
+      "parameters": {
+        "name": "Append Context",
+        "typeVersion": 1,
+        "position": [
+          300,
+          50
+        ],
+        "parameters": {}
+      }
     },
     {
       "id": "append_user_instruction",
@@ -41,21 +65,37 @@
       "type": "core.append_user_instruction",
       "typeVersion": 1,
       "position": [
-        600,
-        50
+        100,
+        300
       ],
-      "parameters": {}
+      "parameters": {
+        "name": "Append User Instruction",
+        "typeVersion": 1,
+        "position": [
+          600,
+          50
+        ],
+        "parameters": {}
+      }
     },
     {
       "id": "ai_request",
-      "name": "AI Request",
+      "name": "Ai Request",
       "type": "core.ai_request",
       "typeVersion": 1,
       "position": [
-        900,
-        50
+        400,
+        300
       ],
-      "parameters": {}
+      "parameters": {
+        "name": "AI Request",
+        "typeVersion": 1,
+        "position": [
+          900,
+          50
+        ],
+        "parameters": {}
+      }
     },
     {
       "id": "run_tool_calls",
@@ -63,10 +103,18 @@
       "type": "core.run_tool_calls",
       "typeVersion": 1,
       "position": [
-        1200,
-        50
+        700,
+        300
       ],
-      "parameters": {}
+      "parameters": {
+        "name": "Run Tool Calls",
+        "typeVersion": 1,
+        "position": [
+          1200,
+          50
+        ],
+        "parameters": {}
+      }
     },
     {
       "id": "append_tool_results",
@@ -74,10 +122,18 @@
       "type": "core.append_tool_results",
       "typeVersion": 1,
       "position": [
-        1500,
-        50
+        100,
+        500
       ],
-      "parameters": {}
+      "parameters": {
+        "name": "Append Tool Results",
+        "typeVersion": 1,
+        "position": [
+          1500,
+          50
+        ],
+        "parameters": {}
+      }
     }
   ],
   "connections": {
@@ -85,7 +141,7 @@
       "main": {
         "0": [
           {
-            "node": "Append Context",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -96,7 +152,7 @@
       "main": {
         "0": [
           {
-            "node": "Append Context",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -107,7 +163,7 @@
       "main": {
         "0": [
           {
-            "node": "Append User Instruction",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -118,18 +174,18 @@
       "main": {
         "0": [
           {
-            "node": "AI Request",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
         ]
       }
     },
-    "AI Request": {
+    "Ai Request": {
       "main": {
         "0": [
           {
-            "node": "Run Tool Calls",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -140,7 +196,7 @@
       "main": {
         "0": [
           {
-            "node": "Append Tool Results",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -148,14 +204,13 @@
       }
     }
   },
-  "triggers": [
-    {
-      "nodeId": "load_context",
-      "kind": "manual",
-      "enabled": true,
-      "meta": {
-        "description": "Manually triggered single-pass workflow execution"
-      }
-    }
-  ]
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  }
 }
