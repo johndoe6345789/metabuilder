@@ -6,7 +6,10 @@
       "name": "Quake Begin",
       "type": "frame.begin",
       "typeVersion": 1,
-      "position": [0, 0],
+      "position": [
+        0,
+        0
+      ],
       "parameters": {
         "inputs": {
           "delta": "frame.delta"
@@ -18,7 +21,10 @@
       "name": "Quake Physics",
       "type": "frame.bullet_physics",
       "typeVersion": 1,
-      "position": [260, 0],
+      "position": [
+        260,
+        0
+      ],
       "parameters": {
         "inputs": {
           "delta": "frame.delta"
@@ -30,7 +36,10 @@
       "name": "Quake Scene",
       "type": "frame.scene",
       "typeVersion": 1,
-      "position": [520, 0],
+      "position": [
+        520,
+        0
+      ],
       "parameters": {
         "inputs": {
           "delta": "frame.delta"
@@ -42,7 +51,10 @@
       "name": "Quake Render",
       "type": "frame.render",
       "typeVersion": 1,
-      "position": [780, 0],
+      "position": [
+        780,
+        0
+      ],
       "parameters": {
         "inputs": {
           "elapsed": "frame.elapsed"
@@ -54,7 +66,10 @@
       "name": "Quake Validation",
       "type": "validation.tour.checkpoint",
       "typeVersion": 1,
-      "position": [1040, 0],
+      "position": [
+        1040,
+        0
+      ],
       "parameters": {
         "inputs": {
           "checkpoint": "packages.quake3_map"
@@ -66,30 +81,49 @@
     "Quake Begin": {
       "main": {
         "0": [
-          { "node": "Quake Physics", "type": "main", "index": 0 }
+          {
+            "node": "Quake Physics",
+            "type": "main",
+            "index": 0
+          }
         ]
       }
     },
     "Quake Physics": {
       "main": {
         "0": [
-          { "node": "Quake Scene", "type": "main", "index": 0 }
+          {
+            "node": "Quake Scene",
+            "type": "main",
+            "index": 0
+          }
         ]
       }
     },
     "Quake Scene": {
       "main": {
         "0": [
-          { "node": "Quake Render", "type": "main", "index": 0 }
+          {
+            "node": "Quake Render",
+            "type": "main",
+            "index": 0
+          }
         ]
       }
     },
     "Quake Render": {
       "main": {
         "0": [
-          { "node": "Quake Validation", "type": "main", "index": 0 }
+          {
+            "node": "Quake Validation",
+            "type": "main",
+            "index": 0
+          }
         ]
       }
     }
-  }
+  },
+  "id": "workflow_quake3_frame",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
 }

@@ -6,7 +6,10 @@
       "name": "Load Config",
       "type": "config.load",
       "typeVersion": 1,
-      "position": [0, 0],
+      "position": [
+        0,
+        0
+      ],
       "parameters": {
         "inputs": {
           "path": "config.path"
@@ -21,7 +24,10 @@
       "name": "Validate Version",
       "type": "config.version.validate",
       "typeVersion": 1,
-      "position": [260, 0],
+      "position": [
+        260,
+        0
+      ],
       "parameters": {
         "inputs": {
           "document": "config.document",
@@ -37,7 +43,10 @@
       "name": "Migrate Version",
       "type": "config.migrate",
       "typeVersion": 1,
-      "position": [520, 0],
+      "position": [
+        520,
+        0
+      ],
       "parameters": {
         "inputs": {
           "document": "config.document",
@@ -55,7 +64,10 @@
       "name": "Validate Schema",
       "type": "config.schema.validate",
       "typeVersion": 1,
-      "position": [780, 0],
+      "position": [
+        780,
+        0
+      ],
       "parameters": {
         "inputs": {
           "document": "config.document",
@@ -68,7 +80,10 @@
       "name": "Build Runtime Config",
       "type": "runtime.config.build",
       "typeVersion": 1,
-      "position": [1040, 0],
+      "position": [
+        1040,
+        0
+      ],
       "parameters": {
         "inputs": {
           "document": "config.document",
@@ -84,30 +99,49 @@
     "Load Config": {
       "main": {
         "0": [
-          { "node": "Validate Version", "type": "main", "index": 0 }
+          {
+            "node": "Validate Version",
+            "type": "main",
+            "index": 0
+          }
         ]
       }
     },
     "Validate Version": {
       "main": {
         "0": [
-          { "node": "Migrate Version", "type": "main", "index": 0 }
+          {
+            "node": "Migrate Version",
+            "type": "main",
+            "index": 0
+          }
         ]
       }
     },
     "Migrate Version": {
       "main": {
         "0": [
-          { "node": "Validate Schema", "type": "main", "index": 0 }
+          {
+            "node": "Validate Schema",
+            "type": "main",
+            "index": 0
+          }
         ]
       }
     },
     "Validate Schema": {
       "main": {
         "0": [
-          { "node": "Build Runtime Config", "type": "main", "index": 0 }
+          {
+            "node": "Build Runtime Config",
+            "type": "main",
+            "index": 0
+          }
         ]
       }
     }
-  }
+  },
+  "id": "workflow_boot_default",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
 }

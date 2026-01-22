@@ -6,7 +6,10 @@
       "name": "MaterialX Paths",
       "type": "list.literal",
       "typeVersion": 1,
-      "position": [0, 0],
+      "position": [
+        0,
+        0
+      ],
       "parameters": {
         "items": [
           "libraries",
@@ -24,7 +27,10 @@
       "name": "Assert MaterialX Paths",
       "type": "value.assert.type",
       "typeVersion": 1,
-      "position": [260, 0],
+      "position": [
+        260,
+        0
+      ],
       "parameters": {
         "inputs": {
           "value": "materialx.paths"
@@ -37,9 +43,16 @@
     "MaterialX Paths": {
       "main": {
         "0": [
-          { "node": "Assert MaterialX Paths", "type": "main", "index": 0 }
+          {
+            "node": "Assert MaterialX Paths",
+            "type": "main",
+            "index": 0
+          }
         ]
       }
     }
-  }
+  },
+  "id": "workflow_materialx_catalog",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
 }

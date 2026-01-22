@@ -6,7 +6,10 @@
       "name": "GUI Begin",
       "type": "frame.begin",
       "typeVersion": 1,
-      "position": [0, 0],
+      "position": [
+        0,
+        0
+      ],
       "parameters": {
         "inputs": {
           "delta": "frame.delta",
@@ -19,7 +22,10 @@
       "name": "GUI Layout",
       "type": "frame.gui",
       "typeVersion": 1,
-      "position": [260, 0],
+      "position": [
+        260,
+        0
+      ],
       "parameters": {
         "inputs": {
           "elapsed": "frame.elapsed"
@@ -31,7 +37,10 @@
       "name": "Render UI",
       "type": "frame.render",
       "typeVersion": 1,
-      "position": [520, 0],
+      "position": [
+        520,
+        0
+      ],
       "parameters": {
         "inputs": {
           "elapsed": "frame.elapsed"
@@ -43,7 +52,10 @@
       "name": "Capture UI",
       "type": "validation.tour.checkpoint",
       "typeVersion": 1,
-      "position": [780, 0],
+      "position": [
+        780,
+        0
+      ],
       "parameters": {
         "inputs": {
           "checkpoint": "packages.gui_demo"
@@ -55,23 +67,38 @@
     "GUI Begin": {
       "main": {
         "0": [
-          { "node": "GUI Layout", "type": "main", "index": 0 }
+          {
+            "node": "GUI Layout",
+            "type": "main",
+            "index": 0
+          }
         ]
       }
     },
     "GUI Layout": {
       "main": {
         "0": [
-          { "node": "Render UI", "type": "main", "index": 0 }
+          {
+            "node": "Render UI",
+            "type": "main",
+            "index": 0
+          }
         ]
       }
     },
     "Render UI": {
       "main": {
         "0": [
-          { "node": "Capture UI", "type": "main", "index": 0 }
+          {
+            "node": "Capture UI",
+            "type": "main",
+            "index": 0
+          }
         ]
       }
     }
-  }
+  },
+  "id": "workflow_gui_frame",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
 }
