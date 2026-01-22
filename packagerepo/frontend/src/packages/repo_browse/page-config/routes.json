@@ -1,0 +1,10 @@
+[
+  {
+    "id": "page_browse",
+    "path": "/browse",
+    "title": "Browse Packages",
+    "packageId": "repo_browse",
+    "component": "browse_page",
+    "requiresAuth": false
+  }
+]

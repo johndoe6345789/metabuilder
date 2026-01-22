@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/web_register_route",
+  "version": "1.0.0",
+  "description": "Register a route on a Flask application",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["web", "workflow", "plugin", "flask", "route"],
+  "main": "web_register_route.py",
+  "files": ["web_register_route.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "web.register_route",
+    "category": "web",
+    "class": "WebRegisterRoute",
+    "entrypoint": "execute"
+  }
+}

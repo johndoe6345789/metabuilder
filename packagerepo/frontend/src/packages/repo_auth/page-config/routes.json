@@ -1,0 +1,10 @@
+[
+  {
+    "id": "page_login",
+    "path": "/login",
+    "title": "Login",
+    "packageId": "repo_auth",
+    "component": "login_page",
+    "requiresAuth": false
+  }
+]

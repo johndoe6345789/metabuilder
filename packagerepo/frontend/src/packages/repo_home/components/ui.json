@@ -1,0 +1,112 @@
+{
+  "$schema": "https://packagerepo.dev/schemas/components.schema.json",
+  "package": "repo_home",
+  "root": "home_page",
+  "components": [
+    {
+      "id": "home_page",
+      "name": "HomePage",
+      "render": {
+        "template": {
+          "type": "Container",
+          "children": [
+            { "$ref": "hero_section" },
+            { "$ref": "features_section" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "hero_section",
+      "name": "HeroSection",
+      "render": {
+        "template": {
+          "type": "Section",
+          "sx": { "textAlign": "center", "py": 8 },
+          "children": [
+            {
+              "type": "Text",
+              "variant": "h1",
+              "sx": { "fontSize": "3rem", "fontWeight": 700, "mb": 2 },
+              "children": "Package Repository"
+            },
+            {
+              "type": "Text",
+              "variant": "body2",
+              "sx": { "color": "var(--mat-sys-on-surface-variant)", "mb": 4 },
+              "children": "Secure, fast, schema-driven artifact storage"
+            },
+            {
+              "type": "Stack",
+              "direction": "row",
+              "sx": { "justifyContent": "center", "gap": 2 },
+              "children": [
+                { "type": "Button", "variant": "primary", "href": "/browse", "children": "Browse Packages" },
+                { "type": "Button", "variant": "outline", "href": "/docs", "children": "Documentation" }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "features_section",
+      "name": "FeaturesSection",
+      "render": {
+        "template": {
+          "type": "Grid",
+          "container": true,
+          "cols": 3,
+          "sx": { "gap": 3 },
+          "children": [
+            { "$ref": "feature_card_secure" },
+            { "$ref": "feature_card_fast" },
+            { "$ref": "feature_card_schema" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "feature_card_secure",
+      "render": {
+        "template": {
+          "type": "Card",
+          "sx": { "textAlign": "center", "p": 3 },
+          "children": [
+            { "type": "Text", "sx": { "fontSize": "48px" }, "children": "🔒" },
+            { "type": "Text", "variant": "h3", "sx": { "my": 2 }, "children": "Secure" },
+            { "type": "Text", "variant": "body2", "children": "SHA256 content-addressed storage" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "feature_card_fast",
+      "render": {
+        "template": {
+          "type": "Card",
+          "sx": { "textAlign": "center", "p": 3 },
+          "children": [
+            { "type": "Text", "sx": { "fontSize": "48px" }, "children": "⚡" },
+            { "type": "Text", "variant": "h3", "sx": { "my": 2 }, "children": "Fast" },
+            { "type": "Text", "variant": "body2", "children": "Built-in caching and indexing" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "feature_card_schema",
+      "render": {
+        "template": {
+          "type": "Card",
+          "sx": { "textAlign": "center", "p": 3 },
+          "children": [
+            { "type": "Text", "sx": { "fontSize": "48px" }, "children": "📋" },
+            { "type": "Text", "variant": "h3", "sx": { "my": 2 }, "children": "Schema-Driven" },
+            { "type": "Text", "variant": "body2", "children": "Declarative configuration" }
+          ]
+        }
+      }
+    }
+  ]
+}
