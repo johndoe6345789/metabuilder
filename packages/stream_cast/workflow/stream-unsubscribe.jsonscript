@@ -12,9 +12,17 @@
         100
       ],
       "parameters": {
-        "input": "{{ $context.user.id }}",
-        "operation": "validate",
-        "validator": "required"
+        "name": "Validate Context",
+        "typeVersion": 1,
+        "position": [
+          100,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $context.user.id }}",
+          "operation": "validate",
+          "validator": "required"
+        }
       }
     },
     {
@@ -27,13 +35,21 @@
         100
       ],
       "parameters": {
-        "filter": {
-          "channelId": "{{ $json.channelId }}",
-          "userId": "{{ $context.user.id }}",
-          "tenantId": "{{ $context.tenantId }}"
-        },
-        "operation": "database_delete",
-        "entity": "StreamSubscription"
+        "name": "Delete Subscription",
+        "typeVersion": 1,
+        "position": [
+          400,
+          100
+        ],
+        "parameters": {
+          "filter": {
+            "channelId": "{{ $json.channelId }}",
+            "userId": "{{ $context.user.id }}",
+            "tenantId": "{{ $context.tenantId }}"
+          },
+          "operation": "database_delete",
+          "entity": "StreamSubscription"
+        }
       }
     },
     {
@@ -46,19 +62,25 @@
         100
       ],
       "parameters": {
-        "action": "http_response",
-        "status": 200,
-        "body": {
-          "message": "Unsubscribed successfully"
+        "name": "Return Success",
+        "typeVersion": 1,
+        "position": [
+          700,
+          100
+        ],
+        "parameters": {
+          "action": "http_response",
+          "status": 200,
+          "body": {
+            "message": "Unsubscribed successfully"
+          }
         }
       }
     }
   ],
   "connections": {},
   "staticData": {},
-  "meta": {
-    "description": "Remove user stream subscription"
-  },
+  "meta": {},
   "settings": {
     "timezone": "UTC",
     "executionTimeout": 3600,

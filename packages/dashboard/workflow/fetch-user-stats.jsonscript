@@ -12,9 +12,17 @@
         100
       ],
       "parameters": {
-        "input": "{{ $context.user.id }}",
-        "operation": "validate",
-        "validator": "required"
+        "name": "Validate Context",
+        "typeVersion": 1,
+        "position": [
+          100,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $context.user.id }}",
+          "operation": "validate",
+          "validator": "required"
+        }
       }
     },
     {
@@ -27,13 +35,21 @@
         100
       ],
       "parameters": {
-        "filter": {
-          "authorId": "{{ $context.user.id }}",
-          "tenantId": "{{ $context.tenantId }}",
-          "isDeleted": false
-        },
-        "operation": "database_count",
-        "entity": "ForumPost"
+        "name": "Count Forum Posts",
+        "typeVersion": 1,
+        "position": [
+          400,
+          100
+        ],
+        "parameters": {
+          "filter": {
+            "authorId": "{{ $context.user.id }}",
+            "tenantId": "{{ $context.tenantId }}",
+            "isDeleted": false
+          },
+          "operation": "database_count",
+          "entity": "ForumPost"
+        }
       }
     },
     {
@@ -46,12 +62,20 @@
         100
       ],
       "parameters": {
-        "filter": {
-          "authorId": "{{ $context.user.id }}",
-          "tenantId": "{{ $context.tenantId }}"
-        },
-        "operation": "database_count",
-        "entity": "ForumThread"
+        "name": "Count Forum Threads",
+        "typeVersion": 1,
+        "position": [
+          700,
+          100
+        ],
+        "parameters": {
+          "filter": {
+            "authorId": "{{ $context.user.id }}",
+            "tenantId": "{{ $context.tenantId }}"
+          },
+          "operation": "database_count",
+          "entity": "ForumThread"
+        }
       }
     },
     {
@@ -64,12 +88,20 @@
         300
       ],
       "parameters": {
-        "filter": {
-          "uploadedBy": "{{ $context.user.id }}",
-          "tenantId": "{{ $context.tenantId }}"
-        },
-        "operation": "database_count",
-        "entity": "MediaAsset"
+        "name": "Count Media Uploads",
+        "typeVersion": 1,
+        "position": [
+          100,
+          300
+        ],
+        "parameters": {
+          "filter": {
+            "uploadedBy": "{{ $context.user.id }}",
+            "tenantId": "{{ $context.tenantId }}"
+          },
+          "operation": "database_count",
+          "entity": "MediaAsset"
+        }
       }
     },
     {
@@ -82,17 +114,25 @@
         300
       ],
       "parameters": {
-        "filter": {
-          "authorId": "{{ $context.user.id }}",
-          "tenantId": "{{ $context.tenantId }}",
-          "isDeleted": false
-        },
-        "aggregations": {
-          "totalLikes": "sum(likes)",
-          "avgScore": "avg(score)"
-        },
-        "operation": "database_aggregate",
-        "entity": "ForumPost"
+        "name": "Calculate Engagement",
+        "typeVersion": 1,
+        "position": [
+          400,
+          300
+        ],
+        "parameters": {
+          "filter": {
+            "authorId": "{{ $context.user.id }}",
+            "tenantId": "{{ $context.tenantId }}",
+            "isDeleted": false
+          },
+          "aggregations": {
+            "totalLikes": "sum(likes)",
+            "avgScore": "avg(score)"
+          },
+          "operation": "database_aggregate",
+          "entity": "ForumPost"
+        }
       }
     },
     {
@@ -105,16 +145,24 @@
         300
       ],
       "parameters": {
-        "output": {
-          "forumPosts": "{{ $steps.count_forum_posts.output }}",
-          "forumThreads": "{{ $steps.count_forum_threads.output }}",
-          "mediaUploads": "{{ $steps.count_media_uploads.output }}",
-          "engagement": {
-            "totalLikes": "{{ $steps.calculate_engagement.output.totalLikes || 0 }}",
-            "averageScore": "{{ $steps.calculate_engagement.output.avgScore || 0 }}"
-          }
-        },
-        "operation": "transform_data"
+        "name": "Format Response",
+        "typeVersion": 1,
+        "position": [
+          700,
+          300
+        ],
+        "parameters": {
+          "output": {
+            "forumPosts": "{{ $steps.count_forum_posts.output }}",
+            "forumThreads": "{{ $steps.count_forum_threads.output }}",
+            "mediaUploads": "{{ $steps.count_media_uploads.output }}",
+            "engagement": {
+              "totalLikes": "{{ $steps.calculate_engagement.output.totalLikes || 0 }}",
+              "averageScore": "{{ $steps.calculate_engagement.output.avgScore || 0 }}"
+            }
+          },
+          "operation": "transform_data"
+        }
       }
     },
     {
@@ -127,17 +175,23 @@
         500
       ],
       "parameters": {
-        "action": "http_response",
-        "status": 200,
-        "body": "{{ $steps.format_response.output }}"
+        "name": "Return Success",
+        "typeVersion": 1,
+        "position": [
+          100,
+          500
+        ],
+        "parameters": {
+          "action": "http_response",
+          "status": 200,
+          "body": "{{ $steps.format_response.output }}"
+        }
       }
     }
   ],
   "connections": {},
   "staticData": {},
-  "meta": {
-    "description": "Calculate and fetch user statistics (posts, comments, activity, etc)"
-  },
+  "meta": {},
   "settings": {
     "timezone": "UTC",
     "executionTimeout": 3600,

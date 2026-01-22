@@ -1,96 +1,220 @@
 {
-  "version": "2.2.0",
   "name": "Delete Forum Post",
-  "description": "Delete or soft-delete a forum post with authorization checks",
-  "trigger": {
-    "type": "http",
-    "method": "DELETE",
-    "path": "/forum/posts/:postId"
-  },
+  "active": false,
   "nodes": [
     {
       "id": "validate_context",
-      "type": "operation",
-      "op": "validate",
-      "input": "{{ $context.tenantId }}",
-      "validator": "required"
+      "name": "Validate Context",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "name": "Validate Context",
+        "typeVersion": 1,
+        "position": [
+          100,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $context.tenantId }}",
+          "operation": "validate",
+          "validator": "required"
+        }
+      }
     },
     {
       "id": "fetch_post",
-      "type": "operation",
-      "op": "database_read",
-      "entity": "ForumPost",
-      "params": {
-        "filter": {
-          "id": "{{ $json.postId }}",
-          "tenantId": "{{ $context.tenantId }}"
+      "name": "Fetch Post",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "name": "Fetch Post",
+        "typeVersion": 1,
+        "position": [
+          400,
+          100
+        ],
+        "parameters": {
+          "filter": {
+            "id": "{{ $json.postId }}",
+            "tenantId": "{{ $context.tenantId }}"
+          },
+          "operation": "database_read",
+          "entity": "ForumPost"
         }
       }
     },
     {
       "id": "check_authorization",
-      "type": "operation",
-      "op": "condition",
-      "condition": "{{ $steps.fetch_post.output.authorId === $context.user.id || $context.user.level >= 3 }}"
+      "name": "Check Authorization",
+      "type": "metabuilder.condition",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "name": "Check Authorization",
+        "typeVersion": 1,
+        "position": [
+          700,
+          100
+        ],
+        "parameters": {
+          "condition": "{{ $steps.fetch_post.output.authorId === $context.user.id || $context.user.level >= 3 }}",
+          "operation": "condition"
+        }
+      }
     },
     {
       "id": "soft_delete_post",
-      "type": "operation",
-      "op": "database_update",
-      "entity": "ForumPost",
-      "params": {
-        "filter": {
-          "id": "{{ $json.postId }}"
-        },
-        "data": {
-          "isDeleted": true,
-          "deletedAt": "{{ new Date().toISOString() }}"
+      "name": "Soft Delete Post",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "name": "Soft Delete Post",
+        "typeVersion": 1,
+        "position": [
+          100,
+          300
+        ],
+        "parameters": {
+          "filter": {
+            "id": "{{ $json.postId }}"
+          },
+          "data": {
+            "isDeleted": true,
+            "deletedAt": "{{ new Date().toISOString() }}"
+          },
+          "operation": "database_update",
+          "entity": "ForumPost"
         }
       }
     },
     {
       "id": "decrement_thread_count",
-      "type": "operation",
-      "op": "database_read",
-      "entity": "ForumThread",
-      "params": {
-        "filter": {
-          "id": "{{ $steps.fetch_post.output.threadId }}"
+      "name": "Decrement Thread Count",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "name": "Decrement Thread Count",
+        "typeVersion": 1,
+        "position": [
+          400,
+          300
+        ],
+        "parameters": {
+          "filter": {
+            "id": "{{ $steps.fetch_post.output.threadId }}"
+          },
+          "operation": "database_read",
+          "entity": "ForumThread"
         }
       }
     },
     {
       "id": "update_thread_count",
-      "type": "operation",
-      "op": "database_update",
-      "entity": "ForumThread",
-      "params": {
-        "filter": {
-          "id": "{{ $steps.fetch_post.output.threadId }}"
-        },
-        "data": {
-          "postCount": "{{ Math.max($steps.decrement_thread_count.output.postCount - 1, 0) }}"
+      "name": "Update Thread Count",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "name": "Update Thread Count",
+        "typeVersion": 1,
+        "position": [
+          700,
+          300
+        ],
+        "parameters": {
+          "filter": {
+            "id": "{{ $steps.fetch_post.output.threadId }}"
+          },
+          "data": {
+            "postCount": "{{ Math.max($steps.decrement_thread_count.output.postCount - 1, 0) }}"
+          },
+          "operation": "database_update",
+          "entity": "ForumThread"
         }
       }
     },
     {
       "id": "emit_deleted",
-      "type": "action",
-      "action": "emit_event",
-      "event": "post_deleted",
-      "channel": "{{ 'forum:thread:' + $steps.fetch_post.output.threadId }}",
-      "data": {
-        "postId": "{{ $json.postId }}"
+      "name": "Emit Deleted",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        100,
+        500
+      ],
+      "parameters": {
+        "name": "Emit Deleted",
+        "typeVersion": 1,
+        "position": [
+          100,
+          500
+        ],
+        "parameters": {
+          "data": {
+            "postId": "{{ $json.postId }}"
+          },
+          "action": "emit_event",
+          "event": "post_deleted",
+          "channel": "{{ 'forum:thread:' + $steps.fetch_post.output.threadId }}"
+        }
       }
     },
     {
       "id": "return_success",
-      "type": "action",
-      "action": "http_response",
-      "status": 200,
-      "body": {
-        "message": "Post deleted successfully"
+      "name": "Return Success",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        400,
+        500
+      ],
+      "parameters": {
+        "name": "Return Success",
+        "typeVersion": 1,
+        "position": [
+          400,
+          500
+        ],
+        "parameters": {
+          "action": "http_response",
+          "status": 200,
+          "body": {
+            "message": "Post deleted successfully"
+          }
+        }
       }
     }
-  ]
+  ],
+  "connections": {},
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  }
 }

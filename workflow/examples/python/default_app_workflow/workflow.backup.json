@@ -1,110 +1,399 @@
 {
-  "version": "2.2.0",
   "name": "default_app_workflow",
-  "description": "Default application workflow with backend bootstrap and iterative AI loop",
   "active": false,
-  "trigger": {
-    "type": "manual",
-    "node": "load_messages"
-  },
   "nodes": [
     {
       "id": "load_messages",
-      "type": "operation",
-      "op": "load_messages",
-      "description": "Load initial messages from storage"
+      "name": "Load Messages",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "name": "Load Messages",
+        "typeVersion": 1,
+        "position": [
+          100,
+          100
+        ],
+        "parameters": {
+          "operation": "load_messages"
+        },
+        "notes": "Load initial messages from storage",
+        "notesInFlow": false
+      }
     },
     {
       "id": "load_metadata",
-      "type": "operation",
-      "op": "load_metadata",
-      "description": "Load workflow metadata and configuration"
+      "name": "Load Metadata",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "name": "Load Metadata",
+        "typeVersion": 1,
+        "position": [
+          400,
+          100
+        ],
+        "parameters": {
+          "operation": "load_metadata"
+        },
+        "notes": "Load workflow metadata and configuration",
+        "notesInFlow": false
+      }
     },
     {
       "id": "load_prompts",
-      "type": "operation",
-      "op": "load_prompts",
-      "description": "Load prompt templates"
+      "name": "Load Prompts",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "name": "Load Prompts",
+        "typeVersion": 1,
+        "position": [
+          700,
+          100
+        ],
+        "parameters": {
+          "operation": "load_prompts"
+        },
+        "notes": "Load prompt templates",
+        "notesInFlow": false
+      }
     },
     {
       "id": "create_github_client",
-      "type": "operation",
-      "op": "create_github_client",
-      "description": "Initialize GitHub API client"
+      "name": "Create Github Client",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "name": "Create Github Client",
+        "typeVersion": 1,
+        "position": [
+          100,
+          300
+        ],
+        "parameters": {
+          "operation": "create_github_client"
+        },
+        "notes": "Initialize GitHub API client",
+        "notesInFlow": false
+      }
     },
     {
       "id": "create_openai_client",
-      "type": "operation",
-      "op": "create_openai_client",
-      "description": "Initialize OpenAI API client"
+      "name": "Create Openai Client",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "name": "Create Openai Client",
+        "typeVersion": 1,
+        "position": [
+          400,
+          300
+        ],
+        "parameters": {
+          "operation": "create_openai_client"
+        },
+        "notes": "Initialize OpenAI API client",
+        "notesInFlow": false
+      }
     },
     {
       "id": "load_tools",
-      "type": "operation",
-      "op": "load_tools",
-      "description": "Load available tool definitions"
+      "name": "Load Tools",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "name": "Load Tools",
+        "typeVersion": 1,
+        "position": [
+          700,
+          300
+        ],
+        "parameters": {
+          "operation": "load_tools"
+        },
+        "notes": "Load available tool definitions",
+        "notesInFlow": false
+      }
     },
     {
       "id": "load_plugins",
-      "type": "operation",
-      "op": "load_plugins",
-      "description": "Load and initialize plugins"
+      "name": "Load Plugins",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        100,
+        500
+      ],
+      "parameters": {
+        "name": "Load Plugins",
+        "typeVersion": 1,
+        "position": [
+          100,
+          500
+        ],
+        "parameters": {
+          "operation": "load_plugins"
+        },
+        "notes": "Load and initialize plugins",
+        "notesInFlow": false
+      }
     },
     {
       "id": "seed_context",
-      "type": "operation",
-      "op": "seed_context",
-      "description": "Initialize execution context"
+      "name": "Seed Context",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        400,
+        500
+      ],
+      "parameters": {
+        "name": "Seed Context",
+        "typeVersion": 1,
+        "position": [
+          400,
+          500
+        ],
+        "parameters": {
+          "operation": "seed_context"
+        },
+        "notes": "Initialize execution context",
+        "notesInFlow": false
+      }
     },
     {
       "id": "seed_messages",
-      "type": "operation",
-      "op": "seed_messages",
-      "description": "Seed initial conversation messages"
+      "name": "Seed Messages",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        700,
+        500
+      ],
+      "parameters": {
+        "name": "Seed Messages",
+        "typeVersion": 1,
+        "position": [
+          700,
+          500
+        ],
+        "parameters": {
+          "operation": "seed_messages"
+        },
+        "notes": "Seed initial conversation messages",
+        "notesInFlow": false
+      }
     },
     {
       "id": "append_user_instructions",
-      "type": "operation",
-      "op": "append_message",
-      "description": "Append user instructions to messages"
+      "name": "Append User Instructions",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        100,
+        700
+      ],
+      "parameters": {
+        "name": "Append User Instructions",
+        "typeVersion": 1,
+        "position": [
+          100,
+          700
+        ],
+        "parameters": {
+          "operation": "append_message"
+        },
+        "notes": "Append user instructions to messages",
+        "notesInFlow": false
+      }
     },
     {
       "id": "ai_loop",
-      "type": "loop",
-      "max_iterations": 10,
-      "when": "$no_tool_calls",
-      "nodes": [
-        {
-          "id": "ai_request",
-          "type": "operation",
-          "op": "ai_request",
-          "description": "Make request to AI model"
-        },
-        {
-          "id": "execute_tool_calls",
-          "type": "operation",
-          "op": "execute_tool_calls",
-          "description": "Execute any tool calls from AI response"
-        },
-        {
-          "id": "append_results",
-          "type": "operation",
-          "op": "append_results",
-          "description": "Append tool results to conversation"
+      "name": "Ai Loop",
+      "type": "metabuilder.loop",
+      "typeVersion": 1,
+      "position": [
+        400,
+        700
+      ],
+      "parameters": {
+        "name": "Ai Loop",
+        "typeVersion": 1,
+        "position": [
+          400,
+          700
+        ],
+        "parameters": {
+          "max_iterations": 10,
+          "when": "$no_tool_calls",
+          "nodes": [
+            {
+              "id": "ai_request",
+              "type": "operation",
+              "op": "ai_request",
+              "description": "Make request to AI model"
+            },
+            {
+              "id": "execute_tool_calls",
+              "type": "operation",
+              "op": "execute_tool_calls",
+              "description": "Execute any tool calls from AI response"
+            },
+            {
+              "id": "append_results",
+              "type": "operation",
+              "op": "append_results",
+              "description": "Append tool results to conversation"
+            }
+          ]
         }
-      ]
+      }
     }
   ],
-  "connections": [
-    { "from": "load_messages", "to": "load_metadata" },
-    { "from": "load_metadata", "to": "load_prompts" },
-    { "from": "load_prompts", "to": "create_github_client" },
-    { "from": "create_github_client", "to": "create_openai_client" },
-    { "from": "create_openai_client", "to": "load_tools" },
-    { "from": "load_tools", "to": "load_plugins" },
-    { "from": "load_plugins", "to": "seed_context" },
-    { "from": "seed_context", "to": "seed_messages" },
-    { "from": "seed_messages", "to": "append_user_instructions" },
-    { "from": "append_user_instructions", "to": "ai_loop" }
-  ]
+  "connections": {
+    "Load Messages": {
+      "main": {
+        "0": [
+          {
+            "node": "[object Object]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Load Metadata": {
+      "main": {
+        "0": [
+          {
+            "node": "[object Object]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Load Prompts": {
+      "main": {
+        "0": [
+          {
+            "node": "[object Object]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Create Github Client": {
+      "main": {
+        "0": [
+          {
+            "node": "[object Object]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Create Openai Client": {
+      "main": {
+        "0": [
+          {
+            "node": "[object Object]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Load Tools": {
+      "main": {
+        "0": [
+          {
+            "node": "[object Object]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Load Plugins": {
+      "main": {
+        "0": [
+          {
+            "node": "[object Object]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Seed Context": {
+      "main": {
+        "0": [
+          {
+            "node": "[object Object]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Seed Messages": {
+      "main": {
+        "0": [
+          {
+            "node": "[object Object]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Append User Instructions": {
+      "main": {
+        "0": [
+          {
+            "node": "[object Object]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    }
+  },
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  }
 }

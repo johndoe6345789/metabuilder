@@ -12,9 +12,17 @@
         100
       ],
       "parameters": {
-        "input": "{{ $context.user.id }}",
-        "operation": "validate",
-        "validator": "required"
+        "name": "Validate Context",
+        "typeVersion": 1,
+        "position": [
+          100,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $context.user.id }}",
+          "operation": "validate",
+          "validator": "required"
+        }
       }
     },
     {
@@ -27,8 +35,16 @@
         100
       ],
       "parameters": {
-        "condition": "{{ $context.user.level >= 2 }}",
-        "operation": "condition"
+        "name": "Check Authorization",
+        "typeVersion": 1,
+        "position": [
+          400,
+          100
+        ],
+        "parameters": {
+          "condition": "{{ $context.user.level >= 2 }}",
+          "operation": "condition"
+        }
       }
     },
     {
@@ -41,12 +57,20 @@
         100
       ],
       "parameters": {
-        "filter": {
-          "id": "{{ $json.channelId }}",
-          "tenantId": "{{ $context.tenantId }}"
-        },
-        "operation": "database_read",
-        "entity": "StreamChannel"
+        "name": "Fetch Channel",
+        "typeVersion": 1,
+        "position": [
+          700,
+          100
+        ],
+        "parameters": {
+          "filter": {
+            "id": "{{ $json.channelId }}",
+            "tenantId": "{{ $context.tenantId }}"
+          },
+          "operation": "database_read",
+          "entity": "StreamChannel"
+        }
       }
     },
     {
@@ -59,15 +83,23 @@
         300
       ],
       "parameters": {
-        "filter": {
-          "id": "{{ $json.channelId }}"
-        },
-        "data": {
-          "activeSceneId": "{{ $json.sceneId }}",
-          "sceneChangedAt": "{{ new Date().toISOString() }}"
-        },
-        "operation": "database_update",
-        "entity": "StreamChannel"
+        "name": "Update Active Scene",
+        "typeVersion": 1,
+        "position": [
+          100,
+          300
+        ],
+        "parameters": {
+          "filter": {
+            "id": "{{ $json.channelId }}"
+          },
+          "data": {
+            "activeSceneId": "{{ $json.sceneId }}",
+            "sceneChangedAt": "{{ new Date().toISOString() }}"
+          },
+          "operation": "database_update",
+          "entity": "StreamChannel"
+        }
       }
     },
     {
@@ -80,13 +112,21 @@
         300
       ],
       "parameters": {
-        "data": {
-          "sceneId": "{{ $json.sceneId }}",
-          "transitionTime": "{{ new Date().toISOString() }}"
-        },
-        "action": "emit_event",
-        "event": "scene_changed",
-        "channel": "{{ 'stream:' + $json.channelId }}"
+        "name": "Emit Scene Change",
+        "typeVersion": 1,
+        "position": [
+          400,
+          300
+        ],
+        "parameters": {
+          "data": {
+            "sceneId": "{{ $json.sceneId }}",
+            "transitionTime": "{{ new Date().toISOString() }}"
+          },
+          "action": "emit_event",
+          "event": "scene_changed",
+          "channel": "{{ 'stream:' + $json.channelId }}"
+        }
       }
     },
     {
@@ -99,19 +139,25 @@
         300
       ],
       "parameters": {
-        "action": "http_response",
-        "status": 200,
-        "body": {
-          "message": "Scene updated"
+        "name": "Return Success",
+        "typeVersion": 1,
+        "position": [
+          700,
+          300
+        ],
+        "parameters": {
+          "action": "http_response",
+          "status": 200,
+          "body": {
+            "message": "Scene updated"
+          }
         }
       }
     }
   ],
   "connections": {},
   "staticData": {},
-  "meta": {
-    "description": "Update stream scene and broadcast to viewers"
-  },
+  "meta": {},
   "settings": {
     "timezone": "UTC",
     "executionTimeout": 3600,

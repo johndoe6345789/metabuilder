@@ -1,95 +1,223 @@
 {
-  "version": "2.2.0",
   "name": "Create Forum Post",
-  "description": "Create a new post (reply) in a forum thread",
-  "trigger": {
-    "type": "http",
-    "method": "POST",
-    "path": "/forum/threads/:threadId/posts"
-  },
+  "active": false,
   "nodes": [
     {
       "id": "validate_tenant",
-      "type": "operation",
-      "op": "validate",
-      "input": "{{ $context.tenantId }}",
-      "validator": "required"
+      "name": "Validate Tenant",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "name": "Validate Tenant",
+        "typeVersion": 1,
+        "position": [
+          100,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $context.tenantId }}",
+          "operation": "validate",
+          "validator": "required"
+        }
+      }
     },
     {
       "id": "validate_input",
-      "type": "operation",
-      "op": "validate",
-      "input": "{{ $json }}",
-      "rules": {
-        "content": "required|string|minLength:3|maxLength:5000"
+      "name": "Validate Input",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "name": "Validate Input",
+        "typeVersion": 1,
+        "position": [
+          400,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $json }}",
+          "operation": "validate",
+          "rules": {
+            "content": "required|string|minLength:3|maxLength:5000"
+          }
+        }
       }
     },
     {
       "id": "check_thread_exists",
-      "type": "operation",
-      "op": "database_read",
-      "entity": "ForumThread",
-      "params": {
-        "filter": {
-          "id": "{{ $json.threadId }}",
-          "tenantId": "{{ $context.tenantId }}"
+      "name": "Check Thread Exists",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "name": "Check Thread Exists",
+        "typeVersion": 1,
+        "position": [
+          700,
+          100
+        ],
+        "parameters": {
+          "filter": {
+            "id": "{{ $json.threadId }}",
+            "tenantId": "{{ $context.tenantId }}"
+          },
+          "operation": "database_read",
+          "entity": "ForumThread"
         }
       }
     },
     {
       "id": "check_thread_locked",
-      "type": "operation",
-      "op": "condition",
-      "condition": "{{ $steps.check_thread_exists.output.isLocked !== true }}"
+      "name": "Check Thread Locked",
+      "type": "metabuilder.condition",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "name": "Check Thread Locked",
+        "typeVersion": 1,
+        "position": [
+          100,
+          300
+        ],
+        "parameters": {
+          "condition": "{{ $steps.check_thread_exists.output.isLocked !== true }}",
+          "operation": "condition"
+        }
+      }
     },
     {
       "id": "create_post",
-      "type": "operation",
-      "op": "database_create",
-      "entity": "ForumPost",
-      "data": {
-        "tenantId": "{{ $context.tenantId }}",
-        "threadId": "{{ $json.threadId }}",
-        "authorId": "{{ $context.user.id }}",
-        "content": "{{ $json.content }}",
-        "editedAt": null,
-        "isDeleted": false,
-        "createdAt": "{{ new Date().toISOString() }}"
+      "name": "Create Post",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "name": "Create Post",
+        "typeVersion": 1,
+        "position": [
+          400,
+          300
+        ],
+        "parameters": {
+          "data": {
+            "tenantId": "{{ $context.tenantId }}",
+            "threadId": "{{ $json.threadId }}",
+            "authorId": "{{ $context.user.id }}",
+            "content": "{{ $json.content }}",
+            "editedAt": null,
+            "isDeleted": false,
+            "createdAt": "{{ new Date().toISOString() }}"
+          },
+          "operation": "database_create",
+          "entity": "ForumPost"
+        }
       }
     },
     {
       "id": "increment_thread_count",
-      "type": "operation",
-      "op": "database_update",
-      "entity": "ForumThread",
-      "params": {
-        "filter": {
-          "id": "{{ $json.threadId }}"
-        },
-        "data": {
-          "postCount": "{{ $steps.check_thread_exists.output.postCount + 1 }}",
-          "updatedAt": "{{ new Date().toISOString() }}"
+      "name": "Increment Thread Count",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "name": "Increment Thread Count",
+        "typeVersion": 1,
+        "position": [
+          700,
+          300
+        ],
+        "parameters": {
+          "filter": {
+            "id": "{{ $json.threadId }}"
+          },
+          "data": {
+            "postCount": "{{ $steps.check_thread_exists.output.postCount + 1 }}",
+            "updatedAt": "{{ new Date().toISOString() }}"
+          },
+          "operation": "database_update",
+          "entity": "ForumThread"
         }
       }
     },
     {
       "id": "emit_event",
-      "type": "action",
-      "action": "emit_event",
-      "event": "post_created",
-      "channel": "{{ 'forum:thread:' + $json.threadId }}",
-      "data": {
-        "postId": "{{ $steps.create_post.output.id }}",
-        "threadId": "{{ $json.threadId }}",
-        "authorId": "{{ $context.user.id }}"
+      "name": "Emit Event",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        100,
+        500
+      ],
+      "parameters": {
+        "name": "Emit Event",
+        "typeVersion": 1,
+        "position": [
+          100,
+          500
+        ],
+        "parameters": {
+          "data": {
+            "postId": "{{ $steps.create_post.output.id }}",
+            "threadId": "{{ $json.threadId }}",
+            "authorId": "{{ $context.user.id }}"
+          },
+          "action": "emit_event",
+          "event": "post_created",
+          "channel": "{{ 'forum:thread:' + $json.threadId }}"
+        }
       }
     },
     {
       "id": "return_success",
-      "type": "action",
-      "action": "http_response",
-      "status": 201,
-      "body": "{{ $steps.create_post.output }}"
+      "name": "Return Success",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        400,
+        500
+      ],
+      "parameters": {
+        "name": "Return Success",
+        "typeVersion": 1,
+        "position": [
+          400,
+          500
+        ],
+        "parameters": {
+          "action": "http_response",
+          "status": 201,
+          "body": "{{ $steps.create_post.output }}"
+        }
+      }
     }
-  ]
+  ],
+  "connections": {},
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  }
 }

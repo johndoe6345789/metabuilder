@@ -1,0 +1,70 @@
+{
+  "version": "2.2.0",
+  "name": "Delete User",
+  "description": "Delete user with safeguard against deleting last admin",
+  "trigger": {
+    "type": "http",
+    "method": "DELETE",
+    "path": "/users/:userId"
+  },
+  "nodes": [
+    {
+      "id": "check_permission",
+      "type": "operation",
+      "op": "condition",
+      "condition": "{{ $context.user.level >= 3 }}"
+    },
+    {
+      "id": "fetch_user",
+      "type": "operation",
+      "op": "database_read",
+      "entity": "User",
+      "params": {
+        "filter": {
+          "id": "{{ $json.userId }}",
+          "tenantId": "{{ $context.tenantId }}"
+        }
+      }
+    },
+    {
+      "id": "count_admins",
+      "type": "operation",
+      "op": "database_count",
+      "entity": "User",
+      "params": {
+        "filter": {
+          "tenantId": "{{ $context.tenantId }}",
+          "level": {
+            "$gte": 3
+          }
+        }
+      }
+    },
+    {
+      "id": "check_not_last_admin",
+      "type": "operation",
+      "op": "condition",
+      "condition": "{{ !($steps.fetch_user.output.level >= 3 && $steps.count_admins.output <= 1) }}"
+    },
+    {
+      "id": "delete_user",
+      "type": "operation",
+      "op": "database_delete",
+      "entity": "User",
+      "params": {
+        "filter": {
+          "id": "{{ $json.userId }}"
+        }
+      }
+    },
+    {
+      "id": "return_success",
+      "type": "action",
+      "action": "http_response",
+      "status": 200,
+      "body": {
+        "message": "User deleted"
+      }
+    }
+  ]
+}

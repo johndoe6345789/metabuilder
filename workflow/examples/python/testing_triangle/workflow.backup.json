@@ -8,11 +8,27 @@
       "type": "tools.run_lint",
       "typeVersion": 1,
       "position": [
-        0,
-        50
+        100,
+        100
       ],
       "parameters": {
-        "path": "src"
+        "name": "Lint",
+        "typeVersion": 1,
+        "position": [
+          100,
+          100
+        ],
+        "parameters": {
+          "name": "Lint",
+          "typeVersion": 1,
+          "position": [
+            0,
+            50
+          ],
+          "parameters": {
+            "path": "src"
+          }
+        }
       }
     },
     {
@@ -21,13 +37,29 @@
       "type": "utils.branch_condition",
       "typeVersion": 1,
       "position": [
-        300,
-        50
+        400,
+        100
       ],
       "parameters": {
-        "value": "$lint_results",
-        "mode": "regex",
-        "compare": "(FAILED|ERROR)"
+        "name": "Lint Failed",
+        "typeVersion": 1,
+        "position": [
+          400,
+          100
+        ],
+        "parameters": {
+          "name": "Lint Failed",
+          "typeVersion": 1,
+          "position": [
+            300,
+            50
+          ],
+          "parameters": {
+            "value": "$lint_results",
+            "mode": "regex",
+            "compare": "(FAILED|ERROR)"
+          }
+        }
       }
     },
     {
@@ -36,11 +68,27 @@
       "type": "utils.not",
       "typeVersion": 1,
       "position": [
-        600,
-        50
+        700,
+        100
       ],
       "parameters": {
-        "value": "$lint_failed"
+        "name": "Lint Ok",
+        "typeVersion": 1,
+        "position": [
+          700,
+          100
+        ],
+        "parameters": {
+          "name": "Lint Ok",
+          "typeVersion": 1,
+          "position": [
+            600,
+            50
+          ],
+          "parameters": {
+            "value": "$lint_failed"
+          }
+        }
       }
     },
     {
@@ -49,11 +97,27 @@
       "type": "tools.run_tests",
       "typeVersion": 1,
       "position": [
-        900,
-        50
+        100,
+        300
       ],
       "parameters": {
-        "path": "tests"
+        "name": "Unit Tests",
+        "typeVersion": 1,
+        "position": [
+          100,
+          300
+        ],
+        "parameters": {
+          "name": "Unit Tests",
+          "typeVersion": 1,
+          "position": [
+            900,
+            50
+          ],
+          "parameters": {
+            "path": "tests"
+          }
+        }
       }
     },
     {
@@ -62,13 +126,29 @@
       "type": "utils.branch_condition",
       "typeVersion": 1,
       "position": [
-        1200,
-        50
+        400,
+        300
       ],
       "parameters": {
-        "value": "$unit_results",
-        "mode": "regex",
-        "compare": "(FAILED|ERROR)"
+        "name": "Unit Failed",
+        "typeVersion": 1,
+        "position": [
+          400,
+          300
+        ],
+        "parameters": {
+          "name": "Unit Failed",
+          "typeVersion": 1,
+          "position": [
+            1200,
+            50
+          ],
+          "parameters": {
+            "value": "$unit_results",
+            "mode": "regex",
+            "compare": "(FAILED|ERROR)"
+          }
+        }
       }
     },
     {
@@ -77,11 +157,27 @@
       "type": "utils.not",
       "typeVersion": 1,
       "position": [
-        1500,
-        50
+        700,
+        300
       ],
       "parameters": {
-        "value": "$unit_failed"
+        "name": "Unit Ok",
+        "typeVersion": 1,
+        "position": [
+          700,
+          300
+        ],
+        "parameters": {
+          "name": "Unit Ok",
+          "typeVersion": 1,
+          "position": [
+            1500,
+            50
+          ],
+          "parameters": {
+            "value": "$unit_failed"
+          }
+        }
       }
     },
     {
@@ -90,11 +186,27 @@
       "type": "tools.run_tests",
       "typeVersion": 1,
       "position": [
-        1800,
-        50
+        100,
+        500
       ],
       "parameters": {
-        "path": "tests/ui"
+        "name": "Ui Tests",
+        "typeVersion": 1,
+        "position": [
+          100,
+          500
+        ],
+        "parameters": {
+          "name": "Ui Tests",
+          "typeVersion": 1,
+          "position": [
+            1800,
+            50
+          ],
+          "parameters": {
+            "path": "tests/ui"
+          }
+        }
       }
     }
   ],
@@ -103,7 +215,7 @@
       "main": {
         "0": [
           {
-            "node": "Lint Failed",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -114,7 +226,7 @@
       "main": {
         "0": [
           {
-            "node": "Lint Ok",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -125,7 +237,7 @@
       "main": {
         "0": [
           {
-            "node": "Unit Failed",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -136,7 +248,7 @@
       "main": {
         "0": [
           {
-            "node": "Unit Ok",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -144,14 +256,13 @@
       }
     }
   },
-  "triggers": [
-    {
-      "nodeId": "lint",
-      "kind": "manual",
-      "enabled": true,
-      "meta": {
-        "description": "Manually triggered meta.workflow_packages.testing_triangle.label workflow execution"
-      }
-    }
-  ]
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  }
 }

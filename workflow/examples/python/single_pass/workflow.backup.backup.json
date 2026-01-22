@@ -1,0 +1,216 @@
+{
+  "name": "Single Pass",
+  "active": false,
+  "nodes": [
+    {
+      "id": "load_context",
+      "name": "Load Context",
+      "type": "core.load_context",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "name": "Load Context",
+        "typeVersion": 1,
+        "position": [
+          0,
+          0
+        ],
+        "parameters": {}
+      }
+    },
+    {
+      "id": "seed_messages",
+      "name": "Seed Messages",
+      "type": "core.seed_messages",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "name": "Seed Messages",
+        "typeVersion": 1,
+        "position": [
+          0,
+          100
+        ],
+        "parameters": {}
+      }
+    },
+    {
+      "id": "append_context",
+      "name": "Append Context",
+      "type": "core.append_context_message",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "name": "Append Context",
+        "typeVersion": 1,
+        "position": [
+          300,
+          50
+        ],
+        "parameters": {}
+      }
+    },
+    {
+      "id": "append_user_instruction",
+      "name": "Append User Instruction",
+      "type": "core.append_user_instruction",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "name": "Append User Instruction",
+        "typeVersion": 1,
+        "position": [
+          600,
+          50
+        ],
+        "parameters": {}
+      }
+    },
+    {
+      "id": "ai_request",
+      "name": "Ai Request",
+      "type": "core.ai_request",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "name": "AI Request",
+        "typeVersion": 1,
+        "position": [
+          900,
+          50
+        ],
+        "parameters": {}
+      }
+    },
+    {
+      "id": "run_tool_calls",
+      "name": "Run Tool Calls",
+      "type": "core.run_tool_calls",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "name": "Run Tool Calls",
+        "typeVersion": 1,
+        "position": [
+          1200,
+          50
+        ],
+        "parameters": {}
+      }
+    },
+    {
+      "id": "append_tool_results",
+      "name": "Append Tool Results",
+      "type": "core.append_tool_results",
+      "typeVersion": 1,
+      "position": [
+        100,
+        500
+      ],
+      "parameters": {
+        "name": "Append Tool Results",
+        "typeVersion": 1,
+        "position": [
+          1500,
+          50
+        ],
+        "parameters": {}
+      }
+    }
+  ],
+  "connections": {
+    "Load Context": {
+      "main": {
+        "0": [
+          {
+            "node": "[object Object]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Seed Messages": {
+      "main": {
+        "0": [
+          {
+            "node": "[object Object]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Append Context": {
+      "main": {
+        "0": [
+          {
+            "node": "[object Object]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Append User Instruction": {
+      "main": {
+        "0": [
+          {
+            "node": "[object Object]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Ai Request": {
+      "main": {
+        "0": [
+          {
+            "node": "[object Object]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Run Tool Calls": {
+      "main": {
+        "0": [
+          {
+            "node": "[object Object]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    }
+  },
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  }
+}

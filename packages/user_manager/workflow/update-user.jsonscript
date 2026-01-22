@@ -12,8 +12,16 @@
         100
       ],
       "parameters": {
-        "condition": "{{ $context.user.level >= 3 || $context.user.id === $json.userId }}",
-        "operation": "condition"
+        "name": "Check Permission",
+        "typeVersion": 1,
+        "position": [
+          100,
+          100
+        ],
+        "parameters": {
+          "condition": "{{ $context.user.level >= 3 || $context.user.id === $json.userId }}",
+          "operation": "condition"
+        }
       }
     },
     {
@@ -26,12 +34,20 @@
         100
       ],
       "parameters": {
-        "filter": {
-          "id": "{{ $json.userId }}",
-          "tenantId": "{{ $context.tenantId }}"
-        },
-        "operation": "database_read",
-        "entity": "User"
+        "name": "Fetch User",
+        "typeVersion": 1,
+        "position": [
+          400,
+          100
+        ],
+        "parameters": {
+          "filter": {
+            "id": "{{ $json.userId }}",
+            "tenantId": "{{ $context.tenantId }}"
+          },
+          "operation": "database_read",
+          "entity": "User"
+        }
       }
     },
     {
@@ -44,16 +60,24 @@
         100
       ],
       "parameters": {
-        "filter": {
-          "id": "{{ $json.userId }}"
-        },
-        "data": {
-          "displayName": "{{ $json.displayName || $steps.fetch_user.output.displayName }}",
-          "level": "{{ $context.user.level >= 3 ? ($json.level || $steps.fetch_user.output.level) : $steps.fetch_user.output.level }}",
-          "isActive": "{{ $json.isActive !== undefined ? $json.isActive : $steps.fetch_user.output.isActive }}"
-        },
-        "operation": "database_update",
-        "entity": "User"
+        "name": "Update User",
+        "typeVersion": 1,
+        "position": [
+          700,
+          100
+        ],
+        "parameters": {
+          "filter": {
+            "id": "{{ $json.userId }}"
+          },
+          "data": {
+            "displayName": "{{ $json.displayName || $steps.fetch_user.output.displayName }}",
+            "level": "{{ $context.user.level >= 3 ? ($json.level || $steps.fetch_user.output.level) : $steps.fetch_user.output.level }}",
+            "isActive": "{{ $json.isActive !== undefined ? $json.isActive : $steps.fetch_user.output.isActive }}"
+          },
+          "operation": "database_update",
+          "entity": "User"
+        }
       }
     },
     {
@@ -66,17 +90,23 @@
         300
       ],
       "parameters": {
-        "action": "http_response",
-        "status": 200,
-        "body": "{{ $steps.update_user.output }}"
+        "name": "Return Success",
+        "typeVersion": 1,
+        "position": [
+          100,
+          300
+        ],
+        "parameters": {
+          "action": "http_response",
+          "status": 200,
+          "body": "{{ $steps.update_user.output }}"
+        }
       }
     }
   ],
   "connections": {},
   "staticData": {},
-  "meta": {
-    "description": "Update user information with tenant safety checks"
-  },
+  "meta": {},
   "settings": {
     "timezone": "UTC",
     "executionTimeout": 3600,

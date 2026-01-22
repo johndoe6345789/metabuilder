@@ -12,10 +12,18 @@
         100
       ],
       "parameters": {
-        "input": "{{ $context.tenantId }}",
-        "operation": "validate",
-        "validator": "required",
-        "errorMessage": "tenantId is required"
+        "name": "Validate Tenant",
+        "typeVersion": 1,
+        "position": [
+          100,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $context.tenantId }}",
+          "operation": "validate",
+          "validator": "required",
+          "errorMessage": "tenantId is required"
+        }
       }
     },
     {
@@ -28,18 +36,26 @@
         100
       ],
       "parameters": {
-        "input": "{{ $json }}",
-        "output": {
-          "tenantId": "{{ $context.tenantId }}",
-          "action": "{{ $json.action }}",
-          "entity": "{{ $json.entity }}",
-          "userId": "{{ $json.userId }}",
-          "timestamp": {
-            "$gte": "{{ $json.startDate || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString() }}",
-            "$lte": "{{ $json.endDate || new Date().toISOString() }}"
-          }
-        },
-        "operation": "transform_data"
+        "name": "Build Filter",
+        "typeVersion": 1,
+        "position": [
+          400,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $json }}",
+          "output": {
+            "tenantId": "{{ $context.tenantId }}",
+            "action": "{{ $json.action }}",
+            "entity": "{{ $json.entity }}",
+            "userId": "{{ $json.userId }}",
+            "timestamp": {
+              "$gte": "{{ $json.startDate || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString() }}",
+              "$lte": "{{ $json.endDate || new Date().toISOString() }}"
+            }
+          },
+          "operation": "transform_data"
+        }
       }
     },
     {
@@ -52,9 +68,17 @@
         100
       ],
       "parameters": {
-        "input": "{{ $steps.build_filter.output }}",
-        "output": "{{ Object.entries($steps.build_filter.output).reduce((acc, [key, value]) => { if (value !== undefined && value !== null && (typeof value !== 'string' || value.length > 0)) acc[key] = value; return acc; }, {}) }}",
-        "operation": "transform_data"
+        "name": "Clean Filter",
+        "typeVersion": 1,
+        "position": [
+          700,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $steps.build_filter.output }}",
+          "output": "{{ Object.entries($steps.build_filter.output).reduce((acc, [key, value]) => { if (value !== undefined && value !== null && (typeof value !== 'string' || value.length > 0)) acc[key] = value; return acc; }, {}) }}",
+          "operation": "transform_data"
+        }
       }
     },
     {
@@ -67,14 +91,22 @@
         300
       ],
       "parameters": {
-        "filter": "{{ $steps.clean_filter.output }}",
-        "sort": {
-          "timestamp": -1
-        },
-        "limit": "{{ Math.min($json.limit || 100, 500) }}",
-        "output": "results",
-        "operation": "database_read",
-        "entity": "AuditLog"
+        "name": "Fetch Filtered",
+        "typeVersion": 1,
+        "position": [
+          100,
+          300
+        ],
+        "parameters": {
+          "filter": "{{ $steps.clean_filter.output }}",
+          "sort": {
+            "timestamp": -1
+          },
+          "limit": "{{ Math.min($json.limit || 100, 500) }}",
+          "output": "results",
+          "operation": "database_read",
+          "entity": "AuditLog"
+        }
       }
     },
     {
@@ -87,21 +119,27 @@
         300
       ],
       "parameters": {
-        "action": "http_response",
-        "status": 200,
-        "body": {
-          "filters": "{{ $json }}",
-          "count": "{{ $steps.fetch_filtered.output.length }}",
-          "results": "{{ $steps.fetch_filtered.output }}"
+        "name": "Return Success",
+        "typeVersion": 1,
+        "position": [
+          400,
+          300
+        ],
+        "parameters": {
+          "action": "http_response",
+          "status": 200,
+          "body": {
+            "filters": "{{ $json }}",
+            "count": "{{ $steps.fetch_filtered.output.length }}",
+            "results": "{{ $steps.fetch_filtered.output }}"
+          }
         }
       }
     }
   ],
   "connections": {},
   "staticData": {},
-  "meta": {
-    "description": "Advanced filtering of audit logs by action, entity, user, and date range"
-  },
+  "meta": {},
   "settings": {
     "timezone": "UTC",
     "executionTimeout": 3600,

@@ -1,109 +1,230 @@
 {
-  "version": "2.2.0",
   "name": "Register Workflow",
-  "description": "User registration with validation, password hashing, and email verification",
-  "trigger": {
-    "type": "http",
-    "method": "POST",
-    "path": "/auth/register"
-  },
+  "active": false,
   "nodes": [
     {
       "id": "apply_rate_limit",
-      "type": "operation",
-      "op": "rate_limit",
-      "key": "{{ $json.email }}",
-      "limit": 3,
-      "window": 3600000
+      "name": "Apply Rate Limit",
+      "type": "metabuilder.rateLimit",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "name": "Apply Rate Limit",
+        "typeVersion": 1,
+        "position": [
+          100,
+          100
+        ],
+        "parameters": {
+          "operation": "rate_limit",
+          "key": "{{ $json.email }}",
+          "limit": 3,
+          "window": 3600000
+        }
+      }
     },
     {
       "id": "validate_input",
-      "type": "operation",
-      "op": "validate",
-      "input": "{{ $json }}",
-      "rules": {
-        "email": "required|email|unique:User",
-        "password": "required|string|minLength:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)/",
-        "displayName": "required|string|minLength:2|maxLength:100"
+      "name": "Validate Input",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "name": "Validate Input",
+        "typeVersion": 1,
+        "position": [
+          400,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $json }}",
+          "operation": "validate",
+          "rules": {
+            "email": "required|email|unique:User",
+            "password": "required|string|minLength:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)/",
+            "displayName": "required|string|minLength:2|maxLength:100"
+          }
+        }
       }
     },
     {
       "id": "hash_password",
-      "type": "operation",
-      "op": "crypto",
-      "operation": "bcrypt_hash",
-      "input": "{{ $json.password }}",
-      "rounds": 12
+      "name": "Hash Password",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "name": "Hash Password",
+        "typeVersion": 1,
+        "position": [
+          700,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $json.password }}",
+          "operation": "bcrypt_hash",
+          "rounds": 12
+        }
+      }
     },
     {
       "id": "generate_verification_token",
-      "type": "operation",
-      "op": "crypto",
-      "operation": "generate_random_token",
-      "length": 32
+      "name": "Generate Verification Token",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "name": "Generate Verification Token",
+        "typeVersion": 1,
+        "position": [
+          100,
+          300
+        ],
+        "parameters": {
+          "operation": "generate_random_token",
+          "length": 32
+        }
+      }
     },
     {
       "id": "create_user",
-      "type": "operation",
-      "op": "database_create",
-      "entity": "User",
-      "data": {
-        "email": "{{ $json.email }}",
-        "passwordHash": "{{ $steps.hash_password.output }}",
-        "displayName": "{{ $json.displayName }}",
-        "tenantId": "{{ $json.tenantId }}",
-        "level": 0,
-        "isActive": false,
-        "isEmailVerified": false,
-        "verificationToken": "{{ $steps.generate_verification_token.output }}",
-        "verificationTokenExpiresAt": "{{ new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() }}",
-        "firstLogin": true,
-        "createdAt": "{{ new Date().toISOString() }}"
+      "name": "Create User",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "name": "Create User",
+        "typeVersion": 1,
+        "position": [
+          400,
+          300
+        ],
+        "parameters": {
+          "data": {
+            "email": "{{ $json.email }}",
+            "passwordHash": "{{ $steps.hash_password.output }}",
+            "displayName": "{{ $json.displayName }}",
+            "tenantId": "{{ $json.tenantId }}",
+            "level": 0,
+            "isActive": false,
+            "isEmailVerified": false,
+            "verificationToken": "{{ $steps.generate_verification_token.output }}",
+            "verificationTokenExpiresAt": "{{ new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() }}",
+            "firstLogin": true,
+            "createdAt": "{{ new Date().toISOString() }}"
+          },
+          "operation": "database_create",
+          "entity": "User"
+        }
       }
     },
     {
       "id": "send_verification_email",
-      "type": "operation",
-      "op": "email_send",
-      "to": "{{ $json.email }}",
-      "subject": "Verify your email address",
-      "template": "email_verification",
-      "data": {
-        "displayName": "{{ $json.displayName }}",
-        "verificationLink": "{{ $env.APP_URL }}/auth/verify/{{ $steps.generate_verification_token.output }}"
+      "name": "Send Verification Email",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "name": "Send Verification Email",
+        "typeVersion": 1,
+        "position": [
+          700,
+          300
+        ],
+        "parameters": {
+          "data": {
+            "displayName": "{{ $json.displayName }}",
+            "verificationLink": "{{ $env.APP_URL }}/auth/verify/{{ $steps.generate_verification_token.output }}"
+          },
+          "operation": "email_send",
+          "to": "{{ $json.email }}",
+          "subject": "Verify your email address",
+          "template": "email_verification"
+        }
       }
     },
     {
       "id": "emit_register_event",
-      "type": "action",
-      "action": "emit_event",
-      "event": "user_registered",
-      "channel": "{{ 'tenant:' + $json.tenantId }}",
-      "data": {
-        "userId": "{{ $steps.create_user.output.id }}",
-        "email": "{{ $json.email }}",
-        "displayName": "{{ $json.displayName }}"
+      "name": "Emit Register Event",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        100,
+        500
+      ],
+      "parameters": {
+        "name": "Emit Register Event",
+        "typeVersion": 1,
+        "position": [
+          100,
+          500
+        ],
+        "parameters": {
+          "data": {
+            "userId": "{{ $steps.create_user.output.id }}",
+            "email": "{{ $json.email }}",
+            "displayName": "{{ $json.displayName }}"
+          },
+          "action": "emit_event",
+          "event": "user_registered",
+          "channel": "{{ 'tenant:' + $json.tenantId }}"
+        }
       }
     },
     {
       "id": "return_success",
-      "type": "action",
-      "action": "http_response",
-      "status": 201,
-      "body": {
-        "message": "Registration successful. Please verify your email address.",
-        "userId": "{{ $steps.create_user.output.id }}",
-        "email": "{{ $json.email }}"
+      "name": "Return Success",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        400,
+        500
+      ],
+      "parameters": {
+        "name": "Return Success",
+        "typeVersion": 1,
+        "position": [
+          400,
+          500
+        ],
+        "parameters": {
+          "action": "http_response",
+          "status": 201,
+          "body": {
+            "message": "Registration successful. Please verify your email address.",
+            "userId": "{{ $steps.create_user.output.id }}",
+            "email": "{{ $json.email }}"
+          }
+        }
       }
     }
   ],
-  "errorHandler": {
-    "type": "action",
-    "action": "http_response",
-    "status": 400,
-    "body": {
-      "error": "Registration failed",
-      "message": "{{ $error.message }}"
-    }
+  "connections": {},
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
   }
 }

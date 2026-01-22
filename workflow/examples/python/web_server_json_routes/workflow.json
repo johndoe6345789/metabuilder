@@ -15,10 +15,18 @@
         "name": "Configure Logging",
         "typeVersion": 1,
         "position": [
-          0,
-          0
+          100,
+          100
         ],
-        "parameters": {}
+        "parameters": {
+          "name": "Configure Logging",
+          "typeVersion": 1,
+          "position": [
+            0,
+            0
+          ],
+          "parameters": {}
+        }
       }
     },
     {
@@ -31,13 +39,21 @@
         100
       ],
       "parameters": {
-        "name": "Load Environment",
+        "name": "Load Env",
         "typeVersion": 1,
         "position": [
-          300,
-          0
+          400,
+          100
         ],
-        "parameters": {}
+        "parameters": {
+          "name": "Load Environment",
+          "typeVersion": 1,
+          "position": [
+            300,
+            0
+          ],
+          "parameters": {}
+        }
       }
     },
     {
@@ -50,16 +66,24 @@
         100
       ],
       "parameters": {
-        "name": "Create Flask App",
+        "name": "Create App",
         "typeVersion": 1,
         "position": [
-          600,
-          0
+          700,
+          100
         ],
         "parameters": {
-          "name": "autometabuilder",
-          "config": {
-            "JSON_SORT_KEYS": false
+          "name": "Create Flask App",
+          "typeVersion": 1,
+          "position": [
+            600,
+            0
+          ],
+          "parameters": {
+            "name": "autometabuilder",
+            "config": {
+              "JSON_SORT_KEYS": false
+            }
           }
         }
       }
@@ -74,56 +98,64 @@
         300
       ],
       "parameters": {
-        "name": "Register API Routes",
+        "name": "Register Api Routes",
         "typeVersion": 1,
         "position": [
-          900,
-          0
+          100,
+          300
         ],
         "parameters": {
-          "blueprint_name": "api",
-          "routes": [
-            {
-              "path": "/api/navigation",
-              "methods": [
-                "GET"
-              ],
-              "handler": "web.api_navigation",
-              "handler_type": "plugin"
-            },
-            {
-              "path": "/api/workflow/packages",
-              "methods": [
-                "GET"
-              ],
-              "handler": "web.api_workflow_packages",
-              "handler_type": "plugin"
-            },
-            {
-              "path": "/api/workflow/plugins",
-              "methods": [
-                "GET"
-              ],
-              "handler": "web.api_workflow_plugins",
-              "handler_type": "plugin"
-            },
-            {
-              "path": "/api/workflow/graph",
-              "methods": [
-                "GET"
-              ],
-              "handler": "web.api_workflow_graph",
-              "handler_type": "plugin"
-            },
-            {
-              "path": "/api/translation-options",
-              "methods": [
-                "GET"
-              ],
-              "handler": "web.api_translation_options",
-              "handler_type": "plugin"
-            }
-          ]
+          "name": "Register API Routes",
+          "typeVersion": 1,
+          "position": [
+            900,
+            0
+          ],
+          "parameters": {
+            "blueprint_name": "api",
+            "routes": [
+              {
+                "path": "/api/navigation",
+                "methods": [
+                  "GET"
+                ],
+                "handler": "web.api_navigation",
+                "handler_type": "plugin"
+              },
+              {
+                "path": "/api/workflow/packages",
+                "methods": [
+                  "GET"
+                ],
+                "handler": "web.api_workflow_packages",
+                "handler_type": "plugin"
+              },
+              {
+                "path": "/api/workflow/plugins",
+                "methods": [
+                  "GET"
+                ],
+                "handler": "web.api_workflow_plugins",
+                "handler_type": "plugin"
+              },
+              {
+                "path": "/api/workflow/graph",
+                "methods": [
+                  "GET"
+                ],
+                "handler": "web.api_workflow_graph",
+                "handler_type": "plugin"
+              },
+              {
+                "path": "/api/translation-options",
+                "methods": [
+                  "GET"
+                ],
+                "handler": "web.api_translation_options",
+                "handler_type": "plugin"
+              }
+            ]
+          }
         }
       }
     },
@@ -137,16 +169,24 @@
         300
       ],
       "parameters": {
-        "name": "Start Web Server",
+        "name": "Start Server",
         "typeVersion": 1,
         "position": [
-          1200,
-          0
+          400,
+          300
         ],
         "parameters": {
-          "host": "0.0.0.0",
-          "port": 8000,
-          "debug": false
+          "name": "Start Web Server",
+          "typeVersion": 1,
+          "position": [
+            1200,
+            0
+          ],
+          "parameters": {
+            "host": "0.0.0.0",
+            "port": 8000,
+            "debug": false
+          }
         }
       }
     }

@@ -12,9 +12,17 @@
         100
       ],
       "parameters": {
+        "name": "Verify Auth",
+        "typeVersion": 1,
+        "position": [
+          100,
+          100
+        ],
         "parameters": {
-          "token": "$request.headers.Authorization",
-          "out": "principal"
+          "parameters": {
+            "token": "$request.headers.Authorization",
+            "out": "principal"
+          }
         }
       }
     },
@@ -28,11 +36,19 @@
         100
       ],
       "parameters": {
+        "name": "Check Write Scope",
+        "typeVersion": 1,
+        "position": [
+          400,
+          100
+        ],
         "parameters": {
-          "principal": "$principal",
-          "required_scopes": [
-            "write"
-          ]
+          "parameters": {
+            "principal": "$principal",
+            "required_scopes": [
+              "write"
+            ]
+          }
         }
       }
     },
@@ -46,10 +62,18 @@
         100
       ],
       "parameters": {
+        "name": "Parse Path",
+        "typeVersion": 1,
+        "position": [
+          700,
+          100
+        ],
         "parameters": {
-          "path": "$request.path",
-          "pattern": "/v1/:namespace/:name/:version/:variant/blob",
-          "out": "entity"
+          "parameters": {
+            "path": "$request.path",
+            "pattern": "/v1/:namespace/:name/:version/:variant/blob",
+            "out": "entity"
+          }
         }
       }
     },
@@ -63,9 +87,17 @@
         300
       ],
       "parameters": {
+        "name": "Normalize",
+        "typeVersion": 1,
+        "position": [
+          100,
+          300
+        ],
         "parameters": {
-          "entity": "$entity",
-          "out": "normalized"
+          "parameters": {
+            "entity": "$entity",
+            "out": "normalized"
+          }
         }
       }
     },
@@ -79,8 +111,16 @@
         300
       ],
       "parameters": {
+        "name": "Validate",
+        "typeVersion": 1,
+        "position": [
+          400,
+          300
+        ],
         "parameters": {
-          "entity": "$normalized"
+          "parameters": {
+            "entity": "$normalized"
+          }
         }
       }
     },
@@ -94,9 +134,17 @@
         300
       ],
       "parameters": {
+        "name": "Compute Digest",
+        "typeVersion": 1,
+        "position": [
+          700,
+          300
+        ],
         "parameters": {
-          "input": "$request.body",
-          "out": "digest"
+          "parameters": {
+            "input": "$request.body",
+            "out": "digest"
+          }
         }
       }
     },
@@ -110,9 +158,17 @@
         500
       ],
       "parameters": {
+        "name": "Check Exists",
+        "typeVersion": 1,
+        "position": [
+          100,
+          500
+        ],
         "parameters": {
-          "key": "artifact/$entity.namespace/$entity.name/$entity.version/$entity.variant",
-          "out": "existing"
+          "parameters": {
+            "key": "artifact/$entity.namespace/$entity.name/$entity.version/$entity.variant",
+            "out": "existing"
+          }
         }
       }
     },
@@ -126,10 +182,18 @@
         500
       ],
       "parameters": {
+        "name": "If Exists",
+        "typeVersion": 1,
+        "position": [
+          400,
+          500
+        ],
         "parameters": {
-          "condition": "$existing != null",
-          "then": "error_exists",
-          "else": "write_blob"
+          "parameters": {
+            "condition": "$existing != null",
+            "then": "error_exists",
+            "else": "write_blob"
+          }
         }
       }
     },
@@ -143,9 +207,17 @@
         500
       ],
       "parameters": {
+        "name": "Write Blob",
+        "typeVersion": 1,
+        "position": [
+          700,
+          500
+        ],
         "parameters": {
-          "digest": "$digest",
-          "data": "$request.body"
+          "parameters": {
+            "digest": "$digest",
+            "data": "$request.body"
+          }
         }
       }
     },
@@ -159,13 +231,21 @@
         700
       ],
       "parameters": {
+        "name": "Write Meta",
+        "typeVersion": 1,
+        "position": [
+          100,
+          700
+        ],
         "parameters": {
-          "key": "artifact/$entity.namespace/$entity.name/$entity.version/$entity.variant",
-          "value": {
-            "digest": "$digest",
-            "size": "$request.content_length",
-            "uploaded_at": "$timestamp",
-            "uploaded_by": "$principal.sub"
+          "parameters": {
+            "key": "artifact/$entity.namespace/$entity.name/$entity.version/$entity.variant",
+            "value": {
+              "digest": "$digest",
+              "size": "$request.content_length",
+              "uploaded_at": "$timestamp",
+              "uploaded_by": "$principal.sub"
+            }
           }
         }
       }
@@ -180,12 +260,20 @@
         700
       ],
       "parameters": {
+        "name": "Update Index",
+        "typeVersion": 1,
+        "position": [
+          400,
+          700
+        ],
         "parameters": {
-          "key": "$entity.namespace/$entity.name",
-          "entry": {
-            "version": "$entity.version",
-            "variant": "$entity.variant",
-            "digest": "$digest"
+          "parameters": {
+            "key": "$entity.namespace/$entity.name",
+            "entry": {
+              "version": "$entity.version",
+              "variant": "$entity.variant",
+              "digest": "$digest"
+            }
           }
         }
       }
@@ -200,12 +288,20 @@
         700
       ],
       "parameters": {
+        "name": "Success",
+        "typeVersion": 1,
+        "position": [
+          700,
+          700
+        ],
         "parameters": {
-          "body": {
-            "ok": true,
-            "digest": "$digest"
-          },
-          "status": 201
+          "parameters": {
+            "body": {
+              "ok": true,
+              "digest": "$digest"
+            },
+            "status": 201
+          }
         }
       }
     },
@@ -219,18 +315,24 @@
         900
       ],
       "parameters": {
+        "name": "Error Exists",
+        "typeVersion": 1,
+        "position": [
+          100,
+          900
+        ],
         "parameters": {
-          "message": "Artifact already exists",
-          "status": 409
+          "parameters": {
+            "message": "Artifact already exists",
+            "status": 409
+          }
         }
       }
     }
   ],
   "connections": {},
   "staticData": {},
-  "meta": {
-    "description": "Upload and store a package artifact"
-  },
+  "meta": {},
   "settings": {
     "timezone": "UTC",
     "executionTimeout": 3600,

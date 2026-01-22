@@ -1,3 +1,88 @@
 {
-  "version":"2.2.0","name":"Export JSON Script","description":"Download JSON Script as file","trigger":{"type":"http","method":"GET","path":"/json-editor/scripts/:scriptId/export"},"nodes":[{"id":"validate_context","type":"operation","op":"validate","input":"{{ $context.tenantId }}","validator":"required"},{"id":"fetch_script","type":"operation","op":"database_read","entity":"JSONScript","params":{"filter":{"id":"{{ $json.scriptId }}","tenantId":"{{ $context.tenantId }}"}}},{"id":"prepare_export","type":"operation","op":"transform_data","output":{"name":"{{ $steps.fetch_script.output.name }}.jsonscript","content":"{{ $steps.fetch_script.output.script }}","contentType":"application/json"}},{"id":"return_file","type":"action","action":"http_response","status":200,"headers":{"Content-Type":"application/json","Content-Disposition":"attachment; filename={{ $steps.prepare_export.output.name }}"},"body":"{{ $steps.prepare_export.output.content }}"}}]
+  "name": "Export JSON Script",
+  "active": false,
+  "nodes": [
+    {
+      "id": "validate_context",
+      "name": "Validate Context",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $context.tenantId }}",
+        "operation": "validate",
+        "validator": "required"
+      }
+    },
+    {
+      "id": "fetch_script",
+      "name": "Fetch Script",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "filter": {
+          "id": "{{ $json.scriptId }}",
+          "tenantId": "{{ $context.tenantId }}"
+        },
+        "operation": "database_read",
+        "entity": "JSONScript"
+      }
+    },
+    {
+      "id": "prepare_export",
+      "name": "Prepare Export",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "output": {
+          "name": "{{ $steps.fetch_script.output.name }}.jsonscript",
+          "content": "{{ $steps.fetch_script.output.script }}",
+          "contentType": "application/json"
+        },
+        "operation": "transform_data"
+      }
+    },
+    {
+      "id": "return_file",
+      "name": "Return File",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "action": "http_response",
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json",
+          "Content-Disposition": "attachment; filename={{ $steps.prepare_export.output.name }}"
+        },
+        "body": "{{ $steps.prepare_export.output.content }}"
+      }
+    }
+  ],
+  "connections": {},
+  "staticData": {},
+  "meta": {
+    "description": "Download JSON Script as file"
+  },
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  }
 }

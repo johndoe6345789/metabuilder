@@ -15,10 +15,18 @@
         "name": "Load Context",
         "typeVersion": 1,
         "position": [
-          0,
-          0
+          100,
+          100
         ],
-        "parameters": {}
+        "parameters": {
+          "name": "Load Context",
+          "typeVersion": 1,
+          "position": [
+            0,
+            0
+          ],
+          "parameters": {}
+        }
       }
     },
     {
@@ -34,10 +42,18 @@
         "name": "Seed Messages",
         "typeVersion": 1,
         "position": [
-          0,
+          400,
           100
         ],
-        "parameters": {}
+        "parameters": {
+          "name": "Seed Messages",
+          "typeVersion": 1,
+          "position": [
+            0,
+            100
+          ],
+          "parameters": {}
+        }
       }
     },
     {
@@ -53,10 +69,18 @@
         "name": "Append Context",
         "typeVersion": 1,
         "position": [
-          300,
-          50
+          700,
+          100
         ],
-        "parameters": {}
+        "parameters": {
+          "name": "Append Context",
+          "typeVersion": 1,
+          "position": [
+            300,
+            50
+          ],
+          "parameters": {}
+        }
       }
     },
     {
@@ -72,10 +96,18 @@
         "name": "Append User Instruction",
         "typeVersion": 1,
         "position": [
-          600,
-          50
+          100,
+          300
         ],
-        "parameters": {}
+        "parameters": {
+          "name": "Append User Instruction",
+          "typeVersion": 1,
+          "position": [
+            600,
+            50
+          ],
+          "parameters": {}
+        }
       }
     },
     {
@@ -91,13 +123,21 @@
         "name": "Main Loop",
         "typeVersion": 1,
         "position": [
-          900,
-          50
+          400,
+          300
         ],
         "parameters": {
-          "max_iterations": 10,
-          "stop_when": "$no_tool_calls",
-          "stop_on": "true"
+          "name": "Main Loop",
+          "typeVersion": 1,
+          "position": [
+            900,
+            50
+          ],
+          "parameters": {
+            "max_iterations": 10,
+            "stop_when": "$no_tool_calls",
+            "stop_on": "true"
+          }
         }
       }
     },
@@ -111,13 +151,21 @@
         300
       ],
       "parameters": {
-        "name": "AI Request",
+        "name": "Ai Request",
         "typeVersion": 1,
         "position": [
-          1200,
-          50
+          700,
+          300
         ],
-        "parameters": {}
+        "parameters": {
+          "name": "AI Request",
+          "typeVersion": 1,
+          "position": [
+            1200,
+            50
+          ],
+          "parameters": {}
+        }
       }
     },
     {
@@ -133,10 +181,18 @@
         "name": "Run Tool Calls",
         "typeVersion": 1,
         "position": [
-          1500,
-          50
+          100,
+          500
         ],
-        "parameters": {}
+        "parameters": {
+          "name": "Run Tool Calls",
+          "typeVersion": 1,
+          "position": [
+            1500,
+            50
+          ],
+          "parameters": {}
+        }
       }
     },
     {
@@ -152,10 +208,18 @@
         "name": "Append Tool Results",
         "typeVersion": 1,
         "position": [
-          1800,
-          50
+          400,
+          500
         ],
-        "parameters": {}
+        "parameters": {
+          "name": "Append Tool Results",
+          "typeVersion": 1,
+          "position": [
+            1800,
+            50
+          ],
+          "parameters": {}
+        }
       }
     }
   ],

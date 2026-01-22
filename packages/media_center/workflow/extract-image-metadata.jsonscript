@@ -12,9 +12,17 @@
         100
       ],
       "parameters": {
-        "input": "{{ $context.tenantId }}",
-        "operation": "validate",
-        "validator": "required"
+        "name": "Validate Context",
+        "typeVersion": 1,
+        "position": [
+          100,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $context.tenantId }}",
+          "operation": "validate",
+          "validator": "required"
+        }
       }
     },
     {
@@ -27,11 +35,19 @@
         100
       ],
       "parameters": {
-        "input": "{{ $json }}",
-        "operation": "validate",
-        "rules": {
-          "assetId": "required|string",
-          "filePath": "required|string"
+        "name": "Validate Input",
+        "typeVersion": 1,
+        "position": [
+          400,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $json }}",
+          "operation": "validate",
+          "rules": {
+            "assetId": "required|string",
+            "filePath": "required|string"
+          }
         }
       }
     },
@@ -45,12 +61,20 @@
         100
       ],
       "parameters": {
-        "filter": {
-          "id": "{{ $json.assetId }}",
-          "tenantId": "{{ $context.tenantId }}"
-        },
-        "operation": "database_read",
-        "entity": "MediaAsset"
+        "name": "Fetch Asset",
+        "typeVersion": 1,
+        "position": [
+          700,
+          100
+        ],
+        "parameters": {
+          "filter": {
+            "id": "{{ $json.assetId }}",
+            "tenantId": "{{ $context.tenantId }}"
+          },
+          "operation": "database_read",
+          "entity": "MediaAsset"
+        }
       }
     },
     {
@@ -63,16 +87,24 @@
         300
       ],
       "parameters": {
-        "output": {
-          "width": true,
-          "height": true,
-          "format": true,
-          "colorSpace": true,
-          "hasAlpha": true,
-          "exif": true
-        },
-        "operation": "analyze_image",
-        "filePath": "{{ $json.filePath }}"
+        "name": "Extract Image Info",
+        "typeVersion": 1,
+        "position": [
+          100,
+          300
+        ],
+        "parameters": {
+          "output": {
+            "width": true,
+            "height": true,
+            "format": true,
+            "colorSpace": true,
+            "hasAlpha": true,
+            "exif": true
+          },
+          "operation": "analyze_image",
+          "filePath": "{{ $json.filePath }}"
+        }
       }
     },
     {
@@ -85,13 +117,21 @@
         300
       ],
       "parameters": {
-        "output": {
-          "width": "{{ $steps.extract_image_info.output.width }}",
-          "height": "{{ $steps.extract_image_info.output.height }}",
-          "aspectRatio": "{{ $steps.extract_image_info.output.width / $steps.extract_image_info.output.height }}",
-          "format": "{{ $steps.extract_image_info.output.format }}"
-        },
-        "operation": "transform_data"
+        "name": "Calculate Dimensions",
+        "typeVersion": 1,
+        "position": [
+          400,
+          300
+        ],
+        "parameters": {
+          "output": {
+            "width": "{{ $steps.extract_image_info.output.width }}",
+            "height": "{{ $steps.extract_image_info.output.height }}",
+            "aspectRatio": "{{ $steps.extract_image_info.output.width / $steps.extract_image_info.output.height }}",
+            "format": "{{ $steps.extract_image_info.output.format }}"
+          },
+          "operation": "transform_data"
+        }
       }
     },
     {
@@ -104,21 +144,29 @@
         300
       ],
       "parameters": {
-        "filter": {
-          "id": "{{ $json.assetId }}"
-        },
-        "data": {
-          "metadata": {
-            "dimensions": "{{ $steps.calculate_dimensions.output }}",
-            "format": "{{ $steps.extract_image_info.output.format }}",
-            "colorSpace": "{{ $steps.extract_image_info.output.colorSpace }}",
-            "hasAlpha": "{{ $steps.extract_image_info.output.hasAlpha }}",
-            "exif": "{{ $steps.extract_image_info.output.exif }}"
+        "name": "Update Asset Metadata",
+        "typeVersion": 1,
+        "position": [
+          700,
+          300
+        ],
+        "parameters": {
+          "filter": {
+            "id": "{{ $json.assetId }}"
           },
-          "extractedAt": "{{ new Date().toISOString() }}"
-        },
-        "operation": "database_update",
-        "entity": "MediaAsset"
+          "data": {
+            "metadata": {
+              "dimensions": "{{ $steps.calculate_dimensions.output }}",
+              "format": "{{ $steps.extract_image_info.output.format }}",
+              "colorSpace": "{{ $steps.extract_image_info.output.colorSpace }}",
+              "hasAlpha": "{{ $steps.extract_image_info.output.hasAlpha }}",
+              "exif": "{{ $steps.extract_image_info.output.exif }}"
+            },
+            "extractedAt": "{{ new Date().toISOString() }}"
+          },
+          "operation": "database_update",
+          "entity": "MediaAsset"
+        }
       }
     },
     {
@@ -131,13 +179,21 @@
         500
       ],
       "parameters": {
-        "data": {
-          "assetId": "{{ $json.assetId }}",
-          "metadata": "{{ $steps.calculate_dimensions.output }}"
-        },
-        "action": "emit_event",
-        "event": "image_metadata_extracted",
-        "channel": "{{ 'media:' + $context.tenantId }}"
+        "name": "Emit Complete",
+        "typeVersion": 1,
+        "position": [
+          100,
+          500
+        ],
+        "parameters": {
+          "data": {
+            "assetId": "{{ $json.assetId }}",
+            "metadata": "{{ $steps.calculate_dimensions.output }}"
+          },
+          "action": "emit_event",
+          "event": "image_metadata_extracted",
+          "channel": "{{ 'media:' + $context.tenantId }}"
+        }
       }
     },
     {
@@ -150,17 +206,23 @@
         500
       ],
       "parameters": {
-        "action": "http_response",
-        "status": 200,
-        "body": "{{ $steps.update_asset_metadata.output }}"
+        "name": "Return Success",
+        "typeVersion": 1,
+        "position": [
+          400,
+          500
+        ],
+        "parameters": {
+          "action": "http_response",
+          "status": 200,
+          "body": "{{ $steps.update_asset_metadata.output }}"
+        }
       }
     }
   ],
   "connections": {},
   "staticData": {},
-  "meta": {
-    "description": "Extract metadata (dimensions, format, EXIF) from uploaded images"
-  },
+  "meta": {},
   "settings": {
     "timezone": "UTC",
     "executionTimeout": 3600,

@@ -12,8 +12,16 @@
         100
       ],
       "parameters": {
-        "condition": "{{ $context.tenantId !== undefined }}",
-        "operation": "condition"
+        "name": "Validate Tenant",
+        "typeVersion": 1,
+        "position": [
+          100,
+          100
+        ],
+        "parameters": {
+          "condition": "{{ $context.tenantId !== undefined }}",
+          "operation": "condition"
+        }
       }
     },
     {
@@ -26,8 +34,16 @@
         100
       ],
       "parameters": {
-        "condition": "{{ $context.user.id !== undefined }}",
-        "operation": "condition"
+        "name": "Validate User",
+        "typeVersion": 1,
+        "position": [
+          400,
+          100
+        ],
+        "parameters": {
+          "condition": "{{ $context.user.id !== undefined }}",
+          "operation": "condition"
+        }
       }
     },
     {
@@ -40,12 +56,20 @@
         100
       ],
       "parameters": {
-        "input": "{{ $json }}",
-        "operation": "validate",
-        "rules": {
-          "categoryId": "required|string",
-          "title": "required|string|minLength:3|maxLength:200",
-          "content": "required|string|minLength:10|maxLength:5000"
+        "name": "Validate Input",
+        "typeVersion": 1,
+        "position": [
+          700,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $json }}",
+          "operation": "validate",
+          "rules": {
+            "categoryId": "required|string",
+            "title": "required|string|minLength:3|maxLength:200",
+            "content": "required|string|minLength:10|maxLength:5000"
+          }
         }
       }
     },
@@ -59,8 +83,16 @@
         300
       ],
       "parameters": {
-        "output": "{{ $json.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') }}",
-        "operation": "transform_data"
+        "name": "Generate Slug",
+        "typeVersion": 1,
+        "position": [
+          100,
+          300
+        ],
+        "parameters": {
+          "output": "{{ $json.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') }}",
+          "operation": "transform_data"
+        }
       }
     },
     {
@@ -73,22 +105,30 @@
         300
       ],
       "parameters": {
-        "data": {
-          "tenantId": "{{ $context.tenantId }}",
-          "categoryId": "{{ $json.categoryId }}",
-          "authorId": "{{ $context.user.id }}",
-          "title": "{{ $json.title }}",
-          "slug": "{{ $steps.generate_slug.output }}",
-          "content": "{{ $json.content }}",
-          "viewCount": 0,
-          "postCount": 1,
-          "isLocked": false,
-          "isPinned": false,
-          "createdAt": "{{ new Date().toISOString() }}",
-          "updatedAt": "{{ new Date().toISOString() }}"
-        },
-        "operation": "database_create",
-        "entity": "ForumThread"
+        "name": "Create Thread",
+        "typeVersion": 1,
+        "position": [
+          400,
+          300
+        ],
+        "parameters": {
+          "data": {
+            "tenantId": "{{ $context.tenantId }}",
+            "categoryId": "{{ $json.categoryId }}",
+            "authorId": "{{ $context.user.id }}",
+            "title": "{{ $json.title }}",
+            "slug": "{{ $steps.generate_slug.output }}",
+            "content": "{{ $json.content }}",
+            "viewCount": 0,
+            "postCount": 1,
+            "isLocked": false,
+            "isPinned": false,
+            "createdAt": "{{ new Date().toISOString() }}",
+            "updatedAt": "{{ new Date().toISOString() }}"
+          },
+          "operation": "database_create",
+          "entity": "ForumThread"
+        }
       }
     },
     {
@@ -101,14 +141,22 @@
         300
       ],
       "parameters": {
-        "data": {
-          "threadId": "{{ $steps.create_thread.output.id }}",
-          "title": "{{ $json.title }}",
-          "authorId": "{{ $context.user.id }}"
-        },
-        "action": "emit_event",
-        "event": "thread_created",
-        "channel": "{{ 'forum:' + $context.tenantId }}"
+        "name": "Emit Created",
+        "typeVersion": 1,
+        "position": [
+          700,
+          300
+        ],
+        "parameters": {
+          "data": {
+            "threadId": "{{ $steps.create_thread.output.id }}",
+            "title": "{{ $json.title }}",
+            "authorId": "{{ $context.user.id }}"
+          },
+          "action": "emit_event",
+          "event": "thread_created",
+          "channel": "{{ 'forum:' + $context.tenantId }}"
+        }
       }
     },
     {
@@ -121,17 +169,23 @@
         500
       ],
       "parameters": {
-        "action": "http_response",
-        "status": 201,
-        "body": "{{ $steps.create_thread.output }}"
+        "name": "Return Success",
+        "typeVersion": 1,
+        "position": [
+          100,
+          500
+        ],
+        "parameters": {
+          "action": "http_response",
+          "status": 201,
+          "body": "{{ $steps.create_thread.output }}"
+        }
       }
     }
   ],
   "connections": {},
   "staticData": {},
-  "meta": {
-    "description": "Create a new forum thread with validation and slug generation"
-  },
+  "meta": {},
   "settings": {
     "timezone": "UTC",
     "executionTimeout": 3600,

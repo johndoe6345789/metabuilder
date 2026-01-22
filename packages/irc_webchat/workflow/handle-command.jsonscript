@@ -12,9 +12,17 @@
         100
       ],
       "parameters": {
-        "input": "{{ $context.user.id }}",
-        "operation": "validate",
-        "validator": "required"
+        "name": "Validate Context",
+        "typeVersion": 1,
+        "position": [
+          100,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $context.user.id }}",
+          "operation": "validate",
+          "validator": "required"
+        }
       }
     },
     {
@@ -27,11 +35,19 @@
         100
       ],
       "parameters": {
-        "output": {
-          "command": "{{ $json.message.split(' ')[0].substring(1).toLowerCase() }}",
-          "args": "{{ $json.message.split(' ').slice(1) }}"
-        },
-        "operation": "transform_data"
+        "name": "Parse Command",
+        "typeVersion": 1,
+        "position": [
+          400,
+          100
+        ],
+        "parameters": {
+          "output": {
+            "command": "{{ $json.message.split(' ')[0].substring(1).toLowerCase() }}",
+            "args": "{{ $json.message.split(' ').slice(1) }}"
+          },
+          "operation": "transform_data"
+        }
       }
     },
     {
@@ -44,8 +60,16 @@
         100
       ],
       "parameters": {
-        "condition": "{{ $steps.parse_command.output.command === 'help' }}",
-        "operation": "condition"
+        "name": "Handle Help",
+        "typeVersion": 1,
+        "position": [
+          700,
+          100
+        ],
+        "parameters": {
+          "condition": "{{ $steps.parse_command.output.command === 'help' }}",
+          "operation": "condition"
+        }
       }
     },
     {
@@ -58,8 +82,16 @@
         300
       ],
       "parameters": {
-        "condition": "{{ $steps.parse_command.output.command === 'users' }}",
-        "operation": "condition"
+        "name": "Handle Users",
+        "typeVersion": 1,
+        "position": [
+          100,
+          300
+        ],
+        "parameters": {
+          "condition": "{{ $steps.parse_command.output.command === 'users' }}",
+          "operation": "condition"
+        }
       }
     },
     {
@@ -72,8 +104,16 @@
         300
       ],
       "parameters": {
-        "condition": "{{ $steps.parse_command.output.command === 'me' }}",
-        "operation": "condition"
+        "name": "Handle Me",
+        "typeVersion": 1,
+        "position": [
+          400,
+          300
+        ],
+        "parameters": {
+          "condition": "{{ $steps.parse_command.output.command === 'me' }}",
+          "operation": "condition"
+        }
       }
     },
     {
@@ -86,8 +126,16 @@
         300
       ],
       "parameters": {
-        "condition": "{{ $steps.parse_command.output.command === 'kick' && $context.user.level >= 2 }}",
-        "operation": "condition"
+        "name": "Handle Kick",
+        "typeVersion": 1,
+        "position": [
+          700,
+          300
+        ],
+        "parameters": {
+          "condition": "{{ $steps.parse_command.output.command === 'kick' && $context.user.level >= 2 }}",
+          "operation": "condition"
+        }
       }
     },
     {
@@ -100,16 +148,22 @@
         500
       ],
       "parameters": {
-        "condition": "{{ $steps.parse_command.output.command === 'ban' && $context.user.level >= 3 }}",
-        "operation": "condition"
+        "name": "Handle Ban",
+        "typeVersion": 1,
+        "position": [
+          100,
+          500
+        ],
+        "parameters": {
+          "condition": "{{ $steps.parse_command.output.command === 'ban' && $context.user.level >= 3 }}",
+          "operation": "condition"
+        }
       }
     }
   ],
   "connections": {},
   "staticData": {},
-  "meta": {
-    "description": "Process IRC commands (/help, /users, /me, /clear, /kick, /ban)"
-  },
+  "meta": {},
   "settings": {
     "timezone": "UTC",
     "executionTimeout": 3600,

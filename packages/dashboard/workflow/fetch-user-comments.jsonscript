@@ -12,9 +12,17 @@
         100
       ],
       "parameters": {
-        "input": "{{ $context.user.id }}",
-        "operation": "validate",
-        "validator": "required"
+        "name": "Validate Context",
+        "typeVersion": 1,
+        "position": [
+          100,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $context.user.id }}",
+          "operation": "validate",
+          "validator": "required"
+        }
       }
     },
     {
@@ -27,11 +35,19 @@
         100
       ],
       "parameters": {
-        "output": {
-          "limit": "{{ Math.min($json.limit || 20, 100) }}",
-          "offset": "{{ ($json.page || 1 - 1) * ($json.limit || 20) }}"
-        },
-        "operation": "transform_data"
+        "name": "Extract Pagination",
+        "typeVersion": 1,
+        "position": [
+          400,
+          100
+        ],
+        "parameters": {
+          "output": {
+            "limit": "{{ Math.min($json.limit || 20, 100) }}",
+            "offset": "{{ ($json.page || 1 - 1) * ($json.limit || 20) }}"
+          },
+          "operation": "transform_data"
+        }
       }
     },
     {
@@ -44,18 +60,26 @@
         100
       ],
       "parameters": {
-        "filter": {
-          "authorId": "{{ $context.user.id }}",
-          "tenantId": "{{ $context.tenantId }}",
-          "isDeleted": false
-        },
-        "sort": {
-          "createdAt": -1
-        },
-        "limit": "{{ $steps.extract_pagination.output.limit }}",
-        "offset": "{{ $steps.extract_pagination.output.offset }}",
-        "operation": "database_read",
-        "entity": "ForumPost"
+        "name": "Fetch Comments",
+        "typeVersion": 1,
+        "position": [
+          700,
+          100
+        ],
+        "parameters": {
+          "filter": {
+            "authorId": "{{ $context.user.id }}",
+            "tenantId": "{{ $context.tenantId }}",
+            "isDeleted": false
+          },
+          "sort": {
+            "createdAt": -1
+          },
+          "limit": "{{ $steps.extract_pagination.output.limit }}",
+          "offset": "{{ $steps.extract_pagination.output.offset }}",
+          "operation": "database_read",
+          "entity": "ForumPost"
+        }
       }
     },
     {
@@ -68,9 +92,17 @@
         300
       ],
       "parameters": {
-        "input": "{{ $steps.fetch_comments.output }}",
-        "output": "{{ $steps.fetch_comments.output.map(post => ({ ...post, threadUrl: '/forum/thread/' + post.threadId })) }}",
-        "operation": "transform_data"
+        "name": "Enrich With Thread Info",
+        "typeVersion": 1,
+        "position": [
+          100,
+          300
+        ],
+        "parameters": {
+          "input": "{{ $steps.fetch_comments.output }}",
+          "output": "{{ $steps.fetch_comments.output.map(post => ({ ...post, threadUrl: '/forum/thread/' + post.threadId })) }}",
+          "operation": "transform_data"
+        }
       }
     },
     {
@@ -83,13 +115,21 @@
         300
       ],
       "parameters": {
-        "filter": {
-          "authorId": "{{ $context.user.id }}",
-          "tenantId": "{{ $context.tenantId }}",
-          "isDeleted": false
-        },
-        "operation": "database_count",
-        "entity": "ForumPost"
+        "name": "Count Total",
+        "typeVersion": 1,
+        "position": [
+          400,
+          300
+        ],
+        "parameters": {
+          "filter": {
+            "authorId": "{{ $context.user.id }}",
+            "tenantId": "{{ $context.tenantId }}",
+            "isDeleted": false
+          },
+          "operation": "database_count",
+          "entity": "ForumPost"
+        }
       }
     },
     {
@@ -102,16 +142,24 @@
         300
       ],
       "parameters": {
-        "output": {
-          "comments": "{{ $steps.enrich_with_thread_info.output }}",
-          "pagination": {
-            "total": "{{ $steps.count_total.output }}",
-            "page": "{{ $json.page || 1 }}",
-            "limit": "{{ $steps.extract_pagination.output.limit }}",
-            "hasMore": "{{ $steps.count_total.output > ($steps.extract_pagination.output.offset + $steps.extract_pagination.output.limit) }}"
-          }
-        },
-        "operation": "transform_data"
+        "name": "Format Response",
+        "typeVersion": 1,
+        "position": [
+          700,
+          300
+        ],
+        "parameters": {
+          "output": {
+            "comments": "{{ $steps.enrich_with_thread_info.output }}",
+            "pagination": {
+              "total": "{{ $steps.count_total.output }}",
+              "page": "{{ $json.page || 1 }}",
+              "limit": "{{ $steps.extract_pagination.output.limit }}",
+              "hasMore": "{{ $steps.count_total.output > ($steps.extract_pagination.output.offset + $steps.extract_pagination.output.limit) }}"
+            }
+          },
+          "operation": "transform_data"
+        }
       }
     },
     {
@@ -124,17 +172,23 @@
         500
       ],
       "parameters": {
-        "action": "http_response",
-        "status": 200,
-        "body": "{{ $steps.format_response.output }}"
+        "name": "Return Success",
+        "typeVersion": 1,
+        "position": [
+          100,
+          500
+        ],
+        "parameters": {
+          "action": "http_response",
+          "status": 200,
+          "body": "{{ $steps.format_response.output }}"
+        }
       }
     }
   ],
   "connections": {},
   "staticData": {},
-  "meta": {
-    "description": "Fetch recent comments/posts from current user with pagination"
-  },
+  "meta": {},
   "settings": {
     "timezone": "UTC",
     "executionTimeout": 3600,

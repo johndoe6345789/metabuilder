@@ -1,82 +1,219 @@
 {
   "name": "Authenticate User",
-  "description": "Login and generate JWT token",
-  "version": "1.0.0",
+  "active": false,
   "nodes": [
     {
       "id": "parse_body",
+      "name": "Parse Body",
       "type": "packagerepo.parse_json",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
       "parameters": {
-        "input": "$request.body",
-        "out": "credentials"
+        "name": "Parse Body",
+        "typeVersion": 1,
+        "position": [
+          100,
+          100
+        ],
+        "parameters": {
+          "parameters": {
+            "input": "$request.body",
+            "out": "credentials"
+          }
+        }
       }
     },
     {
       "id": "validate_fields",
+      "name": "Validate Fields",
       "type": "logic.if",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
       "parameters": {
-        "condition": "$credentials.username == null || $credentials.password == null",
-        "then": "error_invalid_request",
-        "else": "verify_password"
+        "name": "Validate Fields",
+        "typeVersion": 1,
+        "position": [
+          400,
+          100
+        ],
+        "parameters": {
+          "parameters": {
+            "condition": "$credentials.username == null || $credentials.password == null",
+            "then": "error_invalid_request",
+            "else": "verify_password"
+          }
+        }
       }
     },
     {
       "id": "verify_password",
+      "name": "Verify Password",
       "type": "packagerepo.auth_verify_password",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
       "parameters": {
-        "username": "$credentials.username",
-        "password": "$credentials.password",
-        "out": "user"
+        "name": "Verify Password",
+        "typeVersion": 1,
+        "position": [
+          700,
+          100
+        ],
+        "parameters": {
+          "parameters": {
+            "username": "$credentials.username",
+            "password": "$credentials.password",
+            "out": "user"
+          }
+        }
       }
     },
     {
       "id": "check_verified",
+      "name": "Check Verified",
       "type": "logic.if",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
       "parameters": {
-        "condition": "$user == null",
-        "then": "error_unauthorized",
-        "else": "generate_token"
+        "name": "Check Verified",
+        "typeVersion": 1,
+        "position": [
+          100,
+          300
+        ],
+        "parameters": {
+          "parameters": {
+            "condition": "$user == null",
+            "then": "error_unauthorized",
+            "else": "generate_token"
+          }
+        }
       }
     },
     {
       "id": "generate_token",
+      "name": "Generate Token",
       "type": "packagerepo.auth_generate_jwt",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
       "parameters": {
-        "subject": "$user.username",
-        "scopes": "$user.scopes",
-        "expires_in": 86400,
-        "out": "token"
+        "name": "Generate Token",
+        "typeVersion": 1,
+        "position": [
+          400,
+          300
+        ],
+        "parameters": {
+          "parameters": {
+            "subject": "$user.username",
+            "scopes": "$user.scopes",
+            "expires_in": 86400,
+            "out": "token"
+          }
+        }
       }
     },
     {
       "id": "respond_success",
+      "name": "Respond Success",
       "type": "packagerepo.respond_json",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ],
       "parameters": {
-        "body": {
-          "ok": true,
-          "token": "$token",
-          "username": "$user.username",
-          "scopes": "$user.scopes",
-          "expires_in": 86400
-        },
-        "status": 200
+        "name": "Respond Success",
+        "typeVersion": 1,
+        "position": [
+          700,
+          300
+        ],
+        "parameters": {
+          "parameters": {
+            "body": {
+              "ok": true,
+              "token": "$token",
+              "username": "$user.username",
+              "scopes": "$user.scopes",
+              "expires_in": 86400
+            },
+            "status": 200
+          }
+        }
       }
     },
     {
       "id": "error_invalid_request",
+      "name": "Error Invalid Request",
       "type": "packagerepo.respond_error",
+      "typeVersion": 1,
+      "position": [
+        100,
+        500
+      ],
       "parameters": {
-        "message": "Missing username or password",
-        "status": 400
+        "name": "Error Invalid Request",
+        "typeVersion": 1,
+        "position": [
+          100,
+          500
+        ],
+        "parameters": {
+          "parameters": {
+            "message": "Missing username or password",
+            "status": 400
+          }
+        }
       }
     },
     {
       "id": "error_unauthorized",
+      "name": "Error Unauthorized",
       "type": "packagerepo.respond_error",
+      "typeVersion": 1,
+      "position": [
+        400,
+        500
+      ],
       "parameters": {
-        "message": "Invalid username or password",
-        "status": 401
+        "name": "Error Unauthorized",
+        "typeVersion": 1,
+        "position": [
+          400,
+          500
+        ],
+        "parameters": {
+          "parameters": {
+            "message": "Invalid username or password",
+            "status": 401
+          }
+        }
       }
     }
-  ]
+  ],
+  "connections": {},
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  }
 }

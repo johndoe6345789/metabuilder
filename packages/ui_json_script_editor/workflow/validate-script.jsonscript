@@ -12,10 +12,18 @@
         100
       ],
       "parameters": {
-        "input": "{{ $json }}",
-        "operation": "validate",
-        "rules": {
-          "script": "required|string"
+        "name": "Validate Input",
+        "typeVersion": 1,
+        "position": [
+          100,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $json }}",
+          "operation": "validate",
+          "rules": {
+            "script": "required|string"
+          }
         }
       }
     },
@@ -29,9 +37,17 @@
         100
       ],
       "parameters": {
-        "input": "{{ $json.script }}",
-        "output": "{{ JSON.parse($json.script) }}",
-        "operation": "transform_data"
+        "name": "Parse Json",
+        "typeVersion": 1,
+        "position": [
+          400,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $json.script }}",
+          "output": "{{ JSON.parse($json.script) }}",
+          "operation": "transform_data"
+        }
       }
     },
     {
@@ -44,8 +60,16 @@
         100
       ],
       "parameters": {
-        "condition": "{{ $steps.parse_json.output.version === '2.2.0' }}",
-        "operation": "condition"
+        "name": "Validate Version",
+        "typeVersion": 1,
+        "position": [
+          700,
+          100
+        ],
+        "parameters": {
+          "condition": "{{ $steps.parse_json.output.version === '2.2.0' }}",
+          "operation": "condition"
+        }
       }
     },
     {
@@ -58,8 +82,16 @@
         300
       ],
       "parameters": {
-        "condition": "{{ Array.isArray($steps.parse_json.output.nodes) && $steps.parse_json.output.nodes.length > 0 }}",
-        "operation": "condition"
+        "name": "Validate Nodes",
+        "typeVersion": 1,
+        "position": [
+          100,
+          300
+        ],
+        "parameters": {
+          "condition": "{{ Array.isArray($steps.parse_json.output.nodes) && $steps.parse_json.output.nodes.length > 0 }}",
+          "operation": "condition"
+        }
       }
     },
     {
@@ -72,8 +104,16 @@
         300
       ],
       "parameters": {
-        "output": "{{ $steps.parse_json.output.nodes.every(node => node.id && node.type) }}",
-        "operation": "transform_data"
+        "name": "Validate Node Structure",
+        "typeVersion": 1,
+        "position": [
+          400,
+          300
+        ],
+        "parameters": {
+          "output": "{{ $steps.parse_json.output.nodes.every(node => node.id && node.type) }}",
+          "operation": "transform_data"
+        }
       }
     },
     {
@@ -86,20 +126,26 @@
         300
       ],
       "parameters": {
-        "action": "http_response",
-        "status": 200,
-        "body": {
-          "valid": true,
-          "message": "Script is valid"
+        "name": "Return Valid",
+        "typeVersion": 1,
+        "position": [
+          700,
+          300
+        ],
+        "parameters": {
+          "action": "http_response",
+          "status": 200,
+          "body": {
+            "valid": true,
+            "message": "Script is valid"
+          }
         }
       }
     }
   ],
   "connections": {},
   "staticData": {},
-  "meta": {
-    "description": "Validate JSON Script v2.2.0 format and syntax"
-  },
+  "meta": {},
   "settings": {
     "timezone": "UTC",
     "executionTimeout": 3600,

@@ -12,9 +12,17 @@
         100
       ],
       "parameters": {
-        "input": "{{ $context.tenantId }}",
-        "operation": "validate",
-        "validator": "required"
+        "name": "Validate Context",
+        "typeVersion": 1,
+        "position": [
+          100,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $context.tenantId }}",
+          "operation": "validate",
+          "validator": "required"
+        }
       }
     },
     {
@@ -27,14 +35,22 @@
         100
       ],
       "parameters": {
-        "input": "{{ $json }}",
-        "output": {
-          "status": "{{ $json.filters.status || null }}",
-          "searchTerm": "{{ $json.filters.search || '' }}",
-          "dateFrom": "{{ $json.filters.dateFrom || null }}",
-          "dateTo": "{{ $json.filters.dateTo || null }}"
-        },
-        "operation": "transform_data"
+        "name": "Extract Filters",
+        "typeVersion": 1,
+        "position": [
+          400,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $json }}",
+          "output": {
+            "status": "{{ $json.filters.status || null }}",
+            "searchTerm": "{{ $json.filters.search || '' }}",
+            "dateFrom": "{{ $json.filters.dateFrom || null }}",
+            "dateTo": "{{ $json.filters.dateTo || null }}"
+          },
+          "operation": "transform_data"
+        }
       }
     },
     {
@@ -47,8 +63,16 @@
         100
       ],
       "parameters": {
-        "condition": "{{ $steps.extract_filters.output.status !== null }}",
-        "operation": "condition"
+        "name": "Apply Status Filter",
+        "typeVersion": 1,
+        "position": [
+          700,
+          100
+        ],
+        "parameters": {
+          "condition": "{{ $steps.extract_filters.output.status !== null }}",
+          "operation": "condition"
+        }
       }
     },
     {
@@ -61,8 +85,16 @@
         300
       ],
       "parameters": {
-        "condition": "{{ $steps.extract_filters.output.searchTerm.length > 0 }}",
-        "operation": "condition"
+        "name": "Apply Search Filter",
+        "typeVersion": 1,
+        "position": [
+          100,
+          300
+        ],
+        "parameters": {
+          "condition": "{{ $steps.extract_filters.output.searchTerm.length > 0 }}",
+          "operation": "condition"
+        }
       }
     },
     {
@@ -75,8 +107,16 @@
         300
       ],
       "parameters": {
-        "condition": "{{ $steps.extract_filters.output.dateFrom !== null || $steps.extract_filters.output.dateTo !== null }}",
-        "operation": "condition"
+        "name": "Apply Date Filter",
+        "typeVersion": 1,
+        "position": [
+          400,
+          300
+        ],
+        "parameters": {
+          "condition": "{{ $steps.extract_filters.output.dateFrom !== null || $steps.extract_filters.output.dateTo !== null }}",
+          "operation": "condition"
+        }
       }
     },
     {
@@ -89,9 +129,17 @@
         300
       ],
       "parameters": {
-        "input": "{{ $json.data }}",
-        "output": "{{ $json.data.filter(item => { let match = true; if ($steps.extract_filters.output.status && item.status !== $steps.extract_filters.output.status) match = false; if ($steps.extract_filters.output.searchTerm && !JSON.stringify(item).toLowerCase().includes($steps.extract_filters.output.searchTerm.toLowerCase())) match = false; if ($steps.extract_filters.output.dateFrom && new Date(item.createdAt) < new Date($steps.extract_filters.output.dateFrom)) match = false; if ($steps.extract_filters.output.dateTo && new Date(item.createdAt) > new Date($steps.extract_filters.output.dateTo)) match = false; return match; }) }}",
-        "operation": "transform_data"
+        "name": "Filter Data",
+        "typeVersion": 1,
+        "position": [
+          700,
+          300
+        ],
+        "parameters": {
+          "input": "{{ $json.data }}",
+          "output": "{{ $json.data.filter(item => { let match = true; if ($steps.extract_filters.output.status && item.status !== $steps.extract_filters.output.status) match = false; if ($steps.extract_filters.output.searchTerm && !JSON.stringify(item).toLowerCase().includes($steps.extract_filters.output.searchTerm.toLowerCase())) match = false; if ($steps.extract_filters.output.dateFrom && new Date(item.createdAt) < new Date($steps.extract_filters.output.dateFrom)) match = false; if ($steps.extract_filters.output.dateTo && new Date(item.createdAt) > new Date($steps.extract_filters.output.dateTo)) match = false; return match; }) }}",
+          "operation": "transform_data"
+        }
       }
     },
     {
@@ -104,20 +152,26 @@
         500
       ],
       "parameters": {
-        "data": {
-          "filters": "{{ $steps.extract_filters.output }}",
-          "data": "{{ $steps.filter_data.output }}"
-        },
-        "action": "emit_event",
-        "event": "data_filtered"
+        "name": "Return Filtered",
+        "typeVersion": 1,
+        "position": [
+          100,
+          500
+        ],
+        "parameters": {
+          "data": {
+            "filters": "{{ $steps.extract_filters.output }}",
+            "data": "{{ $steps.filter_data.output }}"
+          },
+          "action": "emit_event",
+          "event": "data_filtered"
+        }
       }
     }
   ],
   "connections": {},
   "staticData": {},
-  "meta": {
-    "description": "Apply filters to data while maintaining multi-tenant safety"
-  },
+  "meta": {},
   "settings": {
     "timezone": "UTC",
     "executionTimeout": 3600,

@@ -12,9 +12,17 @@
         100
       ],
       "parameters": {
-        "input": "{{ $context.user.id }}",
-        "operation": "validate",
-        "validator": "required"
+        "name": "Validate Context",
+        "typeVersion": 1,
+        "position": [
+          100,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $context.user.id }}",
+          "operation": "validate",
+          "validator": "required"
+        }
       }
     },
     {
@@ -27,12 +35,20 @@
         100
       ],
       "parameters": {
-        "filter": {
-          "id": "{{ $context.user.id }}",
-          "tenantId": "{{ $context.tenantId }}"
-        },
-        "operation": "database_read",
-        "entity": "User"
+        "name": "Fetch User",
+        "typeVersion": 1,
+        "position": [
+          400,
+          100
+        ],
+        "parameters": {
+          "filter": {
+            "id": "{{ $context.user.id }}",
+            "tenantId": "{{ $context.tenantId }}"
+          },
+          "operation": "database_read",
+          "entity": "User"
+        }
       }
     },
     {
@@ -45,12 +61,20 @@
         100
       ],
       "parameters": {
-        "filter": {
-          "userId": "{{ $context.user.id }}",
-          "tenantId": "{{ $context.tenantId }}"
-        },
-        "operation": "database_read",
-        "entity": "UserPreferences"
+        "name": "Fetch Preferences",
+        "typeVersion": 1,
+        "position": [
+          700,
+          100
+        ],
+        "parameters": {
+          "filter": {
+            "userId": "{{ $context.user.id }}",
+            "tenantId": "{{ $context.tenantId }}"
+          },
+          "operation": "database_read",
+          "entity": "UserPreferences"
+        }
       }
     },
     {
@@ -63,17 +87,25 @@
         300
       ],
       "parameters": {
-        "output": {
-          "id": "{{ $steps.fetch_user.output.id }}",
-          "email": "{{ $steps.fetch_user.output.email }}",
-          "displayName": "{{ $steps.fetch_user.output.displayName }}",
-          "avatar": "{{ $steps.fetch_user.output.avatar }}",
-          "bio": "{{ $steps.fetch_user.output.bio }}",
-          "createdAt": "{{ $steps.fetch_user.output.createdAt }}",
-          "lastLogin": "{{ $steps.fetch_user.output.lastLogin }}",
-          "preferences": "{{ $steps.fetch_preferences.output }}"
-        },
-        "operation": "transform_data"
+        "name": "Format Response",
+        "typeVersion": 1,
+        "position": [
+          100,
+          300
+        ],
+        "parameters": {
+          "output": {
+            "id": "{{ $steps.fetch_user.output.id }}",
+            "email": "{{ $steps.fetch_user.output.email }}",
+            "displayName": "{{ $steps.fetch_user.output.displayName }}",
+            "avatar": "{{ $steps.fetch_user.output.avatar }}",
+            "bio": "{{ $steps.fetch_user.output.bio }}",
+            "createdAt": "{{ $steps.fetch_user.output.createdAt }}",
+            "lastLogin": "{{ $steps.fetch_user.output.lastLogin }}",
+            "preferences": "{{ $steps.fetch_preferences.output }}"
+          },
+          "operation": "transform_data"
+        }
       }
     },
     {
@@ -86,17 +118,23 @@
         300
       ],
       "parameters": {
-        "action": "http_response",
-        "status": 200,
-        "body": "{{ $steps.format_response.output }}"
+        "name": "Return Success",
+        "typeVersion": 1,
+        "position": [
+          400,
+          300
+        ],
+        "parameters": {
+          "action": "http_response",
+          "status": 200,
+          "body": "{{ $steps.format_response.output }}"
+        }
       }
     }
   ],
   "connections": {},
   "staticData": {},
-  "meta": {
-    "description": "Fetch current user profile information including name, email, avatar"
-  },
+  "meta": {},
   "settings": {
     "timezone": "UTC",
     "executionTimeout": 3600,

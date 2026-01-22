@@ -12,10 +12,18 @@
         100
       ],
       "parameters": {
-        "input": "{{ $context.tenantId }}",
-        "operation": "validate",
-        "validator": "required",
-        "errorMessage": "tenantId is required for multi-tenant safety"
+        "name": "Validate Context",
+        "typeVersion": 1,
+        "position": [
+          100,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $context.tenantId }}",
+          "operation": "validate",
+          "validator": "required",
+          "errorMessage": "tenantId is required for multi-tenant safety"
+        }
       }
     },
     {
@@ -28,12 +36,20 @@
         100
       ],
       "parameters": {
-        "input": "{{ $json }}",
-        "output": {
-          "limit": "{{ Math.min($json.limit || 100, 500) }}",
-          "offset": "{{ ($json.page || 1 - 1) * ($json.limit || 100) }}"
-        },
-        "operation": "transform_data"
+        "name": "Extract Pagination",
+        "typeVersion": 1,
+        "position": [
+          400,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $json }}",
+          "output": {
+            "limit": "{{ Math.min($json.limit || 100, 500) }}",
+            "offset": "{{ ($json.page || 1 - 1) * ($json.limit || 100) }}"
+          },
+          "operation": "transform_data"
+        }
       }
     },
     {
@@ -46,17 +62,25 @@
         100
       ],
       "parameters": {
-        "filter": {
-          "tenantId": "{{ $context.tenantId }}"
-        },
-        "sort": {
-          "timestamp": -1
-        },
-        "limit": "{{ $steps.extract_pagination.output.limit }}",
-        "offset": "{{ $steps.extract_pagination.output.offset }}",
-        "output": "logs",
-        "operation": "database_read",
-        "entity": "AuditLog"
+        "name": "Fetch Logs",
+        "typeVersion": 1,
+        "position": [
+          700,
+          100
+        ],
+        "parameters": {
+          "filter": {
+            "tenantId": "{{ $context.tenantId }}"
+          },
+          "sort": {
+            "timestamp": -1
+          },
+          "limit": "{{ $steps.extract_pagination.output.limit }}",
+          "offset": "{{ $steps.extract_pagination.output.offset }}",
+          "output": "logs",
+          "operation": "database_read",
+          "entity": "AuditLog"
+        }
       }
     },
     {
@@ -69,12 +93,20 @@
         300
       ],
       "parameters": {
-        "filter": {
-          "tenantId": "{{ $context.tenantId }}"
-        },
-        "output": "totalCount",
-        "operation": "database_count",
-        "entity": "AuditLog"
+        "name": "Fetch Count",
+        "typeVersion": 1,
+        "position": [
+          100,
+          300
+        ],
+        "parameters": {
+          "filter": {
+            "tenantId": "{{ $context.tenantId }}"
+          },
+          "output": "totalCount",
+          "operation": "database_count",
+          "entity": "AuditLog"
+        }
       }
     },
     {
@@ -87,17 +119,25 @@
         300
       ],
       "parameters": {
-        "input": "{{ $steps.fetch_logs.output }}",
-        "output": {
-          "logs": "{{ $steps.fetch_logs.output }}",
-          "pagination": {
-            "total": "{{ $steps.fetch_count.output }}",
-            "limit": "{{ $steps.extract_pagination.output.limit }}",
-            "offset": "{{ $steps.extract_pagination.output.offset }}",
-            "hasMore": "{{ $steps.fetch_count.output > ($steps.extract_pagination.output.offset + $steps.extract_pagination.output.limit) }}"
-          }
-        },
-        "operation": "transform_data"
+        "name": "Format Response",
+        "typeVersion": 1,
+        "position": [
+          400,
+          300
+        ],
+        "parameters": {
+          "input": "{{ $steps.fetch_logs.output }}",
+          "output": {
+            "logs": "{{ $steps.fetch_logs.output }}",
+            "pagination": {
+              "total": "{{ $steps.fetch_count.output }}",
+              "limit": "{{ $steps.extract_pagination.output.limit }}",
+              "offset": "{{ $steps.extract_pagination.output.offset }}",
+              "hasMore": "{{ $steps.fetch_count.output > ($steps.extract_pagination.output.offset + $steps.extract_pagination.output.limit) }}"
+            }
+          },
+          "operation": "transform_data"
+        }
       }
     },
     {
@@ -110,17 +150,23 @@
         300
       ],
       "parameters": {
-        "action": "http_response",
-        "status": 200,
-        "body": "{{ $steps.format_response.output }}"
+        "name": "Return Success",
+        "typeVersion": 1,
+        "position": [
+          700,
+          300
+        ],
+        "parameters": {
+          "action": "http_response",
+          "status": 200,
+          "body": "{{ $steps.format_response.output }}"
+        }
       }
     }
   ],
   "connections": {},
   "staticData": {},
-  "meta": {
-    "description": "Load and paginate audit logs with tenant filtering"
-  },
+  "meta": {},
   "settings": {
     "timezone": "UTC",
     "executionTimeout": 3600,

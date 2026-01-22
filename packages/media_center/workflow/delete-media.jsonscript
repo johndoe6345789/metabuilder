@@ -12,9 +12,17 @@
         100
       ],
       "parameters": {
-        "input": "{{ $context.tenantId }}",
-        "operation": "validate",
-        "validator": "required"
+        "name": "Validate Context",
+        "typeVersion": 1,
+        "position": [
+          100,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $context.tenantId }}",
+          "operation": "validate",
+          "validator": "required"
+        }
       }
     },
     {
@@ -27,12 +35,20 @@
         100
       ],
       "parameters": {
-        "filter": {
-          "id": "{{ $json.assetId }}",
-          "tenantId": "{{ $context.tenantId }}"
-        },
-        "operation": "database_read",
-        "entity": "MediaAsset"
+        "name": "Fetch Asset",
+        "typeVersion": 1,
+        "position": [
+          400,
+          100
+        ],
+        "parameters": {
+          "filter": {
+            "id": "{{ $json.assetId }}",
+            "tenantId": "{{ $context.tenantId }}"
+          },
+          "operation": "database_read",
+          "entity": "MediaAsset"
+        }
       }
     },
     {
@@ -45,8 +61,16 @@
         100
       ],
       "parameters": {
-        "condition": "{{ $steps.fetch_asset.output.uploadedBy === $context.user.id || $context.user.level >= 3 }}",
-        "operation": "condition"
+        "name": "Check Authorization",
+        "typeVersion": 1,
+        "position": [
+          700,
+          100
+        ],
+        "parameters": {
+          "condition": "{{ $steps.fetch_asset.output.uploadedBy === $context.user.id || $context.user.level >= 3 }}",
+          "operation": "condition"
+        }
       }
     },
     {
@@ -59,12 +83,20 @@
         300
       ],
       "parameters": {
-        "operation": "delete_recursive",
-        "paths": [
-          "{{ $steps.fetch_asset.output.path }}",
-          "{{ $steps.fetch_asset.output.path }}-thumbnail }}",
-          "{{ $steps.fetch_asset.output.path }}-optimized }}"
-        ]
+        "name": "Delete Files",
+        "typeVersion": 1,
+        "position": [
+          100,
+          300
+        ],
+        "parameters": {
+          "operation": "delete_recursive",
+          "paths": [
+            "{{ $steps.fetch_asset.output.path }}",
+            "{{ $steps.fetch_asset.output.path }}-thumbnail }}",
+            "{{ $steps.fetch_asset.output.path }}-optimized }}"
+          ]
+        }
       }
     },
     {
@@ -77,11 +109,19 @@
         300
       ],
       "parameters": {
-        "filter": {
-          "id": "{{ $json.assetId }}"
-        },
-        "operation": "database_delete",
-        "entity": "MediaAsset"
+        "name": "Delete Asset Record",
+        "typeVersion": 1,
+        "position": [
+          400,
+          300
+        ],
+        "parameters": {
+          "filter": {
+            "id": "{{ $json.assetId }}"
+          },
+          "operation": "database_delete",
+          "entity": "MediaAsset"
+        }
       }
     },
     {
@@ -94,12 +134,20 @@
         300
       ],
       "parameters": {
-        "data": {
-          "assetId": "{{ $json.assetId }}"
-        },
-        "action": "emit_event",
-        "event": "media_deleted",
-        "channel": "{{ 'media:' + $context.tenantId }}"
+        "name": "Emit Deleted",
+        "typeVersion": 1,
+        "position": [
+          700,
+          300
+        ],
+        "parameters": {
+          "data": {
+            "assetId": "{{ $json.assetId }}"
+          },
+          "action": "emit_event",
+          "event": "media_deleted",
+          "channel": "{{ 'media:' + $context.tenantId }}"
+        }
       }
     },
     {
@@ -112,19 +160,25 @@
         500
       ],
       "parameters": {
-        "action": "http_response",
-        "status": 200,
-        "body": {
-          "message": "Media asset deleted successfully"
+        "name": "Return Success",
+        "typeVersion": 1,
+        "position": [
+          100,
+          500
+        ],
+        "parameters": {
+          "action": "http_response",
+          "status": 200,
+          "body": {
+            "message": "Media asset deleted successfully"
+          }
         }
       }
     }
   ],
   "connections": {},
   "staticData": {},
-  "meta": {
-    "description": "Delete media asset with authorization and file cleanup"
-  },
+  "meta": {},
   "settings": {
     "timezone": "UTC",
     "executionTimeout": 3600,

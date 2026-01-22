@@ -12,9 +12,17 @@
         100
       ],
       "parameters": {
-        "input": "{{ $context.user.id }}",
-        "operation": "validate",
-        "validator": "required"
+        "name": "Validate Context",
+        "typeVersion": 1,
+        "position": [
+          100,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $context.user.id }}",
+          "operation": "validate",
+          "validator": "required"
+        }
       }
     },
     {
@@ -27,12 +35,20 @@
         100
       ],
       "parameters": {
-        "filter": {
-          "id": "{{ $json.channelId }}",
-          "tenantId": "{{ $context.tenantId }}"
-        },
-        "operation": "database_read",
-        "entity": "StreamChannel"
+        "name": "Fetch Channel",
+        "typeVersion": 1,
+        "position": [
+          400,
+          100
+        ],
+        "parameters": {
+          "filter": {
+            "id": "{{ $json.channelId }}",
+            "tenantId": "{{ $context.tenantId }}"
+          },
+          "operation": "database_read",
+          "entity": "StreamChannel"
+        }
       }
     },
     {
@@ -45,14 +61,22 @@
         100
       ],
       "parameters": {
-        "data": {
-          "channelId": "{{ $json.channelId }}",
-          "userId": "{{ $context.user.id }}",
-          "tenantId": "{{ $context.tenantId }}",
-          "subscribedAt": "{{ new Date().toISOString() }}"
-        },
-        "operation": "database_create",
-        "entity": "StreamSubscription"
+        "name": "Create Subscription",
+        "typeVersion": 1,
+        "position": [
+          700,
+          100
+        ],
+        "parameters": {
+          "data": {
+            "channelId": "{{ $json.channelId }}",
+            "userId": "{{ $context.user.id }}",
+            "tenantId": "{{ $context.tenantId }}",
+            "subscribedAt": "{{ new Date().toISOString() }}"
+          },
+          "operation": "database_create",
+          "entity": "StreamSubscription"
+        }
       }
     },
     {
@@ -65,17 +89,23 @@
         300
       ],
       "parameters": {
-        "action": "sse_stream",
-        "channel": "{{ 'stream:' + $json.channelId }}",
-        "onConnect": "{{ { subscriptionId: $steps.create_subscription.output.id } }}"
+        "name": "Setup Sse",
+        "typeVersion": 1,
+        "position": [
+          100,
+          300
+        ],
+        "parameters": {
+          "action": "sse_stream",
+          "channel": "{{ 'stream:' + $json.channelId }}",
+          "onConnect": "{{ { subscriptionId: $steps.create_subscription.output.id } }}"
+        }
       }
     }
   ],
   "connections": {},
   "staticData": {},
-  "meta": {
-    "description": "Subscribe user to stream updates via SSE"
-  },
+  "meta": {},
   "settings": {
     "timezone": "UTC",
     "executionTimeout": 3600,

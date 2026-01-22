@@ -1,87 +1,199 @@
 {
-  "version": "2.2.0",
   "name": "Mark Notification as Read",
-  "description": "Mark single or multiple notifications as read by user",
-  "trigger": {
-    "type": "http",
-    "method": "POST",
-    "path": "/notifications/mark-read"
-  },
+  "active": false,
   "nodes": [
     {
       "id": "validate_context",
-      "type": "operation",
-      "op": "validate",
-      "input": "{{ $context.tenantId }}",
-      "validator": "required"
+      "name": "Validate Context",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "name": "Validate Context",
+        "typeVersion": 1,
+        "position": [
+          100,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $context.tenantId }}",
+          "operation": "validate",
+          "validator": "required"
+        }
+      }
     },
     {
       "id": "validate_user",
-      "type": "operation",
-      "op": "validate",
-      "input": "{{ $context.user.id }}",
-      "validator": "required"
+      "name": "Validate User",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "name": "Validate User",
+        "typeVersion": 1,
+        "position": [
+          400,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $context.user.id }}",
+          "operation": "validate",
+          "validator": "required"
+        }
+      }
     },
     {
       "id": "check_bulk_vs_single",
-      "type": "operation",
-      "op": "condition",
-      "condition": "{{ Array.isArray($json.notificationIds) }}"
+      "name": "Check Bulk Vs Single",
+      "type": "metabuilder.condition",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "name": "Check Bulk Vs Single",
+        "typeVersion": 1,
+        "position": [
+          700,
+          100
+        ],
+        "parameters": {
+          "condition": "{{ Array.isArray($json.notificationIds) }}",
+          "operation": "condition"
+        }
+      }
     },
     {
       "id": "mark_single",
-      "type": "operation",
-      "op": "database_update",
-      "entity": "Notification",
-      "params": {
-        "filter": {
-          "id": "{{ $json.notificationId }}",
-          "userId": "{{ $context.user.id }}",
-          "tenantId": "{{ $context.tenantId }}"
-        },
-        "data": {
-          "isRead": true,
-          "readAt": "{{ new Date().toISOString() }}"
+      "name": "Mark Single",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "name": "Mark Single",
+        "typeVersion": 1,
+        "position": [
+          100,
+          300
+        ],
+        "parameters": {
+          "filter": {
+            "id": "{{ $json.notificationId }}",
+            "userId": "{{ $context.user.id }}",
+            "tenantId": "{{ $context.tenantId }}"
+          },
+          "data": {
+            "isRead": true,
+            "readAt": "{{ new Date().toISOString() }}"
+          },
+          "operation": "database_update",
+          "entity": "Notification"
         }
       }
     },
     {
       "id": "mark_bulk",
-      "type": "operation",
-      "op": "database_update_many",
-      "entity": "Notification",
-      "params": {
-        "filter": {
-          "id": {
-            "$in": "{{ $json.notificationIds }}"
+      "name": "Mark Bulk",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "name": "Mark Bulk",
+        "typeVersion": 1,
+        "position": [
+          400,
+          300
+        ],
+        "parameters": {
+          "filter": {
+            "id": {
+              "$in": "{{ $json.notificationIds }}"
+            },
+            "userId": "{{ $context.user.id }}",
+            "tenantId": "{{ $context.tenantId }}"
           },
-          "userId": "{{ $context.user.id }}",
-          "tenantId": "{{ $context.tenantId }}"
-        },
-        "data": {
-          "isRead": true,
-          "readAt": "{{ new Date().toISOString() }}"
+          "data": {
+            "isRead": true,
+            "readAt": "{{ new Date().toISOString() }}"
+          },
+          "operation": "database_update_many",
+          "entity": "Notification"
         }
       }
     },
     {
       "id": "emit_read_event",
-      "type": "action",
-      "action": "emit_event",
-      "event": "notification_read",
-      "channel": "{{ 'user:' + $context.user.id }}",
-      "data": {
-        "notificationIds": "{{ Array.isArray($json.notificationIds) ? $json.notificationIds : [$json.notificationId] }}"
+      "name": "Emit Read Event",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "name": "Emit Read Event",
+        "typeVersion": 1,
+        "position": [
+          700,
+          300
+        ],
+        "parameters": {
+          "data": {
+            "notificationIds": "{{ Array.isArray($json.notificationIds) ? $json.notificationIds : [$json.notificationId] }}"
+          },
+          "action": "emit_event",
+          "event": "notification_read",
+          "channel": "{{ 'user:' + $context.user.id }}"
+        }
       }
     },
     {
       "id": "return_success",
-      "type": "action",
-      "action": "http_response",
-      "status": 200,
-      "body": {
-        "message": "Notification(s) marked as read"
+      "name": "Return Success",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        100,
+        500
+      ],
+      "parameters": {
+        "name": "Return Success",
+        "typeVersion": 1,
+        "position": [
+          100,
+          500
+        ],
+        "parameters": {
+          "action": "http_response",
+          "status": 200,
+          "body": {
+            "message": "Notification(s) marked as read"
+          }
+        }
       }
     }
-  ]
+  ],
+  "connections": {},
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  }
 }

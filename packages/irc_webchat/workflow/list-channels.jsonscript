@@ -12,9 +12,17 @@
         100
       ],
       "parameters": {
-        "input": "{{ $context.tenantId }}",
-        "operation": "validate",
-        "validator": "required"
+        "name": "Validate Context",
+        "typeVersion": 1,
+        "position": [
+          100,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $context.tenantId }}",
+          "operation": "validate",
+          "validator": "required"
+        }
       }
     },
     {
@@ -27,11 +35,19 @@
         100
       ],
       "parameters": {
-        "output": {
-          "includePrivate": "{{ $context.user.level >= 2 }}",
-          "includeSecret": "{{ $context.user.level >= 3 }}"
-        },
-        "operation": "transform_data"
+        "name": "Extract Params",
+        "typeVersion": 1,
+        "position": [
+          400,
+          100
+        ],
+        "parameters": {
+          "output": {
+            "includePrivate": "{{ $context.user.level >= 2 }}",
+            "includeSecret": "{{ $context.user.level >= 3 }}"
+          },
+          "operation": "transform_data"
+        }
       }
     },
     {
@@ -44,13 +60,21 @@
         100
       ],
       "parameters": {
-        "output": {
-          "tenantId": "{{ $context.tenantId }}",
-          "mode": {
-            "$in": "{{ [$steps.extract_params.output.includeSecret ? 'secret' : null, $steps.extract_params.output.includePrivate ? 'private' : null, 'public'].filter(x => x) }}"
-          }
-        },
-        "operation": "transform_data"
+        "name": "Build Filter",
+        "typeVersion": 1,
+        "position": [
+          700,
+          100
+        ],
+        "parameters": {
+          "output": {
+            "tenantId": "{{ $context.tenantId }}",
+            "mode": {
+              "$in": "{{ [$steps.extract_params.output.includeSecret ? 'secret' : null, $steps.extract_params.output.includePrivate ? 'private' : null, 'public'].filter(x => x) }}"
+            }
+          },
+          "operation": "transform_data"
+        }
       }
     },
     {
@@ -63,12 +87,20 @@
         300
       ],
       "parameters": {
-        "filter": "{{ $steps.build_filter.output }}",
-        "sort": {
-          "createdAt": -1
-        },
-        "operation": "database_read",
-        "entity": "IRCChannel"
+        "name": "Fetch Channels",
+        "typeVersion": 1,
+        "position": [
+          100,
+          300
+        ],
+        "parameters": {
+          "filter": "{{ $steps.build_filter.output }}",
+          "sort": {
+            "createdAt": -1
+          },
+          "operation": "database_read",
+          "entity": "IRCChannel"
+        }
       }
     },
     {
@@ -81,19 +113,25 @@
         300
       ],
       "parameters": {
-        "action": "http_response",
-        "status": 200,
-        "body": {
-          "channels": "{{ $steps.fetch_channels.output }}"
+        "name": "Return Success",
+        "typeVersion": 1,
+        "position": [
+          400,
+          300
+        ],
+        "parameters": {
+          "action": "http_response",
+          "status": 200,
+          "body": {
+            "channels": "{{ $steps.fetch_channels.output }}"
+          }
         }
       }
     }
   ],
   "connections": {},
   "staticData": {},
-  "meta": {
-    "description": "List IRC channels with mode filtering (public/private/secret)"
-  },
+  "meta": {},
   "settings": {
     "timezone": "UTC",
     "executionTimeout": 3600,

@@ -8,11 +8,36 @@
       "type": "core.start",
       "typeVersion": 1,
       "position": [
-        0,
-        0
+        100,
+        100
       ],
-      "parameters": {}
+      "parameters": {
+        "name": "Start",
+        "typeVersion": 1,
+        "position": [
+          100,
+          100
+        ],
+        "parameters": {
+          "name": "Start",
+          "typeVersion": 1,
+          "position": [
+            0,
+            0
+          ],
+          "parameters": {}
+        }
+      }
     }
   ],
-  "connections": {}
+  "connections": {},
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  }
 }

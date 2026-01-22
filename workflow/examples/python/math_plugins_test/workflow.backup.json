@@ -8,32 +8,64 @@
       "type": "math.add",
       "typeVersion": 1,
       "position": [
-        0,
-        0
+        100,
+        100
       ],
       "parameters": {
-        "numbers": [
-          1,
-          2,
-          3,
-          4,
-          5
-        ]
+        "name": "Test Add",
+        "typeVersion": 1,
+        "position": [
+          100,
+          100
+        ],
+        "parameters": {
+          "name": "Test Add",
+          "typeVersion": 1,
+          "position": [
+            0,
+            0
+          ],
+          "parameters": {
+            "numbers": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          }
+        }
       }
     },
     {
       "id": "assert_add",
-      "name": "Assert Add equals 15",
+      "name": "Assert Add",
       "type": "test.assert_equals",
       "typeVersion": 1,
       "position": [
-        300,
-        0
+        400,
+        100
       ],
       "parameters": {
-        "actual": "$test_add.result",
-        "expected": 15,
-        "message": "math.add should sum all numbers"
+        "name": "Assert Add",
+        "typeVersion": 1,
+        "position": [
+          400,
+          100
+        ],
+        "parameters": {
+          "name": "Assert Add equals 15",
+          "typeVersion": 1,
+          "position": [
+            300,
+            0
+          ],
+          "parameters": {
+            "actual": "$test_add.result",
+            "expected": 15,
+            "message": "math.add should sum all numbers"
+          }
+        }
       }
     },
     {
@@ -42,30 +74,62 @@
       "type": "math.multiply",
       "typeVersion": 1,
       "position": [
-        0,
+        700,
         100
       ],
       "parameters": {
-        "numbers": [
-          2,
-          3,
-          4
-        ]
+        "name": "Test Multiply",
+        "typeVersion": 1,
+        "position": [
+          700,
+          100
+        ],
+        "parameters": {
+          "name": "Test Multiply",
+          "typeVersion": 1,
+          "position": [
+            0,
+            100
+          ],
+          "parameters": {
+            "numbers": [
+              2,
+              3,
+              4
+            ]
+          }
+        }
       }
     },
     {
       "id": "assert_multiply",
-      "name": "Assert Multiply equals 24",
+      "name": "Assert Multiply",
       "type": "test.assert_equals",
       "typeVersion": 1,
       "position": [
-        300,
-        100
+        100,
+        300
       ],
       "parameters": {
-        "actual": "$test_multiply.result",
-        "expected": 24,
-        "message": "math.multiply should multiply all numbers"
+        "name": "Assert Multiply",
+        "typeVersion": 1,
+        "position": [
+          100,
+          300
+        ],
+        "parameters": {
+          "name": "Assert Multiply equals 24",
+          "typeVersion": 1,
+          "position": [
+            300,
+            100
+          ],
+          "parameters": {
+            "actual": "$test_multiply.result",
+            "expected": 24,
+            "message": "math.multiply should multiply all numbers"
+          }
+        }
       }
     },
     {
@@ -74,27 +138,59 @@
       "type": "math.subtract",
       "typeVersion": 1,
       "position": [
-        0,
-        200
+        400,
+        300
       ],
       "parameters": {
-        "a": 10,
-        "b": 3
+        "name": "Test Subtract",
+        "typeVersion": 1,
+        "position": [
+          400,
+          300
+        ],
+        "parameters": {
+          "name": "Test Subtract",
+          "typeVersion": 1,
+          "position": [
+            0,
+            200
+          ],
+          "parameters": {
+            "a": 10,
+            "b": 3
+          }
+        }
       }
     },
     {
       "id": "assert_subtract",
-      "name": "Assert Subtract equals 7",
+      "name": "Assert Subtract",
       "type": "test.assert_equals",
       "typeVersion": 1,
       "position": [
-        300,
-        200
+        700,
+        300
       ],
       "parameters": {
-        "actual": "$test_subtract.result",
-        "expected": 7,
-        "message": "math.subtract should return a - b"
+        "name": "Assert Subtract",
+        "typeVersion": 1,
+        "position": [
+          700,
+          300
+        ],
+        "parameters": {
+          "name": "Assert Subtract equals 7",
+          "typeVersion": 1,
+          "position": [
+            300,
+            200
+          ],
+          "parameters": {
+            "actual": "$test_subtract.result",
+            "expected": 7,
+            "message": "math.subtract should return a - b"
+          }
+        }
       }
     },
     {
@@ -103,27 +199,59 @@
       "type": "math.divide",
       "typeVersion": 1,
       "position": [
-        0,
-        300
+        100,
+        500
       ],
       "parameters": {
-        "a": 20,
-        "b": 4
+        "name": "Test Divide",
+        "typeVersion": 1,
+        "position": [
+          100,
+          500
+        ],
+        "parameters": {
+          "name": "Test Divide",
+          "typeVersion": 1,
+          "position": [
+            0,
+            300
+          ],
+          "parameters": {
+            "a": 20,
+            "b": 4
+          }
+        }
       }
     },
     {
       "id": "assert_divide",
-      "name": "Assert Divide equals 5",
+      "name": "Assert Divide",
       "type": "test.assert_equals",
       "typeVersion": 1,
       "position": [
-        300,
-        300
+        400,
+        500
       ],
       "parameters": {
-        "actual": "$test_divide.result",
-        "expected": 5,
-        "message": "math.divide should return a / b"
+        "name": "Assert Divide",
+        "typeVersion": 1,
+        "position": [
+          400,
+          500
+        ],
+        "parameters": {
+          "name": "Assert Divide equals 5",
+          "typeVersion": 1,
+          "position": [
+            300,
+            300
+          ],
+          "parameters": {
+            "actual": "$test_divide.result",
+            "expected": 5,
+            "message": "math.divide should return a / b"
+          }
+        }
       }
     },
     {
@@ -132,32 +260,64 @@
       "type": "math.max",
       "typeVersion": 1,
       "position": [
-        0,
-        400
+        700,
+        500
       ],
       "parameters": {
-        "numbers": [
-          3,
-          7,
-          2,
-          9,
-          1
-        ]
+        "name": "Test Max",
+        "typeVersion": 1,
+        "position": [
+          700,
+          500
+        ],
+        "parameters": {
+          "name": "Test Max",
+          "typeVersion": 1,
+          "position": [
+            0,
+            400
+          ],
+          "parameters": {
+            "numbers": [
+              3,
+              7,
+              2,
+              9,
+              1
+            ]
+          }
+        }
       }
     },
     {
       "id": "assert_max",
-      "name": "Assert Max equals 9",
+      "name": "Assert Max",
       "type": "test.assert_equals",
       "typeVersion": 1,
       "position": [
-        300,
-        400
+        100,
+        700
       ],
       "parameters": {
-        "actual": "$test_max.result",
-        "expected": 9,
-        "message": "math.max should return maximum value"
+        "name": "Assert Max",
+        "typeVersion": 1,
+        "position": [
+          100,
+          700
+        ],
+        "parameters": {
+          "name": "Assert Max equals 9",
+          "typeVersion": 1,
+          "position": [
+            300,
+            400
+          ],
+          "parameters": {
+            "actual": "$test_max.result",
+            "expected": 9,
+            "message": "math.max should return maximum value"
+          }
+        }
       }
     },
     {
@@ -166,32 +326,64 @@
       "type": "math.min",
       "typeVersion": 1,
       "position": [
-        0,
-        500
+        400,
+        700
       ],
       "parameters": {
-        "numbers": [
-          3,
-          7,
-          2,
-          9,
-          1
-        ]
+        "name": "Test Min",
+        "typeVersion": 1,
+        "position": [
+          400,
+          700
+        ],
+        "parameters": {
+          "name": "Test Min",
+          "typeVersion": 1,
+          "position": [
+            0,
+            500
+          ],
+          "parameters": {
+            "numbers": [
+              3,
+              7,
+              2,
+              9,
+              1
+            ]
+          }
+        }
       }
     },
     {
       "id": "assert_min",
-      "name": "Assert Min equals 1",
+      "name": "Assert Min",
       "type": "test.assert_equals",
       "typeVersion": 1,
       "position": [
-        300,
-        500
+        700,
+        700
       ],
       "parameters": {
-        "actual": "$test_min.result",
-        "expected": 1,
-        "message": "math.min should return minimum value"
+        "name": "Assert Min",
+        "typeVersion": 1,
+        "position": [
+          700,
+          700
+        ],
+        "parameters": {
+          "name": "Assert Min equals 1",
+          "typeVersion": 1,
+          "position": [
+            300,
+            500
+          ],
+          "parameters": {
+            "actual": "$test_min.result",
+            "expected": 1,
+            "message": "math.min should return minimum value"
+          }
+        }
       }
     }
   ],
@@ -200,7 +392,7 @@
       "main": {
         "0": [
           {
-            "node": "Assert Add equals 15",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -211,7 +403,7 @@
       "main": {
         "0": [
           {
-            "node": "Assert Multiply equals 24",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -222,7 +414,7 @@
       "main": {
         "0": [
           {
-            "node": "Assert Subtract equals 7",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -233,7 +425,7 @@
       "main": {
         "0": [
           {
-            "node": "Assert Divide equals 5",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -244,7 +436,7 @@
       "main": {
         "0": [
           {
-            "node": "Assert Max equals 9",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -255,7 +447,7 @@
       "main": {
         "0": [
           {
-            "node": "Assert Min equals 1",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -263,14 +455,13 @@
       }
     }
   },
-  "triggers": [
-    {
-      "nodeId": "test_add",
-      "kind": "manual",
-      "enabled": true,
-      "meta": {
-        "description": "Manually triggered Math Plugins Test Suite workflow execution"
-      }
-    }
-  ]
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  }
 }

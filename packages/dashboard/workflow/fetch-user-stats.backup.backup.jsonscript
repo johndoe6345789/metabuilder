@@ -1,0 +1,148 @@
+{
+  "name": "Fetch User Statistics",
+  "active": false,
+  "nodes": [
+    {
+      "id": "validate_context",
+      "name": "Validate Context",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $context.user.id }}",
+        "operation": "validate",
+        "validator": "required"
+      }
+    },
+    {
+      "id": "count_forum_posts",
+      "name": "Count Forum Posts",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "filter": {
+          "authorId": "{{ $context.user.id }}",
+          "tenantId": "{{ $context.tenantId }}",
+          "isDeleted": false
+        },
+        "operation": "database_count",
+        "entity": "ForumPost"
+      }
+    },
+    {
+      "id": "count_forum_threads",
+      "name": "Count Forum Threads",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "filter": {
+          "authorId": "{{ $context.user.id }}",
+          "tenantId": "{{ $context.tenantId }}"
+        },
+        "operation": "database_count",
+        "entity": "ForumThread"
+      }
+    },
+    {
+      "id": "count_media_uploads",
+      "name": "Count Media Uploads",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "filter": {
+          "uploadedBy": "{{ $context.user.id }}",
+          "tenantId": "{{ $context.tenantId }}"
+        },
+        "operation": "database_count",
+        "entity": "MediaAsset"
+      }
+    },
+    {
+      "id": "calculate_engagement",
+      "name": "Calculate Engagement",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "filter": {
+          "authorId": "{{ $context.user.id }}",
+          "tenantId": "{{ $context.tenantId }}",
+          "isDeleted": false
+        },
+        "aggregations": {
+          "totalLikes": "sum(likes)",
+          "avgScore": "avg(score)"
+        },
+        "operation": "database_aggregate",
+        "entity": "ForumPost"
+      }
+    },
+    {
+      "id": "format_response",
+      "name": "Format Response",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "output": {
+          "forumPosts": "{{ $steps.count_forum_posts.output }}",
+          "forumThreads": "{{ $steps.count_forum_threads.output }}",
+          "mediaUploads": "{{ $steps.count_media_uploads.output }}",
+          "engagement": {
+            "totalLikes": "{{ $steps.calculate_engagement.output.totalLikes || 0 }}",
+            "averageScore": "{{ $steps.calculate_engagement.output.avgScore || 0 }}"
+          }
+        },
+        "operation": "transform_data"
+      }
+    },
+    {
+      "id": "return_success",
+      "name": "Return Success",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        100,
+        500
+      ],
+      "parameters": {
+        "action": "http_response",
+        "status": 200,
+        "body": "{{ $steps.format_response.output }}"
+      }
+    }
+  ],
+  "connections": {},
+  "staticData": {},
+  "meta": {
+    "description": "Calculate and fetch user statistics (posts, comments, activity, etc)"
+  },
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  }
+}

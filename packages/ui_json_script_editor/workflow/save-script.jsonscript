@@ -12,8 +12,16 @@
         100
       ],
       "parameters": {
-        "condition": "{{ $context.user.level >= 3 }}",
-        "operation": "condition"
+        "name": "Check Permission",
+        "typeVersion": 1,
+        "position": [
+          100,
+          100
+        ],
+        "parameters": {
+          "condition": "{{ $context.user.level >= 3 }}",
+          "operation": "condition"
+        }
       }
     },
     {
@@ -26,11 +34,19 @@
         100
       ],
       "parameters": {
-        "input": "{{ $json }}",
-        "operation": "validate",
-        "rules": {
-          "name": "required|string",
-          "script": "required|string"
+        "name": "Validate Input",
+        "typeVersion": 1,
+        "position": [
+          400,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $json }}",
+          "operation": "validate",
+          "rules": {
+            "name": "required|string",
+            "script": "required|string"
+          }
         }
       }
     },
@@ -44,16 +60,24 @@
         100
       ],
       "parameters": {
-        "data": {
-          "tenantId": "{{ $context.tenantId }}",
-          "createdBy": "{{ $context.user.id }}",
-          "name": "{{ $json.name }}",
-          "description": "{{ $json.description }}",
-          "script": "{{ $json.script }}",
-          "createdAt": "{{ new Date().toISOString() }}"
-        },
-        "operation": "database_create",
-        "entity": "JSONScript"
+        "name": "Create Script",
+        "typeVersion": 1,
+        "position": [
+          700,
+          100
+        ],
+        "parameters": {
+          "data": {
+            "tenantId": "{{ $context.tenantId }}",
+            "createdBy": "{{ $context.user.id }}",
+            "name": "{{ $json.name }}",
+            "description": "{{ $json.description }}",
+            "script": "{{ $json.script }}",
+            "createdAt": "{{ new Date().toISOString() }}"
+          },
+          "operation": "database_create",
+          "entity": "JSONScript"
+        }
       }
     },
     {
@@ -66,20 +90,26 @@
         300
       ],
       "parameters": {
-        "action": "http_response",
-        "status": 201,
-        "body": {
-          "id": "{{ $steps.create_script.output.id }}",
-          "message": "Script saved"
+        "name": "Return Success",
+        "typeVersion": 1,
+        "position": [
+          100,
+          300
+        ],
+        "parameters": {
+          "action": "http_response",
+          "status": 201,
+          "body": {
+            "id": "{{ $steps.create_script.output.id }}",
+            "message": "Script saved"
+          }
         }
       }
     }
   ],
   "connections": {},
   "staticData": {},
-  "meta": {
-    "description": "Save JSON Script with permission checks (god/supergod only)"
-  },
+  "meta": {},
   "settings": {
     "timezone": "UTC",
     "executionTimeout": 3600,

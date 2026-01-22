@@ -12,8 +12,16 @@
         100
       ],
       "parameters": {
-        "condition": "{{ $context.user.level >= 3 }}",
-        "operation": "condition"
+        "name": "Check Permission",
+        "typeVersion": 1,
+        "position": [
+          100,
+          100
+        ],
+        "parameters": {
+          "condition": "{{ $context.user.level >= 3 }}",
+          "operation": "condition"
+        }
       }
     },
     {
@@ -26,11 +34,19 @@
         100
       ],
       "parameters": {
-        "input": "{{ $json }}",
-        "operation": "validate",
-        "rules": {
-          "email": "required|email|unique:User",
-          "displayName": "required|string"
+        "name": "Validate Input",
+        "typeVersion": 1,
+        "position": [
+          400,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $json }}",
+          "operation": "validate",
+          "rules": {
+            "email": "required|email|unique:User",
+            "displayName": "required|string"
+          }
         }
       }
     },
@@ -44,9 +60,17 @@
         100
       ],
       "parameters": {
-        "input": "{{ $json.password || $utils.generateSecurePassword() }}",
-        "operation": "bcrypt_hash",
-        "rounds": 12
+        "name": "Hash Password",
+        "typeVersion": 1,
+        "position": [
+          700,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $json.password || $utils.generateSecurePassword() }}",
+          "operation": "bcrypt_hash",
+          "rounds": 12
+        }
       }
     },
     {
@@ -59,16 +83,24 @@
         300
       ],
       "parameters": {
-        "data": {
-          "email": "{{ $json.email }}",
-          "displayName": "{{ $json.displayName }}",
-          "passwordHash": "{{ $steps.hash_password.output }}",
-          "tenantId": "{{ $context.tenantId }}",
-          "level": "{{ $json.level || 0 }}",
-          "isActive": true
-        },
-        "operation": "database_create",
-        "entity": "User"
+        "name": "Create User",
+        "typeVersion": 1,
+        "position": [
+          100,
+          300
+        ],
+        "parameters": {
+          "data": {
+            "email": "{{ $json.email }}",
+            "displayName": "{{ $json.displayName }}",
+            "passwordHash": "{{ $steps.hash_password.output }}",
+            "tenantId": "{{ $context.tenantId }}",
+            "level": "{{ $json.level || 0 }}",
+            "isActive": true
+          },
+          "operation": "database_create",
+          "entity": "User"
+        }
       }
     },
     {
@@ -81,10 +113,18 @@
         300
       ],
       "parameters": {
-        "operation": "email_send",
-        "to": "{{ $json.email }}",
-        "subject": "Welcome",
-        "template": "user_welcome"
+        "name": "Send Welcome Email",
+        "typeVersion": 1,
+        "position": [
+          400,
+          300
+        ],
+        "parameters": {
+          "operation": "email_send",
+          "to": "{{ $json.email }}",
+          "subject": "Welcome",
+          "template": "user_welcome"
+        }
       }
     },
     {
@@ -97,20 +137,26 @@
         300
       ],
       "parameters": {
-        "action": "http_response",
-        "status": 201,
-        "body": {
-          "id": "{{ $steps.create_user.output.id }}",
-          "email": "{{ $json.email }}"
+        "name": "Return Success",
+        "typeVersion": 1,
+        "position": [
+          700,
+          300
+        ],
+        "parameters": {
+          "action": "http_response",
+          "status": 201,
+          "body": {
+            "id": "{{ $steps.create_user.output.id }}",
+            "email": "{{ $json.email }}"
+          }
         }
       }
     }
   ],
   "connections": {},
   "staticData": {},
-  "meta": {
-    "description": "Create new user with email verification"
-  },
+  "meta": {},
   "settings": {
     "timezone": "UTC",
     "executionTimeout": 3600,

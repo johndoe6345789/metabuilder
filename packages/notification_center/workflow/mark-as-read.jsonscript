@@ -12,9 +12,17 @@
         100
       ],
       "parameters": {
-        "input": "{{ $context.tenantId }}",
-        "operation": "validate",
-        "validator": "required"
+        "name": "Validate Context",
+        "typeVersion": 1,
+        "position": [
+          100,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $context.tenantId }}",
+          "operation": "validate",
+          "validator": "required"
+        }
       }
     },
     {
@@ -27,9 +35,17 @@
         100
       ],
       "parameters": {
-        "input": "{{ $context.user.id }}",
-        "operation": "validate",
-        "validator": "required"
+        "name": "Validate User",
+        "typeVersion": 1,
+        "position": [
+          400,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $context.user.id }}",
+          "operation": "validate",
+          "validator": "required"
+        }
       }
     },
     {
@@ -42,8 +58,16 @@
         100
       ],
       "parameters": {
-        "condition": "{{ Array.isArray($json.notificationIds) }}",
-        "operation": "condition"
+        "name": "Check Bulk Vs Single",
+        "typeVersion": 1,
+        "position": [
+          700,
+          100
+        ],
+        "parameters": {
+          "condition": "{{ Array.isArray($json.notificationIds) }}",
+          "operation": "condition"
+        }
       }
     },
     {
@@ -56,17 +80,25 @@
         300
       ],
       "parameters": {
-        "filter": {
-          "id": "{{ $json.notificationId }}",
-          "userId": "{{ $context.user.id }}",
-          "tenantId": "{{ $context.tenantId }}"
-        },
-        "data": {
-          "isRead": true,
-          "readAt": "{{ new Date().toISOString() }}"
-        },
-        "operation": "database_update",
-        "entity": "Notification"
+        "name": "Mark Single",
+        "typeVersion": 1,
+        "position": [
+          100,
+          300
+        ],
+        "parameters": {
+          "filter": {
+            "id": "{{ $json.notificationId }}",
+            "userId": "{{ $context.user.id }}",
+            "tenantId": "{{ $context.tenantId }}"
+          },
+          "data": {
+            "isRead": true,
+            "readAt": "{{ new Date().toISOString() }}"
+          },
+          "operation": "database_update",
+          "entity": "Notification"
+        }
       }
     },
     {
@@ -79,19 +111,27 @@
         300
       ],
       "parameters": {
-        "filter": {
-          "id": {
-            "$in": "{{ $json.notificationIds }}"
+        "name": "Mark Bulk",
+        "typeVersion": 1,
+        "position": [
+          400,
+          300
+        ],
+        "parameters": {
+          "filter": {
+            "id": {
+              "$in": "{{ $json.notificationIds }}"
+            },
+            "userId": "{{ $context.user.id }}",
+            "tenantId": "{{ $context.tenantId }}"
           },
-          "userId": "{{ $context.user.id }}",
-          "tenantId": "{{ $context.tenantId }}"
-        },
-        "data": {
-          "isRead": true,
-          "readAt": "{{ new Date().toISOString() }}"
-        },
-        "operation": "database_update_many",
-        "entity": "Notification"
+          "data": {
+            "isRead": true,
+            "readAt": "{{ new Date().toISOString() }}"
+          },
+          "operation": "database_update_many",
+          "entity": "Notification"
+        }
       }
     },
     {
@@ -104,12 +144,20 @@
         300
       ],
       "parameters": {
-        "data": {
-          "notificationIds": "{{ Array.isArray($json.notificationIds) ? $json.notificationIds : [$json.notificationId] }}"
-        },
-        "action": "emit_event",
-        "event": "notification_read",
-        "channel": "{{ 'user:' + $context.user.id }}"
+        "name": "Emit Read Event",
+        "typeVersion": 1,
+        "position": [
+          700,
+          300
+        ],
+        "parameters": {
+          "data": {
+            "notificationIds": "{{ Array.isArray($json.notificationIds) ? $json.notificationIds : [$json.notificationId] }}"
+          },
+          "action": "emit_event",
+          "event": "notification_read",
+          "channel": "{{ 'user:' + $context.user.id }}"
+        }
       }
     },
     {
@@ -122,19 +170,25 @@
         500
       ],
       "parameters": {
-        "action": "http_response",
-        "status": 200,
-        "body": {
-          "message": "Notification(s) marked as read"
+        "name": "Return Success",
+        "typeVersion": 1,
+        "position": [
+          100,
+          500
+        ],
+        "parameters": {
+          "action": "http_response",
+          "status": 200,
+          "body": {
+            "message": "Notification(s) marked as read"
+          }
         }
       }
     }
   ],
   "connections": {},
   "staticData": {},
-  "meta": {
-    "description": "Mark single or multiple notifications as read by user"
-  },
+  "meta": {},
   "settings": {
     "timezone": "UTC",
     "executionTimeout": 3600,

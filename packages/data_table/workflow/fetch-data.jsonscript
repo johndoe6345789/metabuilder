@@ -12,10 +12,18 @@
         100
       ],
       "parameters": {
-        "input": "{{ $context.tenantId }}",
-        "operation": "validate",
-        "validator": "required",
-        "errorMessage": "tenantId is REQUIRED for multi-tenant safety - data leak prevention"
+        "name": "Validate Tenant Critical",
+        "typeVersion": 1,
+        "position": [
+          100,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $context.tenantId }}",
+          "operation": "validate",
+          "validator": "required",
+          "errorMessage": "tenantId is REQUIRED for multi-tenant safety - data leak prevention"
+        }
       }
     },
     {
@@ -28,10 +36,18 @@
         100
       ],
       "parameters": {
-        "input": "{{ $context.user.id }}",
-        "operation": "validate",
-        "validator": "required",
-        "errorMessage": "userId is REQUIRED for row-level ACL"
+        "name": "Validate User Critical",
+        "typeVersion": 1,
+        "position": [
+          400,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $context.user.id }}",
+          "operation": "validate",
+          "validator": "required",
+          "errorMessage": "userId is REQUIRED for row-level ACL"
+        }
       }
     },
     {
@@ -44,14 +60,22 @@
         100
       ],
       "parameters": {
-        "input": "{{ $json }}",
-        "operation": "validate",
-        "rules": {
-          "entity": "required|string",
-          "sortBy": "string",
-          "sortOrder": "string",
-          "limit": "number|max:500",
-          "page": "number|min:1"
+        "name": "Validate Input",
+        "typeVersion": 1,
+        "position": [
+          700,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $json }}",
+          "operation": "validate",
+          "rules": {
+            "entity": "required|string",
+            "sortBy": "string",
+            "sortOrder": "string",
+            "limit": "number|max:500",
+            "page": "number|min:1"
+          }
         }
       }
     },
@@ -65,14 +89,22 @@
         300
       ],
       "parameters": {
-        "output": {
-          "entity": "{{ $json.entity }}",
-          "sortBy": "{{ $json.sortBy || 'createdAt' }}",
-          "sortOrder": "{{ $json.sortOrder === 'asc' ? 1 : -1 }}",
-          "limit": "{{ Math.min($json.limit || 50, 500) }}",
-          "page": "{{ $json.page || 1 }}"
-        },
-        "operation": "transform_data"
+        "name": "Extract Params",
+        "typeVersion": 1,
+        "position": [
+          100,
+          300
+        ],
+        "parameters": {
+          "output": {
+            "entity": "{{ $json.entity }}",
+            "sortBy": "{{ $json.sortBy || 'createdAt' }}",
+            "sortOrder": "{{ $json.sortOrder === 'asc' ? 1 : -1 }}",
+            "limit": "{{ Math.min($json.limit || 50, 500) }}",
+            "page": "{{ $json.page || 1 }}"
+          },
+          "operation": "transform_data"
+        }
       }
     },
     {
@@ -85,8 +117,16 @@
         300
       ],
       "parameters": {
-        "output": "{{ ($steps.extract_params.output.page - 1) * $steps.extract_params.output.limit }}",
-        "operation": "transform_data"
+        "name": "Calculate Offset",
+        "typeVersion": 1,
+        "position": [
+          400,
+          300
+        ],
+        "parameters": {
+          "output": "{{ ($steps.extract_params.output.page - 1) * $steps.extract_params.output.limit }}",
+          "operation": "transform_data"
+        }
       }
     },
     {
@@ -99,12 +139,20 @@
         300
       ],
       "parameters": {
-        "output": {
-          "tenantId": "{{ $context.tenantId }}",
-          "searchTerm": "{{ $json.search || null }}",
-          "filters": "{{ $json.filters || {} }}"
-        },
-        "operation": "transform_data"
+        "name": "Build Filter",
+        "typeVersion": 1,
+        "position": [
+          700,
+          300
+        ],
+        "parameters": {
+          "output": {
+            "tenantId": "{{ $context.tenantId }}",
+            "searchTerm": "{{ $json.search || null }}",
+            "filters": "{{ $json.filters || {} }}"
+          },
+          "operation": "transform_data"
+        }
       }
     },
     {
@@ -117,8 +165,16 @@
         500
       ],
       "parameters": {
-        "condition": "{{ $context.user.level >= 3 || $build_filter.output.filters.userId === $context.user.id }}",
-        "operation": "condition"
+        "name": "Apply User Acl",
+        "typeVersion": 1,
+        "position": [
+          100,
+          500
+        ],
+        "parameters": {
+          "condition": "{{ $context.user.level >= 3 || $build_filter.output.filters.userId === $context.user.id }}",
+          "operation": "condition"
+        }
       }
     },
     {
@@ -131,19 +187,27 @@
         500
       ],
       "parameters": {
-        "operation": "http_request",
-        "url": "{{ '/api/v1/' + $context.tenantId + '/' + $steps.extract_params.output.entity }}",
-        "method": "GET",
-        "queryParameters": {
-          "tenantId": "{{ $context.tenantId }}",
-          "sortBy": "{{ $steps.extract_params.output.sortBy }}",
-          "sortOrder": "{{ $steps.extract_params.output.sortOrder }}",
-          "limit": "{{ $steps.extract_params.output.limit }}",
-          "offset": "{{ $steps.calculate_offset.output }}",
-          "filters": "{{ JSON.stringify($steps.build_filter.output.filters) }}"
-        },
-        "headers": {
-          "Authorization": "{{ 'Bearer ' + $context.token }}"
+        "name": "Fetch Data",
+        "typeVersion": 1,
+        "position": [
+          400,
+          500
+        ],
+        "parameters": {
+          "operation": "http_request",
+          "url": "{{ '/api/v1/' + $context.tenantId + '/' + $steps.extract_params.output.entity }}",
+          "method": "GET",
+          "queryParameters": {
+            "tenantId": "{{ $context.tenantId }}",
+            "sortBy": "{{ $steps.extract_params.output.sortBy }}",
+            "sortOrder": "{{ $steps.extract_params.output.sortOrder }}",
+            "limit": "{{ $steps.extract_params.output.limit }}",
+            "offset": "{{ $steps.calculate_offset.output }}",
+            "filters": "{{ JSON.stringify($steps.build_filter.output.filters) }}"
+          },
+          "headers": {
+            "Authorization": "{{ 'Bearer ' + $context.token }}"
+          }
         }
       }
     },
@@ -157,8 +221,16 @@
         500
       ],
       "parameters": {
-        "condition": "{{ $steps.fetch_data.output.status === 200 }}",
-        "operation": "condition"
+        "name": "Validate Response",
+        "typeVersion": 1,
+        "position": [
+          700,
+          500
+        ],
+        "parameters": {
+          "condition": "{{ $steps.fetch_data.output.status === 200 }}",
+          "operation": "condition"
+        }
       }
     },
     {
@@ -171,12 +243,20 @@
         700
       ],
       "parameters": {
-        "input": "{{ $steps.fetch_data.output.body }}",
-        "output": {
-          "data": "{{ $steps.fetch_data.output.body.data }}",
-          "total": "{{ $steps.fetch_data.output.body.total }}"
-        },
-        "operation": "transform_data"
+        "name": "Parse Response",
+        "typeVersion": 1,
+        "position": [
+          100,
+          700
+        ],
+        "parameters": {
+          "input": "{{ $steps.fetch_data.output.body }}",
+          "output": {
+            "data": "{{ $steps.fetch_data.output.body.data }}",
+            "total": "{{ $steps.fetch_data.output.body.total }}"
+          },
+          "operation": "transform_data"
+        }
       }
     },
     {
@@ -189,20 +269,28 @@
         700
       ],
       "parameters": {
-        "output": {
-          "data": "{{ $steps.parse_response.output.data }}",
-          "pagination": {
-            "total": "{{ $steps.parse_response.output.total }}",
-            "page": "{{ $steps.extract_params.output.page }}",
-            "limit": "{{ $steps.extract_params.output.limit }}",
-            "totalPages": "{{ Math.ceil($steps.parse_response.output.total / $steps.extract_params.output.limit) }}"
+        "name": "Format Response",
+        "typeVersion": 1,
+        "position": [
+          400,
+          700
+        ],
+        "parameters": {
+          "output": {
+            "data": "{{ $steps.parse_response.output.data }}",
+            "pagination": {
+              "total": "{{ $steps.parse_response.output.total }}",
+              "page": "{{ $steps.extract_params.output.page }}",
+              "limit": "{{ $steps.extract_params.output.limit }}",
+              "totalPages": "{{ Math.ceil($steps.parse_response.output.total / $steps.extract_params.output.limit) }}"
+            },
+            "sorting": {
+              "sortBy": "{{ $steps.extract_params.output.sortBy }}",
+              "sortOrder": "{{ $steps.extract_params.output.sortOrder === 1 ? 'asc' : 'desc' }}"
+            }
           },
-          "sorting": {
-            "sortBy": "{{ $steps.extract_params.output.sortBy }}",
-            "sortOrder": "{{ $steps.extract_params.output.sortOrder === 1 ? 'asc' : 'desc' }}"
-          }
-        },
-        "operation": "transform_data"
+          "operation": "transform_data"
+        }
       }
     },
     {
@@ -215,17 +303,23 @@
         700
       ],
       "parameters": {
-        "action": "http_response",
-        "status": 200,
-        "body": "{{ $steps.format_response.output }}"
+        "name": "Return Success",
+        "typeVersion": 1,
+        "position": [
+          700,
+          700
+        ],
+        "parameters": {
+          "action": "http_response",
+          "status": 200,
+          "body": "{{ $steps.format_response.output }}"
+        }
       }
     }
   ],
   "connections": {},
   "staticData": {},
-  "meta": {
-    "description": "Fetch data with multi-tenant filtering, sorting, and pagination - CRITICAL for security"
-  },
+  "meta": {},
   "settings": {
     "timezone": "UTC",
     "executionTimeout": 3600,

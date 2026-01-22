@@ -12,9 +12,17 @@
         100
       ],
       "parameters": {
-        "input": "{{ $context.user.id }}",
-        "operation": "validate",
-        "validator": "required"
+        "name": "Validate Context",
+        "typeVersion": 1,
+        "position": [
+          100,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $context.user.id }}",
+          "operation": "validate",
+          "validator": "required"
+        }
       }
     },
     {
@@ -27,11 +35,19 @@
         100
       ],
       "parameters": {
-        "output": {
-          "limit": "{{ Math.min($json.limit || 50, 200) }}",
-          "offset": "{{ ($json.page || 1 - 1) * ($json.limit || 50) }}"
-        },
-        "operation": "transform_data"
+        "name": "Extract Pagination",
+        "typeVersion": 1,
+        "position": [
+          400,
+          100
+        ],
+        "parameters": {
+          "output": {
+            "limit": "{{ Math.min($json.limit || 50, 200) }}",
+            "offset": "{{ ($json.page || 1 - 1) * ($json.limit || 50) }}"
+          },
+          "operation": "transform_data"
+        }
       }
     },
     {
@@ -44,18 +60,26 @@
         100
       ],
       "parameters": {
-        "filter": {
-          "userId": "{{ $context.user.id }}",
-          "tenantId": "{{ $context.tenantId }}",
-          "isRead": false
-        },
-        "sort": {
-          "createdAt": -1
-        },
-        "limit": "{{ $steps.extract_pagination.output.limit }}",
-        "offset": "{{ $steps.extract_pagination.output.offset }}",
-        "operation": "database_read",
-        "entity": "Notification"
+        "name": "Fetch Unread",
+        "typeVersion": 1,
+        "position": [
+          700,
+          100
+        ],
+        "parameters": {
+          "filter": {
+            "userId": "{{ $context.user.id }}",
+            "tenantId": "{{ $context.tenantId }}",
+            "isRead": false
+          },
+          "sort": {
+            "createdAt": -1
+          },
+          "limit": "{{ $steps.extract_pagination.output.limit }}",
+          "offset": "{{ $steps.extract_pagination.output.offset }}",
+          "operation": "database_read",
+          "entity": "Notification"
+        }
       }
     },
     {
@@ -68,13 +92,21 @@
         300
       ],
       "parameters": {
-        "filter": {
-          "userId": "{{ $context.user.id }}",
-          "tenantId": "{{ $context.tenantId }}",
-          "isRead": false
-        },
-        "operation": "database_count",
-        "entity": "Notification"
+        "name": "Count Unread",
+        "typeVersion": 1,
+        "position": [
+          100,
+          300
+        ],
+        "parameters": {
+          "filter": {
+            "userId": "{{ $context.user.id }}",
+            "tenantId": "{{ $context.tenantId }}",
+            "isRead": false
+          },
+          "operation": "database_count",
+          "entity": "Notification"
+        }
       }
     },
     {
@@ -87,16 +119,24 @@
         300
       ],
       "parameters": {
-        "output": {
-          "notifications": "{{ $steps.fetch_unread.output }}",
-          "unreadCount": "{{ $steps.count_unread.output }}",
-          "pagination": {
-            "page": "{{ $json.page || 1 }}",
-            "limit": "{{ $steps.extract_pagination.output.limit }}",
-            "hasMore": "{{ $steps.count_unread.output > ($steps.extract_pagination.output.offset + $steps.extract_pagination.output.limit) }}"
-          }
-        },
-        "operation": "transform_data"
+        "name": "Format Response",
+        "typeVersion": 1,
+        "position": [
+          400,
+          300
+        ],
+        "parameters": {
+          "output": {
+            "notifications": "{{ $steps.fetch_unread.output }}",
+            "unreadCount": "{{ $steps.count_unread.output }}",
+            "pagination": {
+              "page": "{{ $json.page || 1 }}",
+              "limit": "{{ $steps.extract_pagination.output.limit }}",
+              "hasMore": "{{ $steps.count_unread.output > ($steps.extract_pagination.output.offset + $steps.extract_pagination.output.limit) }}"
+            }
+          },
+          "operation": "transform_data"
+        }
       }
     },
     {
@@ -109,17 +149,23 @@
         300
       ],
       "parameters": {
-        "action": "http_response",
-        "status": 200,
-        "body": "{{ $steps.format_response.output }}"
+        "name": "Return Success",
+        "typeVersion": 1,
+        "position": [
+          700,
+          300
+        ],
+        "parameters": {
+          "action": "http_response",
+          "status": 200,
+          "body": "{{ $steps.format_response.output }}"
+        }
       }
     }
   ],
   "connections": {},
   "staticData": {},
-  "meta": {
-    "description": "Fetch all unread notifications for current user with pagination"
-  },
+  "meta": {},
   "settings": {
     "timezone": "UTC",
     "executionTimeout": 3600,

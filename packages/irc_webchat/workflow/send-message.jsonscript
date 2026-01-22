@@ -12,9 +12,17 @@
         100
       ],
       "parameters": {
-        "input": "{{ $context.user.id }}",
-        "operation": "validate",
-        "validator": "required"
+        "name": "Validate Context",
+        "typeVersion": 1,
+        "position": [
+          100,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $context.user.id }}",
+          "operation": "validate",
+          "validator": "required"
+        }
       }
     },
     {
@@ -27,10 +35,18 @@
         100
       ],
       "parameters": {
-        "operation": "rate_limit",
-        "key": "{{ 'irc:' + $context.user.id + ':' + $json.channelId }}",
-        "limit": 1,
-        "window": 2000
+        "name": "Apply Slowmode",
+        "typeVersion": 1,
+        "position": [
+          400,
+          100
+        ],
+        "parameters": {
+          "operation": "rate_limit",
+          "key": "{{ 'irc:' + $context.user.id + ':' + $json.channelId }}",
+          "limit": 1,
+          "window": 2000
+        }
       }
     },
     {
@@ -43,10 +59,18 @@
         100
       ],
       "parameters": {
-        "input": "{{ $json }}",
-        "operation": "validate",
-        "rules": {
-          "message": "required|string|minLength:1|maxLength:500"
+        "name": "Validate Input",
+        "typeVersion": 1,
+        "position": [
+          700,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $json }}",
+          "operation": "validate",
+          "rules": {
+            "message": "required|string|minLength:1|maxLength:500"
+          }
         }
       }
     },
@@ -60,15 +84,23 @@
         300
       ],
       "parameters": {
-        "data": {
-          "channelId": "{{ $json.channelId }}",
-          "userId": "{{ $context.user.id }}",
-          "tenantId": "{{ $context.tenantId }}",
-          "message": "{{ $json.message }}",
-          "createdAt": "{{ new Date().toISOString() }}"
-        },
-        "operation": "database_create",
-        "entity": "IRCMessage"
+        "name": "Create Message",
+        "typeVersion": 1,
+        "position": [
+          100,
+          300
+        ],
+        "parameters": {
+          "data": {
+            "channelId": "{{ $json.channelId }}",
+            "userId": "{{ $context.user.id }}",
+            "tenantId": "{{ $context.tenantId }}",
+            "message": "{{ $json.message }}",
+            "createdAt": "{{ new Date().toISOString() }}"
+          },
+          "operation": "database_create",
+          "entity": "IRCMessage"
+        }
       }
     },
     {
@@ -81,22 +113,28 @@
         300
       ],
       "parameters": {
-        "data": {
-          "messageId": "{{ $steps.create_message.output.id }}",
-          "userId": "{{ $context.user.id }}",
-          "message": "{{ $json.message }}"
-        },
-        "action": "emit_event",
-        "event": "message_sent",
-        "channel": "{{ 'irc:' + $json.channelId }}"
+        "name": "Emit Message",
+        "typeVersion": 1,
+        "position": [
+          400,
+          300
+        ],
+        "parameters": {
+          "data": {
+            "messageId": "{{ $steps.create_message.output.id }}",
+            "userId": "{{ $context.user.id }}",
+            "message": "{{ $json.message }}"
+          },
+          "action": "emit_event",
+          "event": "message_sent",
+          "channel": "{{ 'irc:' + $json.channelId }}"
+        }
       }
     }
   ],
   "connections": {},
   "staticData": {},
-  "meta": {
-    "description": "Send message to IRC channel with slowmode rate limiting"
-  },
+  "meta": {},
   "settings": {
     "timezone": "UTC",
     "executionTimeout": 3600,

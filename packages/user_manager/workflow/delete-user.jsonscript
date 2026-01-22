@@ -1,3 +1,118 @@
 {
-  "version":"2.2.0","name":"Delete User","description":"Delete user with safeguard against deleting last admin","trigger":{"type":"http","method":"DELETE","path":"/users/:userId"},"nodes":[{"id":"check_permission","type":"operation","op":"condition","condition":"{{ $context.user.level >= 3 }}"},{"id":"fetch_user","type":"operation","op":"database_read","entity":"User","params":{"filter":{"id":"{{ $json.userId }}","tenantId":"{{ $context.tenantId }}"}}},{"id":"count_admins","type":"operation","op":"database_count","entity":"User","params":{"filter":{"tenantId":"{{ $context.tenantId }}","level":{"$gte":3}}}},{"id":"check_not_last_admin","type":"operation","op":"condition","condition":"{{ !($steps.fetch_user.output.level >= 3 && $steps.count_admins.output <= 1) }}"},{"id":"delete_user","type":"operation","op":"database_delete","entity":"User","params":{"filter":{"id":"{{ $json.userId }}"}}},{"id":"return_success","type":"action","action":"http_response","status":200,"body":{"message":"User deleted"}}}]
+  "name": "Delete User",
+  "active": false,
+  "nodes": [
+    {
+      "id": "check_permission",
+      "name": "Check Permission",
+      "type": "metabuilder.condition",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "condition": "{{ $context.user.level >= 3 }}",
+        "operation": "condition"
+      }
+    },
+    {
+      "id": "fetch_user",
+      "name": "Fetch User",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "filter": {
+          "id": "{{ $json.userId }}",
+          "tenantId": "{{ $context.tenantId }}"
+        },
+        "operation": "database_read",
+        "entity": "User"
+      }
+    },
+    {
+      "id": "count_admins",
+      "name": "Count Admins",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "filter": {
+          "tenantId": "{{ $context.tenantId }}",
+          "level": {
+            "$gte": 3
+          }
+        },
+        "operation": "database_count",
+        "entity": "User"
+      }
+    },
+    {
+      "id": "check_not_last_admin",
+      "name": "Check Not Last Admin",
+      "type": "metabuilder.condition",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "condition": "{{ !($steps.fetch_user.output.level >= 3 && $steps.count_admins.output <= 1) }}",
+        "operation": "condition"
+      }
+    },
+    {
+      "id": "delete_user",
+      "name": "Delete User",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "filter": {
+          "id": "{{ $json.userId }}"
+        },
+        "operation": "database_delete",
+        "entity": "User"
+      }
+    },
+    {
+      "id": "return_success",
+      "name": "Return Success",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "action": "http_response",
+        "status": 200,
+        "body": {
+          "message": "User deleted"
+        }
+      }
+    }
+  ],
+  "connections": {},
+  "staticData": {},
+  "meta": {
+    "description": "Delete user with safeguard against deleting last admin"
+  },
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  }
 }

@@ -12,9 +12,17 @@
         100
       ],
       "parameters": {
-        "input": "{{ $context.tenantId }}",
-        "operation": "validate",
-        "validator": "required"
+        "name": "Validate Context",
+        "typeVersion": 1,
+        "position": [
+          100,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $context.tenantId }}",
+          "operation": "validate",
+          "validator": "required"
+        }
       }
     },
     {
@@ -27,8 +35,16 @@
         100
       ],
       "parameters": {
-        "condition": "{{ $context.user.level >= 3 }}",
-        "operation": "condition"
+        "name": "Check Permission",
+        "typeVersion": 1,
+        "position": [
+          400,
+          100
+        ],
+        "parameters": {
+          "condition": "{{ $context.user.level >= 3 }}",
+          "operation": "condition"
+        }
       }
     },
     {
@@ -41,9 +57,17 @@
         100
       ],
       "parameters": {
-        "input": "{{ $json.fileContent }}",
-        "output": "{{ JSON.parse($json.fileContent) }}",
-        "operation": "transform_data"
+        "name": "Parse Script",
+        "typeVersion": 1,
+        "position": [
+          700,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $json.fileContent }}",
+          "output": "{{ JSON.parse($json.fileContent) }}",
+          "operation": "transform_data"
+        }
       }
     },
     {
@@ -56,8 +80,16 @@
         300
       ],
       "parameters": {
-        "condition": "{{ $steps.parse_script.output.version === '2.2.0' }}",
-        "operation": "condition"
+        "name": "Validate Format",
+        "typeVersion": 1,
+        "position": [
+          100,
+          300
+        ],
+        "parameters": {
+          "condition": "{{ $steps.parse_script.output.version === '2.2.0' }}",
+          "operation": "condition"
+        }
       }
     },
     {
@@ -70,15 +102,23 @@
         300
       ],
       "parameters": {
-        "data": {
-          "tenantId": "{{ $context.tenantId }}",
-          "createdBy": "{{ $context.user.id }}",
-          "name": "{{ $json.name || 'Imported Script' }}",
-          "script": "{{ JSON.stringify($steps.parse_script.output) }}",
-          "createdAt": "{{ new Date().toISOString() }}"
-        },
-        "operation": "database_create",
-        "entity": "JSONScript"
+        "name": "Create Script",
+        "typeVersion": 1,
+        "position": [
+          400,
+          300
+        ],
+        "parameters": {
+          "data": {
+            "tenantId": "{{ $context.tenantId }}",
+            "createdBy": "{{ $context.user.id }}",
+            "name": "{{ $json.name || 'Imported Script' }}",
+            "script": "{{ JSON.stringify($steps.parse_script.output) }}",
+            "createdAt": "{{ new Date().toISOString() }}"
+          },
+          "operation": "database_create",
+          "entity": "JSONScript"
+        }
       }
     },
     {
@@ -91,20 +131,26 @@
         300
       ],
       "parameters": {
-        "action": "http_response",
-        "status": 201,
-        "body": {
-          "id": "{{ $steps.create_script.output.id }}",
-          "message": "Script imported"
+        "name": "Return Success",
+        "typeVersion": 1,
+        "position": [
+          700,
+          300
+        ],
+        "parameters": {
+          "action": "http_response",
+          "status": 201,
+          "body": {
+            "id": "{{ $steps.create_script.output.id }}",
+            "message": "Script imported"
+          }
         }
       }
     }
   ],
   "connections": {},
   "staticData": {},
-  "meta": {
-    "description": "Parse and import JSON Script from file"
-  },
+  "meta": {},
   "settings": {
     "timezone": "UTC",
     "executionTimeout": 3600,

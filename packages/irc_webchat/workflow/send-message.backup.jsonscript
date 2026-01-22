@@ -1,3 +1,145 @@
 {
-  "version":"2.2.0","name":"Send IRC Message","description":"Send message to IRC channel with slowmode rate limiting","trigger":{"type":"http","method":"POST","path":"/irc/channels/:channelId/messages"},"nodes":[{"id":"validate_context","type":"operation","op":"validate","input":"{{ $context.user.id }}","validator":"required"},{"id":"apply_slowmode","type":"operation","op":"rate_limit","key":"{{ 'irc:' + $context.user.id + ':' + $json.channelId }}","limit":1,"window":2000},{"id":"validate_input","type":"operation","op":"validate","input":"{{ $json }}","rules":{"message":"required|string|minLength:1|maxLength:500"}},{"id":"create_message","type":"operation","op":"database_create","entity":"IRCMessage","data":{"channelId":"{{ $json.channelId }}","userId":"{{ $context.user.id }}","tenantId":"{{ $context.tenantId }}","message":"{{ $json.message }}","createdAt":"{{ new Date().toISOString() }}"}},{"id":"emit_message","type":"action","action":"emit_event","event":"message_sent","channel":"{{ 'irc:' + $json.channelId }}","data":{"messageId":"{{ $steps.create_message.output.id }}","userId":"{{ $context.user.id }}","message":"{{ $json.message }}"}}]
+  "name": "Send IRC Message",
+  "active": false,
+  "nodes": [
+    {
+      "id": "validate_context",
+      "name": "Validate Context",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "name": "Validate Context",
+        "typeVersion": 1,
+        "position": [
+          100,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $context.user.id }}",
+          "operation": "validate",
+          "validator": "required"
+        }
+      }
+    },
+    {
+      "id": "apply_slowmode",
+      "name": "Apply Slowmode",
+      "type": "metabuilder.rateLimit",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "name": "Apply Slowmode",
+        "typeVersion": 1,
+        "position": [
+          400,
+          100
+        ],
+        "parameters": {
+          "operation": "rate_limit",
+          "key": "{{ 'irc:' + $context.user.id + ':' + $json.channelId }}",
+          "limit": 1,
+          "window": 2000
+        }
+      }
+    },
+    {
+      "id": "validate_input",
+      "name": "Validate Input",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "name": "Validate Input",
+        "typeVersion": 1,
+        "position": [
+          700,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $json }}",
+          "operation": "validate",
+          "rules": {
+            "message": "required|string|minLength:1|maxLength:500"
+          }
+        }
+      }
+    },
+    {
+      "id": "create_message",
+      "name": "Create Message",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "name": "Create Message",
+        "typeVersion": 1,
+        "position": [
+          100,
+          300
+        ],
+        "parameters": {
+          "data": {
+            "channelId": "{{ $json.channelId }}",
+            "userId": "{{ $context.user.id }}",
+            "tenantId": "{{ $context.tenantId }}",
+            "message": "{{ $json.message }}",
+            "createdAt": "{{ new Date().toISOString() }}"
+          },
+          "operation": "database_create",
+          "entity": "IRCMessage"
+        }
+      }
+    },
+    {
+      "id": "emit_message",
+      "name": "Emit Message",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "name": "Emit Message",
+        "typeVersion": 1,
+        "position": [
+          400,
+          300
+        ],
+        "parameters": {
+          "data": {
+            "messageId": "{{ $steps.create_message.output.id }}",
+            "userId": "{{ $context.user.id }}",
+            "message": "{{ $json.message }}"
+          },
+          "action": "emit_event",
+          "event": "message_sent",
+          "channel": "{{ 'irc:' + $json.channelId }}"
+        }
+      }
+    }
+  ],
+  "connections": {},
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  }
 }

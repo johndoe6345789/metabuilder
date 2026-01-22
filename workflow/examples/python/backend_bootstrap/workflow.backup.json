@@ -7,64 +7,216 @@
       "name": "Load Messages",
       "type": "backend.load_messages",
       "typeVersion": 1,
-      "position": [0, 50],
-      "parameters": {}
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "name": "Load Messages",
+        "typeVersion": 1,
+        "position": [
+          100,
+          100
+        ],
+        "parameters": {
+          "name": "Load Messages",
+          "typeVersion": 1,
+          "position": [
+            0,
+            50
+          ],
+          "parameters": {}
+        }
+      }
     },
     {
       "id": "load_metadata",
       "name": "Load Metadata",
       "type": "backend.load_metadata",
       "typeVersion": 1,
-      "position": [300, 50],
-      "parameters": {}
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "name": "Load Metadata",
+        "typeVersion": 1,
+        "position": [
+          400,
+          100
+        ],
+        "parameters": {
+          "name": "Load Metadata",
+          "typeVersion": 1,
+          "position": [
+            300,
+            50
+          ],
+          "parameters": {}
+        }
+      }
     },
     {
       "id": "load_prompt",
       "name": "Load Prompt",
       "type": "backend.load_prompt",
       "typeVersion": 1,
-      "position": [600, 50],
-      "parameters": {}
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "name": "Load Prompt",
+        "typeVersion": 1,
+        "position": [
+          700,
+          100
+        ],
+        "parameters": {
+          "name": "Load Prompt",
+          "typeVersion": 1,
+          "position": [
+            600,
+            50
+          ],
+          "parameters": {}
+        }
+      }
     },
     {
       "id": "create_github",
-      "name": "Create GitHub Client",
+      "name": "Create Github",
       "type": "backend.create_github",
       "typeVersion": 1,
-      "position": [900, 50],
-      "parameters": {}
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "name": "Create Github",
+        "typeVersion": 1,
+        "position": [
+          100,
+          300
+        ],
+        "parameters": {
+          "name": "Create GitHub Client",
+          "typeVersion": 1,
+          "position": [
+            900,
+            50
+          ],
+          "parameters": {}
+        }
+      }
     },
     {
       "id": "create_openai",
-      "name": "Create OpenAI Client",
+      "name": "Create Openai",
       "type": "backend.create_openai",
       "typeVersion": 1,
-      "position": [1200, 50],
-      "parameters": {}
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "name": "Create Openai",
+        "typeVersion": 1,
+        "position": [
+          400,
+          300
+        ],
+        "parameters": {
+          "name": "Create OpenAI Client",
+          "typeVersion": 1,
+          "position": [
+            1200,
+            50
+          ],
+          "parameters": {}
+        }
+      }
     },
     {
       "id": "load_tools",
       "name": "Load Tools",
       "type": "backend.load_tools",
       "typeVersion": 1,
-      "position": [1500, 50],
-      "parameters": {}
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "name": "Load Tools",
+        "typeVersion": 1,
+        "position": [
+          700,
+          300
+        ],
+        "parameters": {
+          "name": "Load Tools",
+          "typeVersion": 1,
+          "position": [
+            1500,
+            50
+          ],
+          "parameters": {}
+        }
+      }
     },
     {
       "id": "build_tool_map",
       "name": "Build Tool Map",
       "type": "backend.build_tool_map",
       "typeVersion": 1,
-      "position": [1800, 50],
-      "parameters": {}
+      "position": [
+        100,
+        500
+      ],
+      "parameters": {
+        "name": "Build Tool Map",
+        "typeVersion": 1,
+        "position": [
+          100,
+          500
+        ],
+        "parameters": {
+          "name": "Build Tool Map",
+          "typeVersion": 1,
+          "position": [
+            1800,
+            50
+          ],
+          "parameters": {}
+        }
+      }
     },
     {
       "id": "load_plugins",
       "name": "Load Plugins",
       "type": "backend.load_plugins",
       "typeVersion": 1,
-      "position": [2100, 50],
-      "parameters": {}
+      "position": [
+        400,
+        500
+      ],
+      "parameters": {
+        "name": "Load Plugins",
+        "typeVersion": 1,
+        "position": [
+          400,
+          500
+        ],
+        "parameters": {
+          "name": "Load Plugins",
+          "typeVersion": 1,
+          "position": [
+            2100,
+            50
+          ],
+          "parameters": {}
+        }
+      }
     }
   ],
   "connections": {
@@ -72,7 +224,7 @@
       "main": {
         "0": [
           {
-            "node": "Load Metadata",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -83,7 +235,7 @@
       "main": {
         "0": [
           {
-            "node": "Load Prompt",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -94,29 +246,29 @@
       "main": {
         "0": [
           {
-            "node": "Create GitHub Client",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
         ]
       }
     },
-    "Create GitHub Client": {
+    "Create Github Client": {
       "main": {
         "0": [
           {
-            "node": "Create OpenAI Client",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
         ]
       }
     },
-    "Create OpenAI Client": {
+    "Create Openai Client": {
       "main": {
         "0": [
           {
-            "node": "Load Tools",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -127,7 +279,7 @@
       "main": {
         "0": [
           {
-            "node": "Build Tool Map",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -138,7 +290,7 @@
       "main": {
         "0": [
           {
-            "node": "Load Plugins",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -146,14 +298,13 @@
       }
     }
   },
-  "triggers": [
-    {
-      "nodeId": "load_messages",
-      "kind": "manual",
-      "enabled": true,
-      "meta": {
-        "description": "Initialize backend services and dependencies"
-      }
-    }
-  ]
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  }
 }

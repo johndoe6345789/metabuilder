@@ -12,10 +12,18 @@
         100
       ],
       "parameters": {
+        "name": "Create App",
+        "typeVersion": 1,
+        "position": [
+          100,
+          100
+        ],
         "parameters": {
-          "name": "packagerepo",
-          "config": {
-            "MAX_CONTENT_LENGTH": 2147483648
+          "parameters": {
+            "name": "packagerepo",
+            "config": {
+              "MAX_CONTENT_LENGTH": 2147483648
+            }
           }
         }
       }
@@ -30,13 +38,21 @@
         100
       ],
       "parameters": {
+        "name": "Register Publish",
+        "typeVersion": 1,
+        "position": [
+          400,
+          100
+        ],
         "parameters": {
-          "path": "/v1/<namespace>/<name>/<version>/<variant>/blob",
-          "methods": [
-            "PUT"
-          ],
-          "workflow": "publish_artifact",
-          "endpoint": "publish_artifact"
+          "parameters": {
+            "path": "/v1/<namespace>/<name>/<version>/<variant>/blob",
+            "methods": [
+              "PUT"
+            ],
+            "workflow": "publish_artifact",
+            "endpoint": "publish_artifact"
+          }
         }
       }
     },
@@ -50,13 +66,21 @@
         100
       ],
       "parameters": {
+        "name": "Register Download",
+        "typeVersion": 1,
+        "position": [
+          700,
+          100
+        ],
         "parameters": {
-          "path": "/v1/<namespace>/<name>/<version>/<variant>/blob",
-          "methods": [
-            "GET"
-          ],
-          "workflow": "download_artifact",
-          "endpoint": "download_artifact"
+          "parameters": {
+            "path": "/v1/<namespace>/<name>/<version>/<variant>/blob",
+            "methods": [
+              "GET"
+            ],
+            "workflow": "download_artifact",
+            "endpoint": "download_artifact"
+          }
         }
       }
     },
@@ -70,13 +94,21 @@
         300
       ],
       "parameters": {
+        "name": "Register Latest",
+        "typeVersion": 1,
+        "position": [
+          100,
+          300
+        ],
         "parameters": {
-          "path": "/v1/<namespace>/<name>/latest",
-          "methods": [
-            "GET"
-          ],
-          "workflow": "resolve_latest",
-          "endpoint": "resolve_latest"
+          "parameters": {
+            "path": "/v1/<namespace>/<name>/latest",
+            "methods": [
+              "GET"
+            ],
+            "workflow": "resolve_latest",
+            "endpoint": "resolve_latest"
+          }
         }
       }
     },
@@ -90,13 +122,21 @@
         300
       ],
       "parameters": {
+        "name": "Register Versions",
+        "typeVersion": 1,
+        "position": [
+          400,
+          300
+        ],
         "parameters": {
-          "path": "/v1/<namespace>/<name>/versions",
-          "methods": [
-            "GET"
-          ],
-          "workflow": "list_versions",
-          "endpoint": "list_versions"
+          "parameters": {
+            "path": "/v1/<namespace>/<name>/versions",
+            "methods": [
+              "GET"
+            ],
+            "workflow": "list_versions",
+            "endpoint": "list_versions"
+          }
         }
       }
     },
@@ -110,13 +150,21 @@
         300
       ],
       "parameters": {
+        "name": "Register Login",
+        "typeVersion": 1,
+        "position": [
+          700,
+          300
+        ],
         "parameters": {
-          "path": "/auth/login",
-          "methods": [
-            "POST"
-          ],
-          "workflow": "auth_login",
-          "endpoint": "auth_login"
+          "parameters": {
+            "path": "/auth/login",
+            "methods": [
+              "POST"
+            ],
+            "workflow": "auth_login",
+            "endpoint": "auth_login"
+          }
         }
       }
     },
@@ -130,10 +178,18 @@
         500
       ],
       "parameters": {
+        "name": "Start Server",
+        "typeVersion": 1,
+        "position": [
+          100,
+          500
+        ],
         "parameters": {
-          "host": "0.0.0.0",
-          "port": 8080,
-          "debug": false
+          "parameters": {
+            "host": "0.0.0.0",
+            "port": 8080,
+            "debug": false
+          }
         }
       }
     }
@@ -143,7 +199,7 @@
       "main": {
         "0": [
           {
-            "node": "Register Publish",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -154,7 +210,7 @@
       "main": {
         "0": [
           {
-            "node": "Register Download",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -165,7 +221,7 @@
       "main": {
         "0": [
           {
-            "node": "Register Latest",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -176,7 +232,7 @@
       "main": {
         "0": [
           {
-            "node": "Register Versions",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -187,7 +243,7 @@
       "main": {
         "0": [
           {
-            "node": "Register Login",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -198,7 +254,7 @@
       "main": {
         "0": [
           {
-            "node": "Start Server",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -207,9 +263,7 @@
     }
   },
   "staticData": {},
-  "meta": {
-    "description": "Complete Flask server defined as a workflow"
-  },
+  "meta": {},
   "settings": {
     "timezone": "UTC",
     "executionTimeout": 3600,

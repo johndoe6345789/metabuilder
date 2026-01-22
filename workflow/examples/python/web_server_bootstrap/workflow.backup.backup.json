@@ -1,0 +1,507 @@
+{
+  "name": "Web Server Bootstrap",
+  "active": false,
+  "nodes": [
+    {
+      "id": "configure_logging",
+      "name": "Configure Logging",
+      "type": "backend.configure_logging",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "name": "Configure Logging",
+        "typeVersion": 1,
+        "position": [
+          0,
+          0
+        ],
+        "parameters": {}
+      }
+    },
+    {
+      "id": "load_env",
+      "name": "Load Env",
+      "type": "backend.load_env",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "name": "Load Environment",
+        "typeVersion": 1,
+        "position": [
+          300,
+          0
+        ],
+        "parameters": {}
+      }
+    },
+    {
+      "id": "create_app",
+      "name": "Create App",
+      "type": "web.create_flask_app",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "name": "Create Flask App",
+        "typeVersion": 1,
+        "position": [
+          600,
+          0
+        ],
+        "parameters": {
+          "name": "autometabuilder",
+          "config": {
+            "JSON_SORT_KEYS": false
+          }
+        }
+      }
+    },
+    {
+      "id": "create_context_routes",
+      "name": "Create Context Routes",
+      "type": "web.route_context",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "name": "Create Context Routes",
+        "typeVersion": 1,
+        "position": [
+          900,
+          -150
+        ],
+        "parameters": {}
+      }
+    },
+    {
+      "id": "create_run_routes",
+      "name": "Create Run Routes",
+      "type": "web.route_run",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "name": "Create Run Routes",
+        "typeVersion": 1,
+        "position": [
+          900,
+          -50
+        ],
+        "parameters": {}
+      }
+    },
+    {
+      "id": "create_prompt_routes",
+      "name": "Create Prompt Routes",
+      "type": "web.route_prompt",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "name": "Create Prompt Routes",
+        "typeVersion": 1,
+        "position": [
+          900,
+          50
+        ],
+        "parameters": {}
+      }
+    },
+    {
+      "id": "create_settings_routes",
+      "name": "Create Settings Routes",
+      "type": "web.route_settings",
+      "typeVersion": 1,
+      "position": [
+        100,
+        500
+      ],
+      "parameters": {
+        "name": "Create Settings Routes",
+        "typeVersion": 1,
+        "position": [
+          900,
+          150
+        ],
+        "parameters": {}
+      }
+    },
+    {
+      "id": "create_translations_routes",
+      "name": "Create Translations Routes",
+      "type": "web.route_translations",
+      "typeVersion": 1,
+      "position": [
+        400,
+        500
+      ],
+      "parameters": {
+        "name": "Create Translation Routes",
+        "typeVersion": 1,
+        "position": [
+          900,
+          250
+        ],
+        "parameters": {}
+      }
+    },
+    {
+      "id": "create_navigation_routes",
+      "name": "Create Navigation Routes",
+      "type": "web.route_navigation",
+      "typeVersion": 1,
+      "position": [
+        700,
+        500
+      ],
+      "parameters": {
+        "name": "Create Navigation Routes",
+        "typeVersion": 1,
+        "position": [
+          900,
+          350
+        ],
+        "parameters": {}
+      }
+    },
+    {
+      "id": "register_context",
+      "name": "Register Context",
+      "type": "web.register_blueprint",
+      "typeVersion": 1,
+      "position": [
+        100,
+        700
+      ],
+      "parameters": {
+        "name": "Register Context Blueprint",
+        "typeVersion": 1,
+        "position": [
+          1200,
+          -150
+        ],
+        "parameters": {
+          "blueprint": "={{$node.create_context_routes.json.result}}"
+        }
+      }
+    },
+    {
+      "id": "register_run",
+      "name": "Register Run",
+      "type": "web.register_blueprint",
+      "typeVersion": 1,
+      "position": [
+        400,
+        700
+      ],
+      "parameters": {
+        "name": "Register Run Blueprint",
+        "typeVersion": 1,
+        "position": [
+          1200,
+          -50
+        ],
+        "parameters": {
+          "blueprint": "={{$node.create_run_routes.json.result}}"
+        }
+      }
+    },
+    {
+      "id": "register_prompt",
+      "name": "Register Prompt",
+      "type": "web.register_blueprint",
+      "typeVersion": 1,
+      "position": [
+        700,
+        700
+      ],
+      "parameters": {
+        "name": "Register Prompt Blueprint",
+        "typeVersion": 1,
+        "position": [
+          1200,
+          50
+        ],
+        "parameters": {
+          "blueprint": "={{$node.create_prompt_routes.json.result}}"
+        }
+      }
+    },
+    {
+      "id": "register_settings",
+      "name": "Register Settings",
+      "type": "web.register_blueprint",
+      "typeVersion": 1,
+      "position": [
+        100,
+        900
+      ],
+      "parameters": {
+        "name": "Register Settings Blueprint",
+        "typeVersion": 1,
+        "position": [
+          1200,
+          150
+        ],
+        "parameters": {
+          "blueprint": "={{$node.create_settings_routes.json.result}}"
+        }
+      }
+    },
+    {
+      "id": "register_translations",
+      "name": "Register Translations",
+      "type": "web.register_blueprint",
+      "typeVersion": 1,
+      "position": [
+        400,
+        900
+      ],
+      "parameters": {
+        "name": "Register Translations Blueprint",
+        "typeVersion": 1,
+        "position": [
+          1200,
+          250
+        ],
+        "parameters": {
+          "blueprint": "={{$node.create_translations_routes.json.result}}"
+        }
+      }
+    },
+    {
+      "id": "register_navigation",
+      "name": "Register Navigation",
+      "type": "web.register_blueprint",
+      "typeVersion": 1,
+      "position": [
+        700,
+        900
+      ],
+      "parameters": {
+        "name": "Register Navigation Blueprint",
+        "typeVersion": 1,
+        "position": [
+          1200,
+          350
+        ],
+        "parameters": {
+          "blueprint": "={{$node.create_navigation_routes.json.result}}"
+        }
+      }
+    },
+    {
+      "id": "start_server",
+      "name": "Start Server",
+      "type": "web.start_server",
+      "typeVersion": 1,
+      "position": [
+        100,
+        1100
+      ],
+      "parameters": {
+        "name": "Start Web Server",
+        "typeVersion": 1,
+        "position": [
+          1500,
+          100
+        ],
+        "parameters": {
+          "host": "0.0.0.0",
+          "port": 8000,
+          "debug": false
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Configure Logging": {
+      "main": {
+        "0": [
+          {
+            "node": "[object Object]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Load Environment": {
+      "main": {
+        "0": [
+          {
+            "node": "[object Object]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Create Flask App": {
+      "main": {
+        "0": [
+          {
+            "node": "[object Object]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Create Context Routes": {
+      "main": {
+        "0": [
+          {
+            "node": "[object Object]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Create Run Routes": {
+      "main": {
+        "0": [
+          {
+            "node": "[object Object]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Create Prompt Routes": {
+      "main": {
+        "0": [
+          {
+            "node": "[object Object]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Create Settings Routes": {
+      "main": {
+        "0": [
+          {
+            "node": "[object Object]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Create Translation Routes": {
+      "main": {
+        "0": [
+          {
+            "node": "[object Object]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Create Navigation Routes": {
+      "main": {
+        "0": [
+          {
+            "node": "[object Object]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Register Context Blueprint": {
+      "main": {
+        "0": [
+          {
+            "node": "[object Object]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Register Run Blueprint": {
+      "main": {
+        "0": [
+          {
+            "node": "[object Object]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Register Prompt Blueprint": {
+      "main": {
+        "0": [
+          {
+            "node": "[object Object]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Register Settings Blueprint": {
+      "main": {
+        "0": [
+          {
+            "node": "[object Object]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Register Translations Blueprint": {
+      "main": {
+        "0": [
+          {
+            "node": "[object Object]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Register Navigation Blueprint": {
+      "main": {
+        "0": [
+          {
+            "node": "[object Object]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    }
+  },
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  }
+}

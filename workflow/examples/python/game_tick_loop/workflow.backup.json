@@ -8,10 +8,26 @@
       "type": "core.seed_messages",
       "typeVersion": 1,
       "position": [
-        0,
-        50
+        100,
+        100
       ],
-      "parameters": {}
+      "parameters": {
+        "name": "Seed Messages",
+        "typeVersion": 1,
+        "position": [
+          100,
+          100
+        ],
+        "parameters": {
+          "name": "Seed Messages",
+          "typeVersion": 1,
+          "position": [
+            0,
+            50
+          ],
+          "parameters": {}
+        }
+      }
     },
     {
       "id": "map_ticks",
@@ -19,16 +35,32 @@
       "type": "utils.map_list",
       "typeVersion": 1,
       "position": [
-        300,
-        50
+        400,
+        100
       ],
       "parameters": {
-        "items": [
-          "tick_start",
-          "tick_update",
-          "tick_render"
+        "name": "Map Ticks",
+        "typeVersion": 1,
+        "position": [
+          400,
+          100
         ],
-        "template": "Tick: {item}"
+        "parameters": {
+          "name": "Map Ticks",
+          "typeVersion": 1,
+          "position": [
+            300,
+            50
+          ],
+          "parameters": {
+            "items": [
+              "tick_start",
+              "tick_update",
+              "tick_render"
+            ],
+            "template": "Tick: {item}"
+          }
+        }
       }
     },
     {
@@ -37,12 +69,28 @@
       "type": "utils.reduce_list",
       "typeVersion": 1,
       "position": [
-        600,
-        50
+        700,
+        100
       ],
       "parameters": {
-        "items": "$tick_lines",
-        "separator": "\\n"
+        "name": "Reduce Ticks",
+        "typeVersion": 1,
+        "position": [
+          700,
+          100
+        ],
+        "parameters": {
+          "name": "Reduce Ticks",
+          "typeVersion": 1,
+          "position": [
+            600,
+            50
+          ],
+          "parameters": {
+            "items": "$tick_lines",
+            "separator": "\\n"
+          }
+        }
       }
     },
     {
@@ -51,12 +99,28 @@
       "type": "core.append_context_message",
       "typeVersion": 1,
       "position": [
-        900,
-        50
+        100,
+        300
       ],
       "parameters": {
-        "messages": "$messages",
-        "context": "$tick_context"
+        "name": "Append Tick Context",
+        "typeVersion": 1,
+        "position": [
+          100,
+          300
+        ],
+        "parameters": {
+          "name": "Append Tick Context",
+          "typeVersion": 1,
+          "position": [
+            900,
+            50
+          ],
+          "parameters": {
+            "messages": "$messages",
+            "context": "$tick_context"
+          }
+        }
       }
     },
     {
@@ -65,13 +129,29 @@
       "type": "control.loop",
       "typeVersion": 1,
       "position": [
-        1200,
-        50
+        400,
+        300
       ],
       "parameters": {
-        "max_iterations": 3,
-        "stop_when": "$no_tool_calls",
-        "stop_on": "true"
+        "name": "Main Loop",
+        "typeVersion": 1,
+        "position": [
+          400,
+          300
+        ],
+        "parameters": {
+          "name": "Main Loop",
+          "typeVersion": 1,
+          "position": [
+            1200,
+            50
+          ],
+          "parameters": {
+            "max_iterations": 3,
+            "stop_when": "$no_tool_calls",
+            "stop_on": "true"
+          }
+        }
       }
     }
   ],
@@ -80,7 +160,7 @@
       "main": {
         "0": [
           {
-            "node": "Reduce Ticks",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -91,7 +171,7 @@
       "main": {
         "0": [
           {
-            "node": "Append Tick Context",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -102,7 +182,7 @@
       "main": {
         "0": [
           {
-            "node": "Append Tick Context",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -110,14 +190,13 @@
       }
     }
   },
-  "triggers": [
-    {
-      "nodeId": "seed_messages",
-      "kind": "manual",
-      "enabled": true,
-      "meta": {
-        "description": "Manually triggered meta.workflow_packages.game_tick_loop.label workflow execution"
-      }
-    }
-  ]
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  }
 }

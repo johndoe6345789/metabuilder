@@ -12,9 +12,17 @@
         100
       ],
       "parameters": {
-        "input": "{{ $context.tenantId }}",
-        "operation": "validate",
-        "validator": "required"
+        "name": "Validate Tenant",
+        "typeVersion": 1,
+        "position": [
+          100,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $context.tenantId }}",
+          "operation": "validate",
+          "validator": "required"
+        }
       }
     },
     {
@@ -27,14 +35,22 @@
         100
       ],
       "parameters": {
-        "output": {
-          "categoryId": "{{ $json.categoryId }}",
-          "sortBy": "{{ $json.sortBy || 'updatedAt' }}",
-          "sortOrder": "{{ $json.sortOrder || 'desc' }}",
-          "limit": "{{ Math.min($json.limit || 20, 100) }}",
-          "page": "{{ $json.page || 1 }}"
-        },
-        "operation": "transform_data"
+        "name": "Extract Params",
+        "typeVersion": 1,
+        "position": [
+          400,
+          100
+        ],
+        "parameters": {
+          "output": {
+            "categoryId": "{{ $json.categoryId }}",
+            "sortBy": "{{ $json.sortBy || 'updatedAt' }}",
+            "sortOrder": "{{ $json.sortOrder || 'desc' }}",
+            "limit": "{{ Math.min($json.limit || 20, 100) }}",
+            "page": "{{ $json.page || 1 }}"
+          },
+          "operation": "transform_data"
+        }
       }
     },
     {
@@ -47,8 +63,16 @@
         100
       ],
       "parameters": {
-        "output": "{{ ($steps.extract_params.output.page - 1) * $steps.extract_params.output.limit }}",
-        "operation": "transform_data"
+        "name": "Calculate Offset",
+        "typeVersion": 1,
+        "position": [
+          700,
+          100
+        ],
+        "parameters": {
+          "output": "{{ ($steps.extract_params.output.page - 1) * $steps.extract_params.output.limit }}",
+          "operation": "transform_data"
+        }
       }
     },
     {
@@ -61,17 +85,25 @@
         300
       ],
       "parameters": {
-        "filter": {
-          "tenantId": "{{ $context.tenantId }}",
-          "categoryId": "{{ $steps.extract_params.output.categoryId }}"
-        },
-        "sort": {
-          "{{ $steps.extract_params.output.sortBy }}": "{{ $steps.extract_params.output.sortOrder === 'asc' ? 1 : -1 }}"
-        },
-        "limit": "{{ $steps.extract_params.output.limit }}",
-        "offset": "{{ $steps.calculate_offset.output }}",
-        "operation": "database_read",
-        "entity": "ForumThread"
+        "name": "Fetch Threads",
+        "typeVersion": 1,
+        "position": [
+          100,
+          300
+        ],
+        "parameters": {
+          "filter": {
+            "tenantId": "{{ $context.tenantId }}",
+            "categoryId": "{{ $steps.extract_params.output.categoryId }}"
+          },
+          "sort": {
+            "{{ $steps.extract_params.output.sortBy }}": "{{ $steps.extract_params.output.sortOrder === 'asc' ? 1 : -1 }}"
+          },
+          "limit": "{{ $steps.extract_params.output.limit }}",
+          "offset": "{{ $steps.calculate_offset.output }}",
+          "operation": "database_read",
+          "entity": "ForumThread"
+        }
       }
     },
     {
@@ -84,12 +116,20 @@
         300
       ],
       "parameters": {
-        "filter": {
-          "tenantId": "{{ $context.tenantId }}",
-          "categoryId": "{{ $steps.extract_params.output.categoryId }}"
-        },
-        "operation": "database_count",
-        "entity": "ForumThread"
+        "name": "Fetch Total",
+        "typeVersion": 1,
+        "position": [
+          400,
+          300
+        ],
+        "parameters": {
+          "filter": {
+            "tenantId": "{{ $context.tenantId }}",
+            "categoryId": "{{ $steps.extract_params.output.categoryId }}"
+          },
+          "operation": "database_count",
+          "entity": "ForumThread"
+        }
       }
     },
     {
@@ -102,16 +142,24 @@
         300
       ],
       "parameters": {
-        "output": {
-          "threads": "{{ $steps.fetch_threads.output }}",
-          "pagination": {
-            "total": "{{ $steps.fetch_total.output }}",
-            "page": "{{ $steps.extract_params.output.page }}",
-            "limit": "{{ $steps.extract_params.output.limit }}",
-            "totalPages": "{{ Math.ceil($steps.fetch_total.output / $steps.extract_params.output.limit) }}"
-          }
-        },
-        "operation": "transform_data"
+        "name": "Format Response",
+        "typeVersion": 1,
+        "position": [
+          700,
+          300
+        ],
+        "parameters": {
+          "output": {
+            "threads": "{{ $steps.fetch_threads.output }}",
+            "pagination": {
+              "total": "{{ $steps.fetch_total.output }}",
+              "page": "{{ $steps.extract_params.output.page }}",
+              "limit": "{{ $steps.extract_params.output.limit }}",
+              "totalPages": "{{ Math.ceil($steps.fetch_total.output / $steps.extract_params.output.limit) }}"
+            }
+          },
+          "operation": "transform_data"
+        }
       }
     },
     {
@@ -124,17 +172,23 @@
         500
       ],
       "parameters": {
-        "action": "http_response",
-        "status": 200,
-        "body": "{{ $steps.format_response.output }}"
+        "name": "Return Success",
+        "typeVersion": 1,
+        "position": [
+          100,
+          500
+        ],
+        "parameters": {
+          "action": "http_response",
+          "status": 200,
+          "body": "{{ $steps.format_response.output }}"
+        }
       }
     }
   ],
   "connections": {},
   "staticData": {},
-  "meta": {
-    "description": "List forum threads in a category with pagination and sorting"
-  },
+  "meta": {},
   "settings": {
     "timezone": "UTC",
     "executionTimeout": 3600,

@@ -1,0 +1,75 @@
+{
+  "version": "2.2.0",
+  "name": "List Users",
+  "description": "List all users in tenant with pagination",
+  "trigger": {
+    "type": "http",
+    "method": "GET",
+    "path": "/users"
+  },
+  "nodes": [
+    {
+      "id": "validate_context",
+      "type": "operation",
+      "op": "validate",
+      "input": "{{ $context.tenantId }}",
+      "validator": "required"
+    },
+    {
+      "id": "extract_pagination",
+      "type": "operation",
+      "op": "transform_data",
+      "output": {
+        "limit": "{{ Math.min($json.limit || 50, 500) }}",
+        "offset": "{{ ($json.page || 1 - 1) * ($json.limit || 50) }}"
+      }
+    },
+    {
+      "id": "fetch_users",
+      "type": "operation",
+      "op": "database_read",
+      "entity": "User",
+      "params": {
+        "filter": {
+          "tenantId": "{{ $context.tenantId }}"
+        },
+        "sort": {
+          "createdAt": -1
+        },
+        "limit": "{{ $steps.extract_pagination.output.limit }}",
+        "offset": "{{ $steps.extract_pagination.output.offset }}"
+      }
+    },
+    {
+      "id": "count_total",
+      "type": "operation",
+      "op": "database_count",
+      "entity": "User",
+      "params": {
+        "filter": {
+          "tenantId": "{{ $context.tenantId }}"
+        }
+      }
+    },
+    {
+      "id": "format_response",
+      "type": "operation",
+      "op": "transform_data",
+      "output": {
+        "users": "{{ $steps.fetch_users.output.map(u => ({ id: u.id, email: u.email, displayName: u.displayName, level: u.level, isActive: u.isActive, createdAt: u.createdAt })) }}",
+        "pagination": {
+          "total": "{{ $steps.count_total.output }}",
+          "limit": "{{ $steps.extract_pagination.output.limit }}",
+          "page": "{{ $json.page || 1 }}"
+        }
+      }
+    },
+    {
+      "id": "return_success",
+      "type": "action",
+      "action": "http_response",
+      "status": 200,
+      "body": "{{ $steps.format_response.output }}"
+    }
+  ]
+}

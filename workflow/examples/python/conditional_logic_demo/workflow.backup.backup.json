@@ -1,0 +1,147 @@
+{
+  "name": "Conditional Logic Demo",
+  "active": false,
+  "nodes": [
+    {
+      "id": "create_user_data",
+      "name": "Create User Data",
+      "type": "var.set",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "name": "Create User Data",
+        "typeVersion": 1,
+        "position": [
+          0,
+          100
+        ],
+        "parameters": {
+          "key": "user",
+          "value": {
+            "name": "Alice",
+            "age": 25,
+            "score": 85,
+            "role": "developer"
+          }
+        }
+      }
+    },
+    {
+      "id": "extract_age",
+      "name": "Extract Age",
+      "type": "dict.get",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "name": "Extract Age",
+        "typeVersion": 1,
+        "position": [
+          300,
+          50
+        ],
+        "parameters": {
+          "object": "$user",
+          "key": "age"
+        }
+      }
+    },
+    {
+      "id": "check_adult",
+      "name": "Check Adult",
+      "type": "logic.gte",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "name": "Check If Adult",
+        "typeVersion": 1,
+        "position": [
+          600,
+          100
+        ],
+        "parameters": {
+          "a": "$age",
+          "b": 18
+        }
+      }
+    },
+    {
+      "id": "format_report",
+      "name": "Format Report",
+      "type": "string.format",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "name": "Format Final Report",
+        "typeVersion": 1,
+        "position": [
+          900,
+          100
+        ],
+        "parameters": {
+          "template": "User: {name}, Age: {age}, Adult: {is_adult}",
+          "variables": {
+            "name": "Alice",
+            "age": "$age",
+            "is_adult": "$is_adult"
+          }
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Create User Data": {
+      "main": {
+        "0": [
+          {
+            "node": "[object Object]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Extract Age": {
+      "main": {
+        "0": [
+          {
+            "node": "[object Object]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Check If Adult": {
+      "main": {
+        "0": [
+          {
+            "node": "[object Object]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    }
+  },
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  }
+}

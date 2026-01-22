@@ -12,12 +12,20 @@
         100
       ],
       "parameters": {
-        "input": "{{ $json }}",
-        "output": {
-          "page": "{{ Math.max($json.page || 1, 1) }}",
-          "limit": "{{ Math.min($json.limit || 50, 500) }}"
-        },
-        "operation": "transform_data"
+        "name": "Extract Pagination Params",
+        "typeVersion": 1,
+        "position": [
+          100,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $json }}",
+          "output": {
+            "page": "{{ Math.max($json.page || 1, 1) }}",
+            "limit": "{{ Math.min($json.limit || 50, 500) }}"
+          },
+          "operation": "transform_data"
+        }
       }
     },
     {
@@ -30,8 +38,16 @@
         100
       ],
       "parameters": {
-        "output": "{{ ($steps.extract_pagination_params.output.page - 1) * $steps.extract_pagination_params.output.limit }}",
-        "operation": "transform_data"
+        "name": "Calculate Offset",
+        "typeVersion": 1,
+        "position": [
+          400,
+          100
+        ],
+        "parameters": {
+          "output": "{{ ($steps.extract_pagination_params.output.page - 1) * $steps.extract_pagination_params.output.limit }}",
+          "operation": "transform_data"
+        }
       }
     },
     {
@@ -44,9 +60,17 @@
         100
       ],
       "parameters": {
-        "input": "{{ $json.data }}",
-        "output": "{{ $json.data.slice($steps.calculate_offset.output, $steps.calculate_offset.output + $steps.extract_pagination_params.output.limit) }}",
-        "operation": "transform_data"
+        "name": "Slice Data",
+        "typeVersion": 1,
+        "position": [
+          700,
+          100
+        ],
+        "parameters": {
+          "input": "{{ $json.data }}",
+          "output": "{{ $json.data.slice($steps.calculate_offset.output, $steps.calculate_offset.output + $steps.extract_pagination_params.output.limit) }}",
+          "operation": "transform_data"
+        }
       }
     },
     {
@@ -59,8 +83,16 @@
         300
       ],
       "parameters": {
-        "output": "{{ Math.ceil($json.data.length / $steps.extract_pagination_params.output.limit) }}",
-        "operation": "transform_data"
+        "name": "Calculate Total Pages",
+        "typeVersion": 1,
+        "position": [
+          100,
+          300
+        ],
+        "parameters": {
+          "output": "{{ Math.ceil($json.data.length / $steps.extract_pagination_params.output.limit) }}",
+          "operation": "transform_data"
+        }
       }
     },
     {
@@ -73,26 +105,32 @@
         300
       ],
       "parameters": {
-        "data": {
-          "data": "{{ $steps.slice_data.output }}",
-          "pagination": {
-            "page": "{{ $steps.extract_pagination_params.output.page }}",
-            "limit": "{{ $steps.extract_pagination_params.output.limit }}",
-            "total": "{{ $json.data.length }}",
-            "totalPages": "{{ $steps.calculate_total_pages.output }}",
-            "hasMore": "{{ $steps.extract_pagination_params.output.page < $steps.calculate_total_pages.output }}"
-          }
-        },
-        "action": "emit_event",
-        "event": "data_paginated"
+        "name": "Return Paginated",
+        "typeVersion": 1,
+        "position": [
+          400,
+          300
+        ],
+        "parameters": {
+          "data": {
+            "data": "{{ $steps.slice_data.output }}",
+            "pagination": {
+              "page": "{{ $steps.extract_pagination_params.output.page }}",
+              "limit": "{{ $steps.extract_pagination_params.output.limit }}",
+              "total": "{{ $json.data.length }}",
+              "totalPages": "{{ $steps.calculate_total_pages.output }}",
+              "hasMore": "{{ $steps.extract_pagination_params.output.page < $steps.calculate_total_pages.output }}"
+            }
+          },
+          "action": "emit_event",
+          "event": "data_paginated"
+        }
       }
     }
   ],
   "connections": {},
   "staticData": {},
-  "meta": {
-    "description": "Apply pagination logic to data results"
-  },
+  "meta": {},
   "settings": {
     "timezone": "UTC",
     "executionTimeout": 3600,
