@@ -1,0 +1,87 @@
+{
+  "name": "Download Artifact",
+  "description": "Download a package artifact blob",
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "parse_path",
+      "type": "packagerepo.parse_path",
+      "parameters": {
+        "path": "$request.path",
+        "pattern": "/v1/:namespace/:name/:version/:variant/blob",
+        "out": "entity"
+      }
+    },
+    {
+      "id": "normalize",
+      "type": "packagerepo.normalize_entity",
+      "parameters": {
+        "entity": "$entity",
+        "out": "normalized"
+      }
+    },
+    {
+      "id": "get_meta",
+      "type": "packagerepo.kv_get",
+      "parameters": {
+        "key": "artifact/$entity.namespace/$entity.name/$entity.version/$entity.variant",
+        "out": "metadata"
+      }
+    },
+    {
+      "id": "check_exists",
+      "type": "logic.if",
+      "parameters": {
+        "condition": "$metadata == null",
+        "then": "error_not_found",
+        "else": "read_blob"
+      }
+    },
+    {
+      "id": "read_blob",
+      "type": "packagerepo.blob_get",
+      "parameters": {
+        "digest": "$metadata.digest",
+        "out": "blob_data"
+      }
+    },
+    {
+      "id": "check_blob_exists",
+      "type": "logic.if",
+      "parameters": {
+        "condition": "$blob_data == null",
+        "then": "error_blob_missing",
+        "else": "respond_blob"
+      }
+    },
+    {
+      "id": "respond_blob",
+      "type": "packagerepo.respond_blob",
+      "parameters": {
+        "data": "$blob_data",
+        "headers": {
+          "Content-Type": "application/octet-stream",
+          "Content-Digest": "sha-256=$metadata.digest",
+          "Content-Length": "$metadata.size"
+        },
+        "status": 200
+      }
+    },
+    {
+      "id": "error_not_found",
+      "type": "packagerepo.respond_error",
+      "parameters": {
+        "message": "Artifact not found",
+        "status": 404
+      }
+    },
+    {
+      "id": "error_blob_missing",
+      "type": "packagerepo.respond_error",
+      "parameters": {
+        "message": "Artifact blob data missing",
+        "status": 500
+      }
+    }
+  ]
+}

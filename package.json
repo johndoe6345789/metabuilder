@@ -18,7 +18,9 @@
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:debug": "playwright test --debug",
     "test:e2e:report": "playwright show-report",
-    "test:e2e:json": "playwright test e2e/json-packages.spec.ts"
+    "test:e2e:json": "playwright test e2e/json-packages.spec.ts",
+    "migrate:workflows": "ts-node scripts/migrate-workflows-to-n8n.ts",
+    "migrate:workflows:dry": "ts-node scripts/migrate-workflows-to-n8n.ts --dry-run"
   },
   "workspaces": [
     "dbal/development",
