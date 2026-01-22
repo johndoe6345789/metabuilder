@@ -1,0 +1,124 @@
+{
+  "name": "Publish Artifact",
+  "description": "Upload and store a package artifact",
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "verify_auth",
+      "type": "packagerepo.auth_verify_jwt",
+      "parameters": {
+        "token": "$request.headers.Authorization",
+        "out": "principal"
+      }
+    },
+    {
+      "id": "check_write_scope",
+      "type": "packagerepo.auth_check_scopes",
+      "parameters": {
+        "principal": "$principal",
+        "required_scopes": ["write"]
+      }
+    },
+    {
+      "id": "parse_path",
+      "type": "packagerepo.parse_path",
+      "parameters": {
+        "path": "$request.path",
+        "pattern": "/v1/:namespace/:name/:version/:variant/blob",
+        "out": "entity"
+      }
+    },
+    {
+      "id": "normalize",
+      "type": "packagerepo.normalize_entity",
+      "parameters": {
+        "entity": "$entity",
+        "out": "normalized"
+      }
+    },
+    {
+      "id": "validate",
+      "type": "packagerepo.validate_entity",
+      "parameters": {
+        "entity": "$normalized"
+      }
+    },
+    {
+      "id": "compute_digest",
+      "type": "string.sha256",
+      "parameters": {
+        "input": "$request.body",
+        "out": "digest"
+      }
+    },
+    {
+      "id": "check_exists",
+      "type": "packagerepo.kv_get",
+      "parameters": {
+        "key": "artifact/$entity.namespace/$entity.name/$entity.version/$entity.variant",
+        "out": "existing"
+      }
+    },
+    {
+      "id": "if_exists",
+      "type": "logic.if",
+      "parameters": {
+        "condition": "$existing != null",
+        "then": "error_exists",
+        "else": "write_blob"
+      }
+    },
+    {
+      "id": "write_blob",
+      "type": "packagerepo.blob_put",
+      "parameters": {
+        "digest": "$digest",
+        "data": "$request.body"
+      }
+    },
+    {
+      "id": "write_meta",
+      "type": "packagerepo.kv_put",
+      "parameters": {
+        "key": "artifact/$entity.namespace/$entity.name/$entity.version/$entity.variant",
+        "value": {
+          "digest": "$digest",
+          "size": "$request.content_length",
+          "uploaded_at": "$timestamp",
+          "uploaded_by": "$principal.sub"
+        }
+      }
+    },
+    {
+      "id": "update_index",
+      "type": "packagerepo.index_upsert",
+      "parameters": {
+        "key": "$entity.namespace/$entity.name",
+        "entry": {
+          "version": "$entity.version",
+          "variant": "$entity.variant",
+          "digest": "$digest"
+        }
+      }
+    },
+    {
+      "id": "success",
+      "type": "packagerepo.respond_json",
+      "parameters": {
+        "body": {
+          "ok": true,
+          "digest": "$digest"
+        },
+        "status": 201
+      }
+    },
+    {
+      "id": "error_exists",
+      "type": "packagerepo.respond_error",
+      "parameters": {
+        "message": "Artifact already exists",
+        "status": 409
+      }
+    }
+  ]
+}
