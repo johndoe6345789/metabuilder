@@ -22,16 +22,24 @@
           "name": "Create User Data",
           "typeVersion": 1,
           "position": [
-            0,
+            100,
             100
           ],
           "parameters": {
-            "key": "user",
-            "value": {
-              "name": "Alice",
-              "age": 25,
-              "score": 85,
-              "role": "developer"
+            "name": "Create User Data",
+            "typeVersion": 1,
+            "position": [
+              0,
+              100
+            ],
+            "parameters": {
+              "key": "user",
+              "value": {
+                "name": "Alice",
+                "age": 25,
+                "score": 85,
+                "role": "developer"
+              }
             }
           }
         }
@@ -57,12 +65,20 @@
           "name": "Extract Age",
           "typeVersion": 1,
           "position": [
-            300,
-            50
+            400,
+            100
           ],
           "parameters": {
-            "object": "$user",
-            "key": "age"
+            "name": "Extract Age",
+            "typeVersion": 1,
+            "position": [
+              300,
+              50
+            ],
+            "parameters": {
+              "object": "$user",
+              "key": "age"
+            }
           }
         }
       }
@@ -84,15 +100,23 @@
           100
         ],
         "parameters": {
-          "name": "Check If Adult",
+          "name": "Check Adult",
           "typeVersion": 1,
           "position": [
-            600,
+            700,
             100
           ],
           "parameters": {
-            "a": "$age",
-            "b": 18
+            "name": "Check If Adult",
+            "typeVersion": 1,
+            "position": [
+              600,
+              100
+            ],
+            "parameters": {
+              "a": "$age",
+              "b": 18
+            }
           }
         }
       }
@@ -114,18 +138,26 @@
           300
         ],
         "parameters": {
-          "name": "Format Final Report",
+          "name": "Format Report",
           "typeVersion": 1,
           "position": [
-            900,
-            100
+            100,
+            300
           ],
           "parameters": {
-            "template": "User: {name}, Age: {age}, Adult: {is_adult}",
-            "variables": {
-              "name": "Alice",
-              "age": "$age",
-              "is_adult": "$is_adult"
+            "name": "Format Final Report",
+            "typeVersion": 1,
+            "position": [
+              900,
+              100
+            ],
+            "parameters": {
+              "template": "User: {name}, Age: {age}, Adult: {is_adult}",
+              "variables": {
+                "name": "Alice",
+                "age": "$age",
+                "is_adult": "$is_adult"
+              }
             }
           }
         }

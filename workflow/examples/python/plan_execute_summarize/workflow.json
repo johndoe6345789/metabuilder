@@ -22,10 +22,18 @@
           "name": "Load Context",
           "typeVersion": 1,
           "position": [
-            0,
-            50
+            100,
+            100
           ],
-          "parameters": {}
+          "parameters": {
+            "name": "Load Context",
+            "typeVersion": 1,
+            "position": [
+              0,
+              50
+            ],
+            "parameters": {}
+          }
         }
       }
     },
@@ -49,10 +57,18 @@
           "name": "Seed Messages",
           "typeVersion": 1,
           "position": [
-            300,
-            50
+            400,
+            100
           ],
-          "parameters": {}
+          "parameters": {
+            "name": "Seed Messages",
+            "typeVersion": 1,
+            "position": [
+              300,
+              50
+            ],
+            "parameters": {}
+          }
         }
       }
     },
@@ -76,12 +92,20 @@
           "name": "Append Context",
           "typeVersion": 1,
           "position": [
-            600,
-            50
+            700,
+            100
           ],
           "parameters": {
-            "messages": "$messages",
-            "context": "$sdlc_context"
+            "name": "Append Context",
+            "typeVersion": 1,
+            "position": [
+              600,
+              50
+            ],
+            "parameters": {
+              "messages": "$messages",
+              "context": "$sdlc_context"
+            }
           }
         }
       }
@@ -106,11 +130,19 @@
           "name": "Append User Instruction",
           "typeVersion": 1,
           "position": [
-            900,
-            50
+            100,
+            300
           ],
           "parameters": {
-            "messages": "$messages"
+            "name": "Append User Instruction",
+            "typeVersion": 1,
+            "position": [
+              900,
+              50
+            ],
+            "parameters": {
+              "messages": "$messages"
+            }
           }
         }
       }
@@ -135,11 +167,19 @@
           "name": "Planner Request",
           "typeVersion": 1,
           "position": [
-            1200,
-            50
+            400,
+            300
           ],
           "parameters": {
-            "messages": "$messages"
+            "name": "Planner Request",
+            "typeVersion": 1,
+            "position": [
+              1200,
+              50
+            ],
+            "parameters": {
+              "messages": "$messages"
+            }
           }
         }
       }
@@ -164,11 +204,19 @@
           "name": "Run Tool Calls",
           "typeVersion": 1,
           "position": [
-            1500,
-            50
+            700,
+            300
           ],
           "parameters": {
-            "response": "$llm_response"
+            "name": "Run Tool Calls",
+            "typeVersion": 1,
+            "position": [
+              1500,
+              50
+            ],
+            "parameters": {
+              "response": "$llm_response"
+            }
           }
         }
       }
@@ -193,12 +241,20 @@
           "name": "Append Tool Results",
           "typeVersion": 1,
           "position": [
-            1800,
-            50
+            100,
+            500
           ],
           "parameters": {
-            "messages": "$messages",
-            "tool_results": "$tool_results"
+            "name": "Append Tool Results",
+            "typeVersion": 1,
+            "position": [
+              1800,
+              50
+            ],
+            "parameters": {
+              "messages": "$messages",
+              "tool_results": "$tool_results"
+            }
           }
         }
       }
@@ -223,11 +279,19 @@
           "name": "Summary Request",
           "typeVersion": 1,
           "position": [
-            2100,
-            50
+            400,
+            500
           ],
           "parameters": {
-            "messages": "$messages"
+            "name": "Summary Request",
+            "typeVersion": 1,
+            "position": [
+              2100,
+              50
+            ],
+            "parameters": {
+              "messages": "$messages"
+            }
           }
         }
       }

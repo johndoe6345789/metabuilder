@@ -1,0 +1,181 @@
+{
+  "name": "Join IRC Channel",
+  "active": false,
+  "nodes": [
+    {
+      "id": "validate_context",
+      "name": "Validate Context",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "name": "Validate Context",
+        "typeVersion": 1,
+        "position": [
+          100,
+          100
+        ],
+        "parameters": {
+          "name": "Validate Context",
+          "typeVersion": 1,
+          "position": [
+            100,
+            100
+          ],
+          "parameters": {
+            "input": "{{ $context.user.id }}",
+            "operation": "validate",
+            "validator": "required"
+          }
+        }
+      }
+    },
+    {
+      "id": "fetch_channel",
+      "name": "Fetch Channel",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "name": "Fetch Channel",
+        "typeVersion": 1,
+        "position": [
+          400,
+          100
+        ],
+        "parameters": {
+          "name": "Fetch Channel",
+          "typeVersion": 1,
+          "position": [
+            400,
+            100
+          ],
+          "parameters": {
+            "filter": {
+              "id": "{{ $json.channelId }}",
+              "tenantId": "{{ $context.tenantId }}"
+            },
+            "operation": "database_read",
+            "entity": "IRCChannel"
+          }
+        }
+      }
+    },
+    {
+      "id": "check_channel_mode",
+      "name": "Check Channel Mode",
+      "type": "metabuilder.condition",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "name": "Check Channel Mode",
+        "typeVersion": 1,
+        "position": [
+          700,
+          100
+        ],
+        "parameters": {
+          "name": "Check Channel Mode",
+          "typeVersion": 1,
+          "position": [
+            700,
+            100
+          ],
+          "parameters": {
+            "condition": "{{ $steps.fetch_channel.output.mode === 'public' || ($context.user.level >= 2 && $steps.fetch_channel.output.mode === 'private') }}",
+            "operation": "condition"
+          }
+        }
+      }
+    },
+    {
+      "id": "create_membership",
+      "name": "Create Membership",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "name": "Create Membership",
+        "typeVersion": 1,
+        "position": [
+          100,
+          300
+        ],
+        "parameters": {
+          "name": "Create Membership",
+          "typeVersion": 1,
+          "position": [
+            100,
+            300
+          ],
+          "parameters": {
+            "data": {
+              "channelId": "{{ $json.channelId }}",
+              "userId": "{{ $context.user.id }}",
+              "joinedAt": "{{ new Date().toISOString() }}"
+            },
+            "operation": "database_create",
+            "entity": "IRCMembership"
+          }
+        }
+      }
+    },
+    {
+      "id": "emit_join",
+      "name": "Emit Join",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "name": "Emit Join",
+        "typeVersion": 1,
+        "position": [
+          400,
+          300
+        ],
+        "parameters": {
+          "name": "Emit Join",
+          "typeVersion": 1,
+          "position": [
+            400,
+            300
+          ],
+          "parameters": {
+            "data": {
+              "userId": "{{ $context.user.id }}",
+              "channelId": "{{ $json.channelId }}"
+            },
+            "action": "emit_event",
+            "event": "user_joined",
+            "channel": "{{ 'irc:' + $json.channelId }}"
+          }
+        }
+      }
+    }
+  ],
+  "connections": {},
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  }
+}

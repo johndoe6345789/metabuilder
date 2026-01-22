@@ -22,23 +22,31 @@
           "name": "Test Concat",
           "typeVersion": 1,
           "position": [
-            0,
-            0
+            100,
+            100
           ],
           "parameters": {
-            "lists": [
-              [
-                1,
-                2
-              ],
-              [
-                3,
-                4
-              ],
-              [
-                5
+            "name": "Test Concat",
+            "typeVersion": 1,
+            "position": [
+              0,
+              0
+            ],
+            "parameters": {
+              "lists": [
+                [
+                  1,
+                  2
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  5
+                ]
               ]
-            ]
+            }
           }
         }
       }
@@ -63,11 +71,19 @@
           "name": "Assert Concat Length",
           "typeVersion": 1,
           "position": [
-            300,
-            0
+            400,
+            100
           ],
           "parameters": {
-            "items": "$test_concat.result"
+            "name": "Assert Concat Length",
+            "typeVersion": 1,
+            "position": [
+              300,
+              0
+            ],
+            "parameters": {
+              "items": "$test_concat.result"
+            }
           }
         }
       }
@@ -92,13 +108,21 @@
           "name": "Assert Concat",
           "typeVersion": 1,
           "position": [
-            600,
-            0
+            700,
+            100
           ],
           "parameters": {
-            "actual": "$assert_concat_length.result",
-            "expected": 5,
-            "message": "list.concat should concatenate lists"
+            "name": "Assert Concat",
+            "typeVersion": 1,
+            "position": [
+              600,
+              0
+            ],
+            "parameters": {
+              "actual": "$assert_concat_length.result",
+              "expected": 5,
+              "message": "list.concat should concatenate lists"
+            }
           }
         }
       }
@@ -123,17 +147,25 @@
           "name": "Test Length",
           "typeVersion": 1,
           "position": [
-            0,
-            100
+            100,
+            300
           ],
           "parameters": {
-            "items": [
-              1,
-              2,
-              3,
-              4,
-              5
-            ]
+            "name": "Test Length",
+            "typeVersion": 1,
+            "position": [
+              0,
+              100
+            ],
+            "parameters": {
+              "items": [
+                1,
+                2,
+                3,
+                4,
+                5
+              ]
+            }
           }
         }
       }
@@ -158,13 +190,21 @@
           "name": "Assert Length",
           "typeVersion": 1,
           "position": [
-            300,
-            100
+            400,
+            300
           ],
           "parameters": {
-            "actual": "$test_length.result",
-            "expected": 5,
-            "message": "list.length should count items"
+            "name": "Assert Length",
+            "typeVersion": 1,
+            "position": [
+              300,
+              100
+            ],
+            "parameters": {
+              "actual": "$test_length.result",
+              "expected": 5,
+              "message": "list.length should count items"
+            }
           }
         }
       }
@@ -189,19 +229,27 @@
           "name": "Test Slice",
           "typeVersion": 1,
           "position": [
-            0,
-            200
+            700,
+            300
           ],
           "parameters": {
-            "items": [
-              1,
-              2,
-              3,
-              4,
-              5
+            "name": "Test Slice",
+            "typeVersion": 1,
+            "position": [
+              0,
+              200
             ],
-            "start": 1,
-            "end": 3
+            "parameters": {
+              "items": [
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "start": 1,
+              "end": 3
+            }
           }
         }
       }
@@ -226,11 +274,19 @@
           "name": "Assert Slice Length",
           "typeVersion": 1,
           "position": [
-            300,
-            200
+            100,
+            500
           ],
           "parameters": {
-            "items": "$test_slice.result"
+            "name": "Assert Slice Length",
+            "typeVersion": 1,
+            "position": [
+              300,
+              200
+            ],
+            "parameters": {
+              "items": "$test_slice.result"
+            }
           }
         }
       }
@@ -255,13 +311,21 @@
           "name": "Assert Slice",
           "typeVersion": 1,
           "position": [
-            600,
-            200
+            400,
+            500
           ],
           "parameters": {
-            "actual": "$assert_slice_length.result",
-            "expected": 2,
-            "message": "list.slice should extract slice"
+            "name": "Assert Slice",
+            "typeVersion": 1,
+            "position": [
+              600,
+              200
+            ],
+            "parameters": {
+              "actual": "$assert_slice_length.result",
+              "expected": 2,
+              "message": "list.slice should extract slice"
+            }
           }
         }
       }
@@ -286,22 +350,30 @@
           "name": "Test Find",
           "typeVersion": 1,
           "position": [
-            0,
-            300
+            700,
+            500
           ],
           "parameters": {
-            "items": [
-              {
-                "id": 1,
-                "name": "Alice"
-              },
-              {
-                "id": 2,
-                "name": "Bob"
-              }
+            "name": "Test Find",
+            "typeVersion": 1,
+            "position": [
+              0,
+              300
             ],
-            "key": "name",
-            "value": "Bob"
+            "parameters": {
+              "items": [
+                {
+                  "id": 1,
+                  "name": "Alice"
+                },
+                {
+                  "id": 2,
+                  "name": "Bob"
+                }
+              ],
+              "key": "name",
+              "value": "Bob"
+            }
           }
         }
       }
@@ -323,15 +395,23 @@
           700
         ],
         "parameters": {
-          "name": "Assert Find Result",
+          "name": "Assert Find",
           "typeVersion": 1,
           "position": [
-            300,
-            300
+            100,
+            700
           ],
           "parameters": {
-            "value": "$test_find.result",
-            "message": "list.find should find item"
+            "name": "Assert Find Result",
+            "typeVersion": 1,
+            "position": [
+              300,
+              300
+            ],
+            "parameters": {
+              "value": "$test_find.result",
+              "message": "list.find should find item"
+            }
           }
         }
       }
@@ -353,15 +433,23 @@
           700
         ],
         "parameters": {
-          "name": "Assert Found Flag",
+          "name": "Assert Find Found",
           "typeVersion": 1,
           "position": [
-            600,
-            300
+            400,
+            700
           ],
           "parameters": {
-            "value": "$test_find.found",
-            "message": "list.find should set found flag"
+            "name": "Assert Found Flag",
+            "typeVersion": 1,
+            "position": [
+              600,
+              300
+            ],
+            "parameters": {
+              "value": "$test_find.found",
+              "message": "list.find should set found flag"
+            }
           }
         }
       }

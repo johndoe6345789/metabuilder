@@ -22,10 +22,18 @@
           "name": "Load Messages",
           "typeVersion": 1,
           "position": [
-            0,
-            50
+            100,
+            100
           ],
-          "parameters": {}
+          "parameters": {
+            "name": "Load Messages",
+            "typeVersion": 1,
+            "position": [
+              0,
+              50
+            ],
+            "parameters": {}
+          }
         }
       }
     },
@@ -49,10 +57,18 @@
           "name": "Load Metadata",
           "typeVersion": 1,
           "position": [
-            300,
-            50
+            400,
+            100
           ],
-          "parameters": {}
+          "parameters": {
+            "name": "Load Metadata",
+            "typeVersion": 1,
+            "position": [
+              300,
+              50
+            ],
+            "parameters": {}
+          }
         }
       }
     },
@@ -76,10 +92,18 @@
           "name": "Load Prompt",
           "typeVersion": 1,
           "position": [
-            600,
-            50
+            700,
+            100
           ],
-          "parameters": {}
+          "parameters": {
+            "name": "Load Prompt",
+            "typeVersion": 1,
+            "position": [
+              600,
+              50
+            ],
+            "parameters": {}
+          }
         }
       }
     },
@@ -100,13 +124,21 @@
           300
         ],
         "parameters": {
-          "name": "Create GitHub Client",
+          "name": "Create Github",
           "typeVersion": 1,
           "position": [
-            900,
-            50
+            100,
+            300
           ],
-          "parameters": {}
+          "parameters": {
+            "name": "Create GitHub Client",
+            "typeVersion": 1,
+            "position": [
+              900,
+              50
+            ],
+            "parameters": {}
+          }
         }
       }
     },
@@ -127,13 +159,21 @@
           300
         ],
         "parameters": {
-          "name": "Create OpenAI Client",
+          "name": "Create Openai",
           "typeVersion": 1,
           "position": [
-            1200,
-            50
+            400,
+            300
           ],
-          "parameters": {}
+          "parameters": {
+            "name": "Create OpenAI Client",
+            "typeVersion": 1,
+            "position": [
+              1200,
+              50
+            ],
+            "parameters": {}
+          }
         }
       }
     },
@@ -157,10 +197,18 @@
           "name": "Load Tools",
           "typeVersion": 1,
           "position": [
-            1500,
-            50
+            700,
+            300
           ],
-          "parameters": {}
+          "parameters": {
+            "name": "Load Tools",
+            "typeVersion": 1,
+            "position": [
+              1500,
+              50
+            ],
+            "parameters": {}
+          }
         }
       }
     },
@@ -184,10 +232,18 @@
           "name": "Build Tool Map",
           "typeVersion": 1,
           "position": [
-            1800,
-            50
+            100,
+            500
           ],
-          "parameters": {}
+          "parameters": {
+            "name": "Build Tool Map",
+            "typeVersion": 1,
+            "position": [
+              1800,
+              50
+            ],
+            "parameters": {}
+          }
         }
       }
     },
@@ -211,10 +267,18 @@
           "name": "Load Plugins",
           "typeVersion": 1,
           "position": [
-            2100,
-            50
+            400,
+            500
           ],
-          "parameters": {}
+          "parameters": {
+            "name": "Load Plugins",
+            "typeVersion": 1,
+            "position": [
+              2100,
+              50
+            ],
+            "parameters": {}
+          }
         }
       }
     }

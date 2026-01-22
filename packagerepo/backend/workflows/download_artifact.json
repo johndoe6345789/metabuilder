@@ -19,10 +19,18 @@
           100
         ],
         "parameters": {
+          "name": "Parse Path",
+          "typeVersion": 1,
+          "position": [
+            100,
+            100
+          ],
           "parameters": {
-            "path": "$request.path",
-            "pattern": "/v1/:namespace/:name/:version/:variant/blob",
-            "out": "entity"
+            "parameters": {
+              "path": "$request.path",
+              "pattern": "/v1/:namespace/:name/:version/:variant/blob",
+              "out": "entity"
+            }
           }
         }
       }
@@ -44,9 +52,17 @@
           100
         ],
         "parameters": {
+          "name": "Normalize",
+          "typeVersion": 1,
+          "position": [
+            400,
+            100
+          ],
           "parameters": {
-            "entity": "$entity",
-            "out": "normalized"
+            "parameters": {
+              "entity": "$entity",
+              "out": "normalized"
+            }
           }
         }
       }
@@ -68,9 +84,17 @@
           100
         ],
         "parameters": {
+          "name": "Get Meta",
+          "typeVersion": 1,
+          "position": [
+            700,
+            100
+          ],
           "parameters": {
-            "key": "artifact/$entity.namespace/$entity.name/$entity.version/$entity.variant",
-            "out": "metadata"
+            "parameters": {
+              "key": "artifact/$entity.namespace/$entity.name/$entity.version/$entity.variant",
+              "out": "metadata"
+            }
           }
         }
       }
@@ -92,10 +116,18 @@
           300
         ],
         "parameters": {
+          "name": "Check Exists",
+          "typeVersion": 1,
+          "position": [
+            100,
+            300
+          ],
           "parameters": {
-            "condition": "$metadata == null",
-            "then": "error_not_found",
-            "else": "read_blob"
+            "parameters": {
+              "condition": "$metadata == null",
+              "then": "error_not_found",
+              "else": "read_blob"
+            }
           }
         }
       }
@@ -117,9 +149,17 @@
           300
         ],
         "parameters": {
+          "name": "Read Blob",
+          "typeVersion": 1,
+          "position": [
+            400,
+            300
+          ],
           "parameters": {
-            "digest": "$metadata.digest",
-            "out": "blob_data"
+            "parameters": {
+              "digest": "$metadata.digest",
+              "out": "blob_data"
+            }
           }
         }
       }
@@ -141,10 +181,18 @@
           300
         ],
         "parameters": {
+          "name": "Check Blob Exists",
+          "typeVersion": 1,
+          "position": [
+            700,
+            300
+          ],
           "parameters": {
-            "condition": "$blob_data == null",
-            "then": "error_blob_missing",
-            "else": "respond_blob"
+            "parameters": {
+              "condition": "$blob_data == null",
+              "then": "error_blob_missing",
+              "else": "respond_blob"
+            }
           }
         }
       }
@@ -166,14 +214,22 @@
           500
         ],
         "parameters": {
+          "name": "Respond Blob",
+          "typeVersion": 1,
+          "position": [
+            100,
+            500
+          ],
           "parameters": {
-            "data": "$blob_data",
-            "headers": {
-              "Content-Type": "application/octet-stream",
-              "Content-Digest": "sha-256=$metadata.digest",
-              "Content-Length": "$metadata.size"
-            },
-            "status": 200
+            "parameters": {
+              "data": "$blob_data",
+              "headers": {
+                "Content-Type": "application/octet-stream",
+                "Content-Digest": "sha-256=$metadata.digest",
+                "Content-Length": "$metadata.size"
+              },
+              "status": 200
+            }
           }
         }
       }
@@ -195,9 +251,17 @@
           500
         ],
         "parameters": {
+          "name": "Error Not Found",
+          "typeVersion": 1,
+          "position": [
+            400,
+            500
+          ],
           "parameters": {
-            "message": "Artifact not found",
-            "status": 404
+            "parameters": {
+              "message": "Artifact not found",
+              "status": 404
+            }
           }
         }
       }
@@ -219,9 +283,17 @@
           500
         ],
         "parameters": {
+          "name": "Error Blob Missing",
+          "typeVersion": 1,
+          "position": [
+            700,
+            500
+          ],
           "parameters": {
-            "message": "Artifact blob data missing",
-            "status": 500
+            "parameters": {
+              "message": "Artifact blob data missing",
+              "status": 500
+            }
           }
         }
       }

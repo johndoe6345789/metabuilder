@@ -22,10 +22,18 @@
           "name": "Configure Logging",
           "typeVersion": 1,
           "position": [
-            0,
-            0
+            100,
+            100
           ],
-          "parameters": {}
+          "parameters": {
+            "name": "Configure Logging",
+            "typeVersion": 1,
+            "position": [
+              0,
+              0
+            ],
+            "parameters": {}
+          }
         }
       }
     },
@@ -46,13 +54,21 @@
           100
         ],
         "parameters": {
-          "name": "Load Environment",
+          "name": "Load Env",
           "typeVersion": 1,
           "position": [
-            300,
-            0
+            400,
+            100
           ],
-          "parameters": {}
+          "parameters": {
+            "name": "Load Environment",
+            "typeVersion": 1,
+            "position": [
+              300,
+              0
+            ],
+            "parameters": {}
+          }
         }
       }
     },
@@ -73,16 +89,24 @@
           100
         ],
         "parameters": {
-          "name": "Create Flask App",
+          "name": "Create App",
           "typeVersion": 1,
           "position": [
-            600,
-            0
+            700,
+            100
           ],
           "parameters": {
-            "name": "autometabuilder",
-            "config": {
-              "JSON_SORT_KEYS": false
+            "name": "Create Flask App",
+            "typeVersion": 1,
+            "position": [
+              600,
+              0
+            ],
+            "parameters": {
+              "name": "autometabuilder",
+              "config": {
+                "JSON_SORT_KEYS": false
+              }
             }
           }
         }
@@ -108,10 +132,18 @@
           "name": "Create Context Routes",
           "typeVersion": 1,
           "position": [
-            900,
-            -150
+            100,
+            300
           ],
-          "parameters": {}
+          "parameters": {
+            "name": "Create Context Routes",
+            "typeVersion": 1,
+            "position": [
+              900,
+              -150
+            ],
+            "parameters": {}
+          }
         }
       }
     },
@@ -135,10 +167,18 @@
           "name": "Create Run Routes",
           "typeVersion": 1,
           "position": [
-            900,
-            -50
+            400,
+            300
           ],
-          "parameters": {}
+          "parameters": {
+            "name": "Create Run Routes",
+            "typeVersion": 1,
+            "position": [
+              900,
+              -50
+            ],
+            "parameters": {}
+          }
         }
       }
     },
@@ -162,10 +202,18 @@
           "name": "Create Prompt Routes",
           "typeVersion": 1,
           "position": [
-            900,
-            50
+            700,
+            300
           ],
-          "parameters": {}
+          "parameters": {
+            "name": "Create Prompt Routes",
+            "typeVersion": 1,
+            "position": [
+              900,
+              50
+            ],
+            "parameters": {}
+          }
         }
       }
     },
@@ -189,10 +237,18 @@
           "name": "Create Settings Routes",
           "typeVersion": 1,
           "position": [
-            900,
-            150
+            100,
+            500
           ],
-          "parameters": {}
+          "parameters": {
+            "name": "Create Settings Routes",
+            "typeVersion": 1,
+            "position": [
+              900,
+              150
+            ],
+            "parameters": {}
+          }
         }
       }
     },
@@ -213,13 +269,21 @@
           500
         ],
         "parameters": {
-          "name": "Create Translation Routes",
+          "name": "Create Translations Routes",
           "typeVersion": 1,
           "position": [
-            900,
-            250
+            400,
+            500
           ],
-          "parameters": {}
+          "parameters": {
+            "name": "Create Translation Routes",
+            "typeVersion": 1,
+            "position": [
+              900,
+              250
+            ],
+            "parameters": {}
+          }
         }
       }
     },
@@ -243,10 +307,18 @@
           "name": "Create Navigation Routes",
           "typeVersion": 1,
           "position": [
-            900,
-            350
+            700,
+            500
           ],
-          "parameters": {}
+          "parameters": {
+            "name": "Create Navigation Routes",
+            "typeVersion": 1,
+            "position": [
+              900,
+              350
+            ],
+            "parameters": {}
+          }
         }
       }
     },
@@ -267,14 +339,22 @@
           700
         ],
         "parameters": {
-          "name": "Register Context Blueprint",
+          "name": "Register Context",
           "typeVersion": 1,
           "position": [
-            1200,
-            -150
+            100,
+            700
           ],
           "parameters": {
-            "blueprint": "={{$node.create_context_routes.json.result}}"
+            "name": "Register Context Blueprint",
+            "typeVersion": 1,
+            "position": [
+              1200,
+              -150
+            ],
+            "parameters": {
+              "blueprint": "={{$node.create_context_routes.json.result}}"
+            }
           }
         }
       }
@@ -296,14 +376,22 @@
           700
         ],
         "parameters": {
-          "name": "Register Run Blueprint",
+          "name": "Register Run",
           "typeVersion": 1,
           "position": [
-            1200,
-            -50
+            400,
+            700
           ],
           "parameters": {
-            "blueprint": "={{$node.create_run_routes.json.result}}"
+            "name": "Register Run Blueprint",
+            "typeVersion": 1,
+            "position": [
+              1200,
+              -50
+            ],
+            "parameters": {
+              "blueprint": "={{$node.create_run_routes.json.result}}"
+            }
           }
         }
       }
@@ -325,14 +413,22 @@
           700
         ],
         "parameters": {
-          "name": "Register Prompt Blueprint",
+          "name": "Register Prompt",
           "typeVersion": 1,
           "position": [
-            1200,
-            50
+            700,
+            700
           ],
           "parameters": {
-            "blueprint": "={{$node.create_prompt_routes.json.result}}"
+            "name": "Register Prompt Blueprint",
+            "typeVersion": 1,
+            "position": [
+              1200,
+              50
+            ],
+            "parameters": {
+              "blueprint": "={{$node.create_prompt_routes.json.result}}"
+            }
           }
         }
       }
@@ -354,14 +450,22 @@
           900
         ],
         "parameters": {
-          "name": "Register Settings Blueprint",
+          "name": "Register Settings",
           "typeVersion": 1,
           "position": [
-            1200,
-            150
+            100,
+            900
           ],
           "parameters": {
-            "blueprint": "={{$node.create_settings_routes.json.result}}"
+            "name": "Register Settings Blueprint",
+            "typeVersion": 1,
+            "position": [
+              1200,
+              150
+            ],
+            "parameters": {
+              "blueprint": "={{$node.create_settings_routes.json.result}}"
+            }
           }
         }
       }
@@ -383,14 +487,22 @@
           900
         ],
         "parameters": {
-          "name": "Register Translations Blueprint",
+          "name": "Register Translations",
           "typeVersion": 1,
           "position": [
-            1200,
-            250
+            400,
+            900
           ],
           "parameters": {
-            "blueprint": "={{$node.create_translations_routes.json.result}}"
+            "name": "Register Translations Blueprint",
+            "typeVersion": 1,
+            "position": [
+              1200,
+              250
+            ],
+            "parameters": {
+              "blueprint": "={{$node.create_translations_routes.json.result}}"
+            }
           }
         }
       }
@@ -412,14 +524,22 @@
           900
         ],
         "parameters": {
-          "name": "Register Navigation Blueprint",
+          "name": "Register Navigation",
           "typeVersion": 1,
           "position": [
-            1200,
-            350
+            700,
+            900
           ],
           "parameters": {
-            "blueprint": "={{$node.create_navigation_routes.json.result}}"
+            "name": "Register Navigation Blueprint",
+            "typeVersion": 1,
+            "position": [
+              1200,
+              350
+            ],
+            "parameters": {
+              "blueprint": "={{$node.create_navigation_routes.json.result}}"
+            }
           }
         }
       }
@@ -441,16 +561,24 @@
           1100
         ],
         "parameters": {
-          "name": "Start Web Server",
+          "name": "Start Server",
           "typeVersion": 1,
           "position": [
-            1500,
-            100
+            100,
+            1100
           ],
           "parameters": {
-            "host": "0.0.0.0",
-            "port": 8000,
-            "debug": false
+            "name": "Start Web Server",
+            "typeVersion": 1,
+            "position": [
+              1500,
+              100
+            ],
+            "parameters": {
+              "host": "0.0.0.0",
+              "port": 8000,
+              "debug": false
+            }
           }
         }
       }

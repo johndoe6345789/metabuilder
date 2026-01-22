@@ -19,18 +19,26 @@
           100
         ],
         "parameters": {
-          "name": "Test AND (all true)",
+          "name": "Test And True",
           "typeVersion": 1,
           "position": [
-            0,
-            0
+            100,
+            100
           ],
           "parameters": {
-            "values": [
-              true,
-              true,
-              true
-            ]
+            "name": "Test AND (all true)",
+            "typeVersion": 1,
+            "position": [
+              0,
+              0
+            ],
+            "parameters": {
+              "values": [
+                true,
+                true,
+                true
+              ]
+            }
           }
         }
       }
@@ -52,15 +60,23 @@
           100
         ],
         "parameters": {
-          "name": "Assert AND result is true",
+          "name": "Assert And True",
           "typeVersion": 1,
           "position": [
-            300,
-            0
+            400,
+            100
           ],
           "parameters": {
-            "value": "$test_and_true.result",
-            "message": "logic.and with all true values should return true"
+            "name": "Assert AND result is true",
+            "typeVersion": 1,
+            "position": [
+              300,
+              0
+            ],
+            "parameters": {
+              "value": "$test_and_true.result",
+              "message": "logic.and with all true values should return true"
+            }
           }
         }
       }
@@ -82,18 +98,26 @@
           100
         ],
         "parameters": {
-          "name": "Test AND (with false)",
+          "name": "Test And False",
           "typeVersion": 1,
           "position": [
-            0,
+            700,
             100
           ],
           "parameters": {
-            "values": [
-              true,
-              false,
-              true
-            ]
+            "name": "Test AND (with false)",
+            "typeVersion": 1,
+            "position": [
+              0,
+              100
+            ],
+            "parameters": {
+              "values": [
+                true,
+                false,
+                true
+              ]
+            }
           }
         }
       }
@@ -115,15 +139,23 @@
           300
         ],
         "parameters": {
-          "name": "Assert AND result is false",
+          "name": "Assert And False",
           "typeVersion": 1,
           "position": [
-            300,
-            100
+            100,
+            300
           ],
           "parameters": {
-            "value": "$test_and_false.result",
-            "message": "logic.and with any false value should return false"
+            "name": "Assert AND result is false",
+            "typeVersion": 1,
+            "position": [
+              300,
+              100
+            ],
+            "parameters": {
+              "value": "$test_and_false.result",
+              "message": "logic.and with any false value should return false"
+            }
           }
         }
       }
@@ -145,18 +177,26 @@
           300
         ],
         "parameters": {
-          "name": "Test OR (with true)",
+          "name": "Test Or True",
           "typeVersion": 1,
           "position": [
-            0,
-            200
+            400,
+            300
           ],
           "parameters": {
-            "values": [
-              false,
-              false,
-              true
-            ]
+            "name": "Test OR (with true)",
+            "typeVersion": 1,
+            "position": [
+              0,
+              200
+            ],
+            "parameters": {
+              "values": [
+                false,
+                false,
+                true
+              ]
+            }
           }
         }
       }
@@ -178,15 +218,23 @@
           300
         ],
         "parameters": {
-          "name": "Assert OR result is true",
+          "name": "Assert Or True",
           "typeVersion": 1,
           "position": [
-            300,
-            200
+            700,
+            300
           ],
           "parameters": {
-            "value": "$test_or_true.result",
-            "message": "logic.or with any true value should return true"
+            "name": "Assert OR result is true",
+            "typeVersion": 1,
+            "position": [
+              300,
+              200
+            ],
+            "parameters": {
+              "value": "$test_or_true.result",
+              "message": "logic.or with any true value should return true"
+            }
           }
         }
       }
@@ -208,18 +256,26 @@
           500
         ],
         "parameters": {
-          "name": "Test OR (all false)",
+          "name": "Test Or False",
           "typeVersion": 1,
           "position": [
-            0,
-            300
+            100,
+            500
           ],
           "parameters": {
-            "values": [
-              false,
-              false,
-              false
-            ]
+            "name": "Test OR (all false)",
+            "typeVersion": 1,
+            "position": [
+              0,
+              300
+            ],
+            "parameters": {
+              "values": [
+                false,
+                false,
+                false
+              ]
+            }
           }
         }
       }
@@ -241,15 +297,23 @@
           500
         ],
         "parameters": {
-          "name": "Assert OR result is false",
+          "name": "Assert Or False",
           "typeVersion": 1,
           "position": [
-            300,
-            300
+            400,
+            500
           ],
           "parameters": {
-            "value": "$test_or_false.result",
-            "message": "logic.or with all false values should return false"
+            "name": "Assert OR result is false",
+            "typeVersion": 1,
+            "position": [
+              300,
+              300
+            ],
+            "parameters": {
+              "value": "$test_or_false.result",
+              "message": "logic.or with all false values should return false"
+            }
           }
         }
       }
@@ -271,15 +335,23 @@
           500
         ],
         "parameters": {
-          "name": "Test Equals (same)",
+          "name": "Test Equals True",
           "typeVersion": 1,
           "position": [
-            0,
-            400
+            700,
+            500
           ],
           "parameters": {
-            "a": 42,
-            "b": 42
+            "name": "Test Equals (same)",
+            "typeVersion": 1,
+            "position": [
+              0,
+              400
+            ],
+            "parameters": {
+              "a": 42,
+              "b": 42
+            }
           }
         }
       }
@@ -301,15 +373,23 @@
           700
         ],
         "parameters": {
-          "name": "Assert Equals is true",
+          "name": "Assert Equals True",
           "typeVersion": 1,
           "position": [
-            300,
-            400
+            100,
+            700
           ],
           "parameters": {
-            "value": "$test_equals_true.result",
-            "message": "logic.equals with same values should return true"
+            "name": "Assert Equals is true",
+            "typeVersion": 1,
+            "position": [
+              300,
+              400
+            ],
+            "parameters": {
+              "value": "$test_equals_true.result",
+              "message": "logic.equals with same values should return true"
+            }
           }
         }
       }
@@ -331,15 +411,23 @@
           700
         ],
         "parameters": {
-          "name": "Test Equals (different)",
+          "name": "Test Equals False",
           "typeVersion": 1,
           "position": [
-            0,
-            500
+            400,
+            700
           ],
           "parameters": {
-            "a": 42,
-            "b": 24
+            "name": "Test Equals (different)",
+            "typeVersion": 1,
+            "position": [
+              0,
+              500
+            ],
+            "parameters": {
+              "a": 42,
+              "b": 24
+            }
           }
         }
       }
@@ -361,15 +449,23 @@
           700
         ],
         "parameters": {
-          "name": "Assert Equals is false",
+          "name": "Assert Equals False",
           "typeVersion": 1,
           "position": [
-            300,
-            500
+            700,
+            700
           ],
           "parameters": {
-            "value": "$test_equals_false.result",
-            "message": "logic.equals with different values should return false"
+            "name": "Assert Equals is false",
+            "typeVersion": 1,
+            "position": [
+              300,
+              500
+            ],
+            "parameters": {
+              "value": "$test_equals_false.result",
+              "message": "logic.equals with different values should return false"
+            }
           }
         }
       }
@@ -391,15 +487,23 @@
           900
         ],
         "parameters": {
-          "name": "Test Greater Than",
+          "name": "Test Gt",
           "typeVersion": 1,
           "position": [
-            0,
-            600
+            100,
+            900
           ],
           "parameters": {
-            "a": 10,
-            "b": 5
+            "name": "Test Greater Than",
+            "typeVersion": 1,
+            "position": [
+              0,
+              600
+            ],
+            "parameters": {
+              "a": 10,
+              "b": 5
+            }
           }
         }
       }
@@ -421,15 +525,23 @@
           900
         ],
         "parameters": {
-          "name": "Assert GT is true",
+          "name": "Assert Gt",
           "typeVersion": 1,
           "position": [
-            300,
-            600
+            400,
+            900
           ],
           "parameters": {
-            "value": "$test_gt.result",
-            "message": "logic.gt should return true when a > b"
+            "name": "Assert GT is true",
+            "typeVersion": 1,
+            "position": [
+              300,
+              600
+            ],
+            "parameters": {
+              "value": "$test_gt.result",
+              "message": "logic.gt should return true when a > b"
+            }
           }
         }
       }
@@ -451,15 +563,23 @@
           900
         ],
         "parameters": {
-          "name": "Test Less Than",
+          "name": "Test Lt",
           "typeVersion": 1,
           "position": [
-            0,
-            700
+            700,
+            900
           ],
           "parameters": {
-            "a": 3,
-            "b": 7
+            "name": "Test Less Than",
+            "typeVersion": 1,
+            "position": [
+              0,
+              700
+            ],
+            "parameters": {
+              "a": 3,
+              "b": 7
+            }
           }
         }
       }
@@ -481,15 +601,23 @@
           1100
         ],
         "parameters": {
-          "name": "Assert LT is true",
+          "name": "Assert Lt",
           "typeVersion": 1,
           "position": [
-            300,
-            700
+            100,
+            1100
           ],
           "parameters": {
-            "value": "$test_lt.result",
-            "message": "logic.lt should return true when a < b"
+            "name": "Assert LT is true",
+            "typeVersion": 1,
+            "position": [
+              300,
+              700
+            ],
+            "parameters": {
+              "value": "$test_lt.result",
+              "message": "logic.lt should return true when a < b"
+            }
           }
         }
       }

@@ -19,10 +19,18 @@
           100
         ],
         "parameters": {
+          "name": "Parse Path",
+          "typeVersion": 1,
+          "position": [
+            100,
+            100
+          ],
           "parameters": {
-            "path": "$request.path",
-            "pattern": "/v1/:namespace/:name/versions",
-            "out": "entity"
+            "parameters": {
+              "path": "$request.path",
+              "pattern": "/v1/:namespace/:name/versions",
+              "out": "entity"
+            }
           }
         }
       }
@@ -44,9 +52,17 @@
           100
         ],
         "parameters": {
+          "name": "Normalize",
+          "typeVersion": 1,
+          "position": [
+            400,
+            100
+          ],
           "parameters": {
-            "entity": "$entity",
-            "out": "normalized"
+            "parameters": {
+              "entity": "$entity",
+              "out": "normalized"
+            }
           }
         }
       }
@@ -68,9 +84,17 @@
           100
         ],
         "parameters": {
+          "name": "Query Index",
+          "typeVersion": 1,
+          "position": [
+            700,
+            100
+          ],
           "parameters": {
-            "key": "$entity.namespace/$entity.name",
-            "out": "versions"
+            "parameters": {
+              "key": "$entity.namespace/$entity.name",
+              "out": "versions"
+            }
           }
         }
       }
@@ -92,10 +116,18 @@
           300
         ],
         "parameters": {
+          "name": "Check Exists",
+          "typeVersion": 1,
+          "position": [
+            100,
+            300
+          ],
           "parameters": {
-            "condition": "$versions == null",
-            "then": "error_not_found",
-            "else": "enrich_versions"
+            "parameters": {
+              "condition": "$versions == null",
+              "then": "error_not_found",
+              "else": "enrich_versions"
+            }
           }
         }
       }
@@ -117,11 +149,19 @@
           300
         ],
         "parameters": {
+          "name": "Enrich Versions",
+          "typeVersion": 1,
+          "position": [
+            400,
+            300
+          ],
           "parameters": {
-            "namespace": "$entity.namespace",
-            "name": "$entity.name",
-            "versions": "$versions",
-            "out": "enriched"
+            "parameters": {
+              "namespace": "$entity.namespace",
+              "name": "$entity.name",
+              "versions": "$versions",
+              "out": "enriched"
+            }
           }
         }
       }
@@ -143,13 +183,21 @@
           300
         ],
         "parameters": {
+          "name": "Respond Json",
+          "typeVersion": 1,
+          "position": [
+            700,
+            300
+          ],
           "parameters": {
-            "body": {
-              "namespace": "$entity.namespace",
-              "name": "$entity.name",
-              "versions": "$enriched"
-            },
-            "status": 200
+            "parameters": {
+              "body": {
+                "namespace": "$entity.namespace",
+                "name": "$entity.name",
+                "versions": "$enriched"
+              },
+              "status": 200
+            }
           }
         }
       }
@@ -171,9 +219,17 @@
           500
         ],
         "parameters": {
+          "name": "Error Not Found",
+          "typeVersion": 1,
+          "position": [
+            100,
+            500
+          ],
           "parameters": {
-            "message": "Package not found",
-            "status": 404
+            "parameters": {
+              "message": "Package not found",
+              "status": 404
+            }
           }
         }
       }

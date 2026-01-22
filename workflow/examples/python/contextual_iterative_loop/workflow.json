@@ -22,11 +22,19 @@
           "name": "List Files",
           "typeVersion": 1,
           "position": [
-            0,
-            50
+            100,
+            100
           ],
           "parameters": {
-            "path": "."
+            "name": "List Files",
+            "typeVersion": 1,
+            "position": [
+              0,
+              50
+            ],
+            "parameters": {
+              "path": "."
+            }
           }
         }
       }
@@ -51,13 +59,21 @@
           "name": "Filter Python",
           "typeVersion": 1,
           "position": [
-            300,
-            50
+            400,
+            100
           ],
           "parameters": {
-            "items": "$repo_files",
-            "mode": "regex",
-            "pattern": "\\.py$"
+            "name": "Filter Python",
+            "typeVersion": 1,
+            "position": [
+              300,
+              50
+            ],
+            "parameters": {
+              "items": "$repo_files",
+              "mode": "regex",
+              "pattern": "\\.py$"
+            }
           }
         }
       }
@@ -82,12 +98,20 @@
           "name": "Map Python",
           "typeVersion": 1,
           "position": [
-            600,
-            50
+            700,
+            100
           ],
           "parameters": {
-            "items": "$python_files",
-            "template": "PY: {item}"
+            "name": "Map Python",
+            "typeVersion": 1,
+            "position": [
+              600,
+              50
+            ],
+            "parameters": {
+              "items": "$python_files",
+              "template": "PY: {item}"
+            }
           }
         }
       }
@@ -112,12 +136,20 @@
           "name": "Reduce Python",
           "typeVersion": 1,
           "position": [
-            900,
-            50
+            100,
+            300
           ],
           "parameters": {
-            "items": "$python_lines",
-            "separator": "\\n"
+            "name": "Reduce Python",
+            "typeVersion": 1,
+            "position": [
+              900,
+              50
+            ],
+            "parameters": {
+              "items": "$python_lines",
+              "separator": "\\n"
+            }
           }
         }
       }
@@ -142,10 +174,18 @@
           "name": "Seed Messages",
           "typeVersion": 1,
           "position": [
-            1200,
-            50
+            400,
+            300
           ],
-          "parameters": {}
+          "parameters": {
+            "name": "Seed Messages",
+            "typeVersion": 1,
+            "position": [
+              1200,
+              50
+            ],
+            "parameters": {}
+          }
         }
       }
     },
@@ -169,12 +209,20 @@
           "name": "Append Repo Summary",
           "typeVersion": 1,
           "position": [
-            1500,
-            50
+            700,
+            300
           ],
           "parameters": {
-            "messages": "$messages",
-            "context": "$python_summary"
+            "name": "Append Repo Summary",
+            "typeVersion": 1,
+            "position": [
+              1500,
+              50
+            ],
+            "parameters": {
+              "messages": "$messages",
+              "context": "$python_summary"
+            }
           }
         }
       }
@@ -199,11 +247,19 @@
           "name": "Append User Instruction",
           "typeVersion": 1,
           "position": [
-            1800,
-            50
+            100,
+            500
           ],
           "parameters": {
-            "messages": "$messages"
+            "name": "Append User Instruction",
+            "typeVersion": 1,
+            "position": [
+              1800,
+              50
+            ],
+            "parameters": {
+              "messages": "$messages"
+            }
           }
         }
       }
@@ -228,13 +284,21 @@
           "name": "Main Loop",
           "typeVersion": 1,
           "position": [
-            2100,
-            50
+            400,
+            500
           ],
           "parameters": {
-            "max_iterations": 5,
-            "stop_when": "$no_tool_calls",
-            "stop_on": "true"
+            "name": "Main Loop",
+            "typeVersion": 1,
+            "position": [
+              2100,
+              50
+            ],
+            "parameters": {
+              "max_iterations": 5,
+              "stop_when": "$no_tool_calls",
+              "stop_on": "true"
+            }
           }
         }
       }

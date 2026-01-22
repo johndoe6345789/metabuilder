@@ -19,9 +19,17 @@
           100
         ],
         "parameters": {
+          "name": "Parse Body",
+          "typeVersion": 1,
+          "position": [
+            100,
+            100
+          ],
           "parameters": {
-            "input": "$request.body",
-            "out": "credentials"
+            "parameters": {
+              "input": "$request.body",
+              "out": "credentials"
+            }
           }
         }
       }
@@ -43,10 +51,18 @@
           100
         ],
         "parameters": {
+          "name": "Validate Fields",
+          "typeVersion": 1,
+          "position": [
+            400,
+            100
+          ],
           "parameters": {
-            "condition": "$credentials.username == null || $credentials.password == null",
-            "then": "error_invalid_request",
-            "else": "verify_password"
+            "parameters": {
+              "condition": "$credentials.username == null || $credentials.password == null",
+              "then": "error_invalid_request",
+              "else": "verify_password"
+            }
           }
         }
       }
@@ -68,10 +84,18 @@
           100
         ],
         "parameters": {
+          "name": "Verify Password",
+          "typeVersion": 1,
+          "position": [
+            700,
+            100
+          ],
           "parameters": {
-            "username": "$credentials.username",
-            "password": "$credentials.password",
-            "out": "user"
+            "parameters": {
+              "username": "$credentials.username",
+              "password": "$credentials.password",
+              "out": "user"
+            }
           }
         }
       }
@@ -93,10 +117,18 @@
           300
         ],
         "parameters": {
+          "name": "Check Verified",
+          "typeVersion": 1,
+          "position": [
+            100,
+            300
+          ],
           "parameters": {
-            "condition": "$user == null",
-            "then": "error_unauthorized",
-            "else": "generate_token"
+            "parameters": {
+              "condition": "$user == null",
+              "then": "error_unauthorized",
+              "else": "generate_token"
+            }
           }
         }
       }
@@ -118,11 +150,19 @@
           300
         ],
         "parameters": {
+          "name": "Generate Token",
+          "typeVersion": 1,
+          "position": [
+            400,
+            300
+          ],
           "parameters": {
-            "subject": "$user.username",
-            "scopes": "$user.scopes",
-            "expires_in": 86400,
-            "out": "token"
+            "parameters": {
+              "subject": "$user.username",
+              "scopes": "$user.scopes",
+              "expires_in": 86400,
+              "out": "token"
+            }
           }
         }
       }
@@ -144,15 +184,23 @@
           300
         ],
         "parameters": {
+          "name": "Respond Success",
+          "typeVersion": 1,
+          "position": [
+            700,
+            300
+          ],
           "parameters": {
-            "body": {
-              "ok": true,
-              "token": "$token",
-              "username": "$user.username",
-              "scopes": "$user.scopes",
-              "expires_in": 86400
-            },
-            "status": 200
+            "parameters": {
+              "body": {
+                "ok": true,
+                "token": "$token",
+                "username": "$user.username",
+                "scopes": "$user.scopes",
+                "expires_in": 86400
+              },
+              "status": 200
+            }
           }
         }
       }
@@ -174,9 +222,17 @@
           500
         ],
         "parameters": {
+          "name": "Error Invalid Request",
+          "typeVersion": 1,
+          "position": [
+            100,
+            500
+          ],
           "parameters": {
-            "message": "Missing username or password",
-            "status": 400
+            "parameters": {
+              "message": "Missing username or password",
+              "status": 400
+            }
           }
         }
       }
@@ -198,9 +254,17 @@
           500
         ],
         "parameters": {
+          "name": "Error Unauthorized",
+          "typeVersion": 1,
+          "position": [
+            400,
+            500
+          ],
           "parameters": {
-            "message": "Invalid username or password",
-            "status": 401
+            "parameters": {
+              "message": "Invalid username or password",
+              "status": 401
+            }
           }
         }
       }

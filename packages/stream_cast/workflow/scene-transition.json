@@ -1,0 +1,216 @@
+{
+  "name": "Handle Scene Transition",
+  "active": false,
+  "nodes": [
+    {
+      "id": "validate_context",
+      "name": "Validate Context",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "name": "Validate Context",
+        "typeVersion": 1,
+        "position": [
+          100,
+          100
+        ],
+        "parameters": {
+          "name": "Validate Context",
+          "typeVersion": 1,
+          "position": [
+            100,
+            100
+          ],
+          "parameters": {
+            "input": "{{ $context.user.id }}",
+            "operation": "validate",
+            "validator": "required"
+          }
+        }
+      }
+    },
+    {
+      "id": "check_authorization",
+      "name": "Check Authorization",
+      "type": "metabuilder.condition",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "name": "Check Authorization",
+        "typeVersion": 1,
+        "position": [
+          400,
+          100
+        ],
+        "parameters": {
+          "name": "Check Authorization",
+          "typeVersion": 1,
+          "position": [
+            400,
+            100
+          ],
+          "parameters": {
+            "condition": "{{ $context.user.level >= 2 }}",
+            "operation": "condition"
+          }
+        }
+      }
+    },
+    {
+      "id": "fetch_channel",
+      "name": "Fetch Channel",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "name": "Fetch Channel",
+        "typeVersion": 1,
+        "position": [
+          700,
+          100
+        ],
+        "parameters": {
+          "name": "Fetch Channel",
+          "typeVersion": 1,
+          "position": [
+            700,
+            100
+          ],
+          "parameters": {
+            "filter": {
+              "id": "{{ $json.channelId }}",
+              "tenantId": "{{ $context.tenantId }}"
+            },
+            "operation": "database_read",
+            "entity": "StreamChannel"
+          }
+        }
+      }
+    },
+    {
+      "id": "update_active_scene",
+      "name": "Update Active Scene",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "name": "Update Active Scene",
+        "typeVersion": 1,
+        "position": [
+          100,
+          300
+        ],
+        "parameters": {
+          "name": "Update Active Scene",
+          "typeVersion": 1,
+          "position": [
+            100,
+            300
+          ],
+          "parameters": {
+            "filter": {
+              "id": "{{ $json.channelId }}"
+            },
+            "data": {
+              "activeSceneId": "{{ $json.sceneId }}",
+              "sceneChangedAt": "{{ new Date().toISOString() }}"
+            },
+            "operation": "database_update",
+            "entity": "StreamChannel"
+          }
+        }
+      }
+    },
+    {
+      "id": "emit_scene_change",
+      "name": "Emit Scene Change",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "name": "Emit Scene Change",
+        "typeVersion": 1,
+        "position": [
+          400,
+          300
+        ],
+        "parameters": {
+          "name": "Emit Scene Change",
+          "typeVersion": 1,
+          "position": [
+            400,
+            300
+          ],
+          "parameters": {
+            "data": {
+              "sceneId": "{{ $json.sceneId }}",
+              "transitionTime": "{{ new Date().toISOString() }}"
+            },
+            "action": "emit_event",
+            "event": "scene_changed",
+            "channel": "{{ 'stream:' + $json.channelId }}"
+          }
+        }
+      }
+    },
+    {
+      "id": "return_success",
+      "name": "Return Success",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "name": "Return Success",
+        "typeVersion": 1,
+        "position": [
+          700,
+          300
+        ],
+        "parameters": {
+          "name": "Return Success",
+          "typeVersion": 1,
+          "position": [
+            700,
+            300
+          ],
+          "parameters": {
+            "action": "http_response",
+            "status": 200,
+            "body": {
+              "message": "Scene updated"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "connections": {},
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  }
+}
