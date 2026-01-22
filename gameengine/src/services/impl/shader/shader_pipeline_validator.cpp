@@ -8,8 +8,18 @@ std::vector<ShaderPipelineValidator::AttributeInfo>
 ShaderPipelineValidator::ExtractShaderInputs(const std::string& glslSource) const {
     std::vector<AttributeInfo> inputs;
 
-    // Match: layout (location = N) in type name; (handles compact syntax too)
-    std::regex pattern(R"(layout\s*\(\s*location\s*=\s*(\d+)\s*\)\s*in\s+(\w+)\s+(\w+)\s*;)");
+    // Improved pattern to handle:
+    // - Optional qualifiers (flat, smooth, noperspective)
+    // - Multiple layout params separated by commas
+    // - Array types like vec3[N]
+    // - Whitespace variations
+    // Pattern: layout([...] location = N [...]) [qualifier] in type name [array]?;
+    std::regex pattern(
+        R"(layout\s*\([^)]*location\s*=\s*(\d+)[^)]*\)\s*)"  // layout(... location=N ...)
+        R"((?:flat\s+|smooth\s+|noperspective\s+)?)"          // optional interpolation qualifier
+        R"(in\s+(\w+)\s+(\w+))"                               // in type name
+        R"((?:\s*\[\s*\d+\s*\])?\s*;)"                        // optional array index, semicolon
+    );
 
     std::sregex_iterator begin(glslSource.begin(), glslSource.end(), pattern);
     std::sregex_iterator end;
@@ -21,8 +31,6 @@ ShaderPipelineValidator::ExtractShaderInputs(const std::string& glslSource) cons
         size_t size = GetGlslTypeSize(type);
 
         inputs.emplace_back(location, type, name, size);
-
-        // Trace logging disabled to avoid API mismatch
     }
 
     return inputs;
@@ -32,8 +40,18 @@ std::vector<ShaderPipelineValidator::AttributeInfo>
 ShaderPipelineValidator::ExtractShaderOutputs(const std::string& glslSource) const {
     std::vector<AttributeInfo> outputs;
 
-    // Match: layout (location = N) out type name; (handles compact syntax too)
-    std::regex pattern(R"(layout\s*\(\s*location\s*=\s*(\d+)\s*\)\s*out\s+(\w+)\s+(\w+)\s*;)");
+    // Improved pattern to handle:
+    // - Optional qualifiers (flat, smooth, noperspective)
+    // - Multiple layout params separated by commas
+    // - Array types like vec4[N]
+    // - Whitespace variations
+    // Pattern: layout([...] location = N [...]) [qualifier] out type name [array]?;
+    std::regex pattern(
+        R"(layout\s*\([^)]*location\s*=\s*(\d+)[^)]*\)\s*)"  // layout(... location=N ...)
+        R"((?:flat\s+|smooth\s+|noperspective\s+)?)"          // optional interpolation qualifier
+        R"(out\s+(\w+)\s+(\w+))"                              // out type name
+        R"((?:\s*\[\s*\d+\s*\])?\s*;)"                        // optional array index, semicolon
+    );
 
     std::sregex_iterator begin(glslSource.begin(), glslSource.end(), pattern);
     std::sregex_iterator end;
@@ -180,8 +198,13 @@ ShaderPipelineValidator::ValidateSpirvRequirements(
     ValidationResult result;
 
     // Check that all in/out variables have layout(location=N)
-    std::regex inOutPattern(R"(\b(in|out)\s+\w+\s+\w+\s*;)");
-    std::regex layoutPattern(R"(layout\s*\()");
+    // Improved patterns to handle qualifiers and array syntax
+    std::regex inOutPattern(
+        R"(\b(?:flat\s+|smooth\s+|noperspective\s+)?)"  // optional interpolation
+        R"((in|out)\s+\w+\s+\w+)"                        // in/out type name
+        R"((?:\s*\[\s*\d+\s*\])?\s*;)"                   // optional array, semicolon
+    );
+    std::regex layoutPattern(R"(layout\s*\([^)]*location\s*=)");
 
     size_t lineNum = 1;
     std::istringstream stream(glslSource);

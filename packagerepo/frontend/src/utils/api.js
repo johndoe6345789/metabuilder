@@ -33,7 +33,14 @@ export function getApiUrl() {
   // For client-side, try to infer from current location
   if (typeof window !== 'undefined') {
     const { protocol, hostname, port } = window.location;
-    
+
+    // If running on localhost with a custom port (e.g., 3003 from Docker),
+    // use relative URLs to go through Next.js rewrites/proxy
+    if ((hostname === 'localhost' || hostname === '127.0.0.1') && port && port !== '3000') {
+      // Docker compose or similar setup - use Next.js proxy
+      return '';
+    }
+
     // If running on a deployed domain (not localhost), try intelligent defaults
     if (hostname !== 'localhost' && hostname !== '127.0.0.1') {
       // Pattern 1: Frontend on custom port (e.g., :3000) - try backend on :5000
@@ -42,14 +49,14 @@ export function getApiUrl() {
       if (port && port !== '80' && port !== '443') {
         return `${protocol}//${hostname}:5000`;
       }
-      
+
       // Pattern 2: Same origin with Next.js rewrites
       // Return empty string to use relative URLs, which will be handled by Next.js rewrites
       // This works when backend routes are proxied through Next.js
       return '';
     }
-    
-    // For localhost development, backend is typically on port 5000
+
+    // For localhost development on port 3000, backend is typically on port 5000
     return 'http://localhost:5000';
   }
   

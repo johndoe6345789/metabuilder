@@ -310,17 +310,8 @@ void ServiceBasedApp::RegisterServices() {
         registry_.GetService<services::IConfigService>(),
         registry_.GetService<services::ILogger>());
 
-    registry_.RegisterService<services::IFrameWorkflowService, services::impl::FrameWorkflowService>(
-        registry_.GetService<services::ILogger>(),
-        registry_.GetService<services::IConfigService>(),
-        registry_.GetService<services::IAudioService>(),
-        registry_.GetService<services::IInputService>(),
-        registry_.GetService<services::IMeshService>(),
-        registry_.GetService<services::IPhysicsService>(),
-        registry_.GetService<services::ISceneService>(),
-        registry_.GetService<services::IRenderCoordinatorService>(),
-        registry_.GetService<services::IValidationTourService>(),
-        registry_.GetService<services::ISoundboardStateService>());
+    // NOTE: FrameWorkflowService registration moved below after all dependencies are registered
+    // (IPhysicsService, ISceneService, IRenderCoordinatorService)
 
     // Physics bridge services
     registry_.RegisterService<services::IPhysicsBridgeService, services::impl::PhysicsBridgeService>(
@@ -375,6 +366,19 @@ void ServiceBasedApp::RegisterServices() {
         registry_.GetService<services::IGuiService>(),
         registry_.GetService<services::ISceneService>(),
         registry_.GetService<services::IValidationTourService>());
+
+    // Frame workflow service (registered after all dependencies: physics, scene, render coordinator)
+    registry_.RegisterService<services::IFrameWorkflowService, services::impl::FrameWorkflowService>(
+        registry_.GetService<services::ILogger>(),
+        registry_.GetService<services::IConfigService>(),
+        registry_.GetService<services::IAudioService>(),
+        registry_.GetService<services::IInputService>(),
+        registry_.GetService<services::IMeshService>(),
+        registry_.GetService<services::IPhysicsService>(),
+        registry_.GetService<services::ISceneService>(),
+        registry_.GetService<services::IRenderCoordinatorService>(),
+        registry_.GetService<services::IValidationTourService>(),
+        registry_.GetService<services::ISoundboardStateService>());
 
     // Application loop service
     registry_.RegisterService<services::IApplicationLoopService, services::impl::ApplicationLoopService>(

@@ -1,0 +1,9 @@
+[requires]
+sdl/3.2.20
+
+[generators]
+CMakeDeps
+CMakeToolchain
+
+[options]
+sdl/*:shared=True
