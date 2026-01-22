@@ -317,6 +317,107 @@ POST   /api/v1/acme/forum_forge/posts/123/like → Custom action
 
 ---
 
+## Coding Best Practices
+
+### Pre-Commit Verification (Mandatory)
+
+From [docs/CONTRACT.md](./docs/CONTRACT.md) - **ALL checks must pass**:
+
+```bash
+npm run build         # 1. Build Compliance
+npm run typecheck     # 2. Type Safety (0 errors)
+npm run lint          # 3. Code Quality
+npm run test:e2e      # 4. E2E Tests
+```
+
+### Code Quality Rules
+
+| Rule | Correct | Wrong |
+|------|---------|-------|
+| **One lambda per file** | `createUser.ts` with single function | Multiple functions in one file |
+| **No @ts-ignore** | Fix type errors properly | Suppress with `@ts-ignore` |
+| **No implicit any** | Concrete types for all values | Untyped variables |
+| **No dead code** | All code is executed | Unused functions/variables |
+| **Self-documenting** | Clear variable/function names | Cryptic abbreviations |
+| **JSDoc on public APIs** | Document function signatures | Missing documentation |
+
+### UI/Styling Standards
+
+From [.github/copilot-instructions.md](./.github/copilot-instructions.md):
+
+```typescript
+// ❌ NEVER use Radix UI or Tailwind
+import { Dialog } from '@radix-ui/react-dialog'
+<button className="bg-blue-500">Click</button>
+
+// ✅ ALWAYS use Material-UI
+import { Dialog, Button } from '@mui/material'
+<Button variant="contained">Click</Button>
+<Box sx={{ display: 'flex', gap: 2 }}>Content</Box>
+```
+
+**Component Mapping**: Radix Dialog → MUI Dialog, Radix Select → MUI Select, Tailwind → MUI `sx` prop or SCSS modules
+
+### Testing Standards
+
+```typescript
+// Parameterized tests for all functions
+it.each([
+  { input: 'case1', expected: 'result1' },
+  { input: 'case2', expected: 'result2' },
+])('should handle $input', ({ input, expected }) => {
+  expect(myFunction(input)).toBe(expected)
+})
+```
+
+- Test files next to source: `utils.ts` + `utils.test.ts`
+- Run `npm run test:coverage:report` to auto-generate coverage markdown
+- All functions need test coverage
+
+### Security Checklist
+
+From [.github/PULL_REQUEST_TEMPLATE.md](./.github/PULL_REQUEST_TEMPLATE.md):
+
+- [ ] Input validation implemented
+- [ ] No XSS vulnerabilities (no innerHTML with user data)
+- [ ] No SQL injection (use DBAL, not raw queries)
+- [ ] Passwords hashed with SHA-512
+- [ ] No secrets committed to code
+- [ ] Multi-tenant safety verified (tenantId filtering)
+
+### PR Best Practices
+
+From [.github/workflows/README.md](./.github/workflows/README.md):
+
+1. **Descriptive titles** - Used for automatic labeling
+2. **Link issues** - Enables automatic issue closing
+3. **Keep PRs small** - Easier to review and merge
+4. **No console.log** - Will be flagged in review
+5. **No debugger statements** - Treated as blocking issues
+6. **Test locally** - Run lint and tests before pushing
+
+### Declarative-First Development
+
+```typescript
+// ❌ Hardcoded component
+<UserForm user={user} onSave={handleSave} />
+
+// ✅ Declarative from JSON
+<RenderComponent component={{
+  type: 'form',
+  props: { schema: formSchema },
+  children: [/* field components */]
+}} />
+```
+
+**Questions to ask before coding**:
+1. Could this be JSON configuration instead of TypeScript?
+2. Could a generic renderer handle this instead of custom TSX?
+3. Is this filtering by tenantId?
+4. Does this follow one-lambda-per-file pattern?
+
+---
+
 ## Before Starting Any Task
 
 1. **Read the relevant CLAUDE.md** for your work area
