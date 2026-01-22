@@ -38,13 +38,18 @@
 }
 
 .blockquote--success {
-  border-left-color: #4caf50;
-  background: color-mix(in srgb, #4caf50 8%, var(--mat-sys-surface));
+  border-left-color: var(--color-success);
+  background: var(--color-success-container);
 }
 
 .blockquote--warning {
-  border-left-color: #ff9800;
-  background: color-mix(in srgb, #ff9800 8%, var(--mat-sys-surface));
+  border-left-color: var(--color-warning);
+  background: var(--color-warning-container);
+}
+
+.blockquote--info {
+  border-left-color: var(--color-info);
+  background: var(--color-info-container);
 }
 
 // Outlined variant

@@ -13,7 +13,7 @@
   }
 
   &--disabled {
-    opacity: 0.38;
+    opacity: var(--disabled-content-opacity);
     pointer-events: none;
   }
 

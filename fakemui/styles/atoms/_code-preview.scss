@@ -8,8 +8,8 @@
   background: var(--mat-sys-surface-container);
   border: 1px solid var(--mat-sys-outline-variant);
   border-radius: var(--mat-sys-corner-medium);
-  font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, monospace;
-  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: var(--mat-sys-body-small-size);
   line-height: 1.5;
   overflow: hidden;
 }
@@ -25,7 +25,7 @@
 .code-line-num {
   color: var(--mat-sys-on-surface-variant);
   opacity: 0.5;
-  font-size: 0.7rem;
+  font-size: var(--mat-sys-label-small-size);
   min-width: 24px;
   text-align: right;
   user-select: none;
@@ -42,16 +42,16 @@
 
 // Diff added line
 .code-line--added {
-  background: color-mix(in srgb, #4caf50 12%, transparent);
+  background: var(--color-success-container);
 }
 
 .code-line--added .code-line-content {
-  color: #4caf50;
+  color: var(--color-success);
 }
 
 .code-line--added::before {
   content: '+';
-  color: #4caf50;
+  color: var(--color-success);
   font-weight: 600;
   margin-right: 8px;
 }
@@ -74,11 +74,11 @@
 
 // Diff modified line
 .code-line--modified {
-  background: color-mix(in srgb, #ff9800 12%, transparent);
+  background: var(--color-warning-container);
 }
 
 .code-line--modified .code-line-content {
-  color: #ff9800;
+  color: var(--color-warning);
 }
 
 // Context line (unchanged)
@@ -119,7 +119,7 @@
 }
 
 .code-preview-stats--added {
-  color: #4caf50;
+  color: var(--color-success);
 }
 
 .code-preview-stats--removed {

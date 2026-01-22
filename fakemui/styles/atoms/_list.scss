@@ -78,7 +78,7 @@
 
 // Disabled list item
 .list-item--disabled {
-  opacity: 0.38;
+  opacity: var(--disabled-content-opacity);
   pointer-events: none;
 }
 
@@ -239,7 +239,7 @@
 }
 
 .list-item__status--success {
-  background: #4caf50;
+  background: var(--color-success);
 }
 
 .list-item__status--error {
@@ -247,7 +247,11 @@
 }
 
 .list-item__status--warning {
-  background: #ff9800;
+  background: var(--color-warning);
+}
+
+.list-item__status--info {
+  background: var(--color-info);
 }
 
 .list-item__status--pending {

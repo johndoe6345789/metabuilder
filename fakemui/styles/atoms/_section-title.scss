@@ -94,7 +94,7 @@
 // Uppercase variant
 .section-title--uppercase {
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: var(--mat-sys-label-small-tracking);
 }
 
 // With action link

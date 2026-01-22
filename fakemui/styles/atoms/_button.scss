@@ -202,7 +202,7 @@
 .btn--sm {
   height: 32px;
   padding: 0 16px;
-  font-size: 0.75rem;
+  font-size: var(--mat-sys-label-small-size);
 }
 
 .btn--md {
@@ -213,7 +213,7 @@
 .btn--lg {
   height: 48px;
   padding: 0 32px;
-  font-size: 1rem;
+  font-size: var(--mat-sys-body-large-size);
 }
 
 // ============================================

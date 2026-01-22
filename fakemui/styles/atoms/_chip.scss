@@ -106,13 +106,18 @@
 }
 
 .chip--success {
-  background: color-mix(in srgb, #4caf50 20%, transparent);
-  color: #2e7d32;
+  background: var(--color-success-container);
+  color: var(--color-on-success-container);
 }
 
 .chip--warning {
-  background: color-mix(in srgb, #ff9800 20%, transparent);
-  color: #e65100;
+  background: var(--color-warning-container);
+  color: var(--color-on-warning-container);
+}
+
+.chip--info {
+  background: var(--color-info-container);
+  color: var(--color-on-info-container);
 }
 
 .chip--error {
@@ -196,7 +201,7 @@
 
 .chip:disabled,
 .chip--disabled {
-  opacity: 0.38;
+  opacity: var(--disabled-content-opacity);
   cursor: not-allowed;
   pointer-events: none;
 }

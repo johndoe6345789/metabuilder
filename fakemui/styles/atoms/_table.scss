@@ -29,9 +29,9 @@
   text-align: left;
   font-family: var(--mat-sys-label-small-font);
   font-size: var(--mat-sys-label-small-size);
-  font-weight: 500;
+  font-weight: var(--mat-sys-label-small-weight);
   line-height: var(--mat-sys-label-small-line-height);
-  letter-spacing: 0.5px;
+  letter-spacing: var(--mat-sys-label-small-tracking);
   text-transform: uppercase;
   color: var(--mat-sys-on-surface-variant);
   background: var(--mat-sys-surface-container);

@@ -9,8 +9,8 @@
   border-radius: var(--mat-sys-corner-medium);
   overflow-x: auto;
   margin-bottom: 16px;
-  font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, monospace;
-  font-size: 0.875rem;
+  font-family: var(--font-mono);
+  font-size: var(--mat-sys-body-small-size);
   line-height: 1.6;
   color: var(--mat-sys-on-surface);
 }
@@ -75,7 +75,7 @@
   padding: 0 16px;
   color: var(--mat-sys-on-surface-variant);
   opacity: 0.5;
-  font-size: 0.75rem;
+  font-size: var(--mat-sys-label-small-size);
   text-align: right;
   user-select: none;
   border-right: 1px solid var(--mat-sys-outline-variant);

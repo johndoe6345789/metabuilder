@@ -59,7 +59,7 @@
   position: absolute;
   inset: 0;
   background: color-mix(in srgb, var(--mat-sys-surface) 80%, transparent);
-  z-index: 10;
+  z-index: var(--z-local-elevated);
   backdrop-filter: blur(2px);
 }
 
@@ -68,7 +68,7 @@
   position: fixed;
   inset: 0;
   background: var(--mat-sys-surface);
-  z-index: 9999;
+  z-index: var(--z-overlay-max);
 }
 
 // Skeleton loading placeholder

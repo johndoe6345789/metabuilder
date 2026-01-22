@@ -4,7 +4,7 @@
 
 // Base inline code
 .code-inline {
-  font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.875em;
   background: var(--mat-sys-surface-container-high);
   color: var(--mat-sys-on-surface);
@@ -33,17 +33,27 @@
 }
 
 .code-inline--function {
-  color: #ff9800;
+  color: var(--color-warning);
 }
 
 .code-inline--error {
   color: var(--mat-sys-error);
-  background: color-mix(in srgb, var(--mat-sys-error) 8%, var(--mat-sys-surface));
+  background: var(--color-error-container);
 }
 
 .code-inline--success {
-  color: #4caf50;
-  background: color-mix(in srgb, #4caf50 8%, var(--mat-sys-surface));
+  color: var(--color-success);
+  background: var(--color-success-container);
+}
+
+.code-inline--warning {
+  color: var(--color-warning);
+  background: var(--color-warning-container);
+}
+
+.code-inline--info {
+  color: var(--color-info);
+  background: var(--color-info-container);
 }
 
 // Selectable variant (clickable)

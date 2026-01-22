@@ -39,11 +39,15 @@
 }
 
 .progress--success .progress-bar {
-  background: #4caf50;
+  background: var(--color-success);
 }
 
 .progress--warning .progress-bar {
-  background: #ff9800;
+  background: var(--color-warning);
+}
+
+.progress--info .progress-bar {
+  background: var(--color-info);
 }
 
 .progress--error .progress-bar {

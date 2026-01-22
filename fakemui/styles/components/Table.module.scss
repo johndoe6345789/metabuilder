@@ -88,7 +88,7 @@
   background-color: var(--mat-sys-surface-container);
 
   .cell {
-    font-weight: 500;
+    font-weight: var(--mat-sys-label-large-weight);
     border-top: 1px solid var(--mat-sys-outline-variant);
     border-bottom: none;
   }
@@ -300,7 +300,7 @@
   }
 
   &:disabled {
-    opacity: 0.38;
+    opacity: var(--disabled-content-opacity);
     cursor: not-allowed;
   }
 

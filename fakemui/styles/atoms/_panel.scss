@@ -25,28 +25,28 @@
   position: fixed;
   bottom: 16px;
   right: 16px;
-  z-index: 1000;
+  z-index: var(--z-dropdown);
 }
 
 .panel--fixed-bl {
   position: fixed;
   bottom: 16px;
   left: 16px;
-  z-index: 1000;
+  z-index: var(--z-dropdown);
 }
 
 .panel--fixed-tr {
   position: fixed;
   top: 16px;
   right: 16px;
-  z-index: 1000;
+  z-index: var(--z-dropdown);
 }
 
 .panel--fixed-tl {
   position: fixed;
   top: 16px;
   left: 16px;
-  z-index: 1000;
+  z-index: var(--z-dropdown);
 }
 
 // Panel header

@@ -57,6 +57,12 @@
   --color-info-container: color-mix(in srgb, #2196f3 12%, var(--mat-sys-surface));
   --color-on-info-container: #0d47a1;
 
+  // Search/Find highlight (yellow - universal standard)
+  --color-search-highlight: #ffeb3b;
+  --color-on-search-highlight: #000000;
+  --color-search-highlight-current: #fdd835;
+  --color-search-highlight-ring: #fbc02d;
+
   // Error (from M3)
   --color-error: var(--mat-sys-error);
   --color-on-error: var(--mat-sys-on-error);
@@ -95,10 +101,20 @@
   --shadow-xl: var(--mat-sys-level4);
 
   // ============================================
+  // State Layer & Disabled Opacities (M3 spec)
+  // ============================================
+  --state-hover-opacity: 0.08;
+  --state-focus-opacity: 0.12;
+  --state-pressed-opacity: 0.12;
+  --state-dragged-opacity: 0.16;
+  --disabled-container-opacity: 0.12;
+  --disabled-content-opacity: 0.38;
+
+  // ============================================
   // Legacy Typography → M3 Type Scale
   // ============================================
   --font-family: var(--mat-sys-body-large-font);
-  --font-mono: var(--mat-sys-body-large-font);
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, monospace;
 
   --font-size-xs: var(--mat-sys-label-small-size);
   --font-size-sm: var(--mat-sys-body-small-size);
@@ -125,11 +141,20 @@
   --transition-slow: var(--mat-sys-motion-duration-long2) var(--mat-sys-motion-easing-standard);
 
   // ============================================
-  // Z-index Layers (unchanged)
+  // Z-index Layers (M3-aligned stacking order)
   // ============================================
-  --z-dropdown: 100;
-  --z-modal: 200;
-  --z-toast: 300;
+  // Local stacking (within components)
+  --z-local: 1;
+  --z-local-elevated: 10;
+
+  // Global stacking (overlays)
+  --z-dropdown: 1000;
+  --z-sticky: 1100;
+  --z-drawer: 1200;
+  --z-modal: 1300;
+  --z-snackbar: 1400;
+  --z-tooltip: 1500;
+  --z-overlay-max: 9999;
 }
 
 // ============================================

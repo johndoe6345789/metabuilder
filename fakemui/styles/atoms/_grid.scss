@@ -2,6 +2,8 @@
 // ==============================
 // Flat selectors for responsive grid layouts using M3 spacing
 
+@use '../mixins/responsive' as *;
+
 // Base grid
 .grid {
   display: grid;
@@ -100,8 +102,8 @@
   margin-bottom: 16px;
 }
 
-// Responsive grid breakpoints
-@media (max-width: 768px) {
+// Responsive grid breakpoints (M3 window size classes)
+@include compact {
   .grid-cols-2,
   .grid-cols-3,
   .grid-cols-4,
@@ -115,7 +117,7 @@
   }
 }
 
-@media (min-width: 769px) and (max-width: 1024px) {
+@include medium {
   .grid-cols-4,
   .grid-cols-5,
   .grid-cols-6 {

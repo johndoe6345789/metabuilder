@@ -20,28 +20,28 @@
 
 // Status variants
 .stat-badge--pending {
-  background: color-mix(in srgb, #ff9800 20%, var(--mat-sys-surface));
-  color: #e65100;
+  background: var(--color-warning-container);
+  color: var(--color-on-warning-container);
 }
 
 .stat-badge--success {
-  background: color-mix(in srgb, #4caf50 20%, var(--mat-sys-surface));
-  color: #2e7d32;
+  background: var(--color-success-container);
+  color: var(--color-on-success-container);
 }
 
 .stat-badge--error {
-  background: var(--mat-sys-error-container);
-  color: var(--mat-sys-on-error-container);
+  background: var(--color-error-container);
+  color: var(--color-on-error-container);
 }
 
 .stat-badge--warning {
-  background: color-mix(in srgb, #ff9800 20%, var(--mat-sys-surface));
-  color: #e65100;
+  background: var(--color-warning-container);
+  color: var(--color-on-warning-container);
 }
 
 .stat-badge--info {
-  background: color-mix(in srgb, #2196f3 20%, var(--mat-sys-surface));
-  color: #0d47a1;
+  background: var(--color-info-container);
+  color: var(--color-on-info-container);
 }
 
 // M3 color variants
@@ -62,8 +62,8 @@
 
 // Filled variants (stronger emphasis)
 .stat-badge--filled-success {
-  background: #4caf50;
-  color: #fff;
+  background: var(--color-success);
+  color: var(--color-on-success);
 }
 
 .stat-badge--filled-error {
@@ -72,13 +72,13 @@
 }
 
 .stat-badge--filled-warning {
-  background: #ff9800;
-  color: #000;
+  background: var(--color-warning);
+  color: var(--color-on-warning);
 }
 
 .stat-badge--filled-info {
-  background: #2196f3;
-  color: #fff;
+  background: var(--color-info);
+  color: var(--color-on-info);
 }
 
 .stat-badge--filled-primary {

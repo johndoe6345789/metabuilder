@@ -18,7 +18,7 @@
     top: 0;
     bottom: 0;
     border-radius: inherit;
-    transition: width 0.3s ease;
+    transition: width var(--mat-sys-motion-duration-medium2) var(--mat-sys-motion-easing-standard);
   }
 
   .bar {
@@ -53,7 +53,7 @@
   // Determinate (default)
   &.determinate {
     .bar {
-      transition: width 0.4s linear;
+      transition: width var(--mat-sys-motion-duration-medium4) var(--mat-sys-motion-easing-linear);
     }
   }
 
@@ -122,19 +122,28 @@
 
   &.success {
     .bar, .bar2 {
-      background-color: #4caf50;
+      background-color: var(--color-success);
     }
     .buffer {
-      background-color: color-mix(in srgb, #4caf50 30%, transparent);
+      background-color: color-mix(in srgb, var(--color-success) 30%, transparent);
     }
   }
 
   &.warning {
     .bar, .bar2 {
-      background-color: #ff9800;
+      background-color: var(--color-warning);
     }
     .buffer {
-      background-color: color-mix(in srgb, #ff9800 30%, transparent);
+      background-color: color-mix(in srgb, var(--color-warning) 30%, transparent);
+    }
+  }
+
+  &.info {
+    .bar, .bar2 {
+      background-color: var(--color-info);
+    }
+    .buffer {
+      background-color: color-mix(in srgb, var(--color-info) 30%, transparent);
     }
   }
 }
@@ -164,7 +173,7 @@
     }
 
     .circle {
-      transition: stroke-dashoffset 0.3s ease;
+      transition: stroke-dashoffset var(--mat-sys-motion-duration-medium2) var(--mat-sys-motion-easing-standard);
     }
   }
 

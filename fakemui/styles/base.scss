@@ -70,7 +70,7 @@ button {
 
 // Code
 code, pre {
-  font-family: var(--mat-sys-body-large-font);
+  font-family: var(--font-mono);
   font-feature-settings: "tnum" on, "lnum" on;
 }
 
@@ -108,5 +108,5 @@ code, pre {
 // Disabled state - M3 uses 38% opacity
 :disabled {
   cursor: not-allowed;
-  opacity: 0.38;
+  opacity: var(--disabled-content-opacity);
 }

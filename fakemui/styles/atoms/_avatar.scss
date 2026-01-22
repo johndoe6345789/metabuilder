@@ -177,7 +177,7 @@
 }
 
 .avatar__status--online {
-  background: #4caf50;
+  background: var(--color-success);
 }
 
 .avatar__status--busy {
@@ -185,5 +185,5 @@
 }
 
 .avatar__status--away {
-  background: #ff9800;
+  background: var(--color-warning);
 }

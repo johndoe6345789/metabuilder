@@ -124,7 +124,7 @@ table {
 // Disabled state - M3 uses 38% opacity for content
 :disabled {
   cursor: not-allowed;
-  opacity: 0.38;
+  opacity: var(--disabled-content-opacity);
 }
 
 // Text wrapping
@@ -134,7 +134,7 @@ p, h1, h2, h3, h4, h5, h6 {
 
 // Code blocks
 code, kbd, samp, pre {
-  font-family: var(--mat-sys-body-large-font);
+  font-family: var(--font-mono);
   font-feature-settings: "tnum" on, "lnum" on;
 }
 

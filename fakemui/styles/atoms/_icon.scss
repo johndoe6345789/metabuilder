@@ -68,11 +68,15 @@
 }
 
 .icon--success {
-  color: #4caf50;
+  color: var(--color-success);
 }
 
 .icon--warning {
-  color: #ff9800;
+  color: var(--color-warning);
+}
+
+.icon--info {
+  color: var(--color-info);
 }
 
 .icon--on-surface {

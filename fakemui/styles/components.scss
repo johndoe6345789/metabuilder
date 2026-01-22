@@ -265,7 +265,7 @@
     font-size: var(--mat-sys-body-small-size);
 
     &.added {
-      color: #22c55e; // Success green
+      color: var(--color-success);
     }
 
     &.removed {

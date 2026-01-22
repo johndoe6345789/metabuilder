@@ -64,6 +64,36 @@ $scrim: var(--mat-sys-scrim);
 $shadow: var(--mat-sys-shadow);
 
 // ============================================
+// Extended Semantic Colors (not in M3 spec)
+// ============================================
+// M3 only defines error. We extend with success/warning/info.
+// These follow M3 naming conventions.
+
+// Success (green)
+$success: var(--color-success);
+$on-success: var(--color-on-success);
+$success-container: var(--color-success-container);
+$on-success-container: var(--color-on-success-container);
+
+// Warning (amber/orange)
+$warning: var(--color-warning);
+$on-warning: var(--color-on-warning);
+$warning-container: var(--color-warning-container);
+$on-warning-container: var(--color-on-warning-container);
+
+// Info (blue)
+$info: var(--color-info);
+$on-info: var(--color-on-info);
+$info-container: var(--color-info-container);
+$on-info-container: var(--color-on-info-container);
+
+// Search/Find highlight (yellow)
+$search-highlight: var(--color-search-highlight);
+$on-search-highlight: var(--color-on-search-highlight);
+$search-highlight-current: var(--color-search-highlight-current);
+$search-highlight-ring: var(--color-search-highlight-ring);
+
+// ============================================
 // Shape Tokens (Corner Radius)
 // ============================================
 
@@ -102,6 +132,9 @@ $elevation-level5: var(--mat-sys-level5);
 // ============================================
 // Typography Tokens
 // ============================================
+
+// Monospace font for code
+$font-mono: var(--font-mono);
 
 // Display
 $display-large-font: var(--mat-sys-display-large-font);

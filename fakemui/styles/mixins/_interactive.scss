@@ -78,12 +78,12 @@
     background-position: 50%;
     transform: scale(10, 10);
     opacity: 0;
-    transition: transform 0.5s, opacity 1s;
+    transition: transform var(--mat-sys-motion-duration-long2), opacity var(--mat-sys-motion-duration-long4);
   }
 
   &:active::after {
     transform: scale(0, 0);
-    opacity: 0.12;
+    opacity: var(--state-pressed-opacity);
     transition: 0s;
   }
 }

@@ -6,7 +6,7 @@
 // Snackbar container
 .snackbar {
   position: fixed;
-  z-index: 1400;
+  z-index: var(--z-snackbar);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -180,7 +180,7 @@
 // Stacked snackbars
 .snackbar-container {
   position: fixed;
-  z-index: 1400;
+  z-index: var(--z-snackbar);
   display: flex;
   flex-direction: column;
   gap: 8px;

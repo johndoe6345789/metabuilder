@@ -199,5 +199,5 @@
   background: var(--mat-sys-error);
   color: var(--mat-sys-on-error);
   font-size: 0.625rem;
-  font-weight: 500;
+  font-weight: var(--mat-sys-label-small-weight);
 }

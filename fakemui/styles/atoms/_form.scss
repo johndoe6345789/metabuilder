@@ -13,10 +13,10 @@
 }
 
 .form-label {
-  font-family: var(--mat-sys-body-medium-font);
-  font-size: var(--mat-sys-body-medium-size);
-  font-weight: 500;
-  line-height: var(--mat-sys-body-medium-line-height);
+  font-family: var(--mat-sys-label-large-font);
+  font-size: var(--mat-sys-label-large-size);
+  font-weight: var(--mat-sys-label-large-weight);
+  line-height: var(--mat-sys-label-large-line-height);
   color: var(--mat-sys-on-surface-variant);
 }
 
@@ -62,9 +62,9 @@
 }
 
 .input:disabled {
-  opacity: 0.38;
+  opacity: var(--disabled-content-opacity);
   cursor: not-allowed;
-  border-color: color-mix(in srgb, var(--mat-sys-on-surface) 12%, transparent);
+  border-color: color-mix(in srgb, var(--mat-sys-on-surface) var(--disabled-container-opacity), transparent);
 }
 
 .input::placeholder {
@@ -129,7 +129,7 @@
 }
 
 .textarea:disabled {
-  opacity: 0.38;
+  opacity: var(--disabled-content-opacity);
   cursor: not-allowed;
 }
 
@@ -182,7 +182,7 @@
 }
 
 .select:disabled {
-  opacity: 0.38;
+  opacity: var(--disabled-content-opacity);
   cursor: not-allowed;
 }
 
@@ -241,7 +241,7 @@
 }
 
 .checkbox__input:disabled + .checkbox__box {
-  opacity: 0.38;
+  opacity: var(--disabled-content-opacity);
   cursor: not-allowed;
 }
 
@@ -306,7 +306,7 @@
 }
 
 .radio__input:disabled + .radio__circle {
-  opacity: 0.38;
+  opacity: var(--disabled-content-opacity);
   cursor: not-allowed;
 }
 
@@ -381,7 +381,7 @@
 }
 
 .switch__input:disabled + .switch__track {
-  opacity: 0.38;
+  opacity: var(--disabled-content-opacity);
   cursor: not-allowed;
 }
 
