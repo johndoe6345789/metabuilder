@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/parse_path",
+  "version": "1.0.0",
+  "description": "Parse URL path with Express-style :param patterns",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["packagerepo", "workflow", "plugin", "routing", "path"],
+  "main": "parse_path.py",
+  "files": ["parse_path.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "packagerepo.parse_path",
+    "category": "packagerepo",
+    "class": "ParsePath",
+    "entrypoint": "execute"
+  }
+}

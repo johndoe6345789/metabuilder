@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/kv_get",
+  "version": "1.0.0",
+  "description": "Get value from RocksDB key-value store",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["packagerepo", "workflow", "plugin", "rocksdb", "storage"],
+  "main": "kv_get.py",
+  "files": ["kv_get.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "packagerepo.kv_get",
+    "category": "packagerepo",
+    "class": "KvGet",
+    "entrypoint": "execute"
+  }
+}

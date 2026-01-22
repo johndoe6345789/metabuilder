@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/normalize_entity",
+  "version": "1.0.0",
+  "description": "Normalize entity fields (trim, lowercase, etc.)",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["packagerepo", "workflow", "plugin", "normalization", "validation"],
+  "main": "normalize_entity.py",
+  "files": ["normalize_entity.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "packagerepo.normalize_entity",
+    "category": "packagerepo",
+    "class": "NormalizeEntity",
+    "entrypoint": "execute"
+  }
+}

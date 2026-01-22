@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/auth_check_scopes",
+  "version": "1.0.0",
+  "description": "Check if principal has required scopes",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["packagerepo", "workflow", "plugin", "auth", "authorization"],
+  "main": "auth_check_scopes.py",
+  "files": ["auth_check_scopes.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "packagerepo.auth_check_scopes",
+    "category": "packagerepo",
+    "class": "AuthCheckScopes",
+    "entrypoint": "execute"
+  }
+}
