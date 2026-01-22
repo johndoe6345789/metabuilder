@@ -1,6 +1,9 @@
 """Workflow plugin: append tool results."""
+
 import os
 import re
+
+from ...base import NodeExecutor
 
 
 def _is_mvp_reached() -> bool:
@@ -31,14 +34,21 @@ def _is_mvp_reached() -> bool:
     return False
 
 
-def run(runtime, inputs):
+class CoreAppendToolResults(NodeExecutor):
     """Append tool results to the message list."""
-    messages = list(inputs.get("messages") or [])
-    tool_results = inputs.get("tool_results") or []
-    if tool_results:
-        messages.extend(tool_results)
 
-    if runtime.context.get("args", {}).get("yolo") and _is_mvp_reached():
-        runtime.logger.info("MVP reached. Stopping YOLO loop.")
+    node_type = "core.append_tool_results"
+    category = "core"
+    description = "Append tool execution results to the message list"
 
-    return {"messages": messages}
+    def execute(self, inputs, runtime=None):
+        """Append tool results to the message list."""
+        messages = list(inputs.get("messages") or [])
+        tool_results = inputs.get("tool_results") or []
+        if tool_results:
+            messages.extend(tool_results)
+
+        if runtime.context.get("args", {}).get("yolo") and _is_mvp_reached():
+            runtime.logger.info("MVP reached. Stopping YOLO loop.")
+
+        return {"messages": messages}

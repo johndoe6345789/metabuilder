@@ -6,8 +6,11 @@
   "license": "MIT",
   "keywords": ["list", "workflow", "plugin"],
   "main": "list_find.go",
+  "files": ["list_find.go", "factory.go"],
   "metadata": {
     "plugin_type": "list.find",
-    "category": "list"
+    "category": "list",
+    "struct": "ListFind",
+    "entrypoint": "Execute"
   }
 }

@@ -1,12 +1,18 @@
 """Workflow plugin: replace in string."""
 
+from ...base import NodeExecutor
 
-def run(_runtime, inputs):
+
+class StringReplace(NodeExecutor):
     """Replace occurrences in string."""
-    text = inputs.get("text", "")
-    old = inputs.get("old", "")
-    new = inputs.get("new", "")
-    count = inputs.get("count", -1)
 
-    result = text.replace(old, new, count)
-    return {"result": result}
+    node_type = "string.replace"
+    category = "string"
+    description = "Replace occurrences in string"
+
+    def execute(self, inputs, runtime=None):
+        value = str(inputs.get("value", inputs.get("text", "")))
+        old = inputs.get("old", inputs.get("search", ""))
+        new = inputs.get("new", inputs.get("replacement", ""))
+        count = inputs.get("count", -1)
+        return {"result": value.replace(old, new, count)}

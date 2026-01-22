@@ -6,8 +6,11 @@
   "license": "MIT",
   "keywords": ["dict", "workflow", "plugin"],
   "main": "dict_set.go",
+  "files": ["dict_set.go", "factory.go"],
   "metadata": {
     "plugin_type": "dict.set",
-    "category": "dict"
+    "category": "dict",
+    "struct": "DictSet",
+    "entrypoint": "Execute"
   }
 }

@@ -1,8 +1,19 @@
 """Workflow plugin: round number."""
 
+from ...base import NodeExecutor
 
-def run(_runtime, inputs):
-    """Round number to specified precision."""
-    value = inputs.get("value", 0)
-    precision = inputs.get("precision", 0)
-    return {"result": round(value, precision)}
+
+class MathRound(NodeExecutor):
+    """Round to specified decimals."""
+
+    node_type = "math.round"
+    category = "math"
+    description = "Round to specified decimals"
+
+    def execute(self, inputs, runtime=None):
+        try:
+            value = float(inputs.get("value", 0))
+            decimals = int(inputs.get("decimals", inputs.get("precision", 0)))
+            return {"result": round(value, decimals)}
+        except (ValueError, TypeError) as e:
+            return {"error": str(e)}

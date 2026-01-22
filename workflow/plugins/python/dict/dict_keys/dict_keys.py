@@ -1,11 +1,21 @@
 """Workflow plugin: get dictionary keys."""
 
+from ...base import NodeExecutor
 
-def run(_runtime, inputs):
+
+class DictKeys(NodeExecutor):
     """Get all keys from dictionary."""
-    obj = inputs.get("object", {})
 
-    if not isinstance(obj, dict):
-        return {"result": []}
+    node_type = "dict.keys"
+    category = "dict"
+    description = "Get all keys from dictionary"
 
-    return {"result": list(obj.keys())}
+    def execute(self, inputs, runtime=None):
+        obj = inputs.get("object", inputs.get("dict", {}))
+
+        if isinstance(obj, dict):
+            result = list(obj.keys())
+        else:
+            result = []
+
+        return {"result": result}

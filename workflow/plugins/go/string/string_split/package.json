@@ -6,8 +6,11 @@
   "license": "MIT",
   "keywords": ["string", "workflow", "plugin"],
   "main": "string_split.go",
+  "files": ["string_split.go", "factory.go"],
   "metadata": {
     "plugin_type": "string.split",
-    "category": "string"
+    "category": "string",
+    "struct": "StringSplit",
+    "entrypoint": "Execute"
   }
 }

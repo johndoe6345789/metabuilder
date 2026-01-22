@@ -6,8 +6,11 @@
   "license": "MIT",
   "keywords": ["backend", "workflow", "plugin", "prompt", "ai"],
   "main": "backend_load_prompt.py",
+  "files": ["backend_load_prompt.py", "factory.py"],
   "metadata": {
     "plugin_type": "backend.load_prompt",
-    "category": "backend"
+    "category": "backend",
+    "class": "LoadPrompt",
+    "entrypoint": "execute"
   }
 }

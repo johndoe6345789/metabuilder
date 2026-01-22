@@ -6,8 +6,11 @@
   "license": "MIT",
   "keywords": ["backend", "workflow", "plugin", "messages", "i18n"],
   "main": "backend_load_messages.py",
+  "files": ["backend_load_messages.py", "factory.py"],
   "metadata": {
     "plugin_type": "backend.load_messages",
-    "category": "backend"
+    "category": "backend",
+    "class": "LoadMessages",
+    "entrypoint": "execute"
   }
 }

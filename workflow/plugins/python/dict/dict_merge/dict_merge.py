@@ -1,13 +1,19 @@
 """Workflow plugin: merge dictionaries."""
 
+from ...base import NodeExecutor
 
-def run(_runtime, inputs):
+
+class DictMerge(NodeExecutor):
     """Merge multiple dictionaries."""
-    objects = inputs.get("objects", [])
-    result = {}
 
-    for obj in objects:
-        if isinstance(obj, dict):
-            result.update(obj)
+    node_type = "dict.merge"
+    category = "dict"
+    description = "Merge multiple dictionaries"
 
-    return {"result": result}
+    def execute(self, inputs, runtime=None):
+        objects = inputs.get("objects", [])
+        result = {}
+        for obj in objects:
+            if isinstance(obj, dict):
+                result.update(obj)
+        return {"result": result}

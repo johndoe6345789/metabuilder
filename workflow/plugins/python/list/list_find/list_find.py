@@ -1,14 +1,22 @@
 """Workflow plugin: find item in list."""
 
+from ...base import NodeExecutor
 
-def run(_runtime, inputs):
+
+class ListFind(NodeExecutor):
     """Find first item matching condition."""
-    items = inputs.get("items", [])
-    key = inputs.get("key")
-    value = inputs.get("value")
 
-    for item in items:
-        if isinstance(item, dict) and item.get(key) == value:
-            return {"result": item, "found": True}
+    node_type = "list.find"
+    category = "list"
+    description = "Find first item matching condition"
 
-    return {"result": None, "found": False}
+    def execute(self, inputs, runtime=None):
+        items = inputs.get("items", inputs.get("array", []))
+        key = inputs.get("key")
+        value = inputs.get("value")
+
+        for item in items:
+            if isinstance(item, dict) and item.get(key) == value:
+                return {"result": item, "found": True}
+
+        return {"result": None, "found": False}

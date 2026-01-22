@@ -1,35 +1,45 @@
 """Workflow plugin: configure logging."""
+
 import logging
 import sys
 
+from ...base import NodeExecutor
 
-def run(runtime, inputs):
-    """Configure logging for the workflow runtime.
 
-    Inputs:
-        level: Log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
-        format: Log format string
-        file: Optional file path for log output
-    """
-    level_str = inputs.get("level", "INFO").upper()
-    log_format = inputs.get("format", "%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-    log_file = inputs.get("file")
+class ConfigureLogging(NodeExecutor):
+    """Configure logging for the workflow runtime."""
 
-    level = getattr(logging, level_str, logging.INFO)
+    node_type = "backend.configure_logging"
+    category = "backend"
+    description = "Configure logging for workflow runtime"
 
-    handlers = [logging.StreamHandler(sys.stdout)]
-    if log_file:
-        handlers.append(logging.FileHandler(log_file))
+    def execute(self, inputs, runtime=None):
+        """Configure logging for the workflow runtime.
 
-    logging.basicConfig(
-        level=level,
-        format=log_format,
-        handlers=handlers
-    )
+        Inputs:
+            level: Log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+            format: Log format string
+            file: Optional file path for log output
+        """
+        level_str = inputs.get("level", "INFO").upper()
+        log_format = inputs.get("format", "%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+        log_file = inputs.get("file")
 
-    logger = logging.getLogger("metabuilder")
-    logger.setLevel(level)
+        level = getattr(logging, level_str, logging.INFO)
 
-    runtime.context["logger"] = logger
+        handlers = [logging.StreamHandler(sys.stdout)]
+        if log_file:
+            handlers.append(logging.FileHandler(log_file))
 
-    return {"success": True, "level": level_str}
+        logging.basicConfig(
+            level=level,
+            format=log_format,
+            handlers=handlers
+        )
+
+        logger = logging.getLogger("metabuilder")
+        logger.setLevel(level)
+
+        runtime.context["logger"] = logger
+
+        return {"success": True, "level": level_str}

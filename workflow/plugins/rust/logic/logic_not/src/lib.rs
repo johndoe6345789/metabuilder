@@ -1,7 +1,14 @@
 //! Workflow plugin: logical NOT.
 
 use serde_json::Value;
+use std::any::Any;
 use std::collections::HashMap;
+
+/// Trait for workflow node executors.
+pub trait NodeExecutor {
+    /// Execute the node with given inputs and optional runtime context.
+    fn execute(&self, inputs: HashMap<String, Value>, runtime: Option<&dyn Any>) -> HashMap<String, Value>;
+}
 
 /// Helper to convert Value to bool.
 fn to_bool(v: &Value) -> bool {
@@ -15,13 +22,43 @@ fn to_bool(v: &Value) -> bool {
     }
 }
 
-/// Logical NOT on a boolean value.
-pub fn run(_runtime: &mut HashMap<String, Value>, inputs: &HashMap<String, Value>) -> Result<HashMap<String, Value>, String> {
-    let value = inputs.get("value").unwrap_or(&Value::Null);
+/// LogicNot implements the NodeExecutor trait for logical NOT operations.
+pub struct LogicNot {
+    pub node_type: &'static str,
+    pub category: &'static str,
+    pub description: &'static str,
+}
 
-    let mut output = HashMap::new();
-    output.insert("result".to_string(), serde_json::json!(!to_bool(value)));
-    Ok(output)
+impl LogicNot {
+    /// Creates a new LogicNot instance.
+    pub fn new() -> Self {
+        Self {
+            node_type: "logic.not",
+            category: "logic",
+            description: "Logical NOT on a boolean value",
+        }
+    }
+}
+
+impl Default for LogicNot {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl NodeExecutor for LogicNot {
+    fn execute(&self, inputs: HashMap<String, Value>, _runtime: Option<&dyn Any>) -> HashMap<String, Value> {
+        let value = inputs.get("value").unwrap_or(&Value::Null);
+
+        let mut output = HashMap::new();
+        output.insert("result".to_string(), serde_json::json!(!to_bool(value)));
+        output
+    }
+}
+
+/// Creates a new LogicNot instance.
+pub fn create() -> LogicNot {
+    LogicNot::new()
 }
 
 #[cfg(test)]
@@ -29,12 +66,29 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_not() {
-        let mut runtime = HashMap::new();
+    fn test_not_true() {
+        let executor = LogicNot::new();
         let mut inputs = HashMap::new();
         inputs.insert("value".to_string(), serde_json::json!(true));
 
-        let result = run(&mut runtime, &inputs).unwrap();
+        let result = executor.execute(inputs, None);
         assert_eq!(result.get("result"), Some(&serde_json::json!(false)));
+    }
+
+    #[test]
+    fn test_not_false() {
+        let executor = LogicNot::new();
+        let mut inputs = HashMap::new();
+        inputs.insert("value".to_string(), serde_json::json!(false));
+
+        let result = executor.execute(inputs, None);
+        assert_eq!(result.get("result"), Some(&serde_json::json!(true)));
+    }
+
+    #[test]
+    fn test_factory() {
+        let executor = create();
+        assert_eq!(executor.node_type, "logic.not");
+        assert_eq!(executor.category, "logic");
     }
 }

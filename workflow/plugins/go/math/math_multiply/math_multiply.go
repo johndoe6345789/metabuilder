@@ -1,15 +1,27 @@
-// Package math_multiply provides the multiply numbers plugin.
+// Package math_multiply provides a workflow plugin for multiplying numbers.
 package math_multiply
 
-import (
-	plugin "metabuilder/workflow/plugins/go"
-)
+// MathMultiply implements the NodeExecutor interface for multiplying numbers.
+type MathMultiply struct {
+	NodeType    string
+	Category    string
+	Description string
+}
 
-// Run multiplies two or more numbers.
-func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]interface{}, error) {
+// NewMathMultiply creates a new MathMultiply instance.
+func NewMathMultiply() *MathMultiply {
+	return &MathMultiply{
+		NodeType:    "math.multiply",
+		Category:    "math",
+		Description: "Multiply two or more numbers",
+	}
+}
+
+// Execute runs the plugin logic.
+func (p *MathMultiply) Execute(inputs map[string]interface{}, runtime interface{}) map[string]interface{} {
 	numbers, ok := inputs["numbers"].([]interface{})
 	if !ok || len(numbers) == 0 {
-		return map[string]interface{}{"result": 0, "error": "numbers must be a non-empty array"}, nil
+		return map[string]interface{}{"result": 0, "error": "numbers must be a non-empty array"}
 	}
 
 	result := 1.0
@@ -17,7 +29,7 @@ func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]int
 		result *= toFloat64(n)
 	}
 
-	return map[string]interface{}{"result": result}, nil
+	return map[string]interface{}{"result": result}
 }
 
 func toFloat64(v interface{}) float64 {

@@ -1,15 +1,27 @@
-// Package math_subtract provides the subtract numbers plugin.
+// Package math_subtract provides a workflow plugin for subtracting numbers.
 package math_subtract
 
-import (
-	plugin "metabuilder/workflow/plugins/go"
-)
+// MathSubtract implements the NodeExecutor interface for subtracting numbers.
+type MathSubtract struct {
+	NodeType    string
+	Category    string
+	Description string
+}
 
-// Run subtracts numbers from the first number.
-func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]interface{}, error) {
+// NewMathSubtract creates a new MathSubtract instance.
+func NewMathSubtract() *MathSubtract {
+	return &MathSubtract{
+		NodeType:    "math.subtract",
+		Category:    "math",
+		Description: "Subtract numbers from the first number",
+	}
+}
+
+// Execute runs the plugin logic.
+func (p *MathSubtract) Execute(inputs map[string]interface{}, runtime interface{}) map[string]interface{} {
 	numbers, ok := inputs["numbers"].([]interface{})
 	if !ok || len(numbers) == 0 {
-		return map[string]interface{}{"result": 0, "error": "numbers must be a non-empty array"}, nil
+		return map[string]interface{}{"result": 0, "error": "numbers must be a non-empty array"}
 	}
 
 	result := toFloat64(numbers[0])
@@ -17,7 +29,7 @@ func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]int
 		result -= toFloat64(numbers[i])
 	}
 
-	return map[string]interface{}{"result": result}, nil
+	return map[string]interface{}{"result": result}
 }
 
 func toFloat64(v interface{}) float64 {

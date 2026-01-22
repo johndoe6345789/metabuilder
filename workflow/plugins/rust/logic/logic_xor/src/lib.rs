@@ -1,7 +1,14 @@
 //! Workflow plugin: logical XOR.
 
 use serde_json::Value;
+use std::any::Any;
 use std::collections::HashMap;
+
+/// Trait for workflow node executors.
+pub trait NodeExecutor {
+    /// Execute the node with given inputs and optional runtime context.
+    fn execute(&self, inputs: HashMap<String, Value>, runtime: Option<&dyn Any>) -> HashMap<String, Value>;
+}
 
 /// Helper to convert Value to bool.
 fn to_bool(v: &Value) -> bool {
@@ -15,18 +22,48 @@ fn to_bool(v: &Value) -> bool {
     }
 }
 
-/// Logical XOR on boolean values (exactly one true).
-pub fn run(_runtime: &mut HashMap<String, Value>, inputs: &HashMap<String, Value>) -> Result<HashMap<String, Value>, String> {
-    let values: Vec<Value> = inputs
-        .get("values")
-        .and_then(|v| serde_json::from_value(v.clone()).ok())
-        .unwrap_or_default();
+/// LogicXor implements the NodeExecutor trait for logical XOR operations.
+pub struct LogicXor {
+    pub node_type: &'static str,
+    pub category: &'static str,
+    pub description: &'static str,
+}
 
-    let true_count = values.iter().filter(|v| to_bool(v)).count();
+impl LogicXor {
+    /// Creates a new LogicXor instance.
+    pub fn new() -> Self {
+        Self {
+            node_type: "logic.xor",
+            category: "logic",
+            description: "Logical XOR on boolean values (exactly one true)",
+        }
+    }
+}
 
-    let mut output = HashMap::new();
-    output.insert("result".to_string(), serde_json::json!(true_count == 1));
-    Ok(output)
+impl Default for LogicXor {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl NodeExecutor for LogicXor {
+    fn execute(&self, inputs: HashMap<String, Value>, _runtime: Option<&dyn Any>) -> HashMap<String, Value> {
+        let values: Vec<Value> = inputs
+            .get("values")
+            .and_then(|v| serde_json::from_value(v.clone()).ok())
+            .unwrap_or_default();
+
+        let true_count = values.iter().filter(|v| to_bool(v)).count();
+
+        let mut output = HashMap::new();
+        output.insert("result".to_string(), serde_json::json!(true_count == 1));
+        output
+    }
+}
+
+/// Creates a new LogicXor instance.
+pub fn create() -> LogicXor {
+    LogicXor::new()
 }
 
 #[cfg(test)]
@@ -34,12 +71,29 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_xor() {
-        let mut runtime = HashMap::new();
+    fn test_xor_one_true() {
+        let executor = LogicXor::new();
         let mut inputs = HashMap::new();
         inputs.insert("values".to_string(), serde_json::json!([false, true, false]));
 
-        let result = run(&mut runtime, &inputs).unwrap();
+        let result = executor.execute(inputs, None);
         assert_eq!(result.get("result"), Some(&serde_json::json!(true)));
+    }
+
+    #[test]
+    fn test_xor_multiple_true() {
+        let executor = LogicXor::new();
+        let mut inputs = HashMap::new();
+        inputs.insert("values".to_string(), serde_json::json!([true, true, false]));
+
+        let result = executor.execute(inputs, None);
+        assert_eq!(result.get("result"), Some(&serde_json::json!(false)));
+    }
+
+    #[test]
+    fn test_factory() {
+        let executor = create();
+        assert_eq!(executor.node_type, "logic.xor");
+        assert_eq!(executor.category, "logic");
     }
 }

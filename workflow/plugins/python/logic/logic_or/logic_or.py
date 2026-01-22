@@ -1,7 +1,15 @@
 """Workflow plugin: logical OR."""
 
+from ...base import NodeExecutor
 
-def run(_runtime, inputs):
+
+class LogicOr(NodeExecutor):
     """Perform logical OR on values."""
-    values = inputs.get("values", [])
-    return {"result": any(values)}
+
+    node_type = "logic.or"
+    category = "logic"
+    description = "Perform logical OR on values"
+
+    def execute(self, inputs, runtime=None):
+        values = inputs.get("values", [])
+        return {"result": any(values)}

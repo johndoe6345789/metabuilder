@@ -1,21 +1,58 @@
 //! Workflow plugin: find index of value in list.
 
 use serde_json::Value;
+use std::any::Any;
 use std::collections::HashMap;
 
-/// Find index of value in list.
-pub fn run(_runtime: &mut HashMap<String, Value>, inputs: &HashMap<String, Value>) -> Result<HashMap<String, Value>, String> {
-    let list: Vec<Value> = inputs
-        .get("list")
-        .and_then(|v| serde_json::from_value(v.clone()).ok())
-        .unwrap_or_default();
-    let value = inputs.get("value").unwrap_or(&Value::Null);
+/// Trait for workflow node executors.
+pub trait NodeExecutor {
+    /// Execute the node with given inputs and optional runtime context.
+    fn execute(&self, inputs: HashMap<String, Value>, runtime: Option<&dyn Any>) -> HashMap<String, Value>;
+}
 
-    let result = list.iter().position(|v| v == value).map(|i| i as i64).unwrap_or(-1);
+/// ListIndexOf implements the NodeExecutor trait for finding index of value.
+pub struct ListIndexOf {
+    pub node_type: &'static str,
+    pub category: &'static str,
+    pub description: &'static str,
+}
 
-    let mut output = HashMap::new();
-    output.insert("result".to_string(), serde_json::json!(result));
-    Ok(output)
+impl ListIndexOf {
+    /// Creates a new ListIndexOf instance.
+    pub fn new() -> Self {
+        Self {
+            node_type: "list.index_of",
+            category: "list",
+            description: "Find index of value in list",
+        }
+    }
+}
+
+impl Default for ListIndexOf {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl NodeExecutor for ListIndexOf {
+    fn execute(&self, inputs: HashMap<String, Value>, _runtime: Option<&dyn Any>) -> HashMap<String, Value> {
+        let list: Vec<Value> = inputs
+            .get("list")
+            .and_then(|v| serde_json::from_value(v.clone()).ok())
+            .unwrap_or_default();
+        let value = inputs.get("value").unwrap_or(&Value::Null);
+
+        let index = list.iter().position(|v| v == value).map(|i| i as i64).unwrap_or(-1);
+
+        let mut result = HashMap::new();
+        result.insert("result".to_string(), serde_json::json!(index));
+        result
+    }
+}
+
+/// Creates a new ListIndexOf instance.
+pub fn create() -> ListIndexOf {
+    ListIndexOf::new()
 }
 
 #[cfg(test)]
@@ -24,12 +61,19 @@ mod tests {
 
     #[test]
     fn test_index_of() {
-        let mut runtime = HashMap::new();
+        let executor = ListIndexOf::new();
         let mut inputs = HashMap::new();
         inputs.insert("list".to_string(), serde_json::json!([1, 2, 3]));
         inputs.insert("value".to_string(), serde_json::json!(2));
 
-        let result = run(&mut runtime, &inputs).unwrap();
+        let result = executor.execute(inputs, None);
         assert_eq!(result.get("result"), Some(&serde_json::json!(1)));
+    }
+
+    #[test]
+    fn test_factory() {
+        let executor = create();
+        assert_eq!(executor.node_type, "list.index_of");
+        assert_eq!(executor.category, "list");
     }
 }

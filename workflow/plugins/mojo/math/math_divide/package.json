@@ -6,8 +6,11 @@
   "license": "MIT",
   "keywords": ["math", "workflow", "plugin"],
   "main": "math_divide.mojo",
+  "files": ["math_divide.mojo", "factory.mojo"],
   "metadata": {
     "plugin_type": "math.divide",
-    "category": "math"
+    "category": "math",
+    "struct": "MathDivide",
+    "entrypoint": "execute"
   }
 }

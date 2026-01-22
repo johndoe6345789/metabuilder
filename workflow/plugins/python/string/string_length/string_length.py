@@ -1,7 +1,15 @@
 """Workflow plugin: get string length."""
 
+from ...base import NodeExecutor
 
-def run(_runtime, inputs):
-    """Get length of a string."""
-    text = inputs.get("text", "")
-    return {"result": len(text)}
+
+class StringLength(NodeExecutor):
+    """Get string length."""
+
+    node_type = "string.length"
+    category = "string"
+    description = "Get string length"
+
+    def execute(self, inputs, runtime=None):
+        value = str(inputs.get("value", inputs.get("text", "")))
+        return {"result": len(value)}

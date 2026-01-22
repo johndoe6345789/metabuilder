@@ -6,8 +6,11 @@
   "license": "MIT",
   "keywords": ["backend", "workflow", "plugin", "tools", "policy"],
   "main": "backend_load_tool_policies.py",
+  "files": ["backend_load_tool_policies.py", "factory.py"],
   "metadata": {
     "plugin_type": "backend.load_tool_policies",
-    "category": "backend"
+    "category": "backend",
+    "class": "LoadToolPolicies",
+    "entrypoint": "execute"
   }
 }

@@ -1,15 +1,19 @@
 """Workflow plugin: slice a list."""
 
+from ...base import NodeExecutor
 
-def run(_runtime, inputs):
+
+class ListSlice(NodeExecutor):
     """Extract slice from list."""
-    items = inputs.get("items", [])
-    start = inputs.get("start", 0)
-    end = inputs.get("end")
 
-    if end is None:
-        result = items[start:]
-    else:
-        result = items[start:end]
+    node_type = "list.slice"
+    category = "list"
+    description = "Extract slice from list"
 
-    return {"result": result}
+    def execute(self, inputs, runtime=None):
+        array = inputs.get("array", inputs.get("items", inputs.get("list", [])))
+        start = inputs.get("start", 0)
+        end = inputs.get("end")
+
+        result = array[start:end] if end is not None else array[start:]
+        return {"result": result}

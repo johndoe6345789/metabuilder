@@ -6,8 +6,11 @@
   "license": "MIT",
   "keywords": ["backend", "workflow", "plugin", "loader"],
   "main": "backend_load_plugins.py",
+  "files": ["backend_load_plugins.py", "factory.py"],
   "metadata": {
     "plugin_type": "backend.load_plugins",
-    "category": "backend"
+    "category": "backend",
+    "class": "LoadPlugins",
+    "entrypoint": "execute"
   }
 }

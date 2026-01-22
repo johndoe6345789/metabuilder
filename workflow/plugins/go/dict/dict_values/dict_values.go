@@ -1,23 +1,38 @@
-// Package dict_values provides the dictionary values plugin.
+// Package dict_values provides a workflow plugin for getting dictionary values.
 package dict_values
 
 import (
 	"sort"
-
-	plugin "metabuilder/workflow/plugins/go"
 )
 
-// Run returns all values from a dictionary.
+// DictValues implements the NodeExecutor interface for getting dictionary values.
+type DictValues struct {
+	NodeType    string
+	Category    string
+	Description string
+}
+
+// NewDictValues creates a new DictValues instance.
+func NewDictValues() *DictValues {
+	return &DictValues{
+		NodeType:    "dict.values",
+		Category:    "dict",
+		Description: "Get all values from a dictionary",
+	}
+}
+
+// Execute runs the plugin logic.
+// Returns all values from a dictionary.
 // Inputs:
 //   - dict: the dictionary to get values from
 //   - sorted_by_key: (optional) return values sorted by their keys (default: false)
 //
 // Returns:
 //   - result: list of values
-func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]interface{}, error) {
+func (p *DictValues) Execute(inputs map[string]interface{}, runtime interface{}) map[string]interface{} {
 	dict, ok := inputs["dict"].(map[string]interface{})
 	if !ok {
-		return map[string]interface{}{"result": []interface{}{}}, nil
+		return map[string]interface{}{"result": []interface{}{}}
 	}
 
 	sortedByKey := false
@@ -38,7 +53,7 @@ func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]int
 		for _, k := range keys {
 			values = append(values, dict[k])
 		}
-		return map[string]interface{}{"result": values}, nil
+		return map[string]interface{}{"result": values}
 	}
 
 	// Return values in arbitrary order
@@ -47,5 +62,5 @@ func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]int
 		values = append(values, v)
 	}
 
-	return map[string]interface{}{"result": values}, nil
+	return map[string]interface{}{"result": values}
 }

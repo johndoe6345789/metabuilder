@@ -6,8 +6,11 @@
   "license": "MIT",
   "keywords": ["convert", "workflow", "plugin"],
   "main": "convert_to_number.go",
+  "files": ["convert_to_number.go", "factory.go"],
   "metadata": {
     "plugin_type": "convert.to_number",
-    "category": "convert"
+    "category": "convert",
+    "struct": "ConvertToNumber",
+    "entrypoint": "Execute"
   }
 }

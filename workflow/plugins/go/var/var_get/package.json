@@ -6,8 +6,11 @@
   "license": "MIT",
   "keywords": ["var", "workflow", "plugin"],
   "main": "var_get.go",
+  "files": ["var_get.go", "factory.go"],
   "metadata": {
     "plugin_type": "var.get",
-    "category": "var"
+    "category": "var",
+    "struct": "VarGet",
+    "entrypoint": "Execute"
   }
 }

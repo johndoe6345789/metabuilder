@@ -6,8 +6,11 @@
   "license": "MIT",
   "keywords": ["list", "workflow", "plugin"],
   "main": "list_reverse.go",
+  "files": ["list_reverse.go", "factory.go"],
   "metadata": {
     "plugin_type": "list.reverse",
-    "category": "list"
+    "category": "list",
+    "struct": "ListReverse",
+    "entrypoint": "Execute"
   }
 }

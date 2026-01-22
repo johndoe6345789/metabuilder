@@ -6,8 +6,11 @@
   "license": "MIT",
   "keywords": ["string", "workflow", "plugin"],
   "main": "string_upper.mojo",
+  "files": ["string_upper.mojo", "factory.mojo"],
   "metadata": {
     "plugin_type": "string.upper",
-    "category": "string"
+    "category": "string",
+    "struct": "StringUpper",
+    "entrypoint": "execute"
   }
 }

@@ -1,17 +1,31 @@
-// Package string_replace provides the replace string plugin.
+// Package string_replace provides a workflow plugin for replacing strings.
 package string_replace
 
 import (
 	"strings"
-
-	plugin "metabuilder/workflow/plugins/go"
 )
 
-// Run replaces occurrences in a string.
-func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]interface{}, error) {
+// StringReplace implements the NodeExecutor interface for replacing strings.
+type StringReplace struct {
+	NodeType    string
+	Category    string
+	Description string
+}
+
+// NewStringReplace creates a new StringReplace instance.
+func NewStringReplace() *StringReplace {
+	return &StringReplace{
+		NodeType:    "string.replace",
+		Category:    "string",
+		Description: "Replace occurrences in a string",
+	}
+}
+
+// Execute runs the plugin logic.
+func (p *StringReplace) Execute(inputs map[string]interface{}, runtime interface{}) map[string]interface{} {
 	str, ok := inputs["string"].(string)
 	if !ok {
-		return map[string]interface{}{"result": "", "error": "string is required"}, nil
+		return map[string]interface{}{"result": "", "error": "string is required"}
 	}
 
 	old, _ := inputs["old"].(string)
@@ -24,5 +38,5 @@ func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]int
 	}
 
 	result := strings.Replace(str, old, new, count)
-	return map[string]interface{}{"result": result}, nil
+	return map[string]interface{}{"result": result}
 }

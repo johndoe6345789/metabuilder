@@ -1,11 +1,24 @@
-// Package dict_merge provides the dictionary merge plugin.
+// Package dict_merge provides a workflow plugin for merging dictionaries.
 package dict_merge
 
-import (
-	plugin "metabuilder/workflow/plugins/go"
-)
+// DictMerge implements the NodeExecutor interface for merging dictionaries.
+type DictMerge struct {
+	NodeType    string
+	Category    string
+	Description string
+}
 
-// Run combines multiple dictionaries into one.
+// NewDictMerge creates a new DictMerge instance.
+func NewDictMerge() *DictMerge {
+	return &DictMerge{
+		NodeType:    "dict.merge",
+		Category:    "dict",
+		Description: "Merge multiple dictionaries into one",
+	}
+}
+
+// Execute runs the plugin logic.
+// Combines multiple dictionaries into one.
 // Later dictionaries override earlier ones for duplicate keys.
 // Inputs:
 //   - dicts: list of dictionaries to merge
@@ -13,10 +26,10 @@ import (
 //
 // Returns:
 //   - result: the merged dictionary
-func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]interface{}, error) {
+func (p *DictMerge) Execute(inputs map[string]interface{}, runtime interface{}) map[string]interface{} {
 	dicts, ok := inputs["dicts"].([]interface{})
 	if !ok {
-		return map[string]interface{}{"result": map[string]interface{}{}}, nil
+		return map[string]interface{}{"result": map[string]interface{}{}}
 	}
 
 	deep := false
@@ -39,7 +52,7 @@ func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]int
 		}
 	}
 
-	return map[string]interface{}{"result": result}, nil
+	return map[string]interface{}{"result": result}
 }
 
 // shallowMerge copies all keys from src to dst, overwriting existing keys.

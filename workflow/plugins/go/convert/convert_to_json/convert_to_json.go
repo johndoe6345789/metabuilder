@@ -1,14 +1,28 @@
-// Package convert_to_json provides the convert to JSON plugin.
+// Package convert_to_json provides a workflow plugin for converting values to JSON.
 package convert_to_json
 
 import (
 	"encoding/json"
-
-	plugin "metabuilder/workflow/plugins/go"
 )
 
-// Run converts a value to JSON string.
-func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]interface{}, error) {
+// ConvertToJson implements the NodeExecutor interface for converting values to JSON.
+type ConvertToJson struct {
+	NodeType    string
+	Category    string
+	Description string
+}
+
+// NewConvertToJson creates a new ConvertToJson instance.
+func NewConvertToJson() *ConvertToJson {
+	return &ConvertToJson{
+		NodeType:    "convert.to_json",
+		Category:    "convert",
+		Description: "Convert a value to JSON string",
+	}
+}
+
+// Execute runs the plugin logic.
+func (p *ConvertToJson) Execute(inputs map[string]interface{}, runtime interface{}) map[string]interface{} {
 	value := inputs["value"]
 	pretty := false
 	if p, ok := inputs["pretty"].(bool); ok {
@@ -25,8 +39,8 @@ func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]int
 	}
 
 	if err != nil {
-		return map[string]interface{}{"result": "", "error": err.Error()}, nil
+		return map[string]interface{}{"result": "", "error": err.Error()}
 	}
 
-	return map[string]interface{}{"result": string(bytes)}, nil
+	return map[string]interface{}{"result": string(bytes)}
 }

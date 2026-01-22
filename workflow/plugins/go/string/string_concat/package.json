@@ -6,8 +6,11 @@
   "license": "MIT",
   "keywords": ["string", "workflow", "plugin"],
   "main": "string_concat.go",
+  "files": ["string_concat.go", "factory.go"],
   "metadata": {
     "plugin_type": "string.concat",
-    "category": "string"
+    "category": "string",
+    "struct": "StringConcat",
+    "entrypoint": "Execute"
   }
 }

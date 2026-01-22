@@ -1,23 +1,37 @@
-// Package list_unique provides the list unique plugin.
+// Package list_unique provides a workflow plugin for removing duplicates from lists.
 package list_unique
 
 import (
 	"encoding/json"
-
-	plugin "metabuilder/workflow/plugins/go"
 )
 
-// Run removes duplicate elements from a list.
+// ListUnique implements the NodeExecutor interface for removing duplicates from lists.
+type ListUnique struct {
+	NodeType    string
+	Category    string
+	Description string
+}
+
+// NewListUnique creates a new ListUnique instance.
+func NewListUnique() *ListUnique {
+	return &ListUnique{
+		NodeType:    "list.unique",
+		Category:    "list",
+		Description: "Remove duplicate elements from a list",
+	}
+}
+
+// Execute runs the plugin logic.
 // Inputs:
 //   - list: the list to deduplicate
 //   - key: (optional) the key to use for uniqueness in objects
 //
 // Returns:
 //   - result: the list with duplicates removed
-func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]interface{}, error) {
+func (p *ListUnique) Execute(inputs map[string]interface{}, runtime interface{}) map[string]interface{} {
 	list, ok := inputs["list"].([]interface{})
 	if !ok {
-		return map[string]interface{}{"result": []interface{}{}}, nil
+		return map[string]interface{}{"result": []interface{}{}}
 	}
 
 	key, hasKey := inputs["key"].(string)
@@ -48,7 +62,7 @@ func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]int
 		}
 	}
 
-	return map[string]interface{}{"result": result}, nil
+	return map[string]interface{}{"result": result}
 }
 
 // toHashKey converts a value to a string suitable for use as a map key.

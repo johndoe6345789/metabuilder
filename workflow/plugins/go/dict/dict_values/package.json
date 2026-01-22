@@ -6,8 +6,11 @@
   "license": "MIT",
   "keywords": ["dict", "workflow", "plugin"],
   "main": "dict_values.go",
+  "files": ["dict_values.go", "factory.go"],
   "metadata": {
     "plugin_type": "dict.values",
-    "category": "dict"
+    "category": "dict",
+    "struct": "DictValues",
+    "entrypoint": "Execute"
   }
 }

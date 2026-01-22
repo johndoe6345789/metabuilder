@@ -1,15 +1,27 @@
-// Package list_concat provides the concatenate lists plugin.
+// Package list_concat provides a workflow plugin for concatenating lists.
 package list_concat
 
-import (
-	plugin "metabuilder/workflow/plugins/go"
-)
+// ListConcat implements the NodeExecutor interface for concatenating lists.
+type ListConcat struct {
+	NodeType    string
+	Category    string
+	Description string
+}
 
-// Run concatenates multiple lists.
-func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]interface{}, error) {
+// NewListConcat creates a new ListConcat instance.
+func NewListConcat() *ListConcat {
+	return &ListConcat{
+		NodeType:    "list.concat",
+		Category:    "list",
+		Description: "Concatenate multiple lists",
+	}
+}
+
+// Execute runs the plugin logic.
+func (p *ListConcat) Execute(inputs map[string]interface{}, runtime interface{}) map[string]interface{} {
 	lists, ok := inputs["lists"].([]interface{})
 	if !ok {
-		return map[string]interface{}{"result": []interface{}{}}, nil
+		return map[string]interface{}{"result": []interface{}{}}
 	}
 
 	var result []interface{}
@@ -19,5 +31,5 @@ func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]int
 		}
 	}
 
-	return map[string]interface{}{"result": result}, nil
+	return map[string]interface{}{"result": result}
 }

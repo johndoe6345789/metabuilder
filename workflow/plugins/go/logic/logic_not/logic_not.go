@@ -1,14 +1,26 @@
-// Package logic_not provides the logical NOT plugin.
+// Package logic_not provides a workflow plugin for logical NOT operations.
 package logic_not
 
-import (
-	plugin "metabuilder/workflow/plugins/go"
-)
+// LogicNot implements the NodeExecutor interface for logical NOT operations.
+type LogicNot struct {
+	NodeType    string
+	Category    string
+	Description string
+}
 
-// Run performs logical NOT on a boolean value.
-func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]interface{}, error) {
+// NewLogicNot creates a new LogicNot instance.
+func NewLogicNot() *LogicNot {
+	return &LogicNot{
+		NodeType:    "logic.not",
+		Category:    "logic",
+		Description: "Perform logical NOT on a boolean value",
+	}
+}
+
+// Execute runs the plugin logic.
+func (p *LogicNot) Execute(inputs map[string]interface{}, runtime interface{}) map[string]interface{} {
 	value := inputs["value"]
-	return map[string]interface{}{"result": !toBool(value)}, nil
+	return map[string]interface{}{"result": !toBool(value)}
 }
 
 func toBool(v interface{}) bool {

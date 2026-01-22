@@ -1,0 +1,32 @@
+{
+  "name": "@metabuilder/plugin-convert",
+  "version": "1.0.0",
+  "description": "Type conversion and parsing workflow plugins for MetaBuilder",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["convert", "parse", "workflow", "plugin", "type"],
+  "main": "src/index.ts",
+  "files": ["src/index.ts", "src/factory.ts"],
+  "metadata": {
+    "plugin_type": "convert",
+    "category": "convert",
+    "classes": [
+      "ConvertToString",
+      "ConvertToNumber",
+      "ConvertToInteger",
+      "ConvertToFloat",
+      "ConvertToBoolean",
+      "ConvertToArray",
+      "ConvertToObject",
+      "ConvertParseJson",
+      "ConvertToJson",
+      "ConvertParseDate",
+      "ConvertFormatDate",
+      "ConvertBase64Encode",
+      "ConvertBase64Decode",
+      "ConvertUrlEncode",
+      "ConvertUrlDecode"
+    ],
+    "entrypoint": "execute"
+  }
+}

@@ -1,14 +1,16 @@
 {
   "name": "@metabuilder/logic_gte",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Check if a >= b",
   "author": "MetaBuilder",
   "license": "MIT",
-  "keywords": ["logic", "workflow", "plugin", "rust"],
+  "keywords": ["logic", "workflow", "plugin"],
   "main": "src/lib.rs",
+  "files": ["src/lib.rs", "src/factory.rs"],
   "metadata": {
     "plugin_type": "logic.gte",
     "category": "logic",
-    "runtime": "rust"
+    "struct": "LogicGte",
+    "entrypoint": "execute"
   }
 }

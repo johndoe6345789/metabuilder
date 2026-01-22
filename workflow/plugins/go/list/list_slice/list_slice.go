@@ -1,15 +1,27 @@
-// Package list_slice provides the list slice plugin.
+// Package list_slice provides a workflow plugin for slicing lists.
 package list_slice
 
-import (
-	plugin "metabuilder/workflow/plugins/go"
-)
+// ListSlice implements the NodeExecutor interface for slicing lists.
+type ListSlice struct {
+	NodeType    string
+	Category    string
+	Description string
+}
 
-// Run extracts a portion of a list.
-func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]interface{}, error) {
+// NewListSlice creates a new ListSlice instance.
+func NewListSlice() *ListSlice {
+	return &ListSlice{
+		NodeType:    "list.slice",
+		Category:    "list",
+		Description: "Extract a portion of a list",
+	}
+}
+
+// Execute runs the plugin logic.
+func (p *ListSlice) Execute(inputs map[string]interface{}, runtime interface{}) map[string]interface{} {
 	list, ok := inputs["list"].([]interface{})
 	if !ok {
-		return map[string]interface{}{"result": []interface{}{}}, nil
+		return map[string]interface{}{"result": []interface{}{}}
 	}
 
 	start := 0
@@ -41,5 +53,5 @@ func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]int
 		start = end
 	}
 
-	return map[string]interface{}{"result": list[start:end]}, nil
+	return map[string]interface{}{"result": list[start:end]}
 }

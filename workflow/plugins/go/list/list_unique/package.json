@@ -6,8 +6,11 @@
   "license": "MIT",
   "keywords": ["list", "workflow", "plugin"],
   "main": "list_unique.go",
+  "files": ["list_unique.go", "factory.go"],
   "metadata": {
     "plugin_type": "list.unique",
-    "category": "list"
+    "category": "list",
+    "struct": "ListUnique",
+    "entrypoint": "Execute"
   }
 }

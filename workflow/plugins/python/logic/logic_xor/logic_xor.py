@@ -1,8 +1,16 @@
 """Workflow plugin: logical XOR."""
 
+from ...base import NodeExecutor
 
-def run(_runtime, inputs):
+
+class LogicXor(NodeExecutor):
     """Perform logical XOR on two values."""
-    a = inputs.get("a", False)
-    b = inputs.get("b", False)
-    return {"result": bool(a) != bool(b)}
+
+    node_type = "logic.xor"
+    category = "logic"
+    description = "Perform logical XOR on two values"
+
+    def execute(self, inputs, runtime=None):
+        a = bool(inputs.get("a", False))
+        b = bool(inputs.get("b", False))
+        return {"result": a != b}

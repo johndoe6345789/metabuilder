@@ -6,8 +6,11 @@
   "license": "MIT",
   "keywords": ["backend", "workflow", "plugin", "tools"],
   "main": "backend_build_tool_map.py",
+  "files": ["backend_build_tool_map.py", "factory.py"],
   "metadata": {
     "plugin_type": "backend.build_tool_map",
-    "category": "backend"
+    "category": "backend",
+    "class": "BuildToolMap",
+    "entrypoint": "execute"
   }
 }

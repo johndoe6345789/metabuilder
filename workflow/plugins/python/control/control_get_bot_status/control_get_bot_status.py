@@ -1,5 +1,7 @@
 """Workflow plugin: get current bot execution status."""
 
+from ...base import NodeExecutor
+
 # Global state for bot process
 _bot_process = None
 _mock_running = False
@@ -27,13 +29,20 @@ def reset_bot_state():
     _mock_running = False
 
 
-def run(_runtime, _inputs):
-    """Get current bot execution status.
+class ControlGetBotStatus(NodeExecutor):
+    """Get current bot execution status."""
 
-    Returns:
-        Dictionary with:
-            - is_running: bool - Whether the bot is currently running
-            - config: dict - Current run configuration (empty if not running)
-            - process: object - Bot process object (or None if not running)
-    """
-    return get_bot_state()
+    node_type = "control.get_bot_status"
+    category = "control"
+    description = "Get current bot execution status"
+
+    def execute(self, inputs, runtime=None):
+        """Get current bot execution status.
+
+        Returns:
+            Dictionary with:
+                - is_running: bool - Whether the bot is currently running
+                - config: dict - Current run configuration (empty if not running)
+                - process: object - Bot process object (or None if not running)
+        """
+        return get_bot_state()

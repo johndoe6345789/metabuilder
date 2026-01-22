@@ -6,8 +6,11 @@
   "license": "MIT",
   "keywords": ["logic", "workflow", "plugin"],
   "main": "logic_or.go",
+  "files": ["logic_or.go", "factory.go"],
   "metadata": {
     "plugin_type": "logic.or",
-    "category": "logic"
+    "category": "logic",
+    "struct": "LogicOr",
+    "entrypoint": "Execute"
   }
 }

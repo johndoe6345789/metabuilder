@@ -6,8 +6,11 @@
   "license": "MIT",
   "keywords": ["dict", "workflow", "plugin"],
   "main": "dict_delete.go",
+  "files": ["dict_delete.go", "factory.go"],
   "metadata": {
     "plugin_type": "dict.delete",
-    "category": "dict"
+    "category": "dict",
+    "struct": "DictDelete",
+    "entrypoint": "Execute"
   }
 }

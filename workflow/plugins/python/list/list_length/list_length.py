@@ -1,7 +1,15 @@
 """Workflow plugin: get list length."""
 
+from ...base import NodeExecutor
 
-def run(_runtime, inputs):
-    """Get length of a list or string."""
-    items = inputs.get("items", [])
-    return {"result": len(items) if items is not None else 0}
+
+class ListLength(NodeExecutor):
+    """Get list length."""
+
+    node_type = "list.length"
+    category = "list"
+    description = "Get list length"
+
+    def execute(self, inputs, runtime=None):
+        array = inputs.get("array", inputs.get("list", []))
+        return {"result": len(array) if array is not None else 0}

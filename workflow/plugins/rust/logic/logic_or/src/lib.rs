@@ -1,7 +1,14 @@
 //! Workflow plugin: logical OR.
 
 use serde_json::Value;
+use std::any::Any;
 use std::collections::HashMap;
+
+/// Trait for workflow node executors.
+pub trait NodeExecutor {
+    /// Execute the node with given inputs and optional runtime context.
+    fn execute(&self, inputs: HashMap<String, Value>, runtime: Option<&dyn Any>) -> HashMap<String, Value>;
+}
 
 /// Helper to convert Value to bool.
 fn to_bool(v: &Value) -> bool {
@@ -15,18 +22,48 @@ fn to_bool(v: &Value) -> bool {
     }
 }
 
-/// Logical OR on boolean values.
-pub fn run(_runtime: &mut HashMap<String, Value>, inputs: &HashMap<String, Value>) -> Result<HashMap<String, Value>, String> {
-    let values: Vec<Value> = inputs
-        .get("values")
-        .and_then(|v| serde_json::from_value(v.clone()).ok())
-        .unwrap_or_default();
+/// LogicOr implements the NodeExecutor trait for logical OR operations.
+pub struct LogicOr {
+    pub node_type: &'static str,
+    pub category: &'static str,
+    pub description: &'static str,
+}
 
-    let result = values.iter().any(to_bool);
+impl LogicOr {
+    /// Creates a new LogicOr instance.
+    pub fn new() -> Self {
+        Self {
+            node_type: "logic.or",
+            category: "logic",
+            description: "Logical OR on boolean values",
+        }
+    }
+}
 
-    let mut output = HashMap::new();
-    output.insert("result".to_string(), serde_json::json!(result));
-    Ok(output)
+impl Default for LogicOr {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl NodeExecutor for LogicOr {
+    fn execute(&self, inputs: HashMap<String, Value>, _runtime: Option<&dyn Any>) -> HashMap<String, Value> {
+        let values: Vec<Value> = inputs
+            .get("values")
+            .and_then(|v| serde_json::from_value(v.clone()).ok())
+            .unwrap_or_default();
+
+        let result = values.iter().any(to_bool);
+
+        let mut output = HashMap::new();
+        output.insert("result".to_string(), serde_json::json!(result));
+        output
+    }
+}
+
+/// Creates a new LogicOr instance.
+pub fn create() -> LogicOr {
+    LogicOr::new()
 }
 
 #[cfg(test)]
@@ -35,11 +72,28 @@ mod tests {
 
     #[test]
     fn test_or() {
-        let mut runtime = HashMap::new();
+        let executor = LogicOr::new();
         let mut inputs = HashMap::new();
         inputs.insert("values".to_string(), serde_json::json!([false, true, false]));
 
-        let result = run(&mut runtime, &inputs).unwrap();
+        let result = executor.execute(inputs, None);
         assert_eq!(result.get("result"), Some(&serde_json::json!(true)));
+    }
+
+    #[test]
+    fn test_or_all_false() {
+        let executor = LogicOr::new();
+        let mut inputs = HashMap::new();
+        inputs.insert("values".to_string(), serde_json::json!([false, false, false]));
+
+        let result = executor.execute(inputs, None);
+        assert_eq!(result.get("result"), Some(&serde_json::json!(false)));
+    }
+
+    #[test]
+    fn test_factory() {
+        let executor = create();
+        assert_eq!(executor.node_type, "logic.or");
+        assert_eq!(executor.category, "logic");
     }
 }

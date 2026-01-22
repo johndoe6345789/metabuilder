@@ -1,24 +1,34 @@
 """Workflow plugin: load tool policies."""
+
 import os
 import json
 
+from ...base import NodeExecutor
 
-def run(runtime, inputs):
-    """Load tool policies for access control.
 
-    Inputs:
-        path: Path to tool policies file
-    """
-    path = inputs.get("path", "config/tool_policies.json")
+class LoadToolPolicies(NodeExecutor):
+    """Load tool policies for access control."""
 
-    if not os.path.exists(path):
-        # Default to permissive if no policies file
-        runtime.context["tool_policies"] = {}
-        return {"success": True, "policy_count": 0}
+    node_type = "backend.load_tool_policies"
+    category = "backend"
+    description = "Load tool policies for access control"
 
-    with open(path) as f:
-        policies = json.load(f)
+    def execute(self, inputs, runtime=None):
+        """Load tool policies for access control.
 
-    runtime.context["tool_policies"] = policies
+        Inputs:
+            path: Path to tool policies file
+        """
+        path = inputs.get("path", "config/tool_policies.json")
 
-    return {"success": True, "policy_count": len(policies)}
+        if not os.path.exists(path):
+            # Default to permissive if no policies file
+            runtime.context["tool_policies"] = {}
+            return {"success": True, "policy_count": 0}
+
+        with open(path) as f:
+            policies = json.load(f)
+
+        runtime.context["tool_policies"] = policies
+
+        return {"success": True, "policy_count": len(policies)}

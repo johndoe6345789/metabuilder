@@ -1,25 +1,35 @@
 """Workflow plugin: create GitHub client."""
+
 import os
 
+from ...base import NodeExecutor
 
-def run(runtime, inputs):
-    """Create a GitHub client and store in runtime context.
 
-    Inputs:
-        token: GitHub token (defaults to GITHUB_TOKEN env var)
-    """
-    try:
-        from github import Github
-    except ImportError:
-        return {"success": False, "error": "PyGithub package not installed"}
+class CreateGitHub(NodeExecutor):
+    """Create a GitHub client and store in runtime context."""
 
-    token = inputs.get("token") or os.getenv("GITHUB_TOKEN")
+    node_type = "backend.create_github"
+    category = "backend"
+    description = "Create GitHub client for repository operations"
 
-    if not token:
-        return {"success": False, "error": "No token provided"}
+    def execute(self, inputs, runtime=None):
+        """Create a GitHub client and store in runtime context.
 
-    client = Github(token)
+        Inputs:
+            token: GitHub token (defaults to GITHUB_TOKEN env var)
+        """
+        try:
+            from github import Github
+        except ImportError:
+            return {"success": False, "error": "PyGithub package not installed"}
 
-    runtime.context["github"] = client
+        token = inputs.get("token") or os.getenv("GITHUB_TOKEN")
 
-    return {"success": True}
+        if not token:
+            return {"success": False, "error": "No token provided"}
+
+        client = Github(token)
+
+        runtime.context["github"] = client
+
+        return {"success": True}

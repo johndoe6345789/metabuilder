@@ -6,8 +6,11 @@
   "license": "MIT",
   "keywords": ["backend", "workflow", "plugin", "openai", "ai"],
   "main": "backend_create_openai.py",
+  "files": ["backend_create_openai.py", "factory.py"],
   "metadata": {
     "plugin_type": "backend.create_openai",
-    "category": "backend"
+    "category": "backend",
+    "class": "CreateOpenAI",
+    "entrypoint": "execute"
   }
 }

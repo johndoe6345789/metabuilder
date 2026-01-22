@@ -6,8 +6,11 @@
   "license": "MIT",
   "keywords": ["list", "workflow", "plugin"],
   "main": "list_concat.mojo",
+  "files": ["list_concat.mojo", "factory.mojo"],
   "metadata": {
     "plugin_type": "list.concat",
-    "category": "list"
+    "category": "list",
+    "struct": "ListConcat",
+    "entrypoint": "execute"
   }
 }

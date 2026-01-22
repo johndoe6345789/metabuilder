@@ -6,8 +6,11 @@
   "license": "MIT",
   "keywords": ["math", "workflow", "plugin"],
   "main": "math_multiply.go",
+  "files": ["math_multiply.go", "factory.go"],
   "metadata": {
     "plugin_type": "math.multiply",
-    "category": "math"
+    "category": "math",
+    "struct": "MathMultiply",
+    "entrypoint": "Execute"
   }
 }

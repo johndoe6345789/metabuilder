@@ -6,8 +6,11 @@
   "license": "MIT",
   "keywords": ["string", "workflow", "plugin"],
   "main": "string_replace.go",
+  "files": ["string_replace.go", "factory.go"],
   "metadata": {
     "plugin_type": "string.replace",
-    "category": "string"
+    "category": "string",
+    "struct": "StringReplace",
+    "entrypoint": "Execute"
   }
 }

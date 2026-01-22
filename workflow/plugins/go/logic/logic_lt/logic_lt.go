@@ -1,16 +1,28 @@
-// Package logic_lt provides the less than comparison plugin.
+// Package logic_lt provides a workflow plugin for less than comparisons.
 package logic_lt
 
-import (
-	plugin "metabuilder/workflow/plugins/go"
-)
+// LogicLt implements the NodeExecutor interface for less than comparisons.
+type LogicLt struct {
+	NodeType    string
+	Category    string
+	Description string
+}
 
-// Run checks if a < b.
-func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]interface{}, error) {
+// NewLogicLt creates a new LogicLt instance.
+func NewLogicLt() *LogicLt {
+	return &LogicLt{
+		NodeType:    "logic.lt",
+		Category:    "logic",
+		Description: "Check if a is less than b",
+	}
+}
+
+// Execute runs the plugin logic.
+func (p *LogicLt) Execute(inputs map[string]interface{}, runtime interface{}) map[string]interface{} {
 	a := toFloat(inputs["a"])
 	b := toFloat(inputs["b"])
 
-	return map[string]interface{}{"result": a < b}, nil
+	return map[string]interface{}{"result": a < b}
 }
 
 func toFloat(v interface{}) float64 {

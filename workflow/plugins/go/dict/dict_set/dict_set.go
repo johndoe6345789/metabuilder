@@ -1,13 +1,28 @@
-// Package dict_set provides the dictionary set plugin.
+// Package dict_set provides a workflow plugin for setting dictionary values.
 package dict_set
 
 import (
 	"strings"
-
-	plugin "metabuilder/workflow/plugins/go"
 )
 
-// Run sets a value in a dictionary by key.
+// DictSet implements the NodeExecutor interface for setting dictionary values.
+type DictSet struct {
+	NodeType    string
+	Category    string
+	Description string
+}
+
+// NewDictSet creates a new DictSet instance.
+func NewDictSet() *DictSet {
+	return &DictSet{
+		NodeType:    "dict.set",
+		Category:    "dict",
+		Description: "Set a value in a dictionary by key",
+	}
+}
+
+// Execute runs the plugin logic.
+// Sets a value in a dictionary by key.
 // Supports dot notation for nested keys (e.g., "user.name").
 // Creates intermediate objects as needed.
 // Inputs:
@@ -17,7 +32,7 @@ import (
 //
 // Returns:
 //   - result: the modified dictionary
-func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]interface{}, error) {
+func (p *DictSet) Execute(inputs map[string]interface{}, runtime interface{}) map[string]interface{} {
 	dict, ok := inputs["dict"].(map[string]interface{})
 	if !ok {
 		dict = make(map[string]interface{})
@@ -28,7 +43,7 @@ func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]int
 
 	key, ok := inputs["key"].(string)
 	if !ok {
-		return map[string]interface{}{"result": dict}, nil
+		return map[string]interface{}{"result": dict}
 	}
 
 	value := inputs["value"]
@@ -39,7 +54,7 @@ func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]int
 	if len(parts) == 1 {
 		// Simple key
 		dict[key] = value
-		return map[string]interface{}{"result": dict}, nil
+		return map[string]interface{}{"result": dict}
 	}
 
 	// Nested key - navigate/create intermediate objects
@@ -69,7 +84,7 @@ func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]int
 	// Set the final value
 	current[parts[len(parts)-1]] = value
 
-	return map[string]interface{}{"result": dict}, nil
+	return map[string]interface{}{"result": dict}
 }
 
 // copyDict creates a shallow copy of a dictionary.

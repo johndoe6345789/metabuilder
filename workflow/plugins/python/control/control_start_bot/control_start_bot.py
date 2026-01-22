@@ -1,20 +1,19 @@
 """Workflow plugin: start bot execution in background thread."""
+
 import os
 import subprocess
 import sys
 import threading
 import time
 
-from .control_get_bot_status import (
+from ...base import NodeExecutor
+from ..control_get_bot_status.control_get_bot_status import (
     get_bot_state,
     reset_bot_state,
-    _bot_process,
-    _mock_running,
-    _current_run_config
 )
 
 # Import global state
-import workflow.plugins.python.control.control_get_bot_status as bot_status
+import workflow.plugins.python.control.control_get_bot_status.control_get_bot_status as bot_status
 
 
 def _run_bot_task(mode: str, iterations: int, yolo: bool, stop_at_mvp: bool) -> None:
@@ -61,37 +60,44 @@ def _run_bot_task(mode: str, iterations: int, yolo: bool, stop_at_mvp: bool) -> 
         reset_bot_state()
 
 
-def run(_runtime, inputs):
-    """Start bot execution in background thread.
+class ControlStartBot(NodeExecutor):
+    """Start bot execution in background thread."""
 
-    Args:
-        inputs: Dictionary with keys:
-            - mode: str (default: "once") - Execution mode ("once", "iterations", etc.)
-            - iterations: int (default: 1) - Number of iterations for "iterations" mode
-            - yolo: bool (default: True) - Run in YOLO mode
-            - stop_at_mvp: bool (default: False) - Stop when MVP is reached
+    node_type = "control.start_bot"
+    category = "control"
+    description = "Start bot execution in background thread"
 
-    Returns:
-        Dictionary with:
-            - started: bool - Whether the bot was started successfully
-            - error: str (optional) - Error message if bot is already running
-    """
-    mode = inputs.get("mode", "once")
-    iterations = inputs.get("iterations", 1)
-    yolo = inputs.get("yolo", True)
-    stop_at_mvp = inputs.get("stop_at_mvp", False)
+    def execute(self, inputs, runtime=None):
+        """Start bot execution in background thread.
 
-    # Check if bot is already running
-    state = get_bot_state()
-    if state["is_running"]:
-        return {"started": False, "error": "Bot already running"}
+        Args:
+            inputs: Dictionary with keys:
+                - mode: str (default: "once") - Execution mode ("once", "iterations", etc.)
+                - iterations: int (default: 1) - Number of iterations for "iterations" mode
+                - yolo: bool (default: True) - Run in YOLO mode
+                - stop_at_mvp: bool (default: False) - Stop when MVP is reached
 
-    # Start bot in background thread
-    thread = threading.Thread(
-        target=_run_bot_task,
-        args=(mode, iterations, yolo, stop_at_mvp),
-        daemon=True
-    )
-    thread.start()
+        Returns:
+            Dictionary with:
+                - started: bool - Whether the bot was started successfully
+                - error: str (optional) - Error message if bot is already running
+        """
+        mode = inputs.get("mode", "once")
+        iterations = inputs.get("iterations", 1)
+        yolo = inputs.get("yolo", True)
+        stop_at_mvp = inputs.get("stop_at_mvp", False)
 
-    return {"started": True}
+        # Check if bot is already running
+        state = get_bot_state()
+        if state["is_running"]:
+            return {"started": False, "error": "Bot already running"}
+
+        # Start bot in background thread
+        thread = threading.Thread(
+            target=_run_bot_task,
+            args=(mode, iterations, yolo, stop_at_mvp),
+            daemon=True
+        )
+        thread.start()
+
+        return {"started": True}

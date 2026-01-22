@@ -6,8 +6,11 @@
   "license": "MIT",
   "keywords": ["backend", "workflow", "plugin", "env"],
   "main": "backend_load_env.py",
+  "files": ["backend_load_env.py", "factory.py"],
   "metadata": {
     "plugin_type": "backend.load_env",
-    "category": "backend"
+    "category": "backend",
+    "class": "LoadEnv",
+    "entrypoint": "execute"
   }
 }

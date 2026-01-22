@@ -6,8 +6,11 @@
   "license": "MIT",
   "keywords": ["var", "workflow", "plugin"],
   "main": "var_delete.go",
+  "files": ["var_delete.go", "factory.go"],
   "metadata": {
     "plugin_type": "var.delete",
-    "category": "var"
+    "category": "var",
+    "struct": "VarDelete",
+    "entrypoint": "Execute"
   }
 }

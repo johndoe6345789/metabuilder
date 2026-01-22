@@ -1,16 +1,28 @@
-// Package list_length provides the list length plugin.
+// Package list_length provides a workflow plugin for getting list length.
 package list_length
 
-import (
-	plugin "metabuilder/workflow/plugins/go"
-)
+// ListLength implements the NodeExecutor interface for getting list length.
+type ListLength struct {
+	NodeType    string
+	Category    string
+	Description string
+}
 
-// Run returns the length of a list.
-func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]interface{}, error) {
+// NewListLength creates a new ListLength instance.
+func NewListLength() *ListLength {
+	return &ListLength{
+		NodeType:    "list.length",
+		Category:    "list",
+		Description: "Get the length of a list",
+	}
+}
+
+// Execute runs the plugin logic.
+func (p *ListLength) Execute(inputs map[string]interface{}, runtime interface{}) map[string]interface{} {
 	list, ok := inputs["list"].([]interface{})
 	if !ok {
-		return map[string]interface{}{"result": 0}, nil
+		return map[string]interface{}{"result": 0}
 	}
 
-	return map[string]interface{}{"result": len(list)}, nil
+	return map[string]interface{}{"result": len(list)}
 }

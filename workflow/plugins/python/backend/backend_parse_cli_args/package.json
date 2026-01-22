@@ -6,8 +6,11 @@
   "license": "MIT",
   "keywords": ["backend", "workflow", "plugin", "cli", "args"],
   "main": "backend_parse_cli_args.py",
+  "files": ["backend_parse_cli_args.py", "factory.py"],
   "metadata": {
     "plugin_type": "backend.parse_cli_args",
-    "category": "backend"
+    "category": "backend",
+    "class": "ParseCliArgs",
+    "entrypoint": "execute"
   }
 }

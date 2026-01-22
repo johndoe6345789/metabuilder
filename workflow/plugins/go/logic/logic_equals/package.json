@@ -6,8 +6,11 @@
   "license": "MIT",
   "keywords": ["logic", "workflow", "plugin"],
   "main": "logic_equals.go",
+  "files": ["logic_equals.go", "factory.go"],
   "metadata": {
     "plugin_type": "logic.equals",
-    "category": "logic"
+    "category": "logic",
+    "struct": "LogicEquals",
+    "entrypoint": "Execute"
   }
 }

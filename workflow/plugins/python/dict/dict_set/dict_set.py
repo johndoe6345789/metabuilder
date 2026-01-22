@@ -1,15 +1,22 @@
 """Workflow plugin: set value in dictionary."""
 
+from ...base import NodeExecutor
 
-def run(_runtime, inputs):
+
+class DictSet(NodeExecutor):
     """Set value in dictionary by key."""
-    obj = inputs.get("object", {})
-    key = inputs.get("key")
-    value = inputs.get("value")
 
-    if not isinstance(obj, dict):
-        obj = {}
+    node_type = "dict.set"
+    category = "dict"
+    description = "Set value in dictionary by key"
 
-    result = dict(obj)
-    result[key] = value
-    return {"result": result}
+    def execute(self, inputs, runtime=None):
+        obj = inputs.get("object", inputs.get("dict", {}))
+        key = inputs.get("key", inputs.get("path"))
+        value = inputs.get("value")
+
+        if not isinstance(obj, dict):
+            obj = {}
+
+        result = {**obj, key: value}
+        return {"result": result}

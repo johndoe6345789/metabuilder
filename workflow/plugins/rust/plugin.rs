@@ -3,6 +3,7 @@
 //! Shared types for all Rust workflow plugins.
 
 use serde_json::Value;
+use std::any::Any;
 use std::collections::HashMap;
 
 /// Runtime context for plugin execution.
@@ -51,9 +52,15 @@ impl std::fmt::Display for PluginError {
 
 impl std::error::Error for PluginError {}
 
-/// Trait for workflow plugins
+/// Trait for workflow plugins (legacy).
 pub trait Plugin {
     fn run(&self, runtime: &mut Runtime, inputs: &HashMap<String, Value>) -> PluginResult;
+}
+
+/// Trait for workflow node executors.
+pub trait NodeExecutor {
+    /// Execute the node with given inputs and optional runtime context.
+    fn execute(&self, inputs: HashMap<String, Value>, runtime: Option<&dyn Any>) -> HashMap<String, Value>;
 }
 
 /// Helper to get a value from inputs with type conversion

@@ -1,13 +1,28 @@
-// Package dict_delete provides the dictionary delete plugin.
+// Package dict_delete provides a workflow plugin for deleting dictionary keys.
 package dict_delete
 
 import (
 	"strings"
-
-	plugin "metabuilder/workflow/plugins/go"
 )
 
-// Run removes a key from a dictionary.
+// DictDelete implements the NodeExecutor interface for deleting dictionary keys.
+type DictDelete struct {
+	NodeType    string
+	Category    string
+	Description string
+}
+
+// NewDictDelete creates a new DictDelete instance.
+func NewDictDelete() *DictDelete {
+	return &DictDelete{
+		NodeType:    "dict.delete",
+		Category:    "dict",
+		Description: "Delete a key from a dictionary",
+	}
+}
+
+// Execute runs the plugin logic.
+// Removes a key from a dictionary.
 // Supports dot notation for nested keys (e.g., "user.name").
 // Inputs:
 //   - dict: the dictionary to modify
@@ -16,10 +31,10 @@ import (
 // Returns:
 //   - result: the modified dictionary
 //   - deleted: whether the key was found and deleted
-func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]interface{}, error) {
+func (p *DictDelete) Execute(inputs map[string]interface{}, runtime interface{}) map[string]interface{} {
 	dict, ok := inputs["dict"].(map[string]interface{})
 	if !ok {
-		return map[string]interface{}{"result": map[string]interface{}{}, "deleted": false}, nil
+		return map[string]interface{}{"result": map[string]interface{}{}, "deleted": false}
 	}
 
 	// Make a shallow copy to avoid mutating the original
@@ -27,7 +42,7 @@ func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]int
 
 	key, ok := inputs["key"].(string)
 	if !ok {
-		return map[string]interface{}{"result": dict, "deleted": false}, nil
+		return map[string]interface{}{"result": dict, "deleted": false}
 	}
 
 	// Handle dot notation for nested keys
@@ -37,9 +52,9 @@ func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]int
 		// Simple key
 		if _, exists := dict[key]; exists {
 			delete(dict, key)
-			return map[string]interface{}{"result": dict, "deleted": true}, nil
+			return map[string]interface{}{"result": dict, "deleted": true}
 		}
-		return map[string]interface{}{"result": dict, "deleted": false}, nil
+		return map[string]interface{}{"result": dict, "deleted": false}
 	}
 
 	// Nested key - navigate to parent and delete
@@ -54,11 +69,11 @@ func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]int
 				current = copied
 			} else {
 				// Cannot descend further
-				return map[string]interface{}{"result": dict, "deleted": false}, nil
+				return map[string]interface{}{"result": dict, "deleted": false}
 			}
 		} else {
 			// Path does not exist
-			return map[string]interface{}{"result": dict, "deleted": false}, nil
+			return map[string]interface{}{"result": dict, "deleted": false}
 		}
 	}
 
@@ -66,10 +81,10 @@ func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]int
 	finalKey := parts[len(parts)-1]
 	if _, exists := current[finalKey]; exists {
 		delete(current, finalKey)
-		return map[string]interface{}{"result": dict, "deleted": true}, nil
+		return map[string]interface{}{"result": dict, "deleted": true}
 	}
 
-	return map[string]interface{}{"result": dict, "deleted": false}, nil
+	return map[string]interface{}{"result": dict, "deleted": false}
 }
 
 // copyDict creates a shallow copy of a dictionary.

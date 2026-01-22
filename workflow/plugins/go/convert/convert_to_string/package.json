@@ -6,8 +6,11 @@
   "license": "MIT",
   "keywords": ["convert", "workflow", "plugin"],
   "main": "convert_to_string.go",
+  "files": ["convert_to_string.go", "factory.go"],
   "metadata": {
     "plugin_type": "convert.to_string",
-    "category": "convert"
+    "category": "convert",
+    "struct": "ConvertToString",
+    "entrypoint": "Execute"
   }
 }

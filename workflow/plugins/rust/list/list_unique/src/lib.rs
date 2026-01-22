@@ -1,25 +1,62 @@
 //! Workflow plugin: remove duplicates from list.
 
 use serde_json::Value;
+use std::any::Any;
 use std::collections::HashMap;
 
-/// Remove duplicates from list.
-pub fn run(_runtime: &mut HashMap<String, Value>, inputs: &HashMap<String, Value>) -> Result<HashMap<String, Value>, String> {
-    let list: Vec<Value> = inputs
-        .get("list")
-        .and_then(|v| serde_json::from_value(v.clone()).ok())
-        .unwrap_or_default();
+/// Trait for workflow node executors.
+pub trait NodeExecutor {
+    /// Execute the node with given inputs and optional runtime context.
+    fn execute(&self, inputs: HashMap<String, Value>, runtime: Option<&dyn Any>) -> HashMap<String, Value>;
+}
 
-    let mut seen = Vec::new();
-    for item in list {
-        if !seen.contains(&item) {
-            seen.push(item);
+/// ListUnique implements the NodeExecutor trait for removing duplicates.
+pub struct ListUnique {
+    pub node_type: &'static str,
+    pub category: &'static str,
+    pub description: &'static str,
+}
+
+impl ListUnique {
+    /// Creates a new ListUnique instance.
+    pub fn new() -> Self {
+        Self {
+            node_type: "list.unique",
+            category: "list",
+            description: "Remove duplicates from list",
         }
     }
+}
 
-    let mut output = HashMap::new();
-    output.insert("result".to_string(), serde_json::json!(seen));
-    Ok(output)
+impl Default for ListUnique {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl NodeExecutor for ListUnique {
+    fn execute(&self, inputs: HashMap<String, Value>, _runtime: Option<&dyn Any>) -> HashMap<String, Value> {
+        let list: Vec<Value> = inputs
+            .get("list")
+            .and_then(|v| serde_json::from_value(v.clone()).ok())
+            .unwrap_or_default();
+
+        let mut seen = Vec::new();
+        for item in list {
+            if !seen.contains(&item) {
+                seen.push(item);
+            }
+        }
+
+        let mut result = HashMap::new();
+        result.insert("result".to_string(), serde_json::json!(seen));
+        result
+    }
+}
+
+/// Creates a new ListUnique instance.
+pub fn create() -> ListUnique {
+    ListUnique::new()
 }
 
 #[cfg(test)]
@@ -28,11 +65,18 @@ mod tests {
 
     #[test]
     fn test_unique() {
-        let mut runtime = HashMap::new();
+        let executor = ListUnique::new();
         let mut inputs = HashMap::new();
         inputs.insert("list".to_string(), serde_json::json!([1, 2, 2, 3, 3, 3]));
 
-        let result = run(&mut runtime, &inputs).unwrap();
+        let result = executor.execute(inputs, None);
         assert_eq!(result.get("result"), Some(&serde_json::json!([1, 2, 3])));
+    }
+
+    #[test]
+    fn test_factory() {
+        let executor = create();
+        assert_eq!(executor.node_type, "list.unique");
+        assert_eq!(executor.category, "list");
     }
 }

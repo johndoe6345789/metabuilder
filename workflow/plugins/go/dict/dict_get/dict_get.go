@@ -1,13 +1,28 @@
-// Package dict_get provides the dictionary get plugin.
+// Package dict_get provides a workflow plugin for getting dictionary values.
 package dict_get
 
 import (
 	"strings"
-
-	plugin "metabuilder/workflow/plugins/go"
 )
 
-// Run retrieves a value from a dictionary by key.
+// DictGet implements the NodeExecutor interface for getting dictionary values.
+type DictGet struct {
+	NodeType    string
+	Category    string
+	Description string
+}
+
+// NewDictGet creates a new DictGet instance.
+func NewDictGet() *DictGet {
+	return &DictGet{
+		NodeType:    "dict.get",
+		Category:    "dict",
+		Description: "Get a value from a dictionary by key",
+	}
+}
+
+// Execute runs the plugin logic.
+// Retrieves a value from a dictionary by key.
 // Supports dot notation for nested keys (e.g., "user.name").
 // Inputs:
 //   - dict: the dictionary to read from
@@ -17,17 +32,17 @@ import (
 // Returns:
 //   - result: the value at the key or default
 //   - found: whether the key was found
-func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]interface{}, error) {
+func (p *DictGet) Execute(inputs map[string]interface{}, runtime interface{}) map[string]interface{} {
 	dict, ok := inputs["dict"].(map[string]interface{})
 	if !ok {
 		defaultVal := inputs["default"]
-		return map[string]interface{}{"result": defaultVal, "found": false}, nil
+		return map[string]interface{}{"result": defaultVal, "found": false}
 	}
 
 	key, ok := inputs["key"].(string)
 	if !ok {
 		defaultVal := inputs["default"]
-		return map[string]interface{}{"result": defaultVal, "found": false}, nil
+		return map[string]interface{}{"result": defaultVal, "found": false}
 	}
 
 	// Handle dot notation for nested keys
@@ -38,7 +53,7 @@ func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]int
 		if val, exists := current[part]; exists {
 			if i == len(parts)-1 {
 				// Final key, return the value
-				return map[string]interface{}{"result": val, "found": true}, nil
+				return map[string]interface{}{"result": val, "found": true}
 			}
 			// Not the final key, try to descend
 			if nested, ok := val.(map[string]interface{}); ok {
@@ -46,15 +61,15 @@ func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]int
 			} else {
 				// Cannot descend further
 				defaultVal := inputs["default"]
-				return map[string]interface{}{"result": defaultVal, "found": false}, nil
+				return map[string]interface{}{"result": defaultVal, "found": false}
 			}
 		} else {
 			// Key not found
 			defaultVal := inputs["default"]
-			return map[string]interface{}{"result": defaultVal, "found": false}, nil
+			return map[string]interface{}{"result": defaultVal, "found": false}
 		}
 	}
 
 	defaultVal := inputs["default"]
-	return map[string]interface{}{"result": defaultVal, "found": false}, nil
+	return map[string]interface{}{"result": defaultVal, "found": false}
 }

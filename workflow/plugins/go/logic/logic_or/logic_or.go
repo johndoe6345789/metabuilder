@@ -1,24 +1,36 @@
-// Package logic_or provides the logical OR plugin.
+// Package logic_or provides a workflow plugin for logical OR operations.
 package logic_or
 
-import (
-	plugin "metabuilder/workflow/plugins/go"
-)
+// LogicOr implements the NodeExecutor interface for logical OR operations.
+type LogicOr struct {
+	NodeType    string
+	Category    string
+	Description string
+}
 
-// Run performs logical OR on boolean values.
-func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]interface{}, error) {
+// NewLogicOr creates a new LogicOr instance.
+func NewLogicOr() *LogicOr {
+	return &LogicOr{
+		NodeType:    "logic.or",
+		Category:    "logic",
+		Description: "Perform logical OR on boolean values",
+	}
+}
+
+// Execute runs the plugin logic.
+func (p *LogicOr) Execute(inputs map[string]interface{}, runtime interface{}) map[string]interface{} {
 	values, ok := inputs["values"].([]interface{})
 	if !ok || len(values) == 0 {
-		return map[string]interface{}{"result": false}, nil
+		return map[string]interface{}{"result": false}
 	}
 
 	for _, v := range values {
 		if toBool(v) {
-			return map[string]interface{}{"result": true}, nil
+			return map[string]interface{}{"result": true}
 		}
 	}
 
-	return map[string]interface{}{"result": false}, nil
+	return map[string]interface{}{"result": false}
 }
 
 func toBool(v interface{}) bool {

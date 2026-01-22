@@ -6,8 +6,11 @@
   "license": "MIT",
   "keywords": ["logic", "workflow", "plugin"],
   "main": "logic_not.go",
+  "files": ["logic_not.go", "factory.go"],
   "metadata": {
     "plugin_type": "logic.not",
-    "category": "logic"
+    "category": "logic",
+    "struct": "LogicNot",
+    "entrypoint": "Execute"
   }
 }

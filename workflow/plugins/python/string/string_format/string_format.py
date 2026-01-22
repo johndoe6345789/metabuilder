@@ -1,13 +1,19 @@
 """Workflow plugin: format string with variables."""
 
+from ...base import NodeExecutor
 
-def run(_runtime, inputs):
+
+class StringFormat(NodeExecutor):
     """Format string with variables."""
-    template = inputs.get("template", "")
-    variables = inputs.get("variables", {})
 
-    try:
-        result = template.format(**variables)
-        return {"result": result}
-    except (KeyError, ValueError) as e:
-        return {"result": template, "error": str(e)}
+    node_type = "string.format"
+    category = "string"
+    description = "Format string with variables"
+
+    def execute(self, inputs, runtime=None):
+        template = inputs.get("template", "")
+        variables = inputs.get("variables", {})
+        try:
+            return {"result": template.format(**variables)}
+        except (KeyError, ValueError) as e:
+            return {"result": template, "error": str(e)}

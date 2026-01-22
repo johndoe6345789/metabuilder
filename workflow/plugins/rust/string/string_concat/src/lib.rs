@@ -1,24 +1,61 @@
 //! Workflow plugin: concatenate strings.
 
 use serde_json::Value;
+use std::any::Any;
 use std::collections::HashMap;
 
-/// Concatenate multiple strings with optional separator.
-pub fn run(_runtime: &mut HashMap<String, Value>, inputs: &HashMap<String, Value>) -> Result<HashMap<String, Value>, String> {
-    let strings: Vec<String> = inputs
-        .get("strings")
-        .and_then(|v| serde_json::from_value(v.clone()).ok())
-        .unwrap_or_default();
-    let separator: String = inputs
-        .get("separator")
-        .and_then(|v| serde_json::from_value(v.clone()).ok())
-        .unwrap_or_default();
+/// Trait for workflow node executors.
+pub trait NodeExecutor {
+    /// Execute the node with given inputs and optional runtime context.
+    fn execute(&self, inputs: HashMap<String, Value>, runtime: Option<&dyn Any>) -> HashMap<String, Value>;
+}
 
-    let result = strings.join(&separator);
+/// StringConcat implements the NodeExecutor trait for concatenating strings.
+pub struct StringConcat {
+    pub node_type: &'static str,
+    pub category: &'static str,
+    pub description: &'static str,
+}
 
-    let mut output = HashMap::new();
-    output.insert("result".to_string(), serde_json::json!(result));
-    Ok(output)
+impl StringConcat {
+    /// Creates a new StringConcat instance.
+    pub fn new() -> Self {
+        Self {
+            node_type: "string.concat",
+            category: "string",
+            description: "Concatenate multiple strings",
+        }
+    }
+}
+
+impl Default for StringConcat {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl NodeExecutor for StringConcat {
+    fn execute(&self, inputs: HashMap<String, Value>, _runtime: Option<&dyn Any>) -> HashMap<String, Value> {
+        let strings: Vec<String> = inputs
+            .get("strings")
+            .and_then(|v| serde_json::from_value(v.clone()).ok())
+            .unwrap_or_default();
+        let separator: String = inputs
+            .get("separator")
+            .and_then(|v| serde_json::from_value(v.clone()).ok())
+            .unwrap_or_default();
+
+        let concatenated = strings.join(&separator);
+
+        let mut result = HashMap::new();
+        result.insert("result".to_string(), serde_json::json!(concatenated));
+        result
+    }
+}
+
+/// Creates a new StringConcat instance.
+pub fn create() -> StringConcat {
+    StringConcat::new()
 }
 
 #[cfg(test)]
@@ -27,11 +64,18 @@ mod tests {
 
     #[test]
     fn test_concat() {
-        let mut runtime = HashMap::new();
+        let executor = StringConcat::new();
         let mut inputs = HashMap::new();
         inputs.insert("strings".to_string(), serde_json::json!(["hello", " ", "world"]));
 
-        let result = run(&mut runtime, &inputs).unwrap();
+        let result = executor.execute(inputs, None);
         assert_eq!(result.get("result"), Some(&serde_json::json!("hello world")));
+    }
+
+    #[test]
+    fn test_factory() {
+        let executor = create();
+        assert_eq!(executor.node_type, "string.concat");
+        assert_eq!(executor.category, "string");
     }
 }

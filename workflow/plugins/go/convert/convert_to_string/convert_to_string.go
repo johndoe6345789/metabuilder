@@ -1,15 +1,29 @@
-// Package convert_to_string provides the convert to string plugin.
+// Package convert_to_string provides a workflow plugin for converting values to strings.
 package convert_to_string
 
 import (
 	"encoding/json"
 	"fmt"
-
-	plugin "metabuilder/workflow/plugins/go"
 )
 
-// Run converts a value to string.
-func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]interface{}, error) {
+// ConvertToString implements the NodeExecutor interface for converting values to strings.
+type ConvertToString struct {
+	NodeType    string
+	Category    string
+	Description string
+}
+
+// NewConvertToString creates a new ConvertToString instance.
+func NewConvertToString() *ConvertToString {
+	return &ConvertToString{
+		NodeType:    "convert.to_string",
+		Category:    "convert",
+		Description: "Convert a value to string",
+	}
+}
+
+// Execute runs the plugin logic.
+func (p *ConvertToString) Execute(inputs map[string]interface{}, runtime interface{}) map[string]interface{} {
 	value := inputs["value"]
 
 	var result string
@@ -29,5 +43,5 @@ func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]int
 		}
 	}
 
-	return map[string]interface{}{"result": result}, nil
+	return map[string]interface{}{"result": result}
 }

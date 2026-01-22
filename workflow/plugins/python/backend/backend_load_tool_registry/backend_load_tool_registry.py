@@ -1,22 +1,32 @@
 """Workflow plugin: load tool registry."""
+
 import os
 import json
 
+from ...base import NodeExecutor
 
-def run(runtime, inputs):
-    """Load tool registry defining available AI tools.
 
-    Inputs:
-        path: Path to tool registry file
-    """
-    path = inputs.get("path", "config/tool_registry.json")
+class LoadToolRegistry(NodeExecutor):
+    """Load tool registry defining available AI tools."""
 
-    if not os.path.exists(path):
-        return {"success": False, "error": f"File not found: {path}"}
+    node_type = "backend.load_tool_registry"
+    category = "backend"
+    description = "Load tool registry for AI function calling"
 
-    with open(path) as f:
-        registry = json.load(f)
+    def execute(self, inputs, runtime=None):
+        """Load tool registry defining available AI tools.
 
-    runtime.context["tool_registry"] = registry
+        Inputs:
+            path: Path to tool registry file
+        """
+        path = inputs.get("path", "config/tool_registry.json")
 
-    return {"success": True, "tool_count": len(registry)}
+        if not os.path.exists(path):
+            return {"success": False, "error": f"File not found: {path}"}
+
+        with open(path) as f:
+            registry = json.load(f)
+
+        runtime.context["tool_registry"] = registry
+
+        return {"success": True, "tool_count": len(registry)}

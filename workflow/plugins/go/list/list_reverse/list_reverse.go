@@ -1,15 +1,27 @@
-// Package list_reverse provides the list reverse plugin.
+// Package list_reverse provides a workflow plugin for reversing lists.
 package list_reverse
 
-import (
-	plugin "metabuilder/workflow/plugins/go"
-)
+// ListReverse implements the NodeExecutor interface for reversing lists.
+type ListReverse struct {
+	NodeType    string
+	Category    string
+	Description string
+}
 
-// Run reverses a list.
-func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]interface{}, error) {
+// NewListReverse creates a new ListReverse instance.
+func NewListReverse() *ListReverse {
+	return &ListReverse{
+		NodeType:    "list.reverse",
+		Category:    "list",
+		Description: "Reverse a list",
+	}
+}
+
+// Execute runs the plugin logic.
+func (p *ListReverse) Execute(inputs map[string]interface{}, runtime interface{}) map[string]interface{} {
 	list, ok := inputs["list"].([]interface{})
 	if !ok {
-		return map[string]interface{}{"result": []interface{}{}}, nil
+		return map[string]interface{}{"result": []interface{}{}}
 	}
 
 	result := make([]interface{}, len(list))
@@ -17,5 +29,5 @@ func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]int
 		result[len(list)-1-i] = v
 	}
 
-	return map[string]interface{}{"result": result}, nil
+	return map[string]interface{}{"result": result}
 }

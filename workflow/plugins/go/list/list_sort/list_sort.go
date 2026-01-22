@@ -1,13 +1,27 @@
-// Package list_sort provides the list sort plugin.
+// Package list_sort provides a workflow plugin for sorting lists.
 package list_sort
 
 import (
 	"sort"
-
-	plugin "metabuilder/workflow/plugins/go"
 )
 
-// Run sorts a list of values.
+// ListSort implements the NodeExecutor interface for sorting lists.
+type ListSort struct {
+	NodeType    string
+	Category    string
+	Description string
+}
+
+// NewListSort creates a new ListSort instance.
+func NewListSort() *ListSort {
+	return &ListSort{
+		NodeType:    "list.sort",
+		Category:    "list",
+		Description: "Sort a list of values",
+	}
+}
+
+// Execute runs the plugin logic.
 // Inputs:
 //   - list: the list to sort
 //   - key: (optional) the key to sort by for objects
@@ -15,10 +29,10 @@ import (
 //
 // Returns:
 //   - result: the sorted list
-func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]interface{}, error) {
+func (p *ListSort) Execute(inputs map[string]interface{}, runtime interface{}) map[string]interface{} {
 	list, ok := inputs["list"].([]interface{})
 	if !ok {
-		return map[string]interface{}{"result": []interface{}{}}, nil
+		return map[string]interface{}{"result": []interface{}{}}
 	}
 
 	// Make a copy to avoid mutating the original
@@ -55,7 +69,7 @@ func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]int
 		return less
 	})
 
-	return map[string]interface{}{"result": result}, nil
+	return map[string]interface{}{"result": result}
 }
 
 // compareLess compares two values and returns true if a < b.

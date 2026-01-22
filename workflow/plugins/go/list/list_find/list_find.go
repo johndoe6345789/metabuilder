@@ -1,11 +1,23 @@
-// Package list_find provides the list find plugin.
+// Package list_find provides a workflow plugin for finding elements in lists.
 package list_find
 
-import (
-	plugin "metabuilder/workflow/plugins/go"
-)
+// ListFind implements the NodeExecutor interface for finding elements in lists.
+type ListFind struct {
+	NodeType    string
+	Category    string
+	Description string
+}
 
-// Run returns the first element matching a condition or key/value pair.
+// NewListFind creates a new ListFind instance.
+func NewListFind() *ListFind {
+	return &ListFind{
+		NodeType:    "list.find",
+		Category:    "list",
+		Description: "Find first element matching a condition",
+	}
+}
+
+// Execute runs the plugin logic.
 // Inputs:
 //   - list: the list to search
 //   - key: (optional) the key to match in objects
@@ -14,10 +26,10 @@ import (
 // Returns:
 //   - result: the first matching element or nil
 //   - index: the index of the match or -1
-func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]interface{}, error) {
+func (p *ListFind) Execute(inputs map[string]interface{}, runtime interface{}) map[string]interface{} {
 	list, ok := inputs["list"].([]interface{})
 	if !ok {
-		return map[string]interface{}{"result": nil, "index": -1}, nil
+		return map[string]interface{}{"result": nil, "index": -1}
 	}
 
 	value := inputs["value"]
@@ -28,16 +40,16 @@ func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]int
 			// Search by key/value in objects
 			if obj, ok := item.(map[string]interface{}); ok {
 				if objVal, exists := obj[key]; exists && objVal == value {
-					return map[string]interface{}{"result": item, "index": i}, nil
+					return map[string]interface{}{"result": item, "index": i}
 				}
 			}
 		} else {
 			// Direct value comparison
 			if item == value {
-				return map[string]interface{}{"result": item, "index": i}, nil
+				return map[string]interface{}{"result": item, "index": i}
 			}
 		}
 	}
 
-	return map[string]interface{}{"result": nil, "index": -1}, nil
+	return map[string]interface{}{"result": nil, "index": -1}
 }

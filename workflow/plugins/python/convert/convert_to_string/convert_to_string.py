@@ -1,7 +1,15 @@
 """Workflow plugin: convert to string."""
 
+from ...base import NodeExecutor
 
-def run(_runtime, inputs):
+
+class ConvertToString(NodeExecutor):
     """Convert value to string."""
-    value = inputs.get("value")
-    return {"result": str(value) if value is not None else ""}
+
+    node_type = "convert.toString"
+    category = "convert"
+    description = "Convert value to string"
+
+    def execute(self, inputs, runtime=None):
+        value = inputs.get("value")
+        return {"result": str(value) if value is not None else ""}

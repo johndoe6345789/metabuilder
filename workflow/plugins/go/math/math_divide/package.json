@@ -6,8 +6,11 @@
   "license": "MIT",
   "keywords": ["math", "workflow", "plugin"],
   "main": "math_divide.go",
+  "files": ["math_divide.go", "factory.go"],
   "metadata": {
     "plugin_type": "math.divide",
-    "category": "math"
+    "category": "math",
+    "struct": "MathDivide",
+    "entrypoint": "Execute"
   }
 }

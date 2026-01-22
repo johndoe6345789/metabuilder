@@ -1,0 +1,39 @@
+{
+  "name": "@metabuilder/plugin-list",
+  "version": "1.0.0",
+  "description": "Array/list operations workflow plugins for MetaBuilder",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["list", "array", "workflow", "plugin", "collection"],
+  "main": "src/index.ts",
+  "files": ["src/index.ts", "src/factory.ts"],
+  "metadata": {
+    "plugin_type": "list",
+    "category": "list",
+    "classes": [
+      "ListConcat",
+      "ListLength",
+      "ListSlice",
+      "ListFind",
+      "ListFindIndex",
+      "ListFilter",
+      "ListMap",
+      "ListReduce",
+      "ListEvery",
+      "ListSome",
+      "ListSort",
+      "ListReverse",
+      "ListUnique",
+      "ListFlatten",
+      "ListPush",
+      "ListPop",
+      "ListShift",
+      "ListUnshift",
+      "ListIncludes",
+      "ListIndexOf",
+      "ListAt",
+      "ListGroupBy"
+    ],
+    "entrypoint": "execute"
+  }
+}

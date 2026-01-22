@@ -1,13 +1,16 @@
 {
   "name": "@metabuilder/tools_run_lint",
   "version": "1.0.0",
-  "description": "tools_run_lint plugin",
+  "description": "Run linting on source files",
   "author": "MetaBuilder",
   "license": "MIT",
-  "keywords": ["tools", "workflow", "plugin"],
+  "keywords": ["tools", "workflow", "plugin", "lint"],
   "main": "tools_run_lint.py",
+  "files": ["tools_run_lint.py", "factory.py"],
   "metadata": {
     "plugin_type": "tools.run_lint",
-    "category": "tools"
+    "category": "tools",
+    "class": "ToolsRunLint",
+    "entrypoint": "execute"
   }
 }

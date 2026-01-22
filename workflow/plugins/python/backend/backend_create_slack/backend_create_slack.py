@@ -1,25 +1,35 @@
 """Workflow plugin: create Slack client."""
+
 import os
 
+from ...base import NodeExecutor
 
-def run(runtime, inputs):
-    """Create a Slack client and store in runtime context.
 
-    Inputs:
-        token: Slack bot token (defaults to SLACK_BOT_TOKEN env var)
-    """
-    try:
-        from slack_sdk import WebClient
-    except ImportError:
-        return {"success": False, "error": "slack_sdk package not installed"}
+class CreateSlack(NodeExecutor):
+    """Create a Slack client and store in runtime context."""
 
-    token = inputs.get("token") or os.getenv("SLACK_BOT_TOKEN")
+    node_type = "backend.create_slack"
+    category = "backend"
+    description = "Create Slack client for messaging"
 
-    if not token:
-        return {"success": False, "error": "No token provided"}
+    def execute(self, inputs, runtime=None):
+        """Create a Slack client and store in runtime context.
 
-    client = WebClient(token=token)
+        Inputs:
+            token: Slack bot token (defaults to SLACK_BOT_TOKEN env var)
+        """
+        try:
+            from slack_sdk import WebClient
+        except ImportError:
+            return {"success": False, "error": "slack_sdk package not installed"}
 
-    runtime.context["slack"] = client
+        token = inputs.get("token") or os.getenv("SLACK_BOT_TOKEN")
 
-    return {"success": True}
+        if not token:
+            return {"success": False, "error": "No token provided"}
+
+        client = WebClient(token=token)
+
+        runtime.context["slack"] = client
+
+        return {"success": True}

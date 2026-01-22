@@ -1,16 +1,28 @@
-// Package logic_gt provides the greater than comparison plugin.
+// Package logic_gt provides a workflow plugin for greater than comparisons.
 package logic_gt
 
-import (
-	plugin "metabuilder/workflow/plugins/go"
-)
+// LogicGt implements the NodeExecutor interface for greater than comparisons.
+type LogicGt struct {
+	NodeType    string
+	Category    string
+	Description string
+}
 
-// Run checks if a > b.
-func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]interface{}, error) {
+// NewLogicGt creates a new LogicGt instance.
+func NewLogicGt() *LogicGt {
+	return &LogicGt{
+		NodeType:    "logic.gt",
+		Category:    "logic",
+		Description: "Check if a is greater than b",
+	}
+}
+
+// Execute runs the plugin logic.
+func (p *LogicGt) Execute(inputs map[string]interface{}, runtime interface{}) map[string]interface{} {
 	a := toFloat(inputs["a"])
 	b := toFloat(inputs["b"])
 
-	return map[string]interface{}{"result": a > b}, nil
+	return map[string]interface{}{"result": a > b}
 }
 
 func toFloat(v interface{}) float64 {

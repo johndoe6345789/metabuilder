@@ -1,21 +1,31 @@
 """Workflow plugin: load system prompt."""
+
 import os
 
+from ...base import NodeExecutor
 
-def run(runtime, inputs):
-    """Load system prompt from file.
 
-    Inputs:
-        path: Path to prompt file
-    """
-    path = inputs.get("path", "config/system_prompt.txt")
+class LoadPrompt(NodeExecutor):
+    """Load system prompt from file."""
 
-    if not os.path.exists(path):
-        return {"success": False, "error": f"File not found: {path}"}
+    node_type = "backend.load_prompt"
+    category = "backend"
+    description = "Load system prompt from file"
 
-    with open(path) as f:
-        prompt = f.read()
+    def execute(self, inputs, runtime=None):
+        """Load system prompt from file.
 
-    runtime.context["system_prompt"] = prompt
+        Inputs:
+            path: Path to prompt file
+        """
+        path = inputs.get("path", "config/system_prompt.txt")
 
-    return {"success": True, "length": len(prompt)}
+        if not os.path.exists(path):
+            return {"success": False, "error": f"File not found: {path}"}
+
+        with open(path) as f:
+            prompt = f.read()
+
+        runtime.context["system_prompt"] = prompt
+
+        return {"success": True, "length": len(prompt)}

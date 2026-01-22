@@ -6,8 +6,11 @@
   "license": "MIT",
   "keywords": ["math", "workflow", "plugin"],
   "main": "math_subtract.go",
+  "files": ["math_subtract.go", "factory.go"],
   "metadata": {
     "plugin_type": "math.subtract",
-    "category": "math"
+    "category": "math",
+    "struct": "MathSubtract",
+    "entrypoint": "Execute"
   }
 }

@@ -1,26 +1,36 @@
 """Workflow plugin: load workflow metadata."""
+
 import os
 import json
 
+from ...base import NodeExecutor
 
-def run(runtime, inputs):
-    """Load workflow metadata from package.json or config.
 
-    Inputs:
-        path: Path to metadata file
-    """
-    path = inputs.get("path", "package.json")
+class LoadMetadata(NodeExecutor):
+    """Load workflow metadata from package.json or config."""
 
-    if not os.path.exists(path):
-        return {"success": False, "error": f"File not found: {path}"}
+    node_type = "backend.load_metadata"
+    category = "backend"
+    description = "Load workflow metadata from config"
 
-    with open(path) as f:
-        metadata = json.load(f)
+    def execute(self, inputs, runtime=None):
+        """Load workflow metadata from package.json or config.
 
-    runtime.context["metadata"] = metadata
+        Inputs:
+            path: Path to metadata file
+        """
+        path = inputs.get("path", "package.json")
 
-    return {
-        "success": True,
-        "name": metadata.get("name"),
-        "version": metadata.get("version")
-    }
+        if not os.path.exists(path):
+            return {"success": False, "error": f"File not found: {path}"}
+
+        with open(path) as f:
+            metadata = json.load(f)
+
+        runtime.context["metadata"] = metadata
+
+        return {
+            "success": True,
+            "name": metadata.get("name"),
+            "version": metadata.get("version")
+        }

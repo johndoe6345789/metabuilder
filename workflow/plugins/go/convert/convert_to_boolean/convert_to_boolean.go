@@ -1,14 +1,28 @@
-// Package convert_to_boolean provides the convert to boolean plugin.
+// Package convert_to_boolean provides a workflow plugin for converting values to booleans.
 package convert_to_boolean
 
 import (
 	"strings"
-
-	plugin "metabuilder/workflow/plugins/go"
 )
 
-// Run converts a value to boolean.
-func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]interface{}, error) {
+// ConvertToBoolean implements the NodeExecutor interface for converting values to booleans.
+type ConvertToBoolean struct {
+	NodeType    string
+	Category    string
+	Description string
+}
+
+// NewConvertToBoolean creates a new ConvertToBoolean instance.
+func NewConvertToBoolean() *ConvertToBoolean {
+	return &ConvertToBoolean{
+		NodeType:    "convert.to_boolean",
+		Category:    "convert",
+		Description: "Convert a value to boolean",
+	}
+}
+
+// Execute runs the plugin logic.
+func (p *ConvertToBoolean) Execute(inputs map[string]interface{}, runtime interface{}) map[string]interface{} {
 	value := inputs["value"]
 
 	var result bool
@@ -31,5 +45,5 @@ func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]int
 		result = true // Non-nil values are truthy
 	}
 
-	return map[string]interface{}{"result": result}, nil
+	return map[string]interface{}{"result": result}
 }

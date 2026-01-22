@@ -1,17 +1,31 @@
-// Package string_split provides the split string plugin.
+// Package string_split provides a workflow plugin for splitting strings.
 package string_split
 
 import (
 	"strings"
-
-	plugin "metabuilder/workflow/plugins/go"
 )
 
-// Run splits a string by separator.
-func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]interface{}, error) {
+// StringSplit implements the NodeExecutor interface for splitting strings.
+type StringSplit struct {
+	NodeType    string
+	Category    string
+	Description string
+}
+
+// NewStringSplit creates a new StringSplit instance.
+func NewStringSplit() *StringSplit {
+	return &StringSplit{
+		NodeType:    "string.split",
+		Category:    "string",
+		Description: "Split a string by separator",
+	}
+}
+
+// Execute runs the plugin logic.
+func (p *StringSplit) Execute(inputs map[string]interface{}, runtime interface{}) map[string]interface{} {
 	str, ok := inputs["string"].(string)
 	if !ok {
-		return map[string]interface{}{"result": []string{}, "error": "string is required"}, nil
+		return map[string]interface{}{"result": []string{}, "error": "string is required"}
 	}
 
 	separator := ""
@@ -29,5 +43,5 @@ func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]int
 		result = strings.Split(str, separator)
 	}
 
-	return map[string]interface{}{"result": result}, nil
+	return map[string]interface{}{"result": result}
 }

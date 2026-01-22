@@ -6,8 +6,11 @@
   "license": "MIT",
   "keywords": ["string", "workflow", "plugin"],
   "main": "string_upper.go",
+  "files": ["string_upper.go", "factory.go"],
   "metadata": {
     "plugin_type": "string.upper",
-    "category": "string"
+    "category": "string",
+    "struct": "StringUpper",
+    "entrypoint": "Execute"
   }
 }

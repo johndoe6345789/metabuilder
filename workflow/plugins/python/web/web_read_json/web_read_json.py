@@ -1,21 +1,31 @@
 """Workflow plugin: read JSON file."""
+
 import json
 from pathlib import Path
 
+from ...base import NodeExecutor
 
-def run(_runtime, inputs):
+
+class WebReadJson(NodeExecutor):
     """Read JSON file."""
-    path = inputs.get("path")
-    if not path:
-        return {"error": "path is required"}
 
-    path_obj = Path(path)
-    if not path_obj.exists():
-        return {"result": {}}
+    node_type = "web.read_json"
+    category = "web"
+    description = "Read JSON file"
 
-    try:
-        json_data = json.loads(path_obj.read_text(encoding="utf-8"))
-    except json.JSONDecodeError:
-        return {"result": {}}
+    def execute(self, inputs, runtime=None):
+        """Read JSON file."""
+        path = inputs.get("path")
+        if not path:
+            return {"error": "path is required"}
 
-    return {"result": json_data}
+        path_obj = Path(path)
+        if not path_obj.exists():
+            return {"result": {}}
+
+        try:
+            json_data = json.loads(path_obj.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            return {"result": {}}
+
+        return {"result": json_data}

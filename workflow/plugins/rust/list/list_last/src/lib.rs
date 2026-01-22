@@ -1,20 +1,57 @@
 //! Workflow plugin: get last element.
 
 use serde_json::Value;
+use std::any::Any;
 use std::collections::HashMap;
 
-/// Get last element of list.
-pub fn run(_runtime: &mut HashMap<String, Value>, inputs: &HashMap<String, Value>) -> Result<HashMap<String, Value>, String> {
-    let list: Vec<Value> = inputs
-        .get("list")
-        .and_then(|v| serde_json::from_value(v.clone()).ok())
-        .unwrap_or_default();
+/// Trait for workflow node executors.
+pub trait NodeExecutor {
+    /// Execute the node with given inputs and optional runtime context.
+    fn execute(&self, inputs: HashMap<String, Value>, runtime: Option<&dyn Any>) -> HashMap<String, Value>;
+}
 
-    let result = list.last().cloned().unwrap_or(Value::Null);
+/// ListLast implements the NodeExecutor trait for getting last element.
+pub struct ListLast {
+    pub node_type: &'static str,
+    pub category: &'static str,
+    pub description: &'static str,
+}
 
-    let mut output = HashMap::new();
-    output.insert("result".to_string(), result);
-    Ok(output)
+impl ListLast {
+    /// Creates a new ListLast instance.
+    pub fn new() -> Self {
+        Self {
+            node_type: "list.last",
+            category: "list",
+            description: "Get last element of list",
+        }
+    }
+}
+
+impl Default for ListLast {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl NodeExecutor for ListLast {
+    fn execute(&self, inputs: HashMap<String, Value>, _runtime: Option<&dyn Any>) -> HashMap<String, Value> {
+        let list: Vec<Value> = inputs
+            .get("list")
+            .and_then(|v| serde_json::from_value(v.clone()).ok())
+            .unwrap_or_default();
+
+        let value = list.last().cloned().unwrap_or(Value::Null);
+
+        let mut result = HashMap::new();
+        result.insert("result".to_string(), value);
+        result
+    }
+}
+
+/// Creates a new ListLast instance.
+pub fn create() -> ListLast {
+    ListLast::new()
 }
 
 #[cfg(test)]
@@ -23,11 +60,18 @@ mod tests {
 
     #[test]
     fn test_last() {
-        let mut runtime = HashMap::new();
+        let executor = ListLast::new();
         let mut inputs = HashMap::new();
         inputs.insert("list".to_string(), serde_json::json!([1, 2, 3]));
 
-        let result = run(&mut runtime, &inputs).unwrap();
+        let result = executor.execute(inputs, None);
         assert_eq!(result.get("result"), Some(&serde_json::json!(3)));
+    }
+
+    #[test]
+    fn test_factory() {
+        let executor = create();
+        assert_eq!(executor.node_type, "list.last");
+        assert_eq!(executor.category, "list");
     }
 }

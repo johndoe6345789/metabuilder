@@ -1,15 +1,27 @@
-// Package math_add provides the add numbers plugin.
+// Package math_add provides a workflow plugin for adding numbers.
 package math_add
 
-import (
-	plugin "metabuilder/workflow/plugins/go"
-)
+// MathAdd implements the NodeExecutor interface for adding numbers.
+type MathAdd struct {
+	NodeType    string
+	Category    string
+	Description string
+}
 
-// Run adds two or more numbers.
-func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]interface{}, error) {
+// NewMathAdd creates a new MathAdd instance.
+func NewMathAdd() *MathAdd {
+	return &MathAdd{
+		NodeType:    "math.add",
+		Category:    "math",
+		Description: "Add two or more numbers",
+	}
+}
+
+// Execute runs the plugin logic.
+func (p *MathAdd) Execute(inputs map[string]interface{}, runtime interface{}) map[string]interface{} {
 	numbers, ok := inputs["numbers"].([]interface{})
 	if !ok {
-		return map[string]interface{}{"result": 0, "error": "numbers must be an array"}, nil
+		return map[string]interface{}{"result": 0, "error": "numbers must be an array"}
 	}
 
 	var sum float64
@@ -24,5 +36,5 @@ func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]int
 		}
 	}
 
-	return map[string]interface{}{"result": sum}, nil
+	return map[string]interface{}{"result": sum}
 }

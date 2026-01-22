@@ -1,29 +1,66 @@
 //! Workflow plugin: modulo operation.
 
 use serde_json::Value;
+use std::any::Any;
 use std::collections::HashMap;
 
-/// Calculate modulo of two numbers.
-pub fn run(_runtime: &mut HashMap<String, Value>, inputs: &HashMap<String, Value>) -> Result<HashMap<String, Value>, String> {
-    let a: f64 = inputs
-        .get("a")
-        .and_then(|v| serde_json::from_value(v.clone()).ok())
-        .unwrap_or(0.0);
-    let b: f64 = inputs
-        .get("b")
-        .and_then(|v| serde_json::from_value(v.clone()).ok())
-        .unwrap_or(1.0);
+/// Trait for workflow node executors.
+pub trait NodeExecutor {
+    /// Execute the node with given inputs and optional runtime context.
+    fn execute(&self, inputs: HashMap<String, Value>, runtime: Option<&dyn Any>) -> HashMap<String, Value>;
+}
 
-    let mut output = HashMap::new();
+/// MathModulo implements the NodeExecutor trait for modulo operations.
+pub struct MathModulo {
+    pub node_type: &'static str,
+    pub category: &'static str,
+    pub description: &'static str,
+}
 
-    if b == 0.0 {
-        output.insert("result".to_string(), serde_json::json!(0));
-        output.insert("error".to_string(), serde_json::json!("division by zero"));
-        return Ok(output);
+impl MathModulo {
+    /// Creates a new MathModulo instance.
+    pub fn new() -> Self {
+        Self {
+            node_type: "math.modulo",
+            category: "math",
+            description: "Calculate modulo of two numbers",
+        }
     }
+}
 
-    output.insert("result".to_string(), serde_json::json!(a % b));
-    Ok(output)
+impl Default for MathModulo {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl NodeExecutor for MathModulo {
+    fn execute(&self, inputs: HashMap<String, Value>, _runtime: Option<&dyn Any>) -> HashMap<String, Value> {
+        let a: f64 = inputs
+            .get("a")
+            .and_then(|v| serde_json::from_value(v.clone()).ok())
+            .unwrap_or(0.0);
+        let b: f64 = inputs
+            .get("b")
+            .and_then(|v| serde_json::from_value(v.clone()).ok())
+            .unwrap_or(1.0);
+
+        let mut result = HashMap::new();
+
+        if b == 0.0 {
+            result.insert("result".to_string(), serde_json::json!(0));
+            result.insert("error".to_string(), serde_json::json!("division by zero"));
+            return result;
+        }
+
+        result.insert("result".to_string(), serde_json::json!(a % b));
+        result
+    }
+}
+
+/// Creates a new MathModulo instance.
+pub fn create() -> MathModulo {
+    MathModulo::new()
 }
 
 #[cfg(test)]
@@ -32,12 +69,19 @@ mod tests {
 
     #[test]
     fn test_modulo() {
-        let mut runtime = HashMap::new();
+        let executor = MathModulo::new();
         let mut inputs = HashMap::new();
         inputs.insert("a".to_string(), serde_json::json!(10.0));
         inputs.insert("b".to_string(), serde_json::json!(3.0));
 
-        let result = run(&mut runtime, &inputs).unwrap();
+        let result = executor.execute(inputs, None);
         assert_eq!(result.get("result"), Some(&serde_json::json!(1.0)));
+    }
+
+    #[test]
+    fn test_factory() {
+        let executor = create();
+        assert_eq!(executor.node_type, "math.modulo");
+        assert_eq!(executor.category, "math");
     }
 }

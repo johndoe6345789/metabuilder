@@ -1,0 +1,32 @@
+{
+  "name": "@metabuilder/plugin-string",
+  "version": "1.0.0",
+  "description": "String manipulation workflow plugins for MetaBuilder",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["string", "workflow", "plugin", "text", "manipulation"],
+  "main": "src/index.ts",
+  "files": ["src/index.ts", "src/factory.ts"],
+  "metadata": {
+    "plugin_type": "string",
+    "category": "string",
+    "classes": [
+      "StringConcat",
+      "StringFormat",
+      "StringLength",
+      "StringLower",
+      "StringUpper",
+      "StringTrim",
+      "StringReplace",
+      "StringSplit",
+      "StringJoin",
+      "StringSubstring",
+      "StringIncludes",
+      "StringStartsWith",
+      "StringEndsWith",
+      "StringPadStart",
+      "StringPadEnd"
+    ],
+    "entrypoint": "execute"
+  }
+}

@@ -1,24 +1,36 @@
-// Package logic_and provides the logical AND plugin.
+// Package logic_and provides a workflow plugin for logical AND operations.
 package logic_and
 
-import (
-	plugin "metabuilder/workflow/plugins/go"
-)
+// LogicAnd implements the NodeExecutor interface for logical AND operations.
+type LogicAnd struct {
+	NodeType    string
+	Category    string
+	Description string
+}
 
-// Run performs logical AND on boolean values.
-func Run(runtime *plugin.Runtime, inputs map[string]interface{}) (map[string]interface{}, error) {
+// NewLogicAnd creates a new LogicAnd instance.
+func NewLogicAnd() *LogicAnd {
+	return &LogicAnd{
+		NodeType:    "logic.and",
+		Category:    "logic",
+		Description: "Perform logical AND on boolean values",
+	}
+}
+
+// Execute runs the plugin logic.
+func (p *LogicAnd) Execute(inputs map[string]interface{}, runtime interface{}) map[string]interface{} {
 	values, ok := inputs["values"].([]interface{})
 	if !ok || len(values) == 0 {
-		return map[string]interface{}{"result": false}, nil
+		return map[string]interface{}{"result": false}
 	}
 
 	for _, v := range values {
 		if !toBool(v) {
-			return map[string]interface{}{"result": false}, nil
+			return map[string]interface{}{"result": false}
 		}
 	}
 
-	return map[string]interface{}{"result": true}, nil
+	return map[string]interface{}{"result": true}
 }
 
 func toBool(v interface{}) bool {

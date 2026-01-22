@@ -1,14 +1,23 @@
 """Workflow plugin: set variable in workflow store."""
 
+from ...base import NodeExecutor
 
-def run(runtime, inputs):
-    """Set variable value in workflow store."""
-    key = inputs.get("key")
-    value = inputs.get("value")
 
-    if key is None:
-        return {"result": None, "key": None, "error": "key is required"}
+class VarSet(NodeExecutor):
+    """Set a variable value in the workflow store."""
 
-    runtime.store[key] = value
+    node_type = "var.set"
+    category = "var"
+    description = "Set variable in workflow store"
 
-    return {"result": value, "key": key}
+    def execute(self, inputs, runtime=None):
+        """Set variable value in workflow store."""
+        key = inputs.get("key")
+        value = inputs.get("value")
+
+        if key is None:
+            return {"result": None, "key": None, "error": "key is required"}
+
+        runtime.store[key] = value
+
+        return {"result": value, "key": key}

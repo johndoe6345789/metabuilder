@@ -1,11 +1,19 @@
 """Workflow plugin: maximum value."""
 
+from ...base import NodeExecutor
 
-def run(_runtime, inputs):
-    """Find maximum value in numbers."""
-    numbers = inputs.get("numbers", [])
 
-    if not numbers:
-        return {"result": None}
+class MathMax(NodeExecutor):
+    """Get maximum of values."""
 
-    return {"result": max(numbers)}
+    node_type = "math.max"
+    category = "math"
+    description = "Get maximum of values"
+
+    def execute(self, inputs, runtime=None):
+        numbers = inputs.get("numbers", inputs.get("values", []))
+        try:
+            result = max(float(n) for n in numbers)
+            return {"result": result}
+        except (ValueError, TypeError) as e:
+            return {"error": str(e)}
