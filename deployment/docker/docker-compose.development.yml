@@ -30,7 +30,7 @@ services:
   # C++ DBAL Daemon (Development with interactive mode)
   dbal-daemon:
     build:
-      context: ../dbal/production
+      context: ../../dbal/production
       dockerfile: build-config/Dockerfile
       args:
         BUILD_TYPE: Debug
@@ -43,7 +43,7 @@ services:
       DBAL_DAEMON: "false"  # Interactive mode for development
       DBAL_CONFIG: /app/config/config.yaml
     volumes:
-      - ../dbal/production:/app/source:ro  # Mount source for live changes
+      - ../../dbal/production:/app/source:ro  # Mount source for live changes
       - ./config/dbal:/app/config:ro
       - dbal_data_dev:/app/data
     ports:
@@ -66,8 +66,8 @@ services:
   # MetaBuilder Frontend & API (Development with hot-reload)
   metabuilder-app:
     build:
-      context: ..
-      dockerfile: deployment/Dockerfile.app.dev
+      context: ../..
+      dockerfile: deployment/docker/Dockerfile.app.dev
       args:
         NODE_ENV: development
     container_name: metabuilder-app-dev
@@ -78,7 +78,7 @@ services:
       DBAL_API_URL: http://dbal-daemon:8080
       VITE_HMR_HOST: localhost  # For Vite hot module replacement
     volumes:
-      - ..:/app  # Mount entire project for hot-reload
+      - ../..:/app  # Mount entire project for hot-reload
       - /app/node_modules  # Prevent overwriting node_modules
       - app_cache_dev:/app/.cache
     ports:
