@@ -1,0 +1,476 @@
+{
+  "$schema": "http://json-schema.org/draft-2020-12/schema",
+  "version": "1.0.0",
+  "description": "MetaBuilder N8N Node Registry - Complete mapping of all node types with execution constraints",
+  "nodeTypes": [
+    {
+      "name": "metabuilder.trigger",
+      "displayName": "Trigger",
+      "description": "Workflow trigger node",
+      "group": "core",
+      "codex": {
+        "categories": ["Core"],
+        "label": "Trigger"
+      },
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "main",
+          "type": "main",
+          "displayName": "Output",
+          "description": "Trigger output"
+        }
+      ],
+      "properties": [
+        {
+          "displayName": "Trigger Type",
+          "name": "triggerType",
+          "type": "string",
+          "default": "manual",
+          "description": "Type of trigger",
+          "options": [
+            { "name": "Manual", "value": "manual" },
+            { "name": "Webhook", "value": "webhook" },
+            { "name": "Schedule", "value": "schedule" }
+          ]
+        }
+      ],
+      "execution": {
+        "modes": ["trigger"],
+        "maxTimeout": 3600000,
+        "retryable": false
+      },
+      "multiLanguage": {
+        "ts": "metabuilder.trigger",
+        "python": "metabuilder_trigger"
+      }
+    },
+    {
+      "name": "packagerepo.parse_json",
+      "displayName": "Parse JSON",
+      "description": "Parse and validate JSON input",
+      "group": "transform",
+      "codex": {
+        "categories": ["Transform"],
+        "label": "Parse JSON"
+      },
+      "inputs": [
+        {
+          "name": "main",
+          "type": "main",
+          "displayName": "Input",
+          "description": "Input data to parse"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "main",
+          "type": "main",
+          "displayName": "Output",
+          "description": "Parsed JSON output"
+        }
+      ],
+      "properties": [
+        {
+          "displayName": "Input",
+          "name": "input",
+          "type": "string",
+          "required": true,
+          "description": "JSON string to parse"
+        },
+        {
+          "displayName": "Output Variable",
+          "name": "out",
+          "type": "string",
+          "description": "Variable name to store output"
+        }
+      ],
+      "execution": {
+        "modes": ["operation"],
+        "maxTimeout": 30000,
+        "retryable": true
+      }
+    },
+    {
+      "name": "logic.if",
+      "displayName": "Condition",
+      "description": "Branch workflow based on condition",
+      "group": "logic",
+      "codex": {
+        "categories": ["Logic"],
+        "label": "If/Else"
+      },
+      "inputs": [
+        {
+          "name": "main",
+          "type": "main",
+          "displayName": "Input",
+          "description": "Condition input"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "main",
+          "type": "main",
+          "displayName": "True",
+          "description": "Execute if condition is true"
+        },
+        {
+          "name": "error",
+          "type": "error",
+          "displayName": "False",
+          "description": "Execute if condition is false"
+        }
+      ],
+      "properties": [
+        {
+          "displayName": "Condition",
+          "name": "condition",
+          "type": "string",
+          "required": true,
+          "description": "Boolean expression to evaluate"
+        },
+        {
+          "displayName": "Then Node",
+          "name": "then",
+          "type": "string",
+          "description": "Node to execute if true"
+        },
+        {
+          "displayName": "Else Node",
+          "name": "else",
+          "type": "string",
+          "description": "Node to execute if false"
+        }
+      ],
+      "execution": {
+        "modes": ["logic"],
+        "maxTimeout": 10000,
+        "retryable": false
+      }
+    },
+    {
+      "name": "packagerepo.auth_verify_password",
+      "displayName": "Verify Password",
+      "description": "Verify user password against database",
+      "group": "integration",
+      "codex": {
+        "categories": ["Integration", "Auth"],
+        "label": "Verify Password"
+      },
+      "inputs": [
+        {
+          "name": "main",
+          "type": "main",
+          "displayName": "Input",
+          "description": "User credentials input"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "main",
+          "type": "main",
+          "displayName": "Output",
+          "description": "Verification result with user data"
+        }
+      ],
+      "properties": [
+        {
+          "displayName": "Username",
+          "name": "username",
+          "type": "string",
+          "required": true,
+          "description": "Username to verify"
+        },
+        {
+          "displayName": "Password",
+          "name": "password",
+          "type": "string",
+          "required": true,
+          "typeOptions": { "password": true },
+          "description": "Password to verify"
+        },
+        {
+          "displayName": "Output Variable",
+          "name": "out",
+          "type": "string",
+          "description": "Variable to store verified user"
+        }
+      ],
+      "execution": {
+        "modes": ["operation"],
+        "maxTimeout": 30000,
+        "retryable": true
+      },
+      "credentials": [
+        {
+          "name": "database",
+          "required": false,
+          "displayOptions": {
+            "show": {}
+          }
+        }
+      ]
+    },
+    {
+      "name": "packagerepo.auth_generate_jwt",
+      "displayName": "Generate JWT",
+      "description": "Generate JWT authentication token",
+      "group": "integration",
+      "codex": {
+        "categories": ["Integration", "Auth"],
+        "label": "Generate JWT"
+      },
+      "inputs": [
+        {
+          "name": "main",
+          "type": "main",
+          "displayName": "Input",
+          "description": "User data for token generation"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "main",
+          "type": "main",
+          "displayName": "Output",
+          "description": "Generated JWT token"
+        }
+      ],
+      "properties": [
+        {
+          "displayName": "Subject",
+          "name": "subject",
+          "type": "string",
+          "required": true,
+          "description": "JWT subject (user ID or username)"
+        },
+        {
+          "displayName": "Scopes",
+          "name": "scopes",
+          "type": "array",
+          "description": "User permission scopes"
+        },
+        {
+          "displayName": "Expires In",
+          "name": "expires_in",
+          "type": "number",
+          "default": 86400,
+          "description": "Token expiration in seconds"
+        },
+        {
+          "displayName": "Output Variable",
+          "name": "out",
+          "type": "string",
+          "description": "Variable to store JWT token"
+        }
+      ],
+      "execution": {
+        "modes": ["operation"],
+        "maxTimeout": 10000,
+        "retryable": true
+      }
+    },
+    {
+      "name": "packagerepo.respond_json",
+      "displayName": "Respond JSON",
+      "description": "Send JSON response",
+      "group": "integration",
+      "codex": {
+        "categories": ["Integration", "Response"],
+        "label": "Respond JSON"
+      },
+      "inputs": [
+        {
+          "name": "main",
+          "type": "main",
+          "displayName": "Input",
+          "description": "Response data"
+        }
+      ],
+      "outputs": [],
+      "properties": [
+        {
+          "displayName": "Body",
+          "name": "body",
+          "type": "object",
+          "required": true,
+          "description": "Response body (JSON object)"
+        },
+        {
+          "displayName": "Status Code",
+          "name": "status",
+          "type": "number",
+          "default": 200,
+          "description": "HTTP status code"
+        }
+      ],
+      "execution": {
+        "modes": ["action"],
+        "maxTimeout": 10000,
+        "retryable": false
+      }
+    },
+    {
+      "name": "packagerepo.respond_error",
+      "displayName": "Respond Error",
+      "description": "Send error response",
+      "group": "integration",
+      "codex": {
+        "categories": ["Integration", "Response"],
+        "label": "Respond Error"
+      },
+      "inputs": [
+        {
+          "name": "main",
+          "type": "main",
+          "displayName": "Input",
+          "description": "Error information"
+        }
+      ],
+      "outputs": [],
+      "properties": [
+        {
+          "displayName": "Message",
+          "name": "message",
+          "type": "string",
+          "required": true,
+          "description": "Error message"
+        },
+        {
+          "displayName": "Status Code",
+          "name": "status",
+          "type": "number",
+          "default": 400,
+          "description": "HTTP status code"
+        }
+      ],
+      "execution": {
+        "modes": ["action"],
+        "maxTimeout": 10000,
+        "retryable": false
+      }
+    },
+    {
+      "name": "core.http_request",
+      "displayName": "HTTP Request",
+      "description": "Make HTTP request to external service",
+      "group": "integration",
+      "codex": {
+        "categories": ["Integration", "HTTP"],
+        "label": "HTTP Request"
+      },
+      "inputs": [
+        {
+          "name": "main",
+          "type": "main",
+          "displayName": "Input"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "main",
+          "type": "main",
+          "displayName": "Output"
+        }
+      ],
+      "properties": [
+        {
+          "displayName": "Method",
+          "name": "method",
+          "type": "string",
+          "default": "GET",
+          "options": [
+            { "name": "GET", "value": "GET" },
+            { "name": "POST", "value": "POST" },
+            { "name": "PUT", "value": "PUT" },
+            { "name": "DELETE", "value": "DELETE" }
+          ]
+        },
+        {
+          "displayName": "URL",
+          "name": "url",
+          "type": "string",
+          "required": true
+        },
+        {
+          "displayName": "Headers",
+          "name": "headers",
+          "type": "object"
+        },
+        {
+          "displayName": "Body",
+          "name": "body",
+          "type": "object"
+        }
+      ],
+      "execution": {
+        "modes": ["operation"],
+        "maxTimeout": 60000,
+        "retryable": true
+      }
+    }
+  ],
+  "categories": [
+    {
+      "id": "core",
+      "name": "Core",
+      "description": "Core workflow components"
+    },
+    {
+      "id": "transform",
+      "name": "Transform",
+      "description": "Data transformation nodes"
+    },
+    {
+      "id": "logic",
+      "name": "Logic",
+      "description": "Conditional and control flow"
+    },
+    {
+      "id": "integration",
+      "name": "Integration",
+      "description": "External service integration"
+    }
+  ],
+  "plugins": [
+    {
+      "id": "metabuilder.core",
+      "name": "MetaBuilder Core",
+      "version": "1.0.0",
+      "nodeTypes": ["metabuilder.trigger"],
+      "languages": ["ts", "python"],
+      "repository": "internal"
+    },
+    {
+      "id": "packagerepo",
+      "name": "Package Repository",
+      "version": "1.0.0",
+      "nodeTypes": [
+        "packagerepo.parse_json",
+        "packagerepo.auth_verify_password",
+        "packagerepo.auth_generate_jwt",
+        "packagerepo.respond_json",
+        "packagerepo.respond_error"
+      ],
+      "languages": ["ts"],
+      "repository": "internal"
+    },
+    {
+      "id": "core.logic",
+      "name": "Core Logic",
+      "version": "1.0.0",
+      "nodeTypes": ["logic.if"],
+      "languages": ["ts"],
+      "repository": "internal"
+    },
+    {
+      "id": "core.http",
+      "name": "HTTP Integration",
+      "version": "1.0.0",
+      "nodeTypes": ["core.http_request"],
+      "languages": ["ts", "python"],
+      "repository": "internal"
+    }
+  ]
+}

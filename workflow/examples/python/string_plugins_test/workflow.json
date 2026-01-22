@@ -12,35 +12,11 @@
         100
       ],
       "parameters": {
-        "name": "Test Concat",
-        "typeVersion": 1,
-        "position": [
-          100,
-          100
+        "strings": [
+          "Hello",
+          "World"
         ],
-        "parameters": {
-          "name": "Test Concat",
-          "typeVersion": 1,
-          "position": [
-            100,
-            100
-          ],
-          "parameters": {
-            "name": "Test Concat",
-            "typeVersion": 1,
-            "position": [
-              0,
-              0
-            ],
-            "parameters": {
-              "strings": [
-                "Hello",
-                "World"
-              ],
-              "separator": " "
-            }
-          }
-        }
+        "separator": " "
       }
     },
     {
@@ -53,33 +29,9 @@
         100
       ],
       "parameters": {
-        "name": "Assert Concat",
-        "typeVersion": 1,
-        "position": [
-          400,
-          100
-        ],
-        "parameters": {
-          "name": "Assert Concat",
-          "typeVersion": 1,
-          "position": [
-            400,
-            100
-          ],
-          "parameters": {
-            "name": "Assert Concat",
-            "typeVersion": 1,
-            "position": [
-              300,
-              0
-            ],
-            "parameters": {
-              "actual": "$test_concat.result",
-              "expected": "Hello World",
-              "message": "string.concat should join strings"
-            }
-          }
-        }
+        "actual": "$test_concat.result",
+        "expected": "Hello World",
+        "message": "string.concat should join strings"
       }
     },
     {
@@ -92,31 +44,7 @@
         100
       ],
       "parameters": {
-        "name": "Test Upper",
-        "typeVersion": 1,
-        "position": [
-          700,
-          100
-        ],
-        "parameters": {
-          "name": "Test Upper",
-          "typeVersion": 1,
-          "position": [
-            700,
-            100
-          ],
-          "parameters": {
-            "name": "Test Upper",
-            "typeVersion": 1,
-            "position": [
-              0,
-              100
-            ],
-            "parameters": {
-              "text": "hello"
-            }
-          }
-        }
+        "text": "hello"
       }
     },
     {
@@ -129,33 +57,9 @@
         300
       ],
       "parameters": {
-        "name": "Assert Upper",
-        "typeVersion": 1,
-        "position": [
-          100,
-          300
-        ],
-        "parameters": {
-          "name": "Assert Upper",
-          "typeVersion": 1,
-          "position": [
-            100,
-            300
-          ],
-          "parameters": {
-            "name": "Assert Upper",
-            "typeVersion": 1,
-            "position": [
-              300,
-              100
-            ],
-            "parameters": {
-              "actual": "$test_upper.result",
-              "expected": "HELLO",
-              "message": "string.upper should uppercase text"
-            }
-          }
-        }
+        "actual": "$test_upper.result",
+        "expected": "HELLO",
+        "message": "string.upper should uppercase text"
       }
     },
     {
@@ -168,31 +72,7 @@
         300
       ],
       "parameters": {
-        "name": "Test Lower",
-        "typeVersion": 1,
-        "position": [
-          400,
-          300
-        ],
-        "parameters": {
-          "name": "Test Lower",
-          "typeVersion": 1,
-          "position": [
-            400,
-            300
-          ],
-          "parameters": {
-            "name": "Test Lower",
-            "typeVersion": 1,
-            "position": [
-              0,
-              200
-            ],
-            "parameters": {
-              "text": "WORLD"
-            }
-          }
-        }
+        "text": "WORLD"
       }
     },
     {
@@ -205,33 +85,9 @@
         300
       ],
       "parameters": {
-        "name": "Assert Lower",
-        "typeVersion": 1,
-        "position": [
-          700,
-          300
-        ],
-        "parameters": {
-          "name": "Assert Lower",
-          "typeVersion": 1,
-          "position": [
-            700,
-            300
-          ],
-          "parameters": {
-            "name": "Assert Lower",
-            "typeVersion": 1,
-            "position": [
-              300,
-              200
-            ],
-            "parameters": {
-              "actual": "$test_lower.result",
-              "expected": "world",
-              "message": "string.lower should lowercase text"
-            }
-          }
-        }
+        "actual": "$test_lower.result",
+        "expected": "world",
+        "message": "string.lower should lowercase text"
       }
     },
     {
@@ -244,32 +100,8 @@
         500
       ],
       "parameters": {
-        "name": "Test Split",
-        "typeVersion": 1,
-        "position": [
-          100,
-          500
-        ],
-        "parameters": {
-          "name": "Test Split",
-          "typeVersion": 1,
-          "position": [
-            100,
-            500
-          ],
-          "parameters": {
-            "name": "Test Split",
-            "typeVersion": 1,
-            "position": [
-              0,
-              300
-            ],
-            "parameters": {
-              "text": "a,b,c",
-              "separator": ","
-            }
-          }
-        }
+        "text": "a,b,c",
+        "separator": ","
       }
     },
     {
@@ -282,31 +114,7 @@
         500
       ],
       "parameters": {
-        "name": "Assert Split Length",
-        "typeVersion": 1,
-        "position": [
-          400,
-          500
-        ],
-        "parameters": {
-          "name": "Assert Split Length",
-          "typeVersion": 1,
-          "position": [
-            400,
-            500
-          ],
-          "parameters": {
-            "name": "Assert Split Length",
-            "typeVersion": 1,
-            "position": [
-              300,
-              300
-            ],
-            "parameters": {
-              "items": "$test_split.result"
-            }
-          }
-        }
+        "items": "$test_split.result"
       }
     },
     {
@@ -319,33 +127,9 @@
         500
       ],
       "parameters": {
-        "name": "Assert Split",
-        "typeVersion": 1,
-        "position": [
-          700,
-          500
-        ],
-        "parameters": {
-          "name": "Assert Split",
-          "typeVersion": 1,
-          "position": [
-            700,
-            500
-          ],
-          "parameters": {
-            "name": "Assert Split Count",
-            "typeVersion": 1,
-            "position": [
-              600,
-              300
-            ],
-            "parameters": {
-              "actual": "$assert_split_length.result",
-              "expected": 3,
-              "message": "string.split should split into array"
-            }
-          }
-        }
+        "actual": "$assert_split_length.result",
+        "expected": 3,
+        "message": "string.split should split into array"
       }
     },
     {
@@ -358,31 +142,7 @@
         700
       ],
       "parameters": {
-        "name": "Test Length",
-        "typeVersion": 1,
-        "position": [
-          100,
-          700
-        ],
-        "parameters": {
-          "name": "Test Length",
-          "typeVersion": 1,
-          "position": [
-            100,
-            700
-          ],
-          "parameters": {
-            "name": "Test Length",
-            "typeVersion": 1,
-            "position": [
-              0,
-              400
-            ],
-            "parameters": {
-              "text": "Hello"
-            }
-          }
-        }
+        "text": "Hello"
       }
     },
     {
@@ -395,33 +155,9 @@
         700
       ],
       "parameters": {
-        "name": "Assert Length",
-        "typeVersion": 1,
-        "position": [
-          400,
-          700
-        ],
-        "parameters": {
-          "name": "Assert Length",
-          "typeVersion": 1,
-          "position": [
-            400,
-            700
-          ],
-          "parameters": {
-            "name": "Assert Length",
-            "typeVersion": 1,
-            "position": [
-              300,
-              400
-            ],
-            "parameters": {
-              "actual": "$test_length.result",
-              "expected": 5,
-              "message": "string.length should return character count"
-            }
-          }
-        }
+        "actual": "$test_length.result",
+        "expected": 5,
+        "message": "string.length should return character count"
       }
     }
   ],

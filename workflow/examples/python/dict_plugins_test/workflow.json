@@ -12,35 +12,11 @@
         100
       ],
       "parameters": {
-        "name": "Test Get",
-        "typeVersion": 1,
-        "position": [
-          100,
-          100
-        ],
-        "parameters": {
-          "name": "Test Get",
-          "typeVersion": 1,
-          "position": [
-            100,
-            100
-          ],
-          "parameters": {
-            "name": "Test Get",
-            "typeVersion": 1,
-            "position": [
-              0,
-              0
-            ],
-            "parameters": {
-              "object": {
-                "name": "Alice",
-                "age": 30
-              },
-              "key": "name"
-            }
-          }
-        }
+        "object": {
+          "name": "Alice",
+          "age": 30
+        },
+        "key": "name"
       }
     },
     {
@@ -53,33 +29,9 @@
         100
       ],
       "parameters": {
-        "name": "Assert Get",
-        "typeVersion": 1,
-        "position": [
-          400,
-          100
-        ],
-        "parameters": {
-          "name": "Assert Get",
-          "typeVersion": 1,
-          "position": [
-            400,
-            100
-          ],
-          "parameters": {
-            "name": "Assert Get Value",
-            "typeVersion": 1,
-            "position": [
-              300,
-              0
-            ],
-            "parameters": {
-              "actual": "$test_get.result",
-              "expected": "Alice",
-              "message": "dict.get should retrieve value"
-            }
-          }
-        }
+        "actual": "$test_get.result",
+        "expected": "Alice",
+        "message": "dict.get should retrieve value"
       }
     },
     {
@@ -92,32 +44,8 @@
         100
       ],
       "parameters": {
-        "name": "Assert Get Found",
-        "typeVersion": 1,
-        "position": [
-          700,
-          100
-        ],
-        "parameters": {
-          "name": "Assert Get Found",
-          "typeVersion": 1,
-          "position": [
-            700,
-            100
-          ],
-          "parameters": {
-            "name": "Assert Get Found",
-            "typeVersion": 1,
-            "position": [
-              600,
-              0
-            ],
-            "parameters": {
-              "value": "$test_get.found",
-              "message": "dict.get should set found flag"
-            }
-          }
-        }
+        "value": "$test_get.found",
+        "message": "dict.get should set found flag"
       }
     },
     {
@@ -130,35 +58,11 @@
         300
       ],
       "parameters": {
-        "name": "Test Set",
-        "typeVersion": 1,
-        "position": [
-          100,
-          300
-        ],
-        "parameters": {
-          "name": "Test Set",
-          "typeVersion": 1,
-          "position": [
-            100,
-            300
-          ],
-          "parameters": {
-            "name": "Test Set",
-            "typeVersion": 1,
-            "position": [
-              0,
-              100
-            ],
-            "parameters": {
-              "object": {
-                "a": 1
-              },
-              "key": "b",
-              "value": 2
-            }
-          }
-        }
+        "object": {
+          "a": 1
+        },
+        "key": "b",
+        "value": 2
       }
     },
     {
@@ -171,32 +75,8 @@
         300
       ],
       "parameters": {
-        "name": "Test Get New Key",
-        "typeVersion": 1,
-        "position": [
-          400,
-          300
-        ],
-        "parameters": {
-          "name": "Test Get New Key",
-          "typeVersion": 1,
-          "position": [
-            400,
-            300
-          ],
-          "parameters": {
-            "name": "Test Get New Key",
-            "typeVersion": 1,
-            "position": [
-              300,
-              100
-            ],
-            "parameters": {
-              "object": "$test_set.result",
-              "key": "b"
-            }
-          }
-        }
+        "object": "$test_set.result",
+        "key": "b"
       }
     },
     {
@@ -209,33 +89,9 @@
         300
       ],
       "parameters": {
-        "name": "Assert Set",
-        "typeVersion": 1,
-        "position": [
-          700,
-          300
-        ],
-        "parameters": {
-          "name": "Assert Set",
-          "typeVersion": 1,
-          "position": [
-            700,
-            300
-          ],
-          "parameters": {
-            "name": "Assert Set Value",
-            "typeVersion": 1,
-            "position": [
-              600,
-              100
-            ],
-            "parameters": {
-              "actual": "$test_get_new_key.result",
-              "expected": 2,
-              "message": "dict.set should add new key"
-            }
-          }
-        }
+        "actual": "$test_get_new_key.result",
+        "expected": 2,
+        "message": "dict.set should add new key"
       }
     },
     {
@@ -248,34 +104,10 @@
         500
       ],
       "parameters": {
-        "name": "Test Keys",
-        "typeVersion": 1,
-        "position": [
-          100,
-          500
-        ],
-        "parameters": {
-          "name": "Test Keys",
-          "typeVersion": 1,
-          "position": [
-            100,
-            500
-          ],
-          "parameters": {
-            "name": "Test Keys",
-            "typeVersion": 1,
-            "position": [
-              0,
-              200
-            ],
-            "parameters": {
-              "object": {
-                "a": 1,
-                "b": 2,
-                "c": 3
-              }
-            }
-          }
+        "object": {
+          "a": 1,
+          "b": 2,
+          "c": 3
         }
       }
     },
@@ -289,31 +121,7 @@
         500
       ],
       "parameters": {
-        "name": "Assert Keys Length",
-        "typeVersion": 1,
-        "position": [
-          400,
-          500
-        ],
-        "parameters": {
-          "name": "Assert Keys Length",
-          "typeVersion": 1,
-          "position": [
-            400,
-            500
-          ],
-          "parameters": {
-            "name": "Assert Keys Length",
-            "typeVersion": 1,
-            "position": [
-              300,
-              200
-            ],
-            "parameters": {
-              "items": "$test_keys.result"
-            }
-          }
-        }
+        "items": "$test_keys.result"
       }
     },
     {
@@ -326,33 +134,9 @@
         500
       ],
       "parameters": {
-        "name": "Assert Keys",
-        "typeVersion": 1,
-        "position": [
-          700,
-          500
-        ],
-        "parameters": {
-          "name": "Assert Keys",
-          "typeVersion": 1,
-          "position": [
-            700,
-            500
-          ],
-          "parameters": {
-            "name": "Assert Keys Count",
-            "typeVersion": 1,
-            "position": [
-              600,
-              200
-            ],
-            "parameters": {
-              "actual": "$assert_keys_length.result",
-              "expected": 3,
-              "message": "dict.keys should return all keys"
-            }
-          }
-        }
+        "actual": "$assert_keys_length.result",
+        "expected": 3,
+        "message": "dict.keys should return all keys"
       }
     },
     {
@@ -365,41 +149,17 @@
         700
       ],
       "parameters": {
-        "name": "Test Merge",
-        "typeVersion": 1,
-        "position": [
-          100,
-          700
-        ],
-        "parameters": {
-          "name": "Test Merge",
-          "typeVersion": 1,
-          "position": [
-            100,
-            700
-          ],
-          "parameters": {
-            "name": "Test Merge",
-            "typeVersion": 1,
-            "position": [
-              0,
-              300
-            ],
-            "parameters": {
-              "objects": [
-                {
-                  "a": 1
-                },
-                {
-                  "b": 2
-                },
-                {
-                  "c": 3
-                }
-              ]
-            }
+        "objects": [
+          {
+            "a": 1
+          },
+          {
+            "b": 2
+          },
+          {
+            "c": 3
           }
-        }
+        ]
       }
     },
     {
@@ -412,31 +172,7 @@
         700
       ],
       "parameters": {
-        "name": "Test Merged Keys",
-        "typeVersion": 1,
-        "position": [
-          400,
-          700
-        ],
-        "parameters": {
-          "name": "Test Merged Keys",
-          "typeVersion": 1,
-          "position": [
-            400,
-            700
-          ],
-          "parameters": {
-            "name": "Get Merged Keys",
-            "typeVersion": 1,
-            "position": [
-              300,
-              300
-            ],
-            "parameters": {
-              "object": "$test_merge.result"
-            }
-          }
-        }
+        "object": "$test_merge.result"
       }
     },
     {
@@ -449,31 +185,7 @@
         700
       ],
       "parameters": {
-        "name": "Assert Merge Length",
-        "typeVersion": 1,
-        "position": [
-          700,
-          700
-        ],
-        "parameters": {
-          "name": "Assert Merge Length",
-          "typeVersion": 1,
-          "position": [
-            700,
-            700
-          ],
-          "parameters": {
-            "name": "Assert Merge Length",
-            "typeVersion": 1,
-            "position": [
-              600,
-              300
-            ],
-            "parameters": {
-              "items": "$test_merged_keys.result"
-            }
-          }
-        }
+        "items": "$test_merged_keys.result"
       }
     },
     {
@@ -486,33 +198,9 @@
         900
       ],
       "parameters": {
-        "name": "Assert Merge",
-        "typeVersion": 1,
-        "position": [
-          100,
-          900
-        ],
-        "parameters": {
-          "name": "Assert Merge",
-          "typeVersion": 1,
-          "position": [
-            100,
-            900
-          ],
-          "parameters": {
-            "name": "Assert Merge",
-            "typeVersion": 1,
-            "position": [
-              900,
-              300
-            ],
-            "parameters": {
-              "actual": "$assert_merge_length.result",
-              "expected": 3,
-              "message": "dict.merge should merge dicts"
-            }
-          }
-        }
+        "actual": "$assert_merge_length.result",
+        "expected": 3,
+        "message": "dict.merge should merge dicts"
       }
     }
   ],

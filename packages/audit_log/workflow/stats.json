@@ -12,26 +12,10 @@
         100
       ],
       "parameters": {
-        "name": "Validate Context",
-        "typeVersion": 1,
-        "position": [
-          100,
-          100
-        ],
-        "parameters": {
-          "name": "Validate Context",
-          "typeVersion": 1,
-          "position": [
-            100,
-            100
-          ],
-          "parameters": {
-            "input": "{{ $context.tenantId }}",
-            "operation": "validate",
-            "validator": "required",
-            "errorMessage": "tenantId is required"
-          }
-        }
+        "input": "{{ $context.tenantId }}",
+        "operation": "validate",
+        "validator": "required",
+        "errorMessage": "tenantId is required"
       }
     },
     {
@@ -44,27 +28,11 @@
         100
       ],
       "parameters": {
-        "name": "Get Date Range",
-        "typeVersion": 1,
-        "position": [
-          400,
-          100
-        ],
-        "parameters": {
-          "name": "Get Date Range",
-          "typeVersion": 1,
-          "position": [
-            400,
-            100
-          ],
-          "parameters": {
-            "output": {
-              "startDate": "{{ new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString() }}",
-              "endDate": "{{ new Date().toISOString() }}"
-            },
-            "operation": "transform_data"
-          }
-        }
+        "output": {
+          "startDate": "{{ new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString() }}",
+          "endDate": "{{ new Date().toISOString() }}"
+        },
+        "operation": "transform_data"
       }
     },
     {
@@ -77,36 +45,20 @@
         100
       ],
       "parameters": {
-        "name": "Count By Action",
-        "typeVersion": 1,
-        "position": [
-          700,
-          100
-        ],
-        "parameters": {
-          "name": "Count By Action",
-          "typeVersion": 1,
-          "position": [
-            700,
-            100
-          ],
-          "parameters": {
-            "filter": {
-              "tenantId": "{{ $context.tenantId }}",
-              "timestamp": {
-                "$gte": "{{ $steps.get_date_range.output.startDate }}",
-                "$lte": "{{ $steps.get_date_range.output.endDate }}"
-              }
-            },
-            "groupBy": "action",
-            "aggregations": {
-              "count": "count"
-            },
-            "output": "actionStats",
-            "operation": "database_aggregate",
-            "entity": "AuditLog"
+        "filter": {
+          "tenantId": "{{ $context.tenantId }}",
+          "timestamp": {
+            "$gte": "{{ $steps.get_date_range.output.startDate }}",
+            "$lte": "{{ $steps.get_date_range.output.endDate }}"
           }
-        }
+        },
+        "groupBy": "action",
+        "aggregations": {
+          "count": "count"
+        },
+        "output": "actionStats",
+        "operation": "database_aggregate",
+        "entity": "AuditLog"
       }
     },
     {
@@ -119,36 +71,20 @@
         300
       ],
       "parameters": {
-        "name": "Count By Entity",
-        "typeVersion": 1,
-        "position": [
-          100,
-          300
-        ],
-        "parameters": {
-          "name": "Count By Entity",
-          "typeVersion": 1,
-          "position": [
-            100,
-            300
-          ],
-          "parameters": {
-            "filter": {
-              "tenantId": "{{ $context.tenantId }}",
-              "timestamp": {
-                "$gte": "{{ $steps.get_date_range.output.startDate }}",
-                "$lte": "{{ $steps.get_date_range.output.endDate }}"
-              }
-            },
-            "groupBy": "entity",
-            "aggregations": {
-              "count": "count"
-            },
-            "output": "entityStats",
-            "operation": "database_aggregate",
-            "entity": "AuditLog"
+        "filter": {
+          "tenantId": "{{ $context.tenantId }}",
+          "timestamp": {
+            "$gte": "{{ $steps.get_date_range.output.startDate }}",
+            "$lte": "{{ $steps.get_date_range.output.endDate }}"
           }
-        }
+        },
+        "groupBy": "entity",
+        "aggregations": {
+          "count": "count"
+        },
+        "output": "entityStats",
+        "operation": "database_aggregate",
+        "entity": "AuditLog"
       }
     },
     {
@@ -161,29 +97,13 @@
         300
       ],
       "parameters": {
-        "name": "Format Response",
-        "typeVersion": 1,
-        "position": [
-          400,
-          300
-        ],
-        "parameters": {
-          "name": "Format Response",
-          "typeVersion": 1,
-          "position": [
-            400,
-            300
-          ],
-          "parameters": {
-            "output": {
-              "dateRange": "{{ $steps.get_date_range.output }}",
-              "actionStatistics": "{{ $steps.count_by_action.output }}",
-              "entityStatistics": "{{ $steps.count_by_entity.output }}",
-              "totalEntries": "{{ $steps.count_by_action.output.reduce((sum, item) => sum + item.count, 0) }}"
-            },
-            "operation": "transform_data"
-          }
-        }
+        "output": {
+          "dateRange": "{{ $steps.get_date_range.output }}",
+          "actionStatistics": "{{ $steps.count_by_action.output }}",
+          "entityStatistics": "{{ $steps.count_by_entity.output }}",
+          "totalEntries": "{{ $steps.count_by_action.output.reduce((sum, item) => sum + item.count, 0) }}"
+        },
+        "operation": "transform_data"
       }
     },
     {
@@ -196,29 +116,69 @@
         300
       ],
       "parameters": {
-        "name": "Return Success",
-        "typeVersion": 1,
-        "position": [
-          700,
-          300
-        ],
-        "parameters": {
-          "name": "Return Success",
-          "typeVersion": 1,
-          "position": [
-            700,
-            300
-          ],
-          "parameters": {
-            "action": "http_response",
-            "status": 200,
-            "body": "{{ $steps.format_response.output }}"
-          }
-        }
+        "action": "http_response",
+        "status": 200,
+        "body": "{{ $steps.format_response.output }}"
       }
     }
   ],
-  "connections": {},
+  "connections": {
+    "validate_context": {
+      "main": [
+        [
+          {
+            "node": "get_date_range",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get_date_range": {
+      "main": [
+        [
+          {
+            "node": "count_by_action",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "count_by_action": {
+      "main": [
+        [
+          {
+            "node": "count_by_entity",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "count_by_entity": {
+      "main": [
+        [
+          {
+            "node": "format_response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "format_response": {
+      "main": [
+        [
+          {
+            "node": "return_success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "staticData": {},
   "meta": {},
   "settings": {
@@ -227,5 +187,8 @@
     "saveExecutionProgress": true,
     "saveDataErrorExecution": "all",
     "saveDataSuccessExecution": "all"
-  }
+  },
+  "id": "workflow_stats",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
 }

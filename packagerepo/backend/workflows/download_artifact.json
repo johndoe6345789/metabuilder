@@ -12,27 +12,9 @@
         100
       ],
       "parameters": {
-        "name": "Parse Path",
-        "typeVersion": 1,
-        "position": [
-          100,
-          100
-        ],
-        "parameters": {
-          "name": "Parse Path",
-          "typeVersion": 1,
-          "position": [
-            100,
-            100
-          ],
-          "parameters": {
-            "parameters": {
-              "path": "$request.path",
-              "pattern": "/v1/:namespace/:name/:version/:variant/blob",
-              "out": "entity"
-            }
-          }
-        }
+        "path": "$request.path",
+        "pattern": "/v1/:namespace/:name/:version/:variant/blob",
+        "out": "entity"
       }
     },
     {
@@ -45,26 +27,8 @@
         100
       ],
       "parameters": {
-        "name": "Normalize",
-        "typeVersion": 1,
-        "position": [
-          400,
-          100
-        ],
-        "parameters": {
-          "name": "Normalize",
-          "typeVersion": 1,
-          "position": [
-            400,
-            100
-          ],
-          "parameters": {
-            "parameters": {
-              "entity": "$entity",
-              "out": "normalized"
-            }
-          }
-        }
+        "entity": "$entity",
+        "out": "normalized"
       }
     },
     {
@@ -77,26 +41,8 @@
         100
       ],
       "parameters": {
-        "name": "Get Meta",
-        "typeVersion": 1,
-        "position": [
-          700,
-          100
-        ],
-        "parameters": {
-          "name": "Get Meta",
-          "typeVersion": 1,
-          "position": [
-            700,
-            100
-          ],
-          "parameters": {
-            "parameters": {
-              "key": "artifact/$entity.namespace/$entity.name/$entity.version/$entity.variant",
-              "out": "metadata"
-            }
-          }
-        }
+        "key": "artifact/$entity.namespace/$entity.name/$entity.version/$entity.variant",
+        "out": "metadata"
       }
     },
     {
@@ -109,27 +55,9 @@
         300
       ],
       "parameters": {
-        "name": "Check Exists",
-        "typeVersion": 1,
-        "position": [
-          100,
-          300
-        ],
-        "parameters": {
-          "name": "Check Exists",
-          "typeVersion": 1,
-          "position": [
-            100,
-            300
-          ],
-          "parameters": {
-            "parameters": {
-              "condition": "$metadata == null",
-              "then": "error_not_found",
-              "else": "read_blob"
-            }
-          }
-        }
+        "condition": "$metadata == null",
+        "then": "error_not_found",
+        "else": "read_blob"
       }
     },
     {
@@ -142,26 +70,8 @@
         300
       ],
       "parameters": {
-        "name": "Read Blob",
-        "typeVersion": 1,
-        "position": [
-          400,
-          300
-        ],
-        "parameters": {
-          "name": "Read Blob",
-          "typeVersion": 1,
-          "position": [
-            400,
-            300
-          ],
-          "parameters": {
-            "parameters": {
-              "digest": "$metadata.digest",
-              "out": "blob_data"
-            }
-          }
-        }
+        "digest": "$metadata.digest",
+        "out": "blob_data"
       }
     },
     {
@@ -174,27 +84,9 @@
         300
       ],
       "parameters": {
-        "name": "Check Blob Exists",
-        "typeVersion": 1,
-        "position": [
-          700,
-          300
-        ],
-        "parameters": {
-          "name": "Check Blob Exists",
-          "typeVersion": 1,
-          "position": [
-            700,
-            300
-          ],
-          "parameters": {
-            "parameters": {
-              "condition": "$blob_data == null",
-              "then": "error_blob_missing",
-              "else": "respond_blob"
-            }
-          }
-        }
+        "condition": "$blob_data == null",
+        "then": "error_blob_missing",
+        "else": "respond_blob"
       }
     },
     {
@@ -207,31 +99,13 @@
         500
       ],
       "parameters": {
-        "name": "Respond Blob",
-        "typeVersion": 1,
-        "position": [
-          100,
-          500
-        ],
-        "parameters": {
-          "name": "Respond Blob",
-          "typeVersion": 1,
-          "position": [
-            100,
-            500
-          ],
-          "parameters": {
-            "parameters": {
-              "data": "$blob_data",
-              "headers": {
-                "Content-Type": "application/octet-stream",
-                "Content-Digest": "sha-256=$metadata.digest",
-                "Content-Length": "$metadata.size"
-              },
-              "status": 200
-            }
-          }
-        }
+        "data": "$blob_data",
+        "headers": {
+          "Content-Type": "application/octet-stream",
+          "Content-Digest": "sha-256=$metadata.digest",
+          "Content-Length": "$metadata.size"
+        },
+        "status": 200
       }
     },
     {
@@ -244,26 +118,8 @@
         500
       ],
       "parameters": {
-        "name": "Error Not Found",
-        "typeVersion": 1,
-        "position": [
-          400,
-          500
-        ],
-        "parameters": {
-          "name": "Error Not Found",
-          "typeVersion": 1,
-          "position": [
-            400,
-            500
-          ],
-          "parameters": {
-            "parameters": {
-              "message": "Artifact not found",
-              "status": 404
-            }
-          }
-        }
+        "message": "Artifact not found",
+        "status": 404
       }
     },
     {
@@ -276,30 +132,101 @@
         500
       ],
       "parameters": {
-        "name": "Error Blob Missing",
-        "typeVersion": 1,
-        "position": [
-          700,
-          500
-        ],
-        "parameters": {
-          "name": "Error Blob Missing",
-          "typeVersion": 1,
-          "position": [
-            700,
-            500
-          ],
-          "parameters": {
-            "parameters": {
-              "message": "Artifact blob data missing",
-              "status": 500
-            }
-          }
-        }
+        "message": "Artifact blob data missing",
+        "status": 500
       }
     }
   ],
-  "connections": {},
+  "connections": {
+    "parse_path": {
+      "main": [
+        [
+          {
+            "node": "normalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "normalize": {
+      "main": [
+        [
+          {
+            "node": "get_meta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get_meta": {
+      "main": [
+        [
+          {
+            "node": "check_exists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_exists": {
+      "main": [
+        [
+          {
+            "node": "read_blob",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "read_blob": {
+      "main": [
+        [
+          {
+            "node": "check_blob_exists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_blob_exists": {
+      "main": [
+        [
+          {
+            "node": "respond_blob",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "respond_blob": {
+      "main": [
+        [
+          {
+            "node": "error_not_found",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "error_not_found": {
+      "main": [
+        [
+          {
+            "node": "error_blob_missing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "staticData": {},
   "meta": {},
   "settings": {
@@ -308,5 +235,8 @@
     "saveExecutionProgress": true,
     "saveDataErrorExecution": "all",
     "saveDataSuccessExecution": "all"
-  }
+  },
+  "id": "workflow_download_artifact",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
 }

@@ -12,25 +12,9 @@
         100
       ],
       "parameters": {
-        "name": "Validate Context",
-        "typeVersion": 1,
-        "position": [
-          100,
-          100
-        ],
-        "parameters": {
-          "name": "Validate Context",
-          "typeVersion": 1,
-          "position": [
-            100,
-            100
-          ],
-          "parameters": {
-            "input": "{{ $context.tenantId }}",
-            "operation": "validate",
-            "validator": "required"
-          }
-        }
+        "input": "{{ $context.tenantId }}",
+        "operation": "validate",
+        "validator": "required"
       }
     },
     {
@@ -43,30 +27,14 @@
         100
       ],
       "parameters": {
-        "name": "Extract Filters",
-        "typeVersion": 1,
-        "position": [
-          400,
-          100
-        ],
-        "parameters": {
-          "name": "Extract Filters",
-          "typeVersion": 1,
-          "position": [
-            400,
-            100
-          ],
-          "parameters": {
-            "input": "{{ $json }}",
-            "output": {
-              "status": "{{ $json.filters.status || null }}",
-              "searchTerm": "{{ $json.filters.search || '' }}",
-              "dateFrom": "{{ $json.filters.dateFrom || null }}",
-              "dateTo": "{{ $json.filters.dateTo || null }}"
-            },
-            "operation": "transform_data"
-          }
-        }
+        "input": "{{ $json }}",
+        "output": {
+          "status": "{{ $json.filters.status || null }}",
+          "searchTerm": "{{ $json.filters.search || '' }}",
+          "dateFrom": "{{ $json.filters.dateFrom || null }}",
+          "dateTo": "{{ $json.filters.dateTo || null }}"
+        },
+        "operation": "transform_data"
       }
     },
     {
@@ -79,24 +47,8 @@
         100
       ],
       "parameters": {
-        "name": "Apply Status Filter",
-        "typeVersion": 1,
-        "position": [
-          700,
-          100
-        ],
-        "parameters": {
-          "name": "Apply Status Filter",
-          "typeVersion": 1,
-          "position": [
-            700,
-            100
-          ],
-          "parameters": {
-            "condition": "{{ $steps.extract_filters.output.status !== null }}",
-            "operation": "condition"
-          }
-        }
+        "condition": "{{ $steps.extract_filters.output.status !== null }}",
+        "operation": "condition"
       }
     },
     {
@@ -109,24 +61,8 @@
         300
       ],
       "parameters": {
-        "name": "Apply Search Filter",
-        "typeVersion": 1,
-        "position": [
-          100,
-          300
-        ],
-        "parameters": {
-          "name": "Apply Search Filter",
-          "typeVersion": 1,
-          "position": [
-            100,
-            300
-          ],
-          "parameters": {
-            "condition": "{{ $steps.extract_filters.output.searchTerm.length > 0 }}",
-            "operation": "condition"
-          }
-        }
+        "condition": "{{ $steps.extract_filters.output.searchTerm.length > 0 }}",
+        "operation": "condition"
       }
     },
     {
@@ -139,24 +75,8 @@
         300
       ],
       "parameters": {
-        "name": "Apply Date Filter",
-        "typeVersion": 1,
-        "position": [
-          400,
-          300
-        ],
-        "parameters": {
-          "name": "Apply Date Filter",
-          "typeVersion": 1,
-          "position": [
-            400,
-            300
-          ],
-          "parameters": {
-            "condition": "{{ $steps.extract_filters.output.dateFrom !== null || $steps.extract_filters.output.dateTo !== null }}",
-            "operation": "condition"
-          }
-        }
+        "condition": "{{ $steps.extract_filters.output.dateFrom !== null || $steps.extract_filters.output.dateTo !== null }}",
+        "operation": "condition"
       }
     },
     {
@@ -169,25 +89,9 @@
         300
       ],
       "parameters": {
-        "name": "Filter Data",
-        "typeVersion": 1,
-        "position": [
-          700,
-          300
-        ],
-        "parameters": {
-          "name": "Filter Data",
-          "typeVersion": 1,
-          "position": [
-            700,
-            300
-          ],
-          "parameters": {
-            "input": "{{ $json.data }}",
-            "output": "{{ $json.data.filter(item => { let match = true; if ($steps.extract_filters.output.status && item.status !== $steps.extract_filters.output.status) match = false; if ($steps.extract_filters.output.searchTerm && !JSON.stringify(item).toLowerCase().includes($steps.extract_filters.output.searchTerm.toLowerCase())) match = false; if ($steps.extract_filters.output.dateFrom && new Date(item.createdAt) < new Date($steps.extract_filters.output.dateFrom)) match = false; if ($steps.extract_filters.output.dateTo && new Date(item.createdAt) > new Date($steps.extract_filters.output.dateTo)) match = false; return match; }) }}",
-            "operation": "transform_data"
-          }
-        }
+        "input": "{{ $json.data }}",
+        "output": "{{ $json.data.filter(item => { let match = true; if ($steps.extract_filters.output.status && item.status !== $steps.extract_filters.output.status) match = false; if ($steps.extract_filters.output.searchTerm && !JSON.stringify(item).toLowerCase().includes($steps.extract_filters.output.searchTerm.toLowerCase())) match = false; if ($steps.extract_filters.output.dateFrom && new Date(item.createdAt) < new Date($steps.extract_filters.output.dateFrom)) match = false; if ($steps.extract_filters.output.dateTo && new Date(item.createdAt) > new Date($steps.extract_filters.output.dateTo)) match = false; return match; }) }}",
+        "operation": "transform_data"
       }
     },
     {
@@ -200,32 +104,83 @@
         500
       ],
       "parameters": {
-        "name": "Return Filtered",
-        "typeVersion": 1,
-        "position": [
-          100,
-          500
-        ],
-        "parameters": {
-          "name": "Return Filtered",
-          "typeVersion": 1,
-          "position": [
-            100,
-            500
-          ],
-          "parameters": {
-            "data": {
-              "filters": "{{ $steps.extract_filters.output }}",
-              "data": "{{ $steps.filter_data.output }}"
-            },
-            "action": "emit_event",
-            "event": "data_filtered"
-          }
-        }
+        "data": {
+          "filters": "{{ $steps.extract_filters.output }}",
+          "data": "{{ $steps.filter_data.output }}"
+        },
+        "action": "emit_event",
+        "event": "data_filtered"
       }
     }
   ],
-  "connections": {},
+  "connections": {
+    "validate_context": {
+      "main": [
+        [
+          {
+            "node": "extract_filters",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "extract_filters": {
+      "main": [
+        [
+          {
+            "node": "apply_status_filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "apply_status_filter": {
+      "main": [
+        [
+          {
+            "node": "apply_search_filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "apply_search_filter": {
+      "main": [
+        [
+          {
+            "node": "apply_date_filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "apply_date_filter": {
+      "main": [
+        [
+          {
+            "node": "filter_data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "filter_data": {
+      "main": [
+        [
+          {
+            "node": "return_filtered",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "staticData": {},
   "meta": {},
   "settings": {
@@ -234,5 +189,8 @@
     "saveExecutionProgress": true,
     "saveDataErrorExecution": "all",
     "saveDataSuccessExecution": "all"
-  }
+  },
+  "id": "workflow_filtering",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
 }

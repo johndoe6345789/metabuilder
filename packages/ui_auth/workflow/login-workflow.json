@@ -12,27 +12,11 @@
         100
       ],
       "parameters": {
-        "name": "Apply Rate Limit",
-        "typeVersion": 1,
-        "position": [
-          100,
-          100
-        ],
-        "parameters": {
-          "name": "Apply Rate Limit",
-          "typeVersion": 1,
-          "position": [
-            100,
-            100
-          ],
-          "parameters": {
-            "operation": "rate_limit",
-            "key": "{{ $json.email }}",
-            "limit": 5,
-            "window": 60000,
-            "errorMessage": "Too many login attempts. Please try again in a few minutes."
-          }
-        }
+        "operation": "rate_limit",
+        "key": "{{ $json.email }}",
+        "limit": 5,
+        "window": 60000,
+        "errorMessage": "Too many login attempts. Please try again in a few minutes."
       }
     },
     {
@@ -45,27 +29,11 @@
         100
       ],
       "parameters": {
-        "name": "Validate Input",
-        "typeVersion": 1,
-        "position": [
-          400,
-          100
-        ],
-        "parameters": {
-          "name": "Validate Input",
-          "typeVersion": 1,
-          "position": [
-            400,
-            100
-          ],
-          "parameters": {
-            "input": "{{ $json }}",
-            "operation": "validate",
-            "rules": {
-              "email": "required|email",
-              "password": "required|string|minLength:6"
-            }
-          }
+        "input": "{{ $json }}",
+        "operation": "validate",
+        "rules": {
+          "email": "required|email",
+          "password": "required|string|minLength:6"
         }
       }
     },
@@ -79,27 +47,11 @@
         100
       ],
       "parameters": {
-        "name": "Fetch User",
-        "typeVersion": 1,
-        "position": [
-          700,
-          100
-        ],
-        "parameters": {
-          "name": "Fetch User",
-          "typeVersion": 1,
-          "position": [
-            700,
-            100
-          ],
-          "parameters": {
-            "filter": {
-              "email": "{{ $json.email }}"
-            },
-            "operation": "database_read",
-            "entity": "User"
-          }
-        }
+        "filter": {
+          "email": "{{ $json.email }}"
+        },
+        "operation": "database_read",
+        "entity": "User"
       }
     },
     {
@@ -112,24 +64,8 @@
         300
       ],
       "parameters": {
-        "name": "Check User Exists",
-        "typeVersion": 1,
-        "position": [
-          100,
-          300
-        ],
-        "parameters": {
-          "name": "Check User Exists",
-          "typeVersion": 1,
-          "position": [
-            100,
-            300
-          ],
-          "parameters": {
-            "condition": "{{ $steps.fetch_user.output !== null }}",
-            "operation": "condition"
-          }
-        }
+        "condition": "{{ $steps.fetch_user.output !== null }}",
+        "operation": "condition"
       }
     },
     {
@@ -142,25 +78,9 @@
         300
       ],
       "parameters": {
-        "name": "Verify Password",
-        "typeVersion": 1,
-        "position": [
-          400,
-          300
-        ],
-        "parameters": {
-          "name": "Verify Password",
-          "typeVersion": 1,
-          "position": [
-            400,
-            300
-          ],
-          "parameters": {
-            "input": "{{ $json.password }}",
-            "operation": "bcrypt_compare",
-            "hash": "{{ $steps.fetch_user.output.passwordHash }}"
-          }
-        }
+        "input": "{{ $json.password }}",
+        "operation": "bcrypt_compare",
+        "hash": "{{ $steps.fetch_user.output.passwordHash }}"
       }
     },
     {
@@ -173,24 +93,8 @@
         300
       ],
       "parameters": {
-        "name": "Check Password Valid",
-        "typeVersion": 1,
-        "position": [
-          700,
-          300
-        ],
-        "parameters": {
-          "name": "Check Password Valid",
-          "typeVersion": 1,
-          "position": [
-            700,
-            300
-          ],
-          "parameters": {
-            "condition": "{{ $steps.verify_password.output === true }}",
-            "operation": "condition"
-          }
-        }
+        "condition": "{{ $steps.verify_password.output === true }}",
+        "operation": "condition"
       }
     },
     {
@@ -203,24 +107,8 @@
         500
       ],
       "parameters": {
-        "name": "Check Account Active",
-        "typeVersion": 1,
-        "position": [
-          100,
-          500
-        ],
-        "parameters": {
-          "name": "Check Account Active",
-          "typeVersion": 1,
-          "position": [
-            100,
-            500
-          ],
-          "parameters": {
-            "condition": "{{ $steps.fetch_user.output.isActive !== false }}",
-            "operation": "condition"
-          }
-        }
+        "condition": "{{ $steps.fetch_user.output.isActive !== false }}",
+        "operation": "condition"
       }
     },
     {
@@ -233,31 +121,15 @@
         500
       ],
       "parameters": {
-        "name": "Generate Session",
-        "typeVersion": 1,
-        "position": [
-          400,
-          500
-        ],
-        "parameters": {
-          "name": "Generate Session",
-          "typeVersion": 1,
-          "position": [
-            400,
-            500
-          ],
-          "parameters": {
-            "operation": "generate_jwt",
-            "payload": {
-              "userId": "{{ $steps.fetch_user.output.id }}",
-              "email": "{{ $steps.fetch_user.output.email }}",
-              "tenantId": "{{ $steps.fetch_user.output.tenantId }}",
-              "level": "{{ $steps.fetch_user.output.level }}"
-            },
-            "secret": "{{ $env.JWT_SECRET }}",
-            "expiresIn": "24h"
-          }
-        }
+        "operation": "generate_jwt",
+        "payload": {
+          "userId": "{{ $steps.fetch_user.output.id }}",
+          "email": "{{ $steps.fetch_user.output.email }}",
+          "tenantId": "{{ $steps.fetch_user.output.tenantId }}",
+          "level": "{{ $steps.fetch_user.output.level }}"
+        },
+        "secret": "{{ $env.JWT_SECRET }}",
+        "expiresIn": "24h"
       }
     },
     {
@@ -270,32 +142,16 @@
         500
       ],
       "parameters": {
-        "name": "Create Session Record",
-        "typeVersion": 1,
-        "position": [
-          700,
-          500
-        ],
-        "parameters": {
-          "name": "Create Session Record",
-          "typeVersion": 1,
-          "position": [
-            700,
-            500
-          ],
-          "parameters": {
-            "data": {
-              "userId": "{{ $steps.fetch_user.output.id }}",
-              "tenantId": "{{ $steps.fetch_user.output.tenantId }}",
-              "token": "{{ $steps.generate_session.output }}",
-              "ipAddress": "{{ $json.ipAddress }}",
-              "userAgent": "{{ $json.userAgent }}",
-              "expiresAt": "{{ new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() }}"
-            },
-            "operation": "database_create",
-            "entity": "Session"
-          }
-        }
+        "data": {
+          "userId": "{{ $steps.fetch_user.output.id }}",
+          "tenantId": "{{ $steps.fetch_user.output.tenantId }}",
+          "token": "{{ $steps.generate_session.output }}",
+          "ipAddress": "{{ $json.ipAddress }}",
+          "userAgent": "{{ $json.userAgent }}",
+          "expiresAt": "{{ new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() }}"
+        },
+        "operation": "database_create",
+        "entity": "Session"
       }
     },
     {
@@ -308,30 +164,14 @@
         700
       ],
       "parameters": {
-        "name": "Update Last Login",
-        "typeVersion": 1,
-        "position": [
-          100,
-          700
-        ],
-        "parameters": {
-          "name": "Update Last Login",
-          "typeVersion": 1,
-          "position": [
-            100,
-            700
-          ],
-          "parameters": {
-            "filter": {
-              "id": "{{ $steps.fetch_user.output.id }}"
-            },
-            "data": {
-              "lastLogin": "{{ new Date().toISOString() }}"
-            },
-            "operation": "database_update",
-            "entity": "User"
-          }
-        }
+        "filter": {
+          "id": "{{ $steps.fetch_user.output.id }}"
+        },
+        "data": {
+          "lastLogin": "{{ new Date().toISOString() }}"
+        },
+        "operation": "database_update",
+        "entity": "User"
       }
     },
     {
@@ -344,30 +184,14 @@
         700
       ],
       "parameters": {
-        "name": "Emit Login Event",
-        "typeVersion": 1,
-        "position": [
-          400,
-          700
-        ],
-        "parameters": {
-          "name": "Emit Login Event",
-          "typeVersion": 1,
-          "position": [
-            400,
-            700
-          ],
-          "parameters": {
-            "data": {
-              "userId": "{{ $steps.fetch_user.output.id }}",
-              "tenantId": "{{ $steps.fetch_user.output.tenantId }}",
-              "timestamp": "{{ new Date().toISOString() }}"
-            },
-            "action": "emit_event",
-            "event": "user_login",
-            "channel": "{{ 'user:' + $steps.fetch_user.output.id }}"
-          }
-        }
+        "data": {
+          "userId": "{{ $steps.fetch_user.output.id }}",
+          "tenantId": "{{ $steps.fetch_user.output.tenantId }}",
+          "timestamp": "{{ new Date().toISOString() }}"
+        },
+        "action": "emit_event",
+        "event": "user_login",
+        "channel": "{{ 'user:' + $steps.fetch_user.output.id }}"
       }
     },
     {
@@ -380,37 +204,143 @@
         700
       ],
       "parameters": {
-        "name": "Return Success",
-        "typeVersion": 1,
-        "position": [
-          700,
-          700
-        ],
-        "parameters": {
-          "name": "Return Success",
-          "typeVersion": 1,
-          "position": [
-            700,
-            700
-          ],
-          "parameters": {
-            "action": "http_response",
-            "status": 200,
-            "body": {
-              "token": "{{ $steps.generate_session.output }}",
-              "user": {
-                "id": "{{ $steps.fetch_user.output.id }}",
-                "email": "{{ $steps.fetch_user.output.email }}",
-                "displayName": "{{ $steps.fetch_user.output.displayName }}",
-                "tenantId": "{{ $steps.fetch_user.output.tenantId }}"
-              }
-            }
+        "action": "http_response",
+        "status": 200,
+        "body": {
+          "token": "{{ $steps.generate_session.output }}",
+          "user": {
+            "id": "{{ $steps.fetch_user.output.id }}",
+            "email": "{{ $steps.fetch_user.output.email }}",
+            "displayName": "{{ $steps.fetch_user.output.displayName }}",
+            "tenantId": "{{ $steps.fetch_user.output.tenantId }}"
           }
         }
       }
     }
   ],
-  "connections": {},
+  "connections": {
+    "apply_rate_limit": {
+      "main": [
+        [
+          {
+            "node": "validate_input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "validate_input": {
+      "main": [
+        [
+          {
+            "node": "fetch_user",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fetch_user": {
+      "main": [
+        [
+          {
+            "node": "check_user_exists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_user_exists": {
+      "main": [
+        [
+          {
+            "node": "verify_password",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "verify_password": {
+      "main": [
+        [
+          {
+            "node": "check_password_valid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_password_valid": {
+      "main": [
+        [
+          {
+            "node": "check_account_active",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_account_active": {
+      "main": [
+        [
+          {
+            "node": "generate_session",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "generate_session": {
+      "main": [
+        [
+          {
+            "node": "create_session_record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create_session_record": {
+      "main": [
+        [
+          {
+            "node": "update_last_login",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update_last_login": {
+      "main": [
+        [
+          {
+            "node": "emit_login_event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "emit_login_event": {
+      "main": [
+        [
+          {
+            "node": "return_success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "staticData": {},
   "meta": {},
   "settings": {
@@ -419,5 +349,8 @@
     "saveExecutionProgress": true,
     "saveDataErrorExecution": "all",
     "saveDataSuccessExecution": "all"
-  }
+  },
+  "id": "workflow_login_workflow",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
 }

@@ -12,25 +12,9 @@
         100
       ],
       "parameters": {
-        "name": "Validate Context",
-        "typeVersion": 1,
-        "position": [
-          100,
-          100
-        ],
-        "parameters": {
-          "name": "Validate Context",
-          "typeVersion": 1,
-          "position": [
-            100,
-            100
-          ],
-          "parameters": {
-            "input": "{{ $context.user.id }}",
-            "operation": "validate",
-            "validator": "required"
-          }
-        }
+        "input": "{{ $context.user.id }}",
+        "operation": "validate",
+        "validator": "required"
       }
     },
     {
@@ -43,28 +27,12 @@
         100
       ],
       "parameters": {
-        "name": "Fetch Channel",
-        "typeVersion": 1,
-        "position": [
-          400,
-          100
-        ],
-        "parameters": {
-          "name": "Fetch Channel",
-          "typeVersion": 1,
-          "position": [
-            400,
-            100
-          ],
-          "parameters": {
-            "filter": {
-              "id": "{{ $json.channelId }}",
-              "tenantId": "{{ $context.tenantId }}"
-            },
-            "operation": "database_read",
-            "entity": "IRCChannel"
-          }
-        }
+        "filter": {
+          "id": "{{ $json.channelId }}",
+          "tenantId": "{{ $context.tenantId }}"
+        },
+        "operation": "database_read",
+        "entity": "IRCChannel"
       }
     },
     {
@@ -77,24 +45,8 @@
         100
       ],
       "parameters": {
-        "name": "Check Channel Mode",
-        "typeVersion": 1,
-        "position": [
-          700,
-          100
-        ],
-        "parameters": {
-          "name": "Check Channel Mode",
-          "typeVersion": 1,
-          "position": [
-            700,
-            100
-          ],
-          "parameters": {
-            "condition": "{{ $steps.fetch_channel.output.mode === 'public' || ($context.user.level >= 2 && $steps.fetch_channel.output.mode === 'private') }}",
-            "operation": "condition"
-          }
-        }
+        "condition": "{{ $steps.fetch_channel.output.mode === 'public' || ($context.user.level >= 2 && $steps.fetch_channel.output.mode === 'private') }}",
+        "operation": "condition"
       }
     },
     {
@@ -107,29 +59,13 @@
         300
       ],
       "parameters": {
-        "name": "Create Membership",
-        "typeVersion": 1,
-        "position": [
-          100,
-          300
-        ],
-        "parameters": {
-          "name": "Create Membership",
-          "typeVersion": 1,
-          "position": [
-            100,
-            300
-          ],
-          "parameters": {
-            "data": {
-              "channelId": "{{ $json.channelId }}",
-              "userId": "{{ $context.user.id }}",
-              "joinedAt": "{{ new Date().toISOString() }}"
-            },
-            "operation": "database_create",
-            "entity": "IRCMembership"
-          }
-        }
+        "data": {
+          "channelId": "{{ $json.channelId }}",
+          "userId": "{{ $context.user.id }}",
+          "joinedAt": "{{ new Date().toISOString() }}"
+        },
+        "operation": "database_create",
+        "entity": "IRCMembership"
       }
     },
     {
@@ -142,33 +78,62 @@
         300
       ],
       "parameters": {
-        "name": "Emit Join",
-        "typeVersion": 1,
-        "position": [
-          400,
-          300
-        ],
-        "parameters": {
-          "name": "Emit Join",
-          "typeVersion": 1,
-          "position": [
-            400,
-            300
-          ],
-          "parameters": {
-            "data": {
-              "userId": "{{ $context.user.id }}",
-              "channelId": "{{ $json.channelId }}"
-            },
-            "action": "emit_event",
-            "event": "user_joined",
-            "channel": "{{ 'irc:' + $json.channelId }}"
-          }
-        }
+        "data": {
+          "userId": "{{ $context.user.id }}",
+          "channelId": "{{ $json.channelId }}"
+        },
+        "action": "emit_event",
+        "event": "user_joined",
+        "channel": "{{ 'irc:' + $json.channelId }}"
       }
     }
   ],
-  "connections": {},
+  "connections": {
+    "validate_context": {
+      "main": [
+        [
+          {
+            "node": "fetch_channel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fetch_channel": {
+      "main": [
+        [
+          {
+            "node": "check_channel_mode",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_channel_mode": {
+      "main": [
+        [
+          {
+            "node": "create_membership",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create_membership": {
+      "main": [
+        [
+          {
+            "node": "emit_join",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "staticData": {},
   "meta": {},
   "settings": {
@@ -177,5 +142,8 @@
     "saveExecutionProgress": true,
     "saveDataErrorExecution": "all",
     "saveDataSuccessExecution": "all"
-  }
+  },
+  "id": "workflow_join_channel",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
 }

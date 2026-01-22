@@ -12,27 +12,9 @@
         100
       ],
       "parameters": {
-        "name": "Parse Path",
-        "typeVersion": 1,
-        "position": [
-          100,
-          100
-        ],
-        "parameters": {
-          "name": "Parse Path",
-          "typeVersion": 1,
-          "position": [
-            100,
-            100
-          ],
-          "parameters": {
-            "parameters": {
-              "path": "$request.path",
-              "pattern": "/v1/:namespace/:name/latest",
-              "out": "entity"
-            }
-          }
-        }
+        "path": "$request.path",
+        "pattern": "/v1/:namespace/:name/latest",
+        "out": "entity"
       }
     },
     {
@@ -45,26 +27,8 @@
         100
       ],
       "parameters": {
-        "name": "Normalize",
-        "typeVersion": 1,
-        "position": [
-          400,
-          100
-        ],
-        "parameters": {
-          "name": "Normalize",
-          "typeVersion": 1,
-          "position": [
-            400,
-            100
-          ],
-          "parameters": {
-            "parameters": {
-              "entity": "$entity",
-              "out": "normalized"
-            }
-          }
-        }
+        "entity": "$entity",
+        "out": "normalized"
       }
     },
     {
@@ -77,26 +41,8 @@
         100
       ],
       "parameters": {
-        "name": "Query Index",
-        "typeVersion": 1,
-        "position": [
-          700,
-          100
-        ],
-        "parameters": {
-          "name": "Query Index",
-          "typeVersion": 1,
-          "position": [
-            700,
-            100
-          ],
-          "parameters": {
-            "parameters": {
-              "key": "$entity.namespace/$entity.name",
-              "out": "versions"
-            }
-          }
-        }
+        "key": "$entity.namespace/$entity.name",
+        "out": "versions"
       }
     },
     {
@@ -109,27 +55,9 @@
         300
       ],
       "parameters": {
-        "name": "Check Exists",
-        "typeVersion": 1,
-        "position": [
-          100,
-          300
-        ],
-        "parameters": {
-          "name": "Check Exists",
-          "typeVersion": 1,
-          "position": [
-            100,
-            300
-          ],
-          "parameters": {
-            "parameters": {
-              "condition": "$versions == null || $versions.length == 0",
-              "then": "error_not_found",
-              "else": "find_latest"
-            }
-          }
-        }
+        "condition": "$versions == null || $versions.length == 0",
+        "then": "error_not_found",
+        "else": "find_latest"
       }
     },
     {
@@ -142,26 +70,8 @@
         300
       ],
       "parameters": {
-        "name": "Find Latest",
-        "typeVersion": 1,
-        "position": [
-          400,
-          300
-        ],
-        "parameters": {
-          "name": "Find Latest",
-          "typeVersion": 1,
-          "position": [
-            400,
-            300
-          ],
-          "parameters": {
-            "parameters": {
-              "versions": "$versions",
-              "out": "latest"
-            }
-          }
-        }
+        "versions": "$versions",
+        "out": "latest"
       }
     },
     {
@@ -174,26 +84,8 @@
         300
       ],
       "parameters": {
-        "name": "Get Meta",
-        "typeVersion": 1,
-        "position": [
-          700,
-          300
-        ],
-        "parameters": {
-          "name": "Get Meta",
-          "typeVersion": 1,
-          "position": [
-            700,
-            300
-          ],
-          "parameters": {
-            "parameters": {
-              "key": "artifact/$entity.namespace/$entity.name/$latest.version/$latest.variant",
-              "out": "metadata"
-            }
-          }
-        }
+        "key": "artifact/$entity.namespace/$entity.name/$latest.version/$latest.variant",
+        "out": "metadata"
       }
     },
     {
@@ -206,34 +98,16 @@
         500
       ],
       "parameters": {
-        "name": "Respond Json",
-        "typeVersion": 1,
-        "position": [
-          100,
-          500
-        ],
-        "parameters": {
-          "name": "Respond Json",
-          "typeVersion": 1,
-          "position": [
-            100,
-            500
-          ],
-          "parameters": {
-            "parameters": {
-              "body": {
-                "namespace": "$entity.namespace",
-                "name": "$entity.name",
-                "version": "$latest.version",
-                "variant": "$latest.variant",
-                "digest": "$latest.digest",
-                "size": "$metadata.size",
-                "uploaded_at": "$metadata.uploaded_at"
-              },
-              "status": 200
-            }
-          }
-        }
+        "body": {
+          "namespace": "$entity.namespace",
+          "name": "$entity.name",
+          "version": "$latest.version",
+          "variant": "$latest.variant",
+          "digest": "$latest.digest",
+          "size": "$metadata.size",
+          "uploaded_at": "$metadata.uploaded_at"
+        },
+        "status": 200
       }
     },
     {
@@ -246,30 +120,90 @@
         500
       ],
       "parameters": {
-        "name": "Error Not Found",
-        "typeVersion": 1,
-        "position": [
-          400,
-          500
-        ],
-        "parameters": {
-          "name": "Error Not Found",
-          "typeVersion": 1,
-          "position": [
-            400,
-            500
-          ],
-          "parameters": {
-            "parameters": {
-              "message": "Package not found",
-              "status": 404
-            }
-          }
-        }
+        "message": "Package not found",
+        "status": 404
       }
     }
   ],
-  "connections": {},
+  "connections": {
+    "parse_path": {
+      "main": [
+        [
+          {
+            "node": "normalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "normalize": {
+      "main": [
+        [
+          {
+            "node": "query_index",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "query_index": {
+      "main": [
+        [
+          {
+            "node": "check_exists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_exists": {
+      "main": [
+        [
+          {
+            "node": "find_latest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "find_latest": {
+      "main": [
+        [
+          {
+            "node": "get_meta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get_meta": {
+      "main": [
+        [
+          {
+            "node": "respond_json",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "respond_json": {
+      "main": [
+        [
+          {
+            "node": "error_not_found",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "staticData": {},
   "meta": {},
   "settings": {
@@ -278,5 +212,8 @@
     "saveExecutionProgress": true,
     "saveDataErrorExecution": "all",
     "saveDataSuccessExecution": "all"
-  }
+  },
+  "id": "workflow_resolve_latest",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
 }

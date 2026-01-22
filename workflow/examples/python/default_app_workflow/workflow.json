@@ -12,25 +12,7 @@
         100
       ],
       "parameters": {
-        "name": "Load Messages",
-        "typeVersion": 1,
-        "position": [
-          100,
-          100
-        ],
-        "parameters": {
-          "name": "Load Messages",
-          "typeVersion": 1,
-          "position": [
-            100,
-            100
-          ],
-          "parameters": {
-            "operation": "load_messages"
-          },
-          "notes": "Load initial messages from storage",
-          "notesInFlow": false
-        }
+        "operation": "load_messages"
       }
     },
     {
@@ -43,25 +25,7 @@
         100
       ],
       "parameters": {
-        "name": "Load Metadata",
-        "typeVersion": 1,
-        "position": [
-          400,
-          100
-        ],
-        "parameters": {
-          "name": "Load Metadata",
-          "typeVersion": 1,
-          "position": [
-            400,
-            100
-          ],
-          "parameters": {
-            "operation": "load_metadata"
-          },
-          "notes": "Load workflow metadata and configuration",
-          "notesInFlow": false
-        }
+        "operation": "load_metadata"
       }
     },
     {
@@ -74,25 +38,7 @@
         100
       ],
       "parameters": {
-        "name": "Load Prompts",
-        "typeVersion": 1,
-        "position": [
-          700,
-          100
-        ],
-        "parameters": {
-          "name": "Load Prompts",
-          "typeVersion": 1,
-          "position": [
-            700,
-            100
-          ],
-          "parameters": {
-            "operation": "load_prompts"
-          },
-          "notes": "Load prompt templates",
-          "notesInFlow": false
-        }
+        "operation": "load_prompts"
       }
     },
     {
@@ -105,25 +51,7 @@
         300
       ],
       "parameters": {
-        "name": "Create Github Client",
-        "typeVersion": 1,
-        "position": [
-          100,
-          300
-        ],
-        "parameters": {
-          "name": "Create Github Client",
-          "typeVersion": 1,
-          "position": [
-            100,
-            300
-          ],
-          "parameters": {
-            "operation": "create_github_client"
-          },
-          "notes": "Initialize GitHub API client",
-          "notesInFlow": false
-        }
+        "operation": "create_github_client"
       }
     },
     {
@@ -136,25 +64,7 @@
         300
       ],
       "parameters": {
-        "name": "Create Openai Client",
-        "typeVersion": 1,
-        "position": [
-          400,
-          300
-        ],
-        "parameters": {
-          "name": "Create Openai Client",
-          "typeVersion": 1,
-          "position": [
-            400,
-            300
-          ],
-          "parameters": {
-            "operation": "create_openai_client"
-          },
-          "notes": "Initialize OpenAI API client",
-          "notesInFlow": false
-        }
+        "operation": "create_openai_client"
       }
     },
     {
@@ -167,25 +77,7 @@
         300
       ],
       "parameters": {
-        "name": "Load Tools",
-        "typeVersion": 1,
-        "position": [
-          700,
-          300
-        ],
-        "parameters": {
-          "name": "Load Tools",
-          "typeVersion": 1,
-          "position": [
-            700,
-            300
-          ],
-          "parameters": {
-            "operation": "load_tools"
-          },
-          "notes": "Load available tool definitions",
-          "notesInFlow": false
-        }
+        "operation": "load_tools"
       }
     },
     {
@@ -198,25 +90,7 @@
         500
       ],
       "parameters": {
-        "name": "Load Plugins",
-        "typeVersion": 1,
-        "position": [
-          100,
-          500
-        ],
-        "parameters": {
-          "name": "Load Plugins",
-          "typeVersion": 1,
-          "position": [
-            100,
-            500
-          ],
-          "parameters": {
-            "operation": "load_plugins"
-          },
-          "notes": "Load and initialize plugins",
-          "notesInFlow": false
-        }
+        "operation": "load_plugins"
       }
     },
     {
@@ -229,25 +103,7 @@
         500
       ],
       "parameters": {
-        "name": "Seed Context",
-        "typeVersion": 1,
-        "position": [
-          400,
-          500
-        ],
-        "parameters": {
-          "name": "Seed Context",
-          "typeVersion": 1,
-          "position": [
-            400,
-            500
-          ],
-          "parameters": {
-            "operation": "seed_context"
-          },
-          "notes": "Initialize execution context",
-          "notesInFlow": false
-        }
+        "operation": "seed_context"
       }
     },
     {
@@ -260,25 +116,7 @@
         500
       ],
       "parameters": {
-        "name": "Seed Messages",
-        "typeVersion": 1,
-        "position": [
-          700,
-          500
-        ],
-        "parameters": {
-          "name": "Seed Messages",
-          "typeVersion": 1,
-          "position": [
-            700,
-            500
-          ],
-          "parameters": {
-            "operation": "seed_messages"
-          },
-          "notes": "Seed initial conversation messages",
-          "notesInFlow": false
-        }
+        "operation": "seed_messages"
       }
     },
     {
@@ -291,25 +129,7 @@
         700
       ],
       "parameters": {
-        "name": "Append User Instructions",
-        "typeVersion": 1,
-        "position": [
-          100,
-          700
-        ],
-        "parameters": {
-          "name": "Append User Instructions",
-          "typeVersion": 1,
-          "position": [
-            100,
-            700
-          ],
-          "parameters": {
-            "operation": "append_message"
-          },
-          "notes": "Append user instructions to messages",
-          "notesInFlow": false
-        }
+        "operation": "append_message"
       }
     },
     {
@@ -322,44 +142,28 @@
         700
       ],
       "parameters": {
-        "name": "Ai Loop",
-        "typeVersion": 1,
-        "position": [
-          400,
-          700
-        ],
-        "parameters": {
-          "name": "Ai Loop",
-          "typeVersion": 1,
-          "position": [
-            400,
-            700
-          ],
-          "parameters": {
-            "max_iterations": 10,
-            "when": "$no_tool_calls",
-            "nodes": [
-              {
-                "id": "ai_request",
-                "type": "operation",
-                "op": "ai_request",
-                "description": "Make request to AI model"
-              },
-              {
-                "id": "execute_tool_calls",
-                "type": "operation",
-                "op": "execute_tool_calls",
-                "description": "Execute any tool calls from AI response"
-              },
-              {
-                "id": "append_results",
-                "type": "operation",
-                "op": "append_results",
-                "description": "Append tool results to conversation"
-              }
-            ]
+        "max_iterations": 10,
+        "when": "$no_tool_calls",
+        "nodes": [
+          {
+            "id": "ai_request",
+            "type": "operation",
+            "op": "ai_request",
+            "description": "Make request to AI model"
+          },
+          {
+            "id": "execute_tool_calls",
+            "type": "operation",
+            "op": "execute_tool_calls",
+            "description": "Execute any tool calls from AI response"
+          },
+          {
+            "id": "append_results",
+            "type": "operation",
+            "op": "append_results",
+            "description": "Append tool results to conversation"
           }
-        }
+        ]
       }
     }
   ],

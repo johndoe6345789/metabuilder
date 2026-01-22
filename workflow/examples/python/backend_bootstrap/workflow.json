@@ -11,31 +11,7 @@
         100,
         100
       ],
-      "parameters": {
-        "name": "Load Messages",
-        "typeVersion": 1,
-        "position": [
-          100,
-          100
-        ],
-        "parameters": {
-          "name": "Load Messages",
-          "typeVersion": 1,
-          "position": [
-            100,
-            100
-          ],
-          "parameters": {
-            "name": "Load Messages",
-            "typeVersion": 1,
-            "position": [
-              0,
-              50
-            ],
-            "parameters": {}
-          }
-        }
-      }
+      "parameters": {}
     },
     {
       "id": "load_metadata",
@@ -46,31 +22,7 @@
         400,
         100
       ],
-      "parameters": {
-        "name": "Load Metadata",
-        "typeVersion": 1,
-        "position": [
-          400,
-          100
-        ],
-        "parameters": {
-          "name": "Load Metadata",
-          "typeVersion": 1,
-          "position": [
-            400,
-            100
-          ],
-          "parameters": {
-            "name": "Load Metadata",
-            "typeVersion": 1,
-            "position": [
-              300,
-              50
-            ],
-            "parameters": {}
-          }
-        }
-      }
+      "parameters": {}
     },
     {
       "id": "load_prompt",
@@ -81,31 +33,7 @@
         700,
         100
       ],
-      "parameters": {
-        "name": "Load Prompt",
-        "typeVersion": 1,
-        "position": [
-          700,
-          100
-        ],
-        "parameters": {
-          "name": "Load Prompt",
-          "typeVersion": 1,
-          "position": [
-            700,
-            100
-          ],
-          "parameters": {
-            "name": "Load Prompt",
-            "typeVersion": 1,
-            "position": [
-              600,
-              50
-            ],
-            "parameters": {}
-          }
-        }
-      }
+      "parameters": {}
     },
     {
       "id": "create_github",
@@ -116,31 +44,7 @@
         100,
         300
       ],
-      "parameters": {
-        "name": "Create Github",
-        "typeVersion": 1,
-        "position": [
-          100,
-          300
-        ],
-        "parameters": {
-          "name": "Create Github",
-          "typeVersion": 1,
-          "position": [
-            100,
-            300
-          ],
-          "parameters": {
-            "name": "Create GitHub Client",
-            "typeVersion": 1,
-            "position": [
-              900,
-              50
-            ],
-            "parameters": {}
-          }
-        }
-      }
+      "parameters": {}
     },
     {
       "id": "create_openai",
@@ -151,31 +55,7 @@
         400,
         300
       ],
-      "parameters": {
-        "name": "Create Openai",
-        "typeVersion": 1,
-        "position": [
-          400,
-          300
-        ],
-        "parameters": {
-          "name": "Create Openai",
-          "typeVersion": 1,
-          "position": [
-            400,
-            300
-          ],
-          "parameters": {
-            "name": "Create OpenAI Client",
-            "typeVersion": 1,
-            "position": [
-              1200,
-              50
-            ],
-            "parameters": {}
-          }
-        }
-      }
+      "parameters": {}
     },
     {
       "id": "load_tools",
@@ -186,31 +66,7 @@
         700,
         300
       ],
-      "parameters": {
-        "name": "Load Tools",
-        "typeVersion": 1,
-        "position": [
-          700,
-          300
-        ],
-        "parameters": {
-          "name": "Load Tools",
-          "typeVersion": 1,
-          "position": [
-            700,
-            300
-          ],
-          "parameters": {
-            "name": "Load Tools",
-            "typeVersion": 1,
-            "position": [
-              1500,
-              50
-            ],
-            "parameters": {}
-          }
-        }
-      }
+      "parameters": {}
     },
     {
       "id": "build_tool_map",
@@ -221,31 +77,7 @@
         100,
         500
       ],
-      "parameters": {
-        "name": "Build Tool Map",
-        "typeVersion": 1,
-        "position": [
-          100,
-          500
-        ],
-        "parameters": {
-          "name": "Build Tool Map",
-          "typeVersion": 1,
-          "position": [
-            100,
-            500
-          ],
-          "parameters": {
-            "name": "Build Tool Map",
-            "typeVersion": 1,
-            "position": [
-              1800,
-              50
-            ],
-            "parameters": {}
-          }
-        }
-      }
+      "parameters": {}
     },
     {
       "id": "load_plugins",
@@ -256,31 +88,7 @@
         400,
         500
       ],
-      "parameters": {
-        "name": "Load Plugins",
-        "typeVersion": 1,
-        "position": [
-          400,
-          500
-        ],
-        "parameters": {
-          "name": "Load Plugins",
-          "typeVersion": 1,
-          "position": [
-            400,
-            500
-          ],
-          "parameters": {
-            "name": "Load Plugins",
-            "typeVersion": 1,
-            "position": [
-              2100,
-              50
-            ],
-            "parameters": {}
-          }
-        }
-      }
+      "parameters": {}
     }
   ],
   "connections": {

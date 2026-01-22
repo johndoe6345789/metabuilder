@@ -12,25 +12,9 @@
         100
       ],
       "parameters": {
-        "name": "Validate Context",
-        "typeVersion": 1,
-        "position": [
-          100,
-          100
-        ],
-        "parameters": {
-          "name": "Validate Context",
-          "typeVersion": 1,
-          "position": [
-            100,
-            100
-          ],
-          "parameters": {
-            "input": "{{ $context.tenantId }}",
-            "operation": "validate",
-            "validator": "required"
-          }
-        }
+        "input": "{{ $context.tenantId }}",
+        "operation": "validate",
+        "validator": "required"
       }
     },
     {
@@ -43,28 +27,12 @@
         100
       ],
       "parameters": {
-        "name": "Fetch Asset",
-        "typeVersion": 1,
-        "position": [
-          400,
-          100
-        ],
-        "parameters": {
-          "name": "Fetch Asset",
-          "typeVersion": 1,
-          "position": [
-            400,
-            100
-          ],
-          "parameters": {
-            "filter": {
-              "id": "{{ $json.assetId }}",
-              "tenantId": "{{ $context.tenantId }}"
-            },
-            "operation": "database_read",
-            "entity": "MediaAsset"
-          }
-        }
+        "filter": {
+          "id": "{{ $json.assetId }}",
+          "tenantId": "{{ $context.tenantId }}"
+        },
+        "operation": "database_read",
+        "entity": "MediaAsset"
       }
     },
     {
@@ -77,24 +45,8 @@
         100
       ],
       "parameters": {
-        "name": "Check Authorization",
-        "typeVersion": 1,
-        "position": [
-          700,
-          100
-        ],
-        "parameters": {
-          "name": "Check Authorization",
-          "typeVersion": 1,
-          "position": [
-            700,
-            100
-          ],
-          "parameters": {
-            "condition": "{{ $steps.fetch_asset.output.uploadedBy === $context.user.id || $context.user.level >= 3 }}",
-            "operation": "condition"
-          }
-        }
+        "condition": "{{ $steps.fetch_asset.output.uploadedBy === $context.user.id || $context.user.level >= 3 }}",
+        "operation": "condition"
       }
     },
     {
@@ -107,28 +59,12 @@
         300
       ],
       "parameters": {
-        "name": "Delete Files",
-        "typeVersion": 1,
-        "position": [
-          100,
-          300
-        ],
-        "parameters": {
-          "name": "Delete Files",
-          "typeVersion": 1,
-          "position": [
-            100,
-            300
-          ],
-          "parameters": {
-            "operation": "delete_recursive",
-            "paths": [
-              "{{ $steps.fetch_asset.output.path }}",
-              "{{ $steps.fetch_asset.output.path }}-thumbnail }}",
-              "{{ $steps.fetch_asset.output.path }}-optimized }}"
-            ]
-          }
-        }
+        "operation": "delete_recursive",
+        "paths": [
+          "{{ $steps.fetch_asset.output.path }}",
+          "{{ $steps.fetch_asset.output.path }}-thumbnail }}",
+          "{{ $steps.fetch_asset.output.path }}-optimized }}"
+        ]
       }
     },
     {
@@ -141,27 +77,11 @@
         300
       ],
       "parameters": {
-        "name": "Delete Asset Record",
-        "typeVersion": 1,
-        "position": [
-          400,
-          300
-        ],
-        "parameters": {
-          "name": "Delete Asset Record",
-          "typeVersion": 1,
-          "position": [
-            400,
-            300
-          ],
-          "parameters": {
-            "filter": {
-              "id": "{{ $json.assetId }}"
-            },
-            "operation": "database_delete",
-            "entity": "MediaAsset"
-          }
-        }
+        "filter": {
+          "id": "{{ $json.assetId }}"
+        },
+        "operation": "database_delete",
+        "entity": "MediaAsset"
       }
     },
     {
@@ -174,28 +94,12 @@
         300
       ],
       "parameters": {
-        "name": "Emit Deleted",
-        "typeVersion": 1,
-        "position": [
-          700,
-          300
-        ],
-        "parameters": {
-          "name": "Emit Deleted",
-          "typeVersion": 1,
-          "position": [
-            700,
-            300
-          ],
-          "parameters": {
-            "data": {
-              "assetId": "{{ $json.assetId }}"
-            },
-            "action": "emit_event",
-            "event": "media_deleted",
-            "channel": "{{ 'media:' + $context.tenantId }}"
-          }
-        }
+        "data": {
+          "assetId": "{{ $json.assetId }}"
+        },
+        "action": "emit_event",
+        "event": "media_deleted",
+        "channel": "{{ 'media:' + $context.tenantId }}"
       }
     },
     {
@@ -208,31 +112,82 @@
         500
       ],
       "parameters": {
-        "name": "Return Success",
-        "typeVersion": 1,
-        "position": [
-          100,
-          500
-        ],
-        "parameters": {
-          "name": "Return Success",
-          "typeVersion": 1,
-          "position": [
-            100,
-            500
-          ],
-          "parameters": {
-            "action": "http_response",
-            "status": 200,
-            "body": {
-              "message": "Media asset deleted successfully"
-            }
-          }
+        "action": "http_response",
+        "status": 200,
+        "body": {
+          "message": "Media asset deleted successfully"
         }
       }
     }
   ],
-  "connections": {},
+  "connections": {
+    "validate_context": {
+      "main": [
+        [
+          {
+            "node": "fetch_asset",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fetch_asset": {
+      "main": [
+        [
+          {
+            "node": "check_authorization",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_authorization": {
+      "main": [
+        [
+          {
+            "node": "delete_files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "delete_files": {
+      "main": [
+        [
+          {
+            "node": "delete_asset_record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "delete_asset_record": {
+      "main": [
+        [
+          {
+            "node": "emit_deleted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "emit_deleted": {
+      "main": [
+        [
+          {
+            "node": "return_success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "staticData": {},
   "meta": {},
   "settings": {
@@ -241,5 +196,8 @@
     "saveExecutionProgress": true,
     "saveDataErrorExecution": "all",
     "saveDataSuccessExecution": "all"
-  }
+  },
+  "id": "workflow_delete_media",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
 }

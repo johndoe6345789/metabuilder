@@ -1,7 +1,7 @@
 {
   "name": "Fetch Packages",
   "description": "Workflow to fetch and filter packages from the API",
-  "version": "1.0.0",
+  "version": "3.0.0",
   "nodes": [
     {
       "id": "fetch_packages",
@@ -33,17 +33,40 @@
     }
   ],
   "connections": {
-    "Fetch Packages": {
-      "main": { "0": [{ "node": "Filter by Search", "type": "main", "index": 0 }] }
+    "fetch_packages": {
+      "main": [
+        [
+          {
+            "node": "filter_packages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
-    "Filter by Search": {
-      "main": { "0": [{ "node": "Return Filtered", "type": "main", "index": 0 }] }
+    "filter_packages": {
+      "main": [
+        [
+          {
+            "node": "respond",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "inputs": {
-    "search": { "type": "string", "default": "" }
+    "search": {
+      "type": "string",
+      "default": ""
+    }
   },
   "outputs": {
-    "packages": { "type": "array" }
-  }
+    "packages": {
+      "type": "array"
+    }
+  },
+  "id": "workflow_fetch_packages",
+  "tenantId": "${TENANT_ID}"
 }

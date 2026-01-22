@@ -12,43 +12,19 @@
         100
       ],
       "parameters": {
-        "name": "Create Sample Data",
-        "typeVersion": 1,
-        "position": [
-          100,
-          100
-        ],
-        "parameters": {
-          "name": "Create Sample Data",
-          "typeVersion": 1,
-          "position": [
-            100,
-            100
-          ],
-          "parameters": {
-            "name": "Create Sample Data",
-            "typeVersion": 1,
-            "position": [
-              0,
-              50
-            ],
-            "parameters": {
-              "key": "numbers",
-              "value": [
-                1,
-                2,
-                3,
-                4,
-                5,
-                6,
-                7,
-                8,
-                9,
-                10
-              ]
-            }
-          }
-        }
+        "key": "numbers",
+        "value": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
       }
     },
     {
@@ -61,33 +37,9 @@
         100
       ],
       "parameters": {
-        "name": "Filter Even",
-        "typeVersion": 1,
-        "position": [
-          400,
-          100
-        ],
-        "parameters": {
-          "name": "Filter Even",
-          "typeVersion": 1,
-          "position": [
-            400,
-            100
-          ],
-          "parameters": {
-            "name": "Filter Even Numbers",
-            "typeVersion": 1,
-            "position": [
-              300,
-              50
-            ],
-            "parameters": {
-              "items": "$numbers",
-              "mode": "lambda",
-              "condition": "lambda x: x % 2 == 0"
-            }
-          }
-        }
+        "items": "$numbers",
+        "mode": "lambda",
+        "condition": "lambda x: x % 2 == 0"
       }
     },
     {
@@ -100,32 +52,8 @@
         100
       ],
       "parameters": {
-        "name": "Map Square",
-        "typeVersion": 1,
-        "position": [
-          700,
-          100
-        ],
-        "parameters": {
-          "name": "Map Square",
-          "typeVersion": 1,
-          "position": [
-            700,
-            100
-          ],
-          "parameters": {
-            "name": "Square Each Number",
-            "typeVersion": 1,
-            "position": [
-              600,
-              50
-            ],
-            "parameters": {
-              "items": "$filtered_numbers",
-              "transform": "lambda x: x * x"
-            }
-          }
-        }
+        "items": "$filtered_numbers",
+        "transform": "lambda x: x * x"
       }
     },
     {
@@ -138,31 +66,7 @@
         300
       ],
       "parameters": {
-        "name": "Reduce Sum",
-        "typeVersion": 1,
-        "position": [
-          100,
-          300
-        ],
-        "parameters": {
-          "name": "Reduce Sum",
-          "typeVersion": 1,
-          "position": [
-            100,
-            300
-          ],
-          "parameters": {
-            "name": "Sum All Values",
-            "typeVersion": 1,
-            "position": [
-              900,
-              50
-            ],
-            "parameters": {
-              "numbers": "$squared_numbers"
-            }
-          }
-        }
+        "numbers": "$squared_numbers"
       }
     },
     {
@@ -175,32 +79,8 @@
         300
       ],
       "parameters": {
-        "name": "Check Threshold",
-        "typeVersion": 1,
-        "position": [
-          400,
-          300
-        ],
-        "parameters": {
-          "name": "Check Threshold",
-          "typeVersion": 1,
-          "position": [
-            400,
-            300
-          ],
-          "parameters": {
-            "name": "Check If Sum > 50",
-            "typeVersion": 1,
-            "position": [
-              1200,
-              50
-            ],
-            "parameters": {
-              "a": "$sum",
-              "b": 50
-            }
-          }
-        }
+        "a": "$sum",
+        "b": 50
       }
     },
     {
@@ -213,31 +93,7 @@
         300
       ],
       "parameters": {
-        "name": "Branch Result",
-        "typeVersion": 1,
-        "position": [
-          700,
-          300
-        ],
-        "parameters": {
-          "name": "Branch Result",
-          "typeVersion": 1,
-          "position": [
-            700,
-            300
-          ],
-          "parameters": {
-            "name": "Branch On Result",
-            "typeVersion": 1,
-            "position": [
-              1500,
-              50
-            ],
-            "parameters": {
-              "condition": "$is_greater"
-            }
-          }
-        }
+        "condition": "$is_greater"
       }
     },
     {
@@ -250,33 +106,9 @@
         500
       ],
       "parameters": {
-        "name": "Format Success",
-        "typeVersion": 1,
-        "position": [
-          100,
-          500
-        ],
-        "parameters": {
-          "name": "Format Success",
-          "typeVersion": 1,
-          "position": [
-            100,
-            500
-          ],
-          "parameters": {
-            "name": "Format Success Message",
-            "typeVersion": 1,
-            "position": [
-              1800,
-              0
-            ],
-            "parameters": {
-              "template": "Success! Sum is {sum}, which is greater than 50.",
-              "variables": {
-                "sum": "$sum"
-              }
-            }
-          }
+        "template": "Success! Sum is {sum}, which is greater than 50.",
+        "variables": {
+          "sum": "$sum"
         }
       }
     },
@@ -290,33 +122,9 @@
         500
       ],
       "parameters": {
-        "name": "Format Failure",
-        "typeVersion": 1,
-        "position": [
-          400,
-          500
-        ],
-        "parameters": {
-          "name": "Format Failure",
-          "typeVersion": 1,
-          "position": [
-            400,
-            500
-          ],
-          "parameters": {
-            "name": "Format Failure Message",
-            "typeVersion": 1,
-            "position": [
-              1800,
-              100
-            ],
-            "parameters": {
-              "template": "Sum is {sum}, which is not greater than 50.",
-              "variables": {
-                "sum": "$sum"
-              }
-            }
-          }
+        "template": "Sum is {sum}, which is not greater than 50.",
+        "variables": {
+          "sum": "$sum"
         }
       }
     },
@@ -330,32 +138,8 @@
         500
       ],
       "parameters": {
-        "name": "Store Result",
-        "typeVersion": 1,
-        "position": [
-          700,
-          500
-        ],
-        "parameters": {
-          "name": "Store Result",
-          "typeVersion": 1,
-          "position": [
-            700,
-            500
-          ],
-          "parameters": {
-            "name": "Store Final Result",
-            "typeVersion": 1,
-            "position": [
-              2100,
-              50
-            ],
-            "parameters": {
-              "key": "final_message",
-              "value": "$message"
-            }
-          }
-        }
+        "key": "final_message",
+        "value": "$message"
       }
     }
   ],

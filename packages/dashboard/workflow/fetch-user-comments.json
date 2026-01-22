@@ -12,25 +12,9 @@
         100
       ],
       "parameters": {
-        "name": "Validate Context",
-        "typeVersion": 1,
-        "position": [
-          100,
-          100
-        ],
-        "parameters": {
-          "name": "Validate Context",
-          "typeVersion": 1,
-          "position": [
-            100,
-            100
-          ],
-          "parameters": {
-            "input": "{{ $context.user.id }}",
-            "operation": "validate",
-            "validator": "required"
-          }
-        }
+        "input": "{{ $context.user.id }}",
+        "operation": "validate",
+        "validator": "required"
       }
     },
     {
@@ -43,27 +27,11 @@
         100
       ],
       "parameters": {
-        "name": "Extract Pagination",
-        "typeVersion": 1,
-        "position": [
-          400,
-          100
-        ],
-        "parameters": {
-          "name": "Extract Pagination",
-          "typeVersion": 1,
-          "position": [
-            400,
-            100
-          ],
-          "parameters": {
-            "output": {
-              "limit": "{{ Math.min($json.limit || 20, 100) }}",
-              "offset": "{{ ($json.page || 1 - 1) * ($json.limit || 20) }}"
-            },
-            "operation": "transform_data"
-          }
-        }
+        "output": {
+          "limit": "{{ Math.min($json.limit || 20, 100) }}",
+          "offset": "{{ ($json.page || 1 - 1) * ($json.limit || 20) }}"
+        },
+        "operation": "transform_data"
       }
     },
     {
@@ -76,34 +44,18 @@
         100
       ],
       "parameters": {
-        "name": "Fetch Comments",
-        "typeVersion": 1,
-        "position": [
-          700,
-          100
-        ],
-        "parameters": {
-          "name": "Fetch Comments",
-          "typeVersion": 1,
-          "position": [
-            700,
-            100
-          ],
-          "parameters": {
-            "filter": {
-              "authorId": "{{ $context.user.id }}",
-              "tenantId": "{{ $context.tenantId }}",
-              "isDeleted": false
-            },
-            "sort": {
-              "createdAt": -1
-            },
-            "limit": "{{ $steps.extract_pagination.output.limit }}",
-            "offset": "{{ $steps.extract_pagination.output.offset }}",
-            "operation": "database_read",
-            "entity": "ForumPost"
-          }
-        }
+        "filter": {
+          "authorId": "{{ $context.user.id }}",
+          "tenantId": "{{ $context.tenantId }}",
+          "isDeleted": false
+        },
+        "sort": {
+          "createdAt": -1
+        },
+        "limit": "{{ $steps.extract_pagination.output.limit }}",
+        "offset": "{{ $steps.extract_pagination.output.offset }}",
+        "operation": "database_read",
+        "entity": "ForumPost"
       }
     },
     {
@@ -116,25 +68,9 @@
         300
       ],
       "parameters": {
-        "name": "Enrich With Thread Info",
-        "typeVersion": 1,
-        "position": [
-          100,
-          300
-        ],
-        "parameters": {
-          "name": "Enrich With Thread Info",
-          "typeVersion": 1,
-          "position": [
-            100,
-            300
-          ],
-          "parameters": {
-            "input": "{{ $steps.fetch_comments.output }}",
-            "output": "{{ $steps.fetch_comments.output.map(post => ({ ...post, threadUrl: '/forum/thread/' + post.threadId })) }}",
-            "operation": "transform_data"
-          }
-        }
+        "input": "{{ $steps.fetch_comments.output }}",
+        "output": "{{ $steps.fetch_comments.output.map(post => ({ ...post, threadUrl: '/forum/thread/' + post.threadId })) }}",
+        "operation": "transform_data"
       }
     },
     {
@@ -147,29 +83,13 @@
         300
       ],
       "parameters": {
-        "name": "Count Total",
-        "typeVersion": 1,
-        "position": [
-          400,
-          300
-        ],
-        "parameters": {
-          "name": "Count Total",
-          "typeVersion": 1,
-          "position": [
-            400,
-            300
-          ],
-          "parameters": {
-            "filter": {
-              "authorId": "{{ $context.user.id }}",
-              "tenantId": "{{ $context.tenantId }}",
-              "isDeleted": false
-            },
-            "operation": "database_count",
-            "entity": "ForumPost"
-          }
-        }
+        "filter": {
+          "authorId": "{{ $context.user.id }}",
+          "tenantId": "{{ $context.tenantId }}",
+          "isDeleted": false
+        },
+        "operation": "database_count",
+        "entity": "ForumPost"
       }
     },
     {
@@ -182,32 +102,16 @@
         300
       ],
       "parameters": {
-        "name": "Format Response",
-        "typeVersion": 1,
-        "position": [
-          700,
-          300
-        ],
-        "parameters": {
-          "name": "Format Response",
-          "typeVersion": 1,
-          "position": [
-            700,
-            300
-          ],
-          "parameters": {
-            "output": {
-              "comments": "{{ $steps.enrich_with_thread_info.output }}",
-              "pagination": {
-                "total": "{{ $steps.count_total.output }}",
-                "page": "{{ $json.page || 1 }}",
-                "limit": "{{ $steps.extract_pagination.output.limit }}",
-                "hasMore": "{{ $steps.count_total.output > ($steps.extract_pagination.output.offset + $steps.extract_pagination.output.limit) }}"
-              }
-            },
-            "operation": "transform_data"
+        "output": {
+          "comments": "{{ $steps.enrich_with_thread_info.output }}",
+          "pagination": {
+            "total": "{{ $steps.count_total.output }}",
+            "page": "{{ $json.page || 1 }}",
+            "limit": "{{ $steps.extract_pagination.output.limit }}",
+            "hasMore": "{{ $steps.count_total.output > ($steps.extract_pagination.output.offset + $steps.extract_pagination.output.limit) }}"
           }
-        }
+        },
+        "operation": "transform_data"
       }
     },
     {
@@ -220,29 +124,80 @@
         500
       ],
       "parameters": {
-        "name": "Return Success",
-        "typeVersion": 1,
-        "position": [
-          100,
-          500
-        ],
-        "parameters": {
-          "name": "Return Success",
-          "typeVersion": 1,
-          "position": [
-            100,
-            500
-          ],
-          "parameters": {
-            "action": "http_response",
-            "status": 200,
-            "body": "{{ $steps.format_response.output }}"
-          }
-        }
+        "action": "http_response",
+        "status": 200,
+        "body": "{{ $steps.format_response.output }}"
       }
     }
   ],
-  "connections": {},
+  "connections": {
+    "validate_context": {
+      "main": [
+        [
+          {
+            "node": "extract_pagination",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "extract_pagination": {
+      "main": [
+        [
+          {
+            "node": "fetch_comments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fetch_comments": {
+      "main": [
+        [
+          {
+            "node": "enrich_with_thread_info",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "enrich_with_thread_info": {
+      "main": [
+        [
+          {
+            "node": "count_total",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "count_total": {
+      "main": [
+        [
+          {
+            "node": "format_response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "format_response": {
+      "main": [
+        [
+          {
+            "node": "return_success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "staticData": {},
   "meta": {},
   "settings": {
@@ -251,5 +206,8 @@
     "saveExecutionProgress": true,
     "saveDataErrorExecution": "all",
     "saveDataSuccessExecution": "all"
-  }
+  },
+  "id": "workflow_fetch_user_comments",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
 }

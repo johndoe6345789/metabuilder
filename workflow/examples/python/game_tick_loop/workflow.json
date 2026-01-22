@@ -11,31 +11,7 @@
         100,
         100
       ],
-      "parameters": {
-        "name": "Seed Messages",
-        "typeVersion": 1,
-        "position": [
-          100,
-          100
-        ],
-        "parameters": {
-          "name": "Seed Messages",
-          "typeVersion": 1,
-          "position": [
-            100,
-            100
-          ],
-          "parameters": {
-            "name": "Seed Messages",
-            "typeVersion": 1,
-            "position": [
-              0,
-              50
-            ],
-            "parameters": {}
-          }
-        }
-      }
+      "parameters": {}
     },
     {
       "id": "map_ticks",
@@ -47,36 +23,12 @@
         100
       ],
       "parameters": {
-        "name": "Map Ticks",
-        "typeVersion": 1,
-        "position": [
-          400,
-          100
+        "items": [
+          "tick_start",
+          "tick_update",
+          "tick_render"
         ],
-        "parameters": {
-          "name": "Map Ticks",
-          "typeVersion": 1,
-          "position": [
-            400,
-            100
-          ],
-          "parameters": {
-            "name": "Map Ticks",
-            "typeVersion": 1,
-            "position": [
-              300,
-              50
-            ],
-            "parameters": {
-              "items": [
-                "tick_start",
-                "tick_update",
-                "tick_render"
-              ],
-              "template": "Tick: {item}"
-            }
-          }
-        }
+        "template": "Tick: {item}"
       }
     },
     {
@@ -89,32 +41,8 @@
         100
       ],
       "parameters": {
-        "name": "Reduce Ticks",
-        "typeVersion": 1,
-        "position": [
-          700,
-          100
-        ],
-        "parameters": {
-          "name": "Reduce Ticks",
-          "typeVersion": 1,
-          "position": [
-            700,
-            100
-          ],
-          "parameters": {
-            "name": "Reduce Ticks",
-            "typeVersion": 1,
-            "position": [
-              600,
-              50
-            ],
-            "parameters": {
-              "items": "$tick_lines",
-              "separator": "\\n"
-            }
-          }
-        }
+        "items": "$tick_lines",
+        "separator": "\\n"
       }
     },
     {
@@ -127,32 +55,8 @@
         300
       ],
       "parameters": {
-        "name": "Append Tick Context",
-        "typeVersion": 1,
-        "position": [
-          100,
-          300
-        ],
-        "parameters": {
-          "name": "Append Tick Context",
-          "typeVersion": 1,
-          "position": [
-            100,
-            300
-          ],
-          "parameters": {
-            "name": "Append Tick Context",
-            "typeVersion": 1,
-            "position": [
-              900,
-              50
-            ],
-            "parameters": {
-              "messages": "$messages",
-              "context": "$tick_context"
-            }
-          }
-        }
+        "messages": "$messages",
+        "context": "$tick_context"
       }
     },
     {
@@ -165,33 +69,9 @@
         300
       ],
       "parameters": {
-        "name": "Main Loop",
-        "typeVersion": 1,
-        "position": [
-          400,
-          300
-        ],
-        "parameters": {
-          "name": "Main Loop",
-          "typeVersion": 1,
-          "position": [
-            400,
-            300
-          ],
-          "parameters": {
-            "name": "Main Loop",
-            "typeVersion": 1,
-            "position": [
-              1200,
-              50
-            ],
-            "parameters": {
-              "max_iterations": 3,
-              "stop_when": "$no_tool_calls",
-              "stop_on": "true"
-            }
-          }
-        }
+        "max_iterations": 3,
+        "stop_when": "$no_tool_calls",
+        "stop_on": "true"
       }
     }
   ],

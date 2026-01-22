@@ -12,24 +12,8 @@
         100
       ],
       "parameters": {
-        "name": "Check Permission",
-        "typeVersion": 1,
-        "position": [
-          100,
-          100
-        ],
-        "parameters": {
-          "name": "Check Permission",
-          "typeVersion": 1,
-          "position": [
-            100,
-            100
-          ],
-          "parameters": {
-            "condition": "{{ $context.user.level >= 3 || $context.user.id === $json.userId }}",
-            "operation": "condition"
-          }
-        }
+        "condition": "{{ $context.user.level >= 3 || $context.user.id === $json.userId }}",
+        "operation": "condition"
       }
     },
     {
@@ -42,28 +26,12 @@
         100
       ],
       "parameters": {
-        "name": "Fetch User",
-        "typeVersion": 1,
-        "position": [
-          400,
-          100
-        ],
-        "parameters": {
-          "name": "Fetch User",
-          "typeVersion": 1,
-          "position": [
-            400,
-            100
-          ],
-          "parameters": {
-            "filter": {
-              "id": "{{ $json.userId }}",
-              "tenantId": "{{ $context.tenantId }}"
-            },
-            "operation": "database_read",
-            "entity": "User"
-          }
-        }
+        "filter": {
+          "id": "{{ $json.userId }}",
+          "tenantId": "{{ $context.tenantId }}"
+        },
+        "operation": "database_read",
+        "entity": "User"
       }
     },
     {
@@ -76,32 +44,16 @@
         100
       ],
       "parameters": {
-        "name": "Update User",
-        "typeVersion": 1,
-        "position": [
-          700,
-          100
-        ],
-        "parameters": {
-          "name": "Update User",
-          "typeVersion": 1,
-          "position": [
-            700,
-            100
-          ],
-          "parameters": {
-            "filter": {
-              "id": "{{ $json.userId }}"
-            },
-            "data": {
-              "displayName": "{{ $json.displayName || $steps.fetch_user.output.displayName }}",
-              "level": "{{ $context.user.level >= 3 ? ($json.level || $steps.fetch_user.output.level) : $steps.fetch_user.output.level }}",
-              "isActive": "{{ $json.isActive !== undefined ? $json.isActive : $steps.fetch_user.output.isActive }}"
-            },
-            "operation": "database_update",
-            "entity": "User"
-          }
-        }
+        "filter": {
+          "id": "{{ $json.userId }}"
+        },
+        "data": {
+          "displayName": "{{ $json.displayName || $steps.fetch_user.output.displayName }}",
+          "level": "{{ $context.user.level >= 3 ? ($json.level || $steps.fetch_user.output.level) : $steps.fetch_user.output.level }}",
+          "isActive": "{{ $json.isActive !== undefined ? $json.isActive : $steps.fetch_user.output.isActive }}"
+        },
+        "operation": "database_update",
+        "entity": "User"
       }
     },
     {
@@ -114,29 +66,47 @@
         300
       ],
       "parameters": {
-        "name": "Return Success",
-        "typeVersion": 1,
-        "position": [
-          100,
-          300
-        ],
-        "parameters": {
-          "name": "Return Success",
-          "typeVersion": 1,
-          "position": [
-            100,
-            300
-          ],
-          "parameters": {
-            "action": "http_response",
-            "status": 200,
-            "body": "{{ $steps.update_user.output }}"
-          }
-        }
+        "action": "http_response",
+        "status": 200,
+        "body": "{{ $steps.update_user.output }}"
       }
     }
   ],
-  "connections": {},
+  "connections": {
+    "check_permission": {
+      "main": [
+        [
+          {
+            "node": "fetch_user",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fetch_user": {
+      "main": [
+        [
+          {
+            "node": "update_user",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update_user": {
+      "main": [
+        [
+          {
+            "node": "return_success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "staticData": {},
   "meta": {},
   "settings": {
@@ -145,5 +115,8 @@
     "saveExecutionProgress": true,
     "saveDataErrorExecution": "all",
     "saveDataSuccessExecution": "all"
-  }
+  },
+  "id": "workflow_update_user",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
 }

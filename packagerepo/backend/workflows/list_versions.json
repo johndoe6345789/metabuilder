@@ -12,27 +12,9 @@
         100
       ],
       "parameters": {
-        "name": "Parse Path",
-        "typeVersion": 1,
-        "position": [
-          100,
-          100
-        ],
-        "parameters": {
-          "name": "Parse Path",
-          "typeVersion": 1,
-          "position": [
-            100,
-            100
-          ],
-          "parameters": {
-            "parameters": {
-              "path": "$request.path",
-              "pattern": "/v1/:namespace/:name/versions",
-              "out": "entity"
-            }
-          }
-        }
+        "path": "$request.path",
+        "pattern": "/v1/:namespace/:name/versions",
+        "out": "entity"
       }
     },
     {
@@ -45,26 +27,8 @@
         100
       ],
       "parameters": {
-        "name": "Normalize",
-        "typeVersion": 1,
-        "position": [
-          400,
-          100
-        ],
-        "parameters": {
-          "name": "Normalize",
-          "typeVersion": 1,
-          "position": [
-            400,
-            100
-          ],
-          "parameters": {
-            "parameters": {
-              "entity": "$entity",
-              "out": "normalized"
-            }
-          }
-        }
+        "entity": "$entity",
+        "out": "normalized"
       }
     },
     {
@@ -77,26 +41,8 @@
         100
       ],
       "parameters": {
-        "name": "Query Index",
-        "typeVersion": 1,
-        "position": [
-          700,
-          100
-        ],
-        "parameters": {
-          "name": "Query Index",
-          "typeVersion": 1,
-          "position": [
-            700,
-            100
-          ],
-          "parameters": {
-            "parameters": {
-              "key": "$entity.namespace/$entity.name",
-              "out": "versions"
-            }
-          }
-        }
+        "key": "$entity.namespace/$entity.name",
+        "out": "versions"
       }
     },
     {
@@ -109,32 +55,14 @@
         300
       ],
       "parameters": {
-        "name": "Check Exists",
-        "typeVersion": 1,
-        "position": [
-          100,
-          300
-        ],
-        "parameters": {
-          "name": "Check Exists",
-          "typeVersion": 1,
-          "position": [
-            100,
-            300
-          ],
-          "parameters": {
-            "parameters": {
-              "condition": "$versions == null",
-              "then": "error_not_found",
-              "else": "enrich_versions"
-            }
-          }
-        }
+        "condition": "$versions == null",
+        "then": "error_not_found",
+        "else": "enrich_versions"
       }
     },
     {
       "id": "enrich_versions",
-      "name": "Enrich Versions",
+      "name": "$entity.name",
       "type": "packagerepo.enrich_version_list",
       "typeVersion": 1,
       "position": [
@@ -142,28 +70,9 @@
         300
       ],
       "parameters": {
-        "name": "Enrich Versions",
-        "typeVersion": 1,
-        "position": [
-          400,
-          300
-        ],
-        "parameters": {
-          "name": "Enrich Versions",
-          "typeVersion": 1,
-          "position": [
-            400,
-            300
-          ],
-          "parameters": {
-            "parameters": {
-              "namespace": "$entity.namespace",
-              "name": "$entity.name",
-              "versions": "$versions",
-              "out": "enriched"
-            }
-          }
-        }
+        "namespace": "$entity.namespace",
+        "versions": "$versions",
+        "out": "enriched"
       }
     },
     {
@@ -176,30 +85,12 @@
         300
       ],
       "parameters": {
-        "name": "Respond Json",
-        "typeVersion": 1,
-        "position": [
-          700,
-          300
-        ],
-        "parameters": {
-          "name": "Respond Json",
-          "typeVersion": 1,
-          "position": [
-            700,
-            300
-          ],
-          "parameters": {
-            "parameters": {
-              "body": {
-                "namespace": "$entity.namespace",
-                "name": "$entity.name",
-                "versions": "$enriched"
-              },
-              "status": 200
-            }
-          }
-        }
+        "body": {
+          "namespace": "$entity.namespace",
+          "name": "$entity.name",
+          "versions": "$enriched"
+        },
+        "status": 200
       }
     },
     {
@@ -212,30 +103,79 @@
         500
       ],
       "parameters": {
-        "name": "Error Not Found",
-        "typeVersion": 1,
-        "position": [
-          100,
-          500
-        ],
-        "parameters": {
-          "name": "Error Not Found",
-          "typeVersion": 1,
-          "position": [
-            100,
-            500
-          ],
-          "parameters": {
-            "parameters": {
-              "message": "Package not found",
-              "status": 404
-            }
-          }
-        }
+        "message": "Package not found",
+        "status": 404
       }
     }
   ],
-  "connections": {},
+  "connections": {
+    "parse_path": {
+      "main": [
+        [
+          {
+            "node": "normalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "normalize": {
+      "main": [
+        [
+          {
+            "node": "query_index",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "query_index": {
+      "main": [
+        [
+          {
+            "node": "check_exists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_exists": {
+      "main": [
+        [
+          {
+            "node": "enrich_versions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "enrich_versions": {
+      "main": [
+        [
+          {
+            "node": "respond_json",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "respond_json": {
+      "main": [
+        [
+          {
+            "node": "error_not_found",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "staticData": {},
   "meta": {},
   "settings": {
@@ -244,5 +184,8 @@
     "saveExecutionProgress": true,
     "saveDataErrorExecution": "all",
     "saveDataSuccessExecution": "all"
-  }
+  },
+  "id": "workflow_list_versions",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
 }

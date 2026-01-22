@@ -183,6 +183,50 @@ function mapNodeType(mbType: string, op?: string): string {
 }
 
 /**
+ * Flatten nested parameters structure
+ * Handles cases where parameters are wrapped multiple times with node-level attributes
+ * (name, typeVersion, position) that got merged into the parameters object
+ */
+function flattenParameters(obj: any, depth = 0): Record<string, any> {
+  // Safety check for infinite recursion
+  if (depth > 10) {
+    return obj
+  }
+
+  // If it's not an object or is an array, return as-is
+  if (typeof obj !== 'object' || obj === null || Array.isArray(obj)) {
+    return obj
+  }
+
+  // Get keys
+  const keys = Object.keys(obj)
+
+  // If we have node-level attributes (name/typeVersion/position) at parameter level,
+  // these were incorrectly merged in. Extract from nested 'parameters' field.
+  if ((keys.includes('name') || keys.includes('typeVersion') || keys.includes('position')) &&
+      keys.includes('parameters')) {
+    // Skip the node-level attributes and use the nested parameters
+    return flattenParameters(obj.parameters, depth + 1)
+  }
+
+  // If it has the structure { parameters: { ... } } and only that key, unwrap it
+  if (keys.length === 1 && keys[0] === 'parameters' && typeof obj.parameters === 'object') {
+    return flattenParameters(obj.parameters, depth + 1)
+  }
+
+  // Otherwise, recursively flatten all values
+  const result: Record<string, any> = {}
+  for (const [key, value] of Object.entries(obj)) {
+    if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+      result[key] = flattenParameters(value, depth)
+    } else {
+      result[key] = value
+    }
+  }
+  return result
+}
+
+/**
  * Convert MetaBuilder node to N8N node
  */
 function convertNode(
@@ -194,7 +238,7 @@ function convertNode(
   const type = mapNodeType(mbNode.type, mbNode.op)
 
   // Build parameters by merging all relevant fields
-  const parameters: Record<string, any> = {
+  let parameters: Record<string, any> = {
     ...(mbNode.params || {}),
     ...(mbNode.data ? { data: mbNode.data } : {}),
     ...(mbNode.input ? { input: mbNode.input } : {}),
@@ -211,6 +255,9 @@ function convertNode(
       parameters[key] = mbNode[key]
     }
   })
+
+  // Flatten any nested parameters structure
+  parameters = flattenParameters(parameters)
 
   const n8nNode: N8NNode = {
     id: mbNode.id,

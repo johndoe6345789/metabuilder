@@ -12,31 +12,7 @@
         100
       ],
       "parameters": {
-        "name": "Lint",
-        "typeVersion": 1,
-        "position": [
-          100,
-          100
-        ],
-        "parameters": {
-          "name": "Lint",
-          "typeVersion": 1,
-          "position": [
-            100,
-            100
-          ],
-          "parameters": {
-            "name": "Lint",
-            "typeVersion": 1,
-            "position": [
-              0,
-              50
-            ],
-            "parameters": {
-              "path": "src"
-            }
-          }
-        }
+        "path": "src"
       }
     },
     {
@@ -49,33 +25,9 @@
         100
       ],
       "parameters": {
-        "name": "Lint Failed",
-        "typeVersion": 1,
-        "position": [
-          400,
-          100
-        ],
-        "parameters": {
-          "name": "Lint Failed",
-          "typeVersion": 1,
-          "position": [
-            400,
-            100
-          ],
-          "parameters": {
-            "name": "Lint Failed",
-            "typeVersion": 1,
-            "position": [
-              300,
-              50
-            ],
-            "parameters": {
-              "value": "$lint_results",
-              "mode": "regex",
-              "compare": "(FAILED|ERROR)"
-            }
-          }
-        }
+        "value": "$lint_results",
+        "mode": "regex",
+        "compare": "(FAILED|ERROR)"
       }
     },
     {
@@ -88,31 +40,7 @@
         100
       ],
       "parameters": {
-        "name": "Lint Ok",
-        "typeVersion": 1,
-        "position": [
-          700,
-          100
-        ],
-        "parameters": {
-          "name": "Lint Ok",
-          "typeVersion": 1,
-          "position": [
-            700,
-            100
-          ],
-          "parameters": {
-            "name": "Lint Ok",
-            "typeVersion": 1,
-            "position": [
-              600,
-              50
-            ],
-            "parameters": {
-              "value": "$lint_failed"
-            }
-          }
-        }
+        "value": "$lint_failed"
       }
     },
     {
@@ -125,31 +53,7 @@
         300
       ],
       "parameters": {
-        "name": "Unit Tests",
-        "typeVersion": 1,
-        "position": [
-          100,
-          300
-        ],
-        "parameters": {
-          "name": "Unit Tests",
-          "typeVersion": 1,
-          "position": [
-            100,
-            300
-          ],
-          "parameters": {
-            "name": "Unit Tests",
-            "typeVersion": 1,
-            "position": [
-              900,
-              50
-            ],
-            "parameters": {
-              "path": "tests"
-            }
-          }
-        }
+        "path": "tests"
       }
     },
     {
@@ -162,33 +66,9 @@
         300
       ],
       "parameters": {
-        "name": "Unit Failed",
-        "typeVersion": 1,
-        "position": [
-          400,
-          300
-        ],
-        "parameters": {
-          "name": "Unit Failed",
-          "typeVersion": 1,
-          "position": [
-            400,
-            300
-          ],
-          "parameters": {
-            "name": "Unit Failed",
-            "typeVersion": 1,
-            "position": [
-              1200,
-              50
-            ],
-            "parameters": {
-              "value": "$unit_results",
-              "mode": "regex",
-              "compare": "(FAILED|ERROR)"
-            }
-          }
-        }
+        "value": "$unit_results",
+        "mode": "regex",
+        "compare": "(FAILED|ERROR)"
       }
     },
     {
@@ -201,31 +81,7 @@
         300
       ],
       "parameters": {
-        "name": "Unit Ok",
-        "typeVersion": 1,
-        "position": [
-          700,
-          300
-        ],
-        "parameters": {
-          "name": "Unit Ok",
-          "typeVersion": 1,
-          "position": [
-            700,
-            300
-          ],
-          "parameters": {
-            "name": "Unit Ok",
-            "typeVersion": 1,
-            "position": [
-              1500,
-              50
-            ],
-            "parameters": {
-              "value": "$unit_failed"
-            }
-          }
-        }
+        "value": "$unit_failed"
       }
     },
     {
@@ -238,31 +94,7 @@
         500
       ],
       "parameters": {
-        "name": "Ui Tests",
-        "typeVersion": 1,
-        "position": [
-          100,
-          500
-        ],
-        "parameters": {
-          "name": "Ui Tests",
-          "typeVersion": 1,
-          "position": [
-            100,
-            500
-          ],
-          "parameters": {
-            "name": "Ui Tests",
-            "typeVersion": 1,
-            "position": [
-              1800,
-              50
-            ],
-            "parameters": {
-              "path": "tests/ui"
-            }
-          }
-        }
+        "path": "tests/ui"
       }
     }
   ],

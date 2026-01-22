@@ -12,31 +12,7 @@
         100
       ],
       "parameters": {
-        "name": "List Files",
-        "typeVersion": 1,
-        "position": [
-          100,
-          100
-        ],
-        "parameters": {
-          "name": "List Files",
-          "typeVersion": 1,
-          "position": [
-            100,
-            100
-          ],
-          "parameters": {
-            "name": "List Files",
-            "typeVersion": 1,
-            "position": [
-              0,
-              50
-            ],
-            "parameters": {
-              "path": "."
-            }
-          }
-        }
+        "path": "."
       }
     },
     {
@@ -49,33 +25,9 @@
         100
       ],
       "parameters": {
-        "name": "Filter Python",
-        "typeVersion": 1,
-        "position": [
-          400,
-          100
-        ],
-        "parameters": {
-          "name": "Filter Python",
-          "typeVersion": 1,
-          "position": [
-            400,
-            100
-          ],
-          "parameters": {
-            "name": "Filter Python",
-            "typeVersion": 1,
-            "position": [
-              300,
-              50
-            ],
-            "parameters": {
-              "items": "$repo_files",
-              "mode": "regex",
-              "pattern": "\\.py$"
-            }
-          }
-        }
+        "items": "$repo_files",
+        "mode": "regex",
+        "pattern": "\\.py$"
       }
     },
     {
@@ -88,32 +40,8 @@
         100
       ],
       "parameters": {
-        "name": "Map Python",
-        "typeVersion": 1,
-        "position": [
-          700,
-          100
-        ],
-        "parameters": {
-          "name": "Map Python",
-          "typeVersion": 1,
-          "position": [
-            700,
-            100
-          ],
-          "parameters": {
-            "name": "Map Python",
-            "typeVersion": 1,
-            "position": [
-              600,
-              50
-            ],
-            "parameters": {
-              "items": "$python_files",
-              "template": "PY: {item}"
-            }
-          }
-        }
+        "items": "$python_files",
+        "template": "PY: {item}"
       }
     },
     {
@@ -126,32 +54,8 @@
         300
       ],
       "parameters": {
-        "name": "Reduce Python",
-        "typeVersion": 1,
-        "position": [
-          100,
-          300
-        ],
-        "parameters": {
-          "name": "Reduce Python",
-          "typeVersion": 1,
-          "position": [
-            100,
-            300
-          ],
-          "parameters": {
-            "name": "Reduce Python",
-            "typeVersion": 1,
-            "position": [
-              900,
-              50
-            ],
-            "parameters": {
-              "items": "$python_lines",
-              "separator": "\\n"
-            }
-          }
-        }
+        "items": "$python_lines",
+        "separator": "\\n"
       }
     },
     {
@@ -163,31 +67,7 @@
         400,
         300
       ],
-      "parameters": {
-        "name": "Seed Messages",
-        "typeVersion": 1,
-        "position": [
-          400,
-          300
-        ],
-        "parameters": {
-          "name": "Seed Messages",
-          "typeVersion": 1,
-          "position": [
-            400,
-            300
-          ],
-          "parameters": {
-            "name": "Seed Messages",
-            "typeVersion": 1,
-            "position": [
-              1200,
-              50
-            ],
-            "parameters": {}
-          }
-        }
-      }
+      "parameters": {}
     },
     {
       "id": "append_repo_summary",
@@ -199,32 +79,8 @@
         300
       ],
       "parameters": {
-        "name": "Append Repo Summary",
-        "typeVersion": 1,
-        "position": [
-          700,
-          300
-        ],
-        "parameters": {
-          "name": "Append Repo Summary",
-          "typeVersion": 1,
-          "position": [
-            700,
-            300
-          ],
-          "parameters": {
-            "name": "Append Repo Summary",
-            "typeVersion": 1,
-            "position": [
-              1500,
-              50
-            ],
-            "parameters": {
-              "messages": "$messages",
-              "context": "$python_summary"
-            }
-          }
-        }
+        "messages": "$messages",
+        "context": "$python_summary"
       }
     },
     {
@@ -237,31 +93,7 @@
         500
       ],
       "parameters": {
-        "name": "Append User Instruction",
-        "typeVersion": 1,
-        "position": [
-          100,
-          500
-        ],
-        "parameters": {
-          "name": "Append User Instruction",
-          "typeVersion": 1,
-          "position": [
-            100,
-            500
-          ],
-          "parameters": {
-            "name": "Append User Instruction",
-            "typeVersion": 1,
-            "position": [
-              1800,
-              50
-            ],
-            "parameters": {
-              "messages": "$messages"
-            }
-          }
-        }
+        "messages": "$messages"
       }
     },
     {
@@ -274,33 +106,9 @@
         500
       ],
       "parameters": {
-        "name": "Main Loop",
-        "typeVersion": 1,
-        "position": [
-          400,
-          500
-        ],
-        "parameters": {
-          "name": "Main Loop",
-          "typeVersion": 1,
-          "position": [
-            400,
-            500
-          ],
-          "parameters": {
-            "name": "Main Loop",
-            "typeVersion": 1,
-            "position": [
-              2100,
-              50
-            ],
-            "parameters": {
-              "max_iterations": 5,
-              "stop_when": "$no_tool_calls",
-              "stop_on": "true"
-            }
-          }
-        }
+        "max_iterations": 5,
+        "stop_when": "$no_tool_calls",
+        "stop_on": "true"
       }
     }
   ],

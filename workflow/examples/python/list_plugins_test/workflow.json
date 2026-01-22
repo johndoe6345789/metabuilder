@@ -12,43 +12,19 @@
         100
       ],
       "parameters": {
-        "name": "Test Concat",
-        "typeVersion": 1,
-        "position": [
-          100,
-          100
-        ],
-        "parameters": {
-          "name": "Test Concat",
-          "typeVersion": 1,
-          "position": [
-            100,
-            100
+        "lists": [
+          [
+            1,
+            2
           ],
-          "parameters": {
-            "name": "Test Concat",
-            "typeVersion": 1,
-            "position": [
-              0,
-              0
-            ],
-            "parameters": {
-              "lists": [
-                [
-                  1,
-                  2
-                ],
-                [
-                  3,
-                  4
-                ],
-                [
-                  5
-                ]
-              ]
-            }
-          }
-        }
+          [
+            3,
+            4
+          ],
+          [
+            5
+          ]
+        ]
       }
     },
     {
@@ -61,31 +37,7 @@
         100
       ],
       "parameters": {
-        "name": "Assert Concat Length",
-        "typeVersion": 1,
-        "position": [
-          400,
-          100
-        ],
-        "parameters": {
-          "name": "Assert Concat Length",
-          "typeVersion": 1,
-          "position": [
-            400,
-            100
-          ],
-          "parameters": {
-            "name": "Assert Concat Length",
-            "typeVersion": 1,
-            "position": [
-              300,
-              0
-            ],
-            "parameters": {
-              "items": "$test_concat.result"
-            }
-          }
-        }
+        "items": "$test_concat.result"
       }
     },
     {
@@ -98,33 +50,9 @@
         100
       ],
       "parameters": {
-        "name": "Assert Concat",
-        "typeVersion": 1,
-        "position": [
-          700,
-          100
-        ],
-        "parameters": {
-          "name": "Assert Concat",
-          "typeVersion": 1,
-          "position": [
-            700,
-            100
-          ],
-          "parameters": {
-            "name": "Assert Concat",
-            "typeVersion": 1,
-            "position": [
-              600,
-              0
-            ],
-            "parameters": {
-              "actual": "$assert_concat_length.result",
-              "expected": 5,
-              "message": "list.concat should concatenate lists"
-            }
-          }
-        }
+        "actual": "$assert_concat_length.result",
+        "expected": 5,
+        "message": "list.concat should concatenate lists"
       }
     },
     {
@@ -137,37 +65,13 @@
         300
       ],
       "parameters": {
-        "name": "Test Length",
-        "typeVersion": 1,
-        "position": [
-          100,
-          300
-        ],
-        "parameters": {
-          "name": "Test Length",
-          "typeVersion": 1,
-          "position": [
-            100,
-            300
-          ],
-          "parameters": {
-            "name": "Test Length",
-            "typeVersion": 1,
-            "position": [
-              0,
-              100
-            ],
-            "parameters": {
-              "items": [
-                1,
-                2,
-                3,
-                4,
-                5
-              ]
-            }
-          }
-        }
+        "items": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
       }
     },
     {
@@ -180,33 +84,9 @@
         300
       ],
       "parameters": {
-        "name": "Assert Length",
-        "typeVersion": 1,
-        "position": [
-          400,
-          300
-        ],
-        "parameters": {
-          "name": "Assert Length",
-          "typeVersion": 1,
-          "position": [
-            400,
-            300
-          ],
-          "parameters": {
-            "name": "Assert Length",
-            "typeVersion": 1,
-            "position": [
-              300,
-              100
-            ],
-            "parameters": {
-              "actual": "$test_length.result",
-              "expected": 5,
-              "message": "list.length should count items"
-            }
-          }
-        }
+        "actual": "$test_length.result",
+        "expected": 5,
+        "message": "list.length should count items"
       }
     },
     {
@@ -219,39 +99,15 @@
         300
       ],
       "parameters": {
-        "name": "Test Slice",
-        "typeVersion": 1,
-        "position": [
-          700,
-          300
+        "items": [
+          1,
+          2,
+          3,
+          4,
+          5
         ],
-        "parameters": {
-          "name": "Test Slice",
-          "typeVersion": 1,
-          "position": [
-            700,
-            300
-          ],
-          "parameters": {
-            "name": "Test Slice",
-            "typeVersion": 1,
-            "position": [
-              0,
-              200
-            ],
-            "parameters": {
-              "items": [
-                1,
-                2,
-                3,
-                4,
-                5
-              ],
-              "start": 1,
-              "end": 3
-            }
-          }
-        }
+        "start": 1,
+        "end": 3
       }
     },
     {
@@ -264,31 +120,7 @@
         500
       ],
       "parameters": {
-        "name": "Assert Slice Length",
-        "typeVersion": 1,
-        "position": [
-          100,
-          500
-        ],
-        "parameters": {
-          "name": "Assert Slice Length",
-          "typeVersion": 1,
-          "position": [
-            100,
-            500
-          ],
-          "parameters": {
-            "name": "Assert Slice Length",
-            "typeVersion": 1,
-            "position": [
-              300,
-              200
-            ],
-            "parameters": {
-              "items": "$test_slice.result"
-            }
-          }
-        }
+        "items": "$test_slice.result"
       }
     },
     {
@@ -301,33 +133,9 @@
         500
       ],
       "parameters": {
-        "name": "Assert Slice",
-        "typeVersion": 1,
-        "position": [
-          400,
-          500
-        ],
-        "parameters": {
-          "name": "Assert Slice",
-          "typeVersion": 1,
-          "position": [
-            400,
-            500
-          ],
-          "parameters": {
-            "name": "Assert Slice",
-            "typeVersion": 1,
-            "position": [
-              600,
-              200
-            ],
-            "parameters": {
-              "actual": "$assert_slice_length.result",
-              "expected": 2,
-              "message": "list.slice should extract slice"
-            }
-          }
-        }
+        "actual": "$assert_slice_length.result",
+        "expected": 2,
+        "message": "list.slice should extract slice"
       }
     },
     {
@@ -340,42 +148,18 @@
         500
       ],
       "parameters": {
-        "name": "Test Find",
-        "typeVersion": 1,
-        "position": [
-          700,
-          500
-        ],
-        "parameters": {
-          "name": "Test Find",
-          "typeVersion": 1,
-          "position": [
-            700,
-            500
-          ],
-          "parameters": {
-            "name": "Test Find",
-            "typeVersion": 1,
-            "position": [
-              0,
-              300
-            ],
-            "parameters": {
-              "items": [
-                {
-                  "id": 1,
-                  "name": "Alice"
-                },
-                {
-                  "id": 2,
-                  "name": "Bob"
-                }
-              ],
-              "key": "name",
-              "value": "Bob"
-            }
+        "items": [
+          {
+            "id": 1,
+            "name": "Alice"
+          },
+          {
+            "id": 2,
+            "name": "Bob"
           }
-        }
+        ],
+        "key": "name",
+        "value": "Bob"
       }
     },
     {
@@ -388,32 +172,8 @@
         700
       ],
       "parameters": {
-        "name": "Assert Find",
-        "typeVersion": 1,
-        "position": [
-          100,
-          700
-        ],
-        "parameters": {
-          "name": "Assert Find",
-          "typeVersion": 1,
-          "position": [
-            100,
-            700
-          ],
-          "parameters": {
-            "name": "Assert Find Result",
-            "typeVersion": 1,
-            "position": [
-              300,
-              300
-            ],
-            "parameters": {
-              "value": "$test_find.result",
-              "message": "list.find should find item"
-            }
-          }
-        }
+        "value": "$test_find.result",
+        "message": "list.find should find item"
       }
     },
     {
@@ -426,32 +186,8 @@
         700
       ],
       "parameters": {
-        "name": "Assert Find Found",
-        "typeVersion": 1,
-        "position": [
-          400,
-          700
-        ],
-        "parameters": {
-          "name": "Assert Find Found",
-          "typeVersion": 1,
-          "position": [
-            400,
-            700
-          ],
-          "parameters": {
-            "name": "Assert Found Flag",
-            "typeVersion": 1,
-            "position": [
-              600,
-              300
-            ],
-            "parameters": {
-              "value": "$test_find.found",
-              "message": "list.find should set found flag"
-            }
-          }
-        }
+        "value": "$test_find.found",
+        "message": "list.find should set found flag"
       }
     }
   ],

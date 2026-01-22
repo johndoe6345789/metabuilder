@@ -12,25 +12,9 @@
         100
       ],
       "parameters": {
-        "name": "Validate Context",
-        "typeVersion": 1,
-        "position": [
-          100,
-          100
-        ],
-        "parameters": {
-          "name": "Validate Context",
-          "typeVersion": 1,
-          "position": [
-            100,
-            100
-          ],
-          "parameters": {
-            "input": "{{ $context.user.id }}",
-            "operation": "validate",
-            "validator": "required"
-          }
-        }
+        "input": "{{ $context.user.id }}",
+        "operation": "validate",
+        "validator": "required"
       }
     },
     {
@@ -43,28 +27,12 @@
         100
       ],
       "parameters": {
-        "name": "Fetch Channel",
-        "typeVersion": 1,
-        "position": [
-          400,
-          100
-        ],
-        "parameters": {
-          "name": "Fetch Channel",
-          "typeVersion": 1,
-          "position": [
-            400,
-            100
-          ],
-          "parameters": {
-            "filter": {
-              "id": "{{ $json.channelId }}",
-              "tenantId": "{{ $context.tenantId }}"
-            },
-            "operation": "database_read",
-            "entity": "StreamChannel"
-          }
-        }
+        "filter": {
+          "id": "{{ $json.channelId }}",
+          "tenantId": "{{ $context.tenantId }}"
+        },
+        "operation": "database_read",
+        "entity": "StreamChannel"
       }
     },
     {
@@ -77,30 +45,14 @@
         100
       ],
       "parameters": {
-        "name": "Create Subscription",
-        "typeVersion": 1,
-        "position": [
-          700,
-          100
-        ],
-        "parameters": {
-          "name": "Create Subscription",
-          "typeVersion": 1,
-          "position": [
-            700,
-            100
-          ],
-          "parameters": {
-            "data": {
-              "channelId": "{{ $json.channelId }}",
-              "userId": "{{ $context.user.id }}",
-              "tenantId": "{{ $context.tenantId }}",
-              "subscribedAt": "{{ new Date().toISOString() }}"
-            },
-            "operation": "database_create",
-            "entity": "StreamSubscription"
-          }
-        }
+        "data": {
+          "channelId": "{{ $json.channelId }}",
+          "userId": "{{ $context.user.id }}",
+          "tenantId": "{{ $context.tenantId }}",
+          "subscribedAt": "{{ new Date().toISOString() }}"
+        },
+        "operation": "database_create",
+        "entity": "StreamSubscription"
       }
     },
     {
@@ -113,29 +65,47 @@
         300
       ],
       "parameters": {
-        "name": "Setup Sse",
-        "typeVersion": 1,
-        "position": [
-          100,
-          300
-        ],
-        "parameters": {
-          "name": "Setup Sse",
-          "typeVersion": 1,
-          "position": [
-            100,
-            300
-          ],
-          "parameters": {
-            "action": "sse_stream",
-            "channel": "{{ 'stream:' + $json.channelId }}",
-            "onConnect": "{{ { subscriptionId: $steps.create_subscription.output.id } }}"
-          }
-        }
+        "action": "sse_stream",
+        "channel": "{{ 'stream:' + $json.channelId }}",
+        "onConnect": "{{ { subscriptionId: $steps.create_subscription.output.id } }}"
       }
     }
   ],
-  "connections": {},
+  "connections": {
+    "validate_context": {
+      "main": [
+        [
+          {
+            "node": "fetch_channel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fetch_channel": {
+      "main": [
+        [
+          {
+            "node": "create_subscription",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create_subscription": {
+      "main": [
+        [
+          {
+            "node": "setup_sse",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "staticData": {},
   "meta": {},
   "settings": {
@@ -144,5 +114,8 @@
     "saveExecutionProgress": true,
     "saveDataErrorExecution": "all",
     "saveDataSuccessExecution": "all"
-  }
+  },
+  "id": "workflow_stream_subscribe",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
 }

@@ -12,16 +12,8 @@
         100
       ],
       "parameters": {
-        "name": "Check Permission",
-        "typeVersion": 1,
-        "position": [
-          100,
-          100
-        ],
-        "parameters": {
-          "condition": "{{ $context.user.level >= 3 }}",
-          "operation": "condition"
-        }
+        "condition": "{{ $context.user.level >= 3 }}",
+        "operation": "condition"
       }
     },
     {
@@ -34,20 +26,12 @@
         100
       ],
       "parameters": {
-        "name": "Fetch User",
-        "typeVersion": 1,
-        "position": [
-          400,
-          100
-        ],
-        "parameters": {
-          "filter": {
-            "id": "{{ $json.userId }}",
-            "tenantId": "{{ $context.tenantId }}"
-          },
-          "operation": "database_read",
-          "entity": "User"
-        }
+        "filter": {
+          "id": "{{ $json.userId }}",
+          "tenantId": "{{ $context.tenantId }}"
+        },
+        "operation": "database_read",
+        "entity": "User"
       }
     },
     {
@@ -60,22 +44,14 @@
         100
       ],
       "parameters": {
-        "name": "Count Admins",
-        "typeVersion": 1,
-        "position": [
-          700,
-          100
-        ],
-        "parameters": {
-          "filter": {
-            "tenantId": "{{ $context.tenantId }}",
-            "level": {
-              "$gte": 3
-            }
-          },
-          "operation": "database_count",
-          "entity": "User"
-        }
+        "filter": {
+          "tenantId": "{{ $context.tenantId }}",
+          "level": {
+            "$gte": 3
+          }
+        },
+        "operation": "database_count",
+        "entity": "User"
       }
     },
     {
@@ -88,16 +64,8 @@
         300
       ],
       "parameters": {
-        "name": "Check Not Last Admin",
-        "typeVersion": 1,
-        "position": [
-          100,
-          300
-        ],
-        "parameters": {
-          "condition": "{{ !($steps.fetch_user.output.level >= 3 && $steps.count_admins.output <= 1) }}",
-          "operation": "condition"
-        }
+        "condition": "{{ !($steps.fetch_user.output.level >= 3 && $steps.count_admins.output <= 1) }}",
+        "operation": "condition"
       }
     },
     {
@@ -110,19 +78,11 @@
         300
       ],
       "parameters": {
-        "name": "Delete User",
-        "typeVersion": 1,
-        "position": [
-          400,
-          300
-        ],
-        "parameters": {
-          "filter": {
-            "id": "{{ $json.userId }}"
-          },
-          "operation": "database_delete",
-          "entity": "User"
-        }
+        "filter": {
+          "id": "{{ $json.userId }}"
+        },
+        "operation": "database_delete",
+        "entity": "User"
       }
     },
     {
@@ -135,23 +95,71 @@
         300
       ],
       "parameters": {
-        "name": "Return Success",
-        "typeVersion": 1,
-        "position": [
-          700,
-          300
-        ],
-        "parameters": {
-          "action": "http_response",
-          "status": 200,
-          "body": {
-            "message": "User deleted"
-          }
+        "action": "http_response",
+        "status": 200,
+        "body": {
+          "message": "User deleted"
         }
       }
     }
   ],
-  "connections": {},
+  "connections": {
+    "check_permission": {
+      "main": [
+        [
+          {
+            "node": "fetch_user",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fetch_user": {
+      "main": [
+        [
+          {
+            "node": "count_admins",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "count_admins": {
+      "main": [
+        [
+          {
+            "node": "check_not_last_admin",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_not_last_admin": {
+      "main": [
+        [
+          {
+            "node": "delete_user",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "delete_user": {
+      "main": [
+        [
+          {
+            "node": "return_success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "staticData": {},
   "meta": {},
   "settings": {
@@ -160,5 +168,8 @@
     "saveExecutionProgress": true,
     "saveDataErrorExecution": "all",
     "saveDataSuccessExecution": "all"
-  }
+  },
+  "id": "workflow_delete_user",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
 }

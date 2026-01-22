@@ -12,25 +12,9 @@
         100
       ],
       "parameters": {
-        "name": "Extract Log Id",
-        "typeVersion": 1,
-        "position": [
-          100,
-          100
-        ],
-        "parameters": {
-          "name": "Extract Log Id",
-          "typeVersion": 1,
-          "position": [
-            100,
-            100
-          ],
-          "parameters": {
-            "input": "{{ $json }}",
-            "output": "{{ $json.id }}",
-            "operation": "transform_data"
-          }
-        }
+        "input": "{{ $json }}",
+        "output": "{{ $json.id }}",
+        "operation": "transform_data"
       }
     },
     {
@@ -43,29 +27,13 @@
         100
       ],
       "parameters": {
-        "name": "Fetch User Details",
-        "typeVersion": 1,
-        "position": [
-          400,
-          100
-        ],
-        "parameters": {
-          "name": "Fetch User Details",
-          "typeVersion": 1,
-          "position": [
-            400,
-            100
-          ],
-          "parameters": {
-            "filter": {
-              "id": "{{ $json.userId }}",
-              "tenantId": "{{ $context.tenantId }}"
-            },
-            "output": "user",
-            "operation": "database_read",
-            "entity": "User"
-          }
-        }
+        "filter": {
+          "id": "{{ $json.userId }}",
+          "tenantId": "{{ $context.tenantId }}"
+        },
+        "output": "user",
+        "operation": "database_read",
+        "entity": "User"
       }
     },
     {
@@ -78,29 +46,13 @@
         100
       ],
       "parameters": {
-        "name": "Format Timestamp",
-        "typeVersion": 1,
-        "position": [
-          700,
-          100
-        ],
-        "parameters": {
-          "name": "Format Timestamp",
-          "typeVersion": 1,
-          "position": [
-            700,
-            100
-          ],
-          "parameters": {
-            "input": "{{ $json.timestamp }}",
-            "output": {
-              "iso": "{{ new Date($json.timestamp).toISOString() }}",
-              "formatted": "{{ new Date($json.timestamp).toLocaleString('en-US') }}",
-              "relative": "{{ Math.floor((Date.now() - new Date($json.timestamp).getTime()) / 1000) }} seconds ago"
-            },
-            "operation": "transform_data"
-          }
-        }
+        "input": "{{ $json.timestamp }}",
+        "output": {
+          "iso": "{{ new Date($json.timestamp).toISOString() }}",
+          "formatted": "{{ new Date($json.timestamp).toLocaleString('en-US') }}",
+          "relative": "{{ Math.floor((Date.now() - new Date($json.timestamp).getTime()) / 1000) }} seconds ago"
+        },
+        "operation": "transform_data"
       }
     },
     {
@@ -113,38 +65,22 @@
         300
       ],
       "parameters": {
-        "name": "Format Entry",
-        "typeVersion": 1,
-        "position": [
-          100,
-          300
-        ],
-        "parameters": {
-          "name": "Format Entry",
-          "typeVersion": 1,
-          "position": [
-            100,
-            300
-          ],
-          "parameters": {
-            "output": {
-              "id": "{{ $json.id }}",
-              "user": {
-                "id": "{{ $steps.fetch_user_details.output.id }}",
-                "email": "{{ $steps.fetch_user_details.output.email }}",
-                "displayName": "{{ $steps.fetch_user_details.output.displayName }}"
-              },
-              "action": "{{ $json.action }}",
-              "entity": "{{ $json.entity }}",
-              "entityId": "{{ $json.entityId }}",
-              "changes": "{{ $json.changes }}",
-              "timestamp": "{{ $steps.format_timestamp.output }}",
-              "ipAddress": "{{ $json.ipAddress }}",
-              "userAgent": "{{ $json.userAgent }}"
-            },
-            "operation": "transform_data"
-          }
-        }
+        "output": {
+          "id": "{{ $json.id }}",
+          "user": {
+            "id": "{{ $steps.fetch_user_details.output.id }}",
+            "email": "{{ $steps.fetch_user_details.output.email }}",
+            "displayName": "{{ $steps.fetch_user_details.output.displayName }}"
+          },
+          "action": "{{ $json.action }}",
+          "entity": "{{ $json.entity }}",
+          "entityId": "{{ $json.entityId }}",
+          "changes": "{{ $json.changes }}",
+          "timestamp": "{{ $steps.format_timestamp.output }}",
+          "ipAddress": "{{ $json.ipAddress }}",
+          "userAgent": "{{ $json.userAgent }}"
+        },
+        "operation": "transform_data"
       }
     },
     {
@@ -157,29 +93,58 @@
         300
       ],
       "parameters": {
-        "name": "Return Formatted",
-        "typeVersion": 1,
-        "position": [
-          400,
-          300
-        ],
-        "parameters": {
-          "name": "Return Formatted",
-          "typeVersion": 1,
-          "position": [
-            400,
-            300
-          ],
-          "parameters": {
-            "data": "{{ $steps.format_entry.output }}",
-            "action": "emit_event",
-            "event": "audit_formatted"
-          }
-        }
+        "data": "{{ $steps.format_entry.output }}",
+        "action": "emit_event",
+        "event": "audit_formatted"
       }
     }
   ],
-  "connections": {},
+  "connections": {
+    "extract_log_id": {
+      "main": [
+        [
+          {
+            "node": "fetch_user_details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fetch_user_details": {
+      "main": [
+        [
+          {
+            "node": "format_timestamp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "format_timestamp": {
+      "main": [
+        [
+          {
+            "node": "format_entry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "format_entry": {
+      "main": [
+        [
+          {
+            "node": "return_formatted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "staticData": {},
   "meta": {},
   "settings": {
@@ -188,5 +153,8 @@
     "saveExecutionProgress": true,
     "saveDataErrorExecution": "all",
     "saveDataSuccessExecution": "all"
-  }
+  },
+  "id": "workflow_formatting",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
 }

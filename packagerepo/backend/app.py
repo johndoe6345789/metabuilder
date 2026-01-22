@@ -21,6 +21,7 @@ import jsonschema
 import auth_sqlalchemy as auth_module
 import config_db_sqlalchemy as config_db
 from rocksdb_store import RocksDBStore
+from workflow_loader_v2 import create_workflow_loader_v2
 
 app = Flask(__name__)
 CORS(app)
@@ -37,6 +38,16 @@ except (FileNotFoundError, json.JSONDecodeError) as e:
 # Configuration is now loaded from database using SQLAlchemy
 # schema.json is only used once during initial database setup
 DB_CONFIG = config_db.get_repository_config()
+
+# Initialize workflow loader for n8n-based workflow execution
+# This enables validation, registry integration, and multi-tenant safety
+WORKFLOW_LOADER = None
+def get_workflow_loader():
+    """Get or create the workflow loader instance (lazy initialization)."""
+    global WORKFLOW_LOADER
+    if WORKFLOW_LOADER is None:
+        WORKFLOW_LOADER = create_workflow_loader_v2(app.config)
+    return WORKFLOW_LOADER
 
 # Configuration
 DATA_DIR = Path(os.environ.get("DATA_DIR", "/tmp/data"))
@@ -166,15 +177,15 @@ def validate_entity(entity_data: Dict[str, Any], entity_type: str = "artifact") 
     entity_config = get_entity_config(entity_type)
     if not entity_config:
         return
-    
+
     for constraint in entity_config.get('constraints', []):
         field = constraint['field']
         value = entity_data.get(field)
-        
+
         # Skip validation if field is optional and not present
         if constraint.get('when_present', False) and not value:
             continue
-        
+
         if value and 'regex' in constraint:
             import re
             if not re.match(constraint['regex'], value):
@@ -183,6 +194,16 @@ def validate_entity(entity_data: Dict[str, Any], entity_type: str = "artifact") 
                     400,
                     "VALIDATION_ERROR"
                 )
+
+
+def get_tenant_id() -> Optional[str]:
+    """Extract tenant ID from request headers for multi-tenant isolation.
+
+    Returns the X-Tenant-ID header value if present, for multi-tenant safety.
+    This is optional in the current PackageRepo implementation but recommended
+    for future multi-tenant support.
+    """
+    return request.headers.get('X-Tenant-ID')
 
 
 def compute_blob_digest(data: bytes) -> str:
@@ -666,6 +687,54 @@ def health():
 def get_schema():
     """Return the repository schema."""
     return jsonify(SCHEMA)
+
+
+@app.route("/v1/workflows/<workflow_name>/execute", methods=["POST"])
+def execute_workflow(workflow_name: str):
+    """Execute a workflow with validation and multi-tenant safety.
+
+    This endpoint demonstrates the new WorkflowLoaderV2 integration.
+    It provides:
+    - Automatic workflow validation against schema
+    - Registry-based node type validation
+    - Multi-tenant safety enforcement
+    - Detailed error diagnostics
+
+    Usage:
+        POST /v1/workflows/publish_artifact/execute
+        Headers:
+            Authorization: Bearer <token>
+            X-Tenant-ID: <optional-tenant-id>
+        Body: {} (workflow inputs, if any)
+    """
+    try:
+        # Auth check
+        principal = require_scopes(["write"])
+
+        # Get tenant ID from headers (optional)
+        tenant_id = get_tenant_id()
+
+        # Get workflow loader
+        loader = get_workflow_loader()
+        loader.tenant_id = tenant_id
+
+        # Execute workflow with validation
+        result = loader.execute_workflow_for_request(
+            workflow_name,
+            request,
+            additional_context={
+                "principal": principal,
+                "tenant_id": tenant_id
+            },
+            validate=True  # Enable schema validation
+        )
+
+        return result
+
+    except RepositoryError:
+        raise
+    except Exception as e:
+        raise RepositoryError(f"Workflow execution failed: {str(e)}", 500, "WORKFLOW_ERROR")
 
 
 @app.route("/rocksdb/stats", methods=["GET"])

@@ -12,36 +12,12 @@
         100
       ],
       "parameters": {
-        "name": "Create User Data",
-        "typeVersion": 1,
-        "position": [
-          100,
-          100
-        ],
-        "parameters": {
-          "name": "Create User Data",
-          "typeVersion": 1,
-          "position": [
-            100,
-            100
-          ],
-          "parameters": {
-            "name": "Create User Data",
-            "typeVersion": 1,
-            "position": [
-              0,
-              100
-            ],
-            "parameters": {
-              "key": "user",
-              "value": {
-                "name": "Alice",
-                "age": 25,
-                "score": 85,
-                "role": "developer"
-              }
-            }
-          }
+        "key": "user",
+        "value": {
+          "name": "Alice",
+          "age": 25,
+          "score": 85,
+          "role": "developer"
         }
       }
     },
@@ -55,32 +31,8 @@
         100
       ],
       "parameters": {
-        "name": "Extract Age",
-        "typeVersion": 1,
-        "position": [
-          400,
-          100
-        ],
-        "parameters": {
-          "name": "Extract Age",
-          "typeVersion": 1,
-          "position": [
-            400,
-            100
-          ],
-          "parameters": {
-            "name": "Extract Age",
-            "typeVersion": 1,
-            "position": [
-              300,
-              50
-            ],
-            "parameters": {
-              "object": "$user",
-              "key": "age"
-            }
-          }
-        }
+        "object": "$user",
+        "key": "age"
       }
     },
     {
@@ -93,32 +45,8 @@
         100
       ],
       "parameters": {
-        "name": "Check Adult",
-        "typeVersion": 1,
-        "position": [
-          700,
-          100
-        ],
-        "parameters": {
-          "name": "Check Adult",
-          "typeVersion": 1,
-          "position": [
-            700,
-            100
-          ],
-          "parameters": {
-            "name": "Check If Adult",
-            "typeVersion": 1,
-            "position": [
-              600,
-              100
-            ],
-            "parameters": {
-              "a": "$age",
-              "b": 18
-            }
-          }
-        }
+        "a": "$age",
+        "b": 18
       }
     },
     {
@@ -131,35 +59,11 @@
         300
       ],
       "parameters": {
-        "name": "Format Report",
-        "typeVersion": 1,
-        "position": [
-          100,
-          300
-        ],
-        "parameters": {
-          "name": "Format Report",
-          "typeVersion": 1,
-          "position": [
-            100,
-            300
-          ],
-          "parameters": {
-            "name": "Format Final Report",
-            "typeVersion": 1,
-            "position": [
-              900,
-              100
-            ],
-            "parameters": {
-              "template": "User: {name}, Age: {age}, Adult: {is_adult}",
-              "variables": {
-                "name": "Alice",
-                "age": "$age",
-                "is_adult": "$is_adult"
-              }
-            }
-          }
+        "template": "User: {name}, Age: {age}, Adult: {is_adult}",
+        "variables": {
+          "name": "Alice",
+          "age": "$age",
+          "is_adult": "$is_adult"
         }
       }
     }

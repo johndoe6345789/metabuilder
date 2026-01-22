@@ -12,17 +12,9 @@
         100
       ],
       "parameters": {
-        "name": "Validate Context",
-        "typeVersion": 1,
-        "position": [
-          100,
-          100
-        ],
-        "parameters": {
-          "input": "{{ $context.tenantId }}",
-          "operation": "validate",
-          "validator": "required"
-        }
+        "input": "{{ $context.tenantId }}",
+        "operation": "validate",
+        "validator": "required"
       }
     },
     {
@@ -35,19 +27,11 @@
         100
       ],
       "parameters": {
-        "name": "Extract Pagination",
-        "typeVersion": 1,
-        "position": [
-          400,
-          100
-        ],
-        "parameters": {
-          "output": {
-            "limit": "{{ Math.min($json.limit || 50, 500) }}",
-            "offset": "{{ ($json.page || 1 - 1) * ($json.limit || 50) }}"
-          },
-          "operation": "transform_data"
-        }
+        "output": {
+          "limit": "{{ Math.min($json.limit || 50, 500) }}",
+          "offset": "{{ ($json.page || 1 - 1) * ($json.limit || 50) }}"
+        },
+        "operation": "transform_data"
       }
     },
     {
@@ -60,24 +44,16 @@
         100
       ],
       "parameters": {
-        "name": "Fetch Scripts",
-        "typeVersion": 1,
-        "position": [
-          700,
-          100
-        ],
-        "parameters": {
-          "filter": {
-            "tenantId": "{{ $context.tenantId }}"
-          },
-          "sort": {
-            "createdAt": -1
-          },
-          "limit": "{{ $steps.extract_pagination.output.limit }}",
-          "offset": "{{ $steps.extract_pagination.output.offset }}",
-          "operation": "database_read",
-          "entity": "JSONScript"
-        }
+        "filter": {
+          "tenantId": "{{ $context.tenantId }}"
+        },
+        "sort": {
+          "createdAt": -1
+        },
+        "limit": "{{ $steps.extract_pagination.output.limit }}",
+        "offset": "{{ $steps.extract_pagination.output.offset }}",
+        "operation": "database_read",
+        "entity": "JSONScript"
       }
     },
     {
@@ -90,19 +66,11 @@
         300
       ],
       "parameters": {
-        "name": "Count Total",
-        "typeVersion": 1,
-        "position": [
-          100,
-          300
-        ],
-        "parameters": {
-          "filter": {
-            "tenantId": "{{ $context.tenantId }}"
-          },
-          "operation": "database_count",
-          "entity": "JSONScript"
-        }
+        "filter": {
+          "tenantId": "{{ $context.tenantId }}"
+        },
+        "operation": "database_count",
+        "entity": "JSONScript"
       }
     },
     {
@@ -115,22 +83,14 @@
         300
       ],
       "parameters": {
-        "name": "Format Response",
-        "typeVersion": 1,
-        "position": [
-          400,
-          300
-        ],
-        "parameters": {
-          "output": {
-            "scripts": "{{ $steps.fetch_scripts.output }}",
-            "pagination": {
-              "total": "{{ $steps.count_total.output }}",
-              "limit": "{{ $steps.extract_pagination.output.limit }}"
-            }
-          },
-          "operation": "transform_data"
-        }
+        "output": {
+          "scripts": "{{ $steps.fetch_scripts.output }}",
+          "pagination": {
+            "total": "{{ $steps.count_total.output }}",
+            "limit": "{{ $steps.extract_pagination.output.limit }}"
+          }
+        },
+        "operation": "transform_data"
       }
     },
     {
@@ -143,21 +103,69 @@
         300
       ],
       "parameters": {
-        "name": "Return Success",
-        "typeVersion": 1,
-        "position": [
-          700,
-          300
-        ],
-        "parameters": {
-          "action": "http_response",
-          "status": 200,
-          "body": "{{ $steps.format_response.output }}"
-        }
+        "action": "http_response",
+        "status": 200,
+        "body": "{{ $steps.format_response.output }}"
       }
     }
   ],
-  "connections": {},
+  "connections": {
+    "validate_context": {
+      "main": [
+        [
+          {
+            "node": "extract_pagination",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "extract_pagination": {
+      "main": [
+        [
+          {
+            "node": "fetch_scripts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fetch_scripts": {
+      "main": [
+        [
+          {
+            "node": "count_total",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "count_total": {
+      "main": [
+        [
+          {
+            "node": "format_response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "format_response": {
+      "main": [
+        [
+          {
+            "node": "return_success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "staticData": {},
   "meta": {},
   "settings": {
@@ -166,5 +174,8 @@
     "saveExecutionProgress": true,
     "saveDataErrorExecution": "all",
     "saveDataSuccessExecution": "all"
-  }
+  },
+  "id": "workflow_list_scripts",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
 }

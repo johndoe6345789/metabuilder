@@ -12,26 +12,10 @@
         100
       ],
       "parameters": {
-        "name": "Validate Context",
-        "typeVersion": 1,
-        "position": [
-          100,
-          100
-        ],
-        "parameters": {
-          "name": "Validate Context",
-          "typeVersion": 1,
-          "position": [
-            100,
-            100
-          ],
-          "parameters": {
-            "input": "{{ $context.tenantId }}",
-            "operation": "validate",
-            "validator": "required",
-            "errorMessage": "tenantId is required for multi-tenant safety"
-          }
-        }
+        "input": "{{ $context.tenantId }}",
+        "operation": "validate",
+        "validator": "required",
+        "errorMessage": "tenantId is required for multi-tenant safety"
       }
     },
     {
@@ -44,28 +28,12 @@
         100
       ],
       "parameters": {
-        "name": "Extract Pagination",
-        "typeVersion": 1,
-        "position": [
-          400,
-          100
-        ],
-        "parameters": {
-          "name": "Extract Pagination",
-          "typeVersion": 1,
-          "position": [
-            400,
-            100
-          ],
-          "parameters": {
-            "input": "{{ $json }}",
-            "output": {
-              "limit": "{{ Math.min($json.limit || 100, 500) }}",
-              "offset": "{{ ($json.page || 1 - 1) * ($json.limit || 100) }}"
-            },
-            "operation": "transform_data"
-          }
-        }
+        "input": "{{ $json }}",
+        "output": {
+          "limit": "{{ Math.min($json.limit || 100, 500) }}",
+          "offset": "{{ ($json.page || 1 - 1) * ($json.limit || 100) }}"
+        },
+        "operation": "transform_data"
       }
     },
     {
@@ -78,33 +46,17 @@
         100
       ],
       "parameters": {
-        "name": "Fetch Logs",
-        "typeVersion": 1,
-        "position": [
-          700,
-          100
-        ],
-        "parameters": {
-          "name": "Fetch Logs",
-          "typeVersion": 1,
-          "position": [
-            700,
-            100
-          ],
-          "parameters": {
-            "filter": {
-              "tenantId": "{{ $context.tenantId }}"
-            },
-            "sort": {
-              "timestamp": -1
-            },
-            "limit": "{{ $steps.extract_pagination.output.limit }}",
-            "offset": "{{ $steps.extract_pagination.output.offset }}",
-            "output": "logs",
-            "operation": "database_read",
-            "entity": "AuditLog"
-          }
-        }
+        "filter": {
+          "tenantId": "{{ $context.tenantId }}"
+        },
+        "sort": {
+          "timestamp": -1
+        },
+        "limit": "{{ $steps.extract_pagination.output.limit }}",
+        "offset": "{{ $steps.extract_pagination.output.offset }}",
+        "output": "logs",
+        "operation": "database_read",
+        "entity": "AuditLog"
       }
     },
     {
@@ -117,28 +69,12 @@
         300
       ],
       "parameters": {
-        "name": "Fetch Count",
-        "typeVersion": 1,
-        "position": [
-          100,
-          300
-        ],
-        "parameters": {
-          "name": "Fetch Count",
-          "typeVersion": 1,
-          "position": [
-            100,
-            300
-          ],
-          "parameters": {
-            "filter": {
-              "tenantId": "{{ $context.tenantId }}"
-            },
-            "output": "totalCount",
-            "operation": "database_count",
-            "entity": "AuditLog"
-          }
-        }
+        "filter": {
+          "tenantId": "{{ $context.tenantId }}"
+        },
+        "output": "totalCount",
+        "operation": "database_count",
+        "entity": "AuditLog"
       }
     },
     {
@@ -151,33 +87,17 @@
         300
       ],
       "parameters": {
-        "name": "Format Response",
-        "typeVersion": 1,
-        "position": [
-          400,
-          300
-        ],
-        "parameters": {
-          "name": "Format Response",
-          "typeVersion": 1,
-          "position": [
-            400,
-            300
-          ],
-          "parameters": {
-            "input": "{{ $steps.fetch_logs.output }}",
-            "output": {
-              "logs": "{{ $steps.fetch_logs.output }}",
-              "pagination": {
-                "total": "{{ $steps.fetch_count.output }}",
-                "limit": "{{ $steps.extract_pagination.output.limit }}",
-                "offset": "{{ $steps.extract_pagination.output.offset }}",
-                "hasMore": "{{ $steps.fetch_count.output > ($steps.extract_pagination.output.offset + $steps.extract_pagination.output.limit) }}"
-              }
-            },
-            "operation": "transform_data"
+        "input": "{{ $steps.fetch_logs.output }}",
+        "output": {
+          "logs": "{{ $steps.fetch_logs.output }}",
+          "pagination": {
+            "total": "{{ $steps.fetch_count.output }}",
+            "limit": "{{ $steps.extract_pagination.output.limit }}",
+            "offset": "{{ $steps.extract_pagination.output.offset }}",
+            "hasMore": "{{ $steps.fetch_count.output > ($steps.extract_pagination.output.offset + $steps.extract_pagination.output.limit) }}"
           }
-        }
+        },
+        "operation": "transform_data"
       }
     },
     {
@@ -190,29 +110,69 @@
         300
       ],
       "parameters": {
-        "name": "Return Success",
-        "typeVersion": 1,
-        "position": [
-          700,
-          300
-        ],
-        "parameters": {
-          "name": "Return Success",
-          "typeVersion": 1,
-          "position": [
-            700,
-            300
-          ],
-          "parameters": {
-            "action": "http_response",
-            "status": 200,
-            "body": "{{ $steps.format_response.output }}"
-          }
-        }
+        "action": "http_response",
+        "status": 200,
+        "body": "{{ $steps.format_response.output }}"
       }
     }
   ],
-  "connections": {},
+  "connections": {
+    "validate_context": {
+      "main": [
+        [
+          {
+            "node": "extract_pagination",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "extract_pagination": {
+      "main": [
+        [
+          {
+            "node": "fetch_logs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fetch_logs": {
+      "main": [
+        [
+          {
+            "node": "fetch_count",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fetch_count": {
+      "main": [
+        [
+          {
+            "node": "format_response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "format_response": {
+      "main": [
+        [
+          {
+            "node": "return_success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "staticData": {},
   "meta": {},
   "settings": {
@@ -221,5 +181,8 @@
     "saveExecutionProgress": true,
     "saveDataErrorExecution": "all",
     "saveDataSuccessExecution": "all"
-  }
+  },
+  "id": "workflow_init",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
 }

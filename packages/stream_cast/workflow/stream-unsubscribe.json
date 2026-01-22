@@ -12,25 +12,9 @@
         100
       ],
       "parameters": {
-        "name": "Validate Context",
-        "typeVersion": 1,
-        "position": [
-          100,
-          100
-        ],
-        "parameters": {
-          "name": "Validate Context",
-          "typeVersion": 1,
-          "position": [
-            100,
-            100
-          ],
-          "parameters": {
-            "input": "{{ $context.user.id }}",
-            "operation": "validate",
-            "validator": "required"
-          }
-        }
+        "input": "{{ $context.user.id }}",
+        "operation": "validate",
+        "validator": "required"
       }
     },
     {
@@ -43,29 +27,13 @@
         100
       ],
       "parameters": {
-        "name": "Delete Subscription",
-        "typeVersion": 1,
-        "position": [
-          400,
-          100
-        ],
-        "parameters": {
-          "name": "Delete Subscription",
-          "typeVersion": 1,
-          "position": [
-            400,
-            100
-          ],
-          "parameters": {
-            "filter": {
-              "channelId": "{{ $json.channelId }}",
-              "userId": "{{ $context.user.id }}",
-              "tenantId": "{{ $context.tenantId }}"
-            },
-            "operation": "database_delete",
-            "entity": "StreamSubscription"
-          }
-        }
+        "filter": {
+          "channelId": "{{ $json.channelId }}",
+          "userId": "{{ $context.user.id }}",
+          "tenantId": "{{ $context.tenantId }}"
+        },
+        "operation": "database_delete",
+        "entity": "StreamSubscription"
       }
     },
     {
@@ -78,31 +46,38 @@
         100
       ],
       "parameters": {
-        "name": "Return Success",
-        "typeVersion": 1,
-        "position": [
-          700,
-          100
-        ],
-        "parameters": {
-          "name": "Return Success",
-          "typeVersion": 1,
-          "position": [
-            700,
-            100
-          ],
-          "parameters": {
-            "action": "http_response",
-            "status": 200,
-            "body": {
-              "message": "Unsubscribed successfully"
-            }
-          }
+        "action": "http_response",
+        "status": 200,
+        "body": {
+          "message": "Unsubscribed successfully"
         }
       }
     }
   ],
-  "connections": {},
+  "connections": {
+    "validate_context": {
+      "main": [
+        [
+          {
+            "node": "delete_subscription",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "delete_subscription": {
+      "main": [
+        [
+          {
+            "node": "return_success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "staticData": {},
   "meta": {},
   "settings": {
@@ -111,5 +86,8 @@
     "saveExecutionProgress": true,
     "saveDataErrorExecution": "all",
     "saveDataSuccessExecution": "all"
-  }
+  },
+  "id": "workflow_stream_unsubscribe",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
 }

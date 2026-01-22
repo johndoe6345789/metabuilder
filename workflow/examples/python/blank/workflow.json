@@ -11,31 +11,7 @@
         100,
         100
       ],
-      "parameters": {
-        "name": "Start",
-        "typeVersion": 1,
-        "position": [
-          100,
-          100
-        ],
-        "parameters": {
-          "name": "Start",
-          "typeVersion": 1,
-          "position": [
-            100,
-            100
-          ],
-          "parameters": {
-            "name": "Start",
-            "typeVersion": 1,
-            "position": [
-              0,
-              0
-            ],
-            "parameters": {}
-          }
-        }
-      }
+      "parameters": {}
     }
   ],
   "connections": {},

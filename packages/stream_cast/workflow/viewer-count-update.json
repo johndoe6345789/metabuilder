@@ -12,27 +12,11 @@
         100
       ],
       "parameters": {
-        "name": "Fetch Active Streams",
-        "typeVersion": 1,
-        "position": [
-          100,
-          100
-        ],
-        "parameters": {
-          "name": "Fetch Active Streams",
-          "typeVersion": 1,
-          "position": [
-            100,
-            100
-          ],
-          "parameters": {
-            "filter": {
-              "isLive": true
-            },
-            "operation": "database_read",
-            "entity": "StreamChannel"
-          }
-        }
+        "filter": {
+          "isLive": true
+        },
+        "operation": "database_read",
+        "entity": "StreamChannel"
       }
     },
     {
@@ -45,45 +29,29 @@
         100
       ],
       "parameters": {
-        "name": "Update Viewer Counts",
-        "typeVersion": 1,
-        "position": [
-          400,
-          100
-        ],
-        "parameters": {
-          "name": "Update Viewer Counts",
-          "typeVersion": 1,
-          "position": [
-            400,
-            100
-          ],
-          "parameters": {
-            "operation": "parallel",
-            "tasks": [
-              {
-                "id": "count_viewers",
-                "op": "database_count",
-                "entity": "StreamSubscription",
-                "params": {
-                  "filter": {
-                    "channelId": "{{ $steps.fetch_active_streams.output.id }}"
-                  }
-                }
-              },
-              {
-                "id": "fetch_channel_stats",
-                "op": "database_read",
-                "entity": "StreamChannel",
-                "params": {
-                  "filter": {
-                    "id": "{{ $steps.fetch_active_streams.output.id }}"
-                  }
-                }
+        "operation": "parallel",
+        "tasks": [
+          {
+            "id": "count_viewers",
+            "op": "database_count",
+            "entity": "StreamSubscription",
+            "params": {
+              "filter": {
+                "channelId": "{{ $steps.fetch_active_streams.output.id }}"
               }
-            ]
+            }
+          },
+          {
+            "id": "fetch_channel_stats",
+            "op": "database_read",
+            "entity": "StreamChannel",
+            "params": {
+              "filter": {
+                "id": "{{ $steps.fetch_active_streams.output.id }}"
+              }
+            }
           }
-        }
+        ]
       }
     },
     {
@@ -96,33 +64,40 @@
         100
       ],
       "parameters": {
-        "name": "Broadcast Counts",
-        "typeVersion": 1,
-        "position": [
-          700,
-          100
-        ],
-        "parameters": {
-          "name": "Broadcast Counts",
-          "typeVersion": 1,
-          "position": [
-            700,
-            100
-          ],
-          "parameters": {
-            "data": {
-              "viewerCount": "{{ $steps.update_viewer_counts.tasks.count_viewers.output }}",
-              "liveTime": "{{ new Date() - new Date($steps.update_viewer_counts.tasks.fetch_channel_stats.output.startedAt) }}"
-            },
-            "action": "emit_event",
-            "event": "viewer_count_updated",
-            "channel": "{{ 'stream:' + $steps.fetch_active_streams.output.id }}"
-          }
-        }
+        "data": {
+          "viewerCount": "{{ $steps.update_viewer_counts.tasks.count_viewers.output }}",
+          "liveTime": "{{ new Date() - new Date($steps.update_viewer_counts.tasks.fetch_channel_stats.output.startedAt) }}"
+        },
+        "action": "emit_event",
+        "event": "viewer_count_updated",
+        "channel": "{{ 'stream:' + $steps.fetch_active_streams.output.id }}"
       }
     }
   ],
-  "connections": {},
+  "connections": {
+    "fetch_active_streams": {
+      "main": [
+        [
+          {
+            "node": "update_viewer_counts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update_viewer_counts": {
+      "main": [
+        [
+          {
+            "node": "broadcast_counts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "staticData": {},
   "meta": {},
   "settings": {
@@ -131,5 +106,8 @@
     "saveExecutionProgress": true,
     "saveDataErrorExecution": "all",
     "saveDataSuccessExecution": "all"
-  }
+  },
+  "id": "workflow_viewer_count_update",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
 }

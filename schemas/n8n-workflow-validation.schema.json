@@ -1,0 +1,210 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/schemas/n8n-workflow-validation.schema.json",
+  "title": "N8N Workflow Validation Rules",
+  "description": "Extended validation rules for n8n workflows to ensure proper execution and multi-tenant safety",
+  "$defs": {
+    "parameterValidationRules": {
+      "description": "Validation rules for node parameters",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "preventObjectSerialization": {
+          "description": "Prevent [object Object] serialization by requiring explicit string conversion",
+          "type": "boolean",
+          "default": true
+        },
+        "validateConnectionTargets": {
+          "description": "Validate that connection targets reference valid node names in the workflow",
+          "type": "boolean",
+          "default": true
+        },
+        "flattenParameterStructure": {
+          "description": "Ensure parameters are not nested with duplicate node attributes (name, typeVersion, position)",
+          "type": "boolean",
+          "default": true
+        },
+        "requireExplicitTypes": {
+          "description": "Require explicit typing for parameter values instead of allowing implicit coercion",
+          "type": "boolean",
+          "default": false
+        },
+        "preventNestedParameters": {
+          "description": "Prevent recursive parameter nesting (max depth: 2)",
+          "type": "boolean",
+          "default": true,
+          "maxNestingDepth": 2
+        }
+      }
+    },
+    "connectionValidationRules": {
+      "description": "Validation rules for workflow connections",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "requireValidNodeNames": {
+          "description": "Connections must reference existing node names (not IDs)",
+          "type": "boolean",
+          "default": true
+        },
+        "preventCircularConnections": {
+          "description": "Prevent circular connection patterns that cause infinite loops",
+          "type": "boolean",
+          "default": true
+        },
+        "validateConnectionFormat": {
+          "description": "Enforce n8n adjacency map format (nodeType -> outputType -> outputIndex -> targets)",
+          "type": "boolean",
+          "default": true
+        },
+        "requireValidOutputTypes": {
+          "description": "Connection output types must be 'main' or 'error'",
+          "type": "boolean",
+          "default": true
+        },
+        "validateOutputIndices": {
+          "description": "Output indices must be non-negative integers",
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "multiTenantValidationRules": {
+      "description": "Validation rules for multi-tenant safety",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "requireTenantId": {
+          "description": "Workflow execution must include tenantId for access control",
+          "type": "boolean",
+          "default": true
+        },
+        "validateCredentialIsolation": {
+          "description": "Credentials must be scoped to tenant (no cross-tenant credential access)",
+          "type": "boolean",
+          "default": true
+        },
+        "enforceDataIsolation": {
+          "description": "Workflow variables and execution data must be scoped to tenant",
+          "type": "boolean",
+          "default": true
+        },
+        "validateVariableScope": {
+          "description": "Global-scope variables must be explicitly approved or disabled",
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "variableValidationRules": {
+      "description": "Validation rules for workflow variables",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "requireVariableTypes": {
+          "description": "Variables must have explicit type declarations",
+          "type": "boolean",
+          "default": true
+        },
+        "validateDefaultValues": {
+          "description": "Default values must match the declared variable type",
+          "type": "boolean",
+          "default": true
+        },
+        "preventSecretExposure": {
+          "description": "Variables marked as 'secret' type cannot be logged or exposed in outputs",
+          "type": "boolean",
+          "default": true
+        },
+        "validateVariableNames": {
+          "description": "Variable names must follow naming convention: [a-zA-Z_][a-zA-Z0-9_]*",
+          "type": "boolean",
+          "default": true
+        },
+        "preventCircularReferences": {
+          "description": "Variables cannot reference other variables in a circular pattern",
+          "type": "boolean",
+          "default": true
+        },
+        "validateRegexPatterns": {
+          "description": "Regex patterns in variable validation must not cause ReDoS attacks",
+          "type": "boolean",
+          "default": true,
+          "maxPatternComplexity": 100
+        }
+      }
+    },
+    "executionValidationRules": {
+      "description": "Validation rules for execution behavior",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "requireExecutionTimeout": {
+          "description": "All nodes must have reasonable execution timeouts (1s - 1h)",
+          "type": "boolean",
+          "default": true,
+          "minTimeout": 1000,
+          "maxTimeout": 3600000
+        },
+        "validateRetryPolicy": {
+          "description": "Retry policies must have reasonable bounds",
+          "type": "boolean",
+          "default": true,
+          "maxRetries": 10
+        },
+        "preventInfiniteLoops": {
+          "description": "Iterator nodes must have exit conditions",
+          "type": "boolean",
+          "default": true
+        },
+        "validateResourceLimits": {
+          "description": "Enforce memory and CPU limits for execution",
+          "type": "boolean",
+          "default": true,
+          "maxMemoryMb": 2048,
+          "maxConcurrentNodes": 100
+        }
+      }
+    },
+    "nodeTypeValidationRules": {
+      "description": "Validation rules for node type definitions",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "requireValidNodeTypes": {
+          "description": "Node types must be registered in the node registry",
+          "type": "boolean",
+          "default": true
+        },
+        "validateTypeVersion": {
+          "description": "Node typeVersion must match registered version",
+          "type": "boolean",
+          "default": true
+        },
+        "requireNodePositioning": {
+          "description": "All nodes must have valid position coordinates [x, y]",
+          "type": "boolean",
+          "default": true
+        },
+        "validateNodeProperties": {
+          "description": "Node parameters must match the type definition schema",
+          "type": "boolean",
+          "default": true
+        },
+        "preventDuplicateNodeNames": {
+          "description": "Each node must have a unique name within the workflow",
+          "type": "boolean",
+          "default": true
+        }
+      }
+    }
+  },
+  "validationRuleSet": {
+    "parameters": { "$ref": "#/$defs/parameterValidationRules" },
+    "connections": { "$ref": "#/$defs/connectionValidationRules" },
+    "multiTenant": { "$ref": "#/$defs/multiTenantValidationRules" },
+    "variables": { "$ref": "#/$defs/variableValidationRules" },
+    "execution": { "$ref": "#/$defs/executionValidationRules" },
+    "nodeTypes": { "$ref": "#/$defs/nodeTypeValidationRules" }
+  }
+}

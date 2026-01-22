@@ -12,25 +12,9 @@
         100
       ],
       "parameters": {
-        "name": "Validate Context",
-        "typeVersion": 1,
-        "position": [
-          100,
-          100
-        ],
-        "parameters": {
-          "name": "Validate Context",
-          "typeVersion": 1,
-          "position": [
-            100,
-            100
-          ],
-          "parameters": {
-            "input": "{{ $context.user.id }}",
-            "operation": "validate",
-            "validator": "required"
-          }
-        }
+        "input": "{{ $context.user.id }}",
+        "operation": "validate",
+        "validator": "required"
       }
     },
     {
@@ -43,27 +27,11 @@
         100
       ],
       "parameters": {
-        "name": "Extract Pagination",
-        "typeVersion": 1,
-        "position": [
-          400,
-          100
-        ],
-        "parameters": {
-          "name": "Extract Pagination",
-          "typeVersion": 1,
-          "position": [
-            400,
-            100
-          ],
-          "parameters": {
-            "output": {
-              "limit": "{{ Math.min($json.limit || 50, 200) }}",
-              "offset": "{{ ($json.page || 1 - 1) * ($json.limit || 50) }}"
-            },
-            "operation": "transform_data"
-          }
-        }
+        "output": {
+          "limit": "{{ Math.min($json.limit || 50, 200) }}",
+          "offset": "{{ ($json.page || 1 - 1) * ($json.limit || 50) }}"
+        },
+        "operation": "transform_data"
       }
     },
     {
@@ -76,34 +44,18 @@
         100
       ],
       "parameters": {
-        "name": "Fetch Unread",
-        "typeVersion": 1,
-        "position": [
-          700,
-          100
-        ],
-        "parameters": {
-          "name": "Fetch Unread",
-          "typeVersion": 1,
-          "position": [
-            700,
-            100
-          ],
-          "parameters": {
-            "filter": {
-              "userId": "{{ $context.user.id }}",
-              "tenantId": "{{ $context.tenantId }}",
-              "isRead": false
-            },
-            "sort": {
-              "createdAt": -1
-            },
-            "limit": "{{ $steps.extract_pagination.output.limit }}",
-            "offset": "{{ $steps.extract_pagination.output.offset }}",
-            "operation": "database_read",
-            "entity": "Notification"
-          }
-        }
+        "filter": {
+          "userId": "{{ $context.user.id }}",
+          "tenantId": "{{ $context.tenantId }}",
+          "isRead": false
+        },
+        "sort": {
+          "createdAt": -1
+        },
+        "limit": "{{ $steps.extract_pagination.output.limit }}",
+        "offset": "{{ $steps.extract_pagination.output.offset }}",
+        "operation": "database_read",
+        "entity": "Notification"
       }
     },
     {
@@ -116,29 +68,13 @@
         300
       ],
       "parameters": {
-        "name": "Count Unread",
-        "typeVersion": 1,
-        "position": [
-          100,
-          300
-        ],
-        "parameters": {
-          "name": "Count Unread",
-          "typeVersion": 1,
-          "position": [
-            100,
-            300
-          ],
-          "parameters": {
-            "filter": {
-              "userId": "{{ $context.user.id }}",
-              "tenantId": "{{ $context.tenantId }}",
-              "isRead": false
-            },
-            "operation": "database_count",
-            "entity": "Notification"
-          }
-        }
+        "filter": {
+          "userId": "{{ $context.user.id }}",
+          "tenantId": "{{ $context.tenantId }}",
+          "isRead": false
+        },
+        "operation": "database_count",
+        "entity": "Notification"
       }
     },
     {
@@ -151,32 +87,16 @@
         300
       ],
       "parameters": {
-        "name": "Format Response",
-        "typeVersion": 1,
-        "position": [
-          400,
-          300
-        ],
-        "parameters": {
-          "name": "Format Response",
-          "typeVersion": 1,
-          "position": [
-            400,
-            300
-          ],
-          "parameters": {
-            "output": {
-              "notifications": "{{ $steps.fetch_unread.output }}",
-              "unreadCount": "{{ $steps.count_unread.output }}",
-              "pagination": {
-                "page": "{{ $json.page || 1 }}",
-                "limit": "{{ $steps.extract_pagination.output.limit }}",
-                "hasMore": "{{ $steps.count_unread.output > ($steps.extract_pagination.output.offset + $steps.extract_pagination.output.limit) }}"
-              }
-            },
-            "operation": "transform_data"
+        "output": {
+          "notifications": "{{ $steps.fetch_unread.output }}",
+          "unreadCount": "{{ $steps.count_unread.output }}",
+          "pagination": {
+            "page": "{{ $json.page || 1 }}",
+            "limit": "{{ $steps.extract_pagination.output.limit }}",
+            "hasMore": "{{ $steps.count_unread.output > ($steps.extract_pagination.output.offset + $steps.extract_pagination.output.limit) }}"
           }
-        }
+        },
+        "operation": "transform_data"
       }
     },
     {
@@ -189,29 +109,69 @@
         300
       ],
       "parameters": {
-        "name": "Return Success",
-        "typeVersion": 1,
-        "position": [
-          700,
-          300
-        ],
-        "parameters": {
-          "name": "Return Success",
-          "typeVersion": 1,
-          "position": [
-            700,
-            300
-          ],
-          "parameters": {
-            "action": "http_response",
-            "status": 200,
-            "body": "{{ $steps.format_response.output }}"
-          }
-        }
+        "action": "http_response",
+        "status": 200,
+        "body": "{{ $steps.format_response.output }}"
       }
     }
   ],
-  "connections": {},
+  "connections": {
+    "validate_context": {
+      "main": [
+        [
+          {
+            "node": "extract_pagination",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "extract_pagination": {
+      "main": [
+        [
+          {
+            "node": "fetch_unread",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fetch_unread": {
+      "main": [
+        [
+          {
+            "node": "count_unread",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "count_unread": {
+      "main": [
+        [
+          {
+            "node": "format_response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "format_response": {
+      "main": [
+        [
+          {
+            "node": "return_success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "staticData": {},
   "meta": {},
   "settings": {
@@ -220,5 +180,8 @@
     "saveExecutionProgress": true,
     "saveDataErrorExecution": "all",
     "saveDataSuccessExecution": "all"
-  }
+  },
+  "id": "workflow_list_unread",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
 }

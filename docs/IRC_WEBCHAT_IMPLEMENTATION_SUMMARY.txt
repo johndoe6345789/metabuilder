@@ -1,0 +1,328 @@
+================================================================================
+IRC WEBCHAT PACKAGE - WORKFLOW SCHEMA UPDATE PLAN
+IMPLEMENTATION SUMMARY
+================================================================================
+
+DATE CREATED: 2026-01-22
+SCOPE: 4 Workflows in packages/irc_webchat/workflow/
+COMPLEXITY: Low-Medium (2.5 hours estimated effort)
+STATUS: Ready for Implementation
+
+================================================================================
+DELIVERABLES (3 Documents Created)
+================================================================================
+
+1. IRC_WEBCHAT_WORKFLOW_UPDATE_PLAN.md (COMPREHENSIVE)
+   - Executive summary
+   - Current state analysis (7 gaps identified)
+   - 7 required changes with detailed explanations
+   - Complete updated JSON examples for all 4 workflows
+   - 3-part validation checklist (Root, Node, Connection levels)
+   - Testing & validation section
+   - ~600 lines, ~25 KB
+
+2. IRC_WEBCHAT_QUICK_REFERENCE.md (QUICK LOOKUP)
+   - 1-page overview of all 4 workflows
+   - What each workflow does (in 2-3 sentences)
+   - Node flows (ASCII diagrams)
+   - Key points per workflow
+   - Common mistakes to avoid
+   - Testing commands
+   - ~200 lines, ~8 KB
+
+3. IRC_WEBCHAT_SCHEMA_UPDATES.md (MATRIX & MAPPING)
+   - Field update summary table
+   - Workflow-specific updates (ID + metadata per workflow)
+   - Node-by-node update guide
+   - Category enum values and mapping
+   - Version strategy
+   - Copy-paste templates
+   - ~350 lines, ~12 KB
+
+================================================================================
+WORKFLOWS AFFECTED (4 Total)
+================================================================================
+
+1. send-message.json
+   File: packages/irc_webchat/workflow/send-message.json
+   Nodes: 5 (validate → slowmode → input validation → create → emit)
+   ID: wf_irc_send_message_7a8f9e1b
+   Category: notification
+   Multi-tenant: ✓ (uses tenantId in create_message)
+
+2. handle-command.json
+   File: packages/irc_webchat/workflow/handle-command.json
+   Nodes: 7 (validate → parse → 5x command handlers)
+   ID: wf_irc_handle_command_b2c3d4e5
+   Category: business-logic
+   Multi-tenant: ✓ (context-based)
+
+3. join-channel.json
+   File: packages/irc_webchat/workflow/join-channel.json
+   Nodes: 5 (validate → fetch → check mode → create → emit)
+   ID: wf_irc_join_channel_c3d4e5f6
+   Category: business-logic
+   Multi-tenant: ✓ (fetch + create use tenantId)
+
+4. list-channels.json
+   File: packages/irc_webchat/workflow/list-channels.json
+   Nodes: 5 (validate → extract → filter → fetch → response)
+   ID: wf_irc_list_channels_d4e5f6g7
+   Category: data-transformation
+   Multi-tenant: ✓ (filter uses tenantId)
+
+================================================================================
+KEY UPDATES REQUIRED (Applies to All 4 Workflows)
+================================================================================
+
+FIELD ADDITIONS:
+✓ id           - Unique workflow identifier (UUID-like string)
+✓ versionId    - Semantic version (v1.0.0 for all)
+✓ tenantId     - Multi-tenant scope (at root level)
+✓ description  - 50-200 word explanation
+✓ category     - Enum: notification|business-logic|data-transformation
+✓ tags         - 3-5 relevant keywords per workflow
+✓ createdAt    - ISO-8601 timestamp
+✓ updatedAt    - ISO-8601 timestamp
+✓ createdBy    - "system" for package workflows
+✓ locked       - false (allow editing)
+✓ meta         - Package, endpoint, auth info
+
+NODE UPDATES:
+✓ notes field  - 20-150 word description per node
+               - Explains what node does and why
+               - Available as canvas tooltip
+
+NO CHANGES:
+• name         - Keep existing human-readable names
+• active       - Keep as false (inactive for package workflows)
+• nodes array  - Structure unchanged
+• connections - N8N format already correct
+• parameters   - Already use {{ }} syntax
+
+================================================================================
+VALIDATION APPROACH
+================================================================================
+
+SCHEMA COMPLIANCE:
+✓ n8n-workflow.schema.json
+✓ metabuilder-workflow-v3.schema.json
+
+MULTI-TENANT SAFETY:
+✓ Top-level tenantId field present
+✓ All database reads include tenantId filter
+✓ All database writes include tenantId in data
+✓ No cross-tenant data leaks possible
+
+NODE VALIDATION:
+✓ All nodes have: id, name, type, typeVersion, position, notes
+✓ All parameters type-checked
+✓ All expressions use {{ }} syntax
+✓ All database operations reference correct entities
+
+CONNECTION VALIDATION:
+✓ No circular references (DAG property maintained)
+✓ All target nodes exist
+✓ Proper n8n adjacency format
+
+================================================================================
+IMPLEMENTATION STEPS (Per Workflow)
+================================================================================
+
+For EACH of the 4 workflows:
+
+Step 1: COPY & PASTE
+   → Use updated JSON example from IRC_WEBCHAT_WORKFLOW_UPDATE_PLAN.md
+   → Replace file content
+
+Step 2: CUSTOMIZE
+   → Review description for accuracy
+   → Update meta fields as needed
+   → Verify node notes are relevant
+
+Step 3: VALIDATE
+   → Run schema validation
+   → Check tenantId filtering
+   → Verify no circular connections
+
+Step 4: TEST
+   → Run unit tests
+   → Run E2E tests
+   → Check WebSocket events broadcast correctly
+
+Step 5: COMMIT
+   → Use message: feat(irc_webchat): upgrade {workflow} to N8N schema v3
+   → Reference IRC_WEBCHAT_WORKFLOW_UPDATE_PLAN.md in commit body
+
+Step 6: MERGE
+   → Get code review approval
+   → Merge to main branch
+
+ESTIMATED TIME PER WORKFLOW: 30-40 minutes
+TOTAL TIME FOR ALL 4: 2-3 hours (including testing)
+
+================================================================================
+KEY FIELD VALUES (Copy-Paste Reference)
+================================================================================
+
+ID PATTERN:
+  wf_irc_{workflow_name}_{8_hex_characters}
+
+Examples:
+  send-message    → wf_irc_send_message_7a8f9e1b
+  handle-command  → wf_irc_handle_command_b2c3d4e5
+  join-channel    → wf_irc_join_channel_c3d4e5f6
+  list-channels   → wf_irc_list_channels_d4e5f6g7
+
+VERSION:
+  versionId: "v1.0.0"
+
+TENANT:
+  tenantId: "{{ $context.tenantId }}"
+
+TIMESTAMPS:
+  createdAt: "2026-01-22T00:00:00Z"
+  updatedAt: "2026-01-22T00:00:00Z"
+
+CREATOR:
+  createdBy: "system"
+
+CATEGORIES:
+  send-message    → "notification"
+  handle-command  → "business-logic"
+  join-channel    → "business-logic"
+  list-channels   → "data-transformation"
+
+================================================================================
+COMMON MISTAKES & SOLUTIONS
+================================================================================
+
+MISTAKE #1: Missing tenantId at root level
+❌ BEFORE:
+   {
+     "name": "...",
+     "nodes": [...]
+   }
+
+✓ AFTER:
+   {
+     "name": "...",
+     "tenantId": "{{ $context.tenantId }}",
+     "nodes": [...]
+   }
+
+MISTAKE #2: Database operations without tenantId filter
+❌ BEFORE:
+   { "filter": { "id": "..." } }
+
+✓ AFTER:
+   { "filter": { "id": "...", "tenantId": "{{ $context.tenantId }}" } }
+
+MISTAKE #3: Missing node notes
+❌ BEFORE:
+   { "id": "validate_context", "parameters": {...} }
+
+✓ AFTER:
+   { "id": "validate_context", "notes": "Ensures user is authenticated...", "parameters": {...} }
+
+MISTAKE #4: Circular connections
+❌ BEFORE:
+   A → B → C → A  (circular!)
+
+✓ AFTER:
+   A → B → C  (linear DAG)
+
+================================================================================
+SUCCESS CRITERIA
+================================================================================
+
+A workflow update is COMPLETE when:
+
+□ All required root-level fields present (id, versionId, tenantId, etc.)
+□ All nodes have meaningful notes field (20-150 words each)
+□ All connections validated (no cycles, all references exist)
+□ All parameters type-checked against node type schema
+□ Multi-tenant filtering verified in all database operations
+□ Passes n8n-workflow.schema.json validation
+□ Passes metabuilder-workflow-v3.schema.json validation
+□ All 4 workflows updated consistently
+□ package.json files.byType.workflows updated correctly
+□ E2E tests passing (or marked for manual verification)
+□ Code review approved
+□ Merged to main branch
+
+================================================================================
+RELATED FILES & DOCUMENTATION
+================================================================================
+
+SCHEMA FILES:
+  /schemas/n8n-workflow.schema.json
+  /dbal/shared/api/schema/workflow/metabuilder-workflow-v3.schema.json
+  /schemas/package-schemas/workflow.schema.json
+
+PACKAGE FILES:
+  /packages/irc_webchat/package.json
+  /packages/irc_webchat/workflow/ (4 JSON files)
+  /packages/irc_webchat/permissions/roles.json
+
+DOCUMENTATION:
+  /docs/N8N_COMPLIANCE_AUDIT.md
+  /docs/RATE_LIMITING_GUIDE.md
+  /docs/MULTI_TENANT_AUDIT.md
+  /docs/CLAUDE.md
+
+ENTITY SCHEMAS:
+  /dbal/shared/api/schema/entities/packages/irc.yaml
+
+================================================================================
+REFERENCES & LINKS
+================================================================================
+
+FULL IMPLEMENTATION PLAN:
+  See: IRC_WEBCHAT_WORKFLOW_UPDATE_PLAN.md
+  Contains complete updated JSON for all 4 workflows
+
+QUICK REFERENCE:
+  See: IRC_WEBCHAT_QUICK_REFERENCE.md
+  Contains 1-page overview and quick copy-paste snippets
+
+SCHEMA UPDATE MATRIX:
+  See: IRC_WEBCHAT_SCHEMA_UPDATES.md
+  Contains field mappings and validation templates
+
+N8N COMPLIANCE:
+  See: docs/N8N_COMPLIANCE_AUDIT.md
+  Explains N8N workflow compliance requirements
+
+================================================================================
+QUESTION CHECKLIST
+================================================================================
+
+Before starting implementation, confirm:
+
+□ Have you read IRC_WEBCHAT_WORKFLOW_UPDATE_PLAN.md (main doc)?
+□ Do you understand the 7 required changes?
+□ Are you familiar with N8N workflow format?
+□ Do you understand MetaBuilder multi-tenant requirements?
+□ Have you reviewed similar workflows in other packages?
+□ Do you know how to validate JSON against schemas?
+□ Have you set up test environment?
+□ Do you have write access to packages/irc_webchat/?
+
+If ALL are checked, you're ready to start implementation!
+
+================================================================================
+END OF SUMMARY
+================================================================================
+
+Created: 2026-01-22
+Status: READY FOR IMPLEMENTATION
+Estimated Duration: 2-3 hours total
+Complexity: Low-Medium
+Risk Level: Low (only schema/metadata updates, no logic changes)
+
+For questions or clarifications, refer to the detailed documents:
+1. IRC_WEBCHAT_WORKFLOW_UPDATE_PLAN.md (comprehensive)
+2. IRC_WEBCHAT_QUICK_REFERENCE.md (quick lookup)
+3. IRC_WEBCHAT_SCHEMA_UPDATES.md (field mappings)
+

@@ -12,24 +12,8 @@
         100
       ],
       "parameters": {
-        "name": "Check Permission",
-        "typeVersion": 1,
-        "position": [
-          100,
-          100
-        ],
-        "parameters": {
-          "name": "Check Permission",
-          "typeVersion": 1,
-          "position": [
-            100,
-            100
-          ],
-          "parameters": {
-            "condition": "{{ $context.user.level >= 3 }}",
-            "operation": "condition"
-          }
-        }
+        "condition": "{{ $context.user.level >= 3 }}",
+        "operation": "condition"
       }
     },
     {
@@ -42,27 +26,11 @@
         100
       ],
       "parameters": {
-        "name": "Validate Input",
-        "typeVersion": 1,
-        "position": [
-          400,
-          100
-        ],
-        "parameters": {
-          "name": "Validate Input",
-          "typeVersion": 1,
-          "position": [
-            400,
-            100
-          ],
-          "parameters": {
-            "input": "{{ $json }}",
-            "operation": "validate",
-            "rules": {
-              "name": "required|string",
-              "script": "required|string"
-            }
-          }
+        "input": "{{ $json }}",
+        "operation": "validate",
+        "rules": {
+          "name": "required|string",
+          "script": "required|string"
         }
       }
     },
@@ -76,32 +44,16 @@
         100
       ],
       "parameters": {
-        "name": "Create Script",
-        "typeVersion": 1,
-        "position": [
-          700,
-          100
-        ],
-        "parameters": {
-          "name": "Create Script",
-          "typeVersion": 1,
-          "position": [
-            700,
-            100
-          ],
-          "parameters": {
-            "data": {
-              "tenantId": "{{ $context.tenantId }}",
-              "createdBy": "{{ $context.user.id }}",
-              "name": "{{ $json.name }}",
-              "description": "{{ $json.description }}",
-              "script": "{{ $json.script }}",
-              "createdAt": "{{ new Date().toISOString() }}"
-            },
-            "operation": "database_create",
-            "entity": "JSONScript"
-          }
-        }
+        "data": {
+          "tenantId": "{{ $context.tenantId }}",
+          "createdBy": "{{ $context.user.id }}",
+          "name": "{{ $json.name }}",
+          "description": "{{ $json.description }}",
+          "script": "{{ $json.script }}",
+          "createdAt": "{{ new Date().toISOString() }}"
+        },
+        "operation": "database_create",
+        "entity": "JSONScript"
       }
     },
     {
@@ -114,32 +66,50 @@
         300
       ],
       "parameters": {
-        "name": "Return Success",
-        "typeVersion": 1,
-        "position": [
-          100,
-          300
-        ],
-        "parameters": {
-          "name": "Return Success",
-          "typeVersion": 1,
-          "position": [
-            100,
-            300
-          ],
-          "parameters": {
-            "action": "http_response",
-            "status": 201,
-            "body": {
-              "id": "{{ $steps.create_script.output.id }}",
-              "message": "Script saved"
-            }
-          }
+        "action": "http_response",
+        "status": 201,
+        "body": {
+          "id": "{{ $steps.create_script.output.id }}",
+          "message": "Script saved"
         }
       }
     }
   ],
-  "connections": {},
+  "connections": {
+    "check_permission": {
+      "main": [
+        [
+          {
+            "node": "validate_input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "validate_input": {
+      "main": [
+        [
+          {
+            "node": "create_script",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create_script": {
+      "main": [
+        [
+          {
+            "node": "return_success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "staticData": {},
   "meta": {},
   "settings": {
@@ -148,5 +118,8 @@
     "saveExecutionProgress": true,
     "saveDataErrorExecution": "all",
     "saveDataSuccessExecution": "all"
-  }
+  },
+  "id": "workflow_save_script",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
 }

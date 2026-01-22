@@ -12,24 +12,8 @@
         100
       ],
       "parameters": {
-        "name": "Validate Tenant",
-        "typeVersion": 1,
-        "position": [
-          100,
-          100
-        ],
-        "parameters": {
-          "name": "Validate Tenant",
-          "typeVersion": 1,
-          "position": [
-            100,
-            100
-          ],
-          "parameters": {
-            "condition": "{{ $context.tenantId !== undefined }}",
-            "operation": "condition"
-          }
-        }
+        "condition": "{{ $context.tenantId !== undefined }}",
+        "operation": "condition"
       }
     },
     {
@@ -42,24 +26,8 @@
         100
       ],
       "parameters": {
-        "name": "Validate User",
-        "typeVersion": 1,
-        "position": [
-          400,
-          100
-        ],
-        "parameters": {
-          "name": "Validate User",
-          "typeVersion": 1,
-          "position": [
-            400,
-            100
-          ],
-          "parameters": {
-            "condition": "{{ $context.user.id !== undefined }}",
-            "operation": "condition"
-          }
-        }
+        "condition": "{{ $context.user.id !== undefined }}",
+        "operation": "condition"
       }
     },
     {
@@ -72,28 +40,12 @@
         100
       ],
       "parameters": {
-        "name": "Validate Input",
-        "typeVersion": 1,
-        "position": [
-          700,
-          100
-        ],
-        "parameters": {
-          "name": "Validate Input",
-          "typeVersion": 1,
-          "position": [
-            700,
-            100
-          ],
-          "parameters": {
-            "input": "{{ $json }}",
-            "operation": "validate",
-            "rules": {
-              "categoryId": "required|string",
-              "title": "required|string|minLength:3|maxLength:200",
-              "content": "required|string|minLength:10|maxLength:5000"
-            }
-          }
+        "input": "{{ $json }}",
+        "operation": "validate",
+        "rules": {
+          "categoryId": "required|string",
+          "title": "required|string|minLength:3|maxLength:200",
+          "content": "required|string|minLength:10|maxLength:5000"
         }
       }
     },
@@ -107,24 +59,8 @@
         300
       ],
       "parameters": {
-        "name": "Generate Slug",
-        "typeVersion": 1,
-        "position": [
-          100,
-          300
-        ],
-        "parameters": {
-          "name": "Generate Slug",
-          "typeVersion": 1,
-          "position": [
-            100,
-            300
-          ],
-          "parameters": {
-            "output": "{{ $json.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') }}",
-            "operation": "transform_data"
-          }
-        }
+        "output": "{{ $json.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') }}",
+        "operation": "transform_data"
       }
     },
     {
@@ -137,38 +73,22 @@
         300
       ],
       "parameters": {
-        "name": "Create Thread",
-        "typeVersion": 1,
-        "position": [
-          400,
-          300
-        ],
-        "parameters": {
-          "name": "Create Thread",
-          "typeVersion": 1,
-          "position": [
-            400,
-            300
-          ],
-          "parameters": {
-            "data": {
-              "tenantId": "{{ $context.tenantId }}",
-              "categoryId": "{{ $json.categoryId }}",
-              "authorId": "{{ $context.user.id }}",
-              "title": "{{ $json.title }}",
-              "slug": "{{ $steps.generate_slug.output }}",
-              "content": "{{ $json.content }}",
-              "viewCount": 0,
-              "postCount": 1,
-              "isLocked": false,
-              "isPinned": false,
-              "createdAt": "{{ new Date().toISOString() }}",
-              "updatedAt": "{{ new Date().toISOString() }}"
-            },
-            "operation": "database_create",
-            "entity": "ForumThread"
-          }
-        }
+        "data": {
+          "tenantId": "{{ $context.tenantId }}",
+          "categoryId": "{{ $json.categoryId }}",
+          "authorId": "{{ $context.user.id }}",
+          "title": "{{ $json.title }}",
+          "slug": "{{ $steps.generate_slug.output }}",
+          "content": "{{ $json.content }}",
+          "viewCount": 0,
+          "postCount": 1,
+          "isLocked": false,
+          "isPinned": false,
+          "createdAt": "{{ new Date().toISOString() }}",
+          "updatedAt": "{{ new Date().toISOString() }}"
+        },
+        "operation": "database_create",
+        "entity": "ForumThread"
       }
     },
     {
@@ -181,30 +101,14 @@
         300
       ],
       "parameters": {
-        "name": "Emit Created",
-        "typeVersion": 1,
-        "position": [
-          700,
-          300
-        ],
-        "parameters": {
-          "name": "Emit Created",
-          "typeVersion": 1,
-          "position": [
-            700,
-            300
-          ],
-          "parameters": {
-            "data": {
-              "threadId": "{{ $steps.create_thread.output.id }}",
-              "title": "{{ $json.title }}",
-              "authorId": "{{ $context.user.id }}"
-            },
-            "action": "emit_event",
-            "event": "thread_created",
-            "channel": "{{ 'forum:' + $context.tenantId }}"
-          }
-        }
+        "data": {
+          "threadId": "{{ $steps.create_thread.output.id }}",
+          "title": "{{ $json.title }}",
+          "authorId": "{{ $context.user.id }}"
+        },
+        "action": "emit_event",
+        "event": "thread_created",
+        "channel": "{{ 'forum:' + $context.tenantId }}"
       }
     },
     {
@@ -217,29 +121,80 @@
         500
       ],
       "parameters": {
-        "name": "Return Success",
-        "typeVersion": 1,
-        "position": [
-          100,
-          500
-        ],
-        "parameters": {
-          "name": "Return Success",
-          "typeVersion": 1,
-          "position": [
-            100,
-            500
-          ],
-          "parameters": {
-            "action": "http_response",
-            "status": 201,
-            "body": "{{ $steps.create_thread.output }}"
-          }
-        }
+        "action": "http_response",
+        "status": 201,
+        "body": "{{ $steps.create_thread.output }}"
       }
     }
   ],
-  "connections": {},
+  "connections": {
+    "validate_tenant": {
+      "main": [
+        [
+          {
+            "node": "validate_user",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "validate_user": {
+      "main": [
+        [
+          {
+            "node": "validate_input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "validate_input": {
+      "main": [
+        [
+          {
+            "node": "generate_slug",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "generate_slug": {
+      "main": [
+        [
+          {
+            "node": "create_thread",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create_thread": {
+      "main": [
+        [
+          {
+            "node": "emit_created",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "emit_created": {
+      "main": [
+        [
+          {
+            "node": "return_success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "staticData": {},
   "meta": {},
   "settings": {
@@ -248,5 +203,8 @@
     "saveExecutionProgress": true,
     "saveDataErrorExecution": "all",
     "saveDataSuccessExecution": "all"
-  }
+  },
+  "id": "workflow_create_thread",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
 }

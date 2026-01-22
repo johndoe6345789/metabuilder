@@ -12,26 +12,10 @@
         100
       ],
       "parameters": {
-        "name": "Apply Rate Limit",
-        "typeVersion": 1,
-        "position": [
-          100,
-          100
-        ],
-        "parameters": {
-          "name": "Apply Rate Limit",
-          "typeVersion": 1,
-          "position": [
-            100,
-            100
-          ],
-          "parameters": {
-            "operation": "rate_limit",
-            "key": "{{ $json.email }}",
-            "limit": 3,
-            "window": 3600000
-          }
-        }
+        "operation": "rate_limit",
+        "key": "{{ $json.email }}",
+        "limit": 3,
+        "window": 3600000
       }
     },
     {
@@ -44,28 +28,12 @@
         100
       ],
       "parameters": {
-        "name": "Validate Input",
-        "typeVersion": 1,
-        "position": [
-          400,
-          100
-        ],
-        "parameters": {
-          "name": "Validate Input",
-          "typeVersion": 1,
-          "position": [
-            400,
-            100
-          ],
-          "parameters": {
-            "input": "{{ $json }}",
-            "operation": "validate",
-            "rules": {
-              "email": "required|email|unique:User",
-              "password": "required|string|minLength:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)/",
-              "displayName": "required|string|minLength:2|maxLength:100"
-            }
-          }
+        "input": "{{ $json }}",
+        "operation": "validate",
+        "rules": {
+          "email": "required|email|unique:User",
+          "password": "required|string|minLength:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)/",
+          "displayName": "required|string|minLength:2|maxLength:100"
         }
       }
     },
@@ -79,25 +47,9 @@
         100
       ],
       "parameters": {
-        "name": "Hash Password",
-        "typeVersion": 1,
-        "position": [
-          700,
-          100
-        ],
-        "parameters": {
-          "name": "Hash Password",
-          "typeVersion": 1,
-          "position": [
-            700,
-            100
-          ],
-          "parameters": {
-            "input": "{{ $json.password }}",
-            "operation": "bcrypt_hash",
-            "rounds": 12
-          }
-        }
+        "input": "{{ $json.password }}",
+        "operation": "bcrypt_hash",
+        "rounds": 12
       }
     },
     {
@@ -110,24 +62,8 @@
         300
       ],
       "parameters": {
-        "name": "Generate Verification Token",
-        "typeVersion": 1,
-        "position": [
-          100,
-          300
-        ],
-        "parameters": {
-          "name": "Generate Verification Token",
-          "typeVersion": 1,
-          "position": [
-            100,
-            300
-          ],
-          "parameters": {
-            "operation": "generate_random_token",
-            "length": 32
-          }
-        }
+        "operation": "generate_random_token",
+        "length": 32
       }
     },
     {
@@ -140,37 +76,21 @@
         300
       ],
       "parameters": {
-        "name": "Create User",
-        "typeVersion": 1,
-        "position": [
-          400,
-          300
-        ],
-        "parameters": {
-          "name": "Create User",
-          "typeVersion": 1,
-          "position": [
-            400,
-            300
-          ],
-          "parameters": {
-            "data": {
-              "email": "{{ $json.email }}",
-              "passwordHash": "{{ $steps.hash_password.output }}",
-              "displayName": "{{ $json.displayName }}",
-              "tenantId": "{{ $json.tenantId }}",
-              "level": 0,
-              "isActive": false,
-              "isEmailVerified": false,
-              "verificationToken": "{{ $steps.generate_verification_token.output }}",
-              "verificationTokenExpiresAt": "{{ new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() }}",
-              "firstLogin": true,
-              "createdAt": "{{ new Date().toISOString() }}"
-            },
-            "operation": "database_create",
-            "entity": "User"
-          }
-        }
+        "data": {
+          "email": "{{ $json.email }}",
+          "passwordHash": "{{ $steps.hash_password.output }}",
+          "displayName": "{{ $json.displayName }}",
+          "tenantId": "{{ $json.tenantId }}",
+          "level": 0,
+          "isActive": false,
+          "isEmailVerified": false,
+          "verificationToken": "{{ $steps.generate_verification_token.output }}",
+          "verificationTokenExpiresAt": "{{ new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() }}",
+          "firstLogin": true,
+          "createdAt": "{{ new Date().toISOString() }}"
+        },
+        "operation": "database_create",
+        "entity": "User"
       }
     },
     {
@@ -183,30 +103,14 @@
         300
       ],
       "parameters": {
-        "name": "Send Verification Email",
-        "typeVersion": 1,
-        "position": [
-          700,
-          300
-        ],
-        "parameters": {
-          "name": "Send Verification Email",
-          "typeVersion": 1,
-          "position": [
-            700,
-            300
-          ],
-          "parameters": {
-            "data": {
-              "displayName": "{{ $json.displayName }}",
-              "verificationLink": "{{ $env.APP_URL }}/auth/verify/{{ $steps.generate_verification_token.output }}"
-            },
-            "operation": "email_send",
-            "to": "{{ $json.email }}",
-            "subject": "Verify your email address",
-            "template": "email_verification"
-          }
-        }
+        "data": {
+          "displayName": "{{ $json.displayName }}",
+          "verificationLink": "{{ $env.APP_URL }}/auth/verify/{{ $steps.generate_verification_token.output }}"
+        },
+        "operation": "email_send",
+        "to": "{{ $json.email }}",
+        "subject": "Verify your email address",
+        "template": "email_verification"
       }
     },
     {
@@ -219,30 +123,14 @@
         500
       ],
       "parameters": {
-        "name": "Emit Register Event",
-        "typeVersion": 1,
-        "position": [
-          100,
-          500
-        ],
-        "parameters": {
-          "name": "Emit Register Event",
-          "typeVersion": 1,
-          "position": [
-            100,
-            500
-          ],
-          "parameters": {
-            "data": {
-              "userId": "{{ $steps.create_user.output.id }}",
-              "email": "{{ $json.email }}",
-              "displayName": "{{ $json.displayName }}"
-            },
-            "action": "emit_event",
-            "event": "user_registered",
-            "channel": "{{ 'tenant:' + $json.tenantId }}"
-          }
-        }
+        "data": {
+          "userId": "{{ $steps.create_user.output.id }}",
+          "email": "{{ $json.email }}",
+          "displayName": "{{ $json.displayName }}"
+        },
+        "action": "emit_event",
+        "event": "user_registered",
+        "channel": "{{ 'tenant:' + $json.tenantId }}"
       }
     },
     {
@@ -255,33 +143,95 @@
         500
       ],
       "parameters": {
-        "name": "Return Success",
-        "typeVersion": 1,
-        "position": [
-          400,
-          500
-        ],
-        "parameters": {
-          "name": "Return Success",
-          "typeVersion": 1,
-          "position": [
-            400,
-            500
-          ],
-          "parameters": {
-            "action": "http_response",
-            "status": 201,
-            "body": {
-              "message": "Registration successful. Please verify your email address.",
-              "userId": "{{ $steps.create_user.output.id }}",
-              "email": "{{ $json.email }}"
-            }
-          }
+        "action": "http_response",
+        "status": 201,
+        "body": {
+          "message": "Registration successful. Please verify your email address.",
+          "userId": "{{ $steps.create_user.output.id }}",
+          "email": "{{ $json.email }}"
         }
       }
     }
   ],
-  "connections": {},
+  "connections": {
+    "apply_rate_limit": {
+      "main": [
+        [
+          {
+            "node": "validate_input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "validate_input": {
+      "main": [
+        [
+          {
+            "node": "hash_password",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "hash_password": {
+      "main": [
+        [
+          {
+            "node": "generate_verification_token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "generate_verification_token": {
+      "main": [
+        [
+          {
+            "node": "create_user",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create_user": {
+      "main": [
+        [
+          {
+            "node": "send_verification_email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "send_verification_email": {
+      "main": [
+        [
+          {
+            "node": "emit_register_event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "emit_register_event": {
+      "main": [
+        [
+          {
+            "node": "return_success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "staticData": {},
   "meta": {},
   "settings": {
@@ -290,5 +240,8 @@
     "saveExecutionProgress": true,
     "saveDataErrorExecution": "all",
     "saveDataSuccessExecution": "all"
-  }
+  },
+  "id": "workflow_register_workflow",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
 }
