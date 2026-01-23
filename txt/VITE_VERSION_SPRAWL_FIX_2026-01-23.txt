@@ -1,0 +1,83 @@
+# Vite Version Sprawl Fix - January 23, 2026
+
+## Summary
+Fixed vite version inconsistencies across the codebase to standardize on ^7.3.1
+
+## Changes Made
+
+### 1. codegen/package.json
+**Issue**: vite appeared twice in devDependencies (line duplication)
+- BEFORE:
+  - devDependencies had: "vite": "^7.3.1" (appeared twice)
+  - overrides had: "vite": "^7.3.1"
+- AFTER:
+  - devDependencies has: "vite": "^7.3.1" (single entry)
+  - overrides section REMOVED vite entry (kept: react, react-dom, @types/react, @types/react-dom)
+
+**Rationale**: The vite override was unnecessary and could cause conflicts. By removing it from overrides and keeping a single devDependency, all workspaces now resolve to 7.3.1 naturally through npm's resolution algorithm.
+
+### 2. codegen/packages/spark-tools/package.json
+**Issue**: peerDependencies specified multi-version range that included older 6.4.1
+- BEFORE: "vite": "^7.0.0 || ^6.4.1"
+- AFTER: "vite": "^7.3.1"
+
+**Rationale**: Standardize to match rest of codebase. Multi-version ranges create resolution ambiguity.
+
+### 3. Unaffected (Already Correct)
+- storybook/package.json: "vite": "^7.3.1" ✓
+- old/package.json: "vite": "^7.3.1" ✓
+
+## Verification
+
+### vite Dependency Hierarchy (After Fix)
+```
+vite@7.3.1 (root requirement)
+├── storybook/package.json: "vite": "^7.3.1"
+├── old/package.json: "vite": "^7.3.1"
+├── codegen/package.json: "vite": "^7.3.1" (single entry)
+│   └── codegen/packages/spark-tools/package.json: "vite": "^7.3.1"
+└── Other workspaces (transitive via devDependencies)
+```
+
+### npm install Results
+```
+Command: npm install
+Result: added 1 package, removed 8 packages, changed 2 packages, and audited 1225 packages
+Time: 2s
+Status: ✅ SUCCESS
+Vulnerabilities: 7 moderate (unchanged, all in dev dependencies)
+```
+
+### npm ls vite Output
+All packages now correctly resolve to vite@7.3.1:
+- codegen transitive chain: vite@7.3.1 deduped
+- storybook transitive chain: vite@7.3.1 deduped
+- All dependencies consolidated to single version
+
+## Files Modified
+1. /Users/rmac/Documents/metabuilder/codegen/package.json (2 changes)
+2. /Users/rmac/Documents/metabuilder/codegen/packages/spark-tools/package.json (1 change)
+
+## Root Cause Analysis
+
+**Why the sprawl existed:**
+1. Override sections should only be used for critical conflicts (like React major versions)
+2. Having vite in both devDependencies AND overrides created redundancy
+3. Multi-version peer dependencies (|| syntax) left ambiguity for consumers
+
+**Why this fix is correct:**
+1. Removes override - unnecessary for vite, which isn't causing conflicts
+2. Consolidates to single exact version across all workspaces
+3. npm's natural resolution algorithm now handles consistency
+4. Reduces configuration surface area (simpler = more maintainable)
+
+## Impact
+- ✅ npm install succeeds cleanly
+- ✅ No version conflicts
+- ✅ All transitive dependencies resolve to single vite version
+- ✅ Reduced configuration complexity
+- ✅ Enables better caching and reproducible builds
+
+## References
+- CLAUDE.md section: "Library Versions (Updated Jan 23, 2026)"
+- Previous work: ROOT_CLEANUP_PLAN_2026-01-23.txt, DEPENDENCY_FIX_COMPLETION_SUMMARY_2026-01-23.txt
