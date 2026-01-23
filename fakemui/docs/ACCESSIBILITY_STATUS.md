@@ -10,7 +10,7 @@ All fakemui components now have accessibility infrastructure in place with autom
 ## What Was Completed
 
 ### 1. Accessibility Utilities Infrastructure ✅
-- **Moved** accessibility utilities from `legacy/migration-in-progress/` to `src/utils/`
+- **Moved** accessibility utilities from `wip/` to `src/utils/`
 - **Created** proper directory structure following CLAUDE.md guidelines
 - **Resolved** broken import path in main `index.ts`
 
@@ -237,7 +237,7 @@ All utilities follow WAI-ARIA and WCAG 2.1 guidelines:
 ## Legacy Cleanup
 
 **Before**:
-- Accessibility utilities scattered in `legacy/migration-in-progress/`
+- Accessibility utilities scattered in `wip/`
 - Broken import path in main `index.ts`
 - No integration with components
 
@@ -246,7 +246,7 @@ All utilities follow WAI-ARIA and WCAG 2.1 guidelines:
 - ✅ Import path resolved in `index.ts`
 - ✅ Two components fully integrated
 - ✅ Hooks ready for use in all components
-- ⏳ Can archive `legacy/migration-in-progress/` once all components updated
+- ⏳ Can archive `wip/` once all components updated
 
 ## Performance Impact
 

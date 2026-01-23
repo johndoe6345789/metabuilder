@@ -1,0 +1,249 @@
+═══════════════════════════════════════════════════════════════════════════════
+SMTP RELAY ↔ POSTFIX INTEGRATION PLAN
+═══════════════════════════════════════════════════════════════════════════════
+Date: 2026-01-23
+Status: PLANNING
+Objective: Configure Postfix to simulate Gmail for SMTP Relay testing
+
+═══════════════════════════════════════════════════════════════════════════════
+CURRENT STATE
+═══════════════════════════════════════════════════════════════════════════════
+
+Separated Stacks:
+1. Root compose (metabuilder-network):
+   - Postfix at port 25 ✅
+   - WorkflowUI → Postfix:25 ✅
+   - No SMTP Relay service
+
+2. Separate test compose (smtprelay/docker-compose.yml):
+   - SMTP Relay → Postfix:25 ✅
+   - Isolated in smtp-relay-net
+
+3. Unused:
+   - Mock Gmail (deployment/docker/mock-gmail/) - built but not integrated
+
+═══════════════════════════════════════════════════════════════════════════════
+SOLUTION: ADD SMTP RELAY TO ROOT COMPOSE
+═══════════════════════════════════════════════════════════════════════════════
+
+Goal: Make Postfix simulate Gmail for SMTP Relay testing
+
+Files to Modify:
+1. docker-compose.yml (ROOT)
+   - Add smtp-relay service
+   - Configure to forward to postfix:25
+   - Expose dashboard on 8080
+
+2. smtprelay/docker-compose.yml (REFERENCE)
+   - Keep as-is (standalone test environment)
+   - Already has working integration
+
+3. deployment/env/.env.example (NEW/UPDATE)
+   - Centralize SMTP configuration
+   - Define: GMAIL_USERNAME, GMAIL_APP_PASSWORD, FORWARD_TO
+
+═══════════════════════════════════════════════════════════════════════════════
+IMPLEMENTATION DETAILS
+═══════════════════════════════════════════════════════════════════════════════
+
+STEP 1: Update docker-compose.yml
+─────────────────────────────────────────────────────────────────────────────
+
+Add SMTP Relay Service:
+```yaml
+  smtp-relay:
+    build:
+      context: ./smtprelay
+      dockerfile: Dockerfile
+    container_name: metabuilder-smtp-relay
+    ports:
+      - "2525:2525"   # SMTP ingest port
+      - "8080:8080"   # HTTP dashboard
+    environment:
+      # Postfix simulation mode
+      - GMAIL_USERNAME=${GMAIL_USERNAME:-relay@metabuilder.local}
+      - GMAIL_APP_PASSWORD=${GMAIL_APP_PASSWORD:-dummy}
+      - FORWARD_TO=${FORWARD_TO:-admin@metabuilder.local}
+      - GMAIL_HOST=postfix
+      - GMAIL_PORT=25
+
+      # Network config
+      - SMTP_LISTEN_HOST=0.0.0.0
+      - SMTP_LISTEN_PORT=2525
+      - HTTP_LISTEN_HOST=0.0.0.0
+      - HTTP_LISTEN_PORT=8080
+
+      # Optional
+      - ALLOW_ANY_RCPT=true
+      - ADD_X_HEADERS=true
+      - MAX_STORE=200
+
+    depends_on:
+      postfix:
+        condition: service_healthy
+
+    restart: unless-stopped
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+    networks:
+      - metabuilder-network
+```
+
+STEP 2: Environment Variables
+─────────────────────────────────────────────────────────────────────────────
+
+File: deployment/env/.env.example
+
+Add lines:
+```
+# SMTP Relay Configuration
+GMAIL_USERNAME=relay@metabuilder.local
+GMAIL_APP_PASSWORD=dummy
+FORWARD_TO=admin@metabuilder.local
+
+# Postfix Configuration
+POSTFIX_myhostname=metabuilder.local
+POSTFIX_mydomain=metabuilder.local
+POSTFIX_mynetworks=127.0.0.1/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+POSTFIX_relayhost=
+POSTFIX_SMTP_SASL_AUTH=no
+POSTFIX_SMTP_SASL_PASSWD=
+POSTFIX_TLS_LEVEL=may
+```
+
+STEP 3: Access Points
+─────────────────────────────────────────────────────────────────────────────
+
+WorkflowUI can now choose:
+- Option A (current): Send directly to postfix:25
+- Option B (new): Send to smtp-relay:2525 for message history
+
+SMTP Relay dashboard: http://localhost:8080
+
+═══════════════════════════════════════════════════════════════════════════════
+FLOW DIAGRAM (AFTER INTEGRATION)
+═══════════════════════════════════════════════════════════════════════════════
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│                      metabuilder-network (bridge)                         │
+├────────────────────────────────────────────────────────────────────────────┤
+│                                                                            │
+│  WorkflowUI (port 3000)                                                  │
+│  ↓                                                                        │
+│  ├─→ Option A: postfix:25 (direct)                                      │
+│  │                                                                        │
+│  └─→ Option B: smtp-relay:2525 (with history)                           │
+│      │                                                                    │
+│      └─→ postfix:25 (relay)                                             │
+│          │                                                               │
+│          └─→ External (if relayhost configured)                         │
+│                                                                          │
+│  Admin Dashboard: http://localhost:8080                                 │
+│                                                                          │
+└────────────────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════════
+RATIONALE
+═══════════════════════════════════════════════════════════════════════════════
+
+Why Postfix simulates Gmail:
+- SMTP Relay expects upstream SMTP server at GMAIL_HOST:GMAIL_PORT
+- By pointing to Postfix instead of smtp.gmail.com:587
+- SMTP Relay works offline without real Gmail credentials
+- Postfix handles all mail delivery/relaying
+
+Benefits:
+✅ Local testing without Gmail account
+✅ Message history available in dashboard
+✅ Can inspect mail queue with Postfix tools
+✅ Easy to forward to real Gmail later (set POSTFIX_relayhost)
+✅ SMTP Relay code unchanged (uses environment variables)
+
+═══════════════════════════════════════════════════════════════════════════════
+TESTING CHECKLIST
+═══════════════════════════════════════════════════════════════════════════════
+
+After implementation:
+
+1. Start containers
+   docker-compose up
+
+2. Check service health
+   docker-compose ps
+
+3. Verify network connectivity
+   docker exec metabuilder-smtp-relay ping postfix
+
+4. Test SMTP Relay dashboard
+   curl http://localhost:8080/
+
+5. Send test email
+   docker exec metabuilder-smtp-relay python scripts/send_test_mail.py
+
+6. Verify Postfix received it
+   docker exec metabuilder-postfix mailq
+   docker logs metabuilder-postfix
+
+═══════════════════════════════════════════════════════════════════════════════
+OPTIONAL ENHANCEMENTS (FUTURE)
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Mock Gmail integration:
+   - Uncomment mock-gmail service in docker-compose.yml
+   - Point smtp-relay to it instead of Postfix
+   - For pure mocking without real delivery
+
+2. External relay configuration:
+   - Set POSTFIX_relayhost=smtp.gmail.com:587
+   - Add SASL credentials
+   - For forwarding to real Gmail
+
+3. Development environment:
+   - Add Postfix + SMTP Relay to docker-compose.development.yml
+   - Replace Mailhog with this setup
+   - Mirror production architecture locally
+
+4. Health monitoring:
+   - Add prometheus/grafana export from Postfix
+   - Monitor SMTP Relay metrics
+   - Dashboard integration
+
+═══════════════════════════════════════════════════════════════════════════════
+ROLLBACK PLAN
+═══════════════════════════════════════════════════════════════════════════════
+
+If issues arise:
+1. Simply remove smtp-relay service from docker-compose.yml
+2. WorkflowUI continues with direct Postfix:25 connection
+3. No schema/config files affected
+4. Full revert possible in <5 minutes
+
+═══════════════════════════════════════════════════════════════════════════════
+FILES TO EDIT
+═══════════════════════════════════════════════════════════════════════════════
+
+1. docker-compose.yml
+   - Add smtp-relay service (40 lines)
+   - Change: 1 file, ~40 lines
+
+2. deployment/env/.env.example
+   - Add SMTP/Postfix vars (12 lines)
+   - Change: 1 file, ~12 lines
+
+Total Changes: 2 files, ~52 lines
+
+═══════════════════════════════════════════════════════════════════════════════
+STATUS
+═══════════════════════════════════════════════════════════════════════════════
+
+Ready for implementation. No blockers identified. All components already exist
+and tested in separate smtprelay/docker-compose.yml. This is primarily a
+composition/integration task.
+
+═══════════════════════════════════════════════════════════════════════════════

@@ -11,13 +11,14 @@ services:
     environment:
       - NODE_ENV=production
       - DATABASE_URL=sqlite:////app/data/workflows.db
-      - SMTP_RELAY_HOST=postfix
-      - SMTP_RELAY_PORT=25
+      - SMTP_RELAY_HOST=smtp-relay
+      - SMTP_RELAY_PORT=2525
     volumes:
       - workflowui-data:/app/data
       - workflowui-logs:/app/logs
     depends_on:
-      - postfix
+      smtp-relay:
+        condition: service_healthy
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/"]
@@ -37,8 +38,10 @@ services:
     hostname: metabuilder.local
     ports:
       - "25:25"
-      - "587:587"
+      - "110:110"
+      - "143:143"
       - "465:465"
+      - "587:587"
     environment:
       - POSTFIX_myhostname=metabuilder.local
       - POSTFIX_mydomain=metabuilder.local
@@ -61,6 +64,41 @@ services:
     networks:
       - metabuilder-network
 
+  # SMTP Relay - relays mail through Postfix (Postfix simulates Gmail)
+  smtp-relay:
+    build:
+      context: ./smtprelay
+      dockerfile: Dockerfile
+    container_name: metabuilder-smtp-relay
+    ports:
+      - "2525:2525"
+      - "8080:8080"
+    environment:
+      - GMAIL_USERNAME=${GMAIL_USERNAME:-relay@metabuilder.local}
+      - GMAIL_APP_PASSWORD=${GMAIL_APP_PASSWORD:-dummy}
+      - FORWARD_TO=${FORWARD_TO:-admin@metabuilder.local}
+      - GMAIL_HOST=postfix
+      - GMAIL_PORT=25
+      - SMTP_LISTEN_HOST=0.0.0.0
+      - SMTP_LISTEN_PORT=2525
+      - HTTP_LISTEN_HOST=0.0.0.0
+      - HTTP_LISTEN_PORT=8080
+      - ALLOW_ANY_RCPT=true
+      - ADD_X_HEADERS=true
+      - MAX_STORE=200
+    depends_on:
+      postfix:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - metabuilder-network
+
 volumes:
   workflowui-data:
     driver: local
@@ -71,6 +109,8 @@ volumes:
   postfix-logs:
     driver: local
   postfix-spool:
+    driver: local
+  smtp-relay-logs:
     driver: local
 
 networks:

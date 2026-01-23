@@ -4,13 +4,17 @@ FROM debian:bookworm-slim
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install Postfix and utilities
+# Install Postfix, Dovecot (POP3/IMAP), and utilities
 RUN apt-get update && apt-get install -y --no-install-recommends \
     postfix \
+    dovecot-core \
+    dovecot-imapd \
+    dovecot-pop3d \
     ca-certificates \
     mailutils \
     curl \
     vim-tiny \
+    sudo \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
@@ -68,10 +72,78 @@ set_postfix_config "default_destination_rate_limit" "0"
 # Logging
 set_postfix_config "maillog_file" "/var/log/postfix.log"
 
+echo "Creating default mail accounts..."
+# Create mail user if it doesn't exist
+if ! id -u mail > /dev/null 2>&1; then
+    useradd -r -u 8 -g mail -d /var/mail -s /usr/sbin/nologin mail
+fi
+
+# Create default accounts with passwords
+mkdir -p /var/mail/metabuilder.local
+useradd -m -s /sbin/nologin admin 2>/dev/null || true
+useradd -m -s /sbin/nologin relay 2>/dev/null || true
+useradd -m -s /sbin/nologin user 2>/dev/null || true
+
+# Set passwords (plain text - testing only)
+echo "admin:password123" | chpasswd
+echo "relay:relaypass" | chpasswd
+echo "user:userpass" | chpasswd
+
+# Set mailbox permissions
+chown -R mail:mail /var/mail
+chmod 700 /var/mail
+
+echo "Configuring Dovecot..."
+# Configure Dovecot for POP3/IMAP
+mkdir -p /etc/dovecot
+cat > /etc/dovecot/dovecot.conf << 'DOVECOT_EOF'
+protocols = imap pop3
+listen = *, ::
+
+service imap-login {
+  inet_listener imap {
+    port = 143
+  }
+}
+
+service pop3-login {
+  inet_listener pop3 {
+    port = 110
+  }
+}
+
+service auth {
+  unix_listener /var/spool/postfix/private/auth {
+    mode = 0666
+    user = postfix
+    group = postfix
+  }
+}
+
+userdb {
+  driver = passwd
+}
+
+passdb {
+  driver = pam
+  args = "%s"
+}
+
+mail_location = mbox:~/mail:INBOX=/var/mail/%u
+DOVECOT_EOF
+
 echo "Starting Postfix..."
 /etc/init.d/postfix start
 
-echo "Postfix running on $(hostname)"
+echo "Starting Dovecot..."
+/etc/init.d/dovecot start
+
+echo "Mail server running on $(hostname)"
+echo "Accounts: admin (password123), relay (relaypass), user (userpass)"
+echo "SMTP: localhost:25, 587"
+echo "IMAP: localhost:143"
+echo "POP3: localhost:110"
+
 # Keep container alive
 tail -f /var/log/mail.log 2>/dev/null || tail -f /var/log/syslog 2>/dev/null || sleep infinity
 EOF
@@ -94,7 +166,7 @@ RUN postconf -e "inet_interfaces = all" \
     && postconf -e "mailbox_size_limit = 0" \
     && postconf -e "message_size_limit = 52428800"
 
-# Expose SMTP ports
-EXPOSE 25 587 465
+# Expose SMTP, POP3, IMAP ports
+EXPOSE 25 110 143 465 587
 
 ENTRYPOINT ["/entrypoint.sh"]

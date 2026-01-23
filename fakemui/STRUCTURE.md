@@ -23,34 +23,18 @@ fakemui/
 │       └── *.py                    # Python binding implementations
 │
 ├── qml/                            # QML Desktop Components
-│   ├── components-legacy/          # Legacy QML/React hybrid components
-│   ├── qml-components/             # Pure QML components (104+)
+│   ├── components/                 # Pure QML components (104+)
+│   ├── hybrid/                     # QML/JS hybrid components (legacy)
 │   ├── widgets/                    # QML widget library
 │   └── qmldir                      # QML module metadata
 │
-├── python/                         # Python Implementations
-│   └── fakemui/                    # Python package for non-web use
-│       ├── __init__.py
-│       ├── atoms.py
-│       ├── inputs.py
-│       ├── surfaces.py
-│       ├── layout.py
-│       ├── data_display.py
-│       ├── feedback.py
-│       ├── navigation.py
-│       ├── utils.py
-│       ├── lab.py
-│       ├── x.py
-│       ├── base.py
-│       ├── theming.py
-│       ├── demo.py
-│       └── stylesheet.py
+├── utilities/                      # Core Utilities (formerly legacy/utilities/)
+│   ├── contexts/                   # React Context implementations
+│   └── core/                       # Core utility functions
 │
-├── legacy/                         # Legacy Code & Utilities
-│   ├── utilities/                  # Core utilities and contexts
-│   │   ├── contexts/               # React Context implementations
-│   │   └── core/                   # Core utility functions
-│   └── migration-in-progress/      # Incomplete migrations
+├── wip/                            # Work-In-Progress (formerly legacy/migration-in-progress/)
+│   ├── styles/                     # Incomplete style migrations
+│   └── utils/                      # Partially migrated utilities
 │
 ├── icons/                          # SVG Icon Library
 │   └── 421 SVG icons (organized by category)
@@ -91,9 +75,9 @@ fakemui/
 | Category | Count | Location |
 |----------|-------|----------|
 | **React Components** | 145 | `react/components/` |
-| **QML Components** | 104+ | `qml/qml-components/` |
+| **QML Components** | 104+ | `qml/components/` |
+| **QML Hybrid** | 23 | `qml/hybrid/` |
 | **SVG Icons** | 421 | `icons/` |
-| **Python Modules** | 15 | `python/fakemui/` |
 | **SCSS Files** | 78 | `styles/` + `scss/` |
 | **Documentation Files** | 6 | `docs/` |
 
@@ -114,25 +98,25 @@ fakemui/
 - **Language**: QML
 - **Components**: 104+ QML-specific components
 - **Folders**:
-  - `qml-components/` - Pure QML
-  - `components-legacy/` - Legacy/hybrid components
+  - `components/` - Pure QML components (104+)
+  - `hybrid/` - QML/JS hybrid components
   - `widgets/` - Widget library
 
-### 🟡 Python (Alternative)
-- **Location**: `python/fakemui/`
-- **Purpose**: Python bindings for non-web use
-- **Status**: ✅ Available, implementation files
-- **Language**: Python
-- **Contains**: Module implementations for atoms, inputs, surfaces, etc.
-
-### ⚫ Legacy & Utilities
-- **Location**: `legacy/`
-- **Purpose**: Supporting code, utilities, and migrations
-- **Status**: ✅ Preserved, available for reference
+### 🟢 Utilities
+- **Location**: `utilities/`
+- **Purpose**: Core utilities and contexts
+- **Status**: ✅ Production utilities
 - **Contains**:
-  - React Contexts
-  - Core utilities
-  - Migration-in-progress code
+  - React Context implementations
+  - Core utility functions
+
+### ⚙️ Work-In-Progress
+- **Location**: `wip/`
+- **Purpose**: Ongoing migrations and incomplete work
+- **Status**: ✅ Preserved for reference
+- **Contains**:
+  - Partial style migrations
+  - Migrated utilities
 
 ## Using Components
 

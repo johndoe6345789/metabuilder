@@ -12,6 +12,9 @@ import os
 import json
 from datetime import datetime
 from typing import Dict, List, Any, Optional, Tuple
+import imaplib
+import email
+from email.header import decode_header
 
 # Load environment variables
 load_dotenv()
@@ -834,6 +837,183 @@ def health_check():
             'error': str(e),
             'database': 'disconnected'
         }), 500
+
+
+# ============================================================================
+# Email Endpoints (IMAP Client)
+# ============================================================================
+
+@app.route('/api/emails/connect', methods=['POST'])
+def connect_email():
+    """Connect to IMAP server"""
+    try:
+        data = request.get_json()
+        host = data.get('host', 'localhost')
+        port = data.get('port', 143)
+        username = data.get('username')
+        password = data.get('password')
+
+        if not username or not password:
+            return jsonify({'error': 'Username and password required'}), 400
+
+        # Test connection
+        imap = imaplib.IMAP4(host, port)
+        imap.login(username, password)
+        imap.logout()
+
+        return jsonify({
+            'status': 'connected',
+            'message': 'Successfully connected to IMAP server'
+        }), 200
+    except Exception as e:
+        return jsonify({'error': f'Connection failed: {str(e)}'}), 500
+
+
+@app.route('/api/emails/list', methods=['POST'])
+def list_emails():
+    """List emails from IMAP mailbox"""
+    try:
+        data = request.get_json()
+        host = data.get('host', 'localhost')
+        port = data.get('port', 143)
+        username = data.get('username')
+        password = data.get('password')
+        mailbox = data.get('mailbox', 'INBOX')
+        limit = data.get('limit', 20)
+
+        if not username or not password:
+            return jsonify({'error': 'Username and password required'}), 400
+
+        imap = imaplib.IMAP4(host, port)
+        imap.login(username, password)
+        imap.select(mailbox)
+
+        # Get email IDs
+        status, messages = imap.search(None, 'ALL')
+        email_ids = messages[0].split()[-limit:] if messages[0] else []
+
+        emails = []
+        for email_id in reversed(email_ids):
+            status, msg_data = imap.fetch(email_id, '(RFC822)')
+            msg = email.message_from_bytes(msg_data[0][1])
+
+            # Decode subject
+            subject = msg.get('Subject', '')
+            if isinstance(subject, str):
+                try:
+                    decoded_parts = decode_header(subject)
+                    subject = ''.join([part[0].decode(part[1] or 'utf-8') if isinstance(part[0], bytes) else part[0] for part in decoded_parts])
+                except:
+                    pass
+
+            emails.append({
+                'id': email_id.decode(),
+                'from': msg.get('From', ''),
+                'subject': subject,
+                'date': msg.get('Date', ''),
+                'body_preview': (msg.get_payload(decode=True) or b'').decode('utf-8', errors='ignore')[:200]
+            })
+
+        imap.close()
+        imap.logout()
+
+        return jsonify({
+            'emails': emails,
+            'count': len(emails),
+            'mailbox': mailbox
+        }), 200
+    except Exception as e:
+        return jsonify({'error': f'Failed to list emails: {str(e)}'}), 500
+
+
+@app.route('/api/emails/read', methods=['POST'])
+def read_email():
+    """Read specific email"""
+    try:
+        data = request.get_json()
+        host = data.get('host', 'localhost')
+        port = data.get('port', 143)
+        username = data.get('username')
+        password = data.get('password')
+        email_id = data.get('email_id')
+        mailbox = data.get('mailbox', 'INBOX')
+
+        if not username or not password or not email_id:
+            return jsonify({'error': 'Missing required fields'}), 400
+
+        imap = imaplib.IMAP4(host, port)
+        imap.login(username, password)
+        imap.select(mailbox)
+
+        status, msg_data = imap.fetch(email_id, '(RFC822)')
+        msg = email.message_from_bytes(msg_data[0][1])
+
+        # Extract body
+        body = ''
+        if msg.is_multipart():
+            for part in msg.walk():
+                if part.get_content_type() == 'text/plain':
+                    body = part.get_payload(decode=True).decode('utf-8', errors='ignore')
+                    break
+        else:
+            body = msg.get_payload(decode=True).decode('utf-8', errors='ignore')
+
+        # Decode subject
+        subject = msg.get('Subject', '')
+        if isinstance(subject, str):
+            try:
+                decoded_parts = decode_header(subject)
+                subject = ''.join([part[0].decode(part[1] or 'utf-8') if isinstance(part[0], bytes) else part[0] for part in decoded_parts])
+            except:
+                pass
+
+        imap.close()
+        imap.logout()
+
+        return jsonify({
+            'id': email_id,
+            'from': msg.get('From', ''),
+            'to': msg.get('To', ''),
+            'subject': subject,
+            'date': msg.get('Date', ''),
+            'body': body,
+            'headers': dict(msg.items())
+        }), 200
+    except Exception as e:
+        return jsonify({'error': f'Failed to read email: {str(e)}'}), 500
+
+
+@app.route('/api/emails/mailboxes', methods=['POST'])
+def list_mailboxes():
+    """List available mailboxes"""
+    try:
+        data = request.get_json()
+        host = data.get('host', 'localhost')
+        port = data.get('port', 143)
+        username = data.get('username')
+        password = data.get('password')
+
+        if not username or not password:
+            return jsonify({'error': 'Username and password required'}), 400
+
+        imap = imaplib.IMAP4(host, port)
+        imap.login(username, password)
+
+        status, mailboxes = imap.list()
+        mailbox_list = []
+
+        for mailbox in mailboxes:
+            mailbox_str = mailbox.decode().split('"') if isinstance(mailbox, bytes) else mailbox
+            mailbox_list.append(mailbox)
+
+        imap.logout()
+
+        return jsonify({
+            'mailboxes': [m.decode() if isinstance(m, bytes) else m for m in mailbox_list],
+            'count': len(mailbox_list)
+        }), 200
+    except Exception as e:
+        return jsonify({'error': f'Failed to list mailboxes: {str(e)}'}), 500
 
 
 # ============================================================================
