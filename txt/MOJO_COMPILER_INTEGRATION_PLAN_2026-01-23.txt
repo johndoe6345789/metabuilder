@@ -1,0 +1,225 @@
+# Mojo Compiler Integration Plan - 2026-01-23
+
+## Discovery
+
+The modular repo at https://github.com/johndoe6345789/modular contains:
+- Full Mojo compiler implementation (written in Mojo itself!)
+- Located at: /mojo/compiler/src/
+- Size: 952K total, 21 .mojo source files
+- Test suite: 15+ test files covering lexer, parser, type system, codegen
+- Examples: ~8 example programs
+- Build system: Bazel (not needed, can run via Pixi)
+
+## Compiler Architecture (Modular Implementation)
+
+```
+mojo/compiler/src/
+├── frontend/           # Parsing & lexing (4 files)
+│   ├── lexer.mojo     # Tokenization
+│   ├── parser.mojo    # AST building
+│   ├── ast.mojo       # AST node definitions
+│   └── source_location.mojo
+├── semantic/          # Type checking (3 files)
+│   ├── type_system.mojo   # Type definitions & rules
+│   ├── type_checker.mojo  # Type inference & validation
+│   └── symbol_table.mojo  # Scope & symbol resolution
+├── ir/                # Intermediate representation (2 files)
+│   ├── mlir_gen.mojo  # MLIR code generation
+│   └── mojo_dialect.mojo
+├── codegen/           # Backend (2 files)
+│   ├── llvm_backend.mojo  # LLVM IR generation
+│   └── optimizer.mojo     # Optimization passes
+└── runtime/           # Runtime support (3 files)
+    ├── memory.mojo         # Memory management
+    ├── reflection.mojo     # Runtime reflection
+    └── async_runtime.mojo  # Async/await runtime
+```
+
+## Current Mojo/ Folder Status
+
+- Contains: 37 .mojo example programs (4,560 lines)
+- Structure: src/main.mojo + 12 example directories
+- Status: Example code using official Mojo SDK (not compiler)
+- Compiler status: NONE - only example programs exist
+
+## Integration Strategy
+
+### Phase 1: Extract & Organize (This Session)
+Copy from modular repo to metabuilder/mojo/:
+- /mojo/compiler/src/ → mojo/compiler/src/ (21 files, 952K)
+- /mojo/compiler/examples/ → mojo/compiler/examples/ (8 files)
+- /mojo/compiler/test_*.mojo → mojo/compiler/tests/ (15 files)
+
+Create mojo/CLAUDE.md documenting:
+- Architecture overview
+- Module descriptions
+- How to build/test/use
+- Development patterns
+
+### Phase 2: Reorganize Existing Code
+Move current examples:
+- /mojo/examples/ → /mojo/samples/ (keep as reference)
+- /mojo/src/ → /mojo/samples/src/
+- Purpose: Separate compiler from sample programs
+
+### Phase 3: Directory Structure (Final)
+```
+mojo/
+├── compiler/
+│   ├── src/             # Compiler implementation (21 files)
+│   │   ├── frontend/    # Lexer, parser, AST
+│   │   ├── semantic/    # Type checking
+│   │   ├── ir/          # MLIR generation
+│   │   ├── codegen/     # LLVM backend
+│   │   └── runtime/     # Runtime support
+│   ├── examples/        # Compiler usage examples
+│   ├── tests/          # Comprehensive test suite
+│   ├── CLAUDE.md       # Compiler development guide
+│   └── README.md       # Quick start
+├── samples/            # Mojo programs (moved from examples/)
+│   ├── game-of-life/
+│   ├── snake/
+│   ├── gpu-kernels/
+│   └── ...
+├── CLAUDE.md           # Top-level Mojo project guide
+└── mojoproject.toml    # SDK config
+```
+
+## Files to Extract (Total: 44 files, ~2.5MB)
+
+From /tmp/modular/mojo/compiler/:
+
+**Source Code** (21 files):
+- frontend/lexer.mojo
+- frontend/parser.mojo
+- frontend/ast.mojo
+- frontend/source_location.mojo
+- frontend/node_store.mojo
+- semantic/type_system.mojo
+- semantic/type_checker.mojo
+- semantic/symbol_table.mojo
+- ir/mlir_gen.mojo
+- ir/mojo_dialect.mojo
+- codegen/llvm_backend.mojo
+- codegen/optimizer.mojo
+- runtime/memory.mojo
+- runtime/reflection.mojo
+- runtime/async_runtime.mojo
+- examples/*.mojo (8 files)
+
+**Tests** (15 files):
+- test_lexer.mojo
+- test_*.mojo (14 test files)
+
+**Documentation** (3 files):
+- compiler_demo.mojo
+- examples_usage.mojo
+- README.md (create)
+
+## What to Ignore
+
+From modular repo (not needed):
+- .git/ directory (start fresh)
+- Bazel build system (use Pixi instead)
+- max/ directory (MAX framework, not compiler)
+- docs/ (integrate relevant parts into mojo/compiler/)
+- Python bindings (not needed yet)
+- Integration tests (focus on unit tests first)
+
+## Implementation Steps
+
+### Step 1: Create Directory Structure
+```bash
+mkdir -p mojo/compiler/{src/{frontend,semantic,ir,codegen,runtime},examples,tests,docs}
+mkdir -p mojo/samples
+```
+
+### Step 2: Copy Compiler Source
+```bash
+cp /tmp/modular/mojo/compiler/src/frontend/*.mojo mojo/compiler/src/frontend/
+cp /tmp/modular/mojo/compiler/src/semantic/*.mojo mojo/compiler/src/semantic/
+cp /tmp/modular/mojo/compiler/src/ir/*.mojo mojo/compiler/src/ir/
+cp /tmp/modular/mojo/compiler/src/codegen/*.mojo mojo/compiler/src/codegen/
+cp /tmp/modular/mojo/compiler/src/runtime/*.mojo mojo/compiler/src/runtime/
+```
+
+### Step 3: Copy Examples & Tests
+```bash
+cp /tmp/modular/mojo/compiler/examples/*.mojo mojo/compiler/examples/
+cp /tmp/modular/mojo/compiler/test_*.mojo mojo/compiler/tests/
+```
+
+### Step 4: Move Existing Code
+```bash
+mv mojo/examples mojo/samples
+```
+
+### Step 5: Create Documentation
+- mojo/CLAUDE.md (project guide)
+- mojo/compiler/CLAUDE.md (compiler guide)
+- mojo/compiler/README.md (quick start)
+- mojo/samples/README.md (sample programs)
+
+### Step 6: Update Root CLAUDE.md
+Update /CLAUDE.md:
+- mojo/ from "Mojo language examples" to "Mojo compiler implementation + samples"
+- Link to mojo/CLAUDE.md
+- Describe new structure
+
+### Step 7: Git Commit
+```bash
+git add mojo/
+git commit -m "feat(mojo): integrate Modular Mojo compiler implementation
+
+Extracted from modular repo:
+- 21 compiler source files (lexer, parser, type system, codegen, runtime)
+- 15 test files with comprehensive coverage
+- 8 example programs demonstrating compiler features
+
+Reorganized existing code:
+- examples/ → samples/ (keep as reference)
+- Added compiler/ for compiler implementation
+- Created proper documentation hierarchy
+
+Structure:
+- mojo/compiler/src/: Frontend, semantic, IR, codegen, runtime
+- mojo/compiler/tests/: Comprehensive test suite
+- mojo/samples/: Mojo language example programs
+- mojo/CLAUDE.md: Developer guide
+- mojo/compiler/CLAUDE.md: Compiler architecture details
+
+Status: Ready for continued development and integration.
+
+Co-Authored-By: Claude Haiku 4.5 <noreply@anthropic.com>"
+```
+
+## Risk Assessment
+
+**LOW RISK** - This is primarily file organization:
+- No build system changes (will use Pixi)
+- No dependency conflicts (compiler is self-contained Mojo)
+- No breaking changes to existing examples (just moved)
+- All files are source code (no binaries)
+
+## Success Criteria
+
+✓ Compiler source extracted to mojo/compiler/src/ (21 files)
+✓ Examples organized: mojo/compiler/examples/ + mojo/samples/
+✓ Tests organized: mojo/compiler/tests/
+✓ Documentation complete:
+  - mojo/CLAUDE.md (top-level project guide)
+  - mojo/compiler/CLAUDE.md (architecture + development)
+  - mojo/compiler/README.md (quick start)
+  - mojo/samples/README.md (sample programs guide)
+✓ Directory structure clear and navigable
+✓ Root CLAUDE.md updated
+✓ Git commit with full history
+
+## Effort
+
+**Single pass:** ~1 hour
+- Copy files: 15 min
+- Create structure: 10 min
+- Write documentation: 25 min
+- Git + verification: 10 min
+
