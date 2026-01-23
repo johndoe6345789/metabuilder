@@ -6,14 +6,57 @@
  * Supports: useCounter, useToggle, useStateWithHistory, useValidation, useArray, useSet, useMap, useStack, useQueue
  */
 
-import {
-  INodeExecutor,
-  WorkflowNode,
-  WorkflowContext,
-  ExecutionState,
-  NodeResult,
-  ValidationResult
-} from '../../../../../../../executor/ts/types'
+/**
+ * Core type definitions for the workflow hooks plugin
+ */
+export interface WorkflowNode {
+  id: string
+  name: string
+  type: string
+  parameters: Record<string, any>
+  [key: string]: any
+}
+
+export interface WorkflowContext {
+  executionId: string
+  tenantId: string
+  userId: string
+  [key: string]: any
+}
+
+export interface ExecutionState {
+  [nodeId: string]: any
+}
+
+export interface NodeResult {
+  status: 'success' | 'error' | 'skipped' | 'pending'
+  output?: any
+  outputData?: any
+  error?: string
+  errorCode?: string
+  timestamp: number
+  duration?: number
+  [key: string]: any
+}
+
+export interface ValidationResult {
+  valid: boolean
+  errors: string[]
+  warnings: string[]
+}
+
+/**
+ * Node executor interface that all workflow plugins implement
+ */
+export interface INodeExecutor {
+  nodeType: string
+  execute(
+    node: WorkflowNode,
+    context: WorkflowContext,
+    state: ExecutionState
+  ): Promise<NodeResult>
+  validate(node: WorkflowNode): ValidationResult
+}
 
 export interface HookState {
   [key: string]: any
