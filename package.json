@@ -13,6 +13,8 @@
     "redux/hooks-auth",
     "redux/hooks-canvas",
     "redux/hooks-async",
+    "redux/hooks-utils",
+    "redux/hooks-forms",
     "redux/core-hooks",
     "redux/api-clients",
     "redux/timing-utils",
