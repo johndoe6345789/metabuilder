@@ -10,6 +10,7 @@ import { LayoutSettings } from './LayoutSettings';
 import { ZoomSettings } from './ZoomSettings';
 import { ViewportSettings } from './ViewportSettings';
 import styles from '../sections.module.scss';
+import { testId, aria } from '../../../utils/accessibility';
 
 interface CanvasSettingsState {
   gridVisible: boolean;
@@ -72,7 +73,11 @@ export const CanvasSettings: React.FC = () => {
   }, []);
 
   return (
-    <div className={styles.section}>
+    <section
+      className={styles.section}
+      data-testid={testId.settingsCanvasSection()}
+      aria-label="Canvas settings"
+    >
       <GridSettings
         gridVisible={settings.gridVisible}
         gridSnapping={settings.gridSnapping}
@@ -114,12 +119,23 @@ export const CanvasSettings: React.FC = () => {
           className={`${styles.button} ${styles.primary}`}
           onClick={handleSave}
           disabled={isSaving}
+          data-testid={testId.settingsButton('save-all')}
+          aria-busy={isSaving}
         >
           {isSaving ? 'Saving...' : 'Save All Settings'}
         </button>
-        {saveMessage && <p className={styles.saveMessage}>{saveMessage}</p>}
+        {saveMessage && (
+          <p
+            className={styles.saveMessage}
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            {saveMessage}
+          </p>
+        )}
       </div>
-    </div>
+    </section>
   );
 };
 

@@ -9,6 +9,7 @@ import { TwoFactorSettings } from './TwoFactorSettings';
 import { SessionManagementSettings } from './SessionManagementSettings';
 import { AccountDeletionSettings } from './AccountDeletionSettings';
 import styles from '../sections.module.scss';
+import { testId } from '../../../utils/accessibility';
 
 interface SecuritySettingsProps {
   onAccountDeleted?: () => void;
@@ -32,7 +33,11 @@ export const SecuritySettings: React.FC<SecuritySettingsProps> = ({
   }, []);
 
   return (
-    <div className={styles.section}>
+    <section
+      className={styles.section}
+      data-testid={testId.settingsSecuritySection()}
+      aria-label="Security settings"
+    >
       <PasswordSecuritySettings onPasswordChanged={handlePasswordChanged} />
       <SessionManagementSettings onSessionsCleared={handleSessionsCleared} />
       <TwoFactorSettings onStatusChange={handleTwoFactorStatusChange} />
@@ -40,7 +45,7 @@ export const SecuritySettings: React.FC<SecuritySettingsProps> = ({
         userEmail={userEmail}
         onAccountDeleted={onAccountDeleted}
       />
-    </div>
+    </section>
   );
 };
 

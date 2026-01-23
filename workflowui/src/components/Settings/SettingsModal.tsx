@@ -9,6 +9,7 @@ import { AccountSettings } from './sections/AccountSettings';
 import { SecuritySettings } from './SecuritySettings/SecuritySettings';
 import { CanvasSettings } from './sections/CanvasSettings';
 import { NotificationSettings } from './sections/NotificationSettings';
+import { testId, aria } from '../../utils/accessibility';
 
 type SettingsTab = 'account' | 'security' | 'canvas' | 'notifications';
 
@@ -35,44 +36,72 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   };
 
   return (
-    <div className={styles.overlay} onClick={onClose}>
-      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+    <div
+      className={styles.overlay}
+      onClick={onClose}
+      role="presentation"
+      data-testid={testId.modal('settings')}
+    >
+      <div
+        className={styles.modal}
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="settings-title"
+      >
         {/* Header */}
         <div className={styles.header}>
-          <h1 className={styles.title}>Settings</h1>
+          <h1 className={styles.title} id="settings-title">Settings</h1>
           <button
             className={styles.closeButton}
             onClick={onClose}
             title="Close settings"
             aria-label="Close settings"
+            data-testid={testId.modalClose('settings')}
           >
             ✕
           </button>
         </div>
 
         {/* Tab Navigation */}
-        <div className={styles.tabNav}>
+        <div className={styles.tabNav} role="tablist" aria-label="Settings sections">
           <button
             className={`${styles.tab} ${activeTab === 'account' ? styles.active : ''}`}
             onClick={() => setActiveTab('account')}
+            role="tab"
+            aria-selected={activeTab === 'account'}
+            aria-controls="settings-account"
+            data-testid={testId.navTab('Account')}
           >
             👤 Account
           </button>
           <button
             className={`${styles.tab} ${activeTab === 'security' ? styles.active : ''}`}
             onClick={() => setActiveTab('security')}
+            role="tab"
+            aria-selected={activeTab === 'security'}
+            aria-controls="settings-security"
+            data-testid={testId.navTab('Security')}
           >
             🔐 Security
           </button>
           <button
             className={`${styles.tab} ${activeTab === 'canvas' ? styles.active : ''}`}
             onClick={() => setActiveTab('canvas')}
+            role="tab"
+            aria-selected={activeTab === 'canvas'}
+            aria-controls="settings-canvas"
+            data-testid={testId.navTab('Canvas')}
           >
             🎨 Canvas
           </button>
           <button
             className={`${styles.tab} ${activeTab === 'notifications' ? styles.active : ''}`}
             onClick={() => setActiveTab('notifications')}
+            role="tab"
+            aria-selected={activeTab === 'notifications'}
+            aria-controls="settings-notifications"
+            data-testid={testId.navTab('Notifications')}
           >
             🔔 Notifications
           </button>
@@ -80,12 +109,26 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
         {/* Content */}
         <div className={styles.content}>
-          {activeTab === 'account' && <AccountSettings />}
-          {activeTab === 'security' && (
-            <SecuritySettings onAccountDeleted={handleAccountDeleted} />
+          {activeTab === 'account' && (
+            <div role="tabpanel" id="settings-account" aria-labelledby="settings-title">
+              <AccountSettings />
+            </div>
           )}
-          {activeTab === 'canvas' && <CanvasSettings />}
-          {activeTab === 'notifications' && <NotificationSettings />}
+          {activeTab === 'security' && (
+            <div role="tabpanel" id="settings-security" aria-labelledby="settings-title">
+              <SecuritySettings onAccountDeleted={handleAccountDeleted} />
+            </div>
+          )}
+          {activeTab === 'canvas' && (
+            <div role="tabpanel" id="settings-canvas" aria-labelledby="settings-title">
+              <CanvasSettings />
+            </div>
+          )}
+          {activeTab === 'notifications' && (
+            <div role="tabpanel" id="settings-notifications" aria-labelledby="settings-title">
+              <NotificationSettings />
+            </div>
+          )}
         </div>
       </div>
     </div>

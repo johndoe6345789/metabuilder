@@ -9,6 +9,7 @@ import { EmailNotificationSettings } from './EmailNotificationSettings';
 import { PushNotificationSettings } from './PushNotificationSettings';
 import { NotificationHistorySettings } from './NotificationHistorySettings';
 import styles from '../sections.module.scss';
+import { testId } from '../../../utils/accessibility';
 
 interface NotificationSettingsState {
   // In-App Notifications
@@ -77,7 +78,11 @@ export const NotificationSettings: React.FC = () => {
   }, []);
 
   return (
-    <div className={styles.section}>
+    <section
+      className={styles.section}
+      data-testid={testId.settingsNotificationSection()}
+      aria-label="Notification settings"
+    >
       <InAppNotificationSettings
         workflowExecuted={settings.workflowExecuted}
         workflowFailed={settings.workflowFailed}
@@ -110,12 +115,23 @@ export const NotificationSettings: React.FC = () => {
           className={`${styles.button} ${styles.primary}`}
           onClick={handleSave}
           disabled={isSaving}
+          data-testid={testId.settingsButton('save-preferences')}
+          aria-busy={isSaving}
         >
           {isSaving ? 'Saving...' : 'Save Preferences'}
         </button>
-        {saveMessage && <p className={styles.saveMessage}>{saveMessage}</p>}
+        {saveMessage && (
+          <p
+            className={styles.saveMessage}
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            {saveMessage}
+          </p>
+        )}
       </div>
-    </div>
+    </section>
   );
 };
 

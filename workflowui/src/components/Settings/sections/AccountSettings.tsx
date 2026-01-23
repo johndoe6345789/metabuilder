@@ -5,6 +5,7 @@
 
 import React, { useState, useCallback } from 'react';
 import styles from './sections.module.scss';
+import { testId, aria } from '../../../utils/accessibility';
 
 export const AccountSettings: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -45,8 +46,8 @@ export const AccountSettings: React.FC = () => {
   }, [originalData]);
 
   return (
-    <div className={styles.section}>
-      <h2 className={styles.sectionTitle}>Profile Information</h2>
+    <section className={styles.section} data-testid={testId.settingsPanel()} aria-label="Account settings">
+      <h2 className={styles.sectionTitle} id="account-settings-title">Profile Information</h2>
 
       {/* Avatar Section */}
       <div className={styles.avatarSection}>
@@ -129,7 +130,11 @@ export const AccountSettings: React.FC = () => {
       {/* Action Buttons */}
       <div className={styles.actions}>
         {!isEditing ? (
-          <button className={`${styles.button} ${styles.primary}`} onClick={() => setIsEditing(true)}>
+          <button
+            className={`${styles.button} ${styles.primary}`}
+            onClick={() => setIsEditing(true)}
+            data-testid={testId.settingsButton('edit-profile')}
+          >
             Edit Profile
           </button>
         ) : (
@@ -138,10 +143,16 @@ export const AccountSettings: React.FC = () => {
               className={`${styles.button} ${styles.primary}`}
               onClick={handleSave}
               disabled={isSaving}
+              data-testid={testId.settingsButton('save-profile')}
+              aria-busy={isSaving}
             >
               {isSaving ? 'Saving...' : 'Save Changes'}
             </button>
-            <button className={styles.button} onClick={handleCancel}>
+            <button
+              className={styles.button}
+              onClick={handleCancel}
+              data-testid={testId.settingsButton('cancel-profile')}
+            >
               Cancel
             </button>
           </>
@@ -149,7 +160,7 @@ export const AccountSettings: React.FC = () => {
       </div>
 
       {/* Account Info */}
-      <div className={styles.infoSection}>
+      <div className={styles.infoSection} role="region" aria-label="Account information">
         <h3 className={styles.infoTitle}>Account Information</h3>
         <div className={styles.infoRow}>
           <span className={styles.infoLabel}>Account Created:</span>
@@ -164,7 +175,7 @@ export const AccountSettings: React.FC = () => {
           <span className={styles.infoValue}>2</span>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 
