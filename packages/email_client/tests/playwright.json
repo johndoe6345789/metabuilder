@@ -1,0 +1,241 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "email_client",
+  "version": "1.0.0",
+  "description": "End-to-end tests for email client workflows including compose, send, sync, and folder management",
+  "baseURL": "http://localhost:3000",
+  "setup": {
+    "beforeAll": [
+      {
+        "action": "navigate",
+        "url": "/email/inbox"
+      },
+      {
+        "action": "waitForElement",
+        "selector": "[data-testid='email-inbox']",
+        "timeout": 5000
+      }
+    ],
+    "beforeEach": [
+      {
+        "action": "navigate",
+        "url": "/email/inbox"
+      }
+    ]
+  },
+  "fixtures": {
+    "testUser": {
+      "email": "test@example.com",
+      "password": "TestPassword123!",
+      "displayName": "Test User"
+    },
+    "testRecipient": {
+      "email": "recipient@example.com",
+      "displayName": "Test Recipient"
+    },
+    "testMessage": {
+      "to": ["recipient@example.com"],
+      "subject": "Test Email Subject",
+      "body": "This is a test email message body.",
+      "cc": [],
+      "bcc": []
+    }
+  },
+  "tests": [
+    {
+      "name": "User can view email inbox",
+      "steps": [
+        { "action": "navigate", "url": "/email/inbox" },
+        { "action": "waitForElement", "selector": "[data-testid='email-list']", "timeout": 3000 },
+        { "action": "assertVisible", "selector": "[data-testid='email-inbox']" }
+      ]
+    },
+    {
+      "name": "User can select an email from inbox",
+      "steps": [
+        { "action": "navigate", "url": "/email/inbox" },
+        { "action": "waitForElement", "selector": "[data-testid='email-card']", "timeout": 3000 },
+        { "action": "click", "selector": "[data-testid='email-card']:first-child" },
+        { "action": "waitForElement", "selector": "[data-testid='email-detail']", "timeout": 2000 },
+        { "action": "assertVisible", "selector": "[data-testid='email-header']" }
+      ]
+    },
+    {
+      "name": "User can mark email as read",
+      "steps": [
+        { "action": "navigate", "url": "/email/inbox" },
+        { "action": "click", "selector": "[data-testid='email-card']:first-child" },
+        { "action": "waitForElement", "selector": "[data-testid='mark-as-read-checkbox']" },
+        { "action": "click", "selector": "[data-testid='mark-as-read-checkbox']" },
+        { "action": "assertAttribute", "selector": "[data-testid='mark-as-read-checkbox']", "attribute": "aria-checked", "value": "true" }
+      ]
+    },
+    {
+      "name": "User can star an email",
+      "steps": [
+        { "action": "navigate", "url": "/email/inbox" },
+        { "action": "click", "selector": "[data-testid='email-card']:first-child" },
+        { "action": "click", "selector": "[data-testid='star-button']" },
+        { "action": "waitForText", "selector": "[data-testid='star-button']", "text": "⭐", "timeout": 1000 }
+      ]
+    },
+    {
+      "name": "User can navigate folders",
+      "steps": [
+        { "action": "navigate", "url": "/email/inbox" },
+        { "action": "click", "selector": "[data-testid='folder-sent']" },
+        { "action": "waitForElement", "selector": "[data-testid='email-list']", "timeout": 2000 },
+        { "action": "assertUrl", "url": "http://localhost:3000/email/inbox?folder=sent" }
+      ]
+    },
+    {
+      "name": "User can open compose window",
+      "steps": [
+        { "action": "navigate", "url": "/email/compose" },
+        { "action": "waitForElement", "selector": "[data-testid='compose-window']", "timeout": 3000 },
+        { "action": "assertVisible", "selector": "[data-testid='recipient-input-to']" },
+        { "action": "assertVisible", "selector": "[data-testid='subject-input']" },
+        { "action": "assertVisible", "selector": "[data-testid='body-editor']" }
+      ]
+    },
+    {
+      "name": "User can add recipients in compose",
+      "steps": [
+        { "action": "navigate", "url": "/email/compose" },
+        { "action": "click", "selector": "[data-testid='recipient-input-to']" },
+        { "action": "type", "selector": "[data-testid='recipient-input-to'] input", "text": "recipient@example.com" },
+        { "action": "press", "key": "Enter" },
+        { "action": "waitForElement", "selector": "[data-testid='recipient-chip']:contains('recipient@example.com')", "timeout": 2000 }
+      ]
+    },
+    {
+      "name": "User can add cc recipients",
+      "steps": [
+        { "action": "navigate", "url": "/email/compose" },
+        { "action": "click", "selector": "[data-testid='recipient-input-cc']" },
+        { "action": "type", "selector": "[data-testid='recipient-input-cc'] input", "text": "cc@example.com" },
+        { "action": "press", "key": "Enter" },
+        { "action": "assertVisible", "selector": "[data-testid='recipient-chip']:contains('cc@example.com')" }
+      ]
+    },
+    {
+      "name": "User can compose and send email",
+      "steps": [
+        { "action": "navigate", "url": "/email/compose" },
+        { "action": "click", "selector": "[data-testid='recipient-input-to']" },
+        { "action": "type", "selector": "[data-testid='recipient-input-to'] input", "text": "recipient@example.com" },
+        { "action": "press", "key": "Enter" },
+        { "action": "click", "selector": "[data-testid='subject-input']" },
+        { "action": "type", "selector": "[data-testid='subject-input']", "text": "Test Email Subject" },
+        { "action": "click", "selector": "[data-testid='body-editor'] textarea" },
+        { "action": "type", "selector": "[data-testid='body-editor'] textarea", "text": "This is a test email." },
+        { "action": "click", "selector": "[data-testid='send-button']" },
+        { "action": "waitForText", "selector": "[data-testid='success-message']", "text": "Email sent", "timeout": 3000 }
+      ]
+    },
+    {
+      "name": "User can save draft",
+      "steps": [
+        { "action": "navigate", "url": "/email/compose" },
+        { "action": "click", "selector": "[data-testid='subject-input']" },
+        { "action": "type", "selector": "[data-testid='subject-input']", "text": "Draft Email" },
+        { "action": "click", "selector": "[data-testid='body-editor'] textarea" },
+        { "action": "type", "selector": "[data-testid='body-editor'] textarea", "text": "This is a draft." },
+        { "action": "press", "key": "Control+S" },
+        { "action": "waitForText", "selector": "[data-testid='status-message']", "text": "Draft saved", "timeout": 2000 }
+      ]
+    },
+    {
+      "name": "User can trigger email sync",
+      "steps": [
+        { "action": "navigate", "url": "/email/inbox" },
+        { "action": "click", "selector": "[data-testid='sync-button']" },
+        { "action": "waitForElement", "selector": "[data-testid='sync-progress']", "timeout": 2000 },
+        { "action": "waitForElement", "selector": "[data-testid='sync-complete']", "timeout": 30000 }
+      ]
+    },
+    {
+      "name": "User can view sync status",
+      "steps": [
+        { "action": "navigate", "url": "/email/inbox" },
+        { "action": "assertVisible", "selector": "[data-testid='sync-status-badge']" },
+        { "action": "assertText", "selector": "[data-testid='sync-status-badge']", "contains": "Last sync" }
+      ]
+    },
+    {
+      "name": "User can access email settings",
+      "steps": [
+        { "action": "navigate", "url": "/email/settings" },
+        { "action": "waitForElement", "selector": "[data-testid='settings-layout']", "timeout": 3000 },
+        { "action": "assertVisible", "selector": "[data-testid='settings-accounts-tab']" },
+        { "action": "assertVisible", "selector": "[data-testid='settings-filters-tab']" }
+      ]
+    },
+    {
+      "name": "User can manage email accounts",
+      "steps": [
+        { "action": "navigate", "url": "/email/settings" },
+        { "action": "click", "selector": "[data-testid='settings-accounts-tab']" },
+        { "action": "waitForElement", "selector": "[data-testid='account-list']", "timeout": 2000 },
+        { "action": "assertVisible", "selector": "[data-testid='account-item']" }
+      ]
+    },
+    {
+      "name": "User can switch between email accounts",
+      "steps": [
+        { "action": "navigate", "url": "/email/inbox" },
+        { "action": "waitForElement", "selector": "[data-testid='account-tabs']", "timeout": 2000 },
+        { "action": "click", "selector": "[data-testid='account-tab']:nth-child(2)" },
+        { "action": "waitForElement", "selector": "[data-testid='email-list']", "timeout": 2000 }
+      ]
+    },
+    {
+      "name": "User can search emails",
+      "steps": [
+        { "action": "navigate", "url": "/email/inbox" },
+        { "action": "click", "selector": "[data-testid='search-input']" },
+        { "action": "type", "selector": "[data-testid='search-input']", "text": "important" },
+        { "action": "press", "key": "Enter" },
+        { "action": "waitForElement", "selector": "[data-testid='search-results']", "timeout": 3000 }
+      ]
+    },
+    {
+      "name": "User can view email attachments",
+      "steps": [
+        { "action": "navigate", "url": "/email/inbox" },
+        { "action": "click", "selector": "[data-testid='email-card-with-attachments']" },
+        { "action": "waitForElement", "selector": "[data-testid='attachment-list']", "timeout": 2000 },
+        { "action": "assertVisible", "selector": "[data-testid='attachment-item']" }
+      ]
+    },
+    {
+      "name": "User can download attachment",
+      "steps": [
+        { "action": "navigate", "url": "/email/inbox" },
+        { "action": "click", "selector": "[data-testid='email-card-with-attachments']" },
+        { "action": "click", "selector": "[data-testid='attachment-download-button']" },
+        { "action": "waitForDownload", "timeout": 5000 }
+      ]
+    },
+    {
+      "name": "User can reply to email",
+      "steps": [
+        { "action": "navigate", "url": "/email/inbox" },
+        { "action": "click", "selector": "[data-testid='email-card']:first-child" },
+        { "action": "click", "selector": "[data-testid='reply-button']" },
+        { "action": "waitForElement", "selector": "[data-testid='compose-reply']", "timeout": 2000 },
+        { "action": "assertAttribute", "selector": "[data-testid='recipient-input-to']", "attribute": "value", "contains": "sender@" }
+      ]
+    },
+    {
+      "name": "User can delete email",
+      "steps": [
+        { "action": "navigate", "url": "/email/inbox" },
+        { "action": "click", "selector": "[data-testid='email-card']:first-child" },
+        { "action": "click", "selector": "[data-testid='delete-button']" },
+        { "action": "click", "selector": "[data-testid='confirm-delete']" },
+        { "action": "waitForElement", "selector": "[data-testid='undo-message']", "timeout": 2000 }
+      ]
+    }
+  ]
+}
