@@ -288,12 +288,53 @@ import { useLoginLogic } from '@metabuilder/hooks/useLoginLogic'
 - Supports multi-version peer dependencies (React 18/19, Redux 8/9)
 - Location: `/hooks/` at project root
 
+### Utility Hooks (`redux/hooks-utils/`, `redux/hooks-forms/`)
+
+**Status**: ✅ New high-priority utilities (Jan 23, 2026)
+
+**Packages Created**:
+- `@metabuilder/hooks-utils@1.0.0` - Data table, async operations, and timing utilities
+  - `useTableState` - Unified data grid: pagination + sorting + filtering + search
+  - `useAsyncOperation` - Non-Redux async with retry and caching
+  - `useDebounced` - Value debouncing with leading/trailing options
+  - `useThrottled` - Value throttling for continuous updates
+
+- `@metabuilder/hooks-forms@1.0.0` - Form management with validation
+  - `useFormBuilder` - Complete form state with field arrays and validation
+  - Field-level and form-level error tracking
+  - Touched/dirty state management
+  - Submit state and error handling
+
+**Impact**: Eliminates ~1,500 lines of duplicate code across codegen, workflowui, pastebin
+
+**Usage**:
+```typescript
+import { useTableState, useAsyncOperation } from '@metabuilder/hooks-utils'
+import { useFormBuilder } from '@metabuilder/hooks-forms'
+
+// Data grid with all operations
+const table = useTableState(items, { pageSize: 10, searchFields: ['name'] })
+table.setSearch('filter')
+table.sort('name')
+table.addFilter({ field: 'status', operator: 'eq', value: 'active' })
+
+// Non-Redux async
+const { data, isLoading, execute } = useAsyncOperation(apiCall, { cacheKey: 'data' })
+
+// Form with validation
+const form = useFormBuilder({ initialValues: {}, onSubmit: submitForm })
+```
+
+---
+
 ### Redux State Management
 
-**Current Status**: 10 packages total (including new centralized hooks)
+**Current Status**: 12 packages total (10 Redux-specific + 2 utility packages)
 
 **Packages**:
-- `@metabuilder/hooks` - Centralized custom React hooks (NEW - Jan 23, 2026)
+- `@metabuilder/hooks` - Centralized custom React hooks (30 total)
+- `@metabuilder/hooks-utils` - Utility hooks with data/async helpers (NEW - Jan 23, 2026)
+- `@metabuilder/hooks-forms` - Form management hooks (NEW - Jan 23, 2026)
 - `@metabuilder/core-hooks` - Generic Redux hooks
 - `@metabuilder/api-clients` - API client hooks
 - `@metabuilder/hooks-*` - Feature-specific hooks (auth, canvas, data, core)
