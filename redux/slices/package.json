@@ -9,17 +9,17 @@
     "dev": "tsc --watch"
   },
   "dependencies": {
-    "@reduxjs/toolkit": "^1.9.0",
-    "react": "^18.0.0",
-    "react-redux": "^8.0.0"
+    "@reduxjs/toolkit": "^1.9.7",
+    "react": "^19.2.3",
+    "react-redux": "^9.2.0"
   },
   "peerDependencies": {
-    "@reduxjs/toolkit": "^1.9.0",
-    "react": "^18.0.0",
-    "react-redux": "^8.0.0"
+    "@reduxjs/toolkit": "^1.9.7 || ^2.5.0",
+    "react": "^18.0.0 || ^19.0.0",
+    "react-redux": "^8.0.0 || ^9.0.0"
   },
   "devDependencies": {
-    "typescript": "^5.0.0"
+    "typescript": "^5.9.3"
   },
   "files": [
     "dist"
