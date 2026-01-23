@@ -1,0 +1,18 @@
+[workspace]
+name = "mojo-compiler"
+version = "1.0.0"
+description = "Mojo compiler implementation with full test suite"
+authors = ["MetaBuilder"]
+channels = ["conda-forge", "https://conda.modular.com/max-nightly/"]
+platforms = ["osx-arm64", "linux-64", "linux-aarch64"]
+
+[dependencies]
+mojo = "<1.0.0"
+
+[tasks]
+test = "mojo tests/test_snake_phase2.mojo"
+test-phase1 = "mojo tests/test_snake_phase1.mojo"
+test-phase3 = "mojo tests/test_snake_phase3.mojo"
+test-phase4 = "mojo tests/test_snake_phase4.mojo"
+test-phase5 = "mojo tests/test_snake_phase5.mojo"
+test-all = "mojo tests/test_*.mojo"

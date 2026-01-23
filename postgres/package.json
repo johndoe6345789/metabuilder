@@ -57,7 +57,7 @@
     "posthog-js": "^1.315.1",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
-    "react-hook-form": "^7.70.0",
+    "react-hook-form": "^7.71.1",
     "zod": "^4.3.5"
   },
   "devDependencies": {

@@ -30,6 +30,9 @@
     "jsdom": "^27.4.0"
   },
   "dependencies": {
-    "@reduxjs/toolkit": "^2.0.0"
+    "@reduxjs/toolkit": "^2.5.2"
+  },
+  "overrides": {
+    "lodash": "^4.17.22"
   }
 }
