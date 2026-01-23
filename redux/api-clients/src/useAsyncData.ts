@@ -1,11 +1,19 @@
 /**
  * useAsyncData - Generic async data fetching hook
  *
+ * Delegates to Redux-backed @metabuilder/hooks-async for state management.
+ * Maintains backward compatibility with previous standalone implementation.
+ *
  * Manages async operations with loading states, error handling, retries, and refetching.
  * Works across all frontends for any async data source.
  */
 
 import { useEffect, useState, useCallback, useRef } from 'react'
+import {
+  useReduxAsyncData as useReduxAsyncDataImpl,
+  useReduxPaginatedAsyncData as useReduxPaginatedAsyncDataImpl,
+  useReduxMutation as useReduxMutationImpl,
+} from '@metabuilder/hooks-async'
 
 export interface UseAsyncDataOptions<T> {
   /**
@@ -93,6 +101,8 @@ export interface UseAsyncDataResult<T> {
  * Handles data fetching, loading state, error state, and automatic retries.
  * Perfect for client-side data loading with built-in loading UI feedback.
  *
+ * Delegates to Redux-backed implementation via @metabuilder/hooks-async.
+ *
  * @template T The type of data being fetched
  * @param fetchFn - Async function to fetch data
  * @param options - Configuration options
@@ -132,113 +142,37 @@ export function useAsyncData<T>(
     initialData,
   } = options
 
-  const [data, setData] = useState<T | undefined>(initialData)
-  const [isLoading, setIsLoading] = useState(false)
-  const [isRefetching, setIsRefetching] = useState(false)
-  const [error, setError] = useState<Error | null>(null)
-  const retryCountRef = useRef(0)
-  const abortControllerRef = useRef<AbortController | null>(null)
+  // Track initial data locally for compatibility
+  const [localData, setLocalData] = useState<T | undefined>(initialData)
 
-  const fetchData = useCallback(
-    async (isRetry = false) => {
-      try {
-        // Cancel previous request if exists
-        if (abortControllerRef.current) {
-          abortControllerRef.current.abort()
-        }
-
-        // Create new abort controller for this request
-        abortControllerRef.current = new AbortController()
-
-        if (isRetry) {
-          setIsRefetching(true)
-        } else {
-          setIsLoading(true)
-        }
-        setError(null)
-
-        const result = await fetchFn()
-        setData(result)
-        setError(null)
-        retryCountRef.current = 0
-
-        if (onSuccess) {
-          onSuccess(result)
-        }
-      } catch (err) {
-        const error = err instanceof Error ? err : new Error(String(err))
-
-        // Don't update state if this request was aborted
-        if (error.name === 'AbortError') {
-          return
-        }
-
-        setError(error)
-
-        // Retry logic
-        if (retryCountRef.current < retries) {
-          retryCountRef.current += 1
-          await new Promise((resolve) => setTimeout(resolve, retryDelay))
-          await fetchData(isRetry)
-        } else if (onError) {
-          onError(error)
-        }
-      } finally {
-        setIsLoading(false)
-        setIsRefetching(false)
-      }
+  // Delegate to Redux-backed implementation
+  const reduxResult = useReduxAsyncDataImpl<T>(fetchFn, {
+    maxRetries: retries,
+    retryDelay,
+    refetchOnFocus,
+    refetchInterval: refetchInterval ?? undefined,
+    dependencies: Array.isArray(dependencies) ? [...dependencies] : [],
+    onSuccess: (data) => {
+      setLocalData(data as T)
+      onSuccess?.(data as T)
     },
-    [fetchFn, retries, retryDelay, onSuccess, onError]
-  )
+    onError: (error: string) => {
+      // Convert error string to Error object for backward compatibility
+      const errorObj = new Error(error)
+      onError?.(errorObj)
+    },
+  })
 
-  // Initial fetch
-  useEffect(() => {
-    fetchData()
-  }, dependencies) // eslint-disable-line react-hooks/exhaustive-deps
-
-  // Auto-refetch on interval
-  useEffect(() => {
-    if (!refetchInterval || refetchInterval <= 0) {
-      return
-    }
-
-    const interval = setInterval(() => {
-      void fetchData(true)
-    }, refetchInterval)
-
-    return () => clearInterval(interval)
-  }, [refetchInterval, fetchData])
-
-  // Refetch on window focus
-  useEffect(() => {
-    if (!refetchOnFocus) {
-      return
-    }
-
-    const handleFocus = () => {
-      void fetchData(true)
-    }
-
-    window.addEventListener('focus', handleFocus)
-    return () => window.removeEventListener('focus', handleFocus)
-  }, [refetchOnFocus, fetchData])
-
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort()
-      }
-    }
-  }, [])
+  // Use local data if available, otherwise use Redux data
+  const data = reduxResult.data ?? localData
 
   return {
     data,
-    isLoading,
-    error,
-    isRefetching,
-    retry: () => fetchData(true),
-    refetch: () => fetchData(true),
+    isLoading: reduxResult.isLoading,
+    error: reduxResult.error ? new Error(reduxResult.error) : null,
+    isRefetching: reduxResult.isRefetching,
+    retry: reduxResult.retry,
+    refetch: reduxResult.refetch,
   }
 }
 
@@ -294,6 +228,8 @@ export interface UsePaginatedDataResult<T> extends UseAsyncDataResult<T[]> {
 /**
  * usePaginatedData - Hook for paginated API calls
  *
+ * Delegates to Redux-backed implementation via @metabuilder/hooks-async.
+ *
  * @template T Item type in the paginated result
  * @param fetchFn - Function that takes page and pageSize and returns items and total
  * @param options - Configuration options
@@ -328,41 +264,70 @@ export function usePaginatedData<T>(
 ): UsePaginatedDataResult<T> {
   const { pageSize = 10, initialPage = 0, ...asyncOptions } = options
 
+  // Track pagination locally - convert from 0-based to 1-based for Redux hook
   const [page, setPage] = useState(initialPage)
   const [itemCount, setItemCount] = useState(0)
 
-  const asyncResult = useAsyncData(
-    async () => {
-      const result = await fetchFn(page, pageSize)
-      setItemCount(result.total)
-      return result.items
+  // Create a mutable copy of dependencies for the Redux hook
+  const deps = asyncOptions.dependencies ? Array.isArray(asyncOptions.dependencies) ? [...asyncOptions.dependencies] : [asyncOptions.dependencies] : []
+
+  // Delegate to Redux-backed paginated implementation
+  // Note: Redux hook uses 1-based pages, convert our 0-based page
+  const reduxResult = useReduxPaginatedAsyncDataImpl<T>(
+    (reduxPage: number, reduxPageSize: number) => {
+      // Convert from Redux 1-based to API 0-based (or keep as-is based on your API)
+      return fetchFn(reduxPage - 1, reduxPageSize).then((result) => {
+        setItemCount(result.total)
+        return result.items
+      })
     },
     {
-      ...asyncOptions,
-      dependencies: [page, pageSize, ...(asyncOptions.dependencies ?? [])],
+      pageSize,
+      initialPage: page + 1, // Convert 0-based to 1-based for Redux hook
+      dependencies: deps,
+      maxRetries: asyncOptions.retries,
+      retryDelay: asyncOptions.retryDelay,
+      refetchOnFocus: asyncOptions.refetchOnFocus,
+      refetchInterval: (asyncOptions.refetchInterval ?? null) ?? undefined,
+      onSuccess: asyncOptions.onSuccess as ((data: unknown) => void) | undefined,
+      onError: (error: string) => {
+        // Convert error string to Error object for backward compatibility
+        const errorObj = new Error(error)
+        asyncOptions.onError?.(errorObj)
+      },
     }
   )
 
   const pageCount = Math.ceil(itemCount / pageSize)
 
   return {
-    ...asyncResult,
+    data: reduxResult.data || [],
+    isLoading: reduxResult.isLoading,
+    error: reduxResult.error ? new Error(reduxResult.error) : null,
+    isRefetching: reduxResult.isRefetching,
+    retry: reduxResult.retry,
+    refetch: reduxResult.refetch,
     page,
     pageCount,
     itemCount,
     goToPage: (newPage: number) => {
       if (newPage >= 0 && newPage < pageCount) {
         setPage(newPage)
+        reduxResult.goToPage(newPage + 1) // Convert to 1-based
       }
     },
     nextPage: () => {
       if (page < pageCount - 1) {
-        setPage(page + 1)
+        const newPage = page + 1
+        setPage(newPage)
+        reduxResult.nextPage()
       }
     },
     previousPage: () => {
       if (page > 0) {
-        setPage(page - 1)
+        const newPage = page - 1
+        setPage(newPage)
+        reduxResult.prevPage()
       }
     },
   }
@@ -408,6 +373,8 @@ export interface UseMutationResult<T, R> {
 /**
  * useMutation - Hook for write operations with loading state
  *
+ * Delegates to Redux-backed implementation via @metabuilder/hooks-async.
+ *
  * @template T Input data type for the mutation
  * @template R Return type of the mutation
  * @param mutationFn - Function that executes the mutation
@@ -439,42 +406,20 @@ export function useMutation<T, R>(
 ): UseMutationResult<T, R> {
   const { onSuccess, onError } = options
 
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<Error | null>(null)
-
-  const mutate = useCallback(
-    async (data: T) => {
-      try {
-        setIsLoading(true)
-        setError(null)
-
-        const result = await mutationFn(data)
-
-        if (onSuccess) {
-          onSuccess(result)
-        }
-
-        return result
-      } catch (err) {
-        const error = err instanceof Error ? err : new Error(String(err))
-        setError(error)
-
-        if (onError) {
-          onError(error)
-        }
-
-        throw error
-      } finally {
-        setIsLoading(false)
-      }
+  // Delegate to Redux-backed implementation
+  const reduxResult = useReduxMutationImpl<T, R>(mutationFn, {
+    onSuccess,
+    onError: (error: string) => {
+      // Convert error string to Error object for backward compatibility
+      const errorObj = new Error(error)
+      onError?.(errorObj)
     },
-    [mutationFn, onSuccess, onError]
-  )
+  })
 
   return {
-    mutate,
-    isLoading,
-    error,
-    reset: () => setError(null),
+    mutate: reduxResult.mutate,
+    isLoading: reduxResult.isLoading,
+    error: reduxResult.error ? new Error(reduxResult.error) : null,
+    reset: reduxResult.reset,
   }
 }
