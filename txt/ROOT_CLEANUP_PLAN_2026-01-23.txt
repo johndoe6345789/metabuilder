@@ -1,0 +1,135 @@
+PROJECT ROOT CLEANUP PLAN
+═══════════════════════════════════════════════════════════════════════
+
+CURRENT STATE (17 root files + config files):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+KEEP (Essential):
+  ✅ .env.local - Environment configuration
+  ✅ .gitignore - Git ignore rules
+  ✅ .gitattributes - Git attributes
+  ✅ .npmrc - npm configuration
+  ✅ .gitlab-ci.yml - GitLab CI
+  ✅ Jenkinsfile - Jenkins CI
+  ✅ lefthook.yml - Git hooks
+  ✅ docker-compose.ghcr.yml - Docker compose
+  ✅ .dockerignore - Docker ignore
+  ✅ .DS_Store - macOS file (ignore)
+  ✅ playwright.config.ts - E2E test config
+  ✅ package.json - Node dependencies
+  ✅ package-lock.json - Locked dependencies
+  ✅ CLAUDE.md - AI Assistant guide
+
+MOVE TO txt/ (Analysis/reports - should be indexed in txt/):
+  🚚 DASHBOARD_WORKFLOW_DELIVERY_SUMMARY.txt
+  🚚 GAMEENGINE_N8N_AUDIT_SUMMARY.txt
+  🚚 WORKFLOW_EXECUTOR_DIAGRAM.txt
+
+REMOVE (Outdated/temp utilities):
+  ❌ examples_workflow_compliance.py (one-off script)
+  ❌ workflow_compliance_fixer.py (one-off script)
+  ❌ test-prisma-adapter.js (test file, belongs in test/)
+
+ISSUES FOUND IN txt/ FOLDER:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ GOOD: Recent dependency files (Jan 23, 2026):
+  - COMPLETION_STATUS.txt
+  - DEPENDENCY_UPDATES_INDEX_2026-01-23.txt
+  - conan_updates_2026-01-23.txt
+  - npm_security_fixes_2026-01-23.txt
+  - plugin_dependency_setup_2026-01-23.txt
+
+❌ OLD: Pre-organization files:
+  - ANALYSIS_COMPLETE.txt (Jan 21)
+  - AUDIT_LOG_IMPLEMENTATION_SUMMARY.txt (Jan 21)
+  - PHASE3_ADMIN_PACKAGES_DELIVERABLES.txt (Jan 21)
+
+ISSUES FOUND IN docs/ FOLDER:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Root /docs/ should be MINIMAL (only project-wide):
+
+✅ BELONGS IN ROOT docs/:
+  - CLAUDE.md (core development guide)
+  - DOCS_INDEX.md (navigation)
+
+❌ SHOULD MOVE TO SUBPROJECT docs/:
+  - DEPENDENCY_UPDATES_2026-01-23.md → (already in txt/)
+  - FAKEMUI_REORGANIZATION_SUMMARY.md → fakemui/docs/
+  - FRONTEND_UI_FRAMEWORK_AUDIT.md → fakemui/docs/ or codegen/docs/
+  - INDEX_TIER2_ANALYSIS.md → (unclear purpose, archive?)
+  - IRC_WEBCHAT_IMPLEMENTATION_SUMMARY.txt → packages/irc_webchat/docs/
+  - MEDIA_CENTER_UPDATE_SUMMARY.txt → packages/media_center/docs/
+  - AUDIT_RESULTS.txt → (timestamp unclear, archive?)
+  - COMPLIANCE_ANALYSIS_SUMMARY.txt → (unclear purpose, archive?)
+
+⚠️  DIRECTORIES TO AUDIT:
+  - /docs/n8n/ → moved to subproject docs (gameengine/, packages/)
+  - /docs/archive/ → contains old stuff
+  - /docs/analysis/ → old analysis files
+  - /docs/architecture/ → might have useful content
+  - /docs/guides/ → good but not organized
+  - /docs/core/ → subproject-specific?
+  - /docs/gameengine/ → ✅ proper subproject docs
+  - /docs/dbal/ → subproject-specific?
+  - /docs/implementation/ → unclear purpose
+
+ACTION PLAN:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PHASE 1 - REMOVE ROOT CRUFT:
+  1. Remove: examples_workflow_compliance.py
+  2. Remove: workflow_compliance_fixer.py
+  3. Remove: test-prisma-adapter.js
+  4. Move to txt/: DASHBOARD_WORKFLOW_DELIVERY_SUMMARY.txt
+  5. Move to txt/: GAMEENGINE_N8N_AUDIT_SUMMARY.txt
+  6. Move to txt/: WORKFLOW_EXECUTOR_DIAGRAM.txt
+
+PHASE 2 - ORGANIZE txt/ FOLDER:
+  1. Keep: All 2026-01-23 dependency files (CURRENT)
+  2. Archive: Old analysis files (ANALYSIS_COMPLETE.txt, etc.)
+  3. Create: README.md in txt/ explaining file organization
+
+PHASE 3 - ORGANIZE docs/ FOLDER:
+  1. Keep only in /docs/:
+     - CLAUDE.md
+     - DOCS_INDEX.md
+     - Any architecture/principles docs
+  2. Move game/media/irc docs to subproject /docs/ folders
+  3. Archive: /docs/n8n/, /docs/analysis/, /docs/archive/
+  4. Create: /docs/README.md explaining structure
+
+PHASE 4 - VERIFY:
+  1. Check root is clean
+  2. Verify subprojects have proper /docs/ folders
+  3. Update CLAUDE.md with "Per-Subproject Docs" reference
+
+EXPECTED RESULT:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PROJECT ROOT (13 files):
+  - Essential configs (.env.local, .gitignore, .npmrc, etc.)
+  - CI/CD (Jenkinsfile, .gitlab-ci.yml)
+  - Build (docker-compose.ghcr.yml, .dockerignore)
+  - Package management (package.json, package-lock.json)
+  - Testing (playwright.config.ts)
+  - Docs (CLAUDE.md)
+
+txt/ FOLDER (organized):
+  - Current dependency files (Jan 23, 2026)
+  - Delivery/audit summaries
+  - Can add new analysis/reports here
+
+docs/ FOLDER (minimal):
+  - CLAUDE.md (core guide)
+  - DOCS_INDEX.md (navigation)
+  - Architecture principles
+  - Subproject docs moved OUT
+
+Subproject docs/ FOLDERS (organized):
+  - fakemui/docs/ ✅ (already good)
+  - codegen/docs/ → move CodeForge stuff
+  - packages/*/docs/ → move package-specific docs
+  - gameengine/docs/ ✅ (already good)
+  - etc.
