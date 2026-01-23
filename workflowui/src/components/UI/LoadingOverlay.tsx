@@ -5,7 +5,6 @@
 
 import React from 'react';
 import { useUI } from '../../hooks';
-import styles from './LoadingOverlay.module.scss';
 
 export const LoadingOverlay: React.FC = () => {
   const { loading, loadingMessage } = useUI();
@@ -15,12 +14,12 @@ export const LoadingOverlay: React.FC = () => {
   }
 
   return (
-    <div className={styles.overlay} role="progressbar" aria-busy="true">
-      <div className={styles.content}>
-        <div className={styles.spinner}>
-          <div className={styles.spinnerCircle}></div>
+    <div  role="progressbar" aria-busy="true">
+      <div >
+        <div >
+          <div ></div>
         </div>
-        {loadingMessage && <p className={styles.message}>{loadingMessage}</p>}
+        {loadingMessage && <p >{loadingMessage}</p>}
       </div>
     </div>
   );

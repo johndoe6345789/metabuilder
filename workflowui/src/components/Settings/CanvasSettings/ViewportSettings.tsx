@@ -4,7 +4,6 @@
  */
 
 import React from 'react';
-import styles from '../sections.module.scss';
 
 interface ViewportSettingsProps {
   defaultZoom: number;
@@ -20,12 +19,12 @@ export const ViewportSettings: React.FC<ViewportSettingsProps> = ({
   onSettingChange,
 }) => {
   return (
-    <div className={styles.subsection}>
-      <h3 className={styles.subsectionTitle}>Viewport Defaults</h3>
+    <div >
+      <h3 >Viewport Defaults</h3>
 
-      <div className={styles.settingRow}>
-        <label htmlFor="defaultZoom" className={styles.label}>
-          Default Zoom: <span className={styles.value}>{defaultZoom}%</span>
+      <div >
+        <label htmlFor="defaultZoom" >
+          Default Zoom: <span >{defaultZoom}%</span>
         </label>
         <input
           id="defaultZoom"
@@ -35,13 +34,13 @@ export const ViewportSettings: React.FC<ViewportSettingsProps> = ({
           step="10"
           value={defaultZoom}
           onChange={(e) => onSettingChange('defaultZoom', parseInt(e.target.value))}
-          className={styles.slider}
+          
         />
       </div>
 
-      <div className={styles.settingRow}>
-        <label htmlFor="minZoom" className={styles.label}>
-          Minimum Zoom: <span className={styles.value}>{minZoom}%</span>
+      <div >
+        <label htmlFor="minZoom" >
+          Minimum Zoom: <span >{minZoom}%</span>
         </label>
         <input
           id="minZoom"
@@ -51,13 +50,13 @@ export const ViewportSettings: React.FC<ViewportSettingsProps> = ({
           step="5"
           value={minZoom}
           onChange={(e) => onSettingChange('minZoom', parseInt(e.target.value))}
-          className={styles.slider}
+          
         />
       </div>
 
-      <div className={styles.settingRow}>
-        <label htmlFor="maxZoom" className={styles.label}>
-          Maximum Zoom: <span className={styles.value}>{maxZoom}%</span>
+      <div >
+        <label htmlFor="maxZoom" >
+          Maximum Zoom: <span >{maxZoom}%</span>
         </label>
         <input
           id="maxZoom"
@@ -67,7 +66,7 @@ export const ViewportSettings: React.FC<ViewportSettingsProps> = ({
           step="50"
           value={maxZoom}
           onChange={(e) => onSettingChange('maxZoom', parseInt(e.target.value))}
-          className={styles.slider}
+          
         />
       </div>
     </div>

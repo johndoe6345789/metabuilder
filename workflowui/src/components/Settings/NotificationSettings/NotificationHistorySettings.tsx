@@ -4,7 +4,6 @@
  */
 
 import React from 'react';
-import styles from '../sections.module.scss';
 
 interface HistoryItem {
   id: string;
@@ -27,20 +26,20 @@ export const NotificationHistorySettings: React.FC<NotificationHistorySettingsPr
   onClearAll = () => {},
 }) => {
   return (
-    <div className={styles.subsection}>
-      <h3 className={styles.subsectionTitle}>Notification History</h3>
-      <p className={styles.description}>
+    <div >
+      <h3 >Notification History</h3>
+      <p >
         View and manage your notification history
       </p>
 
       {history.map((item) => (
-        <div key={item.id} className={styles.historyItem}>
-          <div className={styles.historyContent}>
-            <p className={styles.historyTitle}>{item.title}</p>
-            <p className={styles.historyTime}>{item.time}</p>
+        <div key={item.id} >
+          <div >
+            <p >{item.title}</p>
+            <p >{item.time}</p>
           </div>
           <button
-            className={`${styles.button} ${styles.small}`}
+            className={""}
             onClick={() => onClearItem(item.id)}
           >
             Clear
@@ -49,7 +48,7 @@ export const NotificationHistorySettings: React.FC<NotificationHistorySettingsPr
       ))}
 
       <button
-        className={`${styles.button} ${styles.full} ${styles.secondary}`}
+        className={""}
         onClick={onClearAll}
       >
         Clear All History

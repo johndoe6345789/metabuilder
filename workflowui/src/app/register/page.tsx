@@ -12,7 +12,6 @@ import {
   usePasswordValidation,
   useRegisterLogic
 } from '../../hooks';
-import styles from './page.module.scss';
 
 export default function RegisterPage() {
   const { email, password, localError, isLoading, errorMessage, setEmail, setPassword, setLocalError, clearErrors } = useAuthForm();
@@ -44,17 +43,17 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className={styles.registerContainer}>
-      <div className={styles.registerBox}>
-        <div className={styles.header}>
+    <div >
+      <div >
+        <div >
           <h1>WorkflowUI</h1>
           <p>Create your account</p>
         </div>
 
-        <form onSubmit={onRegisterSubmit} className={styles.form}>
+        <form onSubmit={onRegisterSubmit} >
           {/* Name Input */}
-          <div className={styles.formGroup}>
-            <label htmlFor="name" className={styles.label}>
+          <div >
+            <label htmlFor="name" >
               Full Name
             </label>
             <input
@@ -63,14 +62,14 @@ export default function RegisterPage() {
               placeholder="John Doe"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className={styles.input}
+              
               disabled={isLoading}
             />
           </div>
 
           {/* Email Input */}
-          <div className={styles.formGroup}>
-            <label htmlFor="email" className={styles.label}>
+          <div >
+            <label htmlFor="email" >
               Email Address
             </label>
             <input
@@ -79,15 +78,15 @@ export default function RegisterPage() {
               placeholder="your@email.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className={styles.input}
+              
               disabled={isLoading}
               autoComplete="email"
             />
           </div>
 
           {/* Password Input */}
-          <div className={styles.formGroup}>
-            <label htmlFor="password" className={styles.label}>
+          <div >
+            <label htmlFor="password" >
               Password
             </label>
             <input
@@ -96,31 +95,30 @@ export default function RegisterPage() {
               placeholder="••••••••"
               value={password}
               onChange={(e) => onPasswordChange(e.target.value)}
-              className={styles.input}
+              
               disabled={isLoading}
               autoComplete="new-password"
             />
             {password && (
-              <div className={styles.passwordStrength}>
-                <div className={styles.strengthBar}>
+              <div >
+                <div >
                   <div
-                    className={`${styles.fill} ${styles[`strength${passwordStrength}`]}`}
                     style={{ width: `${(passwordStrength / 4) * 100}%` }}
                   />
                 </div>
-                <span className={styles.strengthText}>
+                <span >
                   {validatePassword(password).message}
                 </span>
               </div>
             )}
-            <p className={styles.hint}>
+            <p >
               At least 8 characters with uppercase, lowercase, and numbers
             </p>
           </div>
 
           {/* Confirm Password Input */}
-          <div className={styles.formGroup}>
-            <label htmlFor="confirmPassword" className={styles.label}>
+          <div >
+            <label htmlFor="confirmPassword" >
               Confirm Password
             </label>
             <input
@@ -129,7 +127,7 @@ export default function RegisterPage() {
               placeholder="••••••••"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className={styles.input}
+              
               disabled={isLoading}
               autoComplete="new-password"
             />
@@ -137,7 +135,7 @@ export default function RegisterPage() {
 
           {/* Error Message */}
           {(localError || errorMessage) && (
-            <div className={styles.error}>
+            <div >
               {localError || errorMessage}
             </div>
           )}
@@ -145,7 +143,7 @@ export default function RegisterPage() {
           {/* Submit Button */}
           <button
             type="submit"
-            className={`${styles.button} ${styles.primary}`}
+            className={""}
             disabled={isLoading}
           >
             {isLoading ? 'Creating account...' : 'Create Account'}
@@ -153,10 +151,10 @@ export default function RegisterPage() {
         </form>
 
         {/* Footer */}
-        <div className={styles.footer}>
+        <div >
           <p>
             Already have an account?{' '}
-            <Link href="/login" className={styles.link}>
+            <Link href="/login" >
               Sign in
             </Link>
           </p>

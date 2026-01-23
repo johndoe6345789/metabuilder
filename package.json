@@ -23,6 +23,15 @@
     "migrate:workflows:dry": "ts-node scripts/migrate-workflows-to-n8n.ts --dry-run"
   },
   "workspaces": [
+    "redux/slices",
+    "redux/hooks",
+    "redux/adapters",
+    "redux/hooks-data",
+    "redux/hooks-auth",
+    "redux/hooks-canvas",
+    "redux/core-hooks",
+    "redux/api-clients",
+    "redux/timing-utils",
     "dbal/development",
     "frontends/nextjs",
     "frontends/dbal",

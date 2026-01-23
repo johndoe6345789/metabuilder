@@ -1,0 +1,23 @@
+{
+  "name": "@metabuilder/service-adapters",
+  "version": "0.1.0",
+  "description": "Service adapter interfaces for decoupling hooks from concrete implementations",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "react": "^18.0.0"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "files": [
+    "dist"
+  ]
+}

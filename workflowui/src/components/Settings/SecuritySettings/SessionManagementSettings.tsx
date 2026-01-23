@@ -4,7 +4,6 @@
  */
 
 import React, { useState, useCallback } from 'react';
-import styles from '../sections.module.scss';
 
 interface Session {
   id: string;
@@ -68,23 +67,23 @@ export const SessionManagementSettings: React.FC<SessionManagementSettingsProps>
   }, [onSessionsCleared]);
 
   return (
-    <div className={styles.subsection}>
-      <h3 className={styles.subsectionTitle}>Active Sessions</h3>
-      <p className={styles.description}>
+    <div >
+      <h3 >Active Sessions</h3>
+      <p >
         Manage your active sessions across devices
       </p>
 
       {sessions.map((session) => (
-        <div key={session.id} className={styles.sessionItem}>
-          <div className={styles.sessionInfo}>
-            <p className={styles.sessionDevice}>{session.device}</p>
-            <p className={styles.sessionTime}>Last active: {session.lastActive}</p>
+        <div key={session.id} >
+          <div >
+            <p >{session.device}</p>
+            <p >Last active: {session.lastActive}</p>
           </div>
           {session.isCurrent ? (
-            <span className={styles.sessionBadge}>Current</span>
+            <span >Current</span>
           ) : (
             <button
-              className={`${styles.button} ${styles.small}`}
+              className={""}
               onClick={() => handleSignOutSession(session.id)}
             >
               Sign Out
@@ -94,7 +93,7 @@ export const SessionManagementSettings: React.FC<SessionManagementSettingsProps>
       ))}
 
       <button
-        className={`${styles.button} ${styles.danger} ${styles.full}`}
+        className={""}
         onClick={handleSignOutAll}
         disabled={isClearing || sessions.filter((s) => !s.isCurrent).length === 0}
       >

@@ -4,7 +4,6 @@
  */
 
 import React from 'react';
-import styles from './CollaborativeCursors.module.scss';
 
 export interface RemoteCursorData {
   userId: string;
@@ -41,7 +40,7 @@ export const CollaborativeCursors: React.FC<CollaborativeCursorsProps> = ({
         return (
           <div
             key={cursor.userId}
-            className={styles.remoteCursor}
+            
             style={{
               left: `${screenX}px`,
               top: `${screenY}px`,
@@ -51,7 +50,7 @@ export const CollaborativeCursors: React.FC<CollaborativeCursorsProps> = ({
           >
             {/* Cursor Arrow */}
             <svg
-              className={styles.cursorArrow}
+              
               viewBox="0 0 16 20"
               width="16"
               height="20"
@@ -61,7 +60,7 @@ export const CollaborativeCursors: React.FC<CollaborativeCursorsProps> = ({
             </svg>
 
             {/* User Label */}
-            <div className={styles.cursorLabel}>{cursor.userName}</div>
+            <div >{cursor.userName}</div>
           </div>
         );
       })}

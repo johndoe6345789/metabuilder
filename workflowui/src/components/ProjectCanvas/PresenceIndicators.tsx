@@ -4,7 +4,6 @@
  */
 
 import React from 'react';
-import styles from './PresenceIndicators.module.scss';
 
 export interface UserPresence {
   userId: string;
@@ -25,24 +24,24 @@ export const PresenceIndicators: React.FC<PresenceIndicatorsProps> = ({
   const otherUsers = users.filter((u) => u.userId !== currentUserId);
 
   return (
-    <div className={styles.presenceIndicators}>
-      <div className={styles.presenceList}>
+    <div >
+      <div >
         {otherUsers.map((user) => (
           <div
             key={user.userId}
-            className={styles.presenceItem}
+            
             title={user.userName + (user.lockedItemId ? ' (editing)' : ' (viewing)')}
           >
             <div
-              className={styles.avatar}
+              
               style={{ backgroundColor: user.userColor }}
             >
               {user.userName.charAt(0).toUpperCase()}
             </div>
-            <div className={styles.info}>
-              <div className={styles.name}>{user.userName}</div>
+            <div >
+              <div >{user.userName}</div>
               {user.lockedItemId && (
-                <div className={styles.status}>Editing...</div>
+                <div >Editing...</div>
               )}
             </div>
           </div>
@@ -50,7 +49,7 @@ export const PresenceIndicators: React.FC<PresenceIndicatorsProps> = ({
       </div>
 
       {otherUsers.length === 0 && (
-        <div className={styles.empty}>Solo editing</div>
+        <div >Solo editing</div>
       )}
     </div>
   );

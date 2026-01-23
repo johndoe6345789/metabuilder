@@ -10,7 +10,6 @@ import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useProject, useWorkspace } from '../../../hooks';
 import { Breadcrumbs } from '../../../components/Navigation/Breadcrumbs';
-import styles from './page.module.scss';
 
 export default function WorkspacePage() {
   const router = useRouter();
@@ -53,7 +52,7 @@ export default function WorkspacePage() {
   const regularProjects = projects.filter(p => !p.starred);
 
   return (
-    <div className={styles.workspacePage}>
+    <div >
       <Breadcrumbs
         items={[
           { label: '🏠 Workspaces', href: '/' },
@@ -61,13 +60,13 @@ export default function WorkspacePage() {
         ]}
       />
 
-      <div className={styles.header}>
+      <div >
         <div>
           <h1>{currentWorkspace?.name || 'Workspace'}</h1>
           <p>{currentWorkspace?.description || 'Organize your projects'}</p>
         </div>
         <button
-          className={`${styles.createButton} btn btn-primary`}
+          className={` btn btn-primary`}
           onClick={() => setShowCreateForm(true)}
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -78,19 +77,19 @@ export default function WorkspacePage() {
         </button>
       </div>
 
-      <div className={styles.content}>
+      <div >
         {isLoading ? (
-          <div className={styles.loading}>
-            <div className={styles.spinner}></div>
+          <div >
+            <div ></div>
             <p>Loading projects...</p>
           </div>
         ) : (
           <>
             {/* Starred Projects Section */}
             {starredProjects.length > 0 && (
-              <div className={styles.section}>
-                <h2 className={styles.sectionTitle}>⭐ Starred Projects</h2>
-                <div className={styles.projectsGrid}>
+              <div >
+                <h2 >⭐ Starred Projects</h2>
+                <div >
                   {starredProjects.map(project => (
                     <ProjectCard key={project.id} project={project} />
                   ))}
@@ -100,8 +99,8 @@ export default function WorkspacePage() {
 
             {/* Create Project Form */}
             {showCreateForm && (
-              <div className={styles.createFormContainer}>
-                <form onSubmit={handleCreateProject} className={styles.createForm}>
+              <div >
+                <form onSubmit={handleCreateProject} >
                   <h3>Create New Project</h3>
                   <input
                     type="text"
@@ -109,9 +108,9 @@ export default function WorkspacePage() {
                     value={newProjectName}
                     onChange={(e) => setNewProjectName(e.target.value)}
                     autoFocus
-                    className={styles.formInput}
+                    
                   />
-                  <div className={styles.formActions}>
+                  <div >
                     <button type="submit" className="btn btn-primary" disabled={!newProjectName.trim()}>
                       Create
                     </button>
@@ -131,16 +130,16 @@ export default function WorkspacePage() {
             )}
 
             {/* Regular Projects Section */}
-            <div className={styles.section}>
-              <h2 className={styles.sectionTitle}>
+            <div >
+              <h2 >
                 {starredProjects.length > 0 ? 'All Projects' : 'Projects'}
               </h2>
               {regularProjects.length === 0 && !showCreateForm ? (
-                <div className={styles.emptyState}>
+                <div >
                   <p>No projects yet. Create one to get started!</p>
                 </div>
               ) : (
-                <div className={styles.projectsGrid}>
+                <div >
                   {regularProjects.map(project => (
                     <ProjectCard key={project.id} project={project} />
                   ))}
@@ -160,14 +159,14 @@ interface ProjectCardProps {
 
 function ProjectCard({ project }: ProjectCardProps) {
   return (
-    <Link href={`/project/${project.id}`} className={styles.projectCard}>
-      <div className={styles.projectColor} style={{ backgroundColor: project.color || '#1976d2' }} />
-      <div className={styles.projectContent}>
+    <Link href={`/project/${project.id}`} >
+      <div  style={{ backgroundColor: project.color || '#1976d2' }} />
+      <div >
         <h3>{project.name}</h3>
         <p>{project.description || 'No description'}</p>
-        <div className={styles.projectMeta}>
-          <span className={styles.workflowCount}>0 workflows</span>
-          <span className={styles.updated}>Updated today</span>
+        <div >
+          <span >0 workflows</span>
+          <span >Updated today</span>
         </div>
       </div>
     </Link>

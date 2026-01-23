@@ -5,7 +5,6 @@
  */
 
 import React, { useRef } from 'react';
-import styles from '../InfiniteCanvas.module.scss';
 import { testId } from '../../../utils/accessibility';
 
 interface CanvasContentProps {
@@ -23,7 +22,7 @@ export const CanvasContent = React.forwardRef<HTMLDivElement, CanvasContentProps
     return (
       <div
         ref={contentRef}
-        className={styles.content}
+        
         style={{
           transform: `translate(${panX}px, ${panY}px) scale(${zoom})`,
           transformOrigin: '0 0'

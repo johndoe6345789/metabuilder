@@ -5,7 +5,6 @@
 
 import React from 'react';
 import { useEditor } from '../../../hooks';
-import styles from '../Toolbar.module.scss';
 
 interface ViewToolbarProps {
   onMenuOpen?: () => void;
@@ -15,8 +14,8 @@ export const ViewToolbar: React.FC<ViewToolbarProps> = ({ onMenuOpen }) => {
   const { zoom, zoomIn, zoomOut, resetZoom } = useEditor();
 
   return (
-    <div className={styles.toolbarGroup}>
-      <div className={styles.zoomControl}>
+    <div >
+      <div >
         <button
           className="btn btn-ghost btn-sm btn-icon"
           onClick={zoomOut}
@@ -29,7 +28,7 @@ export const ViewToolbar: React.FC<ViewToolbarProps> = ({ onMenuOpen }) => {
           </svg>
         </button>
 
-        <span className={styles.zoomValue}>{Math.round(zoom * 100)}%</span>
+        <span >{Math.round(zoom * 100)}%</span>
 
         <button
           className="btn btn-ghost btn-sm btn-icon"

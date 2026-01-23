@@ -5,7 +5,6 @@
 
 import React, { useState } from 'react';
 import { useWorkflow, useExecution, useUI } from '../../../hooks';
-import styles from '../Toolbar.module.scss';
 
 interface ExecutionToolbarProps {
   workflowId: string;
@@ -62,7 +61,7 @@ export const ExecutionToolbar: React.FC<ExecutionToolbarProps> = ({
   const isExecuting = currentExecution?.status === 'running';
 
   return (
-    <div className={styles.toolbarGroup}>
+    <div >
       <button
         className="btn btn-secondary btn-sm"
         onClick={handleSave}
@@ -75,7 +74,7 @@ export const ExecutionToolbar: React.FC<ExecutionToolbarProps> = ({
           <polyline points="7 3 7 8 15 8" />
         </svg>
         Save
-        {isSaving && <span className={styles.spinner}></span>}
+        {isSaving && <span ></span>}
       </button>
 
       <button
@@ -88,7 +87,7 @@ export const ExecutionToolbar: React.FC<ExecutionToolbarProps> = ({
           <polygon points="5 3 19 12 5 21 5 3" />
         </svg>
         Execute
-        {isExecuting && <span className={styles.spinner}></span>}
+        {isExecuting && <span ></span>}
       </button>
 
       <button

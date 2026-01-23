@@ -5,7 +5,6 @@
 
 import React, { useEffect, useState } from 'react';
 import { useWorkflow } from '../../../hooks';
-import styles from '../Toolbar.module.scss';
 
 interface ValidationModalProps {
   workflowId: string;
@@ -40,11 +39,11 @@ export const ValidationModal: React.FC<ValidationModalProps> = ({ workflowId, on
   }
 
   return (
-    <div className={styles.validationOverlay} onClick={onClose}>
-      <div className={styles.validationModal} onClick={(e) => e.stopPropagation()}>
-        <div className={styles.validationHeader}>
+    <div  onClick={onClose}>
+      <div  onClick={(e) => e.stopPropagation()}>
+        <div >
           <h3>Validation Results</h3>
-          <button className={styles.closeButton} onClick={onClose}>
+          <button  onClick={onClose}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <line x1="18" y1="6" x2="6" y2="18" strokeWidth="2" />
               <line x1="6" y1="6" x2="18" y2="18" strokeWidth="2" />
@@ -52,13 +51,13 @@ export const ValidationModal: React.FC<ValidationModalProps> = ({ workflowId, on
           </button>
         </div>
 
-        <div className={styles.validationBody}>
+        <div >
           {validation.valid ? (
             <div className="alert alert-success">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
               </svg>
-              <div className={styles.validationContent}>
+              <div >
                 <p>Workflow is valid and ready to execute</p>
               </div>
             </div>
@@ -69,9 +68,9 @@ export const ValidationModal: React.FC<ValidationModalProps> = ({ workflowId, on
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z" />
                   </svg>
-                  <div className={styles.validationContent}>
-                    <p className={styles.validationLabel}>Errors:</p>
-                    <ul className={styles.validationList}>
+                  <div >
+                    <p >Errors:</p>
+                    <ul >
                       {validation.errors.map((error: string, i: number) => (
                         <li key={i}>{error}</li>
                       ))}
@@ -85,9 +84,9 @@ export const ValidationModal: React.FC<ValidationModalProps> = ({ workflowId, on
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z" />
                   </svg>
-                  <div className={styles.validationContent}>
-                    <p className={styles.validationLabel}>Warnings:</p>
-                    <ul className={styles.validationList}>
+                  <div >
+                    <p >Warnings:</p>
+                    <ul >
                       {validation.warnings.map((warning: string, i: number) => (
                         <li key={i}>{warning}</li>
                       ))}
@@ -99,7 +98,7 @@ export const ValidationModal: React.FC<ValidationModalProps> = ({ workflowId, on
           )}
         </div>
 
-        <div className={styles.validationFooter}>
+        <div >
           <button className="btn btn-primary btn-sm" onClick={onClose}>
             Close
           </button>

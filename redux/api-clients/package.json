@@ -1,0 +1,24 @@
+{
+  "name": "@metabuilder/api-clients",
+  "version": "0.1.0",
+  "description": "API client hooks for MetaBuilder - DBAL, async data fetching, GitHub integration",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "jest"
+  },
+  "dependencies": {
+    "react": "^18.0.0"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "files": [
+    "dist"
+  ]
+}

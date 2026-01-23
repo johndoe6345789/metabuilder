@@ -5,7 +5,6 @@
  */
 
 import React from 'react';
-import styles from '../InfiniteCanvas.module.scss';
 import { testId } from '../../../utils/accessibility';
 
 interface ZoomControlsProps {
@@ -22,9 +21,9 @@ export const ZoomControls: React.FC<ZoomControlsProps> = ({
   onResetView
 }) => {
   return (
-    <div className={styles.zoomIndicator} role="toolbar" aria-label="Zoom controls">
+    <div  role="toolbar" aria-label="Zoom controls">
       <button
-        className={styles.zoomButton}
+        
         onClick={onZoomOut}
         title="Zoom out (Ctrl+Scroll)"
         aria-label="Zoom out"
@@ -33,14 +32,14 @@ export const ZoomControls: React.FC<ZoomControlsProps> = ({
         −
       </button>
       <span
-        className={styles.zoomValue}
+        
         role="status"
         aria-label={`Current zoom level: ${Math.round(zoom * 100)} percent`}
       >
         {Math.round(zoom * 100)}%
       </span>
       <button
-        className={styles.zoomButton}
+        
         onClick={onZoomIn}
         title="Zoom in (Ctrl+Scroll)"
         aria-label="Zoom in"
@@ -49,7 +48,7 @@ export const ZoomControls: React.FC<ZoomControlsProps> = ({
         +
       </button>
       <button
-        className={styles.resetButton}
+        
         onClick={onResetView}
         title="Reset view (Ctrl+0)"
         aria-label="Reset view to 100% zoom"

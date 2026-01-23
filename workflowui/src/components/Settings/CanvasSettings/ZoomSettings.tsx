@@ -4,7 +4,6 @@
  */
 
 import React from 'react';
-import styles from '../sections.module.scss';
 
 interface PerformanceSettingsProps {
   enableVirtualization: boolean;
@@ -18,11 +17,11 @@ export const ZoomSettings: React.FC<PerformanceSettingsProps> = ({
   onSettingChange,
 }) => {
   return (
-    <div className={styles.subsection}>
-      <h3 className={styles.subsectionTitle}>Performance</h3>
+    <div >
+      <h3 >Performance</h3>
 
-      <div className={styles.settingRow}>
-        <label className={styles.checkboxLabel}>
+      <div >
+        <label >
           <input
             type="checkbox"
             checked={enableVirtualization}
@@ -30,16 +29,16 @@ export const ZoomSettings: React.FC<PerformanceSettingsProps> = ({
           />
           <span>Enable Virtualization</span>
         </label>
-        <p className={styles.settingDescription}>
+        <p >
           Only render visible cards (recommended for 100+ workflows)
         </p>
       </div>
 
       {enableVirtualization && (
-        <div className={styles.settingRow}>
-          <label htmlFor="maxRenders" className={styles.label}>
+        <div >
+          <label htmlFor="maxRenders" >
             Max Concurrent Renders:{' '}
-            <span className={styles.value}>{maxConcurrentRenders}</span>
+            <span >{maxConcurrentRenders}</span>
           </label>
           <input
             id="maxRenders"
@@ -49,7 +48,7 @@ export const ZoomSettings: React.FC<PerformanceSettingsProps> = ({
             step="10"
             value={maxConcurrentRenders}
             onChange={(e) => onSettingChange('maxConcurrentRenders', parseInt(e.target.value))}
-            className={styles.slider}
+            
           />
         </div>
       )}

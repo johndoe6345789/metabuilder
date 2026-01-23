@@ -4,18 +4,6 @@
  */
 
 import React, { useState } from 'react';
-import {
-  Box,
-  Typography,
-  Button,
-  Collapse,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
-} from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { documentationService } from '../../services/documentationService';
 import { testId } from '../../utils/accessibility';
 
@@ -43,81 +31,84 @@ export const DocNavigation: React.FC<DocNavigationProps> = ({
   };
 
   return (
-    <Box
+    <nav
       role="region"
       aria-label="Documentation sections"
       data-testid={testId.helpNav('documentation')}
     >
       {navigationTree.map(({ section, pages }) => (
-        <Box key={section.id} sx={{ mb: 2 }}>
-          {/* Section Header */}
-          <Button
-            fullWidth
+        <div key={section.id} style={{ marginBottom: '12px' }}>
+          <button
             onClick={() => handleToggleSection(section.id)}
-            sx={{
-              justifyContent: 'space-between',
-              textAlign: 'left',
-              color: 'primary.main',
-              fontWeight: 600,
-              mb: 1,
-            }}
             aria-expanded={expandedSections.has(section.id)}
             aria-controls={`section-${section.id}`}
             data-testid={testId.button(`section-${section.id}`)}
+            style={{
+              width: '100%',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              padding: '8px',
+              background: 'none',
+              border: 'none',
+              color: '#1976d2',
+              fontWeight: 600,
+              cursor: 'pointer',
+              fontSize: 'inherit',
+              textAlign: 'left',
+            }}
           >
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span>{section.icon}</span>
               <span>{section.title}</span>
-            </Box>
-            {expandedSections.has(section.id) ? (
-              <ExpandLessIcon fontSize="small" />
-            ) : (
-              <ExpandMoreIcon fontSize="small" />
-            )}
-          </Button>
+            </span>
+            <span>{expandedSections.has(section.id) ? '▼' : '▶'}</span>
+          </button>
 
-          {/* Pages List */}
-          <Collapse
-            in={expandedSections.has(section.id)}
-            id={`section-${section.id}`}
-          >
-            <List sx={{ p: 0, ml: 1 }}>
+          {expandedSections.has(section.id) && (
+            <ul
+              id={`section-${section.id}`}
+              style={{
+                listStyle: 'none',
+                padding: 0,
+                margin: 0,
+                paddingLeft: '16px',
+              }}
+            >
               {pages.map((page) => (
-                <ListItem
-                  key={page.id}
-                  disablePadding
-                  data-testid={testId.listItem(`doc-page-${page.id}`)}
-                >
-                  <ListItemButton
-                    selected={currentPageId === page.id}
+                <li key={page.id} style={{ marginBottom: '4px' }}>
+                  <button
                     onClick={() => onPageSelect(page.id)}
-                    sx={{
-                      py: 0.5,
-                      px: 1,
-                      '&.Mui-selected': {
-                        backgroundColor: 'action.selected',
-                        borderLeft: '3px solid',
-                        borderColor: 'primary.main',
-                      },
-                    }}
                     data-testid={testId.navLink(page.id)}
+                    style={{
+                      width: '100%',
+                      textAlign: 'left',
+                      padding: '6px 8px',
+                      background: 'none',
+                      border: 'none',
+                      borderLeft: currentPageId === page.id ? '3px solid #1976d2' : '3px solid transparent',
+                      backgroundColor: currentPageId === page.id ? '#f5f5f5' : 'transparent',
+                      color: 'inherit',
+                      cursor: 'pointer',
+                      fontSize: '0.9rem',
+                    }}
                   >
-                    <ListItemText
-                      primary={page.title}
-                      secondary={
-                        page.estimatedReadTime ? `${page.estimatedReadTime} min` : undefined
-                      }
-                      primaryTypographyProps={{ variant: 'body2' }}
-                      secondaryTypographyProps={{ variant: 'caption' }}
-                    />
-                  </ListItemButton>
-                </ListItem>
+                    <div style={{ fontWeight: currentPageId === page.id ? 500 : 400 }}>
+                      {page.title}
+                    </div>
+                    {page.estimatedReadTime && (
+                      <div style={{ fontSize: '0.75rem', color: '#999', marginTop: '2px' }}>
+                        {page.estimatedReadTime} min
+                      </div>
+                    )}
+                  </button>
+                </li>
               ))}
-            </List>
-          </Collapse>
-        </Box>
+            </ul>
+          )}
+        </div>
       ))}
-    </Box>
+    </nav>
   );
 };
 

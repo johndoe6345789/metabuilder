@@ -5,7 +5,6 @@
  */
 
 import React from 'react';
-import styles from '../InfiniteCanvas.module.scss';
 import { testId } from '../../../utils/accessibility';
 
 interface CanvasGridProps {
@@ -15,9 +14,9 @@ interface CanvasGridProps {
 
 export const CanvasGrid: React.FC<CanvasGridProps> = ({ snapSize, gridOffset }) => {
   return (
-    <div className={styles.gridContainer} data-testid={testId.canvasGrid()} aria-hidden="true">
+    <div  data-testid={testId.canvasGrid()} aria-hidden="true">
       <svg
-        className={styles.gridPattern}
+        
         width={snapSize}
         height={snapSize}
         style={{

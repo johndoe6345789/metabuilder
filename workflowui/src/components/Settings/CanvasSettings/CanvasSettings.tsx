@@ -9,7 +9,6 @@ import { SnapSettings } from './SnapSettings';
 import { LayoutSettings } from './LayoutSettings';
 import { ZoomSettings } from './ZoomSettings';
 import { ViewportSettings } from './ViewportSettings';
-import styles from '../sections.module.scss';
 import { testId, aria } from '../../../utils/accessibility';
 
 interface CanvasSettingsState {
@@ -74,7 +73,7 @@ export const CanvasSettings: React.FC = () => {
 
   return (
     <section
-      className={styles.section}
+      
       data-testid={testId.settingsCanvasSection()}
       aria-label="Canvas settings"
     >
@@ -114,9 +113,9 @@ export const CanvasSettings: React.FC = () => {
         onSettingChange={handleSettingChange}
       />
 
-      <div className={styles.saveSection}>
+      <div >
         <button
-          className={`${styles.button} ${styles.primary}`}
+          className={""}
           onClick={handleSave}
           disabled={isSaving}
           data-testid={testId.settingsButton('save-all')}
@@ -126,7 +125,7 @@ export const CanvasSettings: React.FC = () => {
         </button>
         {saveMessage && (
           <p
-            className={styles.saveMessage}
+            
             role="status"
             aria-live="polite"
             aria-atomic="true"

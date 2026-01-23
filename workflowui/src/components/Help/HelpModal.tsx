@@ -3,47 +3,11 @@
  * Main in-app help and documentation modal
  */
 
-import React, { useState } from 'react';
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  TextField,
-  Box,
-  Tabs,
-  Tab,
-  Paper,
-  Typography,
-  CircularProgress,
-} from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import SearchIcon from '@mui/icons-material/Search';
+import React from 'react';
 import { useDocumentation } from '../../hooks/useDocumentation';
 import { testId } from '../../utils/accessibility';
 import DocNavigation from './DocNavigation';
 import DocContentRenderer from './DocContentRenderer';
-import styles from './Help.module.scss';
-
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
-
-function TabPanel({ children, value, index }: TabPanelProps) {
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`help-tabpanel-${index}`}
-      aria-labelledby={`help-tab-${index}`}
-    >
-      {value === index && <Box sx={{ p: 2 }}>{children}</Box>}
-    </div>
-  );
-}
 
 export const HelpModal: React.FC = () => {
   const {
@@ -57,104 +21,134 @@ export const HelpModal: React.FC = () => {
     goToPage,
     search,
     clearSearchResults,
-    navigationTree,
   } = useDocumentation();
 
-  const [tabValue, setTabValue] = useState(0);
-
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    search(value);
+    search(e.target.value);
   };
 
   const handleClearSearch = () => {
     clearSearchResults();
   };
 
-  return (
-    <Dialog
-      open={isOpen}
-      onClose={closeHelpModal}
-      maxWidth="lg"
-      fullWidth
-      data-testid={testId.modal('help')}
-      role="dialog"
-      aria-labelledby="help-modal-title"
-    >
-      <DialogTitle
-        id="help-modal-title"
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}
-      >
-        <Typography variant="h6">Help & Documentation</Typography>
-        <Button
-          size="small"
-          onClick={closeHelpModal}
-          aria-label="Close help modal"
-          data-testid={testId.button('close-help')}
-        >
-          <CloseIcon />
-        </Button>
-      </DialogTitle>
+  if (!isOpen) return null;
 
-      <DialogContent sx={{ p: 0 }}>
-        <Box sx={{ display: 'flex', height: '600px' }}>
-          {/* Sidebar Navigation */}
-          <Box
-            sx={{
-              width: '250px',
-              borderRight: '1px solid #e0e0e0',
-              overflowY: 'auto',
-              p: 2,
+  return (
+    <>
+      <div
+        style={{
+          position: 'fixed',
+          inset: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          zIndex: 999,
+        }}
+        onClick={closeHelpModal}
+        aria-hidden="true"
+      />
+      <div
+        style={{
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          backgroundColor: 'var(--color-surface)',
+          borderRadius: '8px',
+          boxShadow: 'var(--shadow-xl)',
+          zIndex: 1000,
+          width: '90%',
+          maxWidth: '1000px',
+          maxHeight: '90vh',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+        data-testid={testId.modal('help')}
+        role="dialog"
+        aria-labelledby="help-modal-title"
+      >
+        {/* Header */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            padding: '24px',
+            borderBottom: '1px solid var(--color-border)',
+          }}
+        >
+          <h2 id="help-modal-title" style={{ margin: 0, fontSize: '20px', fontWeight: 600 }}>
+            Help & Documentation
+          </h2>
+          <button
+            onClick={closeHelpModal}
+            aria-label="Close help modal"
+            data-testid={testId.button('close-help')}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              fontSize: '20px',
+              color: 'var(--color-text-secondary)',
             }}
+          >
+            ✕
+          </button>
+        </div>
+
+        {/* Content */}
+        <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+          {/* Sidebar Navigation */}
+          <div
             role="navigation"
             aria-label="Documentation navigation"
+            style={{
+              width: '250px',
+              borderRight: '1px solid var(--color-border)',
+              overflowY: 'auto',
+              padding: '16px',
+            }}
           >
-            <DocNavigation
-              onPageSelect={goToPage}
-              currentPageId={currentPage?.id}
-            />
-          </Box>
+            <DocNavigation onPageSelect={goToPage} currentPageId={currentPage?.id} />
+          </div>
 
           {/* Main Content */}
-          <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
             {/* Search Bar */}
-            <Box
-              sx={{
-                p: 2,
-                borderBottom: '1px solid #e0e0e0',
-                display: 'flex',
-                gap: 1,
-              }}
-            >
-              <TextField
+            <div style={{ padding: '16px', borderBottom: '1px solid var(--color-border)', display: 'flex', gap: '8px' }}>
+              <input
+                type="text"
                 placeholder="Search documentation..."
                 value={searchQuery}
                 onChange={handleSearchChange}
-                size="small"
-                fullWidth
-                InputProps={{
-                  startAdornment: <SearchIcon sx={{ mr: 1 }} />,
-                }}
                 aria-label="Search documentation"
                 data-testid={testId.input('help-search')}
+                style={{
+                  flex: 1,
+                  padding: '8px 12px',
+                  border: '1px solid var(--color-border)',
+                  borderRadius: '4px',
+                  fontSize: '14px',
+                }}
               />
               {searchQuery && (
-                <Button
-                  size="small"
+                <button
                   onClick={handleClearSearch}
                   aria-label="Clear search"
+                  style={{
+                    padding: '8px 16px',
+                    backgroundColor: 'var(--color-surface-hover)',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontSize: '14px',
+                  }}
                 >
                   Clear
-                </Button>
+                </button>
               )}
-            </Box>
+            </div>
 
-            {/* Content */}
-            <Box sx={{ flex: 1, overflowY: 'auto', p: 2 }}>
+            {/* Content Area */}
+            <div style={{ flex: 1, overflowY: 'auto', padding: '16px' }}>
               {searchQuery && searchResults.length > 0 ? (
                 <DocContentRenderer
                   pages={searchResults}
@@ -162,43 +156,61 @@ export const HelpModal: React.FC = () => {
                   onPageSelect={goToPage}
                 />
               ) : searchQuery && searchResults.length === 0 ? (
-                <Typography color="textSecondary">
-                  No results found for "{searchQuery}"
-                </Typography>
+                <p style={{ color: 'var(--color-text-secondary)' }}>No results found for "{searchQuery}"</p>
               ) : currentPage ? (
-                <DocContentRenderer
-                  pages={[currentPage]}
-                  onPageSelect={goToPage}
-                />
+                <DocContentRenderer pages={[currentPage]} onPageSelect={goToPage} />
               ) : (
-                <Typography color="textSecondary">
-                  Select a topic from the left to get started
-                </Typography>
+                <p style={{ color: 'var(--color-text-secondary)' }}>Select a topic from the left to get started</p>
               )}
-            </Box>
-          </Box>
-        </Box>
-      </DialogContent>
+            </div>
+          </div>
+        </div>
 
-      <DialogActions sx={{ p: 2 }}>
-        <Button
-          onClick={goBackInHistory}
-          disabled={!canGoBack}
-          aria-label="Go back to previous page"
-          data-testid={testId.button('help-back')}
+        {/* Footer */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            padding: '16px 24px',
+            borderTop: '1px solid var(--color-border)',
+          }}
         >
-          ← Back
-        </Button>
-        <Box sx={{ flex: 1 }} />
-        <Button
-          onClick={closeHelpModal}
-          variant="contained"
-          data-testid={testId.button('close-help-footer')}
-        >
-          Close
-        </Button>
-      </DialogActions>
-    </Dialog>
+          <button
+            onClick={goBackInHistory}
+            disabled={!canGoBack}
+            aria-label="Go back to previous page"
+            data-testid={testId.button('help-back')}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: !canGoBack ? 'var(--color-surface-hover)' : 'transparent',
+              border: '1px solid var(--color-border)',
+              borderRadius: '4px',
+              cursor: !canGoBack ? 'not-allowed' : 'pointer',
+              opacity: !canGoBack ? 0.5 : 1,
+            }}
+          >
+            ← Back
+          </button>
+          <button
+            onClick={closeHelpModal}
+            data-testid={testId.button('close-help-footer')}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: 'var(--color-primary)',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '14px',
+              fontWeight: 500,
+            }}
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </>
   );
 };
 

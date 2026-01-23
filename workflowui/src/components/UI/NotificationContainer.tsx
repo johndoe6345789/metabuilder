@@ -5,13 +5,12 @@
 
 import React, { useEffect } from 'react';
 import { useUI } from '../../hooks';
-import styles from './NotificationContainer.module.scss';
 
 export const NotificationContainer: React.FC = () => {
   const { notifications, removeNotification } = useUI();
 
   return (
-    <div className={styles.notificationContainer} role="region" aria-live="polite" aria-atomic="true">
+    <div  role="region" aria-live="polite" aria-atomic="true">
       {notifications.map((notification: any) => (
         <Notification
           key={notification.id}
@@ -78,13 +77,38 @@ const Notification: React.FC<NotificationProps> = ({ notification, onClose }) =>
   };
 
   return (
-    <div className={`${styles.notification} ${styles[`notification-${notification.type}`]}`}>
-      <div className={styles.notificationIcon}>{getIcon(notification.type)}</div>
-      <div className={styles.notificationContent}>
-        <p className={styles.notificationMessage}>{notification.message}</p>
+    <div
+      data-notification-type={notification.type}
+      style={{
+        padding: '16px',
+        borderRadius: '4px',
+        backgroundColor:
+          notification.type === 'success' ? 'rgba(46, 125, 50, 0.1)' :
+          notification.type === 'error' ? 'rgba(211, 47, 47, 0.1)' :
+          notification.type === 'warning' ? 'rgba(245, 127, 0, 0.1)' :
+          'rgba(2, 136, 209, 0.1)',
+        borderLeft: '4px solid',
+        borderLeftColor:
+          notification.type === 'success' ? 'var(--color-success)' :
+          notification.type === 'error' ? 'var(--color-error)' :
+          notification.type === 'warning' ? 'var(--color-warning)' :
+          'var(--color-info)',
+        color:
+          notification.type === 'success' ? 'var(--color-success)' :
+          notification.type === 'error' ? 'var(--color-error)' :
+          notification.type === 'warning' ? 'var(--color-warning)' :
+          'var(--color-info)',
+        display: 'flex',
+        gap: '12px',
+        alignItems: 'flex-start',
+      }}
+    >
+      <div >{getIcon(notification.type)}</div>
+      <div >
+        <p >{notification.message}</p>
       </div>
       <button
-        className={styles.notificationClose}
+        
         onClick={onClose}
         aria-label="Close notification"
       >

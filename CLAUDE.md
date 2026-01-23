@@ -12,6 +12,7 @@
 | Document | Location | Purpose |
 |----------|----------|---------|
 | **Core Development Guide** | [docs/CLAUDE.md](./docs/CLAUDE.md) | Full development principles, patterns, workflows |
+| **WorkflowUI Guide** | [CLAUDE.md](./CLAUDE.md) | Frontend dependencies, scope safety, MUI ban |
 | **CodeForge IDE Guide** | [codegen/CLAUDE.md](./codegen/CLAUDE.md) | JSON-to-React migration, component system |
 | **Pastebin Conventions** | [pastebin/CLAUDE.md](./pastebin/CLAUDE.md) | Documentation file organization |
 | **Domain-Specific Rules** | [docs/AGENTS.md](./docs/AGENTS.md) | Task-specific guidance |

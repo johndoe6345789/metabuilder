@@ -1,28 +1,11 @@
 /**
  * DocContentRenderer Component
- * Renders documentation pages and their content
+ * Renders documentation pages and their content (minimal version without external UI library)
  */
 
 import React from 'react';
-import {
-  Typography,
-  Box,
-  Card,
-  CardContent,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Alert,
-  Paper,
-  Link,
-  Divider,
-} from '@mui/material';
 import { DocPage, DocContentBlock } from '../../types/documentation';
 import { testId } from '../../utils/accessibility';
-import styles from './Help.module.scss';
 
 interface DocContentRendererProps {
   pages: (DocPage | undefined)[];
@@ -40,142 +23,131 @@ const ContentBlock: React.FC<{
   switch (type) {
     case 'heading':
       const HeadingTag = (`h${level}` as keyof JSX.IntrinsicElements) || 'h2';
-      return (
-        <Typography
-          component={HeadingTag}
-          variant={level === 1 ? 'h5' : level === 2 ? 'h6' : 'body1'}
-          sx={{ mt: 2, mb: 1, fontWeight: 600 }}
-        >
-          {content}
-        </Typography>
+      return React.createElement(
+        HeadingTag,
+        { style: { marginTop: '16px', marginBottom: '8px', fontWeight: 600 } },
+        content
       );
 
     case 'text':
-      return (
-        <Typography paragraph sx={{ lineHeight: 1.6 }}>
-          {content}
-        </Typography>
-      );
+      return <p style={{ lineHeight: 1.6 }}>{content}</p>;
 
     case 'code':
       return (
-        <Paper
-          variant="outlined"
-          sx={{
-            p: 2,
-            mb: 2,
-            backgroundColor: '#f5f5f5',
-            overflowX: 'auto',
-            fontFamily: 'monospace',
-            fontSize: '0.85rem',
-          }}
-        >
+        <pre style={{
+          padding: '16px',
+          marginBottom: '16px',
+          backgroundColor: '#f5f5f5',
+          overflowX: 'auto',
+          fontFamily: 'monospace',
+          fontSize: '0.85rem',
+          border: '1px solid #e0e0e0',
+          borderRadius: '4px'
+        }}>
           <code>{content}</code>
-        </Paper>
+        </pre>
       );
 
     case 'list':
       return (
-        <Box component="ul" sx={{ ml: 2, mb: 2 }}>
+        <ul style={{ marginLeft: '16px', marginBottom: '16px' }}>
           {items?.map((item, idx) => (
-            <Typography key={idx} component="li" sx={{ mb: 0.5 }}>
+            <li key={idx} style={{ marginBottom: '4px' }}>
               {item}
-            </Typography>
+            </li>
           ))}
-        </Box>
+        </ul>
       );
 
     case 'table':
       return (
-        <TableContainer component={Paper} sx={{ mb: 2 }}>
-          <Table size="small">
-            <TableHead>
-              <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
-                {columns?.map((col) => (
-                  <TableCell key={col} sx={{ fontWeight: 600 }}>
-                    {col}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows?.map((row, idx) => (
-                <TableRow key={idx}>
-                  {row.map((cell, cellIdx) => (
-                    <TableCell key={cellIdx}>{cell}</TableCell>
-                  ))}
-                </TableRow>
+        <table style={{
+          marginBottom: '16px',
+          width: '100%',
+          borderCollapse: 'collapse',
+          border: '1px solid #e0e0e0'
+        }}>
+          <thead>
+            <tr style={{ backgroundColor: '#f5f5f5' }}>
+              {columns?.map((col) => (
+                <th key={col} style={{ fontWeight: 600, padding: '8px', textAlign: 'left', border: '1px solid #e0e0e0' }}>
+                  {col}
+                </th>
               ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+            </tr>
+          </thead>
+          <tbody>
+            {rows?.map((row, idx) => (
+              <tr key={idx}>
+                {row.map((cell, cellIdx) => (
+                  <td key={cellIdx} style={{ padding: '8px', border: '1px solid #e0e0e0' }}>{cell}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       );
 
     case 'callout':
+      const bgColor = variant === 'error' ? '#ffebee' : variant === 'warning' ? '#fff3e0' : '#e3f2fd';
+      const borderColor = variant === 'error' ? '#f44336' : variant === 'warning' ? '#ff9800' : '#2196f3';
       return (
-        <Alert
-          severity={variant || 'info'}
-          sx={{ mb: 2 }}
-          icon={icon}
-          data-testid={testId.alert(`callout-${variant}`)}
-        >
-          <Typography variant="body2">{content}</Typography>
-          {subtext && (
-            <Typography variant="caption" sx={{ mt: 1, display: 'block' }}>
-              {subtext}
-            </Typography>
-          )}
-        </Alert>
+        <div style={{
+          marginBottom: '16px',
+          padding: '12px',
+          backgroundColor: bgColor,
+          borderLeft: `4px solid ${borderColor}`,
+          borderRadius: '4px'
+        }} data-testid={testId.alert(`callout-${variant}`)}>
+          <p style={{ margin: '0 0 8px 0' }}>{content}</p>
+          {subtext && <p style={{ margin: '0', fontSize: '0.875rem' }}>{subtext}</p>}
+        </div>
       );
 
     case 'step':
       return (
-        <Box
-          sx={{
+        <div style={{
+          display: 'flex',
+          gap: '16px',
+          marginBottom: '16px',
+          padding: '12px',
+          backgroundColor: '#f9f9f9',
+          borderLeft: '3px solid #2196f3',
+          borderRadius: '4px'
+        }}>
+          <div style={{
+            minWidth: '32px',
+            height: '32px',
             display: 'flex',
-            gap: 2,
-            mb: 2,
-            p: 1.5,
-            backgroundColor: '#f9f9f9',
-            borderLeft: '3px solid #2196f3',
-            borderRadius: 1,
-          }}
-        >
-          <Box
-            sx={{
-              minWidth: 32,
-              height: 32,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '1.2rem',
-            }}
-          >
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '1.2rem',
+          }}>
             {icon}
-          </Box>
-          <Typography sx={{ lineHeight: 1.6 }}>{content}</Typography>
-        </Box>
+          </div>
+          <p style={{ lineHeight: 1.6, margin: 0 }}>{content}</p>
+        </div>
       );
 
     case 'image':
       return (
-        <Box sx={{ mb: 2, textAlign: 'center' }}>
+        <div style={{ marginBottom: '16px', textAlign: 'center' }}>
           <img
             src={content}
             alt={title || 'Documentation image'}
-            style={{ maxWidth: '100%', height: 'auto', borderRadius: 4 }}
+            style={{ maxWidth: '100%', height: 'auto', borderRadius: '4px' }}
           />
           {title && (
-            <Typography variant="caption" sx={{ display: 'block', mt: 1 }}>
+            <p style={{ display: 'block', marginTop: '8px', fontSize: '0.875rem', color: '#666' }}>
               {title}
-            </Typography>
+            </p>
           )}
-        </Box>
+        </div>
       );
 
     case 'video':
       return (
-        <Box sx={{ mb: 2, position: 'relative', paddingTop: '56.25%', height: 0, overflow: 'hidden' }}>
+        <div style={{ marginBottom: '16px', position: 'relative', paddingTop: '56.25%', height: 0, overflow: 'hidden' }}>
           <iframe
             src={content}
             title={title}
@@ -186,25 +158,27 @@ const ContentBlock: React.FC<{
               width: '100%',
               height: '100%',
               border: 'none',
-              borderRadius: 4,
+              borderRadius: '4px',
             }}
             allowFullScreen
           />
-        </Box>
+        </div>
       );
 
     case 'example':
       return (
-        <Card variant="outlined" sx={{ mb: 2, backgroundColor: '#fafafa' }}>
-          <CardContent>
-            {title && (
-              <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
-                Example: {title}
-              </Typography>
-            )}
-            <Typography variant="body2">{content}</Typography>
-          </CardContent>
-        </Card>
+        <div style={{
+          marginBottom: '16px',
+          padding: '16px',
+          backgroundColor: '#fafafa',
+          border: '1px solid #e0e0e0',
+          borderRadius: '4px'
+        }}>
+          {title && (
+            <h3 style={{ fontWeight: 600, marginBottom: '8px', marginTop: 0 }}>Example: {title}</h3>
+          )}
+          <p style={{ margin: 0 }}>{content}</p>
+        </div>
       );
 
     default:
@@ -221,48 +195,44 @@ export const DocContentRenderer: React.FC<DocContentRendererProps> = ({
 
   if (!validPages.length) {
     return (
-      <Typography color="textSecondary" data-testid={testId.text('no-content')}>
+      <p style={{ color: '#666' }} data-testid={testId.text('no-content')}>
         No documentation available
-      </Typography>
+      </p>
     );
   }
 
   return (
-    <Box role="main" aria-label="Documentation content">
+    <main role="main" aria-label="Documentation content">
       {validPages.map((page, pageIdx) => (
-        <Box
+        <section
           key={page.id}
           data-testid={testId.section(`doc-page-${page.id}`)}
-          sx={{ mb: pageIdx < validPages.length - 1 ? 4 : 0 }}
+          style={{ marginBottom: pageIdx < validPages.length - 1 ? '32px' : 0 }}
         >
           {/* Page Header */}
-          <Box sx={{ mb: 2 }}>
-            <Typography variant="h4" sx={{ fontWeight: 700, mb: 0.5 }}>
-              {page.title}
-            </Typography>
+          <div style={{ marginBottom: '16px' }}>
+            <h1 style={{ fontWeight: 700, marginBottom: '4px', marginTop: 0 }}>{page.title}</h1>
             {page.description && (
-              <Typography color="textSecondary" sx={{ mb: 1 }}>
-                {page.description}
-              </Typography>
+              <p style={{ color: '#666', marginBottom: '8px', margin: 0 }}>{page.description}</p>
             )}
-            <Box sx={{ display: 'flex', gap: 2, mt: 1 }}>
+            <div style={{ display: 'flex', gap: '16px', marginTop: '8px' }}>
               {page.difficulty && (
-                <Typography variant="caption" sx={{ fontWeight: 500 }}>
+                <span style={{ fontWeight: 500, fontSize: '0.875rem' }}>
                   Difficulty: {page.difficulty}
-                </Typography>
+                </span>
               )}
               {page.estimatedReadTime && (
-                <Typography variant="caption" sx={{ fontWeight: 500 }}>
+                <span style={{ fontWeight: 500, fontSize: '0.875rem' }}>
                   Read time: {page.estimatedReadTime} min
-                </Typography>
+                </span>
               )}
-            </Box>
-          </Box>
+            </div>
+          </div>
 
-          <Divider sx={{ my: 2 }} />
+          <hr style={{ border: 'none', borderTop: '1px solid #e0e0e0', margin: '16px 0' }} />
 
           {/* Page Content */}
-          <Box sx={{ my: 2 }}>
+          <div style={{ margin: '16px 0' }}>
             {page.content.map((block, idx) => (
               <ContentBlock
                 key={idx}
@@ -270,33 +240,40 @@ export const DocContentRenderer: React.FC<DocContentRendererProps> = ({
                 onPageSelect={onPageSelect}
               />
             ))}
-          </Box>
+          </div>
 
           {/* Related Pages */}
           {page.relatedPages && page.relatedPages.length > 0 && (
-            <Box sx={{ mt: 4, pt: 2, borderTop: '1px solid #e0e0e0' }}>
-              <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-                Related Topics
-              </Typography>
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+            <div style={{ marginTop: '32px', paddingTop: '16px', borderTop: '1px solid #e0e0e0' }}>
+              <h2 style={{ marginBottom: '16px', fontWeight: 600 }}>Related Topics</h2>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {page.relatedPages.map((relatedId) => (
-                  <Link
+                  <button
                     key={relatedId}
                     onClick={() => onPageSelect?.(relatedId)}
-                    sx={{ cursor: 'pointer', textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}
-                    component="button"
-                    color="primary"
+                    style={{
+                      cursor: 'pointer',
+                      textDecoration: 'none',
+                      background: 'none',
+                      border: 'none',
+                      color: '#2196f3',
+                      textAlign: 'left',
+                      padding: 0,
+                      fontSize: 'inherit'
+                    }}
                     data-testid={testId.link(`related-${relatedId}`)}
+                    onMouseEnter={(e) => (e.currentTarget.style.textDecoration = 'underline')}
+                    onMouseLeave={(e) => (e.currentTarget.style.textDecoration = 'none')}
                   >
                     View related topic →
-                  </Link>
+                  </button>
                 ))}
-              </Box>
-            </Box>
+              </div>
+            </div>
           )}
-        </Box>
+        </section>
       ))}
-    </Box>
+    </main>
   );
 };
 

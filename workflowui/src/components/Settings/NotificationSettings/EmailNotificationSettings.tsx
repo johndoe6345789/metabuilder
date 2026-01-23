@@ -4,7 +4,6 @@
  */
 
 import React from 'react';
-import styles from '../sections.module.scss';
 
 interface EmailNotificationSettingsProps {
   emailExecutionSummary: boolean;
@@ -22,14 +21,14 @@ export const EmailNotificationSettings: React.FC<EmailNotificationSettingsProps>
   onSettingChange,
 }) => {
   return (
-    <div className={styles.subsection}>
-      <h3 className={styles.subsectionTitle}>Email Notifications</h3>
-      <p className={styles.description}>
+    <div >
+      <h3 >Email Notifications</h3>
+      <p >
         Receive email summaries and alerts
       </p>
 
-      <div className={styles.settingRow}>
-        <label className={styles.checkboxLabel}>
+      <div >
+        <label >
           <input
             type="checkbox"
             checked={emailExecutionSummary}
@@ -37,11 +36,11 @@ export const EmailNotificationSettings: React.FC<EmailNotificationSettingsProps>
           />
           <span>Execution Summary</span>
         </label>
-        <p className={styles.settingDescription}>Daily summary of workflow executions</p>
+        <p >Daily summary of workflow executions</p>
       </div>
 
-      <div className={styles.settingRow}>
-        <label className={styles.checkboxLabel}>
+      <div >
+        <label >
           <input
             type="checkbox"
             checked={emailWeeklyDigest}
@@ -49,11 +48,11 @@ export const EmailNotificationSettings: React.FC<EmailNotificationSettingsProps>
           />
           <span>Weekly Digest</span>
         </label>
-        <p className={styles.settingDescription}>Weekly summary of activity and insights</p>
+        <p >Weekly summary of activity and insights</p>
       </div>
 
-      <div className={styles.settingRow}>
-        <label className={styles.checkboxLabel}>
+      <div >
+        <label >
           <input
             type="checkbox"
             checked={emailSecurityAlerts}
@@ -61,11 +60,11 @@ export const EmailNotificationSettings: React.FC<EmailNotificationSettingsProps>
           />
           <span>Security Alerts</span>
         </label>
-        <p className={styles.settingDescription}>Important security and login notifications</p>
+        <p >Important security and login notifications</p>
       </div>
 
-      <div className={styles.settingRow}>
-        <label className={styles.checkboxLabel}>
+      <div >
+        <label >
           <input
             type="checkbox"
             checked={emailProductUpdates}
@@ -73,7 +72,7 @@ export const EmailNotificationSettings: React.FC<EmailNotificationSettingsProps>
           />
           <span>Product Updates</span>
         </label>
-        <p className={styles.settingDescription}>New features and product announcements</p>
+        <p >New features and product announcements</p>
       </div>
     </div>
   );

@@ -25,7 +25,6 @@ import { CanvasContent } from './CanvasContent';
 import { ZoomControls } from './ZoomControls';
 import { PanHint } from './PanHint';
 import { NavigationArrows } from './NavigationArrows';
-import styles from '../InfiniteCanvas.module.scss';
 import { RootState } from '../../../store/store';
 import { selectCanvasItems } from '../../../store/slices/canvasItemsSlice';
 import { testId, aria } from '../../../utils/accessibility';
@@ -109,7 +108,7 @@ export const InfiniteCanvas: React.FC<InfiniteCanvasProps> = ({
   return (
     <div
       ref={canvasRef}
-      className={styles.canvas}
+      
       onMouseDown={handleMouseDown}
       style={{ cursor: isPanning ? 'grabbing' : 'grab' }}
       data-testid={testId.canvasContainer()}

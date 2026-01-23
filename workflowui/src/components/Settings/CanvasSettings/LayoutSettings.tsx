@@ -4,7 +4,6 @@
  */
 
 import React from 'react';
-import styles from '../sections.module.scss';
 
 interface LayoutSettingsProps {
   cardPreviewSize: 'small' | 'medium' | 'large';
@@ -20,18 +19,18 @@ export const LayoutSettings: React.FC<LayoutSettingsProps> = ({
   onSettingChange,
 }) => {
   return (
-    <div className={styles.subsection}>
-      <h3 className={styles.subsectionTitle}>Workflow Cards</h3>
+    <div >
+      <h3 >Workflow Cards</h3>
 
-      <div className={styles.settingRow}>
-        <label htmlFor="cardPreviewSize" className={styles.label}>
+      <div >
+        <label htmlFor="cardPreviewSize" >
           Preview Size
         </label>
         <select
           id="cardPreviewSize"
           value={cardPreviewSize}
           onChange={(e) => onSettingChange('cardPreviewSize', e.target.value)}
-          className={styles.select}
+          
         >
           <option value="small">Small (200x150)</option>
           <option value="medium">Medium (300x200)</option>
@@ -39,8 +38,8 @@ export const LayoutSettings: React.FC<LayoutSettingsProps> = ({
         </select>
       </div>
 
-      <div className={styles.settingRow}>
-        <label className={styles.checkboxLabel}>
+      <div >
+        <label >
           <input
             type="checkbox"
             checked={showCardDescriptions}
@@ -48,11 +47,11 @@ export const LayoutSettings: React.FC<LayoutSettingsProps> = ({
           />
           <span>Show Card Descriptions</span>
         </label>
-        <p className={styles.settingDescription}>Display workflow descriptions in cards</p>
+        <p >Display workflow descriptions in cards</p>
       </div>
 
-      <div className={styles.settingRow}>
-        <label className={styles.checkboxLabel}>
+      <div >
+        <label >
           <input
             type="checkbox"
             checked={cardAnimations}
@@ -60,7 +59,7 @@ export const LayoutSettings: React.FC<LayoutSettingsProps> = ({
           />
           <span>Enable Animations</span>
         </label>
-        <p className={styles.settingDescription}>Smooth transitions and hover effects</p>
+        <p >Smooth transitions and hover effects</p>
       </div>
     </div>
   );

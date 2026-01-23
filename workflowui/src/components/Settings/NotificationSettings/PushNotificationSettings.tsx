@@ -4,7 +4,6 @@
  */
 
 import React from 'react';
-import styles from '../sections.module.scss';
 
 interface PushNotificationSettingsProps {
   soundEnabled: boolean;
@@ -18,11 +17,11 @@ export const PushNotificationSettings: React.FC<PushNotificationSettingsProps> =
   onSettingChange,
 }) => {
   return (
-    <div className={styles.subsection}>
-      <h3 className={styles.subsectionTitle}>Sound & Desktop</h3>
+    <div >
+      <h3 >Sound & Desktop</h3>
 
-      <div className={styles.settingRow}>
-        <label className={styles.checkboxLabel}>
+      <div >
+        <label >
           <input
             type="checkbox"
             checked={soundEnabled}
@@ -30,11 +29,11 @@ export const PushNotificationSettings: React.FC<PushNotificationSettingsProps> =
           />
           <span>Enable Sound</span>
         </label>
-        <p className={styles.settingDescription}>Play sound when notifications arrive</p>
+        <p >Play sound when notifications arrive</p>
       </div>
 
-      <div className={styles.settingRow}>
-        <label className={styles.checkboxLabel}>
+      <div >
+        <label >
           <input
             type="checkbox"
             checked={desktopNotifications}
@@ -42,7 +41,7 @@ export const PushNotificationSettings: React.FC<PushNotificationSettingsProps> =
           />
           <span>Desktop Notifications</span>
         </label>
-        <p className={styles.settingDescription}>Show browser desktop notifications</p>
+        <p >Show browser desktop notifications</p>
       </div>
     </div>
   );

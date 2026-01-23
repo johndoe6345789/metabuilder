@@ -5,7 +5,6 @@
  */
 
 import React from 'react';
-import styles from '../InfiniteCanvas.module.scss';
 import { testId, aria } from '../../../utils/accessibility';
 
 interface NavigationArrowsProps {
@@ -16,7 +15,7 @@ export const NavigationArrows: React.FC<NavigationArrowsProps> = ({ onPan }) => 
   return (
     <>
       <button
-        className={`${styles.navArrow} ${styles.navTop}`}
+        className={""}
         onClick={() => onPan('up')}
         title="Pan up (or use arrow keys)"
         aria-label="Pan up"
@@ -26,7 +25,7 @@ export const NavigationArrows: React.FC<NavigationArrowsProps> = ({ onPan }) => 
       </button>
 
       <button
-        className={`${styles.navArrow} ${styles.navBottom}`}
+        className={""}
         onClick={() => onPan('down')}
         title="Pan down (or use arrow keys)"
         aria-label="Pan down"
@@ -36,7 +35,7 @@ export const NavigationArrows: React.FC<NavigationArrowsProps> = ({ onPan }) => 
       </button>
 
       <button
-        className={`${styles.navArrow} ${styles.navLeft}`}
+        className={""}
         onClick={() => onPan('left')}
         title="Pan left (or use arrow keys)"
         aria-label="Pan left"
@@ -46,7 +45,7 @@ export const NavigationArrows: React.FC<NavigationArrowsProps> = ({ onPan }) => 
       </button>
 
       <button
-        className={`${styles.navArrow} ${styles.navRight}`}
+        className={""}
         onClick={() => onPan('right')}
         title="Pan right (or use arrow keys)"
         aria-label="Pan right"

@@ -10,7 +10,6 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { Breadcrumbs } from '../../../components/Navigation/Breadcrumbs';
 import { templateService } from '../../../services/templateService';
-import styles from './template-detail.module.scss';
 
 export default function TemplateDetailPage() {
   const params = useParams();
@@ -22,8 +21,8 @@ export default function TemplateDetailPage() {
 
   if (!template) {
     return (
-      <div className={styles.container}>
-        <div className={styles.notFound}>
+      <div >
+        <div >
           <h1>Template not found</h1>
           <p>The template you're looking for doesn't exist.</p>
           <Link href={"/templates" as any} className="btn btn-primary">
@@ -41,7 +40,7 @@ export default function TemplateDetailPage() {
   };
 
   return (
-    <div className={styles.container}>
+    <div >
       <Breadcrumbs
         items={[
           { label: '🏠 Workspaces', href: '/' },
@@ -50,32 +49,32 @@ export default function TemplateDetailPage() {
         ]}
       />
 
-      <div className={styles.content}>
+      <div >
         {/* Header Section */}
-        <header className={styles.header}>
-          <div className={styles.headerLeft}>
+        <header >
+          <div >
             <div
-              className={styles.largeIcon}
+              
               style={{ backgroundColor: template.color }}
             >
               {template.icon}
             </div>
           </div>
 
-          <div className={styles.headerRight}>
+          <div >
             <div>
               <h1>{template.name}</h1>
-              <p className={styles.description}>{template.description}</p>
+              <p >{template.description}</p>
 
               {template.longDescription && (
-                <p className={styles.longDescription}>{template.longDescription}</p>
+                <p >{template.longDescription}</p>
               )}
             </div>
 
-            <div className={styles.headerMeta}>
-              <div className={styles.metaGroup}>
-                <span className={styles.metaLabel}>Difficulty</span>
-                <div className={styles.metaValue}>
+            <div >
+              <div >
+                <span >Difficulty</span>
+                <div >
                   {template.difficulty === 'beginner' && '🟢'}
                   {template.difficulty === 'intermediate' && '🟡'}
                   {template.difficulty === 'advanced' && '🔴'}
@@ -83,30 +82,30 @@ export default function TemplateDetailPage() {
                 </div>
               </div>
 
-              <div className={styles.metaGroup}>
-                <span className={styles.metaLabel}>Rating</span>
-                <div className={styles.metaValue}>
+              <div >
+                <span >Rating</span>
+                <div >
                   {'⭐'.repeat(Math.round(template.metadata.rating || 0))}
-                  <span className={styles.rating}>
+                  <span >
                     {template.metadata.rating?.toFixed(1) || 'N/A'}
                   </span>
                 </div>
               </div>
 
-              <div className={styles.metaGroup}>
-                <span className={styles.metaLabel}>Downloads</span>
-                <div className={styles.metaValue}>
+              <div >
+                <span >Downloads</span>
+                <div >
                   {template.metadata.downloads?.toLocaleString() || 0}
                 </div>
               </div>
 
-              <div className={styles.metaGroup}>
-                <span className={styles.metaLabel}>By</span>
-                <div className={styles.metaValue}>{template.metadata.author}</div>
+              <div >
+                <span >By</span>
+                <div >{template.metadata.author}</div>
               </div>
             </div>
 
-            <div className={styles.actions}>
+            <div >
               <button
                 data-testid="template-create-project"
                 className="btn btn-primary btn-lg"
@@ -122,34 +121,34 @@ export default function TemplateDetailPage() {
         </header>
 
         {/* Tabs */}
-        <nav className={styles.tabs} role="tablist">
-          <button className={styles.tab} role="tab" aria-selected="true">
+        <nav  role="tablist">
+          <button  role="tab" aria-selected="true">
             Workflows
           </button>
-          <button className={styles.tab} role="tab" aria-selected="false">
+          <button  role="tab" aria-selected="false">
             Details
           </button>
-          <button className={styles.tab} role="tab" aria-selected="false">
+          <button  role="tab" aria-selected="false">
             Reviews
           </button>
         </nav>
 
         {/* Main Content */}
-        <main className={styles.main}>
+        <main >
           {/* Workflows Section */}
-          <section className={styles.section}>
+          <section >
             <h2>Included Workflows ({template.workflows.length})</h2>
-            <div className={styles.workflowsList}>
+            <div >
               {template.workflows.map((workflow, idx) => (
                 <div
                   key={idx}
                   data-testid={`template-workflow-${idx}`}
-                  className={styles.workflowCard}
+                  
                 >
                   <h3>{workflow.name}</h3>
                   <p>{workflow.description}</p>
 
-                  <div className={styles.workflowDiagram}>
+                  <div >
                     <svg width="100%" height="100" viewBox="0 0 400 100">
                       {/* Simple workflow visualization */}
                       {workflow.nodes.slice(0, 5).map((node, nodeIdx) => (
@@ -196,13 +195,13 @@ export default function TemplateDetailPage() {
                       </defs>
                     </svg>
                     {workflow.nodes.length > 5 && (
-                      <p className={styles.moreNodes}>
+                      <p >
                         +{workflow.nodes.length - 5} more nodes
                       </p>
                     )}
                   </div>
 
-                  <div className={styles.workflowStats}>
+                  <div >
                     <span>{workflow.nodes.length} nodes</span>
                     <span>
                       {workflow.connections?.length || 0} connections
@@ -214,14 +213,14 @@ export default function TemplateDetailPage() {
           </section>
 
           {/* Tags Section */}
-          <section className={styles.section}>
+          <section >
             <h3>Tags</h3>
-            <div className={styles.tags}>
+            <div >
               {template.tags.map((tag) => (
                 <Link
                   key={tag}
                   href={`/templates?search=${encodeURIComponent(tag)}` as any}
-                  className={styles.tag}
+                  
                 >
                   #{tag}
                 </Link>
@@ -231,24 +230,24 @@ export default function TemplateDetailPage() {
 
           {/* Related Templates */}
           {relatedTemplates.length > 0 && (
-            <section className={styles.section}>
+            <section >
               <h3>Related Templates</h3>
-              <div className={styles.relatedGrid}>
+              <div >
                 {relatedTemplates.map((related) => (
                   <Link
                     key={related.id}
                     href={`/templates/${related.id}` as any}
-                    className={styles.relatedCard}
+                    
                   >
                     <div
-                      className={styles.relatedIcon}
+                      
                       style={{ backgroundColor: related.color }}
                     >
                       {related.icon}
                     </div>
                     <h4>{related.name}</h4>
                     <p>{related.description}</p>
-                    <div className={styles.relatedMeta}>
+                    <div >
                       <span>⭐ {related.metadata.rating?.toFixed(1) || 'N/A'}</span>
                       <span>⬇️ {related.metadata.downloads?.toLocaleString()}</span>
                     </div>
@@ -262,15 +261,15 @@ export default function TemplateDetailPage() {
         {/* Create Project Modal */}
         {showCreateForm && (
           <div
-            className={styles.modal}
+            
             data-testid="template-create-modal"
             role="dialog"
             aria-modal="true"
             aria-labelledby="create-modal-title"
           >
-            <div className={styles.modalContent}>
+            <div >
               <button
-                className={styles.closeBtn}
+                
                 onClick={() => setShowCreateForm(false)}
                 aria-label="Close"
               >
@@ -279,8 +278,8 @@ export default function TemplateDetailPage() {
 
               <h2 id="create-modal-title">Create Project from Template</h2>
 
-              <form onSubmit={handleCreateProject} className={styles.form}>
-                <div className={styles.formGroup}>
+              <form onSubmit={handleCreateProject} >
+                <div >
                   <label htmlFor="project-name">Project Name</label>
                   <input
                     id="project-name"
@@ -293,7 +292,7 @@ export default function TemplateDetailPage() {
                   />
                 </div>
 
-                <div className={styles.formGroup}>
+                <div >
                   <label htmlFor="workspace">Workspace</label>
                   <select
                     id="workspace"
@@ -305,7 +304,7 @@ export default function TemplateDetailPage() {
                   </select>
                 </div>
 
-                <div className={styles.formGroup}>
+                <div >
                   <label>
                     <input
                       type="checkbox"
@@ -316,7 +315,7 @@ export default function TemplateDetailPage() {
                   </label>
                 </div>
 
-                <div className={styles.formActions}>
+                <div >
                   <button type="submit" className="btn btn-primary btn-lg">
                     Create Project
                   </button>

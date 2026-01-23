@@ -7,7 +7,6 @@
 
 import React from 'react';
 import { useUI, useHeaderLogic, useResponsiveSidebar } from '../../hooks';
-import styles from './MainLayout.module.scss';
 import { testId } from '../../utils/accessibility';
 
 interface MainLayoutProps {
@@ -21,13 +20,13 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children, showSidebar = 
 
   return (
     <div
-      className={styles.mainLayout}
+      
       data-theme={theme}
       data-testid={testId.button('main-layout')}
     >
       <Header onMenuClick={() => setSidebar(!sidebarOpen)} />
 
-      <div className={styles.container}>
+      <div >
         {showSidebar && sidebarOpen && (
           <Sidebar
             isOpen={sidebarOpen}
@@ -36,7 +35,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children, showSidebar = 
           />
         )}
 
-        <main className={styles.main}>{children}</main>
+        <main >{children}</main>
       </div>
     </div>
   );
@@ -51,11 +50,11 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
   const { user, isAuthenticated, showUserMenu, handleLogout, toggleUserMenu } = useHeaderLogic();
 
   return (
-    <header className={styles.header} data-testid={testId.navHeader()}>
-      <div className={styles.headerContent}>
-        <div className={styles.headerLeft}>
+    <header  data-testid={testId.navHeader()}>
+      <div >
+        <div >
           <button
-            className={styles.menuButton}
+            
             onClick={onMenuClick}
             title="Toggle sidebar"
             aria-label="Toggle sidebar"
@@ -68,12 +67,12 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
             </svg>
           </button>
 
-          <h1 className={styles.logo} id="app-title">WorkflowUI</h1>
+          <h1  id="app-title">WorkflowUI</h1>
         </div>
 
-        <div className={styles.headerRight}>
+        <div >
           <button
-            className={styles.themeButton}
+            
             onClick={toggleTheme}
             title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
             aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
@@ -99,9 +98,9 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
           </button>
 
           {isAuthenticated && user && (
-            <div className={styles.userMenu}>
+            <div >
               <button
-                className={styles.userButton}
+                
                 onClick={toggleUserMenu}
                 title={user.name}
                 aria-label={`User menu for ${user.name}`}
@@ -109,19 +108,19 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
                 aria-haspopup="menu"
                 data-testid={testId.navMenuButton('user-menu')}
               >
-                <div className={styles.userAvatar}>
+                <div >
                   {user.name.charAt(0).toUpperCase()}
                 </div>
               </button>
 
               {showUserMenu && (
-                <div className={styles.userDropdown} role="menu">
-                  <div className={styles.userInfo}>
-                    <div className={styles.userName}>{user.name}</div>
-                    <div className={styles.userEmail}>{user.email}</div>
+                <div  role="menu">
+                  <div >
+                    <div >{user.name}</div>
+                    <div >{user.email}</div>
                   </div>
                   <button
-                    className={styles.logoutButton}
+                    
                     onClick={handleLogout}
                     role="menuitem"
                     data-testid={testId.button('logout')}
@@ -149,43 +148,43 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, isMobile, onClose }) => {
     <>
       {isMobile && isOpen && (
         <div
-          className={styles.sidebarBackdrop}
+          
           onClick={onClose}
           aria-hidden="true"
         />
       )}
 
       <aside
-        className={`${styles.sidebar} ${isOpen ? styles.open : ''}`}
+        
         role="complementary"
         data-testid={testId.navSidebar()}
         aria-label="Workflows sidebar"
       >
-        <div className={styles.sidebarHeader}>
+        <div >
           <h2>Workflows</h2>
         </div>
 
-        <nav className={styles.sidebarNav} aria-label="Workflows navigation">
-          <ul className={styles.navList} role="list">
-            <li className={styles.navItem} role="listitem">
-              <a href="/workflows" className={styles.navLink} data-testid={testId.navLink('all-workflows')}>
+        <nav  aria-label="Workflows navigation">
+          <ul  role="list">
+            <li  role="listitem">
+              <a href="/workflows"  data-testid={testId.navLink('all-workflows')}>
                 All Workflows
               </a>
             </li>
-            <li className={styles.navItem} role="listitem">
-              <a href="/workflows/recent" className={styles.navLink} data-testid={testId.navLink('recent')}>
+            <li  role="listitem">
+              <a href="/workflows/recent"  data-testid={testId.navLink('recent')}>
                 Recent
               </a>
             </li>
-            <li className={styles.navItem} role="listitem">
-              <a href="/workflows/favorites" className={styles.navLink} data-testid={testId.navLink('favorites')}>
+            <li  role="listitem">
+              <a href="/workflows/favorites"  data-testid={testId.navLink('favorites')}>
                 Favorites
               </a>
             </li>
           </ul>
         </nav>
 
-        <div className={styles.sidebarFooter}>
+        <div >
           <button className="btn btn-secondary btn-sm" data-testid={testId.button('new-workflow')}>
             New Workflow
           </button>

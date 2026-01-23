@@ -4,7 +4,6 @@
  */
 
 import React, { useState, useCallback } from 'react';
-import styles from '../sections.module.scss';
 
 interface AccountDeletionSettingsProps {
   userEmail?: string;
@@ -48,31 +47,31 @@ export const AccountDeletionSettings: React.FC<AccountDeletionSettingsProps> = (
   }, []);
 
   return (
-    <div className={`${styles.subsection} ${styles.dangerZone}`}>
-      <h3 className={styles.subsectionTitle}>Danger Zone</h3>
-      <p className={styles.description}>
+    <div className={""}>
+      <h3 >Danger Zone</h3>
+      <p >
         These actions are permanent and cannot be undone
       </p>
 
       {!showConfirm ? (
         <button
-          className={`${styles.button} ${styles.danger}`}
+          className={""}
           onClick={handleDeleteClick}
         >
           Delete Account
         </button>
       ) : (
-        <div className={styles.deleteConfirmContainer}>
-          <div className={styles.deleteWarning}>
-            <p className={styles.deleteWarningTitle}>Are you sure?</p>
-            <p className={styles.deleteWarningText}>
+        <div >
+          <div >
+            <p >Are you sure?</p>
+            <p >
               Deleting your account is permanent. All your data, workflows, and
               projects will be permanently deleted and cannot be recovered.
             </p>
           </div>
 
-          <div className={styles.formGroup}>
-            <label htmlFor="deleteEmail" className={styles.label}>
+          <div >
+            <label htmlFor="deleteEmail" >
               Type your email to confirm:
             </label>
             <input
@@ -80,21 +79,21 @@ export const AccountDeletionSettings: React.FC<AccountDeletionSettingsProps> = (
               type="email"
               value={confirmEmail}
               onChange={(e) => setConfirmEmail(e.target.value)}
-              className={styles.input}
+              
               placeholder={userEmail}
             />
-            <p className={styles.hint}>We need to confirm you own this account</p>
+            <p >We need to confirm you own this account</p>
           </div>
 
-          <div className={styles.actions}>
+          <div >
             <button
-              className={`${styles.button} ${styles.danger}`}
+              className={""}
               onClick={handleConfirmDelete}
               disabled={isDeleting || confirmEmail !== userEmail}
             >
               {isDeleting ? 'Deleting...' : 'Delete Account Permanently'}
             </button>
-            <button className={styles.button} onClick={handleCancel}>
+            <button  onClick={handleCancel}>
               Cancel
             </button>
           </div>

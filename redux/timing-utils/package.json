@@ -1,0 +1,22 @@
+{
+  "name": "@metabuilder/timing-utils",
+  "version": "0.1.0",
+  "description": "Timing and debounce utilities for React - debounced saves, debounce values, and save indicators",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0"
+  },
+  "optionalDependencies": {
+    "date-fns": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.0.0",
+    "typescript": "^5.0.0"
+  }
+}

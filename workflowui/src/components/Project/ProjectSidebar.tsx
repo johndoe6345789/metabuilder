@@ -9,7 +9,6 @@ import { useWorkspace } from '../../hooks/useWorkspace';
 import { useProjectSidebarLogic } from '../../hooks';
 import { testId } from '../../utils/accessibility';
 import { Project } from '../../types/project';
-import styles from './ProjectSidebar.module.scss';
 
 interface ProjectSidebarProps {
   onSelectProject: (projectId: string) => void;
@@ -63,24 +62,24 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = ({
 
   return (
     <aside
-      className={`${styles.sidebar} ${isCollapsed ? styles.collapsed : ''}`}
+      className={""}
       data-testid={testId.projectSidebar()}
       role="complementary"
       aria-label="Projects sidebar"
     >
       {/* Header */}
-      <div className={styles.header}>
-        <div className={styles.headerContent}>
-          <h2 className={styles.workspaceName} id="sidebar-workspace-title">
+      <div >
+        <div >
+          <h2  id="sidebar-workspace-title">
             {currentWorkspace?.name || 'Workspace'}
           </h2>
-          <p className={styles.projectCount} aria-label={`${projects.length} project${projects.length !== 1 ? 's' : ''} available`}>
+          <p  aria-label={`${projects.length} project${projects.length !== 1 ? 's' : ''} available`}>
             {projects.length} project{projects.length !== 1 ? 's' : ''}
           </p>
         </div>
 
         <button
-          className={styles.toggleButton}
+          
           onClick={toggleCollapsed}
           title={isCollapsed ? 'Expand' : 'Collapse'}
           aria-label={isCollapsed ? 'Expand projects sidebar' : 'Collapse projects sidebar'}
@@ -99,15 +98,15 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = ({
             {/* Starred Projects */}
             {starredProjects.length > 0 && (
               <section
-                className={styles.section}
+                
                 role="region"
                 aria-label="Starred projects"
               >
-                <h3 className={styles.sectionTitle} id="starred-projects-title">
+                <h3  id="starred-projects-title">
                   Starred
                 </h3>
                 <div
-                  className={styles.projectList}
+                  
                   role="list"
                   aria-labelledby="starred-projects-title"
                 >
@@ -125,16 +124,16 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = ({
 
             {/* All Projects */}
             <section
-              className={styles.section}
+              
               role="region"
               aria-label="All projects"
             >
-              <div className={styles.sectionHeader}>
-                <h3 className={styles.sectionTitle} id="all-projects-title">
+              <div >
+                <h3  id="all-projects-title">
                   Projects
                 </h3>
                 <button
-                  className={styles.addButton}
+                  
                   onClick={() => setShowNewProjectForm(true)}
                   title="Create new project"
                   aria-label="Create new project"
@@ -146,7 +145,7 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = ({
 
               {showNewProjectForm && (
                 <form
-                  className={styles.newProjectForm}
+                  
                   onSubmit={onCreateProject}
                   role="region"
                   aria-label="Create new project form"
@@ -157,7 +156,7 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = ({
                   <input
                     id="new-project-name-input"
                     type="text"
-                    className={styles.input}
+                    
                     placeholder="Project name..."
                     value={newProjectName}
                     onChange={(e) => setNewProjectName(e.target.value)}
@@ -165,17 +164,17 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = ({
                     aria-required="true"
                     data-testid={testId.input('new-project-name')}
                   />
-                  <div className={styles.formButtons}>
+                  <div >
                     <button
                       type="submit"
-                      className={styles.submitButton}
+                      
                       data-testid={testId.button('create-project')}
                     >
                       Create
                     </button>
                     <button
                       type="button"
-                      className={styles.cancelButton}
+                      
                       onClick={resetProjectForm}
                       data-testid={testId.button('cancel-new-project')}
                     >
@@ -186,7 +185,7 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = ({
               )}
 
               <div
-                className={styles.projectList}
+                
                 role="list"
                 aria-labelledby="all-projects-title"
               >
@@ -200,7 +199,7 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = ({
                     />
                   ))
                 ) : (
-                  <p className={styles.emptyState} role="status">
+                  <p  role="status">
                     No projects. Create one to get started!
                   </p>
                 )}
@@ -224,24 +223,24 @@ const ProjectItem: React.FC<ProjectItemProps> = ({ project, isSelected, onClick 
   return (
     <div
       role="listitem"
-      className={styles.projectListItem}
+      
     >
       <button
-        className={`${styles.projectItem} ${isSelected ? styles.selected : ''}`}
+        className={""}
         style={{ borderLeftColor: project.color }}
         onClick={() => onClick(project.id)}
         aria-selected={isSelected}
         aria-current={isSelected ? 'page' : undefined}
         data-testid={testId.projectItem(project.id)}
       >
-        <div className={styles.projectInfo}>
-          <h4 className={styles.projectName}>{project.name}</h4>
+        <div >
+          <h4 >{project.name}</h4>
           {project.description && (
-            <p className={styles.projectDescription}>{project.description}</p>
+            <p >{project.description}</p>
           )}
         </div>
         {project.starred && (
-          <span className={styles.star} aria-hidden="true">
+          <span  aria-hidden="true">
             ★
           </span>
         )}

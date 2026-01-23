@@ -6,7 +6,6 @@
 import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { ProjectCanvasItem } from '../../types/project';
 import { useProjectCanvas } from '../../hooks/canvas';
-import styles from './WorkflowCard.module.scss';
 
 interface WorkflowCardProps {
   item: ProjectCanvasItem;
@@ -205,9 +204,6 @@ export const WorkflowCard: React.FC<WorkflowCardProps> = ({
   return (
     <div
       ref={cardRef}
-      className={`${styles.card} ${isSelected ? styles.selected : ''} ${
-        isDragging ? styles.dragging : ''
-      }`}
       style={{
         left: `${item.position.x}px`,
         top: `${item.position.y}px`,
@@ -220,11 +216,11 @@ export const WorkflowCard: React.FC<WorkflowCardProps> = ({
       onMouseMove={handleDragStart}
     >
       {/* Header */}
-      <div className={styles.header} data-no-drag>
-        <div className={styles.title}>{workflow?.name || 'Untitled Workflow'}</div>
-        <div className={styles.actions}>
+      <div  data-no-drag>
+        <div >{workflow?.name || 'Untitled Workflow'}</div>
+        <div >
           <button
-            className={styles.actionButton}
+            
             onClick={() => onOpen(workflow.id)}
             title="Open workflow editor"
             aria-label="Open workflow"
@@ -232,7 +228,7 @@ export const WorkflowCard: React.FC<WorkflowCardProps> = ({
             ⟳
           </button>
           <button
-            className={styles.actionButton}
+            
             onClick={() => onDelete(item.id)}
             title="Remove from canvas"
             aria-label="Remove"
@@ -244,61 +240,61 @@ export const WorkflowCard: React.FC<WorkflowCardProps> = ({
 
       {/* Body - Mini preview */}
       {!item.minimized ? (
-        <div className={styles.body}>
-          <div className={styles.preview}>
-            <div className={styles.previewContent}>
-              <div className={styles.nodeCount}>{nodeCount}</div>
-              <div className={styles.label}>nodes</div>
+        <div >
+          <div >
+            <div >
+              <div >{nodeCount}</div>
+              <div >nodes</div>
             </div>
           </div>
         </div>
       ) : null}
 
       {/* Footer */}
-      <div className={styles.footer}>
-        <span className={styles.meta}>
+      <div >
+        <span >
           {nodeCount} nodes • {connectionCount} connections
         </span>
       </div>
 
       {/* Resize handles */}
       <div
-        className={`${styles.resizeHandle} ${styles.n}`}
+        className={""}
         data-no-drag
         onMouseDown={(e) => handleResizeStart(e, 'n')}
       />
       <div
-        className={`${styles.resizeHandle} ${styles.s}`}
+        className={""}
         data-no-drag
         onMouseDown={(e) => handleResizeStart(e, 's')}
       />
       <div
-        className={`${styles.resizeHandle} ${styles.e}`}
+        className={""}
         data-no-drag
         onMouseDown={(e) => handleResizeStart(e, 'e')}
       />
       <div
-        className={`${styles.resizeHandle} ${styles.w}`}
+        className={""}
         data-no-drag
         onMouseDown={(e) => handleResizeStart(e, 'w')}
       />
       <div
-        className={`${styles.resizeHandle} ${styles.ne}`}
+        className={""}
         data-no-drag
         onMouseDown={(e) => handleResizeStart(e, 'ne')}
       />
       <div
-        className={`${styles.resizeHandle} ${styles.nw}`}
+        className={""}
         data-no-drag
         onMouseDown={(e) => handleResizeStart(e, 'nw')}
       />
       <div
-        className={`${styles.resizeHandle} ${styles.se}`}
+        className={""}
         data-no-drag
         onMouseDown={(e) => handleResizeStart(e, 'se')}
       />
       <div
-        className={`${styles.resizeHandle} ${styles.sw}`}
+        className={""}
         data-no-drag
         onMouseDown={(e) => handleResizeStart(e, 'sw')}
       />

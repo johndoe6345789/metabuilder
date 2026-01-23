@@ -1,0 +1,19 @@
+{
+  "name": "@metabuilder/core-hooks",
+  "version": "0.1.0",
+  "description": "Generic, reusable React hooks for common UI patterns - no Redux or service dependencies",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.0.0",
+    "typescript": "^5.0.0"
+  }
+}

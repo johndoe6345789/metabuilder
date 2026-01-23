@@ -5,7 +5,6 @@
 
 import React, { useCallback } from 'react';
 import { useProjectCanvas } from '../../hooks/canvas';
-import styles from './CanvasToolbar.module.scss';
 
 interface CanvasToolbarProps {
   onAddWorkflow?: () => void;
@@ -39,20 +38,20 @@ export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
   );
 
   return (
-    <div className={styles.toolbar}>
+    <div >
       {/* Zoom Controls */}
-      <div className={styles.group}>
+      <div >
         <button
-          className={styles.button}
+          
           onClick={zoom_out}
           title="Zoom out"
           aria-label="Zoom out"
         >
           −
         </button>
-        <span className={styles.value}>{Math.round(zoom * 100)}%</span>
+        <span >{Math.round(zoom * 100)}%</span>
         <button
-          className={styles.button}
+          
           onClick={zoom_in}
           title="Zoom in"
           aria-label="Zoom in"
@@ -60,7 +59,7 @@ export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
           +
         </button>
         <button
-          className={styles.button}
+          
           onClick={reset_view}
           title="Reset view"
           aria-label="Reset view"
@@ -70,11 +69,11 @@ export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
       </div>
 
       {/* Divider */}
-      <div className={styles.divider} />
+      <div  />
 
       {/* Grid Controls */}
-      <div className={styles.group}>
-        <label className={styles.checkboxLabel}>
+      <div >
+        <label >
           <input
             type="checkbox"
             checked={showGrid}
@@ -84,7 +83,7 @@ export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
           <span>Grid</span>
         </label>
 
-        <label className={styles.checkboxLabel}>
+        <label >
           <input
             type="checkbox"
             checked={gridSnap}
@@ -96,7 +95,7 @@ export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
 
         {gridSnap && (
           <select
-            className={styles.select}
+            
             value={snapSize}
             onChange={handleSnapSizeChange}
             aria-label="Grid snap size"
@@ -112,13 +111,13 @@ export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
       </div>
 
       {/* Divider */}
-      <div className={styles.divider} />
+      <div  />
 
       {/* Actions */}
-      <div className={styles.group}>
+      <div >
         {onAddWorkflow && (
           <button
-            className={`${styles.button} ${styles.primary}`}
+            className={""}
             onClick={onAddWorkflow}
             title="Add workflow to canvas"
             aria-label="Add workflow"
@@ -129,7 +128,7 @@ export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
 
         {onAutoLayout && (
           <button
-            className={styles.button}
+            
             onClick={onAutoLayout}
             title="Auto-arrange workflows"
             aria-label="Auto-layout"
@@ -140,7 +139,7 @@ export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
 
         {onOpenSettings && (
           <button
-            className={styles.button}
+            
             onClick={onOpenSettings}
             title="Canvas settings"
             aria-label="Settings"

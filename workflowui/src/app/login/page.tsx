@@ -8,7 +8,6 @@
 import React from 'react';
 import Link from 'next/link';
 import { useAuthForm, useLoginLogic } from '../../hooks';
-import styles from './page.module.scss';
 
 export default function LoginPage() {
   const { email, password, localError, isLoading, errorMessage, setEmail, setPassword, clearErrors } = useAuthForm();
@@ -26,17 +25,17 @@ export default function LoginPage() {
   };
 
   return (
-    <div className={styles.loginContainer}>
-      <div className={styles.loginBox}>
-        <div className={styles.header}>
+    <div >
+      <div >
+        <div >
           <h1>WorkflowUI</h1>
           <p>Sign in to your account</p>
         </div>
 
-        <form onSubmit={onLoginSubmit} className={styles.form}>
+        <form onSubmit={onLoginSubmit} >
           {/* Email Input */}
-          <div className={styles.formGroup}>
-            <label htmlFor="email" className={styles.label}>
+          <div >
+            <label htmlFor="email" >
               Email Address
             </label>
             <input
@@ -45,15 +44,15 @@ export default function LoginPage() {
               placeholder="your@email.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className={styles.input}
+              
               disabled={isLoading}
               autoComplete="email"
             />
           </div>
 
           {/* Password Input */}
-          <div className={styles.formGroup}>
-            <label htmlFor="password" className={styles.label}>
+          <div >
+            <label htmlFor="password" >
               Password
             </label>
             <input
@@ -62,7 +61,7 @@ export default function LoginPage() {
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className={styles.input}
+              
               disabled={isLoading}
               autoComplete="current-password"
             />
@@ -70,7 +69,7 @@ export default function LoginPage() {
 
           {/* Error Message */}
           {(localError || errorMessage) && (
-            <div className={styles.error}>
+            <div >
               {localError || errorMessage}
             </div>
           )}
@@ -78,7 +77,7 @@ export default function LoginPage() {
           {/* Submit Button */}
           <button
             type="submit"
-            className={`${styles.button} ${styles.primary}`}
+            className={""}
             disabled={isLoading}
           >
             {isLoading ? 'Signing in...' : 'Sign In'}
@@ -86,10 +85,10 @@ export default function LoginPage() {
         </form>
 
         {/* Footer */}
-        <div className={styles.footer}>
+        <div >
           <p>
             Don't have an account?{' '}
-            <Link href="/register" className={styles.link}>
+            <Link href="/register" >
               Sign up
             </Link>
           </p>

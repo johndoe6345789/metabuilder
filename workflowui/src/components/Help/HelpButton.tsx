@@ -4,8 +4,6 @@
  */
 
 import React from 'react';
-import { Button, Tooltip } from '@mui/material';
-import HelpIcon from '@mui/icons-material/Help';
 import { useDocumentation } from '../../hooks/useDocumentation';
 import { DocCategory } from '../../types/documentation';
 import { testId } from '../../utils/accessibility';
@@ -33,30 +31,50 @@ export const HelpButton: React.FC<HelpButtonProps> = ({
     openHelpModal(pageId, category);
   };
 
-  const button = (
-    <Button
+  if (variant === 'icon') {
+    return (
+      <button
+        onClick={handleClick}
+        aria-label={ariaLabel}
+        title={tooltip}
+        data-testid={testId.button('help')}
+        style={{
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          fontSize: '16px',
+          fontWeight: 600,
+          minWidth: '32px',
+          height: '32px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        ?
+      </button>
+    );
+  }
+
+  return (
+    <button
       onClick={handleClick}
       aria-label={ariaLabel}
       data-testid={testId.button('help')}
-      size={size}
-      variant={variant === 'contained' ? 'contained' : 'text'}
+      style={{
+        padding: '8px 16px',
+        backgroundColor: variant === 'contained' ? 'var(--color-primary)' : 'transparent',
+        color: variant === 'contained' ? 'white' : 'inherit',
+        border: variant === 'contained' ? 'none' : '1px solid var(--color-border)',
+        borderRadius: '4px',
+        cursor: 'pointer',
+        fontSize: '14px',
+        fontWeight: 500,
+      }}
     >
-      {variant === 'icon' ? (
-        <HelpIcon />
-      ) : (
-        <>
-          <HelpIcon sx={{ mr: 1 }} />
-          Help
-        </>
-      )}
-    </Button>
+      Help
+    </button>
   );
-
-  if (variant === 'icon') {
-    return <Tooltip title={tooltip}>{button}</Tooltip>;
-  }
-
-  return button;
 };
 
 export default HelpButton;

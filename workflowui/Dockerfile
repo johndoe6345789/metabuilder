@@ -17,10 +17,13 @@ FROM node:18-alpine as frontend-builder
 
 WORKDIR /app
 
-COPY workflowui/package.json workflowui/package-lock.json ./
-RUN npm ci --legacy-peer-deps
+# Copy package files
+COPY workflowui/package*.json ./
+RUN npm install --legacy-peer-deps
 
+# Copy source code
 COPY workflowui/ .
+# Copy fakemui for imports
 COPY fakemui/ ../fakemui
 
 # Build Next.js application

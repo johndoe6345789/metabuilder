@@ -4,7 +4,6 @@
  */
 
 import React, { useState, useCallback } from 'react';
-import styles from '../sections.module.scss';
 
 interface TwoFactorSettingsProps {
   onStatusChange?: (enabled: boolean) => void;
@@ -55,17 +54,17 @@ export const TwoFactorSettings: React.FC<TwoFactorSettingsProps> = ({ onStatusCh
   }, [onStatusChange]);
 
   return (
-    <div className={styles.subsection}>
-      <h3 className={styles.subsectionTitle}>Two-Factor Authentication</h3>
-      <p className={styles.description}>
+    <div >
+      <h3 >Two-Factor Authentication</h3>
+      <p >
         Add an extra layer of security to your account
       </p>
 
-      <div className={styles.statusRow}>
+      <div >
         <span>Status:</span>
         <span
           className={
-            twoFactorEnabled ? styles.statusEnabled : styles.statusDisabled
+            twoFactorEnabled ? "enabled" : "disabled"
           }
         >
           {twoFactorEnabled ? 'Enabled' : 'Not Enabled'}
@@ -74,7 +73,7 @@ export const TwoFactorSettings: React.FC<TwoFactorSettingsProps> = ({ onStatusCh
 
       {!twoFactorEnabled && !showSetup && (
         <button
-          className={`${styles.button} ${styles.secondary}`}
+          className={""}
           onClick={handleEnableTwoFactor}
         >
           Enable 2FA
@@ -82,12 +81,12 @@ export const TwoFactorSettings: React.FC<TwoFactorSettingsProps> = ({ onStatusCh
       )}
 
       {showSetup && !twoFactorEnabled && (
-        <div className={styles.formContainer}>
-          <p className={styles.hint}>
+        <div >
+          <p >
             Scan this QR code with your authenticator app, then enter the 6-digit code:
           </p>
-          <div className={styles.formGroup}>
-            <label htmlFor="verificationCode" className={styles.label}>
+          <div >
+            <label htmlFor="verificationCode" >
               Verification Code
             </label>
             <input
@@ -95,20 +94,20 @@ export const TwoFactorSettings: React.FC<TwoFactorSettingsProps> = ({ onStatusCh
               type="text"
               value={verificationCode}
               onChange={(e) => setVerificationCode(e.target.value.slice(0, 6))}
-              className={styles.input}
+              
               placeholder="000000"
               maxLength={6}
             />
           </div>
-          <div className={styles.actions}>
+          <div >
             <button
-              className={`${styles.button} ${styles.primary}`}
+              className={""}
               onClick={handleVerifyAndEnable}
               disabled={isEnabling}
             >
               {isEnabling ? 'Enabling...' : 'Verify & Enable'}
             </button>
-            <button className={styles.button} onClick={() => setShowSetup(false)}>
+            <button  onClick={() => setShowSetup(false)}>
               Cancel
             </button>
           </div>
@@ -116,17 +115,17 @@ export const TwoFactorSettings: React.FC<TwoFactorSettingsProps> = ({ onStatusCh
       )}
 
       {showBackupCodes && twoFactorEnabled && (
-        <div className={styles.formContainer}>
-          <p className={styles.hint}>Save these backup codes in a safe place:</p>
-          <div className={styles.codesList}>
+        <div >
+          <p >Save these backup codes in a safe place:</p>
+          <div >
             {backupCodes.map((code, idx) => (
-              <div key={idx} className={styles.codeItem}>
+              <div key={idx} >
                 {code}
               </div>
             ))}
           </div>
           <button
-            className={`${styles.button} ${styles.primary}`}
+            className={""}
             onClick={() => setShowBackupCodes(false)}
           >
             I Saved My Backup Codes
@@ -136,7 +135,7 @@ export const TwoFactorSettings: React.FC<TwoFactorSettingsProps> = ({ onStatusCh
 
       {twoFactorEnabled && !showBackupCodes && (
         <button
-          className={`${styles.button} ${styles.danger}`}
+          className={""}
           onClick={handleDisableTwoFactor}
         >
           Disable 2FA

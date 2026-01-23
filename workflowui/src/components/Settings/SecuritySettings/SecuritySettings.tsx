@@ -8,7 +8,6 @@ import { PasswordSecuritySettings } from './PasswordSecuritySettings';
 import { TwoFactorSettings } from './TwoFactorSettings';
 import { SessionManagementSettings } from './SessionManagementSettings';
 import { AccountDeletionSettings } from './AccountDeletionSettings';
-import styles from '../sections.module.scss';
 import { testId } from '../../../utils/accessibility';
 
 interface SecuritySettingsProps {
@@ -34,7 +33,7 @@ export const SecuritySettings: React.FC<SecuritySettingsProps> = ({
 
   return (
     <section
-      className={styles.section}
+      
       data-testid={testId.settingsSecuritySection()}
       aria-label="Security settings"
     >

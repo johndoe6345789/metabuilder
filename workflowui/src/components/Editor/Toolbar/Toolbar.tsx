@@ -7,7 +7,6 @@ import React, { useState } from 'react';
 import { ExecutionToolbar } from './ExecutionToolbar';
 import { ViewToolbar } from './ViewToolbar';
 import { ValidationModal } from './ValidationModal';
-import styles from '../Toolbar.module.scss';
 
 interface ToolbarProps {
   workflowId: string;
@@ -18,7 +17,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({ workflowId, onValidate }) => {
   const [showValidation, setShowValidation] = useState(false);
 
   return (
-    <div className={styles.toolbar}>
+    <div >
       <ExecutionToolbar
         workflowId={workflowId}
         onValidationShow={setShowValidation}

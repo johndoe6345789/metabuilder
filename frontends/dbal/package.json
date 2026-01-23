@@ -14,9 +14,14 @@
     "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
+    "@metabuilder/core-hooks": "file:../../redux/core-hooks",
+    "@metabuilder/api-clients": "file:../../redux/api-clients",
     "next": "16.1.2",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "react-redux": "^9.0.4",
+    "redux": "^5.0.1",
+    "redux-thunk": "^2.4.2"
   },
   "devDependencies": {
     "@playwright/test": "^1.57.0",

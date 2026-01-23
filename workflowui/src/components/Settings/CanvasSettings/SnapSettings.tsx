@@ -4,7 +4,6 @@
  */
 
 import React from 'react';
-import styles from '../sections.module.scss';
 
 interface SnapSettingsProps {
   autoSave: boolean;
@@ -22,11 +21,11 @@ export const SnapSettings: React.FC<SnapSettingsProps> = ({
   onSettingChange,
 }) => {
   return (
-    <div className={styles.subsection}>
-      <h3 className={styles.subsectionTitle}>Canvas Behavior</h3>
+    <div >
+      <h3 >Canvas Behavior</h3>
 
-      <div className={styles.settingRow}>
-        <label className={styles.checkboxLabel}>
+      <div >
+        <label >
           <input
             type="checkbox"
             checked={autoSave}
@@ -34,13 +33,13 @@ export const SnapSettings: React.FC<SnapSettingsProps> = ({
           />
           <span>Auto-Save</span>
         </label>
-        <p className={styles.settingDescription}>Automatically save canvas state</p>
+        <p >Automatically save canvas state</p>
       </div>
 
       {autoSave && (
-        <div className={styles.settingRow}>
-          <label htmlFor="autoSaveInterval" className={styles.label}>
-            Save Interval: <span className={styles.value}>{autoSaveInterval}s</span>
+        <div >
+          <label htmlFor="autoSaveInterval" >
+            Save Interval: <span >{autoSaveInterval}s</span>
           </label>
           <input
             id="autoSaveInterval"
@@ -50,13 +49,13 @@ export const SnapSettings: React.FC<SnapSettingsProps> = ({
             step="10"
             value={autoSaveInterval}
             onChange={(e) => onSettingChange('autoSaveInterval', parseInt(e.target.value))}
-            className={styles.slider}
+            
           />
         </div>
       )}
 
-      <div className={styles.settingRow}>
-        <label className={styles.checkboxLabel}>
+      <div >
+        <label >
           <input
             type="checkbox"
             checked={zoomInvert}
@@ -64,18 +63,18 @@ export const SnapSettings: React.FC<SnapSettingsProps> = ({
           />
           <span>Invert Zoom Direction</span>
         </label>
-        <p className={styles.settingDescription}>Reverse scroll wheel zoom direction</p>
+        <p >Reverse scroll wheel zoom direction</p>
       </div>
 
-      <div className={styles.settingRow}>
-        <label htmlFor="panDirection" className={styles.label}>
+      <div >
+        <label htmlFor="panDirection" >
           Pan Hotkey
         </label>
         <select
           id="panDirection"
           value={panDirection}
           onChange={(e) => onSettingChange('panDirection', e.target.value)}
-          className={styles.select}
+          
         >
           <option value="shift">Shift + Drag</option>
           <option value="space">Space + Drag</option>

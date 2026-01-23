@@ -8,7 +8,6 @@ import { InAppNotificationSettings } from './InAppNotificationSettings';
 import { EmailNotificationSettings } from './EmailNotificationSettings';
 import { PushNotificationSettings } from './PushNotificationSettings';
 import { NotificationHistorySettings } from './NotificationHistorySettings';
-import styles from '../sections.module.scss';
 import { testId } from '../../../utils/accessibility';
 
 interface NotificationSettingsState {
@@ -79,7 +78,7 @@ export const NotificationSettings: React.FC = () => {
 
   return (
     <section
-      className={styles.section}
+      
       data-testid={testId.settingsNotificationSection()}
       aria-label="Notification settings"
     >
@@ -110,9 +109,9 @@ export const NotificationSettings: React.FC = () => {
         onClearAll={handleClearAllHistory}
       />
 
-      <div className={styles.saveSection}>
+      <div >
         <button
-          className={`${styles.button} ${styles.primary}`}
+          className={""}
           onClick={handleSave}
           disabled={isSaving}
           data-testid={testId.settingsButton('save-preferences')}
@@ -122,7 +121,7 @@ export const NotificationSettings: React.FC = () => {
         </button>
         {saveMessage && (
           <p
-            className={styles.saveMessage}
+            
             role="status"
             aria-live="polite"
             aria-atomic="true"

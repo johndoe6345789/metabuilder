@@ -4,7 +4,6 @@
  */
 
 import React from 'react';
-import styles from '../sections.module.scss';
 
 interface InAppNotificationSettingsProps {
   workflowExecuted: boolean;
@@ -22,14 +21,14 @@ export const InAppNotificationSettings: React.FC<InAppNotificationSettingsProps>
   onSettingChange,
 }) => {
   return (
-    <div className={styles.subsection}>
-      <h3 className={styles.subsectionTitle}>In-App Notifications</h3>
-      <p className={styles.description}>
+    <div >
+      <h3 >In-App Notifications</h3>
+      <p >
         Get notified about important events while using WorkflowUI
       </p>
 
-      <div className={styles.settingRow}>
-        <label className={styles.checkboxLabel}>
+      <div >
+        <label >
           <input
             type="checkbox"
             checked={workflowExecuted}
@@ -37,11 +36,11 @@ export const InAppNotificationSettings: React.FC<InAppNotificationSettingsProps>
           />
           <span>Workflow Executed</span>
         </label>
-        <p className={styles.settingDescription}>Notify when a workflow completes</p>
+        <p >Notify when a workflow completes</p>
       </div>
 
-      <div className={styles.settingRow}>
-        <label className={styles.checkboxLabel}>
+      <div >
+        <label >
           <input
             type="checkbox"
             checked={workflowFailed}
@@ -49,11 +48,11 @@ export const InAppNotificationSettings: React.FC<InAppNotificationSettingsProps>
           />
           <span>Workflow Failed</span>
         </label>
-        <p className={styles.settingDescription}>Alert when a workflow encounters an error</p>
+        <p >Alert when a workflow encounters an error</p>
       </div>
 
-      <div className={styles.settingRow}>
-        <label className={styles.checkboxLabel}>
+      <div >
+        <label >
           <input
             type="checkbox"
             checked={projectShared}
@@ -61,11 +60,11 @@ export const InAppNotificationSettings: React.FC<InAppNotificationSettingsProps>
           />
           <span>Project Shared</span>
         </label>
-        <p className={styles.settingDescription}>Notify when someone shares a project</p>
+        <p >Notify when someone shares a project</p>
       </div>
 
-      <div className={styles.settingRow}>
-        <label className={styles.checkboxLabel}>
+      <div >
+        <label >
           <input
             type="checkbox"
             checked={collaboratorJoined}
@@ -73,7 +72,7 @@ export const InAppNotificationSettings: React.FC<InAppNotificationSettingsProps>
           />
           <span>Collaborator Joined</span>
         </label>
-        <p className={styles.settingDescription}>Notify when someone joins your project</p>
+        <p >Notify when someone joins your project</p>
       </div>
     </div>
   );

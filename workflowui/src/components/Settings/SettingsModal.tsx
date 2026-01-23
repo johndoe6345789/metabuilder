@@ -4,7 +4,6 @@
  */
 
 import React, { useState } from 'react';
-import styles from './SettingsModal.module.scss';
 import { AccountSettings } from './sections/AccountSettings';
 import { SecuritySettings } from './SecuritySettings/SecuritySettings';
 import { CanvasSettings } from './sections/CanvasSettings';
@@ -37,23 +36,23 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
   return (
     <div
-      className={styles.overlay}
+      
       onClick={onClose}
       role="presentation"
       data-testid={testId.modal('settings')}
     >
       <div
-        className={styles.modal}
+        
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
         aria-labelledby="settings-title"
       >
         {/* Header */}
-        <div className={styles.header}>
-          <h1 className={styles.title} id="settings-title">Settings</h1>
+        <div >
+          <h1  id="settings-title">Settings</h1>
           <button
-            className={styles.closeButton}
+            
             onClick={onClose}
             title="Close settings"
             aria-label="Close settings"
@@ -64,9 +63,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
         </div>
 
         {/* Tab Navigation */}
-        <div className={styles.tabNav} role="tablist" aria-label="Settings sections">
+        <div  role="tablist" aria-label="Settings sections">
           <button
-            className={`${styles.tab} ${activeTab === 'account' ? styles.active : ''}`}
+            className={""}
             onClick={() => setActiveTab('account')}
             role="tab"
             aria-selected={activeTab === 'account'}
@@ -76,7 +75,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             👤 Account
           </button>
           <button
-            className={`${styles.tab} ${activeTab === 'security' ? styles.active : ''}`}
+            className={""}
             onClick={() => setActiveTab('security')}
             role="tab"
             aria-selected={activeTab === 'security'}
@@ -86,7 +85,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             🔐 Security
           </button>
           <button
-            className={`${styles.tab} ${activeTab === 'canvas' ? styles.active : ''}`}
+            className={""}
             onClick={() => setActiveTab('canvas')}
             role="tab"
             aria-selected={activeTab === 'canvas'}
@@ -96,7 +95,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             🎨 Canvas
           </button>
           <button
-            className={`${styles.tab} ${activeTab === 'notifications' ? styles.active : ''}`}
+            className={""}
             onClick={() => setActiveTab('notifications')}
             role="tab"
             aria-selected={activeTab === 'notifications'}
@@ -108,7 +107,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
         </div>
 
         {/* Content */}
-        <div className={styles.content}>
+        <div >
           {activeTab === 'account' && (
             <div role="tabpanel" id="settings-account" aria-labelledby="settings-title">
               <AccountSettings />

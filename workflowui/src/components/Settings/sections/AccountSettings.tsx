@@ -4,7 +4,6 @@
  */
 
 import React, { useState, useCallback } from 'react';
-import styles from './sections.module.scss';
 import { testId, aria } from '../../../utils/accessibility';
 
 export const AccountSettings: React.FC = () => {
@@ -46,26 +45,26 @@ export const AccountSettings: React.FC = () => {
   }, [originalData]);
 
   return (
-    <section className={styles.section} data-testid={testId.settingsPanel()} aria-label="Account settings">
-      <h2 className={styles.sectionTitle} id="account-settings-title">Profile Information</h2>
+    <section  data-testid={testId.settingsPanel()} aria-label="Account settings">
+      <h2  id="account-settings-title">Profile Information</h2>
 
       {/* Avatar Section */}
-      <div className={styles.avatarSection}>
-        <div className={styles.avatarContainer}>
+      <div >
+        <div >
           <img
             src="https://api.dicebear.com/7.x/avataaars/svg?seed=johndoe"
             alt="User avatar"
-            className={styles.avatar}
+            
           />
         </div>
         {isEditing && (
-          <button className={styles.changeAvatarButton}>Change Avatar</button>
+          <button >Change Avatar</button>
         )}
       </div>
 
       {/* Form Fields */}
-      <div className={styles.formGroup}>
-        <label htmlFor="fullName" className={styles.label}>
+      <div >
+        <label htmlFor="fullName" >
           Full Name
         </label>
         <input
@@ -75,12 +74,12 @@ export const AccountSettings: React.FC = () => {
           value={formData.fullName}
           onChange={handleInputChange}
           disabled={!isEditing}
-          className={`${styles.input} ${!isEditing ? styles.disabled : ''}`}
+          className={""}
         />
       </div>
 
-      <div className={styles.formGroup}>
-        <label htmlFor="email" className={styles.label}>
+      <div >
+        <label htmlFor="email" >
           Email Address
         </label>
         <input
@@ -90,13 +89,13 @@ export const AccountSettings: React.FC = () => {
           value={formData.email}
           onChange={handleInputChange}
           disabled={!isEditing}
-          className={`${styles.input} ${!isEditing ? styles.disabled : ''}`}
+          className={""}
         />
-        <p className={styles.hint}>Your email is used for login and notifications</p>
+        <p >Your email is used for login and notifications</p>
       </div>
 
-      <div className={styles.formGroup}>
-        <label htmlFor="username" className={styles.label}>
+      <div >
+        <label htmlFor="username" >
           Username
         </label>
         <input
@@ -106,13 +105,13 @@ export const AccountSettings: React.FC = () => {
           value={formData.username}
           onChange={handleInputChange}
           disabled={!isEditing}
-          className={`${styles.input} ${!isEditing ? styles.disabled : ''}`}
+          className={""}
         />
-        <p className={styles.hint}>Your unique identifier on the platform</p>
+        <p >Your unique identifier on the platform</p>
       </div>
 
-      <div className={styles.formGroup}>
-        <label htmlFor="bio" className={styles.label}>
+      <div >
+        <label htmlFor="bio" >
           Bio
         </label>
         <textarea
@@ -121,17 +120,17 @@ export const AccountSettings: React.FC = () => {
           value={formData.bio}
           onChange={handleInputChange}
           disabled={!isEditing}
-          className={`${styles.textarea} ${!isEditing ? styles.disabled : ''}`}
+          className={""}
           rows={4}
         />
-        <p className={styles.hint}>Tell us about yourself (optional)</p>
+        <p >Tell us about yourself (optional)</p>
       </div>
 
       {/* Action Buttons */}
-      <div className={styles.actions}>
+      <div >
         {!isEditing ? (
           <button
-            className={`${styles.button} ${styles.primary}`}
+            className={""}
             onClick={() => setIsEditing(true)}
             data-testid={testId.settingsButton('edit-profile')}
           >
@@ -140,7 +139,7 @@ export const AccountSettings: React.FC = () => {
         ) : (
           <>
             <button
-              className={`${styles.button} ${styles.primary}`}
+              className={""}
               onClick={handleSave}
               disabled={isSaving}
               data-testid={testId.settingsButton('save-profile')}
@@ -149,7 +148,7 @@ export const AccountSettings: React.FC = () => {
               {isSaving ? 'Saving...' : 'Save Changes'}
             </button>
             <button
-              className={styles.button}
+              
               onClick={handleCancel}
               data-testid={testId.settingsButton('cancel-profile')}
             >
@@ -160,19 +159,19 @@ export const AccountSettings: React.FC = () => {
       </div>
 
       {/* Account Info */}
-      <div className={styles.infoSection} role="region" aria-label="Account information">
-        <h3 className={styles.infoTitle}>Account Information</h3>
-        <div className={styles.infoRow}>
-          <span className={styles.infoLabel}>Account Created:</span>
-          <span className={styles.infoValue}>January 15, 2024</span>
+      <div  role="region" aria-label="Account information">
+        <h3 >Account Information</h3>
+        <div >
+          <span >Account Created:</span>
+          <span >January 15, 2024</span>
         </div>
-        <div className={styles.infoRow}>
-          <span className={styles.infoLabel}>Last Login:</span>
-          <span className={styles.infoValue}>Today at 2:34 PM</span>
+        <div >
+          <span >Last Login:</span>
+          <span >Today at 2:34 PM</span>
         </div>
-        <div className={styles.infoRow}>
-          <span className={styles.infoLabel}>Active Sessions:</span>
-          <span className={styles.infoValue}>2</span>
+        <div >
+          <span >Active Sessions:</span>
+          <span >2</span>
         </div>
       </div>
     </section>

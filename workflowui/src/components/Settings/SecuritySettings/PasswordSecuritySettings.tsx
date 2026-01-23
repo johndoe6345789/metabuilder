@@ -1,7 +1,6 @@
 /** PasswordSecuritySettings Component - Password change management */
 
 import React, { useState, useCallback } from 'react';
-import styles from '../sections.module.scss';
 
 interface PasswordForm {
   currentPassword: string;
@@ -58,65 +57,65 @@ export const PasswordSecuritySettings: React.FC<{ onPasswordChanged?: () => void
   }, [validatePassword, onPasswordChanged]);
 
   return (
-    <div className={styles.subsection}>
-      <h3 className={styles.subsectionTitle}>Change Password</h3>
-      <p className={styles.description}>Keep your account secure with a strong password</p>
+    <div >
+      <h3 >Change Password</h3>
+      <p >Keep your account secure with a strong password</p>
       {!showForm ? (
         <button
-          className={`${styles.button} ${styles.secondary}`}
+          className={""}
           onClick={() => setShowForm(true)}
         >
           Change Password
         </button>
       ) : (
-        <div className={styles.formContainer}>
-          <div className={styles.formGroup}>
-            <label htmlFor="currentPassword" className={styles.label}>Current Password</label>
+        <div >
+          <div >
+            <label htmlFor="currentPassword" >Current Password</label>
             <input
               id="currentPassword"
               type="password"
               name="currentPassword"
               value={form.currentPassword}
               onChange={handleInputChange}
-              className={styles.input}
+              
               placeholder="Enter your current password"
             />
           </div>
-          <div className={styles.formGroup}>
-            <label htmlFor="newPassword" className={styles.label}>New Password</label>
+          <div >
+            <label htmlFor="newPassword" >New Password</label>
             <input
               id="newPassword"
               type="password"
               name="newPassword"
               value={form.newPassword}
               onChange={handleInputChange}
-              className={styles.input}
+              
               placeholder="Enter new password"
             />
-            <p className={styles.hint}>Min 8 chars: uppercase, lowercase, numbers</p>
+            <p >Min 8 chars: uppercase, lowercase, numbers</p>
           </div>
-          <div className={styles.formGroup}>
-            <label htmlFor="confirmPassword" className={styles.label}>Confirm New Password</label>
+          <div >
+            <label htmlFor="confirmPassword" >Confirm New Password</label>
             <input
               id="confirmPassword"
               type="password"
               name="confirmPassword"
               value={form.confirmPassword}
               onChange={handleInputChange}
-              className={styles.input}
+              
               placeholder="Confirm new password"
             />
           </div>
-          {error && <p className={styles.error}>{error}</p>}
-          <div className={styles.actions}>
+          {error && <p >{error}</p>}
+          <div >
             <button
-              className={`${styles.button} ${styles.primary}`}
+              className={""}
               onClick={handleChangePassword}
               disabled={isChanging}
             >
               {isChanging ? 'Changing...' : 'Change Password'}
             </button>
-            <button className={styles.button} onClick={() => setShowForm(false)}>Cancel</button>
+            <button  onClick={() => setShowForm(false)}>Cancel</button>
           </div>
         </div>
       )}

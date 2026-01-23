@@ -283,3 +283,24 @@ export type {
   AccessibilityComponent,
   AccessibilityAction,
 } from './src/utils/accessibility'
+
+// Redux Integration
+// ────────────────────────────────────────────────────────────────────
+// fakemui is designed as a pure UI component library with Material Design 3
+// State management (Redux slices, hooks, store) is application-specific
+//
+// For applications using Redux/workflows:
+// - Redux Slices: Available in workflowui/src/store/slices/
+// - Custom Hooks: Available in workflowui/src/hooks/
+// - Store Configuration: See workflowui/src/store/store.ts
+//
+// These will be unified into a shared @metabuilder/redux-slices package
+// as the framework matures.
+//
+// fakemui itself provides only:
+// - Material Design 3 UI components
+// - Icons, layouts, forms, navigation
+// - Accessibility utilities
+// - Theming support
+
+
