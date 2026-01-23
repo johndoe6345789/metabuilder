@@ -1,281 +1,402 @@
-# WorkflowUI Hooks Analysis Documentation
+# WorkflowUI - Visual Workflow Editor
 
-**Analysis Date:** January 23, 2026
-**Code Health Score:** 83/100 ✓
-**Analysis Status:** ✓ COMPLETE
+Modern, production-grade visual workflow editor inspired by n8n, built for MetaBuilder's DAG executor system.
 
----
+## 🎯 Overview
 
-## Documentation Index
+WorkflowUI is a full-featured workflow editor with:
 
-This folder contains comprehensive analysis of the WorkflowUI hooks system.
+- **Visual DAG Editor**: Drag-and-drop node-based workflow construction with React Flow
+- **Real-Time Collaboration**: Live updates via Redux and WebSockets
+- **Offline-First**: IndexedDB for local workflow storage and sync
+- **Plugin Ecosystem**: Support for custom node types and extensions
+- **Type-Safe**: Full TypeScript with strict mode enabled
 
-### 1. **HOOKS_SUMMARY.txt** (START HERE)
-**Length:** 194 lines
-**Type:** Executive Summary
-**Best For:** Quick overview of findings
+## 🏗️ Architecture
 
-Contains:
-- Critical findings summary
-- Statistics at a glance
-- Files to review by priority
-- Active vs. unused hooks
-- Code health metrics
-
-**Read Time:** 5-10 minutes
-
----
-
-### 2. **HOOKS_QUICK_REFERENCE.md**
-**Length:** 216 lines
-**Type:** Reference Guide
-**Best For:** Looking up specific hooks
-
-Contains:
-- All 42 hooks in a reference table
-- Status indicators (✓ used, ✗ unused, ⚠️ partial)
-- Quick feature lookup (authentication, UI, canvas, etc.)
-- Import patterns and recommendations
-- Performance notes
-
-**Read Time:** 5-15 minutes
-
----
-
-### 3. **HOOKS_ANALYSIS.md** (COMPREHENSIVE)
-**Length:** 423 lines
-**Type:** Detailed Technical Analysis
-**Best For:** Understanding problems in depth
-
-Contains:
-- Detailed analysis of each unused hook
-- Complete dead code inventory
-- Code quality issues with line numbers
-- Usage patterns table
-- Architecture strengths/weaknesses
-- Numbered recommendations by priority
-- Implementation checklist
-
-**Read Time:** 30-45 minutes
-
----
-
-### 4. **HOOKS_CLEANUP_ACTIONS.md** (ACTION GUIDE)
-**Length:** 306 lines
-**Type:** Step-by-Step Implementation Guide
-**Best For:** Actually fixing the issues
-
-Contains:
-- Critical fixes with exact code changes
-- Before/after code snippets
-- High priority integration guides
-- Testing procedures
-- Success criteria
-- Time estimates for each fix
-- Project timeline recommendations
-
-**Read Time:** 20-30 minutes (implementation: 2-3 hours)
-
----
-
-## Quick Start Guide
-
-### For Managers/Leads
-1. Read: `HOOKS_SUMMARY.txt` (5 min)
-2. Review: Priority fixes section
-3. Plan: 2-3 hours work across 2 sprints
-4. Action: Create sprint items from HOOKS_CLEANUP_ACTIONS.md
-
-### For Developers
-1. Read: `HOOKS_QUICK_REFERENCE.md` (10 min)
-2. Review: "Issues by Priority" section
-3. Reference: `HOOKS_ANALYSIS.md` for details
-4. Implement: Use `HOOKS_CLEANUP_ACTIONS.md` step-by-step
-
-### For Code Reviewers
-1. Read: `HOOKS_ANALYSIS.md` (full analysis)
-2. Check: Dead code section (line numbers)
-3. Verify: Type safety issues section
-4. Review: Code quality recommendations
-
----
-
-## Key Findings Summary
-
-### The Good ✓
-- **23 active hooks** working correctly
-- **Excellent modular design** with clear separation
-- **Strong composition pattern** (useUI, useEditor, useProjectCanvas)
-- **Well-documented TypeScript interfaces**
-- **Good Redux integration**
-
-### The Bad ✗
-- **3 completely unused hooks** (170+ lines)
-- **11 lines of commented code** in 2 files
-- **5 stub methods** with TODO comments
-- **3 type safety violations** (as any)
-- **7 hooks over-exported** (never directly imported)
-
-### The Metrics
-- **Code Health:** 83/100 (Good)
-- **Unused Hooks:** 7% of codebase
-- **Dead Code:** ~50 lines
-- **Type Safety Issues:** 3
-- **Files to Fix:** 9
-
----
-
-## Action Items
-
-### CRITICAL (10 minutes, 0.17 hours)
-- [ ] Remove `useRealtimeService` from exports
-- [ ] Fix `useProject.ts` commented code
-- [ ] Document `useExecution.ts` stub methods
-
-### HIGH (2-3 hours)
-- [ ] Integrate or remove `useCanvasKeyboard`
-- [ ] Integrate or remove `useCanvasVirtualization`
-- [ ] Update editor hook export documentation
-
-### MEDIUM (30 minutes)
-- [ ] Fix 3 `as any` type assertions
-- [ ] Optimize hook dependencies
-- [ ] Add pre-commit hooks
-
-### TOTAL TIME: 2.5-3.5 hours
-
----
-
-## Key Statistics
-
-| Metric | Count |
-|--------|-------|
-| Total Hooks | 42 |
-| Actively Used | 23 |
-| Completely Unused | 3 |
-| Partially Used | 2 |
-| Over-exported | 7 |
-| Lines of Dead Code | ~50 |
-| Type Safety Issues | 3 |
-| Files with Issues | 9 |
-
----
-
-## Priority Recommendations
-
-### This Week
-1. Remove unused hook exports (10 min)
-2. Fix commented notification code (2 min)
-3. Document stub methods (3 min)
-
-### Next Sprint
-1. Integrate keyboard shortcuts (1-2 hours)
-2. Integrate canvas virtualization (1-2 hours) - **Performance benefit!**
-3. Update hook exports documentation (5 min)
-
-### Future
-1. TypeScript strict mode
-2. ESLint rules for commented code
-3. Pre-commit hooks for quality
-
----
-
-## File Locations
-
-All source files being analyzed are in:
 ```
-/Users/rmac/Documents/metabuilder/workflowui/src/hooks/
-├── ui/                    (6 hooks - all used)
-├── editor/                (8 hooks - 1 active, 7 composition)
-├── canvas/                (10 hooks - 7 active, 3 unused)
-├── useAuthForm.ts         (used)
-├── usePasswordValidation.ts (used)
-├── useLoginLogic.ts       (used)
-├── useRegisterLogic.ts    (used)
-├── useHeaderLogic.ts      (used)
-├── useResponsiveSidebar.ts (used)
-├── useProjectSidebarLogic.ts (used)
-├── useDashboardLogic.ts   (used)
-├── useWorkspace.ts        (used)
-├── useProject.ts          (⚠️ partial - commented code)
-├── useWorkflow.ts         (used)
-├── useExecution.ts        (⚠️ partial - stubs)
-├── useRealtimeService.ts  (✗ unused)
-├── useCanvasKeyboard.ts   (✗ unused)
-├── useCanvasVirtualization.ts (✗ unused)
-└── index.ts               (main export file)
+Frontend (Next.js + React)
+  ├─ UI Components (FakeMUI)
+  ├─ Redux Store (state management)
+  ├─ React Flow (DAG visualization)
+  └─ IndexedDB (offline storage)
+       │
+       ▼
+Backend (Flask + Python)
+  ├─ Workflow execution
+  ├─ Plugin management
+  ├─ Database persistence
+  └─ WebSocket server
+       │
+       ▼
+MetaBuilder DAG Executor
+  ├─ Node execution
+  ├─ Error recovery
+  ├─ Multi-tenant support
+  └─ Plugin registry
 ```
 
----
+## 📦 Tech Stack
 
-## How to Use These Documents
+| Layer | Technology | Purpose |
+|-------|-----------|---------|
+| **Frontend** | Next.js 14 | Server-side rendering, API routes |
+| **UI Framework** | FakeMUI | Material UI compatible components |
+| **State** | Redux + Redux Toolkit | Centralized state management |
+| **Flow Editor** | React Flow | DAG visualization and manipulation |
+| **Styling** | SCSS | Component scoped styles |
+| **Storage** | IndexedDB (Dexie) | Offline workflow persistence |
+| **HTTP** | Axios | API client with interceptors |
+| **Backend** | Flask | Python workflow execution |
+| **Database** | SQLAlchemy + PostgreSQL/SQLite | Persistent workflow storage |
+| **Validation** | n8n JSON Schema | Workflow and node validation |
 
-### Reading Approach 1: Manager/High-Level
-```
-HOOKS_SUMMARY.txt
-    ↓
-Read Priority section
-    ↓
-Decide: Skip detailed analysis OR deep dive
-```
+## 🚀 Quick Start
 
-### Reading Approach 2: Developer/Implementation
-```
-HOOKS_QUICK_REFERENCE.md
-    ↓
-Look up specific hooks
-    ↓
-For issues: Read HOOKS_ANALYSIS.md (relevant section)
-    ↓
-To fix: Follow HOOKS_CLEANUP_ACTIONS.md
-```
+### Prerequisites
 
-### Reading Approach 3: Code Reviewer
-```
-HOOKS_ANALYSIS.md (full read)
-    ↓
-Focus on: Code Quality Issues section
-    ↓
-Check line numbers in actual files
-    ↓
-Verify: Type Safety and Dead Code sections
+```bash
+Node.js 18+
+Python 3.11+
+npm or yarn
 ```
 
----
+### Installation
 
-## Next Steps
+```bash
+# Install frontend dependencies
+npm install
 
-1. **Select your role above** and follow the recommended reading order
-2. **Decide on action items** - use the checklist in each document
-3. **Schedule implementation** - 2-3 hours total across 2 sprints
-4. **Verify improvements** - Run `npm run typecheck` and `npm run build`
-5. **Schedule follow-up** - Review again in 1 month (Feb 23, 2026)
+# Install backend dependencies
+pip install -r backend/requirements.txt
 
----
+# Initialize IndexedDB
+npm run db:init
+```
 
-## Questions?
+### Development
 
-Refer to the specific section in the analysis documents:
-- **"How do I use hook X?"** → HOOKS_QUICK_REFERENCE.md
-- **"What's the detailed issue?"** → HOOKS_ANALYSIS.md
-- **"How do I fix hook Y?"** → HOOKS_CLEANUP_ACTIONS.md
-- **"What are the metrics?"** → HOOKS_SUMMARY.txt
+```bash
+# Start both frontend and backend
+npm run dev:all
 
----
+# Or separately:
+npm run dev          # Frontend on http://localhost:3000
+npm run backend      # Backend on http://localhost:5000
+```
 
-## Document Metadata
+### Database Setup
 
-| Document | Lines | Type | Focus |
-|----------|-------|------|-------|
-| HOOKS_SUMMARY.txt | 194 | Summary | Overview |
-| HOOKS_QUICK_REFERENCE.md | 216 | Reference | Lookup |
-| HOOKS_ANALYSIS.md | 423 | Detailed | Technical |
-| HOOKS_CLEANUP_ACTIONS.md | 306 | Guide | Implementation |
-| **TOTAL** | **1,139** | **Complete Analysis** | **All Aspects** |
+The backend uses SQLAlchemy for database persistence:
 
----
+```bash
+# Default: SQLite (development)
+# The database file is created automatically at backend/workflows.db
 
-**Generated by:** Claude Code Hook Analyzer v1.0
-**Analysis Date:** January 23, 2026
-**Next Review:** February 23, 2026
-**Code Health:** 83/100 ✓
+# PostgreSQL (production)
+export DATABASE_URL=postgresql://user:password@localhost/workflows
+npm run backend
+
+# Create tables
+python -c "from server_sqlalchemy import app, db; app.app_context().push(); db.create_all()"
+```
+
+### Build
+
+```bash
+npm run build
+npm start
+```
+
+## 📂 Folder Structure
+
+```
+workflowui/
+├── src/
+│   ├── app/                    # Next.js app directory
+│   │   ├── layout.tsx          # Root layout
+│   │   ├── page.tsx            # Dashboard page
+│   │   ├── editor/[id].tsx     # Workflow editor
+│   │   └── api/                # Next.js API routes
+│   │
+│   ├── components/             # React components
+│   │   ├── Editor/             # Workflow editor components
+│   │   │   ├── Canvas.tsx      # React Flow canvas
+│   │   │   ├── Toolbar.tsx     # Editor toolbar
+│   │   │   ├── NodePanel.tsx   # Node configuration panel
+│   │   │   └── Properties.tsx  # Node properties panel
+│   │   ├── Nodes/              # Custom node types
+│   │   │   ├── BaseNode.tsx    # Base node wrapper
+│   │   │   ├── PlaywrightNode.tsx
+│   │   │   ├── StorybookNode.tsx
+│   │   │   └── CustomNode.tsx
+│   │   ├── UI/                 # Shared UI components
+│   │   │   ├── Button.tsx
+│   │   │   ├── Modal.tsx
+│   │   │   ├── Sidebar.tsx
+│   │   │   └── Toolbar.tsx
+│   │   └── Layout/             # Layout components
+│   │       ├── Header.tsx
+│   │       └── MainLayout.tsx
+│   │
+│   ├── store/                  # Redux store
+│   │   ├── store.ts            # Store configuration
+│   │   ├── slices/
+│   │   │   ├── workflowSlice.ts
+│   │   │   ├── editorSlice.ts
+│   │   │   ├── nodesSlice.ts
+│   │   │   ├── connectionSlice.ts
+│   │   │   └── uiSlice.ts
+│   │   └── types.ts            # Store type definitions
+│   │
+│   ├── services/               # API/backend services
+│   │   ├── workflowService.ts  # Workflow API calls
+│   │   ├── nodeService.ts      # Node registry API
+│   │   ├── executionService.ts # Workflow execution
+│   │   └── storageService.ts   # IndexedDB persistence
+│   │
+│   ├── db/                     # IndexedDB schema & operations
+│   │   ├── schema.ts           # Dexie schema
+│   │   ├── workflows.ts        # Workflow queries
+│   │   ├── nodes.ts            # Node cache
+│   │   └── cache.ts            # Cache operations
+│   │
+│   ├── hooks/                  # React hooks
+│   │   ├── useWorkflow.ts      # Workflow state hook
+│   │   ├── useEditor.ts        # Editor state hook
+│   │   ├── useNodes.ts         # Node operations hook
+│   │   ├── useConnection.ts    # Connection hook
+│   │   └── useStorage.ts       # IndexedDB hook
+│   │
+│   ├── types/                  # TypeScript types
+│   │   ├── workflow.ts         # Workflow types
+│   │   ├── node.ts             # Node types
+│   │   ├── connection.ts       # Connection types
+│   │   └── index.ts            # Export all types
+│   │
+│   ├── utils/                  # Utility functions
+│   │   ├── dagValidation.ts    # DAG validation
+│   │   ├── nodeFactory.ts      # Node creation factory
+│   │   ├── layoutEngine.ts     # Auto-layout algorithm
+│   │   ├── jsonValidator.ts    # JSON Schema validation
+│   │   └── transformers.ts     # n8n format converters
+│   │
+│   └── styles/                 # Global styles
+│       ├── globals.scss        # Global styles
+│       ├── variables.scss      # Design tokens
+│       └── mixins.scss         # SCSS mixins
+│
+├── backend/                    # Flask backend
+│   ├── server.py               # Flask app
+│   ├── requirements.txt        # Python dependencies
+│   ├── routes/
+│   │   ├── workflows.py        # Workflow endpoints
+│   │   ├── execution.py        # Execution endpoints
+│   │   └── nodes.py            # Node registry
+│   ├── models/
+│   │   ├── workflow.py         # Workflow model
+│   │   └── execution.py        # Execution model
+│   ├── services/
+│   │   ├── executor.py         # Workflow execution
+│   │   └── storage.py          # Persistence
+│   └── utils/
+│       ├── validation.py       # Workflow validation
+│       └── converters.py       # Format converters
+│
+├── workflows/                  # Sample workflows
+│   ├── e2e-testing.json
+│   ├── documentation.json
+│   └── complex-pipeline.json
+│
+├── stories/                    # Storybook stories
+│   ├── Editor.stories.tsx
+│   ├── Nodes.stories.tsx
+│   └── UI.stories.tsx
+│
+├── scripts/                    # Build/setup scripts
+│   ├── init-db.js              # Initialize IndexedDB
+│   └── migrate-db.js           # Database migrations
+│
+├── public/                     # Static assets
+│   └── icons/
+│
+├── tsconfig.json               # TypeScript config
+├── next.config.js              # Next.js config
+├── jest.config.js              # Jest config
+├── .storybook/                 # Storybook config
+└── README.md
+```
+
+## 🎨 Key Components
+
+### 1. Canvas (React Flow)
+
+```tsx
+// Drag-and-drop DAG editor with zoom, pan, selection
+<WorkflowCanvas>
+  <ReactFlowProvider>
+    <ReactFlow nodes={nodes} edges={edges} onConnect={onConnect}>
+      <Background />
+      <Controls />
+      <MiniMap />
+    </ReactFlow>
+  </ReactFlowProvider>
+</WorkflowCanvas>
+```
+
+### 2. Node Types
+
+```tsx
+// Playwright node example
+<PlaywrightNode
+  id="test_chromium"
+  data={{
+    browser: "chromium",
+    baseUrl: "http://localhost:3000",
+    headless: true
+  }}
+/>
+```
+
+### 3. Redux Store
+
+```typescript
+// Central state management
+store/slices:
+  - workflowSlice: Current workflow, metadata
+  - editorSlice: Canvas zoom, pan, selection
+  - nodesSlice: Node registry, templates
+  - connectionSlice: Edge creation state
+  - uiSlice: Modals, panels, notifications
+```
+
+### 4. IndexedDB Storage
+
+```typescript
+// Offline-first storage with Dexie
+db.workflows.put(workflow)
+db.workflows.get(id)
+db.workflows.toArray()
+db.syncWithServer() // Auto-sync when online
+```
+
+### 5. Backend API
+
+```python
+# Flask endpoints
+POST   /api/workflows              # Create workflow
+GET    /api/workflows/<id>         # Get workflow
+PUT    /api/workflows/<id>         # Update workflow
+DELETE /api/workflows/<id>         # Delete workflow
+POST   /api/workflows/<id>/execute # Execute workflow
+GET    /api/nodes                  # Get node registry
+```
+
+## 🔌 Plugin System
+
+Custom node types can be added:
+
+```typescript
+// Define custom node
+const CustomNode: NodeType = {
+  id: 'my.custom',
+  name: 'My Custom Node',
+  category: 'custom',
+  parameters: {
+    field1: { type: 'string', required: true },
+    field2: { type: 'number', required: false }
+  }
+};
+
+// Register in node registry
+registerNodeType(CustomNode);
+```
+
+## 📊 Features
+
+### Visual Editing
+- ✅ Drag-and-drop node creation
+- ✅ Connection drawing with validation
+- ✅ Node selection and multi-select
+- ✅ Undo/redo support
+- ✅ Auto-layout (horizontal, vertical, hierarchical)
+- ✅ Zoom and pan controls
+- ✅ Minimap navigation
+
+### Workflow Management
+- ✅ Create/edit/delete workflows
+- ✅ Version control integration
+- ✅ Workflow templates
+- ✅ Import/export (JSON, n8n format)
+- ✅ Workflow validation (DAG constraints)
+- ✅ Multi-tenant support
+
+### Execution
+- ✅ Dry-run execution
+- ✅ Execution history
+- ✅ Result visualization
+- ✅ Error reporting
+- ✅ Step-by-step debugging
+- ✅ Performance metrics
+
+### Developer Experience
+- ✅ Hot reload
+- ✅ Redux DevTools integration
+- ✅ Storybook for component development
+- ✅ TypeScript strict mode
+- ✅ Comprehensive error messages
+- ✅ Debug mode
+
+## 🧪 Testing
+
+```bash
+# Run tests
+npm test
+
+# Watch mode
+npm test:watch
+
+# Component development
+npm run storybook
+```
+
+## 📚 Documentation
+
+- [Architecture Guide](./docs/ARCHITECTURE.md)
+- [Component API](./docs/COMPONENTS.md)
+- [Redux Store Design](./docs/REDUX.md)
+- [IndexedDB Schema](./docs/DATABASE.md)
+- [Node Type Reference](./docs/NODE_TYPES.md)
+- [API Reference](./docs/API.md)
+
+## 🚀 Deployment
+
+```bash
+# Build for production
+npm run build
+
+# Start production server
+npm start
+```
+
+Deployed with:
+- Vercel (Next.js frontend)
+- Heroku/Railway (Flask backend)
+- MongoDB Atlas (persistent storage)
+
+## 🤝 Contributing
+
+1. Create feature branch: `git checkout -b feature/name`
+2. Make changes with tests
+3. Submit PR with description
+
+## 📄 License
+
+Part of MetaBuilder project
+
+## 🔗 Related
+
+- [MetaBuilder](../README.md)
+- [DAG Executor](../workflow/executor/ts)
+- [Workflow Plugins](../docs/WORKFLOW_PLUGINS_ARCHITECTURE.md)
+- [n8n Format](https://docs.n8n.io)

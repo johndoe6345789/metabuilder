@@ -4,23 +4,24 @@ FROM python:3.9-slim as backend-builder
 
 WORKDIR /app/backend
 
-COPY backend/requirements.txt .
+COPY workflowui/backend/requirements.txt .
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
     && rm -rf /var/lib/apt/lists/* \
     && pip install --no-cache-dir -r requirements.txt
 
-COPY backend/ .
+COPY workflowui/backend/ .
 
 # Stage 2: Frontend (Node.js + Next.js)
 FROM node:18-alpine as frontend-builder
 
 WORKDIR /app
 
-COPY package.json package-lock.json ./
+COPY workflowui/package.json workflowui/package-lock.json ./
 RUN npm ci --legacy-peer-deps
 
-COPY . .
+COPY workflowui/ .
+COPY fakemui/ ../fakemui
 
 # Build Next.js application
 RUN npm run build

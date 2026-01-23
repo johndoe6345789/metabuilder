@@ -4,12 +4,12 @@ services:
   # WorkflowUI Application (Next.js + Flask)
   workflowui:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: workflowui/Dockerfile
     container_name: metabuilder-workflowui
     ports:
       - "3000:3000"
-      - "5000:5000"
+      - "5050:5000"
     environment:
       # Node.js
       - NODE_ENV=production
@@ -19,7 +19,7 @@ services:
       # Flask Backend
       - FLASK_ENV=production
       - FLASK_APP=backend/server_sqlalchemy.py
-      - DATABASE_URL=file:/app/data/workflows.db
+      - DATABASE_URL=sqlite:////app/data/workflows.db
       - PYTHONUNBUFFERED=1
 
       # SMTP Relay (optional)
@@ -54,7 +54,7 @@ services:
     container_name: metabuilder-smtp-relay
     ports:
       - "2525:2525"
-      - "8081:8080"
+      - "8080:8080"
 
     environment:
       - SMTP_LISTEN_HOST=0.0.0.0
