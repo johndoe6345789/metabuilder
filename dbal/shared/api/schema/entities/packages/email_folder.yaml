@@ -1,0 +1,77 @@
+entity: EmailFolder
+version: "1.0"
+package: email_client
+description: "Email folder (Inbox, Sent, Drafts, custom)"
+
+fields:
+  id:
+    type: cuid
+    primary: true
+    generated: true
+
+  tenantId:
+    type: uuid
+    required: true
+    index: true
+
+  emailClientId:
+    type: uuid
+    required: true
+    index: true
+    description: "FK to EmailClient"
+
+  name:
+    type: string
+    required: true
+    max_length: 255
+    description: "Folder name (e.g., 'Inbox', 'Sent', 'Drafts')"
+
+  type:
+    type: enum
+    values: [inbox, sent, drafts, trash, spam, archive, custom]
+    default: custom
+    description: "System folder type"
+
+  unreadCount:
+    type: int
+    default: 0
+    description: "Count of unread messages"
+
+  totalCount:
+    type: int
+    default: 0
+    description: "Total message count"
+
+  syncToken:
+    type: string
+    nullable: true
+    description: "IMAP sync token for incremental sync"
+
+  isSelectable:
+    type: boolean
+    default: true
+    description: "Whether folder can contain messages"
+
+  createdAt:
+    type: bigint
+    generated: true
+
+  updatedAt:
+    type: bigint
+    generated: true
+
+indexes:
+  - fields: [emailClientId, name]
+    name: client_folder_idx
+  - fields: [tenantId, emailClientId, type]
+    name: type_lookup_idx
+
+acl:
+  read:
+    self: true
+    row_level: "emailClientId IN (SELECT id FROM EmailClient WHERE userId = $user.id AND tenantId = $context.tenantId)"
+  create: false  # System-managed
+  update:
+    self: true
+    row_level: "emailClientId IN (SELECT id FROM EmailClient WHERE userId = $user.id)"
+  delete: false  # Soft-delete only
