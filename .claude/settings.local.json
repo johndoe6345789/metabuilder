@@ -82,7 +82,8 @@
       "Bash(for file in fakemui/fakemui/utils/useMediaQuery.js)",
       "Bash(perl -pi -e:*)",
       "Bash(pkill:*)",
-      "Bash(node --version:*)"
+      "Bash(node --version:*)",
+      "Bash(docker build:*)"
     ]
   },
   "spinnerTipsEnabled": false
