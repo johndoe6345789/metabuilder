@@ -1,0 +1,169 @@
+DEPENDENCY VULNERABILITY FIX PLAN
+═══════════════════════════════════════════════════════════════════════
+
+Date: 2026-01-23
+Status: Attempted fix - encountered workspace conflicts
+Priority: Medium (7 moderate, 0 critical/high in verified audit)
+
+ISSUE SUMMARY:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+npm audit fix fails with TWO CRITICAL CONFLICTS:
+
+1. eslint version conflict
+   - Invalid version: ^9.41.0 (does not exist)
+   - Valid versions: ^9.28.0, ^9.21.0
+   - Location: dbal/development/package.json, codegen/package.json
+   - Fix: Update to ^9.28.0
+
+2. vite version override conflict
+   - Override for vite@^7.4.0 conflicts with direct dependency
+   - Likely in: codegen/, or nested workspace
+   - Root cause: Incompatible peer dependencies
+   - Fix: Investigate workspace vite versions
+
+ATTEMPTED FIXES:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ COMPLETED:
+  - Updated dbal/development/package.json: eslint ^9.41.0 → ^9.28.0
+  - Removed package-lock.json for fresh install
+
+❌ BLOCKED:
+  - npm install fails on vite override conflict
+  - npm audit fix fails on vite override conflict
+
+WORKSPACE ANALYSIS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Root workspaces (from root package.json):
+  - redux/slices
+  - redux/hooks
+  - redux/adapters
+  - redux/hooks-data
+  - redux/hooks-auth
+  - redux/hooks-canvas
+  - redux/core-hooks
+  - redux/api-clients
+  - redux/timing-utils
+  - dbal/development
+  - frontends/nextjs
+  - frontends/dbal
+  - config
+  - storybook
+
+Suspicious for vite conflicts:
+  - codegen/ (NOT in root workspaces!)
+  - gameengine/ (NOT in root workspaces!)
+  - workflowui/ (NOT in root workspaces!)
+
+These are STANDALONE subprojects not in root package.json workspaces array.
+
+ROOT CAUSE:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+The vite override conflict suggests:
+  1. Some workspace has `overrides` or `resolutions` field
+  2. It specifies vite@^7.4.0 as override
+  3. Another workspace has vite as direct dependency with different version
+  4. npm can't resolve the conflict
+
+REMEDIATION STRATEGY:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PHASE 1: IDENTIFY CONFLICT (2 hours)
+  1. Search all workspaces for "overrides" and "resolutions"
+  2. Find which package specifies vite@^7.4.0 as override
+  3. Find which package has vite as direct dependency
+  4. Determine version mismatch
+
+PHASE 2: FIX ESLINT (30 min) ✅ STARTED
+  1. Update codegen/package.json: eslint ^9.41.0 → ^9.28.0
+  2. Update any other workspaces with invalid eslint
+  3. Test: npm install in each workspace
+
+PHASE 3: FIX VITE CONFLICT (1-2 hours)
+  1. Remove vite override from offending workspace
+  2. OR align vite versions across all workspaces
+  3. OR add override to compatible version
+  4. Test: npm install at root
+
+PHASE 4: FIX LODASH (Optional - low priority)
+  1. Run npm audit fix --force (after above fixed)
+  2. This will upgrade Prisma to 6.19.2+
+  3. Test: dbal build and tests pass
+  4. Time: 2-4 hours (includes testing)
+
+QUICK FIX (RECOMMENDED):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Skip full npm audit fix. Instead:
+
+1. Fix eslint versions (30 min)
+   - codegen/package.json: ^9.28.0
+   - dbal/development/package.json: ^9.28.0 ✅ (done)
+   - Any others with ^9.41.0
+
+2. Identify vite override (30 min)
+   ```bash
+   grep -r "overrides\|resolutions" . --include="package.json"
+   grep -r "\"vite\"" . --include="package.json" | grep -v node_modules
+   ```
+
+3. Align versions (30 min)
+   - Make vite versions consistent across workspaces
+   - Remove conflicting override
+
+4. Clean reinstall
+   ```bash
+   rm -rf node_modules package-lock.json
+   npm install
+   ```
+
+5. Verify
+   ```bash
+   npm audit
+   ```
+
+DECISION NEEDED:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Option A: QUICK FIX (Recommended)
+  - Fix eslint versions
+  - Resolve vite override conflict
+  - Keep lodash 4.17.21 (low risk, dev-only)
+  - Time: 1-2 hours
+  - Risk: Low
+  - Outcome: npm install works, vulnerabilities remain but documented
+
+Option B: FULL FIX
+  - Fix eslint versions
+  - Resolve vite conflict
+  - Run npm audit fix --force
+  - Updates Prisma to 6.19.2+ (breaking changes)
+  - Time: 4-8 hours (includes testing all packages)
+  - Risk: Medium (breaking changes)
+  - Outcome: npm install works, most vulnerabilities fixed, breaking changes tested
+
+Option C: DEFER
+  - Document current status
+  - Wait for GitHub Dependabot to clarify "56" claims
+  - If critical found: Re-evaluate
+  - Time: 0
+  - Risk: Low (only 7 moderate confirmed, dev-only)
+  - Outcome: Vulnerabilities documented, not fixed
+
+CURRENT STATUS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Confirmed vulnerabilities (local npm audit):
+  - 7 moderate (lodash prototype pollution in dev chain)
+  - 0 critical, 0 high
+  - Affects: @prisma/dev only (development tool)
+  - Risk: LOW
+
+Blockers to fix:
+  - eslint ^9.41.0 (non-existent version)
+  - vite override conflict (in some workspace)
+
+Next action: Choose between Quick Fix (Option A) or Defer (Option C)
