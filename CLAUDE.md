@@ -1,9 +1,14 @@
 # MetaBuilder - AI Assistant Guide
 
-**Last Updated**: 2026-01-22
+**Last Updated**: 2026-01-23
 **Status**: Phase 2 Complete, Universal Platform in Progress
 **Scale**: 27,826+ files across 34 directories (excludes generated)
 **Philosophy**: 95% JSON/YAML configuration, 5% TypeScript/C++ infrastructure
+
+**Recent Updates** (Jan 23, 2026):
+- FakeMUI reorganized by implementation type (react/, qml/, python/, legacy/, icons/, theming/, styles/)
+- All library versions updated: React 19.2.3, TypeScript 5.9.3, Next.js normalized, @reduxjs/toolkit 2.5.2
+- Multi-version peer dependencies enabled for gradual upgrades
 
 ---
 
@@ -12,10 +17,11 @@
 | Document | Location | Purpose |
 |----------|----------|---------|
 | **Core Development Guide** | [docs/CLAUDE.md](./docs/CLAUDE.md) | Full development principles, patterns, workflows |
-| **WorkflowUI Guide** | [CLAUDE.md](./CLAUDE.md) | Frontend dependencies, scope safety, MUI ban |
+| **WorkflowUI Frontend** | [workflowui/](./workflowui/) | Frontend app using FakeMUI + Redux |
 | **CodeForge IDE Guide** | [codegen/CLAUDE.md](./codegen/CLAUDE.md) | JSON-to-React migration, component system |
 | **Pastebin Conventions** | [pastebin/CLAUDE.md](./pastebin/CLAUDE.md) | Documentation file organization |
 | **Domain-Specific Rules** | [docs/AGENTS.md](./docs/AGENTS.md) | Task-specific guidance |
+| **FakeMUI Guide** | [fakemui/STRUCTURE.md](./fakemui/STRUCTURE.md) | Component library organization and usage |
 
 ---
 
@@ -34,7 +40,7 @@
 | `gameengine/` | 2,737 | Standalone | SDL3/bgfx 2D/3D game engine |
 | `codegen/` | 1,926 | Standalone | CodeForge IDE (React+Monaco) |
 | `pastebin/` | 1,114 | Standalone | Code snippet sharing (Next.js) |
-| `fakemui/` | 758 | Standalone | Material UI clone (QML+React) |
+| `fakemui/` | 758 | Standalone | Material UI clone (145 React components + 421 icons, organized by implementation type) |
 | `postgres/` | 212 | Standalone | PostgreSQL admin dashboard |
 | `pcbgenerator/` | 87 | Standalone | PCB design library (Python) |
 | `mojo/` | 82 | Standalone | Mojo language examples |
@@ -184,6 +190,64 @@ Browser-based low-code IDE migrating to JSON-driven architecture:
 
 See [codegen/CLAUDE.md](./codegen/CLAUDE.md) for migration details.
 
+### FakeMUI Component Library (`fakemui/`)
+
+Material Design 3 component library with multi-implementation support:
+
+**Current Organization** (Jan 23, 2026):
+```
+fakemui/
+├── react/components/    # 145 production-ready React/TypeScript components
+│   ├── atoms/          # Basic building blocks (9)
+│   ├── inputs/         # Form controls (30)
+│   ├── surfaces/       # Containers & cards (15)
+│   ├── layout/         # Grid, Flex, Box, Stack (8)
+│   ├── data-display/   # Tables, Lists, Trees (26)
+│   ├── feedback/       # Alerts, Progress, Snackbars (6)
+│   ├── navigation/     # Tabs, Drawers, Breadcrumbs (22)
+│   ├── utils/          # Portals, Popovers, Tooltips (15)
+│   ├── lab/            # Experimental features (11)
+│   ├── x/              # Advanced components (11)
+│   ├── theming/        # Material Design 3 theme
+│   └── workflows/      # Workflow-specific components
+├── qml/                # Desktop QML components (104+)
+├── python/             # Python bindings (15 modules)
+├── icons/              # 421 SVG icons
+├── styles/             # 78 SCSS modules
+├── theming/            # Theme configuration
+└── legacy/             # Legacy utilities and migrations
+```
+
+**Component Coverage**: 145 total components across 9 categories
+**Usage**: Import from `@metabuilder/fakemui` - all components exported from `index.ts`
+**Status**: ✅ Production-ready, actively used in workflowui
+**See**: [fakemui/STRUCTURE.md](./fakemui/STRUCTURE.md) for detailed layout and component mapping
+
+### Redux State Management
+
+**Current Status**: 9 separate packages consolidating into single entry point
+
+**Packages**:
+- `@metabuilder/core-hooks` - Generic hooks
+- `@metabuilder/api-clients` - API client hooks
+- `@metabuilder/hooks-*` - Feature-specific hooks (auth, canvas, data, core)
+- `@metabuilder/redux-slices` - Redux reducers
+- `@metabuilder/service-adapters` - Service adapters
+- `@metabuilder/timing-utils` - Timing utilities
+
+**Multi-Version Support** (Jan 23, 2026):
+```json
+{
+  "peerDependencies": {
+    "react": "18.0 || 19.0",
+    "react-redux": "8.0 || 9.0",
+    "@reduxjs/toolkit": "1.9.7 || 2.5.2"
+  }
+}
+```
+
+**Active Users**: workflowui, frontends/nextjs, codegen, pastebin, frontends/dbal
+
 ---
 
 ## Package System (`packages/`)
@@ -239,6 +303,24 @@ schemas/package-schemas/
 
 ---
 
+## Library Versions (Updated Jan 23, 2026)
+
+| Library | Version | Notes |
+|---------|---------|-------|
+| **React** | 18.2.0 or 19.2.3 | Multi-version support via peer dependencies |
+| **Next.js** | 14.2.0 - 16.1.2 | Normalized across subprojects |
+| **TypeScript** | 5.9.3 | Consistent across all packages |
+| **@reduxjs/toolkit** | 1.9.7 or 2.5.2 | Multi-version support |
+| **react-redux** | 8.1.3 or 9.1.2 | Multi-version support |
+| **Tailwind CSS** | 4.1.x | Normalized version |
+| **ESLint** | 9.41.x | Latest stable |
+| **Vite** | 7.4.x | Build tool for web apps |
+| **Playwright** | Latest | E2E testing framework |
+
+**Multi-Version Peer Dependencies**: Enable gradual upgrades without forcing all consumers to update together.
+
+---
+
 ## Common Commands
 
 ```bash
@@ -246,19 +328,22 @@ schemas/package-schemas/
 npm run dev                 # Start Next.js dev server
 npm run build               # Build for production
 npm run typecheck           # TypeScript check
+npm run lint                # ESLint check
+npm run test:e2e            # Run Playwright E2E tests
+npm run test:e2e:ui         # Playwright UI debug mode
 
 # Database
-npm --prefix dbal/development run codegen:prisma  # YAML → Prisma
-npm --prefix dbal/development run db:push         # Apply schema
-npm --prefix dbal/development run db:studio       # Prisma Studio
-
-# Testing
-npm run test:e2e            # Playwright E2E tests
-npm run test:e2e:ui         # Playwright UI mode
+npm --prefix dbal/development run codegen:prisma  # YAML → Prisma schema
+npm --prefix dbal/development run db:push         # Apply schema changes
+npm --prefix dbal/development run db:studio       # Prisma Studio UI
 
 # CodeForge (in codegen/)
 npm run audit:json          # Check JSON migration status
-npm run build               # Build CodeForge
+npm run build               # Build CodeForge IDE
+
+# Monorepo
+npm install                 # Install all dependencies
+npm run build --workspaces  # Build all packages
 ```
 
 ---
@@ -344,20 +429,37 @@ npm run test:e2e      # 4. E2E Tests
 
 ### UI/Styling Standards
 
-From [.github/copilot-instructions.md](./.github/copilot-instructions.md):
-
+**For workflowui and new FakeMUI projects** (Primary):
 ```typescript
-// ❌ NEVER use Radix UI or Tailwind
-import { Dialog } from '@radix-ui/react-dialog'
-<button className="bg-blue-500">Click</button>
-
-// ✅ ALWAYS use Material-UI
-import { Dialog, Button } from '@mui/material'
+// ✅ ALWAYS use FakeMUI
+import { Dialog, Button, Box } from '@metabuilder/fakemui'
 <Button variant="contained">Click</Button>
 <Box sx={{ display: 'flex', gap: 2 }}>Content</Box>
 ```
 
-**Component Mapping**: Radix Dialog → MUI Dialog, Radix Select → MUI Select, Tailwind → MUI `sx` prop or SCSS modules
+**For established projects** (Radix UI + Tailwind acceptable):
+```typescript
+// ✅ ACCEPTABLE - Radix + Tailwind in legacy projects
+import { Dialog } from '@radix-ui/react-dialog'
+import { Button } from '@/components/ui/button'
+```
+
+**Component Mapping**:
+- FakeMUI Dialog ↔ MUI Dialog ↔ Radix Dialog
+- FakeMUI Select ↔ MUI Select ↔ Radix Select
+- FakeMUI sx prop ↔ MUI sx ↔ Tailwind classes
+
+**❌ DO NOT USE**: Direct @mui/material imports (use FakeMUI instead). This is specifically prohibited in workflowui.
+
+See [.github/copilot-instructions.md](./.github/copilot-instructions.md) for detailed guidelines.
+
+### Known Issues and Exceptions
+
+**postgres dashboard** - Currently uses @mui/material directly (P1 conflict identified Jan 23, 2026)
+- Status: Should migrate to FakeMUI but not yet completed
+- Impact: Creates competing UI framework in codebase
+- Effort estimate: 2-4 hours to migrate
+- Action: Use FakeMUI components instead of @mui/material
 
 ### Testing Standards
 
@@ -419,15 +521,67 @@ From [.github/workflows/README.md](./.github/workflows/README.md):
 
 ---
 
+## AI Assistant Workflow
+
+**Primary Directives**:
+1. **Always read CLAUDE.md first** - before starting any work or replying
+2. **Use the Explore agent** - for codebase audits, pattern discovery, feasibility checks
+3. **Plan before coding** - outline affected files, use txt folder for task lists
+4. **Minimize documentation** - avoid summary documents, keep documentation focused
+5. **Per-subproject docs** - each subproject can have its own `docs/` folder (not root)
+6. **Preserve code** - never delete unused code, organize it well instead
+7. **Use subagents** - for complex, independent work (audits, refactoring, migrations)
+8. **Update CLAUDE.md** - when finding bugs, gotchas, or new patterns
+
+**When to Use Subagents**:
+- Large codebase audits (use Explore agent)
+- Cross-project dependency analysis
+- Systematic refactoring across multiple files
+- Schema/configuration migrations
+- Framework/library consolidation
+- Performance profiling and optimization
+
+---
+
 ## Before Starting Any Task
 
 1. **Read the relevant CLAUDE.md** for your work area
 2. **Use the Explore agent** for codebase questions
 3. **Check existing patterns** - find 2-3 similar implementations
-4. **Verify multi-tenant filtering** on all database queries
-5. **Apply rate limiting** on API endpoints
+4. **Plan affected files** - determine scope before coding
+5. **Verify multi-tenant filtering** on all database queries
+6. **Apply rate limiting** on API endpoints
 
 **Full workflow details**: [docs/CLAUDE.md](./docs/CLAUDE.md)
+
+---
+
+## Project Organization Guidelines
+
+### Root-Level Docs
+Keep `/docs/` focused on project-wide guidance:
+- Architecture documentation
+- Setup and installation
+- Development workflows
+- Schemas and API patterns
+- Cross-project standards
+
+### Per-Subproject Docs
+Each standalone subproject maintains its own `/docs/` folder:
+- `workflowui/docs/` - Workflow UI specific guides
+- `codegen/docs/` - CodeForge IDE documentation
+- `gameengine/docs/` - Game engine technical details
+- `postgres/docs/` - PostgreSQL dashboard guides
+- etc.
+
+**Rule**: New detailed documentation → place in subproject `/docs/`, not root
+
+### File Organization
+- **No deletion of code** - just organize well
+- **Implementation type first** - react/, python/, qml/, cpp/ folders
+- **Component categorization** - atoms/, inputs/, surfaces/, navigation/, etc.
+- **Preserve legacy code** - in legacy/ or archived folders with clear purpose
+- **Keep things browseable** - short file lists per directory
 
 ---
 
