@@ -1,6 +1,6 @@
 // fakemui/react/components/email/surfaces/SignatureCard.tsx
 import React, { forwardRef } from 'react'
-import { Card, CardProps, Typography } from '../..'
+import { Card, CardProps, Typography } from '..'
 import { useAccessible } from '@metabuilder/fakemui/hooks'
 
 export interface SignatureCardProps extends CardProps {

@@ -1,6 +1,6 @@
 // fakemui/react/components/email/feedback/SyncProgress.tsx
 import React, { forwardRef } from 'react'
-import { Box, BoxProps, LinearProgress, Typography } from '../..'
+import { Box, BoxProps, LinearProgress, Typography } from '..'
 import { useAccessible } from '@metabuilder/fakemui/hooks'
 
 export interface SyncProgressProps extends BoxProps {

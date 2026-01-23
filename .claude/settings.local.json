@@ -84,7 +84,9 @@
       "Bash(pkill:*)",
       "Bash(node --version:*)",
       "Bash(docker build:*)",
-      "Bash(docker-compose up:*)"
+      "Bash(docker-compose up:*)",
+      "Skill(superpowers:using-superpowers)",
+      "Skill(superpowers:writing-plans)"
     ]
   },
   "spinnerTipsEnabled": false

@@ -1,11 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
   productionBrowserSourceMaps: false,
 
+  // Turbopack configuration (Next.js 16)
+  turbopack: {},
+
   // External packages
-  transpilePackages: ['@metabuilder/fakemui', '@metabuilder/redux-core'],
+  transpilePackages: ['@metabuilder/fakemui', '@metabuilder/redux-core', '@metabuilder/hooks'],
 
   // API proxy for development
   rewrites: async () => {
@@ -80,38 +82,6 @@ const nextConfig = {
         permanent: false
       }
     ]
-  },
-
-  // Webpack optimization
-  webpack: (config, { isServer }) => {
-    // Optimization for large bundles
-    if (!isServer) {
-      config.optimization = {
-        ...config.optimization,
-        splitChunks: {
-          cacheGroups: {
-            default: false,
-            vendors: false,
-            // Vendor chunk
-            vendor: {
-              filename: 'static/chunks/vendor.js',
-              chunks: 'all',
-              test: /node_modules/,
-              priority: 20
-            },
-            // Separate chunk for common modules
-            common: {
-              minChunks: 2,
-              priority: 10,
-              reuseExistingChunk: true,
-              filename: 'static/chunks/common.js'
-            }
-          }
-        }
-      }
-    }
-
-    return config
   },
 
   // Image optimization

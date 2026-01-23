@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { useAppDispatch, useAppSelector } from '@metabuilder/redux-core'
+import { useAppDispatch } from '@metabuilder/redux-core'
 import { Box, Spinner, Alert } from '@metabuilder/fakemui'
 
 /**
@@ -59,7 +59,7 @@ async function loadPageConfig(packageId: string): Promise<PageConfig> {
  * Generic component renderer
  * Renders declarative component definitions from JSON
  */
-function RenderComponent({ component }: { component: PageConfig }): JSX.Element {
+function RenderComponent({ component }: { component: PageConfig }): React.JSX.Element {
   const { type, props = {}, children } = component
 
   // Map component types to FakeMUI components

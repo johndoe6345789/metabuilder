@@ -1,6 +1,6 @@
 // fakemui/react/components/email/layout/SettingsLayout.tsx
 import React, { forwardRef } from 'react'
-import { Box, BoxProps, Tabs, Tab } from '../..'
+import { Box, BoxProps, Tabs, Tab } from '..'
 import { useAccessible } from '@metabuilder/fakemui/hooks'
 
 export interface SettingsSection {

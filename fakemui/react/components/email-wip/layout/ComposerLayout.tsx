@@ -1,6 +1,6 @@
 // fakemui/react/components/email/layout/ComposerLayout.tsx
 import React, { forwardRef } from 'react'
-import { Box, BoxProps } from '../..'
+import { Box, BoxProps } from '..'
 import { useAccessible } from '@metabuilder/fakemui/hooks'
 
 export interface ComposerLayoutProps extends BoxProps {

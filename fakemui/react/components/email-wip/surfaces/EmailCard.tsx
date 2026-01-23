@@ -1,6 +1,6 @@
 // fakemui/react/components/email/surfaces/EmailCard.tsx
 import React, { forwardRef } from 'react'
-import { Card, CardProps, Box, Typography } from '../..'
+import { Card, CardProps, Box, Typography } from '..'
 import { useAccessible } from '@metabuilder/fakemui/hooks'
 import { MarkAsReadCheckbox, StarButton } from '../atoms'
 

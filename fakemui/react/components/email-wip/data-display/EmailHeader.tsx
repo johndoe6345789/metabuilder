@@ -1,6 +1,6 @@
 // fakemui/react/components/email/data-display/EmailHeader.tsx
 import React, { forwardRef } from 'react'
-import { Box, BoxProps, Typography } from '../..'
+import { Box, BoxProps, Typography } from '..'
 import { useAccessible } from '@metabuilder/fakemui/hooks'
 import { StarButton } from '../atoms'
 

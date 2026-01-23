@@ -1,6 +1,6 @@
 // fakemui/react/components/email/surfaces/ComposeWindow.tsx
 import React, { forwardRef, useState } from 'react'
-import { Box, BoxProps, Button, Card } from '../..'
+import { Box, BoxProps, Button, Card } from '..'
 import { useAccessible } from '@metabuilder/fakemui/hooks'
 import { EmailAddressInput, RecipientInput, BodyEditor } from '../inputs'
 

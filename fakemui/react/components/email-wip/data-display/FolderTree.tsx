@@ -1,6 +1,6 @@
 // fakemui/react/components/email/data-display/FolderTree.tsx
 import React, { forwardRef, useState } from 'react'
-import { Box, BoxProps, Typography } from '../..'
+import { Box, BoxProps, Typography } from '..'
 import { useAccessible } from '@metabuilder/fakemui/hooks'
 
 export interface FolderNode {

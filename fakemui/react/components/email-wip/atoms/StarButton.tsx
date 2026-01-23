@@ -17,7 +17,7 @@ export const StarButton = forwardRef<HTMLButtonElement, StarButtonProps>(
       identifier: customTestId || 'star'
     })
 
-    const handleClick = (e: React.MouseEvent) => {
+    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
       const newState = !starred
       setStarred(newState)
       onToggleStar?.(newState)

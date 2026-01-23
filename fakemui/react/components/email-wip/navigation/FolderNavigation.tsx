@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react'
-import { Box, BoxProps, Button } from '../..'
+import { Box, BoxProps, Button } from '..'
 import { useAccessible } from '@metabuilder/fakemui/hooks'
 
 export interface FolderNavigationItem {

@@ -1,6 +1,8 @@
 // fakemui/react/components/email/data-display/AttachmentList.tsx
 import React, { forwardRef } from 'react'
-import { Box, BoxProps, Typography, Button } from '../..'
+import { Box, type BoxProps } from '../../layout'
+import { Typography } from '../../atoms'
+import { Button } from '../../inputs'
 import { useAccessible } from '@metabuilder/fakemui/hooks'
 import { AttachmentIcon } from '../atoms'
 

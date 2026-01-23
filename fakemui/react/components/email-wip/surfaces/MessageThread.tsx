@@ -1,6 +1,6 @@
 // fakemui/react/components/email/surfaces/MessageThread.tsx
 import React, { forwardRef } from 'react'
-import { Box, BoxProps, Typography, Card } from '../..'
+import { Box, BoxProps, Typography, Card } from '..'
 import { useAccessible } from '@metabuilder/fakemui/hooks'
 
 export interface MessageThreadProps extends BoxProps {

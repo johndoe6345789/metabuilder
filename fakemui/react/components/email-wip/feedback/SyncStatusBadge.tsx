@@ -1,6 +1,6 @@
 // fakemui/react/components/email/feedback/SyncStatusBadge.tsx
 import React, { forwardRef } from 'react'
-import { Box, BoxProps, Chip } from '../..'
+import { Box, BoxProps, Chip } from '..'
 import { useAccessible } from '@metabuilder/fakemui/hooks'
 
 export type SyncStatus = 'syncing' | 'synced' | 'error' | 'idle'

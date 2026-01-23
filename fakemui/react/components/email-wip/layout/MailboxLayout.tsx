@@ -1,6 +1,6 @@
 // fakemui/react/components/email/layout/MailboxLayout.tsx
 import React, { forwardRef } from 'react'
-import { Box, BoxProps, AppBar, Toolbar } from '../..'
+import { Box, BoxProps, AppBar, Toolbar } from '..'
 import { useAccessible } from '@metabuilder/fakemui/hooks'
 
 export interface MailboxLayoutProps extends BoxProps {

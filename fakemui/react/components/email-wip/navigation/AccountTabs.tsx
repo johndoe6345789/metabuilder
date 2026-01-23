@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react'
-import { Tabs, Tab, TabsProps } from '../..'
+import { Tabs, Tab, TabsProps } from '..'
 import { useAccessible } from '@metabuilder/fakemui/hooks'
 
 export interface EmailAccount {

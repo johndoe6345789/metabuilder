@@ -1,6 +1,6 @@
 // fakemui/react/components/email/data-display/ThreadList.tsx
 import React, { forwardRef } from 'react'
-import { Box, BoxProps } from '../..'
+import { Box, BoxProps } from '..'
 import { useAccessible } from '@metabuilder/fakemui/hooks'
 import { EmailCard, type EmailCardProps } from '../surfaces'
 
