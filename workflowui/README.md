@@ -48,6 +48,7 @@ MetaBuilder DAG Executor
 | **Storage** | IndexedDB (Dexie) | Offline workflow persistence |
 | **HTTP** | Axios | API client with interceptors |
 | **Backend** | Flask | Python workflow execution |
+| **Database** | SQLAlchemy + PostgreSQL/SQLite | Persistent workflow storage |
 | **Validation** | n8n JSON Schema | Workflow and node validation |
 
 ## 🚀 Quick Start
@@ -82,6 +83,22 @@ npm run dev:all
 # Or separately:
 npm run dev          # Frontend on http://localhost:3000
 npm run backend      # Backend on http://localhost:5000
+```
+
+### Database Setup
+
+The backend uses SQLAlchemy for database persistence:
+
+```bash
+# Default: SQLite (development)
+# The database file is created automatically at backend/workflows.db
+
+# PostgreSQL (production)
+export DATABASE_URL=postgresql://user:password@localhost/workflows
+npm run backend
+
+# Create tables
+python -c "from server_sqlalchemy import app, db; app.app_context().push(); db.create_all()"
 ```
 
 ### Build
