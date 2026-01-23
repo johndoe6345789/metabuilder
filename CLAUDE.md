@@ -6,7 +6,12 @@
 **Philosophy**: 95% JSON/YAML configuration, 5% TypeScript/C++ infrastructure
 
 **Recent Updates** (Jan 23, 2026):
-- FakeMUI reorganized by implementation type (react/, qml/, python/, legacy/, icons/, theming/, styles/)
+- **FakeMUI Directory Restructuring** (✅ COMPLETE):
+  - Promoted directories to first-class naming: `qml/hybrid/` (was components-legacy), `utilities/` (was legacy/utilities), `wip/` (was legacy/migration-in-progress)
+  - Flattened QML nesting: `qml/components/` (was qml-components/qml-components/)
+  - Removed empty `legacy/` and `python/fakemui/` directories
+  - Updated qmldir with 135 component registrations to use new paths
+  - No "legacy" terminology in directory names; all directories now first-class
 - All library versions updated: React 19.2.3, TypeScript 5.9.3, Next.js normalized, @reduxjs/toolkit 2.5.2
 - Multi-version peer dependencies enabled for gradual upgrades
 - **Dependency Management Upgrade**: Conan libraries updated (14 changes), npm security patches applied (9 packages), Python/Go workflow plugin management established
