@@ -10,7 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@metabuilder/hooks-async": "^0.1.0",
+    "@metabuilder/hooks-async": "file:../hooks-async",
     "react": "^19.2.3",
     "react-redux": "^9.2.0",
     "redux": "^4.2.1"
