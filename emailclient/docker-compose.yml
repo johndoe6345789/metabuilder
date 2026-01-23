@@ -67,7 +67,7 @@ services:
       FLASK_ENV: development
       FLASK_DEBUG: '1'
     ports:
-      - '5000:5000'
+      - '8500:5000'
     depends_on:
       - postfix
       - dovecot
@@ -85,7 +85,7 @@ services:
       POSTGRES_PASSWORD: emailclient
       POSTGRES_DB: emailclient
     ports:
-      - '5432:5432'
+      - '5433:5432'
     volumes:
       - postgres-data:/var/lib/postgresql/data
     networks:
