@@ -1,7 +1,7 @@
 /**
  * @metabuilder/redux-slices
  * Redux Toolkit slices for workflow state management
- * 
+ *
  * Includes slices for:
  * - Workflow state (nodes, connections, execution)
  * - Canvas state (zoom, pan, selection, settings)
@@ -10,6 +10,7 @@
  * - Auth state (user, token, authentication)
  * - Project & Workspace management
  * - Real-time collaboration features
+ * - Async data management (fetch, mutations, retries)
  */
 
 // Workflow
@@ -123,21 +124,14 @@ export {
   goBack, clearSearch, clearHistory
 } from './slices/documentationSlice'
 
-// Store types
-export type RootState = {
-  workflow: WorkflowState
-  canvas: CanvasState
-  canvasItems: CanvasItemsState
-  editor: EditorState
-  connection: ConnectionState
-  ui: UIState
-  auth: AuthState
-  project: ProjectState
-  workspace: WorkspaceState
-  nodes: NodesState
-  collaboration: CollaborationState
-  realtime: RealtimeState
-  documentation: DocumentationState
-}
-
-export type AppDispatch = any // Will be typed in store.ts
+// Async Data
+export { asyncDataSlice, type AsyncDataState, type AsyncRequest } from './slices/asyncDataSlice'
+export {
+  fetchAsyncData, mutateAsyncData, refetchAsyncData, cleanupAsyncRequests,
+  setRequestLoading, setRequestError, setRequestData,
+  clearRequest, clearAllRequests, resetRequest,
+  setGlobalLoading, setGlobalError, setRefetchInterval,
+  selectAsyncRequest, selectAsyncData, selectAsyncError,
+  selectAsyncLoading, selectAsyncRefetching, selectAllAsyncRequests,
+  selectGlobalLoading, selectGlobalError
+} from './slices/asyncDataSlice'

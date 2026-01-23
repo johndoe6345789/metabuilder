@@ -29,6 +29,7 @@
     "redux/hooks-data",
     "redux/hooks-auth",
     "redux/hooks-canvas",
+    "redux/hooks-async",
     "redux/core-hooks",
     "redux/api-clients",
     "redux/timing-utils",

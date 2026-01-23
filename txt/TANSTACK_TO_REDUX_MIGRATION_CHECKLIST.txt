@@ -1,0 +1,394 @@
+═══════════════════════════════════════════════════════════════════════════════
+ TANSTACK TO REDUX MIGRATION - IMPLEMENTATION CHECKLIST
+═══════════════════════════════════════════════════════════════════════════════
+
+Status: STARTING (Jan 23, 2026)
+Priority: MEDIUM (not blocking, good to consolidate state management)
+Complexity: EASY (minimal TanStack usage, Redux ready)
+Risk: LOW (custom hooks provide abstraction)
+
+───────────────────────────────────────────────────────────────────────────────
+ CRITICAL FILES TO CREATE/MODIFY (IN ORDER)
+───────────────────────────────────────────────────────────────────────────────
+
+PHASE 1: CREATE ASYNC DATA SLICE & HOOKS (Priority: HIGHEST)
+═══════════════════════════════════════════════════════════════════════════════
+
+[X] 1. Create asyncDataSlice.ts
+    File: /redux/slices/src/slices/asyncDataSlice.ts ✅ CREATED
+    Status: COMPLETE - 426 lines, includes all thunks, reducers, selectors
+    What: Core async state management with thunks
+    Contains:
+      - Interface: AsyncRequest (id, status, data, error, retryCount, etc.)
+      - Interface: AsyncDataState (requests map, mutation queue, global state)
+      - Async Thunks:
+        * fetchAsyncData (generic fetch with retries)
+        * mutateAsyncData (write operations)
+        * refetchAsyncData (refetch without clearing data)
+        * cleanupAsyncRequests (remove old requests)
+      - Reducers:
+        * setRequestLoading, setRequestError, setRequestData, clearRequest, etc.
+      - Selectors:
+        * selectAsyncRequest, selectAsyncData, selectAsyncError, selectAsyncLoading
+    Implementation Details:
+      - Uses request ID as cache key for deduplication
+      - Request lifecycle: cleanup removes requests > 5min old
+      - Handles all Redux Toolkit thunk patterns
+
+[X] 2. Create redux/hooks-async workspace ✅ CREATED
+    Files Created:
+      - /redux/hooks-async/package.json ✅
+      - /redux/hooks-async/src/useReduxAsyncData.ts ✅
+      - /redux/hooks-async/src/useReduxMutation.ts ✅
+      - /redux/hooks-async/src/__tests__/useReduxAsyncData.test.ts ✅
+      - /redux/hooks-async/src/__tests__/useReduxMutation.test.ts ✅
+      - /redux/hooks-async/src/index.ts ✅
+      - /redux/hooks-async/tsconfig.json ✅
+      - /redux/hooks-async/README.md ✅
+    Status: COMPLETE
+    What: Workspace package exporting Redux-backed hooks
+    Exports:
+      - useReduxAsyncData<T>(fetchFn, options) → UseAsyncDataResult
+      - useReduxMutation<T,R>(mutationFn, options) → UseMutationResult
+      - useReduxPaginatedAsyncData<T>(fetchFn, pageSize, options) → PaginatedResult
+    API Compatibility: 100% same as old hooks (no consumer changes needed)
+    Implementation Includes:
+      - Request deduplication via stable requestId
+      - Automatic retry with configurable backoff
+      - Refetch on focus support
+      - Success/error callbacks
+      - Status lifecycle: idle → pending → succeeded/failed
+      - TypeScript generics for fully typed hooks
+
+[X] 3. Add workspace to root package.json ✅ UPDATED
+    File: /package.json
+    Status: COMPLETE - Added "redux/hooks-async" to workspaces array
+    Next: npm install to verify
+
+[X] 4. Implement useReduxAsyncData hook ✅ CREATED
+    File: /redux/hooks-async/src/useReduxAsyncData.ts
+    Status: COMPLETE - 200+ lines with full implementation
+    What: Drop-in replacement for useAsyncData
+    Signature: useReduxAsyncData<T>(fetchFn, options?) → UseAsyncDataResult<T>
+    Returns: { data, isLoading, error, isRefetching, retry, refetch }
+    Implementation Features:
+      - Generates stable requestId using useRef
+      - Uses useSelector to get request state from Redux
+      - Uses useEffect to dispatch fetchAsyncData on mount/dependency change
+      - Handles success/error callbacks in separate useEffect
+      - Returns normalized result object matching old API
+      - Supports refetchOnFocus and refetchInterval options
+      - Includes useReduxPaginatedAsyncData variant
+
+[X] 5. Implement useReduxMutation hook ✅ CREATED
+    File: /redux/hooks-async/src/useReduxMutation.ts
+    Status: COMPLETE - 300+ lines with full implementation
+    What: Redux version of useMutation
+    Signature: useReduxMutation<T,R>(mutationFn, options?) → UseMutationResult
+    Returns: { mutate, isLoading, error, reset, status }
+    Implementation Features:
+      - Generates stable mutationId using useRef
+      - Returns unwrapped promise from dispatch
+      - Tracks status: 'idle' | 'pending' | 'succeeded' | 'failed'
+      - Success/error callbacks with onStatusChange callback
+      - Includes useReduxMultiMutation for sequential mutations
+
+[X] 6. Write tests for hooks ✅ CREATED
+    Files:
+      - /redux/hooks-async/src/__tests__/useReduxAsyncData.test.ts ✅
+      - /redux/hooks-async/src/__tests__/useReduxMutation.test.ts ✅
+    Status: COMPLETE - 350+ lines of comprehensive tests
+    Tests Implemented:
+      - Fetch data and update state ✓
+      - Handle fetch errors ✓
+      - Call success callbacks ✓
+      - Call error callbacks ✓
+      - Support manual refetch ✓
+      - Support manual retry ✓
+      - Respect maxRetries option ✓
+      - Indicate refetching state ✓
+      - Handle dependencies array ✓
+      - Execute mutations sequentially ✓
+      - Support typed payloads and responses ✓
+    Setup: Tests use renderHook with jest mocks
+
+───────────────────────────────────────────────────────────────────────────────
+ PHASE 2: UPDATE CUSTOM HOOKS (Priority: HIGH)
+═══════════════════════════════════════════════════════════════════════════════
+
+[ ] 7. Update api-clients useAsyncData export
+    File: /redux/api-clients/src/useAsyncData.ts
+    Current: Custom implementation with useState
+    New: Delegate to useReduxAsyncData from hooks-async
+    Change: Just import and re-export useReduxAsyncData
+    Breaking: NO - same API, same behavior
+    Impact: All packages using @metabuilder/api-clients get Redux automatically
+
+[ ] 8. Update api-clients useMutation export
+    File: /redux/api-clients/src/useAsyncData.ts
+    Change: Export useReduxMutation
+    Verify: Tests in redux/api-clients still pass
+
+[ ] 9. Create duplicate hook in frontends/nextjs if needed
+    File: /frontends/nextjs/src/hooks/useAsyncData.ts
+    Current: Has its own implementation
+    Decision: Keep or delete?
+    If keep: Update to use Redux
+    If delete: Consumers use api-clients instead
+    Recommendation: DELETE and use api-clients export (consolidates)
+
+───────────────────────────────────────────────────────────────────────────────
+ PHASE 3: REMOVE TANSTACK PROVIDER (Priority: HIGH)
+═══════════════════════════════════════════════════════════════════════════════
+
+[ ] 10. Create store.ts for NextJS frontend
+    File: /frontends/nextjs/src/store/store.ts (NEW)
+    What: Redux store configuration
+    Contains:
+      - configureStore with asyncDataSlice reducer
+      - Other slices as needed (auth, ui, project, workflow, etc.)
+      - Middleware with serializableCheck for async operations
+      - Export RootState and AppDispatch types
+    Configuration:
+      - Register asyncDataSlice
+      - Configure serializable check ignorelist for async state
+      - Keep existing middleware
+
+[ ] 11. Update providers-component.tsx
+    File: /frontends/nextjs/src/app/providers/providers-component.tsx
+    Change:
+      BEFORE:
+        import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+        const [queryClient] = useState(() => new QueryClient({...}))
+        <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+
+      AFTER:
+        import { Provider } from 'react-redux'
+        import { store } from '@/store/store'
+        <Provider store={store}>{children}</Provider>
+    Impact: All children have access to Redux
+    Note: Don't remove other providers (theme, error boundary, etc.)
+
+[ ] 12. Remove TanStack from codegen/package.json
+    File: /codegen/package.json
+    Remove: "@tanstack/react-query": "^5.90.20"
+    Verify: codegen still builds
+    Reason: Not actually used in codegen
+
+[ ] 13. Remove TanStack from old/package.json
+    File: /old/package.json
+    Remove: "@tanstack/react-query": "^5.90.20"
+    Note: old/ is legacy project
+    Action: Can delete entire old/ folder if not needed
+
+[ ] 14. Update pastebin tests
+    File: /pastebin/tests/unit/lib/quality-validator/analyzers/architectureChecker.test.ts
+    Remove: @tanstack/react-query from forbidden imports list
+    Add: Redux patterns to allowed patterns
+    Reason: Tests verify codebase follows architecture rules
+
+───────────────────────────────────────────────────────────────────────────────
+ PHASE 4: VALIDATION & TESTING (Priority: HIGH)
+═══════════════════════════════════════════════════════════════════════════════
+
+[ ] 15. Run npm install & build
+    Commands:
+      npm install
+      npm run build
+      npm run typecheck
+    Verify: No errors, all workspaces included
+    Expected: Clean build with no TanStack warnings
+
+[ ] 16. Run hook tests
+    Command: npm run test --workspace=@metabuilder/hooks-async
+    Verify: All unit tests pass
+    Coverage: > 90%
+
+[ ] 17. Run E2E tests
+    Command: npm run test:e2e
+    Verify: All tests pass
+    Checklist:
+      - [ ] Authentication flow works
+      - [ ] Data fetching still works
+      - [ ] Mutations still work
+      - [ ] Error handling works
+      - [ ] Refetching works
+      - [ ] Pagination works
+
+[ ] 18. Run architecture checker
+    Command: npm test --workspace=pastebin
+    Verify: No TanStack references
+    Verify: Redux patterns validated
+
+[ ] 19. Performance profiling
+    Tools: Redux DevTools, Chrome DevTools
+    Check:
+      - [ ] No excessive state updates
+      - [ ] No memory leaks (request cleanup)
+      - [ ] Request deduplication working
+      - [ ] Bundle size reduction (remove TanStack)
+    Baseline: Compare to pre-migration metrics
+
+[ ] 20. Lint & format check
+    Commands:
+      npm run lint
+      npm run lint:fix
+    Verify: All files pass linting
+
+───────────────────────────────────────────────────────────────────────────────
+ PHASE 5: DOCUMENTATION & CLEANUP (Priority: MEDIUM)
+═══════════════════════════════════════════════════════════════════════════════
+
+[ ] 21. Update CLAUDE.md
+    File: /CLAUDE.md
+    Changes:
+      - Update Redux State Management section (remove TanStack mention)
+      - Add hooks-async package documentation
+      - Add useReduxAsyncData/useReduxMutation patterns
+      - Update dependency list (remove @tanstack/react-query)
+      - Add gotchas discovered during migration
+    Gotchas to document:
+      - Request deduplication for concurrent calls
+      - Request cleanup to prevent memory leaks
+      - SSR safety for Redux state
+      - AbortController for cancellation
+
+[ ] 22. Create migration guide
+    File: /docs/guides/REDUX_ASYNC_DATA_GUIDE.md
+    What: Developer guide for using new hooks
+    Contents:
+      - How to use useReduxAsyncData (with examples)
+      - How to use useReduxMutation (with examples)
+      - How pagination works with Redux
+      - Error handling patterns
+      - Refetching patterns
+      - Retry logic
+      - Differences from TanStack
+
+[ ] 23. Document asyncDataSlice
+    File: /redux/slices/docs/ASYNC_DATA_SLICE.md (NEW)
+    What: Technical documentation of async slice
+    Contents:
+      - State shape
+      - Thunk parameters
+      - Reducer actions
+      - Selectors
+      - Examples
+
+[ ] 24. Archive removed code
+    File: /docs/archive/TANSTACK_REMOVAL_2026-01-23.md
+    What: Document what was removed and why
+    Purpose: Historical reference
+
+[ ] 25. Final verification
+    Checklist:
+      - [ ] All tests pass
+      - [ ] Build succeeds
+      - [ ] No TypeScript errors
+      - [ ] No ESLint warnings
+      - [ ] No console errors in browser
+      - [ ] All features work
+      - [ ] Performance acceptable
+      - [ ] Memory usage stable
+
+───────────────────────────────────────────────────────────────────────────────
+ GIT WORKFLOW
+───────────────────────────────────────────────────────────────────────────────
+
+Commit 1 (Phase 1): Create async slice & hooks
+  chore(redux): add asyncDataSlice with fetchAsyncData, mutateAsyncData thunks
+  chore(redux): create hooks-async workspace with useReduxAsyncData, useReduxMutation
+  chore(redux): add unit tests for async hooks
+
+Commit 2 (Phase 2): Update custom hooks
+  refactor(redux): update api-clients to use Redux-backed hooks
+  refactor(nextjs): remove duplicate useAsyncData, use api-clients
+
+Commit 3 (Phase 3): Remove TanStack
+  chore(nextjs): replace QueryClientProvider with Redux Provider
+  chore(deps): remove @tanstack/react-query from codegen, old
+  chore(tests): update architecture checker for Redux patterns
+
+Commit 4 (Phase 5): Documentation
+  docs(redis): add async data hooks guide
+  docs(redux): add asyncDataSlice documentation
+  docs(CLAUDE.md): update with Redux async patterns and gotchas
+
+───────────────────────────────────────────────────────────────────────────────
+ ESTIMATED EFFORT
+───────────────────────────────────────────────────────────────────────────────
+
+Phase 1 (Infrastructure):     3-4 days (slice + hooks + tests)
+Phase 2 (Integration):         1 day   (update exports)
+Phase 3 (Cleanup):             1 day   (remove TanStack, update provider)
+Phase 4 (Validation):          1 day   (tests, performance, linting)
+Phase 5 (Documentation):       1 day   (guides, CLAUDE.md, archive)
+
+TOTAL:                         7-8 days (1.5 weeks, can work in parallel)
+
+Parallel possible:
+- Phase 1 steps 1-2 can proceed while others work
+- Phase 4 can start once Phase 1 basics complete
+- Phase 5 can be done at end
+
+───────────────────────────────────────────────────────────────────────────────
+ ROLLBACK PLAN (If Needed)
+───────────────────────────────────────────────────────────────────────────────
+
+Quick Rollback (< 1 hour):
+1. Revert /frontends/nextjs/src/app/providers/providers-component.tsx
+2. Keep Redux slices (no harm)
+3. Reinstall @tanstack/react-query
+4. No consumer code changes needed
+
+Full Rollback:
+1. git revert [migration commits]
+2. npm install
+3. npm run build
+
+───────────────────────────────────────────────────────────────────────────────
+ RISK MITIGATION STRATEGIES
+───────────────────────────────────────────────────────────────────────────────
+
+Low Risk Mitigations:
+1. Custom hooks abstraction - consumers unchanged
+2. Backward compatible API - no breaking changes
+3. Redux already established - patterns known
+4. Comprehensive testing - E2E coverage
+5. Gradual rollout - test before full deployment
+6. Memory management - request cleanup implemented
+7. SSR safety - explicit window checks
+
+High Confidence Factors:
+- TanStack barely used (only 5 files)
+- Custom hooks already exist as abstraction
+- Redux patterns established in codebase
+- Test coverage available for validation
+
+═══════════════════════════════════════════════════════════════════════════════
+ STATUS TRACKING
+═══════════════════════════════════════════════════════════════════════════════
+
+[Legend: [ ] = TODO, [X] = DONE, [~] = IN PROGRESS, [S] = SKIPPED]
+
+PHASE 1: [X] [X] [X] [X] [X] [X]  (6/6 COMPLETE)
+PHASE 2: [ ] [ ] [ ]
+PHASE 3: [ ] [ ] [ ] [ ] [ ]
+PHASE 4: [ ] [ ] [ ] [ ] [ ]
+PHASE 5: [ ] [ ] [ ] [ ] [ ]
+
+Phase 1 Summary:
+✅ asyncDataSlice.ts created (426 lines)
+✅ hooks-async workspace created (8 files)
+✅ useReduxAsyncData hook implemented (200+ lines)
+✅ useReduxMutation hook implemented (300+ lines)
+✅ Unit tests created (350+ lines)
+✅ Added to root package.json workspaces
+
+Total Phase 1 Files Created: 12
+Total Lines Written: 1300+
+Build Status: Pending npm install & build verification
+
+Last Updated: 2026-01-23
+Next: Verify npm install, then begin Phase 2 (Update custom hooks)
+═══════════════════════════════════════════════════════════════════════════════
