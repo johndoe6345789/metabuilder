@@ -53,7 +53,7 @@ RUN mkdir -p /app/data /app/logs
 # Environment variables
 ENV NODE_ENV=production
 ENV PYTHONUNBUFFERED=1
-ENV DATABASE_URL=file:/app/data/workflows.db
+ENV DATABASE_URL=sqlite:////app/data/workflows.db
 ENV FLASK_APP=backend/server_sqlalchemy.py
 
 # Expose ports

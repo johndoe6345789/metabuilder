@@ -1,903 +1,434 @@
-# MetaBuilder Development Guide for AI Assistants
+# MetaBuilder - AI Assistant Guide
 
-**Last Updated**: 2026-01-21
-**Status**: Phase 2 Complete, Monorepo Consolidated
-**Overall Health**: 82/100
-**Vision**: Universal Platform - One cohesive system for code, 3D, graphics, media, and system administration
-**Structure**: Monorepo containing MetaBuilder core + 15 standalone projects
-
----
-
-## Table of Contents
-
-1. [Universal Platform Vision](#universal-platform-vision)
-2. [Before Starting Any Task](#before-starting-any-task)
-3. [Core Principles](#core-principles)
-4. [Architecture Overview](#architecture-overview)
-5. [JSON-First Philosophy](#json-first-philosophy)
-6. [Multi-Tenant & Security](#multi-tenant--security)
-7. [Code Organization](#code-organization)
-8. [What NOT to Do](#what-not-to-do)
-9. [Quick Reference](#quick-reference)
+**Last Updated**: 2026-01-22
+**Status**: Phase 2 Complete, Universal Platform in Progress
+**Scale**: 27,826+ files across 34 directories (excludes generated)
+**Philosophy**: 95% JSON/YAML configuration, 5% TypeScript/C++ infrastructure
 
 ---
 
-## Universal Platform Vision
+## Quick Navigation
 
-MetaBuilder is evolving into a **Universal Platform** - a userland operating environment that provides everything through a unified data model and consistent interface.
-
-### The Premise
-
-Modern computing is fragmented. Users need dozens of apps, each with its own paradigms, file formats, and learning curves. MetaBuilder provides **one cohesive system** for code editing, 3D modeling, game development, graphics work, system administration, and media production.
-
-### System Architecture
-
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                              FRONTENDS                                       │
-├─────────────────┬─────────────────────┬─────────────────────────────────────┤
-│   CLI Frontend  │   Qt6 Frontend      │   Web Frontend (Next.js)            │
-│   (Commander)   │   (Native Desktop)  │   (Browser/Electron/Tauri)          │
-└────────┬────────┴──────────┬──────────┴──────────────────┬──────────────────┘
-         │                   │                              │
-         └───────────────────┼──────────────────────────────┘
-                             │
-                    ┌────────▼────────┐
-                    │  FRONTEND BUS   │
-                    │  (WebSocket/IPC)│
-                    └────────┬────────┘
-                             │
-┌────────────────────────────▼────────────────────────────────────────────────┐
-│                           METABUILDER CORE                                   │
-│  ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐        │
-│  │ State Machine│ │ Command Bus  │ │ Event Stream │ │ Entity Graph │        │
-│  │ (XState-like)│ │ (CQRS)       │ │ (Pub/Sub)    │ │ (DBAL)       │        │
-│  └──────────────┘ └──────────────┘ └──────────────┘ └──────────────┘        │
-│  ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐        │
-│  │ Undo/Redo    │ │ Job Scheduler│ │ Plugin Host  │ │ VFS Layer    │        │
-│  │ (Event Src)  │ │ (DAG Engine) │ │ (Registry)   │ │ (Abstraction)│        │
-│  └──────────────┘ └──────────────┘ └──────────────┘ └──────────────┘        │
-└─────────────────────────────────┬───────────────────────────────────────────┘
-                                  │
-┌─────────────────────────────────▼───────────────────────────────────────────┐
-│                        CAPABILITY MODULES                                    │
-├─────────────┬─────────────┬─────────────┬─────────────┬─────────────────────┤
-│   CODE      │   GRAPHICS  │    3D       │   MEDIA     │   SYSTEM            │
-│   ────      │   ────────  │    ──       │   ─────     │   ──────            │
-│ • Editor    │ • Raster    │ • Modeling  │ • Audio     │ • Files             │
-│ • LSP Host  │ • Vector    │ • Sculpting │ • Video     │ • Processes         │
-│ • Debugger  │ • Compositor│ • Animation │ • Streaming │ • Network           │
-│ • Builder   │ • Filters   │ • Physics   │ • Recording │ • Hardware          │
-│ • VCS       │ • AI Gen    │ • Rendering │ • Encoding  │ • Containers        │
-├─────────────┼─────────────┼─────────────┼─────────────┼─────────────────────┤
-│   GAME      │   DATA      │   DOCS      │   COMMS     │   AI                │
-│   ────      │   ────      │   ────      │   ─────     │   ──                │
-│ • Engine    │ • Database  │ • Writer    │ • Chat      │ • Local LLM         │
-│ • Physics   │ • Sheets    │ • Slides    │ • Email     │ • Image Gen         │
-│ • Audio     │ • Graphs    │ • Diagrams  │ • Calendar  │ • Code Assist       │
-│ • Assets    │ • ETL       │ • PDF       │ • Tasks     │ • Agents            │
-│ • Scripting │ • Analytics │ • Publishing│ • Contacts  │ • Embeddings        │
-└─────────────┴─────────────┴─────────────┴─────────────┴─────────────────────┘
-                                  │
-┌─────────────────────────────────▼───────────────────────────────────────────┐
-│                         RUNTIME LAYER                                        │
-│  ┌────────────┐ ┌────────────┐ ┌────────────┐ ┌────────────┐                │
-│  │ Native     │ │ WASM       │ │ Workflow   │ │ GPU        │                │
-│  │ (C++/TS)   │ │ (Portable) │ │ (JSON DAG) │ │ (Compute)  │                │
-│  └────────────┘ └────────────┘ └────────────┘ └────────────┘                │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
-
-### Mapping to Current Implementation
-
-| Architecture Layer | Current Component | Location |
-|-------------------|-------------------|----------|
-| Entity Graph | DBAL | `dbal/` |
-| Job Scheduler | DAG Executor | `workflow/executor/ts/executor/` |
-| Plugin Host | Node Executor Registry | `workflow/executor/ts/registry/` |
-| Workflow Runtime | Python/TS Plugins | `workflow/plugins/` |
-| Web Frontend | Next.js App | `frontends/nextjs/` |
-
-### Core Subsystems (To Build)
-
-| Subsystem | Purpose | Status |
-|-----------|---------|--------|
-| State Machine | Central state management (XState-like) | Planned |
-| Command Bus | CQRS command/query separation | Planned |
-| Event Stream | Pub/sub for cross-module communication | Planned |
-| VFS Layer | Virtual filesystem abstraction | Planned |
-| Frontend Bus | WebSocket/IPC for frontend sync | Planned |
-
-### Capability Categories
-
-- **Code**: Editor, LSP, debugger, builder, VCS
-- **Graphics**: Raster, vector, compositor, filters, AI generation
-- **3D**: Modeling, sculpting, animation, physics, rendering
-- **Media**: Audio, video, streaming, recording, encoding
-- **System**: Files, processes, network, hardware, containers
-- **Game**: Engine, physics, audio, assets, scripting
-- **Data**: Database, sheets, graphs, ETL, analytics
-- **Docs**: Writer, slides, diagrams, PDF, publishing
-- **Comms**: Chat, email, calendar, tasks, contacts
-- **AI**: Local LLM, image generation, code assist, agents, embeddings
-
-**Full architecture details**: See [docs/UNIVERSAL_PLATFORM_ARCHITECTURE.md](./docs/UNIVERSAL_PLATFORM_ARCHITECTURE.md)
+| Document | Location | Purpose |
+|----------|----------|---------|
+| **Core Development Guide** | [docs/CLAUDE.md](./docs/CLAUDE.md) | Full development principles, patterns, workflows |
+| **CodeForge IDE Guide** | [codegen/CLAUDE.md](./codegen/CLAUDE.md) | JSON-to-React migration, component system |
+| **Pastebin Conventions** | [pastebin/CLAUDE.md](./pastebin/CLAUDE.md) | Documentation file organization |
+| **Domain-Specific Rules** | [docs/AGENTS.md](./docs/AGENTS.md) | Task-specific guidance |
 
 ---
 
-## Before Starting Any Task
+## Complete Directory Index
 
-**MANDATORY: Perform exploration BEFORE any implementation work.** Do NOT skip this step or go shallow.
+| Directory | Files | Category | Description |
+|-----------|-------|----------|-------------|
+| `dbal/` | 642 | Core | Database Abstraction Layer (TS dev / C++ prod) |
+| `workflow/` | 765 | Core | DAG workflow engine with multi-language plugins |
+| `frontends/` | 495 | Core | CLI, Qt6, Next.js frontends |
+| `packages/` | 550 | Core | 62 modular feature packages |
+| `schemas/` | 105 | Core | JSON Schema validation |
+| `services/` | 29 | Core | Media daemon (FFmpeg/ImageMagick) |
+| `prisma/` | 1 | Core | Prisma schema configuration |
+| `exploded-diagrams/` | 17,565 | Standalone | Interactive 3D exploded diagrams (Next.js + JSCAD) |
+| `gameengine/` | 2,737 | Standalone | SDL3/bgfx 2D/3D game engine |
+| `codegen/` | 1,926 | Standalone | CodeForge IDE (React+Monaco) |
+| `pastebin/` | 1,114 | Standalone | Code snippet sharing (Next.js) |
+| `fakemui/` | 758 | Standalone | Material UI clone (QML+React) |
+| `postgres/` | 212 | Standalone | PostgreSQL admin dashboard |
+| `pcbgenerator/` | 87 | Standalone | PCB design library (Python) |
+| `mojo/` | 82 | Standalone | Mojo language examples |
+| `packagerepo/` | 72 | Standalone | Package repository service |
+| `cadquerywrapper/` | 48 | Standalone | Parametric 3D CAD (Python) |
+| `sparkos/` | 48 | Standalone | Minimal Linux distro + Qt6 |
+| `storybook/` | 40 | Standalone | Component documentation |
+| `dockerterminal/` | 37 | Standalone | Container management dashboard |
+| `smtprelay/` | 22 | Standalone | SMTP relay (Python/Twisted) |
+| `caproverforge/` | 19 | Standalone | CapRover mobile client |
+| `repoforge/` | 17 | Standalone | GitHub Android client |
+| `docs/` | 151 | Docs | Project documentation |
+| `old/` | 149 | Archive | Legacy Spark implementation |
+| `txt/` | 3 | Docs | Text files |
+| `.github/` | 52 | CI/CD | GitHub Actions, templates, prompts |
+| `deployment/` | 25 | Infra | Docker, deployment configs |
+| `spec/` | 15 | Docs | TLA+ formal specifications |
+| `scripts/` | 13 | Tooling | Build and migration scripts |
+| `config/` | 12 | Config | Lint, test configuration |
+| `e2e/` | 6 | Testing | Playwright E2E infrastructure |
+| `.claude/` | 2 | Config | Claude AI settings |
+| `.openhands/` | 1 | Config | OpenHands AI agent config |
 
-### Exploration is NOT Optional
-- Many task failures occur because exploration was skipped or done superficially
-- Shallow exploration (reading only 1-2 files) misses critical context and conventions
-- Proper exploration prevents rework, security issues, and architectural mistakes
-- Use the **Explore agent** for codebase questions - it goes deep systematically
-
-### For EVERY Task - Follow This Sequence
-
-#### 1. Understand the Task Domain
-- Read `/CLAUDE.md` (this file) - core principles and patterns
-- Read `/AGENTS.md` - domain-specific rules for your task type
-- Read `/README.md` - project overview
-- Check recent git commits: What was done recently in this area?
-
-#### 2. Map the Relevant Codebase (Use Explore Agent)
-The exploration depth depends on task type:
-
-**For Feature/Package Work:**
-- [ ] Examine `/packages/{packageId}/` structure - all directories and files
-- [ ] Review similar existing packages for patterns
-- [ ] Check `/schemas/package-schemas/` for validation rules
-- [ ] Look at `/dbal/shared/api/schema/entities/` if new entities needed
-
-**For API/Backend Work:**
-- [ ] Review `/frontends/nextjs/src/app/api/v1/[...slug]/route.ts` - main router
-- [ ] Check `/frontends/nextjs/src/lib/middleware/` - rate limiting, auth, multi-tenant
-- [ ] Examine `/dbal/development/src/adapters/` - database patterns
-- [ ] Check `/dbal/shared/api/schema/operations/` - operation specifications
-- [ ] Review rate limiting setup in `/docs/RATE_LIMITING_GUIDE.md`
-
-**For Frontend/UI Work:**
-- [ ] Review target `/packages/{packageId}/component/` structure
-- [ ] Check `/frontends/nextjs/src/lib/` for rendering and utilities
-- [ ] Examine similar UI packages for component patterns
-- [ ] Understand the JSON→React rendering flow
-
-**For Database/Schema Work:**
-- [ ] Review all 27 YAML entity definitions in `/dbal/shared/api/schema/entities/`
-- [ ] Check `/schemas/package-schemas/` for JSON validation schemas
-- [ ] Understand the two-layer schema system (YAML source → Prisma → JSON validation)
-- [ ] Review `/docs/MULTI_TENANT_AUDIT.md` for tenant filtering patterns
-
-**For Testing Work:**
-- [ ] Check `/playwright.config.ts` and `/e2e/` structure
-- [ ] Review test patterns in `/packages/{packageId}/playwright/` and `tests/`
-- [ ] Understand schema validation in `/schemas/package-schemas/tests/`
-- [ ] Check how tests handle multi-tenancy
-
-#### 3. Identify Patterns & Conventions
-- Look at 2-3 similar completed implementations
-- Identify: naming conventions, directory structure, file organization, code patterns
-- Check what's in `/schemas/` and `/dbal/` for your task area
-- Note any TODOs or FIXMEs related to your task
-
-#### 4. Check for Existing Work/Documentation
-- Search for related documentation files
-- Check git log for similar work: `git log --grep="keyword"`
-- Look for ADRs (Architecture Decision Records) or implementation guides
-- Note if there are Phase reports or migration docs relevant to your task
-
-#### 5. Identify Blockers & Dependencies
-- Check `/TECH_DEBT.md` and `/SYSTEM_HEALTH_ASSESSMENT.md` for known issues
-- Verify dependencies are installed and buildable
-- Check if related packages/modules already exist
-- Understand what's needed before you can start
-
-### What "Going 1 Level Deep" Really Means
-
-**Insufficient Exploration (❌ Don't Do This):**
-```
-- Only reading CLAUDE.md
-- Checking 1 file and starting to code
-- Skipping package structure inspection
-- Missing schema validation files
-- Not checking existing patterns
-```
-
-**Proper Exploration (✅ Do This):**
-```
-# For package work:
-✓ Read package.json file structure
-✓ Examine component/ directory and sample files
-✓ Check page-config/ for routing patterns
-✓ Review workflow/ for existing JSON Script patterns
-✓ Look at tests/ and playwright/ for test patterns
-✓ Compare with 2-3 similar packages
-✓ Check /schemas/package-schemas/ for validation rules
-
-# For API work:
-✓ Review main router ([...slug]/route.ts)
-✓ Check middleware implementations
-✓ Examine 2-3 similar API endpoints
-✓ Review rate limiting patterns
-✓ Understand multi-tenant filtering
-✓ Check DBAL client usage patterns
-
-# For schema work:
-✓ Review all 27 YAML entities (/dbal/shared/api/schema/entities/)
-✓ Check JSON validation schemas (/schemas/package-schemas/)
-✓ Understand entity operations specifications
-✓ Review existing entity implementations
-✓ Check how tenantId is used everywhere
-```
-
-### When to Use the Explore Agent
-
-Use the **Explore agent** for:
-- Understanding codebase structure and patterns
-- Finding where code lives (searching across files)
-- Mapping dependencies and integrations
-- Answering "How does X work?" questions
-- Identifying similar existing implementations
-- Understanding architecture layers
-
-**Do NOT** use Explore for:
-- Simple file reads (use Read tool directly)
-- Known file paths (use Read/Glob/Grep)
-- Trivial searches (use Glob for patterns)
-
-### Common Exploration Mistakes (And How to Fix Them)
-
-| Mistake | Impact | Fix |
-|---------|--------|-----|
-| Not reading `/CLAUDE.md` principles first | Violates 95/5 rule, multi-tenant issues | Always start with Core Principles section |
-| Skipping schema review | Missing validation requirements, data structure issues | Review `/schemas/package-schemas/` before coding |
-| Not checking existing patterns | Inconsistent code, duplicate work | Examine 2-3 similar implementations |
-| Ignoring multi-tenant requirements | Data leaks, security issues | Read Multi-Tenant section, check all DB queries have tenantId filter |
-| Missing rate limiting | API abuse risk | Review `/docs/RATE_LIMITING_GUIDE.md` for new endpoints |
-| Not understanding JSON-first philosophy | TypeScript bloat, wrong patterns | Review JSON-First Philosophy section |
-| Assuming you know the structure | Wrong file locations, wasted effort | Use Explore agent to map the actual structure |
+*Note: Generated directories excluded: `node_modules/`, `playwright-report/`, `test-results/`, `.git/`, `.idea/`, `.vscode/`*
 
 ---
 
 ## Core Principles
 
 ### 1. 95% Data, 5% Code
-
-MetaBuilder is **95% configuration/data in JSON, 5% infrastructure code in TypeScript**.
-
-- UI components defined as JSON
-- Workflows defined as JSON Script
-- Pages/routes defined as JSON
-- Business logic in JSON, not TypeScript
-- Code only handles rendering and persistence
+- UI components, workflows, pages, business logic = **JSON**
+- TypeScript/C++ only handles rendering and persistence
 
 ### 2. Schema-First Development
-
-**Two-layer schema system - YAML entities + JSON validation schemas**.
-
-**Layer 1: Core Database Schemas (YAML)**
-- Source of truth for database structure
-- Location: `/dbal/shared/api/schema/entities/` (27 files)
-- 5 core system entities (User, Session, Workflow, Package, UIPage)
-- 3 access control entities (Credential, ComponentNode, PageConfig)
-- 6 package-specific entities (Forum, Notification, AuditLog, Media, IRC, Streaming)
-- 4 domain-specific entities (Product, Game, Artist, Video)
-
-**Layer 2: JSON Validation Schemas (JSON Schema)**
-- Location: `/schemas/package-schemas/` (27 files)
-- Validates package files: metadata, entities, types, scripts, components, API, events, etc.
-- Reference: [SCHEMAS_COMPREHENSIVE.md](./SCHEMAS_COMPREHENSIVE.md)
-
-**Development Workflow**:
-```bash
-# 1. Define entity schema in YAML
-# /dbal/shared/api/schema/entities/core/my-entity.yaml
-
-# 2. Generate Prisma from YAML
-npm --prefix dbal/development run codegen:prisma
-
-# 3. Push to database
-npm --prefix dbal/development run db:push
-
-# 4. Create package files with proper schemas
-# Use schemas/package-schemas/*.json for validation
-
-# 5. Code follows the schema
+```
+dbal/shared/api/schema/entities/    # YAML entities (SOURCE OF TRUTH)
+schemas/package-schemas/            # JSON validation schemas
 ```
 
 ### 3. Multi-Tenant by Default
-
-**Every entity has tenantId - no exceptions.**
-
 ```typescript
-// ✅ CORRECT: Filter by tenant
-const db = getDBALClient()
-const records = await db.users.list({
-  filter: { tenantId: user.tenantId }
-})
-
-// ❌ WRONG: Missing tenant filter (data leak!)
-const records = await db.users.list()
+// EVERY query must filter by tenantId - no exceptions
+const records = await db.users.list({ filter: { tenantId } })
 ```
 
-### 4. Use JSON Script, Not TypeScript for Logic
+### 4. DBAL > Prisma > Raw SQL
+```typescript
+const db = getDBALClient()       // Highest - handles ACL, caching
+const prisma = getPrismaClient() // Middle - only if DBAL doesn't support
+// Raw SQL - never do this
+```
 
-**Business logic lives in JSON Script v2.2.0, not TypeScript.**
+### 5. One Lambda Per File
+```
+src/lib/users/createUser.ts   // One function per file
+src/lib/users/listUsers.ts    // One function per file
+```
 
+### 6. JSON Script for Business Logic
 ```json
 {
   "version": "2.2.0",
   "nodes": [
-    {
-      "id": "filter",
-      "type": "operation",
-      "op": "filter",
-      "condition": "{{ $json.status === 'active' }}"
-    }
+    { "id": "filter", "type": "operation", "op": "filter",
+      "condition": "{{ $json.status === 'active' }}" }
   ]
 }
 ```
 
-Why: Non-technical users understand JSON, GUIs can generate it, no compilation needed.
+---
 
-### 5. One Lambda Per File
+## Key Subsystems
 
-**Each file = one focused function, period.**
+### DBAL - Database Abstraction Layer (`dbal/`)
 
-```typescript
-// ✅ CORRECT
-// src/lib/users/createUser.ts
-export async function createUser(data: UserData): Promise<User> { ... }
-
-// src/lib/users/listUsers.ts
-export async function listUsers(): Promise<User[]> { ... }
-
-// ❌ WRONG: Multiple functions in one file
-// src/lib/users.ts
-export function createUser() { ... }
-export function listUsers() { ... }
-export function deleteUser() { ... }
+**Structure**:
+```
+dbal/
+├── development/          # TypeScript implementation (Phase 2 - CURRENT)
+│   └── src/
+│       ├── adapters/     # Prisma, Memory, ACL adapters
+│       ├── blob/         # S3, filesystem, memory storage
+│       ├── core/         # Client, types, errors
+│       └── workflow/     # DAG executor, node executors
+├── production/           # C++ implementation (Phase 3 - FUTURE)
+└── shared/
+    └── api/schema/       # YAML entity definitions (SOURCE OF TRUTH)
+        ├── entities/     # 18 entity definitions
+        └── operations/   # Operation specifications
 ```
 
-### 6. DBAL > Prisma > Raw SQL
+**Entity Categories**:
+| Category | Entities |
+|----------|----------|
+| Core | `user`, `session`, `workflow`, `package`, `ui_page` |
+| Access | `credential`, `component_node`, `page_config` |
+| Packages | `forum`, `notification`, `audit_log`, `media`, `irc`, `streaming` |
+| Domain | `product`, `game`, `artist`, `video` |
 
-**Use highest abstraction level available.**
+### Workflow Engine (`workflow/`)
 
-```typescript
-// ✅ HIGHEST (handles multi-tenant, ACL, caching)
-const db = getDBALClient()
-const users = await db.users.list()
+**Structure**:
+```
+workflow/
+├── executor/             # Multi-language executors
+│   ├── ts/               # TypeScript (primary)
+│   ├── python/           # Python executor
+│   └── cpp/              # C++ (planned)
+├── plugins/              # Multi-language plugins
+│   ├── cpp/              # 16 plugin categories
+│   ├── python/           # Python plugins
+│   ├── ts/               # TypeScript plugins
+│   ├── go/               # Go plugins
+│   ├── rust/             # Rust plugins
+│   └── mojo/             # Mojo plugins
+└── examples/             # 19 example workflows
+```
 
-// ⚠️ MIDDLE (only if DBAL doesn't support)
-const prisma = getPrismaClient()
-const users = await prisma.user.findMany()
+**C++ Plugin Categories**: control, convert, core, dict, list, logic, math, string, notifications, test, tools, utils, var, web
 
-// ❌ LOWEST (never do this)
-const query = "SELECT * FROM user"
+### Frontends (`frontends/`)
+
+| Frontend | Tech | Purpose |
+|----------|------|---------|
+| `cli/` | C++ | Command-line interface |
+| `nextjs/` | React/Next.js | **Primary** web application |
+| `qt6/` | C++/QML | Desktop application (22 packages) |
+
+### Game Engine (`gameengine/`)
+
+**Tech Stack**:
+- **Graphics**: SDL 3.2.20, bgfx 1.129, MaterialX 1.39.1
+- **3D/Physics**: Assimp, Bullet3, Box2D, GLM
+- **Media**: FFmpeg 8.0.1, libvips, OGG/Vorbis/Theora
+- **ECS**: EnTT 3.16.0
+
+**Services** (36 interfaces): application_loop, lifecycle, audio, config, crash_recovery, graphics_backend, gui, input, materialx, render_graph, scene, shader_compiler, soundboard, workflow
+
+### CodeForge IDE (`codegen/`)
+
+Browser-based low-code IDE migrating to JSON-driven architecture:
+
+- **~420 TSX files** (legacy) → **338 JSON definitions** (target)
+- **Pattern**: JSON components + custom hooks
+- **Framework layer** (173 TSX): Radix/Shadcn primitives - must stay TSX
+- **Application layer** (256+ files): Business logic - converting to JSON
+
+See [codegen/CLAUDE.md](./codegen/CLAUDE.md) for migration details.
+
+---
+
+## Package System (`packages/`)
+
+**62 packages** organized by category:
+
+| Category | Packages |
+|----------|----------|
+| **Admin** | `admin`, `admin_dialog`, `database_manager`, `package_manager`, `user_manager`, `role_editor`, `route_manager` |
+| **UI Core** | `ui_auth`, `ui_database_manager`, `ui_dialogs`, `ui_footer`, `ui_header`, `ui_home`, `ui_login`, `ui_pages` |
+| **Dev Tools** | `code_editor`, `codegen_studio`, `component_editor`, `schema_editor`, `theme_editor`, `workflow_editor`, `nerd_mode_ide` |
+| **Features** | `forum_forge`, `irc_webchat`, `media_center`, `notification_center`, `social_hub`, `stream_cast` |
+| **Testing** | `api_tests`, `smoke_tests`, `testing`, `system_critical_flows` |
+
+**Standard Package Structure**:
+```
+packages/{packageId}/
+├── package.json              # Metadata + file inventory
+├── components/ui.json        # UI component definitions
+├── page-config/              # Route definitions
+├── permissions/roles.json    # RBAC definitions
+├── workflow/*.jsonscript     # JSON Script workflows
+├── styles/tokens.json        # Design tokens
+└── tests/                    # Test definitions
 ```
 
 ---
 
-## Repository Structure (Quick Reference)
+## Schema System
 
-**Monorepo Directory Tree:**
+### Two-Layer Architecture
+
+**Layer 1: YAML Entity Schemas** (Source of Truth)
 ```
-metabuilder/
-├── cadquerywrapper/      # CadQuery 3D CAD wrapper (Python)
-├── caproverforge/        # CapRover mobile client (Android/Kotlin)
-├── codegen/              # Code generation tools
-├── config/               # Lint, test, misc configs
-├── dbal/                 # Database Abstraction Layer
-│   ├── development/      # DBAL TypeScript implementation
-│   ├── production/       # Production build
-│   └── shared/api/schema/# YAML entities (SOURCE OF TRUTH)
-├── deployment/           # Docker & infrastructure
-├── dockerterminal/       # Docker Swarm management (Next.js)
-├── docs/                 # Documentation (organized)
-│   ├── analysis/         # Status reports, assessments
-│   ├── architecture/     # System design docs
-│   ├── guides/           # Quick references, how-tos
-│   ├── implementation/   # Implementation details
-│   ├── packages/         # Package-specific docs
-│   ├── phases/           # Phase completion reports
-│   ├── testing/          # E2E and test docs
-│   └── workflow/         # Workflow engine docs
-├── e2e/                  # End-to-end Playwright tests
-├── fakemui/              # Material UI clone (React/QML)
-├── frontends/            # Multiple frontends
-│   ├── cli/              # Command-line interface
-│   ├── nextjs/           # Primary web UI
-│   └── qt6/              # Desktop application
-├── gameengine/           # SDL3 C++ game engine
-├── mojo/                 # Mojo examples (systems programming)
-│   └── examples/         # Official Modular examples
-├── packagerepo/          # Package repository service
-├── packages/             # 62+ feature packages
-├── pastebin/             # Snippet pastebin (Next.js)
-├── pcbgenerator/         # PCB design library (Python)
-├── postgres/             # PostgreSQL utilities
-├── repoforge/            # GitHub Android client (Kotlin)
-├── schemas/              # JSON validation schemas
-├── scripts/              # Build and migration scripts
-├── services/             # Background services
-├── smtprelay/            # SMTP relay (Python/Twisted)
-├── sparkos/              # Minimal Linux distro + Qt6 app
-├── storybook/            # Component stories
-├── workflow/             # Workflow engine
-│   ├── executor/         # Multi-language executors
-│   │   ├── ts/           # TypeScript core engine
-│   │   ├── python/       # Python executor
-│   │   └── cpp/          # C++ executor (planned)
-│   ├── examples/         # Workflow examples
-│   └── plugins/          # Workflow plugins
-└── [root files]          # CLAUDE.md, README.md, etc.
+dbal/shared/api/schema/entities/
+├── core/           # user, session, workflow, package, ui_page
+├── access/         # credential, component_node, page_config
+├── packages/       # forum, notification, audit_log, media, irc, streaming
+└── domain/         # product, game, artist, video
 ```
 
-**Standalone Projects in Monorepo:**
-| Project | Purpose | Tech Stack |
-|---------|---------|------------|
-| `cadquerywrapper/` | Parametric 3D CAD modeling | Python, CadQuery |
-| `caproverforge/` | CapRover PaaS mobile client | Android, Kotlin |
-| `codegen/` | Visual code generation studio | React, Vite, TypeScript |
-| `dockerterminal/` | Docker Swarm management | Next.js, TypeScript |
-| `fakemui/` | Material UI clone (React + QML) | React, QML, TypeScript |
-| `gameengine/` | 2D/3D game engine | C++, SDL3 |
-| `mojo/` | Systems programming examples | Mojo (Python superset) |
-| `packagerepo/` | Package repository service | Python, FastAPI |
-| `pastebin/` | Code snippet sharing | Next.js, TypeScript |
-| `pcbgenerator/` | PCB design automation | Python |
-| `postgres/` | PostgreSQL admin dashboard | Next.js, Drizzle ORM |
-| `repoforge/` | GitHub client for Android | Kotlin, Compose |
-| `smtprelay/` | Email relay server | Python, Twisted |
-| `sparkos/` | Minimal Linux + Qt6 app | C++, Qt6, Linux |
-| `storybook/` | Component documentation | React, Vite, Storybook |
+**Layer 2: JSON Validation Schemas**
+```
+schemas/package-schemas/
+├── metadata_schema.json      # Package metadata
+├── entities_schema.json      # Database entities
+├── components_schema.json    # UI components
+├── script_schema.json        # JSON Script v2.2.0
+├── workflow.schema.json      # Workflow definitions
+├── permissions_schema.json   # RBAC definitions
+└── ... (27 total)
+```
 
-**Critical Root Files:**
-- `CLAUDE.md` - THIS FILE (in docs/)
-- `AGENTS.md` - Domain-specific rules (in docs/)
-- `README.md` - Project overview (in docs/)
-- `package.json` - Workspace configuration
-- `playwright.config.ts` - E2E test config
+---
 
-**Understanding the Structure:**
-- **Schemas drive development**: YAML entities → Prisma schema → JSON validation → Code
-- **Packages are modular**: Each package is self-contained with its own structure
-- **Multi-layer architecture**: Database layer (DBAL) → API (Next.js) → Frontend (React/CLI/Qt6)
-- **Everything multi-tenant**: Every entity has `tenantId` - mandatory filtering
-- **Standalone projects**: Integrated into monorepo but maintain independence
+## Common Commands
+
+```bash
+# Development
+npm run dev                 # Start Next.js dev server
+npm run build               # Build for production
+npm run typecheck           # TypeScript check
+
+# Database
+npm --prefix dbal/development run codegen:prisma  # YAML → Prisma
+npm --prefix dbal/development run db:push         # Apply schema
+npm --prefix dbal/development run db:studio       # Prisma Studio
+
+# Testing
+npm run test:e2e            # Playwright E2E tests
+npm run test:e2e:ui         # Playwright UI mode
+
+# CodeForge (in codegen/)
+npm run audit:json          # Check JSON migration status
+npm run build               # Build CodeForge
+```
+
+---
+
+## API Routing Pattern
+
+```
+/api/v1/{tenant}/{package}/{entity}[/{id}[/{action}]]
+
+GET    /api/v1/acme/forum_forge/posts          → List
+POST   /api/v1/acme/forum_forge/posts          → Create
+GET    /api/v1/acme/forum_forge/posts/123      → Get
+PUT    /api/v1/acme/forum_forge/posts/123      → Update
+DELETE /api/v1/acme/forum_forge/posts/123      → Delete
+POST   /api/v1/acme/forum_forge/posts/123/like → Custom action
+```
+
+**Rate Limits**: Login (5/min), Register (3/min), List (100/min), Mutations (50/min)
 
 ---
 
 ## Architecture Overview
 
-### Three-Tier System
-
 ```
-Frontend (Next.js/CLI/Qt6)
-  ↓
-DBAL (TypeScript Phase 2, C++ Phase 3)
-  ↓
-Database (SQLite dev, PostgreSQL prod)
-```
-
-### Routing Pattern
-
-```
-/api/v1/{tenant}/{package}/{entity}[/{id}[/{action}]]
-
-GET  /api/v1/acme/forum_forge/posts          → List
-POST /api/v1/acme/forum_forge/posts          → Create
-GET  /api/v1/acme/forum_forge/posts/123      → Get
-PUT  /api/v1/acme/forum_forge/posts/123      → Update
-DELETE /api/v1/acme/forum_forge/posts/123    → Delete
-POST /api/v1/acme/forum_forge/posts/123/like → Custom action
+┌─────────────────────────────────────────────────────────────────┐
+│                           FRONTENDS                              │
+├─────────────────┬─────────────────────┬─────────────────────────┤
+│   CLI (C++)     │   Qt6 (QML)         │   Next.js (React)       │
+└────────┬────────┴──────────┬──────────┴──────────────┬──────────┘
+         │                   │                          │
+         └───────────────────┼──────────────────────────┘
+                             │
+                    ┌────────▼────────┐
+                    │   DBAL Layer    │  TypeScript (Phase 2)
+                    │   ACL, Caching  │  C++ (Phase 3)
+                    └────────┬────────┘
+                             │
+                    ┌────────▼────────┐
+                    │    Database     │  SQLite (dev)
+                    │                 │  PostgreSQL (prod)
+                    └─────────────────┘
 ```
 
 ---
 
-## JSON-First Philosophy
+## Key Documentation
 
-### UI Components as JSON
-
-```json
-{
-  "id": "comp_hero",
-  "name": "Hero Section",
-  "render": {
-    "type": "Container",
-    "props": { "variant": "primary" },
-    "children": [
-      {
-        "type": "Heading",
-        "props": { "text": "Welcome" }
-      }
-    ]
-  }
-}
-```
-
-### Pages as JSON
-
-```json
-{
-  "id": "page_home",
-  "path": "/",
-  "title": "Home",
-  "tenantId": "acme",
-  "component": "home_page",
-  "isPublished": true
-}
-```
-
-### Workflows as JSON Script
-
-```json
-{
-  "version": "2.2.0",
-  "nodes": [
-    {
-      "id": "step1",
-      "type": "operation",
-      "op": "transform_data",
-      "input": "{{ $json }}",
-      "output": "{{ $utils.flatten($json) }}"
-    }
-  ]
-}
-```
-
-**No hardcoded TypeScript UI logic!** Everything is JSON that GUIs can generate.
+| Document | Purpose |
+|----------|---------|
+| [docs/CLAUDE.md](./docs/CLAUDE.md) | **Start here** - Full development guide |
+| [docs/AGENTS.md](./docs/AGENTS.md) | Domain-specific rules |
+| [docs/SCHEMAS_COMPREHENSIVE.md](./docs/SCHEMAS_COMPREHENSIVE.md) | All 27 JSON + 27 YAML schemas |
+| [docs/PACKAGES_INVENTORY.md](./docs/PACKAGES_INVENTORY.md) | All 62 packages with files |
+| [docs/RATE_LIMITING_GUIDE.md](./docs/RATE_LIMITING_GUIDE.md) | API rate limiting patterns |
+| [docs/MULTI_TENANT_AUDIT.md](./docs/MULTI_TENANT_AUDIT.md) | Multi-tenant filtering |
+| [spec/*.tla](./spec/) | TLA+ formal specifications |
 
 ---
 
-## Multi-Tenant & Security
+## Coding Best Practices
 
-### Rate Limiting (Always Apply)
+### Pre-Commit Verification (Mandatory)
+
+From [docs/CONTRACT.md](./docs/CONTRACT.md) - **ALL checks must pass**:
+
+```bash
+npm run build         # 1. Build Compliance
+npm run typecheck     # 2. Type Safety (0 errors)
+npm run lint          # 3. Code Quality
+npm run test:e2e      # 4. E2E Tests
+```
+
+### Code Quality Rules
+
+| Rule | Correct | Wrong |
+|------|---------|-------|
+| **One lambda per file** | `createUser.ts` with single function | Multiple functions in one file |
+| **No @ts-ignore** | Fix type errors properly | Suppress with `@ts-ignore` |
+| **No implicit any** | Concrete types for all values | Untyped variables |
+| **No dead code** | All code is executed | Unused functions/variables |
+| **Self-documenting** | Clear variable/function names | Cryptic abbreviations |
+| **JSDoc on public APIs** | Document function signatures | Missing documentation |
+
+### UI/Styling Standards
+
+From [.github/copilot-instructions.md](./.github/copilot-instructions.md):
 
 ```typescript
-import { applyRateLimit } from '@/lib/middleware'
+// ❌ NEVER use Radix UI or Tailwind
+import { Dialog } from '@radix-ui/react-dialog'
+<button className="bg-blue-500">Click</button>
 
-export async function POST(request: NextRequest) {
-  // Apply rate limit
-  const limitResponse = applyRateLimit(request, 'mutation')
-  if (limitResponse) return limitResponse
-  
-  // Rest of handler
-}
+// ✅ ALWAYS use Material-UI
+import { Dialog, Button } from '@mui/material'
+<Button variant="contained">Click</Button>
+<Box sx={{ display: 'flex', gap: 2 }}>Content</Box>
 ```
 
-**Rate limits:**
-- Login: 5 attempts/minute
-- Register: 3 attempts/minute
-- List: 100 requests/minute
-- Mutations: 50 requests/minute
-- Bootstrap: 1 attempt/hour
+**Component Mapping**: Radix Dialog → MUI Dialog, Radix Select → MUI Select, Tailwind → MUI `sx` prop or SCSS modules
 
-### Multi-Tenant Filtering (Always Apply)
+### Testing Standards
 
 ```typescript
-// ✅ CORRECT
-const filter = tenantId !== undefined ? { tenantId } : {}
-const records = await adapter.list(entity, { filter })
-
-// ❌ WRONG: Data leak!
-const records = await adapter.list(entity)
-```
-
-**Rule**: Every database query filters by tenantId. No exceptions.
-
----
-
-## Code Organization
-
-### Directory Structure
-
-```
-/dbal/
-  /development/src/
-    /core/client/      # DBAL implementation
-    /adapters/         # Prisma adapter
-    /seeds/            # Seed logic
-  /shared/api/schema/  # YAML schemas (source of truth)
-    /entities/         # 27 entity definitions
-    /operations/       # 7 operation specs
-
-/frontends/nextjs/
-  /src/lib/
-    /middleware/       # Express-style middleware
-    /routing/          # API routing helpers
-    /db-client.ts      # DBAL singleton
-  /app/api/
-    /v1/[...slug]/     # RESTful API
-
-/packages/             # 62 packages total
-  /{packageId}/
-    /page-config/      # Routes
-    /workflow/         # Workflows (JSON Script v2.2.0)
-    /component/        # Components
-    /permissions/      # Roles & permissions
-    /styles/           # Design tokens
-    /tests/            # Unit tests
-    /playwright/       # E2E tests
-    package.json       # Package metadata + file inventory
-
-/schemas/
-  /package-schemas/    # 27 JSON schemas for validation
-    /{schema}.json     # Metadata, entities, types, scripts, components, etc.
-    /examples/         # Reference templates (minimal, complete, advanced)
-  README.md            # Schema overview
-  SEED_SCHEMAS.md      # Seed data validation guide
-  yaml-schema.yaml     # YAML meta-schema
-```
-
-### What Goes Where
-
-| Item | Location | Format |
-|------|----------|--------|
-| Entity definitions | `/dbal/shared/api/schema/entities/` | YAML (27 files) |
-| Entity operations | `/dbal/shared/api/schema/operations/` | YAML (7 files) |
-| API routes | `/frontends/nextjs/src/app/api/` | TypeScript |
-| UI definitions | `/packages/{pkg}/component/` | JSON |
-| Workflows | `/packages/{pkg}/workflow/` | JSON Script v2.2.0 |
-| Pages/routes | `/packages/{pkg}/page-config/` | JSON |
-| Package metadata | `/packages/{pkg}/package.json` | JSON (with file inventory) |
-| Schema validation | `/schemas/package-schemas/` | JSON Schema (27 files) |
-
-### Package File Inventory
-
-Each package.json now includes a `files` section documenting all contained files:
-
-```json
-{
-  "packageId": "my_package",
-  "files": {
-    "directories": ["components", "page-config", "tests", ...],
-    "byType": {
-      "components": ["components/ui.json"],
-      "pages": ["page-config/page-config.json"],
-      "workflows": ["workflow/init.jsonscript"],
-      "tests": ["tests/test.json", "playwright/tests.json"],
-      "config": ["package.json"],
-      "permissions": ["permissions/roles.json"],
-      "styles": ["styles/tokens.json"],
-      "schemas": ["entities/schema.json"]
-    }
-  }
-}
-```
-
-See [PACKAGE_INVENTORY_GUIDE.md](./PACKAGE_INVENTORY_GUIDE.md) for usage examples.
-
----
-
-## What NOT to Do
-
-### ❌ Don't Use Prisma Directly
-
-```typescript
-// ❌ WRONG
-import { prisma } from '@/lib/config/prisma'
-const users = await prisma.user.findMany()
-
-// ✅ CORRECT
-const db = getDBALClient()
-const users = await db.users.list()
-```
-
-### ❌ Don't Hardcode Configuration
-
-```typescript
-// ❌ WRONG: Hardcoded routes
-const routes = [
-  { path: '/', component: 'home' },
-  { path: '/about', component: 'about' }
-]
-
-// ✅ CORRECT: In database/JSON
-// /packages/my_package/page-config/routes.json
-```
-
-### ❌ Don't Skip tenantId Filtering
-
-```typescript
-// ❌ WRONG: Data leak!
-const users = await db.users.list()
-
-// ✅ CORRECT
-const users = await db.users.list({
-  filter: { tenantId }
+// Parameterized tests for all functions
+it.each([
+  { input: 'case1', expected: 'result1' },
+  { input: 'case2', expected: 'result2' },
+])('should handle $input', ({ input, expected }) => {
+  expect(myFunction(input)).toBe(expected)
 })
 ```
 
-### ❌ Don't Put Multiple Functions in One File
+- Test files next to source: `utils.ts` + `utils.test.ts`
+- Run `npm run test:coverage:report` to auto-generate coverage markdown
+- All functions need test coverage
+
+### Security Checklist
+
+From [.github/PULL_REQUEST_TEMPLATE.md](./.github/PULL_REQUEST_TEMPLATE.md):
+
+- [ ] Input validation implemented
+- [ ] No XSS vulnerabilities (no innerHTML with user data)
+- [ ] No SQL injection (use DBAL, not raw queries)
+- [ ] Passwords hashed with SHA-512
+- [ ] No secrets committed to code
+- [ ] Multi-tenant safety verified (tenantId filtering)
+
+### PR Best Practices
+
+From [.github/workflows/README.md](./.github/workflows/README.md):
+
+1. **Descriptive titles** - Used for automatic labeling
+2. **Link issues** - Enables automatic issue closing
+3. **Keep PRs small** - Easier to review and merge
+4. **No console.log** - Will be flagged in review
+5. **No debugger statements** - Treated as blocking issues
+6. **Test locally** - Run lint and tests before pushing
+
+### Declarative-First Development
 
 ```typescript
-// ❌ WRONG
-// src/lib/users.ts
-export function create() { ... }
-export function list() { ... }
-export function delete() { ... }
+// ❌ Hardcoded component
+<UserForm user={user} onSave={handleSave} />
 
-// ✅ CORRECT
-// src/lib/users/create.ts
-export function createUser() { ... }
-
-// src/lib/users/list.ts
-export function listUsers() { ... }
-
-// src/lib/users/delete.ts
-export function deleteUser() { ... }
+// ✅ Declarative from JSON
+<RenderComponent component={{
+  type: 'form',
+  props: { schema: formSchema },
+  children: [/* field components */]
+}} />
 ```
 
-### ❌ Don't Use TypeScript for Business Logic
-
-```typescript
-// ❌ WRONG: TypeScript workflow logic
-export function processOrder(order) {
-  if (order.status === 'pending') {
-    // Complex TypeScript logic
-  }
-}
-
-// ✅ CORRECT: JSON Script
-{
-  "nodes": [
-    {
-      "op": "filter",
-      "condition": "{{ $json.status === 'pending' }}"
-    }
-  ]
-}
-```
-
-### ❌ Don't Forget Rate Limiting on APIs
-
-```typescript
-// ❌ WRONG: Missing rate limit
-export async function POST(request: NextRequest) {
-  // No protection!
-}
-
-// ✅ CORRECT
-export async function POST(request: NextRequest) {
-  const limitResponse = applyRateLimit(request, 'mutation')
-  if (limitResponse) return limitResponse
-}
-```
-
-### ❌ Don't Ignore YAML Schemas
-
-```typescript
-// ❌ WRONG: Schema in code
-interface User {
-  id: string
-  name: string
-}
-
-// ✅ CORRECT: YAML source of truth
-// /dbal/shared/api/schema/entities/core/user.yaml
-```
+**Questions to ask before coding**:
+1. Could this be JSON configuration instead of TypeScript?
+2. Could a generic renderer handle this instead of custom TSX?
+3. Is this filtering by tenantId?
+4. Does this follow one-lambda-per-file pattern?
 
 ---
 
-## Quick Reference
+## Before Starting Any Task
 
-### Common Commands
+1. **Read the relevant CLAUDE.md** for your work area
+2. **Use the Explore agent** for codebase questions
+3. **Check existing patterns** - find 2-3 similar implementations
+4. **Verify multi-tenant filtering** on all database queries
+5. **Apply rate limiting** on API endpoints
 
-```bash
-# Development
-npm run dev                 # Start dev server
-npm run typecheck          # Check TypeScript
-npm run build              # Build production
-npm run test:e2e           # Run tests
-
-# Database
-npm --prefix dbal/development run codegen:prisma    # YAML → Prisma
-npm --prefix dbal/development run db:push           # Apply schema
-
-# Documentation
-http://localhost:3000/api/docs     # API docs
-```
-
-### Key Files
-
-- **Rate Limiting**: `frontends/nextjs/src/lib/middleware/rate-limit.ts`
-- **DBAL Client**: `frontends/nextjs/src/lib/db-client.ts`
-- **API Routes**: `frontends/nextjs/src/app/api/v1/[...slug]/route.ts`
-- **YAML Schemas**: `dbal/shared/api/schema/entities/` (source of truth)
-- **JSON Schemas**: `schemas/package-schemas/` (validation & documentation)
-
-### Documentation
-
-**Core Principles & Development**:
-- **This file**: CLAUDE.md (core principles)
-- **Rate Limiting**: `/docs/RATE_LIMITING_GUIDE.md`
-- **Multi-Tenant**: `/docs/MULTI_TENANT_AUDIT.md`
-- **API Reference**: `/docs/API_DOCUMENTATION_GUIDE.md`
-- **Strategic Guide**: `/STRATEGIC_POLISH_GUIDE.md`
-
-**Schemas & Package Documentation**:
-- **All Schemas**: [SCHEMAS_COMPREHENSIVE.md](./SCHEMAS_COMPREHENSIVE.md) - 27 JSON schemas + 27 YAML entities
-- **Quick Start**: `schemas/package-schemas/QUICKSTART.md` - 30-second patterns
-- **Schema Reference**: `schemas/package-schemas/SCHEMAS_README.md` - Complete 16 schema overview
-- **Package Inventory**: [PACKAGES_INVENTORY.md](./PACKAGES_INVENTORY.md) - All 62 packages with files
-- **Package Guide**: [PACKAGE_INVENTORY_GUIDE.md](./PACKAGE_INVENTORY_GUIDE.md) - How to use package.json files section
-- **Seed Schemas**: `schemas/SEED_SCHEMAS.md` - Seed data validation & entity types
-- **Root Schemas**: `schemas/README.md` - Schema overview & core database structure
-
----
-
-## Development Workflow
-
-### Phase 1: Explore (MANDATORY - Never Skip)
-
-1. **Read Foundation Docs** (15 min)
-   - [ ] `/CLAUDE.md` core principles
-   - [ ] `/AGENTS.md` for your domain
-   - [ ] `/README.md` project overview
-
-2. **Map the Codebase** (30-45 min)
-   - [ ] Use Explore agent to understand structure
-   - [ ] Identify where similar work exists
-   - [ ] Check relevant schemas and types
-   - [ ] Review 2-3 similar implementations
-
-3. **Verify Dependencies** (10 min)
-   - [ ] Build passes: `npm run build`
-   - [ ] Tests pass: `npm run test`
-   - [ ] No blocking issues in `/TECH_DEBT.md`
-
-**Checklist Before Moving to Phase 2:**
-- [ ] You can explain the existing pattern for your task type
-- [ ] You've found 2-3 examples of similar work
-- [ ] You understand the directory structure
-- [ ] You know what schemas/types are involved
-- [ ] You've identified any blockers or dependencies
-
-### Phase 2: Design (Before Coding)
-
-1. **Schema Design** (if needed)
-   - [ ] Update YAML in `/dbal/shared/api/schema/entities/`
-   - [ ] Generate Prisma: `npm --prefix dbal/development run codegen:prisma`
-   - [ ] Create validation schemas in `/schemas/package-schemas/`
-
-2. **Architecture Design**
-   - [ ] Sketch file structure and naming
-   - [ ] Identify multi-tenant filtering points
-   - [ ] Plan rate limiting strategy
-   - [ ] Document any deviations from existing patterns
-
-3. **Get Alignment**
-   - [ ] If patterns unclear, ask for clarification
-   - [ ] If task scope seems large, break it down
-   - [ ] Verify assumptions about dependencies
-
-### Phase 3: Implementation
-
-1. Start Implementation with Code Review Agent proactively
-2. Apply multi-tenant filtering to ALL database queries
-3. Add rate limiting to sensitive endpoints
-4. Follow one-function-per-file pattern
-5. Use JSON Script for business logic, not TypeScript
-
-### Before Committing
-
-- [ ] TypeScript compiles: `npm run typecheck`
-- [ ] Tests pass (99%+): `npm run test:e2e`
-- [ ] Build succeeds: `npm run build`
-- [ ] **One function per file** rule followed
-- [ ] **Multi-tenant filtering** applied everywhere (tenantId check)
-- [ ] **Rate limiting** on sensitive endpoints
-- [ ] **No Prisma direct usage** (use DBAL)
-- [ ] **Business logic in JSON Script**, not TypeScript
-- [ ] Documentation updated
-- [ ] Code review completed
+**Full workflow details**: [docs/CLAUDE.md](./docs/CLAUDE.md)
 
 ---
 
 **Status**: Production Ready (Phase 2 Complete)
 **Next**: Universal Platform - Core Infrastructure (State Machine, Command Bus, Event Stream, VFS, Frontend Bus)
-
