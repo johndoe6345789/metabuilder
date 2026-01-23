@@ -628,8 +628,29 @@ From [.github/workflows/README.md](./.github/workflows/README.md):
 
 ## Project Organization Guidelines
 
-### Root-Level Docs
+### Root Directory (Clean)
+Keep project root minimal - only essential files:
+- Configuration: `.env.local`, `.gitignore`, `.npmrc`, `lefthook.yml`
+- CI/CD: `Jenkinsfile`, `.gitlab-ci.yml`
+- Build: `docker-compose.ghcr.yml`, `.dockerignore`
+- Package: `package.json`, `package-lock.json`
+- Testing: `playwright.config.ts`
+- Docs: `CLAUDE.md` (AI Assistant Guide)
+
+**Rule**: Move one-off scripts and old reports to `/txt/` folder
+
+### Task Lists & Reports (`/txt/`)
+For progress tracking, analysis documents, and delivery summaries:
+- Current task lists (dated: `TASKNAME_2026-01-23.txt`)
+- Dependency update reports
+- Delivery and audit summaries
+- Old reports archived with clear purpose
+
+See: `txt/README.md` for organization guide
+
+### Root-Level Docs (`/docs/`)
 Keep `/docs/` focused on project-wide guidance:
+- Core principles and patterns
 - Architecture documentation
 - Setup and installation
 - Development workflows
@@ -642,7 +663,8 @@ Each standalone subproject maintains its own `/docs/` folder:
 - `codegen/docs/` - CodeForge IDE documentation
 - `gameengine/docs/` - Game engine technical details
 - `postgres/docs/` - PostgreSQL dashboard guides
-- etc.
+- `fakemui/docs/` - Component library guides
+- `packages/*/docs/` - Package-specific documentation
 
 **Rule**: New detailed documentation → place in subproject `/docs/`, not root
 
@@ -652,6 +674,7 @@ Each standalone subproject maintains its own `/docs/` folder:
 - **Component categorization** - atoms/, inputs/, surfaces/, navigation/, etc.
 - **Preserve legacy code** - in legacy/ or archived folders with clear purpose
 - **Keep things browseable** - short file lists per directory
+- **Clean root** - move reports and utilities out of project root
 
 ---
 
