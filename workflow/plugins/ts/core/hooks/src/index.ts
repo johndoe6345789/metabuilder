@@ -3,7 +3,7 @@
  * Provides hook-like state management operations in workflow DAG context
  *
  * Mirrors @metabuilder/hooks API but for server-side workflow execution
- * Supports: useCounter, useToggle, useStateWithHistory, useValidation, useArray, useSet, useMap
+ * Supports: useCounter, useToggle, useStateWithHistory, useValidation, useArray, useSet, useMap, useStack, useQueue
  */
 
 import {
@@ -13,7 +13,7 @@ import {
   ExecutionState,
   NodeResult,
   ValidationResult
-} from '@metabuilder/workflow'
+} from '../../../../../../../executor/ts/types'
 
 export interface HookState {
   [key: string]: any
@@ -30,7 +30,6 @@ export interface HookState {
  */
 export class WorkflowHooksExecutor implements INodeExecutor {
   readonly nodeType = 'hook'
-  readonly category = 'core'
   readonly description = 'Hook-like state management operations (useCounter, useToggle, useStateWithHistory, etc.)'
 
   async execute(
@@ -41,39 +40,105 @@ export class WorkflowHooksExecutor implements INodeExecutor {
     const { hookType, operation, ...params } = node.parameters
 
     if (!hookType) {
-      throw new Error('Hook node requires "hookType" parameter')
+      return {
+        status: 'error',
+        error: 'Hook node requires "hookType" parameter',
+        errorCode: 'MISSING_HOOK_TYPE',
+        timestamp: Date.now()
+      }
     }
 
     try {
+      let result: any
       switch (hookType) {
         case 'useCounter':
-          return this.useCounter(operation, params, state)
+          result = this.useCounter(operation, params, state)
+          break
         case 'useToggle':
-          return this.useToggle(operation, params, state)
+          result = this.useToggle(operation, params, state)
+          break
         case 'useStateWithHistory':
-          return this.useStateWithHistory(operation, params, state)
+          result = this.useStateWithHistory(operation, params, state)
+          break
         case 'useValidation':
-          return this.useValidation(operation, params, state)
+          result = this.useValidation(operation, params, state)
+          break
         case 'useArray':
-          return this.useArray(operation, params, state)
+          result = this.useArray(operation, params, state)
+          break
         case 'useSet':
-          return this.useSet(operation, params, state)
+          result = this.useSet(operation, params, state)
+          break
         case 'useMap':
-          return this.useMap(operation, params, state)
+          result = this.useMap(operation, params, state)
+          break
         case 'useStack':
-          return this.useStack(operation, params, state)
+          result = this.useStack(operation, params, state)
+          break
         case 'useQueue':
-          return this.useQueue(operation, params, state)
+          result = this.useQueue(operation, params, state)
+          break
         default:
           throw new Error(`Unknown hook type: ${hookType}`)
       }
+
+      return {
+        status: 'success',
+        output: result,
+        outputData: result,
+        timestamp: Date.now()
+      }
     } catch (error) {
       return {
-        result: null,
+        status: 'error',
         error: error instanceof Error ? error.message : String(error),
-        hookType,
-        operation
+        errorCode: 'HOOK_EXECUTION_ERROR',
+        timestamp: Date.now()
       }
+    }
+  }
+
+  validate(node: WorkflowNode): ValidationResult {
+    const errors: string[] = []
+    const warnings: string[] = []
+
+    if (!node.parameters?.hookType) {
+      errors.push('Hook node requires "hookType" parameter')
+    }
+
+    if (!node.parameters?.operation) {
+      errors.push('Hook node requires "operation" parameter')
+    }
+
+    if (!node.parameters?.key) {
+      warnings.push('Hook node should have a "key" parameter to persist state')
+    }
+
+    const validHooks = [
+      'useCounter',
+      'useToggle',
+      'useStateWithHistory',
+      'useValidation',
+      'useArray',
+      'useSet',
+      'useMap',
+      'useStack',
+      'useQueue'
+    ]
+
+    if (
+      node.parameters?.hookType &&
+      !validHooks.includes(node.parameters.hookType)
+    ) {
+      errors.push(
+        `Unknown hook type: ${node.parameters.hookType}. Valid types: ${validHooks.join(', ')}`
+      )
+    }
+
+    return {
+      valid: errors.length === 0,
+      errors,
+      warnings
     }
   }
 
@@ -81,7 +146,7 @@ export class WorkflowHooksExecutor implements INodeExecutor {
    * useCounter - Counter state management
    * Operations: increment, decrement, set, reset
    */
-  private useCounter(operation: string, params: any, state: ExecutionState) {
+  private useCounter(operation: string, params: any, state: any) {
     const { key = 'counter', initial = 0, min = -Infinity, max = Infinity } = params
     const current = state[key] ?? initial
 
@@ -129,7 +194,7 @@ export class WorkflowHooksExecutor implements INodeExecutor {
    * useToggle - Boolean state management
    * Operations: toggle, setTrue, setFalse, set, reset
    */
-  private useToggle(operation: string, params: any, state: ExecutionState) {
+  private useToggle(operation: string, params: any, state: any) {
     const { key = 'toggle', initial = false } = params
     const current = state[key] ?? initial
 
@@ -173,7 +238,7 @@ export class WorkflowHooksExecutor implements INodeExecutor {
    * useStateWithHistory - State with undo/redo
    * Operations: set, undo, redo, reset, getHistory
    */
-  private useStateWithHistory(operation: string, params: any, state: ExecutionState) {
+  private useStateWithHistory(operation: string, params: any, state: any) {
     const { key = 'history', maxHistory = 50 } = params
     const historyState = state[key] ?? {
       states: [params.initial ?? null],
@@ -255,7 +320,7 @@ export class WorkflowHooksExecutor implements INodeExecutor {
    * useValidation - Field validation
    * Operations: validate, addRule, clearErrors
    */
-  private useValidation(operation: string, params: any, state: ExecutionState) {
+  private useValidation(operation: string, params: any, state: any) {
     const { key = 'validation', values = {}, rules = {} } = params
     const validationState = state[key] ?? { rules: {} }
 
@@ -306,7 +371,7 @@ export class WorkflowHooksExecutor implements INodeExecutor {
    * useArray - Array operations
    * Operations: push, pop, shift, unshift, insert, remove, removeAt, clear, filter, map
    */
-  private useArray(operation: string, params: any, state: ExecutionState) {
+  private useArray(operation: string, params: any, state: any) {
     const { key = 'array', initialValue = [] } = params
     const current = state[key] ?? initialValue
     const arr = Array.isArray(current) ? current : []
@@ -340,7 +405,7 @@ export class WorkflowHooksExecutor implements INodeExecutor {
    * useSet - Set operations
    * Operations: add, remove, has, toggle, clear
    */
-  private useSet(operation: string, params: any, state: ExecutionState) {
+  private useSet(operation: string, params: any, state: any) {
     const { key = 'set', initialValue = [] } = params
     const current = state[key] ?? initialValue
     const set = new Set(current)
@@ -373,7 +438,7 @@ export class WorkflowHooksExecutor implements INodeExecutor {
    * useMap - Map operations
    * Operations: set, get, delete, has, clear, entries, keys, values
    */
-  private useMap(operation: string, params: any, state: ExecutionState) {
+  private useMap(operation: string, params: any, state: any) {
     const { key = 'map', initialValue = {} } = params
     const current = state[key] ?? initialValue
     const map = new Map(Object.entries(current))
@@ -407,7 +472,7 @@ export class WorkflowHooksExecutor implements INodeExecutor {
    * useStack - LIFO stack operations
    * Operations: push, pop, peek, clear
    */
-  private useStack(operation: string, params: any, state: ExecutionState) {
+  private useStack(operation: string, params: any, state: any) {
     const { key = 'stack', initialValue = [] } = params
     const current = state[key] ?? initialValue
     const stack = Array.isArray(current) ? current : []
@@ -430,7 +495,7 @@ export class WorkflowHooksExecutor implements INodeExecutor {
    * useQueue - FIFO queue operations
    * Operations: enqueue, dequeue, peek, clear
    */
-  private useQueue(operation: string, params: any, state: ExecutionState) {
+  private useQueue(operation: string, params: any, state: any) {
     const { key = 'queue', initialValue = [] } = params
     const current = state[key] ?? initialValue
     const queue = Array.isArray(current) ? current : []
