@@ -1,0 +1,76 @@
+entity: EmailAttachment
+version: "1.0"
+package: email_client
+description: "Email attachment metadata"
+
+fields:
+  id:
+    type: cuid
+    primary: true
+    generated: true
+
+  tenantId:
+    type: uuid
+    required: true
+    index: true
+
+  messageId:
+    type: uuid
+    required: true
+    index: true
+    description: "FK to EmailMessage"
+
+  filename:
+    type: string
+    required: true
+    description: "Original filename"
+
+  mimeType:
+    type: string
+    required: true
+    description: "MIME type (e.g., image/png, application/pdf)"
+
+  size:
+    type: bigint
+    required: true
+    description: "File size in bytes"
+
+  contentId:
+    type: string
+    nullable: true
+    description: "Content-ID for embedded attachments"
+
+  isInline:
+    type: boolean
+    default: false
+    description: "Inline vs attachment"
+
+  storageKey:
+    type: string
+    required: true
+    unique: true
+    description: "S3/blob storage key for download"
+
+  downloadUrl:
+    type: string
+    nullable: true
+    description: "Pre-signed download URL (expires)"
+
+  createdAt:
+    type: bigint
+    generated: true
+
+indexes:
+  - fields: [messageId]
+    name: message_attachments_idx
+  - fields: [tenantId, messageId]
+    name: tenant_message_idx
+
+acl:
+  read:
+    self: true
+    row_level: "messageId IN (SELECT id FROM EmailMessage WHERE emailClientId IN (SELECT id FROM EmailClient WHERE userId = $user.id AND tenantId = $context.tenantId))"
+  create:
+    system: true
+  update: false
+  delete: false
