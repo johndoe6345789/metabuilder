@@ -1,0 +1,170 @@
+entity: EmailMessage
+version: "1.0"
+package: email_client
+description: "Email message stored in folder"
+
+fields:
+  id:
+    type: cuid
+    primary: true
+    generated: true
+
+  tenantId:
+    type: uuid
+    required: true
+    index: true
+
+  emailClientId:
+    type: uuid
+    required: true
+    index: true
+    description: "FK to EmailClient"
+
+  folderId:
+    type: uuid
+    required: true
+    index: true
+    description: "FK to EmailFolder"
+
+  messageId:
+    type: string
+    required: true
+    description: "RFC 5322 Message-ID header"
+
+  imapUid:
+    type: string
+    nullable: true
+    description: "IMAP UID for sync tracking"
+
+  from:
+    type: string
+    required: true
+    description: "Sender email address"
+
+  to:
+    type: json
+    required: true
+    description: "Recipient addresses (JSON array of strings)"
+
+  cc:
+    type: json
+    nullable: true
+    description: "CC recipients (JSON array)"
+
+  bcc:
+    type: json
+    nullable: true
+    description: "BCC recipients (JSON array)"
+
+  replyTo:
+    type: string
+    nullable: true
+    description: "Reply-To header"
+
+  subject:
+    type: string
+    max_length: 500
+    description: "Email subject"
+
+  textBody:
+    type: text
+    nullable: true
+    description: "Plain text version"
+
+  htmlBody:
+    type: text
+    nullable: true
+    description: "HTML version (sanitized)"
+
+  headers:
+    type: json
+    nullable: true
+    description: "All headers as JSON object"
+
+  receivedAt:
+    type: bigint
+    required: true
+    index: true
+    description: "Message timestamp (ms)"
+
+  isRead:
+    type: boolean
+    default: false
+    index: true
+    description: "Read/unread flag"
+
+  isStarred:
+    type: boolean
+    default: false
+    index: true
+    description: "Starred/flagged status"
+
+  isSpam:
+    type: boolean
+    default: false
+    description: "Marked as spam"
+
+  isDraft:
+    type: boolean
+    default: false
+    description: "Draft message"
+
+  isSent:
+    type: boolean
+    default: false
+    description: "Sent message"
+
+  isDeleted:
+    type: boolean
+    default: false
+    description: "Soft-delete flag"
+
+  attachmentCount:
+    type: int
+    default: 0
+    description: "Number of attachments"
+
+  conversationId:
+    type: uuid
+    nullable: true
+    index: true
+    description: "FK to conversation thread (for grouping)"
+
+  labels:
+    type: json
+    nullable: true
+    description: "Custom labels (JSON array)"
+
+  size:
+    type: bigint
+    nullable: true
+    description: "Message size in bytes"
+
+  createdAt:
+    type: bigint
+    generated: true
+
+  updatedAt:
+    type: bigint
+    generated: true
+
+indexes:
+  - fields: [emailClientId, folderId, receivedAt]
+    name: client_folder_date_idx
+  - fields: [tenantId, isRead, receivedAt]
+    name: unread_date_idx
+  - fields: [conversationId]
+    name: conversation_idx
+
+acl:
+  read:
+    self: true
+    row_level: "emailClientId IN (SELECT id FROM EmailClient WHERE userId = $user.id AND tenantId = $context.tenantId)"
+  create:
+    self: true
+    row_level: "emailClientId IN (SELECT id FROM EmailClient WHERE userId = $user.id)"
+  update:
+    self: true
+    row_level: "emailClientId IN (SELECT id FROM EmailClient WHERE userId = $user.id)"
+    writable_fields: [isRead, isStarred, isSpam, labels]
+  delete: false  # Soft-delete via isDeleted flag
