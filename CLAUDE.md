@@ -6,6 +6,16 @@
 **Philosophy**: 95% JSON/YAML configuration, 5% TypeScript/C++ infrastructure
 
 **Recent Updates** (Jan 23, 2026):
+- **Email Client Implementation** (🚀 IN PROGRESS - Planning Complete):
+  - Comprehensive implementation plan created: `docs/plans/2026-01-23-email-client-implementation.md`
+  - Architecture: Minimal Next.js bootloader (`emailclient/`) + declarative package system
+  - DBAL Schemas: 4 entities (EmailClient, EmailFolder, EmailMessage, EmailAttachment)
+  - FakeMUI Components: 22 components across 8 categories (atoms, inputs, surfaces, data-display, feedback, layout, navigation)
+  - Redux: Email state slices for list, detail, compose, filters
+  - Custom Hooks: 6 hooks for email operations (sync, store, mailboxes, accounts, compose, messages)
+  - Backend: Python email service with IMAP/SMTP/POP3 support, Celery background jobs
+  - Workflow Plugins: IMAP sync, search, email parsing plugins
+  - Status: Phase 1-2 planning complete, ready for implementation
 - **Mojo Compiler Integration** (✅ COMPLETE):
   - Integrated full Mojo compiler from modular repo (21 source files, 952K)
   - Architecture: 5 phases (frontend, semantic, IR, codegen, runtime)
@@ -53,6 +63,7 @@
 | Document | Location | Purpose |
 |----------|----------|---------|
 | **Core Development Guide** | [docs/CLAUDE.md](./docs/CLAUDE.md) | Full development principles, patterns, workflows |
+| **Email Client Plan** | [docs/plans/2026-01-23-email-client-implementation.md](./docs/plans/2026-01-23-email-client-implementation.md) | Email client implementation phases 1-8 |
 | **WorkflowUI Frontend** | [workflowui/](./workflowui/) | Frontend app using FakeMUI + Redux |
 | **CodeForge IDE Guide** | [codegen/CLAUDE.md](./codegen/CLAUDE.md) | JSON-to-React migration, component system |
 | **Pastebin Conventions** | [pastebin/CLAUDE.md](./pastebin/CLAUDE.md) | Documentation file organization |
@@ -71,7 +82,9 @@
 | `packages/` | 550 | Core | 62 modular feature packages |
 | `schemas/` | 105 | Core | JSON Schema validation |
 | `services/` | 29 | Core | Media daemon (FFmpeg/ImageMagick) |
+| `services/email_service/` | TBD | Core | Email service (IMAP/SMTP/POP3, Python Flask) |
 | `prisma/` | 1 | Core | Prisma schema configuration |
+| `emailclient/` | TBD | App Dev | Email client bootloader (minimal Next.js harness) |
 | `exploded-diagrams/` | 17,565 | Standalone | Interactive 3D exploded diagrams (Next.js + JSCAD) |
 | `gameengine/` | 2,737 | Standalone | SDL3/bgfx 2D/3D game engine |
 | `codegen/` | 1,926 | Standalone | CodeForge IDE (React+Monaco) |
@@ -254,9 +267,17 @@ fakemui/
 └── legacy/             # Legacy utilities and migrations
 ```
 
-**Component Coverage**: 145 total components across 9 categories
+**Component Coverage**: 167 total components across 11 categories (145 core + 22 email)
 **Usage**: Import from `@metabuilder/fakemui` - all components exported from `index.ts`
 **Status**: ✅ Production-ready, actively used in workflowui
+**Email Components** (Jan 23, 2026 - 22 new components):
+- **Atoms** (3): AttachmentIcon, StarButton, MarkAsReadCheckbox
+- **Inputs** (3): EmailAddressInput, RecipientInput, BodyEditor
+- **Surfaces** (4): EmailCard, MessageThread, ComposeWindow, SignatureCard
+- **Data-Display** (4): AttachmentList, EmailHeader, FolderTree, ThreadList
+- **Feedback** (2): SyncStatusBadge, SyncProgress
+- **Layout** (3): MailboxLayout, ComposerLayout, SettingsLayout
+- **Navigation** (2): AccountTabs, FolderNavigation
 **See**: [fakemui/STRUCTURE.md](./fakemui/STRUCTURE.md) for detailed layout and component mapping
 
 ### React Hooks (`hooks/`)
@@ -354,6 +375,70 @@ const form = useFormBuilder({ initialValues: {}, onSubmit: submitForm })
 ```
 
 **Active Users**: workflowui, frontends/nextjs, codegen, pastebin, frontends/dbal
+
+### Email Client Architecture (NEW - Jan 23, 2026)
+
+**Status**: Implementation Plan Complete, Ready for Phase-by-Phase Execution
+
+**Components**:
+1. **DBAL Schemas** (4 entities): EmailClient, EmailFolder, EmailMessage, EmailAttachment
+   - Location: `dbal/shared/api/schema/entities/packages/`
+   - Multi-tenant: Every entity has `tenantId` index + row-level ACL
+   - Credentials: FK to existing Credential entity (SHA-512 encryption)
+
+2. **FakeMUI Email Components** (22 components in `fakemui/react/components/email/`)
+   - **Atoms** (3): Icon, Button, Checkbox
+   - **Inputs** (3): Address, Recipients, BodyEditor
+   - **Surfaces** (4): Card, Thread, Compose, Signature
+   - **Data-Display** (4): Attachments, Header, FolderTree, ThreadList
+   - **Feedback** (2): SyncBadge, SyncProgress
+   - **Layout** (3): Mailbox, Composer, Settings
+   - **Navigation** (2): AccountTabs, FolderNavigation
+
+3. **Redux State Slices** (NEW package `redux/email/`):
+   - `emailListSlice` - Message list + pagination + filtering
+   - `emailDetailSlice` - Selected message + thread view
+   - `emailComposeSlice` - Draft management + recipients
+   - `emailFiltersSlice` - Saved filters + search queries
+
+4. **Custom Hooks** (NEW: `hooks/email/`):
+   - `useEmailSync()` - Trigger/monitor IMAP sync
+   - `useEmailStore()` - IndexedDB offline cache
+   - `useMailboxes()` - Folder hierarchy
+   - `useAccounts()` - Email account list
+   - `useCompose()` - Compose form state
+   - `useMessages()` - Message CRUD
+
+5. **Email Package** (`packages/email_client/`):
+   - Page-config: Routes `/email/inbox`, `/email/compose`, `/email/settings`
+   - Workflows: Send, Fetch, Mark-as-read via JSON Script
+   - Permissions: User creates/reads own emails, admin full access
+
+6. **Workflow Plugins** (`workflow/plugins/ts/integration/email/`):
+   - `imap-sync` - Incremental sync from IMAP server
+   - `imap-search` - Full-text search via IMAP
+   - `email-parser` - RFC 5322 parsing, HTML sanitization
+
+7. **Backend Email Service** (`services/email_service/`):
+   - Python Flask API for account management
+   - IMAP/POP3/SMTP protocol handlers
+   - Celery background jobs for sync/send
+   - S3/blob storage for attachments
+
+8. **Email Client Bootloader** (`emailclient/`):
+   - Minimal Next.js dev harness
+   - Loads `packages/email_client/` declaratively
+   - Docker Compose: Postfix/Dovecot for local testing
+   - Redux + hooks wiring
+
+**Development Plan**: See [docs/plans/2026-01-23-email-client-implementation.md](./docs/plans/2026-01-23-email-client-implementation.md)
+
+**Key Patterns**:
+- Multi-tenant: All queries filter by `tenantId` + user-owned ACL
+- Soft delete: Messages marked `isDeleted` instead of purged
+- Offline support: IndexedDB for message cache + draft storage
+- Async operations: Celery for long-running sync/send
+- Security: Credentials encrypted, passwords never returned from API
 
 ---
 
