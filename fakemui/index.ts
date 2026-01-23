@@ -271,3 +271,6 @@ export type {
   AccessibilityComponent,
   AccessibilityAction,
 } from './src/utils/accessibility'
+
+// Email Components
+export * from './react/components/email'
