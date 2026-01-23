@@ -58,11 +58,11 @@ class Workflow(db.Model):
 
     # Indexes for efficient querying
     __table_args__ = (
-        db.Index('idx_tenant_id', 'tenant_id'),
-        db.Index('idx_tenant_name', 'tenant_id', 'name'),
-        db.Index('idx_project_id', 'project_id'),
-        db.Index('idx_workspace_id', 'workspace_id'),
-        db.Index('idx_tenant_project', 'tenant_id', 'project_id'),
+        db.Index('idx_workflow_tenant_id', 'tenant_id'),
+        db.Index('idx_workflow_tenant_name', 'tenant_id', 'name'),
+        db.Index('idx_workflow_project_id', 'project_id'),
+        db.Index('idx_workflow_workspace_id', 'workspace_id'),
+        db.Index('idx_workflow_tenant_project', 'tenant_id', 'project_id'),
     )
 
     def to_dict(self) -> Dict[str, Any]:
@@ -130,9 +130,9 @@ class Execution(db.Model):
 
     # Indexes for efficient querying
     __table_args__ = (
-        db.Index('idx_workflow_id', 'workflow_id'),
-        db.Index('idx_tenant_workflow', 'tenant_id', 'workflow_id'),
-        db.Index('idx_status', 'status'),
+        db.Index('idx_execution_workflow_id', 'workflow_id'),
+        db.Index('idx_execution_tenant_workflow', 'tenant_id', 'workflow_id'),
+        db.Index('idx_execution_status', 'status'),
     )
 
     def to_dict(self) -> Dict[str, Any]:
@@ -241,9 +241,9 @@ class AuditLog(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 
     __table_args__ = (
-        db.Index('idx_workflow_id', 'workflow_id'),
-        db.Index('idx_tenant_id', 'tenant_id'),
-        db.Index('idx_action', 'action'),
+        db.Index('idx_audit_workflow_id', 'workflow_id'),
+        db.Index('idx_audit_tenant_id', 'tenant_id'),
+        db.Index('idx_audit_action', 'action'),
     )
 
     def to_dict(self) -> Dict[str, Any]:
@@ -281,7 +281,7 @@ class Workspace(db.Model):
     projects = db.relationship('Project', backref='workspace', cascade='all, delete-orphan', lazy=True)
 
     __table_args__ = (
-        db.Index('idx_tenant_id', 'tenant_id'),
+        db.Index('idx_workspace_tenant_id', 'tenant_id'),
     )
 
     def to_dict(self) -> Dict[str, Any]:
@@ -332,10 +332,10 @@ class Project(db.Model):
     canvas_items = db.relationship('ProjectCanvasItem', backref='project', cascade='all, delete-orphan', lazy=True)
 
     __table_args__ = (
-        db.Index('idx_workspace_id', 'workspace_id'),
-        db.Index('idx_tenant_id', 'tenant_id'),
-        db.Index('idx_starred', 'starred'),
-        db.Index('idx_tenant_workspace', 'tenant_id', 'workspace_id'),
+        db.Index('idx_project_workspace_id', 'workspace_id'),
+        db.Index('idx_project_tenant_id', 'tenant_id'),
+        db.Index('idx_project_starred', 'starred'),
+        db.Index('idx_project_tenant_workspace', 'tenant_id', 'workspace_id'),
     )
 
     def to_dict(self) -> Dict[str, Any]:
@@ -388,9 +388,9 @@ class ProjectCanvasItem(db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
     __table_args__ = (
-        db.Index('idx_project_id', 'project_id'),
-        db.Index('idx_workflow_id', 'workflow_id'),
-        db.Index('idx_project_workflow', 'project_id', 'workflow_id'),
+        db.Index('idx_canvas_project_id', 'project_id'),
+        db.Index('idx_canvas_workflow_id', 'workflow_id'),
+        db.Index('idx_canvas_project_workflow', 'project_id', 'workflow_id'),
     )
 
     def to_dict(self) -> Dict[str, Any]:
