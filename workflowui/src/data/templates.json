@@ -1,0 +1,433 @@
+{
+  "version": "1.0.0",
+  "templates": [
+    {
+      "id": "email-automation",
+      "name": "Email Automation",
+      "description": "Automated email workflows with scheduling and personalization",
+      "longDescription": "Complete email automation solution with support for scheduled sends, personalization tokens, A/B testing, and detailed analytics. Perfect for marketing campaigns, newsletters, and transactional emails.",
+      "category": "automation",
+      "icon": "📧",
+      "color": "#FF6B6B",
+      "difficulty": "beginner",
+      "tags": ["email", "marketing", "automation", "scheduling"],
+      "workflows": [
+        {
+          "name": "Send Welcome Email",
+          "description": "Welcome email on user registration",
+          "nodes": [
+            { "id": "trigger", "type": "event", "label": "User Registered" },
+            { "id": "template", "type": "operation", "label": "Load Email Template" },
+            { "id": "personalize", "type": "operation", "label": "Personalize Content" },
+            { "id": "send", "type": "action", "label": "Send Email" },
+            { "id": "log", "type": "operation", "label": "Log Activity" }
+          ],
+          "connections": [
+            { "source": "trigger", "target": "template" },
+            { "source": "template", "target": "personalize" },
+            { "source": "personalize", "target": "send" },
+            { "source": "send", "target": "log" }
+          ]
+        },
+        {
+          "name": "Scheduled Newsletter",
+          "description": "Weekly newsletter distribution",
+          "nodes": [
+            { "id": "schedule", "type": "trigger", "label": "Weekly Timer" },
+            { "id": "fetch", "type": "operation", "label": "Fetch Content" },
+            { "id": "format", "type": "operation", "label": "Format Newsletter" },
+            { "id": "send", "type": "action", "label": "Send to List" },
+            { "id": "track", "type": "operation", "label": "Track Metrics" }
+          ],
+          "connections": [
+            { "source": "schedule", "target": "fetch" },
+            { "source": "fetch", "target": "format" },
+            { "source": "format", "target": "send" },
+            { "source": "send", "target": "track" }
+          ]
+        }
+      ],
+      "metadata": {
+        "author": "MetaBuilder Team",
+        "version": "1.0",
+        "createdAt": 1674086400000,
+        "updatedAt": 1674086400000,
+        "downloads": 1240,
+        "rating": 4.8,
+        "featured": true
+      },
+      "preview": {
+        "description": "Set up complete email automation in minutes"
+      }
+    },
+    {
+      "id": "data-pipeline",
+      "name": "Data Pipeline",
+      "description": "ETL pipeline for data extraction, transformation, and loading",
+      "longDescription": "Production-grade data pipeline with support for multiple data sources, complex transformations, error handling, and retry logic. Includes monitoring, logging, and data quality checks.",
+      "category": "data-processing",
+      "icon": "📊",
+      "color": "#4ECDC4",
+      "difficulty": "advanced",
+      "tags": ["data", "etl", "transformation", "pipeline", "integration"],
+      "workflows": [
+        {
+          "name": "CSV to Database",
+          "description": "Import CSV data to database with validation",
+          "nodes": [
+            { "id": "fetch", "type": "operation", "label": "Fetch CSV" },
+            { "id": "parse", "type": "operation", "label": "Parse Data" },
+            { "id": "validate", "type": "operation", "label": "Validate Schema" },
+            { "id": "transform", "type": "operation", "label": "Transform Fields" },
+            { "id": "load", "type": "action", "label": "Load to DB" },
+            { "id": "report", "type": "operation", "label": "Generate Report" }
+          ],
+          "connections": [
+            { "source": "fetch", "target": "parse" },
+            { "source": "parse", "target": "validate" },
+            { "source": "validate", "target": "transform" },
+            { "source": "transform", "target": "load" },
+            { "source": "load", "target": "report" }
+          ]
+        }
+      ],
+      "metadata": {
+        "author": "MetaBuilder Team",
+        "version": "1.0",
+        "createdAt": 1674086400000,
+        "updatedAt": 1674086400000,
+        "downloads": 856,
+        "rating": 4.7,
+        "featured": true
+      },
+      "preview": {
+        "description": "Transform raw data into insights automatically"
+      }
+    },
+    {
+      "id": "slack-notification",
+      "name": "Slack Notifications",
+      "description": "Real-time Slack notifications for events and alerts",
+      "longDescription": "Send rich, formatted Slack notifications with attachments, interactive buttons, and threading support. Monitor events, alerts, and automated actions with real-time Slack updates.",
+      "category": "communication",
+      "icon": "💬",
+      "color": "#36C5F0",
+      "difficulty": "beginner",
+      "tags": ["slack", "notification", "communication", "alerts"],
+      "workflows": [
+        {
+          "name": "Alert to Slack",
+          "description": "Send alerts to Slack channel",
+          "nodes": [
+            { "id": "trigger", "type": "event", "label": "Alert Event" },
+            { "id": "format", "type": "operation", "label": "Format Message" },
+            { "id": "send", "type": "action", "label": "Send to Slack" },
+            { "id": "log", "type": "operation", "label": "Log Notification" }
+          ],
+          "connections": [
+            { "source": "trigger", "target": "format" },
+            { "source": "format", "target": "send" },
+            { "source": "send", "target": "log" }
+          ]
+        }
+      ],
+      "metadata": {
+        "author": "MetaBuilder Team",
+        "version": "1.0",
+        "createdAt": 1674086400000,
+        "updatedAt": 1674086400000,
+        "downloads": 2100,
+        "rating": 4.9,
+        "featured": true
+      },
+      "preview": {
+        "description": "Keep your team instantly informed with Slack"
+      }
+    },
+    {
+      "id": "api-monitoring",
+      "name": "API Monitoring",
+      "description": "Monitor API endpoints with health checks and alerting",
+      "longDescription": "Comprehensive API monitoring solution with periodic health checks, response time tracking, error rate monitoring, and multi-channel alerting for critical issues.",
+      "category": "monitoring",
+      "icon": "🔍",
+      "color": "#95E1D3",
+      "difficulty": "intermediate",
+      "tags": ["monitoring", "api", "health-check", "alerts"],
+      "workflows": [
+        {
+          "name": "API Health Check",
+          "description": "Monitor API endpoint health every 5 minutes",
+          "nodes": [
+            { "id": "timer", "type": "trigger", "label": "5-min Timer" },
+            { "id": "request", "type": "operation", "label": "Ping API" },
+            { "id": "check", "type": "operation", "label": "Check Status" },
+            { "id": "alert", "type": "action", "label": "Alert if Down" },
+            { "id": "metrics", "type": "operation", "label": "Update Metrics" }
+          ],
+          "connections": [
+            { "source": "timer", "target": "request" },
+            { "source": "request", "target": "check" },
+            { "source": "check", "target": "alert" },
+            { "source": "check", "target": "metrics" }
+          ]
+        }
+      ],
+      "metadata": {
+        "author": "MetaBuilder Team",
+        "version": "1.0",
+        "createdAt": 1674086400000,
+        "updatedAt": 1674086400000,
+        "downloads": 634,
+        "rating": 4.6,
+        "featured": false
+      },
+      "preview": {
+        "description": "Ensure maximum uptime with continuous monitoring"
+      }
+    },
+    {
+      "id": "cms-content-sync",
+      "name": "CMS Content Sync",
+      "description": "Synchronize content between CMS and external platforms",
+      "longDescription": "Bidirectional content synchronization between your CMS and various platforms. Support for drafts, publishing, versioning, and rollback capabilities.",
+      "category": "integration",
+      "icon": "📝",
+      "color": "#F38181",
+      "difficulty": "advanced",
+      "tags": ["cms", "content", "sync", "integration"],
+      "workflows": [
+        {
+          "name": "Publish Content",
+          "description": "Publish CMS content to web",
+          "nodes": [
+            { "id": "trigger", "type": "event", "label": "Content Published" },
+            { "id": "fetch", "type": "operation", "label": "Fetch Content" },
+            { "id": "validate", "type": "operation", "label": "Validate" },
+            { "id": "deploy", "type": "action", "label": "Deploy" }
+          ],
+          "connections": [
+            { "source": "trigger", "target": "fetch" },
+            { "source": "fetch", "target": "validate" },
+            { "source": "validate", "target": "deploy" }
+          ]
+        }
+      ],
+      "metadata": {
+        "author": "MetaBuilder Team",
+        "version": "1.0",
+        "createdAt": 1674086400000,
+        "updatedAt": 1674086400000,
+        "downloads": 342,
+        "rating": 4.5,
+        "featured": false
+      },
+      "preview": {
+        "description": "Keep all your content platforms synchronized"
+      }
+    },
+    {
+      "id": "lead-scoring",
+      "name": "Lead Scoring",
+      "description": "Automated lead scoring and qualification system",
+      "longDescription": "Intelligent lead scoring with configurable rules, engagement tracking, and automatic routing to sales teams. Includes scoring model management and performance analytics.",
+      "category": "crm",
+      "icon": "🎯",
+      "color": "#FFA07A",
+      "difficulty": "intermediate",
+      "tags": ["crm", "leads", "scoring", "automation"],
+      "workflows": [
+        {
+          "name": "Score New Lead",
+          "description": "Calculate lead score on signup",
+          "nodes": [
+            { "id": "trigger", "type": "event", "label": "Lead Signup" },
+            { "id": "fetch", "type": "operation", "label": "Fetch Lead Data" },
+            { "id": "score", "type": "operation", "label": "Calculate Score" },
+            { "id": "route", "type": "action", "label": "Route to Sales" },
+            { "id": "notify", "type": "action", "label": "Notify Team" }
+          ],
+          "connections": [
+            { "source": "trigger", "target": "fetch" },
+            { "source": "fetch", "target": "score" },
+            { "source": "score", "target": "route" },
+            { "source": "score", "target": "notify" }
+          ]
+        }
+      ],
+      "metadata": {
+        "author": "MetaBuilder Team",
+        "version": "1.0",
+        "createdAt": 1674086400000,
+        "updatedAt": 1674086400000,
+        "downloads": 567,
+        "rating": 4.7,
+        "featured": false
+      },
+      "preview": {
+        "description": "Prioritize high-value leads automatically"
+      }
+    },
+    {
+      "id": "inventory-management",
+      "name": "Inventory Management",
+      "description": "Real-time inventory tracking and stock alerts",
+      "longDescription": "Complete inventory management system with real-time stock tracking, low-stock alerts, automatic reorder suggestions, and supplier integration.",
+      "category": "ecommerce",
+      "icon": "📦",
+      "color": "#AA96DA",
+      "difficulty": "intermediate",
+      "tags": ["inventory", "ecommerce", "tracking", "alerts"],
+      "workflows": [
+        {
+          "name": "Stock Low Alert",
+          "description": "Alert when inventory is low",
+          "nodes": [
+            { "id": "check", "type": "trigger", "label": "Check Stock" },
+            { "id": "query", "type": "operation", "label": "Query Database" },
+            { "id": "compare", "type": "operation", "label": "Check Threshold" },
+            { "id": "alert", "type": "action", "label": "Send Alert" },
+            { "id": "suggest", "type": "action", "label": "Suggest Reorder" }
+          ],
+          "connections": [
+            { "source": "check", "target": "query" },
+            { "source": "query", "target": "compare" },
+            { "source": "compare", "target": "alert" },
+            { "source": "alert", "target": "suggest" }
+          ]
+        }
+      ],
+      "metadata": {
+        "author": "MetaBuilder Team",
+        "version": "1.0",
+        "createdAt": 1674086400000,
+        "updatedAt": 1674086400000,
+        "downloads": 423,
+        "rating": 4.6,
+        "featured": false
+      },
+      "preview": {
+        "description": "Never run out of stock with smart tracking"
+      }
+    },
+    {
+      "id": "report-generation",
+      "name": "Report Generation",
+      "description": "Automated report creation and distribution",
+      "longDescription": "Create professional reports automatically with customizable templates, scheduled generation, multi-format output (PDF, Excel, HTML), and email distribution.",
+      "category": "reporting",
+      "icon": "📄",
+      "color": "#FCBAD3",
+      "difficulty": "intermediate",
+      "tags": ["reporting", "automation", "distribution"],
+      "workflows": [
+        {
+          "name": "Weekly Report",
+          "description": "Generate and send weekly report",
+          "nodes": [
+            { "id": "schedule", "type": "trigger", "label": "Weekly Timer" },
+            { "id": "collect", "type": "operation", "label": "Collect Data" },
+            { "id": "generate", "type": "operation", "label": "Generate PDF" },
+            { "id": "send", "type": "action", "label": "Email Report" }
+          ],
+          "connections": [
+            { "source": "schedule", "target": "collect" },
+            { "source": "collect", "target": "generate" },
+            { "source": "generate", "target": "send" }
+          ]
+        }
+      ],
+      "metadata": {
+        "author": "MetaBuilder Team",
+        "version": "1.0",
+        "createdAt": 1674086400000,
+        "updatedAt": 1674086400000,
+        "downloads": 678,
+        "rating": 4.7,
+        "featured": false
+      },
+      "preview": {
+        "description": "Automated reporting on your schedule"
+      }
+    }
+  ],
+  "categories": [
+    {
+      "id": "automation",
+      "name": "Automation",
+      "description": "Streamline repetitive tasks and workflows",
+      "icon": "⚙️",
+      "color": "#667BC6"
+    },
+    {
+      "id": "data-processing",
+      "name": "Data Processing",
+      "description": "ETL and data transformation pipelines",
+      "icon": "📊",
+      "color": "#4ECDC4"
+    },
+    {
+      "id": "integration",
+      "name": "Integration",
+      "description": "Connect and synchronize systems",
+      "icon": "🔗",
+      "color": "#45B7D1"
+    },
+    {
+      "id": "monitoring",
+      "name": "Monitoring",
+      "description": "Track health and performance",
+      "icon": "🔍",
+      "color": "#96CEB4"
+    },
+    {
+      "id": "reporting",
+      "name": "Reporting",
+      "description": "Generate and distribute reports",
+      "icon": "📈",
+      "color": "#FFEAA7"
+    },
+    {
+      "id": "communication",
+      "name": "Communication",
+      "description": "Send notifications and messages",
+      "icon": "💬",
+      "color": "#DDA0DD"
+    },
+    {
+      "id": "content",
+      "name": "Content",
+      "description": "Manage and publish content",
+      "icon": "📝",
+      "color": "#F38181"
+    },
+    {
+      "id": "ecommerce",
+      "name": "E-Commerce",
+      "description": "Online store and sales automation",
+      "icon": "🛍️",
+      "color": "#AA96DA"
+    },
+    {
+      "id": "finance",
+      "name": "Finance",
+      "description": "Financial tracking and analysis",
+      "icon": "💰",
+      "color": "#A8E6CF"
+    },
+    {
+      "id": "crm",
+      "name": "CRM",
+      "description": "Customer relationship management",
+      "icon": "🎯",
+      "color": "#FFA07A"
+    },
+    {
+      "id": "hr",
+      "name": "HR",
+      "description": "Human resources and team management",
+      "icon": "👥",
+      "color": "#FFD3B6"
+    }
+  ]
+}
