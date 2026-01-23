@@ -1,0 +1,9 @@
+/Users/rmac/Documents/metabuilder/dbal/development/package.json,@prisma/adapter-better-sqlite3,^7.2.0 → ^7.3.0,Security patch update for Prisma ORM adapter
+/Users/rmac/Documents/metabuilder/dbal/development/package.json,@prisma/client,^7.2.0 → ^7.3.0,Security patch update for Prisma client
+/Users/rmac/Documents/metabuilder/dbal/development/package.json,prisma,^7.2.0 → ^7.3.0,Security patch update for Prisma CLI
+/Users/rmac/Documents/metabuilder/frontends/nextjs/package.json,next,16.1.2 → 16.1.4,Critical Next.js security patch
+/Users/rmac/Documents/metabuilder/codegen/package.json,react,^19.0.0 → ^19.2.3,React minor version security update
+/Users/rmac/Documents/metabuilder/codegen/package.json,react-dom,^19.0.0 → ^19.2.3,React DOM minor version security update
+/Users/rmac/Documents/metabuilder/codegen/package.json,octokit,^4.1.2 → ^5.0.5,GitHub API client major version security update
+/Users/rmac/Documents/metabuilder/workflowui/package.json,@reduxjs/toolkit,^1.9.7 → ^2.5.2,Redux Toolkit major version security update with breaking changes
+/Users/rmac/Documents/metabuilder/workflowui/package.json,jest,^30.0.0-alpha.6 → ^29.7.0,Jest updated from alpha to stable release

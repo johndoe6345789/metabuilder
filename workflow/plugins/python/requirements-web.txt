@@ -1,0 +1,16 @@
+# Web Plugin Dependencies
+# These dependencies are required for web/* plugins
+# Last Updated: 2026-01-23
+
+# Include base requirements
+-r requirements.txt
+
+# Web framework
+Flask>=3.0.0          # web_create_flask_app: Flask web framework
+Flask-CORS>=4.0.0     # CORS support for Flask applications
+
+# HTTP utilities
+requests>=2.31.0      # HTTP requests for web operations
+
+# Environment management
+python-dotenv>=1.0.0  # For environment variable management

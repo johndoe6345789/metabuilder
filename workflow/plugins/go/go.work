@@ -1,0 +1,19 @@
+go 1.21
+
+use (
+	.
+	./control
+	./convert
+	./core
+	./dict
+	./list
+	./logic
+	./math
+	./notifications
+	./string
+	./test
+	./tools
+	./utils
+	./var
+	./web
+)

@@ -1,0 +1,15 @@
+# Package Repository Plugin Dependencies
+# These dependencies are required for packagerepo/* plugins
+# Last Updated: 2026-01-23
+
+# Include base requirements
+-r requirements.txt
+
+# Data validation and processing
+pydantic>=2.5.0       # Entity validation and data models
+
+# Authentication
+PyJWT>=2.8.1          # JWT token verification for auth_verify_jwt
+
+# HTTP utilities
+requests>=2.31.0      # HTTP requests for package operations

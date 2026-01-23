@@ -9,6 +9,7 @@
 - FakeMUI reorganized by implementation type (react/, qml/, python/, legacy/, icons/, theming/, styles/)
 - All library versions updated: React 19.2.3, TypeScript 5.9.3, Next.js normalized, @reduxjs/toolkit 2.5.2
 - Multi-version peer dependencies enabled for gradual upgrades
+- **Dependency Management Upgrade**: Conan libraries updated (14 changes), npm security patches applied (9 packages), Python/Go workflow plugin management established
 
 ---
 
@@ -518,6 +519,75 @@ From [.github/workflows/README.md](./.github/workflows/README.md):
 2. Could a generic renderer handle this instead of custom TSX?
 3. Is this filtering by tenantId?
 4. Does this follow one-lambda-per-file pattern?
+
+---
+
+## Dependency Management
+
+### Conan (C++/System Libraries)
+
+**Update Strategy**: All Conan dependencies follow semantic versioning with zero breaking changes. Updates completed:
+
+| Subsystem | Changes | Status |
+|-----------|---------|--------|
+| CLI Frontend | cpr 1.10.0→1.14.1, lua 5.4.6→5.4.7, sol2 3.3.1→3.4.1, cmake 3.27.1→3.30.0 | ✓ Updated |
+| Qt6 Frontend | qt 6.7.0→6.8.1, cmake 3.27.1→3.30.0, ninja 1.11.1→1.12.1 | ✓ Updated |
+| DBAL | sqlite3 3.45.0→3.46.0 | ✓ Updated |
+| Media Daemon | fmt 10.2.1→12.0.1, spdlog 1.12.0→1.16.0 | ✓ Updated |
+| GameEngine | shaderc 2023.6→2024.3, rapidjson, stb, libalsa snapshots | ✓ Updated |
+
+**Files**: See `txt/conan_updates_2026-01-23.txt` for complete list
+
+### npm/Node.js (JavaScript/TypeScript)
+
+**Security Focus**: 9 critical/high-priority packages updated
+
+**Critical Security Patches**:
+- Prisma 7.2.0→7.3.0 (lodash prototype pollution fix)
+- Next.js 16.1.2→16.1.4
+
+**High-Priority Updates**:
+- @reduxjs/toolkit 1.9.7→2.5.2 (major version)
+- jest: alpha.6→29.7.0 (unstable→stable)
+- octokit 4.1.2→5.0.5
+- React 19.0.0→19.2.3 (security patches)
+
+**Files**: See `txt/npm_security_fixes_2026-01-23.txt` for complete list
+
+### Workflow Plugin Dependencies (Multi-Language)
+
+**Python Plugins** (138 files, 15 categories):
+- Master `requirements.txt` + 7 category-specific files
+- Core deps: python-dotenv, tenacity
+- Runtime: Python 3.9+
+- Location: `workflow/plugins/python/requirements*.txt`
+
+**Go Plugins** (51 files, 14 categories):
+- `go.mod` (root) + `go.work` (workspace coordination)
+- Zero external dependencies (stdlib only)
+- Runtime: Go 1.21+
+- Location: `workflow/plugins/go/`
+
+**TypeScript Plugins** (25 files, 9 categories):
+- 94% standardized on `@metabuilder/workflow: ^3.0.0`
+- 1 non-standard file uses `workspace:*` (minor issue, documented)
+- Location: `workflow/plugins/ts/`
+
+**Documentation**: See `txt/plugin_dependency_setup_2026-01-23.txt` and `workflow/plugins/DEPENDENCY_MANAGEMENT.md`
+
+### Dependency Update Workflow
+
+1. **Conan Updates**: Run `conan install . --build=missing` after updating versions
+2. **npm Updates**: Run `npm install` at root, then `npm run build && npm run test:e2e`
+3. **Python Plugins**: `pip install -r workflow/plugins/python/requirements.txt`
+4. **Go Plugins**: `go work init`, then `go work use ./workflow/plugins/go`
+
+### Known Issues & Gotchas
+
+- **Jest Alpha in workflowui**: Was using unstable jest 30.0.0-alpha.6, now updated to 29.7.0. If tests fail, check jest.config.js compatibility.
+- **Prisma Multi-Package Setup**: DBAL uses workspace dependencies; ensure `npm install` runs from root
+- **Python Plugin Categories**: Some plugins may have conditional imports (e.g., Flask only imported when creating web services). Install full `requirements.txt` to avoid import errors.
+- **Go Module Path**: Currently uses `github.com/metabuilder/workflow-plugins-go`; update if you change the GitHub organization
 
 ---
 

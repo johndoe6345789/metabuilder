@@ -1,4 +1,5 @@
 import React, { forwardRef } from 'react'
+import { useAccessible } from '../../../src/utils/useAccessible'
 
 /**
  * Valid button variants for styling
@@ -38,6 +39,8 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   startIcon?: React.ReactNode
   /** End icon element */
   endIcon?: React.ReactNode
+  /** Unique identifier for testing and accessibility */
+  testId?: string
 }
 
 /**
@@ -74,27 +77,35 @@ const getSizeClass = (props: ButtonProps): string => {
  */
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (props, ref) => {
-    const { 
-      children, 
+    const {
+      children,
       variant,
       size,
-      primary, 
-      secondary, 
-      outline, 
-      ghost, 
-      sm, 
-      lg, 
-      icon, 
-      loading, 
+      primary,
+      secondary,
+      outline,
+      ghost,
+      sm,
+      lg,
+      icon,
+      loading,
       fullWidth,
       startIcon,
       endIcon,
-      disabled, 
+      disabled,
       className = '',
       type = 'button',
+      testId: customTestId,
       'aria-busy': ariaBusy,
-      ...restProps 
+      'aria-label': ariaLabel,
+      ...restProps
     } = props
+
+    const accessible = useAccessible({
+      feature: 'form',
+      component: 'button',
+      identifier: customTestId || String(children)?.substring(0, 20),
+    })
 
     const classes = [
       'btn',
@@ -112,6 +123,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         type={type}
         className={classes}
         disabled={disabled || loading}
+        data-testid={accessible['data-testid']}
+        aria-label={ariaLabel || accessible['aria-label']}
         aria-busy={ariaBusy ?? loading}
         aria-disabled={disabled || loading}
         {...restProps}

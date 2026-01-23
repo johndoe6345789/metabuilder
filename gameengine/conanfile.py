@@ -12,7 +12,7 @@ class SDL3CppConan(ConanFile):
     generators = "CMakeDeps", "VirtualRunEnv"
     BASE_REQUIRES = (
         "sdl/3.2.20",
-        "shaderc/2023.6",
+        "shaderc/2024.3",
         "cpptrace/1.0.4",
         "ogg/1.3.5",
         "theora/1.1.1",
@@ -22,14 +22,14 @@ class SDL3CppConan(ConanFile):
         "assimp/6.0.2",
         "glm/1.0.1",
         "vorbis/1.3.7",
-        "rapidjson/cci.20230929",
+        "rapidjson/cci.20231212",
         "lunasvg/3.0.1",
         "libvips/8.16.0",
         "freetype/2.13.2",
         "ffmpeg/8.0.1",
         "cairo/1.18.0",
         "libzip/1.10.1",
-        "stb/cci.20230920",
+        "stb/cci.20231130",
         "gtest/1.17.0"
     )
     RENDER_STACK_REQUIRES = (
@@ -41,7 +41,7 @@ class SDL3CppConan(ConanFile):
 
     def configure(self):
         self.requires("wayland/1.23.92", override=True)
-        self.requires("libalsa/1.2.13", override=True)
+        self.requires("libalsa/1.2.14", override=True)
         self.requires("pulseaudio/17.0", override=True)
 
     def layout(self):

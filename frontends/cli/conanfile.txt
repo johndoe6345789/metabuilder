@@ -1,7 +1,7 @@
 [requires]
-cpr/1.10.0
-lua/5.4.6
-sol2/3.3.1
+cpr/1.14.1
+lua/5.4.7
+sol2/3.4.1
 nlohmann_json/3.11.3
 
 [generators]
@@ -13,4 +13,4 @@ cpr/*:ssl_backend=openssl
 lua/*:shared=False
 
 [tool_requires]
-cmake/3.27.1
+cmake/3.30.0
