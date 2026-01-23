@@ -8,6 +8,7 @@
 import React from 'react';
 import { useUI, useHeaderLogic, useResponsiveSidebar } from '../../hooks';
 import styles from './MainLayout.module.scss';
+import { testId } from '../../utils/accessibility';
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -22,6 +23,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children, showSidebar = 
     <div
       className={styles.mainLayout}
       data-theme={theme}
+      data-testid={testId.button('main-layout')}
     >
       <Header onMenuClick={() => setSidebar(!sidebarOpen)} />
 
@@ -49,7 +51,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
   const { user, isAuthenticated, showUserMenu, handleLogout, toggleUserMenu } = useHeaderLogic();
 
   return (
-    <header className={styles.header}>
+    <header className={styles.header} data-testid={testId.navHeader()}>
       <div className={styles.headerContent}>
         <div className={styles.headerLeft}>
           <button
@@ -57,6 +59,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
             onClick={onMenuClick}
             title="Toggle sidebar"
             aria-label="Toggle sidebar"
+            data-testid={testId.navMenuButton('toggle-sidebar')}
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <line x1="3" y1="6" x2="21" y2="6" strokeWidth="2" />
@@ -65,7 +68,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
             </svg>
           </button>
 
-          <h1 className={styles.logo}>WorkflowUI</h1>
+          <h1 className={styles.logo} id="app-title">WorkflowUI</h1>
         </div>
 
         <div className={styles.headerRight}>
@@ -74,6 +77,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
             onClick={toggleTheme}
             title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
             aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+            data-testid={testId.button('toggle-theme')}
           >
             {theme === 'light' ? (
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -101,6 +105,9 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
                 onClick={toggleUserMenu}
                 title={user.name}
                 aria-label={`User menu for ${user.name}`}
+                aria-expanded={showUserMenu}
+                aria-haspopup="menu"
+                data-testid={testId.navMenuButton('user-menu')}
               >
                 <div className={styles.userAvatar}>
                   {user.name.charAt(0).toUpperCase()}
@@ -108,7 +115,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
               </button>
 
               {showUserMenu && (
-                <div className={styles.userDropdown}>
+                <div className={styles.userDropdown} role="menu">
                   <div className={styles.userInfo}>
                     <div className={styles.userName}>{user.name}</div>
                     <div className={styles.userEmail}>{user.email}</div>
@@ -116,6 +123,8 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
                   <button
                     className={styles.logoutButton}
                     onClick={handleLogout}
+                    role="menuitem"
+                    data-testid={testId.button('logout')}
                   >
                     Logout
                   </button>
@@ -148,26 +157,28 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, isMobile, onClose }) => {
 
       <aside
         className={`${styles.sidebar} ${isOpen ? styles.open : ''}`}
-        role="navigation"
+        role="complementary"
+        data-testid={testId.navSidebar()}
+        aria-label="Workflows sidebar"
       >
         <div className={styles.sidebarHeader}>
           <h2>Workflows</h2>
         </div>
 
-        <nav className={styles.sidebarNav}>
-          <ul className={styles.navList}>
-            <li className={styles.navItem}>
-              <a href="/workflows" className={styles.navLink}>
+        <nav className={styles.sidebarNav} aria-label="Workflows navigation">
+          <ul className={styles.navList} role="list">
+            <li className={styles.navItem} role="listitem">
+              <a href="/workflows" className={styles.navLink} data-testid={testId.navLink('all-workflows')}>
                 All Workflows
               </a>
             </li>
-            <li className={styles.navItem}>
-              <a href="/workflows/recent" className={styles.navLink}>
+            <li className={styles.navItem} role="listitem">
+              <a href="/workflows/recent" className={styles.navLink} data-testid={testId.navLink('recent')}>
                 Recent
               </a>
             </li>
-            <li className={styles.navItem}>
-              <a href="/workflows/favorites" className={styles.navLink}>
+            <li className={styles.navItem} role="listitem">
+              <a href="/workflows/favorites" className={styles.navLink} data-testid={testId.navLink('favorites')}>
                 Favorites
               </a>
             </li>
@@ -175,7 +186,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, isMobile, onClose }) => {
         </nav>
 
         <div className={styles.sidebarFooter}>
-          <button className="btn btn-secondary btn-sm">New Workflow</button>
+          <button className="btn btn-secondary btn-sm" data-testid={testId.button('new-workflow')}>
+            New Workflow
+          </button>
         </div>
       </aside>
     </>
