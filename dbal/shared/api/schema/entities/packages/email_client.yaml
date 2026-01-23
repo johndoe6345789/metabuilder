@@ -1,0 +1,125 @@
+entity: EmailClient
+version: "1.0"
+package: email_client
+description: "Email account configuration (IMAP/POP3)"
+
+fields:
+  id:
+    type: cuid
+    primary: true
+    generated: true
+    description: "Unique email client ID"
+
+  tenantId:
+    type: uuid
+    required: true
+    index: true
+    description: "Tenant ownership"
+
+  userId:
+    type: uuid
+    required: true
+    index: true
+    description: "User who owns this email account"
+
+  accountName:
+    type: string
+    required: true
+    max_length: 255
+    description: "Display name (e.g., 'Work Email', 'Gmail')"
+
+  emailAddress:
+    type: string
+    required: true
+    unique: true
+    description: "Email address (e.g., user@gmail.com)"
+
+  protocol:
+    type: enum
+    values: [imap, pop3]
+    default: imap
+    description: "Email protocol"
+
+  hostname:
+    type: string
+    required: true
+    description: "IMAP/POP3 server (e.g., imap.gmail.com)"
+
+  port:
+    type: int
+    required: true
+    description: "Server port (993 for IMAP+TLS, 995 for POP3+TLS)"
+
+  encryption:
+    type: enum
+    values: [none, tls, starttls]
+    default: tls
+    description: "Encryption method"
+
+  username:
+    type: string
+    required: true
+    description: "Username for auth"
+
+  credentialId:
+    type: uuid
+    required: true
+    description: "FK to Credential entity (password stored encrypted)"
+
+  isSyncEnabled:
+    type: boolean
+    default: true
+    description: "Whether to auto-sync new emails"
+
+  syncInterval:
+    type: int
+    default: 300
+    description: "Sync interval in seconds (default 5 min)"
+
+  lastSyncAt:
+    type: bigint
+    nullable: true
+    description: "Last successful sync timestamp (ms)"
+
+  isSyncing:
+    type: boolean
+    default: false
+    description: "Currently syncing flag"
+
+  isEnabled:
+    type: boolean
+    default: true
+    description: "Account enabled/disabled"
+
+  createdAt:
+    type: bigint
+    generated: true
+    description: "Creation timestamp (ms)"
+
+  updatedAt:
+    type: bigint
+    generated: true
+    description: "Last update timestamp (ms)"
+
+indexes:
+  - fields: [userId, tenantId]
+    name: user_tenant_idx
+  - fields: [emailAddress, tenantId]
+    name: email_address_idx
+
+acl:
+  create:
+    self: true
+    admin: true
+  read:
+    self: true
+    row_level: "userId = $user.id AND tenantId = $context.tenantId"
+    admin: true
+  update:
+    self: true
+    row_level: "userId = $user.id AND tenantId = $context.tenantId"
+    admin: true
+  delete:
+    self: true
+    row_level: "userId = $user.id AND tenantId = $context.tenantId"
+    admin: true
