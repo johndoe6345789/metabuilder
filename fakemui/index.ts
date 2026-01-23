@@ -77,7 +77,7 @@ export {
   TimePicker,
   ColorPicker,
   FileUpload,
-} from './fakemui/inputs'
+} from './react/components/inputs'
 
 // Surfaces
 export {
@@ -95,7 +95,7 @@ export {
   AppBar,
   Toolbar,
   Drawer,
-} from './fakemui/surfaces'
+} from './react/components/surfaces'
 
 // Layout
 export {
@@ -107,7 +107,7 @@ export {
   ImageList,
   ImageListItem,
   ImageListItemBar,
-} from './fakemui/layout'
+} from './react/components/layout'
 
 // Data Display
 export {
@@ -138,7 +138,7 @@ export {
   Separator,
   // Note: TreeView also available from lab with component-based API
   TreeView as TreeViewFlat,
-} from './fakemui/data-display'
+} from './react/components/data-display'
 
 // Note: Icon is exported from icons module (line 6), not data-display
 
@@ -151,7 +151,7 @@ export {
   Skeleton,
   Snackbar,
   Spinner,
-} from './fakemui/feedback'
+} from './react/components/feedback'
 
 // Note: Dialog components are available from utils module
 // Import Dialog, DialogTitle, DialogContent, DialogActions from '@/fakemui/utils'
@@ -179,7 +179,7 @@ export {
   SpeedDial,
   SpeedDialAction,
   SpeedDialIcon,
-} from './fakemui/navigation'
+} from './react/components/navigation'
 
 // Utils
 export {
@@ -213,7 +213,7 @@ export {
   useToast,
   Iframe,
   classNames,
-} from './fakemui/utils'
+} from './react/components/utils'
 
 // Atoms
 export {
@@ -226,7 +226,7 @@ export {
   States,
   EditorWrapper,
   AutoGrid,
-} from './fakemui/atoms'
+} from './react/components/atoms'
 
 // Lab (Experimental)
 export {
@@ -241,7 +241,7 @@ export {
   TimelineOppositeContent,
   TreeView as TreeViewComponent,
   TreeItem,
-} from './fakemui/lab'
+} from './react/components/lab'
 
 // Note: TreeView has two implementations:
 // - TreeViewFlat (data-display): Simple array-based API for JSON trees
@@ -261,14 +261,14 @@ export {
   StaticDatePicker,
   CalendarPicker,
   ClockPicker,
-} from './fakemui/x'
+} from './react/components/x'
 
 // Note: DatePicker has two implementations:
 // - DatePicker (inputs): Simple HTML input-based (string values)
 // - DatePickerAdvanced (x): Advanced with calendar UI (Date objects)
 
 // Theming
-export type { Theme, ThemeOptions } from './fakemui/theming'
+export type { Theme, ThemeOptions } from './react/components/theming'
 
 // Accessibility Utilities
 export {

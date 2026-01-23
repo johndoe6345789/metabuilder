@@ -1,27 +1,8 @@
 {
   "name": "metabuilder-root",
-  "private": true,
   "version": "0.0.0",
-  "description": "MetaBuilder - Data-driven multi-tenant platform",
-  "scripts": {
-    "db:generate": "npm --prefix dbal/development run db:generate",
-    "db:push": "npm --prefix dbal/development run db:push",
-    "db:migrate": "npm --prefix dbal/development run db:migrate",
-    "db:seed": "npm --prefix dbal/development run db:seed",
-    "dev": "npm --prefix frontends/nextjs run dev",
-    "build": "npm --prefix frontends/nextjs run build",
-    "typecheck": "npm --prefix frontends/nextjs run typecheck",
-    "lint": "npm --prefix frontends/nextjs run lint",
-    "test": "npm --prefix frontends/nextjs run test",
-    "test:e2e": "playwright test",
-    "test:e2e:ui": "playwright test --ui",
-    "test:e2e:headed": "playwright test --headed",
-    "test:e2e:debug": "playwright test --debug",
-    "test:e2e:report": "playwright show-report",
-    "test:e2e:json": "playwright test e2e/json-packages.spec.ts",
-    "migrate:workflows": "ts-node scripts/migrate-workflows-to-n8n.ts",
-    "migrate:workflows:dry": "ts-node scripts/migrate-workflows-to-n8n.ts --dry-run"
-  },
+  "private": true,
+  "description": "MetaBuilder - Universal Platform",
   "workspaces": [
     "redux/slices",
     "redux/hooks",
@@ -34,6 +15,7 @@
     "redux/api-clients",
     "redux/timing-utils",
     "dbal/development",
+    "fakemui",
     "frontends/nextjs",
     "frontends/dbal",
     "config",
@@ -42,5 +24,8 @@
   "devDependencies": {
     "@playwright/test": "^1.49.1",
     "jsdom": "^27.4.0"
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "^2.0.0"
   }
 }

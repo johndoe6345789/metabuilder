@@ -1,0 +1,38 @@
+{
+  "name": "fakemui",
+  "version": "1.0.0",
+  "description": "Material Design 3 inspired component library - React components",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "exports": {
+    ".": "./index.ts",
+    "./icons": "./icons/index.ts",
+    "./react/components/inputs": "./react/components/inputs/index.ts",
+    "./react/components/surfaces": "./react/components/surfaces/index.ts",
+    "./react/components/layout": "./react/components/layout/index.ts",
+    "./react/components/data-display": "./react/components/data-display/index.ts",
+    "./react/components/feedback": "./react/components/feedback/index.ts",
+    "./react/components/navigation": "./react/components/navigation/index.ts",
+    "./react/components/utils": "./react/components/utils/index.ts",
+    "./react/components/atoms": "./react/components/atoms/index.ts",
+    "./react/components/lab": "./react/components/lab/index.ts",
+    "./react/components/x": "./react/components/x/index.ts",
+    "./scss": "./scss/index.scss"
+  },
+  "sideEffects": [
+    "./scss/**/*.scss",
+    "./react/**/*.scss"
+  ],
+  "keywords": [
+    "material-design",
+    "ui-components",
+    "react",
+    "component-library"
+  ],
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  }
+}

@@ -1,0 +1,548 @@
+================================================================================
+DEPENDENCY MANAGEMENT TEAM GUIDE
+MetaBuilder - For Developers and Contributors
+Created: 2026-01-23
+================================================================================
+
+TABLE OF CONTENTS
+================================================================================
+1. Quick Start: Adding Dependencies
+2. Checking Versions
+3. Reporting Issues
+4. Common Problems & Solutions
+5. Escalation Paths
+6. Documentation Requirements
+7. FAQ
+
+================================================================================
+1. QUICK START: ADDING NEW DEPENDENCIES
+================================================================================
+
+STEP 1: Before You Install
+  [ ] Is this package actively maintained? (Check GitHub last commit)
+  [ ] Does it have TypeScript types? (Or should you add @types?)
+  [ ] Does it have peer dependencies? (Check the warning in npm install)
+  [ ] Is it a pre-release? (Should you use a stable version instead?)
+  [ ] Does it conflict with existing dependencies?
+
+STEP 2: Check Canonical Versions
+  Reference: txt/DEPENDENCY_QUICK_REFERENCE_2026-01-23.txt
+  
+  For common packages, use these EXACT versions:
+    - TypeScript:     5.9.3
+    - React:          19.2.3 (or 18.3.1 for stable)
+    - Next.js:        15.1.3+ (but project-dependent)
+    - Material-UI:    7.3.6
+    - Prisma:         7.2.0
+    - Prettier:       3.x
+    - ESLint:         8.x
+
+  For other packages, use caret range (^version) unless security-critical.
+
+STEP 3: Install in Correct Location
+  
+  [ROOT workspace]
+  For dev dependencies used by multiple projects:
+  $ npm install --save-dev [package]@version
+  
+  [Specific workspace]
+  For project-specific dependencies:
+  $ npm install --save [package]@version --workspace=[workspace-name]
+  
+  [Standalone project]
+  In a standalone directory (e.g., postgres/, pastebin/):
+  $ cd postgres/
+  $ npm install [package]@version
+
+STEP 4: Verify Installation
+  $ npm ls [package]              # Show where it was installed
+  $ npm ls --depth=0 2>&1         # Check for peer dependency warnings
+
+STEP 5: Document Your Addition
+  [ ] Update CLAUDE.md if it's a canonical package
+  [ ] Add comment to package.json if version is non-standard
+  [ ] If pre-release: Document why in your PR description
+  [ ] If security-critical: Add to security notes
+
+STEP 6: Run Pre-commit Checks
+  $ npm run build         # Will fail if dependency has issues
+  $ npm run typecheck     # Verify no type errors
+  $ npm run lint          # Check code quality
+  $ npm run test:e2e      # Run E2E tests
+
+================================================================================
+2. CHECKING VERSIONS
+================================================================================
+
+QUESTION 1: What version of [package] should I use?
+
+Answer A: It's a canonical package
+  1. Look in: txt/DEPENDENCY_QUICK_REFERENCE_2026-01-23.txt
+  2. Use EXACT version listed
+  3. Example: "TypeScript must be 5.9.3 everywhere"
+
+Answer B: It's in a utility category
+  1. Look in: docs/DEPENDENCY_MANAGEMENT_STRATEGY.md (Tier 3 section)
+  2. Use caret range (^1.2.3) for flexibility
+  3. Example: "Any ESLint 8.x is acceptable"
+
+Answer C: I'm not sure
+  1. Is it security-related? Use exact version
+  2. Is it compiler/build tool? Use exact version
+  3. Is it UI library? Use caret range
+  4. Is it utility? Use caret range
+  5. When in doubt: Ask in #dependencies Slack channel
+
+QUESTION 2: Why is npm complaining about peer dependencies?
+
+Answer:
+  1. This is normal - many packages have peer dependency warnings
+  2. Check .npmrc for: legacy-peer-deps=true (should be present)
+  3. Run: npm install (it should work despite warnings)
+  4. If npm install fails:
+     - Run: npm ls --depth=0 (identify conflicting packages)
+     - File GitHub issue with full output
+     - Ping dependencies team
+
+QUESTION 3: Why do different projects use different React versions?
+
+Answer:
+  - workflowui: React 18.3.1 (stable, enterprise-grade)
+  - codegen: React 19.2.3 (cutting edge, low-code builder)
+  - pastebin: React 19.0.0 (experimental platform)
+  
+  This is intentional. Each project's README explains its version choice.
+  Don't change versions without consulting the project lead.
+
+QUESTION 4: How do I know if a newer version is safe?
+
+Answer:
+  1. Check the changelog on npm or GitHub
+  2. Look for: "Breaking changes" section
+  3. If no breaking changes: Safe to update (test anyway)
+  4. If breaking changes: File issue before updating
+  5. For major version bumps: See Phase 2 procedures
+
+================================================================================
+3. REPORTING ISSUES
+================================================================================
+
+SCENARIO 1: I found a security vulnerability
+
+Action (IMMEDIATE):
+  1. DON'T commit it, DON'T push it
+  2. Run: npm audit
+  3. File GitHub issue labeled "security"
+  4. In issue description:
+     - [ ] Package name and version
+     - [ ] CVSS score and affected versions
+     - [ ] Link to vulnerability report
+     - [ ] Proposed fix (update to version X, or Y, or workaround Z)
+  5. Notify #security Slack channel
+  6. DO NOT CLOSE until patched and tested
+
+SCENARIO 2: npm install fails
+
+Action (SAME DAY):
+  1. Run these diagnostics:
+     - npm ls --depth=0
+     - npm ls --depth=0 2>&1 | grep UNMET
+     - npm cache clean --force
+  2. Try: npm install again
+  3. If still fails: File GitHub issue with:
+     - [ ] Full npm install output (first 100 lines)
+     - [ ] Result of npm ls --depth=0
+     - [ ] Node and npm versions (node --version && npm --version)
+     - [ ] Which workspace/project failed
+  4. Add label: phase3-escalation
+  5. Ping @metabuilder-core
+
+SCENARIO 3: Build is broken after dependency update
+
+Action (SAME DAY):
+  1. Run: npm run build
+  2. Capture full error output
+  3. File GitHub issue with:
+     - [ ] Package that was updated
+     - [ ] What changed (version number)
+     - [ ] Full build error output
+     - [ ] Which workspaces are affected
+  4. Add label: phase2-escalation
+  5. Consider rolling back while investigating:
+     - git checkout package.json
+     - npm install
+
+SCENARIO 4: TypeScript compilation fails
+
+Action (SAME DAY):
+  1. Run: npm run typecheck
+  2. If errors appeared after dependency update:
+     - May need @types package
+     - May need TypeScript version update
+     - May need code changes
+  3. File GitHub issue with:
+     - [ ] Package that was updated
+     - [ ] Full typecheck error output (errors only, not warnings)
+     - [ ] Which projects are affected
+  4. Add label: dependencies
+  5. Try running: npm install --save-dev @types/[package]
+
+SCENARIO 5: Performance regression after update
+
+Action (WITHIN 1 WEEK):
+  1. Measure: npm run build (compare build time)
+  2. Measure: npm ls (check for duplicate dependencies)
+  3. Run: npm dedupe
+  4. Measure again to see if it improves
+  5. File GitHub issue with:
+     - [ ] Package that was updated
+     - [ ] Build time before/after
+     - [ ] Bundle size before/after (if available)
+     - [ ] dedupe results
+  6. Add label: performance
+  7. Consider reverting if regression >10%
+
+================================================================================
+4. COMMON PROBLEMS & SOLUTIONS
+================================================================================
+
+PROBLEM A: "npm ERR! Unsatisfied peerDependencies"
+
+Cause: Package A requires Package B, but B is wrong version
+Solution:
+  1. Check .npmrc has: legacy-peer-deps=true
+  2. Try: npm install [package-b@version]
+  3. If doesn't work: File issue (this is phase3-escalation)
+
+PROBLEM B: "Cannot find module or missing type"
+
+Cause: Package or @types package not installed
+Solution:
+  1. If it's a TypeScript package: npm install --save-dev @types/[package]
+  2. If it's a runtime dependency: npm install [package]
+  3. If still missing: Check import statement spelling
+  4. Run: npm run typecheck again
+
+PROBLEM C: "Build output larger than expected"
+
+Cause: May have duplicate dependencies
+Solution:
+  1. Run: npm dedupe
+  2. Run: npm prune
+  3. Check: npm ls --all | grep duplicate
+  4. If duplicates remain: May need major version update (Phase 2)
+
+PROBLEM D: "Pre-release version appeared in node_modules"
+
+Cause: Dependency requires pre-release of something
+Solution:
+  1. Identify: npm ls [pre-release-package]
+  2. Report to dependencies team
+  3. Options:
+     a. Update the dependency that requires it
+     b. If needed: Document why in CLAUDE.md
+     c. If temporary: Track in GitHub issue
+
+PROBLEM E: "TypeScript version mismatch between projects"
+
+Cause: One project has 5.9.3, another has 5.9.2
+Solution:
+  1. All should have 5.9.3 (canonical)
+  2. Run in affected workspace:
+     npm install --save-dev typescript@5.9.3 --workspace=[project]
+  3. Run: npm run typecheck (verify no errors)
+  4. Commit change with message: "fix: standardize TypeScript to 5.9.3"
+
+================================================================================
+5. ESCALATION PATHS
+================================================================================
+
+When to Ask for Help
+================================================================================
+
+Level 1 (Ask in #dependencies Slack channel, no urgent response needed):
+  - I don't know which version to use
+  - Should I upgrade to the latest version?
+  - Can I use a pre-release package?
+  - How do I report version inconsistencies?
+
+Level 2 (File GitHub issue, will be reviewed within 1 week):
+  - I found a bug in a dependency
+  - Performance regression after update
+  - Minor version conflicts between projects
+  - Documentation questions
+
+Level 3 (File GitHub issue + notify @metabuilder-core, within 1 day):
+  - npm install consistently fails
+  - npm audit shows MEDIUM vulnerability
+  - Build fails with multiple errors
+  - TypeScript compilation has widespread failures
+
+Level 4 (File GitHub issue + ping Slack, IMMEDIATE attention):
+  - npm audit shows CRITICAL/HIGH vulnerability
+  - Production deployment blocked by dependency
+  - Security incident
+  - Data loss risk from broken package
+
+GitHub Labels for Issues
+================================================================================
+
+Add these labels to your issue:
+
+dependencies          - General dependency management issue
+security              - Security vulnerability found
+phase1-audit          - Audit and documentation work
+phase2-escalation     - Comprehensive update needed
+phase3-escalation     - Dependency deadlock, needs resolution
+performance           - Performance impact
+breaking-change       - Requires code changes
+pre-release           - Involves pre-release packages
+
+================================================================================
+6. DOCUMENTATION REQUIREMENTS
+================================================================================
+
+WHEN adding a NEW package:
+
+In PR description, include:
+  [x] Package name and version
+  [x] Why is this package needed?
+  [x] Does it have security implications?
+  [x] TypeScript types? (Yes / No / Adding @types/package)
+  [x] Any version conflicts? (Yes / No)
+  [x] Tested locally? (Yes / No)
+
+WHEN updating an existing package:
+
+In PR description, include:
+  [x] Package name
+  [x] Version change (e.g., 1.2.3 → 1.2.5)
+  [x] Reason for update (security / bug fix / feature)
+  [x] Breaking changes? (Yes / No / Details)
+  [x] Test results (build succeeds / typecheck passes / e2e passes)
+
+WHEN there's a major version bump:
+
+In PR description, include:
+  [x] Comprehensive changelog
+  [x] Migration steps
+  [x] API changes
+  [x] Deprecations
+  [x] Files affected
+  [x] Estimated effort to migrate (hours)
+  [x] Risk level (Low / Medium / High)
+
+WHEN adding a pre-release package:
+
+In PR description, include:
+  [x] Justification for using pre-release
+  [x] Expected stability timeline
+  [x] Plan to migrate to stable (target date)
+  [x] Project impact if unstable
+
+In CLAUDE.md, add to "Pre-release Packages" section:
+  Pre-release Package: [package]@[version]
+  Project: [project name]
+  Reason: [why]
+  Added: [date]
+  Plan to upgrade: [date or "TBD"]
+
+================================================================================
+7. FAQ
+================================================================================
+
+Q: Can I downgrade a package to an older version?
+A: Only if approved by dependencies team. Downgrades risk missing security patches.
+   File GitHub issue explaining why before downgrading.
+
+Q: Can I use a different version of React in my project?
+A: For main projects: No, stick to canonical version (discuss with team lead)
+   For experimental projects (pastebin, exploded-diagrams): Maybe, document why
+   Always get approval before deviating from standard
+
+Q: How often are dependencies updated?
+A: Security patches: Immediately
+   Bug fixes: Weekly batch (Mondays)
+   Minor updates: Monthly batch (1st week)
+   Major versions: Quarterly review
+
+Q: What's the difference between ^ and ~ in version ranges?
+A: ^1.2.3 = Allow 1.x.x versions (caret = major version locked)
+   ~1.2.3 = Allow 1.2.x versions (tilde = minor version locked)
+   See: https://docs.npmjs.com/about-semantic-versioning
+
+Q: Why do we have legacy-peer-deps=true in .npmrc?
+A: Because many packages have complex peer dependency relationships.
+   This setting allows flexible version resolution while staying safe.
+   DO NOT remove this setting without approval.
+
+Q: Can I use npm and yarn together?
+A: NO. We use npm exclusively (npm 11.7.0).
+   Delete yarn.lock if you find it. Use npm only.
+
+Q: What if a package has known security issues?
+A: 1. Check: npm audit
+   2. File GitHub issue immediately (label: security)
+   3. If CRITICAL: Report in #security Slack channel
+   4. If HIGH: Update ASAP (within 24 hours)
+   5. If MEDIUM: Update within 1 week
+   6. If LOW: Include in next monthly batch
+
+Q: How do I test my dependency changes locally?
+A: 1. Make changes to package.json
+   2. Run: npm install
+   3. Run: npm run build
+   4. Run: npm run typecheck
+   5. Run: npm run test:e2e (if applicable)
+   6. If all pass: Commit and create PR
+
+Q: My project uses a non-canonical version. Why?
+A: Check the project's README or CLAUDE.md for explanation.
+   Common reasons:
+   - Experimental branch needs cutting-edge version
+   - Backward compatibility requirement
+   - Team decision documented in git history
+   If you think it should change: File GitHub issue to discuss
+
+Q: Can I add a dependency to the root package.json?
+A: Only if it's a dev dependency used by multiple projects.
+   Runtime dependencies go in their specific workspace.
+   Check: npm ls --depth=0 (see what's already there)
+
+Q: What if npm install takes forever?
+A: 1. Press Ctrl+C to stop
+   2. Try: npm cache clean --force
+   3. Try: npm install again
+   4. If still slow: File GitHub issue (may indicate dependency conflict)
+
+Q: I want to upgrade TypeScript. Should I do it?
+A: ONLY with approval from @metabuilder-core
+   Changes TypeScript version requires:
+   - Updates across ENTIRE workspace
+   - Type checking all projects
+   - Testing all builds
+   - This is Phase 2 work
+
+Q: How do I report a version inconsistency I found?
+A: File GitHub issue with:
+   [ ] Which projects have different versions
+   - grep -r '"package":' --include="package.json" (show full output)
+   [ ] Which version should be canonical
+   [ ] Proposed fix (update X, Y, Z to version)
+   Label: dependencies
+
+Q: What's the relationship between Phases 1-4?
+A: Phase 1: Initial audit and data gathering
+   Phase 2: Comprehensive updates (major version bumps, mass fixes)
+   Phase 3: Dependency deadlock resolution
+   Phase 4: Ongoing maintenance (THIS GUIDE)
+   See: docs/DEPENDENCY_MANAGEMENT_STRATEGY.md
+
+Q: I see a package with a really old version. Should I update it?
+A: Not necessarily. Ask in #dependencies channel:
+   - Is it deliberately pinned?
+   - Is there a reason for the old version?
+   - What would updating accomplish?
+   Don't change it without understanding why first.
+
+Q: Can I use monorepo version linking (workspace protocol)?
+A: Yes, for packages that are part of MetaBuilder core.
+   Format: "package": "workspace:*"
+   Check existing examples: grep -r "workspace:\*" --include="package.json"
+
+Q: What if the CI/CD pipeline rejects my dependency change?
+A: Common reasons:
+   1. npm audit shows new vulnerability: Fix before merge
+   2. Build fails: Check full build log
+   3. Tests fail: Run locally to reproduce
+   4. Pre-commit hook failed: See error message
+   All must pass before merge:
+   - npm run build
+   - npm run typecheck
+   - npm run lint
+   - npm run test:e2e
+
+================================================================================
+RESOURCES & CONTACTS
+================================================================================
+
+Documentation:
+  - docs/DEPENDENCY_MANAGEMENT_STRATEGY.md   (Full strategy)
+  - txt/DEPENDENCY_QUICK_REFERENCE_2026-01-23.txt  (Quick lookup)
+  - txt/DEPENDENCY_TEAM_GUIDE_2026-01-23.txt       (This file)
+
+Slack Channels:
+  #dependencies        - General questions
+  #security           - Security vulnerabilities
+  #devops             - Deployment issues
+  @metabuilder-core   - For escalations
+
+GitHub:
+  Label: dependencies  - Find all related issues
+  Label: security      - Find all security issues
+  Discussions          - For questions and ideas
+
+Commands Reference:
+  See: txt/DEPENDENCY_QUICK_REFERENCE_2026-01-23.txt (Common Audit Commands)
+
+Previous Audit Reports:
+  txt/AUDIT_REPORT_2026-01.txt
+  txt/AUDIT_REPORT_2026-02.txt
+  (New audit reports created monthly on 1st of month)
+
+================================================================================
+QUICK DECISION TREE
+================================================================================
+
+Do you need to add a new package?
+  ├─ Is it TypeScript, Prisma, or React?
+  │  ├─ YES → Check txt/DEPENDENCY_QUICK_REFERENCE_2026-01-23.txt
+  │  └─ NO → Use caret range (^version)
+  │
+  ├─ Is it security-critical?
+  │  ├─ YES → Use exact version (no ^ or ~)
+  │  └─ NO → Use caret range
+  │
+  └─ Is it pre-release?
+     ├─ YES → Document in PR why needed
+     └─ NO → Proceed normally
+
+Do you see a version inconsistency?
+  ├─ Is it TypeScript?
+  │  ├─ YES → Should all be 5.9.3 (escalate if not)
+  │  └─ NO → Check txt/DEPENDENCY_QUICK_REFERENCE
+  │
+  ├─ Is it React?
+  │  ├─ YES → Can be 18.3.1 or 19.2.3 (by project)
+  │  └─ NO → Check canonical table
+  │
+  └─ Was this intended?
+     ├─ YES → Document why (add comment to package.json)
+     └─ NO → File GitHub issue (label: dependencies)
+
+Did you find a vulnerability?
+  ├─ Is it CRITICAL or HIGH?
+  │  ├─ YES → File issue labeled "security" + notify Slack
+  │  └─ NO → Include in next monthly batch
+  │
+  └─ Can we update to fix it?
+     ├─ YES → Create PR with update
+     └─ NO → Implement workaround, file issue
+
+Is your build broken?
+  ├─ After dependency change?
+  │  ├─ YES → npm run build (capture full error)
+  │  │         File issue labeled "phase2-escalation"
+  │  │         Consider rolling back
+  │  └─ NO → Might be pre-existing issue
+  │
+  └─ npm install failures?
+     ├─ YES → npm ls --depth=0 (check UNMET)
+     │         File issue labeled "phase3-escalation"
+     └─ NO → Different problem
+
+================================================================================
+END OF TEAM GUIDE
+Version: 1.0 | For: All MetaBuilder developers
+Last Updated: 2026-01-23 | Next Update: When processes change
+================================================================================

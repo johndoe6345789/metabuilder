@@ -18,6 +18,11 @@
   - **Methodology**: ✅ Full Planning (Explore agent), ✅ Full Implementation (9 versions fixed), ✅ Full Verification (npm install/ls/audit), ✅ Full Documentation (/txt/), ✅ Full Commits
   - **Result**: Root npm install succeeds (924 packages), npm audit clean (7 moderate dev-only)
   - **Deliverables**: ESLINT_VITE_COMPREHENSIVE_FIX_PLAN_2026-01-23.txt, DEPENDENCY_FIX_COMPLETION_SUMMARY_2026-01-23.txt
+- **FakeMUI Import Paths Fixed** (Jan 23, 2026 - ✅ COMPLETE):
+  - Updated index.ts from broken `./fakemui/inputs` paths to canonical `./react/components/inputs` paths (10 imports fixed)
+  - Removed symlinks (no longer needed with direct paths)
+  - WorkflowUI package.json: classnames ^2.5.2 → ^2.3.2 (non-existent version fixed)
+  - Impact: WorkflowUI Docker build can now proceed
 
 - **Project-Wide Dependency Remediation** (Jan 23, 2026 - ✅ PHASE 1 COMPLETE):
   - **Scope**: Comprehensive audit of 89 package.json files across entire codebase

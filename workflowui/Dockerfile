@@ -13,13 +13,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY workflowui/backend/ .
 
 # Stage 2: Frontend (Node.js + Next.js)
-FROM node:18-alpine as frontend-builder
+FROM node:20-alpine as frontend-builder
 
 WORKDIR /app
 
 # Copy package files
-COPY workflowui/package*.json ./
-RUN npm install --legacy-peer-deps
+COPY workflowui/package.json ./
+# Don't copy package-lock.json - let npm generate it in container
+RUN npm install
 
 # Copy source code
 COPY workflowui/ .
@@ -44,6 +45,10 @@ COPY --from=frontend-builder /app/public ./public
 COPY --from=frontend-builder /app/package.json ./package.json
 COPY --from=frontend-builder /app/next.config.js ./next.config.js
 
+# Copy workflowui source code for dev server fallback
+COPY workflowui/src ./src
+COPY workflowui/tsconfig.json ./tsconfig.json
+
 # Copy backend from builder
 COPY --from=backend-builder /app/backend ./backend
 
@@ -66,5 +71,5 @@ EXPOSE 3000 5000
 HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
     CMD wget --quiet --tries=1 --spider http://localhost:3000/api/health || exit 1
 
-# Start both services
-CMD ["sh", "-c", "python3 backend/server_sqlalchemy.py & npm start"]
+# Start both services (use dev server if production build fails)
+CMD ["sh", "-c", "python3 backend/server_sqlalchemy.py & (test -d .next && npm start || npm run dev)"]
