@@ -259,12 +259,42 @@ fakemui/
 **Status**: ✅ Production-ready, actively used in workflowui
 **See**: [fakemui/STRUCTURE.md](./fakemui/STRUCTURE.md) for detailed layout and component mapping
 
+### React Hooks (`hooks/`)
+
+**Status**: ✅ Centralized hooks package (Jan 23, 2026)
+
+**Package**: `@metabuilder/hooks@1.0.0` - 30 custom React hooks consolidated from across codebase
+
+**Hook Categories** (by functionality):
+- **Authentication** (4 hooks): useLoginLogic, useRegisterLogic, usePasswordValidation, useAuthForm
+- **Dashboard & UI** (4 hooks): useDashboardLogic, useResponsiveSidebar, useHeaderLogic, useProjectSidebarLogic
+- **Storage & Data** (3 hooks): useStorageDataHandlers, useStorageSettingsHandlers, useStorageSwitchHandlers
+- **Design Tools** (2 hooks): useFaviconDesigner, useDragResize
+- **Development** (1 hook): useGithubBuildStatus
+- **Utilities**: Redux hooks (useAppDispatch, useAppSelector), Context utilities (ToastContext, I18nNavigation)
+
+**Usage**:
+```typescript
+// Default import - all hooks
+import { useDashboardLogic } from '@metabuilder/hooks'
+
+// Conditional exports - tree-shaking
+import { useLoginLogic } from '@metabuilder/hooks/useLoginLogic'
+```
+
+**Workspace Setup** (Jan 23, 2026):
+- Added to root `package.json` workspaces array
+- Properly configured `exports` in hooks/package.json for named imports
+- Supports multi-version peer dependencies (React 18/19, Redux 8/9)
+- Location: `/hooks/` at project root
+
 ### Redux State Management
 
-**Current Status**: 9 separate packages consolidating into single entry point
+**Current Status**: 10 packages total (including new centralized hooks)
 
 **Packages**:
-- `@metabuilder/core-hooks` - Generic hooks
+- `@metabuilder/hooks` - Centralized custom React hooks (NEW - Jan 23, 2026)
+- `@metabuilder/core-hooks` - Generic Redux hooks
 - `@metabuilder/api-clients` - API client hooks
 - `@metabuilder/hooks-*` - Feature-specific hooks (auth, canvas, data, core)
 - `@metabuilder/redux-slices` - Redux reducers
