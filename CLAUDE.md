@@ -10,6 +10,9 @@
 - All library versions updated: React 19.2.3, TypeScript 5.9.3, Next.js normalized, @reduxjs/toolkit 2.5.2
 - Multi-version peer dependencies enabled for gradual upgrades
 - **Dependency Management Upgrade**: Conan libraries updated (14 changes), npm security patches applied (9 packages), Python/Go workflow plugin management established
+- **Project Root Cleanup**: Removed one-off scripts, organized reports in /txt/
+- **FakeMUI Accessibility**: Complete data-testid & ARIA integration (Button, TextField updated; 105 components ready for systematic update)
+- **AI Assistant Workflow Refined**: Full implementation required, no partial fixes, always use Explore agent for planning
 
 ---
 
@@ -462,6 +465,29 @@ See [.github/copilot-instructions.md](./.github/copilot-instructions.md) for det
 - Effort estimate: 2-4 hours to migrate
 - Action: Use FakeMUI components instead of @mui/material
 
+**Dependency Vulnerabilities** (Jan 23, 2026 - Status: NEEDS FULL FIX)
+- **Verified (local npm audit)**: 7 moderate vulnerabilities (lodash 4.17.21 prototype pollution in @prisma/dev)
+- **GitHub Dependabot claims**: 56 vulnerabilities (3 critical, 11 high, 36 moderate, 6 low)
+- **Root causes identified**:
+  - Invalid version: `eslint@^9.41.0` (doesn't exist, valid: 9.28.0) - Found in: dbal/development/package.json, codegen/package.json
+  - Invalid version: `@eslint/js@^9.41.0` (doesn't exist)
+  - Invalid version: `classnames@^2.5.2` (doesn't exist, valid: 2.3.2) - Found in: workflowui/package.json
+  - vite override conflict in workspace prevents npm install
+  - lodash only in dev chain (@prisma/dev) - LOW production risk
+- **Current blocking issues**: npm install fails, npm audit fix fails
+- **Fix status**: PARTIAL (eslint in dbal/development updated to 9.28.0, classnames in workflowui updated to 2.3.2, vite unresolved)
+- **Required for FULL fix**:
+  1. Find ALL workspaces with invalid versions (grep all package.json)
+  2. Update eslint/eslint-js to ^9.28.0 everywhere
+  3. Find vite override conflict (grep for "overrides", "resolutions")
+  4. Align vite versions across all workspaces
+  5. Clean install: rm -rf node_modules package-lock.json && npm install
+  6. Run: npm audit fix --force (will update Prisma)
+  7. Test ALL packages: build, tests pass
+- **Time estimate**: 3-4 hours for FULL fix (cannot be done in shortcuts)
+- **Documents**: txt/DEPENDENCY_AUDIT_DETAILS_2026-01-23.txt, txt/DEPENDENCY_FIX_PLAN_2026-01-23.txt
+- **Action**: Use Explore agent to find ALL version constraints before fixing
+
 ### Testing Standards
 
 ```typescript
@@ -593,15 +619,29 @@ From [.github/workflows/README.md](./.github/workflows/README.md):
 
 ## AI Assistant Workflow
 
-**Primary Directives**:
-1. **Always read CLAUDE.md first** - before starting any work or replying
-2. **Use the Explore agent** - for codebase audits, pattern discovery, feasibility checks
-3. **Plan before coding** - outline affected files, use txt folder for task lists
-4. **Minimize documentation** - avoid summary documents, keep documentation focused
-5. **Per-subproject docs** - each subproject can have its own `docs/` folder (not root)
-6. **Preserve code** - never delete unused code, organize it well instead
-7. **Use subagents** - for complex, independent work (audits, refactoring, migrations)
-8. **Update CLAUDE.md** - when finding bugs, gotchas, or new patterns
+**CRITICAL: Must-Follow Directives** (No Exceptions):
+1. **ALWAYS read CLAUDE.md first** - before starting any work or replying
+2. **ALWAYS use Explore agent** - for feasibility checks, codebase analysis, planning
+3. **ALWAYS plan before coding** - list affected files in txt/, determine scope
+4. **ALWAYS full implementation** - no partial fixes, no shortcuts, no stubs
+5. **ALWAYS use subagents** - for complex work (don't do it alone)
+6. **UPDATE CLAUDE.md** - when finding bugs, gotchas, or new patterns discovered
+7. **NO SUMMARY DOCUMENTS** - keep things organized, not documented to death
+8. **SUBPROJECT DOCS** - each project owns its /docs/, not root
+9. **GIT WORKFLOW** - when user says "git push", do `git add` on project root first, then commit
+10. **CLEANUP** - regularly maintain project root (no orphaned files)
+11. **CODE ORGANIZATION** - don't care if code unused, DO care if disorganized
+12. **FEASIBILITY CHECKS** - outline what files will be edited before starting
+
+**Gotchas & Lessons Learned** (Jan 23, 2026):
+| Gotcha | Impact | Prevention |
+|--------|--------|-----------|
+| **Partial fixes committed** | Blocks full resolution, creates merge conflicts | Plan FULL solution before committing |
+| **Skipping Explore agent** | Miss dependencies, make wrong decisions | Always use Explore for planning |
+| **No planning document** | Don't know scope, make mistakes | Create plan in txt/ BEFORE coding |
+| **Version conflicts (eslint, vite)** | npm install fails, blocks all work | Check ALL workspaces upfront |
+| **Workspace issues isolated** | Problems not discovered until too late | Use `grep -r` across ALL workspaces |
+| **Assuming fixes are simple** | Complex issues need comprehensive approach | Start with Explore, then plan |
 
 **When to Use Subagents**:
 - Large codebase audits (use Explore agent)
@@ -610,6 +650,7 @@ From [.github/workflows/README.md](./.github/workflows/README.md):
 - Schema/configuration migrations
 - Framework/library consolidation
 - Performance profiling and optimization
+- **Feasibility analysis BEFORE any implementation**
 
 ---
 
@@ -645,6 +686,17 @@ For progress tracking, analysis documents, and delivery summaries:
 - Dependency update reports
 - Delivery and audit summaries
 - Old reports archived with clear purpose
+
+**Current Contents** (Jan 23, 2026):
+- `ROOT_CLEANUP_PLAN_2026-01-23.txt` - Project root cleanup strategy
+- `COMPLETION_STATUS.txt` - Task completion tracking
+- `DEPENDENCY_UPDATES_INDEX_2026-01-23.txt` - Dependency management index
+- `DEPENDENCY_AUDIT_DETAILS_2026-01-23.txt` - Vulnerability analysis (7 moderate verified)
+- `DEPENDENCY_FIX_PLAN_2026-01-23.txt` - FULL fix plan (3-4 hours, all workspaces)
+- `plugin_dependency_setup_2026-01-23.txt` - Workflow plugin dependencies
+- `conan_updates_2026-01-23.txt` - C++ library updates
+- `npm_security_fixes_2026-01-23.txt` - npm patches applied
+- `README.md` - Organization guide
 
 See: `txt/README.md` for organization guide
 
