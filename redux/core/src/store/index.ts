@@ -1,5 +1,6 @@
 import { useDispatch, useSelector, TypedUseSelectorHook } from 'react-redux'
 import { configureStore } from '@reduxjs/toolkit'
+import { getMiddlewareConfig, getDevToolsConfig } from '../middleware'
 
 // Types will be augmented when store is configured
 export type RootState = any
@@ -14,7 +15,12 @@ export function createAppStore(reducers: any, preloadedState?: any) {
   return configureStore({
     reducer: reducers,
     preloadedState,
+    middleware: getMiddlewareConfig(),
+    devTools: getDevToolsConfig(),
   })
 }
 
 export type AppStore = ReturnType<typeof createAppStore>
+
+// Re-export middleware utils for custom configuration
+export { getMiddlewareConfig, getDevToolsConfig } from '../middleware'

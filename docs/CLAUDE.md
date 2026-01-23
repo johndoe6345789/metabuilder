@@ -691,6 +691,159 @@ export function MyComponent() {
 **Refetch After Mutation:**
 ```typescript
 const { data: users, refetch: refetchUsers } = useReduxAsyncData(...)
+
+### Redux Core Package (@metabuilder/redux-core)
+
+Root Redux package containing core slices needed by all frontends (Next.js, Qt6, CLI).
+
+**Purpose**: Centralized state management for authentication, projects, workflows, and async data operations across all MetaBuilder frontends.
+
+#### Core Slices Included
+
+| Slice | Purpose | Key Actions |
+|-------|---------|-------------|
+| **authSlice** | Authentication & session management | `setAuthenticated`, `setUser`, `logout`, `restoreFromStorage` |
+| **projectSlice** | Project CRUD & selection | `setProjects`, `addProject`, `updateProject`, `removeProject`, `setCurrentProject` |
+| **workspaceSlice** | Workspace management | `setWorkspaces`, `addWorkspace`, `updateWorkspace`, `removeWorkspace`, `setCurrentWorkspace` |
+| **workflowSlice** | Workflow execution engine | `loadWorkflow`, `createWorkflow`, `saveWorkflow`, `addNode`, `deleteNode`, `startExecution` |
+| **nodesSlice** | Node registry & templates | `setRegistry`, `addNodeType`, `setTemplates`, `addTemplate`, `setCategories` |
+| **asyncDataSlice** | Async data management (replaces react-query) | `fetchAsyncData`, `mutateAsyncData`, `refetchAsyncData`, `cleanupAsyncRequests` |
+
+#### Quick Start
+
+Installation (already in workspaces):
+```bash
+npm install @metabuilder/redux-core
+```
+
+Basic store setup:
+```typescript
+import { configureStore } from '@reduxjs/toolkit'
+import { coreReducers } from '@metabuilder/redux-core'
+
+const store = configureStore({
+  reducer: {
+    ...coreReducers,  // All core state (auth, project, workflow, etc)
+    // Add frontend-specific slices (canvas, editor, etc)
+  }
+})
+```
+
+#### Import Options
+
+**Option 1: Everything (recommended for most apps)**
+```typescript
+import { 
+  authSlice, 
+  projectSlice, 
+  coreReducers, 
+  useAppDispatch,
+  useAppSelector 
+} from '@metabuilder/redux-core'
+```
+
+**Option 2: Specific exports (for tree-shaking)**
+```typescript
+// Slices
+import { authSlice } from '@metabuilder/redux-core/slices'
+
+// Types
+import type { Project, User, Workflow } from '@metabuilder/redux-core/types'
+
+// Hooks
+import { useAppDispatch, useAppSelector } from '@metabuilder/redux-core/store'
+
+// Reducer map
+import { coreReducers } from '@metabuilder/redux-core'
+```
+
+#### Store Configuration Examples
+
+**Next.js (frontends/nextjs)**
+```typescript
+import { configureStore } from '@reduxjs/toolkit'
+import { coreReducers } from '@metabuilder/redux-core'
+import { canvasSlice, editorSlice } from '@metabuilder/redux-slices'
+
+export const store = configureStore({
+  reducer: {
+    ...coreReducers,           // Core: auth, project, workspace, workflow, nodes, asyncData
+    canvas: canvasSlice.reducer,
+    editor: editorSlice.reducer,
+  }
+})
+```
+
+**Qt6 Desktop (frontends/qt6)**
+```typescript
+const store = configureStore({
+  reducer: {
+    ...coreReducers,        // Core state for desktop app
+    // Add Qt6-specific slices
+  }
+})
+```
+
+**CLI (frontends/cli)**
+```typescript
+const store = configureStore({
+  reducer: {
+    ...coreReducers,  // Minimal core state for CLI
+  }
+})
+```
+
+#### Using Hooks
+
+```typescript
+import { useAppDispatch, useAppSelector } from '@metabuilder/redux-core'
+import { setUser, selectUser } from '@metabuilder/redux-core'
+
+export function UserProfile() {
+  const dispatch = useAppDispatch()
+  const user = useAppSelector(selectUser)
+  
+  useEffect(() => {
+    dispatch(setUser({ id: '123', email: 'user@example.com' }))
+  }, [])
+  
+  return <div>{user?.email}</div>
+}
+```
+
+#### Async Data Pattern
+
+```typescript
+import { useAppDispatch, useAppSelector } from '@metabuilder/redux-core'
+import { fetchAsyncData, selectAsyncData } from '@metabuilder/redux-core'
+
+export function ProjectsList() {
+  const dispatch = useAppDispatch()
+  const { data: projects, loading } = useAppSelector(state => 
+    selectAsyncData(state, 'projects')
+  )
+  
+  useEffect(() => {
+    dispatch(fetchAsyncData({
+      requestId: 'projects',
+      promise: fetch('/api/projects').then(r => r.json())
+    }))
+  }, [])
+  
+  if (loading) return <Spinner />
+  return <div>{projects?.map(p => <div key={p.id}>{p.name}</div>)}</div>
+}
+```
+
+#### Documentation & References
+
+- **Store Details**: `/redux/core/README.md`
+- **Integration Guide**: `/docs/guides/REDUX_CORE_INTEGRATION_GUIDE.md`
+- **Pattern Reference**: `/.claude/REDUX_CORE_PATTERNS.md`
+- **DevTools Setup**: `/redux/core/src/middleware/`
+
+---
+
 const { mutate: createUser } = useReduxMutation(
   async (user) => {
     const res = await fetch('/api/users', { method: 'POST', body: JSON.stringify(user) })

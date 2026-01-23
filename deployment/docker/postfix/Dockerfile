@@ -72,6 +72,16 @@ set_postfix_config "default_destination_rate_limit" "0"
 # Logging
 set_postfix_config "maillog_file" "/var/log/postfix.log"
 
+echo "Generating self-signed certificates for Dovecot..."
+mkdir -p /etc/dovecot/certs
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+  -keyout /etc/dovecot/certs/dovecot.key \
+  -out /etc/dovecot/certs/dovecot.crt \
+  -subj "/C=US/ST=State/L=City/O=Organization/CN=metabuilder.local" 2>/dev/null
+
+chmod 600 /etc/dovecot/certs/dovecot.key
+chmod 644 /etc/dovecot/certs/dovecot.crt
+
 echo "Creating default mail accounts..."
 # Create mail user if it doesn't exist
 if ! id -u mail > /dev/null 2>&1; then
@@ -100,18 +110,27 @@ cat > /etc/dovecot/dovecot.conf << 'DOVECOT_EOF'
 protocols = imap pop3
 listen = *, ::
 
-ssl = no
-disable_plaintext_auth = no
+# SSL configuration with self-signed cert
+ssl = required
+ssl_cert = </etc/dovecot/certs/dovecot.crt
+ssl_key = </etc/dovecot/certs/dovecot.key
+disable_plaintext_auth = yes
 
 service imap-login {
   inet_listener imap {
     port = 143
+  }
+  inet_listener imaps {
+    port = 993
   }
 }
 
 service pop3-login {
   inet_listener pop3 {
     port = 110
+  }
+  inet_listener pop3s {
+    port = 995
   }
 }
 
@@ -170,7 +189,7 @@ RUN postconf -e "inet_interfaces = all" \
     && postconf -e "mailbox_size_limit = 0" \
     && postconf -e "message_size_limit = 52428800"
 
-# Expose SMTP, POP3, IMAP ports
-EXPOSE 25 110 143 465 587
+# Expose SMTP, POP3, IMAP ports (with TLS variants)
+EXPOSE 25 110 143 465 587 993 995
 
 ENTRYPOINT ["/entrypoint.sh"]

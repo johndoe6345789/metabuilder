@@ -118,3 +118,15 @@ export const coreReducers = {
   nodes: nodesSlice.reducer,
   asyncData: asyncDataSlice.reducer,
 }
+
+// Middleware and DevTools
+export {
+  getMiddlewareConfig,
+  getDevToolsConfig,
+  devToolsConfig,
+  createLoggingMiddleware,
+  createPerformanceMiddleware,
+  createErrorMiddleware,
+  createAnalyticsMiddleware,
+  enableReduxDevTools,
+} from './middleware'

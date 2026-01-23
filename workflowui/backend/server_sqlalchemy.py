@@ -856,10 +856,23 @@ def connect_email():
         if not username or not password:
             return jsonify({'error': 'Username and password required'}), 400
 
-        # Test connection (plaintext auth allowed in Docker)
-        imap = imaplib.IMAP4(host, port, timeout=10)
+        # Test connection with TLS and self-signed cert
+        import ssl
+        context = ssl.create_default_context()
+        context.check_hostname = False
+        context.verify_mode = ssl.CERT_NONE
+
+        try:
+            imap = imaplib.IMAP4_SSL(host, 993, ssl_context=context, timeout=10)
+        except:
+            imap = imaplib.IMAP4(host, port, timeout=10)
+            imap.starttls(ssl_context=context)
+
         imap.login(username, password)
-        imap.logout()
+        try:
+            imap.logout()
+        except:
+            pass
 
         return jsonify({
             'status': 'connected',
@@ -884,7 +897,17 @@ def list_emails():
         if not username or not password:
             return jsonify({'error': 'Username and password required'}), 400
 
-        imap = imaplib.IMAP4(host, port, timeout=10)
+        import ssl
+        context = ssl.create_default_context()
+        context.check_hostname = False
+        context.verify_mode = ssl.CERT_NONE
+
+        try:
+            imap = imaplib.IMAP4_SSL(host, 993, ssl_context=context, timeout=10)
+        except:
+            imap = imaplib.IMAP4(host, port, timeout=10)
+            imap.starttls(ssl_context=context)
+
         imap.login(username, password)
         imap.select(mailbox)
 
@@ -941,7 +964,17 @@ def read_email():
         if not username or not password or not email_id:
             return jsonify({'error': 'Missing required fields'}), 400
 
-        imap = imaplib.IMAP4(host, port, timeout=10)
+        import ssl
+        context = ssl.create_default_context()
+        context.check_hostname = False
+        context.verify_mode = ssl.CERT_NONE
+
+        try:
+            imap = imaplib.IMAP4_SSL(host, 993, ssl_context=context, timeout=10)
+        except:
+            imap = imaplib.IMAP4(host, port, timeout=10)
+            imap.starttls(ssl_context=context)
+
         imap.login(username, password)
         imap.select(mailbox)
 
@@ -997,14 +1030,16 @@ def list_mailboxes():
         if not username or not password:
             return jsonify({'error': 'Username and password required'}), 400
 
-        # Connect with STARTTLS for secure plain auth
         import ssl
         context = ssl.create_default_context()
         context.check_hostname = False
         context.verify_mode = ssl.CERT_NONE
 
-        imap = imaplib.IMAP4(host, port, timeout=10)
-        imap.starttls(ssl_context=context)
+        try:
+            imap = imaplib.IMAP4_SSL(host, 993, ssl_context=context, timeout=10)
+        except:
+            imap = imaplib.IMAP4(host, port, timeout=10)
+            imap.starttls(ssl_context=context)
 
         imap.login(username, password)
 
@@ -1015,8 +1050,10 @@ def list_mailboxes():
             mailbox_str = mailbox.decode().split('"') if isinstance(mailbox, bytes) else mailbox
             mailbox_list.append(mailbox)
 
-        imap.close()
-        imap.logout()
+        try:
+            imap.logout()
+        except:
+            pass
 
         return jsonify({
             'mailboxes': [m.decode() if isinstance(m, bytes) else m for m in mailbox_list],
