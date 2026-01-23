@@ -1,0 +1,35 @@
+{
+  "name": "emailclient",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint . --config eslint.config.mjs",
+    "lint:fix": "eslint . --config eslint.config.mjs --fix",
+    "test": "jest",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui"
+  },
+  "dependencies": {
+    "@metabuilder/fakemui": "workspace:*",
+    "@metabuilder/hooks": "workspace:*",
+    "@metabuilder/redux-core": "workspace:*",
+    "@reduxjs/toolkit": "^2.5.2",
+    "next": "^16.1.2",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "react-redux": "^9.1.2"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.1",
+    "@types/node": "^20",
+    "@types/react": "^19.2.8",
+    "@types/react-dom": "^19.2.3",
+    "eslint": "^9.28.0",
+    "eslint-config-next": "^16.1.2",
+    "typescript": "^5.9.3"
+  }
+}
