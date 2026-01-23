@@ -1,0 +1,139 @@
+{
+  "id": "mark_as_read",
+  "name": "Mark as Read",
+  "version": "2.2.0",
+  "description": "Mark email message(s) as read or unread",
+  "packageId": "email_client",
+  "startNode": "validate-message-id",
+  "nodes": [
+    {
+      "id": "validate-message-id",
+      "type": "operation",
+      "op": "condition",
+      "condition": "{{ $json.messageId && $json.messageId.length > 0 }}",
+      "description": "Validate that message ID is provided",
+      "onSuccess": {
+        "nextNode": "validate-read-status"
+      },
+      "onError": {
+        "nextNode": "error-no-message-id"
+      }
+    },
+    {
+      "id": "validate-read-status",
+      "type": "operation",
+      "op": "condition",
+      "condition": "{{ typeof $json.isRead === 'boolean' }}",
+      "description": "Validate that read status is boolean",
+      "onSuccess": {
+        "nextNode": "get-message"
+      },
+      "onError": {
+        "nextNode": "error-invalid-read-status"
+      }
+    },
+    {
+      "id": "get-message",
+      "type": "action",
+      "action": "workflow.plugins.ts",
+      "plugin": "dbal.read",
+      "description": "Retrieve email message from database",
+      "params": {
+        "entity": "EmailMessage",
+        "id": "{{ $json.messageId }}"
+      },
+      "nextNode": "check-ownership"
+    },
+    {
+      "id": "check-ownership",
+      "type": "operation",
+      "op": "condition",
+      "condition": "{{ $json.userId === $context.userId }}",
+      "description": "Verify user owns the message (multi-tenant ACL)",
+      "onSuccess": {
+        "nextNode": "update-message-status"
+      },
+      "onError": {
+        "nextNode": "error-unauthorized"
+      }
+    },
+    {
+      "id": "update-message-status",
+      "type": "action",
+      "action": "workflow.plugins.ts",
+      "plugin": "dbal.update",
+      "description": "Update message read status in database",
+      "params": {
+        "entity": "EmailMessage",
+        "id": "{{ $json.messageId }}",
+        "data": {
+          "isRead": "{{ $json.isRead }}"
+        }
+      },
+      "nextNode": "sync-to-imap"
+    },
+    {
+      "id": "sync-to-imap",
+      "type": "action",
+      "action": "workflow.plugins.python",
+      "plugin": "email.imap.set_flags",
+      "description": "Synchronize read status to IMAP server",
+      "params": {
+        "accountId": "{{ $json.emailClientId }}",
+        "imapUid": "{{ $json.imapUid }}",
+        "flags": {
+          "seen": "{{ $json.isRead }}"
+        }
+      },
+      "nextNode": "update-folder-unread-count"
+    },
+    {
+      "id": "update-folder-unread-count",
+      "type": "action",
+      "action": "workflow.plugins.python",
+      "plugin": "email.folder.update_unread_count",
+      "description": "Recalculate unread count for folder",
+      "params": {
+        "folderId": "{{ $json.folderId }}"
+      },
+      "nextNode": "success-mark-read"
+    },
+    {
+      "id": "success-mark-read",
+      "type": "output",
+      "output": {
+        "status": "success",
+        "message": "Message status updated",
+        "isRead": "{{ $json.isRead }}",
+        "timestamp": "{{ Date.now() }}"
+      }
+    },
+    {
+      "id": "error-no-message-id",
+      "type": "output",
+      "output": {
+        "status": "error",
+        "message": "No message ID specified",
+        "error": "INVALID_MESSAGE_ID"
+      }
+    },
+    {
+      "id": "error-invalid-read-status",
+      "type": "output",
+      "output": {
+        "status": "error",
+        "message": "Read status must be boolean (true/false)",
+        "error": "INVALID_READ_STATUS"
+      }
+    },
+    {
+      "id": "error-unauthorized",
+      "type": "output",
+      "output": {
+        "status": "error",
+        "message": "Unauthorized: message does not belong to user",
+        "error": "UNAUTHORIZED"
+      }
+    }
+  ]
+}

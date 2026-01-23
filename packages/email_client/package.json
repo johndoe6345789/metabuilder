@@ -1,0 +1,92 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "email_client",
+  "name": "Email Client",
+  "version": "1.0.0",
+  "description": "Full-featured email client with IMAP/POP3/SMTP support, folders, attachments, and multi-account management",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "social",
+  "minLevel": 1,
+  "primary": false,
+  "icon": "static_content/icon.svg",
+  "keywords": [
+    "email",
+    "imap",
+    "pop3",
+    "smtp",
+    "mailbox",
+    "messaging",
+    "communication"
+  ],
+  "dependencies": {
+    "ui_permissions": "^1.0.0"
+  },
+  "devDependencies": {
+    "testing": "^1.0.0"
+  },
+  "exports": {
+    "components": [
+      "EmailInbox",
+      "EmailCompose",
+      "EmailSettings",
+      "EmailCard",
+      "MessageThread",
+      "ComposeWindow",
+      "FolderTree",
+      "AttachmentList",
+      "AccountTabs",
+      "SyncStatusBadge"
+    ],
+    "scripts": [
+      "send_email",
+      "fetch_inbox",
+      "mark_as_read",
+      "sync_accounts",
+      "list_folders"
+    ]
+  },
+  "tests": {
+    "suites": [
+      "tests/metadata.test.json"
+    ]
+  },
+  "schema": {
+    "entities": [
+      "EmailClient",
+      "EmailFolder",
+      "EmailMessage",
+      "EmailAttachment"
+    ],
+    "path": "schema/entities.yaml"
+  },
+  "files": {
+    "directories": [
+      "page-config",
+      "permissions",
+      "static_content",
+      "tests",
+      "workflow",
+      "docs"
+    ],
+    "byType": {
+      "pages": [
+        "page-config/page-config.json"
+      ],
+      "workflows": [
+        "workflow/send-email.json",
+        "workflow/fetch-inbox.json",
+        "workflow/mark-as-read.json"
+      ],
+      "config": [
+        "package.json"
+      ],
+      "permissions": [
+        "permissions/roles.json"
+      ],
+      "docs": [
+        "docs/CLAUDE.md"
+      ]
+    }
+  }
+}

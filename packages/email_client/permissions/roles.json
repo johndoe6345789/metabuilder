@@ -1,0 +1,139 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "email_client",
+  "description": "Email Client access permissions for account management, messaging, and settings",
+  "permissions": [
+    {
+      "id": "email.read",
+      "name": "Read Email",
+      "description": "Read and view email messages in own accounts",
+      "resource": "email",
+      "action": "read",
+      "scope": "own",
+      "minLevel": 1
+    },
+    {
+      "id": "email.create",
+      "name": "Send Email",
+      "description": "Compose and send email messages from own accounts",
+      "resource": "email.message",
+      "action": "create",
+      "scope": "own",
+      "minLevel": 1
+    },
+    {
+      "id": "email.update",
+      "name": "Update Email Status",
+      "description": "Mark emails as read, star, archive, or apply labels",
+      "resource": "email.message",
+      "action": "update",
+      "scope": "own",
+      "minLevel": 1
+    },
+    {
+      "id": "email.delete",
+      "name": "Delete Email",
+      "description": "Delete or move email messages to trash",
+      "resource": "email.message",
+      "action": "delete",
+      "scope": "own",
+      "minLevel": 1
+    },
+    {
+      "id": "email.account.manage",
+      "name": "Manage Email Accounts",
+      "description": "Add, edit, delete email accounts and configure IMAP/SMTP settings",
+      "resource": "email.account",
+      "action": "manage",
+      "scope": "own",
+      "minLevel": 1
+    },
+    {
+      "id": "email.sync",
+      "name": "Sync Email",
+      "description": "Synchronize email accounts and fetch new messages",
+      "resource": "email",
+      "action": "update",
+      "scope": "own",
+      "minLevel": 1
+    },
+    {
+      "id": "email.admin",
+      "name": "Email Administrator",
+      "description": "Full administrative access to all email accounts and system settings",
+      "resource": "email",
+      "action": "manage",
+      "scope": "global",
+      "minLevel": 4
+    }
+  ],
+  "resources": [
+    {
+      "id": "email",
+      "name": "Email",
+      "type": "custom",
+      "description": "Email system resources including accounts and messages",
+      "actions": ["read", "create", "update", "delete", "manage"]
+    },
+    {
+      "id": "email.message",
+      "name": "Email Message",
+      "type": "custom",
+      "description": "Individual email messages",
+      "actions": ["read", "create", "update", "delete"]
+    },
+    {
+      "id": "email.account",
+      "name": "Email Account",
+      "type": "custom",
+      "description": "Email account configuration (IMAP/SMTP)",
+      "actions": ["read", "create", "update", "delete", "manage"]
+    },
+    {
+      "id": "email.folder",
+      "name": "Email Folder",
+      "type": "custom",
+      "description": "Email folders and labels",
+      "actions": ["read", "manage"]
+    },
+    {
+      "id": "email.attachment",
+      "name": "Email Attachment",
+      "type": "custom",
+      "description": "Email attachments",
+      "actions": ["read", "download"]
+    }
+  ],
+  "roles": [
+    {
+      "id": "email.user",
+      "name": "Email User",
+      "description": "Standard user who can manage own email accounts and messages",
+      "minLevel": 1,
+      "permissions": [
+        "email.read",
+        "email.create",
+        "email.update",
+        "email.delete",
+        "email.account.manage",
+        "email.sync"
+      ]
+    },
+    {
+      "id": "email.admin",
+      "name": "Email Administrator",
+      "description": "System administrator with full control over email system",
+      "minLevel": 4,
+      "permissions": [
+        "email.read",
+        "email.create",
+        "email.update",
+        "email.delete",
+        "email.account.manage",
+        "email.sync",
+        "email.admin"
+      ]
+    }
+  ]
+}

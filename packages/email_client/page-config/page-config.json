@@ -1,0 +1,38 @@
+[
+  {
+    "id": "page_email_inbox",
+    "path": "/email/inbox",
+    "title": "Email Inbox",
+    "packageId": "email_client",
+    "component": "EmailInbox",
+    "level": 1,
+    "requiresAuth": true,
+    "isPublished": true,
+    "sortOrder": 50,
+    "description": "View and manage email messages in your inbox"
+  },
+  {
+    "id": "page_email_compose",
+    "path": "/email/compose",
+    "title": "Compose Email",
+    "packageId": "email_client",
+    "component": "EmailCompose",
+    "level": 1,
+    "requiresAuth": true,
+    "isPublished": true,
+    "sortOrder": 51,
+    "description": "Compose and send a new email message"
+  },
+  {
+    "id": "page_email_settings",
+    "path": "/email/settings",
+    "title": "Email Settings",
+    "packageId": "email_client",
+    "component": "EmailSettings",
+    "level": 1,
+    "requiresAuth": true,
+    "isPublished": true,
+    "sortOrder": 52,
+    "description": "Manage email accounts and settings"
+  }
+]
