@@ -1,0 +1,140 @@
+{
+  "name": "Component Documentation Pipeline",
+  "description": "Build and manage Storybook component documentation",
+  "version": "1.0.0",
+  "id": "workflow_storybook_docs",
+  "tenantId": "${TENANT_ID}",
+  "nodes": [
+    {
+      "id": "trigger",
+      "name": "Start Documentation Build",
+      "type": "webhook",
+      "typeVersion": 1,
+      "position": [0, 0],
+      "parameters": {
+        "events": "workflow.docs.build"
+      }
+    },
+    {
+      "id": "checkout_repo",
+      "name": "Checkout Repository",
+      "type": "git.clone",
+      "typeVersion": 1,
+      "position": [300, 0],
+      "parameters": {
+        "repository": "{{ $env.GIT_REPO }}",
+        "branch": "main"
+      }
+    },
+    {
+      "id": "install_dependencies",
+      "name": "Install Dependencies",
+      "type": "terminal.exec",
+      "typeVersion": 1,
+      "position": [600, 0],
+      "parameters": {
+        "command": "npm install"
+      }
+    },
+    {
+      "id": "build_storybook_static",
+      "name": "Build Static Storybook",
+      "type": "documentation.storybook",
+      "typeVersion": 1,
+      "position": [900, 0],
+      "parameters": {
+        "command": "build",
+        "outputDir": "storybook-static",
+        "docs": true
+      }
+    },
+    {
+      "id": "build_storybook_docs",
+      "name": "Build Documentation Site",
+      "type": "documentation.storybook",
+      "typeVersion": 1,
+      "position": [900, 100],
+      "parameters": {
+        "command": "build",
+        "outputDir": "docs-build",
+        "docs": true,
+        "configDir": ".storybook"
+      }
+    },
+    {
+      "id": "upload_to_s3",
+      "name": "Upload to S3",
+      "type": "aws.s3.upload",
+      "typeVersion": 1,
+      "position": [1200, 50],
+      "parameters": {
+        "bucket": "{{ $env.DOCS_BUCKET }}",
+        "source": "storybook-static",
+        "destination": "components/v{{ $json.version }}"
+      }
+    },
+    {
+      "id": "update_cdn_cache",
+      "name": "Invalidate CDN Cache",
+      "type": "aws.cloudfront.invalidate",
+      "typeVersion": 1,
+      "position": [1500, 50],
+      "parameters": {
+        "distributionId": "{{ $env.CDN_DIST_ID }}",
+        "paths": ["/components/*"]
+      }
+    },
+    {
+      "id": "notify_completion",
+      "name": "Notify Team",
+      "type": "notification",
+      "typeVersion": 1,
+      "position": [1800, 50],
+      "parameters": {
+        "type": "slack",
+        "channel": "#documentation",
+        "message": "Component documentation updated and deployed! View at: {{ $env.DOCS_URL }}"
+      }
+    }
+  ],
+  "connections": {
+    "trigger": {
+      "main": {
+        "0": [{"node": "checkout_repo", "type": "main", "index": 0}]
+      }
+    },
+    "checkout_repo": {
+      "main": {
+        "0": [{"node": "install_dependencies", "type": "main", "index": 0}]
+      }
+    },
+    "install_dependencies": {
+      "main": {
+        "0": [
+          {"node": "build_storybook_static", "type": "main", "index": 0},
+          {"node": "build_storybook_docs", "type": "main", "index": 0}
+        ]
+      }
+    },
+    "build_storybook_static": {
+      "main": {
+        "0": [{"node": "upload_to_s3", "type": "main", "index": 0}]
+      }
+    },
+    "build_storybook_docs": {
+      "main": {
+        "0": [{"node": "upload_to_s3", "type": "main", "index": 0}]
+      }
+    },
+    "upload_to_s3": {
+      "main": {
+        "0": [{"node": "update_cdn_cache", "type": "main", "index": 0}]
+      }
+    },
+    "update_cdn_cache": {
+      "main": {
+        "0": [{"node": "notify_completion", "type": "main", "index": 0}]
+      }
+    }
+  }
+}

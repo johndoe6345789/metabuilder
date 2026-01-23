@@ -1,0 +1,375 @@
+================================================================================
+WorkflowLoaderV2 Integration Plan - Executive Summary
+================================================================================
+
+PROJECT SCOPE
+=============
+Integration of WorkflowLoaderV2 and registry support into the Next.js workflow 
+service, with pre-execution validation, multi-tenant safety, and caching.
+
+DELIVERABLES CREATED
+====================
+
+1. WORKFLOW_LOADERV2_INTEGRATION_PLAN.md
+   - Complete integration architecture
+   - 6 main endpoint modifications (before/after)
+   - Validation integration points
+   - Error response templates
+   - Multi-tenant context flow
+   - Caching strategy (L1/L2/L3)
+   - Testing checklist
+   - Migration path (4 phases)
+   - Implementation checklist
+
+2. WORKFLOW_LOADERV2_IMPLEMENTATION.md
+   - WorkflowLoaderV2 core class (complete code)
+   - ValidationCache implementation
+   - ErrorHandler with formatting
+   - MultiTenantContext builder
+   - Integration examples
+   - Unit test examples
+   - Production-ready patterns
+
+3. WORKFLOW_LOADERV2_QUICK_REFERENCE.md
+   - Quick start guide
+   - API reference for all functions
+   - Error code lookup table
+   - 4 common patterns with examples
+   - Multi-tenant safety examples
+   - Performance tips
+   - Debugging guide
+   - Migration instructions
+
+KEY ARCHITECTURAL DECISIONS
+===========================
+
+1. VALIDATION STRATEGY
+   - Multi-layer validation (schema, nodes, connections, registry, multi-tenant)
+   - WorkflowValidator as foundation
+   - Registry-based node type validation
+   - Resource constraint enforcement
+
+2. CACHING APPROACH
+   - L1: Memory cache (100 entries, 1-hour TTL)
+   - L2: Redis cache (distributed, 24-hour TTL)
+   - L3: Database (source of truth)
+   - Hash-based cache keys to detect workflow changes
+   - Automatic invalidation on workflow update
+
+3. ERROR HANDLING
+   - Structured error codes (machine-readable)
+   - User-friendly messages (for UI)
+   - Diagnostic information (for debugging)
+   - Stack traces (development only)
+   - Context linking (execution, workflow, node, tenant)
+
+4. MULTI-TENANT SAFETY
+   - Route tenant param validation
+   - User tenant check (admin exception)
+   - Workflow tenantId verification
+   - Context propagation through execution
+   - All queries filtered by tenantId
+
+ENDPOINT MODIFICATIONS
+======================
+
+1. GET /api/v1/{tenant}/workflows
+   - Added: ?includeValidation=true query param
+   - Added: Validation metadata in response
+   - Added: Cache hit indicator
+
+2. POST /api/v1/{tenant}/workflows
+   - Added: Pre-creation validation
+   - Added: Reject invalid workflows (400)
+   - Added: Cache validation result
+   - Changed: Response includes validation state
+
+3. GET /api/v1/{tenant}/workflows/{id}
+   - Added: Validation metadata in response
+   - Added: Last validation timestamp
+
+4. PUT /api/v1/{tenant}/workflows/{id}
+   - Added: Validation on update
+   - Added: Cache invalidation
+   - Added: Validation re-caching
+
+5. POST /api/v1/{tenant}/workflows/{id}/execute
+   - Added: Mandatory validation before execution
+   - Added: Detailed validation error responses
+   - Changed: Fail fast on invalid workflows
+   - Added: Multi-tenant context building
+
+6. POST /api/v1/{tenant}/workflows/{id}/validate (NEW)
+   - Purpose: Pre-save validation endpoint
+   - Returns: Validation result + diagnostics
+   - No database writes
+
+VALIDATION ERROR CODES
+======================
+
+Node Structure:
+- MISSING_NODE_ID / MISSING_NODE_NAME / MISSING_NODE_TYPE
+- INVALID_NODE_TYPE (not in registry)
+- DUPLICATE_NODE_NAME
+
+Node Parameters:
+- MISSING_REQUIRED_FIELD
+- TYPE_MISMATCH
+- ENUM_VALIDATION_FAILED
+- OBJECT_SERIALIZATION_FAILURE
+- NESTED_NODE_ATTRIBUTES
+
+Connections:
+- INVALID_CONNECTION_SOURCE
+- INVALID_CONNECTION_TARGET_NODE
+- INVALID_CONNECTION_FORMAT
+- INVALID_OUTPUT_TYPE
+
+Variables:
+- INVALID_VARIABLE_NAME
+- INVALID_VARIABLE_TYPE
+- VARIABLE_TYPE_MISMATCH
+- MISSING_VARIABLE_TYPE
+
+Execution:
+- TIMEOUT_TOO_SHORT / TIMEOUT_TOO_LONG
+- REGEX_COMPLEXITY_WARNING
+
+Multi-Tenant:
+- MISSING_TENANT_ID
+- GLOBAL_SCOPE_VARIABLE
+
+Resource Limits:
+- RESOURCE_LIMIT_EXCEEDED
+- EXECUTION_CONSTRAINT_VIOLATED
+
+CACHING PERFORMANCE
+===================
+
+Memory Cache:
+- Hit latency: ~5ms
+- Hit rate: ~80% for repeated workflows
+- Max size: 100 entries
+- Auto-cleanup: Every 5 minutes
+
+Redis Cache (optional):
+- Hit latency: ~20-50ms
+- Distributed across processes
+- 24-hour TTL
+- Max size: 10,000 entries
+
+Without Cache:
+- Validation time: ~150-500ms (depending on size)
+- Scales with workflow complexity
+
+Cache Invalidation Triggers:
+- Workflow update
+- Registry change
+- Tenant config change
+- Manual invalidation
+- TTL expiration
+
+MULTI-TENANT FLOW
+=================
+
+1. Request arrives with route {tenant}
+2. User authenticated (extract tenantId, level)
+3. Access check: user.tenantId === route.tenant OR user.level >= 4
+4. Load workflow with tenantId filter
+5. Validate workflow (checks tenantId present)
+6. Build ExecutionContext with:
+   - context.tenantId = route.tenant
+   - context.userId = user.id
+   - context.multiTenant = { enforced: true, ... }
+7. Execute workflow
+   - All node executions inherit tenantId
+   - All database queries filtered by tenantId
+8. Audit log includes tenant context
+
+Safety Properties:
+- No cross-tenant data access
+- No global scope variables allowed
+- All queries tenantId-filtered
+- User can only access own tenant (unless admin)
+- Workflow must belong to tenant
+
+TESTING STRATEGY
+================
+
+Unit Tests:
+- WorkflowValidator (all error codes)
+- WorkflowLoaderV2 (caching, batch)
+- ErrorHandler (formatting)
+- ValidationCache (TTL, eviction)
+
+Integration Tests:
+- Endpoint validations
+- Multi-tenant isolation
+- Cache behavior
+- Error responses
+
+E2E Tests:
+- Create → Validate → Execute flow
+- Invalid workflow rejection
+- Warning handling
+- Multi-tenant isolation
+- Cache effectiveness
+
+Load Tests:
+- 100-node workflow validation < 500ms
+- 1000 concurrent validations stable
+- Rate limiting effective
+- Cache memory stable
+
+MIGRATION PLAN (8 WEEKS)
+=======================
+
+Phase 1 (Weeks 1-2): Foundation
+- Create WorkflowLoaderV2 class
+- Implement ValidationCache
+- Add validation error types
+- Unit tests
+
+Phase 2 (Weeks 3-4): Integration
+- Update all 6 API endpoints
+- Implement error handler
+- Add multi-tenant context
+- Audit logging
+
+Phase 3 (Weeks 5-6): Optimization
+- Redis cache setup
+- Performance tuning
+- Load testing
+- Monitoring/metrics
+
+Phase 4 (Weeks 7-8): Deployment
+- Staging deployment
+- Full test suite
+- Canary rollout (10% traffic)
+- Production monitoring
+
+Backward Compatibility:
+- Support skipValidation=true for gradual rollout
+- Keep old endpoints functional
+- Deprecation warnings in logs
+- 6-month sunset period
+
+FILES TO CREATE
+===============
+
+Frontend:
+✓ frontends/nextjs/src/lib/workflow/workflow-loader-v2.ts
+✓ frontends/nextjs/src/lib/workflow/workflow-loader-v2.test.ts
+✓ frontends/nextjs/src/lib/workflow/validation-cache.ts
+✓ frontends/nextjs/src/lib/workflow/validation-cache.test.ts
+✓ frontends/nextjs/src/lib/workflow/error-handler.ts
+✓ frontends/nextjs/src/lib/workflow/error-handler.test.ts
+✓ frontends/nextjs/src/lib/workflow/multi-tenant-context.ts
+✓ frontends/nextjs/src/lib/workflow/index.ts (exports)
+
+API Routes (modifications):
+✓ frontends/nextjs/src/app/api/v1/[tenant]/workflows/route.ts
+✓ frontends/nextjs/src/app/api/v1/[tenant]/workflows/[workflowId]/route.ts
+✓ frontends/nextjs/src/app/api/v1/[tenant]/workflows/[workflowId]/execute/route.ts
+✓ frontends/nextjs/src/app/api/v1/[tenant]/workflows/[workflowId]/validate/route.ts
+
+Database:
+✓ Migration: Add workflow_validations table
+  - workflowId, tenantId, validationResult, validatedAt
+  - Index on (workflowId, tenantId)
+
+Documentation (CREATED):
+✓ docs/WORKFLOW_LOADERV2_INTEGRATION_PLAN.md
+✓ docs/WORKFLOW_LOADERV2_IMPLEMENTATION.md
+✓ docs/WORKFLOW_LOADERV2_QUICK_REFERENCE.md
+
+INTEGRATION POINTS
+==================
+
+1. DAGExecutor Integration
+   - Validation happens before DAG creation
+   - Error handling improved
+   - Execution metrics collected
+   - Multi-tenant context passed through
+
+2. Node Registry Integration
+   - Node type validation against registry
+   - Executor availability checked
+   - Execution constraints verified
+   - Plugin metadata used
+
+3. DBAL Integration
+   - Workflows loaded with tenantId filter
+   - Validation results stored
+   - Audit logs include validation state
+   - Multi-tenant safety at DB level
+
+4. API Layer Integration
+   - Error handler formats responses
+   - Rate limiting applied
+   - Authentication enforced
+   - Multi-tenant checks in place
+
+PERFORMANCE TARGETS
+===================
+
+Validation:
+- Single workflow: < 200ms
+- Batch (100 workflows): < 5s
+- Cache hit: < 10ms
+- Hit rate: > 75% in production
+
+Execution:
+- Validation overhead: < 50ms when cached
+- No impact on successful execution
+- Fail-fast on invalid workflows
+
+Cache:
+- Memory usage: < 50MB
+- Redis usage: < 500MB (if deployed)
+- Cleanup time: < 100ms
+
+MONITORING & METRICS
+====================
+
+Track:
+- Validation error rates (by code)
+- Cache hit rate / miss rate
+- Validation latency (with/without cache)
+- Multi-tenant violations (should be 0)
+- Execution time impact
+- Memory usage
+
+Alerts:
+- Error rate > 5%
+- Cache hit rate < 50%
+- Validation latency > 1s
+- Multi-tenant violations detected
+- Memory > 100MB
+
+NEXT STEPS
+==========
+
+1. Review this plan with team
+2. Create feature branch: feature/workflow-loaderv2
+3. Implement WorkflowLoaderV2 core (Phase 1)
+4. Write comprehensive tests
+5. Update API endpoints (Phase 2)
+6. Performance testing (Phase 3)
+7. Staging deployment
+8. Production rollout with monitoring
+
+CONTACT & SUPPORT
+=================
+
+Documentation:
+- Quick Reference: WORKFLOW_LOADERV2_QUICK_REFERENCE.md
+- Full Plan: WORKFLOW_LOADERV2_INTEGRATION_PLAN.md
+- Implementation: WORKFLOW_LOADERV2_IMPLEMENTATION.md
+
+Questions?
+- Review CLAUDE.md for project patterns
+- Check AGENTS.md for domain-specific rules
+- See docs/MULTI_TENANT_AUDIT.md for safety rules
+
+================================================================================

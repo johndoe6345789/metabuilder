@@ -1,13 +1,23 @@
 /**
  * Built-in Node Executors Registry
- * Registers all built-in workflow node executors
+ * Registers all built-in workflow node executors with the global registry
+ *
+ * This module:
+ * - Imports all class-based and function-based executors
+ * - Provides registration mechanism
+ * - Exports catalog of available node types
+ * - Maintains backward compatibility with legacy plugin system
+ *
  * @packageDocumentation
  */
 
 import { getNodeExecutorRegistry } from '../registry/node-executor-registry';
 import { registerPluginMap } from './function-executor-adapter';
 
-// Import class-based executors from plugin packages
+// ============================================================================
+// CLASS-BASED EXECUTOR IMPORTS
+// ============================================================================
+
 import { dbalReadExecutor } from '../../../plugins/ts/dbal-read/src/index';
 import { dbalWriteExecutor } from '../../../plugins/ts/dbal-write/src/index';
 import { httpRequestExecutor } from '../../../plugins/ts/integration/http-request/src/index';
@@ -18,7 +28,10 @@ import { waitExecutor } from '../../../plugins/ts/utility/wait/src/index';
 import { setVariableExecutor } from '../../../plugins/ts/utility/set-variable/src/index';
 import { webhookResponseExecutor } from '../../../plugins/ts/integration/webhook-response/src/index';
 
-// Import function-based plugin maps
+// ============================================================================
+// FUNCTION-BASED PLUGIN MAP IMPORTS
+// ============================================================================
+
 import { stringPlugins } from '../../../plugins/ts/string/src/index';
 import { mathPlugins } from '../../../plugins/ts/math/src/index';
 import { logicPlugins } from '../../../plugins/ts/logic/src/index';
@@ -27,7 +40,14 @@ import { dictPlugins } from '../../../plugins/ts/dict/src/index';
 import { convertPlugins } from '../../../plugins/ts/convert/src/index';
 import { varPlugins } from '../../../plugins/ts/var/src/index';
 
-// Re-export class-based executors for direct use
+// ============================================================================
+// BACKWARD COMPATIBILITY EXPORTS
+// ============================================================================
+
+/**
+ * Class-based executors - Direct use or plugin registration
+ * @exports
+ */
 export {
   dbalReadExecutor,
   dbalWriteExecutor,
@@ -41,7 +61,10 @@ export {
   webhookResponseExecutor
 };
 
-// Re-export function-based plugin maps
+/**
+ * Function-based plugin maps - Catalog of available operations
+ * @exports
+ */
 export {
   stringPlugins,
   mathPlugins,

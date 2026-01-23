@@ -1,0 +1,16 @@
+{
+  "id": "documentation.storybook",
+  "name": "Storybook Documentation",
+  "version": "1.0.0",
+  "type": "node",
+  "category": "documentation",
+  "description": "Generate and manage Storybook component documentation as workflow nodes",
+  "entry": "index.ts",
+  "tags": ["documentation", "components", "storybook", "ui"],
+  "dependencies": ["@storybook/core", "@storybook/react"],
+  "config": {
+    "port": 6006,
+    "outputDir": "storybook-static",
+    "buildStatic": true
+  }
+}
