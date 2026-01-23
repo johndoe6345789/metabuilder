@@ -2,6 +2,7 @@
 /* eslint-disable no-console */
 const fs = require('fs')
 const path = require('path')
+const yaml = require('yaml')
 
 const header = `datasource db {
   provider = "sqlite"
@@ -11,7 +12,8 @@ generator client {
   provider = "prisma-client-js"
 }`
 
-const models = [
+// Hardcoded core models
+const coreModels = [
   {
     name: 'User',
     fields: [
@@ -142,6 +144,143 @@ const models = [
     ],
   },
 ]
+
+// Function to convert YAML field type to Prisma type
+function yamlTypeToPrismaType(yamlType, isNullable = false, isArray = false) {
+  const typeMap = {
+    cuid: 'String',
+    uuid: 'String',
+    string: 'String',
+    int: 'Int',
+    bigint: 'BigInt',
+    float: 'Float',
+    boolean: 'Boolean',
+    json: 'String', // JSON stored as string in SQLite
+    text: 'String',
+    enum: 'String',
+  }
+
+  let prismaType = typeMap[yamlType] || 'String'
+  if (isArray) prismaType = prismaType + '[]'
+  if (isNullable) prismaType = prismaType + '?'
+
+  return prismaType
+}
+
+// Function to load and convert YAML schema to model
+function yamlToModel(yamlPath) {
+  try {
+    const content = fs.readFileSync(yamlPath, 'utf8')
+    const yamlData = yaml.parse(content)
+
+    if (!yamlData || !yamlData.entity) {
+      return null
+    }
+
+    const modelName = yamlData.entity
+    const fields = []
+    const blockAttributes = []
+
+    // Process fields
+    if (yamlData.fields && typeof yamlData.fields === 'object') {
+      for (const [fieldName, fieldDef] of Object.entries(yamlData.fields)) {
+        if (!fieldDef || typeof fieldDef !== 'object') continue
+
+        const isNullable = fieldDef.nullable || !fieldDef.required
+        const fieldType = yamlTypeToPrismaType(fieldDef.type, isNullable)
+        const attributes = []
+
+        // Handle primary key
+        if (fieldDef.primary) {
+          attributes.push('@id')
+        }
+
+        // Handle unique constraint
+        if (fieldDef.unique) {
+          attributes.push('@unique')
+        }
+
+        // Handle default values
+        if (fieldDef.default !== undefined) {
+          let defaultVal = fieldDef.default
+          if (typeof defaultVal === 'string') {
+            defaultVal = `"${defaultVal}"`
+          }
+          attributes.push(`@default(${defaultVal})`)
+        }
+
+        // Handle generated fields
+        if (fieldDef.generated) {
+          if (fieldName === 'id' && fieldDef.type === 'cuid') {
+            attributes.push('@default(cuid())')
+          }
+        }
+
+        fields.push({
+          name: fieldName,
+          type: fieldType,
+          attributes: attributes.length > 0 ? attributes : undefined,
+        })
+      }
+    }
+
+    // Process indexes
+    if (Array.isArray(yamlData.indexes)) {
+      yamlData.indexes.forEach((index) => {
+        if (index.fields && Array.isArray(index.fields)) {
+          const fieldList = index.fields.join(', ')
+          blockAttributes.push(`@@index([${fieldList}])`)
+        }
+      })
+    }
+
+    return {
+      name: modelName,
+      fields,
+      blockAttributes: blockAttributes.length > 0 ? blockAttributes : undefined,
+    }
+  } catch (err) {
+    return null
+  }
+}
+
+// Load all YAML entity schemas
+function loadYamlModels(entityDir) {
+  const models = []
+
+  function walkDir(dir) {
+    try {
+      const files = fs.readdirSync(dir)
+      files.forEach((file) => {
+        const fullPath = path.join(dir, file)
+        const stat = fs.statSync(fullPath)
+
+        if (stat.isDirectory()) {
+          walkDir(fullPath)
+        } else if (file.endsWith('.yaml')) {
+          const model = yamlToModel(fullPath)
+          if (model) {
+            models.push(model)
+          }
+        }
+      })
+    } catch (err) {
+      // Ignore directory read errors
+    }
+  }
+
+  walkDir(entityDir)
+  return models
+}
+
+const entityDir = path.resolve(__dirname, '../../api/schema/entities')
+const yamlModels = loadYamlModels(entityDir)
+
+console.log(`✓ Parsed ${coreModels.length} existing entities`)
+console.log(`✓ Parsed ${yamlModels.length} YAML email entities`)
+yamlModels.forEach((m) => console.log(`  - ${m.name}`))
+
+const models = [...coreModels, ...yamlModels]
 
 const renderField = (field) => {
   const attrs = field.attributes ? ` ${field.attributes.join(' ')}` : ''
