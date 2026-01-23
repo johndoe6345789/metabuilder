@@ -1,0 +1,10 @@
+{
+  "name": "@metabuilder/workflow-plugins-email",
+  "version": "1.0.0",
+  "description": "Email operation plugins for MetaBuilder workflow engine (sync, search, parse)",
+  "private": true,
+  "workspaces": [
+    "imap-sync",
+    "imap-search"
+  ]
+}
