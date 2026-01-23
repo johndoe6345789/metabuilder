@@ -1,0 +1,78 @@
+version: '3.9'
+
+services:
+  # WorkflowUI (Next.js + Flask)
+  workflowui:
+    image: metabuilder/workflowui:latest
+    container_name: metabuilder-workflowui
+    ports:
+      - "3000:3000"
+      - "5002:5000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=sqlite:////app/data/workflows.db
+      - SMTP_RELAY_HOST=postfix
+      - SMTP_RELAY_PORT=25
+    volumes:
+      - workflowui-data:/app/data
+      - workflowui-logs:/app/logs
+    depends_on:
+      - postfix
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+    networks:
+      - metabuilder-network
+
+  # Postfix Mail Server - handles all mail delivery
+  postfix:
+    build:
+      context: .
+      dockerfile: deployment/docker/postfix/Dockerfile
+    container_name: metabuilder-postfix
+    hostname: metabuilder.local
+    ports:
+      - "25:25"
+      - "587:587"
+      - "465:465"
+    environment:
+      - POSTFIX_myhostname=metabuilder.local
+      - POSTFIX_mydomain=metabuilder.local
+      - POSTFIX_mynetworks=127.0.0.1/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+      - POSTFIX_relayhost=${POSTFIX_RELAYHOST:-}
+      - POSTFIX_smtp_sasl_auth_enable=${POSTFIX_SMTP_SASL_AUTH:-no}
+      - POSTFIX_smtp_sasl_password_maps=${POSTFIX_SMTP_SASL_PASSWD:-}
+      - POSTFIX_smtp_tls_security_level=${POSTFIX_TLS_LEVEL:-may}
+    volumes:
+      - postfix-data:/var/mail
+      - postfix-logs:/var/log
+      - postfix-spool:/var/spool/postfix
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "postfix", "status"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    networks:
+      - metabuilder-network
+
+volumes:
+  workflowui-data:
+    driver: local
+  workflowui-logs:
+    driver: local
+  postfix-data:
+    driver: local
+  postfix-logs:
+    driver: local
+  postfix-spool:
+    driver: local
+
+networks:
+  metabuilder-network:
+    driver: bridge

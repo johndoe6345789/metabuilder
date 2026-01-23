@@ -5,7 +5,7 @@
 
 import React, { useCallback } from 'react';
 import { ProjectCanvasItem } from '../../../types/project';
-import styles from '../WorkflowCard.module.scss';
+// import styles from (TODO: SCSS module - Phase 5)
 import { WorkflowCardHeader } from './WorkflowCardHeader';
 import { WorkflowCardPreview } from './WorkflowCardPreview';
 import { WorkflowCardFooter } from './WorkflowCardFooter';

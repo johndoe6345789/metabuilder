@@ -1,16 +1,6 @@
 /**
  * @metabuilder/redux-slices
  * Redux Toolkit slices for workflow state management
- *
- * Includes slices for:
- * - Workflow state (nodes, connections, execution)
- * - Canvas state (zoom, pan, selection, settings)
- * - Editor state (zoom, pan, nodes, edges, selection)
- * - UI state (modals, notifications, theme, loading)
- * - Auth state (user, token, authentication)
- * - Project & Workspace management
- * - Real-time collaboration features
- * - Async data management (fetch, mutations, retries)
  */
 
 // Workflow
@@ -26,7 +16,7 @@ export {
 } from './slices/workflowSlice'
 
 // Canvas
-export { canvasSlice, type CanvasState } from './slices/canvasSlice'
+export { canvasSlice } from './slices/canvasSlice'
 export { 
   setCanvasZoom, setCanvasPan, panCanvas,
   selectCanvasItem, addToSelection, toggleSelection,
@@ -35,7 +25,7 @@ export {
 } from './slices/canvasSlice'
 
 // Canvas Items
-export { canvasItemsSlice, type CanvasItemsState } from './slices/canvasItemsSlice'
+export { canvasItemsSlice } from './slices/canvasItemsSlice'
 export {
   setCanvasItems, addCanvasItem, updateCanvasItem, removeCanvasItem,
   bulkUpdateCanvasItems, deleteCanvasItems, duplicateCanvasItems,
@@ -66,26 +56,26 @@ export {
   setNotification, removeNotification, clearNotifications,
   setTheme, toggleTheme,
   setSidebarOpen, toggleSidebar,
-  setLoading, setLoadingMessage
+  setLoading as setUILoading, setLoadingMessage
 } from './slices/uiSlice'
 
 // Auth
 export { authSlice, type AuthState, type User } from './slices/authSlice'
 export {
-  setLoading, setError, setAuthenticated,
+  setLoading as setAuthLoading, setError, setAuthenticated,
   setUser, logout, clearError,
   restoreFromStorage
 } from './slices/authSlice'
 
 // Project
-export { projectSlice, type ProjectState } from './slices/projectSlice'
+export { projectSlice } from './slices/projectSlice'
 export {
   setProjects, addProject, updateProject,
   removeProject, setCurrentProject, clearProject
 } from './slices/projectSlice'
 
 // Workspace
-export { workspaceSlice, type WorkspaceState } from './slices/workspaceSlice'
+export { workspaceSlice } from './slices/workspaceSlice'
 export {
   setWorkspaces, addWorkspace, updateWorkspace,
   removeWorkspace, setCurrentWorkspace, clearWorkspaces
@@ -101,7 +91,7 @@ export {
 } from './slices/nodesSlice'
 
 // Collaboration
-export { collaborationSlice, type CollaborationState } from './slices/collaborationSlice'
+export { collaborationSlice } from './slices/collaborationSlice'
 export {
   addActivityEntry, setActivityFeed, clearActivityFeed,
   addConflict, resolveConflict, resolveAllConflicts,
@@ -109,7 +99,7 @@ export {
 } from './slices/collaborationSlice'
 
 // Real-time
-export { realtimeSlice, type RealtimeState } from './slices/realtimeSlice'
+export { realtimeSlice } from './slices/realtimeSlice'
 export {
   setConnected, addConnectedUser, removeConnectedUser,
   updateRemoteCursor, lockItem, releaseItem,
@@ -117,7 +107,7 @@ export {
 } from './slices/realtimeSlice'
 
 // Documentation
-export { documentationSlice, type DocumentationState } from './slices/documentationSlice'
+export { documentationSlice } from './slices/documentationSlice'
 export {
   openHelp, closeHelp, navigateToPage,
   setCategory, setSearchQuery, setSearchResults,
@@ -125,7 +115,7 @@ export {
 } from './slices/documentationSlice'
 
 // Async Data
-export { asyncDataSlice, type AsyncDataState, type AsyncRequest } from './slices/asyncDataSlice'
+export { asyncDataSlice, type AsyncRequest } from './slices/asyncDataSlice'
 export {
   fetchAsyncData, mutateAsyncData, refetchAsyncData, cleanupAsyncRequests,
   setRequestLoading, setRequestError, setRequestData,

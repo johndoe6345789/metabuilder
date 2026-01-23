@@ -1,5 +1,6 @@
 // Fakemui - Material-UI inspired component library
 // Main barrel export file for all components
+// NOTE: Components requiring SCSS modules are commented out (Phase 5)
 
 // Icons
 export {
@@ -110,6 +111,7 @@ export {
 } from './react/components/layout'
 
 // Data Display
+// NOTE: TreeView and Table excluded (require SCSS modules - Phase 5)
 export {
   Typography,
   Avatar,
@@ -124,37 +126,32 @@ export {
   ListItemAvatar,
   ListSubheader,
   AvatarGroup,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TableFooter,
-  TablePagination,
-  TableSortLabel,
+  // Table, (commented - requires SCSS)
+  // TableBody, (commented - requires SCSS)
+  // TableCell, (commented - requires SCSS)
+  // TableContainer, (commented - requires SCSS)
+  // TableHead, (commented - requires SCSS)
+  // TableRow, (commented - requires SCSS)
+  // TableFooter, (commented - requires SCSS)
+  // TablePagination, (commented - requires SCSS)
+  // TableSortLabel, (commented - requires SCSS)
   Tooltip,
   Markdown,
   Separator,
-  // Note: TreeView also available from lab with component-based API
-  TreeView as TreeViewFlat,
+  // TreeView (commented - requires SCSS - Phase 5)
 } from './react/components/data-display'
 
-// Note: Icon is exported from icons module (line 6), not data-display
-
 // Feedback
+// NOTE: Progress excluded (requires SCSS modules - Phase 5)
 export {
   Alert,
   Backdrop,
   CircularProgress,
-  LinearProgress,
+  // LinearProgress, (commented - requires SCSS)
   Skeleton,
   Snackbar,
   Spinner,
 } from './react/components/feedback'
-
-// Note: Dialog components are available from utils module
-// Import Dialog, DialogTitle, DialogContent, DialogActions from '@/fakemui/utils'
 
 // Navigation
 export {
@@ -239,20 +236,15 @@ export {
   TimelineConnector,
   TimelineContent,
   TimelineOppositeContent,
-  TreeView as TreeViewComponent,
+  // TreeView as TreeViewComponent, (commented - requires SCSS - Phase 5)
   TreeItem,
 } from './react/components/lab'
-
-// Note: TreeView has two implementations:
-// - TreeViewFlat (data-display): Simple array-based API for JSON trees
-// - TreeViewComponent (lab): Composition-based API with TreeItem children
 
 // X (Advanced - pro/premium features)
 export {
   DataGrid,
   DataGridPro,
   DataGridPremium,
-  // Advanced date/time pickers with calendar UI
   DatePicker as DatePickerAdvanced,
   TimePicker as TimePickerAdvanced,
   DateTimePicker,
@@ -262,10 +254,6 @@ export {
   CalendarPicker,
   ClockPicker,
 } from './react/components/x'
-
-// Note: DatePicker has two implementations:
-// - DatePicker (inputs): Simple HTML input-based (string values)
-// - DatePickerAdvanced (x): Advanced with calendar UI (Date objects)
 
 // Theming
 export type { Theme, ThemeOptions } from './react/components/theming'
@@ -283,24 +271,3 @@ export type {
   AccessibilityComponent,
   AccessibilityAction,
 } from './src/utils/accessibility'
-
-// Redux Integration
-// ────────────────────────────────────────────────────────────────────
-// fakemui is designed as a pure UI component library with Material Design 3
-// State management (Redux slices, hooks, store) is application-specific
-//
-// For applications using Redux/workflows:
-// - Redux Slices: Available in workflowui/src/store/slices/
-// - Custom Hooks: Available in workflowui/src/hooks/
-// - Store Configuration: See workflowui/src/store/store.ts
-//
-// These will be unified into a shared @metabuilder/redux-slices package
-// as the framework matures.
-//
-// fakemui itself provides only:
-// - Material Design 3 UI components
-// - Icons, layouts, forms, navigation
-// - Accessibility utilities
-// - Theming support
-
-
