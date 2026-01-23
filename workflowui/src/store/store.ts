@@ -9,6 +9,7 @@ import editorReducer from './slices/editorSlice';
 import nodesReducer from './slices/nodesSlice';
 import connectionReducer from './slices/connectionSlice';
 import uiReducer from './slices/uiSlice';
+import { apiMiddleware } from './middleware/apiMiddleware';
 
 /**
  * Configure Redux store with all slices
@@ -25,10 +26,19 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: ['editor/setTransform', 'editor/setSelection'],
-        ignoredPaths: ['editor.transform']
+        ignoredActions: [
+          'editor/setTransform',
+          'editor/setSelection',
+          'editor/setSelection'
+        ],
+        ignoredPaths: [
+          'editor.transform',
+          'editor.selectedNodes',
+          'editor.selectedEdges',
+          'nodes.registry'
+        ]
       }
-    }),
+    }).concat(apiMiddleware),
   devTools: process.env.NODE_ENV !== 'production'
 });
 
