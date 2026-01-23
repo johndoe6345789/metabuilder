@@ -419,6 +419,326 @@ From [.github/workflows/README.md](./.github/workflows/README.md):
 
 ---
 
+## Async Data Management with Redux
+
+All async data fetching and mutations are managed through Redux instead of external libraries. This provides a single source of truth, better debugging with Redux DevTools, and eliminates runtime dependencies.
+
+### useReduxAsyncData Hook
+
+Drop-in replacement for query libraries. Handles data fetching with automatic caching, retries, and request deduplication.
+
+**Signature:**
+```typescript
+const {
+  data,           // T | undefined - fetched data
+  isLoading,      // boolean - initial load state
+  error,          // Error | null - error if fetch failed
+  isRefetching,   // boolean - true during refetch (data still available)
+  refetch,        // () => Promise<T> - manually refetch
+  retry           // () => Promise<T> - manually retry
+} = useReduxAsyncData<T>(
+  fetchFn: () => Promise<T>,
+  options?: {
+    maxRetries?: number           // Default: 3
+    retryDelay?: number           // Default: 1000ms
+    refetchOnFocus?: boolean      // Default: true
+    refetchInterval?: number      // Default: undefined (no polling)
+    enabled?: boolean             // Default: true
+    onSuccess?: (data: T) => void
+    onError?: (error: Error) => void
+  }
+)
+```
+
+**Basic Example:**
+```typescript
+import { useReduxAsyncData } from '@metabuilder/api-clients'
+
+export function UserList() {
+  const { data: users, isLoading, error, refetch } = useReduxAsyncData(
+    async () => {
+      const res = await fetch('/api/users')
+      if (!res.ok) throw new Error('Failed to fetch')
+      return res.json()
+    }
+  )
+
+  if (isLoading) return <div>Loading...</div>
+  if (error) return <div>Error: {error.message}</div>
+
+  return (
+    <>
+      <div>{users?.map(u => <div key={u.id}>{u.name}</div>)}</div>
+      <button onClick={() => refetch()}>Refresh</button>
+    </>
+  )
+}
+```
+
+**Advanced Example with Dependencies:**
+```typescript
+export function UserDetail({ userId }) {
+  const { data: user, isRefetching } = useReduxAsyncData(
+    async () => {
+      const res = await fetch(`/api/users/${userId}`)
+      return res.json()
+    },
+    {
+      refetchOnFocus: true,
+      refetchInterval: 5000, // Poll every 5 seconds
+      onSuccess: (user) => console.log('User loaded:', user.name),
+      onError: (error) => console.error('Failed:', error)
+    }
+  )
+
+  return <div>{user?.name} {isRefetching && '(updating...)'}</div>
+}
+```
+
+**Pagination Support:**
+```typescript
+const { data: page, hasNextPage, fetchNext } = useReduxPaginatedAsyncData(
+  async (pageNum) => {
+    const res = await fetch(`/api/posts?page=${pageNum}`)
+    return res.json()
+  },
+  pageSize: 20
+)
+```
+
+### useReduxMutation Hook
+
+Handles create, update, delete operations with automatic error handling and success/error callbacks.
+
+**Signature:**
+```typescript
+const {
+  mutate,              // (payload: T) => Promise<R> - execute mutation
+  isLoading,           // boolean - mutation in progress
+  error,               // Error | null - error if mutation failed
+  status,              // 'idle' | 'pending' | 'succeeded' | 'failed'
+  reset                // () => void - reset to idle state
+} = useReduxMutation<T, R>(
+  mutationFn: (payload: T) => Promise<R>,
+  options?: {
+    onSuccess?: (result: R) => void
+    onError?: (error: Error) => void
+    onSettled?: (result?: R, error?: Error) => void
+  }
+)
+```
+
+**Basic Example:**
+```typescript
+import { useReduxMutation } from '@metabuilder/api-clients'
+
+export function CreateUserForm() {
+  const { mutate, isLoading, error } = useReduxMutation(
+    async (user: CreateUserInput) => {
+      const res = await fetch('/api/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(user)
+      })
+      if (!res.ok) throw new Error('Failed to create user')
+      return res.json()
+    }
+  )
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    try {
+      await mutate({ name: 'John', email: 'john@example.com' })
+      alert('User created!')
+    } catch (err) {
+      alert(`Error: ${err.message}`)
+    }
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input type="text" placeholder="Name" required />
+      <button type="submit" disabled={isLoading}>
+        {isLoading ? 'Creating...' : 'Create'}
+      </button>
+      {error && <div style={{ color: 'red' }}>{error.message}</div>}
+    </form>
+  )
+}
+```
+
+**Advanced Example with Success Callback:**
+```typescript
+export function UpdateUserForm({ user, onSuccess }) {
+  const { mutate, status } = useReduxMutation(
+    async (updates: Partial<User>) => {
+      const res = await fetch(`/api/users/${user.id}`, {
+        method: 'PUT',
+        body: JSON.stringify(updates)
+      })
+      return res.json()
+    },
+    {
+      onSuccess: (updated) => {
+        onSuccess(updated)
+        // Can also refresh data automatically here
+      },
+      onError: (error) => {
+        console.error('Update failed:', error)
+      }
+    }
+  )
+
+  return (
+    <button onClick={() => mutate({ name: 'New Name' })} disabled={status === 'pending'}>
+      {status === 'pending' ? 'Saving...' : 'Save'}
+    </button>
+  )
+}
+```
+
+### Migration from TanStack React Query
+
+No code changes needed - the hooks API is 100% compatible:
+
+| Feature | Old (TanStack) | New (Redux) | Changes |
+|---------|---|---|---|
+| Data fetching | `useQuery` | `useReduxAsyncData` | Hook name only |
+| Mutations | `useMutation` | `useReduxMutation` | Hook name only |
+| Return object | `{ data, isLoading, error, refetch }` | Same | Same object structure |
+| Callbacks | `onSuccess`, `onError` | Same | Same callback signatures |
+| Status codes | `'loading' \| 'success' \| 'error'` | `'idle' \| 'pending' \| 'succeeded' \| 'failed'` | Use `isLoading` instead |
+| Pagination | `useInfiniteQuery` | `useReduxPaginatedAsyncData` | Different hook |
+| Cache control | Via QueryClientProvider | Automatic Redux dispatch | No manual config needed |
+
+**Find and Replace:**
+```bash
+# In most files, just rename the hook
+useQuery → useReduxAsyncData
+useMutation → useReduxMutation
+```
+
+### Redux State Structure
+
+The async data slice stores all requests in a normalized format:
+
+```typescript
+{
+  asyncData: {
+    requests: {
+      [requestId]: {
+        id: string
+        status: 'idle' | 'pending' | 'succeeded' | 'failed'
+        data: unknown
+        error: null | string
+        retryCount: number
+        lastFetched: number
+        requestTime: number
+      }
+    },
+    mutations: {
+      [mutationId]: {
+        // same structure as request
+      }
+    }
+  }
+}
+```
+
+### Debugging
+
+**Redux DevTools Integration:**
+
+All async operations appear as Redux actions in Redux DevTools:
+
+1. Open Redux DevTools (browser extension)
+2. Look for `asyncData/fetchAsyncData/pending`, `fulfilled`, or `rejected` actions
+3. Inspect the request ID, response data, and error details
+4. Use time-travel debugging to replay requests
+
+**Request Deduplication:**
+
+Concurrent requests with the same `requestId` are automatically deduplicated. This prevents duplicate API calls:
+
+```typescript
+// Both calls fetch once, return same cached data
+const { data: users1 } = useReduxAsyncData(() => fetch('/api/users'))
+const { data: users2 } = useReduxAsyncData(() => fetch('/api/users'))
+```
+
+**Automatic Cleanup:**
+
+Requests older than 5 minutes are automatically cleaned up from Redux state to prevent memory leaks. Manual cleanup available:
+
+```typescript
+import { useDispatch } from 'react-redux'
+import { cleanupAsyncRequests } from '@metabuilder/redux-slices'
+
+export function MyComponent() {
+  const dispatch = useDispatch()
+  
+  useEffect(() => {
+    return () => {
+      // Clean up on unmount
+      dispatch(cleanupAsyncRequests())
+    }
+  }, [])
+}
+```
+
+### Common Patterns
+
+**Refetch After Mutation:**
+```typescript
+const { data: users, refetch: refetchUsers } = useReduxAsyncData(...)
+const { mutate: createUser } = useReduxMutation(
+  async (user) => {
+    const res = await fetch('/api/users', { method: 'POST', body: JSON.stringify(user) })
+    return res.json()
+  },
+  {
+    onSuccess: () => refetchUsers() // Refresh list after create
+  }
+)
+```
+
+**Loading States:**
+```typescript
+const { isLoading, isRefetching, error } = useReduxAsyncData(...)
+
+// Initial load
+if (isLoading) return <Skeleton />
+
+// Soft refresh - data still visible
+if (isRefetching) return <div>{data} <Spinner /></div>
+
+// Error
+if (error) return <ErrorBoundary error={error} />
+```
+
+**Error Recovery:**
+```typescript
+const { data, error, retry } = useReduxAsyncData(...)
+
+if (error) {
+  return (
+    <div>
+      <p>Failed to load: {error.message}</p>
+      <button onClick={() => retry()}>Try Again</button>
+    </div>
+  )
+}
+```
+
+### Documentation References
+
+- **Implementation Details**: [redux/slices/ASYNC_DATA_SLICE.md](../redux/slices/ASYNC_DATA_SLICE.md)
+- **Hook API Reference**: [redux/hooks-async/README.md](../redux/hooks-async/README.md)
+- **Migration Guide**: [docs/guides/REDUX_ASYNC_DATA_GUIDE.md](./guides/REDUX_ASYNC_DATA_GUIDE.md)
+
+---
+
+
 ## Before Starting Any Task
 
 1. **Read the relevant CLAUDE.md** for your work area
