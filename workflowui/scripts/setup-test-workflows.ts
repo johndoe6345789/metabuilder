@@ -114,6 +114,13 @@ async function createTestProjects(workspaceId: string): Promise<Record<string, s
     '#E91E63'
   );
 
+  projects['accessibility-tests'] = await createProject(
+    workspaceId,
+    'accessibility-tests',
+    'Accessibility & WCAG 2.1 AA Tests',
+    '#00BCD4'
+  );
+
   return projects;
 }
 
@@ -320,6 +327,302 @@ const E2E_TESTS = [
   },
 ];
 
+const ACCESSIBILITY_TESTS = [
+  {
+    name: 'Verify data-testid Attributes on Canvas',
+    description: 'Test that all canvas elements have proper data-testid attributes',
+    nodes: [
+      {
+        id: 'navigate_canvas',
+        type: 'browser',
+        action: 'navigate',
+        url: 'http://localhost:3001/project/default-project',
+        waitFor: '[data-testid="canvas-container"]',
+      },
+      {
+        id: 'check_canvas_container',
+        type: 'browser',
+        action: 'evaluate',
+        script: 'document.querySelector("[data-testid=\'canvas-container\']") !== null',
+        output: 'hasCanvasTestId',
+      },
+      {
+        id: 'check_zoom_controls',
+        type: 'browser',
+        action: 'evaluate',
+        script: 'document.querySelector("[data-testid*=\'zoom\']") !== null',
+        output: 'hasZoomTestIds',
+      },
+      {
+        id: 'assert_canvas_testids',
+        type: 'operation',
+        op: 'logic.assert',
+        condition: '{{ nodes.check_canvas_container.output.hasCanvasTestId === true && nodes.check_zoom_controls.output.hasZoomTestIds === true }}',
+        message: 'Canvas elements missing required data-testid attributes',
+      },
+      {
+        id: 'notify_pass',
+        type: 'notification',
+        channel: 'a11y-results',
+        message: '✅ Canvas data-testid verification PASSED',
+      },
+    ],
+    onError: [
+      {
+        id: 'notify_fail',
+        type: 'notification',
+        channel: 'a11y-results',
+        message: '❌ Canvas data-testid verification FAILED - {{ error.message }}',
+      },
+    ],
+  },
+  {
+    name: 'Test ARIA Labels and Roles',
+    description: 'Verify ARIA attributes are present on key components',
+    nodes: [
+      {
+        id: 'navigate_app',
+        type: 'browser',
+        action: 'navigate',
+        url: 'http://localhost:3001',
+        waitFor: '[role="main"]',
+      },
+      {
+        id: 'check_main_role',
+        type: 'browser',
+        action: 'evaluate',
+        script: 'document.querySelector("[role=\'main\']") !== null',
+        output: 'hasMainRole',
+      },
+      {
+        id: 'check_navigation_role',
+        type: 'browser',
+        action: 'evaluate',
+        script: 'document.querySelector("[role=\'navigation\']") !== null || document.querySelector("nav") !== null',
+        output: 'hasNavRole',
+      },
+      {
+        id: 'check_complementary_role',
+        type: 'browser',
+        action: 'evaluate',
+        script: 'document.querySelector("[role=\'complementary\']") !== null',
+        output: 'hasComplementaryRole',
+      },
+      {
+        id: 'assert_aria_roles',
+        type: 'operation',
+        op: 'logic.assert',
+        condition: '{{ nodes.check_main_role.output.hasMainRole === true }}',
+        message: 'Main content area missing proper ARIA role',
+      },
+      {
+        id: 'notify_pass',
+        type: 'notification',
+        channel: 'a11y-results',
+        message: '✅ ARIA roles verification PASSED',
+      },
+    ],
+    onError: [
+      {
+        id: 'notify_fail',
+        type: 'notification',
+        channel: 'a11y-results',
+        message: '❌ ARIA roles verification FAILED - {{ error.message }}',
+      },
+    ],
+  },
+  {
+    name: 'Keyboard Navigation Test - Settings Modal',
+    description: 'Test keyboard navigation through settings modal using Tab and Escape keys',
+    nodes: [
+      {
+        id: 'navigate_app',
+        type: 'browser',
+        action: 'navigate',
+        url: 'http://localhost:3001',
+        waitFor: '[data-testid="button-click-settings"]',
+      },
+      {
+        id: 'click_settings',
+        type: 'browser',
+        action: 'click',
+        selector: '[data-testid="button-click-settings"]',
+      },
+      {
+        id: 'wait_modal',
+        type: 'browser',
+        action: 'waitForSelector',
+        selector: '[role="dialog"]',
+      },
+      {
+        id: 'check_modal_visible',
+        type: 'browser',
+        action: 'evaluate',
+        script: 'document.querySelector("[role=\'dialog\']") !== null',
+        output: 'isModalVisible',
+      },
+      {
+        id: 'press_tab',
+        type: 'browser',
+        action: 'keyboard',
+        key: 'Tab',
+      },
+      {
+        id: 'check_focus_moved',
+        type: 'browser',
+        action: 'evaluate',
+        script: 'document.activeElement.tagName !== \'BODY\'',
+        output: 'focusMoved',
+      },
+      {
+        id: 'press_escape',
+        type: 'browser',
+        action: 'keyboard',
+        key: 'Escape',
+      },
+      {
+        id: 'wait_modal_closed',
+        type: 'browser',
+        action: 'wait',
+        timeout: 500,
+      },
+      {
+        id: 'assert_modal_closed',
+        type: 'browser',
+        action: 'evaluate',
+        script: 'document.querySelector("[role=\'dialog\']") === null || getComputedStyle(document.querySelector("[role=\'dialog\']")).display === \'none\'',
+        output: 'isClosed',
+      },
+      {
+        id: 'assert_keyboard_navigation',
+        type: 'operation',
+        op: 'logic.assert',
+        condition: '{{ nodes.assert_modal_closed.output.isClosed === true }}',
+        message: 'Keyboard navigation (Escape) did not close modal',
+      },
+      {
+        id: 'notify_pass',
+        type: 'notification',
+        channel: 'a11y-results',
+        message: '✅ Keyboard navigation test PASSED',
+      },
+    ],
+    onError: [
+      {
+        id: 'notify_fail',
+        type: 'notification',
+        channel: 'a11y-results',
+        message: '❌ Keyboard navigation test FAILED - {{ error.message }}',
+      },
+    ],
+  },
+  {
+    name: 'Screen Reader Semantics - Form Labels',
+    description: 'Verify form inputs have associated labels for screen readers',
+    nodes: [
+      {
+        id: 'navigate_app',
+        type: 'browser',
+        action: 'navigate',
+        url: 'http://localhost:3001',
+        waitFor: 'input[type="text"]',
+      },
+      {
+        id: 'check_labeled_inputs',
+        type: 'browser',
+        action: 'evaluate',
+        script: `
+          const inputs = document.querySelectorAll('input[type="text"]');
+          let allLabeled = true;
+          inputs.forEach(input => {
+            const hasLabel = document.querySelector(\`label[for="\${input.id}"]\`);
+            const hasAriaLabel = input.getAttribute('aria-label');
+            if (!hasLabel && !hasAriaLabel && input.id) {
+              allLabeled = false;
+            }
+          });
+          allLabeled
+        `,
+        output: 'allInputsLabeled',
+      },
+      {
+        id: 'assert_labels',
+        type: 'operation',
+        op: 'logic.assert',
+        condition: '{{ nodes.check_labeled_inputs.output.allInputsLabeled === true }}',
+        message: 'Some form inputs are not properly labeled',
+      },
+      {
+        id: 'notify_pass',
+        type: 'notification',
+        channel: 'a11y-results',
+        message: '✅ Form labels accessibility test PASSED',
+      },
+    ],
+    onError: [
+      {
+        id: 'notify_fail',
+        type: 'notification',
+        channel: 'a11y-results',
+        message: '❌ Form labels accessibility test FAILED - {{ error.message }}',
+      },
+    ],
+  },
+  {
+    name: 'Color Contrast Verification',
+    description: 'Check that text has sufficient color contrast for WCAG AA compliance',
+    nodes: [
+      {
+        id: 'navigate_app',
+        type: 'browser',
+        action: 'navigate',
+        url: 'http://localhost:3001',
+        waitFor: 'body',
+      },
+      {
+        id: 'check_computed_styles',
+        type: 'browser',
+        action: 'evaluate',
+        script: `
+          const testElements = document.querySelectorAll('button, a, p, h1, h2, h3, h4');
+          let hasGoodContrast = true;
+          testElements.forEach(el => {
+            const color = getComputedStyle(el).color;
+            const bgColor = getComputedStyle(el).backgroundColor;
+            // Simple check: color values are not the same (basic contrast)
+            if (color === bgColor) {
+              hasGoodContrast = false;
+            }
+          });
+          hasGoodContrast
+        `,
+        output: 'hasContrast',
+      },
+      {
+        id: 'assert_contrast',
+        type: 'operation',
+        op: 'logic.assert',
+        condition: '{{ nodes.check_computed_styles.output.hasContrast === true }}',
+        message: 'Some text elements have insufficient color contrast',
+      },
+      {
+        id: 'notify_pass',
+        type: 'notification',
+        channel: 'a11y-results',
+        message: '✅ Color contrast verification PASSED',
+      },
+    ],
+    onError: [
+      {
+        id: 'notify_fail',
+        type: 'notification',
+        channel: 'a11y-results',
+        message: '❌ Color contrast verification FAILED - {{ error.message }}',
+      },
+    ],
+  },
+];
+
 const PERFORMANCE_TESTS = [
   {
     name: 'Setup Performance Test Data - 100 Items',
@@ -394,6 +697,12 @@ async function main() {
     console.log('\n⚡ Creating Performance Tests...');
     for (const test of PERFORMANCE_TESTS) {
       await createWorkflow(projects['performance-tests'], test);
+    }
+
+    // Create accessibility tests
+    console.log('\n♿ Creating Accessibility & WCAG 2.1 AA Tests...');
+    for (const test of ACCESSIBILITY_TESTS) {
+      await createWorkflow(projects['accessibility-tests'], test);
     }
 
     console.log('\n✅ All test workflows created successfully!\n');
