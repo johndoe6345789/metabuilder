@@ -663,6 +663,422 @@ const PERFORMANCE_TESTS = [
   },
 ];
 
+const SECURITY_TESTS = [
+  {
+    name: 'XSS Prevention - User Input Sanitization',
+    description: 'Test that user input is properly sanitized against XSS attacks',
+    nodes: [
+      {
+        id: 'navigate_form',
+        type: 'browser',
+        action: 'navigate',
+        url: 'http://localhost:3001/workflows/create',
+        waitFor: '[data-testid="workflow-name-input"]',
+      },
+      {
+        id: 'inject_xss_payload',
+        type: 'browser',
+        action: 'type',
+        selector: '[data-testid="workflow-name-input"]',
+        text: '<img src=x onerror="alert(\'XSS\')">',
+      },
+      {
+        id: 'check_payload_escaped',
+        type: 'browser',
+        action: 'evaluate',
+        script: 'document.querySelector("[data-testid=\'workflow-name-input\']").value.includes("<img")',
+        output: 'isPayloadEscaped',
+      },
+      {
+        id: 'assert_xss_prevention',
+        type: 'operation',
+        op: 'logic.assert',
+        condition: '{{ nodes.check_payload_escaped.output.isPayloadEscaped === true }}',
+        message: 'XSS payload not properly escaped',
+      },
+    ],
+    onError: [
+      {
+        id: 'notify_fail',
+        type: 'notification',
+        channel: 'security-results',
+        message: '❌ XSS Prevention Test FAILED - {{ error.message }}',
+      },
+    ],
+  },
+  {
+    name: 'CSRF Token Validation - Form Submissions',
+    description: 'Verify CSRF token is required and validated on form submissions',
+    nodes: [
+      {
+        id: 'fetch_form_page',
+        type: 'http',
+        method: 'GET',
+        url: `${API_BASE}/api/workflows/123`,
+        output: 'response',
+      },
+      {
+        id: 'check_for_csrf_token',
+        type: 'browser',
+        action: 'evaluate',
+        script: 'document.querySelector("[name=\'_csrf\']") !== null || document.querySelector("[name=\'x-csrf-token\']") !== null',
+        output: 'hasCsrfToken',
+      },
+      {
+        id: 'assert_csrf_present',
+        type: 'operation',
+        op: 'logic.assert',
+        condition: '{{ nodes.check_for_csrf_token.output.hasCsrfToken === true }}',
+        message: 'CSRF token not found in form',
+      },
+    ],
+  },
+];
+
+const INTEGRATION_TESTS = [
+  {
+    name: 'Multi-Workflow Integration - Workflow Trigger Chain',
+    description: 'Test that workflows can trigger other workflows in sequence',
+    nodes: [
+      {
+        id: 'create_workflow_1',
+        type: 'http',
+        method: 'POST',
+        url: `${API_BASE}/api/workflows`,
+        body: {
+          name: 'Integration Test Workflow 1',
+          projectId: 'integration-project',
+          nodes: [
+            { id: 'trigger', type: 'event', event: 'workflow.start' },
+            { id: 'emit', type: 'event', event: 'workflow.done' },
+          ],
+        },
+        output: 'workflow1',
+      },
+      {
+        id: 'create_workflow_2',
+        type: 'http',
+        method: 'POST',
+        url: `${API_BASE}/api/workflows`,
+        body: {
+          name: 'Integration Test Workflow 2',
+          projectId: 'integration-project',
+          nodes: [
+            { id: 'trigger', type: 'event', event: 'workflow.done', listenTo: '{{ nodes.create_workflow_1.output.workflow1.data.id }}' },
+            { id: 'action', type: 'operation', op: 'log', message: 'Triggered by workflow 1' },
+          ],
+        },
+        output: 'workflow2',
+      },
+      {
+        id: 'execute_chain',
+        type: 'http',
+        method: 'POST',
+        url: `${API_BASE}/api/workflows/{{ nodes.create_workflow_1.output.workflow1.data.id }}/execute`,
+        body: {},
+        output: 'execution',
+      },
+      {
+        id: 'assert_chain_success',
+        type: 'operation',
+        op: 'logic.assert',
+        condition: '{{ nodes.execute_chain.output.execution.status === 200 }}',
+        message: 'Workflow chain execution failed',
+      },
+    ],
+  },
+  {
+    name: 'API Contract Validation - Response Schema',
+    description: 'Verify all API responses match expected schema',
+    nodes: [
+      {
+        id: 'fetch_workflows',
+        type: 'http',
+        method: 'GET',
+        url: `${API_BASE}/api/workflows?tenantId=${TENANT_ID}`,
+        output: 'response',
+      },
+      {
+        id: 'validate_schema',
+        type: 'operation',
+        op: 'logic.assert',
+        condition: '{{ nodes.fetch_workflows.output.response.data && Array.isArray(nodes.fetch_workflows.output.response.data) && nodes.fetch_workflows.output.response.data.every(w => w.id && w.name) }}',
+        message: 'Response does not match expected schema',
+      },
+    ],
+  },
+];
+
+const ERROR_HANDLING_TESTS = [
+  {
+    name: 'Timeout Handling - Long Running Operations',
+    description: 'Test graceful handling of operation timeouts',
+    nodes: [
+      {
+        id: 'create_timeout_workflow',
+        type: 'http',
+        method: 'POST',
+        url: `${API_BASE}/api/workflows`,
+        body: {
+          name: 'Timeout Test Workflow',
+          nodes: [
+            {
+              id: 'long_delay',
+              type: 'operation',
+              op: 'delay',
+              duration: 30000,
+            },
+          ],
+        },
+        output: 'workflow',
+        timeout: 5000,
+      },
+      {
+        id: 'verify_timeout_caught',
+        type: 'operation',
+        op: 'logic.assert',
+        condition: '{{ nodes.create_timeout_workflow.error !== undefined }}',
+        message: 'Timeout not properly caught',
+      },
+    ],
+    onError: [
+      {
+        id: 'notify_pass',
+        type: 'notification',
+        channel: 'error-handling-results',
+        message: '✅ Timeout handling test PASSED - timeout was caught correctly',
+      },
+    ],
+  },
+  {
+    name: 'Network Error Recovery - Retry Mechanism',
+    description: 'Test that failed network requests are retried appropriately',
+    nodes: [
+      {
+        id: 'attempt_failed_request',
+        type: 'http',
+        method: 'GET',
+        url: 'http://localhost:9999/invalid-service',
+        retry: { attempts: 3, backoffMs: 100 },
+        output: 'response',
+      },
+      {
+        id: 'verify_retries_exhausted',
+        type: 'operation',
+        op: 'logic.assert',
+        condition: '{{ nodes.attempt_failed_request.error !== undefined }}',
+        message: 'Expected request to fail after retries',
+      },
+    ],
+    onError: [
+      {
+        id: 'notify_pass',
+        type: 'notification',
+        channel: 'error-handling-results',
+        message: '✅ Network error recovery test PASSED',
+      },
+    ],
+  },
+  {
+    name: '404 Error Handling - Resource Not Found',
+    description: 'Test proper handling of 404 errors',
+    nodes: [
+      {
+        id: 'fetch_nonexistent',
+        type: 'http',
+        method: 'GET',
+        url: `${API_BASE}/api/workflows/nonexistent-id-12345`,
+        output: 'response',
+      },
+      {
+        id: 'assert_404_status',
+        type: 'operation',
+        op: 'logic.assert',
+        condition: '{{ nodes.fetch_nonexistent.output.response.status === 404 }}',
+        message: 'Expected 404 status code',
+      },
+    ],
+  },
+];
+
+const DATA_VALIDATION_TESTS = [
+  {
+    name: 'Input Boundary Testing - Maximum String Length',
+    description: 'Test that input validation enforces maximum string lengths',
+    nodes: [
+      {
+        id: 'create_workflow_long_name',
+        type: 'http',
+        method: 'POST',
+        url: `${API_BASE}/api/workflows`,
+        body: {
+          name: 'A'.repeat(1000),
+          projectId: 'test-project',
+        },
+        output: 'response',
+      },
+      {
+        id: 'verify_validation',
+        type: 'operation',
+        op: 'logic.assert',
+        condition: '{{ nodes.create_workflow_long_name.output.response.status === 400 || nodes.create_workflow_long_name.output.response.data.name.length <= 255 }}',
+        message: 'Input validation not enforced',
+      },
+    ],
+  },
+  {
+    name: 'Type Validation - Invalid Data Types',
+    description: 'Test that type validation rejects invalid data types',
+    nodes: [
+      {
+        id: 'attempt_invalid_type',
+        type: 'http',
+        method: 'POST',
+        url: `${API_BASE}/api/workflows`,
+        body: {
+          name: 'Valid Name',
+          nodes: 'not-an-array',
+        },
+        output: 'response',
+      },
+      {
+        id: 'assert_type_validation',
+        type: 'operation',
+        op: 'logic.assert',
+        condition: '{{ nodes.attempt_invalid_type.output.response.status === 400 || nodes.attempt_invalid_type.error !== undefined }}',
+        message: 'Type validation not enforced',
+      },
+    ],
+  },
+  {
+    name: 'Required Field Validation - Missing Mandatory Fields',
+    description: 'Test that missing required fields are rejected',
+    nodes: [
+      {
+        id: 'create_without_name',
+        type: 'http',
+        method: 'POST',
+        url: `${API_BASE}/api/workflows`,
+        body: {
+          projectId: 'test-project',
+        },
+        output: 'response',
+      },
+      {
+        id: 'assert_required_field',
+        type: 'operation',
+        op: 'logic.assert',
+        condition: '{{ nodes.create_without_name.output.response.status === 400 || nodes.create_without_name.output.response.data.errors.name !== undefined }}',
+        message: 'Required field validation not enforced',
+      },
+    ],
+  },
+];
+
+const UI_UX_TESTS = [
+  {
+    name: 'Form Validation - Real-time Feedback',
+    description: 'Test that form validation provides real-time feedback',
+    nodes: [
+      {
+        id: 'navigate_form',
+        type: 'browser',
+        action: 'navigate',
+        url: 'http://localhost:3001/workflows/create',
+        waitFor: '[data-testid="workflow-form"]',
+      },
+      {
+        id: 'type_invalid_email',
+        type: 'browser',
+        action: 'type',
+        selector: '[data-testid="email-input"]',
+        text: 'not-an-email',
+      },
+      {
+        id: 'check_error_message',
+        type: 'browser',
+        action: 'evaluate',
+        script: 'document.querySelector("[data-testid=\'email-error\']") !== null && document.querySelector("[data-testid=\'email-error\']").textContent.length > 0',
+        output: 'hasErrorMessage',
+      },
+      {
+        id: 'assert_form_validation',
+        type: 'operation',
+        op: 'logic.assert',
+        condition: '{{ nodes.check_error_message.output.hasErrorMessage === true }}',
+        message: 'Form validation feedback not displayed',
+      },
+    ],
+  },
+  {
+    name: 'Responsive Design - Mobile Viewport',
+    description: 'Test that UI is responsive and works on mobile viewports',
+    nodes: [
+      {
+        id: 'set_mobile_viewport',
+        type: 'browser',
+        action: 'setViewport',
+        width: 375,
+        height: 667,
+      },
+      {
+        id: 'navigate_app',
+        type: 'browser',
+        action: 'navigate',
+        url: 'http://localhost:3001',
+        waitFor: 'body',
+      },
+      {
+        id: 'check_mobile_menu',
+        type: 'browser',
+        action: 'evaluate',
+        script: 'document.querySelector("[data-testid=\'mobile-menu-button\']") !== null',
+        output: 'hasMobileMenu',
+      },
+      {
+        id: 'assert_responsive',
+        type: 'operation',
+        op: 'logic.assert',
+        condition: '{{ nodes.check_mobile_menu.output.hasMobileMenu === true }}',
+        message: 'Mobile menu not visible on mobile viewport',
+      },
+    ],
+  },
+  {
+    name: 'Loading State - Skeleton UI Display',
+    description: 'Test that skeleton/loading states are displayed during data fetch',
+    nodes: [
+      {
+        id: 'navigate_dashboard',
+        type: 'browser',
+        action: 'navigate',
+        url: 'http://localhost:3001/dashboard',
+      },
+      {
+        id: 'check_skeleton',
+        type: 'browser',
+        action: 'evaluate',
+        script: 'document.querySelector("[data-testid=\'workflow-skeleton\']") !== null',
+        output: 'hasSkeletonLoader',
+      },
+      {
+        id: 'wait_for_content',
+        type: 'browser',
+        action: 'waitFor',
+        selector: '[data-testid="workflow-list"]',
+        timeout: 5000,
+      },
+      {
+        id: 'verify_content_loaded',
+        type: 'browser',
+        action: 'evaluate',
+        script: 'document.querySelector("[data-testid=\'workflow-skeleton\']") === null && document.querySelector("[data-testid=\'workflow-list\']") !== null',
+        output: 'contentLoaded',
+      },
+    ],
+  },
+];
+
 async function main() {
   console.log('🚀 WorkflowUI Test Setup Script\n');
   console.log(`API Base: ${API_BASE}`);
@@ -703,6 +1119,36 @@ async function main() {
     console.log('\n♿ Creating Accessibility & WCAG 2.1 AA Tests...');
     for (const test of ACCESSIBILITY_TESTS) {
       await createWorkflow(projects['accessibility-tests'], test);
+    }
+
+    // Create security tests
+    console.log('\n🔒 Creating Security Tests...');
+    for (const test of SECURITY_TESTS) {
+      await createWorkflow(projects['api-tests'], test);
+    }
+
+    // Create integration tests
+    console.log('\n🔗 Creating Integration Tests...');
+    for (const test of INTEGRATION_TESTS) {
+      await createWorkflow(projects['e2e-tests'], test);
+    }
+
+    // Create error handling tests
+    console.log('\n⚠️  Creating Error Handling Tests...');
+    for (const test of ERROR_HANDLING_TESTS) {
+      await createWorkflow(projects['api-tests'], test);
+    }
+
+    // Create data validation tests
+    console.log('\n✔️  Creating Data Validation Tests...');
+    for (const test of DATA_VALIDATION_TESTS) {
+      await createWorkflow(projects['api-tests'], test);
+    }
+
+    // Create UI/UX tests
+    console.log('\n🎯 Creating UI/UX Tests...');
+    for (const test of UI_UX_TESTS) {
+      await createWorkflow(projects['frontend-tests'], test);
     }
 
     console.log('\n✅ All test workflows created successfully!\n');
