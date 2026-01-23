@@ -195,6 +195,16 @@ export const testId = {
   // Card
   card: (id: string) => generateTestId('card', 'card', undefined, id),
   cardButton: (id: string, action: string) => generateTestId('card', 'button', 'click', `${id}-${action}`),
+
+  // Help/Documentation
+  help: (name: string) => generateTestId('help', 'section', undefined, name),
+  helpButton: () => generateTestId('help', 'button', 'click', 'open'),
+  helpModal: (name: string) => generateTestId('help', 'modal', undefined, name),
+  helpSearch: () => generateTestId('help', 'input', undefined, 'search'),
+  helpNav: (name: string) => generateTestId('help', 'nav', undefined, name),
+  alert: (type: string) => generateTestId('alert', 'alert', undefined, type),
+  section: (id: string) => generateTestId('section', 'region', undefined, id),
+  listItem: (label: string) => generateTestId('list', 'item', undefined, label),
 };
 
 /**
