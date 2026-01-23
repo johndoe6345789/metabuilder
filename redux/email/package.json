@@ -1,0 +1,37 @@
+{
+  "name": "@metabuilder/redux-email",
+  "version": "1.0.0",
+  "description": "Redux slices for email client state management (lists, details, compose, filters)",
+  "main": "src/index.ts",
+  "types": "src/index.d.ts",
+  "scripts": {
+    "build": "tsc --declaration --emitDeclarationOnly",
+    "lint": "eslint src/",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "redux",
+    "email",
+    "client",
+    "state-management",
+    "slices",
+    "toolkit"
+  ],
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-redux": "^8.0.0 || ^9.0.0",
+    "@reduxjs/toolkit": "^1.9.7 || ^2.5.2"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0 || ^19.0.0",
+    "@reduxjs/toolkit": "^2.5.2",
+    "react-redux": "^9.1.2",
+    "typescript": "^5.0.0"
+  },
+  "files": [
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ]
+}
