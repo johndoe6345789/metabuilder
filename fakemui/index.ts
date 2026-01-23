@@ -269,3 +269,17 @@ export {
 
 // Theming
 export type { Theme, ThemeOptions } from './fakemui/theming'
+
+// Accessibility Utilities
+export {
+  generateTestId,
+  testId,
+  aria,
+  keyboard,
+  validate,
+} from './src/utils/accessibility'
+export type {
+  AccessibilityFeature,
+  AccessibilityComponent,
+  AccessibilityAction,
+} from './src/utils/accessibility'

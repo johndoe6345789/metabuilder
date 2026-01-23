@@ -6,6 +6,7 @@
 
 import React, { useRef } from 'react';
 import styles from '../InfiniteCanvas.module.scss';
+import { testId } from '../../../utils/accessibility';
 
 interface CanvasContentProps {
   children: React.ReactNode;
@@ -27,6 +28,8 @@ export const CanvasContent = React.forwardRef<HTMLDivElement, CanvasContentProps
           transform: `translate(${panX}px, ${panY}px) scale(${zoom})`,
           transformOrigin: '0 0'
         }}
+        data-testid={testId.canvasContainer()}
+        role="presentation"
       >
         {children}
       </div>

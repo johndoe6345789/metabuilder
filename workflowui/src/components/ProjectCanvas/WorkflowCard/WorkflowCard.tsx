@@ -11,6 +11,7 @@ import { WorkflowCardPreview } from './WorkflowCardPreview';
 import { WorkflowCardFooter } from './WorkflowCardFooter';
 import { WorkflowCardActions } from './WorkflowCardActions';
 import { useDragResize } from './useDragResize';
+import { testId, aria } from '../../../utils/accessibility';
 
 interface WorkflowCardProps {
   item: ProjectCanvasItem;
@@ -74,6 +75,13 @@ export const WorkflowCard: React.FC<WorkflowCardProps> = ({
       }}
       onMouseDown={handleSelect}
       onMouseMove={handleDragStart}
+      data-testid={testId.workflowCard(item.id)}
+      role="article"
+      aria-label={`Workflow card: ${workflow?.name}`}
+      aria-selected={isSelected}
+      aria-grabbed={isDragging}
+      tabIndex={0}
+      aria-describedby={`workflow-${item.id}-info`}
     >
       <WorkflowCardHeader
         workflowName={workflow?.name}
@@ -88,6 +96,25 @@ export const WorkflowCard: React.FC<WorkflowCardProps> = ({
         connectionCount={connectionCount}
       />
       <WorkflowCardActions onResizeStart={handleResizeStart} />
+
+      {/* SR-only description of workflow info */}
+      <div
+        id={`workflow-${item.id}-info`}
+        style={{
+          position: 'absolute',
+          width: '1px',
+          height: '1px',
+          padding: 0,
+          margin: '-1px',
+          overflow: 'hidden',
+          clip: 'rect(0, 0, 0, 0)',
+          whiteSpace: 'nowrap',
+          border: 0,
+        }}
+      >
+        {nodeCount} nodes, {connectionCount} connections. {isSelected ? 'Currently selected.' : ''} {isDragging ? 'Currently dragging.' : ''}
+        Use arrow keys to move, drag to reposition, or resize handles to resize.
+      </div>
     </div>
   );
 };

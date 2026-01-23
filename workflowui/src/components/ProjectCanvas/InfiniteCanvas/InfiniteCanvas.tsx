@@ -28,6 +28,7 @@ import { NavigationArrows } from './NavigationArrows';
 import styles from '../InfiniteCanvas.module.scss';
 import { RootState } from '../../../store/store';
 import { selectCanvasItems } from '../../../store/slices/canvasItemsSlice';
+import { testId, aria } from '../../../utils/accessibility';
 
 interface InfiniteCanvasProps {
   children: React.ReactNode;
@@ -111,6 +112,11 @@ export const InfiniteCanvas: React.FC<InfiniteCanvasProps> = ({
       className={styles.canvas}
       onMouseDown={handleMouseDown}
       style={{ cursor: isPanning ? 'grabbing' : 'grab' }}
+      data-testid={testId.canvasContainer()}
+      role="region"
+      aria-label="Infinite canvas for workflow arrangement"
+      aria-describedby="canvas-shortcuts-help"
+      tabIndex={0}
     >
       <CanvasGrid snapSize={snapSize} gridOffset={gridOffset} />
 
@@ -123,6 +129,25 @@ export const InfiniteCanvas: React.FC<InfiniteCanvasProps> = ({
       <PanHint />
 
       <NavigationArrows onPan={handleArrowPan} />
+
+      {/* SR-only help text for keyboard shortcuts */}
+      <div
+        id="canvas-shortcuts-help"
+        style={{
+          position: 'absolute',
+          width: '1px',
+          height: '1px',
+          padding: 0,
+          margin: '-1px',
+          overflow: 'hidden',
+          clip: 'rect(0, 0, 0, 0)',
+          whiteSpace: 'nowrap',
+          border: 0,
+        }}
+      >
+        Keyboard shortcuts: Ctrl+A to select all, Delete to remove selected, Ctrl+D to duplicate, Ctrl+F to search,
+        Escape to clear selection, Arrow keys to pan canvas. Space+drag to pan, mouse wheel to zoom.
+      </div>
     </div>
   );
 };
