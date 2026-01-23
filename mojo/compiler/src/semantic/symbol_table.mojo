@@ -157,3 +157,16 @@ struct SymbolTable:
         """Exit the current scope."""
         if len(self.scopes) > 1:  # Keep at least global scope
             _ = self.scopes.pop()
+
+    fn size(self) -> Int:
+        """Count total symbols across all scopes.
+
+        Returns:
+            The total number of symbols in the symbol table.
+        """
+        var total = 0
+        var i = 0
+        while i < len(self.scopes):
+            total += len(self.scopes[i].symbols)
+            i += 1
+        return total

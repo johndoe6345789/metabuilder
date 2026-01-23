@@ -20,6 +20,6 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "@reduxjs/toolkit": "^2.0.0"
+    "@reduxjs/toolkit": "^2.5.2"
   }
 }

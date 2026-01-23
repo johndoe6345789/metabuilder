@@ -1,0 +1,265 @@
+# Shadcn/ui Component Library Status Report
+Generated: 2026-01-23
+Scope: Full codebase audit (27,826+ files)
+
+## EXECUTIVE SUMMARY
+
+Shadcn/ui is NOT officially used anywhere in the active codebase.
+
+**Key Finding**: Projects have TWO competing UI frameworks:
+1. **FakeMUI** - Official primary framework (145 React components + 421 icons)
+2. **Shadcn/ui Pattern** - Used only in legacy/archived code
+3. **@mui/material** - Used in postgres dashboard (conflict identified)
+
+---
+
+## DETAILED INVENTORY
+
+### Projects Using Shadcn/ui Components (Custom Implementation)
+
+#### 1. codegen/ (CodeForge IDE)
+**Status**: ✅ Active project using custom shadcn-style components
+**Location**: `/codegen/src/components/ui/`
+**Components**: 48+ custom-built shadcn-style components
+**Dependencies**:
+  - @radix-ui/* (25+ packages) - UI primitives
+  - @metabuilder/fakemui (workspace:*) - Primary framework
+  - No direct shadcn/ui dependency
+**Import pattern**: `from '@/components/ui/button'` (custom, not actual shadcn)
+**Details**:
+  - accordion.tsx, alert.tsx, badge.tsx, button.tsx, card.tsx
+  - dialog.tsx, drawer.tsx, input.tsx, label.tsx, pagination.tsx
+  - sidebar.tsx, tabs.tsx, tooltip.tsx, and 35+ more
+  - Uses @radix-ui primitives underneath
+  - Custom CSS + Tailwind styling
+**Note**: These are CUSTOM implementations inspired by shadcn/ui style guide
+         but NOT generated from shadcn/ui CLI or package
+
+#### 2. pastebin/
+**Status**: ✅ Active project with custom shadcn-style components
+**Location**: `/pastebin/src/components/ui/`
+**Components**: 78+ custom-built shadcn-style components
+**Dependencies**:
+  - @radix-ui/* (13+ packages) - UI primitives
+  - Tailwind CSS - Styling
+  - No direct shadcn/ui dependency
+**Import pattern**: `from '@/components/ui/button'` (custom, not actual shadcn)
+**Details**:
+  - accordion.tsx, alert-dialog.tsx, alert.tsx, avatar.tsx
+  - badge.tsx, bottom-navigation.tsx, button.tsx, card.tsx
+  - carousel.tsx, checkbox.tsx, collapsible.tsx, command.tsx
+  - context-menu.tsx, dialog.tsx, dropdown-menu.tsx, and 62+ more
+  - Includes test files (*.test.tsx) for all major components
+  - Custom CSS + Tailwind styling
+**Note**: These are CUSTOM implementations inspired by shadcn/ui style guide
+         but NOT generated from shadcn/ui CLI or package
+
+#### 3. old/ (Archived/Legacy Project)
+**Status**: ❌ Legacy project - NOT active
+**Location**: `/old/src/components/ui/`
+**Dependencies** (in `/old/package.json`):
+  - @radix-ui/* (27+ packages) - Full suite
+  - No direct shadcn/ui dependency
+**Details**:
+  - Legacy implementation of shadcn-style components
+  - Archived in 2024 during migration to modern architecture
+  - No active maintenance
+  - Used as reference only
+**Impact**: None (not used in active codebase)
+
+### Projects Using @mui/material (CONFLICTING)
+
+#### postgres/ (PostgreSQL Admin Dashboard)
+**Status**: ⚠️ CONFLICT - Should use FakeMUI instead
+**Dependencies**:
+  - @mui/material: ^7.3.6
+  - @mui/icons-material: ^7.3.6
+**Issues**:
+  1. Creates competing UI framework in codebase
+  2. Violates project principle: "Use FakeMUI for new projects"
+  3. Different component API than FakeMUI
+  4. Duplicates functionality already in FakeMUI (Button, Dialog, etc.)
+**Migration Status**: Not yet completed
+**Effort Estimate**: 2-4 hours to migrate to FakeMUI
+**Action Required**: Listed as P1 conflict in CLAUDE.md
+
+---
+
+## SHADCN/UI NPM PACKAGE STATUS
+
+**Official shadcn/ui Package**: NOT installed anywhere
+- No `shadcn-ui` dependency in any package.json
+- No `npx shadcn-ui` CLI calls in scripts
+
+**Clarification**:
+- codegen/ and pastebin/ have CUSTOM components inspired by shadcn/ui style
+- These are NOT generated from the official shadcn/ui package
+- They use @radix-ui primitives (which shadcn/ui also uses)
+- They follow shadcn/ui's "copy-paste components" philosophy
+
+---
+
+## OFFICIAL UI FRAMEWORK HIERARCHY
+
+### Tier 1 - PRIMARY FRAMEWORK (All new projects)
+**FakeMUI** (`@metabuilder/fakemui`)
+- Status: ✅ Production-ready
+- Components: 145 React components + 421 icons
+- Organization: react/, qml/, python/, icons/, styles/, theming/
+- Users: workflowui, frontends/nextjs
+- Style: Material Design 3
+- Dependencies: @emotion/react, @emotion/styled, clsx, tslib
+
+### Tier 2 - ESTABLISHED PROJECT EXCEPTION (Legacy projects)
+**Radix UI + Tailwind CSS** (Custom shadcn-style components)
+- Status: ✅ Active in codegen & pastebin
+- Reason: Established projects before FakeMUI was finalized
+- NOT recommended for new projects
+- Components: 48+ in codegen, 78+ in pastebin
+- All custom-built, NOT from official shadcn/ui package
+
+### Tier 3 - CONFLICTING FRAMEWORK (Should migrate)
+**@mui/material** (postgres dashboard)
+- Status: ⚠️ CONFLICT
+- Only in postgres/ project
+- Should migrate to FakeMUI
+- Blocks: Full UI consistency across codebase
+
+---
+
+## DEPENDENCY BREAKDOWN
+
+### All @radix-ui Packages Found
+
+**codegen/package.json** (25 packages):
+- @radix-ui/react-accordion: ^1.1.2
+- @radix-ui/react-alert-dialog: ^1.1.6
+- @radix-ui/react-aspect-ratio: ^1.1.2
+- @radix-ui/react-avatar: ^1.1.2
+- @radix-ui/react-checkbox: ^1.1.2
+- @radix-ui/react-collapsible: ^1.1.2
+- @radix-ui/react-context-menu: ^2.2.6
+- @radix-ui/react-dialog: ^1.1.8
+- @radix-ui/react-dropdown-menu: ^2.1.6
+- @radix-ui/react-hover-card: ^1.1.6
+- @radix-ui/react-label: ^2.1.2
+- @radix-ui/react-menubar: ^1.1.6
+- @radix-ui/react-navigation-menu: ^1.2.5
+- @radix-ui/react-popover: ^1.1.6
+- @radix-ui/react-progress: ^1.1.2
+- @radix-ui/react-radio-group: ^1.2.3
+- @radix-ui/react-scroll-area: ^1.2.9
+- @radix-ui/react-select: ^2.1.6
+- @radix-ui/react-separator: ^1.1.2
+- @radix-ui/react-slider: ^1.3.6
+- @radix-ui/react-slot: ^1.1.2
+- @radix-ui/react-switch: ^1.1.3
+- @radix-ui/react-tabs: ^1.1.3
+- @radix-ui/react-toggle: ^1.1.2
+- @radix-ui/react-toggle-group: ^1.1.2
+- @radix-ui/react-tooltip: ^1.1.8
+
+**pastebin/package.json** (13+ packages):
+- Similar @radix-ui/react-* packages with varying versions
+- Likely full suite similar to codegen
+
+**old/package.json** (27 packages):
+- Complete shadcn/ui toolkit
+- NOT actively used
+
+---
+
+## KEY INSIGHTS
+
+### 1. No Direct Shadcn/ui Usage
+- Zero NPM packages named `shadcn-ui` or `@shadcn/*`
+- Projects copied the shadcn/ui component STYLE, not the package
+- Components are custom-built using @radix-ui primitives
+
+### 2. Multiple UI Strategies
+- **Intended**: FakeMUI (FakeMUI in workflowui, frontends/nextjs)
+- **Inherited**: Custom shadcn-style (codegen, pastebin)
+- **Problematic**: @mui/material (postgres)
+
+### 3. @radix-ui is Foundational
+- Used in codegen (25 packages)
+- Used in pastebin (13+ packages)
+- Used in FakeMUI under the hood
+- = Standard primitive layer across active projects
+
+### 4. Component Style Convergence
+All three approaches use same component patterns:
+```typescript
+// FakeMUI
+import { Button } from '@metabuilder/fakemui'
+
+// Custom shadcn-style in codegen/pastebin
+import { Button } from '@/components/ui/button'
+
+// @mui/material (postgres)
+import { Button } from '@mui/material'
+```
+All three are interchangeable in theory, but mixing creates API confusion.
+
+---
+
+## RECOMMENDATIONS
+
+### For New Projects
+✅ USE: `@metabuilder/fakemui`
+- Primary framework
+- Material Design 3
+- Complete component set
+- Production-ready
+
+### For Existing Projects
+**codegen**: Keep custom shadcn-style OR migrate to FakeMUI
+**pastebin**: Keep custom shadcn-style OR migrate to FakeMUI
+**postgres**: ⚠️ MUST migrate to FakeMUI (P1 conflict)
+
+### For Dependencies
+✅ KEEP: @radix-ui in codegen & pastebin (foundational layer)
+✅ KEEP: FakeMUI in all new projects
+❌ REMOVE: @mui/material from postgres (conflict)
+❌ DO NOT ADD: shadcn/ui package (use FakeMUI instead)
+
+---
+
+## Files to Reference
+
+**Project Configuration**:
+- /Users/rmac/Documents/metabuilder/CLAUDE.md (lines 207-245) - FakeMUI guide
+- /Users/rmac/Documents/metabuilder/CLAUDE.md (lines 480-494) - Coding standards
+
+**Component Implementations**:
+- /codegen/src/components/ui/ (48+ custom shadcn-style components)
+- /pastebin/src/components/ui/ (78+ custom shadcn-style components)
+- /fakemui/react/components/ (145 production FakeMUI components)
+
+**Legacy Reference**:
+- /old/src/components/ui/ (archived shadcn-style components)
+
+**Conflict Zone**:
+- /postgres/package.json (uses @mui/material instead of FakeMUI)
+
+---
+
+## Summary Statistics
+
+| Metric | Count |
+|--------|-------|
+| Direct shadcn/ui NPM packages | 0 |
+| Projects with custom shadcn-style components | 2 (codegen, pastebin) |
+| Projects with FakeMUI | 3 (workflowui, frontends/nextjs, and partial) |
+| Projects with @mui/material | 1 (postgres - CONFLICT) |
+| @radix-ui packages (all projects) | 38+ |
+| FakeMUI components | 145 |
+| Custom shadcn-style components (codegen) | 48+ |
+| Custom shadcn-style components (pastebin) | 78+ |
+
+---
+
+**CONCLUSION**: Shadcn/ui package is NOT used. Project uses FakeMUI as primary
+framework with legacy custom shadcn-style components in some projects and a
+conflicting @mui/material in postgres. Full standardization on FakeMUI
+recommended for consistency.

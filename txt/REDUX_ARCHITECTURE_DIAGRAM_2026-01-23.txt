@@ -1,0 +1,230 @@
+REDUX ARCHITECTURE OVERVIEW
+============================
+
+LAYER DIAGRAM
+=============
+
+┌─────────────────────────────────────────────────────────────┐
+│                    APPLICATIONS                              │
+├──────────────────┬──────────────────┬──────────────────────┤
+│   workflowui     │   codegen        │   frontends/nextjs   │
+│   pastebin       │   emailclient    │   (plus others)      │
+└────────┬─────────┴────────┬─────────┴──────────────┬────────┘
+         │                  │                         │
+         └──────────────────┼─────────────────────────┘
+                            │
+                ┌───────────▼───────────┐
+                │  @metabuilder/hooks-* │  (9 packages)
+                │  Hook-based ergonomic │
+                │  API wrapper layer    │
+                └───────────┬───────────┘
+                            │
+         ┌──────────────────┼──────────────────┐
+         │                  │                  │
+    ┌────▼─────┐  ┌────────▼────────┐  ┌─────▼──────┐
+    │  hooks   │  │ redux-slices    │  │ service-   │
+    │ (async,  │  │ (state def)     │  │ adapters   │
+    │  auth,   │  │                 │  │ (inject)   │
+    │  data)   │  │ redux-core      │  │            │
+    │          │  │ (shared slices) │  │            │
+    └────┬─────┘  └────────┬────────┘  └─────┬──────┘
+         │                  │                  │
+         └──────────────────┼──────────────────┘
+                            │
+                ┌───────────▼──────────────┐
+                │  @reduxjs/toolkit        │
+                │  (createSlice, etc)      │
+                └───────────┬──────────────┘
+                            │
+                ┌───────────▼──────────────┐
+                │  redux                   │
+                │  (createStore, etc)      │
+                └──────────────────────────┘
+
+
+PACKAGE DEPENDENCY TREE
+=======================
+
+ROOT
+├── @reduxjs/toolkit ^2.5.2
+├── @metabuilder/redux-core (1.0.0)
+├── @metabuilder/redux-slices (0.1.0)
+└── @metabuilder/hooks-async (1.0.0)
+
+workflowui/
+├── @reduxjs/toolkit ^2.5.2
+├── redux ^5.0.1
+├── @metabuilder/hooks-async
+├── @metabuilder/hooks-auth
+├── @metabuilder/hooks-canvas
+├── @metabuilder/hooks-data
+├── @metabuilder/timing-utils
+└── ... (other Redux hooks)
+
+codegen/
+├── @reduxjs/toolkit ^2.5.2
+├── @metabuilder/hooks-*
+└── (consumer of Redux ecosystem)
+
+pastebin/
+├── @reduxjs/toolkit ^2.5.0 ← MINOR VERSION DIFFERENCE
+└── @metabuilder/hooks-*
+
+redux/ (PACKAGES DIRECTORY)
+├── api-clients/
+│   ├── redux ^4.2.1 ← INCONSISTENT VERSION
+│   └── @reduxjs/toolkit ^2.5.2
+│
+├── core/
+│   ├── @reduxjs/toolkit ^2.5.2
+│   └── Exports createStore, configureStore
+│
+├── slices/
+│   ├── @reduxjs/toolkit ^2.5.2
+│   ├── PEERDEV: @reduxjs/toolkit ^1.9.7 || ^2.5.2
+│   └── Exports slices (workflow, ui, etc)
+│
+├── hooks-async/
+│   └── @reduxjs/toolkit ^2.5.2
+│
+├── hooks-auth/
+│   └── PEERDEV: @reduxjs/toolkit ^1.9.7 || ^2.5.2
+│
+├── hooks-canvas/
+│   └── PEERDEV: @reduxjs/toolkit ^1.9.7 || ^2.5.2
+│
+├── hooks-data/
+│   └── PEERDEV: @reduxjs/toolkit ^1.9.7 || ^2.5.2
+│
+├── hooks/
+│   └── PEERDEV: @reduxjs/toolkit ^1.9.7 || ^2.5.2
+│
+├── core-hooks/
+│   └── @reduxjs/toolkit ^2.5.2
+│
+├── hooks-forms/
+│   └── Form management hooks
+│
+├── hooks-utils/
+│   └── Utility hooks
+│
+├── timing-utils/
+│   └── @reduxjs/toolkit ^2.5.2
+│
+└── email/
+    └── PEERDEV: @reduxjs/toolkit ^1.9.7 || ^2.5.2
+
+
+MULTI-VERSION PEER DEPENDENCY STRATEGY
+=======================================
+
+Packages with ^1.9.7 || ^2.5.2:
+  - hooks-auth
+  - hooks-canvas
+  - hooks-data
+  - hooks (generic)
+  - email
+  - redux-slices (also has direct ^2.5.2 dependency)
+
+Rationale:
+  - Allows gradual migration from RTK 1.9.7 to 2.5.2
+  - No need to force all consumers to upgrade simultaneously
+  - Typical in large monorepos during major version transitions
+
+Target State (next sprint):
+  - Once all are on 2.5.2, simplify to: @reduxjs/toolkit ^2.5.2
+
+
+COMPARISON: ZUSTAND vs REDUX
+=============================
+
+                    Zustand    Redux
+────────────────────────────────────
+Intentional Use      ✗ NO       ✓ YES
+Packages             0          13+
+Hooks Pattern        Small      Comprehensive
+Service Adapters     ✗          ✓ YES
+Version Consistency  N/A        95% (2 issues)
+TanStack Query       N/A        Replaced (hooks-async)
+────────────────────────────────────
+
+Key Decision: Pure Redux ecosystem chosen
+  - Zero competing state libraries
+  - All async data management via Redux
+  - Hook-based ergonomic API
+  - Service adapter pattern for flexibility
+
+
+STATE MANAGEMENT FLOW
+====================
+
+1. Application dispatches action
+   const dispatch = useDispatch()
+   dispatch(updateWorkflow({ id: 1, name: 'new' }))
+
+2. Redux reducer updates state
+   const slice = createSlice({ name: 'workflow', initialState, reducers })
+
+3. Hook selector reads from store
+   const { hooks-auth, hooks-data, hooks-async, etc }
+   const workflow = useReduxData({ resource: 'workflows', id: 1 })
+
+4. Component receives data
+   const { data, loading, error } = workflow
+   return <WorkflowCard data={data} loading={loading} />
+
+
+RECENT MIGRATIONS
+=================
+
+✅ TanStack Query → Redux (hooks-async package)
+   - Replaces React Query entirely
+   - Redux is single source of truth
+   - Reduces external dependencies
+
+✅ Raw Redux actions → Custom hooks (@metabuilder/hooks-*)
+   - More ergonomic API
+   - Service adapter injection
+   - Better encapsulation
+
+
+ISSUES IDENTIFIED
+=================
+
+HIGH PRIORITY:
+  1. redux/api-clients: ^4.2.1 vs ^5.0.1 in other packages
+     Location: redux/api-clients/package.json (2 lines)
+     Fix: Update to ^5.0.1
+
+  2. pastebin: @reduxjs/toolkit ^2.5.0 vs ^2.5.2
+     Location: pastebin/package.json
+     Fix: Update to ^2.5.2 (patch compatible)
+
+LOW PRIORITY:
+  1. Multi-version peer dependencies
+     Status: Intentional (gradual upgrade)
+     Action: Keep until all consumers on 2.5.2
+
+
+ZUSTAND TRANSITIVE DEPENDENCY
+==============================
+
+Location: exploded-diagrams/package-lock.json
+Versions: 4.3.2, 5.0.1, 5.0.3
+Reason: Likely from jotai or another state library
+Status: Side effect, not intentional use
+Action: None needed (not in main codebase)
+
+
+STRATEGIC SUMMARY
+=================
+
+MetaBuilder's state management strategy:
+  1. Redux as exclusive solution (no Zustand, no Jotai)
+  2. Hook-based ergonomic API (@metabuilder/hooks-*)
+  3. Service adapter pattern for extensibility
+  4. TanStack Query replaced with Redux
+  5. Intentional multi-version support during upgrade phase
+  6. Minor version inconsistencies (fixable, non-critical)
+
+This is a mature, coherent architecture with clear intent.

@@ -272,5 +272,6 @@ export type {
   AccessibilityAction,
 } from './src/utils/accessibility'
 
-// Email Components (TODO: Fix and enable)
+// Email Components
+// NOTE: Disabled - Phase 2 incomplete (component imports need fixing)
 // export * from './react/components/email'

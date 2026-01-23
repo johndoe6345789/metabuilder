@@ -1,0 +1,80 @@
+================================================================================
+                    ESLint VERSION CONSISTENCY REPORT
+                        Generated: 2026-01-23
+================================================================================
+
+PACKAGES WITH ESLint DEPENDENCIES:
+================================================================================
+
+✅ CORRECT VERSIONS (9.39.2 or higher):
+────────────────────────────────────────────────────────────────────────────
+
+1. ./dbal/development/package.json
+   - eslint: ^9.39.2 ✅
+   - @eslint/js: NOT SPECIFIED
+
+2. ./frontends/dbal/package.json
+   - eslint: ^9.39.2 ✅
+
+3. ./frontends/nextjs/package.json
+   - eslint: ^9.39.2 ✅
+   - @eslint/js: ^9.39.2 ✅
+
+4. ./dockerterminal/frontend/package.json
+   - eslint: ^9.39.2 ✅
+
+5. ./old/package.json
+   - eslint: ^9.39.2 ✅
+   - @eslint/js: ^9.28.0 ⚠️ (acceptable, lower than 9.39.2)
+
+6. ./codegen/package.json
+   - eslint: ^9.39.2 ✅
+   - @eslint/js: ^9.39.2 ✅
+
+7. ./postgres/package.json
+   - eslint: ^9.39.2 ✅
+
+⚠️  OUTDATED VERSIONS (Need Updating):
+────────────────────────────────────────────────────────────────────────────
+
+1. ./emailclient/package.json
+   - eslint: ^9.28.0 ⚠️ (older but acceptable, not the broken 9.41.0)
+
+2. ./pastebin/package.json
+   - eslint: ^8 ⚠️ (major version behind, should update to ^9.39.2)
+
+3. ./workflow/package.json
+   - eslint: ^8.0.0 ⚠️ (major version behind, should update to ^9.39.2)
+
+PACKAGES WITHOUT ESLint:
+════════════════════════════════════════════════════════════════════════════
+
+- ./workflowui/package.json - NO ESLINT DEPENDENCY (uses "next lint")
+- Multiple other packages don't have direct eslint dependencies
+
+SUMMARY:
+════════════════════════════════════════════════════════════════════════════
+
+✅ Status: NO BROKEN 9.41.0 VERSIONS FOUND
+
+Current Distribution:
+  - 9.39.2: 7 packages (CORRECT STANDARD)
+  - 9.28.0: 1 package (acceptable)
+  - ^8.x: 2 packages (OUTDATED, should upgrade)
+  - No direct dep: Multiple packages
+
+Issues to Address:
+  1. Update ./pastebin/package.json: eslint ^8 → ^9.39.2
+  2. Update ./workflow/package.json: eslint ^8.0.0 → ^9.39.2
+  3. Review ./emailclient/package.json: Consider updating 9.28.0 → 9.39.2
+
+RECOMMENDATION:
+════════════════════════════════════════════════════════════════════════════
+
+The broken eslint@^9.41.0 version issue has been RESOLVED in the root fixes.
+
+Remaining work is OPTIONAL standardization:
+  - Upgrade the 2 ^8.x packages to ^9.39.2 for consistency
+  - This is low priority (no breaking issues)
+  - Can be batched with next dependency update cycle
+

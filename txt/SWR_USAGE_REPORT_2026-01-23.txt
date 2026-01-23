@@ -1,0 +1,99 @@
+SWR (Stale-While-Revalidate) Dependency Report
+===============================================
+Generated: 2026-01-23
+Status: VERIFIED & COMPATIBLE WITH REACT 19
+
+SUMMARY
+=======
+SWR is NOT directly declared in any project package.json files.
+SWR is a TRANSITIVE DEPENDENCY pulled in by @clerk/nextjs via @clerk/shared.
+
+DEPENDENCY CHAIN
+================
+postgres/package.json
+  └─ @clerk/nextjs@^6.36.6
+     └─ @clerk/shared (bundled/internal dependency)
+        └─ swr@2.3.4
+
+SWR VERSION DETAILS
+===================
+Package: swr
+Version Installed: 2.3.4
+Source: @clerk/shared (internal dependency of @clerk/nextjs)
+Location: /postgres/node_modules/swr/
+
+Peer Dependencies (in swr/package.json):
+  "react": "^16.11.0 || ^17.0.0 || ^18.0.0 || ^19.0.0"
+
+REACT 19 COMPATIBILITY
+======================
+✓ FULLY COMPATIBLE
+
+SWR 2.3.4 explicitly supports React 19.0.0+ in its peer dependency range.
+The postgres package uses React ^19.2.3, which is within SWR's supported range.
+
+VERSION MATRIX
+==============
+postgres/package.json:
+  "react": "^19.2.3"
+  "@clerk/nextjs": "^6.36.6"
+    └─ swr: "2.3.4" (via @clerk/shared)
+
+SWR 2.3.4 peer dependency:
+  "react": "^16.11.0 || ^17.0.0 || ^18.0.0 || ^19.0.0"
+
+Result: ✓ React 19.2.3 matches ^19.0.0 range
+
+USAGE IN CODEBASE
+=================
+✓ NOT DIRECTLY USED in any source code
+  - No "import useSWR" statements found in source files
+  - No "from 'swr'" imports found
+  - SWR is purely a transitive dependency
+
+✓ INDIRECTLY USED by @clerk/nextjs
+  - @clerk/shared uses SWR internally for data fetching
+  - Transparent to application code
+
+CLERK/NEXTJS INTEGRATION
+========================
+The postgres package uses @clerk/nextjs@^6.36.6 for authentication.
+@clerk/nextjs bundles @clerk/shared as an internal dependency.
+@clerk/shared uses SWR 2.3.4 for its internal API calls.
+
+This is a normal pattern - the SWR library is "hidden" inside Clerk's package
+and handles data fetching for authentication state, user info, etc.
+
+SECURITY STATUS
+===============
+✓ No known vulnerabilities
+✓ Actively maintained (Vercel project)
+✓ Compatible with latest React ecosystem
+
+RECOMMENDATIONS
+================
+1. No action required - SWR is compatible with React 19
+2. Continue using @clerk/nextjs@^6.36.6 (latest compatible version)
+3. If upgrading @clerk/nextjs in future, verify it includes compatible SWR
+4. Current setup in postgres/ is optimal
+
+AFFECTED PROJECTS
+=================
+✓ postgres/
+  - Uses via @clerk/nextjs
+  - React: 19.2.3
+  - Status: COMPATIBLE
+
+OTHER PROJECTS
+==============
+workflowui/ - Does NOT use @clerk/nextjs, does NOT have SWR
+frontends/nextjs/ - Does NOT use @clerk/nextjs, does NOT have SWR
+codegen/ - Does NOT use @clerk/nextjs, does NOT have SWR
+
+NOTES
+=====
+- SWR is Vercel's lightweight data fetching library
+- Commonly used by auth providers for token refresh and user state
+- The 2.3.4 version is recent (2024) and well-supported
+- React 19 support was added in SWR 2.2.0+, confirmed in 2.3.4
+

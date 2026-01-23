@@ -2,7 +2,16 @@
 
 import React, { useEffect, useState } from 'react'
 import { useAppDispatch } from '@metabuilder/redux-core'
-import { Box, Spinner, Alert } from '@metabuilder/fakemui'
+import {
+  // Layout
+  Box,
+  // Surfaces
+  Card,
+  // Feedback
+  Spinner, Alert,
+  // Data Display
+  Typography,
+} from '@metabuilder/fakemui'
 
 /**
  * Email Client Main Page
@@ -66,11 +75,13 @@ function RenderComponent({ component }: { component: PageConfig }): React.JSX.El
   const componentMap: Record<string, React.ElementType> = {
     // Layout
     'Box': Box,
-    'Container': Box,
 
     // Surfaces
-    'Card': Box,
-    'Paper': Box,
+    'Card': Card,
+    'Paper': Card,
+
+    // Data Display
+    'Typography': Typography,
 
     // Feedback
     'Spinner': Spinner,

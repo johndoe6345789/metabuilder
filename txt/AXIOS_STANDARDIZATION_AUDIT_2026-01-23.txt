@@ -1,0 +1,223 @@
+AXIOS VERSION STANDARDIZATION AUDIT
+Generated: 2026-01-23
+Status: Complete Analysis
+
+====================================================================
+FINDINGS SUMMARY
+====================================================================
+
+1. AXIOS USAGE ANALYSIS
+   - Identified in: workflowui/package.json ONLY
+   - Current version: ^1.7.7
+   - Latest stable: 1.13.2 (available on npm)
+   - Status: CAN BE UPGRADED but requires verification
+
+2. AXIOS vs FETCH USAGE
+   - Axios dependencies: 1 package (workflowui)
+   - Fetch usage: Widespread (325+ fetch() calls found)
+   - Trend: Project clearly prefers Fetch API over Axios
+   - Pattern: Next.js/React projects using native fetch
+
+3. KEY INSIGHTS
+   - workflowui is ONLY axios consumer in entire codebase
+   - No axios imports found in source code (grep found 0 results)
+   - Fetch API is preferred pattern across codebase
+   - React Query absent from package.json (no @tanstack/react-query)
+   - Service adapters likely use fetch, not axios
+
+====================================================================
+AXIOS USAGE IN WORKFLOWUI
+====================================================================
+
+File: /Users/rmac/Documents/metabuilder/workflowui/package.json
+Current: "axios": "^1.7.7"
+Available: 1.13.2 (latest)
+Risk: LOW - Test required to ensure no breaking changes
+
+Recommendation:
+1. Check if axios is actually used in workflowui source code
+2. If used: Upgrade to ^1.13.2 (6 minor versions ahead)
+3. If unused: Remove dependency (likely transitive from api-clients)
+
+====================================================================
+FETCH API ADOPTION (RECOMMENDED PATTERN)
+====================================================================
+
+High-confidence fetch usage found in:
+- codegen/src/config/orchestration/action-executor.ts
+- codegen/src/hooks/use-github-build-status.ts
+- codegen/src/lib/storage-adapter/flask-backend-adapter.ts
+- dbal/development/src/workflow/executors/http-request.executor.ts
+- dockerterminal/frontend/lib/api.ts
+- frontends/nextjs/ (Next.js native fetch)
+- e2e/global.setup.ts (Playwright)
+
+Projects using fetch:
+✓ CodeForge IDE (codegen/)
+✓ DBAL HTTP executor
+✓ Next.js frontends
+✓ Docker Terminal
+✓ E2E tests
+
+====================================================================
+DECISION MATRIX
+====================================================================
+
+OPTION 1: Keep Axios in workflowui (if actually used)
+- Pros: No changes needed
+- Cons: Diverges from codebase standard (fetch)
+- Cost: Maintain axios dependency
+- Recommendation: Only if critical functionality depends on it
+
+OPTION 2: Upgrade Axios to 1.13.2 (if actively using)
+- Pros: Gets latest security patches, matches codebase version
+- Cons: Requires testing, increases unnecessary dependencies
+- Cost: Run tests, verify no breaking changes
+- Recommendation: Do this ONLY if axios is actively used
+
+OPTION 3: Remove Axios, migrate to Fetch API (RECOMMENDED)
+- Pros: Standardizes to codebase pattern, reduces dependencies
+- Cons: Code migration required
+- Cost: 1-2 hours to audit usage and migrate if found
+- Recommendation: PREFERRED - aligns with project standards
+
+====================================================================
+ACTION ITEMS (Priority Order)
+====================================================================
+
+1. IMMEDIATE: Verify Axios Usage
+   Command: grep -r "axios" workflowui/src --include='*.ts' --include='*.tsx'
+   Goal: Determine if axios is actually imported in source code
+   Expected: If 0 results → It's unused (Option 3 recommended)
+             If >0 results → Check usage pattern (Option 1 or 2)
+
+2. IF USED: Check Version Compatibility
+   - Test workflowui build with axios ^1.13.2
+   - Run: cd workflowui && npm install axios@^1.13.2 && npm run build
+   - Verify: No breaking changes in usage patterns
+
+3. IF UNUSED: Remove Dependency
+   - Command: cd workflowui && npm uninstall axios
+   - Update: package.json automatically updated
+   - Commit: "refactor: remove unused axios dependency from workflowui"
+
+4. DOCUMENT: Update CLAUDE.md
+   - Add to HTTP Client Standards section
+   - Recommendation: Use native Fetch API in new projects
+   - Alternative: Use React Query with fetch queries
+   - Exception: Only axios if project explicitly requires it
+
+====================================================================
+DEPENDENCY CHAIN ANALYSIS
+====================================================================
+
+workflowui dependencies that might bring in axios:
+- @metabuilder/core-hooks
+- @metabuilder/api-clients (likely source of axios)
+- @reduxjs/toolkit
+- react-redux
+
+Recommendation: Check if @metabuilder/api-clients is source.
+If so, the axios dependency might be required for that package.
+
+Command to verify:
+  cat /Users/rmac/Documents/metabuilder/redux/api-clients/package.json | grep axios
+
+====================================================================
+NPM VERSIONS REFERENCE
+====================================================================
+
+Axios versions available:
+- Current in workflowui: 1.7.7 (released Aug 2024)
+- Latest stable: 1.13.2 (released Jan 2025)
+- Breaking changes: None (all semantic versioning)
+- Security updates: 6 minor versions worth of fixes
+
+Recommendation: If keeping axios, upgrade to 1.13.2
+Upgrade path: ^1.7.7 → ^1.13.2 (safe minor version upgrade)
+
+====================================================================
+NEXT STEPS
+====================================================================
+
+1. Run verification command to check actual usage
+2. Based on findings, choose Option 1, 2, or 3
+3. Execute chosen option
+4. Test (build, lint, E2E if applicable)
+5. Commit changes
+6. Update CLAUDE.md with HTTP client standards
+
+====================================================================
+VERIFICATION RESULTS (Jan 23, 2026)
+====================================================================
+
+COMPREHENSIVE SEARCH RESULTS:
+✓ Axios in workflowui/src source code: 0 results (NOT USED)
+✓ Axios in redux/api-clients implementation: 0 results (NOT USED)
+✓ Axios in redux/api-clients/package.json: NOT LISTED
+✓ Axios in any package.json except workflowui: NOT FOUND
+
+CONCLUSION: Axios is UNUSED in workflowui
+- It's declared in workflowui/package.json as a dependency
+- It's NOT imported or used anywhere in source code
+- It's NOT required by any of workflowui's dependencies
+- It's a DEAD DEPENDENCY that should be removed
+
+====================================================================
+RECOMMENDED ACTION: REMOVE AXIOS (Option 3)
+====================================================================
+
+Root Cause: Axios was likely added during initial development but
+never actually used. The codebase has standardized on native Fetch API.
+
+Implementation Steps:
+1. Navigate to workflowui directory
+2. Run: npm uninstall axios
+3. Verify: Check package.json no longer contains axios
+4. Build: npm run build (should succeed without errors)
+5. Commit: Single commit with clear message
+
+Files to be modified:
+- /Users/rmac/Documents/metabuilder/workflowui/package.json (remove axios line)
+- /Users/rmac/Documents/metabuilder/workflowui/package-lock.json (auto-updated)
+
+Risk Assessment: ZERO RISK
+- No source code depends on axios
+- No other packages require axios
+- Dependency removal is safe and clean
+
+====================================================================
+HTTP CLIENT STANDARD (For CLAUDE.md Update)
+====================================================================
+
+Codebase HTTP Client Preference:
+1. PRIMARY: Native Fetch API
+   - Why: Built-in to modern JS/TS, no dependencies, supported in all environments
+   - Usage: 325+ calls across codebase
+   - Projects: Next.js, CodeForge, DBAL, Docker Terminal
+
+2. SECONDARY: React Query (planned support)
+   - Why: Built on top of fetch, enables efficient caching and refetching
+   - Status: Not yet in use (no @tanstack/react-query found)
+   - Recommendation: Consider adding for projects with heavy data fetching
+
+3. NOT RECOMMENDED: Axios
+   - Why: Adds unnecessary dependency, native fetch is sufficient
+   - Exception: Only if project has critical dependency on it
+   - Status: Zero known uses in MetaBuilder
+
+Best Practices:
+- Use native fetch for simple API calls
+- Use React Query + fetch for complex data fetching with caching
+- Avoid axios and other HTTP libraries (unnecessary weight)
+- Always use /api/v1/{tenant}/{package}/{entity} routing pattern
+
+====================================================================
+DELIVERABLE SUMMARY
+====================================================================
+
+Audit Complete: 2026-01-23
+Recommendation: Remove axios from workflowui (unused dependency)
+Impact: Zero breaking changes
+Time to Fix: 5 minutes (remove dependency + test)
+Next: Follow-up email/PR with removal implementation

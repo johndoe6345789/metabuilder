@@ -1,0 +1,228 @@
+# DETAILED LINTING TOOLS BREAKDOWN
+Complete Inventory - 2026-01-23
+
+## PROJECT-BY-PROJECT ANALYSIS
+
+### 1. dbal/development/package.json
+   ✓ ESLint: ^9.39.2 (GOOD)
+   ✓ Prettier: ^3.4.2 (GOOD)
+   ✓ TypeScript: ^5.9.3 (GOOD)
+   ✗ @eslint/js: NOT PRESENT
+   STATUS: 3/4 tools configured
+
+### 2. frontends/dbal/package.json
+   ✓ ESLint: ^9.39.2 (GOOD)
+   ✗ Prettier: NOT PRESENT (ADD)
+   ✓ TypeScript: ~5.9.3 (OK - strict patch)
+   ✗ @eslint/js: NOT PRESENT
+   STATUS: 2/4 tools configured - MISSING PRETTIER
+
+### 3. frontends/nextjs/package.json
+   ✓ ESLint: ^9.39.2 (GOOD)
+   ✓ @eslint/js: ^9.39.2 (GOOD)
+   ✓ Prettier: ^3.4.2 (GOOD)
+   ✓ TypeScript: ~5.9.3 (GOOD)
+   ✓ ESLint plugins: react (^7.37.5), react-hooks (^5.2.0)
+   STATUS: 4/4 tools configured ✅ (BEST PRACTICE)
+
+### 4. dockerterminal/frontend/package.json
+   ✓ ESLint: ^9.39.2 (GOOD)
+   ✗ Prettier: NOT PRESENT (ADD)
+   ⚠ TypeScript: ^5 (TOO LOOSE - change to ^5.9.3)
+   ✗ @eslint/js: NOT PRESENT
+   STATUS: 1.5/4 tools configured - NEEDS UPDATES
+
+### 5. emailclient/package.json
+   ⚠ ESLint: ^9.28.0 (OUTDATED - update to ^9.39.2)
+   ✗ Prettier: NOT PRESENT (ADD)
+   ✓ TypeScript: ^5.9.3 (GOOD)
+   ✗ @eslint/js: NOT PRESENT
+   STATUS: 1.5/4 tools configured - NEEDS UPDATES
+
+### 6. workflow/package.json
+   ⚠ ESLint: ^8.0.0 (DEPRECATED - update to ^9.39.2)
+   ✗ Prettier: NOT PRESENT (ADD)
+   ⚠ TypeScript: ^5.0.0 (TOO LOOSE - change to ^5.9.3)
+   ✗ @eslint/js: NOT PRESENT
+   STATUS: 1/4 tools configured - NEEDS MAJOR UPDATES
+
+### 7. pastebin/package.json
+   ⚠ ESLint: ^8 (DEPRECATED - update to ^9.39.2)
+   ✗ Prettier: NOT PRESENT (ADD)
+   ⚠ TypeScript: ^5 (TOO LOOSE - change to ^5.9.3)
+   ✗ @eslint/js: NOT PRESENT
+   STATUS: 0.5/4 tools configured - NEEDS MAJOR UPDATES
+
+### 8. codegen/package.json
+   ✓ ESLint: ^9.39.2 (GOOD)
+   ✓ @eslint/js: ^9.39.2 (GOOD)
+   ✗ Prettier: NOT PRESENT (ADD)
+   ✓ TypeScript: ~5.9.3 (GOOD)
+   ✓ ESLint plugins: react-hooks (^5.2.0), react-refresh (^0.4.19)
+   STATUS: 3.5/4 tools configured - MISSING PRETTIER
+
+### 9. old/package.json
+   ✓ ESLint: ^9.39.2 (GOOD)
+   ⚠ @eslint/js: ^9.28.0 (OUTDATED - update to ^9.39.2)
+   ✗ Prettier: NOT PRESENT (ADD)
+   ✓ TypeScript: ^5.9.3 (GOOD)
+   ✓ ESLint plugins: react-hooks (^5.2.0), react-refresh (^0.4.19)
+   STATUS: 3/4 tools configured - NEEDS PRETTIER & @eslint/js UPDATE
+
+### 10. postgres/package.json
+    ✓ ESLint: ^9.39.2 (GOOD)
+    ✗ Prettier: NOT PRESENT (ADD)
+    ✓ TypeScript: 5.9.3 (GOOD - exact version)
+    ✗ @eslint/js: NOT PRESENT
+    ⚠ ESLint plugins: INCONSISTENT
+       - react-hooks: ^7.0.1 (MAJOR version mismatch - others use ^5.2.0)
+       - react-refresh: ^0.4.26 (OK)
+       - playwright: ^2.4.0 (OK - testing)
+       - jsx-a11y: ^6.10.2 (OK - a11y)
+       - tailwindcss: ^4.0.0-beta.0 (⚠️ BETA - should update to stable)
+       - format: ^1.2.0 (OK)
+       - storybook: ^10.1.11 (OK)
+    STATUS: 2.5/4 base tools, 7 plugins (some problematic)
+
+### 11. workflowui/package.json
+    ✗ ESLint: NOT PRESENT (ADD) ⚠️ CRITICAL
+    ✗ Prettier: NOT PRESENT (ADD)
+    ✓ TypeScript: ~5.9.3 (GOOD)
+    ✗ @eslint/js: NOT PRESENT
+    STATUS: 1/4 tools configured - MISSING ESLINT (CRITICAL)
+
+### 12. storybook/package.json
+    ✓ TypeScript: ^5.9.3 (GOOD)
+    No ESLint or Prettier defined
+    STATUS: 0/4 linting tools configured
+
+### Redux Packages (in redux/ directory)
+
+redux/slices/package.json:
+  ✓ TypeScript: ^5.9.3
+
+redux/core-hooks/package.json:
+  ✓ TypeScript: ^5.9.3
+
+redux/api-clients/package.json:
+  ✓ TypeScript: ^5.9.3
+  ⚠ TypeScript: ~5.9.3 (strict - different from others)
+
+redux/hooks-auth/package.json:
+  ✓ TypeScript: ^5.9.3
+
+redux/hooks-canvas/package.json:
+  ✓ TypeScript: ^5.9.3
+
+redux/timing-utils/package.json:
+  ✓ TypeScript: ^5.9.3
+
+redux/core/package.json:
+  ⚠ TypeScript: ^5.3.3 (outdated range)
+
+redux/hooks-async/package.json:
+  ⚠ TypeScript: ^5.3.3 (outdated range)
+
+redux/adapters/package.json:
+  ✓ TypeScript: ^5.9.3
+
+redux/hooks/package.json:
+  ✓ TypeScript: ^5.9.3
+
+redux/hooks-utils/package.json:
+  ⚠ TypeScript: ^5.0.0 (too loose)
+
+redux/hooks-forms/package.json:
+  ⚠ TypeScript: ^5.0.0 (too loose)
+
+redux/hooks-data/package.json:
+  ✓ TypeScript: ^5.9.3
+
+redux/email/package.json:
+  ⚠ TypeScript: ^5.0.0 (too loose)
+
+### Workflow Plugins (in workflow/plugins/ts/ directory)
+
+All TypeScript workflow plugins use: typescript: ^5.0.0
+This includes:
+  - ./workflow/plugins/ts/core/hooks/package.json
+  - ./workflow/plugins/ts/dbal-read/package.json
+  - ./workflow/plugins/ts/dbal-write/package.json
+  - ./workflow/plugins/ts/dbal/dbal-write/package.json
+  - ./workflow/plugins/ts/dbal/dbal-read/package.json
+  - ./workflow/plugins/ts/integration/webhook-response/package.json
+  - ./workflow/plugins/ts/integration/email-send/package.json
+  - ./workflow/plugins/ts/integration/http-request/package.json
+  - ./workflow/plugins/ts/integration/email/imap-sync/package.json
+  - ./workflow/plugins/ts/integration/email/imap-search/package.json
+  - ./workflow/plugins/ts/utility/wait/package.json
+
+RECOMMENDATION: Update all to ^5.9.3
+
+### Other Packages
+
+packages/geocities-app/package.json:
+  ⚠ TypeScript: ^5 (too loose)
+
+exploded-diagrams/package.json:
+  ⚠ TypeScript: ^5.0.0 (too loose)
+
+hooks/package.json:
+  ⚠ TypeScript: ^5.0.0 (too loose)
+
+## STANDARDIZATION IMPACT ANALYSIS
+
+### By Project Type
+
+#### Production Frontends (Should be strictest):
+  1. frontends/nextjs .................. ✅ COMPLIANT (4/4)
+  2. workflowui ....................... ❌ CRITICAL (0/4) - MISSING ESLINT
+  3. codegen ......................... ⚠️ PARTIAL (3.5/4) - MISSING PRETTIER
+
+#### Core Services:
+  1. dbal/development ................ ✅ GOOD (3/4)
+  2. workflow ........................ ❌ POOR (1/4) - OLD ESLINT VERSION
+
+#### Supporting Projects:
+  1. postgres ....................... ⚠️ PLUGIN ISSUES (react-hooks mismatch, beta tailwindcss)
+  2. pastebin ....................... ❌ POOR (0.5/4)
+  3. emailclient .................... ⚠️ OUTDATED (1.5/4)
+  4. dockerterminal ................ ⚠️ PARTIAL (1.5/4)
+
+#### Redux Ecosystem:
+  - Core: Good (^5.9.3)
+  - Utilities: Inconsistent (^5.0.0 to ^5.9.3)
+  - Plugins: All use ^5.0.0 (should standardize)
+
+## SEVERITY CLASSIFICATION
+
+### CRITICAL FIXES (Do First - Blocking)
+1. workflowui missing ESLint completely
+   Impact: Project has no linting
+   Effort: 2 minutes to add eslint: ^9.39.2
+
+### HIGH PRIORITY (Do Second - Important)
+2. 9 projects missing Prettier
+   Impact: Inconsistent code formatting
+   Effort: 10-15 minutes total
+
+3. 4 projects on deprecated ESLint (^8.0.0, ^8)
+   Impact: Missing modern ESLint rules
+   Effort: 5-10 minutes total
+
+4. ESLint plugin version mismatch (react-hooks: ^5.2.0 vs ^7.0.1)
+   Impact: Different rule behavior between projects
+   Effort: 30+ minutes (requires testing)
+
+### MEDIUM PRIORITY (Do Third - Good Practice)
+5. TypeScript version standardization (6 different ranges)
+   Impact: Version inconsistency, build issues possible
+   Effort: 30-45 minutes
+
+### LOW PRIORITY (Do Last - Polish)
+6. Beta eslint-plugin-tailwindcss in postgres
+   Impact: Using unstable plugin version
+   Effort: 5-10 minutes
+
+## QUICK FIX COMMANDS (Will be generated in next document)
+

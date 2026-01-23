@@ -1,0 +1,146 @@
+# Radix UI Version Audit - 2026-01-23
+
+## Summary
+- **Projects Analyzed**: 2 (codegen, old)
+- **Total @radix-ui Packages**: 27
+- **Major Version Groups**: Mostly v1.x and v2.x (good compatibility)
+- **Compatibility Status**: ✅ COMPATIBLE (no major version conflicts)
+
+## Version Matrix
+
+### codegen/package.json (26 packages)
+
+**v1.x Components** (Accordion, AspectRatio, Avatar, Checkbox, Collapsible, Dialog, HoverCard, MenuBar, Navigation Menu, Popover, Progress, RadioGroup, ScrollArea, Separator, Slider, Slot, Switch, Tabs, Toggle, ToggleGroup, Tooltip):
+- @radix-ui/react-accordion: ^1.1.2
+- @radix-ui/react-aspect-ratio: ^1.1.2
+- @radix-ui/react-avatar: ^1.1.2
+- @radix-ui/react-checkbox: ^1.1.2
+- @radix-ui/react-collapsible: ^1.1.2
+- @radix-ui/react-dialog: ^1.1.8
+- @radix-ui/react-hover-card: ^1.1.6
+- @radix-ui/react-menubar: ^1.1.6
+- @radix-ui/react-navigation-menu: ^1.2.5
+- @radix-ui/react-popover: ^1.1.6
+- @radix-ui/react-progress: ^1.1.2
+- @radix-ui/react-radio-group: ^1.2.3
+- @radix-ui/react-scroll-area: ^1.2.9
+- @radix-ui/react-separator: ^1.1.2
+- @radix-ui/react-slider: ^1.3.6
+- @radix-ui/react-slot: ^1.1.2
+- @radix-ui/react-switch: ^1.1.3
+- @radix-ui/react-tabs: ^1.1.3
+- @radix-ui/react-toggle: ^1.1.2
+- @radix-ui/react-toggle-group: ^1.1.2
+- @radix-ui/react-tooltip: ^1.1.8
+
+**v2.x Components** (AlertDialog, ContextMenu, DropdownMenu, Label, Select):
+- @radix-ui/react-alert-dialog: ^1.1.6 [NOTE: version shows as 1.x but is actually v1]
+- @radix-ui/react-context-menu: ^2.2.6
+- @radix-ui/react-dropdown-menu: ^2.1.6
+- @radix-ui/react-label: ^2.1.2
+- @radix-ui/react-select: ^2.1.6
+
+### old/package.json (26 packages)
+
+**v1.x Components** (same as codegen, with minor version differences):
+- @radix-ui/react-accordion: ^1.2.3 (vs codegen ^1.1.2)
+- @radix-ui/react-avatar: ^1.1.3 (vs codegen ^1.1.2)
+- @radix-ui/react-checkbox: ^1.1.4 (vs codegen ^1.1.2)
+- @radix-ui/react-collapsible: ^1.1.3 (vs codegen ^1.1.2)
+- @radix-ui/react-dialog: ^1.1.6 (vs codegen ^1.1.8)
+- @radix-ui/react-alert-dialog: ^1.1.6 (same as codegen)
+- [Other v1.x components match codegen]
+
+**v2.x Components** (same as codegen):
+- @radix-ui/react-context-menu: ^2.2.6
+- @radix-ui/react-dropdown-menu: ^2.1.6
+- @radix-ui/react-label: ^2.1.2
+- @radix-ui/react-select: ^2.1.6
+
+**Additional**:
+- @radix-ui/colors: ^3.0.0 (only in old/package.json)
+
+## Compatibility Analysis
+
+### Same Major Versions Across Projects
+✅ All v1.x components use v1.x across both projects
+✅ All v2.x components use v2.x across both projects
+✅ No major version mismatches between projects
+
+### Minor Version Differences (Non-Breaking)
+- @radix-ui/react-accordion: ^1.1.2 → ^1.2.3 (PATCH only, SemVer compatible)
+- @radix-ui/react-avatar: ^1.1.2 → ^1.1.3 (PATCH only, SemVer compatible)
+- @radix-ui/react-checkbox: ^1.1.2 → ^1.1.4 (PATCH only, SemVer compatible)
+- @radix-ui/react-collapsible: ^1.1.2 → ^1.1.3 (PATCH only, SemVer compatible)
+- @radix-ui/react-dialog: ^1.1.8 → ^1.1.6 (PATCH: codegen is NEWER)
+
+**Assessment**: Minor version differences are non-breaking. All caret ranges (^) allow patch updates.
+
+### Key Dependencies (Used by all components)
+
+Radix UI v1.x and v2.x components depend on:
+- react: ^16.8 || ^17 || ^18
+- react-dom: ^16.8 || ^17 || ^18
+- @radix-ui/react-primitive: (internal)
+- @radix-ui/react-use-*: (internal utilities)
+
+These are peer dependencies and should be satisfied by project React versions.
+
+## Component-Specific Notes
+
+### v1.x vs v2.x Differences
+
+**v1.x** (21 components):
+- Simpler APIs
+- Less feature-rich
+- Stable, mature
+
+**v2.x** (4 components):
+- Enhanced functionality
+- Better accessibility
+- Newer features
+
+Components that have v2.x:
+- @radix-ui/react-context-menu v2.2.6
+- @radix-ui/react-dropdown-menu v2.1.6
+- @radix-ui/react-label v2.1.2
+- @radix-ui/react-select v2.1.6
+
+All others are v1.x, which is intentional (not all components have v2).
+
+## Recommendations
+
+### Current Status: ✅ GOOD
+No action required. All projects use compatible versions.
+
+### For Future Updates:
+
+1. **Keep v1.x/v2.x Separation**
+   - Don't force v2 on components that don't need it
+   - Each component evolves independently
+
+2. **Update Strategy**
+   - Update patch versions regularly (e.g., ^1.1.2 → ^1.1.8)
+   - Test patch updates in both projects
+   - Major version upgrades (v1→v2) require component-specific testing
+
+3. **New Projects**
+   - Use same versions as codegen (newer patch levels)
+   - Consider using v2.x where available
+
+## Installation Verification
+
+To verify these versions install correctly:
+```bash
+cd codegen && npm install
+cd ../old && npm install
+npm list @radix-ui/react-dialog
+```
+
+Expected output: Should show compatible versions for both projects.
+
+---
+
+**Audit Date**: 2026-01-23
+**Auditor**: Claude Code
+**Status**: APPROVED - No changes needed

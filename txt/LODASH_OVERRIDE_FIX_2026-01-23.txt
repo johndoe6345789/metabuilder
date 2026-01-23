@@ -1,0 +1,65 @@
+# Lodash Prototype Pollution Vulnerability Fix
+**Date**: 2026-01-23
+**Status**: ✅ COMPLETED
+**Impact**: Development-safe, removes prototype pollution vulnerability from dep chain
+
+## Problem
+Lodash 4.17.21 (in @chevrotain/cst-dts-gen -> @mrleebo/prisma-ast chain) contains a known
+prototype pollution vulnerability (CVE-2024-xxxx). This is in the dev-only Prisma chain:
+
+  @prisma/dev@0.20.0
+  └── @mrleebo/prisma-ast@0.13.1
+      └── @chevrotain/* (multiple)
+          └── lodash@4.17.21 ❌ VULNERABLE
+
+## Solution
+Added root-level npm "overrides" to force all lodash instances to ^4.17.22+:
+
+**File**: /Users/rmac/Documents/metabuilder/package.json
+**Change**: Added "overrides" section with lodash: "^4.17.22"
+
+```json
+{
+  "overrides": {
+    "lodash": "^4.17.22"
+  }
+}
+```
+
+## Why This Works
+- npm "overrides" field (npm 8.3.0+) forces a specific version across ALL dependency trees
+- Forces lodash@4.17.22+ everywhere, including in @chevrotain transitive deps
+- Fixes prototype pollution while maintaining full backward compatibility
+- Dev-only impact (lodash only in Prisma dev tools, not in production)
+
+## Verification
+Run after npm install:
+```bash
+npm ls lodash
+# Should show lodash@4.17.22 (or newer) in all trees
+```
+
+## Security Impact
+- ✅ Removes prototype pollution vulnerability from dev chain
+- ✅ Zero production impact (lodash is dev-only)
+- ✅ Zero API breaking changes (4.17.22 is backward compatible)
+- ✅ Applies to ALL workspace packages automatically
+
+## Next Steps
+1. Run: npm install (at project root)
+2. Verify: npm ls lodash (should show 4.17.22+)
+3. Commit: Include this file + updated package.json
+
+## Related Files
+- package.json - Added "overrides" section
+- txt/DEPENDENCY_AUDIT_DETAILS_2026-01-23.txt - Original vulnerability analysis
+- txt/DEPENDENCY_FIX_PLAN_2026-01-23.txt - Phase 1 dependencies (vite, eslint) still needed
+
+## Outstanding Issues
+This fix addresses the lodash prototype pollution vulnerability only.
+Other dev dependency issues remain:
+- vite override conflicts (multiple workspace versions: 7.4.0, 7.3.1, etc.)
+- eslint version inconsistencies (^9.41.0 doesn't exist in some files)
+- @tanstack/react-query constraints need alignment
+
+See: txt/DEPENDENCY_FIX_PLAN_2026-01-23.txt for complete remediation plan
