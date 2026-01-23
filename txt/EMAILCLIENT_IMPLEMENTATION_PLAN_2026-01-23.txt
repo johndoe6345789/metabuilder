@@ -1,0 +1,845 @@
+================================================================================
+EMAIL CLIENT - COMPREHENSIVE IMPLEMENTATION PLAN
+Date: 2026-01-23
+Status: PLANNING PHASE
+================================================================================
+
+PROJECT SCOPE
+=============
+Build a full-featured email client in root directory that:
+1. Connects to multiple IMAP/POP3/SMTP servers (users manage their accounts)
+2. Manages email accounts with Postfix/Dovecot backend
+3. Syncs emails locally to IndexedDB for offline access
+4. Provides React UI with Redux state management
+5. Integrates with existing authentication, multi-tenant architecture, and FakeMUI
+
+TECHNOLOGY STACK
+================
+Frontend:
+- React 19.2.3 + Next.js (from /frontends/nextjs pattern)
+- FakeMUI components (145 production React components)
+- Redux + custom hooks for state management
+- IndexedDB for offline storage
+- SCSS for styling
+
+Backend:
+- DBAL for multi-tenant credential storage
+- Postfix/Dovecot for account management
+- Existing SMTP relay plugin (enhance it)
+- New IMAP/POP3 sync plugins
+- SQLAlchemy Flask service for email operations (in /services)
+
+Infrastructure:
+- Docker Compose (for local Postfix/Dovecot)
+- caprover deployment (prod)
+- n8n workflows (optional email automation)
+
+================================================================================
+DIRECTORY STRUCTURE - NEW EMAILCLIENT PROJECT
+================================================================================
+
+emailclient/                          # Root email client subproject
+├── package.json                      # Root workspace package
+├── docs/
+│   ├── CLAUDE.md                     # Email client specific guide
+│   ├── ARCHITECTURE.md               # Email sync flow diagrams
+│   ├── ACCOUNT_SETUP.md              # User account management
+│   └── INTEGRATION.md                # API integration patterns
+│
+├── frontend/                         # React/Next.js UI
+│   ├── src/
+│   │   ├── app/                      # Next.js app router
+│   │   │   ├── (auth)/
+│   │   │   │   └── mailbox/          # Main mailbox page
+│   │   │   └── api/
+│   │   │       └── email/            # Email API routes
+│   │   ├── components/
+│   │   │   ├── composer/             # Email compose
+│   │   │   ├── mailbox/              # Inbox/folder browser
+│   │   │   ├── account-manager/      # Account CRUD
+│   │   │   ├── message-viewer/       # Email viewer
+│   │   │   └── settings/             # Email settings
+│   │   ├── hooks/
+│   │   │   ├── useEmailSync.ts       # Email sync hook
+│   │   │   ├── useEmailStore.ts      # IndexedDB wrapper
+│   │   │   ├── useMailboxes.ts       # Mailbox list hook
+│   │   │   └── useAccounts.ts        # Account management hook
+│   │   ├── redux/
+│   │   │   ├── emailSlice.ts         # Redux: emails
+│   │   │   ├── accountsSlice.ts      # Redux: accounts
+│   │   │   ├── syncSlice.ts          # Redux: sync status
+│   │   │   └── store.ts
+│   │   ├── lib/
+│   │   │   ├── imap-client.ts        # IMAP client wrapper
+│   │   │   ├── email-parser.ts       # Parse email headers
+│   │   │   └── indexeddb/
+│   │   │       ├── schema.ts         # IndexedDB schema
+│   │   │       ├── emails.ts         # Email storage ops
+│   │   │       ├── accounts.ts       # Account storage ops
+│   │   │       └── sync.ts           # Sync state tracking
+│   │   └── styles/
+│   │       └── emailclient.scss
+│   ├── tests/
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   ├── redux/
+│   │   └── integration/
+│   └── package.json
+│
+├── backend/                          # Flask + SQLAlchemy service
+│   ├── src/
+│   │   ├── email_service.py          # Main service class
+│   │   ├── imap_sync.py              # IMAP sync engine
+│   │   ├── pop3_sync.py              # POP3 sync engine
+│   │   ├── smtp_send.py              # SMTP sending
+│   │   ├── account_manager.py        # Account CRUD ops
+│   │   ├── models.py                 # SQLAlchemy models
+│   │   ├── schemas.py                # Input validation
+│   │   ├── routes/
+│   │   │   ├── accounts.py           # Account endpoints
+│   │   │   ├── messages.py           # Message endpoints
+│   │   │   ├── sync.py               # Sync management
+│   │   │   └── compose.py            # Email composition
+│   │   ├── middleware/
+│   │   │   ├── auth.py               # Session validation
+│   │   │   └── tenant.py             # Tenant filtering
+│   │   ├── utils/
+│   │   │   ├── imap_parser.py        # Parse IMAP responses
+│   │   │   ├── email_parser.py       # RFC 2822 parsing
+│   │   │   ├── credentials.py        # Encrypt/decrypt creds
+│   │   │   └── validators.py         # Input validators
+│   │   └── celery_tasks.py           # Background sync jobs
+│   ├── requirements.txt              # Python deps
+│   ├── tests/
+│   │   ├── test_sync.py
+│   │   ├── test_smtp.py
+│   │   ├── test_models.py
+│   │   └── test_validators.py
+│   ├── docker/                       # Containerization
+│   │   ├── Dockerfile.dev
+│   │   └── Dockerfile.prod
+│   └── app.py                        # Flask app entry
+│
+├── schemas/                          # DBAL entity definitions
+│   ├── email-client.yaml             # Email client config entity
+│   ├── email-account.yaml            # Email account/mailbox entity
+│   ├── email-message.yaml            # Email message metadata
+│   └── email-folder.yaml             # Mailbox folder structure
+│
+├── workflow-plugins/                 # Enhanced workflow integrations
+│   ├── imap-sync.ts                  # IMAP sync workflow plugin
+│   ├── pop3-sync.ts                  # POP3 sync workflow plugin
+│   ├── smtp-send-enhanced.ts         # Enhanced SMTP plugin
+│   └── email-parse.ts                # Email parsing plugin
+│
+├── docker-compose.yml                # Local dev email server
+├── .dockerignore
+├── .env.example                      # Example env vars
+├── README.md                         # Project overview
+└── QUICK_START.md                    # Getting started guide
+
+
+================================================================================
+PHASE 1: INFRASTRUCTURE & DATA LAYER (Estimated effort: full implementation)
+================================================================================
+
+TASK 1.1: DBAL SCHEMA DEFINITIONS
+Location: emailclient/schemas/ + update dbal/shared/api/schema/entities/
+
+Create 4 new YAML entity definitions:
+
+1. email-client.yaml (Access Layer)
+   - id: UUID (primary)
+   - userId: UUID (fk to User)
+   - tenantId: UUID (mandatory multi-tenant)
+   - accountName: string (user-friendly label)
+   - protocol: enum (imap, pop3) [SMTP is separate, uses smtp entity]
+   - hostname: string (imap.gmail.com, etc)
+   - port: int (usually 993 for IMAP TLS)
+   - encryption: enum (none, tls, starttls)
+   - username: string (email address)
+   - credentialId: UUID (fk to Credential - password stored here)
+   - lastSyncAt: bigint (timestamp)
+   - isSyncing: boolean
+   - isEnabled: boolean
+   - syncInterval: int (minutes, default 5)
+   - maxSyncHistory: int (days to keep, default 30)
+   - createdAt: bigint (generated)
+   - updatedAt: bigint (auto-updated)
+   - ACL:
+     read: self (users see own accounts) + admin
+     create: self (users create their own)
+     update: self (users update own)
+     delete: self (users delete own)
+
+2. email-account.yaml (Packages Layer - like forum, notification)
+   - id: UUID (primary)
+   - emailClientId: UUID (fk to email-client)
+   - tenantId: UUID
+   - email: email (actual email address synced)
+   - displayName: string (optional sender name)
+   - signatureHtml: text (optional email signature)
+   - replyToEmail: email (optional different reply-to)
+   - folders: jsonb (JSON array of folder configs)
+   - syncedMessageCount: int
+   - lastSyncedAt: bigint
+   - createdAt: bigint
+   - ACL: same as email-client (self-managed)
+
+3. email-message.yaml (Packages Layer)
+   - id: UUID (primary)
+   - emailClientId: UUID
+   - accountId: UUID (fk to email-account)
+   - tenantId: UUID
+   - messageId: string (RFC 2822 Message-ID header)
+   - inReplyTo: string (IRT header, nullable)
+   - from: string (sender email)
+   - to: jsonb (array of recipient emails)
+   - cc: jsonb (array)
+   - bcc: jsonb (array)
+   - subject: string
+   - bodyHtml: text (HTML version)
+   - bodyText: text (plain text fallback)
+   - receivedAt: bigint (email timestamp, not sync timestamp)
+   - isRead: boolean (default false)
+   - isStarred: boolean
+   - isDraft: boolean
+   - isSent: boolean (track if this was sent by us)
+   - folderId: string (IMAP folder name)
+   - flags: jsonb (IMAP flags: Seen, Answered, Flagged, Deleted, Draft, Recent)
+   - attachmentCount: int (for preview)
+   - attachments: jsonb (metadata: filename, size, mimeType)
+   - headers: jsonb (select headers for threading: References, List-ID, etc)
+   - createdAt: bigint
+   - ACL: read/update self, admin full access
+
+4. email-folder.yaml (Packages Layer)
+   - id: UUID
+   - emailClientId: UUID
+   - tenantId: UUID
+   - name: string (IMAP folder name: INBOX, [Gmail]/Sent, etc)
+   - displayName: string (user-editable display name)
+   - type: enum (inbox, sent, drafts, trash, spam, archive, custom)
+   - messageCount: int
+   - unreadCount: int
+   - syncedAt: bigint
+   - localFolderPath: string (dovecot path for delegation)
+   - ACL: self-managed
+
+TASK 1.2: DBAL CRUD OPERATIONS
+Location: dbal/development/src/core/entities/
+
+Create one file per operation following existing pattern:
+- email-client/crud/create-email-client.ts
+- email-client/crud/read-email-client.ts
+- email-client/crud/update-email-client.ts
+- email-client/crud/delete-email-client.ts
+- email-client/crud/list-email-clients.ts
+- email-account/crud/* (same pattern)
+- email-message/crud/* (same pattern)
+- email-folder/crud/* (same pattern)
+
+Requirements:
+- Validate tenantId on ALL queries
+- Password stored in Credential entity (never returned)
+- SHA-512 hashing for stored passwords
+- Indexes on: (userId, tenantId), (emailClientId, accountId), (accountId, messageId)
+- Soft delete option for messages (flag as deleted, not purged immediately)
+
+TASK 1.3: API ENDPOINTS
+Location: emailclient/frontend/src/app/api/email/
+
+Routes following existing pattern /api/v1/{tenant}/email_client/{id}:
+
+POST   /api/v1/{tenant}/email-client              → create account (validate host/port reachable)
+GET    /api/v1/{tenant}/email-client              → list accounts (paginated, filter by enabled)
+GET    /api/v1/{tenant}/email-client/{id}         → read config
+PUT    /api/v1/{tenant}/email-client/{id}         → update (re-validate creds if changed)
+DELETE /api/v1/{tenant}/email-client/{id}         → delete + cleanup synced messages
+POST   /api/v1/{tenant}/email-client/{id}/test    → test connection (auth, TLS, port)
+POST   /api/v1/{tenant}/email-client/{id}/sync    → trigger manual sync
+
+GET    /api/v1/{tenant}/email-account             → list accounts for a client
+GET    /api/v1/{tenant}/email-message             → list messages (with pagination, filtering)
+GET    /api/v1/{tenant}/email-message/{id}        → read full message (body + attachments)
+PUT    /api/v1/{tenant}/email-message/{id}        → update flags (read, starred, folder)
+DELETE /api/v1/{tenant}/email-message/{id}        → trash message
+
+POST   /api/v1/{tenant}/email-compose             → send new email
+PUT    /api/v1/{tenant}/email-message/{id}/reply  → send reply
+
+Rate limiting:
+- List: 100/min
+- Mutations: 50/min
+- Sync trigger: 10/min (prevent abuse)
+
+================================================================================
+PHASE 2: BACKEND EMAIL SERVICE (Python/Flask)
+================================================================================
+
+TASK 2.1: EMAIL SERVICE CORE
+Location: emailclient/backend/src/
+
+email_service.py:
+- Class EmailService (main orchestrator)
+- __init__(dbal_client, smtp_config, imap_config, pop3_config)
+- get_client(client_id, user_id, tenant_id) → IMAPClient or POP3Client instance
+- sync_account(account_id) → {synced_count, errors, lastSyncAt}
+- send_email(account_id, to, cc, bcc, subject, html, attachments) → message_id
+- test_connection(host, port, protocol, username, password, encryption) → {success, error}
+- decrypt_password(credentialId) → plaintext (use DBAL Credential lookup)
+
+imap_sync.py:
+- Class IMAPSyncEngine
+- connect(host, port, username, password, encryption)
+- list_folders() → [folder_names]
+- sync_folder(folder_name, last_sync_timestamp) → [messages]
+- fetch_message_full(message_id) → {headers, body_html, body_text, attachments}
+- mark_as_read(message_id)
+- update_flags(message_id, flags)
+- Error handling: ConnectionError, AuthError, TimeoutError (with backoff)
+
+pop3_sync.py:
+- Similar to IMAP but simpler (POP3 can't sync flags/folders)
+- Class POP3SyncEngine
+- Only supports: list, fetch, delete
+
+smtp_send.py:
+- Class SMTPSender (leverage existing smtp_relay plugin)
+- send(from_addr, to, cc, bcc, subject, html, text, attachments, account_id)
+- Handle template expansion (if from workflow)
+- Audit log all sends
+
+account_manager.py:
+- Interface to DBAL entity CRUD
+- Validation: email format, host reachability, port listening
+- Create account record on first sync
+- Track sync status, last error, retry count
+
+models.py (SQLAlchemy):
+- Sync state models (if using local cache for sync status)
+- Or just interface with DBAL exclusively
+
+TASK 2.2: WORKFLOW PLUGINS
+Location: workflow/plugins/ts/integration/ + emailclient/workflow-plugins/
+
+1. imap-sync.ts
+   - Inputs: emailClientId, folderId, maxMessages
+   - Outputs: messages[], syncStats{}
+   - Error handling: retry with exponential backoff
+   - Logging: audit trail of sync ops
+
+2. pop3-sync.ts
+   - Similar, but simpler
+
+3. smtp-send-enhanced.ts
+   - Enhance existing smtp_relay plugin
+   - Add attachment support
+   - Add HTML/text alternatives
+   - Add tracking pixel (optional)
+   - Integrate with email-message entity
+
+4. email-parse.ts
+   - Parse RFC 2822 messages
+   - Extract headers, body, attachments
+   - Generate preview (first 100 chars)
+
+TASK 2.3: PYTHON DEPENDENCIES
+Location: emailclient/backend/
+
+requirements.txt:
+- imaplib2 or imapclient (IMAP protocol)
+- poplib (already in stdlib, but pyaio-pop3 optional for async)
+- email-parser (standard library, email.parser)
+- python-dotenv
+- flask, flask-cors
+- sqlalchemy
+- celery (for background sync)
+- redis (for celery broker)
+- requests (for HTTP calls to DBAL/Next.js API)
+- cryptography (for password encryption at rest)
+
+================================================================================
+PHASE 3: FRONTEND REACT COMPONENTS (FakeMUI-based)
+================================================================================
+
+TASK 3.1: COMPONENT STRUCTURE
+Location: emailclient/frontend/src/components/
+
+Using FakeMUI components (all from @metabuilder/fakemui):
+
+1. mailbox/
+   - MailboxLayout.tsx (main grid: sidebar + email list + viewer)
+   - FolderTree.tsx (left sidebar: INBOX, Sent, Drafts, etc)
+   - MessageList.tsx (center: paginated email list with search)
+   - MessageViewer.tsx (right: full email view with attachments)
+   - Thread.tsx (optional: email threading UI)
+
+2. composer/
+   - ComposeWindow.tsx (modal/fullscreen new email)
+   - ReplyComposer.tsx (reply/reply-all)
+   - RecipientInput.tsx (to/cc/bcc with autocomplete)
+   - AttachmentUpload.tsx (drag-drop file upload)
+
+3. account-manager/
+   - AccountList.tsx (list connected accounts)
+   - AccountForm.tsx (add/edit account)
+   - ConnectionTest.tsx (test IMAP connection)
+   - SyncStatus.tsx (last sync time, unread count, sync button)
+
+4. settings/
+   - EmailSettings.tsx (signature, reply-to, etc)
+   - AccountSettings.tsx (sync interval, folder mapping)
+   - SignatureEditor.tsx (WYSIWYG HTML editor)
+
+5. message-viewer/
+   - AttachmentViewer.tsx (preview + download)
+   - EmailHeaderDisplay.tsx (From, To, Date, etc)
+   - MarkAsReadButton.tsx
+   - StarButton.tsx
+   - MoveToFolderDropdown.tsx
+
+All components:
+- Use FakeMUI Button, TextField, Dialog, Card, List, Table, etc
+- Add data-testid attributes for testing
+- Add ARIA labels for accessibility
+- Use SCSS modules for styling (emailclient/frontend/src/styles/)
+- Responsive design (mobile-first)
+
+TASK 3.2: REDUX STATE MANAGEMENT
+Location: emailclient/frontend/src/redux/
+
+Following project pattern (root redux folder):
+
+emailSlice.ts:
+- state: {
+    accounts: [{id, email, lastSync, isSyncing}],
+    messages: [{id, subject, from, receivedAt, isRead}],
+    folders: [{name, unreadCount, messageCount}],
+    selectedMessage: {id, ...full email data},
+    searchQuery: string,
+    filters: {folder, isRead, isStarred, from}
+  }
+- actions:
+  - setAccounts(accounts)
+  - selectMessage(message)
+  - updateMessageFlags(id, flags)
+  - setMessages(messages)
+  - appendMessages(messages) [for pagination]
+  - setFolders(folders)
+  - setIsSyncing(accountId, boolean)
+
+accountSlice.ts:
+- state: {
+    accounts: [{id, accountName, email, protocol, hostname, isEnabled}],
+    selectedAccount: {id, ...details},
+    isCreating: boolean,
+    error: null | string
+  }
+- actions:
+  - createAccount(config)
+  - updateAccount(id, config)
+  - deleteAccount(id)
+  - testConnection(config) → {success, error}
+  - setSelectedAccount(id)
+
+syncSlice.ts:
+- state: {
+    accountId: {
+      status: 'idle' | 'syncing' | 'error' | 'success',
+      lastSyncAt: timestamp,
+      syncedCount: number,
+      error: null | string,
+      progress: 0-100
+    }
+  }
+- actions:
+  - startSync(accountId)
+  - syncProgress(accountId, progress)
+  - syncSuccess(accountId, syncedCount)
+  - syncError(accountId, error)
+
+TASK 3.3: CUSTOM HOOKS
+Location: emailclient/frontend/src/hooks/
+
+useEmailSync.ts:
+- Hook for triggering manual sync
+- const {sync, isSyncing, lastSync, error} = useEmailSync(accountId)
+- Dispatches to Redux syncSlice
+
+useEmailStore.ts:
+- Wrapper around IndexedDB
+- const {get, set, query, delete} = useEmailStore('messages')
+- Auto-persists on window close
+
+useMailboxes.ts:
+- Fetch mailbox list from API
+- const {folders, isLoading, error} = useMailboxes(accountId)
+
+useAccounts.ts:
+- CRUD for email accounts
+- const {accounts, create, update, delete, test} = useAccounts()
+
+useEmailCompose.ts:
+- Manage compose window state
+- const {isOpen, open, close, draft} = useEmailCompose()
+
+useMessageThreading.ts:
+- Group messages by conversation (In-Reply-To, References headers)
+- const {threads} = useMessageThreading(messages)
+
+TASK 3.4: INDEXEDDB SCHEMA
+Location: emailclient/frontend/src/lib/indexeddb/
+
+schema.ts:
+- Define IndexedDB database: "emailclient"
+- Version: 1 (increment on schema changes)
+- Stores:
+  - "messages": keyPath="id", indexes=[["accountId", "receivedAt"], ["accountId", "isRead"]]
+  - "accounts": keyPath="id"
+  - "folders": keyPath="[accountId, name]"
+  - "drafts": keyPath="id" (unsent emails)
+  - "sync_state": keyPath="accountId" (track sync progress)
+
+emails.ts:
+- saveMessages(messages) → void
+- getMessages(accountId, options) → messages[]
+- getMessage(id) → message | null
+- updateMessage(id, patch) → void
+- deleteMessages(messageIds) → void
+- queryMessages(accountId, filter) → messages[] (by read, starred, date range)
+- clearOldMessages(accountId, daysToKeep) → count
+
+accounts.ts:
+- saveAccounts(accounts) → void
+- getAccounts() → accounts[]
+- getAccount(id) → account | null
+- deleteAccount(id) → void
+
+sync.ts:
+- saveLastSync(accountId, timestamp, messageCount) → void
+- getLastSync(accountId) → {timestamp, messageCount} | null
+- getSyncProgress(accountId) → progress_percent
+
+================================================================================
+PHASE 4: UI PAGES & ROUTING
+================================================================================
+
+TASK 4.1: NEXT.JS APP STRUCTURE
+Location: emailclient/frontend/src/app/
+
+(auth)/
+  mailbox/
+    page.tsx (main mailbox layout)
+    layout.tsx (includes sidebar, header)
+    loading.tsx (skeleton while loading)
+
+api/
+  email/
+    route.ts (API handler for /api/v1/.../email-* routes)
+    accounts/route.ts
+    messages/route.ts
+    sync/route.ts
+    compose/route.ts
+
+TASK 4.2: PAGE COMPONENTS
+Location: emailclient/frontend/src/app/(auth)/mailbox/
+
+page.tsx:
+- Use MailboxLayout component
+- Dispatch useEmailSync on mount
+- Display FolderTree, MessageList, MessageViewer in grid layout
+- Handle search input
+- Show sync status in header
+
+layout.tsx:
+- Navbar with logo, search, settings
+- Side panel with FolderTree
+- Responsive breakpoints (mobile hides details)
+
+loading.tsx:
+- Skeleton screens while fetching messages
+
+TASK 4.3: SETTINGS PAGE
+Location: emailclient/frontend/src/app/(auth)/email-settings/
+
+settings/page.tsx:
+- Link to account manager
+- Email signature editor
+- Auto-sync settings
+- Notification preferences
+- Theme selector
+
+settings/accounts/page.tsx:
+- List all email accounts
+- Add/edit/delete accounts
+- Test connection
+- Manage folders
+
+================================================================================
+PHASE 5: TESTING & DEPLOYMENT
+================================================================================
+
+TASK 5.1: E2E TESTS
+Location: emailclient/tests/ + e2e/
+
+Test scenarios:
+1. Create email account (validate, test connection, save)
+2. Sync inbox (fetch messages, store in IndexedDB)
+3. Compose and send email (via SMTP)
+4. Mark message as read (update flags)
+5. Move message to folder (update folder)
+6. Search messages (query IndexedDB)
+7. Multi-account switch (isolate by accountId)
+8. Offline access (load from IndexedDB when offline)
+9. Sync conflict resolution (duplicate message ID)
+
+TASK 5.2: UNIT TESTS
+- DBAL CRUD operations (query validation, ACL enforcement)
+- IndexedDB operations (save/load/query)
+- Email parsing (RFC 2822)
+- Redux reducers (action handling)
+- Custom hooks (state updates)
+
+TASK 5.3: DOCKER DEPLOYMENT
+Location: emailclient/docker/
+
+Dockerfile.dev:
+- Base: Node 20 + Python 3.11
+- Frontend: Next.js dev server
+- Backend: Flask dev server
+- Postfix/Dovecot container (reuse from deployment/)
+
+Dockerfile.prod:
+- Frontend: Next.js static export + Nginx
+- Backend: Gunicorn + Flask
+- Email service: Celery worker
+
+docker-compose.yml:
+- frontend service (Next.js)
+- backend service (Flask)
+- postfix service (SMTP/IMAP/POP3)
+- redis service (session store, Celery broker)
+- postgres service (production DB)
+
+TASK 5.4: CAPROVER DEPLOYMENT
+- Create Captain definition for emailclient app
+- Link to existing Postfix/Dovecot service
+- Environment variables for DBAL connection
+- SSL certificate from Let's Encrypt
+
+================================================================================
+FILES TO CREATE/MODIFY - SUMMARY
+================================================================================
+
+NEW FILES (74 total):
+SCHEMAS (4):
+✓ emailclient/schemas/email-client.yaml
+✓ emailclient/schemas/email-account.yaml
+✓ emailclient/schemas/email-message.yaml
+✓ emailclient/schemas/email-folder.yaml
+
+DBAL CRUD (16):
+✓ dbal/development/src/core/entities/email-client/crud/create-email-client.ts
+✓ dbal/development/src/core/entities/email-client/crud/read-email-client.ts
+✓ dbal/development/src/core/entities/email-client/crud/update-email-client.ts
+✓ dbal/development/src/core/entities/email-client/crud/delete-email-client.ts
+✓ dbal/development/src/core/entities/email-client/crud/list-email-clients.ts
+✓ dbal/development/src/core/entities/email-account/crud/create-email-account.ts
+✓ dbal/development/src/core/entities/email-account/crud/read-email-account.ts
+✓ ... (similar for message and folder, 16 total)
+
+BACKEND (15):
+✓ emailclient/backend/src/email_service.py
+✓ emailclient/backend/src/imap_sync.py
+✓ emailclient/backend/src/pop3_sync.py
+✓ emailclient/backend/src/smtp_send.py
+✓ emailclient/backend/src/account_manager.py
+✓ emailclient/backend/src/models.py
+✓ emailclient/backend/src/schemas.py
+✓ emailclient/backend/src/routes/accounts.py
+✓ emailclient/backend/src/routes/messages.py
+✓ emailclient/backend/src/routes/sync.py
+✓ emailclient/backend/src/routes/compose.py
+✓ emailclient/backend/src/middleware/auth.py
+✓ emailclient/backend/src/middleware/tenant.py
+✓ emailclient/backend/src/utils/*.py (4 files)
+✓ emailclient/backend/src/celery_tasks.py
+✓ emailclient/backend/app.py
+
+FRONTEND COMPONENTS (24):
+✓ emailclient/frontend/src/components/mailbox/*.tsx (5)
+✓ emailclient/frontend/src/components/composer/*.tsx (4)
+✓ emailclient/frontend/src/components/account-manager/*.tsx (4)
+✓ emailclient/frontend/src/components/settings/*.tsx (3)
+✓ emailclient/frontend/src/components/message-viewer/*.tsx (3)
+✓ emailclient/frontend/src/components/common/*.tsx (5)
+
+REDUX (3):
+✓ emailclient/frontend/src/redux/emailSlice.ts
+✓ emailclient/frontend/src/redux/accountSlice.ts
+✓ emailclient/frontend/src/redux/syncSlice.ts
+
+HOOKS (6):
+✓ emailclient/frontend/src/hooks/useEmailSync.ts
+✓ emailclient/frontend/src/hooks/useEmailStore.ts
+✓ emailclient/frontend/src/hooks/useMailboxes.ts
+✓ emailclient/frontend/src/hooks/useAccounts.ts
+✓ emailclient/frontend/src/hooks/useEmailCompose.ts
+✓ emailclient/frontend/src/hooks/useMessageThreading.ts
+
+INDEXEDDB (2):
+✓ emailclient/frontend/src/lib/indexeddb/schema.ts
+✓ emailclient/frontend/src/lib/indexeddb/emails.ts
+✓ emailclient/frontend/src/lib/indexeddb/accounts.ts
+✓ emailclient/frontend/src/lib/indexeddb/sync.ts
+
+PAGES (6):
+✓ emailclient/frontend/src/app/(auth)/mailbox/page.tsx
+✓ emailclient/frontend/src/app/(auth)/mailbox/layout.tsx
+✓ emailclient/frontend/src/app/(auth)/mailbox/loading.tsx
+✓ emailclient/frontend/src/app/(auth)/email-settings/page.tsx
+✓ emailclient/frontend/src/app/api/email/route.ts
+✓ emailclient/frontend/src/app/api/email/[...slug]/route.ts
+
+WORKFLOWS (4):
+✓ emailclient/workflow-plugins/imap-sync.ts
+✓ emailclient/workflow-plugins/pop3-sync.ts
+✓ emailclient/workflow-plugins/smtp-send-enhanced.ts
+✓ emailclient/workflow-plugins/email-parse.ts
+
+TESTS (15):
+✓ emailclient/tests/components/*.test.tsx (5)
+✓ emailclient/tests/hooks/*.test.ts (3)
+✓ emailclient/tests/redux/*.test.ts (3)
+✓ emailclient/tests/integration/*.test.ts (4)
+✓ emailclient/tests/backend/*.py (5)
+
+CONFIG (6):
+✓ emailclient/package.json
+✓ emailclient/tsconfig.json
+✓ emailclient/next.config.js
+✓ emailclient/jest.config.js
+✓ emailclient/backend/requirements.txt
+✓ emailclient/docker-compose.yml
+
+DOCUMENTATION (5):
+✓ emailclient/docs/CLAUDE.md
+✓ emailclient/docs/ARCHITECTURE.md
+✓ emailclient/docs/ACCOUNT_SETUP.md
+✓ emailclient/docs/INTEGRATION.md
+✓ emailclient/README.md
+✓ emailclient/QUICK_START.md
+
+MODIFIED FILES (3):
+✓ CLAUDE.md (add emailclient section)
+✓ dbal/shared/api/schema/entities/entities.yaml (register 4 new entities)
+✓ deployment/docker-compose.yml (optionally expand for emailclient)
+
+================================================================================
+IMPLEMENTATION PRIORITY & DEPENDENCIES
+================================================================================
+
+CRITICAL PATH (do in order):
+1. DBAL Schemas (Phase 1.1) - blocks everything
+2. DBAL CRUD (Phase 1.2) - needed for API endpoints
+3. API Endpoints (Phase 1.3) - frontend can hit APIs
+4. Backend Email Service (Phase 2.1-2.2) - implement actual email ops
+5. Frontend Components (Phase 3.1-3.4) - UI rendering
+6. Pages & Routing (Phase 4) - user-facing features
+
+PARALLEL WORK (independent):
+- Tests (can write while implementing)
+- Docker setup (while UI is being built)
+- Documentation (throughout)
+
+================================================================================
+TESTING STRATEGY
+================================================================================
+
+1. Unit Tests: DBAL CRUD, Redux reducers, hooks
+2. Integration Tests: API endpoints + DBAL
+3. E2E Tests: Full user flow (add account, sync, compose, send)
+4. Manual Testing: Real IMAP accounts (Gmail, Outlook)
+5. Performance: Index large message counts (10K+ messages)
+6. Security: Rate limiting, tenant isolation, credential encryption
+
+================================================================================
+SECURITY CHECKLIST
+================================================================================
+
+✓ Credentials stored in DBAL Credential entity (SHA-512 hashed)
+✓ Passwords never returned from API (only credentialId)
+✓ Multi-tenant filtering on ALL queries (tenantId required)
+✓ Session-based auth (mb_session cookie)
+✓ Rate limiting: 50/min for mutations, 100/min for lists
+✓ IMAP connection credentials isolated per user
+✓ No plaintext password storage in frontend (Redux/IndexedDB)
+✓ HTTPS/TLS for all connections
+✓ CSRF protection on form submissions
+✓ Input validation (email format, host validation)
+✓ XSS prevention (DOMPurify for HTML email bodies)
+✓ SQL injection prevention (use DBAL, not raw SQL)
+
+================================================================================
+ROLLOUT PLAN
+================================================================================
+
+Phase 1 (Week 1): Infrastructure
+- Create DBAL schemas and CRUD operations
+- Implement API endpoints
+- Setup Docker compose with local Postfix/Dovecot
+
+Phase 2 (Week 2): Backend Services
+- Implement Python email service
+- Integrate IMAP/POP3/SMTP
+- Setup workflow plugins
+- Write backend tests
+
+Phase 3 (Week 3): Frontend
+- Build React components (FakeMUI)
+- Setup Redux state management
+- Implement IndexedDB persistence
+- Build pages and routing
+
+Phase 4 (Week 4): Testing & Deployment
+- E2E tests
+- Performance testing
+- Docker/Caprover deployment
+- Security audit
+
+================================================================================
+MILESTONES & ACCEPTANCE CRITERIA
+================================================================================
+
+PHASE 1 COMPLETE:
+☐ All 4 YAML schemas committed
+☐ All 16 DBAL CRUD operations working
+☐ All 7 API endpoints responding (test with curl)
+☐ CLAUDE.md updated with emailclient section
+
+PHASE 2 COMPLETE:
+☐ Email service connects to test Postfix/Dovecot account
+☐ Can fetch messages from IMAP (test with imaplib interactive)
+☐ Can send email via SMTP (test with test account)
+☐ Workflow plugins registered and callable
+☐ Backend unit tests passing (>80% coverage)
+
+PHASE 3 COMPLETE:
+☐ React components render without errors
+☐ Redux state management working (Redux DevTools)
+☐ IndexedDB persisting emails locally
+☐ Pages load and respond to user input
+☐ FakeMUI components used consistently
+
+PHASE 4 COMPLETE:
+☐ All E2E tests passing (account creation, sync, compose, send)
+☐ Docker images building without errors
+☐ Performance: <3s to load 1000 messages
+☐ Security audit: all checklist items verified
+☐ Caprover deployment successful
+☐ GitHub Actions CI/CD passing
+
+================================================================================
+END OF PLAN
+================================================================================

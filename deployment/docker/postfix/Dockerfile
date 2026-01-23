@@ -158,17 +158,16 @@ echo "Starting Postfix..."
 /etc/init.d/postfix start
 
 echo "Starting Dovecot..."
-dovecot -F 2>&1 &
-DOVECOT_PID=$!
+/etc/init.d/dovecot start
 
 echo "Mail server running on $(hostname)"
 echo "Accounts: admin (password123), relay (relaypass), user (userpass)"
 echo "SMTP: localhost:25, 587"
-echo "IMAP: localhost:143"
-echo "POP3: localhost:110"
+echo "IMAP: localhost:143, 993 (TLS)"
+echo "POP3: localhost:110, 995 (TLS)"
 
-# Wait for both services
-wait
+# Keep container alive
+tail -f /var/log/mail.log 2>/dev/null || tail -f /var/log/syslog 2>/dev/null || sleep infinity
 EOF
 RUN chmod +x /entrypoint.sh
 

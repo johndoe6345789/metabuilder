@@ -937,8 +937,10 @@ def list_emails():
                 'body_preview': (msg.get_payload(decode=True) or b'').decode('utf-8', errors='ignore')[:200]
             })
 
-        imap.close()
-        imap.logout()
+        try:
+            imap.logout()
+        except:
+            pass
 
         return jsonify({
             'emails': emails,
@@ -1000,8 +1002,10 @@ def read_email():
             except:
                 pass
 
-        imap.close()
-        imap.logout()
+        try:
+            imap.logout()
+        except:
+            pass
 
         return jsonify({
             'id': email_id,
