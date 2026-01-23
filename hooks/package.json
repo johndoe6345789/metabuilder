@@ -52,7 +52,11 @@
     "./useStorageSwitchHandlers": "./useStorageSwitchHandlers.ts",
     "./useFaviconDesigner": "./useFaviconDesigner.ts",
     "./useDragResize": "./useDragResize.ts",
-    "./useGithubBuildStatus": "./use-github-build-status.ts"
+    "./useGithubBuildStatus": "./use-github-build-status.ts",
+    "./useKeyboardShortcuts": "./useKeyboardShortcuts.ts",
+    "./useClickOutside": "./useClickOutside.ts",
+    "./useHotkeys": "./useHotkeys.ts",
+    "./useEventListener": "./useEventListener.ts"
   },
   "repository": {
     "type": "git",

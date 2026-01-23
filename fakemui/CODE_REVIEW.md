@@ -23,7 +23,7 @@ Fakemui is a well-structured Material-UI inspired component library for QML and 
 
 ### 1. Architecture & Organization
 - **Excellent category-based structure**: Components logically organized into atoms/, core/, form/, layout/, data-display/, navigation/, feedback/, surfaces/, lab/, utils/
-- **Clear separation of concerns**: Application-specific code (widgets/, core/) separated from reusable library (qml-components/)
+- **Clear separation of concerns**: Application-specific code (widgets/, core/) separated from reusable library (qml/components/)
 - **Singleton theme system**: Centralized Theme, StyleVariables, StyleMixins, and Responsive singletons
 - **Consistent naming**: C prefix for all components (CButton, CCard, etc.) prevents naming conflicts
 
@@ -68,7 +68,7 @@ import QtQuick
 import QtQuick.Controls
 ```
 
-**Files Updated**: All qml-components/ files now use Qt 6.x compatible imports.
+**Files Updated**: All qml/components/ files now use Qt 6.x compatible imports.
 
 #### 2. Minimal Component Implementations
 **Severity**: Medium
@@ -151,7 +151,7 @@ Missing accessibility features:
 
 ### Positive Patterns
 
-1. **Proper use of theme variables** ([CButton.qml:50-86](fakemui/qml-components/core/CButton.qml#L50-L86)):
+1. **Proper use of theme variables** ([CButton.qml:50-86](fakemui/qml/components/core/CButton.qml#L50-L86)):
 ```qml
 background: Rectangle {
     radius: StyleVariables.radiusSm
@@ -162,12 +162,12 @@ background: Rectangle {
 }
 ```
 
-2. **Smooth transitions** ([CButton.qml:85](fakemui/qml-components/core/CButton.qml#L85)):
+2. **Smooth transitions** ([CButton.qml:85](fakemui/qml/components/core/CButton.qml#L85)):
 ```qml
 Behavior on color { ColorAnimation { duration: StyleVariables.transitionFast } }
 ```
 
-3. **Responsive sizing** ([CButton.qml:22-28](fakemui/qml-components/core/CButton.qml#L22-L28)):
+3. **Responsive sizing** ([CButton.qml:22-28](fakemui/qml/components/core/CButton.qml#L22-L28)):
 ```qml
 implicitHeight: {
     switch (size) {
@@ -334,8 +334,8 @@ Fakemui is a **production-ready** Material-UI inspired component library with ex
 |--------------|--------|-------|
 | ✅ All 44 QML files | Modern imports | Qt 6.x compatible |
 | ✅ [core/App.qml](fakemui/core/App.qml) | Clean | Debug code removed |
-| ⚠️ [atoms/CEditorWrapper.qml](fakemui/qml-components/atoms/CEditorWrapper.qml) | Minimal | Optional enhancement |
-| ⚠️ [atoms/CAutoGrid.qml](fakemui/qml-components/atoms/CAutoGrid.qml) | Minimal | Optional enhancement |
+| ⚠️ [atoms/CEditorWrapper.qml](fakemui/qml/components/atoms/CEditorWrapper.qml) | Minimal | Optional enhancement |
+| ⚠️ [atoms/CAutoGrid.qml](fakemui/qml/components/atoms/CAutoGrid.qml) | Minimal | Optional enhancement |
 
 ---
 

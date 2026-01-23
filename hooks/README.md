@@ -25,6 +25,14 @@ This folder contains all custom React hooks from across the MetaBuilder codebase
 - `useFaviconDesigner.ts` - Favicon design functionality
 - `useDragResize.ts` - Drag and resize interactions
 
+### Keyboard & Events (NEW - Jan 23, 2026)
+- `useKeyboardShortcuts.ts` - Unified keyboard shortcut handling with meta keys
+- `useClickOutside.ts` - Detect clicks outside elements (modals, dropdowns)
+- `useHotkeys.ts` - Global hotkey registration with combo support
+- `useEventListener.ts` - Generic event listener with proper cleanup
+- `KEYBOARD_EVENT_HOOKS.md` - Complete documentation with examples
+- `INTEGRATION_EXAMPLES.ts` - Real-world integration examples
+
 ### Development & Build
 - `use-github-build-status.ts` - GitHub build status monitoring
 

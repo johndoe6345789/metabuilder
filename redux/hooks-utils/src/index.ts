@@ -9,3 +9,8 @@ export type { Filter, SortConfig, FilterOperator } from './useTableState'
 // Async operations
 export { useAsyncOperation, type UseAsyncOperationOptions, type UseAsyncOperationReturn } from './useAsyncOperation'
 export type { AsyncError, AsyncStatus } from './useAsyncOperation'
+
+// DOM utilities
+export { useWindowSize, type UseWindowSizeReturn, type WindowSize } from './useWindowSize'
+export { useLocalStorage, type UseLocalStorageOptions, type UseLocalStorageReturn } from './useLocalStorage'
+export { useMediaQuery, type UseMediaQueryInput, type UseMediaQueryReturn } from './useMediaQuery'

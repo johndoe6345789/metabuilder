@@ -17,7 +17,7 @@ Fakemui maintains **separate implementations** for React and QML rather than att
 - React hooks for state management
 - CSS-in-JS styling with `sx` prop
 
-**QML** (`/qml-components`):
+**QML** (`/qml/components`):
 - 104 components (mirrors React structure)
 - Modern Qt 6.x (versionless imports)
 - Declarative QML syntax
@@ -513,7 +513,7 @@ fakemui/
 ├── README.md                 # Overview
 └── docs/                     # Documentation
 
-qml-components/
+qml/components/
 ├── atoms/                    # QML atoms (C-prefixed)
 ├── inputs/                   # QML inputs
 ├── ... (mirrors React structure)

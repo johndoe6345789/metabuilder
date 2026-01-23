@@ -414,4 +414,4 @@ Or use Grid system:
 - [Material Design 3 Spec](https://m3.material.io/)
 - Fakemui Component Index: `/fakemui/index.ts`
 - React Components: `/fakemui/` directory
-- QML Components: `/fakemui/qml-components/` directory
+- QML Components: `/fakemui/qml/components/` directory

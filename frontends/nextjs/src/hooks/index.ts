@@ -13,6 +13,18 @@ export { useKV } from './useKV'
 export { useLevelRouting } from './data/useLevelRouting'
 export { useResolvedUser } from './data/useResolvedUser'
 
+// Data structure management hooks
+export type { UseSetReturn } from './useSet'
+export { useSet } from './useSet'
+export type { UseMapReturn } from './useMap'
+export { useMap } from './useMap'
+export type { UseArrayReturn } from './useArray'
+export { useArray } from './useArray'
+export type { UseStackReturn } from './useStack'
+export { useStack } from './useStack'
+export type { UseQueueReturn } from './useQueue'
+export { useQueue } from './useQueue'
+
 // Phase 3 User CRUD hooks
 export { useUsers } from './useUsers'
 export type { UseUsersReturn } from './useUsers'

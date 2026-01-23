@@ -13,8 +13,8 @@ services:
       POSTFIX_myhostname: 'emailclient.local'
       POSTFIX_mynetworks: '127.0.0.0/8 10.0.0.0/8'
     ports:
-      - '25:25'
-      - '587:587'
+      - '1025:25'
+      - '1587:587'
     networks:
       - emailclient-net
     restart: unless-stopped
@@ -29,13 +29,12 @@ services:
       DOVECOT_USER_DB: 'static'
       DOVECOT_PASS_DB: 'static'
     ports:
-      - '143:143'
-      - '993:993'
-      - '110:110'
-      - '995:995'
+      - '1143:143'
+      - '1993:993'
+      - '1110:110'
+      - '1995:995'
     volumes:
       - dovecot-data:/var/mail
-      - ./config/dovecot.conf:/etc/dovecot/dovecot.conf:ro
     networks:
       - emailclient-net
     restart: unless-stopped
@@ -57,7 +56,7 @@ services:
   email-service:
     image: emailclient-service:latest
     build:
-      context: ./services/email-service
+      context: ../services/email_service
       dockerfile: Dockerfile
     container_name: emailclient-email-service
     environment:
