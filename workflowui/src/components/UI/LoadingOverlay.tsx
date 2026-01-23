@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { useUI } from '@hooks';
+import { useUI } from '../../hooks';
 import styles from './LoadingOverlay.module.scss';
 
 export const LoadingOverlay: React.FC = () => {

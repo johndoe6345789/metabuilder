@@ -5,11 +5,7 @@
 
 import type { Metadata } from 'next';
 import React from 'react';
-import { Provider } from 'react-redux';
-import { store } from '@store/store';
-import MainLayout from '@components/Layout/MainLayout';
-import { NotificationContainer } from '@components/UI/NotificationContainer';
-import { LoadingOverlay } from '@components/UI/LoadingOverlay';
+import RootLayoutClient from '../components/Layout/RootLayoutClient';
 import '@styles/globals.scss';
 import '@styles/components.scss';
 
@@ -40,13 +36,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <meta name="color-scheme" content="light dark" />
       </head>
       <body>
-        <Provider store={store}>
-          <MainLayout showSidebar={true}>
-            {children}
-          </MainLayout>
-          <NotificationContainer />
-          <LoadingOverlay />
-        </Provider>
+        <RootLayoutClient>{children}</RootLayoutClient>
       </body>
     </html>
   );

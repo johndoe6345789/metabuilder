@@ -6,7 +6,8 @@ Handles workflow persistence, execution, and plugin management with database sto
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
-from models import db, Workflow, Execution, NodeType, AuditLog
+from models import db, Workflow, Execution, NodeType, AuditLog, Workspace, Project, ProjectCanvasItem
+from auth import token_required
 import os
 import json
 from datetime import datetime
@@ -234,6 +235,402 @@ def delete_workflow(workflow_id: str):
         log_audit(workflow_id, tenant_id, 'delete', 'workflow')
 
         return jsonify({'success': True}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
+
+# ============================================================================
+# Workspace Endpoints
+# ============================================================================
+
+@app.route('/api/workspaces', methods=['GET'])
+@token_required
+def list_workspaces():
+    """List all workspaces for tenant"""
+    tenant_id = request.args.get('tenantId', 'default')
+    limit = request.args.get('limit', 50, type=int)
+    offset = request.args.get('offset', 0, type=int)
+
+    try:
+        query = Workspace.query.filter_by(tenant_id=tenant_id).limit(limit).offset(offset)
+        workspaces = [w.to_dict() for w in query]
+        total = Workspace.query.filter_by(tenant_id=tenant_id).count()
+
+        return jsonify({
+            'workspaces': workspaces,
+            'count': len(workspaces),
+            'total': total
+        }), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/workspaces', methods=['POST'])
+@token_required
+def create_workspace():
+    """Create new workspace"""
+    try:
+        data = request.get_json()
+
+        if not data.get('name'):
+            return jsonify({'error': 'Workspace name is required'}), 400
+
+        tenant_id = data.get('tenantId', 'default')
+        workspace_id = data.get('id') or f"workspace-{datetime.utcnow().timestamp()}"
+
+        existing = Workspace.query.filter_by(id=workspace_id).first()
+        if existing:
+            return jsonify({'error': 'Workspace ID already exists'}), 409
+
+        workspace = Workspace.from_dict(data)
+        db.session.add(workspace)
+        db.session.commit()
+
+        return jsonify(workspace.to_dict()), 201
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/workspaces/<workspace_id>', methods=['GET'])
+@token_required
+def get_workspace(workspace_id: str):
+    """Get specific workspace"""
+    try:
+        workspace = Workspace.query.get(workspace_id)
+        if not workspace:
+            return jsonify({'error': 'Workspace not found'}), 404
+
+        return jsonify(workspace.to_dict()), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/workspaces/<workspace_id>', methods=['PUT'])
+@token_required
+def update_workspace(workspace_id: str):
+    """Update workspace"""
+    try:
+        data = request.get_json()
+        workspace = Workspace.query.get(workspace_id)
+
+        if not workspace:
+            return jsonify({'error': 'Workspace not found'}), 404
+
+        if 'name' in data:
+            workspace.name = data['name']
+        if 'description' in data:
+            workspace.description = data['description']
+        if 'icon' in data:
+            workspace.icon = data['icon']
+        if 'color' in data:
+            workspace.color = data['color']
+
+        workspace.updated_at = datetime.utcnow()
+        db.session.commit()
+
+        return jsonify(workspace.to_dict()), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/workspaces/<workspace_id>', methods=['DELETE'])
+@token_required
+def delete_workspace(workspace_id: str):
+    """Delete workspace"""
+    try:
+        workspace = Workspace.query.get(workspace_id)
+        if not workspace:
+            return jsonify({'error': 'Workspace not found'}), 404
+
+        db.session.delete(workspace)
+        db.session.commit()
+
+        return jsonify({'success': True}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
+
+# ============================================================================
+# Project Endpoints
+# ============================================================================
+
+@app.route('/api/projects', methods=['GET'])
+@token_required
+def list_projects():
+    """List all projects"""
+    tenant_id = request.args.get('tenantId', 'default')
+    workspace_id = request.args.get('workspaceId')
+    limit = request.args.get('limit', 50, type=int)
+    offset = request.args.get('offset', 0, type=int)
+
+    try:
+        query = Project.query.filter_by(tenant_id=tenant_id)
+        if workspace_id:
+            query = query.filter_by(workspace_id=workspace_id)
+
+        query = query.limit(limit).offset(offset)
+        projects = [p.to_dict() for p in query]
+
+        count_query = Project.query.filter_by(tenant_id=tenant_id)
+        if workspace_id:
+            count_query = count_query.filter_by(workspace_id=workspace_id)
+        total = count_query.count()
+
+        return jsonify({
+            'projects': projects,
+            'count': len(projects),
+            'total': total
+        }), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/projects', methods=['POST'])
+@token_required
+def create_project():
+    """Create new project"""
+    try:
+        data = request.get_json()
+
+        if not data.get('name'):
+            return jsonify({'error': 'Project name is required'}), 400
+        if not data.get('workspaceId'):
+            return jsonify({'error': 'Workspace ID is required'}), 400
+
+        tenant_id = data.get('tenantId', 'default')
+        project_id = data.get('id') or f"project-{datetime.utcnow().timestamp()}"
+
+        existing = Project.query.filter_by(id=project_id).first()
+        if existing:
+            return jsonify({'error': 'Project ID already exists'}), 409
+
+        project = Project.from_dict(data)
+        db.session.add(project)
+        db.session.commit()
+
+        return jsonify(project.to_dict()), 201
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/projects/<project_id>', methods=['GET'])
+@token_required
+def get_project(project_id: str):
+    """Get specific project"""
+    try:
+        project = Project.query.get(project_id)
+        if not project:
+            return jsonify({'error': 'Project not found'}), 404
+
+        return jsonify(project.to_dict()), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/projects/<project_id>', methods=['PUT'])
+@token_required
+def update_project(project_id: str):
+    """Update project"""
+    try:
+        data = request.get_json()
+        project = Project.query.get(project_id)
+
+        if not project:
+            return jsonify({'error': 'Project not found'}), 404
+
+        if 'name' in data:
+            project.name = data['name']
+        if 'description' in data:
+            project.description = data['description']
+        if 'color' in data:
+            project.color = data['color']
+        if 'starred' in data:
+            project.starred = data['starred']
+
+        project.updated_at = datetime.utcnow()
+        db.session.commit()
+
+        return jsonify(project.to_dict()), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/projects/<project_id>', methods=['DELETE'])
+@token_required
+def delete_project(project_id: str):
+    """Delete project"""
+    try:
+        project = Project.query.get(project_id)
+        if not project:
+            return jsonify({'error': 'Project not found'}), 404
+
+        db.session.delete(project)
+        db.session.commit()
+
+        return jsonify({'success': True}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
+
+# ============================================================================
+# Project Canvas Endpoints
+# ============================================================================
+
+@app.route('/api/projects/<project_id>/canvas', methods=['GET'])
+@token_required
+def get_canvas_items(project_id: str):
+    """Get all canvas items for project"""
+    try:
+        project = Project.query.get(project_id)
+        if not project:
+            return jsonify({'error': 'Project not found'}), 404
+
+        items = ProjectCanvasItem.query.filter_by(project_id=project_id).all()
+        canvas_items = [item.to_dict() for item in items]
+
+        return jsonify({
+            'items': canvas_items,
+            'count': len(canvas_items)
+        }), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/projects/<project_id>/canvas/items', methods=['POST'])
+@token_required
+def create_canvas_item(project_id: str):
+    """Create new canvas item"""
+    try:
+        data = request.get_json()
+
+        if not data.get('workflowId'):
+            return jsonify({'error': 'Workflow ID is required'}), 400
+
+        item_id = data.get('id') or f"canvas-{datetime.utcnow().timestamp()}"
+
+        existing = ProjectCanvasItem.query.filter_by(id=item_id).first()
+        if existing:
+            return jsonify({'error': 'Canvas item ID already exists'}), 409
+
+        canvas_item = ProjectCanvasItem.from_dict({
+            **data,
+            'projectId': project_id,
+            'id': item_id
+        })
+        db.session.add(canvas_item)
+        db.session.commit()
+
+        return jsonify(canvas_item.to_dict()), 201
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/projects/<project_id>/canvas/items/<item_id>', methods=['PUT'])
+@token_required
+def update_canvas_item(project_id: str, item_id: str):
+    """Update canvas item"""
+    try:
+        data = request.get_json()
+        canvas_item = ProjectCanvasItem.query.get(item_id)
+
+        if not canvas_item or canvas_item.project_id != project_id:
+            return jsonify({'error': 'Canvas item not found'}), 404
+
+        position = data.get('position', {})
+        if 'x' in position or 'y' in position:
+            canvas_item.position_x = position.get('x', canvas_item.position_x)
+            canvas_item.position_y = position.get('y', canvas_item.position_y)
+
+        size = data.get('size', {})
+        if 'width' in size or 'height' in size:
+            canvas_item.width = size.get('width', canvas_item.width)
+            canvas_item.height = size.get('height', canvas_item.height)
+
+        if 'zIndex' in data:
+            canvas_item.z_index = data['zIndex']
+        if 'color' in data:
+            canvas_item.color = data['color']
+        if 'minimized' in data:
+            canvas_item.minimized = data['minimized']
+
+        canvas_item.updated_at = datetime.utcnow()
+        db.session.commit()
+
+        return jsonify(canvas_item.to_dict()), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/projects/<project_id>/canvas/items/<item_id>', methods=['DELETE'])
+@token_required
+def delete_canvas_item(project_id: str, item_id: str):
+    """Delete canvas item"""
+    try:
+        canvas_item = ProjectCanvasItem.query.get(item_id)
+
+        if not canvas_item or canvas_item.project_id != project_id:
+            return jsonify({'error': 'Canvas item not found'}), 404
+
+        db.session.delete(canvas_item)
+        db.session.commit()
+
+        return jsonify({'success': True}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/projects/<project_id>/canvas/bulk-update', methods=['POST'])
+@token_required
+def bulk_update_canvas_items(project_id: str):
+    """Bulk update multiple canvas items"""
+    try:
+        data = request.get_json()
+        items = data.get('items', [])
+
+        updated_items = []
+        for item_data in items:
+            item_id = item_data.get('id')
+            canvas_item = ProjectCanvasItem.query.get(item_id)
+
+            if not canvas_item or canvas_item.project_id != project_id:
+                continue
+
+            position = item_data.get('position', {})
+            if position:
+                canvas_item.position_x = position.get('x', canvas_item.position_x)
+                canvas_item.position_y = position.get('y', canvas_item.position_y)
+
+            size = item_data.get('size', {})
+            if size:
+                canvas_item.width = size.get('width', canvas_item.width)
+                canvas_item.height = size.get('height', canvas_item.height)
+
+            if 'zIndex' in item_data:
+                canvas_item.z_index = item_data['zIndex']
+            if 'color' in item_data:
+                canvas_item.color = item_data['color']
+            if 'minimized' in item_data:
+                canvas_item.minimized = item_data['minimized']
+
+            canvas_item.updated_at = datetime.utcnow()
+            updated_items.append(canvas_item.to_dict())
+
+        db.session.commit()
+
+        return jsonify({
+            'items': updated_items,
+            'count': len(updated_items)
+        }), 200
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': str(e)}), 500

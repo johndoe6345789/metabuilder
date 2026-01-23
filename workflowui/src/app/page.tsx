@@ -1,63 +1,47 @@
 /**
  * Dashboard / Home Page
- * Main entry point showing workflow list and recent activity
+ * Workspace selector and recent workflows
  */
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Link from 'next/link';
-import { useWorkflow, useUI } from '@hooks';
+import { useDashboardLogic } from '../hooks';
+import { Breadcrumbs } from '../components/Navigation/Breadcrumbs';
 import styles from './page.module.scss';
 
 export default function Dashboard() {
-  const { create, load } = useWorkflow();
-  const { success, error, openModal } = useUI();
-  const [workflows, setWorkflows] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    loadWorkflows();
-  }, []);
-
-  const loadWorkflows = async () => {
-    try {
-      setIsLoading(true);
-      // TODO: Fetch workflows from API via workflowService
-      setWorkflows([]);
-    } catch (err) {
-      error('Failed to load workflows');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleCreateWorkflow = async () => {
-    try {
-      const name = prompt('Enter workflow name:');
-      if (name) {
-        await create(name);
-        success('Workflow created successfully');
-        loadWorkflows();
-      }
-    } catch (err) {
-      error('Failed to create workflow');
-    }
-  };
+  const {
+    isLoading,
+    showCreateForm,
+    newWorkspaceName,
+    workspaces,
+    setShowCreateForm,
+    setNewWorkspaceName,
+    handleCreateWorkspace,
+    handleWorkspaceClick,
+    resetWorkspaceForm
+  } = useDashboardLogic();
 
   return (
     <div className={styles.dashboard}>
+      <Breadcrumbs items={[{ label: '🏠 Workspaces', href: '/' }]} />
+
       <div className={styles.header}>
         <div>
-          <h1>Workflows</h1>
-          <p>Create and manage your visual workflows</p>
+          <h1>Workspaces</h1>
+          <p>Organize your projects and workflows</p>
         </div>
-        <button className="btn btn-primary" onClick={handleCreateWorkflow}>
+        <button
+          className={`${styles.createButton} btn btn-primary`}
+          onClick={() => setShowCreateForm(true)}
+        >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <line x1="12" y1="5" x2="12" y2="19" strokeWidth="2" />
             <line x1="5" y1="12" x2="19" y2="12" strokeWidth="2" />
           </svg>
-          New Workflow
+          New Workspace
         </button>
       </div>
 
@@ -65,12 +49,72 @@ export default function Dashboard() {
         {isLoading ? (
           <div className={styles.loading}>
             <div className={styles.spinner}></div>
-            <p>Loading workflows...</p>
+            <p>Loading workspaces...</p>
           </div>
-        ) : workflows.length === 0 ? (
-          <EmptyState onCreateWorkflow={handleCreateWorkflow} />
         ) : (
-          <WorkflowGrid workflows={workflows} />
+          <>
+            {/* Create Workspace Form */}
+            {showCreateForm && (
+              <div className={styles.createFormContainer}>
+                <form onSubmit={handleCreateWorkspace} className={styles.createForm}>
+                  <h3>Create New Workspace</h3>
+                  <input
+                    type="text"
+                    placeholder="Workspace name"
+                    value={newWorkspaceName}
+                    onChange={(e) => setNewWorkspaceName(e.target.value)}
+                    autoFocus
+                    className={styles.formInput}
+                  />
+                  <div className={styles.formActions}>
+                    <button
+                      type="submit"
+                      className="btn btn-primary"
+                      disabled={!newWorkspaceName.trim()}
+                    >
+                      Create
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      onClick={resetWorkspaceForm}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              </div>
+            )}
+
+            {/* Workspaces Grid */}
+            {workspaces.length === 0 && !showCreateForm ? (
+              <EmptyState onCreateWorkspace={() => setShowCreateForm(true)} />
+            ) : (
+              <div className={styles.workspacesGrid}>
+                {workspaces.map(workspace => (
+                  <div
+                    key={workspace.id}
+                    className={styles.workspaceCard}
+                    onClick={() => handleWorkspaceClick(workspace.id)}
+                  >
+                    <div
+                      className={styles.workspaceIcon}
+                      style={{ backgroundColor: workspace.color || '#1976d2' }}
+                    >
+                      {workspace.icon || '📁'}
+                    </div>
+                    <div className={styles.workspaceContent}>
+                      <h3>{workspace.name}</h3>
+                      <p>{workspace.description || 'No description'}</p>
+                      <span className={styles.timestamp}>
+                        Created {new Date(workspace.createdAt).toLocaleDateString()}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
@@ -78,23 +122,21 @@ export default function Dashboard() {
 }
 
 interface EmptyStateProps {
-  onCreateWorkflow: () => void;
+  onCreateWorkspace: () => void;
 }
 
-function EmptyState({ onCreateWorkflow }: EmptyStateProps) {
+function EmptyState({ onCreateWorkspace }: EmptyStateProps) {
   return (
     <div className={styles.emptyState}>
       <div className={styles.emptyStateIcon}>
         <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-          <rect x="3" y="3" width="18" height="18" rx="2" strokeWidth="2" />
-          <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" />
-          <path d="M21 15l-5-5L5 21" strokeWidth="2" />
+          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" strokeWidth="2" />
         </svg>
       </div>
-      <h2>No workflows yet</h2>
-      <p>Create your first workflow to get started</p>
-      <button className="btn btn-primary btn-lg" onClick={onCreateWorkflow}>
-        Create Your First Workflow
+      <h2>No workspaces yet</h2>
+      <p>Create your first workspace to organize your projects</p>
+      <button className="btn btn-primary btn-lg" onClick={onCreateWorkspace}>
+        Create Your First Workspace
       </button>
     </div>
   );
@@ -118,7 +160,7 @@ function WorkflowGrid({ workflows }: WorkflowGridProps) {
             <span className={styles.updated}>
               Updated {new Date(workflow.updatedAt).toLocaleDateString()}
             </span>
-            <Link href={`/editor/${workflow.id}`} className="btn btn-primary btn-sm">
+            <Link href={`/editor/${workflow.id}` as any} className="btn btn-primary btn-sm">
               Edit
             </Link>
           </div>

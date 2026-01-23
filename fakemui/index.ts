@@ -134,7 +134,13 @@ export {
   TablePagination,
   TableSortLabel,
   Tooltip,
+  Markdown,
+  Separator,
+  // Note: TreeView also available from lab with component-based API
+  TreeView as TreeViewFlat,
 } from './fakemui/data-display'
+
+// Note: Icon is exported from icons module (line 6), not data-display
 
 // Feedback
 export {
@@ -144,6 +150,7 @@ export {
   LinearProgress,
   Skeleton,
   Snackbar,
+  Spinner,
 } from './fakemui/feedback'
 
 // Note: Dialog components are available from utils module
@@ -177,11 +184,19 @@ export {
 // Utils
 export {
   Modal,
+  Dialog,
+  DialogOverlay,
+  DialogPanel,
+  DialogHeader,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
   Popover,
   Popper,
   Portal,
   ClickAwayListener,
   CssBaseline,
+  ScopedCssBaseline,
   GlobalStyles,
   NoSsr,
   TextareaAutosize,
@@ -194,6 +209,10 @@ export {
   useMediaQueryUp,
   useMediaQueryDown,
   useMediaQueryBetween,
+  ToastProvider,
+  useToast,
+  Iframe,
+  classNames,
 } from './fakemui/utils'
 
 // Atoms
@@ -220,14 +239,33 @@ export {
   TimelineConnector,
   TimelineContent,
   TimelineOppositeContent,
-  TreeView,
+  TreeView as TreeViewComponent,
   TreeItem,
 } from './fakemui/lab'
 
-// X (Advanced)
+// Note: TreeView has two implementations:
+// - TreeViewFlat (data-display): Simple array-based API for JSON trees
+// - TreeViewComponent (lab): Composition-based API with TreeItem children
+
+// X (Advanced - pro/premium features)
 export {
   DataGrid,
+  DataGridPro,
+  DataGridPremium,
+  // Advanced date/time pickers with calendar UI
+  DatePicker as DatePickerAdvanced,
+  TimePicker as TimePickerAdvanced,
+  DateTimePicker,
+  DesktopDatePicker,
+  MobileDatePicker,
+  StaticDatePicker,
+  CalendarPicker,
+  ClockPicker,
 } from './fakemui/x'
+
+// Note: DatePicker has two implementations:
+// - DatePicker (inputs): Simple HTML input-based (string values)
+// - DatePickerAdvanced (x): Advanced with calendar UI (Date objects)
 
 // Theming
 export type { Theme, ThemeOptions } from './fakemui/theming'

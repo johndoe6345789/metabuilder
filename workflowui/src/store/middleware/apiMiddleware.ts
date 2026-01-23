@@ -4,7 +4,7 @@
  */
 
 import { Middleware } from '@reduxjs/toolkit';
-import { RootState } from '@store/store';
+import { RootState } from '../../store/store';
 import {
   setSaving,
   setSaveError,
@@ -12,16 +12,17 @@ import {
   startExecution,
   endExecution,
   loadWorkflow
-} from '@store/slices/workflowSlice';
-import { setNotification } from '@store/slices/uiSlice';
-import { workflowService } from '@services/workflowService';
-import { executionService } from '@services/executionService';
+} from '../../store/slices/workflowSlice';
+import { setNotification } from '../../store/slices/uiSlice';
+import { workflowService } from '../../services/workflowService';
+import { executionService } from '../../services/executionService';
 
 /**
  * API middleware for handling asynchronous workflow operations
  * Automatically handles saving, execution, and error cases
  */
-export const apiMiddleware: Middleware<{}, RootState> = (store) => (next) => async (action) => {
+export const apiMiddleware = ((store: any) => (next: any) => (action: any) => {
+  return (async () => {
   // Handle workflow save operations
   if (action.type === 'workflow/setSaving' && action.payload === true) {
     const state = store.getState();
@@ -136,9 +137,10 @@ export const apiMiddleware: Middleware<{}, RootState> = (store) => (next) => asy
     return;
   }
 
-  // Default: pass action through
-  return next(action);
-};
+    // Default: pass action through
+    return next(action);
+  })();
+}) as any;
 
 /**
  * Async thunk-like action creator for loading workflows

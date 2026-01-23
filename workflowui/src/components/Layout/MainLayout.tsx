@@ -3,8 +3,10 @@
  * Root layout with header, sidebar, and main content area
  */
 
-import React, { useState, useEffect } from 'react';
-import { useUI } from '@hooks';
+'use client';
+
+import React from 'react';
+import { useUI, useHeaderLogic, useResponsiveSidebar } from '../../hooks';
 import styles from './MainLayout.module.scss';
 
 interface MainLayoutProps {
@@ -14,22 +16,7 @@ interface MainLayoutProps {
 
 export const MainLayout: React.FC<MainLayoutProps> = ({ children, showSidebar = true }) => {
   const { theme, sidebarOpen, setSidebar } = useUI();
-  const [isMobile, setIsMobile] = useState(false);
-
-  // Handle responsive sidebar
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-      if (window.innerWidth < 768 && sidebarOpen) {
-        setSidebar(false);
-      }
-    };
-
-    window.addEventListener('resize', handleResize);
-    handleResize();
-
-    return () => window.removeEventListener('resize', handleResize);
-  }, [sidebarOpen, setSidebar]);
+  const { isMobile } = useResponsiveSidebar(sidebarOpen, setSidebar);
 
   return (
     <div
@@ -59,6 +46,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
   const { toggleTheme, theme } = useUI();
+  const { user, isAuthenticated, showUserMenu, handleLogout, toggleUserMenu } = useHeaderLogic();
 
   return (
     <header className={styles.header}>
@@ -105,6 +93,36 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
               </svg>
             )}
           </button>
+
+          {isAuthenticated && user && (
+            <div className={styles.userMenu}>
+              <button
+                className={styles.userButton}
+                onClick={toggleUserMenu}
+                title={user.name}
+                aria-label={`User menu for ${user.name}`}
+              >
+                <div className={styles.userAvatar}>
+                  {user.name.charAt(0).toUpperCase()}
+                </div>
+              </button>
+
+              {showUserMenu && (
+                <div className={styles.userDropdown}>
+                  <div className={styles.userInfo}>
+                    <div className={styles.userName}>{user.name}</div>
+                    <div className={styles.userEmail}>{user.email}</div>
+                  </div>
+                  <button
+                    className={styles.logoutButton}
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </header>

@@ -4,7 +4,7 @@
  */
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Workflow, WorkflowNode, WorkflowConnection, ExecutionResult } from '@types/workflow';
+import { Workflow, WorkflowNode, WorkflowConnection, ExecutionResult } from '../../types/workflow';
 
 export interface WorkflowState {
   current: Workflow | null;

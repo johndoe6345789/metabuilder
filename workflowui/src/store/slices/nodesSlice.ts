@@ -4,7 +4,7 @@
  */
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { NodeType, NodeTemplate } from '@types/workflow';
+import { NodeType, NodeTemplate } from '../../types/workflow';
 
 export interface NodesState {
   registry: NodeType[];

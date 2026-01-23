@@ -5,7 +5,7 @@
 
 import { useCallback, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@store/store';
+import { RootState } from '../store/store';
 import {
   loadWorkflow,
   addNode,
@@ -15,11 +15,11 @@ import {
   removeConnection,
   setSaving,
   setDirty
-} from '@store/slices/workflowSlice';
-import { setNotification } from '@store/slices/uiSlice';
-import { fetchWorkflow, createNewWorkflow } from '@store/middleware/apiMiddleware';
-import { workflowService } from '@services/workflowService';
-import { Workflow, WorkflowNode, WorkflowConnection } from '@types/workflow';
+} from '../store/slices/workflowSlice';
+import { setNotification } from '../store/slices/uiSlice';
+import { fetchWorkflow, createNewWorkflow } from '../store/middleware/apiMiddleware';
+import { workflowService } from '../services/workflowService';
+import { Workflow, WorkflowNode, WorkflowConnection } from '../types/workflow';
 
 export function useWorkflow() {
   const dispatch = useDispatch();

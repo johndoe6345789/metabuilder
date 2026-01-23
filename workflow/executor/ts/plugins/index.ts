@@ -22,6 +22,7 @@ import { dbalReadExecutor } from '../../../plugins/ts/dbal-read/src/index';
 import { dbalWriteExecutor } from '../../../plugins/ts/dbal-write/src/index';
 import { httpRequestExecutor } from '../../../plugins/ts/integration/http-request/src/index';
 import { emailSendExecutor, setEmailService } from '../../../plugins/ts/integration/email-send/src/index';
+import { smtpRelayExecutor, setSMTPService } from '../../../plugins/ts/integration/smtp-relay/src/index';
 import { conditionExecutor } from '../../../plugins/ts/control-flow/condition/src/index';
 import { transformExecutor } from '../../../plugins/ts/utility/transform/src/index';
 import { waitExecutor } from '../../../plugins/ts/utility/wait/src/index';
@@ -54,6 +55,8 @@ export {
   httpRequestExecutor,
   emailSendExecutor,
   setEmailService,
+  smtpRelayExecutor,
+  setSMTPService,
   conditionExecutor,
   transformExecutor,
   waitExecutor,
@@ -87,6 +90,7 @@ export function registerBuiltInExecutors(): void {
   registry.register('dbal-write', dbalWriteExecutor);
   registry.register('http-request', httpRequestExecutor);
   registry.register('email-send', emailSendExecutor);
+  registry.register('smtp-relay-send', smtpRelayExecutor);
   registry.register('condition', conditionExecutor);
   registry.register('transform', transformExecutor);
   registry.register('wait', waitExecutor);

@@ -1,0 +1,105 @@
+/**
+ * WorkflowCard Component
+ * Draggable and resizable workflow card on the canvas
+ */
+
+import React, { useCallback } from 'react';
+import { ProjectCanvasItem } from '../../../types/project';
+import styles from '../WorkflowCard.module.scss';
+import { WorkflowCardHeader } from './WorkflowCardHeader';
+import { WorkflowCardPreview } from './WorkflowCardPreview';
+import { WorkflowCardFooter } from './WorkflowCardFooter';
+import { WorkflowCardActions } from './WorkflowCardActions';
+import { useDragResize } from './useDragResize';
+
+interface WorkflowCardProps {
+  item: ProjectCanvasItem;
+  workflow: any;
+  isSelected: boolean;
+  onSelect: (id: string, multiSelect: boolean) => void;
+  onUpdatePosition: (id: string, x: number, y: number) => void;
+  onUpdateSize: (id: string, width: number, height: number) => void;
+  onDelete: (id: string) => void;
+  onOpen: (workflowId: string) => void;
+  zoom: number;
+  snap_to_grid: (pos: { x: number; y: number }) => { x: number; y: number };
+}
+
+export const WorkflowCard: React.FC<WorkflowCardProps> = ({
+  item,
+  workflow,
+  isSelected,
+  onSelect,
+  onUpdatePosition,
+  onUpdateSize,
+  onDelete,
+  onOpen,
+  zoom,
+  snap_to_grid
+}) => {
+  const { cardRef, isDragging, handleDragStart, handleResizeStart } =
+    useDragResize({
+      item,
+      zoom,
+      snap_to_grid,
+      onUpdatePosition,
+      onUpdateSize
+    });
+
+  const handleSelect = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      const multiSelect = e.ctrlKey || e.metaKey || e.shiftKey;
+      onSelect(item.id, multiSelect);
+    },
+    [item.id, onSelect]
+  );
+
+  const nodeCount = workflow?.nodes?.length || 0;
+  const connectionCount = workflow?.connections?.length || 0;
+
+  return (
+    <div
+      ref={cardRef}
+      className={`${styles.card} ${isSelected ? styles.selected : ''} ${
+        isDragging ? styles.dragging : ''
+      }`}
+      style={{
+        left: `${item.position.x}px`,
+        top: `${item.position.y}px`,
+        width: `${item.size.width}px`,
+        height: `${item.size.height}px`,
+        borderColor: item.color || 'var(--color-primary)',
+        zIndex: item.zIndex
+      }}
+      onMouseDown={handleSelect}
+      onMouseMove={handleDragStart}
+    >
+      <WorkflowCardHeader
+        workflowName={workflow?.name}
+        workflowId={workflow?.id}
+        onOpen={onOpen}
+        onDelete={onDelete}
+        itemId={item.id}
+      />
+      <WorkflowCardPreview nodeCount={nodeCount} isMinimized={item.minimized} />
+      <WorkflowCardFooter
+        nodeCount={nodeCount}
+        connectionCount={connectionCount}
+      />
+      <WorkflowCardActions onResizeStart={handleResizeStart} />
+    </div>
+  );
+};
+
+export default React.memo(WorkflowCard, (prevProps, nextProps) => {
+  return (
+    prevProps.item.id === nextProps.item.id &&
+    prevProps.item.position.x === nextProps.item.position.x &&
+    prevProps.item.position.y === nextProps.item.position.y &&
+    prevProps.item.size.width === nextProps.item.size.width &&
+    prevProps.item.size.height === nextProps.item.size.height &&
+    prevProps.isSelected === nextProps.isSelected &&
+    prevProps.item.zIndex === nextProps.item.zIndex
+  );
+});

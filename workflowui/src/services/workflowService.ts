@@ -3,9 +3,9 @@
  * Business logic layer for workflow operations with offline-first capabilities
  */
 
-import { Workflow, WorkflowNode, WorkflowConnection } from '@types/workflow';
+import { Workflow, WorkflowNode, WorkflowConnection } from '../types/workflow';
 import { api } from './api';
-import { workflowDB } from '@db/schema';
+import { db, workflowDB } from '../db/schema';
 
 /**
  * Workflow service with offline-first support
@@ -34,18 +34,18 @@ export const workflowService = {
     };
 
     // Save to IndexedDB
-    await workflowDB.workflows.add(workflow);
+    await db.workflows.add(workflow);
 
     // Add to sync queue for backend sync
-    await workflowDB.syncQueue.add({
+    await db.syncQueue.add({
       id: undefined,
       tenantId: data.tenantId,
       action: 'create',
-      entityType: 'workflow',
+      entity: 'workflow',
       entityId: workflow.id,
       data: workflow,
       timestamp: now,
-      synced: false
+      retries: 0
     });
 
     return workflow;
@@ -57,7 +57,7 @@ export const workflowService = {
   async getWorkflow(workflowId: string, tenantId: string): Promise<Workflow | undefined> {
     try {
       // Try IndexedDB first
-      return await workflowDB.workflows.get(workflowId);
+      return await db.workflows.get(workflowId);
     } catch {
       // Fall through to backend
       return undefined;
@@ -71,7 +71,7 @@ export const workflowService = {
     const workflow = await api.workflows.get(workflowId);
 
     // Cache in IndexedDB
-    await workflowDB.workflows.put(workflow);
+    await db.workflows.put(workflow);
 
     return workflow;
   },
@@ -81,18 +81,18 @@ export const workflowService = {
    */
   async saveWorkflow(workflow: Workflow): Promise<void> {
     workflow.updatedAt = Date.now();
-    await workflowDB.workflows.put(workflow);
+    await db.workflows.put(workflow);
 
     // Add to sync queue
-    await workflowDB.syncQueue.add({
+    await db.syncQueue.add({
       id: undefined,
       tenantId: workflow.tenantId,
       action: 'update',
-      entityType: 'workflow',
+      entity: 'workflow',
       entityId: workflow.id,
       data: workflow,
       timestamp: Date.now(),
-      synced: false
+      retries: 0
     });
   },
 
@@ -103,22 +103,22 @@ export const workflowService = {
     if (workflow.id.startsWith('workflow-')) {
       // New workflow - create on backend
       const result = await api.workflows.create(workflow);
-      await workflowDB.workflows.put(result);
+      await db.workflows.put(result);
       return result;
     } else {
       // Existing workflow - update on backend
       const result = await api.workflows.update(workflow.id, workflow);
-      await workflowDB.workflows.put(result);
+      await db.workflows.put(result);
 
       // Mark sync queue item as synced
-      const syncItems = await workflowDB.syncQueue
+      const syncItems = await db.syncQueue
         .where('[tenantId+action]')
         .equals([workflow.tenantId, 'update'])
         .toArray();
 
       for (const item of syncItems) {
         if (item.entityId === workflow.id) {
-          await workflowDB.syncQueue.update(item.id, { synced: true });
+          await db.syncQueue.update(item.id, { retries: 0 });
         }
       }
 
@@ -137,13 +137,13 @@ export const workflowService = {
 
       // Update IndexedDB cache
       await Promise.all(
-        workflows.map((w: Workflow) => workflowDB.workflows.put(w))
+        workflows.map((w: Workflow) => db.workflows.put(w))
       );
 
       return workflows;
     } catch {
       // Fall back to IndexedDB
-      return workflowDB.workflows
+      return db.workflows
         .where('tenantId')
         .equals(tenantId)
         .toArray();
@@ -158,18 +158,18 @@ export const workflowService = {
     await api.workflows.delete(workflowId);
 
     // Remove from IndexedDB
-    await workflowDB.workflows.delete(workflowId);
+    await db.workflows.delete(workflowId);
 
     // Add to sync queue for confirmation
-    await workflowDB.syncQueue.add({
+    await db.syncQueue.add({
       id: undefined,
       tenantId,
       action: 'delete',
-      entityType: 'workflow',
+      entity: 'workflow',
       entityId: workflowId,
       data: null,
       timestamp: Date.now(),
-      synced: true
+      retries: 0
     });
   },
 
@@ -208,7 +208,7 @@ export const workflowService = {
       workflow.createdAt = Date.now();
       workflow.updatedAt = Date.now();
 
-      await workflowDB.workflows.add(workflow);
+      await db.workflows.add(workflow);
       return workflow;
     } catch (error) {
       throw new Error('Invalid workflow JSON format');
@@ -219,7 +219,7 @@ export const workflowService = {
    * Duplicate workflow
    */
   async duplicateWorkflow(workflowId: string, newName: string): Promise<Workflow> {
-    const original = await workflowDB.workflows.get(workflowId);
+    const original = await db.workflows.get(workflowId);
 
     if (!original) {
       throw new Error('Workflow not found');
@@ -233,7 +233,7 @@ export const workflowService = {
       updatedAt: Date.now()
     };
 
-    await workflowDB.workflows.add(duplicate);
+    await db.workflows.add(duplicate);
     return duplicate;
   },
 

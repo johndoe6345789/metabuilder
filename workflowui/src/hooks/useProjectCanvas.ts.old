@@ -1,0 +1,322 @@
+/**
+ * useProjectCanvas Hook
+ * Manages project canvas items and canvas state (zoom, pan, selection)
+ */
+
+import { useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../store/store';
+import {
+  setCanvasItems,
+  addCanvasItem,
+  updateCanvasItem,
+  removeCanvasItem,
+  bulkUpdateCanvasItems,
+  setCanvasZoom,
+  setCanvasPan,
+  panCanvas,
+  resetCanvasView,
+  selectCanvasItem,
+  addToSelection,
+  removeFromSelection,
+  toggleSelection,
+  setSelection,
+  clearSelection,
+  selectAll,
+  setDragging,
+  setResizing,
+  setGridSnap,
+  setShowGrid,
+  setSnapSize,
+  setLoading,
+  setError,
+  selectCanvasItems,
+  selectSelectedItemIds,
+  selectSelectedItems,
+  selectCanvasZoom,
+  selectCanvasPan,
+  selectGridSnap,
+  selectShowGrid,
+  selectSnapSize,
+  selectProjectIsLoading,
+  selectProjectError,
+  selectIsDragging,
+  selectIsResizing
+} from '../store/slices/projectSlice';
+import { selectCurrentProjectId } from '../store/slices/projectSlice';
+import projectService from '../services/projectService';
+import { projectCanvasItemDB } from '../db/schema';
+import {
+  ProjectCanvasItem,
+  CreateCanvasItemRequest,
+  UpdateCanvasItemRequest,
+  CanvasPosition
+} from '../types/project';
+import { useUI } from './useUI';
+
+export function useProjectCanvas() {
+  const dispatch = useDispatch<AppDispatch>();
+  const { showNotification } = useUI() as any;
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  // Selectors
+  const projectId = useSelector((state: RootState) => selectCurrentProjectId(state));
+  const canvasItems = useSelector((state: RootState) => selectCanvasItems(state));
+  const selectedItemIds = useSelector((state: RootState) => selectSelectedItemIds(state));
+  const selectedItems = useSelector((state: RootState) => selectSelectedItems(state));
+  const zoom = useSelector((state: RootState) => selectCanvasZoom(state));
+  const pan = useSelector((state: RootState) => selectCanvasPan(state));
+  const gridSnap = useSelector((state: RootState) => selectGridSnap(state));
+  const showGrid = useSelector((state: RootState) => selectShowGrid(state));
+  const snapSize = useSelector((state: RootState) => selectSnapSize(state));
+  const isLoading = useSelector((state: RootState) => selectProjectIsLoading(state));
+  const error = useSelector((state: RootState) => selectProjectError(state));
+  const isDragging = useSelector((state: RootState) => selectIsDragging(state));
+  const isResizing = useSelector((state: RootState) => selectIsResizing(state));
+
+  // Load canvas items when project changes
+  useEffect(() => {
+    if (projectId && !isInitialized) {
+      loadCanvasItems();
+      setIsInitialized(true);
+    }
+  }, [projectId, isInitialized]);
+
+  // Load canvas items from server
+  const loadCanvasItems = useCallback(async () => {
+    if (!projectId) return;
+
+    dispatch(setLoading(true));
+    try {
+      const response = await projectService.getCanvasItems(projectId);
+      dispatch(setCanvasItems(response.items));
+
+      // Cache in IndexedDB
+      await Promise.all(response.items.map((item) => projectCanvasItemDB.update(item)));
+
+      dispatch(setError(null));
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : 'Failed to load canvas items';
+      dispatch(setError(errorMsg));
+      showNotification(errorMsg, 'error');
+    } finally {
+      dispatch(setLoading(false));
+    }
+  }, [projectId, dispatch, showNotification]);
+
+  // Create canvas item
+  const createCanvasItem = useCallback(
+    async (data: CreateCanvasItemRequest) => {
+      if (!projectId) return null;
+
+      dispatch(setLoading(true));
+      try {
+        const item = await projectService.createCanvasItem(projectId, data);
+        dispatch(addCanvasItem(item));
+        await projectCanvasItemDB.create(item);
+
+        showNotification('Workflow added to canvas', 'success');
+        return item;
+      } catch (err) {
+        const errorMsg = err instanceof Error ? err.message : 'Failed to add workflow to canvas';
+        dispatch(setError(errorMsg));
+        showNotification(errorMsg, 'error');
+        throw err;
+      } finally {
+        dispatch(setLoading(false));
+      }
+    },
+    [projectId, dispatch, showNotification]
+  );
+
+  // Update canvas item
+  const updateCanvasItemData = useCallback(
+    async (itemId: string, data: UpdateCanvasItemRequest) => {
+      if (!projectId) return null;
+
+      try {
+        const updated = await projectService.updateCanvasItem(projectId, itemId, data);
+        dispatch(updateCanvasItem({ ...updated, id: itemId }));
+        await projectCanvasItemDB.update(updated);
+
+        return updated;
+      } catch (err) {
+        const errorMsg = err instanceof Error ? err.message : 'Failed to update canvas item';
+        dispatch(setError(errorMsg));
+        showNotification(errorMsg, 'error');
+        throw err;
+      }
+    },
+    [projectId, dispatch, showNotification]
+  );
+
+  // Delete canvas item
+  const deleteCanvasItem = useCallback(
+    async (itemId: string) => {
+      if (!projectId) return;
+
+      dispatch(setLoading(true));
+      try {
+        await projectService.deleteCanvasItem(projectId, itemId);
+        dispatch(removeCanvasItem(itemId));
+        await projectCanvasItemDB.delete(itemId);
+
+        showNotification('Workflow removed from canvas', 'success');
+      } catch (err) {
+        const errorMsg = err instanceof Error ? err.message : 'Failed to remove from canvas';
+        dispatch(setError(errorMsg));
+        showNotification(errorMsg, 'error');
+        throw err;
+      } finally {
+        dispatch(setLoading(false));
+      }
+    },
+    [projectId, dispatch, showNotification]
+  );
+
+  // Bulk update canvas items
+  const bulkUpdateItems = useCallback(
+    async (updates: Array<Partial<ProjectCanvasItem> & { id: string }>) => {
+      if (!projectId) return;
+
+      try {
+        const response = await projectService.bulkUpdateCanvasItems(projectId, { items: updates });
+        dispatch(bulkUpdateCanvasItems(response.items));
+
+        // Update IndexedDB cache
+        await Promise.all(response.items.map((item) => projectCanvasItemDB.update(item)));
+      } catch (err) {
+        const errorMsg = err instanceof Error ? err.message : 'Failed to update canvas items';
+        dispatch(setError(errorMsg));
+        showNotification(errorMsg, 'error');
+        throw err;
+      }
+    },
+    [projectId, dispatch, showNotification]
+  );
+
+  // Viewport controls
+  const zoom_in = useCallback(() => {
+    dispatch(setCanvasZoom(Math.min(zoom * 1.2, 3)));
+  }, [zoom, dispatch]);
+
+  const zoom_out = useCallback(() => {
+    dispatch(setCanvasZoom(Math.max(zoom / 1.2, 0.1)));
+  }, [zoom, dispatch]);
+
+  const reset_view = useCallback(() => {
+    dispatch(resetCanvasView());
+  }, [dispatch]);
+
+  const pan_canvas = useCallback((delta: CanvasPosition) => {
+    dispatch(panCanvas(delta));
+  }, [dispatch]);
+
+  // Selection controls
+  const select_item = useCallback((itemId: string) => {
+    dispatch(selectCanvasItem(itemId));
+  }, [dispatch]);
+
+  const select_add = useCallback((itemId: string) => {
+    dispatch(addToSelection(itemId));
+  }, [dispatch]);
+
+  const select_remove = useCallback((itemId: string) => {
+    dispatch(removeFromSelection(itemId));
+  }, [dispatch]);
+
+  const select_toggle = useCallback((itemId: string) => {
+    dispatch(toggleSelection(itemId));
+  }, [dispatch]);
+
+  const select_clear = useCallback(() => {
+    dispatch(clearSelection());
+  }, [dispatch]);
+
+  const select_all_items = useCallback(() => {
+    dispatch(selectAll());
+  }, [dispatch]);
+
+  // Interaction state
+  const set_dragging = useCallback((isDragging: boolean) => {
+    dispatch(setDragging(isDragging));
+  }, [dispatch]);
+
+  const set_resizing = useCallback((isResizing: boolean) => {
+    dispatch(setResizing(isResizing));
+  }, [dispatch]);
+
+  // Settings
+  const toggle_grid_snap = useCallback(() => {
+    dispatch(setGridSnap(!gridSnap));
+  }, [gridSnap, dispatch]);
+
+  const toggle_show_grid = useCallback(() => {
+    dispatch(setShowGrid(!showGrid));
+  }, [showGrid, dispatch]);
+
+  const set_snap_size_value = useCallback((size: number) => {
+    dispatch(setSnapSize(size));
+  }, [dispatch]);
+
+  // Snap position to grid
+  const snap_to_grid = useCallback((position: CanvasPosition): CanvasPosition => {
+    if (!gridSnap) return position;
+
+    return {
+      x: Math.round(position.x / snapSize) * snapSize,
+      y: Math.round(position.y / snapSize) * snapSize
+    };
+  }, [gridSnap, snapSize]);
+
+  return {
+    // State
+    canvasItems,
+    selectedItemIds,
+    selectedItems,
+    zoom,
+    pan,
+    gridSnap,
+    showGrid,
+    snapSize,
+    isLoading,
+    error,
+    isDragging,
+    isResizing,
+
+    // Canvas item operations
+    loadCanvasItems,
+    createCanvasItem,
+    updateCanvasItem: updateCanvasItemData,
+    deleteCanvasItem,
+    bulkUpdateItems,
+
+    // Viewport controls
+    zoom_in,
+    zoom_out,
+    reset_view,
+    pan_canvas,
+
+    // Selection controls
+    select_item,
+    select_add,
+    select_remove,
+    select_toggle,
+    select_clear,
+    select_all_items,
+
+    // Interaction state
+    set_dragging,
+    set_resizing,
+
+    // Settings
+    toggle_grid_snap,
+    toggle_show_grid,
+    set_snap_size: set_snap_size_value,
+
+    // Utilities
+    snap_to_grid
+  };
+}
+
+export default useProjectCanvas;

@@ -166,19 +166,20 @@
     },
     {
       "id": "send_email",
-      "name": "Send Email",
-      "type": "metabuilder.operation",
+      "name": "Send Email via SMTP Relay",
+      "type": "smtp-relay-send",
       "typeVersion": 1,
       "position": [
         100,
         700
       ],
       "parameters": {
-        "operation": "email_send",
         "to": "{{ $steps.fetch_user_email.output.email }}",
         "subject": "{{ $json.title }}",
         "body": "{{ $json.message }}",
-        "template": "{{ $json.emailTemplate || 'default' }}"
+        "template": "{{ $json.emailTemplate }}",
+        "from": "{{ $env.SMTP_FROM_ADDRESS || 'noreply@metabuilder.local' }}",
+        "retryAttempts": 3
       }
     },
     {

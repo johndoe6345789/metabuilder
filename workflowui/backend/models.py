@@ -11,6 +11,23 @@ from typing import Optional, List, Dict, Any
 db = SQLAlchemy()
 
 
+class User(db.Model):
+    """User model for authentication"""
+
+    __tablename__ = 'users'
+
+    id = db.Column(db.String(255), primary_key=True)
+    email = db.Column(db.String(255), unique=True, nullable=False, index=True)
+    password_hash = db.Column(db.String(255), nullable=False)
+    name = db.Column(db.String(255), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+
+    __table_args__ = (
+        db.Index('idx_email', 'email'),
+    )
+
+
 class Workflow(db.Model):
     """Workflow model representing a complete DAG workflow"""
 
@@ -27,6 +44,11 @@ class Workflow(db.Model):
     connections_json = db.Column(db.Text, default='[]')  # Array of edge objects
     tags_json = db.Column(db.Text, default='[]')  # Array of tag strings
 
+    # Project organization (NEW)
+    project_id = db.Column(db.String(255), db.ForeignKey('projects.id'), nullable=True)
+    workspace_id = db.Column(db.String(255), db.ForeignKey('workspaces.id'), nullable=True)
+    starred = db.Column(db.Boolean, default=False)
+
     # Metadata
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
@@ -38,6 +60,9 @@ class Workflow(db.Model):
     __table_args__ = (
         db.Index('idx_tenant_id', 'tenant_id'),
         db.Index('idx_tenant_name', 'tenant_id', 'name'),
+        db.Index('idx_project_id', 'project_id'),
+        db.Index('idx_workspace_id', 'workspace_id'),
+        db.Index('idx_tenant_project', 'tenant_id', 'project_id'),
     )
 
     def to_dict(self) -> Dict[str, Any]:
@@ -48,6 +73,9 @@ class Workflow(db.Model):
             'description': self.description,
             'version': self.version,
             'tenantId': self.tenant_id,
+            'projectId': self.project_id,
+            'workspaceId': self.workspace_id,
+            'starred': self.starred,
             'nodes': json.loads(self.nodes_json),
             'connections': json.loads(self.connections_json),
             'tags': json.loads(self.tags_json),
@@ -64,6 +92,9 @@ class Workflow(db.Model):
             description=data.get('description', ''),
             version=data.get('version', '1.0.0'),
             tenant_id=data.get('tenantId', 'default'),
+            project_id=data.get('projectId'),
+            workspace_id=data.get('workspaceId'),
+            starred=data.get('starred', False),
             nodes_json=json.dumps(data.get('nodes', [])),
             connections_json=json.dumps(data.get('connections', [])),
             tags_json=json.dumps(data.get('tags', []))
@@ -228,3 +259,170 @@ class AuditLog(db.Model):
             'ipAddress': self.ip_address,
             'createdAt': int(self.created_at.timestamp() * 1000)
         }
+
+
+class Workspace(db.Model):
+    """Workspace model representing a top-level workspace container"""
+
+    __tablename__ = 'workspaces'
+
+    id = db.Column(db.String(255), primary_key=True)
+    name = db.Column(db.String(255), nullable=False)
+    description = db.Column(db.Text, default='')
+    icon = db.Column(db.String(100), nullable=True)
+    color = db.Column(db.String(20), default='#1976d2')
+    tenant_id = db.Column(db.String(255), nullable=False, index=True)
+
+    # Metadata
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+
+    # Relationships
+    projects = db.relationship('Project', backref='workspace', cascade='all, delete-orphan', lazy=True)
+
+    __table_args__ = (
+        db.Index('idx_tenant_id', 'tenant_id'),
+    )
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert model to dictionary"""
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            'icon': self.icon,
+            'color': self.color,
+            'tenantId': self.tenant_id,
+            'createdAt': int(self.created_at.timestamp() * 1000),
+            'updatedAt': int(self.updated_at.timestamp() * 1000)
+        }
+
+    @staticmethod
+    def from_dict(data: Dict[str, Any]) -> 'Workspace':
+        """Create model from dictionary"""
+        workspace = Workspace(
+            id=data.get('id'),
+            name=data.get('name', 'Untitled'),
+            description=data.get('description', ''),
+            icon=data.get('icon'),
+            color=data.get('color', '#1976d2'),
+            tenant_id=data.get('tenantId', 'default')
+        )
+        return workspace
+
+
+class Project(db.Model):
+    """Project model representing a project container within a workspace"""
+
+    __tablename__ = 'projects'
+
+    id = db.Column(db.String(255), primary_key=True)
+    name = db.Column(db.String(255), nullable=False)
+    description = db.Column(db.Text, default='')
+    workspace_id = db.Column(db.String(255), db.ForeignKey('workspaces.id'), nullable=False)
+    tenant_id = db.Column(db.String(255), nullable=False, index=True)
+    color = db.Column(db.String(20), default='#1976d2')
+    starred = db.Column(db.Boolean, default=False)
+
+    # Metadata
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+
+    # Relationships
+    canvas_items = db.relationship('ProjectCanvasItem', backref='project', cascade='all, delete-orphan', lazy=True)
+
+    __table_args__ = (
+        db.Index('idx_workspace_id', 'workspace_id'),
+        db.Index('idx_tenant_id', 'tenant_id'),
+        db.Index('idx_starred', 'starred'),
+        db.Index('idx_tenant_workspace', 'tenant_id', 'workspace_id'),
+    )
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert model to dictionary"""
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            'workspaceId': self.workspace_id,
+            'tenantId': self.tenant_id,
+            'color': self.color,
+            'starred': self.starred,
+            'createdAt': int(self.created_at.timestamp() * 1000),
+            'updatedAt': int(self.updated_at.timestamp() * 1000)
+        }
+
+    @staticmethod
+    def from_dict(data: Dict[str, Any]) -> 'Project':
+        """Create model from dictionary"""
+        project = Project(
+            id=data.get('id'),
+            name=data.get('name', 'Untitled'),
+            description=data.get('description', ''),
+            workspace_id=data.get('workspaceId'),
+            tenant_id=data.get('tenantId', 'default'),
+            color=data.get('color', '#1976d2'),
+            starred=data.get('starred', False)
+        )
+        return project
+
+
+class ProjectCanvasItem(db.Model):
+    """ProjectCanvasItem model representing a workflow card on the canvas"""
+
+    __tablename__ = 'project_canvas_items'
+
+    id = db.Column(db.String(255), primary_key=True)
+    project_id = db.Column(db.String(255), db.ForeignKey('projects.id'), nullable=False)
+    workflow_id = db.Column(db.String(255), db.ForeignKey('workflows.id'), nullable=False)
+    position_x = db.Column(db.Float, default=0)
+    position_y = db.Column(db.Float, default=0)
+    width = db.Column(db.Float, default=300)
+    height = db.Column(db.Float, default=200)
+    z_index = db.Column(db.Integer, default=0)
+    color = db.Column(db.String(20), nullable=True)
+    minimized = db.Column(db.Boolean, default=False)
+
+    # Metadata
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+
+    __table_args__ = (
+        db.Index('idx_project_id', 'project_id'),
+        db.Index('idx_workflow_id', 'workflow_id'),
+        db.Index('idx_project_workflow', 'project_id', 'workflow_id'),
+    )
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert model to dictionary"""
+        return {
+            'id': self.id,
+            'projectId': self.project_id,
+            'workflowId': self.workflow_id,
+            'position': {'x': self.position_x, 'y': self.position_y},
+            'size': {'width': self.width, 'height': self.height},
+            'zIndex': self.z_index,
+            'color': self.color,
+            'minimized': self.minimized,
+            'createdAt': int(self.created_at.timestamp() * 1000),
+            'updatedAt': int(self.updated_at.timestamp() * 1000)
+        }
+
+    @staticmethod
+    def from_dict(data: Dict[str, Any]) -> 'ProjectCanvasItem':
+        """Create model from dictionary"""
+        position = data.get('position', {'x': 0, 'y': 0})
+        size = data.get('size', {'width': 300, 'height': 200})
+        canvas_item = ProjectCanvasItem(
+            id=data.get('id'),
+            project_id=data.get('projectId'),
+            workflow_id=data.get('workflowId'),
+            position_x=position.get('x', 0),
+            position_y=position.get('y', 0),
+            width=size.get('width', 300),
+            height=size.get('height', 200),
+            z_index=data.get('zIndex', 0),
+            color=data.get('color'),
+            minimized=data.get('minimized', False)
+        )
+        return canvas_item

@@ -1,0 +1,23 @@
+{
+  "name": "@metabuilder/smtp-relay-plugin",
+  "version": "1.0.0",
+  "description": "SMTP Relay plugin for MetaBuilder workflows - sends emails via Twisted SMTP relay service",
+  "main": "src/index.ts",
+  "keywords": [
+    "metabuilder",
+    "workflow",
+    "plugin",
+    "email",
+    "smtp",
+    "relay"
+  ],
+  "author": "MetaBuilder Contributors",
+  "license": "MIT",
+  "dependencies": {
+    "nodemailer": "^6.9.7",
+    "@metabuilder/workflow": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/nodemailer": "^6.4.14"
+  }
+}

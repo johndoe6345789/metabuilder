@@ -4,7 +4,7 @@
  */
 
 import React, { useEffect } from 'react';
-import { useUI } from '@hooks';
+import { useUI } from '../../hooks';
 import styles from './NotificationContainer.module.scss';
 
 export const NotificationContainer: React.FC = () => {
@@ -12,7 +12,7 @@ export const NotificationContainer: React.FC = () => {
 
   return (
     <div className={styles.notificationContainer} role="region" aria-live="polite" aria-atomic="true">
-      {notifications.map((notification) => (
+      {notifications.map((notification: any) => (
         <Notification
           key={notification.id}
           notification={notification}

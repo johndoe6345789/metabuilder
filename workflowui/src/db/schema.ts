@@ -4,7 +4,46 @@
  */
 
 import Dexie, { Table } from 'dexie';
-import { Workflow, ExecutionResult, NodeType } from '@types/workflow';
+import { Workflow, ExecutionResult, NodeType } from '../types/workflow';
+
+/**
+ * Project types for TypeScript
+ */
+export interface Workspace {
+  id: string;
+  name: string;
+  description?: string;
+  icon?: string;
+  color?: string;
+  tenantId: string;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface Project {
+  id: string;
+  name: string;
+  description?: string;
+  workspaceId: string;
+  tenantId: string;
+  color?: string;
+  starred?: boolean;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface ProjectCanvasItem {
+  id: string;
+  projectId: string;
+  workflowId: string;
+  position: { x: number; y: number };
+  size: { width: number; height: number };
+  zIndex: number;
+  color?: string;
+  minimized?: boolean;
+  createdAt: number;
+  updatedAt: number;
+}
 
 /**
  * WorkflowDB - IndexedDB database for WorkflowUI
@@ -15,6 +54,9 @@ import { Workflow, ExecutionResult, NodeType } from '@types/workflow';
  * - nodeTypes: Node registry cache
  * - drafts: Unsaved workflow drafts
  * - syncQueue: Changes pending sync to server
+ * - workspaces: Workspace containers
+ * - projects: Projects within workspaces
+ * - projectCanvasItems: Workflow cards on canvas
  */
 export class WorkflowDB extends Dexie {
   workflows!: Table<Workflow>;
@@ -22,15 +64,21 @@ export class WorkflowDB extends Dexie {
   nodeTypes!: Table<NodeType>;
   drafts!: Table<Partial<Workflow>>;
   syncQueue!: Table<SyncQueueItem>;
+  workspaces!: Table<Workspace>;
+  projects!: Table<Project>;
+  projectCanvasItems!: Table<ProjectCanvasItem>;
 
   constructor() {
     super('WorkflowUI');
-    this.version(1).stores({
-      workflows: 'id, tenantId, [tenantId+name]',
+    this.version(2).stores({
+      workflows: 'id, tenantId, projectId, workspaceId, [tenantId+name], [tenantId+projectId], starred',
       executions: 'id, workflowId, [tenantId+workflowId]',
       nodeTypes: 'id, [tenantId+category]',
       drafts: 'id, tenantId',
-      syncQueue: '++id, [tenantId+action]'
+      syncQueue: '++id, [tenantId+action]',
+      workspaces: 'id, tenantId',
+      projects: 'id, workspaceId, tenantId, [tenantId+workspaceId], starred',
+      projectCanvasItems: 'id, projectId, workflowId, [projectId+workflowId]'
     });
   }
 }
@@ -270,7 +318,7 @@ export const syncQueueDB = {
       ...item,
       timestamp: Date.now(),
       retries: 0
-    });
+    }) as Promise<number>;
   },
 
   /**
@@ -321,5 +369,170 @@ async function addToSyncQueue(
     console.error('Failed to add to sync queue:', error);
   }
 }
+
+/**
+ * Workspace operations
+ */
+export const workspaceDB = {
+  /**
+   * Get all workspaces for tenant
+   */
+  async getByTenant(tenantId: string): Promise<Workspace[]> {
+    return db.workspaces.where('tenantId').equals(tenantId).toArray();
+  },
+
+  /**
+   * Get single workspace
+   */
+  async get(id: string): Promise<Workspace | undefined> {
+    return db.workspaces.get(id);
+  },
+
+  /**
+   * Create workspace
+   */
+  async create(workspace: Workspace): Promise<string> {
+    const id = await db.workspaces.add(workspace);
+    return id as string;
+  },
+
+  /**
+   * Update workspace
+   */
+  async update(workspace: Workspace): Promise<void> {
+    await db.workspaces.put(workspace);
+  },
+
+  /**
+   * Delete workspace
+   */
+  async delete(id: string): Promise<void> {
+    await db.workspaces.delete(id);
+  }
+};
+
+/**
+ * Project operations
+ */
+export const projectDB = {
+  /**
+   * Get all projects for workspace
+   */
+  async getByWorkspace(workspaceId: string): Promise<Project[]> {
+    return db.projects.where('workspaceId').equals(workspaceId).toArray();
+  },
+
+  /**
+   * Get all projects for tenant
+   */
+  async getByTenant(tenantId: string): Promise<Project[]> {
+    return db.projects.where('tenantId').equals(tenantId).toArray();
+  },
+
+  /**
+   * Get single project
+   */
+  async get(id: string): Promise<Project | undefined> {
+    return db.projects.get(id);
+  },
+
+  /**
+   * Create project
+   */
+  async create(project: Project): Promise<string> {
+    const id = await db.projects.add(project);
+    return id as string;
+  },
+
+  /**
+   * Update project
+   */
+  async update(project: Project): Promise<void> {
+    await db.projects.put(project);
+  },
+
+  /**
+   * Delete project
+   */
+  async delete(id: string): Promise<void> {
+    await db.projects.delete(id);
+  },
+
+  /**
+   * Get starred projects for tenant
+   */
+  async getStarred(tenantId: string): Promise<Project[]> {
+    return db.projects
+      .where('tenantId')
+      .equals(tenantId)
+      .filter((p) => p.starred === true)
+      .toArray();
+  }
+};
+
+/**
+ * Project canvas item operations
+ */
+export const projectCanvasItemDB = {
+  /**
+   * Get all canvas items for project
+   */
+  async getByProject(projectId: string): Promise<ProjectCanvasItem[]> {
+    return db.projectCanvasItems.where('projectId').equals(projectId).toArray();
+  },
+
+  /**
+   * Get single canvas item
+   */
+  async get(id: string): Promise<ProjectCanvasItem | undefined> {
+    return db.projectCanvasItems.get(id);
+  },
+
+  /**
+   * Create canvas item
+   */
+  async create(item: ProjectCanvasItem): Promise<string> {
+    const id = await db.projectCanvasItems.add(item);
+    return id as string;
+  },
+
+  /**
+   * Update canvas item
+   */
+  async update(item: ProjectCanvasItem): Promise<void> {
+    await db.projectCanvasItems.put(item);
+  },
+
+  /**
+   * Delete canvas item
+   */
+  async delete(id: string): Promise<void> {
+    await db.projectCanvasItems.delete(id);
+  },
+
+  /**
+   * Bulk update canvas items
+   */
+  async bulkUpdate(items: ProjectCanvasItem[]): Promise<void> {
+    await db.projectCanvasItems.bulkPut(items);
+  },
+
+  /**
+   * Get canvas item by workflow ID
+   */
+  async getByWorkflow(projectId: string, workflowId: string): Promise<ProjectCanvasItem | undefined> {
+    return db.projectCanvasItems
+      .where('[projectId+workflowId]')
+      .equals([projectId, workflowId])
+      .first();
+  },
+
+  /**
+   * Delete all items for project
+   */
+  async deleteByProject(projectId: string): Promise<void> {
+    await db.projectCanvasItems.where('projectId').equals(projectId).delete();
+  }
+};
 
 export default db;

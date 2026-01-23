@@ -1,265 +1,285 @@
 /**
  * Execution Service
- * Handles workflow execution with polling and result caching
+ * Handles workflow execution with offline-first architecture
  */
 
-import { ExecutionResult, WorkflowNode, WorkflowConnection } from '@types/workflow';
 import { api } from './api';
-import { workflowDB } from '@db/schema';
+import { db } from '../db/schema';
+import { ExecutionResult } from '../types/workflow';
 
-const POLLING_INTERVAL = 2000; // 2 seconds
-const MAX_POLL_ATTEMPTS = 300; // 10 minutes max
+export interface ExecutionRequest {
+  nodes: any[];
+  connections: any[];
+  inputs?: Record<string, any>;
+}
 
-/**
- * Execution service for managing workflow runs
- */
-export const executionService = {
+class ExecutionService {
   /**
-   * Execute workflow and poll for results
+   * Execute a workflow
    */
   async executeWorkflow(
     workflowId: string,
-    workflow: {
-      nodes: WorkflowNode[];
-      connections: WorkflowConnection[];
-    },
+    data: ExecutionRequest,
     tenantId: string = 'default'
   ): Promise<ExecutionResult> {
-    // Start execution on backend
-    const execution = await api.executions.execute(workflowId, workflow);
-
-    // Save to IndexedDB
-    await workflowDB.executions.add(execution);
-
-    // Poll for completion
-    return this.pollForCompletion(execution.id, workflowId, tenantId);
-  },
-
-  /**
-   * Poll execution until completion
-   */
-  async pollForCompletion(
-    executionId: string,
-    workflowId: string,
-    tenantId: string,
-    attempts: number = 0
-  ): Promise<ExecutionResult> {
-    if (attempts > MAX_POLL_ATTEMPTS) {
-      throw new Error('Execution timed out');
-    }
-
     try {
-      const execution = await api.executions.getById(executionId);
+      // Optimistic UI: create local execution record immediately
+      const executionId = `exec-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      const execution: Partial<ExecutionResult> = {
+        id: executionId,
+        workflowId,
+        workflowName: 'Unknown',
+        status: 'running',
+        startTime: Date.now(),
+        nodes: [],
+        tenantId
+      };
 
-      // Save to IndexedDB
-      await workflowDB.executions.put(execution);
-
-      // Check if execution is complete
-      if (
-        execution.status === 'success' ||
-        execution.status === 'error' ||
-        execution.status === 'stopped'
-      ) {
-        return execution;
+      // Save to local IndexedDB first
+      if (db?.executions) {
+        await db.executions.add(execution as ExecutionResult);
       }
 
-      // Still running, poll again
-      await new Promise((resolve) => setTimeout(resolve, POLLING_INTERVAL));
-      return this.pollForCompletion(executionId, workflowId, tenantId, attempts + 1);
+      // Try to execute on backend
+      try {
+        const result = await api.executions.execute(workflowId, data);
+
+        // Update local record with result
+        if (db?.executions) {
+          await db.executions.update(executionId, {
+            status: result.status || 'success',
+            endTime: Date.now(),
+            outputs: result.outputs,
+            error: result.error
+          });
+        }
+
+        return {
+          id: executionId,
+          workflowId,
+          workflowName: execution.workflowName || 'Unknown',
+          tenantId,
+          status: (result.status || 'success') as any,
+          startTime: execution.startTime!,
+          endTime: Date.now(),
+          nodes: result.nodes || [],
+          output: result.output,
+          error: result.error
+        } as ExecutionResult;
+      } catch (backendError) {
+        // Backend execution failed - record error locally
+        if (db?.executions) {
+          await db.executions.update(executionId, {
+            status: 'error',
+            endTime: Date.now(),
+            error: {
+              code: 'BACKEND_ERROR',
+              message: backendError instanceof Error ? backendError.message : 'Backend execution failed'
+            }
+          });
+        }
+
+        throw backendError;
+      }
     } catch (error) {
-      throw new Error(`Failed to get execution status: ${error}`);
+      const message = error instanceof Error ? error.message : 'Execution failed';
+      throw new Error(message);
     }
-  },
+  }
 
   /**
-   * Get execution history for workflow
+   * Get execution history for a workflow
    */
   async getExecutionHistory(
     workflowId: string,
-    tenantId: string,
+    tenantId: string = 'default',
     limit: number = 50
   ): Promise<ExecutionResult[]> {
     try {
-      // Try backend first
-      const response = await api.executions.getHistory(workflowId, limit);
-      const executions = response.executions || [];
+      // Try to fetch from backend first
+      try {
+        const result = await api.executions.getHistory(workflowId, limit);
 
-      // Update IndexedDB cache
-      await Promise.all(
-        executions.map((e: ExecutionResult) => workflowDB.executions.put(e))
-      );
+        // Cache results locally
+        if (db?.executions && Array.isArray(result)) {
+          for (const execution of result) {
+            await db.executions.put({
+              id: execution.id,
+              workflowId,
+              tenantId,
+              ...execution
+            }).catch(() => {
+              // Ignore if record already exists
+            });
+          }
+        }
 
-      return executions;
-    } catch {
-      // Fall back to IndexedDB
-      return workflowDB.executions
-        .where('[tenantId+workflowId]')
-        .equals([tenantId, workflowId])
-        .reverse()
-        .limit(limit)
-        .toArray();
+        return result;
+      } catch (backendError) {
+        // Fall back to local cache
+        console.warn('Failed to fetch from backend, using local cache:', backendError);
+        if (db?.executions) {
+          const executions = await db.executions
+            .where({ workflowId, tenantId })
+            .reverse()
+            .limit(limit)
+            .toArray();
+          return executions;
+        }
+        return [];
+      }
+    } catch (error) {
+      console.error('Failed to get execution history:', error);
+      return [];
     }
-  },
+  }
 
   /**
-   * Get specific execution
+   * Get execution details
    */
-  async getExecution(executionId: string): Promise<ExecutionResult | undefined> {
+  async getExecutionDetails(executionId: string): Promise<ExecutionResult | null> {
     try {
-      // Try IndexedDB first
-      return await workflowDB.executions.get(executionId);
-    } catch {
-      // Fall back to backend
-      return api.executions.getById(executionId);
-    }
-  },
+      // Try backend first
+      try {
+        const result = await api.executions.getById(executionId);
 
-  /**
-   * Get execution results with node details
-   */
-  async getExecutionDetails(executionId: string): Promise<{
-    execution: ExecutionResult;
-    nodeResults: Record<string, any>;
-    summary: {
-      totalNodes: number;
-      successNodes: number;
-      failedNodes: number;
-      skippedNodes: number;
-      duration: number;
-    };
-  }> {
-    const execution = await this.getExecution(executionId);
+        // Cache locally
+        if (db?.executions) {
+          await db.executions.put(result).catch(() => {
+            // Ignore if already exists
+          });
+        }
 
-    if (!execution) {
-      throw new Error('Execution not found');
-    }
-
-    // Calculate summary
-    const nodeResults: Record<string, any> = {};
-    let successNodes = 0;
-    let failedNodes = 0;
-    let skippedNodes = 0;
-
-    for (const nodeExecution of execution.nodes || []) {
-      nodeResults[nodeExecution.nodeId] = nodeExecution;
-
-      if (nodeExecution.status === 'success') {
-        successNodes++;
-      } else if (nodeExecution.status === 'error') {
-        failedNodes++;
-      } else if (nodeExecution.status === 'skipped') {
-        skippedNodes++;
+        return result;
+      } catch (backendError) {
+        // Fall back to local cache
+        if (db?.executions) {
+          return await db.executions.get(executionId);
+        }
+        return null;
       }
+    } catch (error) {
+      console.error('Failed to get execution details:', error);
+      return null;
     }
-
-    return {
-      execution,
-      nodeResults,
-      summary: {
-        totalNodes: execution.nodes?.length || 0,
-        successNodes,
-        failedNodes,
-        skippedNodes,
-        duration: execution.duration || 0
-      }
-    };
-  },
+  }
 
   /**
-   * Stop execution
+   * Get execution statistics for a workflow
    */
-  async stopExecution(executionId: string): Promise<void> {
-    // TODO: Implement stop execution endpoint on backend
-    // await api.executions.stop(executionId);
-    console.log(`Stopping execution: ${executionId}`);
-  },
-
-  /**
-   * Get execution statistics
-   */
-  async getExecutionStats(workflowId: string, tenantId: string): Promise<{
+  async getExecutionStats(
+    workflowId: string,
+    tenantId: string = 'default'
+  ): Promise<{
     totalExecutions: number;
     successCount: number;
     errorCount: number;
-    avgDuration: number;
-    lastExecuted: number | null;
+    averageDuration: number;
+    lastExecution?: ExecutionResult;
   }> {
-    const executions = await workflowDB.executions
-      .where('[tenantId+workflowId]')
-      .equals([tenantId, workflowId])
-      .toArray();
+    try {
+      // Get execution history
+      const executions = await this.getExecutionHistory(workflowId, tenantId, 100);
 
-    let successCount = 0;
-    let errorCount = 0;
-    let totalDuration = 0;
-    let lastExecuted: number | null = null;
-
-    for (const execution of executions) {
-      if (execution.status === 'success') {
-        successCount++;
-      } else if (execution.status === 'error') {
-        errorCount++;
+      if (executions.length === 0) {
+        return {
+          totalExecutions: 0,
+          successCount: 0,
+          errorCount: 0,
+          averageDuration: 0
+        };
       }
 
-      if (execution.endTime && (!lastExecuted || execution.endTime > lastExecuted)) {
-        lastExecuted = execution.endTime;
-      }
+      const successful = executions.filter(e => e.status === 'success');
+      const errors = executions.filter(e => e.status === 'error');
 
-      if (execution.duration) {
-        totalDuration += execution.duration;
-      }
+      const durations = successful
+        .filter(e => e.endTime)
+        .map(e => (e.endTime! - e.startTime) / 1000); // Convert to seconds
+
+      const averageDuration = durations.length > 0
+        ? durations.reduce((a, b) => a + b, 0) / durations.length
+        : 0;
+
+      return {
+        totalExecutions: executions.length,
+        successCount: successful.length,
+        errorCount: errors.length,
+        averageDuration,
+        lastExecution: executions[0]
+      };
+    } catch (error) {
+      console.error('Failed to get execution stats:', error);
+      return {
+        totalExecutions: 0,
+        successCount: 0,
+        errorCount: 0,
+        averageDuration: 0
+      };
     }
-
-    return {
-      totalExecutions: executions.length,
-      successCount,
-      errorCount,
-      avgDuration: executions.length > 0 ? totalDuration / executions.length : 0,
-      lastExecuted
-    };
-  },
-
-  /**
-   * Export execution results
-   */
-  async exportExecutionResults(
-    executionId: string,
-    format: 'json' | 'csv' = 'json'
-  ): Promise<string> {
-    const details = await this.getExecutionDetails(executionId);
-
-    if (format === 'json') {
-      return JSON.stringify(details, null, 2);
-    } else if (format === 'csv') {
-      // Convert to CSV
-      const headers = ['Node ID', 'Status', 'Duration', 'Output'];
-      const rows = Object.entries(details.nodeResults).map(([nodeId, result]) => [
-        nodeId,
-        result.status,
-        result.duration || 0,
-        result.output ? JSON.stringify(result.output) : ''
-      ]);
-
-      const csvContent = [
-        headers.join(','),
-        ...rows.map((row) => row.map((cell) => `"${cell}"`).join(','))
-      ].join('\n');
-
-      return csvContent;
-    }
-
-    throw new Error(`Unsupported export format: ${format}`);
-  },
-
-  /**
-   * Clear execution history
-   */
-  async clearExecutionHistory(workflowId: string, tenantId: string): Promise<void> {
-    const executions = await workflowDB.executions
-      .where('[tenantId+workflowId]')
-      .equals([tenantId, workflowId])
-      .toArray();
-
-    await Promise.all(executions.map((e) => workflowDB.executions.delete(e.id)));
   }
-};
+
+  /**
+   * Cancel a running execution
+   */
+  async cancelExecution(executionId: string): Promise<void> {
+    try {
+      // Mark as cancelled locally
+      if (db?.executions) {
+        await db.executions.update(executionId, {
+          status: 'cancelled' as any,
+          endTime: Date.now()
+        });
+      }
+
+      // Attempt to cancel on backend (non-critical)
+      try {
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/executions/${executionId}/cancel`, {
+          method: 'POST'
+        });
+      } catch (error) {
+        console.warn('Failed to cancel execution on backend:', error);
+      }
+    } catch (error) {
+      console.error('Failed to cancel execution:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Clear execution history for a workflow
+   */
+  async clearExecutionHistory(
+    workflowId: string,
+    tenantId: string = 'default'
+  ): Promise<void> {
+    try {
+      // Clear from local database
+      if (db?.executions) {
+        const executions = await db.executions
+          .where({ workflowId, tenantId })
+          .toArray();
+
+        for (const execution of executions) {
+          await db.executions.delete(execution.id);
+        }
+      }
+
+      // Attempt to clear on backend (non-critical)
+      try {
+        await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/workflows/${workflowId}/executions`,
+          { method: 'DELETE' }
+        );
+      } catch (error) {
+        console.warn('Failed to clear execution history on backend:', error);
+      }
+    } catch (error) {
+      console.error('Failed to clear execution history:', error);
+      throw error;
+    }
+  }
+}
+
+export const executionService = new ExecutionService();
+export default executionService;
