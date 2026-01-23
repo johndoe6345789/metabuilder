@@ -443,3 +443,197 @@ return {'count': counter.get()}
 
 The hooks library is production-ready either way. These utilities would just provide a consistent, familiar development experience for workflow developers.
 
+
+---
+
+## UPDATED APPROACH: Simpler Integration (Added Jan 23, 2026)
+
+### Option A: Hook Loader Plugin (Simplest)
+
+Create a single workflow plugin that loads hooks from @metabuilder/hooks:
+
+```typescript
+// workflow/plugins/ts/react/hook-loader/src/index.ts
+
+import * as hooks from '@metabuilder/hooks'
+
+export class HookLoaderExecutor implements INodeExecutor {
+  nodeType = 'react-hook'
+  category = 'react'
+  description = 'Load and execute React hooks from @metabuilder/hooks'
+
+  async execute(node, context, state) {
+    const { hookName, ...params } = node.parameters
+    
+    // Get the hook from the library
+    const hook = hooks[hookName]
+    if (!hook) {
+      throw new Error(`Hook ${hookName} not found`)
+    }
+    
+    // Execute hook (in workflow context, not React context)
+    const result = hook(params)
+    
+    return { result, ...result }
+  }
+}
+```
+
+**Usage in workflows**:
+```json
+{
+  "nodes": [
+    {
+      "type": "react-hook",
+      "parameters": {
+        "hookName": "useCounter",
+        "initial": 0,
+        "min": 0,
+        "max": 100
+      }
+    }
+  ]
+}
+```
+
+### Option B: Native Workflow Hooks (More Flexible)
+
+Create workflow plugin that mimics hooks but works in DAG context:
+
+```typescript
+// workflow/plugins/ts/core/hooks/src/index.ts
+
+import { INodeExecutor } from '@metabuilder/workflow'
+
+export class WorkflowHooksExecutor implements INodeExecutor {
+  nodeType = 'hook'
+  category = 'core'
+
+  async execute(node, context, state) {
+    const { hookType, operation, ...params } = node.parameters
+    
+    switch (hookType) {
+      case 'useCounter':
+        return this.useCounter(operation, params, state)
+      case 'useToggle':
+        return this.useToggle(operation, params, state)
+      case 'useStateWithHistory':
+        return this.useStateWithHistory(operation, params, state)
+      default:
+        throw new Error(`Unknown hook type: ${hookType}`)
+    }
+  }
+
+  private useCounter(operation, params, state) {
+    const current = state.counter ?? params.initial ?? 0
+    if (operation === 'increment') {
+      return { result: current + 1 }
+    } else if (operation === 'decrement') {
+      return { result: current - 1 }
+    }
+  }
+
+  private useToggle(operation, params, state) {
+    const current = state.toggle ?? params.initial ?? false
+    if (operation === 'toggle') {
+      return { result: !current }
+    } else if (operation === 'set') {
+      return { result: params.value }
+    }
+  }
+
+  private useStateWithHistory(operation, params, state) {
+    const history = state.history ?? [params.initial]
+    const current = history[history.length - 1]
+    
+    if (operation === 'set') {
+      return { result: current, history: [...history, params.value] }
+    } else if (operation === 'undo') {
+      if (history.length > 1) {
+        history.pop()
+        return { result: history[history.length - 1], history }
+      }
+    }
+  }
+}
+```
+
+**Usage in workflows**:
+```json
+{
+  "nodes": [
+    {
+      "type": "hook",
+      "parameters": {
+        "hookType": "useCounter",
+        "operation": "increment",
+        "initial": 0
+      }
+    },
+    {
+      "type": "hook",
+      "parameters": {
+        "hookType": "useToggle",
+        "operation": "toggle",
+        "initial": false
+      }
+    }
+  ]
+}
+```
+
+### Comparison
+
+| Approach | Pros | Cons |
+|----------|------|------|
+| **Hook Loader** | Direct use of @metabuilder/hooks | Requires React runtime (not available in workflows) |
+| **Native Hooks** | Works in DAG context, no React needed | Need to reimplement hook logic |
+| **Workflow Utils** (original) | Shared across all languages | More complex implementation |
+
+### Best Choice: Native Workflow Hooks Plugin
+
+The **native hooks plugin** is the simplest:
+
+✅ **Single plugin package** that handles all hook operations  
+✅ **Works in workflow context** (no React dependency)  
+✅ **Familiar API** to @metabuilder/hooks  
+✅ **Easy to extend** with new hooks  
+✅ **No language barriers** (same plugin works everywhere)  
+
+**Implementation**:
+```
+workflow/plugins/ts/core/hooks/
+├── src/
+│   └── index.ts (HooksExecutor with useCounter, useToggle, etc.)
+├── package.json
+└── README.md
+```
+
+**Execution**:
+```json
+{
+  "nodes": [
+    { "type": "hook", "parameters": { "hookType": "useCounter", "operation": "increment" } },
+    { "type": "hook", "parameters": { "hookType": "useToggle", "operation": "toggle" } },
+    { "type": "hook", "parameters": { "hookType": "useStateWithHistory", "operation": "set", "value": {...} } }
+  ]
+}
+```
+
+---
+
+## RECOMMENDATION
+
+For workflows to "use hooks":
+
+1. **Create a native hooks workflow plugin** ✅ (simplest, ~1 day)
+   - Single package: `workflow/plugins/ts/core/hooks/`
+   - Exposes: useCounter, useToggle, useStateWithHistory, useValidation, etc.
+   - Works: In DAG context, no React needed
+
+2. **Skip hook loader** (too complex, React not available in workflows)
+
+3. **Skip multi-language utilities** (not needed if native plugin exists)
+
+This gives workflows **hook-like state management** without over-engineering.
+
