@@ -1,0 +1,70 @@
+{
+  "name": "@metabuilder/hooks-email",
+  "version": "1.0.0",
+  "description": "Custom React hooks for email client functionality",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "private": true,
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./useEmailSync": {
+      "import": "./dist/useEmailSync.js",
+      "require": "./dist/useEmailSync.js",
+      "types": "./dist/useEmailSync.d.ts"
+    },
+    "./useEmailStore": {
+      "import": "./dist/useEmailStore.js",
+      "require": "./dist/useEmailStore.js",
+      "types": "./dist/useEmailStore.d.ts"
+    },
+    "./useMailboxes": {
+      "import": "./dist/useMailboxes.js",
+      "require": "./dist/useMailboxes.js",
+      "types": "./dist/useMailboxes.d.ts"
+    },
+    "./useAccounts": {
+      "import": "./dist/useAccounts.js",
+      "require": "./dist/useAccounts.js",
+      "types": "./dist/useAccounts.d.ts"
+    },
+    "./useCompose": {
+      "import": "./dist/useCompose.js",
+      "require": "./dist/useCompose.js",
+      "types": "./dist/useCompose.d.ts"
+    },
+    "./useMessages": {
+      "import": "./dist/useMessages.js",
+      "require": "./dist/useMessages.js",
+      "types": "./dist/useMessages.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {},
+  "peerDependencies": {
+    "react": "18.0 || 19.0",
+    "react-redux": "8.0 || 9.0",
+    "@metabuilder/redux-email": "^1.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@metabuilder/redux-email": {
+      "optional": true
+    }
+  },
+  "keywords": [
+    "email",
+    "hooks",
+    "react",
+    "imap",
+    "smtp"
+  ],
+  "author": "MetaBuilder",
+  "license": "MIT"
+}
