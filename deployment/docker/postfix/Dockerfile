@@ -100,6 +100,9 @@ cat > /etc/dovecot/dovecot.conf << 'DOVECOT_EOF'
 protocols = imap pop3
 listen = *, ::
 
+ssl = no
+disable_plaintext_auth = no
+
 service imap-login {
   inet_listener imap {
     port = 143
@@ -129,14 +132,15 @@ passdb {
   args = "%s"
 }
 
-mail_location = mbox:~/mail:INBOX=/var/mail/%u
+mail_location = maildir:~/Maildir
 DOVECOT_EOF
 
 echo "Starting Postfix..."
 /etc/init.d/postfix start
 
 echo "Starting Dovecot..."
-/etc/init.d/dovecot start
+dovecot -F 2>&1 &
+DOVECOT_PID=$!
 
 echo "Mail server running on $(hostname)"
 echo "Accounts: admin (password123), relay (relaypass), user (userpass)"
@@ -144,8 +148,8 @@ echo "SMTP: localhost:25, 587"
 echo "IMAP: localhost:143"
 echo "POP3: localhost:110"
 
-# Keep container alive
-tail -f /var/log/mail.log 2>/dev/null || tail -f /var/log/syslog 2>/dev/null || sleep infinity
+# Wait for both services
+wait
 EOF
 RUN chmod +x /entrypoint.sh
 

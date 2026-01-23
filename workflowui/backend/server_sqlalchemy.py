@@ -856,8 +856,8 @@ def connect_email():
         if not username or not password:
             return jsonify({'error': 'Username and password required'}), 400
 
-        # Test connection
-        imap = imaplib.IMAP4(host, port)
+        # Test connection (plaintext auth allowed in Docker)
+        imap = imaplib.IMAP4(host, port, timeout=10)
         imap.login(username, password)
         imap.logout()
 
@@ -884,7 +884,7 @@ def list_emails():
         if not username or not password:
             return jsonify({'error': 'Username and password required'}), 400
 
-        imap = imaplib.IMAP4(host, port)
+        imap = imaplib.IMAP4(host, port, timeout=10)
         imap.login(username, password)
         imap.select(mailbox)
 
@@ -941,7 +941,7 @@ def read_email():
         if not username or not password or not email_id:
             return jsonify({'error': 'Missing required fields'}), 400
 
-        imap = imaplib.IMAP4(host, port)
+        imap = imaplib.IMAP4(host, port, timeout=10)
         imap.login(username, password)
         imap.select(mailbox)
 
@@ -992,11 +992,20 @@ def list_mailboxes():
         port = data.get('port', 143)
         username = data.get('username')
         password = data.get('password')
+        use_ssl = data.get('use_ssl', False)
 
         if not username or not password:
             return jsonify({'error': 'Username and password required'}), 400
 
-        imap = imaplib.IMAP4(host, port)
+        # Connect with STARTTLS for secure plain auth
+        import ssl
+        context = ssl.create_default_context()
+        context.check_hostname = False
+        context.verify_mode = ssl.CERT_NONE
+
+        imap = imaplib.IMAP4(host, port, timeout=10)
+        imap.starttls(ssl_context=context)
+
         imap.login(username, password)
 
         status, mailboxes = imap.list()
@@ -1006,6 +1015,7 @@ def list_mailboxes():
             mailbox_str = mailbox.decode().split('"') if isinstance(mailbox, bytes) else mailbox
             mailbox_list.append(mailbox)
 
+        imap.close()
         imap.logout()
 
         return jsonify({

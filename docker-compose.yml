@@ -91,7 +91,7 @@ services:
         condition: service_healthy
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+      test: ["CMD", "nc", "-z", "localhost", "2525"]
       interval: 30s
       timeout: 5s
       retries: 3

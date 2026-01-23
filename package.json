@@ -4,6 +4,7 @@
   "private": true,
   "description": "MetaBuilder - Universal Platform",
   "workspaces": [
+    "redux/core",
     "redux/slices",
     "redux/hooks",
     "redux/adapters",

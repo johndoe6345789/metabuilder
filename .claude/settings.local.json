@@ -83,7 +83,8 @@
       "Bash(perl -pi -e:*)",
       "Bash(pkill:*)",
       "Bash(node --version:*)",
-      "Bash(docker build:*)"
+      "Bash(docker build:*)",
+      "Bash(docker-compose up:*)"
     ]
   },
   "spinnerTipsEnabled": false
