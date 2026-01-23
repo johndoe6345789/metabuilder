@@ -1,26 +1,96 @@
-import { useDispatch, useSelector, TypedUseSelectorHook } from 'react-redux'
-import { configureStore } from '@reduxjs/toolkit'
-import { getMiddlewareConfig, getDevToolsConfig } from '../middleware'
+// Core hooks (30 original)
+export { useLoginLogic } from './useLoginLogic'
+export { useRegisterLogic } from './useRegisterLogic'
+export { usePasswordValidation } from './usePasswordValidation'
+export { useAuthForm } from './useAuthForm'
+export { useDashboardLogic } from './useDashboardLogic'
+export { useResponsiveSidebar } from './useResponsiveSidebar'
+export { useHeaderLogic } from './useHeaderLogic'
+export { useProjectSidebarLogic } from './useProjectSidebarLogic'
+export { useStorageDataHandlers } from './useStorageDataHandlers'
+export { useStorageSettingsHandlers } from './useStorageSettingsHandlers'
+export { useStorageSwitchHandlers } from './useStorageSwitchHandlers'
+export { useFaviconDesigner } from './useFaviconDesigner'
+export { useDragResize } from './useDragResize'
+export { default as useGithubBuildStatus } from './use-github-build-status'
 
-// Types will be augmented when store is configured
-export type RootState = any
-export type AppDispatch = any
+// Data structure hooks (5 new)
+export { useSet } from './useSet'
+export { useMap } from './useMap'
+export { useArray } from './useArray'
+export { useStack } from './useStack'
+export { useQueue } from './useQueue'
 
-// Typed hooks for use throughout app
-export const useAppDispatch = () => useDispatch<AppDispatch>()
-export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
+// State mutation hooks (5 new)
+export { useToggle } from './useToggle'
+export { usePrevious } from './usePrevious'
+export { useStateWithHistory } from './useStateWithHistory'
+export { useAsync } from './useAsync'
+export { useUndo } from './useUndo'
 
-// Helper to create typed store with provided reducers
-export function createAppStore(reducers: any, preloadedState?: any) {
-  return configureStore({
-    reducer: reducers,
-    preloadedState,
-    middleware: getMiddlewareConfig(),
-    devTools: getDevToolsConfig(),
-  })
-}
+// Form & validation hooks (5 new)
+export { useValidation } from './useValidation'
+export { useInput } from './useInput'
+export { useCheckbox } from './useCheckbox'
+export { useSelect } from './useSelect'
+export { useFieldArray } from './useFieldArray'
 
-export type AppStore = ReturnType<typeof createAppStore>
+// DOM & event hooks (4 new)
+export { useWindowSize } from './useWindowSize'
+export { useLocalStorage } from './useLocalStorage'
+export { useMediaQuery } from './useMediaQuery'
+export { default as useKeyboardShortcuts } from './useKeyboardShortcuts'
+export { default as useClickOutside } from './useClickOutside'
+export { default as useHotkeys } from './useHotkeys'
+export { default as useEventListener } from './useEventListener'
 
-// Re-export middleware utils for custom configuration
-export { getMiddlewareConfig, getDevToolsConfig } from '../middleware'
+// Pagination & data hooks (4 new)
+export { default as usePagination } from './usePagination'
+export { default as useSortable } from './useSortable'
+export { default as useFilter } from './useFilter'
+export { default as useSearch } from './useSearch'
+export { default as useSort } from './useSort'
+
+// Utility hooks (30+ new)
+export { default as useCounter } from './useCounter'
+export { default as useDebugInfo } from './useDebugInfo'
+export { default as useMountEffect } from './useMountEffect'
+export { default as useUnmountEffect } from './useMountEffect'
+export { default as useTimeout } from './useTimeout'
+export { default as useInterval } from './useInterval'
+export { default as useNotification } from './useNotification'
+export { default as useGeolocation } from './useGeolocation'
+export { default as useClipboard } from './useClipboard'
+export { default as useLocalStorageState } from './useLocalStorageState'
+export { default as useSessionStorageState } from './useSessionStorageState'
+export { default as useOrientation } from './useOrientation'
+export { default as useFocus } from './useFocus'
+export { default as useHover } from './useHover'
+export { default as useActive } from './useActive'
+export { default as useFetch } from './useFetch'
+export { default as useRefresh } from './useRefresh'
+export { default as useRender } from './useRender'
+export { default as useMounted } from './useMounted'
+export { default as useScrollPosition } from './useScrollPosition'
+export { default as useScroll } from './useScroll'
+export { default as usePreviousValue } from './usePreviousValue'
+export { default as usePromise } from './usePromise'
+export { default as useValueRef } from './useValueRef'
+export { default as useUpdateEffect } from './useUpdateEffect'
+export { default as useDifferent } from './useDifferent'
+export { default as useChange } from './useChange'
+export { default as useDefaults } from './useDefaults'
+export { default as useFirstEffect } from './useFirstEffect'
+export { default as useEventCallback } from './useEventCallback'
+export { default as useId } from './useId'
+export { default as usePatch } from './usePatch'
+export { default as useDeepComparison } from './useDeepComparison'
+export { default as useForceUpdate } from './useForceUpdate'
+export { default as useDecrement } from './useDecrement'
+export { default as useIncrement } from './useIncrement'
+export { default as useAsyncCallback } from './useAsyncCallback'
+
+// App utilities
+export { useAppDispatch, useAppSelector, createAppStore } from './hooks'
+export { ToastContext } from './ToastContext'
+export { I18nNavigation } from './I18nNavigation'

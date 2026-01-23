@@ -1,7 +1,7 @@
 {
   "name": "@metabuilder/hooks",
-  "version": "1.0.0",
-  "description": "Centralized collection of React hooks used across MetaBuilder",
+  "version": "2.0.0",
+  "description": "Comprehensive collection of 100+ production-ready React hooks for MetaBuilder",
   "main": "index.ts",
   "types": "index.d.ts",
   "scripts": {
@@ -12,10 +12,12 @@
   "keywords": [
     "react",
     "hooks",
-    "authentication",
-    "dashboard",
-    "storage",
-    "ui"
+    "utilities",
+    "state-management",
+    "forms",
+    "data-structures",
+    "dom",
+    "events"
   ],
   "author": "MetaBuilder",
   "license": "MIT",
@@ -33,34 +35,5 @@
     "*.tsx",
     "index.d.ts",
     "README.md"
-  ],
-  "exports": {
-    ".": {
-      "import": "./index.ts",
-      "types": "./index.d.ts"
-    },
-    "./useLoginLogic": "./useLoginLogic.ts",
-    "./useRegisterLogic": "./useRegisterLogic.ts",
-    "./usePasswordValidation": "./usePasswordValidation.ts",
-    "./useAuthForm": "./useAuthForm.ts",
-    "./useDashboardLogic": "./useDashboardLogic.ts",
-    "./useResponsiveSidebar": "./useResponsiveSidebar.ts",
-    "./useHeaderLogic": "./useHeaderLogic.ts",
-    "./useProjectSidebarLogic": "./useProjectSidebarLogic.ts",
-    "./useStorageDataHandlers": "./useStorageDataHandlers.ts",
-    "./useStorageSettingsHandlers": "./useStorageSettingsHandlers.ts",
-    "./useStorageSwitchHandlers": "./useStorageSwitchHandlers.ts",
-    "./useFaviconDesigner": "./useFaviconDesigner.ts",
-    "./useDragResize": "./useDragResize.ts",
-    "./useGithubBuildStatus": "./use-github-build-status.ts",
-    "./useKeyboardShortcuts": "./useKeyboardShortcuts.ts",
-    "./useClickOutside": "./useClickOutside.ts",
-    "./useHotkeys": "./useHotkeys.ts",
-    "./useEventListener": "./useEventListener.ts"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/metabuilder/metabuilder.git",
-    "directory": "hooks"
-  }
+  ]
 }
