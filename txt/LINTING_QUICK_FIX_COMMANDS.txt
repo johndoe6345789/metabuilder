@@ -1,0 +1,313 @@
+# LINTING TOOLS AUDIT - QUICK FIX COMMANDS
+Date: 2026-01-23
+Use this file to execute the standardization phases
+
+## PHASE 1: ESLint & @eslint/js Standardization (15-20 min)
+
+Update ESLint in 4 projects from old versions to ^9.39.2:
+
+### File 1: ./workflow/package.json
+Current:  "eslint": "^8.0.0"
+Change to: "eslint": "^9.39.2"
+
+Command (if using sed):
+  sed -i '' 's/"eslint": "\^8.0.0"/"eslint": "^9.39.2"/g' /Users/rmac/Documents/metabuilder/workflow/package.json
+
+Verify:
+  grep '"eslint"' /Users/rmac/Documents/metabuilder/workflow/package.json
+
+### File 2: ./pastebin/package.json
+Current:  "eslint": "^8"
+Change to: "eslint": "^9.39.2"
+
+Command:
+  sed -i '' 's/"eslint": "\^8"/"eslint": "^9.39.2"/g' /Users/rmac/Documents/metabuilder/pastebin/package.json
+
+### File 3: ./emailclient/package.json
+Current:  "eslint": "^9.28.0"
+Change to: "eslint": "^9.39.2"
+
+Command:
+  sed -i '' 's/"eslint": "\^9.28.0"/"eslint": "^9.39.2"/g' /Users/rmac/Documents/metabuilder/emailclient/package.json
+
+### File 4: ./old/package.json
+Current:  "@eslint/js": "^9.28.0"
+Change to: "@eslint/js": "^9.39.2"
+
+Command:
+  sed -i '' 's/"@eslint\/js": "\^9.28.0"/"@eslint\/js": "^9.39.2"/g' /Users/rmac/Documents/metabuilder/old/package.json
+
+### Verify Phase 1
+After making changes, check versions:
+
+  echo "=== ESLint versions after Phase 1 ==="
+  grep -r '"eslint"' --include='package.json' | grep -E '(workflow|pastebin|emailclient|old)' | grep -v node_modules
+
+  echo "=== @eslint/js versions after Phase 1 ==="
+  grep -r '"@eslint/js"' --include='package.json' | grep -v node_modules
+
+---
+
+## PHASE 2: Add Missing Prettier (10-15 min)
+
+Add prettier: ^3.4.2 to 9 projects missing it.
+
+The 9 files are:
+  1. ./emailclient/package.json
+  2. ./workflow/package.json
+  3. ./pastebin/package.json
+  4. ./dockerterminal/frontend/package.json
+  5. ./codegen/package.json
+  6. ./postgres/package.json
+  7. ./old/package.json
+  8. ./workflowui/package.json
+  9. ./frontends/dbal/package.json
+
+METHOD: Edit each package.json and add to devDependencies:
+  "prettier": "^3.4.2"
+
+Example (for ./emailclient/package.json):
+  Look for the "devDependencies" section
+  Add: "prettier": "^3.4.2"
+
+The section should look like:
+  "devDependencies": {
+    "eslint": "^9.39.2",
+    "prettier": "^3.4.2",
+    ...
+  }
+
+### Verify Phase 2
+  echo "=== Prettier versions after Phase 2 ==="
+  grep -r '"prettier"' --include='package.json' | grep -v node_modules
+
+---
+
+## PHASE 3: ESLint Plugin Standardization (20-30 min)
+
+This phase requires research and testing. Key issues:
+
+### Issue 1: eslint-plugin-react-hooks version mismatch
+Current state:
+  • Version ^5.2.0 used in: frontends/nextjs, codegen, old
+  • Version ^7.0.1 used in: postgres
+
+Action: Decide which version is correct, then standardize.
+
+Research steps:
+  1. Check npm package page for eslint-plugin-react-hooks
+  2. See what versions are available
+  3. Check compatibility with your React versions
+  4. Test in one project first
+
+### Issue 2: eslint-plugin-react-refresh version inconsistency
+Current state:
+  • Version ^0.4.19 in: old, codegen
+  • Version ^0.4.26 in: postgres
+
+Action: Update all to ^0.4.26 (latest)
+
+Commands:
+  sed -i '' 's/"eslint-plugin-react-refresh": "\^0.4.19"/"eslint-plugin-react-refresh": "^0.4.26"/g' /Users/rmac/Documents/metabuilder/old/package.json
+  sed -i '' 's/"eslint-plugin-react-refresh": "\^0.4.19"/"eslint-plugin-react-refresh": "^0.4.26"/g' /Users/rmac/Documents/metabuilder/codegen/package.json
+
+### Issue 3: eslint-plugin-tailwindcss beta version
+File: ./postgres/package.json
+Current: "eslint-plugin-tailwindcss": "^4.0.0-beta.0"
+Status: BETA version, should update to stable
+
+Action:
+  1. Check npm for stable version
+  2. Update to latest stable (e.g., ^4.1.0 or similar)
+  3. Test in postgres project
+
+---
+
+## PHASE 4: TypeScript Standardization (30-45 min)
+
+Target: typescript: ^5.9.3 for all projects
+
+Projects with wrong versions (and their current versions):
+
+### Too Loose (^5.0.0) - Update to ^5.9.3:
+  1. ./hooks/package.json
+  2. ./workflow/package.json
+  3. ./workflow/plugins/ts/core/hooks/package.json
+  4. ./workflow/plugins/ts/dbal-read/package.json
+  5. ./workflow/plugins/ts/dbal-write/package.json
+  6. ./workflow/plugins/ts/dbal/dbal-write/package.json
+  7. ./workflow/plugins/ts/dbal/dbal-read/package.json
+  8. ./workflow/plugins/ts/integration/webhook-response/package.json
+  9. ./workflow/plugins/ts/integration/email-send/package.json
+  10. ./workflow/plugins/ts/integration/http-request/package.json
+  11. ./workflow/plugins/ts/integration/email/imap-sync/package.json
+  12. ./workflow/plugins/ts/integration/email/imap-search/package.json
+  13. ./workflow/plugins/ts/utility/wait/package.json
+  14. ./packages/geocities-app/package.json
+  15. ./exploded-diagrams/package.json
+  16. ./redux/hooks-utils/package.json
+  17. ./redux/hooks-forms/package.json
+  18. ./redux/email/package.json
+
+Batch command to update all ^5.0.0 to ^5.9.3:
+  find /Users/rmac/Documents/metabuilder -name "package.json" -type f \
+    ! -path "*/node_modules/*" \
+    -exec grep -l '"typescript": "\^5.0.0"' {} \; | while read f; do
+    sed -i '' 's/"typescript": "\^5.0.0"/"typescript": "^5.9.3"/g' "$f"
+  done
+
+### Too Loose (^5) - Update to ^5.9.3:
+  1. ./dockerterminal/frontend/package.json
+  2. ./pastebin/package.json
+
+Commands:
+  sed -i '' 's/"typescript": "\^5"$/"typescript": "^5.9.3"/g' /Users/rmac/Documents/metabuilder/dockerterminal/frontend/package.json
+  sed -i '' 's/"typescript": "\^5"$/"typescript": "^5.9.3"/g' /Users/rmac/Documents/metabuilder/pastebin/package.json
+
+### Outdated (^5.3.3) - Update to ^5.9.3:
+  1. ./redux/core/package.json
+  2. ./redux/hooks-async/package.json
+
+Commands:
+  sed -i '' 's/"typescript": "\^5.3.3"/"typescript": "^5.9.3"/g' /Users/rmac/Documents/metabuilder/redux/core/package.json
+  sed -i '' 's/"typescript": "\^5.3.3"/"typescript": "^5.9.3"/g' /Users/rmac/Documents/metabuilder/redux/hooks-async/package.json
+
+### Already Good (^5.9.3 or ~5.9.3):
+No changes needed for:
+  • dbal/development/package.json
+  • frontends/nextjs/package.json
+  • codegen/package.json
+  • storybook/package.json
+  • emailclient/package.json
+  • workflowui/package.json
+  • postgres/package.json (exact 5.9.3)
+  • Most redux/* packages
+
+### Verify Phase 4
+  echo "=== TypeScript versions after Phase 4 ==="
+  grep -r '"typescript"' --include='package.json' | grep -v node_modules | sort | uniq -c
+
+---
+
+## PHASE 5: Add ESLint to Missing Projects (5-10 min)
+
+### File: ./workflowui/package.json
+Status: MISSING ESLint entirely (CRITICAL)
+
+Action: Add to devDependencies:
+  "eslint": "^9.39.2"
+
+Also add Prettier if missing:
+  "prettier": "^3.4.2"
+
+Look for the "devDependencies" section and add both.
+
+### Verify Phase 5
+  grep '"eslint"' /Users/rmac/Documents/metabuilder/workflowui/package.json
+
+Should output:
+  "eslint": "^9.39.2"
+
+---
+
+## FINAL VERIFICATION (5 min)
+
+After completing all 5 phases, run:
+
+### 1. Check counts
+  echo "=== Final ESLint version distribution ==="
+  grep -r '"eslint"' --include='package.json' | grep -v node_modules | \
+    sed 's/.*"eslint": "//' | sed 's/".*//' | sort | uniq -c
+
+Should show all projects on ^9.39.2
+
+### 2. Check Prettier coverage
+  echo "=== Final Prettier version distribution ==="
+  grep -r '"prettier"' --include='package.json' | grep -v node_modules | wc -l
+
+Should be: >= 11 (most projects have prettier now)
+
+### 3. Check TypeScript consistency
+  echo "=== Final TypeScript version distribution ==="
+  grep -r '"typescript"' --include='package.json' | grep -v node_modules | \
+    sed 's/.*"typescript": "//' | sed 's/".*//' | sort | uniq -c
+
+Should mostly show ^5.9.3
+
+### 4. Install and verify
+  cd /Users/rmac/Documents/metabuilder
+  npm install
+  npm audit
+
+Should see fewer vulnerabilities after standardization.
+
+---
+
+## COMMON ISSUES & SOLUTIONS
+
+### Issue: sed command not working
+Solution: Make sure you're using the correct quotes:
+  sed -i '' 's/old/new/g' file.json  # macOS (notice the empty string '')
+  sed -i 's/old/new/g' file.json     # Linux
+
+### Issue: Package.json has invalid JSON after edit
+Solution: Use a JSON editor or verify with:
+  npx json -f /path/to/package.json
+
+### Issue: npm install fails after changes
+Solution: Check for:
+  1. Invalid JSON syntax (extra commas, etc.)
+  2. Version strings that don't follow semver
+  3. Circular dependencies
+
+### Issue: Some projects don't have ESLint
+Solution: Check if they should have it:
+  • React projects: YES, add eslint: ^9.39.2
+  • TypeScript libraries: YES, add eslint: ^9.39.2
+  • Non-code projects: NO, skip
+
+---
+
+## RECOMMENDED EXECUTION ORDER
+
+1. Create backup of all package.json files
+   find /Users/rmac/Documents/metabuilder -name "package.json" -type f \
+     ! -path "*/node_modules/*" | while read f; do
+     cp "$f" "$f.backup"
+   done
+
+2. Phase 1: ESLint versions (15-20 min)
+3. Verify Phase 1: npm install && npm audit
+4. Phase 2: Add Prettier (10-15 min)
+5. Verify Phase 2: npm install
+6. Phase 3: ESLint plugins (20-30 min, may need testing)
+7. Phase 4: TypeScript standardization (30-45 min)
+8. Phase 5: Add missing ESLint (5-10 min)
+9. Final verification (npm install && npm audit)
+10. Review all changes with git diff
+11. Commit all changes
+
+---
+
+## TIME ESTIMATES
+
+Phase 1: 15-20 min
+Phase 2: 10-15 min
+Phase 3: 20-30 min
+Phase 4: 30-45 min
+Phase 5: 5-10 min
+Verification: 10-15 min
+
+TOTAL: 1.5-2 hours
+
+---
+
+## NOTES
+
+• Always make backups before bulk edits
+• Test npm install after each phase
+• Run npm audit to verify improvements
+• Document any manual changes
+• Review git diff before committing
+• Test the affected projects' builds
+

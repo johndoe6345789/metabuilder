@@ -1,0 +1,115 @@
+# TESTING LIBRARIES - QUICK REFERENCE
+Date: 2026-01-23
+
+═══════════════════════════════════════════════════════════════════════════════
+
+FRAMEWORK BREAKDOWN
+───────────────────────────────────────────────────────────────────────────────
+Jest (11 packages)          │  Vitest (5 packages)
+────────────────────────────┼──────────────────────────────
+emailclient [no ver]        │  dbal/development ^4.0.16
+workflowui ^29.7.0          │  frontends/nextjs ^4.0.16
+pastebin ^29.7.0            │  codegen [no ver]
+workflow ^29.0.0            │  codegen/spark-tools ^3.0.9
+redux/hooks [no ver]        │  postgres ^4.0.15
+redux/hooks-async ^29.7.0   │
+redux/api-clients [no ver]  │
+
+═══════════════════════════════════════════════════════════════════════════════
+
+@TESTING-LIBRARY/REACT VERSIONS (5 packages, 3 MAJOR VERSIONS)
+───────────────────────────────────────────────────────────────────────────────
+
+v14.1.2 (OUTDATED - 2 versions behind)
+  ├─ pastebin ^14.1.2
+  └─ redux/hooks-async ^14.1.2
+
+v16.0.1 (CURRENT)
+  └─ codegen/packages/spark-tools ^16.0.1
+
+v16.3.1 (LATEST)
+  ├─ frontends/nextjs ^16.3.1
+  └─ workflowui ^16.3.1
+
+═══════════════════════════════════════════════════════════════════════════════
+
+CRITICAL ISSUES
+───────────────────────────────────────────────────────────────────────────────
+
+🔴 ISSUE #1: Major Version Gap in @testing-library/react
+   Severity: HIGH
+   Impact: pastebin, redux/hooks-async 2 versions behind
+   Fix: Upgrade to ^16.3.1
+
+🔴 ISSUE #2: Jest vs Vitest Fragmentation
+   Severity: HIGH
+   Impact: 11 Jest vs 5 Vitest - causes maintenance burden
+   Fix: Standardize on single framework (recommend Jest)
+
+🔴 ISSUE #3: Missing Testing Library Declarations
+   Severity: MEDIUM
+   Impact: emailclient, redux/hooks, redux/api-clients, codegen
+   Fix: Add @testing-library/react, @testing-library/jest-dom
+
+🟡 ISSUE #4: Vitest Version Inconsistency
+   Severity: MEDIUM
+   Impact: codegen/spark-tools @3.0.9 (behind v4.x)
+   Fix: Upgrade to ^4.0.16
+
+🟡 ISSUE #5: Jest Version Inconsistency
+   Severity: LOW
+   Impact: workflow @29.0.0 (not latest)
+   Fix: Upgrade to ^29.7.0
+
+🟡 ISSUE #6: @testing-library/jest-dom Version Gap
+   Severity: LOW
+   Impact: pastebin @6.1.5 (5 minor versions behind)
+   Fix: Upgrade to ^6.6.3
+
+═══════════════════════════════════════════════════════════════════════════════
+
+OTHER TESTING LIBRARIES
+───────────────────────────────────────────────────────────────────────────────
+
+@testing-library/dom
+  └─ frontends/nextjs ^10.4.1 [only explicit declaration]
+
+@testing-library/jest-dom
+  ├─ pastebin ^6.1.5 [outdated]
+  ├─ codegen/spark-tools ^6.6.3
+  └─ workflowui ^6.6.3
+
+@testing-library/user-event
+  └─ pastebin ^14.5.1 [only explicit declaration]
+
+═══════════════════════════════════════════════════════════════════════════════
+
+RECOMMENDED ACTION: STANDARDIZE ON JEST
+───────────────────────────────────────────────────────────────────────────────
+
+Standard Versions:
+  jest:                        ^29.7.0
+  @testing-library/react:      ^16.3.1
+  @testing-library/dom:        ^10.4.1
+  @testing-library/jest-dom:   ^6.6.3
+  @testing-library/user-event: ^14.5.1
+
+Packages to Migrate (vitest → jest):
+  1. dbal/development
+  2. frontends/nextjs
+  3. postgres
+  4. codegen/packages/spark-tools
+
+Packages to Upgrade:
+  1. pastebin (all @testing-library/*)
+  2. redux/hooks-async (@testing-library/react)
+  3. workflow (jest version)
+  4. Missing declarations (emailclient, redux/hooks, redux/api-clients, codegen)
+
+Estimated Effort: 3-4 hours
+Build Impact: HIGH (npm install will be cleaner, fewer conflicts)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+FULL DETAILS: See TESTING_LIBRARIES_AUDIT_2026-01-23.txt
+

@@ -1,0 +1,325 @@
+# Testing Libraries Audit
+**Date**: 2026-01-23
+**Status**: Fragmented - Multiple Versions Detected
+**Impact**: Potential build conflicts and incompatibilities
+
+---
+
+## EXECUTIVE SUMMARY
+
+Testing framework landscape is fragmented across the codebase:
+- **2 primary frameworks**: Jest (11 packages) vs Vitest (5 packages)
+- **5 testing library packages** with **3 major version gaps** (@testing-library/react: v14-16)
+- **Incompatibilities**: Some combinations may not work together
+- **Recommendation**: Standardize on single framework + versions
+
+---
+
+## TESTING FRAMEWORK SPLIT
+
+### Jest Users (11 packages)
+```
+emailclient/package.json                                    [no version]
+workflowui/package.json                                     ^29.7.0
+pastebin/package.json                                       ^29.7.0
+workflow/package.json                                       ^29.0.0
+redux/hooks/package.json                                    [no version]
+redux/hooks-async/package.json                              ^29.7.0
+redux/api-clients/package.json                              [no version]
+```
+
+**Notes:**
+- 3 packages have no version specified (uses workspace resolution)
+- 2 packages at ^29.7.0 (latest stable)
+- 1 package at ^29.0.0 (older stable - should upgrade)
+
+### Vitest Users (5 packages)
+```
+dbal/development/package.json                               ^4.0.16
+frontends/nextjs/package.json                               ^4.0.16
+codegen/package.json                                        [no version]
+codegen/packages/spark-tools/package.json                   ^3.0.9
+postgres/package.json                                       ^4.0.15
+```
+
+**Notes:**
+- codegen/package.json has no vitest version (will use peer/workspace resolution)
+- Most are v4.x (latest), but spark-tools is v3.x (behind)
+- postgres at v4.0.15 (slightly behind latest 4.0.16)
+
+---
+
+## @TESTING-LIBRARY PACKAGES (CRITICAL GAPS)
+
+### @testing-library/react (5 packages, 3 MAJOR VERSIONS)
+```
+MAJOR VERSION GAP DETECTED:
+┌─────────────────────────────────────────────────────────┐
+│ v14.1.2  (pastebin, redux/hooks-async)                 │
+│ v16.0.1  (codegen/packages/spark-tools)                │
+│ v16.3.1  (frontends/nextjs, workflowui)   [LATEST]     │
+└─────────────────────────────────────────────────────────┘
+```
+
+**Compatibility Notes:**
+- v14.1.2: React 14.0.0-18.3.x, @testing-library/dom ^9.0.0
+- v16.0.1: React 18.0.0+, @testing-library/dom ^10.0.0
+- v16.3.1: React 18.0.0+, @testing-library/dom ^10.0.0
+
+**Impact:**
+- pastebin & redux/hooks-async are 2 major versions behind
+- Major version changes typically include breaking API changes
+- Different versions will have different query functions, debug utilities
+
+### @testing-library/dom (1 package)
+```
+frontends/nextjs/package.json                              ^10.4.1
+```
+
+**Issue:** Only one project specifies this - others may have it indirectly via @testing-library/react
+**Recommendation:** Explicitly declare in all packages using testing-library
+
+### @testing-library/user-event (1 package)
+```
+pastebin/package.json                                      ^14.5.1
+```
+
+**Issue:** Only pastebin declares this. Other projects may need it for user interaction testing.
+**Recommendation:** Add to all projects using testing-library/react
+
+### @testing-library/jest-dom (3 packages)
+```
+pastebin/package.json                                      ^6.1.5
+codegen/packages/spark-tools/package.json                  ^6.6.3
+workflowui/package.json                                    ^6.6.3
+```
+
+**Gap:** 
+- pastebin at v6.1.5 (older minor)
+- spark-tools & workflowui at v6.6.3 (newer minor)
+- Difference: 5 minor releases
+
+---
+
+## COMPATIBILITY MATRIX
+
+### JEST + @Testing-Library
+```
+jest ^29.7.0  + @testing-library/react ^14.1.2   ✅ Compatible
+jest ^29.7.0  + @testing-library/react ^16.3.1   ❌ Version gap
+jest ^29.0.0  + @testing-library/react [none]    ⚠️  Missing tests
+```
+
+### VITEST + @Testing-Library
+```
+vitest ^4.0.16 + @testing-library/react ^16.3.1  ✅ Compatible
+vitest ^4.0.15 + @testing-library/react [none]   ⚠️  Missing tests
+vitest ^3.0.9  + @testing-library/react [none]   ⚠️  Version behind
+```
+
+---
+
+## CONFIGURATION FILES
+
+### Jest Configs
+```
+pastebin/jest.config.ts
+```
+
+### Vitest Configs
+```
+config/test/vitest.config.ts
+frontends/nextjs/vitest.config.ts
+postgres/vitest.config.mts
+postgres/.storybook/vitest.config.mts
+```
+
+**Note:** More vitest configs than jest configs, indicating migration in progress.
+
+---
+
+## DETAILED PACKAGE BREAKDOWN
+
+### 🔴 CRITICAL ISSUES
+
+#### Issue 1: @testing-library/react Version Gap (2 major versions)
+**Packages affected:**
+- pastebin/package.json (v14.1.2)
+- redux/hooks-async/package.json (v14.1.2)
+
+**Action items:**
+1. Upgrade to v16.3.1 or at least v16.0.1
+2. Test for breaking changes (v14→v16 introduces new query APIs)
+3. Update @testing-library/dom to ^10.4.1
+4. Update @testing-library/jest-dom to ^6.6.3 for pastebin
+
+#### Issue 2: Jest vs Vitest Fragmentation (2 frameworks)
+**Problem:** 11 packages use Jest, 5 use Vitest - creates maintenance burden
+**Recommendation:** Standardize on single framework:
+- **Option A (Jest):** Migrate vitest packages to jest ^29.7.0
+- **Option B (Vitest):** Migrate jest packages to vitest ^4.0.16
+- **Preferred:** Jest (more stable, wider ecosystem, production-proven)
+
+#### Issue 3: Missing Testing Declarations
+**Packages with test script but no testing library:**
+- emailclient (jest, no testing-library)
+- redux/hooks (jest, no testing-library)
+- redux/api-clients (jest, no testing-library)
+- codegen (vitest, no testing-library)
+
+**Action:** Add @testing-library/react and @testing-library/jest-dom (or vitest equivalent)
+
+### 🟡 MEDIUM ISSUES
+
+#### Issue 4: vitest Version Inconsistency
+**Packages:**
+- codegen/packages/spark-tools@^3.0.9 (v3 - behind others)
+- postgres@^4.0.15 (v4.0.15 - close to latest)
+- dbal/development@^4.0.16 (v4.0.16 - latest)
+- frontends/nextjs@^4.0.16 (v4.0.16 - latest)
+
+**Action:** Upgrade spark-tools to ^4.0.16
+
+#### Issue 5: Jest Version Inconsistency
+**Packages:**
+- workflow@^29.0.0 (v29.0.0 - older stable)
+- workflowui@^29.7.0 (v29.7.0 - latest)
+- pastebin@^29.7.0 (v29.7.0 - latest)
+
+**Action:** Upgrade workflow to ^29.7.0
+
+#### Issue 6: @testing-library/jest-dom Gap (pastebin)
+**Issue:** pastebin@^6.1.5 vs workflowui/spark-tools@^6.6.3
+**Action:** Upgrade pastebin to ^6.6.3
+
+---
+
+## RECOMMENDED STANDARDIZATION
+
+### OPTION A: Jest Standardization (Recommended)
+```
+jest:                           ^29.7.0
+@testing-library/react:         ^16.3.1
+@testing-library/dom:           ^10.4.1
+@testing-library/jest-dom:      ^6.6.3
+@testing-library/user-event:    ^14.5.1
+```
+
+**Affected packages (need migration):**
+- dbal/development (vitest → jest)
+- frontends/nextjs (vitest → jest)
+- postgres (vitest → jest)
+- codegen/packages/spark-tools (vitest → jest)
+
+**Affected packages (need upgrade):**
+- pastebin (@testing-library/* versions)
+- redux/hooks-async (@testing-library/react v14 → v16)
+- workflow (jest ^29.0.0 → ^29.7.0)
+
+### OPTION B: Vitest Standardization (Async)
+```
+vitest:                         ^4.0.16
+@testing-library/react:         ^16.3.1
+@testing-library/dom:           ^10.4.1
+@testing-library/jest-dom:      ^6.6.3
+@testing-library/user-event:    ^14.5.1
+```
+
+**Note:** vitest still requires @testing-library/jest-dom for matchers
+**Affected packages (need migration):**
+- emailclient (jest → vitest)
+- workflowui (jest → vitest)
+- pastebin (jest → vitest)
+- workflow (jest → vitest)
+- redux/hooks, redux/hooks-async, redux/api-clients (jest → vitest)
+
+---
+
+## ACTION PLAN
+
+### Phase 1: Standardize on Jest (3-4 hours)
+
+1. **Upgrade all packages to consistent testing versions:**
+   - jest: ^29.7.0 (standardize)
+   - workflow: ^29.0.0 → ^29.7.0
+   - @testing-library/react: → ^16.3.1
+   - @testing-library/dom: → ^10.4.1
+   - @testing-library/jest-dom: → ^6.6.3
+   - @testing-library/user-event: → ^14.5.1
+
+2. **Migrate vitest packages to jest:**
+   - dbal/development: vitest ^4.0.16 → jest ^29.7.0
+   - frontends/nextjs: vitest ^4.0.16 → jest ^29.7.0
+   - postgres: vitest ^4.0.15 → jest ^29.7.0
+   - codegen/packages/spark-tools: vitest ^3.0.9 → jest ^29.7.0
+
+3. **Add testing libraries to packages missing them:**
+   - emailclient: add @testing-library/react, @testing-library/jest-dom
+   - redux/hooks: add @testing-library/react, @testing-library/jest-dom
+   - redux/api-clients: add @testing-library/react, @testing-library/jest-dom
+   - codegen: add @testing-library/react, @testing-library/jest-dom
+
+4. **Delete vitest config files:**
+   - config/test/vitest.config.ts
+   - frontends/nextjs/vitest.config.ts
+   - postgres/vitest.config.mts
+   - postgres/.storybook/vitest.config.mts
+
+5. **Update test scripts to use jest:**
+   - All `"test": "vitest"` → `"test": "jest"`
+   - All `"test:watch": "vitest"` → `"test:watch": "jest --watch"`
+
+6. **Test & Validate:**
+   - npm install from root
+   - npm run build
+   - npm run test (across all packages)
+   - npm run lint
+
+### Phase 2: Alternative - Migrate to Vitest (Future)
+
+If organization decides vitest is preferred:
+- Plan similar migration in reverse
+- Ensure vitest matchers configured correctly
+- Remove jest from all packages
+
+---
+
+## IMPACT ANALYSIS
+
+### Build Impact
+- **Current state:** npm install may fail due to version conflicts
+- **After standardization:** Clean installation, no conflicts
+
+### Test Execution Impact
+- **Current state:** Different testing paradigms across packages
+- **After standardization:** Uniform test experience
+
+### Developer Experience
+- **Current state:** Confusion about which framework to use for new tests
+- **After standardization:** Single clear standard
+
+---
+
+## VERIFICATION CHECKLIST
+
+After implementing standardization:
+
+- [ ] npm install succeeds at project root
+- [ ] npm run build succeeds
+- [ ] npm run test passes across all packages
+- [ ] npm run lint shows no issues
+- [ ] No vitest config files exist
+- [ ] All packages have explicit testing-library dependencies
+- [ ] All jest versions are ^29.7.0
+- [ ] All @testing-library/* versions match the standard
+- [ ] All test scripts use jest
+
+---
+
+## NOTES
+
+- Testing libraries are commonly source of npm audit issues due to transitive deps
+- Version gaps often indicate manual/legacy updates rather than systematic approach
+- Jest is more mature/stable for monorepo testing; vitest is newer/faster but less tested
+- @testing-library/jest-dom must be present for DOM matchers (expect().toBeInTheDocument(), etc.)
+
