@@ -1,0 +1,40 @@
+{
+  "name": "@metabuilder/workflow-plugin-smtp-send",
+  "version": "1.0.0",
+  "description": "SMTP Send node executor - Email delivery via SMTP with attachment support",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "type-check": "tsc --noEmit",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
+  "keywords": ["workflow", "plugin", "email", "smtp", "send", "delivery", "attachments"],
+  "author": "MetaBuilder Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@jest/globals": "^29.7.0",
+    "@types/jest": "^29.5.0",
+    "@types/node": "^20.0.0",
+    "jest": "^29.7.0",
+    "typescript": "^5.0.0"
+  },
+  "peerDependencies": {
+    "@metabuilder/workflow": "^3.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/metabuilder/metabuilder.git",
+    "directory": "workflow/plugins/ts/integration/email/smtp-send"
+  }
+}

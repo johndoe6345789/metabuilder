@@ -1,0 +1,313 @@
+# Alertmanager Configuration - Phase 8 Email Client
+# Alert routing, grouping, and notification management
+# Last Updated: 2026-01-24
+
+global:
+  resolve_timeout: 5m
+  slack_api_url: ${SLACK_WEBHOOK_URL}
+  pagerduty_url: https://events.pagerduty.com/v2/enqueue
+  opsgenie_api_key: ${OPSGENIE_API_KEY}
+  opsgenie_api_url: https://api.opsgenie.com/
+
+# Template files for custom notifications
+templates:
+  - '/etc/alertmanager/templates/email.tmpl'
+  - '/etc/alertmanager/templates/slack.tmpl'
+
+# Alert routing configuration
+route:
+  # Default receiver
+  receiver: 'default'
+
+  # Group alerts by cluster, service, and severity
+  group_by: ['cluster', 'service', 'severity', 'alertname']
+
+  # How long to wait before grouping alerts together
+  group_wait: 30s
+
+  # How long to wait before sending a notification for a new group
+  group_interval: 5m
+
+  # How long to wait before re-sending a notification if no new events
+  repeat_interval: 12h
+
+  # Sub-routes for specific alert types
+  routes:
+    # ========================================================================
+    # Critical Infrastructure Alerts
+    # ========================================================================
+    - match:
+        severity: critical
+        tier: infrastructure
+      receiver: 'critical-ops'
+      group_wait: 10s
+      group_interval: 5m
+      repeat_interval: 1h
+      continue: true
+
+    # ========================================================================
+    # Database Alerts
+    # ========================================================================
+    - match:
+        component: postgres
+      receiver: 'database-team'
+      group_wait: 30s
+      group_interval: 10m
+      repeat_interval: 4h
+      continue: false
+
+    - match:
+        component: redis
+      receiver: 'cache-team'
+      group_wait: 30s
+      group_interval: 10m
+      repeat_interval: 4h
+      continue: false
+
+    # ========================================================================
+    # Email Service Alerts
+    # ========================================================================
+    - match:
+        component: email-service
+      receiver: 'email-service-team'
+      group_wait: 15s
+      group_interval: 5m
+      repeat_interval: 2h
+      continue: true
+
+    - match_re:
+        component: '(postfix|dovecot)'
+      receiver: 'email-protocols-team'
+      group_wait: 30s
+      group_interval: 10m
+      repeat_interval: 4h
+      continue: false
+
+    # ========================================================================
+    # Celery Task Queue Alerts
+    # ========================================================================
+    - match:
+        component: celery
+      receiver: 'celery-team'
+      group_wait: 30s
+      group_interval: 10m
+      repeat_interval: 4h
+      continue: false
+
+    # ========================================================================
+    # Monitoring Stack Alerts
+    # ========================================================================
+    - match:
+        component: monitoring
+      receiver: 'ops-team'
+      group_wait: 15s
+      group_interval: 5m
+      repeat_interval: 1h
+      continue: true
+
+    # ========================================================================
+    # Low Priority / Informational Alerts
+    # ========================================================================
+    - match:
+        severity: info
+      receiver: 'info-receiver'
+      group_wait: 5m
+      group_interval: 30m
+      repeat_interval: 24h
+      continue: false
+
+# Receivers define where to send notifications
+receivers:
+  # ========================================================================
+  # Default Receiver
+  # ========================================================================
+  - name: 'default'
+    slack_configs:
+      - channel: '#alerts'
+        title: 'Alert: {{ .GroupLabels.alertname }}'
+        text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+        send_resolved: true
+        color: '{{ if eq .Status "firing" }}danger{{ else }}good{{ end }}'
+
+  # ========================================================================
+  # Critical Operations Team
+  # ========================================================================
+  - name: 'critical-ops'
+    slack_configs:
+      - channel: '#critical-alerts'
+        title: '🚨 CRITICAL: {{ .GroupLabels.alertname }}'
+        text: |
+          *Cluster:* {{ .GroupLabels.cluster }}
+          *Service:* {{ .GroupLabels.service }}
+          *Severity:* {{ .GroupLabels.severity }}
+          {{ range .Alerts }}
+          *Alert:* {{ .Labels.alertname }}
+          *Summary:* {{ .Annotations.summary }}
+          *Description:* {{ .Annotations.description }}
+          {{ end }}
+        send_resolved: true
+        color: 'danger'
+
+    pagerduty_configs:
+      - service_key: ${PAGERDUTY_SERVICE_KEY_CRITICAL}
+        description: '{{ .GroupLabels.alertname }}: {{ index .Alerts 0 | .Annotations.summary }}'
+        details:
+          cluster: '{{ .GroupLabels.cluster }}'
+          service: '{{ .GroupLabels.service }}'
+          severity: '{{ .GroupLabels.severity }}'
+
+    email_configs:
+      - to: ops-critical@example.com
+        from: alertmanager@example.com
+        smarthost: smtp.example.com:587
+        auth_username: alertmanager@example.com
+        auth_password: ${EMAIL_PASSWORD}
+        headers:
+          Subject: '[CRITICAL] {{ .GroupLabels.alertname }}'
+        html: |-
+          <html>
+            <body>
+              <h2>Critical Alert</h2>
+              <p><strong>Alert:</strong> {{ .GroupLabels.alertname }}</p>
+              <p><strong>Severity:</strong> {{ .GroupLabels.severity }}</p>
+              <p><strong>Description:</strong></p>
+              <ul>
+              {{ range .Alerts }}
+                <li>{{ .Annotations.description }}</li>
+              {{ end }}
+              </ul>
+            </body>
+          </html>
+
+  # ========================================================================
+  # Database Team
+  # ========================================================================
+  - name: 'database-team'
+    slack_configs:
+      - channel: '#database-alerts'
+        title: '{{ .GroupLabels.alertname }} - {{ .GroupLabels.component }}'
+        text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+        send_resolved: true
+
+    email_configs:
+      - to: db-team@example.com
+        smarthost: smtp.example.com:587
+        auth_username: alertmanager@example.com
+        auth_password: ${EMAIL_PASSWORD}
+        headers:
+          Subject: 'Database Alert: {{ .GroupLabels.alertname }}'
+
+  # ========================================================================
+  # Cache Team
+  # ========================================================================
+  - name: 'cache-team'
+    slack_configs:
+      - channel: '#cache-alerts'
+        title: '{{ .GroupLabels.alertname }} - Redis'
+        text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+        send_resolved: true
+
+  # ========================================================================
+  # Email Service Team
+  # ========================================================================
+  - name: 'email-service-team'
+    slack_configs:
+      - channel: '#email-alerts'
+        title: '{{ .GroupLabels.alertname }} - Email Service'
+        text: |
+          *Service:* {{ .GroupLabels.component }}
+          *Severity:* {{ .GroupLabels.severity }}
+          {{ range .Alerts }}
+          *Description:* {{ .Annotations.description }}
+          {{ end }}
+        send_resolved: true
+        color: '{{ if eq .Status "firing" }}warning{{ else }}good{{ end }}'
+
+    opsgenie_configs:
+      - api_key: ${OPSGENIE_API_KEY}
+        priority: '{{ if eq .GroupLabels.severity "critical" }}P1{{ else }}P2{{ end }}'
+        description: '{{ .GroupLabels.alertname }}: {{ index .Alerts 0 | .Annotations.summary }}'
+
+  # ========================================================================
+  # Email Protocols Team
+  # ========================================================================
+  - name: 'email-protocols-team'
+    slack_configs:
+      - channel: '#email-protocols'
+        title: '{{ .GroupLabels.component }} Alert: {{ .GroupLabels.alertname }}'
+        text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+        send_resolved: true
+
+  # ========================================================================
+  # Celery Task Queue Team
+  # ========================================================================
+  - name: 'celery-team'
+    slack_configs:
+      - channel: '#celery-alerts'
+        title: '{{ .GroupLabels.alertname }} - Task Queue'
+        text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+        send_resolved: true
+
+  # ========================================================================
+  # Operations Team
+  # ========================================================================
+  - name: 'ops-team'
+    slack_configs:
+      - channel: '#ops-alerts'
+        title: '{{ .GroupLabels.alertname }} - Monitoring'
+        text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+        send_resolved: true
+        color: 'warning'
+
+  # ========================================================================
+  # Informational Alerts
+  # ========================================================================
+  - name: 'info-receiver'
+    slack_configs:
+      - channel: '#info-alerts'
+        title: 'ℹ️ {{ .GroupLabels.alertname }}'
+        text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+        send_resolved: false
+
+# Inhibition rules - suppress alerts under certain conditions
+inhibit_rules:
+  # ========================================================================
+  # Don't alert on high resource usage if node is down
+  # ========================================================================
+  - source_match:
+      severity: 'critical'
+      alertname: 'NodeDown'
+    target_match_re:
+      severity: 'warning|info'
+    equal: ['instance', 'cluster']
+
+  # ========================================================================
+  # Don't alert on component issues if database is down
+  # ========================================================================
+  - source_match:
+      component: 'postgres'
+      alertname: 'PostgreSQLDown'
+    target_match_re:
+      component: '(email-service|celery)'
+    equal: ['cluster']
+
+  # ========================================================================
+  # Don't alert on connection pool saturation if service is down
+  # ========================================================================
+  - source_match:
+      severity: 'critical'
+      alertname: 'EmailServiceDown'
+    target_match:
+      component: 'email-service'
+      alertname: 'EmailServiceDBConnectionPoolNearCapacity'
+    equal: ['cluster']
+
+  # ========================================================================
+  # Suppress low-priority alerts during maintenance windows
+  # ========================================================================
+  - source_match:
+      severity: 'critical'
+      alertname: 'MaintenanceWindow'
+    target_match_re:
+      severity: 'warning|info'
+    equal: ['cluster']

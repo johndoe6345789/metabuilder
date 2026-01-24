@@ -53,13 +53,19 @@ def client(app):
 
 
 @pytest.fixture(autouse=True)
-def init_db(app):
+def init_db(app, request):
     """
     Initialize database tables before each test
 
     Autouse: Runs before every test automatically
+    Skip for auth middleware tests that don't need DB
     """
     if app is None:
+        yield
+        return
+
+    # Skip for auth middleware tests
+    if 'test_auth_middleware' in request.node.nodeid:
         yield
         return
 

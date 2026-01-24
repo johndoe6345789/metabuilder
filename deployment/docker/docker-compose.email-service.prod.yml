@@ -1,0 +1,363 @@
+# Email Service Production Overrides
+# Extends docker-compose.email-service.yml with production settings
+# High availability, security hardening, monitoring
+#
+# Usage:
+#   docker-compose -f deployment/docker/docker-compose.email-service.yml \
+#                  -f deployment/docker/docker-compose.email-service.prod.yml up -d
+
+version: '3.8'
+
+services:
+  # ============================================================================
+  # PostgreSQL - Production Configuration
+  # ============================================================================
+  email-postgres:
+    container_name: metabuilder-email-postgres-prod
+
+    environment:
+      # Replication and high availability
+      POSTGRES_REPLICATION_MODE: master
+      POSTGRES_WAL_LEVEL: replica
+      POSTGRES_MAX_WAL_SENDERS: 5
+      POSTGRES_MAX_REPLICATION_SLOTS: 5
+      POSTGRES_HOT_STANDBY: "on"
+
+      # Aggressive performance tuning
+      POSTGRES_SHARED_BUFFERS: 1GB
+      POSTGRES_EFFECTIVE_CACHE_SIZE: 3GB
+      POSTGRES_WORK_MEM: 13107kB
+      POSTGRES_MAINTENANCE_WORK_MEM: 256MB
+      POSTGRES_WAL_BUFFERS: 32MB
+
+      # SSL/TLS
+      POSTGRES_SSL: "on"
+      POSTGRES_SSL_CERT_FILE: /etc/postgresql/server.crt
+      POSTGRES_SSL_KEY_FILE: /etc/postgresql/server.key
+
+    volumes:
+      - email_postgres_data_prod:/var/lib/postgresql/data
+      - email_postgres_logs_prod:/var/log/postgresql
+      - ./postgres/init-email-service.sql:/docker-entrypoint-initdb.d/01-init-email-service.sql:ro
+      - ./postgres/init-indexes.sql:/docker-entrypoint-initdb.d/02-init-indexes.sql:ro
+      - ./postgres/init-connection-pooling.sql:/docker-entrypoint-initdb.d/03-init-connection-pooling.sql:ro
+      # TLS certificates (generate with: openssl req -x509 -nodes -days 365 ...)
+      # - ./postgres/server.crt:/etc/postgresql/server.crt:ro
+      # - ./postgres/server.key:/etc/postgresql/server.key:ro
+
+    ports:
+      - "${POSTGRES_PORT:-5434}:5432"
+
+    restart: always
+
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: '4'
+          memory: 4G
+        reservations:
+          cpus: '2'
+          memory: 2G
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U email_service -d email_service"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 30s
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "5"
+        labels: "service=email-postgres,env=production"
+
+    # Enable PostgreSQL-specific options
+    command:
+      - "postgres"
+      - "-c"
+      - "max_connections=300"
+      - "-c"
+      - "shared_buffers=1GB"
+      - "-c"
+      - "effective_cache_size=3GB"
+      - "-c"
+      - "maintenance_work_mem=256MB"
+      - "-c"
+      - "checkpoint_completion_target=0.9"
+      - "-c"
+      - "wal_buffers=32MB"
+      - "-c"
+      - "default_statistics_target=100"
+      - "-c"
+      - "random_page_cost=1.1"
+      - "-c"
+      - "effective_io_concurrency=200"
+      - "-c"
+      - "work_mem=13107kB"
+      - "-c"
+      - "min_wal_size=2GB"
+      - "-c"
+      - "max_wal_size=8GB"
+      - "-c"
+      - "wal_level=replica"
+      - "-c"
+      - "max_wal_senders=5"
+      - "-c"
+      - "max_replication_slots=5"
+      - "-c"
+      - "hot_standby=on"
+      - "-c"
+      - "log_statement=ddl"
+      - "-c"
+      - "log_duration=on"
+      - "-c"
+      - "log_min_duration_statement=1000"
+      - "-c"
+      - "log_connections=on"
+      - "-c"
+      - "log_disconnections=on"
+      - "-c"
+      - "log_line_prefix='%t [%p] %u@%d '"
+
+  # ============================================================================
+  # PostgreSQL Backup Service (Optional)
+  # Automated backups to S3 or local storage
+  # ============================================================================
+  # email-postgres-backup:
+  #   image: postgres:16-alpine
+  #   container_name: metabuilder-email-postgres-backup
+  #   environment:
+  #     PGPASSWORD: ${POSTGRES_PASSWORD}
+  #     BACKUP_SCHEDULE: "0 2 * * *"  # Daily at 2 AM
+  #     BACKUP_RETENTION_DAYS: 30
+  #     S3_BUCKET: metabuilder-email-backups
+  #     AWS_REGION: us-east-1
+  #   volumes:
+  #     - email_postgres_backups:/backups
+  #     - ./postgres/backup.sh:/backup.sh:ro
+  #   depends_on:
+  #     - email-postgres
+  #   networks:
+  #     - email-service-network
+  #   restart: always
+  #   command: bash /backup.sh
+
+  # ============================================================================
+  # PgBouncer - Connection Pooler (Recommended for production)
+  # Multiplexes PostgreSQL connections, enables horizontal scaling
+  # ============================================================================
+  # email-pgbouncer:
+  #   image: pgbouncer:latest
+  #   container_name: metabuilder-email-pgbouncer
+  #   environment:
+  #     PGBOUNCER_DATABASES_HOST: email-postgres
+  #     PGBOUNCER_DATABASES_PORT: 5432
+  #     PGBOUNCER_DATABASES_USER: email_service
+  #     PGBOUNCER_DATABASES_PASSWORD: ${POSTGRES_PASSWORD}
+  #     PGBOUNCER_DATABASES_DBNAME: email_service
+  #     PGBOUNCER_POOL_MODE: transaction
+  #     PGBOUNCER_MAX_CLIENT_CONN: 1000
+  #     PGBOUNCER_MAX_DB_CONNECTIONS: 50
+  #     PGBOUNCER_DEFAULT_POOL_SIZE: 25
+  #   ports:
+  #     - "6432:6432"
+  #   depends_on:
+  #     - email-postgres
+  #   networks:
+  #     - email-service-network
+  #   restart: always
+
+  # ============================================================================
+  # PostgreSQL Monitoring (Optional)
+  # Prometheus exporter for email-postgres metrics
+  # ============================================================================
+  # email-postgres-exporter:
+  #   image: prometheuscommunity/postgres-exporter:latest
+  #   container_name: metabuilder-email-postgres-exporter
+  #   environment:
+  #     DATA_SOURCE_NAME: "postgresql://email_service:${POSTGRES_PASSWORD}@email-postgres:5432/email_service?sslmode=disable"
+  #   ports:
+  #     - "9187:9187"
+  #   depends_on:
+  #     - email-postgres
+  #   networks:
+  #     - email-service-network
+  #   restart: always
+
+  # ============================================================================
+  # Redis - Production Configuration (for email service)
+  # ============================================================================
+  # email-redis:
+  #   image: redis:7-alpine
+  #   container_name: metabuilder-email-redis-prod
+  #   command:
+  #     - redis-server
+  #     - "--appendonly"
+  #     - "yes"
+  #     - "--appendfsync"
+  #     - "everysec"
+  #     - "--maxmemory"
+  #     - "1gb"
+  #     - "--maxmemory-policy"
+  #     - "allkeys-lru"
+  #     - "--requirepass"
+  #     - "${REDIS_PASSWORD}"
+  #     - "--timeout"
+  #     - "300"
+  #   volumes:
+  #     - email_redis_data_prod:/data
+  #   ports:
+  #     - "6380:6379"
+  #   restart: always
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: '1'
+  #         memory: 1G
+  #       reservations:
+  #         cpus: '0.5'
+  #         memory: 512M
+
+  # ============================================================================
+  # Email Service - Production Configuration (future)
+  # ============================================================================
+  # email-service:
+  #   environment:
+  #     ENVIRONMENT: production
+  #     LOG_LEVEL: INFO
+  #     WORKERS: 4
+  #     WORKER_TIMEOUT: 60
+  #     DATABASE_POOL_SIZE: 20
+  #     DATABASE_MAX_OVERFLOW: 5
+  #   restart: always
+  #   deploy:
+  #     replicas: 3
+  #     resources:
+  #       limits:
+  #         cpus: '2'
+  #         memory: 1G
+  #       reservations:
+  #         cpus: '1'
+  #         memory: 512M
+
+  # ============================================================================
+  # Nginx Reverse Proxy (Optional - for email service API)
+  # ============================================================================
+  # email-nginx:
+  #   image: nginx:alpine
+  #   container_name: metabuilder-email-nginx
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - ./nginx.conf:/etc/nginx/nginx.conf:ro
+  #     - ./ssl/cert.crt:/etc/nginx/ssl/cert.crt:ro
+  #     - ./ssl/cert.key:/etc/nginx/ssl/cert.key:ro
+  #   depends_on:
+  #     - email-service
+  #   networks:
+  #     - email-service-network
+  #   restart: always
+
+volumes:
+  email_postgres_data_prod:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: "addr=nfs-server,vers=4,soft,timeo=180,bg,tcp,rw"
+      device: ":/email-postgres-data-prod"
+
+  email_postgres_logs_prod:
+    driver: local
+
+  # email_postgres_backups:
+  #   driver: local
+
+  # email_redis_data_prod:
+  #   driver: local
+
+networks:
+  email-service-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.22.0.0/16
+
+# ============================================================================
+# Production Deployment Checklist
+# ============================================================================
+#
+# Before deploying to production:
+#
+# 1. Security:
+#    [ ] Change POSTGRES_PASSWORD to secure random string
+#    [ ] Generate TLS certificates for PostgreSQL
+#    [ ] Configure firewall rules (only allow internal connections)
+#    [ ] Enable authentication and SSL/TLS
+#    [ ] Review RLS policies on all tables
+#    [ ] Audit database user privileges
+#
+# 2. Backup & Recovery:
+#    [ ] Configure automated backups (daily)
+#    [ ] Test backup restoration procedure
+#    [ ] Configure backup retention (30+ days)
+#    [ ] Set up off-site backup replication (S3, etc.)
+#
+# 3. Monitoring & Alerting:
+#    [ ] Deploy Prometheus for metrics collection
+#    [ ] Configure alerts for connection pool exhaustion
+#    [ ] Set up alert for disk usage > 80%
+#    [ ] Monitor query performance (slow query log)
+#    [ ] Track replication lag (if using standby)
+#
+# 4. High Availability:
+#    [ ] Deploy PostgreSQL standby replica
+#    [ ] Configure automatic failover
+#    [ ] Test failover procedure
+#    [ ] Configure PgBouncer for connection pooling
+#    [ ] Set up load balancer (if multiple replicas)
+#
+# 5. Performance:
+#    [ ] Run ANALYZE on all tables after initial load
+#    [ ] Monitor slow queries (log_min_duration_statement)
+#    [ ] Configure pgBadger for log analysis
+#    [ ] Tune checkpoint_completion_target based on WAL activity
+#    [ ] Monitor and optimize cache hit ratio
+#
+# 6. Testing:
+#    [ ] Load test with expected concurrent connections
+#    [ ] Failover test (kill master, verify standby takes over)
+#    [ ] Backup recovery test (restore from backup)
+#    [ ] Network partition test (simulate split-brain)
+#
+# 7. Documentation:
+#    [ ] Document runbooks for common operations
+#    [ ] Document disaster recovery procedures
+#    [ ] Document escalation contacts
+#    [ ] Document monitoring dashboard URLs
+
+# ============================================================================
+# Performance Tuning Guidelines
+# ============================================================================
+#
+# Based on server specs:
+#   RAM: 8GB -> shared_buffers=2GB, effective_cache_size=6GB
+#   RAM: 16GB -> shared_buffers=4GB, effective_cache_size=12GB
+#   RAM: 32GB -> shared_buffers=8GB, effective_cache_size=24GB
+#
+# Checkpoint tuning:
+#   checkpoint_completion_target=0.9 (spread I/O)
+#   max_wal_size: higher = faster recovery, slower shutdown
+#   min_wal_size: minimum WAL disk usage
+#
+# Connection tuning:
+#   max_connections=300 (or use PgBouncer to pool)
+#   shared_preload_libraries = 'pg_stat_statements' (query tracking)
+#
+# Index maintenance:
+#   REINDEX on high-activity indexes monthly
+#   DROP unused indexes (see pg_stat_user_indexes)
+#   CLUSTER frequently accessed tables (optional, use with care)

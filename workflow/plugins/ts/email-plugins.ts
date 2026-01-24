@@ -301,13 +301,199 @@ export const EmailParserNodeDef = {
 } as const;
 
 /**
+ * SMTP Send Node Definition
+ * Sends emails via SMTP with attachment support
+ *
+ * @example
+ * {
+ *   "id": "send-email",
+ *   "type": "node",
+ *   "nodeType": "smtp-send",
+ *   "name": "Send Email",
+ *   "description": "Send email via SMTP",
+ *   "inputs": [
+ *     {
+ *       "id": "from",
+ *       "name": "From",
+ *       "type": "string",
+ *       "required": true,
+ *       "description": "Sender email address"
+ *     },
+ *     {
+ *       "id": "to",
+ *       "name": "To",
+ *       "type": "string[]",
+ *       "required": true,
+ *       "description": "Recipient email addresses"
+ *     },
+ *     {
+ *       "id": "subject",
+ *       "name": "Subject",
+ *       "type": "string",
+ *       "required": true,
+ *       "description": "Email subject line"
+ *     },
+ *     {
+ *       "id": "textBody",
+ *       "name": "Text Body",
+ *       "type": "string",
+ *       "required": false,
+ *       "description": "Plain text email body"
+ *     },
+ *     {
+ *       "id": "htmlBody",
+ *       "name": "HTML Body",
+ *       "type": "string",
+ *       "required": false,
+ *       "description": "HTML email body"
+ *     },
+ *     {
+ *       "id": "cc",
+ *       "name": "CC",
+ *       "type": "string[]",
+ *       "required": false,
+ *       "description": "CC recipient addresses"
+ *     },
+ *     {
+ *       "id": "bcc",
+ *       "name": "BCC",
+ *       "type": "string[]",
+ *       "required": false,
+ *       "description": "BCC recipient addresses"
+ *     },
+ *     {
+ *       "id": "attachments",
+ *       "name": "Attachments",
+ *       "type": "object[]",
+ *       "required": false,
+ *       "description": "Array of attachments with filename, contentType, data (base64)"
+ *     },
+ *     {
+ *       "id": "smtpConfig",
+ *       "name": "SMTP Config",
+ *       "type": "object",
+ *       "required": false,
+ *       "description": "SMTP server configuration (host, port, username, password, encryption)"
+ *     }
+ *   ],
+ *   "outputs": [
+ *     {
+ *       "id": "status",
+ *       "name": "Status",
+ *       "type": "string",
+ *       "description": "Send status: 'sent', 'partial', 'failed'"
+ *     },
+ *     {
+ *       "id": "data",
+ *       "name": "Send Result",
+ *       "type": "object",
+ *       "description": "Contains messageId, sentAt, successCount, failureCount, errors"
+ *     }
+ *   ]
+ * }
+ */
+export const SMTPSendNodeDef = {
+  nodeType: 'smtp-send',
+  category: 'email-integration',
+  label: 'SMTP Send',
+  description: 'Send emails via SMTP with HTML/text alternatives and attachments',
+  inputs: [
+    {
+      id: 'from',
+      label: 'From',
+      type: 'string',
+      required: true,
+      description: 'Sender email address'
+    },
+    {
+      id: 'to',
+      label: 'To',
+      type: 'string[]',
+      required: true,
+      description: 'Recipient email addresses (at least 1 required)'
+    },
+    {
+      id: 'cc',
+      label: 'CC',
+      type: 'string[]',
+      required: false,
+      description: 'CC recipient email addresses'
+    },
+    {
+      id: 'bcc',
+      label: 'BCC',
+      type: 'string[]',
+      required: false,
+      description: 'BCC recipient email addresses (hidden from other recipients)'
+    },
+    {
+      id: 'subject',
+      label: 'Subject',
+      type: 'string',
+      required: true,
+      description: 'Email subject line'
+    },
+    {
+      id: 'textBody',
+      label: 'Text Body',
+      type: 'string',
+      required: false,
+      description: 'Plain text email body (textBody or htmlBody required)'
+    },
+    {
+      id: 'htmlBody',
+      label: 'HTML Body',
+      type: 'string',
+      required: false,
+      description: 'HTML email body (textBody or htmlBody required)'
+    },
+    {
+      id: 'attachments',
+      label: 'Attachments',
+      type: 'object[]',
+      required: false,
+      description: 'Array of attachments with filename, contentType (MIME), data (base64)'
+    },
+    {
+      id: 'credentialId',
+      label: 'Credential ID',
+      type: 'string',
+      required: false,
+      description: 'UUID of Credential entity with SMTP config (or use smtpConfig)'
+    },
+    {
+      id: 'smtpConfig',
+      label: 'SMTP Config',
+      type: 'object',
+      required: false,
+      description: 'Inline SMTP configuration (host, port, username, password, encryption)'
+    }
+  ],
+  outputs: [
+    {
+      id: 'status',
+      label: 'Status',
+      type: 'string',
+      description: "Send status: 'sent', 'partial', or 'failed'"
+    },
+    {
+      id: 'data',
+      label: 'Send Result',
+      type: 'object',
+      description: 'Object containing messageId, sentAt, successCount, failureCount, errors array'
+    }
+  ]
+} as const;
+
+/**
  * Email Plugin Node Registry
  * Central registry of all email operation node definitions
  */
 export const EMAIL_PLUGIN_NODES = {
   'imap-sync': IMAPSyncNodeDef,
   'imap-search': IMAPSearchNodeDef,
-  'email-parser': EmailParserNodeDef
+  'email-parser': EmailParserNodeDef,
+  'smtp-send': SMTPSendNodeDef
 } as const;
 
 export type EmailNodeType = keyof typeof EMAIL_PLUGIN_NODES;

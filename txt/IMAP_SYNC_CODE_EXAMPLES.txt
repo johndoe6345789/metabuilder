@@ -1,0 +1,833 @@
+================================================================================
+IMAP SYNC PLUGIN - CODE EXAMPLES & USAGE PATTERNS
+================================================================================
+
+Date: January 24, 2026
+Purpose: Practical code examples for implementing and using the IMAP sync plugin
+
+================================================================================
+SECTION 1: BASIC USAGE PATTERNS
+================================================================================
+
+1.1: SIMPLE SYNC EXECUTION
+───────────────────────────
+
+import { imapSyncExecutor } from '@metabuilder/workflow-plugin-imap-sync'
+
+// Create workflow node configuration
+const node = {
+  id: 'sync-inbox-001',
+  type: 'node',
+  nodeType: 'imap-sync',
+  parameters: {
+    imapId: 'gmail-work-123',    // Email account UUID
+    folderId: 'inbox-456',        // Target folder UUID
+    maxMessages: 100              // Default values
+  }
+}
+
+// Create workflow context
+const context = {
+  executionId: 'exec-12345',
+  tenantId: 'tenant-acme',
+  userId: 'user-789',
+  triggerData: {},
+  variables: {}
+}
+
+// Execute sync
+const result = await imapSyncExecutor.execute(node, context, {})
+
+// Handle result
+if (result.status === 'success') {
+  console.log(`✓ Synced ${result.output.data.syncedCount} messages`)
+  console.log(`  Bytes transferred: ${result.output.data.stats.bytesSynced}`)
+  console.log(`  New token: ${result.output.data.newSyncToken}`)
+} else if (result.status === 'partial') {
+  console.log(`⚠ Partial sync: ${result.output.data.syncedCount} messages`)
+  console.log(`  Resume with token: ${result.output.data.newSyncToken}`)
+} else {
+  console.error(`✗ Sync failed: ${result.error}`)
+}
+
+────────────────────────────────────────────────────────────────────────────
+
+1.2: INCREMENTAL SYNC WITH SAVED TOKEN
+───────────────────────────────────────
+
+// Read previously saved token from database
+const folder = await dbal.read('EmailFolder', {
+  filter: {
+    folderId: 'inbox-456',
+    tenantId: 'tenant-acme'
+  }
+})
+
+const node = {
+  id: 'sync-inbox-002',
+  type: 'node',
+  nodeType: 'imap-sync',
+  parameters: {
+    imapId: 'gmail-work-123',
+    folderId: 'inbox-456',
+    syncToken: folder.syncToken,    // "42:1500" from previous sync
+    maxMessages: 100,
+    retryCount: 2
+  }
+}
+
+const result = await imapSyncExecutor.execute(node, context, {})
+
+// Update folder with new token
+if (result.status === 'success' || result.status === 'partial') {
+  await dbal.write('EmailFolder', {
+    id: 'inbox-456',
+    syncToken: result.output.data.newSyncToken,
+    lastSyncAt: result.output.data.lastSyncAt,
+    totalCount: result.output.data.stats.folderTotalCount
+  })
+}
+
+────────────────────────────────────────────────────────────────────────────
+
+1.3: PARTIAL SYNC RECOVERY
+──────────────────────────
+
+// First sync attempt
+const syncResult1 = await imapSyncExecutor.execute(node, context, {})
+
+if (syncResult1.status === 'partial') {
+  const syncData = syncResult1.output.data
+  console.log(`Partial: ${syncData.syncedCount}/${syncData.stats.newMessageCount}`)
+  console.log(`Resume marker: ${syncData.nextUidMarker}`)
+
+  // Second attempt using recovery marker
+  const resumeNode = {
+    ...node,
+    parameters: {
+      ...node.parameters,
+      syncToken: `42:${syncData.nextUidMarker}` // Continue from marker
+    }
+  }
+
+  const syncResult2 = await imapSyncExecutor.execute(resumeNode, context, {})
+  console.log(`Resumed: ${syncResult2.output.data.syncedCount} more messages`)
+}
+
+────────────────────────────────────────────────────────────────────────────
+
+1.4: BATCH SYNC MULTIPLE FOLDERS
+─────────────────────────────────
+
+const folders = ['inbox-456', 'sent-789', 'drafts-012']
+const results = {}
+
+for (const folderId of folders) {
+  const node = {
+    id: `sync-${folderId}`,
+    type: 'node',
+    nodeType: 'imap-sync',
+    parameters: {
+      imapId: 'gmail-work-123',
+      folderId: folderId,
+      maxMessages: 100
+    }
+  }
+
+  const result = await imapSyncExecutor.execute(node, context, {})
+  results[folderId] = {
+    status: result.status,
+    synced: result.output.data.syncedCount,
+    token: result.output.data.newSyncToken
+  }
+}
+
+// Summary
+console.table(results)
+
+────────────────────────────────────────────────────────────────────────────
+
+1.5: ERROR HANDLING WITH RETRY LOGIC
+────────────────────────────────────
+
+async function syncWithFallback() {
+  let attempt = 0
+  const maxAttempts = 3
+
+  while (attempt < maxAttempts) {
+    try {
+      const result = await imapSyncExecutor.execute(node, context, {})
+
+      if (result.status === 'error') {
+        attempt++
+
+        // Check if error is retryable
+        if (result.errorCode === 'AUTH_ERROR') {
+          throw new Error('Authentication failed - check credentials')
+        }
+
+        if (result.errorCode === 'NETWORK_ERROR' && attempt < maxAttempts) {
+          console.log(`Network error, retry ${attempt}/${maxAttempts}...`)
+          await new Promise(r => setTimeout(r, 1000 * attempt))
+          continue
+        }
+
+        throw new Error(`${result.errorCode}: ${result.error}`)
+      }
+
+      return result
+    } catch (error) {
+      console.error(`Attempt ${attempt} failed:`, error.message)
+      if (attempt >= maxAttempts) throw error
+      attempt++
+    }
+  }
+}
+
+================================================================================
+SECTION 2: WORKFLOW JSON DEFINITIONS
+================================================================================
+
+2.1: SIMPLE IMAP SYNC WORKFLOW
+──────────────────────────────
+
+{
+  "id": "wf-email-sync-001",
+  "name": "Daily Email Sync",
+  "description": "Sync Gmail inbox every 4 hours",
+  "enabled": true,
+  "nodes": [
+    {
+      "id": "trigger",
+      "type": "trigger",
+      "nodeType": "schedule",
+      "parameters": {
+        "cronExpression": "0 */4 * * *"
+      }
+    },
+    {
+      "id": "sync-inbox",
+      "type": "node",
+      "nodeType": "imap-sync",
+      "parameters": {
+        "imapId": "{{$json.accountId}}",
+        "folderId": "inbox-456",
+        "maxMessages": 100
+      },
+      "connections": {
+        "success": ["log-success"],
+        "error": ["log-error"]
+      }
+    },
+    {
+      "id": "log-success",
+      "type": "node",
+      "nodeType": "log",
+      "parameters": {
+        "message": "Synced {{$node['sync-inbox'].output.data.syncedCount}} messages"
+      }
+    },
+    {
+      "id": "log-error",
+      "type": "node",
+      "nodeType": "log",
+      "parameters": {
+        "message": "Sync error: {{$node['sync-inbox'].error}}"
+      }
+    }
+  ]
+}
+
+────────────────────────────────────────────────────────────────────────────
+
+2.2: MULTI-FOLDER SYNC WITH LOOP
+─────────────────────────────────
+
+{
+  "id": "wf-sync-all-folders",
+  "name": "Sync All Email Folders",
+  "nodes": [
+    {
+      "id": "get-folders",
+      "type": "node",
+      "nodeType": "dbal-read",
+      "parameters": {
+        "entity": "EmailFolder",
+        "filter": {
+          "clientId": "{{$json.accountId}}",
+          "tenantId": "{{$json.tenantId}}"
+        }
+      }
+    },
+    {
+      "id": "loop-folders",
+      "type": "node",
+      "nodeType": "for-each",
+      "parameters": {
+        "items": "{{$node['get-folders'].output.items}}"
+      },
+      "connections": {
+        "loop": ["sync-folder"]
+      }
+    },
+    {
+      "id": "sync-folder",
+      "type": "node",
+      "nodeType": "imap-sync",
+      "parameters": {
+        "imapId": "{{$json.accountId}}",
+        "folderId": "{{$node['loop-folders'].currentItem.folderId}}",
+        "syncToken": "{{$node['loop-folders'].currentItem.syncToken}}",
+        "maxMessages": 100,
+        "retryCount": 2
+      },
+      "connections": {
+        "success": ["update-folder"],
+        "partial": ["update-folder"],
+        "error": ["log-error"]
+      }
+    },
+    {
+      "id": "update-folder",
+      "type": "node",
+      "nodeType": "dbal-write",
+      "parameters": {
+        "entity": "EmailFolder",
+        "id": "{{$node['loop-folders'].currentItem.folderId}}",
+        "update": {
+          "syncToken": "{{$node['sync-folder'].output.data.newSyncToken}}",
+          "lastSyncAt": "{{$node['sync-folder'].output.data.lastSyncAt}}",
+          "totalCount": "{{$node['sync-folder'].output.data.stats.folderTotalCount}}"
+        }
+      }
+    },
+    {
+      "id": "log-error",
+      "type": "node",
+      "nodeType": "log",
+      "parameters": {
+        "message": "Failed to sync {{$node['loop-folders'].currentItem.folderName}}"
+      }
+    }
+  ]
+}
+
+────────────────────────────────────────────────────────────────────────────
+
+2.3: PARTIAL SYNC RECOVERY WORKFLOW
+────────────────────────────────────
+
+{
+  "id": "wf-sync-with-recovery",
+  "name": "Sync with Partial Recovery",
+  "nodes": [
+    {
+      "id": "sync-attempt-1",
+      "type": "node",
+      "nodeType": "imap-sync",
+      "parameters": {
+        "imapId": "gmail-123",
+        "folderId": "inbox-456",
+        "maxMessages": 100
+      },
+      "connections": {
+        "success": ["complete"],
+        "partial": ["resume-sync"],
+        "error": ["retry-later"]
+      }
+    },
+    {
+      "id": "resume-sync",
+      "type": "node",
+      "nodeType": "imap-sync",
+      "parameters": {
+        "imapId": "gmail-123",
+        "folderId": "inbox-456",
+        "syncToken": "42:{{$node['sync-attempt-1'].output.data.nextUidMarker}}",
+        "maxMessages": 100
+      },
+      "connections": {
+        "success": ["complete"],
+        "partial": ["resume-sync"],
+        "error": ["retry-later"]
+      }
+    },
+    {
+      "id": "complete",
+      "type": "node",
+      "nodeType": "notify",
+      "parameters": {
+        "message": "Sync complete: {{$node['sync-attempt-1'].output.data.syncedCount}} messages"
+      }
+    },
+    {
+      "id": "retry-later",
+      "type": "node",
+      "nodeType": "schedule-next",
+      "parameters": {
+        "delay": "5m"
+      }
+    }
+  ]
+}
+
+================================================================================
+SECTION 3: INTEGRATION WITH DBAL LAYER
+================================================================================
+
+3.1: FULL SYNC WITH DATABASE PERSISTENCE
+────────────────────────────────────────
+
+async function performFullEmailSync(accountId: string, tenantId: string) {
+  // Step 1: Retrieve email account and all folders
+  const account = await dbal.read('EmailClient', {
+    filter: {
+      clientId: accountId,
+      tenantId: tenantId
+    }
+  })
+
+  const folders = await dbal.list('EmailFolder', {
+    filter: {
+      clientId: accountId,
+      tenantId: tenantId
+    }
+  })
+
+  const syncResults = {}
+
+  // Step 2: Sync each folder
+  for (const folder of folders.items) {
+    const node = {
+      id: `sync-${folder.folderId}`,
+      type: 'node',
+      nodeType: 'imap-sync',
+      parameters: {
+        imapId: accountId,
+        folderId: folder.folderId,
+        syncToken: folder.syncToken,  // Resume from last sync
+        maxMessages: 100,
+        retryCount: 2
+      }
+    }
+
+    const context = {
+      executionId: `exec-${Date.now()}`,
+      tenantId: tenantId,
+      userId: account.ownerId,
+      triggerData: {},
+      variables: {}
+    }
+
+    const result = await imapSyncExecutor.execute(node, context, {})
+    syncResults[folder.folderId] = result
+
+    if (result.status === 'error') {
+      console.error(`Sync failed for ${folder.folderName}: ${result.error}`)
+      continue
+    }
+
+    // Step 3: Update folder record with new token
+    const syncData = result.output.data
+    await dbal.write('EmailFolder', {
+      id: folder.folderId,
+      update: {
+        syncToken: syncData.newSyncToken,
+        lastSyncAt: syncData.lastSyncAt,
+        totalCount: syncData.stats.folderTotalCount,
+        unreadCount: syncData.stats.newMessageCount
+      }
+    })
+
+    // Step 4: Insert new messages into database
+    // (In production, messages would come from IMAP fetch)
+    for (let i = 0; i < syncData.syncedCount; i++) {
+      const message = {
+        messageId: `msg-${folder.folderId}-${Date.now()}-${i}`,
+        folderId: folder.folderId,
+        uid: Math.floor(Math.random() * 10000),
+        subject: `Message ${i}`,
+        from: 'sender@example.com',
+        to: account.accountEmail,
+        date: new Date(),
+        body: 'Message body',
+        isRead: false,
+        isDeleted: false,
+        tenantId: tenantId
+      }
+
+      await dbal.write('EmailMessage', message)
+    }
+
+    console.log(`✓ Synced ${syncData.syncedCount} messages in ${folder.folderName}`)
+  }
+
+  return syncResults
+}
+
+────────────────────────────────────────────────────────────────────────────
+
+3.2: CREDENTIAL INTEGRATION (Production)
+────────────────────────────────────────
+
+async function syncWithCredentials(imapId: string, folderId: string, context: WorkflowContext) {
+  // Retrieve email account
+  const account = await dbal.read('EmailClient', {
+    filter: {
+      clientId: imapId,
+      tenantId: context.tenantId
+    }
+  })
+
+  // Retrieve encrypted credentials
+  const credential = await dbal.read('Credential', {
+    filter: {
+      credentialId: account.credentialId,
+      tenantId: context.tenantId,
+      ownerId: context.userId  // User can only access their own creds
+    }
+  })
+
+  // Decrypt password (in production, use encryption service)
+  const decryptedPassword = await encryptionService.decrypt(
+    credential.passwordHash,
+    context.tenantId
+  )
+
+  // Connection details from credential
+  const imapConfig = {
+    host: credential.serverHost || 'imap.gmail.com',
+    port: credential.serverPort || 993,
+    user: credential.username,
+    password: decryptedPassword,
+    tls: credential.useTLS !== false,
+    tlsOptions: {
+      rejectUnauthorized: true
+    }
+  }
+
+  // Execute sync (in production, would connect to real IMAP server)
+  const node = {
+    id: 'sync-with-creds',
+    type: 'node',
+    nodeType: 'imap-sync',
+    parameters: {
+      imapId: imapId,
+      folderId: folderId,
+      maxMessages: 100
+    }
+  }
+
+  try {
+    const result = await imapSyncExecutor.execute(node, context, {})
+    return result
+  } finally {
+    // Clear decrypted password from memory
+    decryptedPassword.fill('*')
+  }
+}
+
+================================================================================
+SECTION 4: VALIDATION & ERROR HANDLING
+================================================================================
+
+4.1: PRE-EXECUTION VALIDATION
+─────────────────────────────
+
+import { IMAPSyncExecutor } from '@metabuilder/workflow-plugin-imap-sync'
+
+const executor = new IMAPSyncExecutor()
+
+// Validate node before execution
+const node = {
+  id: 'sync-inbox',
+  type: 'node',
+  nodeType: 'imap-sync',
+  parameters: {
+    imapId: 'gmail-123',
+    folderId: 'inbox-456',
+    maxMessages: 150  // Invalid! Must be 1-500
+  }
+}
+
+const validation = executor.validate(node)
+
+if (!validation.valid) {
+  console.error('Validation errors:')
+  validation.errors.forEach(err => console.error(`  - ${err}`))
+  validation.warnings.forEach(warn => console.warn(`  - ${warn}`))
+  process.exit(1)
+}
+
+// Safe to execute
+const result = await executor.execute(node, context, state)
+
+────────────────────────────────────────────────────────────────────────────
+
+4.2: COMPREHENSIVE ERROR HANDLING
+─────────────────────────────────
+
+async function syncWithFullErrorHandling(
+  imapId: string,
+  folderId: string,
+  context: WorkflowContext
+) {
+  const node = {
+    id: 'sync',
+    type: 'node',
+    nodeType: 'imap-sync',
+    parameters: {
+      imapId,
+      folderId,
+      maxMessages: 100,
+      retryCount: 2
+    }
+  }
+
+  try {
+    const result = await imapSyncExecutor.execute(node, context, {})
+
+    switch (result.status) {
+      case 'success':
+        console.log(`✓ Success: ${result.output.data.syncedCount} messages`)
+        return { success: true, data: result.output.data }
+
+      case 'partial':
+        console.warn(`⚠ Partial: ${result.output.data.syncedCount} messages`)
+        const syncData = result.output.data
+
+        // Log each error
+        if (syncData.errors.length > 0) {
+          console.warn(`  ${syncData.errors.length} errors encountered:`)
+          syncData.errors.forEach(err => {
+            console.warn(`    - UID ${err.uid}: ${err.error} (${err.errorCode})`)
+          })
+        }
+
+        // Schedule recovery if partial
+        if (syncData.isPartial && syncData.nextUidMarker) {
+          console.log(`  Schedule recovery from UID ${syncData.nextUidMarker}`)
+          // Schedule workflow retry
+          await scheduleWorkflow({
+            workflowId: 'sync-recovery',
+            delay: '5m',
+            parameters: {
+              imapId,
+              folderId,
+              resumeToken: `42:${syncData.nextUidMarker}`
+            }
+          })
+        }
+
+        return { success: true, partial: true, data: syncData }
+
+      case 'error':
+        console.error(`✗ Error: ${result.error} (${result.errorCode})`)
+
+        // Handle specific error types
+        switch (result.errorCode) {
+          case 'AUTH_ERROR':
+            console.error('  → User must update email credentials')
+            await notificationService.send({
+              userId: context.userId,
+              type: 'EMAIL_AUTH_REQUIRED',
+              message: 'Please update your email account password'
+            })
+            break
+
+          case 'NETWORK_ERROR':
+            console.error('  → Server unreachable, will retry automatically')
+            await scheduleWorkflow({
+              workflowId: 'sync-retry',
+              delay: '5m'
+            })
+            break
+
+          case 'INVALID_PARAMS':
+            console.error('  → Invalid configuration, check workflow parameters')
+            break
+
+          default:
+            console.error('  → Unknown error, check logs')
+            await loggingService.logError(result.error, { context, node })
+        }
+
+        return { success: false, error: result.error, errorCode: result.errorCode }
+    }
+  } catch (exception) {
+    console.error('Unexpected exception:', exception)
+    await loggingService.logException(exception, { context, node })
+    throw exception
+  }
+}
+
+────────────────────────────────────────────────────────────────────────────
+
+4.3: MONITORING & METRICS
+────────────────────────
+
+function trackSyncMetrics(result: NodeResult) {
+  const syncData = result.output.data
+
+  // Prometheus metrics
+  metrics.gauge('email_sync_duration_ms', result.duration)
+  metrics.gauge('email_sync_messages_count', syncData.syncedCount)
+  metrics.gauge('email_sync_bytes_transferred', syncData.stats.bytesSynced)
+  metrics.gauge('email_sync_errors_count', syncData.errors.length)
+
+  // Status distribution
+  if (result.status === 'success') {
+    metrics.counter('email_sync_success')
+  } else if (result.status === 'partial') {
+    metrics.counter('email_sync_partial')
+    metrics.gauge('email_sync_partial_messages', syncData.syncedCount)
+  } else {
+    metrics.counter('email_sync_error')
+  }
+
+  // Error breakdown
+  syncData.errors.forEach(err => {
+    metrics.counter(`email_sync_error_${err.errorCode}`)
+  })
+
+  // Performance tracking
+  const throughput = syncData.syncedCount / (result.duration / 1000)
+  metrics.gauge('email_sync_throughput_msgs_per_sec', throughput)
+
+  // Log summary
+  console.log(`Sync Summary:
+    Duration: ${result.duration}ms
+    Messages: ${syncData.syncedCount}
+    Throughput: ${throughput.toFixed(1)} msg/sec
+    Bytes: ${syncData.stats.bytesSynced}
+    Errors: ${syncData.errors.length}
+    Status: ${result.status}`)
+}
+
+================================================================================
+SECTION 5: TESTING PATTERNS
+================================================================================
+
+5.1: UNIT TEST EXAMPLE
+──────────────────────
+
+import { describe, it, expect } from '@jest/globals'
+import { IMAPSyncExecutor } from '@metabuilder/workflow-plugin-imap-sync'
+
+describe('IMAPSyncExecutor', () => {
+  let executor: IMAPSyncExecutor
+  let mockContext: any
+  let mockState: any
+
+  beforeEach(() => {
+    executor = new IMAPSyncExecutor()
+    mockContext = {
+      executionId: 'test-exec',
+      tenantId: 'test-tenant',
+      userId: 'test-user',
+      triggerData: {},
+      variables: {}
+    }
+    mockState = {}
+  })
+
+  it('should successfully sync new messages', async () => {
+    const node = {
+      id: 'test-sync',
+      type: 'node',
+      nodeType: 'imap-sync',
+      parameters: {
+        imapId: 'test-account',
+        folderId: 'test-folder',
+        syncToken: '42:1000',
+        maxMessages: 50
+      }
+    }
+
+    const result = await executor.execute(node, mockContext, mockState)
+
+    expect(result.status).toMatch(/success|partial/)
+    expect(result.output.data.syncedCount).toBeGreaterThanOrEqual(0)
+    expect(result.output.data.newSyncToken).toMatch(/^\d+:\d+$/)
+    expect(result.duration).toBeGreaterThan(0)
+  })
+
+  it('should validate required parameters', () => {
+    const node = {
+      id: 'test-sync',
+      type: 'node',
+      nodeType: 'imap-sync',
+      parameters: {
+        // Missing imapId!
+        folderId: 'test-folder'
+      }
+    }
+
+    const validation = executor.validate(node)
+
+    expect(validation.valid).toBe(false)
+    expect(validation.errors).toContain('IMAP Account ID is required')
+  })
+
+  it('should handle errors gracefully', async () => {
+    const node = {
+      id: 'test-sync',
+      type: 'node',
+      nodeType: 'imap-sync',
+      parameters: {
+        maxMessages: 501  // Invalid!
+      }
+    }
+
+    const result = await executor.execute(node, mockContext, mockState)
+
+    expect(result.status).toBe('error')
+    expect(result.error).toContain('maxMessages')
+    expect(result.errorCode).toBe('IMAP_SYNC_ERROR')
+  })
+})
+
+================================================================================
+SECTION 6: PRODUCTION DEPLOYMENT CHECKLIST
+================================================================================
+
+✓ Pre-Deployment:
+  [ ] Code review completed
+  [ ] All tests passing (npm run test)
+  [ ] Type checking clean (npm run typecheck)
+  [ ] No console.log statements in production code
+  [ ] Error messages are user-friendly
+  [ ] Documentation updated
+
+✓ Security:
+  [ ] Credentials never logged
+  [ ] No passwords in error messages
+  [ ] SQL injection prevention (DBAL usage)
+  [ ] XSS prevention (no innerHTML with user data)
+  [ ] CSRF protection enabled
+  [ ] Rate limiting configured (5/min for auth, 100/min for list)
+
+✓ Performance:
+  [ ] Memory leaks checked (no hanging connections)
+  [ ] Large message handling tested (>10MB)
+  [ ] Concurrent sync tested (10+ accounts)
+  [ ] Network timeout configured (30s)
+  [ ] Retry backoff tuned (100ms, 200ms, 400ms)
+
+✓ Monitoring:
+  [ ] Metrics collection enabled
+  [ ] Error alerts configured
+  [ ] Performance dashboards created
+  [ ] Log aggregation setup
+  [ ] Uptime monitoring enabled
+
+✓ Integration:
+  [ ] Node registry updated
+  [ ] Workflow examples created
+  [ ] Documentation published
+  [ ] Support team trained
+  [ ] Rollback plan documented
+
+================================================================================
+End of Code Examples
+================================================================================

@@ -56,6 +56,20 @@ class EmailAccount(db.Model):
         lazy="select",
         foreign_keys="EmailFolder.account_id"
     )
+    email_filters = relationship(
+        "EmailFilter",
+        back_populates="email_account",
+        cascade="all, delete-orphan",
+        lazy="select",
+        foreign_keys="EmailFilter.account_id"
+    )
+    email_labels = relationship(
+        "EmailLabel",
+        back_populates="email_account",
+        cascade="all, delete-orphan",
+        lazy="select",
+        foreign_keys="EmailLabel.account_id"
+    )
 
     # Indexes for common queries
     __table_args__ = (

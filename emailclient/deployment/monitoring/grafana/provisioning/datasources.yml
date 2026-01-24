@@ -1,0 +1,95 @@
+# Grafana Datasource Provisioning - Phase 8 Email Client
+# Automatically configures data sources on Grafana startup
+# Last Updated: 2026-01-24
+
+apiVersion: 1
+
+datasources:
+  # ============================================================================
+  # Prometheus - Primary Metrics Backend
+  # ============================================================================
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    editable: true
+    jsonData:
+      timeInterval: 15s
+      queryTimeout: 30s
+    secureJsonData: {}
+
+  # ============================================================================
+  # Elasticsearch - Logs & Events
+  # ============================================================================
+  - name: Elasticsearch
+    type: elasticsearch
+    access: proxy
+    url: http://elasticsearch:9200
+    database: logs-*
+    editable: true
+    jsonData:
+      esVersion: "8.0"
+      timeField: "@timestamp"
+      logMessageField: "message"
+      logLevelField: "level"
+      timeInterval: 10s
+      queryTimeout: 60s
+      maxConcurrentShardRequests: 256
+      tlsSkipVerify: false
+    secureJsonData:
+      basicAuthPassword: changeme
+
+  # ============================================================================
+  # Loki - Log Aggregation (Optional)
+  # ============================================================================
+  - name: Loki
+    type: loki
+    access: proxy
+    url: http://loki:3100
+    editable: true
+    jsonData:
+      maxLines: 1000
+      timeInterval: 10s
+      queryTimeout: 60s
+    secureJsonData: {}
+
+  # ============================================================================
+  # ClickHouse - Distributed Analytics (Optional)
+  # ============================================================================
+  # - name: ClickHouse
+  #   type: clickhouse-datasource
+  #   access: proxy
+  #   url: http://clickhouse:8123
+  #   database: default
+  #   editable: true
+  #   jsonData:
+  #     tlsSkipVerify: false
+  #   secureJsonData:
+  #     basicAuthPassword: default
+
+  # ============================================================================
+  # Jaeger - Distributed Tracing (Optional)
+  # ============================================================================
+  - name: Jaeger
+    type: jaeger
+    access: proxy
+    url: http://jaeger:16686
+    editable: true
+    jsonData:
+      timeInterval: 15s
+      queryTimeout: 60s
+    secureJsonData: {}
+
+  # ============================================================================
+  # Alertmanager - Alerts & Notifications
+  # ============================================================================
+  - name: Alertmanager
+    type: alertmanager
+    access: proxy
+    url: http://alertmanager:9093
+    editable: true
+    jsonData:
+      timeInterval: 15s
+      queryTimeout: 30s
+    secureJsonData: {}

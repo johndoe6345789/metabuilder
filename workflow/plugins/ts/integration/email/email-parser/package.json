@@ -1,0 +1,47 @@
+{
+  "name": "@metabuilder/workflow-plugin-email-parser",
+  "version": "1.0.0",
+  "description": "Email Parser node executor - RFC 5322 compliant parsing with MIME multipart support and HTML sanitization",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "type-check": "tsc --noEmit",
+    "test": "jest --coverage",
+    "test:watch": "jest --watch"
+  },
+  "keywords": [
+    "workflow",
+    "plugin",
+    "email",
+    "parser",
+    "rfc5322",
+    "mime",
+    "sanitization"
+  ],
+  "author": "MetaBuilder Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^29.5.0",
+    "@types/node": "^20.0.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.0.0"
+  },
+  "peerDependencies": {
+    "@metabuilder/workflow": "^3.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/metabuilder/metabuilder.git",
+    "directory": "workflow/plugins/ts/integration/email/email-parser"
+  }
+}

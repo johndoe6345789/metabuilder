@@ -8,7 +8,12 @@ from datetime import datetime, timedelta
 import jwt
 import json
 import logging
+import sys
+import os
 from unittest.mock import patch, MagicMock
+
+# Add service root to path
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from src.middleware.auth import (
     AuthError,

@@ -33,10 +33,12 @@ CORS(app, resources={
 })
 
 # Initialize database
-from src.config import init_db, create_all_tables
+from src.db import init_db
 try:
-    init_db()
-    create_all_tables()
+    init_db(app)
+    with app.app_context():
+        from src.db import db
+        db.create_all()
     logger.info("Database initialized successfully")
 except Exception as e:
     logger.error(f"Failed to initialize database: {e}")
@@ -46,11 +48,13 @@ from src.routes.accounts import accounts_bp
 from src.routes.sync import sync_bp
 from src.routes.compose import compose_bp
 from src.routes.folders import folders_bp
+from src.routes.filters import filters_bp
 
 app.register_blueprint(accounts_bp, url_prefix='/api/accounts')
 app.register_blueprint(sync_bp, url_prefix='/api/sync')
 app.register_blueprint(compose_bp, url_prefix='/api/compose')
 app.register_blueprint(folders_bp, url_prefix='/api')
+app.register_blueprint(filters_bp, url_prefix='/api')
 
 # Health check endpoint
 @app.route('/health', methods=['GET'])
