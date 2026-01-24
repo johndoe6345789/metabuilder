@@ -1,11 +1,24 @@
 # MetaBuilder - AI Assistant Guide
 
-**Last Updated**: 2026-01-23
+**Last Updated**: 2026-01-24
 **Status**: Phase 2 Complete, Universal Platform in Progress
 **Scale**: 27,826+ files across 34 directories (excludes generated)
 **Philosophy**: 95% JSON/YAML configuration, 5% TypeScript/C++ infrastructure
 
-**Recent Updates** (Jan 23, 2026):
+**Recent Updates** (Jan 24, 2026):
+- **HIGH Priority Dependency Fixes** (✅ ALL COMPLETED - Jan 24, 2026):
+  - Testing library standardization (4 packages):
+    * pastebin: @testing-library/react v14 → v16, jest-dom 6.1 → 6.6
+    * redux/hooks-async: @testing-library/react v14 → v16 (added), jest-dom 6.6 (added)
+    * workflow: jest 29.0.0 → 29.7.0
+    * codegen/spark-tools: vitest 3.0.9 → 4.0.16
+  - Storybook configuration fixes (2 packages):
+    * storybook: Standardized all addon versions to 8.6.15 (matching core framework)
+    * workflowui & storybook: Fixed React type mismatches (@types/react 19 → 18)
+  - Verification: npm install succeeds (1197 packages, 0 vulnerabilities) ✅
+  - Status: **PRODUCTION-READY** - All HIGH priority standardization complete
+
+**Earlier Updates** (Jan 23, 2026):
 - **Email Client Implementation** (✅ PHASES 1,3-5 COMPLETE - Phase 2 POSTPONED):
   - Comprehensive implementation plan: `docs/plans/2026-01-23-email-client-implementation.md`
   - **Phase 1** (✅ DBAL Schemas): EmailClient, EmailFolder, EmailMessage, EmailAttachment entities with multi-tenant ACL
