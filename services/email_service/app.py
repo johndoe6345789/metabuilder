@@ -6,9 +6,14 @@ from flask import Flask
 from flask_cors import CORS
 from dotenv import load_dotenv
 import os
+import logging
 
 # Load environment variables
 load_dotenv()
+
+# Configure logging
+logging.basicConfig(level=os.getenv('EMAIL_SERVICE_LOG_LEVEL', 'INFO'))
+logger = logging.getLogger(__name__)
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -27,14 +32,25 @@ CORS(app, resources={
     }
 })
 
+# Initialize database
+from src.config import init_db, create_all_tables
+try:
+    init_db()
+    create_all_tables()
+    logger.info("Database initialized successfully")
+except Exception as e:
+    logger.error(f"Failed to initialize database: {e}")
+
 # Register blueprints
 from src.routes.accounts import accounts_bp
 from src.routes.sync import sync_bp
 from src.routes.compose import compose_bp
+from src.routes.folders import folders_bp
 
 app.register_blueprint(accounts_bp, url_prefix='/api/accounts')
 app.register_blueprint(sync_bp, url_prefix='/api/sync')
 app.register_blueprint(compose_bp, url_prefix='/api/compose')
+app.register_blueprint(folders_bp, url_prefix='/api')
 
 # Health check endpoint
 @app.route('/health', methods=['GET'])

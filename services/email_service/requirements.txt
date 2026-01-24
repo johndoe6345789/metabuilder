@@ -1,6 +1,58 @@
-flask==3.0.0
+# Email Service Dependencies - Phase 7 Celery Task Queue
+
+# Celery & Task Queue
+celery[redis]==5.3.4
+redis==5.0.1
+kombu==5.3.4
+
+# Email Protocols
 imapclient==3.0.1
 python-dotenv==1.0.0
-cryptography==41.0.0
-celery==5.3.4
-redis==5.0.0
+cryptography==41.0.7
+
+# Web Framework (Flask API)
+flask==3.0.0
+flask-cors==4.0.0
+flask-limiter==3.5.0
+PyJWT==2.8.1
+
+# Database
+sqlalchemy==2.0.23
+psycopg2-binary==2.9.9
+flask-sqlalchemy==3.1.1
+alembic==1.13.1
+
+# Async Support & Scheduling
+celery-beat==2.5.0
+django-celery-beat==2.5.0
+
+# Monitoring & Logging
+flower==2.0.1
+structlog==23.3.0
+python-json-logger==2.0.7
+
+# Email Processing
+email-validator==2.1.0
+html2text==2024.2.26
+bleach==6.1.0
+
+# Testing
+pytest==7.4.3
+pytest-celery==0.0.0
+pytest-mock==3.12.0
+pytest-cov==4.1.0
+responses==0.24.1
+
+# Code Quality
+black==23.12.0
+isort==5.13.2
+flake8==6.1.0
+mypy==1.7.1
+
+# Performance
+gevent==23.9.1
+gunicorn==21.2.0
+
+# Development
+ipython==8.19.0
+ipdb==0.13.13
