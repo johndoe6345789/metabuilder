@@ -1,0 +1,23 @@
+# Performance Testing Requirements - Phase 8 Email Service Benchmarking
+# These are in addition to the main requirements.txt
+
+# Benchmarking Framework
+pytest-benchmark==4.0.0
+
+# Statistical Analysis
+numpy==1.24.3
+scipy==1.11.4
+
+# Memory Profiling
+memory-profiler==0.61.0
+tracemalloc==1.2.2
+
+# Performance Analysis & Reporting
+psutil==5.9.6
+
+# Optional: Advanced Profiling (for detailed analysis)
+# py-spy==0.3.14  # CPU profiling
+# flamegraph==0.0.0.1  # Flame graph generation
+
+# Note: All other dependencies should be satisfied by main requirements.txt
+# Install with: pip install -r tests/performance/requirements.txt

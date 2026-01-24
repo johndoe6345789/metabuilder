@@ -1,0 +1,220 @@
+# ============================================================================
+# Kustomization Configuration - Phase 8 Email Client
+# Enables environment-specific customizations and overlays
+# ============================================================================
+#
+# Usage:
+#   # Apply with kustomize
+#   kubectl apply -k deployment/kubernetes/
+#
+#   # Build configuration
+#   kustomize build deployment/kubernetes/ | kubectl apply -f -
+#
+#   # Create development overlay
+#   kustomize build deployment/kubernetes/overlays/dev/
+#
+# ============================================================================
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+metadata:
+  name: emailclient
+  namespace: emailclient
+
+# Resources to include
+resources:
+  - email-service-deployment.yaml
+
+# Namespace for all resources
+namespace: emailclient
+
+# Common labels applied to all resources
+commonLabels:
+  app: emailclient
+  version: "1.0.0"
+  managed-by: kustomize
+
+# Common annotations applied to all resources
+commonAnnotations:
+  description: "Phase 8 Email Client - Kubernetes Deployment"
+  version: "1.0.0"
+
+# ============================================================================
+# ConfigMap Generators - Alternative to static ConfigMaps
+# ============================================================================
+
+configMapGenerator:
+  # Generate ConfigMap from environment file
+  - name: email-service-config-from-file
+    behavior: create
+    files:
+      - .env.prod=.env.example
+    options:
+      annotations:
+        generated-by: kustomize
+
+# ============================================================================
+# Secret Generators
+# ============================================================================
+
+secretGenerator:
+  # Generate secrets (override in overlays for actual values)
+  - name: email-service-secrets-generated
+    behavior: create
+    envs:
+      - secrets.env
+    type: Opaque
+    options:
+      annotations:
+        generated-by: kustomize
+
+# ============================================================================
+# Image Overrides
+# ============================================================================
+
+images:
+  - name: emailclient/email-service
+    newName: emailclient/email-service
+    newTag: v1.0.0
+  - name: postgres
+    newName: postgres
+    newTag: "16-alpine"
+  - name: redis
+    newName: redis
+    newTag: "7-alpine"
+  - name: emailclient/postfix
+    newName: emailclient/postfix
+    newTag: v1.0.0
+  - name: emailclient/dovecot
+    newName: emailclient/dovecot
+    newTag: v1.0.0
+
+# ============================================================================
+# Replica Overrides
+# ============================================================================
+
+replicas:
+  - name: email-service
+    count: 2
+  - name: celery-worker
+    count: 2
+  - name: celery-beat
+    count: 1
+  - name: postfix
+    count: 2
+  - name: dovecot
+    count: 2
+  - name: postgres
+    count: 1
+  - name: redis
+    count: 1
+
+# ============================================================================
+# Name/Prefix Overrides
+# ============================================================================
+
+namePrefix: emailclient-
+nameSuffix: ""
+
+# ============================================================================
+# Strategic Merge Patches
+# ============================================================================
+
+patchesStrategicMerge:
+  # Patch to add annotations to all deployments
+  - target:
+      group: apps
+      version: v1
+      kind: Deployment
+    patch: |-
+      - op: add
+        path: /metadata/annotations/deployment.kubernetes.io~1revision
+        value: "1"
+
+# ============================================================================
+# JSON Merge Patches
+# ============================================================================
+
+patchesJson6902:
+  # Example: Update resource limits
+  # - target:
+  #     group: apps
+  #     version: v1
+  #     kind: Deployment
+  #     name: email-service
+  #   patch: |-
+  #     - op: replace
+  #       path: /spec/template/spec/containers/0/resources/limits/cpu
+  #       value: "4000m"
+
+# ============================================================================
+# Vars for Substitution
+# ============================================================================
+
+vars:
+  - name: NAMESPACE
+    objref:
+      kind: Namespace
+      name: emailclient
+    fieldref:
+      fieldpath: metadata.name
+  - name: SERVICE_ACCOUNT
+    objref:
+      kind: ServiceAccount
+      name: emailclient
+    fieldref:
+      fieldpath: metadata.name
+
+# ============================================================================
+# Resource Limiting
+# ============================================================================
+
+# Only include resources matching these selectors
+# selector:
+#   matchLabels:
+#     app: emailclient
+
+# Exclude resources matching these selectors
+# exclusions:
+#   - name: test-pod
+
+# ============================================================================
+# Sort Options
+# ============================================================================
+
+sortOptions:
+  order: legacy  # Options: legacy, fifo
+  legacySortOptions:
+    orderFirst:
+      - Namespace
+      - NetworkPolicy
+      - ResourceQuota
+      - StorageClass
+      - PersistentVolume
+      - PersistentVolumeClaim
+      - ServiceAccount
+      - ClusterRole
+      - ClusterRoleBinding
+      - Role
+      - RoleBinding
+    orderLast:
+      - Ingress
+      - Service
+      - Pod
+
+# ============================================================================
+# OpenAPI Schema
+# ============================================================================
+
+openapi:
+  name: EmailClientKustomization
+  description: "Phase 8 Email Client Kubernetes Kustomization"
+  version: "1.0.0"
+
+# ============================================================================
+# API Version and Kind
+# ============================================================================
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization

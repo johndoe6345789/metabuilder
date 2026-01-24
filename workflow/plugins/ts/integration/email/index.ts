@@ -73,3 +73,26 @@ export {
   type TokenBucketState,
   type RateLimitType
 } from './rate-limiter/src/index';
+export {
+  templateManagerExecutor,
+  TemplateManagerExecutor,
+  type TemplateManagerConfig,
+  type TemplateOperationResult,
+  type EmailTemplate,
+  type ExpandedTemplate,
+  type TemplateVariable,
+  type TemplateShareConfig,
+  type TemplateUsageRecord,
+  type TemplateAction
+} from './template-manager/src/index';
+export {
+  calendarSyncExecutor,
+  CalendarSyncExecutor,
+  type CalendarSyncConfig,
+  type CalendarSyncResult,
+  type CalendarEvent,
+  type EventAttendee,
+  type TimeConflict,
+  type TimeSlot,
+  type CalendarError
+} from './calendar-sync/src/index';

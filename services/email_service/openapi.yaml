@@ -1,0 +1,1484 @@
+openapi: 3.0.3
+info:
+  title: Email Service API
+  description: |
+    Production-grade REST API for email account management with IMAP/SMTP support.
+
+    **Features:**
+    - Multi-tenant architecture with row-level ACL
+    - JWT & header-based authentication
+    - Rate limiting (50 req/min per user via Redis)
+    - Credential encryption (SHA-512 hashing)
+    - IMAP account management & message operations
+    - SMTP send capabilities
+    - Folder & message browsing
+    - Attachment download with presigned URLs
+    - Celery background jobs for sync/send operations
+
+    **Phase 8 API Documentation (Complete Stack)**
+    - Phase 7 (Completed): Flask API with PostgreSQL persistence
+    - Phase 8 (This Document): OpenAPI specification + SDK generation
+
+    **Server Requirements:**
+    - Python 3.9+
+    - PostgreSQL 13+
+    - Redis 6+ (rate limiting & Celery broker)
+    - Node.js 18+ (for SDK generation)
+
+  version: 1.0.0
+  contact:
+    name: MetaBuilder Team
+    url: https://github.com/metabuilder/emailclient
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+
+servers:
+  - url: http://localhost:5000
+    description: Local development server
+  - url: https://email-api.metabuilder.dev
+    description: Production server
+  - url: http://email_service:5000
+    description: Docker Compose service (internal)
+
+tags:
+  - name: Authentication
+    description: JWT token management and validation
+  - name: Accounts
+    description: Email account CRUD operations
+  - name: Folders
+    description: Email folder management
+  - name: Messages
+    description: Email message operations
+  - name: Attachments
+    description: Attachment download and metadata
+  - name: Sync
+    description: IMAP sync operations
+  - name: Compose
+    description: Email composition and sending
+  - name: System
+    description: Health and status endpoints
+
+paths:
+  /health:
+    get:
+      tags:
+        - System
+      summary: Health check
+      description: Check if the email service is running and healthy
+      operationId: healthCheck
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "healthy"
+                  service:
+                    type: string
+                    example: "email_service"
+                  timestamp:
+                    type: integer
+                    format: int64
+                    description: Server timestamp (ms since epoch)
+                    example: 1706033200000
+
+  /api/accounts:
+    get:
+      tags:
+        - Accounts
+      summary: List email accounts
+      description: Retrieve all email accounts for authenticated user with pagination
+      operationId: listAccounts
+      parameters:
+        - name: limit
+          in: query
+          description: Maximum number of accounts to return (default 100)
+          schema:
+            type: integer
+            default: 100
+            minimum: 1
+            maximum: 1000
+        - name: offset
+          in: query
+          description: Number of accounts to skip (default 0)
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+      security:
+        - BearerAuth: []
+        - HeaderAuth: []
+      responses:
+        '200':
+          description: Successfully retrieved accounts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountListResponse'
+              examples:
+                success:
+                  summary: List with 2 accounts
+                  value:
+                    accounts:
+                      - id: "cuid123456"
+                        tenantId: "550e8400-e29b-41d4-a716-446655440000"
+                        userId: "550e8400-e29b-41d4-a716-446655440001"
+                        accountName: "Work Email"
+                        emailAddress: "john@company.com"
+                        protocol: "imap"
+                        hostname: "imap.company.com"
+                        port: 993
+                        encryption: "tls"
+                        isSyncEnabled: true
+                        syncInterval: 300
+                        lastSyncAt: 1706033200000
+                        isSyncing: false
+                        isEnabled: true
+                        createdAt: 1705000000000
+                        updatedAt: 1706033200000
+                      - id: "cuid789012"
+                        tenantId: "550e8400-e29b-41d4-a716-446655440000"
+                        userId: "550e8400-e29b-41d4-a716-446655440001"
+                        accountName: "Gmail"
+                        emailAddress: "john@gmail.com"
+                        protocol: "imap"
+                        hostname: "imap.gmail.com"
+                        port: 993
+                        encryption: "tls"
+                        isSyncEnabled: true
+                        syncInterval: 300
+                        lastSyncAt: 1706033180000
+                        isSyncing: false
+                        isEnabled: true
+                        createdAt: 1705000100000
+                        updatedAt: 1706033200000
+                    pagination:
+                      total: 2
+                      limit: 100
+                      offset: 0
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    post:
+      tags:
+        - Accounts
+      summary: Create email account
+      description: |
+        Create a new email account configuration (IMAP/POP3).
+        Password is encrypted with SHA-512 before storage.
+      operationId: createAccount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAccountRequest'
+            examples:
+              imap:
+                summary: IMAP account (Gmail)
+                value:
+                  accountName: "Gmail"
+                  emailAddress: "user@gmail.com"
+                  protocol: "imap"
+                  hostname: "imap.gmail.com"
+                  port: 993
+                  encryption: "tls"
+                  username: "user@gmail.com"
+                  password: "app-specific-password"
+                  isSyncEnabled: true
+                  syncInterval: 300
+              pop3:
+                summary: POP3 account (Legacy)
+                value:
+                  accountName: "Old Email"
+                  emailAddress: "user@oldmail.com"
+                  protocol: "pop3"
+                  hostname: "mail.oldmail.com"
+                  port: 995
+                  encryption: "tls"
+                  username: "user"
+                  password: "password123"
+                  isSyncEnabled: false
+      security:
+        - BearerAuth: []
+        - HeaderAuth: []
+      responses:
+        '201':
+          description: Account created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: Email address already exists for this tenant
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "Email conflict"
+                message: "Email address already registered"
+                code: "EMAIL_DUPLICATE"
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/accounts/{accountId}:
+    get:
+      tags:
+        - Accounts
+      summary: Get email account
+      description: Retrieve details for a specific email account
+      operationId: getAccount
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          description: Email account ID (CUID format)
+          schema:
+            type: string
+            example: "cuid123456789"
+      security:
+        - BearerAuth: []
+        - HeaderAuth: []
+      responses:
+        '200':
+          description: Account details retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    put:
+      tags:
+        - Accounts
+      summary: Update email account
+      description: |
+        Update account configuration. Cannot modify email address.
+        If updating password, it will be re-encrypted.
+      operationId: updateAccount
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAccountRequest'
+            example:
+              accountName: "Work Email (Updated)"
+              hostname: "mail.company.com"
+              port: 993
+              isSyncEnabled: true
+              syncInterval: 600
+      security:
+        - BearerAuth: []
+        - HeaderAuth: []
+      responses:
+        '200':
+          description: Account updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    delete:
+      tags:
+        - Accounts
+      summary: Delete email account
+      description: Soft-delete an email account (marked as deleted, data retained)
+      operationId: deleteAccount
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - BearerAuth: []
+        - HeaderAuth: []
+      responses:
+        '204':
+          description: Account deleted successfully
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/{accountId}/folders:
+    get:
+      tags:
+        - Folders
+      summary: List email folders
+      description: Retrieve folder hierarchy for an account (Inbox, Sent, Drafts, etc.)
+      operationId: listFolders
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          description: Email account ID
+          schema:
+            type: string
+      security:
+        - BearerAuth: []
+        - HeaderAuth: []
+      responses:
+        '200':
+          description: Folders retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  folders:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Folder'
+                  total:
+                    type: integer
+                    example: 10
+              example:
+                folders:
+                  - id: "cuid_folder_001"
+                    accountId: "cuid123456"
+                    name: "INBOX"
+                    displayName: "Inbox"
+                    type: "inbox"
+                    parentId: null
+                    messageCount: 145
+                    unreadCount: 3
+                    syncedAt: 1706033200000
+                  - id: "cuid_folder_002"
+                    accountId: "cuid123456"
+                    name: "[Gmail]/Sent Mail"
+                    displayName: "Sent Mail"
+                    type: "sent"
+                    parentId: null
+                    messageCount: 87
+                    unreadCount: 0
+                    syncedAt: 1706033200000
+                  - id: "cuid_folder_003"
+                    accountId: "cuid123456"
+                    name: "[Gmail]/Drafts"
+                    displayName: "Drafts"
+                    type: "drafts"
+                    parentId: null
+                    messageCount: 5
+                    unreadCount: 5
+                    syncedAt: 1706033200000
+                total: 10
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/{accountId}/folders/{folderId}/messages:
+    get:
+      tags:
+        - Messages
+      summary: List messages in folder
+      description: Retrieve paginated list of messages from a specific folder
+      operationId: listMessages
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: folderId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+            minimum: 1
+            maximum: 500
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+        - name: sort
+          in: query
+          description: Sort field and direction (e.g., "receivedAt:desc")
+          schema:
+            type: string
+            default: "receivedAt:desc"
+            enum:
+              - "receivedAt:asc"
+              - "receivedAt:desc"
+              - "from:asc"
+              - "from:desc"
+        - name: filter
+          in: query
+          description: Filter by read status (all, read, unread)
+          schema:
+            type: string
+            default: "all"
+            enum:
+              - "all"
+              - "read"
+              - "unread"
+      security:
+        - BearerAuth: []
+        - HeaderAuth: []
+      responses:
+        '200':
+          description: Messages retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Message'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/{accountId}/messages/{messageId}:
+    get:
+      tags:
+        - Messages
+      summary: Get message details
+      description: Retrieve full message content including body and attachments
+      operationId: getMessage
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: messageId
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - BearerAuth: []
+        - HeaderAuth: []
+      responses:
+        '200':
+          description: Message details retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageDetail'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    patch:
+      tags:
+        - Messages
+      summary: Update message flags
+      description: Update message read status, starred status, or custom labels
+      operationId: updateMessage
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: messageId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                isRead:
+                  type: boolean
+                  description: Mark as read/unread
+                isStarred:
+                  type: boolean
+                  description: Add/remove star
+                isSpam:
+                  type: boolean
+                  description: Mark as spam/not spam
+                labels:
+                  type: array
+                  items:
+                    type: string
+                  description: Custom labels
+              example:
+                isRead: true
+                isStarred: false
+                labels: ["work", "important"]
+      security:
+        - BearerAuth: []
+        - HeaderAuth: []
+      responses:
+        '200':
+          description: Message updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageDetail'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/{accountId}/attachments/{attachmentId}/download:
+    get:
+      tags:
+        - Attachments
+      summary: Download attachment
+      description: Download attachment file with presigned URL (expires in 1 hour)
+      operationId: downloadAttachment
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: attachmentId
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - BearerAuth: []
+        - HeaderAuth: []
+      responses:
+        '200':
+          description: Attachment file
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/sync/{accountId}:
+    post:
+      tags:
+        - Sync
+      summary: Trigger IMAP sync
+      description: |
+        Trigger incremental sync from IMAP server.
+        Returns task ID for async operation tracking via Celery.
+      operationId: syncAccount
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                force:
+                  type: boolean
+                  default: false
+                  description: Force full sync (ignore lastSyncAt)
+                folders:
+                  type: array
+                  items:
+                    type: string
+                  description: Specific folders to sync (all if omitted)
+      security:
+        - BearerAuth: []
+        - HeaderAuth: []
+      responses:
+        '202':
+          description: Sync started asynchronously
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  taskId:
+                    type: string
+                    description: Celery task ID for status polling
+                    example: "abc123def456"
+                  status:
+                    type: string
+                    enum: ["pending", "started"]
+                  message:
+                    type: string
+                    example: "Sync started in background"
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/sync/task/{taskId}:
+    get:
+      tags:
+        - Sync
+      summary: Get sync status
+      description: Poll Celery task status to monitor background sync operation
+      operationId: getSyncStatus
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - BearerAuth: []
+        - HeaderAuth: []
+      responses:
+        '200':
+          description: Task status retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  taskId:
+                    type: string
+                  status:
+                    type: string
+                    enum: ["pending", "started", "success", "failure", "retry"]
+                  result:
+                    type: object
+                    description: Task result when completed
+                  error:
+                    type: string
+                    description: Error message if failed
+                  progress:
+                    type: integer
+                    description: Progress percentage (0-100)
+                example:
+                  taskId: "abc123def456"
+                  status: "success"
+                  result:
+                    messagesAdded: 45
+                    messagesUpdated: 12
+                    messagesRemoved: 2
+                    foldersSync: 8
+                  progress: 100
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Task not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/compose/send:
+    post:
+      tags:
+        - Compose
+      summary: Send email
+      description: |
+        Send email via SMTP from specified account.
+        Returns task ID for async send operation.
+      operationId: sendEmail
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendEmailRequest'
+            example:
+              accountId: "cuid123456"
+              to: ["recipient@example.com"]
+              cc: ["cc@example.com"]
+              bcc: ["bcc@example.com"]
+              subject: "Meeting Tomorrow"
+              body: "Hi,\n\nLet's discuss the project at 2pm tomorrow.\n\nBest regards"
+              isHtml: false
+              attachmentIds: ["attach_001", "attach_002"]
+      security:
+        - BearerAuth: []
+        - HeaderAuth: []
+      responses:
+        '202':
+          description: Email queued for sending
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  taskId:
+                    type: string
+                    description: Celery task ID
+                  status:
+                    type: string
+                    example: "pending"
+                  messageId:
+                    type: string
+                    description: Email message ID (in Sent folder)
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/compose/draft:
+    post:
+      tags:
+        - Compose
+      summary: Save draft
+      description: Save email draft (unsent message)
+      operationId: saveDraft
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendEmailRequest'
+      security:
+        - BearerAuth: []
+        - HeaderAuth: []
+      responses:
+        '201':
+          description: Draft saved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  draftId:
+                    type: string
+                  accountId:
+                    type: string
+                  createdAt:
+                    type: integer
+                    format: int64
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        JWT token for authentication.
+        Obtained from user login endpoint.
+      example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+
+    HeaderAuth:
+      type: apiKey
+      in: header
+      name: X-Auth-Token
+      description: |
+        Alternative header-based authentication.
+        Provided as X-Auth-Token header with JWT token.
+      x-header-example:
+        X-Auth-Token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        X-Tenant-ID: "550e8400-e29b-41d4-a716-446655440000"
+        X-User-ID: "550e8400-e29b-41d4-a716-446655440001"
+
+  schemas:
+    AccountListResponse:
+      type: object
+      required:
+        - accounts
+        - pagination
+      properties:
+        accounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Account'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    AccountResponse:
+      type: object
+      required:
+        - id
+        - tenantId
+        - userId
+        - accountName
+        - emailAddress
+        - protocol
+        - hostname
+        - port
+        - encryption
+        - isSyncEnabled
+        - syncInterval
+        - isEnabled
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          description: Unique account ID (CUID format)
+          example: "cuid123456789"
+        tenantId:
+          type: string
+          format: uuid
+          description: Tenant ID for multi-tenancy
+        userId:
+          type: string
+          format: uuid
+          description: User who owns this account
+        accountName:
+          type: string
+          description: Display name
+          example: "Work Email"
+        emailAddress:
+          type: string
+          format: email
+          description: Email address
+          example: "john@company.com"
+        protocol:
+          type: string
+          enum: ["imap", "pop3"]
+          description: Email protocol
+        hostname:
+          type: string
+          description: IMAP/POP3 server hostname
+          example: "imap.company.com"
+        port:
+          type: integer
+          description: Server port
+          example: 993
+        encryption:
+          type: string
+          enum: ["none", "tls", "starttls"]
+          description: Encryption method
+          default: "tls"
+        username:
+          type: string
+          description: Authentication username (password not returned)
+        isSyncEnabled:
+          type: boolean
+          description: Auto-sync enabled
+          default: true
+        syncInterval:
+          type: integer
+          description: Sync interval in seconds
+          default: 300
+          example: 300
+        lastSyncAt:
+          type: integer
+          format: int64
+          nullable: true
+          description: Timestamp of last successful sync (ms)
+          example: 1706033200000
+        isSyncing:
+          type: boolean
+          description: Currently syncing
+          default: false
+        isEnabled:
+          type: boolean
+          description: Account enabled/disabled
+          default: true
+        createdAt:
+          type: integer
+          format: int64
+          description: Creation timestamp (ms)
+        updatedAt:
+          type: integer
+          format: int64
+          description: Last update timestamp (ms)
+
+    Account:
+      type: object
+      properties:
+        id:
+          type: string
+        tenantId:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        accountName:
+          type: string
+        emailAddress:
+          type: string
+          format: email
+        protocol:
+          type: string
+          enum: ["imap", "pop3"]
+        hostname:
+          type: string
+        port:
+          type: integer
+        encryption:
+          type: string
+          enum: ["none", "tls", "starttls"]
+        isSyncEnabled:
+          type: boolean
+        syncInterval:
+          type: integer
+        lastSyncAt:
+          type: integer
+          format: int64
+          nullable: true
+        isSyncing:
+          type: boolean
+        isEnabled:
+          type: boolean
+        createdAt:
+          type: integer
+          format: int64
+        updatedAt:
+          type: integer
+          format: int64
+
+    CreateAccountRequest:
+      type: object
+      required:
+        - accountName
+        - emailAddress
+        - protocol
+        - hostname
+        - port
+        - encryption
+        - username
+        - password
+      properties:
+        accountName:
+          type: string
+          minLength: 1
+          maxLength: 255
+          example: "Work Email"
+        emailAddress:
+          type: string
+          format: email
+          example: "user@company.com"
+        protocol:
+          type: string
+          enum: ["imap", "pop3"]
+          default: "imap"
+        hostname:
+          type: string
+          example: "imap.company.com"
+        port:
+          type: integer
+          example: 993
+          minimum: 1
+          maximum: 65535
+        encryption:
+          type: string
+          enum: ["none", "tls", "starttls"]
+          default: "tls"
+        username:
+          type: string
+          minLength: 1
+          example: "user@company.com"
+        password:
+          type: string
+          minLength: 8
+          description: Will be encrypted with SHA-512 before storage
+          example: "SecurePassword123!"
+        isSyncEnabled:
+          type: boolean
+          default: true
+        syncInterval:
+          type: integer
+          default: 300
+          minimum: 60
+          description: Minimum sync interval (seconds)
+
+    UpdateAccountRequest:
+      type: object
+      properties:
+        accountName:
+          type: string
+          minLength: 1
+          maxLength: 255
+        hostname:
+          type: string
+        port:
+          type: integer
+          minimum: 1
+          maximum: 65535
+        encryption:
+          type: string
+          enum: ["none", "tls", "starttls"]
+        password:
+          type: string
+          minLength: 8
+          description: If provided, will be re-encrypted
+        isSyncEnabled:
+          type: boolean
+        syncInterval:
+          type: integer
+          minimum: 60
+        isEnabled:
+          type: boolean
+
+    Folder:
+      type: object
+      required:
+        - id
+        - accountId
+        - name
+        - displayName
+        - type
+        - messageCount
+        - unreadCount
+      properties:
+        id:
+          type: string
+          description: Unique folder ID
+        accountId:
+          type: string
+          description: Parent account ID
+        name:
+          type: string
+          description: IMAP folder name (raw from server)
+          example: "INBOX"
+        displayName:
+          type: string
+          description: User-friendly folder name
+          example: "Inbox"
+        type:
+          type: string
+          enum: ["inbox", "sent", "drafts", "spam", "trash", "custom"]
+          description: Folder type for UI routing
+        parentId:
+          type: string
+          nullable: true
+          description: Parent folder ID for nested folders
+        messageCount:
+          type: integer
+          description: Total message count
+        unreadCount:
+          type: integer
+          description: Unread message count
+        syncedAt:
+          type: integer
+          format: int64
+          description: Last sync timestamp (ms)
+
+    Message:
+      type: object
+      required:
+        - id
+        - accountId
+        - folderId
+        - from
+        - to
+        - subject
+        - receivedAt
+        - isRead
+      properties:
+        id:
+          type: string
+          description: Unique message ID
+        accountId:
+          type: string
+        folderId:
+          type: string
+        from:
+          type: string
+          format: email
+          example: "sender@example.com"
+        to:
+          type: array
+          items:
+            type: string
+            format: email
+          example: ["recipient@example.com"]
+        cc:
+          type: array
+          items:
+            type: string
+            format: email
+        bcc:
+          type: array
+          items:
+            type: string
+            format: email
+        subject:
+          type: string
+          example: "Project Update"
+        preview:
+          type: string
+          maxLength: 200
+          description: First 200 chars of body for UI preview
+        isRead:
+          type: boolean
+        isStarred:
+          type: boolean
+        isSpam:
+          type: boolean
+        isDeleted:
+          type: boolean
+        attachmentCount:
+          type: integer
+        receivedAt:
+          type: integer
+          format: int64
+        createdAt:
+          type: integer
+          format: int64
+        updatedAt:
+          type: integer
+          format: int64
+
+    MessageDetail:
+      allOf:
+        - $ref: '#/components/schemas/Message'
+        - type: object
+          properties:
+            body:
+              type: string
+              description: Full email body (plain text or HTML)
+            bodyHtml:
+              type: string
+              nullable: true
+              description: HTML version of body
+            headers:
+              type: object
+              description: Raw email headers
+              additionalProperties:
+                type: string
+            attachments:
+              type: array
+              items:
+                $ref: '#/components/schemas/Attachment'
+            conversationId:
+              type: string
+              nullable: true
+              description: Thread/conversation ID for grouping replies
+
+    Attachment:
+      type: object
+      required:
+        - id
+        - filename
+        - mimeType
+        - size
+      properties:
+        id:
+          type: string
+        messageId:
+          type: string
+        filename:
+          type: string
+          example: "document.pdf"
+        mimeType:
+          type: string
+          example: "application/pdf"
+        size:
+          type: integer
+          description: File size in bytes
+          example: 245000
+        contentId:
+          type: string
+          nullable: true
+          description: Content-ID for embedded attachments
+        isInline:
+          type: boolean
+          default: false
+        downloadUrl:
+          type: string
+          format: uri
+          description: Presigned download URL (expires in 1 hour)
+          example: "https://s3.amazonaws.com/bucket/key?X-Amz-Signature=..."
+
+    SendEmailRequest:
+      type: object
+      required:
+        - accountId
+        - to
+        - subject
+        - body
+      properties:
+        accountId:
+          type: string
+          description: Account to send from
+        to:
+          type: array
+          items:
+            type: string
+            format: email
+          minItems: 1
+          example: ["recipient@example.com"]
+        cc:
+          type: array
+          items:
+            type: string
+            format: email
+        bcc:
+          type: array
+          items:
+            type: string
+            format: email
+        replyTo:
+          type: string
+          format: email
+          description: Reply-To address
+        subject:
+          type: string
+          minLength: 1
+          maxLength: 500
+        body:
+          type: string
+          minLength: 1
+          description: Email body content
+        isHtml:
+          type: boolean
+          default: false
+          description: Whether body contains HTML markup
+        attachmentIds:
+          type: array
+          items:
+            type: string
+          description: IDs of attachments to include
+        inReplyTo:
+          type: string
+          nullable: true
+          description: Message ID being replied to
+
+    Pagination:
+      type: object
+      required:
+        - total
+        - limit
+        - offset
+      properties:
+        total:
+          type: integer
+          description: Total number of items
+        limit:
+          type: integer
+          description: Items per page
+        offset:
+          type: integer
+          description: Items skipped
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          description: Error type/code
+          example: "Bad request"
+        message:
+          type: string
+          description: Human-readable error message
+          example: "Invalid email address format"
+        code:
+          type: string
+          nullable: true
+          description: Machine-readable error code
+          example: "INVALID_EMAIL_FORMAT"
+        timestamp:
+          type: integer
+          format: int64
+          nullable: true
+          description: Server timestamp when error occurred
+
+  responses:
+    BadRequest:
+      description: Bad request - invalid parameters or body
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: "Bad request"
+            message: "Invalid email address format"
+            code: "INVALID_EMAIL_FORMAT"
+
+    Unauthorized:
+      description: Missing or invalid authentication credentials
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: "Unauthorized"
+            message: "Missing or invalid JWT token"
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: "Not found"
+            message: "Account with ID 'cuid123' does not exist"
+
+    RateLimited:
+      description: Rate limit exceeded (50 requests per minute)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: "Rate limit exceeded"
+            message: "Too many requests - try again in 30 seconds"
+      headers:
+        X-RateLimit-Limit:
+          schema:
+            type: integer
+            example: 50
+        X-RateLimit-Remaining:
+          schema:
+            type: integer
+            example: 0
+        X-RateLimit-Reset:
+          schema:
+            type: integer
+            format: int64
+            example: 1706033260000
+
+    InternalError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: "Internal server error"
+            message: "Database connection failed"
+
+x-rate-limits:
+  byEndpoint:
+    - endpoint: "/api/accounts"
+      method: "GET"
+      limit: 100
+      window: "1 minute"
+    - endpoint: "/api/accounts"
+      method: "POST"
+      limit: 10
+      window: "1 minute"
+    - endpoint: "/api/sync/*"
+      method: "POST"
+      limit: 5
+      window: "1 minute"
+    - endpoint: "/api/compose/send"
+      method: "POST"
+      limit: 10
+      window: "1 minute"
+    - endpoint: "ALL_OTHER"
+      limit: 50
+      window: "1 minute"
+
+x-authentication:
+  type: "Multi-layer"
+  methods:
+    - name: "JWT Bearer Token"
+      priority: 1
+      header: "Authorization: Bearer <token>"
+      validation: "Signature verified with HS256 secret"
+    - name: "Header-based Auth"
+      priority: 2
+      headers:
+        - "X-Auth-Token: <token>"
+        - "X-Tenant-ID: <uuid>"
+        - "X-User-ID: <uuid>"
+      validation: "Token verified, tenant/user context extracted"
+
+x-sdk-generation:
+  enabled: true
+  languages:
+    - typescript
+    - python
+    - go
+  outputPath: "client-sdks"
+  templates:
+    typescript: "openapi-generator:typescript-fetch"
+    python: "openapi-generator:python-client"
+    go: "openapi-generator:go-client"
+  additionalProperties:
+    packageName: "@metabuilder/email-service-client"
+    packageVersion: "1.0.0"
+
+x-deployment:
+  docker:
+    image: "metabuilder/email-service:latest"
+    port: 5000
+    healthCheck: "/health"
+    environment:
+      - "FLASK_ENV=production"
+      - "EMAIL_SERVICE_LOG_LEVEL=INFO"
+      - "CELERY_BROKER_URL=redis://redis:6379/0"
+      - "DATABASE_URL=postgresql://user:password@postgres:5432/email_service"
+  kubernetes:
+    replicas: 2
+    resources:
+      limits:
+        memory: "512Mi"
+        cpu: "500m"
+      requests:
+        memory: "256Mi"
+        cpu: "250m"

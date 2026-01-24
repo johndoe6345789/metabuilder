@@ -1,7 +1,7 @@
 {
   "name": "@metabuilder/workflow-plugins-email",
   "version": "1.0.0",
-  "description": "Email operation plugins for MetaBuilder workflow engine (sync, search, parse, rate-limit, thread)",
+  "description": "Email operation plugins for MetaBuilder workflow engine (sync, search, parse, rate-limit, thread, calendar)",
   "private": true,
   "workspaces": [
     "imap-sync",
@@ -10,6 +10,7 @@
     "email-parser",
     "smtp-send",
     "rate-limiter",
-    "message-threading"
+    "message-threading",
+    "calendar-sync"
   ]
 }

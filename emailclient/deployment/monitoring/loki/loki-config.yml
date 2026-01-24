@@ -1,0 +1,108 @@
+# Loki Configuration - Phase 8 Email Client
+# Lightweight log aggregation and querying
+# Last Updated: 2026-01-24
+
+auth_enabled: false
+
+ingester:
+  chunk_idle_period: 3m
+  chunk_retain_period: 1m
+  max_chunk_age: 1h
+  max_streams_matchers_cache_size: 10
+  chunk_encoding: snappy
+  # Allow extra time for slow requests
+  chunk_retention_enabled_override: true
+  chunk_retention_period: 1m
+
+limits_config:
+  enforce_metric_name: false
+  reject_old_samples: true
+  reject_old_samples_max_age: 168h
+  ingestion_rate_mb: 10
+  ingestion_burst_size_mb: 20
+  max_streams_matchers_cache_size: 10
+  max_global_streams_matched_per_user: 10000
+  max_query_length: 721h
+  max_cache_freshness_per_query: 10m
+  split_queries_by_interval: 24h
+
+schema_config:
+  configs:
+    - from: 2020-10-24
+      store: boltdb-shipper
+      object_store: filesystem
+      schema: v11
+      index:
+        prefix: index_
+        period: 24h
+
+server:
+  http_listen_port: 3100
+  log_level: info
+  log_format: json
+
+storage_config:
+  boltdb_shipper:
+    active_index_directory: /loki/boltdb-shipper-active
+    cache_location: /loki/boltdb-shipper-cache
+    shared_store: filesystem
+  filesystem:
+    directory: /loki/chunks
+
+chunk_store_config:
+  max_look_back_period: 0s
+  default_time_from: 30d
+
+table_manager:
+  retention_deletes_enabled: false
+  retention_period: 0s
+
+query_range:
+  # make queries more cache-able by aligning them with their step intervals
+  align_queries_with_step: true
+  max_cache_freshness_per_query: 10m
+  max_retries: 5
+  # cache config
+  cache_results: true
+  results_cache:
+    cache:
+      enable_fifocache: true
+      default_validity: 5m
+      background:
+        writeback_goroutines: 10
+        writeback_chan_size: 10000
+      memcached_client:
+        batch_size: 1024
+        parallelism: 100
+      # Filesystem cache for local deployment
+      cache_size: 1000000
+      type: lru
+      default_max_not_looked_up_period: 5m
+      max_cache_freshness_per_query: 10m
+
+# Use this for log alerts
+ruler:
+  enable_api: true
+  enable_alertmanager_v2: true
+  alertmanager_url: http://alertmanager:9093
+  external_url: http://loki:3100
+  rule_path: /loki/rules
+  alertmanager_client:
+    tls_enabled: false
+
+runtime_config:
+  period: 10s
+  file: /etc/loki/runtime.yaml
+
+# Optional: Configure client to forward traces to tempo
+tempo_config:
+  enabled: false
+  # tempo:
+  #   endpoint: http://tempo:3200
+  #   tls:
+  #     insecure: true
+
+# Log messages in JSON
+memberlist:
+  node_name: loki-single
+  bind_port: 7946
