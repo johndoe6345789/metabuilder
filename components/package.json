@@ -65,6 +65,16 @@
       "import": "./dist/vanilla/skeleton/index.mjs",
       "require": "./dist/vanilla/skeleton/index.js",
       "types": "./dist/vanilla/skeleton/index.d.ts"
+    },
+    "./access-denied": {
+      "import": "./dist/vanilla/access-denied/index.mjs",
+      "require": "./dist/vanilla/access-denied/index.js",
+      "types": "./dist/vanilla/access-denied/index.d.ts"
+    },
+    "./vanilla/access-denied": {
+      "import": "./dist/vanilla/access-denied/index.mjs",
+      "require": "./dist/vanilla/access-denied/index.js",
+      "types": "./dist/vanilla/access-denied/index.d.ts"
     }
   },
   "files": [

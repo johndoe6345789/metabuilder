@@ -1,52 +1,12 @@
+/**
+ * Hooks barrel export for frontends/nextjs
+ *
+ * Re-exports all hooks from @metabuilder/hooks plus local NextJS-specific auth hooks
+ */
+
+// Re-export everything from the centralized hooks package
+export * from '@metabuilder/hooks'
+
+// Local NextJS-specific auth exports (these depend on @/lib/auth/* APIs)
 export type { AuthState, AuthUser, UseAuthReturn } from './auth/auth-types'
-export { useMobile } from './use-mobile'
 export { useAuth } from './useAuth'
-export { useAutoRefresh } from './useAutoRefresh'
-export type { EditorFile } from './useCodeEditor'
-export { useCodeEditor } from './useCodeEditor'
-export { useDBAL } from './useDBAL'
-export type { FileNode } from './useFileTree'
-export { useFileTree } from './useFileTree'
-export type { WorkflowRun } from './useGitHubFetcher'
-export { useGitHubFetcher } from './useGitHubFetcher'
-export { useKV } from './useKV'
-export { useLevelRouting } from './data/useLevelRouting'
-export { useResolvedUser } from './data/useResolvedUser'
-
-// Data structure management hooks
-export type { UseSetReturn } from './useSet'
-export { useSet } from './useSet'
-export type { UseMapReturn } from './useMap'
-export { useMap } from './useMap'
-export type { UseArrayReturn } from './useArray'
-export { useArray } from './useArray'
-export type { UseStackReturn } from './useStack'
-export { useStack } from './useStack'
-export type { UseQueueReturn } from './useQueue'
-export { useQueue } from './useQueue'
-
-// Phase 3 User CRUD hooks
-export { useUsers } from './useUsers'
-export type { UseUsersReturn } from './useUsers'
-export { useUserForm } from './useUserForm'
-export type { UseUserFormReturn, UserFormData, UserFormErrors } from './useUserForm'
-export { useUserActions } from './useUserActions'
-export type { UseUserActionsReturn } from './useUserActions'
-
-// Phase 3 Package CRUD hooks
-export { usePackages } from './usePackages'
-export type { UsePackagesReturn } from './usePackages'
-export { usePackageActions } from './usePackageActions'
-export type { UsePackageActionsReturn } from './usePackageActions'
-export { usePackageDetails } from './usePackageDetails'
-export type { UsePackageDetailsReturn } from './usePackageDetails'
-
-// Form validation and state management hooks
-export { useValidation } from './useValidation'
-export type { ValidationSchema, ValidationErrors } from './useValidation'
-export { useInput } from './useInput'
-export { useCheckbox } from './useCheckbox'
-export { useSelect } from './useSelect'
-export type { SelectOption } from './useSelect'
-export { useFieldArray } from './useFieldArray'
-export type { FormField } from './useFieldArray'

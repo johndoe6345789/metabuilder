@@ -25,7 +25,7 @@ import type {
   NodeResult,
   LogEntry,
 } from '@metabuilder/workflow'
-import { useWorkflowExecutions } from '@/hooks/useWorkflow'
+import { useWorkflowExecutions } from '@metabuilder/hooks'
 import styles from './ExecutionMonitor.module.css'
 
 export interface ExecutionMonitorProps {

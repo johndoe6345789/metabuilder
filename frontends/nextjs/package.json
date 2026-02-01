@@ -29,6 +29,7 @@
     },
     "dependencies": {
         "@metabuilder/dbal": "file:../../dbal/development",
+        "@metabuilder/hooks": "file:../../hooks",
         "@metabuilder/core-hooks": "file:../../redux/core-hooks",
         "@metabuilder/api-clients": "file:../../redux/api-clients",
         "@monaco-editor/react": "^4.7.0",

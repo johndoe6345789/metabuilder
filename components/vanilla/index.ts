@@ -58,3 +58,10 @@ export {
   type AvatarSkeletonProps,
   type TextSkeletonProps,
 } from './skeleton'
+
+// Access denied component
+export {
+  AccessDenied,
+  accessDeniedStyles,
+  type AccessDeniedProps,
+} from './access-denied'

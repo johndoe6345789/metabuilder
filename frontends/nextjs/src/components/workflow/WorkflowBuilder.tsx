@@ -17,7 +17,7 @@
 
 import React, { useState, useCallback, useMemo } from 'react'
 import type { WorkflowDefinition, WorkflowNode } from '@metabuilder/workflow'
-import { useWorkflow } from '@/hooks/useWorkflow'
+import { useWorkflow } from '@metabuilder/hooks'
 import styles from './WorkflowBuilder.module.css'
 
 export interface WorkflowBuilderProps {

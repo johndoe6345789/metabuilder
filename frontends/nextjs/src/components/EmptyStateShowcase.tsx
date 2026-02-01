@@ -10,7 +10,7 @@ import {
   ErrorState,
   NoConnectionState,
   LoadingCompleteState,
-} from './EmptyState'
+} from '@metabuilder/components'
 
 /**
  * EmptyStateShowcase - Demonstrates all empty state variants

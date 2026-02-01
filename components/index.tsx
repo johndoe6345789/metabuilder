@@ -67,6 +67,13 @@ export {
   type TextSkeletonProps,
 } from './vanilla/skeleton'
 
+// Access denied component
+export {
+  AccessDenied,
+  accessDeniedStyles,
+  type AccessDeniedProps,
+} from './vanilla/access-denied'
+
 // =============================================================================
 // RADIX COMPONENTS (Built on @radix-ui primitives)
 // =============================================================================

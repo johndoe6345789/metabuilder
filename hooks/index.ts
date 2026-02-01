@@ -135,7 +135,7 @@ export { useResolvedUser } from './useResolvedUser'
 export { useUserActions } from './useUserActions'
 export { useUserForm } from './useUserForm'
 export { useUsers } from './useUsers'
-export { useWorkflow } from './useWorkflow'
+export { useWorkflow, useWorkflowExecutions } from './useWorkflow'
 
 // Re-export types
 export type { AuthUser } from './use-auth'

@@ -5,5 +5,5 @@
 
 // Replace Spark hooks with our custom implementation
 declare module '@github/spark/hooks' {
-  export { useKV } from '@/hooks/useKV'
+  export { useKV } from '@metabuilder/hooks'
 }

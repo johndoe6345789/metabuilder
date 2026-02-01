@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { Skeleton, TableSkeleton, CardSkeleton, ListSkeleton } from './Skeleton'
+import { Skeleton, TableSkeleton, CardSkeleton, ListSkeleton } from '@metabuilder/components'
 
 /**
  * LoadingSkeleton Component - Unified loading state wrapper
