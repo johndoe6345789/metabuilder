@@ -1,9 +1,16 @@
 /** @type {import('next').NextConfig} */
+const path = require('path');
+
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   experimental: {
     typedRoutes: true
+  },
+  sassOptions: {
+    includePaths: [
+      path.resolve(__dirname, '../fakemui/scss/m3-scss')
+    ]
   },
   webpack: (config, { isServer }) => {
     config.resolve.fallback = {

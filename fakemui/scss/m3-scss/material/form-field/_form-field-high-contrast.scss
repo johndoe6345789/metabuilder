@@ -1,4 +1,4 @@
-@use '@angular/cdk';
+@use 'cdk';
 
 @mixin private-form-field-high-contrast() {
   $focus-indicator-width: 3px;

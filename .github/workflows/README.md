@@ -104,7 +104,42 @@ All workflows are designed to work seamlessly with **GitHub Copilot** to assist 
 - Clear gate status reporting on PRs
 - Summary report with all gate results
 
-### 🔄 Supporting Workflows
+### 🔍 CodeQL Code Search (Manual)
+
+#### CodeQL Analysis (`codeql-analysis.yml`)
+**Triggered on:** Manual dispatch only (workflow_dispatch)
+
+**Purpose:** Semantic code search and story planning across 2-3M LOC codebase
+
+**NOT for security gates** - This is separate from gated-pipeline.yml. Use it for:
+- Pattern search across the entire codebase
+- Finding function callers and data flows
+- Planning user stories by understanding code relationships
+- Complex QL queries for refactoring planning
+
+**Languages Indexed:**
+| Language | Locations | Priority |
+|----------|-----------|----------|
+| TypeScript/JavaScript | `frontends/`, `codegen/`, `workflowui/`, `packages/`, `fakemui/react/` | HIGH |
+| Python | `workflow/plugins/python/`, `services/`, `smtprelay/` | MEDIUM |
+| C++ | `dbal/production/`, `frontends/cli/`, `frontends/qt6/`, `gameengine/` | MEDIUM |
+| Go | `workflow/plugins/go/` | LOW |
+
+**Usage:**
+1. Go to Actions tab → "CodeQL Analysis" → "Run workflow"
+2. Select languages to analyze (or "all")
+3. Wait for analysis to complete (can take 30-60 min for full codebase)
+4. Use GitHub Advanced Search or Security tab to query results
+
+**Example Use Cases:**
+- "Find all components using Redux state" → plan migration stories
+- "Find all API endpoints" → plan documentation stories
+- "Find deprecated function usage" → plan refactoring stories
+- "Trace data flow from input to database" → plan security reviews
+
+**Configuration:** `.github/codeql/codeql-config.yml`
+
+## 🔄 Supporting Workflows
 
 #### Issue and PR Triage (`triage.yml`)
 **Triggered on:** Issues (opened/edited/reopened) and Pull Requests (opened/reopened/synchronize/edited)

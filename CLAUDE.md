@@ -5,7 +5,23 @@
 **Scale**: 27,826+ files across 34 directories (excludes generated)
 **Philosophy**: 95% JSON/YAML configuration, 5% TypeScript/C++ infrastructure
 
-**Recent Updates** (Jan 24, 2026):
+**Recent Updates** (Feb 1, 2026):
+- **CodeQL Code Search** (✅ Feb 1, 2026):
+  - **Purpose**: Semantic code search for story planning across 2-3M LOC codebase
+  - **Languages**: TypeScript/JavaScript (HIGH), Python (MEDIUM), C++ (MEDIUM), Go (LOW)
+  - **Usage**: Manual trigger via Actions → "CodeQL Analysis" → "Run workflow"
+  - **Config**: `.github/codeql/codeql-config.yml`, `.github/workflows/codeql-analysis.yml`
+  - **NOT for security gates** - separate from gated-pipeline.yml
+  - See: `.github/workflows/README.md` for full documentation
+- **FakeMUI Organization Complete** (✅ Feb 1, 2026):
+  - **Phase 2 Email Components COMPLETE**: Fixed all import paths, promoted from email-wip/ → email/
+  - **Cleanup**: Removed wip/ directory (duplicate code in src/utils/)
+  - **Exports**: Email components now fully exported from @metabuilder/fakemui
+  - **Status**: All 22 email components production-ready (atoms, inputs, surfaces, data-display, feedback, layout, navigation)
+  - **Python/PyQt6**: 15 Python implementation files preserved (base classes, components for Qt desktop)
+  - **No WIP policy**: All directories now production-ready, no -wip naming
+
+**Earlier Updates** (Jan 24, 2026):
 - **HIGH Priority Dependency Fixes** (✅ ALL COMPLETED - Jan 24, 2026):
   - Testing library standardization (4 packages):
     * pastebin: @testing-library/react v14 → v16, jest-dom 6.1 → 6.6
@@ -19,10 +35,10 @@
   - Status: **PRODUCTION-READY** - All HIGH priority standardization complete
 
 **Earlier Updates** (Jan 23, 2026):
-- **Email Client Implementation** (✅ PHASES 1,3-5 COMPLETE - Phase 2 POSTPONED):
+- **Email Client Implementation** (✅ PHASES 1-5 COMPLETE - Feb 1, 2026):
   - Comprehensive implementation plan: `docs/plans/2026-01-23-email-client-implementation.md`
   - **Phase 1** (✅ DBAL Schemas): EmailClient, EmailFolder, EmailMessage, EmailAttachment entities with multi-tenant ACL
-  - **Phase 2** (⏸ POSTPONED): Email component implementations (22 planned) have broken imports and need complete refactor - requires full component build with proper import resolution
+  - **Phase 2** (✅ COMPLETE - Feb 1, 2026): 22 email components production-ready in fakemui/react/components/email/
   - **Phase 3** (✅ Redux): Email state slices for list, detail, compose, filters
   - **Phase 4** (✅ Custom Hooks): 6 hooks for email operations (sync, store, mailboxes, accounts, compose, messages)
   - **Phase 5** (✅ API Endpoints): Package metadata and page-config endpoints live - enables declarative UI loading
@@ -30,8 +46,7 @@
   - **Next.js 16 Turbopack**: Fully configured, Server/Client components properly split
   - **Architecture**: Minimal Next.js bootloader loads declarative package config from API
   - **Phases 6-8 TODO**: Workflow plugins (IMAP/SMTP), Backend service (Flask), Docker deployment
-  - **Policy**: Email components removed from codebase per "no WIP" directive - either complete full Phase 2 OR do not include
-  - Status: **DEPLOYMENT-READY (Phases 1,3-5)** - API endpoints live, full-stack bootloader complete
+  - Status: **FRONTEND COMPLETE (Phases 1-5)** - All UI components, Redux, hooks, and API endpoints ready
 - **Mojo Compiler Integration** (✅ COMPLETE & VERIFIED - All 5 Phases Executed):
   - Integrated full Mojo compiler from modular repo (21 source files, 260 KB)
   - Architecture: 5 phases (frontend, semantic, IR, codegen, runtime) - ALL EXECUTED ✅
@@ -48,12 +63,14 @@
   - Test results: 12/12 tests PASSED (100%) ✅
   - Comprehensive execution report: `txt/MOJO_COMPILER_OWN_IMPLEMENTATION_EXECUTION_2026-01-23.md` ✅
   - Status: **PRODUCTION-READY** - Full internal compiler with verified execution pipeline
-- **FakeMUI Directory Restructuring** (✅ COMPLETE & VERIFIED - Jan 23, 2026):
-  - Promoted directories to first-class naming: `qml/hybrid/` (was components-legacy), `utilities/` (was legacy/utilities), `wip/` (was legacy/migration-in-progress)
+- **FakeMUI Directory Restructuring** (✅ COMPLETE & VERIFIED - Feb 1, 2026):
+  - **Feb 1, 2026**: Removed wip/ directory (duplicate of src/utils/), deleted 16 orphaned Python stubs
+  - **Feb 1, 2026**: Email components promoted to production (email-wip/ → email/), all imports fixed
+  - **Jan 23, 2026**: Promoted directories to first-class naming: `qml/hybrid/` (was components-legacy), `utilities/` (was legacy/utilities)
   - Flattened QML nesting: `qml/components/` (was qml-components/qml-components/)
   - Removed empty `legacy/` and `python/fakemui/` directories
   - Updated qmldir with 135 component registrations to use new paths
-  - No "legacy" terminology in directory names; all directories now first-class
+  - **No WIP policy enforced**: All directories production-ready, no -wip/-temp/-todo naming
   - Verification complete: All imports resolved, component library production-ready
 - All library versions updated: React 19.2.3, TypeScript 5.9.3, Next.js normalized, @reduxjs/toolkit 2.5.2
 - Multi-version peer dependencies enabled for gradual upgrades
@@ -561,6 +578,11 @@ npm run build               # Build CodeForge IDE
 # Monorepo
 npm install                 # Install all dependencies
 npm run build --workspaces  # Build all packages
+
+# CodeQL (via GitHub Actions - manual trigger)
+# Go to: Actions → "CodeQL Analysis" → "Run workflow"
+# Languages: javascript-typescript, python, cpp, go
+# Use for: code search, story planning, refactoring analysis
 ```
 
 ---
@@ -877,9 +899,10 @@ From [.github/workflows/README.md](./.github/workflows/README.md):
 1. **ALWAYS read CLAUDE.md first** - before starting any work or replying
 2. **ALWAYS use Explore agent** - for feasibility checks, codebase analysis, planning
 3. **ALWAYS plan before coding** - list affected files in txt/, determine scope
-4. **ALWAYS full implementation** - no partial fixes, no shortcuts, no stubs
-5. **ALWAYS use subagents** - for complex work (don't do it alone)
-6. **UPDATE CLAUDE.md** - when finding bugs, gotchas, or new patterns discovered
+4. **CHECK before DELETE** - examine file contents (git show HEAD:path) before deleting anything
+5. **ALWAYS full implementation** - no partial fixes, no shortcuts, no stubs
+6. **ALWAYS use subagents** - for complex work (don't do it alone)
+7. **UPDATE CLAUDE.md** - when finding bugs, gotchas, or new patterns discovered
 7. **NO SUMMARY DOCUMENTS** - keep things organized, not documented to death
 8. **SUBPROJECT DOCS** - each project owns its /docs/, not root
 9. **GIT WORKFLOW** - when user says "git push", do `git add` on project root first, then commit
@@ -887,9 +910,10 @@ From [.github/workflows/README.md](./.github/workflows/README.md):
 11. **CODE ORGANIZATION** - don't care if code unused, DO care if disorganized
 12. **FEASIBILITY CHECKS** - outline what files will be edited before starting
 
-**Gotchas & Lessons Learned** (Jan 23, 2026):
+**Gotchas & Lessons Learned** (Updated Feb 1, 2026):
 | Gotcha | Impact | Prevention |
 |--------|--------|-----------|
+| **Deleting without checking** | Delete full implementations thinking they're stubs | ALWAYS `git show HEAD:path` before deleting |
 | **Partial fixes committed** | Blocks full resolution, creates merge conflicts | Plan FULL solution before committing |
 | **Skipping Explore agent** | Miss dependencies, make wrong decisions | Always use Explore for planning |
 | **No planning document** | Don't know scope, make mistakes | Create plan in txt/ BEFORE coding |

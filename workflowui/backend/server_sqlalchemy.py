@@ -10,6 +10,7 @@ from models import db, Workflow, Execution, NodeType, AuditLog, Workspace, Proje
 from auth import token_required
 import os
 import json
+import socket
 from datetime import datetime
 from typing import Dict, List, Any, Optional, Tuple
 import imaplib
@@ -1087,6 +1088,24 @@ def server_error(error):
 
 
 # ============================================================================
+# Utilities
+# ============================================================================
+
+def find_available_port(start_port: int, max_attempts: int = 10) -> int:
+    """Find an available port starting from start_port"""
+    for offset in range(max_attempts):
+        port = start_port + offset
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        try:
+            sock.bind(('0.0.0.0', port))
+            sock.close()
+            return port
+        except OSError:
+            continue
+    raise RuntimeError(f"Could not find available port in range {start_port}-{start_port + max_attempts}")
+
+
+# ============================================================================
 # Main
 # ============================================================================
 
@@ -1099,9 +1118,14 @@ if __name__ == '__main__':
         init_node_registry()
 
     # Get configuration from environment
-    port = int(os.getenv('PORT', 5000))
+    preferred_port = int(os.getenv('PORT', 5000))
     debug = os.getenv('DEBUG', 'False') == 'True'
     host = os.getenv('HOST', '0.0.0.0')
+
+    # Auto-bump port if in use
+    port = find_available_port(preferred_port)
+    if port != preferred_port:
+        print(f"⚠️  Port {preferred_port} in use, using port {port} instead")
 
     print(f"Starting WorkflowUI Backend on {host}:{port}")
     print(f"Database: {os.getenv('DATABASE_URL', 'sqlite:///workflows.db')}")

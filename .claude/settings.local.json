@@ -86,7 +86,26 @@
       "Bash(docker build:*)",
       "Bash(docker-compose up:*)",
       "Skill(superpowers:using-superpowers)",
-      "Skill(superpowers:writing-plans)"
+      "Skill(superpowers:writing-plans)",
+      "Bash(docker logs:*)",
+      "Bash(docker inspect:*)",
+      "Bash(docker-compose:*)",
+      "Bash(docker stop:*)",
+      "Bash(docker rm:*)",
+      "Bash(tee:*)",
+      "Bash(lsof:*)",
+      "Bash(npx playwright:*)",
+      "Bash(npx playwright@1.49.0 screenshot:*)",
+      "Bash(kill:*)",
+      "Bash(PLAYWRIGHT_BROWSERS_PATH=~/Library/Caches/ms-playwright node:*)",
+      "Bash(node /Users/rmac/Documents/metabuilder/take-screenshot.js:*)",
+      "Bash(npx puppeteer@23.13.0:*)",
+      "Bash(npx:*)",
+      "Bash(ln:*)",
+      "Bash(do if grep -q \"@function get-tokens\" \"$file\")",
+      "Bash(then echo \"✓ $file\")",
+      "Bash(else echo \"✗ $file\")",
+      "Bash(git status:*)"
     ]
   },
   "spinnerTipsEnabled": false

@@ -1,0 +1,84 @@
+FakeMUI SCSS Compilation Status
+================================
+Date: 2026-02-01
+Status: PARTIAL FIX COMPLETE - NEW ISSUE DISCOVERED
+
+COMPLETED
+---------
+✅ Phase 1: Configured sassOptions in workflowui/next.config.js
+✅ Phase 2: Updated 39 SCSS files from @use '@angular/cdk' to @use 'cdk'
+✅ Phase 3: Deleted duplicate @angular directory and empty stub files
+✅ Phase 4: Updated workflowui/src/app/layout.tsx import
+
+VERIFICATION RESULTS
+--------------------
+❌ New Error Discovered:
+SassError: Undefined function.
+  Location: fakemui/scss/m3-scss/material/bottom-sheet/_bottom-sheet-theme.scss:9:20
+  Function: m2-bottom-sheet.get-tokens($theme)
+  Context: Called from base() function
+
+ROOT CAUSE
+----------
+FakeMUI SCSS has internal dependency issues - not just Angular CDK.
+The Material 3 SCSS is calling Material 2 (m2-*) functions that don't exist.
+
+This indicates fakemui/scss/m3-scss/ is incomplete or incorrectly ported from Angular Material.
+
+NEW FINDINGS
+------------
+1. fakemui/scss/material-m3.scss imports incomplete M3 theme system
+2. M3 components reference M2 tokens/functions (legacy compatibility layer missing)
+3. The SCSS source appears to be a partial port of Angular Material SCSS
+4. Pre-compiled CSS (material-m3.css) exists but may not match current component needs
+
+RECOMMENDATION
+--------------
+Option A: Use pre-compiled CSS (SHORT-TERM FIX)
+  - Copy fakemui/scss/material-m3.css to workflowui/src/app/
+  - Import as plain CSS: import './material-m3.css'
+  - Pros: Works immediately, zero build issues
+  - Cons: Can't customize theme, 67KB static CSS
+
+Option B: Fix FakeMUI SCSS properly (LONG-TERM FIX)
+  - Requires comprehensive audit of M2/M3 token system
+  - Implement missing m2-* compatibility functions
+  - Verify all 37 Material components compile
+  - Estimated effort: 4-8 hours
+
+Option C: Migrate to component-level CSS modules (ARCHITECTURAL FIX)
+  - Each FakeMUI React component includes its own scoped CSS
+  - Remove global SCSS compilation from build process
+  - Aligns with modern React best practices
+  - Estimated effort: 8-16 hours (refactor all 145 components)
+
+IMMEDIATE NEXT STEPS
+--------------------
+1. Use Option A (pre-compiled CSS) to unblock WorkflowUI styling
+2. Document FakeMUI SCSS as "needs refactor" in CLAUDE.md
+3. Create issue: fakemui/docs/SCSS_REFACTOR_NEEDED.md
+4. Schedule Option C (component CSS modules) for next sprint
+
+FILES MODIFIED
+--------------
+✅ workflowui/next.config.js (added sassOptions)
+✅ fakemui/scss/m3-scss/**/*.scss (39 files - CDK imports updated)
+✅ workflowui/src/app/layout.tsx (updated import)
+
+DELETED
+-------
+✅ fakemui/scss/m3-scss/@angular/ (duplicate directory)
+✅ fakemui/scss/m3-scss/cdk/_stub.scss (empty stub)
+✅ workflowui/src/app/fakemui.css (temporary file)
+
+CURRENT STATUS
+--------------
+- CDK dependency: FIXED ✅
+- SCSS compilation: BLOCKED by M2/M3 token issues ❌
+- WorkflowUI styling: Using fallback (no styles) ⚠️
+
+ROLLBACK IF NEEDED
+------------------
+git checkout workflowui/next.config.js
+git checkout workflowui/src/app/layout.tsx
+git checkout fakemui/scss/m3-scss/

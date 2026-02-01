@@ -1,0 +1,42 @@
+name: "MetaBuilder CodeQL Config"
+
+# CodeQL configuration for semantic code search across 2-3M LOC codebase
+# Purpose: Enable pattern search, caller analysis, data flow queries for story planning
+# NOT for security gates - that's handled by gated-pipeline.yml
+
+# Paths to analyze (focus on source, exclude generated)
+paths:
+  - frontends
+  - codegen
+  - workflowui
+  - packages
+  - fakemui/react
+  - workflow/plugins
+  - dbal
+  - services
+  - hooks
+  - redux
+
+# Paths to ignore (generated, vendor, tests, archives)
+paths-ignore:
+  - '**/node_modules/**'
+  - '**/.next/**'
+  - '**/dist/**'
+  - '**/build/**'
+  - '**/__pycache__/**'
+  - '**/test-results/**'
+  - '**/playwright-report/**'
+  - '**/coverage/**'
+  - 'old/**'
+  - 'txt/**'
+  - 'spec/**'
+  - '**/*.test.ts'
+  - '**/*.test.tsx'
+  - '**/*.spec.ts'
+  - '**/*.spec.tsx'
+  - '**/e2e/**'
+
+# Query suites - security-and-quality provides comprehensive code analysis
+# This enables rich semantic queries for code search, not just security scanning
+queries:
+  - uses: security-and-quality

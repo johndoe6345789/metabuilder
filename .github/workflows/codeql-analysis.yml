@@ -1,0 +1,143 @@
+name: "CodeQL Analysis"
+
+# CodeQL for Semantic Code Search & Story Planning
+# Purpose: Index codebase for pattern search, caller analysis, data flow queries
+# NOT for security gates - that's handled by gated-pipeline.yml
+#
+# Use Cases:
+# - "Find all components that use Redux state" -> plan migration stories
+# - "Find all API endpoints" -> plan API documentation stories
+# - "Find all uses of deprecated function X" -> plan refactoring stories
+# - "Find data flow from user input to database" -> plan security review stories
+
+on:
+  # Manual trigger only - you control when to re-index
+  # Trigger before story planning sessions for fresh index
+  workflow_dispatch:
+    inputs:
+      languages:
+        description: 'Languages to analyze'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - javascript-typescript
+          - python
+          - cpp
+          - go
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  analyze:
+    name: Analyze (${{ matrix.language }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 360  # Large codebase needs time
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ['javascript-typescript', 'python', 'cpp', 'go']
+        # Language mapping:
+        # - javascript-typescript: frontends/, codegen/, workflowui/, packages/, fakemui/react/
+        # - python: workflow/plugins/python/, services/, smtprelay/
+        # - cpp: dbal/production/, frontends/cli/, frontends/qt6/, gameengine/
+        # - go: workflow/plugins/go/
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # Full history for better code analysis
+          fetch-depth: 0
+
+      - name: Check if language should run
+        id: check-language
+        run: |
+          INPUT_LANG="${{ github.event.inputs.languages }}"
+          MATRIX_LANG="${{ matrix.language }}"
+
+          if [ "$INPUT_LANG" = "all" ] || [ "$INPUT_LANG" = "$MATRIX_LANG" ]; then
+            echo "should_run=true" >> $GITHUB_OUTPUT
+          else
+            echo "should_run=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Initialize CodeQL
+        if: steps.check-language.outputs.should_run == 'true'
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          config-file: ./.github/codeql/codeql-config.yml
+          # Use extended queries for richer code search capabilities
+          queries: security-and-quality
+
+      # Language-specific setup
+      - name: Setup Node.js (TypeScript/JavaScript)
+        if: steps.check-language.outputs.should_run == 'true' && matrix.language == 'javascript-typescript'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Setup Python
+        if: steps.check-language.outputs.should_run == 'true' && matrix.language == 'python'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Setup Go
+        if: steps.check-language.outputs.should_run == 'true' && matrix.language == 'go'
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+
+      # Autobuild handles most cases; for compiled languages it will build
+      - name: Autobuild
+        if: steps.check-language.outputs.should_run == 'true'
+        uses: github/codeql-action/autobuild@v3
+
+      - name: Perform CodeQL Analysis
+        if: steps.check-language.outputs.should_run == 'true'
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{ matrix.language }}"
+          # Upload SARIF for GitHub code search integration
+          upload: true
+          # Wait for processing to complete
+          wait-for-processing: true
+
+      - name: Skip message
+        if: steps.check-language.outputs.should_run == 'false'
+        run: |
+          echo "Skipping ${{ matrix.language }} - not selected for analysis"
+
+  summary:
+    name: Analysis Summary
+    needs: analyze
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Summary Report
+        run: |
+          echo "## CodeQL Analysis Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Languages analyzed: ${{ github.event.inputs.languages || 'all' }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Available Features" >> $GITHUB_STEP_SUMMARY
+          echo "- **Code Search**: Use GitHub Advanced Search with CodeQL queries" >> $GITHUB_STEP_SUMMARY
+          echo "- **Security Tab**: View findings in repository Security tab" >> $GITHUB_STEP_SUMMARY
+          echo "- **API Access**: Query databases via CodeQL CLI or VS Code extension" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Example Queries for Story Planning" >> $GITHUB_STEP_SUMMARY
+          echo '```ql' >> $GITHUB_STEP_SUMMARY
+          echo '// Find all Redux useSelector calls' >> $GITHUB_STEP_SUMMARY
+          echo 'import javascript' >> $GITHUB_STEP_SUMMARY
+          echo 'from CallExpr call' >> $GITHUB_STEP_SUMMARY
+          echo 'where call.getCalleeName() = "useSelector"' >> $GITHUB_STEP_SUMMARY
+          echo 'select call, "Redux selector usage"' >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY

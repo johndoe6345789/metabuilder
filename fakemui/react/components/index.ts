@@ -41,6 +41,5 @@ export { Table } from './data-display/Table'
 export { List } from './data-display/List'
 export { Tree } from './data-display/Tree'
 
-// Email Components
-// NOTE: Disabled - Phase 2 incomplete (component imports need fixing)
-// export * from './email'
+// Email Components (Phase 2 Complete - Jan 2026)
+export * from './email'

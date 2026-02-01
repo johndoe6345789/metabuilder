@@ -1,4 +1,4 @@
-@use '@angular/cdk';
+@use 'cdk';
 @use './tabs-common';
 
 @include tabs-common.paginated-tab-header;

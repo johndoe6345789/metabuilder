@@ -2,7 +2,7 @@
 @use '../core/style/vendor-prefixes';
 @use '../core/tokens/token-utils';
 @use './m3-slide-toggle';
-@use '@angular/cdk';
+@use 'cdk';
 
 $_interactive-disabled-selector: '.mat-mdc-slide-toggle-disabled-interactive.mdc-switch--disabled';
 
