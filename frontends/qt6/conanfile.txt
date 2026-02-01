@@ -1,5 +1,5 @@
 [requires]
-qt/6.8.1
+qt/6.7.3
 cpr/1.14.1
 
 [generators]
