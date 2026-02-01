@@ -14,14 +14,13 @@ function generateSecurePassword(length = 32, includeSpecial = true): string {
     charset += '!@#$%^&*()-_=+[]{}|;:,.<>?';
   }
 
-  const randomBytes = crypto.randomBytes(length);
   let password = '';
 
   for (let i = 0; i < length; i++) {
-    const byte = randomBytes[i];
-    if (byte !== undefined) {
-      password += charset[byte % charset.length];
-    }
+    // Use crypto.randomInt() for unbiased random selection
+    // This avoids modulo bias that occurs with randomBytes % charset.length
+    const randomIndex = crypto.randomInt(charset.length);
+    password += charset[randomIndex];
   }
 
   return password;

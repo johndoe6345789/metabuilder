@@ -12,6 +12,26 @@ const resolve = (value: any, ctx: any): any => {
   return value;
 };
 
+/**
+ * Check if a key is a prototype-polluting key that should be rejected.
+ * Prevents prototype pollution attacks where attackers inject __proto__,
+ * constructor, or prototype keys to modify Object.prototype.
+ */
+const isPrototypePollutingKey = (key: string): boolean => {
+  return key === '__proto__' || key === 'constructor' || key === 'prototype';
+};
+
+/**
+ * Safely assign a value to an object, rejecting prototype-polluting keys.
+ * @throws Error if key is a prototype-polluting key
+ */
+const safeAssign = (obj: any, key: string, value: any): void => {
+  if (isPrototypePollutingKey(key)) {
+    throw new Error(`Prototype-polluting key "${key}" is not allowed`);
+  }
+  obj[key] = value;
+};
+
 export class DictGet implements NodeExecutor {
   readonly nodeType = 'dict.get';
   readonly category = 'dict';
@@ -49,12 +69,16 @@ export class DictSet implements NodeExecutor {
     let current = result;
     for (let i = 0; i < keys.length - 1; i++) {
       const key = keys[i];
+      if (isPrototypePollutingKey(key)) {
+        throw new Error(`Prototype-polluting key "${key}" is not allowed in path`);
+      }
       if (!(key in current) || typeof current[key] !== 'object') {
         current[key] = {};
       }
       current = current[key];
     }
-    current[keys[keys.length - 1]] = value;
+    const finalKey = keys[keys.length - 1];
+    safeAssign(current, finalKey, value);
     return { result };
   }
 }
@@ -69,6 +93,9 @@ export class DictDelete implements NodeExecutor {
     const obj = resolve(inputs.node.parameters.object, ctx) || {};
     const key = resolve(inputs.node.parameters.key, ctx);
     if (typeof obj !== 'object' || obj === null) return { result: {} };
+    if (isPrototypePollutingKey(key)) {
+      throw new Error(`Prototype-polluting key "${key}" is not allowed`);
+    }
     const result = { ...obj };
     delete result[key];
     return { result };
@@ -176,6 +203,9 @@ export class DictPick implements NodeExecutor {
     if (typeof obj !== 'object' || obj === null) return { result: {} };
     const result: Record<string, any> = {};
     for (const key of keys) {
+      if (isPrototypePollutingKey(key)) {
+        throw new Error(`Prototype-polluting key "${key}" is not allowed`);
+      }
       if (key in obj) result[key] = obj[key];
     }
     return { result };
@@ -239,7 +269,11 @@ export class DictInvert implements NodeExecutor {
     if (typeof obj !== 'object' || obj === null) return { result: {} };
     const result: Record<string, any> = {};
     for (const [key, value] of Object.entries(obj)) {
-      result[String(value)] = key;
+      const newKey = String(value);
+      if (isPrototypePollutingKey(newKey)) {
+        throw new Error(`Prototype-polluting key "${newKey}" is not allowed`);
+      }
+      result[newKey] = key;
     }
     return { result };
   }

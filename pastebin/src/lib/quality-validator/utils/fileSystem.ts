@@ -226,12 +226,22 @@ export function shouldExclude(filePath: string, patterns: string[]): boolean {
 }
 
 /**
+ * Escape special regex characters in a string
+ * This prevents regex injection attacks (ReDoS)
+ */
+function escapeRegexChars(str: string): string {
+  // Escape all regex special characters except * and ? (glob wildcards we handle separately)
+  return str.replace(/[.+^${}()|[\]\\]/g, '\\$&');
+}
+
+/**
  * Simple glob pattern matching
+ * Safely converts glob patterns to regex by escaping special characters first
  */
 export function matchesPattern(filePath: string, pattern: string): boolean {
-  // Convert glob pattern to regex
-  const regexPattern = pattern
-    .replace(/\./g, '\\.')
+  // First, escape all regex special characters (except glob wildcards * and ?)
+  // Then convert glob wildcards to their regex equivalents
+  const regexPattern = escapeRegexChars(pattern)
     .replace(/\*/g, '.*')
     .replace(/\?/g, '.');
 
