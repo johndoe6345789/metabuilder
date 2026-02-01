@@ -1,0 +1,21 @@
+{
+  "name": "@metabuilder/workflow-plugins-string",
+  "version": "1.0.0",
+  "description": "String manipulation plugins (C++)",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["string", "workflow", "plugins", "cpp"],
+  "metadata": {
+    "category": "string",
+    "plugin_count": 7
+  },
+  "plugins": [
+    "string_concat",
+    "string_split",
+    "string_replace",
+    "string_upper",
+    "string_lower",
+    "string_trim",
+    "string_length"
+  ]
+}

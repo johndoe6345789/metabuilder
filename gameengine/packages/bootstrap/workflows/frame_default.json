@@ -6,7 +6,10 @@
       "name": "Begin Frame",
       "type": "frame.begin",
       "typeVersion": 1,
-      "position": [0, 0],
+      "position": [
+        0,
+        0
+      ],
       "parameters": {
         "inputs": {
           "delta": "frame.delta",
@@ -19,7 +22,10 @@
       "name": "Step Physics",
       "type": "frame.physics",
       "typeVersion": 1,
-      "position": [260, 0],
+      "position": [
+        260,
+        0
+      ],
       "parameters": {
         "inputs": {
           "delta": "frame.delta"
@@ -31,7 +37,10 @@
       "name": "Update Scene",
       "type": "frame.scene",
       "typeVersion": 1,
-      "position": [520, 0],
+      "position": [
+        520,
+        0
+      ],
       "parameters": {
         "inputs": {
           "delta": "frame.delta"
@@ -43,7 +52,10 @@
       "name": "Render Frame",
       "type": "frame.render",
       "typeVersion": 1,
-      "position": [780, 0],
+      "position": [
+        780,
+        0
+      ],
       "parameters": {
         "inputs": {
           "elapsed": "frame.elapsed"
@@ -55,45 +67,74 @@
       "name": "Update Audio",
       "type": "frame.audio",
       "typeVersion": 1,
-      "position": [1040, -120]
+      "position": [
+        1040,
+        -120
+      ]
     },
     {
       "id": "dispatch_gui",
       "name": "Dispatch GUI",
       "type": "frame.gui",
       "typeVersion": 1,
-      "position": [1040, 120]
+      "position": [
+        1040,
+        120
+      ]
     }
   ],
   "connections": {
     "Begin Frame": {
       "main": {
         "0": [
-          { "node": "Step Physics", "type": "main", "index": 0 }
+          {
+            "node": "Step Physics",
+            "type": "main",
+            "index": 0
+          }
         ]
       }
     },
     "Step Physics": {
       "main": {
         "0": [
-          { "node": "Update Scene", "type": "main", "index": 0 }
+          {
+            "node": "Update Scene",
+            "type": "main",
+            "index": 0
+          }
         ]
       }
     },
     "Update Scene": {
       "main": {
         "0": [
-          { "node": "Render Frame", "type": "main", "index": 0 }
+          {
+            "node": "Render Frame",
+            "type": "main",
+            "index": 0
+          }
         ]
       }
     },
     "Render Frame": {
       "main": {
         "0": [
-          { "node": "Update Audio", "type": "main", "index": 0 },
-          { "node": "Dispatch GUI", "type": "main", "index": 0 }
+          {
+            "node": "Update Audio",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Dispatch GUI",
+            "type": "main",
+            "index": 0
+          }
         ]
       }
     }
-  }
+  },
+  "id": "workflow_frame_default",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
 }

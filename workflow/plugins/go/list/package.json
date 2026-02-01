@@ -1,0 +1,21 @@
+{
+  "name": "@metabuilder/workflow-plugins-list",
+  "version": "1.0.0",
+  "description": "List manipulation plugins",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["list", "workflow", "plugins"],
+  "metadata": {
+    "category": "list",
+    "plugin_count": 7
+  },
+  "plugins": [
+    "list_concat",
+    "list_find",
+    "list_length",
+    "list_reverse",
+    "list_slice",
+    "list_sort",
+    "list_unique"
+  ]
+}

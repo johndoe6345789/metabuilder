@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/backend_parse_cli_args",
+  "version": "1.0.0",
+  "description": "Parse command line arguments",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["backend", "workflow", "plugin", "cli", "args"],
+  "main": "backend_parse_cli_args.py",
+  "files": ["backend_parse_cli_args.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "backend.parse_cli_args",
+    "category": "backend",
+    "class": "ParseCliArgs",
+    "entrypoint": "execute"
+  }
+}

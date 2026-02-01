@@ -1,0 +1,39 @@
+{
+  "id": "dashboard",
+  "name": "Dashboard Assembly",
+  "partNumber": "FD-1833820",
+  "material": "blackPlastic",
+  "quantity": 1,
+  "weight": 18500.0,
+  "weightUnit": "g",
+  "baseY": 0,
+  "description": "Complete instrument panel assembly",
+  "installation": {
+    "tools": [
+      { "name": "Torx socket set", "size": "T15-T30", "required": true },
+      { "name": "Trim removal tool", "size": "-", "required": true },
+      { "name": "Socket", "size": "10mm", "required": true }
+    ],
+    "hardware": [
+      { "name": "Dashboard bolt", "spec": "M6x1.0x15", "qty": 8, "reusable": true },
+      { "name": "Cross-car beam bolt", "spec": "M10x1.5x25", "qty": 4, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Dashboard bolts", "value": 8, "unit": "Nm", "sequence": "", "notes": "" },
+      { "fastener": "Cross-car beam", "value": 25, "unit": "Nm", "sequence": "", "notes": "" }
+    ],
+    "notes": [
+      "Disconnect battery and wait 1 minute (airbags)",
+      "Two-person job - heavy and awkward",
+      "Disconnect all wiring before removal",
+      "HVAC unit stays attached to shell"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 180, "height": 50, "rx": 5 },
+    { "type": "rect", "width": 160, "height": 35, "rx": 8, "offsetY": 5, "fill": "#333" },
+    { "type": "ellipse", "rx": 30, "ry": 15, "offsetX": -50, "offsetY": 0, "fill": "#222" },
+    { "type": "rect", "width": 40, "height": 25, "offsetX": 30, "rx": 3, "fill": "#222" },
+    { "type": "rect", "width": 50, "height": 20, "offsetX": -60, "offsetY": 30, "rx": 2, "fill": "#333" }
+  ]
+}

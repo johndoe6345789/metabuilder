@@ -1,0 +1,600 @@
+================================================================================
+METABUILDER WORKFLOW EXECUTOR - ARCHITECTURE DIAGRAM
+================================================================================
+
+1. FILE STRUCTURE & DEPENDENCIES
+================================================================================
+
+workflow/executor/ts/
+├── index.ts                                    [Public API]
+│   ├── re-exports: DAGExecutor, types, registry, plugins
+│   └── initializeWorkflowEngine()
+│
+├── types.ts                                    [Type Definitions - 342 lines]
+│   ├── WorkflowDefinition (18 fields, multi-tenant aware)
+│   ├── WorkflowNode (nodeType: string is KEY FIELD)
+│   ├── INodeExecutor (interface for all executors)
+│   ├── WorkflowContext (runtime context)
+│   └── ExecutionState (result state)
+│
+├── executor/
+│   └── dag-executor.ts                         [Core Engine - 447 lines]
+│       ├── DAGExecutor class
+│       │   ├── execute(): ExecutionState (main entry point)
+│       │   ├── _initializeTriggers()
+│       │   ├── _executeNode(nodeId)
+│       │   ├── _executeNodeWithRetry(node)
+│       │   ├── _routeOutput(nodeId, result)
+│       │   ├── _handleNodeError(node, result)
+│       │   └── _calculateBackoff() [exponential, linear, fibonacci]
+│       │
+│       └── Private members:
+│           ├── queue: PriorityQueue<string>
+│           ├── state: ExecutionState
+│           ├── nodeResults: Map<string, NodeResult>
+│           └── nodeExecutor: NodeExecutorFn (CALLBACK)
+│
+├── registry/
+│   └── node-executor-registry.ts               [Registry System - 154 lines]
+│       ├── NodeExecutorRegistry class
+│       │   ├── register(nodeType, executor, plugin?)
+│       │   ├── registerBatch(executors)
+│       │   ├── get(nodeType): INodeExecutor | undefined
+│       │   ├── execute(nodeType, node, context, state)
+│       │   ├── listExecutors(): string[]
+│       │   └── listPlugins(): NodeExecutorPlugin[]
+│       │
+│       ├── Global singleton:
+│       │   ├── getNodeExecutorRegistry(): NodeExecutorRegistry
+│       │   ├── setNodeExecutorRegistry(registry)
+│       │   └── resetNodeExecutorRegistry()
+│       │
+│       └── Plugin metadata:
+│           └── NodeExecutorPlugin { nodeType, version, executor, metadata }
+│
+├── plugins/
+│   ├── index.ts                                [Built-in Executors - 135 lines]
+│   │   ├── registerBuiltInExecutors()
+│   │   │   ├── Class-based: dbalReadExecutor, dbalWriteExecutor, etc. (9 total)
+│   │   │   └── Function-based: stringPlugins, mathPlugins, etc. (7 maps)
+│   │   │
+│   │   ├── getAvailableNodeTypes(): string[]
+│   │   └── getNodeTypesByCategory(): Record<string, string[]>
+│   │
+│   └── function-executor-adapter.ts            [Function Wrapper - 102 lines]
+│       ├── PluginFunction type definition
+│       ├── createExecutor(nodeType, fn, meta): INodeExecutor
+│       ├── createExecutorsFromMap(plugins, category): INodeExecutor[]
+│       └── registerPluginMap(registry, plugins, category)
+│
+└── utils/
+    ├── priority-queue.ts                       [Execution Queue - 110 lines]
+    │   └── PriorityQueue<T>
+    │       ├── enqueue(item, priority): void
+    │       ├── dequeue(): QueueItem<T> | undefined
+    │       ├── isEmpty(): boolean
+    │       └── _bubbleUp(), _bubbleDown() [Min-heap maintenance]
+    │
+    ├── template-engine.ts                      [Variable Interpolation - 255 lines]
+    │   ├── interpolateTemplate(template, context): any
+    │   ├── evaluateTemplate(expr, context): any
+    │   ├── buildDefaultUtilities(): { flatten, pick, omit, ... }
+    │   └── Supports: {{ $context.var }}, {{ $json.field }}, {{ $steps.nodeId.output }}
+    │
+    └── workflow-validator.ts                   [Validation - 474 lines]
+        ├── WorkflowValidator class
+        ├── validate(workflow): WorkflowValidationResult
+        ├── validateNode(node)
+        ├── validateConnections(connections)
+        ├── validateVariables(variables)
+        └── validateMultiTenantSafety(workflow)
+
+
+2. EXECUTION SEQUENCE DIAGRAM
+================================================================================
+
+[Application]
+    │
+    ├─► initializeWorkflowEngine()
+    │   │
+    │   └─► registerBuiltInExecutors()
+    │       │
+    │       ├─► getNodeExecutorRegistry() ─────► [Singleton Registry]
+    │       │                                       {
+    │       │                                         'dbal-read': DBALReadExecutor,
+    │       │                                         'dbal-write': DBALWriteExecutor,
+    │       │                                         'http-request': HttpRequestExecutor,
+    │       │                                         'string.concat': StringConcat,
+    │       │                                         'string.upper': StringUpper,
+    │       │                                         ... (76 total)
+    │       │                                       }
+    │       │
+    │       ├─► registry.register('dbal-read', dbalReadExecutor)
+    │       ├─► registry.register('dbal-write', dbalWriteExecutor)
+    │       ├─► registerPluginMap(registry, stringPlugins)
+    │       │   │
+    │       │   └─► for each (nodeType, fn) in stringPlugins:
+    │       │       └─► createExecutor(nodeType, fn)
+    │       │           └─► { nodeType, execute, validate }
+    │       │
+    │       └─► registry.register(nodeType, executor)
+    │
+    └─► executeWorkflow(workflow, context)
+        │
+        ├─► validateWorkflow(workflow) ─► WorkflowValidationResult
+        │
+        ├─► new DAGExecutor(
+        │       executionId,
+        │       workflow,
+        │       context { tenantId, userId, triggerData, ... },
+        │       nodeExecutor callback    ◄─── SINGLE CALLBACK
+        │   )
+        │
+        └─► dagExecutor.execute()
+            │
+            ├─► _initializeTriggers()
+            │   ├─► Find trigger nodes
+            │   └─► queue.enqueue(trigger.nodeId, priority=0)
+            │
+            ├─► while (!queue.isEmpty()):
+            │   │
+            │   ├─► const { item: nodeId, priority } = queue.dequeue()
+            │   │
+            │   ├─► _executeNode(nodeId)
+            │   │   │
+            │   │   ├─► Find node: workflow.nodes.find(n => n.id === nodeId)
+            │   │   │
+            │   │   ├─► Check skip conditions:
+            │   │   │   ├─► if (node.disabled) skip
+            │   │   │   └─► if (node.skipOnFail && prevNodeFailed) skip
+            │   │   │
+            │   │   ├─► _executeNodeWithRetry(node)
+            │   │   │   │
+            │   │   │   └─► for attempt = 0 to maxTries:
+            │   │   │       │
+            │   │   │       ├─► if (attempt > 0): await backoff(attempt, type)
+            │   │   │       │   ├─► exponential: 1s → 2s → 4s → 8s → ...
+            │   │   │       │   ├─► linear: 1s → 2s → 3s → 4s → ...
+            │   │   │       │   └─► fibonacci: 1s → 1s → 2s → 3s → 5s → ...
+            │   │   │       │
+            │   │   │       ├─► Call nodeExecutor callback ◄─── KEY POINT
+            │   │   │       │   {
+            │   │   │       │     nodeId: 'node_123',
+            │   │   │       │     workflow,
+            │   │   │       │     context { tenantId: 'tenant-1', ... },
+            │   │   │       │     state { node_1: NodeResult, ... }
+            │   │   │       │   }
+            │   │   │       │
+            │   │   │       │   Callback logic:
+            │   │   │       │   ┌─────────────────────────────────────────┐
+            │   │   │       │   │ NODE EXECUTOR CALLBACK                  │
+            │   │   │       │   ├─────────────────────────────────────────┤
+            │   │   │       │   │                                          │
+            │   │   │       │   │ 1. Find node in workflow:                │
+            │   │   │       │   │    const node = workflow.nodes.find(    │
+            │   │   │       │   │      n => n.id === nodeId               │
+            │   │   │       │   │    )                                     │
+            │   │   │       │   │                                          │
+            │   │   │       │   │ 2. Extract nodeType (KEY FIELD):         │
+            │   │   │       │   │    const nodeType = node.nodeType        │
+            │   │   │       │   │    // e.g., 'dbal-read', 'string.upper' │
+            │   │   │       │   │                                          │
+            │   │   │       │   │ 3. REGISTRY LOOKUP:                      │
+            │   │   │       │   │    const executor =                      │
+            │   │   │       │   │      registry.get(node.nodeType)         │
+            │   │   │       │   │                                          │
+            │   │   │       │   │    If NOT found:                         │
+            │   │   │       │   │      throw Error(                        │
+            │   │   │       │   │        'No executor for: ' + nodeType    │
+            │   │   │       │   │      )                                   │
+            │   │   │       │   │                                          │
+            │   │   │       │   │ 4. VALIDATE NODE:                        │
+            │   │   │       │   │    const validation =                    │
+            │   │   │       │   │      executor.validate(node)             │
+            │   │   │       │   │                                          │
+            │   │   │       │   │    If NOT valid:                         │
+            │   │   │       │   │      throw Error(                        │
+            │   │   │       │   │        'Validation failed: ' + errors    │
+            │   │   │       │   │      )                                   │
+            │   │   │       │   │                                          │
+            │   │   │       │   │ 5. INTERPOLATE PARAMETERS:               │
+            │   │   │       │   │    const resolvedParams =                │
+            │   │   │       │   │      interpolateTemplate(                │
+            │   │   │       │   │        node.parameters,                  │
+            │   │   │       │   │        { context, state, json: ... }    │
+            │   │   │       │   │      )                                   │
+            │   │   │       │   │                                          │
+            │   │   │       │   │    Replaces:                             │
+            │   │   │       │   │    - {{ $context.tenantId }} → 'tenant-1' │
+            │   │   │       │   │    - {{ $steps.node_1.output.id }} → 123  │
+            │   │   │       │   │    - {{ $utils.uppercase("x") }} → "X"   │
+            │   │   │       │   │                                          │
+            │   │   │       │   │ 6. EXECUTE:                              │
+            │   │   │       │   │    const result = await                  │
+            │   │   │       │   │      executor.execute(                   │
+            │   │   │       │   │        node,                             │
+            │   │   │       │   │        context { tenantId, userId, ... },│
+            │   │   │       │   │        state { previous results }        │
+            │   │   │       │   │      )                                   │
+            │   │   │       │   │                                          │
+            │   │   │       │   │    Returns NodeResult {                  │
+            │   │   │       │   │      status: 'success' | 'error',        │
+            │   │   │       │   │      output?: any,                       │
+            │   │   │       │   │      error?: string,                     │
+            │   │   │       │   │      timestamp: number                   │
+            │   │   │       │   │    }                                     │
+            │   │   │       │   │                                          │
+            │   │   │       │   └─────────────────────────────────────────┘
+            │   │   │       │
+            │   │   │       └─► Check if error is retryable:
+            │   │   │           ├─► retryableErrors: [408, 429, 500, 502, 503, 504]
+            │   │   │           └─► if retryable && attempt < maxTries: continue
+            │   │   │
+            │   │   ├─► Update state[nodeId] = result
+            │   │   │
+            │   │   ├─► Update metrics:
+            │   │   │   ├─► metrics.nodesExecuted++
+            │   │   │   ├─► metrics.successNodes++ or failedNodes++
+            │   │   │   └─► metrics.totalRetries += retries
+            │   │   │
+            │   │   ├─► _handleNodeError(node, result) if error:
+            │   │   │   ├─► node.onError === 'stopWorkflow':
+            │   │   │   │   └─► this.aborted = true
+            │   │   │   │
+            │   │   │   ├─► node.onError === 'continueErrorOutput':
+            │   │   │   │   └─► _routeErrorOutput(node, result)
+            │   │   │   │
+            │   │   │   ├─► node.onError === 'continueRegularOutput':
+            │   │   │   │   └─► _routeOutput(node, { status: 'success' })
+            │   │   │   │
+            │   │   │   └─► node.onError === 'skipNode':
+            │   │   │       └─► Skip downstream nodes
+            │   │   │
+            │   │   └─► _routeOutput(nodeId, result):
+            │   │       │
+            │   │       ├─► Get connections[nodeId]
+            │   │       │
+            │   │       ├─► Determine output port:
+            │   │       │   ├─► 'error' if result.status === 'error'
+            │   │       │   └─► 'main' if result.status === 'success'
+            │   │       │
+            │   │       └─► For each target connection:
+            │   │           ├─► Check conditional routing:
+            │   │           │   └─► evaluateTemplate(condition, context)
+            │   │           │
+            │   │           └─► queue.enqueue(target.node, priority=10)
+            │   │
+            │   └─► Update metrics.duration
+            │
+            ├─► metrics.endTime = Date.now()
+            └─► return ExecutionState
+
+
+3. REGISTRY & PLUGIN RESOLUTION
+================================================================================
+
+STARTUP:
+┌─────────────────────────────────────────────────────────────────┐
+│ initializeWorkflowEngine()                                       │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│ NodeExecutorRegistry (global singleton)                         │
+│ {                                                                │
+│   executors: Map<string, INodeExecutor>                         │
+│   plugins: Map<string, NodeExecutorPlugin>                      │
+│ }                                                                │
+│                                                                  │
+│ Built-in Class Executors (9):                                  │
+│   ├─ 'dbal-read' → DBALReadExecutor instance                    │
+│   ├─ 'dbal-write' → DBALWriteExecutor instance                  │
+│   ├─ 'http-request' → HttpRequestExecutor instance             │
+│   ├─ 'email-send' → EmailSendExecutor instance                 │
+│   ├─ 'condition' → ConditionExecutor instance                   │
+│   ├─ 'transform' → TransformExecutor instance                   │
+│   ├─ 'wait' → WaitExecutor instance                             │
+│   ├─ 'set-variable' → SetVariableExecutor instance             │
+│   └─ 'webhook-response' → WebhookResponseExecutor instance     │
+│                                                                  │
+│ Function-Based Plugin Maps (7 categories × ~10-15 each):       │
+│   ├─ stringPlugins (15):                                        │
+│   │   ├─ 'string.concat'                                        │
+│   │   ├─ 'string.upper'                                         │
+│   │   ├─ 'string.lower'                                         │
+│   │   ├─ 'string.trim'                                          │
+│   │   └─ ... (11 more)                                          │
+│   │                                                              │
+│   ├─ mathPlugins (13):                                          │
+│   │   ├─ 'math.add'                                             │
+│   │   ├─ 'math.subtract'                                        │
+│   │   └─ ... (11 more)                                          │
+│   │                                                              │
+│   ├─ logicPlugins (7):                                          │
+│   │   ├─ 'logic.and'                                            │
+│   │   ├─ 'logic.or'                                             │
+│   │   └─ ... (5 more)                                           │
+│   │                                                              │
+│   ├─ listPlugins (10):                                          │
+│   │   ├─ 'list.push'                                            │
+│   │   ├─ 'list.pop'                                             │
+│   │   └─ ... (8 more)                                           │
+│   │                                                              │
+│   ├─ dictPlugins (8):                                           │
+│   │   ├─ 'dict.get'                                             │
+│   │   ├─ 'dict.set'                                             │
+│   │   └─ ... (6 more)                                           │
+│   │                                                              │
+│   ├─ convertPlugins (5):                                        │
+│   │   ├─ 'convert.toString'                                     │
+│   │   ├─ 'convert.toNumber'                                     │
+│   │   └─ ... (3 more)                                           │
+│   │                                                              │
+│   └─ varPlugins (6):                                            │
+│       ├─ 'var.set'                                              │
+│       ├─ 'var.get'                                              │
+│       └─ ... (4 more)                                           │
+│                                                                  │
+│ Total: ~80 node types registered                                │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+
+
+RUNTIME:
+┌─────────────────────────────────────────────────────────────────┐
+│ Workflow Execution (specific node)                              │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│ WorkflowNode {                                                  │
+│   id: 'node_42',                                                │
+│   nodeType: 'dbal-read',  ◄─── KEY FIELD                        │
+│   name: 'Get Users',                                            │
+│   parameters: {                                                 │
+│     entity: 'user',                                             │
+│     filter: { status: '{{ $json.status }}' }                    │
+│   }                                                              │
+│ }                                                                │
+│                                                                  │
+│   ├─► nodeExecutor(nodeId='node_42', workflow, context, state)  │
+│   │   │                                                          │
+│   │   ├─► Find node: workflow.nodes.find(n => n.id === 'node_42')│
+│   │   │                                                          │
+│   │   ├─► Extract nodeType: 'dbal-read'                         │
+│   │   │                                                          │
+│   │   ├─► Lookup: registry.get('dbal-read')                     │
+│   │   │                                                          │
+│   │   └─► Returns: DBALReadExecutor                             │
+│   │       {                                                      │
+│   │         nodeType: 'dbal-read',                              │
+│   │         execute: async (node, context, state) => { ... },   │
+│   │         validate: (node) => { ... }                         │
+│   │       }                                                      │
+│   │                                                              │
+│   └─► executor.execute(node, context, state)                    │
+│       │                                                          │
+│       ├─► Validates node parameters                             │
+│       │                                                          │
+│       ├─► Interpolates: { status: 'active' }  (from $json.status)│
+│       │                                                          │
+│       ├─► Auto-injects: tenantId: 'tenant-1'  (multi-tenant)    │
+│       │                                                          │
+│       ├─► Calls DBAL layer with resolved filter                 │
+│       │                                                          │
+│       └─► Returns NodeResult {                                  │
+│           status: 'success',                                    │
+│           output: { items: [...], total: 42 },                  │
+│           timestamp: Date.now()                                 │
+│           }                                                      │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+
+
+4. MULTI-TENANT SAFETY ARCHITECTURE
+================================================================================
+
+Input Workflow Definition:
+┌─────────────────────────────────────────────────────────────────┐
+│ {                                                                │
+│   id: 'wf_123',                                                 │
+│   tenantId: 'tenant-1',  ◄─── REQUIRED, validated               │
+│   nodes: [                                                      │
+│     { id: 'n1', nodeType: 'dbal-read', parameters: { ... } }   │
+│   ],                                                             │
+│   ...                                                            │
+│ }                                                                │
+│                                                                  │
+│ Validator checks:                                               │
+│   ✓ workflow.tenantId exists (NOT empty)                       │
+│   ✓ No global-scope variables (warning if present)             │
+│   ✓ All connections refer to valid nodes                        │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+
+Execution Context:
+┌─────────────────────────────────────────────────────────────────┐
+│ {                                                                │
+│   executionId: 'exec_456',                                      │
+│   tenantId: 'tenant-1',  ◄─── REQUIRED, must match workflow     │
+│   userId: 'user_789',                                           │
+│   user: { id, email, level },                                   │
+│   trigger: { ... },                                             │
+│   triggerData: { ... },                                         │
+│   variables: { ... },                                           │
+│   secrets: { ... }                                              │
+│ }                                                                │
+│                                                                  │
+│ Enforced at:                                                     │
+│   ✓ DAGExecutor initialization                                 │
+│   ✓ Template engine context                                     │
+│   ✓ DBAL plugin filter injection                                │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+
+Parameter Interpolation:
+┌─────────────────────────────────────────────────────────────────┐
+│ Original:                                                        │
+│   filter: {                                                      │
+│     status: 'active',                                           │
+│     owner: '{{ $context.userId }}'                              │
+│   }                                                              │
+│                                                                  │
+│ After interpolateTemplate(params, { context: { tenantId, userId, ... }, ... }):│
+│   filter: {                                                      │
+│     status: 'active',                                           │
+│     owner: 'user_789'  ◄─── Resolved from context               │
+│   }                                                              │
+│                                                                  │
+│ In DBAL Plugin (auto-inject):                                   │
+│   filter: {                                                      │
+│     status: 'active',                                           │
+│     owner: 'user_789',                                          │
+│     tenantId: 'tenant-1'  ◄─── AUTO-INJECTED                   │
+│   }                                                              │
+│                                                                  │
+│ Database Query:                                                  │
+│   SELECT * FROM users                                           │
+│   WHERE status = 'active'                                       │
+│   AND owner = 'user_789'                                        │
+│   AND tenantId = 'tenant-1'  ◄─── SAFE: Isolated to tenant     │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+
+
+5. PRIORITY QUEUE EXECUTION MODEL
+================================================================================
+
+Queue State Example:
+
+Enqueue:
+┌─────────────────────────────────────────┐
+│ queue.enqueue('node_1', priority=0)     │
+│ queue.enqueue('node_2', priority=10)    │
+│ queue.enqueue('node_3', priority=5)     │
+└─────────────────────────────────────────┘
+
+Internal Heap (Min-Heap, lower priority = higher priority):
+                    (node_1, 0)
+                   /           \
+            (node_3, 5)     (node_2, 10)
+
+Dequeue Order (FIFO by priority):
+1. node_1 (priority 0)  ◄─── Triggers dequeued first
+2. node_3 (priority 5)  ◄─── Connected nodes queued at priority 10
+3. node_2 (priority 10) ◄─► Results enqueued at priority 10
+
+
+6. ERROR HANDLING & RETRY STRATEGY
+================================================================================
+
+Node Execution:
+┌─────────────────────────────────────────────────────────────────┐
+│ for attempt = 0 to node.maxTries:                              │
+│   try:                                                          │
+│     if (attempt > 0):                                           │
+│       delay = calculateBackoff(attempt, node.retryPolicy)      │
+│       await sleep(delay)                                       │
+│     return executor.execute(node, context, state)              │
+│   catch error:                                                  │
+│     if isRetryable(error) AND attempt < maxTries - 1:          │
+│       continue  ◄─── Retry                                     │
+│     else:                                                       │
+│       throw error  ◄─► Fail node                               │
+│                                                                  │
+│ Retryable Errors:                                              │
+│   - HTTP: 408, 429, 500, 502, 503, 504                        │
+│   - Custom: TIMEOUT, TEMPORARY_FAILURE, etc.                   │
+│                                                                  │
+│ Non-Retryable Errors:                                          │
+│   - Validation failures                                         │
+│   - Unknown node types                                          │
+│   - Missing parameters                                          │
+│   - 4xx errors (except 408, 429)                               │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+
+Backoff Functions:
+
+Exponential (default):
+  Attempt:  0      1       2       3       4
+  Delay:    1s     2s      4s      8s      16s
+  Formula:  initial × 2^attempt
+
+Linear:
+  Attempt:  0      1       2       3       4
+  Delay:    1s     2s      3s      4s      5s
+  Formula:  initial × (attempt + 1)
+
+Fibonacci:
+  Attempt:  0      1       2       3       4
+  Delay:    1s     1s      2s      3s      5s
+  Formula:  fib(attempt+1) × initial
+
+
+7. TEMPLATE ENGINE VARIABLE SCOPES
+================================================================================
+
+Context Stack (precedence order):
+
+{{ $context.variable }}
+    └─► WorkflowContext { tenantId, userId, user, trigger, ... }
+
+{{ $json.field }}
+    └─► WorkflowContext.triggerData { ... }
+
+{{ $steps.nodeId.output }}
+    └─► ExecutionState[nodeId].output { ... }
+
+{{ $env.VAR_NAME }}
+    └─► process.env { NODE_ENV, DATABASE_URL, ... }
+
+{{ $workflow.variables.name }}
+    └─► WorkflowDefinition.variables[name] { ... }
+
+{{ $utils.function(args) }}
+    └─► Utilities { flatten, pick, omit, merge, keys, values,
+                     length, first, last, reverse, sort, unique,
+                     join, split, uppercase, lowercase, trim,
+                     replace, includes, startsWith, endsWith,
+                     now, timestamp }
+
+Direct Variable (fallback):
+{{ $variable }}
+    └─► Searches context → json → env → steps → workflow
+
+
+8. FILE DEPENDENCY GRAPH
+================================================================================
+
+index.ts (Public API)
+    ├─── dag-executor.ts
+    │    ├─── types.ts
+    │    ├─── priority-queue.ts
+    │    └─── template-engine.ts
+    │
+    ├─── registry/node-executor-registry.ts
+    │    └─── types.ts
+    │
+    ├─── plugins/
+    │    ├─── index.ts
+    │    │    ├─── registry/node-executor-registry.ts
+    │    │    ├─── plugins/function-executor-adapter.ts
+    │    │    │    └─── types.ts
+    │    │    ├─── ../../../plugins/ts/dbal-read/src/index.ts
+    │    │    ├─── ../../../plugins/ts/string/src/index.ts
+    │    │    └─── ... (7 more plugin imports)
+    │    │
+    │    └─── function-executor-adapter.ts
+    │         └─── types.ts
+    │
+    ├─── utils/
+    │    ├─── priority-queue.ts
+    │    ├─── template-engine.ts
+    │    └─── workflow-validator.ts
+    │         └─── types.ts
+    │
+    └─── types.ts (No dependencies)
+
+Zero Circular Dependencies ✓
+
+
+================================================================================
+END OF ARCHITECTURE DIAGRAM
+================================================================================

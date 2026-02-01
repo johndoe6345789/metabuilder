@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/string_length",
+  "version": "1.0.0",
+  "description": "Get the length of a string",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["string", "workflow", "plugin"],
+  "main": "string_length.mojo",
+  "files": ["string_length.mojo", "factory.mojo"],
+  "metadata": {
+    "plugin_type": "string.length",
+    "category": "string",
+    "struct": "StringLength",
+    "entrypoint": "execute"
+  }
+}

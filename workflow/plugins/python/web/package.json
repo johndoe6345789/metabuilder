@@ -1,0 +1,23 @@
+{
+  "name": "@metabuilder/workflow-plugins-web",
+  "version": "1.0.0",
+  "description": "Web UI and Flask operation plugins",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["web", "flask", "api", "workflow", "plugins"],
+  "metadata": {
+    "category": "web",
+    "plugin_count": 10
+  },
+  "plugins": [
+    "web_build_prompt_yaml",
+    "web_create_flask_app",
+    "web_get_env_vars",
+    "web_get_prompt_content",
+    "web_get_recent_logs",
+    "web_persist_env_vars",
+    "web_read_json",
+    "web_start_server",
+    "web_write_prompt"
+  ]
+}

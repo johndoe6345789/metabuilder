@@ -1,0 +1,149 @@
+{
+  "name": "Handle Data Table Pagination",
+  "active": false,
+  "nodes": [
+    {
+      "id": "extract_pagination_params",
+      "name": "Extract Pagination Params",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $json }}",
+        "output": {
+          "page": "{{ Math.max($json.page || 1, 1) }}",
+          "limit": "{{ Math.min($json.limit || 50, 500) }}"
+        },
+        "operation": "transform_data"
+      }
+    },
+    {
+      "id": "calculate_offset",
+      "name": "Calculate Offset",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "output": "{{ ($steps.extract_pagination_params.output.page - 1) * $steps.extract_pagination_params.output.limit }}",
+        "operation": "transform_data"
+      }
+    },
+    {
+      "id": "slice_data",
+      "name": "Slice Data",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $json.data }}",
+        "output": "{{ $json.data.slice($steps.calculate_offset.output, $steps.calculate_offset.output + $steps.extract_pagination_params.output.limit) }}",
+        "operation": "transform_data"
+      }
+    },
+    {
+      "id": "calculate_total_pages",
+      "name": "Calculate Total Pages",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "output": "{{ Math.ceil($json.data.length / $steps.extract_pagination_params.output.limit) }}",
+        "operation": "transform_data"
+      }
+    },
+    {
+      "id": "return_paginated",
+      "name": "Return Paginated",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "data": {
+          "data": "{{ $steps.slice_data.output }}",
+          "pagination": {
+            "page": "{{ $steps.extract_pagination_params.output.page }}",
+            "limit": "{{ $steps.extract_pagination_params.output.limit }}",
+            "total": "{{ $json.data.length }}",
+            "totalPages": "{{ $steps.calculate_total_pages.output }}",
+            "hasMore": "{{ $steps.extract_pagination_params.output.page < $steps.calculate_total_pages.output }}"
+          }
+        },
+        "action": "emit_event",
+        "event": "data_paginated"
+      }
+    }
+  ],
+  "connections": {
+    "extract_pagination_params": {
+      "main": [
+        [
+          {
+            "node": "calculate_offset",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "calculate_offset": {
+      "main": [
+        [
+          {
+            "node": "slice_data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "slice_data": {
+      "main": [
+        [
+          {
+            "node": "calculate_total_pages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "calculate_total_pages": {
+      "main": [
+        [
+          {
+            "node": "return_paginated",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "id": "workflow_pagination",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
+}

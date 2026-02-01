@@ -8,8 +8,8 @@
       "type": "math.add",
       "typeVersion": 1,
       "position": [
-        0,
-        0
+        100,
+        100
       ],
       "parameters": {
         "numbers": [
@@ -23,12 +23,12 @@
     },
     {
       "id": "assert_add",
-      "name": "Assert Add equals 15",
+      "name": "Assert Add",
       "type": "test.assert_equals",
       "typeVersion": 1,
       "position": [
-        300,
-        0
+        400,
+        100
       ],
       "parameters": {
         "actual": "$test_add.result",
@@ -42,7 +42,7 @@
       "type": "math.multiply",
       "typeVersion": 1,
       "position": [
-        0,
+        700,
         100
       ],
       "parameters": {
@@ -55,12 +55,12 @@
     },
     {
       "id": "assert_multiply",
-      "name": "Assert Multiply equals 24",
+      "name": "Assert Multiply",
       "type": "test.assert_equals",
       "typeVersion": 1,
       "position": [
-        300,
-        100
+        100,
+        300
       ],
       "parameters": {
         "actual": "$test_multiply.result",
@@ -74,8 +74,8 @@
       "type": "math.subtract",
       "typeVersion": 1,
       "position": [
-        0,
-        200
+        400,
+        300
       ],
       "parameters": {
         "a": 10,
@@ -84,12 +84,12 @@
     },
     {
       "id": "assert_subtract",
-      "name": "Assert Subtract equals 7",
+      "name": "Assert Subtract",
       "type": "test.assert_equals",
       "typeVersion": 1,
       "position": [
-        300,
-        200
+        700,
+        300
       ],
       "parameters": {
         "actual": "$test_subtract.result",
@@ -103,8 +103,8 @@
       "type": "math.divide",
       "typeVersion": 1,
       "position": [
-        0,
-        300
+        100,
+        500
       ],
       "parameters": {
         "a": 20,
@@ -113,12 +113,12 @@
     },
     {
       "id": "assert_divide",
-      "name": "Assert Divide equals 5",
+      "name": "Assert Divide",
       "type": "test.assert_equals",
       "typeVersion": 1,
       "position": [
-        300,
-        300
+        400,
+        500
       ],
       "parameters": {
         "actual": "$test_divide.result",
@@ -132,8 +132,8 @@
       "type": "math.max",
       "typeVersion": 1,
       "position": [
-        0,
-        400
+        700,
+        500
       ],
       "parameters": {
         "numbers": [
@@ -147,12 +147,12 @@
     },
     {
       "id": "assert_max",
-      "name": "Assert Max equals 9",
+      "name": "Assert Max",
       "type": "test.assert_equals",
       "typeVersion": 1,
       "position": [
-        300,
-        400
+        100,
+        700
       ],
       "parameters": {
         "actual": "$test_max.result",
@@ -166,8 +166,8 @@
       "type": "math.min",
       "typeVersion": 1,
       "position": [
-        0,
-        500
+        400,
+        700
       ],
       "parameters": {
         "numbers": [
@@ -181,12 +181,12 @@
     },
     {
       "id": "assert_min",
-      "name": "Assert Min equals 1",
+      "name": "Assert Min",
       "type": "test.assert_equals",
       "typeVersion": 1,
       "position": [
-        300,
-        500
+        700,
+        700
       ],
       "parameters": {
         "actual": "$test_min.result",
@@ -200,7 +200,7 @@
       "main": {
         "0": [
           {
-            "node": "Assert Add equals 15",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -211,7 +211,7 @@
       "main": {
         "0": [
           {
-            "node": "Assert Multiply equals 24",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -222,7 +222,7 @@
       "main": {
         "0": [
           {
-            "node": "Assert Subtract equals 7",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -233,7 +233,7 @@
       "main": {
         "0": [
           {
-            "node": "Assert Divide equals 5",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -244,7 +244,7 @@
       "main": {
         "0": [
           {
-            "node": "Assert Max equals 9",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -255,7 +255,7 @@
       "main": {
         "0": [
           {
-            "node": "Assert Min equals 1",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -263,14 +263,13 @@
       }
     }
   },
-  "triggers": [
-    {
-      "nodeId": "test_add",
-      "kind": "manual",
-      "enabled": true,
-      "meta": {
-        "description": "Manually triggered Math Plugins Test Suite workflow execution"
-      }
-    }
-  ]
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  }
 }

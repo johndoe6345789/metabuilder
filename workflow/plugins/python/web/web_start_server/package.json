@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/web_start_server",
+  "version": "1.0.0",
+  "description": "Start the Flask web server",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["web", "workflow", "plugin"],
+  "main": "web_start_server.py",
+  "files": ["web_start_server.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "web.start_server",
+    "category": "web",
+    "class": "WebStartServer",
+    "entrypoint": "execute"
+  }
+}

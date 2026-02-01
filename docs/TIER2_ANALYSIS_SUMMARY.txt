@@ -1,0 +1,254 @@
+================================================================================
+TIER 2 DATA HOOKS ANALYSIS - COMPLETE
+================================================================================
+
+Date: January 23, 2026
+Status: ANALYSIS_COMPLETE
+Scope: Extract and standardize Tier 2 hooks across MetaBuilder frontends
+
+================================================================================
+KEY FINDINGS
+================================================================================
+
+TIER 2 HOOKS FOUND: 11 Total
+
+workflowui (4 hooks - Redux + Service + IndexedDB):
+  1. useProject - Project CRUD + selection
+  2. useWorkspace - Workspace CRUD + selection
+  3. useWorkflow - Workflow operations + auto-save
+  4. useExecution - Execution + history + stats
+
+frontends/nextjs (7 hooks - No Redux):
+  5. useUsers - User list with pagination, search, filtering
+  6. useUserForm - User form state management
+  7. useUserActions - User CRUD operations
+  8. usePackages - Package list with pagination, search
+  9. usePackageDetails - Single package + related data
+  10. usePackageActions - Package CRUD operations
+  11. useWorkflow - Workflow execution + retry logic
+
+Generic Service Adapters (3 - Available to all):
+  - useRestApi - Generic CRUD builder
+  - useEntity - Entity-specific wrapper
+  - useDependencyEntity - Cross-package access
+
+================================================================================
+COMMON PATTERNS IDENTIFIED (5)
+================================================================================
+
+Pattern 1: Basic CRUD + Selection
+  Examples: useProject, useWorkspace
+  Components: items[], current, CRUD actions, persistence
+
+Pattern 2: List with Pagination, Search, Filtering
+  Examples: useUsers, usePackages
+  Components: pagination, debounced search, filtering, refetch
+
+Pattern 3: Entity Operations + Async Actions
+  Examples: useExecution, useWorkflow(nextjs)
+  Components: status tracking, retry logic, progress metrics
+
+Pattern 4: Form Management with Actions
+  Examples: useUserForm, usePackageActions
+  Components: field state, validation, submission handling
+
+Pattern 5: Single Entity + Related Data
+  Examples: usePackageDetails, useProjectCanvas
+  Components: main entity, collections, lazy loading
+
+================================================================================
+FRAGMENTATION ISSUES (4 Problems)
+================================================================================
+
+Problem 1: API Schema Differences
+  - workflowui: limit, offset, params
+  - frontends/nextjs: page, limit (0-indexed)
+  - useRestApi: skip, take
+
+Problem 2: State Management Mismatch
+  - workflowui: Redux + service + IndexedDB
+  - frontends/nextjs: useState + direct fetch + AbortController
+  - No unified interface
+
+Problem 3: Feature Gaps
+  - workflowui: No search/filter support
+  - frontends/nextjs: No caching strategy
+  - No real-time sync adapters
+
+Problem 4: Code Duplication
+  - Search debouncing implemented separately
+  - Pagination logic repeated
+  - Error handling patterns inconsistent
+  - Retry logic only in workflowui
+
+================================================================================
+PROPOSED SOLUTION: SERVICE ADAPTER PATTERN
+================================================================================
+
+Architecture: 3-Layer (Hooks → Adapters → Services → Storage)
+
+Adapters:
+  1. Redux Adapter (workflowui) - dispatch/useSelector + Redux + IndexedDB
+  2. API Adapter (frontends/nextjs) - Direct fetch + useState + Memory cache
+  3. DBAL Adapter (frontends/dbal) - Minimal implementation
+
+Unified Interface:
+  - All hooks have same signature: useEntity<T>(entityType, options)
+  - All return: UseEntityReturn<T> with identical API
+  - Consistent CRUD, pagination, search, error handling
+
+Benefits:
+  - 30-40% code reduction
+  - Single implementation for 11+ hooks
+  - 100% feature parity across frontends
+  - Standardized error handling and retry logic
+  - Optional caching (IndexedDB, memory, HTTP)
+
+================================================================================
+IMPLEMENTATION TIMELINE: Phase 5 (6-9 weeks)
+================================================================================
+
+Phase 5a: Foundation (1-2 weeks)
+  - Create base adapter layer
+  - Implement 3 adapter variants (Redux, API, DBAL)
+  - Create cache layer (IndexedDB, memory)
+  - Write tests
+
+Phase 5b: Core Hooks (2-3 weeks)
+  - Implement generic useEntity hook
+  - Create entity-specific hooks
+  - Write tests and documentation
+
+Phase 5c: Migration (2-3 weeks)
+  - Refactor workflowui hooks
+  - Refactor frontends/nextjs hooks
+  - Add dbal support
+  - Integration testing
+
+Phase 5d: Polish (1 week)
+  - Performance optimization
+  - Error handling improvements
+  - Final documentation
+
+Total: 6-9 weeks (1.5-2 months)
+
+================================================================================
+NEW PACKAGE STRUCTURE
+================================================================================
+
+packages/tier2-hooks/
+├── src/
+│   ├── adapters/ (base, redux, api, dbal)
+│   ├── cache/ (indexeddb, memory)
+│   ├── hooks/ (use-entity, use-projects, use-users, etc.)
+│   ├── types/ (interfaces)
+│   └── utils/ (retry, query-builder)
+├── tests/ (comprehensive test suite)
+├── docs/ (architecture, migration guide)
+└── package.json
+
+Files to Refactor (Phase 5c+):
+  - workflowui/src/hooks/useProject.ts
+  - workflowui/src/hooks/useWorkspace.ts
+  - workflowui/src/hooks/useWorkflow.ts
+  - workflowui/src/hooks/useExecution.ts
+  - frontends/nextjs/src/hooks/useUsers.ts
+  - frontends/nextjs/src/hooks/usePackages.ts
+  - frontends/nextjs/src/hooks/useWorkflow.ts
+
+================================================================================
+DELIVERABLE DOCUMENTS
+================================================================================
+
+1. TIER2_HOOKS_ANALYSIS.md (Comprehensive - Full Technical Details)
+   Location: /Users/rmac/Documents/metabuilder/docs/TIER2_HOOKS_ANALYSIS.md
+   Contents: Complete analysis, patterns, Redux infrastructure, services, common details
+   
+2. TIER2_EXTRACTION_STRATEGY.md (Executive Summary)
+   Location: /Users/rmac/Documents/metabuilder/docs/TIER2_EXTRACTION_STRATEGY.md
+   Contents: Key findings, fragmentation, solution, timeline, benefits
+   
+3. TIER2_HOOKS_REFERENCE.md (Quick Reference)
+   Location: /Users/rmac/Documents/metabuilder/docs/TIER2_HOOKS_REFERENCE.md
+   Contents: Hook inventory, patterns table, unified signature, quick links
+   
+4. TIER2_ADAPTER_ARCHITECTURE.md (Implementation Guide)
+   Location: /Users/rmac/Documents/metabuilder/docs/TIER2_ADAPTER_ARCHITECTURE.md
+   Contents: Architecture diagrams, adapter code examples, implementation roadmap
+
+5. TIER2_ANALYSIS_SUMMARY.txt (This File)
+   Location: /Users/rmac/Documents/metabuilder/docs/TIER2_ANALYSIS_SUMMARY.txt
+   Contents: Quick summary, key stats, next steps
+
+================================================================================
+NEXT STEPS
+================================================================================
+
+1. ✅ [DONE] Analyze existing Tier 2 hooks across codebase
+2. ✅ [DONE] Document patterns and fragmentation
+3. ✅ [DONE] Design unified adapter pattern
+4. [TODO] Present findings to architecture review board
+5. [TODO] Get approval on adapter design
+6. [TODO] Create Phase 5 RFC document
+7. [TODO] Begin Phase 5a: Foundation work
+
+================================================================================
+SUCCESS METRICS
+================================================================================
+
+Code Quality:
+  - 30-40% reduction in Tier 2 hook lines
+  - 100% of entity CRUD operations covered
+
+Testing:
+  - >80% test coverage on adapters
+  - >80% test coverage on hooks
+
+Type Safety:
+  - Zero `any` types in new code
+  - Full TypeScript integration
+
+Performance:
+  - <5% API response time regression
+  - Improved caching strategy
+
+Documentation:
+  - 100% of hooks documented with examples
+  - Migration guide for all frontends
+
+Adoption:
+  - All frontends migrated by end of Phase 5
+  - Zero breaking changes for consumers
+
+================================================================================
+RISK MITIGATION
+================================================================================
+
+Risk: Redux hooks break during refactor
+Mitigation: Gradual migration, run both old+new hooks during transition
+
+Risk: API schema mismatches
+Mitigation: Adapter layer normalizes differences
+
+Risk: Cache invalidation bugs
+Mitigation: Comprehensive test suite + manual invalidation API
+
+Risk: Performance regression
+Mitigation: Benchmarking before/after, optimization focus
+
+Risk: Developer confusion
+Mitigation: Migration guide + examples + documentation
+
+================================================================================
+CONTACT & QUESTIONS
+================================================================================
+
+For questions about this analysis, refer to:
+  - Full technical details: TIER2_HOOKS_ANALYSIS.md
+  - Quick reference: TIER2_HOOKS_REFERENCE.md
+  - Implementation details: TIER2_ADAPTER_ARCHITECTURE.md
+  - Strategy & timeline: TIER2_EXTRACTION_STRATEGY.md
+
+All documents are in: /Users/rmac/Documents/metabuilder/docs/
+
+================================================================================

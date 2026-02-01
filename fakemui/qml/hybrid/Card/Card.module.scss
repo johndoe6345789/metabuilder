@@ -1,0 +1,240 @@
+// Card Component - Material Design 3
+// ====================================
+// Implements M3 card specifications using official M3 tokens
+// https://m3.material.io/components/cards/specs
+
+@use '../tokens' as m3;
+
+// Base card styles
+.card {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  position: relative;
+  border-style: solid;
+  border-width: 0;
+  border-radius: m3.$corner-medium;
+  transition: all m3.$motion-duration-short4 m3.$motion-easing-standard;
+
+  // High contrast border (invisible by default, visible in high contrast mode)
+  &::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: solid 1px transparent;
+    content: '';
+    display: block;
+    pointer-events: none;
+    box-sizing: border-box;
+    border-radius: inherit;
+  }
+
+  // ============================================
+  // Elevated Card (Default)
+  // ============================================
+
+  &--elevated {
+    background: m3.$surface-container-low;
+    box-shadow: m3.$elevation-level1;
+
+    &:hover {
+      box-shadow: m3.$elevation-level2;
+    }
+  }
+
+  // ============================================
+  // Filled Card
+  // ============================================
+
+  &--filled {
+    background: m3.$surface-container-highest;
+    box-shadow: m3.$elevation-level0;
+  }
+
+  // ============================================
+  // Outlined Card
+  // ============================================
+
+  &--outlined {
+    background: m3.$surface;
+    border-width: 1px;
+    border-color: m3.$outline-variant;
+    box-shadow: m3.$elevation-level0;
+
+    // Outlined card already has visible border
+    &::after {
+      border: none;
+    }
+  }
+
+  // ============================================
+  // Clickable Card State
+  // ============================================
+
+  &--clickable {
+    cursor: pointer;
+
+    &:hover {
+      // State layer at hover opacity
+      background: color-mix(
+        in srgb,
+        var(--card-bg, #{m3.$surface-container-low}) calc(100% - 8%),
+        m3.$on-surface
+      );
+    }
+
+    &:focus-visible {
+      outline: 2px solid m3.$primary;
+      outline-offset: 2px;
+      background: color-mix(
+        in srgb,
+        var(--card-bg, #{m3.$surface-container-low}) calc(100% - 12%),
+        m3.$on-surface
+      );
+    }
+
+    &:active {
+      background: color-mix(
+        in srgb,
+        var(--card-bg, #{m3.$surface-container-low}) calc(100% - 12%),
+        m3.$on-surface
+      );
+    }
+  }
+
+  // Apply correct background variable for each variant
+  &--elevated#{&}--clickable {
+    --card-bg: #{m3.$surface-container-low};
+  }
+
+  &--filled#{&}--clickable {
+    --card-bg: #{m3.$surface-container-highest};
+  }
+
+  &--outlined#{&}--clickable {
+    --card-bg: #{m3.$surface};
+  }
+}
+
+// ============================================
+// Card Header
+// ============================================
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  gap: 16px;
+}
+
+// ============================================
+// Card Title
+// ============================================
+
+.cardTitle {
+  margin: 0;
+  @include m3.typography(title-large);
+  color: m3.$on-surface;
+}
+
+// ============================================
+// Card Subtitle
+// ============================================
+
+.cardSubtitle {
+  margin: 0;
+  @include m3.typography(body-medium);
+  color: m3.$on-surface-variant;
+}
+
+// ============================================
+// Card Content
+// ============================================
+
+.cardContent {
+  display: block;
+  padding: 0 16px;
+
+  &:first-child {
+    padding-top: 16px;
+  }
+
+  &:last-child {
+    padding-bottom: 16px;
+  }
+
+  // Remove bottom margin from last child element
+  > *:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// ============================================
+// Card Footer / Actions
+// ============================================
+
+.cardFooter {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  box-sizing: border-box;
+  min-height: 52px;
+  padding: 8px;
+  gap: 8px;
+}
+
+// End-aligned actions
+.cardFooter--end {
+  justify-content: flex-end;
+}
+
+// ============================================
+// Card Media
+// ============================================
+
+.cardMedia {
+  position: relative;
+  box-sizing: border-box;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  overflow: hidden;
+
+  &:first-child {
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
+  }
+
+  &:last-child {
+    border-bottom-left-radius: inherit;
+    border-bottom-right-radius: inherit;
+  }
+}
+
+// Media aspect ratios
+.cardMedia--16-9 {
+  aspect-ratio: 16 / 9;
+}
+
+.cardMedia--4-3 {
+  aspect-ratio: 4 / 3;
+}
+
+.cardMedia--square {
+  aspect-ratio: 1 / 1;
+}
+
+// ============================================
+// Card Avatar
+// ============================================
+
+.cardAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: m3.$corner-full;
+  flex-shrink: 0;
+  object-fit: cover;
+}

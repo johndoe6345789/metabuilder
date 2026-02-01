@@ -1,0 +1,13 @@
+{
+  "id": "automotive",
+  "name": "Automotive",
+  "description": "Car and vehicle components",
+  "manufacturers": [
+    {
+      "id": "ford",
+      "name": "Ford",
+      "description": "Ford Motor Company drivetrain components",
+      "meta": "USA • Founded 1903"
+    }
+  ]
+}

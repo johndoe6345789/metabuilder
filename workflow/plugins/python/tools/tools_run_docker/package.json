@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/tools_run_docker",
+  "version": "1.0.0",
+  "description": "Run a command inside a Docker container with optional volumes and working directory",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["tools", "workflow", "plugin", "docker"],
+  "main": "tools_run_docker.py",
+  "files": ["tools_run_docker.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "tools.run_docker",
+    "category": "tools",
+    "class": "ToolsRunDocker",
+    "entrypoint": "execute"
+  }
+}

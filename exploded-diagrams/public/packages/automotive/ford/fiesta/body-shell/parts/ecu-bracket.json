@@ -1,0 +1,39 @@
+{
+  "id": "ecu-bracket",
+  "name": "ECU Mounting Bracket",
+  "partNumber": "FD-1826890",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 650.0,
+  "weightUnit": "g",
+  "baseY": 820,
+  "description": "Engine control unit mounting bracket and heat shield",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "10mm", "required": true },
+      { "name": "Torx socket", "size": "T25", "required": true }
+    ],
+    "hardware": [
+      { "name": "Bracket bolt", "spec": "M6x1.0x12", "qty": 3, "reusable": true },
+      { "name": "ECU mounting bolt", "spec": "M6x1.0x20", "qty": 3, "reusable": true },
+      { "name": "Heat shield clip", "spec": "Push fit", "qty": 4, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Bracket bolts", "value": 10, "unit": "Nm", "sequence": "", "notes": "" },
+      { "fastener": "ECU mounting bolts", "value": 8, "unit": "Nm", "sequence": "", "notes": "Electronic component - low torque" }
+    ],
+    "notes": [
+      "Position before wiring loom final routing",
+      "ECU must be grounded to bracket",
+      "Heat shield protects from exhaust heat",
+      "Keep ECU connector area accessible"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 100, "height": 30, "rx": 2 },
+    { "type": "rect", "width": 80, "height": 20, "offsetY": 18, "rx": 2, "fill": "#555" },
+    { "type": "circle", "r": 4, "offsetX": -40, "offsetY": 0, "fill": "#444" },
+    { "type": "circle", "r": 4, "offsetX": 40, "offsetY": 0, "fill": "#444" },
+    { "type": "circle", "r": 4, "offsetX": 0, "offsetY": 0, "fill": "#444" }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "id": "brake-hose-rear-right",
+  "name": "Rear Right Brake Hose",
+  "partNumber": "FD-1850620",
+  "material": "rubber",
+  "quantity": 1,
+  "weight": 100.0,
+  "weightUnit": "g",
+  "baseY": 560,
+  "description": "Flexible brake hose to rear right wheel cylinder",
+  "installation": {
+    "tools": [
+      { "name": "Flare nut spanner", "size": "10mm", "required": true },
+      { "name": "Brake bleeding kit", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Hose clip", "spec": "Spring clip", "qty": 1, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Flare nut", "value": 12, "unit": "Nm" }
+    ],
+    "notes": [
+      "Shorter than front hoses",
+      "Check for rubbing on twist beam",
+      "Bleed wheel cylinder after fitting"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 6, "height": 45, "rx": 3, "fill": "#333" },
+    { "type": "rect", "width": 12, "height": 8, "offsetY": -22, "rx": 2, "fill": "#666" },
+    { "type": "rect", "width": 12, "height": 8, "offsetY": 22, "rx": 2, "fill": "#666" }
+  ]
+}

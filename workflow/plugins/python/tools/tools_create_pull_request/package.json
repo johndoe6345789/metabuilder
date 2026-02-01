@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/tools_create_pull_request",
+  "version": "1.0.0",
+  "description": "Create a pull request with title, body, and branch information",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["tools", "workflow", "plugin"],
+  "main": "tools_create_pull_request.py",
+  "files": ["tools_create_pull_request.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "tools.create_pull_request",
+    "category": "tools",
+    "class": "ToolsCreatePullRequest",
+    "entrypoint": "execute"
+  }
+}

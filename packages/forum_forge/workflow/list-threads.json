@@ -1,0 +1,213 @@
+{
+  "name": "List Forum Threads",
+  "active": false,
+  "nodes": [
+    {
+      "id": "validate_tenant",
+      "name": "Validate Tenant",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $context.tenantId }}",
+        "operation": "validate",
+        "validator": "required"
+      }
+    },
+    {
+      "id": "extract_params",
+      "name": "Extract Params",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "output": {
+          "categoryId": "{{ $json.categoryId }}",
+          "sortBy": "{{ $json.sortBy || 'updatedAt' }}",
+          "sortOrder": "{{ $json.sortOrder || 'desc' }}",
+          "limit": "{{ Math.min($json.limit || 20, 100) }}",
+          "page": "{{ $json.page || 1 }}"
+        },
+        "operation": "transform_data"
+      }
+    },
+    {
+      "id": "calculate_offset",
+      "name": "Calculate Offset",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "output": "{{ ($steps.extract_params.output.page - 1) * $steps.extract_params.output.limit }}",
+        "operation": "transform_data"
+      }
+    },
+    {
+      "id": "fetch_threads",
+      "name": "Fetch Threads",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "filter": {
+          "tenantId": "{{ $context.tenantId }}",
+          "categoryId": "{{ $steps.extract_params.output.categoryId }}"
+        },
+        "sort": {
+          "{{ $steps.extract_params.output.sortBy }}": "{{ $steps.extract_params.output.sortOrder === 'asc' ? 1 : -1 }}"
+        },
+        "limit": "{{ $steps.extract_params.output.limit }}",
+        "offset": "{{ $steps.calculate_offset.output }}",
+        "operation": "database_read",
+        "entity": "ForumThread"
+      }
+    },
+    {
+      "id": "fetch_total",
+      "name": "Fetch Total",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "filter": {
+          "tenantId": "{{ $context.tenantId }}",
+          "categoryId": "{{ $steps.extract_params.output.categoryId }}"
+        },
+        "operation": "database_count",
+        "entity": "ForumThread"
+      }
+    },
+    {
+      "id": "format_response",
+      "name": "Format Response",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "output": {
+          "threads": "{{ $steps.fetch_threads.output }}",
+          "pagination": {
+            "total": "{{ $steps.fetch_total.output }}",
+            "page": "{{ $steps.extract_params.output.page }}",
+            "limit": "{{ $steps.extract_params.output.limit }}",
+            "totalPages": "{{ Math.ceil($steps.fetch_total.output / $steps.extract_params.output.limit) }}"
+          }
+        },
+        "operation": "transform_data"
+      }
+    },
+    {
+      "id": "return_success",
+      "name": "Return Success",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        100,
+        500
+      ],
+      "parameters": {
+        "action": "http_response",
+        "status": 200,
+        "body": "{{ $steps.format_response.output }}"
+      }
+    }
+  ],
+  "connections": {
+    "validate_tenant": {
+      "main": [
+        [
+          {
+            "node": "extract_params",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "extract_params": {
+      "main": [
+        [
+          {
+            "node": "calculate_offset",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "calculate_offset": {
+      "main": [
+        [
+          {
+            "node": "fetch_threads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fetch_threads": {
+      "main": [
+        [
+          {
+            "node": "fetch_total",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fetch_total": {
+      "main": [
+        [
+          {
+            "node": "format_response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "format_response": {
+      "main": [
+        [
+          {
+            "node": "return_success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "id": "workflow_list_threads",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
+}

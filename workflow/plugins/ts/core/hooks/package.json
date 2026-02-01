@@ -1,0 +1,32 @@
+{
+  "name": "@metabuilder/workflow-plugin-hooks",
+  "version": "1.0.0",
+  "description": "Workflow plugin providing hook-like state management operations for DAG execution",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "tsc --declaration --emitDeclarationOnly",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint ."
+  },
+  "keywords": [
+    "workflow",
+    "plugin",
+    "hooks",
+    "state-management",
+    "counter",
+    "toggle",
+    "validation",
+    "arrays",
+    "sets",
+    "maps"
+  ],
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "peerDependencies": {
+    "@metabuilder/workflow": "^3.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

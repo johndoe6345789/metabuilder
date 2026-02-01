@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/math_round",
+  "version": "1.0.0",
+  "description": "Round to specified decimals",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["math", "workflow", "plugin"],
+  "main": "math_round.py",
+  "files": ["math_round.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "math.round",
+    "category": "math",
+    "class": "MathRound",
+    "entrypoint": "execute"
+  }
+}

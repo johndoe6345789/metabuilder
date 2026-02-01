@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/core_append_context_message",
+  "version": "1.0.0",
+  "description": "Append context information to the message list as a system message",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["core", "workflow", "plugin"],
+  "main": "core_append_context_message.py",
+  "files": ["core_append_context_message.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "core.append_context_message",
+    "category": "core",
+    "class": "CoreAppendContextMessage",
+    "entrypoint": "execute"
+  }
+}

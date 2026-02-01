@@ -1,0 +1,17 @@
+{
+  "id": "bearings",
+  "name": "Diff Bearings",
+  "partNumber": "TRA-5118",
+  "material": "steel",
+  "quantity": 2,
+  "weight": 4.5,
+  "weightUnit": "g",
+  "baseY": 350,
+  "description": "10x15x4mm rubber sealed ball bearings",
+  "geometry": [
+    { "type": "cylinder", "rx": 15, "ry": 5, "height": 10, "offsetX": -45 },
+    { "type": "ellipse", "rx": 8, "ry": 3, "offsetX": -45, "fill": "#4a4a4a" },
+    { "type": "cylinder", "rx": 15, "ry": 5, "height": 10, "offsetX": 45 },
+    { "type": "ellipse", "rx": 8, "ry": 3, "offsetX": 45, "fill": "#4a4a4a" }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/convert_parse_json",
+  "version": "1.0.0",
+  "description": "Parse a JSON string to object",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["convert", "workflow", "plugin"],
+  "main": "convert_parse_json.go",
+  "files": ["convert_parse_json.go", "factory.go"],
+  "metadata": {
+    "plugin_type": "convert.parse_json",
+    "category": "convert",
+    "struct": "ConvertParseJson",
+    "entrypoint": "Execute"
+  }
+}

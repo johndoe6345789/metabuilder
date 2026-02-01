@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/utils_filter_list",
+  "version": "1.0.0",
+  "description": "Filter items using a match mode",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["utils", "workflow", "plugin"],
+  "main": "utils_filter_list.py",
+  "files": ["utils_filter_list.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "utils.filter_list",
+    "category": "utils",
+    "class": "FilterList",
+    "entrypoint": "execute"
+  }
+}

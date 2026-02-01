@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/convert_to_number",
+  "version": "1.0.0",
+  "description": "Convert a value to number",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["convert", "workflow", "plugin"],
+  "main": "convert_to_number.go",
+  "files": ["convert_to_number.go", "factory.go"],
+  "metadata": {
+    "plugin_type": "convert.to_number",
+    "category": "convert",
+    "struct": "ConvertToNumber",
+    "entrypoint": "Execute"
+  }
+}

@@ -1,11 +1,175 @@
-// Editor atom - code editor wrapper
+// Editor Atoms - Material Design 3
+// ================================
+// Flat selectors for code editor wrapper styling using M3 tokens
 
+// Base editor wrapper
 .editor-wrapper {
-  border-radius: var(--radius-sm);
+  border-radius: var(--mat-sys-corner-medium);
   overflow: hidden;
+  height: 400px;
+  border: 1px solid var(--mat-sys-outline-variant);
+  background: var(--mat-sys-surface-container);
+}
+
+// Size variants
+.editor-wrapper--xs {
+  height: 200px;
+}
+
+.editor-wrapper--sm {
+  height: 300px;
+}
+
+.editor-wrapper--md {
   height: 400px;
 }
 
-.editor-wrapper--sm { height: 300px; }
-.editor-wrapper--lg { height: 500px; }
-.editor-wrapper--xl { height: 600px; }
+.editor-wrapper--lg {
+  height: 500px;
+}
+
+.editor-wrapper--xl {
+  height: 600px;
+}
+
+.editor-wrapper--full {
+  height: 100%;
+  min-height: 400px;
+}
+
+// With header (filename, tabs)
+.editor-wrapper--with-header {
+  display: flex;
+  flex-direction: column;
+}
+
+.editor-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--mat-sys-surface-container-high);
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  flex-shrink: 0;
+}
+
+.editor-header-title {
+  font-family: var(--mat-sys-label-medium-font);
+  font-size: var(--mat-sys-label-medium-size);
+  color: var(--mat-sys-on-surface);
+}
+
+.editor-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+}
+
+// Editor content area
+.editor-content {
+  flex: 1;
+  min-height: 0;
+}
+
+// With footer (status bar)
+.editor-footer {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 4px 12px;
+  background: var(--mat-sys-surface-container);
+  border-top: 1px solid var(--mat-sys-outline-variant);
+  font-family: var(--mat-sys-label-small-font);
+  font-size: var(--mat-sys-label-small-size);
+  color: var(--mat-sys-on-surface-variant);
+  flex-shrink: 0;
+}
+
+.editor-footer-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.editor-footer-spacer {
+  flex: 1;
+}
+
+// Focused state
+.editor-wrapper:focus-within {
+  border-color: var(--mat-sys-primary);
+  box-shadow: 0 0 0 1px var(--mat-sys-primary);
+}
+
+// Error state
+.editor-wrapper--error {
+  border-color: var(--mat-sys-error);
+}
+
+.editor-wrapper--error:focus-within {
+  box-shadow: 0 0 0 1px var(--mat-sys-error);
+}
+
+// Read-only state
+.editor-wrapper--readonly {
+  background: var(--mat-sys-surface-container-lowest);
+}
+
+.editor-wrapper--readonly .editor-header {
+  background: var(--mat-sys-surface-container);
+}
+
+// Elevated variant
+.editor-wrapper--elevated {
+  box-shadow: var(--mat-sys-level1);
+  border: none;
+}
+
+// Tabs in editor header
+.editor-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex: 1;
+  overflow-x: auto;
+}
+
+.editor-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-family: var(--mat-sys-label-medium-font);
+  font-size: var(--mat-sys-label-medium-size);
+  color: var(--mat-sys-on-surface-variant);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+}
+
+.editor-tab:hover {
+  background: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
+}
+
+.editor-tab--active {
+  color: var(--mat-sys-on-surface);
+  background: var(--mat-sys-surface-container);
+}
+
+.editor-tab-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: var(--mat-sys-corner-extra-small);
+  opacity: 0.6;
+}
+
+.editor-tab-close:hover {
+  opacity: 1;
+  background: color-mix(in srgb, var(--mat-sys-on-surface) 12%, transparent);
+}

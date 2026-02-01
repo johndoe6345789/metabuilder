@@ -1,0 +1,41 @@
+{
+  "id": "brake-disc",
+  "name": "Front Brake Disc",
+  "partNumber": "FD-1679210",
+  "material": "steel",
+  "quantity": 2,
+  "weight": 6800.0,
+  "weightUnit": "g",
+  "baseY": 710,
+  "description": "Vented front brake disc - 278mm diameter",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "32mm", "required": true },
+      { "name": "Impact driver", "size": "-", "required": false },
+      { "name": "Wire brush", "size": "-", "required": true },
+      { "name": "Brake cleaner", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Disc retaining screw", "spec": "M6x1.0x10", "qty": 1, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Disc retaining screw", "value": 5, "unit": "Nm", "sequence": "", "notes": "Anti-rattle only - not structural" }
+    ],
+    "notes": [
+      "Clean hub face before fitting disc",
+      "Check disc thickness - min 25mm",
+      "Check for scoring and heat cracks",
+      "Bed in new discs gradually",
+      "Clean with brake cleaner - no grease on friction surface"
+    ]
+  },
+  "geometry": [
+    { "type": "circle", "r": 55 },
+    { "type": "circle", "r": 48, "fill": "#5a5a5a" },
+    { "type": "circle", "r": 28, "fill": "#4a4a4a" },
+    { "type": "circle", "r": 22, "fill": "#666" },
+    { "type": "circle", "r": 5, "offsetX": -16, "offsetY": 0, "fill": "#333" },
+    { "type": "circle", "r": 5, "offsetX": 8, "offsetY": -14, "fill": "#333" },
+    { "type": "circle", "r": 5, "offsetX": 8, "offsetY": 14, "fill": "#333" }
+  ]
+}

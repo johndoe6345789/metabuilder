@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/validate_entity",
+  "version": "1.0.0",
+  "description": "Validate entity against JSON schema",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["packagerepo", "workflow", "plugin", "validation", "json-schema"],
+  "main": "validate_entity.py",
+  "files": ["validate_entity.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "packagerepo.validate_entity",
+    "category": "packagerepo",
+    "class": "ValidateEntity",
+    "entrypoint": "execute"
+  }
+}

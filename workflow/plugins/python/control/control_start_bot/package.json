@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/control_start_bot",
+  "version": "1.0.0",
+  "description": "Start bot execution in background thread",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["control", "workflow", "plugin"],
+  "main": "control_start_bot.py",
+  "files": ["control_start_bot.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "control.start_bot",
+    "category": "control",
+    "class": "ControlStartBot",
+    "entrypoint": "execute"
+  }
+}

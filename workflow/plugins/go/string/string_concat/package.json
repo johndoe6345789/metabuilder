@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/string_concat",
+  "version": "1.0.0",
+  "description": "Concatenate multiple strings with optional separator",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["string", "workflow", "plugin"],
+  "main": "string_concat.go",
+  "files": ["string_concat.go", "factory.go"],
+  "metadata": {
+    "plugin_type": "string.concat",
+    "category": "string",
+    "struct": "StringConcat",
+    "entrypoint": "Execute"
+  }
+}

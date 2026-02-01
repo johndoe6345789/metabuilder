@@ -1,0 +1,92 @@
+{
+  "id": "y-carriage",
+  "name": "Y-Axis Carriage Plate",
+  "partNumber": "BL-A1-YCP-001",
+  "material": "aluminum",
+  "quantity": 1,
+  "weight": 420.0,
+  "weightUnit": "g",
+  "baseY": -120,
+  "description": "CNC machined aluminum carriage plate for Y-axis motion - mounts heated bed and rides on linear rails",
+  "installation": {
+    "tools": [
+      { "name": "Hex key", "size": "2.5mm", "required": true },
+      { "name": "Hex key", "size": "3mm", "required": true },
+      { "name": "Torque driver", "size": "1-10 Nm", "required": true },
+      { "name": "Loctite", "size": "242 blue", "required": true }
+    ],
+    "hardware": [
+      { "name": "Linear bearing block screw", "spec": "M3x8 SHCS", "grade": "12.9", "qty": 8, "reusable": true },
+      { "name": "Belt clamp screw", "spec": "M3x10 SHCS", "qty": 4, "reusable": true },
+      { "name": "Belt clamp plate", "spec": "GT2 6mm", "qty": 2, "reusable": true },
+      { "name": "Bed mount standoff", "spec": "M3x25 hex", "qty": 4, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Linear bearing screws", "value": 1.2, "unit": "Nm", "sequence": "Crosshatch", "notes": "Apply Loctite 242" },
+      { "fastener": "Belt clamp screws", "value": 0.8, "unit": "Nm", "sequence": "Alternating", "notes": "Ensure belt is tight" },
+      { "fastener": "Bed mount standoffs", "value": 1.5, "unit": "Nm", "sequence": "", "notes": "" }
+    ],
+    "notes": [
+      "Check linear bearing preload after installation",
+      "Verify carriage moves freely along full Y travel",
+      "Belt tension should deflect ~3mm with moderate finger pressure",
+      "Clean rails and lubricate with light machine oil"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 200, "height": 180, "rx": 5, "fill": "#707070" },
+    { "type": "rect", "width": 180, "height": 160, "rx": 3, "fill": "#808080" },
+    { "type": "rect", "width": 30, "height": 170, "offsetX": -85, "rx": 2, "fill": "#606060" },
+    { "type": "rect", "width": 30, "height": 170, "offsetX": 85, "rx": 2, "fill": "#606060" },
+    { "type": "circle", "r": 4, "offsetX": -85, "offsetY": -70, "fill": "#555" },
+    { "type": "circle", "r": 4, "offsetX": -85, "offsetY": 70, "fill": "#555" },
+    { "type": "circle", "r": 4, "offsetX": 85, "offsetY": -70, "fill": "#555" },
+    { "type": "circle", "r": 4, "offsetX": 85, "offsetY": 70, "fill": "#555" }
+  ],
+  "geometry3d": [
+    { "type": "box", "width": 280, "height": 5, "depth": 260, "fill": "#707070" },
+    { "type": "box", "width": 270, "height": 3, "depth": 250, "offsetY": 1, "fill": "#808080" },
+
+    { "type": "box", "width": 280, "height": 8, "depth": 25, "offsetY": -3, "offsetZ": -115, "fill": "#606060" },
+    { "type": "box", "width": 280, "height": 8, "depth": 25, "offsetY": -3, "offsetZ": 115, "fill": "#606060" },
+
+    { "type": "cylinder", "r": 8, "height": 10, "offsetX": -120, "offsetY": -2, "offsetZ": -115, "fill": "#555555" },
+    { "type": "cylinder", "r": 8, "height": 10, "offsetX": -60, "offsetY": -2, "offsetZ": -115, "fill": "#555555" },
+    { "type": "cylinder", "r": 8, "height": 10, "offsetX": 60, "offsetY": -2, "offsetZ": -115, "fill": "#555555" },
+    { "type": "cylinder", "r": 8, "height": 10, "offsetX": 120, "offsetY": -2, "offsetZ": -115, "fill": "#555555" },
+    { "type": "cylinder", "r": 8, "height": 10, "offsetX": -120, "offsetY": -2, "offsetZ": 115, "fill": "#555555" },
+    { "type": "cylinder", "r": 8, "height": 10, "offsetX": -60, "offsetY": -2, "offsetZ": 115, "fill": "#555555" },
+    { "type": "cylinder", "r": 8, "height": 10, "offsetX": 60, "offsetY": -2, "offsetZ": 115, "fill": "#555555" },
+    { "type": "cylinder", "r": 8, "height": 10, "offsetX": 120, "offsetY": -2, "offsetZ": 115, "fill": "#555555" },
+
+    { "type": "cylinder", "r": 2, "height": 15, "offsetX": -120, "offsetY": -2, "offsetZ": -115, "subtract": true },
+    { "type": "cylinder", "r": 2, "height": 15, "offsetX": -60, "offsetY": -2, "offsetZ": -115, "subtract": true },
+    { "type": "cylinder", "r": 2, "height": 15, "offsetX": 60, "offsetY": -2, "offsetZ": -115, "subtract": true },
+    { "type": "cylinder", "r": 2, "height": 15, "offsetX": 120, "offsetY": -2, "offsetZ": -115, "subtract": true },
+    { "type": "cylinder", "r": 2, "height": 15, "offsetX": -120, "offsetY": -2, "offsetZ": 115, "subtract": true },
+    { "type": "cylinder", "r": 2, "height": 15, "offsetX": -60, "offsetY": -2, "offsetZ": 115, "subtract": true },
+    { "type": "cylinder", "r": 2, "height": 15, "offsetX": 60, "offsetY": -2, "offsetZ": 115, "subtract": true },
+    { "type": "cylinder", "r": 2, "height": 15, "offsetX": 120, "offsetY": -2, "offsetZ": 115, "subtract": true },
+
+    { "type": "cylinder", "r": 6, "height": 8, "offsetX": -118, "offsetY": 5, "offsetZ": -118, "fill": "#656565" },
+    { "type": "cylinder", "r": 6, "height": 8, "offsetX": 118, "offsetY": 5, "offsetZ": -118, "fill": "#656565" },
+    { "type": "cylinder", "r": 6, "height": 8, "offsetX": -118, "offsetY": 5, "offsetZ": 118, "fill": "#656565" },
+    { "type": "cylinder", "r": 6, "height": 8, "offsetX": 118, "offsetY": 5, "offsetZ": 118, "fill": "#656565" },
+    { "type": "cylinder", "r": 2, "height": 12, "offsetX": -118, "offsetY": 5, "offsetZ": -118, "subtract": true },
+    { "type": "cylinder", "r": 2, "height": 12, "offsetX": 118, "offsetY": 5, "offsetZ": -118, "subtract": true },
+    { "type": "cylinder", "r": 2, "height": 12, "offsetX": -118, "offsetY": 5, "offsetZ": 118, "subtract": true },
+    { "type": "cylinder", "r": 2, "height": 12, "offsetX": 118, "offsetY": 5, "offsetZ": 118, "subtract": true },
+
+    { "type": "box", "width": 40, "height": 8, "depth": 15, "offsetX": -130, "offsetY": -3, "offsetZ": 0, "fill": "#585858" },
+    { "type": "box", "width": 35, "height": 3, "depth": 12, "offsetX": -130, "offsetY": 0, "offsetZ": 0, "fill": "#505050" },
+    { "type": "cylinder", "r": 2, "height": 10, "offsetX": -135, "offsetY": -3, "offsetZ": -4, "subtract": true },
+    { "type": "cylinder", "r": 2, "height": 10, "offsetX": -135, "offsetY": -3, "offsetZ": 4, "subtract": true },
+
+    { "type": "box", "width": 200, "height": 10, "depth": 180, "offsetY": 0, "subtract": true },
+
+    { "type": "box", "width": 8, "height": 6, "depth": 220, "offsetX": -90, "offsetY": 1, "fill": "#757575" },
+    { "type": "box", "width": 8, "height": 6, "depth": 220, "offsetX": 90, "offsetY": 1, "fill": "#757575" },
+    { "type": "box", "width": 220, "height": 6, "depth": 8, "offsetZ": -90, "offsetY": 1, "fill": "#757575" },
+    { "type": "box", "width": 220, "height": 6, "depth": 8, "offsetZ": 90, "offsetY": 1, "fill": "#757575" }
+  ]
+}

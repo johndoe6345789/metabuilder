@@ -1,0 +1,1 @@
+export { BlinkText } from './BlinkText';

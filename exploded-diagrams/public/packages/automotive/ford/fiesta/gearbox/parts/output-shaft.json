@@ -1,0 +1,48 @@
+{
+  "id": "output-shaft",
+  "name": "Output Shaft",
+  "partNumber": "FD-1848330",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 2400.0,
+  "weightUnit": "g",
+  "baseY": 550,
+  "description": "Main output shaft to differential",
+  "installation": {
+    "tools": [
+      { "name": "Bearing puller", "size": "30-60mm", "required": true },
+      { "name": "Hydraulic press", "size": "10 ton", "required": true },
+      { "name": "Socket", "size": "30mm", "required": true },
+      { "name": "Torque wrench", "size": "100-200 Nm", "required": true }
+    ],
+    "hardware": [
+      { "name": "Output bearing", "spec": "6207-2RS", "qty": 1, "reusable": false },
+      { "name": "Speedometer drive gear", "spec": "18T", "qty": 1, "reusable": true },
+      { "name": "Shaft nut", "spec": "M20x1.5", "qty": 1, "reusable": false },
+      { "name": "Output shaft seal", "spec": "40x55x8", "qty": 1, "reusable": false }
+    ],
+    "torque": [
+      { "fastener": "Output shaft nut", "value": 175, "unit": "Nm", "sequence": "Single", "notes": "Use new nut, stake after torquing" }
+    ],
+    "notes": [
+      "Check splines for wear",
+      "Stake nut after torquing to prevent loosening",
+      "Ensure speedo drive gear meshes correctly",
+      "Apply sealant to shaft seal outer edge"
+    ]
+  },
+  "geometry": [
+    { "type": "cylinder", "rx": 16, "ry": 5, "height": 80 },
+    { "type": "rect", "width": 24, "height": 6, "offsetY": 45, "fill": "#555" },
+    { "type": "gearRing", "teeth": 14, "outerRadius": 18, "toothHeight": 4, "offsetY": -30 },
+    { "type": "circle", "r": 10, "offsetY": 50, "fill": "#444" }
+  ],
+  "geometry3d": [
+    { "type": "cylinder", "r": 14, "height": 160, "fill": "#888" },
+    { "type": "cylinder", "r": 18, "height": 20, "offsetZ": -60, "fill": "#777" },
+    { "type": "cylinder", "r": 18, "height": 20, "offsetZ": -20, "fill": "#777" },
+    { "type": "cylinder", "r": 18, "height": 20, "offsetZ": 20, "fill": "#777" },
+    { "type": "cylinder", "r": 16, "height": 25, "offsetZ": 65, "fill": "#777" },
+    { "type": "cylinder", "r": 6, "height": 160, "subtract": true }
+  ]
+}

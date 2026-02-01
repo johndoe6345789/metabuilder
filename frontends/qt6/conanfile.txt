@@ -1,5 +1,5 @@
 [requires]
-qt/6.7.0
+qt/6.8.1
 cpr/1.14.1
 
 [generators]
@@ -13,8 +13,8 @@ qt/*:qtquick=True
 qt/*:qtquickcontrols2=True
 
 [tool_requires]
-cmake/3.27.1
-ninja/1.11.1
+cmake/3.30.0
+ninja/1.12.1
 
 [layout]
 cmake_layout

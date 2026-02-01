@@ -1,0 +1,297 @@
+===============================================================================
+@TYPES PACKAGES CONSISTENCY AUDIT REPORT
+Generated: 2026-01-23
+===============================================================================
+
+SUMMARY OF FINDINGS
+===================
+
+Total @types packages found: 14 unique packages
+Total locations: 61 declarations across codebase
+Major version mismatches detected: YES
+
+===============================================================================
+CRITICAL ISSUES (Immediate Action Required)
+===============================================================================
+
+1. @types/react - INCONSISTENT ACROSS REACT 18/19 CODEBASES
+   ─────────────────────────────────────────────────────────────────────────
+   
+   React 19.x (^19.2.8) - 21 instances:
+   ✓ storybook/package.json
+   ✓ emailclient/package.json
+   ✓ frontends/dbal/package.json
+   ✓ frontends/nextjs/package.json
+   ✓ dockerterminal/frontend/package.json
+   ✓ old/package.json
+   ✓ codegen/package.json
+   ✓ codegen/packages/spark-tools/package.json
+   ✓ workflowui/package.json
+   ✓ pastebin/package.json
+   ✓ postgres/package.json
+   ✓ exploded-diagrams/package.json
+   ✓ redux/timing-utils/package.json
+   ✓ redux/hooks-canvas/package.json
+   ✓ redux/core-hooks/package.json
+   ✓ redux/hooks-auth/package.json
+   ✓ redux/hooks-data/package.json
+   
+   React 18.x (^18.2.x) - 3 instances:
+   ⚠ redux/core/package.json: ^18.2.45
+   ✗ redux/hooks-async/package.json: ^19.0.0 (MISMATCH - says React 18 but uses 19)
+   
+   Multi-version support (18.x || 19.x) - 4 instances:
+   ✓ hooks/package.json: ^18.2.0 || ^19.0.0
+   ✓ redux/email/package.json: ^18.2.0 || ^19.0.0
+   ✓ redux/hooks-forms/package.json: ^18.2.0 || ^19.0.0
+   ✓ redux/hooks-utils/package.json: ^18.2.0 || ^19.0.0
+   
+   Vague version (^18) - 1 instance:
+   ✗ packages/geocities-app/package.json: ^18 (too vague, use ^18.2.0 instead)
+   
+   ACTION: Consolidate to ^19.2.8 for React 19 projects
+
+
+2. @types/node - SEVERE VERSION FRAGMENTATION
+   ─────────────────────────────────────────────────────────────────────────
+   
+   Node 20.x (^20 or ^20.0.0) - 15 instances:
+   ✗ emailclient/package.json
+   ✗ dockerterminal/frontend/package.json
+   ✗ pastebin/package.json
+   ✗ packages/geocities-app/package.json
+   ✗ exploded-diagrams/package.json
+   ✗ workflow/package.json
+   ✗ workflow/plugins/ts/control-flow/condition/package.json
+   ✗ workflow/plugins/ts/dbal-read/package.json
+   ✗ workflow/plugins/ts/dbal-write/package.json
+   ✗ workflow/plugins/ts/dbal/dbal-read/package.json
+   ✗ workflow/plugins/ts/dbal/dbal-write/package.json
+   ✗ workflow/plugins/ts/integration/email-send/package.json
+   ✗ workflow/plugins/ts/integration/email/imap-search/package.json
+   ✗ workflow/plugins/ts/integration/email/imap-sync/package.json
+   ✗ workflow/plugins/ts/integration/http-request/package.json
+   ✗ workflow/plugins/ts/integration/webhook-response/package.json
+   ✗ workflow/plugins/ts/utility/email-parser/package.json
+   ✗ workflow/plugins/ts/utility/set-variable/package.json
+   ✗ workflow/plugins/ts/utility/transform/package.json
+   ✗ workflow/plugins/ts/utility/wait/package.json
+   
+   Node 22.x (^22.10.5) - 9 instances:
+   ✓ dbal/development/package.json
+   ✓ frontends/dbal/package.json
+   ✓ frontends/nextjs/package.json
+   ✓ workflowui/package.json
+   ✓ redux/timing-utils/package.json
+   ✓ redux/hooks-canvas/package.json
+   ✓ redux/core-hooks/package.json
+   ✓ redux/hooks-auth/package.json
+   ✓ redux/hooks-data/package.json
+   
+   Node 22.x (^22.0.0) - 1 instance:
+   ⚠ exploded-diagrams/package.json
+   
+   Node 22.x (^22.13.9) - 1 instance:
+   ⚠ codegen/packages/spark-tools/package.json
+   
+   Node 24.x (^24.10.4) - 1 instance:
+   ✗ postgres/package.json (HIGHEST VERSION - bleeding edge)
+   
+   ACTION: Standardize to ^22.10.5 (recommended modern version)
+           OR update all to ^24.10.4 if latest required
+
+
+3. @types/react-dom - INCONSISTENT WITH REACT VERSIONS
+   ─────────────────────────────────────────────────────────────────────────
+   
+   React-DOM 19.x (^19.2.3) - 6 instances:
+   ✓ emailclient/package.json
+   ✓ frontends/dbal/package.json
+   ✓ frontends/nextjs/package.json
+   ✓ workflowui/package.json
+   ✓ codegen/package.json (DUPLICATE: listed twice)
+   
+   React-DOM 19.x (^19.0.4) - 2 instances:
+   ⚠ old/package.json (outdated version)
+   ⚠ codegen/package.json (outdated version, should be ^19.2.3)
+   
+   React-DOM 19.x (^19.0.0) - 2 instances:
+   ⚠ exploded-diagrams/package.json
+   ⚠ pastebin/package.json
+   
+   React-DOM 19.x (^19) - 2 instances:
+   ⚠ dockerterminal/frontend/package.json (too vague)
+   ⚠ pastebin/package.json (too vague)
+   
+   React-DOM 18.x (^18.3.5) - 1 instance:
+   ✗ storybook/package.json (MISMATCH: uses React 19 but React-DOM 18)
+   
+   React-DOM 18.x (^18) - 1 instance:
+   ✗ packages/geocities-app/package.json (MISMATCH: uses React 18 but React-DOM 18)
+   
+   ACTION: Standardize all React 19 projects to ^19.2.3
+           Fix storybook and packages/geocities-app mismatches
+
+
+===============================================================================
+MODERATE ISSUES (Should Be Fixed)
+===============================================================================
+
+4. Unrelated @types packages - SCATTERED DEPENDENCIES
+   ─────────────────────────────────────────────────────────────────────────
+   
+   @types/jest:
+   ✓ pastebin/package.json: ^29.5.11
+   ✓ redux/hooks-async/package.json: ^29.5.11
+   ✓ workflow/package.json: ^29.0.0
+   
+   @types/node (workflow plugins use old Node 20):
+   ⚠ 20 instances using ^20.0.0 (should be ^22.10.5 for consistency)
+   
+   Other specialized packages:
+   ✓ workflowui/package.json: @types/lodash-es ^4.17.12
+   ✓ frontends/nextjs/package.json: @types/better-sqlite3 ^7.6.12
+   ✓ postgres/package.json: @types/bcryptjs ^2.4.6
+   ✓ postgres/package.json: @types/pg ^8.16.0
+   ✓ exploded-diagrams/package.json: @types/three ^0.182.0
+   ✓ workflow/plugins/ts/smtp-relay/package.json: @types/nodemailer ^6.4.14
+   ✓ old/package.json: @types/jszip ^3.4.0
+   ✓ codegen/packages/spark-tools/package.json: @types/body-parser ^1.19.6
+   ✓ codegen/packages/spark-tools/package.json: @types/express ^5.0.1
+   
+   ACTION: Review if all specialized packages are needed in current projects
+
+
+===============================================================================
+COMPLETE @TYPES PACKAGES SUMMARY
+===============================================================================
+
+@types/react:
+  ^18.2.0 || ^19.0.0    4 instances (multi-version support - GOOD)
+  ^18.2.45              1 instance  (redux/core - old version)
+  ^19.0.0               1 instance  (redux/hooks-async - inconsistent)
+  ^19.2.8              21 instances (standard - PREFERRED)
+  ^18                   1 instance  (packages/geocities-app - too vague)
+
+@types/node:
+  ^20                   1 instance  (emailclient)
+  ^20.0.0              19 instances (workflow plugins - OUTDATED)
+  ^22.0.0               1 instance  (exploded-diagrams)
+  ^22.10.5              9 instances (standard - PREFERRED)
+  ^22.13.9              1 instance  (codegen/packages/spark-tools)
+  ^24.10.4              1 instance  (postgres - LATEST)
+
+@types/react-dom:
+  ^18                   1 instance  (packages/geocities-app - MISMATCH)
+  ^18.3.5               1 instance  (storybook - MISMATCH with React 19)
+  ^19                   2 instances (dockerterminal, pastebin - too vague)
+  ^19.0.0               2 instances (exploded-diagrams, pastebin - inconsistent)
+  ^19.0.4               2 instances (old, codegen - outdated)
+  ^19.2.3               6 instances (standard - PREFERRED)
+
+@types/jest:
+  ^29.0.0               1 instance  (workflow - inconsistent)
+  ^29.5.11              2 instances (standard - PREFERRED)
+
+Other packages (unique to specific projects):
+  @types/bcryptjs      1 instance
+  @types/better-sqlite3 1 instance
+  @types/body-parser   1 instance
+  @types/express       1 instance
+  @types/jszip         1 instance
+  @types/lodash-es     1 instance
+  @types/nodemailer    1 instance
+  @types/pg            1 instance
+  @types/three         1 instance
+
+
+===============================================================================
+RECOMMENDED STANDARDIZATION PLAN
+===============================================================================
+
+TIER 1 - CRITICAL (Fix Immediately)
+─────────────────────────────────────────────────────────────────────────────
+
+1. All React 19 Projects → @types/react ^19.2.8
+   Fix these projects:
+   - redux/hooks-async (change ^19.0.0 → ^19.2.8)
+   - old/ (already has ^19.2.8, good)
+   - codegen/ (already has ^19.2.8, good)
+
+2. Fix React/React-DOM Mismatches
+   - storybook/: @types/react-dom ^18.3.5 → ^19.2.3
+   - packages/geocities-app/: @types/react ^18 → ^19.2.8
+                                @types/react-dom ^18 → ^19.2.3
+   - exploded-diagrams/: @types/react-dom ^19.0.0 → ^19.2.3
+   - pastebin/: @types/react-dom ^19 → ^19.2.3
+
+3. Node 20 Projects → @types/node ^22.10.5
+   Primary targets (workflow plugins - 20 instances):
+   - workflow/**
+   - workflow/plugins/ts/**
+   
+   Also:
+   - emailclient/ (^20 → ^22.10.5)
+   - dockerterminal/frontend/ (^20 → ^22.10.5)
+   - packages/geocities-app/ (^20 → ^22.10.5)
+
+
+TIER 2 - STANDARDIZATION (Recommended for Consistency)
+─────────────────────────────────────────────────────────────────────────────
+
+1. @types/jest → ^29.5.11 everywhere
+   Change:
+   - workflow/: ^29.0.0 → ^29.5.11
+
+2. @types/node Version Decision
+   Option A: Standardize to ^22.10.5 (modern, stable)
+   Option B: Standardize to ^24.10.4 (latest)
+   Recommendation: ^22.10.5 (proven stability)
+
+
+TIER 3 - OPTIONAL (If Projects Are Active)
+─────────────────────────────────────────────────────────────────────────────
+
+1. Review specialized @types packages:
+   - Is @types/three still needed in exploded-diagrams?
+   - Is @types/body-parser needed in codegen/packages/spark-tools?
+   - Is @types/jszip needed in old/?
+
+2. Consider consolidating React 18/19 packages:
+   - hooks/, redux/email, redux/hooks-forms, redux/hooks-utils
+   - Could pick one target version, OR keep multi-version support
+   - Current multi-version approach is acceptable if supporting both React versions
+
+
+===============================================================================
+IMPLEMENTATION CHECKLIST
+===============================================================================
+
+Priority 1 (Fix These Today):
+☐ redux/hooks-async: @types/react ^19.0.0 → ^19.2.8
+☐ storybook: @types/react-dom ^18.3.5 → ^19.2.3
+☐ packages/geocities-app: @types/react ^18 → ^19.2.8
+☐ packages/geocities-app: @types/react-dom ^18 → ^19.2.3
+☐ exploded-diagrams: @types/react-dom ^19.0.0 → ^19.2.3
+☐ pastebin: @types/react-dom ^19 → ^19.2.3
+☐ dockerterminal/frontend: @types/react-dom ^19 → ^19.2.3
+
+Priority 2 (Standardize Node):
+☐ workflow/ (20 instances): @types/node ^20.0.0 → ^22.10.5
+☐ exploded-diagrams: @types/node ^22.0.0 → ^22.10.5
+☐ codegen/packages/spark-tools: @types/node ^22.13.9 → ^22.10.5
+☐ emailclient: @types/node ^20 → ^22.10.5
+☐ dockerterminal/frontend: @types/node ^20 → ^22.10.5
+☐ pastebin: @types/node ^20 → ^22.10.5
+☐ packages/geocities-app: @types/node ^20 → ^22.10.5
+
+Priority 3 (Jest Consistency):
+☐ workflow: @types/jest ^29.0.0 → ^29.5.11
+
+Priority 4 (Optional):
+☐ postgres: Decide if ^24.10.4 is required or revert to ^22.10.5
+
+
+TOTAL CHANGES NEEDED: 36 package.json files affected
+
+===============================================================================

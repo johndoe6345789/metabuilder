@@ -1,0 +1,59 @@
+{
+  "id": "power-switch",
+  "name": "Main Power Switch",
+  "partNumber": "BL-A1-PSW01",
+  "material": "plastic",
+  "quantity": 1,
+  "weight": 25.0,
+  "weightUnit": "g",
+  "baseY": 340,
+  "description": "Illuminated rocker switch - DPST 16A 250VAC with integrated LED indicator",
+  "installation": {
+    "tools": [
+      { "name": "Flathead screwdriver", "size": "3mm", "required": true },
+      { "name": "Wire crimper", "size": "16-22 AWG", "required": false }
+    ],
+    "hardware": [
+      { "name": "Spade terminal", "spec": "6.3mm female", "qty": 4, "reusable": false },
+      { "name": "Panel gasket", "spec": "30x22mm", "qty": 1, "reusable": false }
+    ],
+    "torque": [],
+    "notes": [
+      "DANGER: Mains voltage - ensure power is disconnected",
+      "Switch snaps into panel cutout - no screws required",
+      "LED indicator shows power-on state",
+      "Verify wiring matches original before powering on",
+      "Test switch operation before closing enclosure"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 35, "height": 20, "rx": 3, "fill": "#1a1a1a" },
+    { "type": "rect", "width": 28, "height": 14, "rx": 7, "fill": "#303030" },
+    { "type": "rect", "width": 12, "height": 10, "offsetX": -5, "rx": 2, "fill": "#cc0000" },
+    { "type": "circle", "r": 2, "offsetX": 8, "offsetY": 0, "fill": "#00ff00" }
+  ],
+  "geometry3d": [
+    { "type": "box", "width": 30, "height": 22, "depth": 25, "fill": "#1a1a1a" },
+
+    { "type": "box", "width": 24, "height": 6, "depth": 14, "offsetY": 14, "fill": "#252530" },
+    { "type": "box", "width": 22, "height": 3, "depth": 12, "offsetY": 16.5, "fill": "#303035" },
+
+    { "type": "box", "width": 10, "height": 8, "depth": 12, "rotateZ": -15, "offsetX": -4, "offsetY": 16, "fill": "#cc0000" },
+    { "type": "box", "width": 9, "height": 7, "depth": 11, "rotateZ": -15, "offsetX": -4, "offsetY": 16.5, "fill": "#dd2020" },
+
+    { "type": "cylinder", "r": 2, "height": 4, "offsetX": 8, "offsetY": 16, "fill": "#00aa00" },
+    { "type": "cylinder", "r": 1.5, "height": 2, "offsetX": 8, "offsetY": 18.5, "fill": "#00ff00" },
+
+    { "type": "box", "width": 5, "height": 8, "depth": 3, "offsetX": -10, "offsetY": -15, "fill": "#c0c0c0" },
+    { "type": "box", "width": 5, "height": 8, "depth": 3, "offsetX": -3, "offsetY": -15, "fill": "#c0c0c0" },
+    { "type": "box", "width": 5, "height": 8, "depth": 3, "offsetX": 4, "offsetY": -15, "fill": "#c0c0c0" },
+    { "type": "box", "width": 5, "height": 8, "depth": 3, "offsetX": 11, "offsetY": -15, "fill": "#c0c0c0" },
+
+    { "type": "box", "width": 32, "height": 2, "depth": 27, "offsetY": 10, "fill": "#303035" },
+
+    { "type": "box", "width": 2, "height": 5, "depth": 2, "offsetX": -13, "offsetY": 3, "offsetZ": -10, "fill": "#404045" },
+    { "type": "box", "width": 2, "height": 5, "depth": 2, "offsetX": 13, "offsetY": 3, "offsetZ": -10, "fill": "#404045" },
+    { "type": "box", "width": 2, "height": 5, "depth": 2, "offsetX": -13, "offsetY": 3, "offsetZ": 10, "fill": "#404045" },
+    { "type": "box", "width": 2, "height": 5, "depth": 2, "offsetX": 13, "offsetY": 3, "offsetZ": 10, "fill": "#404045" }
+  ]
+}

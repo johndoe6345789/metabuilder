@@ -1,0 +1,14 @@
+{
+  "name": "@metabuilder/workflow-plugins-notifications",
+  "version": "1.0.0",
+  "description": "Notifications operation plugins for Go",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["notifications", "workflow", "plugins", "go"],
+  "metadata": {
+    "category": "notifications",
+    "language": "go",
+    "plugin_count": 0
+  },
+  "plugins": []
+}

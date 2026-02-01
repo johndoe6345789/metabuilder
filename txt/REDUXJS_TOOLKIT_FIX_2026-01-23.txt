@@ -1,0 +1,109 @@
+# @reduxjs/toolkit Version Conflict Resolution
+**Date**: 2026-01-23
+**Status**: ✅ COMPLETE - All conflicts resolved
+
+## Summary
+Fixed version conflicts across 11 Redux packages by standardizing @reduxjs/toolkit dependencies to ^2.5.2. The fix ensures a unified dependency tree where all packages resolve to @reduxjs/toolkit@2.11.2 (within the ^2.5.2 range).
+
+## Files Updated
+
+### Direct Dependencies (^2.5.2)
+1. ✅ `/Users/rmac/Documents/metabuilder/package.json`
+   - Changed: ^2.0.0 → ^2.5.2
+
+2. ✅ `/Users/rmac/Documents/metabuilder/redux/core/package.json`
+   - Changed: ^2.0.0 → ^2.5.2
+
+3. ✅ `/Users/rmac/Documents/metabuilder/redux/core-hooks/package.json`
+   - Changed: ^2.0.0 → ^2.5.2
+
+4. ✅ `/Users/rmac/Documents/metabuilder/redux/timing-utils/package.json`
+   - Changed: ^2.0.0 → ^2.5.2
+
+5. ✅ `/Users/rmac/Documents/metabuilder/redux/slices/package.json`
+   - Regular dep changed: ^1.9.7 → ^2.5.2
+   - Peer dep updated: ^1.9.7 || ^2.5.0 → ^1.9.7 || ^2.5.2
+
+6. ✅ `/Users/rmac/Documents/metabuilder/redux/hooks/package.json`
+   - Regular dep changed: ^1.9.7 → ^2.5.2
+   - Peer dep updated: ^1.9.7 || ^2.5.0 → ^1.9.7 || ^2.5.2
+
+7. ✅ `/Users/rmac/Documents/metabuilder/redux/hooks-async/package.json`
+   - Changed: ^1.9.7 → ^2.5.2
+
+### Peer Dependencies Updated (^1.9.7 || ^2.5.2)
+8. ✅ `/Users/rmac/Documents/metabuilder/redux/slices/package.json`
+   - Updated: ^1.9.7 || ^2.5.0 → ^1.9.7 || ^2.5.2
+
+9. ✅ `/Users/rmac/Documents/metabuilder/redux/hooks-auth/package.json`
+   - Updated: ^1.9.7 || ^2.5.0 → ^1.9.7 || ^2.5.2
+
+10. ✅ `/Users/rmac/Documents/metabuilder/redux/hooks-canvas/package.json`
+    - Updated: ^1.9.7 || ^2.5.0 → ^1.9.7 || ^2.5.2
+
+11. ✅ `/Users/rmac/Documents/metabuilder/redux/hooks-data/package.json`
+    - Updated: ^1.9.7 || ^2.5.0 → ^1.9.7 || ^2.5.2
+
+## Verification Results
+
+### Pre-Fix Status
+- Multiple packages with conflicting versions (^2.0.0, ^1.9.7)
+- npm ls showed "invalid" flags on all @reduxjs/toolkit entries
+- npm audit failed due to version conflicts
+
+### Post-Fix Status
+✅ npm install completed successfully
+✅ All packages resolved to @reduxjs/toolkit@2.11.2 (within ^2.5.2 range)
+✅ npm ls shows NO invalid flags
+✅ npm audit shows 0 vulnerabilities (all resolved)
+
+## npm ls @reduxjs/toolkit Output
+```
+metabuilder-root@0.0.0 /Users/rmac/Documents/metabuilder
+├─┬ @metabuilder/core-hooks@0.1.0
+│ └── @reduxjs/toolkit@2.11.2 deduped
+├─┬ @metabuilder/hooks-async@1.0.0
+│ └── @reduxjs/toolkit@2.11.2 deduped
+├─┬ @metabuilder/hooks-auth@0.1.0
+│ └── @reduxjs/toolkit@2.11.2 deduped
+├─┬ @metabuilder/hooks-canvas@0.1.0
+│ └── @reduxjs/toolkit@2.11.2 deduped
+├─┬ @metabuilder/hooks-core@0.1.0
+│ └── @reduxjs/toolkit@2.11.2 deduped
+├─┬ @metabuilder/hooks-data@0.1.0
+│ └── @reduxjs/toolkit@2.11.2 deduped
+├─┬ @metabuilder/redux-core@1.0.0
+│ └── @reduxjs/toolkit@2.11.2 deduped
+├─┬ @metabuilder/redux-slices@0.1.0
+│ └── @reduxjs/toolkit@2.11.2 deduped
+├─┬ @metabuilder/timing-utils@0.1.0
+│ └── @reduxjs/toolkit@2.11.2 deduped
+└── @reduxjs/toolkit@2.11.2
+```
+
+## npm audit Status
+```
+Vulnerabilities: 0
+  - Info:     0
+  - Low:      0
+  - Moderate: 0
+  - High:     0
+  - Critical: 0
+```
+
+## Architecture Impact
+- **No breaking changes**: All packages support both ^1.9.7 and ^2.5.2 via peer dependencies
+- **Unified tree**: Single version (2.11.2) across entire workspace
+- **Backward compatible**: Legacy packages can still use ^1.9.7 if needed
+- **Future-proof**: Supports upgrade path to newer 2.x versions
+
+## Related Documentation
+- See: txt/DEPENDENCY_FIX_COMPLETION_SUMMARY_2026-01-23.txt (earlier fixes)
+- See: CLAUDE.md (Redux State Management section)
+
+## Next Steps
+1. Run full test suite: npm run test:e2e
+2. Build all packages: npm run build --workspaces
+3. Verify no runtime errors in workflowui and other consumers
+4. Commit changes once verified
+

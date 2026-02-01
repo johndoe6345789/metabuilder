@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/string_split",
+  "version": "1.0.0",
+  "description": "Split a string by separator",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["string", "workflow", "plugin"],
+  "main": "string_split.go",
+  "files": ["string_split.go", "factory.go"],
+  "metadata": {
+    "plugin_type": "string.split",
+    "category": "string",
+    "struct": "StringSplit",
+    "entrypoint": "Execute"
+  }
+}

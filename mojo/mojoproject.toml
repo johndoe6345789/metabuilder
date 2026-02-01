@@ -1,0 +1,12 @@
+[project]
+name = "mojo-examples"
+version = "0.1.0"
+description = "Example Mojo projects for MetaBuilder"
+authors = ["MetaBuilder Team"]
+
+[dependencies]
+# Add Mojo packages here when ecosystem grows
+
+[build]
+target = "native"
+optimization = "speed"

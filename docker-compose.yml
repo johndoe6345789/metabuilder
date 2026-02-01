@@ -1,0 +1,120 @@
+version: '3.9'
+
+services:
+  # WorkflowUI (Next.js + Flask)
+  workflowui:
+    image: metabuilder/workflowui:latest
+    container_name: metabuilder-workflowui
+    ports:
+      - "3000:3000"
+      - "5002:5000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=sqlite:////app/data/workflows.db
+      - SMTP_RELAY_HOST=smtp-relay
+      - SMTP_RELAY_PORT=2525
+    volumes:
+      - workflowui-data:/app/data
+      - workflowui-logs:/app/logs
+    depends_on:
+      smtp-relay:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+    networks:
+      - metabuilder-network
+
+  # Postfix Mail Server - handles all mail delivery
+  postfix:
+    build:
+      context: .
+      dockerfile: deployment/docker/postfix/Dockerfile
+    container_name: metabuilder-postfix
+    hostname: metabuilder.local
+    ports:
+      - "25:25"
+      - "110:110"
+      - "143:143"
+      - "465:465"
+      - "587:587"
+      - "993:993"
+      - "995:995"
+    environment:
+      - POSTFIX_myhostname=metabuilder.local
+      - POSTFIX_mydomain=metabuilder.local
+      - POSTFIX_mynetworks=127.0.0.1/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+      - POSTFIX_relayhost=${POSTFIX_RELAYHOST:-}
+      - POSTFIX_smtp_sasl_auth_enable=${POSTFIX_SMTP_SASL_AUTH:-no}
+      - POSTFIX_smtp_sasl_password_maps=${POSTFIX_SMTP_SASL_PASSWD:-}
+      - POSTFIX_smtp_tls_security_level=${POSTFIX_TLS_LEVEL:-may}
+    volumes:
+      - postfix-data:/var/mail
+      - postfix-logs:/var/log
+      - postfix-spool:/var/spool/postfix
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "postfix", "status"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    networks:
+      - metabuilder-network
+
+  # SMTP Relay - relays mail through Postfix (Postfix simulates Gmail)
+  smtp-relay:
+    build:
+      context: ./smtprelay
+      dockerfile: Dockerfile
+    container_name: metabuilder-smtp-relay
+    ports:
+      - "2525:2525"
+      - "8080:8080"
+    environment:
+      - GMAIL_USERNAME=${GMAIL_USERNAME:-relay@metabuilder.local}
+      - GMAIL_APP_PASSWORD=${GMAIL_APP_PASSWORD:-dummy}
+      - FORWARD_TO=${FORWARD_TO:-admin@metabuilder.local}
+      - GMAIL_HOST=postfix
+      - GMAIL_PORT=25
+      - SMTP_LISTEN_HOST=0.0.0.0
+      - SMTP_LISTEN_PORT=2525
+      - HTTP_LISTEN_HOST=0.0.0.0
+      - HTTP_LISTEN_PORT=8080
+      - ALLOW_ANY_RCPT=true
+      - ADD_X_HEADERS=true
+      - MAX_STORE=200
+    depends_on:
+      postfix:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "2525"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - metabuilder-network
+
+volumes:
+  workflowui-data:
+    driver: local
+  workflowui-logs:
+    driver: local
+  postfix-data:
+    driver: local
+  postfix-logs:
+    driver: local
+  postfix-spool:
+    driver: local
+  smtp-relay-logs:
+    driver: local
+
+networks:
+  metabuilder-network:
+    driver: bridge

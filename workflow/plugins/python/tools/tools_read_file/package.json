@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/tools_read_file",
+  "version": "1.0.0",
+  "description": "Read the contents of a file",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["tools", "workflow", "plugin"],
+  "main": "tools_read_file.py",
+  "files": ["tools_read_file.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "tools.read_file",
+    "category": "tools",
+    "class": "ToolsReadFile",
+    "entrypoint": "execute"
+  }
+}

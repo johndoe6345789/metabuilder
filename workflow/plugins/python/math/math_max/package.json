@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/math_max",
+  "version": "1.0.0",
+  "description": "Get maximum of values",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["math", "workflow", "plugin"],
+  "main": "math_max.py",
+  "files": ["math_max.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "math.max",
+    "category": "math",
+    "class": "MathMax",
+    "entrypoint": "execute"
+  }
+}

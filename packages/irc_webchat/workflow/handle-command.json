@@ -1,0 +1,188 @@
+{
+  "name": "Handle IRC Commands",
+  "active": false,
+  "nodes": [
+    {
+      "id": "validate_context",
+      "name": "Validate Context",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $context.user.id }}",
+        "operation": "validate",
+        "validator": "required"
+      }
+    },
+    {
+      "id": "parse_command",
+      "name": "Parse Command",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "output": {
+          "command": "{{ $json.message.split(' ')[0].substring(1).toLowerCase() }}",
+          "args": "{{ $json.message.split(' ').slice(1) }}"
+        },
+        "operation": "transform_data"
+      }
+    },
+    {
+      "id": "handle_help",
+      "name": "Handle Help",
+      "type": "metabuilder.condition",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "condition": "{{ $steps.parse_command.output.command === 'help' }}",
+        "operation": "condition"
+      }
+    },
+    {
+      "id": "handle_users",
+      "name": "Handle Users",
+      "type": "metabuilder.condition",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "condition": "{{ $steps.parse_command.output.command === 'users' }}",
+        "operation": "condition"
+      }
+    },
+    {
+      "id": "handle_me",
+      "name": "Handle Me",
+      "type": "metabuilder.condition",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "condition": "{{ $steps.parse_command.output.command === 'me' }}",
+        "operation": "condition"
+      }
+    },
+    {
+      "id": "handle_kick",
+      "name": "Handle Kick",
+      "type": "metabuilder.condition",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "condition": "{{ $steps.parse_command.output.command === 'kick' && $context.user.level >= 2 }}",
+        "operation": "condition"
+      }
+    },
+    {
+      "id": "handle_ban",
+      "name": "Handle Ban",
+      "type": "metabuilder.condition",
+      "typeVersion": 1,
+      "position": [
+        100,
+        500
+      ],
+      "parameters": {
+        "condition": "{{ $steps.parse_command.output.command === 'ban' && $context.user.level >= 3 }}",
+        "operation": "condition"
+      }
+    }
+  ],
+  "connections": {
+    "validate_context": {
+      "main": [
+        [
+          {
+            "node": "parse_command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "parse_command": {
+      "main": [
+        [
+          {
+            "node": "handle_help",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "handle_help": {
+      "main": [
+        [
+          {
+            "node": "handle_users",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "handle_users": {
+      "main": [
+        [
+          {
+            "node": "handle_me",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "handle_me": {
+      "main": [
+        [
+          {
+            "node": "handle_kick",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "handle_kick": {
+      "main": [
+        [
+          {
+            "node": "handle_ban",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "id": "workflow_handle_command",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
+}

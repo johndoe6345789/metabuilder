@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/web_create_flask_app",
+  "version": "1.0.0",
+  "description": "Create a Flask application instance",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["web", "workflow", "plugin"],
+  "main": "web_create_flask_app.py",
+  "files": ["web_create_flask_app.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "web.create_flask_app",
+    "category": "web",
+    "class": "WebCreateFlaskApp",
+    "entrypoint": "execute"
+  }
+}

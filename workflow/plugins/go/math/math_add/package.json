@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/math_add",
+  "version": "1.0.0",
+  "description": "Add two or more numbers",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["math", "workflow", "plugin"],
+  "main": "math_add.go",
+  "files": ["math_add.go", "factory.go"],
+  "metadata": {
+    "plugin_type": "math.add",
+    "category": "math",
+    "struct": "MathAdd",
+    "entrypoint": "Execute"
+  }
+}

@@ -1,0 +1,442 @@
+# Docker Compose - Monitoring Stack for Phase 8 Email Client
+# Complete ELK stack, Prometheus, Grafana, and distributed tracing infrastructure
+# Last Updated: 2026-01-24
+
+version: '3.9'
+
+services:
+  # ============================================================================
+  # Prometheus - Metrics Collection & Alerting
+  # ============================================================================
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: emailclient-prometheus
+    hostname: prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=30d'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    ports:
+      - '9090:9090'
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus/alert_rules.yml:/etc/prometheus/rules/alert_rules.yml
+      - prometheus-data:/prometheus
+    networks:
+      - monitoring
+      - emailclient-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9090/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    labels:
+      - "com.metabuilder.service=prometheus"
+      - "com.metabuilder.component=metrics"
+
+  # ============================================================================
+  # Alertmanager - Alert Management & Notification
+  # ============================================================================
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: emailclient-alertmanager
+    hostname: alertmanager
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+      - '--storage.path=/alertmanager'
+      - '--web.external-url=http://alertmanager:9093'
+    ports:
+      - '9093:9093'
+    volumes:
+      - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+      - alertmanager-data:/alertmanager
+    networks:
+      - monitoring
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9093/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    labels:
+      - "com.metabuilder.service=alertmanager"
+      - "com.metabuilder.component=alerting"
+
+  # ============================================================================
+  # Grafana - Visualization & Dashboarding
+  # ============================================================================
+  grafana:
+    image: grafana/grafana:latest
+    container_name: emailclient-grafana
+    hostname: grafana
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-admin}
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_USER:-admin}
+      GF_INSTALL_PLUGINS: 'grafana-piechart-panel,grafana-worldmap-panel,grafana-status-panel'
+      GF_SERVER_ROOT_URL: http://grafana:3000
+      GF_DATABASE_TYPE: sqlite3
+      GF_PATHS_PROVISIONING: /etc/grafana/provisioning
+      GF_USERS_ALLOW_SIGN_UP: false
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
+      - elasticsearch
+    networks:
+      - monitoring
+      - emailclient-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    labels:
+      - "com.metabuilder.service=grafana"
+      - "com.metabuilder.component=visualization"
+
+  # ============================================================================
+  # Elasticsearch - Log Storage & Search
+  # ============================================================================
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.0
+    container_name: emailclient-elasticsearch
+    hostname: elasticsearch
+    environment:
+      discovery.type: single-node
+      ELASTIC_PASSWORD: ${ELASTICSEARCH_PASSWORD:-changeme}
+      xpack.security.enabled: true
+      xpack.security.enrollment.enabled: true
+      xpack.ml.enabled: true
+      xpack.watcher.enabled: true
+      ES_JAVA_OPTS: '-Xms512m -Xmx512m'
+      logger.level: info
+    ports:
+      - '9200:9200'
+      - '9300:9300'
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    networks:
+      - monitoring
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s http://elasticsearch:9200 | grep -q cluster_name || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    labels:
+      - "com.metabuilder.service=elasticsearch"
+      - "com.metabuilder.component=search-engine"
+
+  # ============================================================================
+  # Kibana - Log Visualization
+  # ============================================================================
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.10.0
+    container_name: emailclient-kibana
+    hostname: kibana
+    environment:
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+      ELASTICSEARCH_USERNAME: elastic
+      ELASTICSEARCH_PASSWORD: ${ELASTICSEARCH_PASSWORD:-changeme}
+      KIBANA_DEFAULTAPPID: discover
+      xpack.security.enabled: true
+      xpack.reporting.enabled: true
+    ports:
+      - '5601:5601'
+    depends_on:
+      - elasticsearch
+    networks:
+      - monitoring
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5601/api/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    labels:
+      - "com.metabuilder.service=kibana"
+      - "com.metabuilder.component=logging-ui"
+
+  # ============================================================================
+  # Logstash - Log Processing & Forwarding
+  # ============================================================================
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.10.0
+    container_name: emailclient-logstash
+    hostname: logstash
+    environment:
+      ELASTICSEARCH_PASSWORD: ${ELASTICSEARCH_PASSWORD:-changeme}
+      LS_JAVA_OPTS: '-Xmx256m -Xms256m'
+    ports:
+      - '5000:5000/tcp'
+      - '5000:5000/udp'
+      - '9600:9600'
+      - '514:514/tcp'
+      - '514:514/udp'
+      - '8080:8080'
+    volumes:
+      - ./logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+      - ./logstash/email-service-template.json:/etc/logstash/templates/email-service-template.json
+      - /var/log/emailclient:/var/log/emailclient:ro
+      - /var/log/postgresql:/var/log/postgresql:ro
+      - /var/log/postfix:/var/log/postfix:ro
+      - /var/log/dovecot:/var/log/dovecot:ro
+      - logstash-data:/usr/share/logstash/data
+    depends_on:
+      - elasticsearch
+    networks:
+      - monitoring
+      - emailclient-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9600"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    labels:
+      - "com.metabuilder.service=logstash"
+      - "com.metabuilder.component=log-processing"
+
+  # ============================================================================
+  # Loki - Lightweight Log Aggregation (Optional)
+  # ============================================================================
+  loki:
+    image: grafana/loki:latest
+    container_name: emailclient-loki
+    hostname: loki
+    ports:
+      - '3100:3100'
+    volumes:
+      - ./loki/loki-config.yml:/etc/loki/local-config.yml
+      - loki-data:/loki
+    command: -config.file=/etc/loki/local-config.yml
+    networks:
+      - monitoring
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3100/ready"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    labels:
+      - "com.metabuilder.service=loki"
+      - "com.metabuilder.component=log-aggregation"
+
+  # ============================================================================
+  # OpenTelemetry Collector - Distributed Tracing & Metrics
+  # ============================================================================
+  otel-collector:
+    image: otel/opentelemetry-collector-k8s:latest
+    container_name: emailclient-otel-collector
+    hostname: otel-collector
+    command: ["--config=/etc/otel-collector-config.yml"]
+    ports:
+      - '4317:4317'    # OTLP gRPC
+      - '4318:4318'    # OTLP HTTP
+      - '8888:8888'    # Metrics endpoint
+      - '13133:13133'  # Health check
+      - '14250:14250'  # Jaeger gRPC
+      - '14268:14268'  # Jaeger Thrift HTTP
+      - '6831:6831/udp'  # Jaeger Thrift Compact
+      - '9411:9411'    # Zipkin
+      - '55679:55679'  # zPages
+    volumes:
+      - ./opentelemetry/otel-collector-config.yml:/etc/otel-collector-config.yml
+    depends_on:
+      - prometheus
+      - jaeger
+    networks:
+      - monitoring
+      - emailclient-net
+    restart: unless-stopped
+    labels:
+      - "com.metabuilder.service=otel-collector"
+      - "com.metabuilder.component=tracing"
+
+  # ============================================================================
+  # Jaeger - Distributed Tracing Backend
+  # ============================================================================
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: emailclient-jaeger
+    hostname: jaeger
+    environment:
+      COLLECTOR_ZIPKIN_HTTP_PORT: 9411
+      MEMORY_MAX_TRACES: 10000
+    ports:
+      - '6831:6831/udp'   # Jaeger Thrift Compact
+      - '16686:16686'     # Jaeger UI
+      - '14268:14268'     # Jaeger Thrift HTTP Collector
+      - '14250:14250'     # Jaeger gRPC
+    networks:
+      - monitoring
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:16686"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    labels:
+      - "com.metabuilder.service=jaeger"
+      - "com.metabuilder.component=distributed-tracing"
+
+  # ============================================================================
+  # Prometheus Exporters
+  # ============================================================================
+
+  # cAdvisor - Docker Container Metrics
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: emailclient-cadvisor
+    hostname: cadvisor
+    ports:
+      - '8080:8080'
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    privileged: true
+    networks:
+      - monitoring
+    restart: unless-stopped
+    labels:
+      - "com.metabuilder.service=cadvisor"
+      - "com.metabuilder.component=container-metrics"
+
+  # Node Exporter - System Metrics
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: emailclient-node-exporter
+    hostname: node-exporter
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    ports:
+      - '9100:9100'
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    networks:
+      - monitoring
+    restart: unless-stopped
+    labels:
+      - "com.metabuilder.service=node-exporter"
+      - "com.metabuilder.component=system-metrics"
+
+  # PostgreSQL Exporter
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter:latest
+    container_name: emailclient-postgres-exporter
+    hostname: postgres-exporter
+    environment:
+      DATA_SOURCE_NAME: postgresql://${DB_USER:-emailclient}:${DB_PASSWORD:-secure_password}@postgres:5432/${DB_NAME:-emailclient_db}?sslmode=disable
+    ports:
+      - '9187:9187'
+    depends_on:
+      - postgres
+    networks:
+      - monitoring
+      - emailclient-net
+    restart: unless-stopped
+    labels:
+      - "com.metabuilder.service=postgres-exporter"
+      - "com.metabuilder.component=database-metrics"
+
+  # Redis Exporter
+  redis-exporter:
+    image: oliver006/redis_exporter:latest
+    container_name: emailclient-redis-exporter
+    hostname: redis-exporter
+    environment:
+      REDIS_ADDR: redis:6379
+    ports:
+      - '9121:9121'
+    depends_on:
+      - redis
+    networks:
+      - monitoring
+      - emailclient-net
+    restart: unless-stopped
+    labels:
+      - "com.metabuilder.service=redis-exporter"
+      - "com.metabuilder.component=cache-metrics"
+
+  # Postfix Exporter
+  postfix-exporter:
+    image: boynux/postfix-exporter:latest
+    container_name: emailclient-postfix-exporter
+    hostname: postfix-exporter
+    ports:
+      - '9307:9307'
+    volumes:
+      - /var/spool/postfix:/var/spool/postfix:ro
+      - /var/log/postfix:/var/log/postfix:ro
+    networks:
+      - monitoring
+      - emailclient-net
+    restart: unless-stopped
+    labels:
+      - "com.metabuilder.service=postfix-exporter"
+      - "com.metabuilder.component=smtp-metrics"
+
+  # Dovecot Exporter
+  dovecot-exporter:
+    image: custom/dovecot-exporter:latest
+    container_name: emailclient-dovecot-exporter
+    hostname: dovecot-exporter
+    ports:
+      - '9998:9998'
+    environment:
+      DOVECOT_SOCKET: dovecot:/var/run/dovecot/stats
+    volumes:
+      - /var/run/dovecot:/var/run/dovecot:ro
+    networks:
+      - monitoring
+      - emailclient-net
+    restart: unless-stopped
+    labels:
+      - "com.metabuilder.service=dovecot-exporter"
+      - "com.metabuilder.component=imap-pop3-metrics"
+
+# ============================================================================
+# Volumes
+# ============================================================================
+volumes:
+  prometheus-data:
+    driver: local
+  alertmanager-data:
+    driver: local
+  grafana-data:
+    driver: local
+  elasticsearch-data:
+    driver: local
+  logstash-data:
+    driver: local
+  loki-data:
+    driver: local
+
+# ============================================================================
+# Networks
+# ============================================================================
+networks:
+  monitoring:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.26.0.0/16
+  emailclient-net:
+    external: true

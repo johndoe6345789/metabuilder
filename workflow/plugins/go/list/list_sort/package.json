@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/list_sort",
+  "version": "1.0.0",
+  "description": "Sort a list of values",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["list", "workflow", "plugin"],
+  "main": "list_sort.go",
+  "files": ["list_sort.go", "factory.go"],
+  "metadata": {
+    "plugin_type": "list.sort",
+    "category": "list",
+    "struct": "ListSort",
+    "entrypoint": "Execute"
+  }
+}

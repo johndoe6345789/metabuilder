@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/tools_create_branch",
+  "version": "1.0.0",
+  "description": "Create a Git branch from a base branch",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["tools", "workflow", "plugin"],
+  "main": "tools_create_branch.py",
+  "files": ["tools_create_branch.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "tools.create_branch",
+    "category": "tools",
+    "class": "ToolsCreateBranch",
+    "entrypoint": "execute"
+  }
+}

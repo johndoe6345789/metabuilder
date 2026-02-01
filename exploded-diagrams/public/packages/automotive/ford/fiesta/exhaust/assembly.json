@@ -1,0 +1,13 @@
+{
+  "name": "Exhaust System",
+  "description": "Complete exhaust from turbo to tailpipe",
+  "category": "automotive",
+  "parts": [
+    "downpipe",
+    "catalytic-converter",
+    "center-section",
+    "rear-silencer",
+    "exhaust-hanger",
+    "lambda-sensor"
+  ]
+}

@@ -1,0 +1,61 @@
+.marqueeContainer {
+  width: 100%;
+  overflow: hidden;
+  background: linear-gradient(90deg, #000080, #0000aa, #000080);
+  padding: 8px 0;
+  border-top: 3px ridge #c0c0c0;
+  border-bottom: 3px ridge #c0c0c0;
+}
+
+.marquee {
+  display: flex;
+  width: max-content;
+  
+  span {
+    padding: 0 50px;
+    white-space: nowrap;
+    font-family: 'Comic Neue', 'Comic Sans MS', cursive;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #ffff00;
+    text-shadow: 2px 2px #ff0000;
+  }
+  
+  &.left {
+    animation: scrollLeft var(--duration) linear infinite;
+  }
+  
+  &.right {
+    animation: scrollRight var(--duration) linear infinite;
+  }
+  
+  &.slow {
+    --duration: 30s;
+  }
+  
+  &.normal {
+    --duration: 15s;
+  }
+  
+  &.fast {
+    --duration: 8s;
+  }
+}
+
+@keyframes scrollLeft {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes scrollRight {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}

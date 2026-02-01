@@ -1,0 +1,40 @@
+{
+  "id": "strut-assembly",
+  "name": "Strut Assembly",
+  "partNumber": "FD-1751280",
+  "material": "steel",
+  "quantity": 2,
+  "weight": 4800.0,
+  "weightUnit": "g",
+  "baseY": 0,
+  "description": "MacPherson strut shock absorber",
+  "installation": {
+    "tools": [
+      { "name": "Spring compressor", "size": "MacPherson", "required": true },
+      { "name": "Socket", "size": "21mm", "required": true },
+      { "name": "Socket", "size": "18mm", "required": true },
+      { "name": "Allen key", "size": "6mm", "required": true },
+      { "name": "Torque wrench", "size": "50-150 Nm", "required": true }
+    ],
+    "hardware": [
+      { "name": "Strut top nut", "spec": "M14x1.5", "qty": 1, "reusable": false },
+      { "name": "Strut pinch bolt", "spec": "M12x1.5x60", "grade": "10.9", "qty": 1, "reusable": false }
+    ],
+    "torque": [
+      { "fastener": "Strut top nut", "value": 65, "unit": "Nm", "sequence": "", "notes": "Hold shaft with Allen key" },
+      { "fastener": "Strut pinch bolt", "value": 95, "unit": "Nm", "sequence": "", "notes": "Critical - affects camber" }
+    ],
+    "notes": [
+      "DANGER: Compressed spring can cause serious injury",
+      "Use proper spring compressors rated for load",
+      "Mark strut position before removal for alignment",
+      "Check bump stops and dust boots"
+    ]
+  },
+  "geometry": [
+    { "type": "cylinder", "rx": 22, "ry": 8, "height": 120 },
+    { "type": "cylinder", "rx": 8, "ry": 3, "height": 40, "offsetY": -70 },
+    { "type": "rect", "width": 35, "height": 25, "offsetY": 55, "rx": 3, "fill": "#555" },
+    { "type": "circle", "r": 10, "offsetY": 70, "fill": "#444" }
+  ]
+}

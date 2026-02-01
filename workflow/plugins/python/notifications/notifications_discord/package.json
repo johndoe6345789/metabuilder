@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/notifications_discord",
+  "version": "1.0.0",
+  "description": "Send notifications to Discord channels",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["notifications", "workflow", "plugin"],
+  "main": "notifications_discord.py",
+  "files": ["notifications_discord.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "notifications.discord",
+    "category": "notifications",
+    "class": "NotificationsDiscord",
+    "entrypoint": "execute"
+  }
+}

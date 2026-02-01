@@ -1,0 +1,33 @@
+{
+  "name": "@metabuilder/plugin-dict",
+  "version": "1.0.0",
+  "description": "Object/dictionary operations workflow plugins for MetaBuilder",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["dict", "object", "workflow", "plugin", "dictionary"],
+  "main": "src/index.ts",
+  "files": ["src/index.ts", "src/factory.ts"],
+  "metadata": {
+    "plugin_type": "dict",
+    "category": "dict",
+    "classes": [
+      "DictGet",
+      "DictSet",
+      "DictDelete",
+      "DictKeys",
+      "DictValues",
+      "DictEntries",
+      "DictFromEntries",
+      "DictMerge",
+      "DictDeepMerge",
+      "DictPick",
+      "DictOmit",
+      "DictHas",
+      "DictSize",
+      "DictInvert",
+      "DictMapValues",
+      "DictFilterEntries"
+    ],
+    "entrypoint": "execute"
+  }
+}

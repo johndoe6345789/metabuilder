@@ -1,26 +1,15 @@
 'use client'
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { Provider as ReduxProvider } from 'react-redux'
 import { useEffect, useMemo, useState } from 'react'
 
 import { CssBaseline } from '@/fakemui'
+import { store } from '@/store/store'
 import { RetryableErrorBoundary } from '@/components/RetryableErrorBoundary'
 
 import { ThemeContext, type ThemeMode } from './theme-context'
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  const [queryClient] = useState(
-    () =>
-      new QueryClient({
-        defaultOptions: {
-          queries: {
-            staleTime: 60 * 1000, // 1 minute
-            retry: 1,
-          },
-        },
-      })
-  )
-
   const [mode, setMode] = useState<ThemeMode>('system')
 
   const resolvedMode = useMemo<Exclude<ThemeMode, 'system'>>(() => {
@@ -52,7 +41,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <ThemeContext.Provider value={{ mode, resolvedMode, setMode, toggleTheme }}>
       <CssBaseline />
-      <QueryClientProvider client={queryClient}>
+      <ReduxProvider store={store}>
         <RetryableErrorBoundary
           componentName="Providers"
           maxAutoRetries={3}
@@ -61,7 +50,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
         >
           {children}
         </RetryableErrorBoundary>
-      </QueryClientProvider>
+      </ReduxProvider>
     </ThemeContext.Provider>
   )
 }

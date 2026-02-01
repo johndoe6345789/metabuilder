@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/list_slice",
+  "version": "1.0.0",
+  "description": "Extract a portion of a list",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["list", "workflow", "plugin"],
+  "main": "list_slice.go",
+  "files": ["list_slice.go", "factory.go"],
+  "metadata": {
+    "plugin_type": "list.slice",
+    "category": "list",
+    "struct": "ListSlice",
+    "entrypoint": "Execute"
+  }
+}

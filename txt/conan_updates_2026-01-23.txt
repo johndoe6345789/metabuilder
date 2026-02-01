@@ -1,0 +1,23 @@
+/Users/rmac/Documents/metabuilder/dbal/production/build-config/conanfile.txt
+sqlite3/3.45.0 → sqlite3/3.46.0
+
+/Users/rmac/Documents/metabuilder/frontends/cli/conanfile.txt
+cpr/1.10.0 → cpr/1.14.1
+lua/5.4.6 → lua/5.4.7
+sol2/3.3.1 → sol2/3.4.1
+cmake/3.27.1 → cmake/3.30.0
+
+/Users/rmac/Documents/metabuilder/frontends/qt6/conanfile.txt
+qt/6.7.0 → qt/6.8.1
+cmake/3.27.1 → cmake/3.30.0
+ninja/1.11.1 → ninja/1.12.1
+
+/Users/rmac/Documents/metabuilder/services/media_daemon/build-config/conanfile.txt
+fmt/10.2.1 → fmt/12.0.1
+spdlog/1.12.0 → spdlog/1.16.0
+
+/Users/rmac/Documents/metabuilder/gameengine/conanfile.py
+shaderc/2023.6 → shaderc/2024.3
+rapidjson/cci.20230929 → rapidjson/cci.20231212
+stb/cci.20230920 → stb/cci.20231130
+libalsa/1.2.13 → libalsa/1.2.14

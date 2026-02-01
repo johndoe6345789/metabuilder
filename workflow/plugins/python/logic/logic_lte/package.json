@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/logic_lte",
+  "version": "1.0.0",
+  "description": "Check if a <= b",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["logic", "workflow", "plugin"],
+  "main": "logic_lte.py",
+  "files": ["logic_lte.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "logic.lte",
+    "category": "logic",
+    "class": "LogicLte",
+    "entrypoint": "execute"
+  }
+}

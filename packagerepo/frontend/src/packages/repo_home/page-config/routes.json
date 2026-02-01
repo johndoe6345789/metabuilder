@@ -1,0 +1,10 @@
+[
+  {
+    "id": "page_home",
+    "path": "/",
+    "title": "Package Repository",
+    "packageId": "repo_home",
+    "component": "home_page",
+    "requiresAuth": false
+  }
+]

@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/logic_lt",
+  "version": "1.0.0",
+  "description": "Check if a is less than b",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["logic", "workflow", "plugin"],
+  "main": "logic_lt.go",
+  "files": ["logic_lt.go", "factory.go"],
+  "metadata": {
+    "plugin_type": "logic.lt",
+    "category": "logic",
+    "struct": "LogicLt",
+    "entrypoint": "Execute"
+  }
+}

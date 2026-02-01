@@ -8,8 +8,8 @@
       "type": "core.seed_messages",
       "typeVersion": 1,
       "position": [
-        0,
-        50
+        100,
+        100
       ],
       "parameters": {}
     },
@@ -19,8 +19,8 @@
       "type": "utils.map_list",
       "typeVersion": 1,
       "position": [
-        300,
-        50
+        400,
+        100
       ],
       "parameters": {
         "items": [
@@ -37,8 +37,8 @@
       "type": "utils.reduce_list",
       "typeVersion": 1,
       "position": [
-        600,
-        50
+        700,
+        100
       ],
       "parameters": {
         "items": "$tick_lines",
@@ -51,8 +51,8 @@
       "type": "core.append_context_message",
       "typeVersion": 1,
       "position": [
-        900,
-        50
+        100,
+        300
       ],
       "parameters": {
         "messages": "$messages",
@@ -65,8 +65,8 @@
       "type": "control.loop",
       "typeVersion": 1,
       "position": [
-        1200,
-        50
+        400,
+        300
       ],
       "parameters": {
         "max_iterations": 3,
@@ -80,7 +80,7 @@
       "main": {
         "0": [
           {
-            "node": "Reduce Ticks",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -91,7 +91,7 @@
       "main": {
         "0": [
           {
-            "node": "Append Tick Context",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -102,7 +102,7 @@
       "main": {
         "0": [
           {
-            "node": "Append Tick Context",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -110,14 +110,13 @@
       }
     }
   },
-  "triggers": [
-    {
-      "nodeId": "seed_messages",
-      "kind": "manual",
-      "enabled": true,
-      "meta": {
-        "description": "Manually triggered meta.workflow_packages.game_tick_loop.label workflow execution"
-      }
-    }
-  ]
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  }
 }

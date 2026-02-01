@@ -1,0 +1,1608 @@
+# ============================================================================
+# Phase 8 Email Client - Kubernetes Deployment Configuration
+# Complete load-balanced, auto-scaling email service infrastructure
+# ============================================================================
+# This file contains all Kubernetes manifests for the email client:
+# - ConfigMaps: Environment variables and configurations
+# - Secrets: Sensitive data (override in prod)
+# - Services: Internal & external service discovery
+# - StatefulSets: PostgreSQL, Redis (stateful services)
+# - Deployments: Email service, Celery workers, Postfix, Dovecot
+# - HorizontalPodAutoscaler: Auto-scaling based on CPU/memory
+# - PersistentVolumeClaims: Data persistence
+# - NetworkPolicies: Network segmentation
+#
+# Usage:
+#   kubectl create namespace emailclient
+#   kubectl apply -f email-service-deployment.yaml --namespace=emailclient
+#   kubectl get all --namespace=emailclient
+#
+# Scaling:
+#   kubectl scale deployment email-service --replicas=5 --namespace=emailclient
+#   kubectl autoscale deployment email-service --min=2 --max=10 --namespace=emailclient
+#
+# ============================================================================
+
+---
+# ============================================================================
+# NAMESPACE
+# ============================================================================
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: emailclient
+  labels:
+    app: emailclient
+    phase: 8-email-client
+
+---
+# ============================================================================
+# CONFIGMAPS - Environment Variables & Configuration
+# ============================================================================
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: email-service-config
+  namespace: emailclient
+  labels:
+    app: emailclient
+    component: email-service
+data:
+  # Flask Configuration
+  FLASK_ENV: "production"
+  FLASK_HOST: "0.0.0.0"
+  FLASK_PORT: "5000"
+
+  # Database Configuration (PostgreSQL cluster DNS)
+  # Format: postgres-0.postgres:5432,postgres-1.postgres:5432,postgres-2.postgres:5432
+  DB_HOST: "postgres"
+  DB_PORT: "5432"
+  DB_NAME: "emailclient_db"
+  DB_POOL_SIZE: "20"
+  DB_POOL_TIMEOUT: "30"
+  DB_POOL_RECYCLE: "3600"
+
+  # Redis Configuration (Redis cluster)
+  REDIS_HOST: "redis"
+  REDIS_PORT: "6379"
+  REDIS_DB: "0"
+  REDIS_MAX_CONNECTIONS: "50"
+
+  # Celery Configuration (Redis message broker)
+  CELERY_BROKER_HOST: "redis"
+  CELERY_BROKER_PORT: "6379"
+  CELERY_BROKER_DB: "1"
+  CELERY_RESULT_BACKEND: "redis://redis:6379/1"
+  CELERY_TASK_SERIALIZER: "json"
+  CELERY_RESULT_SERIALIZER: "json"
+  CELERY_ACCEPT_CONTENT: "json"
+  CELERY_TIMEZONE: "UTC"
+  CELERY_ENABLE_UTC: "true"
+  CELERY_TASK_TRACK_STARTED: "true"
+  CELERY_TASK_TIME_LIMIT: "3600"
+  CELERY_TASK_SOFT_TIME_LIMIT: "3000"
+
+  # Security Configuration
+  JWT_ALGORITHM: "HS256"
+  JWT_EXPIRATION_HOURS: "24"
+
+  # CORS Configuration
+  CORS_ORIGINS: "http://localhost:3000,https://emailclient.local,https://*.emailclient.local"
+
+  # Email Service Configuration
+  IMAP_TIMEOUT: "30"
+  SMTP_TIMEOUT: "30"
+  IMAP_POOL_SIZE: "10"
+  SMTP_POOL_SIZE: "5"
+  IMAP_IDLE_TIMEOUT: "600"
+  IMAP_KEEPALIVE_INTERVAL: "300"
+
+  # Gunicorn Configuration (WSGI server)
+  GUNICORN_WORKERS: "4"
+  GUNICORN_THREADS: "2"
+  GUNICORN_WORKER_CLASS: "gthread"
+  GUNICORN_TIMEOUT: "120"
+  GUNICORN_KEEPALIVE: "5"
+
+  # Logging Configuration
+  LOG_LEVEL: "INFO"
+  LOG_FORMAT: "json"
+  LOG_FILE: "/var/log/emailclient/email-service.log"
+  LOG_RETENTION_DAYS: "30"
+
+  # Feature Flags
+  ENABLE_IMAP_SYNC: "true"
+  ENABLE_SMTP_SEND: "true"
+  ENABLE_CELERY_TASKS: "true"
+  ENABLE_EMAIL_PARSING: "true"
+  ENABLE_ATTACHMENT_SCANNING: "false"
+  ENABLE_EMAIL_OPTIMIZATION: "true"
+
+  # Rate Limiting Configuration
+  RATE_LIMIT_ENABLED: "true"
+  RATE_LIMIT_REQUESTS_PER_MINUTE: "60"
+  RATE_LIMIT_REQUESTS_PER_HOUR: "1000"
+  RATE_LIMIT_STORAGE: "redis"
+
+  # Multi-tenant Configuration
+  TENANT_ID_HEADER: "X-Tenant-ID"
+  DEFAULT_TENANT_ID: "default"
+  ENABLE_MULTI_TENANT: "true"
+
+  # Performance Configuration
+  MESSAGE_PAGE_SIZE: "50"
+  SYNC_BATCH_SIZE: "100"
+  ATTACHMENT_MAX_SIZE_MB: "25"
+  CACHE_TTL_SECONDS: "3600"
+  SESSION_TIMEOUT_HOURS: "24"
+
+  # Postfix Configuration
+  POSTFIX_HOST: "postfix"
+  POSTFIX_PORT: "25"
+  POSTFIX_TLS_ENABLED: "false"
+  POSTFIX_SKIP_TLS_VERIFICATION: "true"
+
+  # Dovecot Configuration
+  DOVECOT_HOST: "dovecot"
+  DOVECOT_IMAP_PORT: "143"
+  DOVECOT_IMAP_TLS_PORT: "993"
+  DOVECOT_POP3_PORT: "110"
+  DOVECOT_POP3_TLS_PORT: "995"
+
+  # Monitoring Configuration
+  ENABLE_METRICS: "true"
+  METRICS_PORT: "9090"
+  ENABLE_HEALTH_CHECK: "true"
+  HEALTH_CHECK_PORT: "8080"
+
+  # Sync Configuration
+  SYNC_INTERVAL_MINUTES: "5"
+  SYNC_MAX_RETRIES: "3"
+  SYNC_RETRY_DELAY_SECONDS: "60"
+  SYNC_CONCURRENT_ACCOUNTS: "10"
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+  namespace: emailclient
+  labels:
+    app: emailclient
+    component: postgres
+data:
+  POSTGRES_INITDB_ARGS: "-c max_connections=200 -c shared_buffers=256MB -c effective_cache_size=1GB -c maintenance_work_mem=64MB -c random_page_cost=1.1"
+  postgresql.conf: |
+    # PostgreSQL Configuration for Email Client
+    max_connections = 200
+    shared_buffers = 256MB
+    effective_cache_size = 1GB
+    maintenance_work_mem = 64MB
+    random_page_cost = 1.1
+    wal_level = minimal
+    fsync = on
+    synchronous_commit = local
+    log_statement = 'all'
+    log_min_duration_statement = 1000
+    log_duration = off
+    log_lock_waits = on
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: redis-config
+  namespace: emailclient
+  labels:
+    app: emailclient
+    component: redis
+data:
+  redis.conf: |
+    # Redis Configuration for Email Client Cache & Message Broker
+    port 6379
+    bind 0.0.0.0
+    timeout 0
+    tcp-keepalive 300
+    daemonize no
+    databases 16
+
+    # Persistence
+    save 900 1
+    save 300 10
+    save 60 10000
+    appendonly yes
+    appendfsync everysec
+
+    # Memory Management
+    maxmemory 512mb
+    maxmemory-policy allkeys-lru
+
+    # Logging
+    loglevel notice
+
+    # Server
+    slowlog-log-slower-than 10000
+    slowlog-max-len 128
+
+---
+# ============================================================================
+# SECRETS - Sensitive Data (Use external secret management in production)
+# ============================================================================
+apiVersion: v1
+kind: Secret
+metadata:
+  name: email-service-secrets
+  namespace: emailclient
+  labels:
+    app: emailclient
+    component: email-service
+type: Opaque
+stringData:
+  # Database Credentials
+  DB_USER: "emailclient"
+  DB_PASSWORD: "CHANGE_ME_IN_PRODUCTION"
+
+  # Redis Credentials (optional)
+  REDIS_PASSWORD: ""
+
+  # JWT Secret (generate with: openssl rand -base64 32)
+  JWT_SECRET: "CHANGE_ME_IN_PRODUCTION_openssl_rand_base64_32"
+
+  # Encryption Key (generate with: openssl rand -base64 32)
+  ENCRYPTION_KEY: "CHANGE_ME_IN_PRODUCTION_openssl_rand_base64_32"
+
+  # Sentry DSN (optional error tracking)
+  SENTRY_DSN: ""
+
+  # Email Service API Keys
+  MAILGUN_API_KEY: ""
+  SENDGRID_API_KEY: ""
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: postgres-secrets
+  namespace: emailclient
+  labels:
+    app: emailclient
+    component: postgres
+type: Opaque
+stringData:
+  POSTGRES_USER: "emailclient"
+  POSTGRES_PASSWORD: "CHANGE_ME_IN_PRODUCTION"
+  POSTGRES_DB: "emailclient_db"
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: docker-registry
+  namespace: emailclient
+  labels:
+    app: emailclient
+type: kubernetes.io/dockercfg
+data:
+  .dockercfg: eyJhdXRocyI6IHt9fQ==  # Empty registry - replace for private registries
+
+---
+# ============================================================================
+# PERSISTENT VOLUMES & CLAIMS
+# ============================================================================
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+  namespace: emailclient
+  labels:
+    app: emailclient
+    component: postgres
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: fast  # Use 'fast' for SSD, 'standard' for HDD
+  # Optional: Selector for specific PV
+  # selector:
+  #   matchLabels:
+  #     pv-type: postgres
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: redis-pvc
+  namespace: emailclient
+  labels:
+    app: emailclient
+    component: redis
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: fast
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postfix-data-pvc
+  namespace: emailclient
+  labels:
+    app: emailclient
+    component: postfix
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: standard
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: dovecot-data-pvc
+  namespace: emailclient
+  labels:
+    app: emailclient
+    component: dovecot
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: standard
+
+---
+# ============================================================================
+# SERVICES - Internal & External Service Discovery
+# ============================================================================
+
+# Headless Service for PostgreSQL StatefulSet (DNS discovery)
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: emailclient
+  labels:
+    app: emailclient
+    component: postgres
+spec:
+  clusterIP: None  # Headless service for StatefulSet
+  selector:
+    app: emailclient
+    component: postgres
+  ports:
+    - name: postgresql
+      port: 5432
+      targetPort: 5432
+      protocol: TCP
+
+---
+# Service for Redis
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+  namespace: emailclient
+  labels:
+    app: emailclient
+    component: redis
+spec:
+  type: ClusterIP
+  selector:
+    app: emailclient
+    component: redis
+  ports:
+    - name: redis
+      port: 6379
+      targetPort: 6379
+      protocol: TCP
+
+---
+# Service for Email Service API (ClusterIP - internal only)
+apiVersion: v1
+kind: Service
+metadata:
+  name: email-service
+  namespace: emailclient
+  labels:
+    app: emailclient
+    component: email-service
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "9090"
+    prometheus.io/path: "/metrics"
+spec:
+  type: ClusterIP
+  selector:
+    app: emailclient
+    component: email-service
+  ports:
+    - name: http
+      port: 5000
+      targetPort: 5000
+      protocol: TCP
+    - name: metrics
+      port: 9090
+      targetPort: 9090
+      protocol: TCP
+
+---
+# Service for Email Service API (LoadBalancer - external access)
+apiVersion: v1
+kind: Service
+metadata:
+  name: email-service-lb
+  namespace: emailclient
+  labels:
+    app: emailclient
+    component: email-service
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+spec:
+  type: LoadBalancer
+  selector:
+    app: emailclient
+    component: email-service
+  ports:
+    - name: http
+      port: 5000
+      targetPort: 5000
+      protocol: TCP
+  sessionAffinity: ClientIP  # Sticky sessions for stateful connections
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800
+
+---
+# Service for Postfix SMTP
+apiVersion: v1
+kind: Service
+metadata:
+  name: postfix
+  namespace: emailclient
+  labels:
+    app: emailclient
+    component: postfix
+spec:
+  type: ClusterIP
+  selector:
+    app: emailclient
+    component: postfix
+  ports:
+    - name: smtp
+      port: 25
+      targetPort: 25
+      protocol: TCP
+    - name: submission
+      port: 587
+      targetPort: 587
+      protocol: TCP
+    - name: smtps
+      port: 465
+      targetPort: 465
+      protocol: TCP
+
+---
+# Service for Dovecot IMAP/POP3
+apiVersion: v1
+kind: Service
+metadata:
+  name: dovecot
+  namespace: emailclient
+  labels:
+    app: emailclient
+    component: dovecot
+spec:
+  type: ClusterIP
+  selector:
+    app: emailclient
+    component: dovecot
+  ports:
+    - name: imap
+      port: 143
+      targetPort: 143
+      protocol: TCP
+    - name: imaps
+      port: 993
+      targetPort: 993
+      protocol: TCP
+    - name: pop3
+      port: 110
+      targetPort: 110
+      protocol: TCP
+    - name: pop3s
+      port: 995
+      targetPort: 995
+      protocol: TCP
+
+---
+# ============================================================================
+# STATEFULSETS - Stateful Services (PostgreSQL, Redis)
+# ============================================================================
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+  namespace: emailclient
+  labels:
+    app: emailclient
+    component: postgres
+spec:
+  serviceName: postgres  # Headless service for DNS discovery
+  replicas: 1  # Change to 3 for replication in production
+  selector:
+    matchLabels:
+      app: emailclient
+      component: postgres
+  template:
+    metadata:
+      labels:
+        app: emailclient
+        component: postgres
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "5432"
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - emailclient
+                    - key: component
+                      operator: In
+                      values:
+                        - postgres
+                topologyKey: kubernetes.io/hostname
+      containers:
+        - name: postgres
+          image: postgres:16-alpine
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: postgresql
+              containerPort: 5432
+              protocol: TCP
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secrets
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secrets
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secrets
+                  key: POSTGRES_DB
+            - name: POSTGRES_INITDB_ARGS
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-config
+                  key: POSTGRES_INITDB_ARGS
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
+            limits:
+              cpu: 2000m
+              memory: 4Gi
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - pg_isready -U $POSTGRES_USER
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - pg_isready -U $POSTGRES_USER
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 5
+            failureThreshold: 3
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
+              subPath: postgres
+            - name: postgres-config
+              mountPath: /etc/postgresql/postgresql.conf
+              subPath: postgresql.conf
+      volumes:
+        - name: postgres-config
+          configMap:
+            name: postgres-config
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        storageClassName: fast
+        resources:
+          requests:
+            storage: 10Gi
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis
+  namespace: emailclient
+  labels:
+    app: emailclient
+    component: redis
+spec:
+  serviceName: redis
+  replicas: 1  # Change to 3 for cluster in production
+  selector:
+    matchLabels:
+      app: emailclient
+      component: redis
+  template:
+    metadata:
+      labels:
+        app: emailclient
+        component: redis
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - emailclient
+                    - key: component
+                      operator: In
+                      values:
+                        - redis
+                topologyKey: kubernetes.io/hostname
+      containers:
+        - name: redis
+          image: redis:7-alpine
+          imagePullPolicy: IfNotPresent
+          command:
+            - redis-server
+            - /etc/redis/redis.conf
+          ports:
+            - name: redis
+              containerPort: 6379
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: 1000m
+              memory: 2Gi
+          livenessProbe:
+            exec:
+              command:
+                - redis-cli
+                - ping
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            exec:
+              command:
+                - redis-cli
+                - ping
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 5
+            failureThreshold: 3
+          volumeMounts:
+            - name: redis-data
+              mountPath: /data
+            - name: redis-config
+              mountPath: /etc/redis/redis.conf
+              subPath: redis.conf
+      volumes:
+        - name: redis-config
+          configMap:
+            name: redis-config
+  volumeClaimTemplates:
+    - metadata:
+        name: redis-data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        storageClassName: fast
+        resources:
+          requests:
+            storage: 5Gi
+
+---
+# ============================================================================
+# DEPLOYMENTS - Stateless Services (Email Service, Workers)
+# ============================================================================
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: email-service
+  namespace: emailclient
+  labels:
+    app: emailclient
+    component: email-service
+spec:
+  replicas: 2  # Minimum replicas (HPA will scale to max)
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: "25%"  # Allow up to 25% downtime during updates
+      maxSurge: "50%"        # Create up to 50% additional pods during updates
+  selector:
+    matchLabels:
+      app: emailclient
+      component: email-service
+  template:
+    metadata:
+      labels:
+        app: emailclient
+        component: email-service
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9090"
+        prometheus.io/path: "/metrics"
+    spec:
+      # Pod Disruption Budget - ensure minimum availability during cluster operations
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - emailclient
+                    - key: component
+                      operator: In
+                      values:
+                        - email-service
+                topologyKey: kubernetes.io/hostname
+        podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 50
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - emailclient
+                    - key: component
+                      operator: In
+                      values:
+                        - redis
+                topologyKey: kubernetes.io/hostname
+      serviceAccountName: emailclient
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+        - name: email-service
+          image: emailclient/email-service:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 5000
+              protocol: TCP
+            - name: metrics
+              containerPort: 9090
+              protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: email-service-config
+            - secretRef:
+                name: email-service-secrets
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: DATABASE_URL
+              value: "postgresql://$(DB_USER):$(DB_PASSWORD)@postgres:5432/$(DB_NAME)"
+            - name: REDIS_URL
+              value: "redis://redis:6379/0"
+            - name: CELERY_BROKER_URL
+              value: "redis://redis:6379/1"
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+            limits:
+              cpu: 2000m
+              memory: 2Gi
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 5
+            failureThreshold: 3
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 0
+            periodSeconds: 5
+            timeoutSeconds: 5
+            failureThreshold: 6  # Allow up to 30 seconds for startup
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - name: logs
+              mountPath: /var/log/emailclient
+            - name: data
+              mountPath: /app/data
+            - name: tmp
+              mountPath: /tmp
+      # Init container for migrations
+      initContainers:
+        - name: migrations
+          image: emailclient/email-service:latest
+          imagePullPolicy: Always
+          command:
+            - /bin/sh
+            - -c
+            - |
+              echo "Running database migrations..."
+              python -m flask db upgrade
+              echo "Migrations complete"
+          envFrom:
+            - configMapRef:
+                name: email-service-config
+            - secretRef:
+                name: email-service-secrets
+          env:
+            - name: DATABASE_URL
+              value: "postgresql://$(DB_USER):$(DB_PASSWORD)@postgres:5432/$(DB_NAME)"
+      volumes:
+        - name: logs
+          emptyDir: {}
+        - name: data
+          emptyDir: {}
+        - name: tmp
+          emptyDir: {}
+      terminationGracePeriodSeconds: 30
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: celery-worker
+  namespace: emailclient
+  labels:
+    app: emailclient
+    component: celery-worker
+spec:
+  replicas: 2  # Number of worker pods
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: emailclient
+      component: celery-worker
+  template:
+    metadata:
+      labels:
+        app: emailclient
+        component: celery-worker
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - emailclient
+                    - key: component
+                      operator: In
+                      values:
+                        - celery-worker
+                topologyKey: kubernetes.io/hostname
+      serviceAccountName: emailclient
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+        - name: celery-worker
+          image: emailclient/email-service:latest
+          imagePullPolicy: Always
+          command:
+            - celery
+            - -A
+            - tasks
+            - worker
+            - --loglevel=info
+            - --concurrency=4
+          envFrom:
+            - configMapRef:
+                name: email-service-config
+            - secretRef:
+                name: email-service-secrets
+          env:
+            - name: DATABASE_URL
+              value: "postgresql://$(DB_USER):$(DB_PASSWORD)@postgres:5432/$(DB_NAME)"
+            - name: REDIS_URL
+              value: "redis://redis:6379/0"
+            - name: CELERY_BROKER_URL
+              value: "redis://redis:6379/1"
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+            limits:
+              cpu: 2000m
+              memory: 2Gi
+          livenessProbe:
+            exec:
+              command:
+                - celery
+                - -A
+                - tasks
+                - inspect
+                - ping
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 3
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - name: logs
+              mountPath: /var/log/emailclient
+            - name: data
+              mountPath: /app/data
+      volumes:
+        - name: logs
+          emptyDir: {}
+        - name: data
+          emptyDir: {}
+      terminationGracePeriodSeconds: 60
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: celery-beat
+  namespace: emailclient
+  labels:
+    app: emailclient
+    component: celery-beat
+spec:
+  replicas: 1  # Only one beat scheduler
+  strategy:
+    type: Recreate  # Must be Recreate for single-instance services
+  selector:
+    matchLabels:
+      app: emailclient
+      component: celery-beat
+  template:
+    metadata:
+      labels:
+        app: emailclient
+        component: celery-beat
+    spec:
+      serviceAccountName: emailclient
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+        - name: celery-beat
+          image: emailclient/email-service:latest
+          imagePullPolicy: Always
+          command:
+            - celery
+            - -A
+            - tasks
+            - beat
+            - --loglevel=info
+            - --scheduler=django_celery_beat.schedulers:DatabaseScheduler
+          envFrom:
+            - configMapRef:
+                name: email-service-config
+            - secretRef:
+                name: email-service-secrets
+          env:
+            - name: DATABASE_URL
+              value: "postgresql://$(DB_USER):$(DB_PASSWORD)@postgres:5432/$(DB_NAME)"
+            - name: REDIS_URL
+              value: "redis://redis:6379/0"
+            - name: CELERY_BROKER_URL
+              value: "redis://redis:6379/1"
+          resources:
+            requests:
+              cpu: 250m
+              memory: 256Mi
+            limits:
+              cpu: 1000m
+              memory: 1Gi
+          livenessProbe:
+            exec:
+              command:
+                - celery
+                - -A
+                - tasks
+                - inspect
+                - ping
+            initialDelaySeconds: 30
+            periodSeconds: 60
+            timeoutSeconds: 10
+            failureThreshold: 3
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - name: logs
+              mountPath: /var/log/emailclient
+            - name: data
+              mountPath: /app/data
+      volumes:
+        - name: logs
+          emptyDir: {}
+        - name: data
+          emptyDir: {}
+      terminationGracePeriodSeconds: 60
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postfix
+  namespace: emailclient
+  labels:
+    app: emailclient
+    component: postfix
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: "25%"
+      maxSurge: "50%"
+  selector:
+    matchLabels:
+      app: emailclient
+      component: postfix
+  template:
+    metadata:
+      labels:
+        app: emailclient
+        component: postfix
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - emailclient
+                    - key: component
+                      operator: In
+                      values:
+                        - postfix
+                topologyKey: kubernetes.io/hostname
+      serviceAccountName: emailclient
+      securityContext:
+        runAsNonRoot: false  # Postfix requires root for binding ports
+      containers:
+        - name: postfix
+          image: emailclient/postfix:latest
+          imagePullPolicy: Always
+          ports:
+            - name: smtp
+              containerPort: 25
+              protocol: TCP
+            - name: submission
+              containerPort: 587
+              protocol: TCP
+            - name: smtps
+              containerPort: 465
+              protocol: TCP
+          env:
+            - name: POSTFIX_myhostname
+              value: "emailclient.local"
+            - name: POSTFIX_mydomain
+              value: "emailclient.local"
+            - name: POSTFIX_mynetworks
+              value: "127.0.0.0/8 10.0.0.0/8 172.16.0.0/12"
+          resources:
+            requests:
+              cpu: 250m
+              memory: 256Mi
+            limits:
+              cpu: 1000m
+              memory: 1Gi
+          livenessProbe:
+            exec:
+              command:
+                - postfix
+                - status
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            tcpSocket:
+              port: 25
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          volumeMounts:
+            - name: postfix-data
+              mountPath: /var/mail
+            - name: postfix-spool
+              mountPath: /var/spool/postfix
+      volumes:
+        - name: postfix-data
+          persistentVolumeClaim:
+            claimName: postfix-data-pvc
+        - name: postfix-spool
+          emptyDir: {}
+      terminationGracePeriodSeconds: 30
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dovecot
+  namespace: emailclient
+  labels:
+    app: emailclient
+    component: dovecot
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: "25%"
+      maxSurge: "50%"
+  selector:
+    matchLabels:
+      app: emailclient
+      component: dovecot
+  template:
+    metadata:
+      labels:
+        app: emailclient
+        component: dovecot
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - emailclient
+                    - key: component
+                      operator: In
+                      values:
+                        - dovecot
+                topologyKey: kubernetes.io/hostname
+      serviceAccountName: emailclient
+      securityContext:
+        runAsNonRoot: false  # Dovecot requires root for binding ports
+      containers:
+        - name: dovecot
+          image: emailclient/dovecot:latest
+          imagePullPolicy: Always
+          ports:
+            - name: imap
+              containerPort: 143
+              protocol: TCP
+            - name: imaps
+              containerPort: 993
+              protocol: TCP
+            - name: pop3
+              containerPort: 110
+              protocol: TCP
+            - name: pop3s
+              containerPort: 995
+              protocol: TCP
+          env:
+            - name: DOVECOT_MAIL_HOME
+              value: "/var/mail"
+            - name: DOVECOT_PROTOCOLS
+              value: "imap pop3"
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: 1000m
+              memory: 2Gi
+          livenessProbe:
+            exec:
+              command:
+                - doveadm
+                - ping
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            tcpSocket:
+              port: 143
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          volumeMounts:
+            - name: dovecot-data
+              mountPath: /var/mail
+      volumes:
+        - name: dovecot-data
+          persistentVolumeClaim:
+            claimName: dovecot-data-pvc
+      terminationGracePeriodSeconds: 30
+
+---
+# ============================================================================
+# HORIZONTAL POD AUTOSCALER - Auto-scaling Configuration
+# ============================================================================
+
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: email-service-hpa
+  namespace: emailclient
+  labels:
+    app: emailclient
+    component: email-service
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: email-service
+  minReplicas: 2      # Minimum replicas (for HA)
+  maxReplicas: 10     # Maximum replicas
+  metrics:
+    # Scale based on CPU utilization
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70  # Scale up when CPU > 70%
+    # Scale based on memory utilization
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80  # Scale up when memory > 80%
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60  # Wait 60 seconds before scaling up again
+      policies:
+        - type: Percent
+          percent: 100              # Double the number of pods
+          periodSeconds: 60
+        - type: Pods
+          pods: 2                   # Or add 2 pods per 60 seconds
+          periodSeconds: 60
+      selectPolicy: Max             # Choose the policy that scales up most
+    scaleDown:
+      stabilizationWindowSeconds: 300  # Wait 5 minutes before scaling down
+      policies:
+        - type: Percent
+          percent: 50               # Reduce to 50% of current replicas
+          periodSeconds: 60
+        - type: Pods
+          pods: 1                   # Or remove 1 pod per 60 seconds
+          periodSeconds: 60
+      selectPolicy: Min             # Choose the policy that scales down most
+
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: celery-worker-hpa
+  namespace: emailclient
+  labels:
+    app: emailclient
+    component: celery-worker
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: celery-worker
+  minReplicas: 2
+  maxReplicas: 8
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 75
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 30
+      policies:
+        - type: Percent
+          percent: 50
+          periodSeconds: 30
+    scaleDown:
+      stabilizationWindowSeconds: 120
+      policies:
+        - type: Pods
+          pods: 1
+          periodSeconds: 60
+
+---
+# ============================================================================
+# POD DISRUPTION BUDGET - Ensure Minimum Availability
+# ============================================================================
+
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: email-service-pdb
+  namespace: emailclient
+spec:
+  minAvailable: 1  # At least 1 pod must be available
+  selector:
+    matchLabels:
+      app: emailclient
+      component: email-service
+
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: celery-worker-pdb
+  namespace: emailclient
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: emailclient
+      component: celery-worker
+
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: postgres-pdb
+  namespace: emailclient
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: emailclient
+      component: postgres
+
+---
+# ============================================================================
+# RBAC - Service Account & Role-Based Access Control
+# ============================================================================
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: emailclient
+  namespace: emailclient
+  labels:
+    app: emailclient
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: emailclient
+  namespace: emailclient
+spec:
+  rules:
+    # Read ConfigMaps and Secrets
+    - apiGroups: [""]
+      resources: ["configmaps", "secrets"]
+      verbs: ["get", "list", "watch"]
+    # Read Services for DNS discovery
+    - apiGroups: [""]
+      resources: ["services"]
+      verbs: ["get", "list"]
+    # Read Pods (for monitoring/debugging)
+    - apiGroups: [""]
+      resources: ["pods"]
+      verbs: ["get", "list"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: emailclient
+  namespace: emailclient
+spec:
+  roleRef:
+    apiGroup: rbac.authorization.k8s.io
+    kind: Role
+    name: emailclient
+  subjects:
+    - kind: ServiceAccount
+      name: emailclient
+      namespace: emailclient
+
+---
+# ============================================================================
+# NETWORK POLICY - Network Segmentation
+# ============================================================================
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: emailclient-network-policy
+  namespace: emailclient
+spec:
+  podSelector: {}  # Apply to all pods in namespace
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # Allow traffic within namespace
+    - from:
+        - podSelector: {}
+      ports:
+        - protocol: TCP
+          port: 5000
+        - protocol: TCP
+          port: 5432
+        - protocol: TCP
+          port: 6379
+        - protocol: TCP
+          port: 25
+        - protocol: TCP
+          port: 143
+    # Allow from external load balancer
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: ingress-nginx
+  egress:
+    # Allow DNS
+    - to:
+        - namespaceSelector: {}
+      ports:
+        - protocol: UDP
+          port: 53
+    # Allow traffic within namespace
+    - to:
+        - podSelector: {}
+      ports:
+        - protocol: TCP
+          port: 5000
+        - protocol: TCP
+          port: 5432
+        - protocol: TCP
+          port: 6379
+        - protocol: TCP
+          port: 25
+        - protocol: TCP
+          port: 143
+
+---
+# ============================================================================
+# INGRESS - External Access (Optional)
+# ============================================================================
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: email-service-ingress
+  namespace: emailclient
+  labels:
+    app: emailclient
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/rate-limit: "100"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  tls:
+    - hosts:
+        - emailclient.example.com
+      secretName: emailclient-tls
+  rules:
+    - host: emailclient.example.com
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: email-service
+                port:
+                  number: 5000
+          - path: /health
+            pathType: Exact
+            backend:
+              service:
+                name: email-service
+                port:
+                  number: 5000

@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/string_trim",
+  "version": "1.0.0",
+  "description": "Trim whitespace from string",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["string", "workflow", "plugin"],
+  "main": "string_trim.py",
+  "files": ["string_trim.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "string.trim",
+    "category": "string",
+    "class": "StringTrim",
+    "entrypoint": "execute"
+  }
+}

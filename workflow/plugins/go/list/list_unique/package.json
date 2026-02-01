@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/list_unique",
+  "version": "1.0.0",
+  "description": "Remove duplicate elements from a list",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["list", "workflow", "plugin"],
+  "main": "list_unique.go",
+  "files": ["list_unique.go", "factory.go"],
+  "metadata": {
+    "plugin_type": "list.unique",
+    "category": "list",
+    "struct": "ListUnique",
+    "entrypoint": "Execute"
+  }
+}

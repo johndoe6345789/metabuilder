@@ -1,0 +1,33 @@
+{
+  "name": "@metabuilder/hooks-forms",
+  "version": "1.0.0",
+  "description": "Form management hooks for MetaBuilder with validation and field arrays",
+  "main": "src/index.ts",
+  "types": "src/index.d.ts",
+  "scripts": {
+    "build": "tsc --declaration --emitDeclarationOnly",
+    "lint": "eslint src/",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "react",
+    "hooks",
+    "forms",
+    "validation",
+    "field-array",
+    "state-management"
+  ],
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0 || ^19.0.0",
+    "typescript": "^5.0.0"
+  },
+  "files": [
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ]
+}

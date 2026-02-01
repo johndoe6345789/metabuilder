@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/index_upsert",
+  "version": "1.0.0",
+  "description": "Upsert entry in index store",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["packagerepo", "workflow", "plugin", "index", "search"],
+  "main": "index_upsert.py",
+  "files": ["index_upsert.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "packagerepo.index_upsert",
+    "category": "packagerepo",
+    "class": "IndexUpsert",
+    "entrypoint": "execute"
+  }
+}

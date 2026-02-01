@@ -1,0 +1,98 @@
+.guestbook {
+  background: #f0f0f0;
+  border: 3px ridge #c0c0c0;
+  padding: 20px;
+  margin: 20px 0;
+}
+
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.title {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 1.2rem;
+  color: #800080;
+  text-shadow: 2px 2px 0 #c0c0c0;
+}
+
+.intro {
+  font-family: 'Comic Neue', 'Comic Sans MS', cursive;
+  font-size: 1rem;
+  color: #000080;
+  text-align: center;
+  margin-bottom: 15px;
+  padding: 10px;
+  background: #ffffcc;
+  border: 2px dashed #ffcc00;
+}
+
+.entries {
+  margin-top: 20px;
+}
+
+.entriesTitle {
+  font-family: 'Comic Neue', 'Comic Sans MS', cursive;
+  font-size: 1rem;
+  color: #008000;
+  text-align: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px dashed #008000;
+}
+
+.entryList {
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 10px;
+  
+  &::-webkit-scrollbar {
+    width: 16px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: #c0c0c0;
+    border: 1px inset #808080;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: #808080;
+    border: 2px outset #c0c0c0;
+    
+    &:hover {
+      background: #606060;
+    }
+  }
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 20px;
+  
+  p {
+    font-family: 'VT323', monospace;
+    font-size: 1.2rem;
+    color: #808080;
+    animation: pulse 1s infinite;
+  }
+}
+
+.noEntries {
+  font-family: 'Comic Neue', 'Comic Sans MS', cursive;
+  font-size: 1rem;
+  color: #ff0000;
+  text-align: center;
+  padding: 20px;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}

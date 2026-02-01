@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/utils_map_list",
+  "version": "1.0.0",
+  "description": "Map items to formatted strings",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["utils", "workflow", "plugin"],
+  "main": "utils_map_list.py",
+  "files": ["utils_map_list.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "utils.map_list",
+    "category": "utils",
+    "class": "MapList",
+    "entrypoint": "execute"
+  }
+}

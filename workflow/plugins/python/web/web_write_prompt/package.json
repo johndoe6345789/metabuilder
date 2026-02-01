@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/web_write_prompt",
+  "version": "1.0.0",
+  "description": "Write prompt content to file",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["web", "workflow", "plugin"],
+  "main": "web_write_prompt.py",
+  "files": ["web_write_prompt.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "web.write_prompt",
+    "category": "web",
+    "class": "WebWritePrompt",
+    "entrypoint": "execute"
+  }
+}

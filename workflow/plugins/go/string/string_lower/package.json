@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/string_lower",
+  "version": "1.0.0",
+  "description": "Convert string to lowercase",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["string", "workflow", "plugin"],
+  "main": "string_lower.go",
+  "files": ["string_lower.go", "factory.go"],
+  "metadata": {
+    "plugin_type": "string.lower",
+    "category": "string",
+    "struct": "StringLower",
+    "entrypoint": "Execute"
+  }
+}

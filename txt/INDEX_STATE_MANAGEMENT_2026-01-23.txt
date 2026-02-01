@@ -1,0 +1,292 @@
+STATE MANAGEMENT AUDIT - COMPLETE INDEX
+========================================
+Date: January 23, 2026
+Status: All Audits Complete
+
+DOCUMENT ROADMAP
+================
+
+START HERE: README_ZUSTAND_REDUX_2026-01-23.txt
+  → 30-second executive summary
+  → Key findings at a glance
+  → Next actions list
+  → File locations for fixes
+
+THEN READ: ZUSTAND_REDUX_SUMMARY.txt
+  → Quick reference (1 page)
+  → Projects using Redux
+  → Version consistency report
+  → Comparison table
+  → Q&A format
+
+FOR FULL ANALYSIS: ZUSTAND_AUDIT_2026-01-23.txt
+  → Technical deep dive
+  → All 13+ Redux packages detailed
+  → Multi-version support strategy
+  → Recommendations (immediate + medium-term)
+  → File locations for fixes
+
+FOR ARCHITECTURE: REDUX_ARCHITECTURE_DIAGRAM_2026-01-23.txt
+  → Layer diagrams
+  → Package dependency tree
+  → State management flow
+  → Strategic implications
+  → Strategic summary
+
+SUPPORTING DOCS:
+  → TANSTACK_TO_REDUX_MIGRATION_CHECKLIST.txt (migration patterns)
+  → REDUXJS_TOOLKIT_FINAL_REPORT_2026-01-23.txt (RTK details)
+  → REDUXJS_TOOLKIT_FIX_2026-01-23.txt (specific fixes)
+
+KEY FINDINGS (EXECUTIVE SUMMARY)
+================================
+
+ZUSTAND
+  Status: NOT USED (zero occurrences in package.json files)
+  Location: Only in exploded-diagrams/package-lock.json (transitive)
+  Action: None required
+
+REDUX
+  Status: PRODUCTION ECOSYSTEM (13+ packages)
+  Quality: Excellent (95%+ version consistency)
+  Strategy: Pure Redux (no competing libraries)
+  Architecture: Mature and well-designed
+
+VERSION ISSUES (2 MINOR)
+  Issue #1: redux/api-clients uses ^4.2.1 (should be ^5.0.1)
+  Issue #2: pastebin uses ^2.5.0 (should be ^2.5.2)
+  Fix effort: <5 minutes total
+  Priority: Low (not causing errors)
+
+STRATEGIC IMPLICATIONS
+  ✓ No library conflicts (Redux exclusive)
+  ✓ Ergonomic hook-based API
+  ✓ Service adapter pattern for extensibility
+  ✓ TanStack Query replaced (Redux as single source of truth)
+  ✓ Intentional multi-version support for gradual upgrades
+
+REDUX ECOSYSTEM BREAKDOWN
+==========================
+
+Core (2 packages):
+  @reduxjs/toolkit: ^2.5.2 (or ^1.9.7 || ^2.5.2)
+  redux: ^5.0.1 (or ^4.2.1 in api-clients - INCONSISTENT)
+
+Hooks (9 packages):
+  hooks-async: ^2.5.2 (TanStack Query replacement)
+  hooks-auth: 1.9.7 || ^2.5.2
+  hooks-canvas: 1.9.7 || ^2.5.2
+  hooks-data: 1.9.7 || ^2.5.2
+  hooks: 1.9.7 || ^2.5.2
+  core-hooks: ^2.5.2
+  hooks-forms: Form management
+  hooks-utils: Utility hooks
+  email (redux/email/): 1.9.7 || ^2.5.2
+
+State Management (3 packages):
+  redux-core: Shared across frontends
+  redux-slices: Workflow state (1.9.7 || ^2.5.2)
+  service-adapters: Dependency injection
+
+Utilities (2+ packages):
+  timing-utils: Debounced saves
+  api-clients: API integration (INCONSISTENT VERSION)
+
+CONSUMER APPLICATIONS (6)
+==========================
+1. workflowui/
+   - Primary Redux consumer
+   - Full stack: Redux + hooks + slices
+   - Version: @reduxjs/toolkit ^2.5.2, redux ^5.0.1
+
+2. codegen/
+   - CodeForge IDE
+   - Full stack: Redux + hooks
+   - Version: @reduxjs/toolkit ^2.5.2
+
+3. frontends/nextjs/
+   - Next.js web app
+   - Redux for state management
+   - Version: redux ^5.0.1
+
+4. frontends/dbal/
+   - DBAL frontend
+   - Version: redux ^5.0.1
+
+5. emailclient/
+   - Email application
+   - Version: @reduxjs/toolkit ^2.5.2
+
+6. pastebin/
+   - Code snippet sharing
+   - Version: @reduxjs/toolkit ^2.5.0 (MINOR INCONSISTENCY)
+
+MULTI-VERSION SUPPORT (INTENTIONAL)
+===================================
+5 packages support both @reduxjs/toolkit ^1.9.7 AND ^2.5.2:
+  - hooks-auth
+  - hooks-canvas
+  - hooks-data
+  - hooks (generic)
+  - email
+  - redux-slices (also direct ^2.5.2)
+
+Rationale: Gradual upgrade path
+  - Allows consumers to migrate at own pace
+  - No forced simultaneous upgrades
+  - Typical in large monorepos
+
+Target state: Phase out when all consumers on 2.5.2
+
+ISSUES AND FIXES
+================
+
+CRITICAL: None identified
+
+HIGH PRIORITY: None (architecture solid)
+
+MEDIUM PRIORITY:
+  1. redux/api-clients version inconsistency
+     Current: redux ^4.2.1, redux ^4.0.0 (peerDependencies)
+     Target: redux ^5.0.1, redux ^5.0.0
+     File: /redux/api-clients/package.json
+     Lines: 2 locations
+     Effort: 1 minute
+     Impact: None (no breaking changes)
+     Why: Consistency with other packages
+
+LOW PRIORITY:
+  1. pastebin version inconsistency
+     Current: @reduxjs/toolkit ^2.5.0
+     Target: @reduxjs/toolkit ^2.5.2
+     File: /pastebin/package.json
+     Lines: 1 location
+     Effort: 30 seconds
+     Impact: None (patch-compatible)
+     Why: Cosmetic consistency
+
+ARCHITECTURAL STRENGTHS
+=======================
+
+1. NO LIBRARY CONFLICTS
+   - Zustand not adopted = cohesive strategy
+   - Redux exclusive = single source of truth
+   - No fragmentation = predictable behavior
+
+2. HOOK-BASED ERGONOMICS
+   - Hides Redux complexity from consumers
+   - Consistent API pattern across projects
+   - Easy learning curve
+
+3. SERVICE ADAPTER PATTERN
+   - Enables dependency injection
+   - Easy to test (mock adapters)
+   - Decouples hooks from implementations
+
+4. ASYNC DATA MANAGEMENT
+   - TanStack Query completely replaced
+   - Redux manages all async operations
+   - Single location for state + caching
+
+5. INTENTIONAL VERSIONING STRATEGY
+   - Multi-version support for gradual upgrades
+   - No "big bang" migrations
+   - Mature monorepo pattern
+
+NEXT STEPS
+==========
+
+Immediate (this sprint):
+  [ ] Update redux/api-clients: ^4.2.1 → ^5.0.1
+  [ ] Update pastebin: ^2.5.0 → ^2.5.2
+  [ ] Run npm install to verify
+  [ ] Commit changes
+  Estimated effort: 15 minutes
+
+Near-term (next 2 sprints):
+  [ ] Document Redux hook architecture (update CLAUDE.md)
+  [ ] Create developer guide for new Redux hook patterns
+  [ ] Share architecture overview with team
+
+Medium-term (next 1-2 months):
+  [ ] Phase out multi-version peer dependencies
+  [ ] Consider consolidating 9 hook packages
+  [ ] Evaluate performance of current approach
+
+COMPARISON: WHY REDUX OVER ZUSTAND
+===================================
+
+Zustand:
+  - ✗ Not used
+  - ✗ Smaller ecosystem
+  - ✓ Minimal bundle size
+  - ✓ Simpler API
+
+Redux:
+  - ✓ Already invested (13+ packages)
+  - ✓ Mature, proven approach
+  - ✓ Excellent DevTools
+  - ✓ Service adapter pattern
+  - ✓ TanStack Query replacement built
+  - ✓ Multi-version support possible
+  - ✓ Larger community
+  - ✓ Better documentation
+
+Decision: Redux was clearly the right choice given:
+  - 13+ packages already built
+  - Complex state requirements (async data, service injection)
+  - Need for gradual upgrade paths
+  - Value of DevTools and debugging
+
+DOCUMENTATION STRUCTURE
+=======================
+
+txt/
+├── INDEX_STATE_MANAGEMENT_2026-01-23.txt (THIS FILE)
+├── README_ZUSTAND_REDUX_2026-01-23.txt (START HERE)
+├── ZUSTAND_REDUX_SUMMARY.txt (QUICK REFERENCE)
+├── ZUSTAND_AUDIT_2026-01-23.txt (FULL ANALYSIS)
+├── REDUX_ARCHITECTURE_DIAGRAM_2026-01-23.txt (DIAGRAMS)
+├── TANSTACK_TO_REDUX_MIGRATION_CHECKLIST.txt (PATTERNS)
+├── REDUXJS_TOOLKIT_FINAL_REPORT_2026-01-23.txt (RTK DETAILS)
+└── REDUXJS_TOOLKIT_FIX_2026-01-23.txt (SPECIFIC FIXES)
+
+FILES TO UPDATE (IF NEEDED)
+===========================
+
+redux/api-clients/package.json:
+  Line 1: "redux": "^4.2.1" → "redux": "^5.0.1"
+  Line 2: "redux": "^4.0.0" → "redux": "^5.0.0" (in peerDependencies)
+
+pastebin/package.json:
+  Line 1: "@reduxjs/toolkit": "^2.5.0" → "@reduxjs/toolkit": "^2.5.2"
+
+REFERENCES
+==========
+- CLAUDE.md (project architecture overview)
+- docs/CLAUDE.md (development guide)
+- redux/README.md (if exists)
+- Package.json files in each Redux package
+
+CONCLUSION
+==========
+
+MetaBuilder has built a professional, mature Redux state management
+ecosystem with:
+  ✓ Zero competing libraries (pure Redux)
+  ✓ 13+ custom packages for ergonomic API
+  ✓ Service adapter pattern for flexibility
+  ✓ TanStack Query fully replaced
+  ✓ Multi-version support for gradual upgrades
+  ✓ 95%+ version consistency
+
+This is not ad-hoc; it's deliberate architecture.
+
+Two minor version inconsistencies exist but are non-critical
+and fixable in <5 minutes total.
+
+No action required regarding Zustand (not used).
+
+For questions, see README_ZUSTAND_REDUX_2026-01-23.txt
+For quick reference, see ZUSTAND_REDUX_SUMMARY.txt
+For full analysis, see ZUSTAND_AUDIT_2026-01-23.txt

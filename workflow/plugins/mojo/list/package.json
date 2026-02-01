@@ -1,0 +1,17 @@
+{
+  "name": "@metabuilder/workflow-plugins-list",
+  "version": "1.0.0",
+  "description": "List operation plugins",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["list", "workflow", "plugins"],
+  "metadata": {
+    "category": "list",
+    "plugin_count": 3
+  },
+  "plugins": [
+    "list_concat",
+    "list_length",
+    "list_reverse"
+  ]
+}

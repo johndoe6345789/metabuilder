@@ -8,8 +8,8 @@
       "type": "list.concat",
       "typeVersion": 1,
       "position": [
-        0,
-        0
+        100,
+        100
       ],
       "parameters": {
         "lists": [
@@ -33,8 +33,8 @@
       "type": "list.length",
       "typeVersion": 1,
       "position": [
-        300,
-        0
+        400,
+        100
       ],
       "parameters": {
         "items": "$test_concat.result"
@@ -46,8 +46,8 @@
       "type": "test.assert_equals",
       "typeVersion": 1,
       "position": [
-        600,
-        0
+        700,
+        100
       ],
       "parameters": {
         "actual": "$assert_concat_length.result",
@@ -61,8 +61,8 @@
       "type": "list.length",
       "typeVersion": 1,
       "position": [
-        0,
-        100
+        100,
+        300
       ],
       "parameters": {
         "items": [
@@ -80,8 +80,8 @@
       "type": "test.assert_equals",
       "typeVersion": 1,
       "position": [
-        300,
-        100
+        400,
+        300
       ],
       "parameters": {
         "actual": "$test_length.result",
@@ -95,8 +95,8 @@
       "type": "list.slice",
       "typeVersion": 1,
       "position": [
-        0,
-        200
+        700,
+        300
       ],
       "parameters": {
         "items": [
@@ -116,8 +116,8 @@
       "type": "list.length",
       "typeVersion": 1,
       "position": [
-        300,
-        200
+        100,
+        500
       ],
       "parameters": {
         "items": "$test_slice.result"
@@ -129,8 +129,8 @@
       "type": "test.assert_equals",
       "typeVersion": 1,
       "position": [
-        600,
-        200
+        400,
+        500
       ],
       "parameters": {
         "actual": "$assert_slice_length.result",
@@ -144,8 +144,8 @@
       "type": "list.find",
       "typeVersion": 1,
       "position": [
-        0,
-        300
+        700,
+        500
       ],
       "parameters": {
         "items": [
@@ -164,12 +164,12 @@
     },
     {
       "id": "assert_find",
-      "name": "Assert Find Result",
+      "name": "Assert Find",
       "type": "test.assert_exists",
       "typeVersion": 1,
       "position": [
-        300,
-        300
+        100,
+        700
       ],
       "parameters": {
         "value": "$test_find.result",
@@ -178,12 +178,12 @@
     },
     {
       "id": "assert_find_found",
-      "name": "Assert Found Flag",
+      "name": "Assert Find Found",
       "type": "test.assert_true",
       "typeVersion": 1,
       "position": [
-        600,
-        300
+        400,
+        700
       ],
       "parameters": {
         "value": "$test_find.found",
@@ -196,7 +196,7 @@
       "main": {
         "0": [
           {
-            "node": "Assert Concat Length",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -207,7 +207,7 @@
       "main": {
         "0": [
           {
-            "node": "Assert Concat",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -218,7 +218,7 @@
       "main": {
         "0": [
           {
-            "node": "Assert Length",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -229,7 +229,7 @@
       "main": {
         "0": [
           {
-            "node": "Assert Slice Length",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -240,7 +240,7 @@
       "main": {
         "0": [
           {
-            "node": "Assert Slice",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -251,12 +251,7 @@
       "main": {
         "0": [
           {
-            "node": "Assert Find Result",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Assert Found Flag",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -264,14 +259,13 @@
       }
     }
   },
-  "triggers": [
-    {
-      "nodeId": "test_concat",
-      "kind": "manual",
-      "enabled": true,
-      "meta": {
-        "description": "Manually triggered List Plugins Test Suite workflow execution"
-      }
-    }
-  ]
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  }
 }

@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/convert_to_string",
+  "version": "1.0.0",
+  "description": "Convert a value to string",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["convert", "workflow", "plugin"],
+  "main": "convert_to_string.go",
+  "files": ["convert_to_string.go", "factory.go"],
+  "metadata": {
+    "plugin_type": "convert.to_string",
+    "category": "convert",
+    "struct": "ConvertToString",
+    "entrypoint": "Execute"
+  }
+}

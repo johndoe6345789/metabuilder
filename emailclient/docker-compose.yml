@@ -1,0 +1,152 @@
+version: '3.8'
+
+services:
+  # SMTP Relay Service (Postfix)
+  postfix:
+    image: boky/postfix:latest
+    container_name: emailclient-postfix
+    environment:
+      ALLOWED_SENDER_DOMAINS: 'example.com localhost'
+      RELAYHOST: '[smtp.gmail.com]:587'
+      RELAYHOST_USERNAME: ''
+      RELAYHOST_PASSWORD: ''
+      POSTFIX_myhostname: 'emailclient.local'
+      POSTFIX_mynetworks: '127.0.0.0/8 10.0.0.0/8'
+    ports:
+      - '1025:25'
+      - '1587:587'
+    networks:
+      - emailclient-net
+    restart: unless-stopped
+
+  # IMAP Server (Dovecot)
+  dovecot:
+    image: dovecot/dovecot:latest
+    container_name: emailclient-dovecot
+    environment:
+      DOVECOT_PROTOCOLS: 'imap pop3'
+      DOVECOT_MAIL_HOME: '/var/mail'
+      DOVECOT_USER_DB: 'static'
+      DOVECOT_PASS_DB: 'static'
+    ports:
+      - '1143:143'
+      - '1993:993'
+      - '1110:110'
+      - '1995:995'
+    volumes:
+      - dovecot-data:/var/mail
+    networks:
+      - emailclient-net
+    restart: unless-stopped
+
+  # Phase 8: Redis Cache & Celery Broker
+  redis:
+    build:
+      context: ./deployment/docker/redis
+      dockerfile: Dockerfile
+    image: emailclient-redis:latest
+    container_name: emailclient-redis
+    environment:
+      # Redis authentication
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-redis_development_password}
+      # Redis memory management
+      REDIS_MAXMEMORY: ${REDIS_MAXMEMORY:-512mb}
+      REDIS_MAXMEMORY_POLICY: ${REDIS_MAXMEMORY_POLICY:-allkeys-lru}
+    ports:
+      - '6379:6379'
+    volumes:
+      # Persistent data storage for RDB snapshots and AOF
+      - redis-data:/data
+    networks:
+      - emailclient-net
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Phase 8: Email Service (Flask backend)
+  email-service:
+    image: emailclient-service:latest
+    build:
+      context: ./services/email_service
+      dockerfile: Dockerfile
+    container_name: emailclient-email-service
+    environment:
+      # Mail service configuration
+      POSTFIX_HOST: postfix
+      POSTFIX_PORT: 25
+      DOVECOT_HOST: dovecot
+      DOVECOT_IMAP_PORT: 143
+      DOVECOT_IMAP_SSL_PORT: 993
+      DOVECOT_POP3_PORT: 110
+      DOVECOT_POP3_SSL_PORT: 995
+      # Redis/Celery configuration
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-redis_development_password}
+      REDIS_URL: redis://:${REDIS_PASSWORD:-redis_development_password}@redis:6379/0
+      CELERY_BROKER_URL: redis://:${REDIS_PASSWORD:-redis_development_password}@redis:6379/0
+      CELERY_RESULT_BACKEND: redis://:${REDIS_PASSWORD:-redis_development_password}@redis:6379/0
+      CELERY_TASK_SERIALIZER: json
+      CELERY_RESULT_SERIALIZER: json
+      CELERY_ACCEPT_CONTENT: json
+      CELERY_TASK_TIME_LIMIT: 3600
+      CELERY_TASK_SOFT_TIME_LIMIT: 3000
+      # Database configuration
+      DATABASE_URL: postgresql://emailclient:emailclient@postgres:5432/emailclient
+      # Flask configuration
+      FLASK_ENV: ${FLASK_ENV:-development}
+      FLASK_DEBUG: ${FLASK_DEBUG:-1}
+      # Email service configuration
+      IMAP_SYNC_INTERVAL: 300
+      SMTP_TIMEOUT: 30
+    ports:
+      - '8500:5000'
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_started
+      postfix:
+        condition: service_started
+      dovecot:
+        condition: service_started
+    networks:
+      - emailclient-net
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # PostgreSQL Database (optional, for email metadata)
+  postgres:
+    image: postgres:16-alpine
+    container_name: emailclient-postgres
+    environment:
+      POSTGRES_USER: emailclient
+      POSTGRES_PASSWORD: emailclient
+      POSTGRES_DB: emailclient
+    ports:
+      - '5433:5432'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - emailclient-net
+    restart: unless-stopped
+
+volumes:
+  dovecot-data:
+  redis-data:
+  postgres-data:
+
+networks:
+  emailclient-net:
+    driver: bridge

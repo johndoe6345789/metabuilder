@@ -1,0 +1,41 @@
+{
+  "id": "piston-assembly",
+  "name": "Piston Assembly",
+  "partNumber": "FD-CM5G-6108-AA",
+  "material": "aluminum",
+  "quantity": 3,
+  "weight": 285.0,
+  "weightUnit": "g",
+  "baseY": 220,
+  "description": "Forged aluminum piston with low-friction coating",
+  "installation": {
+    "tools": [
+      { "name": "Ring compressor", "size": "71mm", "required": true },
+      { "name": "Piston ring pliers", "size": "-", "required": true },
+      { "name": "Feeler gauge", "size": "0.02-0.5mm", "required": true },
+      { "name": "Soft-face mallet", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Piston ring set", "spec": "1.0/1.0/2.0mm", "qty": 1, "reusable": false },
+      { "name": "Gudgeon pin", "spec": "19x55mm", "qty": 1, "reusable": true },
+      { "name": "Gudgeon pin circlip", "spec": "19mm", "qty": 2, "reusable": false }
+    ],
+    "torque": [],
+    "notes": [
+      "Check ring end gaps before assembly",
+      "Stagger ring gaps 120° apart",
+      "Oil rings generously before insertion",
+      "Arrow on crown must face front",
+      "GraphAl coating reduces friction"
+    ]
+  },
+  "geometry": [
+    { "type": "circle", "r": 35 },
+    { "type": "circle", "r": 30, "fill": "#999" },
+    { "type": "rect", "width": 60, "height": 35, "offsetY": 25, "fill": "#888" },
+    { "type": "rect", "width": 55, "height": 3, "offsetY": 10, "fill": "#555" },
+    { "type": "rect", "width": 55, "height": 3, "offsetY": 17, "fill": "#555" },
+    { "type": "rect", "width": 55, "height": 4, "offsetY": 25, "fill": "#555" },
+    { "type": "circle", "r": 8, "offsetY": 35, "fill": "#444" }
+  ]
+}

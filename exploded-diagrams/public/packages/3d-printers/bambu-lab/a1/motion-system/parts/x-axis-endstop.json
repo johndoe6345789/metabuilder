@@ -1,0 +1,62 @@
+{
+  "id": "x-axis-endstop",
+  "name": "X-Axis Optical Endstop",
+  "partNumber": "BL-A1-MR008",
+  "material": "plastic",
+  "quantity": 1,
+  "weight": 3.0,
+  "weightUnit": "g",
+  "baseY": 500,
+  "description": "Optical endstop sensor with infrared LED and phototransistor for X-axis homing",
+  "installation": {
+    "tools": [
+      { "name": "Hex key", "size": "2mm", "required": true },
+      { "name": "Multimeter", "size": "-", "required": false }
+    ],
+    "hardware": [
+      { "name": "M2x6 socket head cap screw", "spec": "M2x0.4x6", "grade": "8.8", "qty": 2, "reusable": true },
+      { "name": "JST-XH 3-pin connector", "spec": "2.54mm pitch", "qty": 1, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Mounting screws", "value": 0.2, "unit": "Nm", "sequence": "", "notes": "Do not overtighten - plastic mount" }
+    ],
+    "notes": [
+      "Gap between LED and sensor must be clear",
+      "Clean slot with compressed air if triggering fails",
+      "Check 3.3V supply voltage at connector",
+      "Verify flag enters slot cleanly without contact"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 24, "height": 12, "rx": 2, "fill": "#303030" },
+    { "type": "rect", "width": 6, "height": 18, "offsetX": -6, "fill": "#252525" },
+    { "type": "rect", "width": 6, "height": 18, "offsetX": 6, "fill": "#252525" },
+    { "type": "circle", "r": 2, "offsetX": -6, "offsetY": -6, "fill": "#FF3030" },
+    { "type": "circle", "r": 2, "offsetX": 6, "offsetY": -6, "fill": "#303030" }
+  ],
+  "geometry3d": [
+    { "type": "box", "width": 24, "height": 6, "depth": 10, "fill": "#303030" },
+
+    { "type": "box", "width": 6, "height": 16, "depth": 10, "offsetX": -8, "offsetY": 8, "fill": "#252525" },
+    { "type": "box", "width": 6, "height": 16, "depth": 10, "offsetX": 8, "offsetY": 8, "fill": "#252525" },
+
+    { "type": "box", "width": 8, "height": 10, "depth": 6, "offsetY": 8, "subtract": true },
+
+    { "type": "cylinder", "r": 2, "height": 3, "offsetX": -8, "offsetY": 12, "offsetZ": 4, "rotateX": 90, "fill": "#FF3030" },
+
+    { "type": "cylinder", "r": 2, "height": 3, "offsetX": 8, "offsetY": 12, "offsetZ": 4, "rotateX": 90, "fill": "#404040" },
+
+    { "type": "cylinder", "r": 1, "height": 8, "offsetX": -10, "subtract": true },
+    { "type": "cylinder", "r": 1, "height": 8, "offsetX": 10, "subtract": true },
+
+    { "type": "box", "width": 8, "height": 4, "depth": 12, "offsetY": -5, "fill": "#404040" },
+    { "type": "cylinder", "r": 1, "height": 8, "offsetX": -2, "offsetY": -5, "offsetZ": 8, "rotateX": 90, "fill": "#C0C0C0" },
+    { "type": "cylinder", "r": 1, "height": 8, "offsetX": 0, "offsetY": -5, "offsetZ": 8, "rotateX": 90, "fill": "#C0C0C0" },
+    { "type": "cylinder", "r": 1, "height": 8, "offsetX": 2, "offsetY": -5, "offsetZ": 8, "rotateX": 90, "fill": "#C0C0C0" },
+
+    { "type": "cylinder", "r": 1.5, "height": 2, "offsetX": -8, "offsetY": 12, "offsetZ": 2, "rotateX": 90, "fill": "#808080" },
+    { "type": "cylinder", "r": 1.5, "height": 2, "offsetX": 8, "offsetY": 12, "offsetZ": 2, "rotateX": 90, "fill": "#808080" },
+
+    { "type": "box", "width": 10, "height": 1, "depth": 8, "offsetY": 3, "fill": "#1a1a1a" }
+  ]
+}

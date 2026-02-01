@@ -1,0 +1,26 @@
+{
+  "name": "@metabuilder/workflow-plugins-string-rust",
+  "version": "0.1.0",
+  "description": "String manipulation plugins (Rust)",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["string", "workflow", "plugins", "rust"],
+  "metadata": {
+    "category": "string",
+    "runtime": "rust",
+    "plugin_count": 11
+  },
+  "plugins": [
+    "string_concat",
+    "string_split",
+    "string_replace",
+    "string_upper",
+    "string_lower",
+    "string_trim",
+    "string_length",
+    "string_contains",
+    "string_starts_with",
+    "string_ends_with",
+    "string_substring"
+  ]
+}

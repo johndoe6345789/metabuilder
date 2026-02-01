@@ -1,0 +1,14 @@
+{
+  "packageId": "repo_home",
+  "name": "Package Repository Home",
+  "version": "1.0.0",
+  "description": "Landing page for the package repository",
+  "category": "ui",
+  "exports": {
+    "components": ["home_page", "hero_section", "features_section"]
+  },
+  "files": {
+    "components": ["components/ui.json"],
+    "pages": ["page-config/routes.json"]
+  }
+}

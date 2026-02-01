@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/list_reverse",
+  "version": "1.0.0",
+  "description": "Reverse a list",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["list", "workflow", "plugin"],
+  "main": "list_reverse.go",
+  "files": ["list_reverse.go", "factory.go"],
+  "metadata": {
+    "plugin_type": "list.reverse",
+    "category": "list",
+    "struct": "ListReverse",
+    "entrypoint": "Execute"
+  }
+}

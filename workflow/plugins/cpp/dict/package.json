@@ -1,0 +1,14 @@
+{
+  "name": "@metabuilder/workflow-plugins-dict",
+  "version": "1.0.0",
+  "description": "Dictionary operation plugins (C++)",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["dict", "workflow", "plugins", "cpp"],
+  "metadata": {
+    "category": "dict",
+    "language": "cpp",
+    "plugin_count": 0
+  },
+  "plugins": []
+}

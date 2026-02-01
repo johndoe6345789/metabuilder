@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/math_abs",
+  "version": "1.0.0",
+  "description": "Get absolute value",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["math", "workflow", "plugin"],
+  "main": "math_abs.py",
+  "files": ["math_abs.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "math.abs",
+    "category": "math",
+    "class": "MathAbs",
+    "entrypoint": "execute"
+  }
+}

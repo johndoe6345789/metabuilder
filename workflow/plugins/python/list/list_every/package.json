@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/list_every",
+  "version": "1.0.0",
+  "description": "Check if all items match condition",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["list", "workflow", "plugin"],
+  "main": "list_every.py",
+  "files": ["list_every.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "list.every",
+    "category": "list",
+    "class": "ListEvery",
+    "entrypoint": "execute"
+  }
+}

@@ -1,21 +1,50 @@
 /**
  * GET /api/v1/{tenant}/workflows
- * GET /api/v1/{tenant}/workflows?category=automation&limit=10
+ * GET /api/v1/{tenant}/workflows?category=automation&limit=10&includeValidation=true
  *
- * List workflows for tenant with optional filtering
+ * List workflows for tenant with optional filtering and validation metadata
  *
  * Query parameters:
- * - limit: number (default: 50)
+ * - limit: number (default: 50, max: 100)
  * - offset: number (default: 0)
  * - category: 'automation' | 'integration' | 'business-logic' | etc
  * - tags: comma-separated string
  * - active: boolean
+ * - includeValidation: boolean (default: false) - Include validation state for each workflow
+ * - includeMetrics: boolean (default: false) - Include execution metrics
+ *
+ * Response includes optional validation metadata when requested:
+ * {
+ *   "success": true,
+ *   "data": {
+ *     "workflows": [
+ *       {
+ *         "id": "uuid",
+ *         "name": "string",
+ *         ...other fields...,
+ *         "validation": {
+ *           "valid": boolean,
+ *           "errors": ValidationError[],
+ *           "warnings": ValidationError[],
+ *           "validatedAt": ISO8601,
+ *           "cacheHit": boolean
+ *         }
+ *       }
+ *     ],
+ *     "pagination": {
+ *       "total": number,
+ *       "limit": number,
+ *       "offset": number,
+ *       "hasMore": boolean
+ *     }
+ *   }
+ * }
  *
  * ---
  *
  * POST /api/v1/{tenant}/workflows
  *
- * Create new workflow
+ * Create new workflow with pre-creation validation
  *
  * Request body:
  * {
@@ -34,6 +63,9 @@ import { NextResponse } from 'next/server'
 import { authenticate } from '@/lib/middleware/auth-middleware'
 import { applyRateLimit } from '@/lib/middleware/rate-limit'
 import { db } from '@/lib/db-client'
+import { getWorkflowLoader } from '@/lib/workflow/workflow-loader-v2'
+import { handleWorkflowError } from '@/lib/workflow/workflow-error-handler'
+import { buildMultiTenantContext } from '@/lib/workflow/multi-tenant-context'
 import { v4 as uuidv4 } from 'uuid'
 
 interface RouteParams {

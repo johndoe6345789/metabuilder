@@ -1,0 +1,1 @@
+export { RainbowText } from './RainbowText';

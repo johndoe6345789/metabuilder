@@ -1,29 +1,100 @@
-// Section atom - content sections with optional header
+// Section Atoms - Material Design 3
+// =================================
+// Flat selectors for content sections using M3 tokens
 
+// Base section
 .section {
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: 24px;
 }
 
-.section--sm { margin-bottom: var(--spacing-md); }
+// Size variants
+.section--sm {
+  margin-bottom: 16px;
+}
 
+.section--lg {
+  margin-bottom: 32px;
+}
+
+.section--xl {
+  margin-bottom: 48px;
+}
+
+// Section header
 .section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--spacing-md);
+  margin-bottom: 16px;
 }
 
+.section-header--sm {
+  margin-bottom: 12px;
+}
+
+// Section title
 .section-title {
-  font-size: var(--font-size-sm);
-  font-weight: 600;
-  color: var(--color-text-secondary);
+  font-family: var(--mat-sys-title-small-font);
+  font-size: var(--mat-sys-title-small-size);
+  font-weight: var(--mat-sys-title-small-weight);
+  line-height: var(--mat-sys-title-small-line-height);
+  letter-spacing: var(--mat-sys-title-small-tracking);
+  color: var(--mat-sys-on-surface-variant);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
   margin: 0;
 }
 
+// Section subtitle
+.section-subtitle {
+  font-family: var(--mat-sys-body-medium-font);
+  font-size: var(--mat-sys-body-medium-size);
+  color: var(--mat-sys-on-surface-variant);
+  margin: 4px 0 0;
+}
+
+// Section content
 .section-content {
-  padding: var(--spacing-md);
-  background: var(--color-bg);
-  border-radius: var(--radius-sm);
+  padding: 16px;
+  background: var(--mat-sys-surface);
+  border-radius: var(--mat-sys-corner-small);
+}
+
+.section-content--elevated {
+  background: var(--mat-sys-surface-container-low);
+  box-shadow: var(--mat-sys-level1);
+}
+
+.section-content--outlined {
+  background: var(--mat-sys-surface);
+  border: 1px solid var(--mat-sys-outline-variant);
+}
+
+.section-content--transparent {
+  background: transparent;
+  padding: 0;
+}
+
+// Section actions
+.section-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+// Section divider
+.section-divider {
+  height: 1px;
+  background: var(--mat-sys-outline-variant);
+  margin: 24px 0;
+}
+
+// Nested sections
+.section .section {
+  margin-bottom: 16px;
+}
+
+.section .section .section-title {
+  font-family: var(--mat-sys-label-large-font);
+  font-size: var(--mat-sys-label-large-size);
+  font-weight: var(--mat-sys-label-large-weight);
 }

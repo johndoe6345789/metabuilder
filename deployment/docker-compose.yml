@@ -1,0 +1,559 @@
+# Phase 8: Email Client Docker Compose Orchestration
+# Production-ready email client stack with:
+# - Next.js frontend (emailclient)
+# - Python email service (Flask + Celery)
+# - PostgreSQL database with email schemas
+# - Redis cache & message broker
+# - Postfix SMTP relay
+# - Dovecot IMAP server
+# - Nginx reverse proxy with SSL termination
+#
+# Networks:
+#   - public: Nginx (ingress only)
+#   - internal: Backend services (no external access)
+#
+# Usage:
+#   # Development
+#   docker compose up -d
+#
+#   # Production
+#   docker compose -f docker-compose.yml up -d
+#
+#   # View logs
+#   docker compose logs -f emailclient
+#   docker compose logs -f email-service
+#
+#   # Stop all services
+#   docker compose down
+#
+# Environment Setup:
+#   1. Copy .env.example to .env
+#   2. Update sensitive values (passwords, API keys)
+#   3. Run docker compose up
+
+version: '3.8'
+
+services:
+  # ============================================================================
+  # Reverse Proxy - Nginx with SSL/TLS
+  # ============================================================================
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: emailclient-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"      # HTTP (redirects to HTTPS)
+      - "443:443"    # HTTPS
+    volumes:
+      - ./config/nginx/production.conf:/etc/nginx/nginx.conf:ro
+      - ./config/nginx/ssl:/etc/nginx/ssl:ro
+      - nginx_cache:/var/cache/nginx
+      - nginx_logs:/var/log/nginx
+    environment:
+      NGINX_WORKER_PROCESSES: auto
+      NGINX_WORKER_CONNECTIONS: 2048
+    depends_on:
+      emailclient:
+        condition: service_healthy
+    networks:
+      - public
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+
+  # ============================================================================
+  # Email Client Frontend - Next.js Application
+  # ============================================================================
+  emailclient:
+    build:
+      context: ../emailclient
+      dockerfile: Dockerfile
+      args:
+        NODE_ENV: production
+    image: emailclient:latest
+    container_name: emailclient-app
+    restart: unless-stopped
+    environment:
+      # Next.js Configuration
+      NODE_ENV: production
+      PORT: 3000
+      NEXT_PUBLIC_API_URL: "${EMAILCLIENT_API_URL:-http://localhost}"
+      NEXT_PUBLIC_WS_URL: "${EMAILCLIENT_WS_URL:-ws://localhost}"
+
+      # Email Service Configuration
+      EMAIL_SERVICE_HOST: email-service
+      EMAIL_SERVICE_PORT: 5000
+      EMAIL_SERVICE_URL: http://email-service:5000
+
+      # Redis Configuration
+      REDIS_URL: "redis://:${REDIS_PASSWORD:-emailclient_default_password}@redis:6379/0"
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+
+      # PostgreSQL Configuration
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-emailclient}:${POSTGRES_PASSWORD:-emailclient_default_password}@postgres:5432/${POSTGRES_DB:-emailclient}"
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: "${POSTGRES_USER:-emailclient}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-emailclient_default_password}"
+      POSTGRES_DB: "${POSTGRES_DB:-emailclient}"
+
+      # Logging
+      LOG_LEVEL: "${LOG_LEVEL:-info}"
+
+      # Session & Security
+      SESSION_SECRET: "${SESSION_SECRET:-change_me_in_production}"
+      ENCRYPTION_KEY: "${ENCRYPTION_KEY:-change_me_in_production}"
+
+      # CORS Configuration
+      CORS_ORIGINS: "${CORS_ORIGINS:-localhost:3000,localhost:80}"
+    volumes:
+      - emailclient_uploads:/app/uploads
+      - emailclient_cache:/app/.cache
+      - emailclient_sessions:/app/.sessions
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      email-service:
+        condition: service_healthy
+    networks:
+      - public
+      - internal
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+  # ============================================================================
+  # Email Service - Python Flask Backend
+  # ============================================================================
+  email-service:
+    build:
+      context: ../services/email_service
+      dockerfile: Dockerfile
+    image: emailclient-service:latest
+    container_name: emailclient-email-service
+    restart: unless-stopped
+    environment:
+      # Flask Configuration
+      FLASK_ENV: "${FLASK_ENV:-production}"
+      FLASK_HOST: 0.0.0.0
+      FLASK_PORT: 5000
+      FLASK_DEBUG: "${FLASK_DEBUG:-0}"
+
+      # Database Configuration
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-emailclient}:${POSTGRES_PASSWORD:-emailclient_default_password}@postgres:5432/${POSTGRES_DB:-emailclient}"
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: "${POSTGRES_USER:-emailclient}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-emailclient_default_password}"
+      POSTGRES_DB: "${POSTGRES_DB:-emailclient}"
+
+      # Redis Configuration
+      REDIS_URL: "redis://:${REDIS_PASSWORD:-emailclient_default_password}@redis:6379/1"
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 1
+
+      # Celery Configuration
+      CELERY_BROKER_URL: "redis://:${REDIS_PASSWORD:-emailclient_default_password}@redis:6379/2"
+      CELERY_RESULT_BACKEND: "redis://:${REDIS_PASSWORD:-emailclient_default_password}@redis:6379/3"
+      CELERY_WORKER_CONCURRENCY: "${CELERY_WORKER_CONCURRENCY:-4}"
+
+      # Email Server Configuration
+      POSTFIX_HOST: postfix
+      POSTFIX_PORT: 25
+      DOVECOT_HOST: dovecot
+      DOVECOT_IMAP_PORT: 143
+      DOVECOT_IMAPS_PORT: 993
+      DOVECOT_POP3_PORT: 110
+      DOVECOT_POP3S_PORT: 995
+
+      # Email Service Configuration
+      EMAIL_SERVICE_SECRET: "${EMAIL_SERVICE_SECRET:-change_me_in_production}"
+      EMAIL_MAX_ATTACHMENT_SIZE: "${EMAIL_MAX_ATTACHMENT_SIZE:-52428800}"  # 50MB
+      EMAIL_SYNC_INTERVAL: "${EMAIL_SYNC_INTERVAL:-300}"  # 5 minutes
+      EMAIL_RATE_LIMIT: "${EMAIL_RATE_LIMIT:-100}"
+
+      # CORS Configuration
+      CORS_ORIGINS: "${CORS_ORIGINS:-http://localhost:3000,http://localhost}"
+
+      # Logging
+      EMAIL_SERVICE_LOG_LEVEL: "${LOG_LEVEL:-INFO}"
+    volumes:
+      - email_service_logs:/var/log/email-service
+      - email_attachments:/data/attachments
+      - email_temp:/tmp/email-service
+    ports:
+      - "5000:5000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      postfix:
+        condition: service_started
+      dovecot:
+        condition: service_started
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:5000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    deploy:
+      resources:
+        limits:
+          cpus: '1.5'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+
+  # ============================================================================
+  # Celery Worker - Background Job Processing
+  # ============================================================================
+  celery-worker:
+    build:
+      context: ../services/email_service
+      dockerfile: Dockerfile
+      target: celery
+    image: emailclient-celery:latest
+    container_name: emailclient-celery-worker
+    restart: unless-stopped
+    environment:
+      # Flask Configuration
+      FLASK_ENV: "${FLASK_ENV:-production}"
+      FLASK_HOST: 0.0.0.0
+      FLASK_PORT: 5000
+      FLASK_DEBUG: "${FLASK_DEBUG:-0}"
+
+      # Database Configuration
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-emailclient}:${POSTGRES_PASSWORD:-emailclient_default_password}@postgres:5432/${POSTGRES_DB:-emailclient}"
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: "${POSTGRES_USER:-emailclient}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-emailclient_default_password}"
+      POSTGRES_DB: "${POSTGRES_DB:-emailclient}"
+
+      # Redis Configuration
+      REDIS_URL: "redis://:${REDIS_PASSWORD:-emailclient_default_password}@redis:6379/1"
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 1
+
+      # Celery Configuration
+      CELERY_BROKER_URL: "redis://:${REDIS_PASSWORD:-emailclient_default_password}@redis:6379/2"
+      CELERY_RESULT_BACKEND: "redis://:${REDIS_PASSWORD:-emailclient_default_password}@redis:6379/3"
+      CELERY_WORKER_CONCURRENCY: "${CELERY_WORKER_CONCURRENCY:-4}"
+      CELERY_WORKER_PREFETCH_MULTIPLIER: "1"
+      CELERY_WORKER_MAX_TASKS_PER_CHILD: "1000"
+
+      # Email Server Configuration
+      POSTFIX_HOST: postfix
+      POSTFIX_PORT: 25
+      DOVECOT_HOST: dovecot
+      DOVECOT_IMAP_PORT: 143
+      DOVECOT_IMAPS_PORT: 993
+
+      # Email Service Configuration
+      EMAIL_SERVICE_SECRET: "${EMAIL_SERVICE_SECRET:-change_me_in_production}"
+      EMAIL_MAX_ATTACHMENT_SIZE: "${EMAIL_MAX_ATTACHMENT_SIZE:-52428800}"
+      EMAIL_SYNC_INTERVAL: "${EMAIL_SYNC_INTERVAL:-300}"
+
+      # Logging
+      EMAIL_SERVICE_LOG_LEVEL: "${LOG_LEVEL:-INFO}"
+    volumes:
+      - email_service_logs:/var/log/email-service
+      - email_attachments:/data/attachments
+      - email_temp:/tmp/email-service
+    depends_on:
+      - postgres
+      - redis
+      - email-service
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "celery", "-A", "tasks.celery_app", "inspect", "active"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 1.5G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+  # ============================================================================
+  # PostgreSQL Database - Multi-tenant Email Metadata
+  # ============================================================================
+  postgres:
+    image: postgres:16-alpine
+    container_name: emailclient-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: "${POSTGRES_USER:-emailclient}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-emailclient_default_password}"
+      POSTGRES_DB: "${POSTGRES_DB:-emailclient}"
+      POSTGRES_INITDB_ARGS: "-E UTF8 --locale=C.UTF-8"
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-email-db.sql:/docker-entrypoint-initdb.d/01-init-email-db.sql:ro
+    ports:
+      - "5432:5432"
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-emailclient} -d ${POSTGRES_DB:-emailclient}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+  # ============================================================================
+  # Redis Cache & Message Broker
+  # ============================================================================
+  redis:
+    image: redis:7-alpine
+    container_name: emailclient-redis
+    restart: unless-stopped
+    command: >
+      redis-server
+      --requirepass ${REDIS_PASSWORD:-emailclient_default_password}
+      --appendonly yes
+      --appendfsync everysec
+      --maxmemory ${REDIS_MAX_MEMORY:-512mb}
+      --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+  # ============================================================================
+  # Postfix SMTP Relay - Outgoing Email
+  # ============================================================================
+  postfix:
+    image: boky/postfix:latest
+    container_name: emailclient-postfix
+    restart: unless-stopped
+    environment:
+      # Postfix Configuration
+      ALLOWED_SENDER_DOMAINS: "${POSTFIX_ALLOWED_DOMAINS:-example.com localhost}"
+      RELAYHOST: "${POSTFIX_RELAYHOST:-}"
+      RELAYHOST_USERNAME: "${POSTFIX_RELAYHOST_USERNAME:-}"
+      RELAYHOST_PASSWORD: "${POSTFIX_RELAYHOST_PASSWORD:-}"
+      POSTFIX_myhostname: "${POSTFIX_HOSTNAME:-emailclient.local}"
+      POSTFIX_mynetworks: "127.0.0.0/8 10.0.0.0/8 172.16.0.0/12"
+      POSTFIX_message_size_limit: "${POSTFIX_MESSAGE_SIZE_LIMIT:-52428800}"
+      POSTFIX_smtpd_recipient_limit: "${POSTFIX_RECIPIENT_LIMIT:-10000}"
+
+      # TLS Configuration
+      POSTFIX_smtpd_use_tls: "yes"
+      POSTFIX_smtpd_tls_cert_file: "/etc/postfix/ssl/postfix.crt"
+      POSTFIX_smtpd_tls_key_file: "/etc/postfix/ssl/postfix.key"
+    volumes:
+      - postfix_queue:/var/spool/postfix
+      - postfix_logs:/var/log/postfix
+      - ./config/postfix/tls:/etc/postfix/ssl:ro
+    ports:
+      - "25:25"     # SMTP (internal only, accessed via docker network)
+      - "587:587"   # SMTP TLS
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "postfix", "-c", "/etc/postfix", "status"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+
+  # ============================================================================
+  # Dovecot IMAP/POP3 Server - Incoming Email & Storage
+  # ============================================================================
+  dovecot:
+    image: dovecot/dovecot:latest
+    container_name: emailclient-dovecot
+    restart: unless-stopped
+    environment:
+      # Dovecot Configuration
+      DOVECOT_PROTOCOLS: "imap pop3"
+      DOVECOT_MAIL_HOME: "/var/mail"
+      DOVECOT_USER_DB: "static"
+      DOVECOT_PASS_DB: "static"
+      DOVECOT_DEFAULT_LOGIN_USER: "dovecot"
+      DOVECOT_DEFAULT_INTERNAL_USER: "dovecot"
+      DOVECOT_MAIL_LOCATION: "mbox:~/Mail:INBOX=/var/mail/INBOX"
+      DOVECOT_SSL: "required"
+      DOVECOT_SSL_CERT: "/etc/dovecot/ssl/dovecot.crt"
+      DOVECOT_SSL_KEY: "/etc/dovecot/ssl/dovecot.key"
+    volumes:
+      - dovecot_data:/var/mail
+      - dovecot_config:/etc/dovecot
+      - dovecot_logs:/var/log/dovecot
+      - ./config/dovecot/tls:/etc/dovecot/ssl:ro
+    ports:
+      - "143:143"   # IMAP
+      - "993:993"   # IMAPS
+      - "110:110"   # POP3
+      - "995:995"   # POP3S
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "doveadm", "ping"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+# ============================================================================
+# Networks
+# ============================================================================
+networks:
+  # Public network - only Nginx exposed
+  public:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
+
+  # Internal network - backend services only
+  internal:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.21.0.0/24
+
+# ============================================================================
+# Volumes
+# ============================================================================
+volumes:
+  # Application Volumes
+  emailclient_uploads:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: "size=5G,mode=1777"
+  emailclient_cache:
+    driver: local
+  emailclient_sessions:
+    driver: local
+
+  # Database Volumes
+  postgres_data:
+    driver: local
+
+  # Cache & Message Queue
+  redis_data:
+    driver: local
+
+  # Email Server Volumes
+  postfix_queue:
+    driver: local
+  postfix_logs:
+    driver: local
+  dovecot_data:
+    driver: local
+  dovecot_config:
+    driver: local
+  dovecot_logs:
+    driver: local
+
+  # Email Service Volumes
+  email_service_logs:
+    driver: local
+  email_attachments:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: "size=10G,mode=1777"
+  email_temp:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: "size=5G,mode=1777"
+
+  # Reverse Proxy Volumes
+  nginx_cache:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: "size=2G,mode=1777"
+  nginx_logs:
+    driver: local

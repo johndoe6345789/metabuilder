@@ -1,0 +1,178 @@
+{
+  "name": "Create User",
+  "active": false,
+  "nodes": [
+    {
+      "id": "check_permission",
+      "name": "Check Permission",
+      "type": "metabuilder.condition",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "condition": "{{ $context.user.level >= 3 }}",
+        "operation": "condition"
+      }
+    },
+    {
+      "id": "validate_input",
+      "name": "Validate Input",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $json }}",
+        "operation": "validate",
+        "rules": {
+          "email": "required|email|unique:User",
+          "displayName": "required|string"
+        }
+      }
+    },
+    {
+      "id": "hash_password",
+      "name": "Hash Password",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $json.password || $utils.generateSecurePassword() }}",
+        "operation": "bcrypt_hash",
+        "rounds": 12
+      }
+    },
+    {
+      "id": "create_user",
+      "name": "Create User",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "data": {
+          "email": "{{ $json.email }}",
+          "displayName": "{{ $json.displayName }}",
+          "passwordHash": "{{ $steps.hash_password.output }}",
+          "tenantId": "{{ $context.tenantId }}",
+          "level": "{{ $json.level || 0 }}",
+          "isActive": true
+        },
+        "operation": "database_create",
+        "entity": "User"
+      }
+    },
+    {
+      "id": "send_welcome_email",
+      "name": "Send Welcome Email",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "operation": "email_send",
+        "to": "{{ $json.email }}",
+        "subject": "Welcome",
+        "template": "user_welcome"
+      }
+    },
+    {
+      "id": "return_success",
+      "name": "Return Success",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "action": "http_response",
+        "status": 201,
+        "body": {
+          "id": "{{ $steps.create_user.output.id }}",
+          "email": "{{ $json.email }}"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "check_permission": {
+      "main": [
+        [
+          {
+            "node": "validate_input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "validate_input": {
+      "main": [
+        [
+          {
+            "node": "hash_password",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "hash_password": {
+      "main": [
+        [
+          {
+            "node": "create_user",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create_user": {
+      "main": [
+        [
+          {
+            "node": "send_welcome_email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "send_welcome_email": {
+      "main": [
+        [
+          {
+            "node": "return_success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "id": "workflow_create_user",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
+}

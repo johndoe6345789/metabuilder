@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/test_assert_false",
+  "version": "1.0.0",
+  "description": "Assert that a value is false",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["test", "workflow", "plugin"],
+  "main": "test_assert_false.py",
+  "files": ["test_assert_false.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "test.assert_false",
+    "category": "test",
+    "class": "TestAssertFalse",
+    "entrypoint": "execute"
+  }
+}

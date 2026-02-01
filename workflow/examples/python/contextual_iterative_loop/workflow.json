@@ -8,8 +8,8 @@
       "type": "tools.list_files",
       "typeVersion": 1,
       "position": [
-        0,
-        50
+        100,
+        100
       ],
       "parameters": {
         "path": "."
@@ -21,8 +21,8 @@
       "type": "utils.filter_list",
       "typeVersion": 1,
       "position": [
-        300,
-        50
+        400,
+        100
       ],
       "parameters": {
         "items": "$repo_files",
@@ -36,8 +36,8 @@
       "type": "utils.map_list",
       "typeVersion": 1,
       "position": [
-        600,
-        50
+        700,
+        100
       ],
       "parameters": {
         "items": "$python_files",
@@ -50,8 +50,8 @@
       "type": "utils.reduce_list",
       "typeVersion": 1,
       "position": [
-        900,
-        50
+        100,
+        300
       ],
       "parameters": {
         "items": "$python_lines",
@@ -64,8 +64,8 @@
       "type": "core.seed_messages",
       "typeVersion": 1,
       "position": [
-        1200,
-        50
+        400,
+        300
       ],
       "parameters": {}
     },
@@ -75,8 +75,8 @@
       "type": "core.append_context_message",
       "typeVersion": 1,
       "position": [
-        1500,
-        50
+        700,
+        300
       ],
       "parameters": {
         "messages": "$messages",
@@ -89,8 +89,8 @@
       "type": "core.append_user_instruction",
       "typeVersion": 1,
       "position": [
-        1800,
-        50
+        100,
+        500
       ],
       "parameters": {
         "messages": "$messages"
@@ -102,8 +102,8 @@
       "type": "control.loop",
       "typeVersion": 1,
       "position": [
-        2100,
-        50
+        400,
+        500
       ],
       "parameters": {
         "max_iterations": 5,
@@ -117,7 +117,7 @@
       "main": {
         "0": [
           {
-            "node": "Filter Python",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -128,7 +128,7 @@
       "main": {
         "0": [
           {
-            "node": "Map Python",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -139,7 +139,7 @@
       "main": {
         "0": [
           {
-            "node": "Reduce Python",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -150,12 +150,7 @@
       "main": {
         "0": [
           {
-            "node": "Append Repo Summary",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Append User Instruction",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -166,7 +161,7 @@
       "main": {
         "0": [
           {
-            "node": "Append Repo Summary",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -174,14 +169,13 @@
       }
     }
   },
-  "triggers": [
-    {
-      "nodeId": "list_files",
-      "kind": "manual",
-      "enabled": true,
-      "meta": {
-        "description": "Manually triggered meta.workflow_packages.contextual_iterative_loop.label workflow execution"
-      }
-    }
-  ]
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  }
 }

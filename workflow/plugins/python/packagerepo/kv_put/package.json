@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/kv_put",
+  "version": "1.0.0",
+  "description": "Put value in RocksDB key-value store",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["packagerepo", "workflow", "plugin", "rocksdb", "storage"],
+  "main": "kv_put.py",
+  "files": ["kv_put.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "packagerepo.kv_put",
+    "category": "packagerepo",
+    "class": "KvPut",
+    "entrypoint": "execute"
+  }
+}

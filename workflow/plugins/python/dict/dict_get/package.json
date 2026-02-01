@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/dict_get",
+  "version": "1.0.0",
+  "description": "Get value from dictionary by key",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["dict", "workflow", "plugin"],
+  "main": "dict_get.py",
+  "files": ["dict_get.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "dict.get",
+    "category": "dict",
+    "class": "DictGet",
+    "entrypoint": "execute"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/dict_keys",
+  "version": "1.0.0",
+  "description": "Get all keys from a dictionary",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["dict", "workflow", "plugin"],
+  "main": "dict_keys.go",
+  "files": ["dict_keys.go", "factory.go"],
+  "metadata": {
+    "plugin_type": "dict.keys",
+    "category": "dict",
+    "struct": "DictKeys",
+    "entrypoint": "Execute"
+  }
+}

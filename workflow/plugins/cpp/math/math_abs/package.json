@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/math_abs",
+  "version": "1.0.0",
+  "description": "Calculate absolute value",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["math", "workflow", "plugin"],
+  "main": "math_abs.hpp",
+  "metadata": {
+    "plugin_type": "math.abs",
+    "category": "math"
+  }
+}

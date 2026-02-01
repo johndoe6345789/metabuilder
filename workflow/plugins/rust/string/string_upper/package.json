@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/string_upper",
+  "version": "1.0.0",
+  "description": "Convert string to uppercase",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["string", "workflow", "plugin"],
+  "main": "src/lib.rs",
+  "files": ["src/lib.rs", "src/factory.rs"],
+  "metadata": {
+    "plugin_type": "string.upper",
+    "category": "string",
+    "struct": "StringUpper",
+    "entrypoint": "execute"
+  }
+}

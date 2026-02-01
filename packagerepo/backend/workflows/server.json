@@ -1,0 +1,206 @@
+{
+  "name": "Package Repository Server",
+  "active": false,
+  "nodes": [
+    {
+      "id": "create_app",
+      "name": "packagerepo",
+      "type": "web.create_flask_app",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "config": {
+          "MAX_CONTENT_LENGTH": 2147483648
+        }
+      }
+    },
+    {
+      "id": "register_publish",
+      "name": "Register Publish",
+      "type": "web.register_route",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "path": "/v1/<namespace>/<name>/<version>/<variant>/blob",
+        "methods": [
+          "PUT"
+        ],
+        "workflow": "publish_artifact",
+        "endpoint": "publish_artifact"
+      }
+    },
+    {
+      "id": "register_download",
+      "name": "Register Download",
+      "type": "web.register_route",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "path": "/v1/<namespace>/<name>/<version>/<variant>/blob",
+        "methods": [
+          "GET"
+        ],
+        "workflow": "download_artifact",
+        "endpoint": "download_artifact"
+      }
+    },
+    {
+      "id": "register_latest",
+      "name": "Register Latest",
+      "type": "web.register_route",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "path": "/v1/<namespace>/<name>/latest",
+        "methods": [
+          "GET"
+        ],
+        "workflow": "resolve_latest",
+        "endpoint": "resolve_latest"
+      }
+    },
+    {
+      "id": "register_versions",
+      "name": "Register Versions",
+      "type": "web.register_route",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "path": "/v1/<namespace>/<name>/versions",
+        "methods": [
+          "GET"
+        ],
+        "workflow": "list_versions",
+        "endpoint": "list_versions"
+      }
+    },
+    {
+      "id": "register_login",
+      "name": "Register Login",
+      "type": "web.register_route",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "path": "/auth/login",
+        "methods": [
+          "POST"
+        ],
+        "workflow": "auth_login",
+        "endpoint": "auth_login"
+      }
+    },
+    {
+      "id": "start_server",
+      "name": "Start Server",
+      "type": "web.start_server",
+      "typeVersion": 1,
+      "position": [
+        100,
+        500
+      ],
+      "parameters": {
+        "host": "0.0.0.0",
+        "port": 8080,
+        "debug": false
+      }
+    }
+  ],
+  "connections": {
+    "create_app": {
+      "main": [
+        [
+          {
+            "node": "register_publish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "register_publish": {
+      "main": [
+        [
+          {
+            "node": "register_download",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "register_download": {
+      "main": [
+        [
+          {
+            "node": "register_latest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "register_latest": {
+      "main": [
+        [
+          {
+            "node": "register_versions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "register_versions": {
+      "main": [
+        [
+          {
+            "node": "register_login",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "register_login": {
+      "main": [
+        [
+          {
+            "node": "start_server",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "id": "workflow_server",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
+}

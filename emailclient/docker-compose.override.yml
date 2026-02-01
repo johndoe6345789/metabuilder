@@ -1,0 +1,80 @@
+# Docker Compose Override - Development Configuration
+# This file is automatically loaded after docker-compose.yml
+# Use for local development overrides (not committed to production)
+
+version: '3.9'
+
+services:
+  # Override PostgreSQL for development
+  postgres:
+    # Use host volume instead of named volume for easier inspection
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+      - ./deployment/docker/postgres/init-scripts:/docker-entrypoint-initdb.d
+
+  # Override Redis for development
+  redis:
+    # Use host volume for easier debugging
+    volumes:
+      - ./data/redis:/data
+
+  # Override Email Service for development
+  email-service:
+    # Build from local context with development tools
+    build:
+      context: ..
+      dockerfile: ./emailclient/deployment/docker/email-service/Dockerfile
+      args:
+        INSTALL_DEV: "true"
+
+    # Use development Flask server instead of Gunicorn
+    command: python -m flask run --host=0.0.0.0
+
+    environment:
+      FLASK_ENV: development
+      FLASK_DEBUG: "1"
+      FLASK_APP: app.py
+
+    # Mount source code for live reload
+    volumes:
+      - ../services/email_service:/app
+      - ./logs/email-service:/app/logs
+
+    # Expose debug port (optional - for remote debugging)
+    ports:
+      - "5678:5678"
+
+  # Override Celery Worker for development
+  celery-worker:
+    # Use local development command with verbose logging
+    command: celery -A tasks worker --loglevel=debug --concurrency=1
+
+    environment:
+      FLASK_ENV: development
+
+    volumes:
+      - ../services/email_service:/app
+      - ./logs/celery-worker:/app/logs
+
+  # Override Celery Beat for development
+  celery-beat:
+    command: celery -A tasks beat --loglevel=debug
+
+    environment:
+      FLASK_ENV: development
+
+    volumes:
+      - ../services/email_service:/app
+      - ./logs/celery-beat:/app/logs
+
+  # Development tools
+  mailpit:
+    # Email testing UI - view all emails sent during development
+    image: axllent/mailpit:latest
+    container_name: emailclient-mailpit
+    ports:
+      - "1025:1025"  # SMTP
+      - "8025:8025"  # Web UI
+    networks:
+      - emailclient-net
+    restart: unless-stopped

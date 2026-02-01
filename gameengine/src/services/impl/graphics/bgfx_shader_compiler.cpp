@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cstdint>
 #include <cstring>
+#include <filesystem>
 #include <fstream>
 #include <stdexcept>
 #include <string>
@@ -473,8 +474,10 @@ bgfx::ShaderHandle BgfxShaderCompiler::CompileShader(
                            "falling back to temp-file compilation for " + label);
         }
         // Fallback to temp-file + pipelineCompiler_/executable flow
-        std::string tempInputPath = "/tmp/" + label + (isVertex ? ".vert.glsl" : ".frag.glsl");
-        std::string tempOutputPath = "/tmp/" + label + (isVertex ? ".vert.bin" : ".frag.bin");
+        // Use std::filesystem::temp_directory_path() for cross-platform compatibility
+        const std::filesystem::path tempDir = std::filesystem::temp_directory_path();
+        const std::string tempInputPath = (tempDir / (label + (isVertex ? ".vert.glsl" : ".frag.glsl"))).string();
+        const std::string tempOutputPath = (tempDir / (label + (isVertex ? ".vert.bin" : ".frag.bin"))).string();
         {
             std::ofstream ofs(tempInputPath);
             ofs << source;
@@ -485,10 +488,15 @@ bgfx::ShaderHandle BgfxShaderCompiler::CompileShader(
             std::vector<std::string> args = {"--type", isVertex ? "vertex" : "fragment", "--profile", "spirv"};
             ok = pipelineCompiler_->Compile(tempInputPath, tempOutputPath, args);
         } else {
-            std::string cmd = "./src/bgfx_tools/shaderc/shaderc -f " + tempInputPath + " -o " + tempOutputPath;
-            if (logger_) logger_->Trace("BgfxShaderCompiler", "CompileShaderCmd", cmd);
-            int rc = std::system(cmd.c_str());
-            ok = (rc == 0);
+            // Security: Avoid std::system() which is vulnerable to command injection.
+            // Pipeline compiler service must be available for fallback compilation.
+            if (logger_) {
+                logger_->Error("BgfxShaderCompiler: Pipeline compiler service not available for " + label +
+                              " - cannot compile shader without in-memory compilation support");
+            }
+            // Cleanup temp input file before returning
+            std::filesystem::remove(tempInputPath);
+            return BGFX_INVALID_HANDLE;
         }
 
         if (!ok) {
@@ -514,9 +522,9 @@ bgfx::ShaderHandle BgfxShaderCompiler::CompileShader(
             if (logger_) logger_->Error("BgfxShaderCompiler: Failed to read compiled shader data");
             return BGFX_INVALID_HANDLE;
         }
-        // cleanup temp files
-        remove(tempInputPath.c_str());
-        remove(tempOutputPath.c_str());
+        // cleanup temp files using std::filesystem for cross-platform compatibility
+        std::filesystem::remove(tempInputPath);
+        std::filesystem::remove(tempOutputPath);
     }
 
     if (!shaderInfo.has_value()) {

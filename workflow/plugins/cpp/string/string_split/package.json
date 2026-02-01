@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/string_split",
+  "version": "1.0.0",
+  "description": "Split string by separator",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["string", "workflow", "plugin"],
+  "main": "string_split.hpp",
+  "metadata": {
+    "plugin_type": "string.split",
+    "category": "string"
+  }
+}

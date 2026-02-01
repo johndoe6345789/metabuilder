@@ -1,0 +1,66 @@
+{
+  "id": "clutch-disc",
+  "name": "Clutch Disc",
+  "partNumber": "FD-1848115",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 1200.0,
+  "weightUnit": "g",
+  "baseY": -120,
+  "description": "Friction clutch disc with sprung hub",
+  "installation": {
+    "tools": [
+      { "name": "Clutch alignment tool", "size": "20mm spline", "required": true },
+      { "name": "Clean rag", "size": "-", "required": true }
+    ],
+    "hardware": [],
+    "torque": [],
+    "notes": [
+      "Always use alignment tool during installation",
+      "Do not touch friction surfaces with bare hands",
+      "Check friction material thickness - min 7.5mm",
+      "Ensure splines slide freely on input shaft"
+    ]
+  },
+  "geometry": [
+    { "type": "circle", "r": 70, "fill": "#4a3a2a" },
+    { "type": "circle", "r": 55, "fill": "#5a4a3a" },
+    { "type": "circle", "r": 20, "fill": "#666" },
+    { "type": "rect", "width": 8, "height": 30, "offsetY": 0, "fill": "#777" },
+    { "type": "circle", "r": 3, "offsetX": -40, "offsetY": 0, "fill": "#333" },
+    { "type": "circle", "r": 3, "offsetX": 40, "offsetY": 0, "fill": "#333" },
+    { "type": "circle", "r": 3, "offsetX": 0, "offsetY": -40, "fill": "#333" },
+    { "type": "circle", "r": 3, "offsetX": 0, "offsetY": 40, "fill": "#333" }
+  ],
+  "geometry3d": [
+    { "type": "cylinder", "r": 52, "height": 4, "fill": "#5a3d2b" },
+    { "type": "cylinder", "r": 52, "height": 2, "offsetY": 3, "fill": "#4a2d1b" },
+    { "type": "cylinder", "r": 52, "height": 2, "offsetY": -3, "fill": "#4a2d1b" },
+
+    { "type": "cylinder", "r": 38, "height": 6, "subtract": true },
+
+    { "type": "cylinder", "r": 36, "height": 3, "fill": "#606570" },
+
+    { "type": "cylinder", "r": 5, "height": 8, "offsetX": 28, "offsetY": 0, "fill": "#404550" },
+    { "type": "cylinder", "r": 5, "height": 8, "offsetX": -28, "offsetY": 0, "fill": "#404550" },
+    { "type": "cylinder", "r": 5, "height": 8, "offsetX": 0, "offsetY": 28, "fill": "#404550" },
+    { "type": "cylinder", "r": 5, "height": 8, "offsetX": 0, "offsetY": -28, "fill": "#404550" },
+    { "type": "cylinder", "r": 5, "height": 8, "offsetX": 20, "offsetY": 20, "fill": "#404550" },
+    { "type": "cylinder", "r": 5, "height": 8, "offsetX": -20, "offsetY": 20, "fill": "#404550" },
+    { "type": "cylinder", "r": 5, "height": 8, "offsetX": 20, "offsetY": -20, "fill": "#404550" },
+    { "type": "cylinder", "r": 5, "height": 8, "offsetX": -20, "offsetY": -20, "fill": "#404550" },
+
+    { "type": "box", "width": 6, "height": 4, "depth": 12, "offsetX": 28, "fill": "#505560" },
+    { "type": "box", "width": 6, "height": 4, "depth": 12, "offsetX": -28, "fill": "#505560" },
+    { "type": "box", "width": 12, "height": 4, "depth": 6, "offsetZ": 28, "fill": "#505560" },
+    { "type": "box", "width": 12, "height": 4, "depth": 6, "offsetZ": -28, "fill": "#505560" },
+
+    { "type": "cylinder", "r": 18, "height": 22, "fill": "#707580" },
+
+    { "type": "cylinder", "r": 20, "height": 3, "offsetY": 10, "fill": "#808590" },
+
+    { "type": "cylinder", "r": 10, "height": 25, "subtract": true },
+    { "type": "box", "width": 4, "height": 25, "depth": 22, "subtract": true },
+    { "type": "box", "width": 22, "height": 25, "depth": 4, "subtract": true }
+  ]
+}

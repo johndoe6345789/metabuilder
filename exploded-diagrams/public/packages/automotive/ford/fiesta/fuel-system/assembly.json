@@ -1,0 +1,16 @@
+{
+  "id": "fuel-system",
+  "name": "Fuel System",
+  "description": "Fuel tank, pump, lines and filler assembly",
+  "parts": [
+    "fuel-tank",
+    "fuel-pump-module",
+    "fuel-tank-straps",
+    "fuel-filler-neck",
+    "fuel-filler-cap",
+    "fuel-supply-line",
+    "fuel-return-line",
+    "charcoal-canister",
+    "fuel-filter"
+  ]
+}

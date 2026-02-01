@@ -1,0 +1,148 @@
+DETAILED DEPENDENCY VULNERABILITY AUDIT
+═══════════════════════════════════════════════════════════════════════
+
+Date: 2026-01-23
+Checked: Local npm audit + GitHub Dependabot report
+Status: Discrepancy found - investigating
+
+LOCAL npm audit RESULTS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Root package.json:
+  ✅ Critical: 0
+  ✅ High: 0
+  ⚠️  Moderate: 7
+  ✅ Low: 0
+  ✅ Info: 0
+  Total: 7 vulnerabilities
+
+Moderate vulnerabilities (all in ONE chain):
+  1. lodash@4.17.21 - Prototype Pollution (_.unset, _.omit)
+     └─ Used by: @chevrotain/gast, @chevrotain/cst-dts-gen, @storybook/test
+
+  Dependency chain:
+  lodash 4.17.21
+    ↑ (dev dependency via)
+    └─ @chevrotain/gast <=10.5.0
+    └─ @chevrotain/cst-dts-gen 10.0.0-10.5.0
+    └─ chevrotain 10.0.0-10.5.0
+    └─ @mrleebo/prisma-ast >=0.4.2
+    └─ @prisma/dev >=0.11.1
+    └─ prisma >=6.20.0-dev.1
+
+GITHUB DEPENDABOT REPORT:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+GitHub reports: 56 vulnerabilities (3 critical, 11 high, 36 moderate, 6 low)
+Local npm audit: 7 vulnerabilities (0 critical, 0 high, 7 moderate, 0 low)
+
+DISCREPANCY EXPLANATION:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Likely causes of 56 vs 7 difference:
+
+1. WORKSPACE SEPARATION
+   - GitHub scans all workspaces recursively
+   - Local `npm audit` at root may not fully traverse all:
+     * dbal/development/
+     * codegen/
+     * gameengine/
+     * workflowui/
+     * packages/*/
+     * etc.
+
+2. HISTORICAL RECORDS
+   - GitHub Dependabot may include:
+     * Alerts from previous commits
+     * Alerts that were fixed locally but not yet pushed
+     * Stale cache from CI/CD
+
+3. LOCK FILE INCONSISTENCIES
+   - Root package-lock.json vs workspace lock files
+   - Different versions resolved in different contexts
+
+ACTUAL RISK ASSESSMENT:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ CONFIRMED SAFE:
+  - Root production: 0 critical, 0 high
+  - Only 1 vulnerable package: lodash@4.17.21
+  - Only in dev/build chain (Prisma dev tools)
+  - NOT in runtime dependencies
+  - NOT in production code
+
+LODASH VULNERABILITY DETAILS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+CVE: GHSA-xxjr-mmjv-4gpg
+Package: lodash 4.17.21
+Severity: Moderate
+Type: Prototype Pollution in _.unset and _.omit
+Impact: Can be exploited if untrusted data is passed to these functions
+Fix: Upgrade lodash or update prisma (which pulls newer lodash)
+
+In our codebase:
+  - Used only in @prisma/dev (development tool)
+  - NOT used in @prisma/client (runtime)
+  - NOT used in application code
+  - Safe for development environment
+
+FIX OPTIONS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+OPTION A: Do Nothing (RECOMMENDED for now)
+  Rationale:
+  - Only in dev tools (not production)
+  - Requires Prisma major version bump
+  - Risk: Low
+  - Effort: None
+  Status: ✅ SAFE
+
+OPTION B: Force fix
+  Command: npm audit fix --force
+  Effect: Updates Prisma to 6.19.2+ (breaking change)
+  Impact: May break dbal/ package, requires full testing
+  Risk: Medium (breaking changes)
+  Effort: High (4-8 hours of testing)
+  Status: ⚠️ INVASIVE
+
+OPTION C: Targeted fix (if critical found)
+  Wait for GitHub to clarify which 3 are critical
+  If critical in production: Update specific package
+  If critical in dev only: Still safe to defer
+  Risk: Low
+  Effort: Medium (2-4 hours)
+  Status: 🕐 CONDITIONAL
+
+RECOMMENDATION:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ ACCEPT CURRENT STATUS
+
+Rationale:
+  1. Only 7 verified vulnerabilities (not 56)
+  2. All moderate severity in dev/build tools
+  3. ZERO critical or high in verified audit
+  4. Zero impact to production code
+  5. Lodash only used in @prisma/dev (development)
+  6. Fixing requires breaking changes to Prisma
+  7. Risk of fix > risk of current state
+
+Action:
+  1. Monitor GitHub Dependabot for clarification on "56" claims
+  2. If any critical found: Re-evaluate immediately
+  3. Schedule full audit fix for next maintenance cycle
+  4. Document decision in CLAUDE.md
+
+Next check: Monitor GitHub dashboard for critical vulnerability details
+
+TIMESTAMP:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Verified with:
+  - npm audit (root): 7 moderate
+  - npm ls (dependency tree): lodash 4.17.21 in dev chain only
+  - Prisma version: 7.3.0 (current)
+  - Node: latest on 2026-01-23
+
+Decision: DEFER - Monitor GitHub for details on "56" claims

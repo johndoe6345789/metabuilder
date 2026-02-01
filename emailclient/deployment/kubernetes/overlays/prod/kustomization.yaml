@@ -1,0 +1,226 @@
+# Production Environment Overlay
+# Usage: kustomize build overlays/prod/ | kubectl apply -f -
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: emailclient-prod
+
+bases:
+  - ../../
+
+commonLabels:
+  environment: production
+  stage: prod
+
+commonAnnotations:
+  environment: production
+  backup-policy: daily
+
+# Production configuration
+configMapGenerator:
+  - name: email-service-config
+    behavior: merge
+    literals:
+      - FLASK_ENV=production
+      - LOG_LEVEL=WARNING
+      - ENABLE_METRICS=true
+      - ENABLE_HEALTH_CHECK=true
+      - GUNICORN_WORKERS=8
+      - DB_POOL_SIZE=50
+
+# Production replicas (HA by default)
+replicas:
+  - name: email-service
+    count: 3
+  - name: celery-worker
+    count: 3
+  - name: postfix
+    count: 3
+  - name: dovecot
+    count: 3
+  - name: postgres
+    count: 3
+  - name: redis
+    count: 3
+
+# Use production images (with -prod or latest tag)
+images:
+  - name: emailclient/email-service
+    newTag: latest
+  - name: emailclient/postfix
+    newTag: latest
+  - name: emailclient/dovecot
+    newTag: latest
+  - name: postgres
+    newTag: "16-alpine"
+
+# Full resource allocation for production
+patchesStrategicMerge:
+  - kind: Deployment
+    apiVersion: apps/v1
+    metadata:
+      name: email-service
+    spec:
+      strategy:
+        rollingUpdate:
+          maxUnavailable: 1
+          maxSurge: 1
+      template:
+        spec:
+          containers:
+            - name: email-service
+              resources:
+                requests:
+                  cpu: 1000m
+                  memory: 1Gi
+                limits:
+                  cpu: 4000m
+                  memory: 4Gi
+  - kind: Deployment
+    apiVersion: apps/v1
+    metadata:
+      name: celery-worker
+    spec:
+      template:
+        spec:
+          containers:
+            - name: celery-worker
+              resources:
+                requests:
+                  cpu: 1000m
+                  memory: 1Gi
+                limits:
+                  cpu: 4000m
+                  memory: 4Gi
+  - kind: StatefulSet
+    apiVersion: apps/v1
+    metadata:
+      name: postgres
+    spec:
+      template:
+        spec:
+          containers:
+            - name: postgres
+              resources:
+                requests:
+                  cpu: 2000m
+                  memory: 4Gi
+                limits:
+                  cpu: 8000m
+                  memory: 8Gi
+  - kind: StatefulSet
+    apiVersion: apps/v1
+    metadata:
+      name: redis
+    spec:
+      template:
+        spec:
+          containers:
+            - name: redis
+              resources:
+                requests:
+                  cpu: 1000m
+                  memory: 2Gi
+                limits:
+                  cpu: 4000m
+                  memory: 4Gi
+
+# Production HPA configuration (aggressive scaling)
+patchesJson6902:
+  - target:
+      group: autoscaling
+      version: v2
+      kind: HorizontalPodAutoscaler
+      name: email-service-hpa
+    patch: |-
+      - op: replace
+        path: /spec/minReplicas
+        value: 3
+      - op: replace
+        path: /spec/maxReplicas
+        value: 10
+      - op: replace
+        path: /spec/metrics/0/resource/target/averageUtilization
+        value: 65
+  - target:
+      group: autoscaling
+      version: v2
+      kind: HorizontalPodAutoscaler
+      name: celery-worker-hpa
+    patch: |-
+      - op: replace
+        path: /spec/minReplicas
+        value: 3
+      - op: replace
+        path: /spec/maxReplicas
+        value: 8
+      - op: replace
+        path: /spec/metrics/0/resource/target/averageUtilization
+        value: 60
+
+# Production storage class (high-performance SSD)
+patchesJson6902:
+  - target:
+      kind: PersistentVolumeClaim
+      name: postgres-pvc
+    patch: |-
+      - op: replace
+        path: /spec/storageClassName
+        value: fast-ssd
+  - target:
+      kind: PersistentVolumeClaim
+      name: redis-pvc
+    patch: |-
+      - op: replace
+        path: /spec/storageClassName
+        value: fast-ssd
+
+# Production ingress with TLS
+patchesStrategicMerge:
+  - kind: Ingress
+    apiVersion: networking.k8s.io/v1
+    metadata:
+      name: email-service-ingress
+    spec:
+      rules:
+        - host: api.emailclient.com
+          http:
+            paths:
+              - path: /
+                pathType: Prefix
+                backend:
+                  service:
+                    name: email-service
+                    port:
+                      number: 5000
+
+# Production pod disruption budgets
+patchesJson6902:
+  - target:
+      group: policy
+      version: v1
+      kind: PodDisruptionBudget
+      name: email-service-pdb
+    patch: |-
+      - op: replace
+        path: /spec/minAvailable
+        value: 2
+  - target:
+      group: policy
+      version: v1
+      kind: PodDisruptionBudget
+      name: celery-worker-pdb
+    patch: |-
+      - op: replace
+        path: /spec/minAvailable
+        value: 2
+  - target:
+      group: policy
+      version: v1
+      kind: PodDisruptionBudget
+      name: postgres-pdb
+    patch: |-
+      - op: replace
+        path: /spec/minAvailable
+        value: 2

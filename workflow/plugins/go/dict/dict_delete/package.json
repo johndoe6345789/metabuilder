@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/dict_delete",
+  "version": "1.0.0",
+  "description": "Delete a key from a dictionary",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["dict", "workflow", "plugin"],
+  "main": "dict_delete.go",
+  "files": ["dict_delete.go", "factory.go"],
+  "metadata": {
+    "plugin_type": "dict.delete",
+    "category": "dict",
+    "struct": "DictDelete",
+    "entrypoint": "Execute"
+  }
+}

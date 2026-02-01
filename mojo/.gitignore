@@ -1,0 +1,14 @@
+# Mojo build artifacts
+*.mojopkg
+*.o
+*.so
+*.dylib
+build/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

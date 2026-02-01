@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/blob_put",
+  "version": "1.0.0",
+  "description": "Write blob to filesystem",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["packagerepo", "workflow", "plugin", "blob", "storage"],
+  "main": "blob_put.py",
+  "files": ["blob_put.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "packagerepo.blob_put",
+    "category": "packagerepo",
+    "class": "BlobPut",
+    "entrypoint": "execute"
+  }
+}

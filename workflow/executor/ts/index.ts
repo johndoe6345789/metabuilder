@@ -5,11 +5,17 @@
  * @packageDocumentation
  */
 
-// Core exports
+// ============================================================================
+// CORE EXECUTOR & EXECUTION
+// ============================================================================
+
 export { DAGExecutor, ExecutionMetrics, NodeExecutorFn } from './executor/dag-executor';
 export * from './types';
 
-// Registry and plugins
+// ============================================================================
+// REGISTRY CLASSES & ERROR TYPES
+// ============================================================================
+
 export {
   NodeExecutorRegistry,
   NodeExecutorPlugin,
@@ -17,9 +23,44 @@ export {
   setNodeExecutorRegistry,
   resetNodeExecutorRegistry
 } from './registry/node-executor-registry';
-export { registerBuiltInExecutors } from './plugins/index';
 
-// Utilities
+// ============================================================================
+// MULTI-TENANT INTERFACES & SAFETY ENFORCEMENT
+// ============================================================================
+
+export type {
+  MultiTenancyPolicy,
+  WorkflowContext,
+  CredentialBinding,
+  TenantPolicy,
+  TenantContext,
+  MultiTenantErrorType
+} from './types';
+
+export { MultiTenantError } from './types';
+
+export {
+  TenantSafetyEnforcer,
+  getTenantSafetyEnforcer,
+  resetTenantSafetyEnforcer,
+  type TenantAuditEntry
+} from './multi-tenant/tenant-safety';
+
+// ============================================================================
+// VALIDATION & ERROR HANDLING
+// ============================================================================
+
+export {
+  WorkflowValidator,
+  validateWorkflow,
+  type ValidationError,
+  type WorkflowValidationResult
+} from './utils/workflow-validator';
+
+// ============================================================================
+// UTILITIES & TEMPLATE ENGINE
+// ============================================================================
+
 export { PriorityQueue, QueueItem } from './utils/priority-queue';
 export {
   interpolateTemplate,
@@ -28,7 +69,25 @@ export {
   buildDefaultUtilities
 } from './utils/template-engine';
 
-// Built-in executors (for direct use)
+// ============================================================================
+// PLUGIN SYSTEM & FUNCTION ADAPTER
+// ============================================================================
+
+export {
+  createExecutor,
+  createExecutorsFromMap,
+  registerPluginMap,
+  type PluginFunction,
+  type PluginMeta
+} from './plugins/function-executor-adapter';
+
+// ============================================================================
+// BUILT-IN EXECUTORS & REGISTRY
+// ============================================================================
+
+export { registerBuiltInExecutors, getAvailableNodeTypes, getNodeTypesByCategory } from './plugins/index';
+
+// Re-export class-based executors for direct use
 export {
   dbalReadExecutor,
   dbalWriteExecutor,
@@ -42,9 +101,32 @@ export {
   setVariableExecutor
 } from './plugins/index';
 
+// Re-export function-based plugin maps
+export {
+  stringPlugins,
+  mathPlugins,
+  logicPlugins,
+  listPlugins,
+  dictPlugins,
+  convertPlugins,
+  varPlugins
+} from './plugins/index';
+
+// ============================================================================
+// INITIALIZATION
+// ============================================================================
+
 /**
  * Initialize workflow engine with built-in executors
  * Call this once at application startup
+ *
+ * @example
+ * ```typescript
+ * import { initializeWorkflowEngine } from '@metabuilder/workflow';
+ *
+ * // In application startup
+ * initializeWorkflowEngine();
+ * ```
  */
 export function initializeWorkflowEngine() {
   const { registerBuiltInExecutors } = require('./plugins/index');
@@ -52,6 +134,9 @@ export function initializeWorkflowEngine() {
   console.log('✓ MetaBuilder Workflow Engine v3.0.0 initialized');
 }
 
-// Version
+// ============================================================================
+// VERSION INFO
+// ============================================================================
+
 export const VERSION = '3.0.0';
 export const ENGINE_NAME = '@metabuilder/workflow';

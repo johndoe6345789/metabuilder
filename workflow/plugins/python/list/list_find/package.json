@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/list_find",
+  "version": "1.0.0",
+  "description": "Find first item matching condition",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["list", "workflow", "plugin"],
+  "main": "list_find.py",
+  "files": ["list_find.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "list.find",
+    "category": "list",
+    "class": "ListFind",
+    "entrypoint": "execute"
+  }
+}

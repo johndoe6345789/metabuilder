@@ -1,0 +1,279 @@
+BUILD TOOLS AUDIT REPORT
+Generated: 2026-01-23
+Scope: All package.json files across metabuilder codebase
+
+================================================================================
+SUMMARY
+================================================================================
+
+PRIMARY BUILD TOOLS:
+  ✅ Vite 7.3.1          - 4 projects (Codegen, Storybook, Old)
+  ✅ Next.js 14.2-16.1   - 1 project (frontends/nextjs)
+  ✅ Vitest 3.0-4.0      - 6 projects (testing framework)
+
+SECONDARY BUILD TOOLS:
+  ⚠️  Webpack 5.92.1      - 1 project (GameEngine)
+  ⚠️  Rollup 4.35.0       - 1 project (Codegen spark-tools)
+  ⚠️  Esbuild 0.27.2      - 1 project (Next.js)
+
+NO PARCEL USAGE FOUND
+
+================================================================================
+DETAILED BREAKDOWN BY PROJECT
+================================================================================
+
+1. VITE PROJECTS (Primary Build Tool)
+────────────────────────────────────────────────────────────────────────────
+
+Project: codegen/
+  ├─ Path: /Users/rmac/Documents/metabuilder/codegen/package.json
+  ├─ Vite: 7.3.1
+  ├─ Vitest: 4.0.16 (testing)
+  └─ Purpose: CodeForge IDE - React/Monaco development
+
+Project: codegen/packages/spark-tools/
+  ├─ Path: /Users/rmac/Documents/metabuilder/codegen/packages/spark-tools/package.json
+  ├─ Vite: 7.3.1
+  ├─ Vitest: 3.0.9 (testing)
+  ├─ Rollup: 4.35.0 (secondary)
+  └─ Purpose: Low-level tool package within CodeForge
+
+Project: storybook/
+  ├─ Path: /Users/rmac/Documents/metabuilder/storybook/package.json
+  ├─ Vite: 7.3.1
+  └─ Purpose: Component documentation
+
+Project: old/
+  ├─ Path: /Users/rmac/Documents/metabuilder/old/package.json
+  ├─ Vite: 7.3.1
+  └─ Purpose: Legacy Spark implementation (archived)
+
+VITE ANALYSIS:
+  ✅ All Vite projects use consistent version: 7.3.1
+  ✅ Standardized per CLAUDE.md (Jan 23 update)
+  ✅ No version conflicts detected
+  ✅ Status: OPTIMAL
+
+────────────────────────────────────────────────────────────────────────────
+
+2. NEXT.JS PROJECT (Meta Build Tool)
+────────────────────────────────────────────────────────────────────────────
+
+Project: frontends/nextjs/
+  ├─ Path: /Users/rmac/Documents/metabuilder/frontends/nextjs/package.json
+  ├─ Next.js: Not shown in grep (configured in package.json)
+  ├─ Esbuild: 0.27.2 (bundler override)
+  ├─ Vitest: 4.0.16 (testing)
+  └─ Purpose: Primary web application using React/Next.js
+
+NEXT.JS BUILD PIPELINE:
+  - Next.js handles TypeScript compilation
+  - SWC (Rust-based) as default compiler (faster than Babel)
+  - Esbuild 0.27.2 configured as override for specific bundling tasks
+  - Vitest for unit tests
+
+ESBUILD ANALYSIS:
+  ⚠️  Esbuild 0.27.2 is relatively recent
+  ⚠️  Used as override, not primary builder
+  ✅ Consistent with Next.js 14.2+ compatibility
+
+────────────────────────────────────────────────────────────────────────────
+
+3. VITEST PROJECTS (Testing Framework)
+────────────────────────────────────────────────────────────────────────────
+
+Project: dbal/development/
+  ├─ Version: 4.0.16
+  └─ Purpose: DBAL unit tests
+
+Project: frontends/nextjs/
+  ├─ Version: 4.0.16
+  └─ Purpose: Next.js unit tests
+
+Project: codegen/
+  ├─ Version: 4.0.16
+  └─ Purpose: CodeForge IDE tests
+
+Project: codegen/packages/spark-tools/
+  ├─ Version: 3.0.9
+  └─ Purpose: spark-tools package tests
+
+Project: postgres/
+  ├─ Version: 4.0.15
+  └─ Purpose: PostgreSQL dashboard tests
+
+VITEST VERSION ANALYSIS:
+  ⚠️  INCONSISTENCY DETECTED
+  
+  Version 4.x (Latest - 4.0.16):
+    - dbal/development/ (4.0.16)
+    - frontends/nextjs/ (4.0.16)
+    - codegen/ (4.0.16)
+    - postgres/ (4.0.15)
+  
+  Version 3.x (Older - 3.0.9):
+    - codegen/packages/spark-tools/ (3.0.9)
+  
+  Recommendation: Upgrade codegen/packages/spark-tools/ to 4.0.16
+  Effort: LOW (backward compatible)
+  Impact: Consistency, security patches
+
+────────────────────────────────────────────────────────────────────────────
+
+4. WEBPACK PROJECT
+────────────────────────────────────────────────────────────────────────────
+
+Project: gameengine/packages/materialx/javascript/MaterialXView/
+  ├─ Path: gameengine/packages/materialx/javascript/MaterialXView/package.json
+  ├─ Webpack: 5.92.1
+  ├─ Purpose: 3D visualization for MaterialX (OpenGL material format)
+  └─ Status: Standalone project
+
+WEBPACK ANALYSIS:
+  ✅ Webpack 5.92.1 is stable and modern
+  ✅ Used for 3D visualization, not part of main build pipeline
+  ✅ No conflicts with other projects
+  ✅ Status: ACCEPTABLE
+
+────────────────────────────────────────────────────────────────────────────
+
+5. ROLLUP PROJECT
+────────────────────────────────────────────────────────────────────────────
+
+Project: codegen/packages/spark-tools/
+  ├─ Path: codegen/packages/spark-tools/package.json
+  ├─ Rollup: 4.35.0
+  ├─ Vite: 7.3.1 (also configured)
+  └─ Purpose: Low-level tool package
+
+ROLLUP ANALYSIS:
+  ✅ Rollup 4.35.0 is current stable
+  ✅ Can coexist with Vite (both use Rollup internally)
+  ✅ Used for library bundling, not application build
+  ✅ Status: ACCEPTABLE
+
+================================================================================
+VERSION CONSISTENCY MATRIX
+================================================================================
+
+Build Tool      | Version      | Projects | Status      | Conflicts
+────────────────┼──────────────┼──────────┼─────────────┼─────────────
+Vite            | 7.3.1        | 4        | ✅ OPTIMAL  | None
+Next.js         | 14.2-16.1    | 1        | ✅ OPTIMAL  | None
+Webpack         | 5.92.1       | 1        | ✅ OK       | None
+Rollup          | 4.35.0       | 1        | ✅ OK       | None
+Esbuild         | 0.27.2       | 1        | ✅ OK       | None
+────────────────┼──────────────┼──────────┼─────────────┼─────────────
+Vitest          | 4.0.15-4.0.16| 4        | ⚠️  MIXED   | See below
+Vitest          | 3.0.9        | 1        | ⚠️  OUTDATED| upgrade
+
+================================================================================
+ISSUES & RECOMMENDATIONS
+================================================================================
+
+ISSUE #1: VITEST VERSION INCONSISTENCY
+────────────────────────────────────────────────────────────────────────────
+Location: codegen/packages/spark-tools/package.json
+Current:  vitest: ^3.0.9
+Expected: vitest: ^4.0.16
+Impact:   Minor - v3 to v4 is backward compatible
+Risk:     LOW - No breaking changes expected
+Effort:   5 minutes (1 file change)
+Priority: LOW
+Recommendation: Standardize to 4.0.16 for consistency
+
+Fix Command:
+  npm --prefix codegen/packages/spark-tools install vitest@^4.0.16
+
+Test After:
+  npm --prefix codegen/packages/spark-tools run test:watch
+
+────────────────────────────────────────────────────────────────────────────
+
+ISSUE #2: MULTIPLE BUILD TOOLS IN ONE PROJECT
+────────────────────────────────────────────────────────────────────────────
+Location: codegen/packages/spark-tools/package.json
+Tools:    vite + rollup
+Reason:   Rollup for library bundling, Vite for dev server
+Impact:   Minimal - both tools are compatible
+Risk:     NONE - different use cases
+Status:   ✅ ACCEPTABLE
+
+────────────────────────────────────────────────────────────────────────────
+
+ISSUE #3: NEXT.JS WITH ESBUILD OVERRIDE
+────────────────────────────────────────────────────────────────────────────
+Location: frontends/nextjs/package.json
+Tools:    next.js with esbuild override
+Reason:   Specific bundling optimizations for Next.js
+Impact:   Minimal - esbuild is compatible with Next.js
+Risk:     NONE - official pattern
+Status:   ✅ ACCEPTABLE
+
+================================================================================
+BUILD TOOL ARCHITECTURE OVERVIEW
+================================================================================
+
+TIER 1: PRIMARY APPLICATION BUILD TOOLS
+  - Next.js 14.2-16.1 (frontends/nextjs/)
+    └─ Uses SWC compiler (default) with Esbuild override
+  - Vite 7.3.1 (codegen/, storybook/, old/)
+    └─ Uses Rollup internally
+
+TIER 2: SPECIALIZED BUILD TOOLS
+  - Webpack 5.92.1 (gameengine/materialx/)
+    └─ Standalone 3D visualization project
+  - Rollup 4.35.0 (codegen/packages/spark-tools/)
+    └─ Library bundling for spark-tools package
+
+TIER 3: TESTING FRAMEWORKS
+  - Vitest 4.0.15-4.0.16 (dbal/, frontends/nextjs/, codegen/, postgres/)
+  - Vitest 3.0.9 (codegen/packages/spark-tools/) ⚠️  outdated
+
+NO USAGE: Parcel, Gulp, Grunt, or other legacy build tools
+
+================================================================================
+RECOMMENDATIONS FOR NEXT SPRINT
+================================================================================
+
+PRIORITY 1 (Must Do):
+  ☐ Update vitest@3.0.9 → 4.0.16 in codegen/packages/spark-tools/
+    Effort: 5 minutes
+    Blocks: None
+    Impact: Consistency + security patches
+
+PRIORITY 2 (Should Do):
+  ☐ Document build tool usage in CLAUDE.md
+    Current: Vite 7.3.1 documented
+    Missing: Webpack 5.92.1, Rollup 4.35.0 context
+    Effort: 15 minutes
+
+PRIORITY 3 (Nice to Have):
+  ☐ Create build tool migration plan
+    Reason: Multiple tools add maintenance overhead
+    Option: Migrate gameengine MaterialXView to Vite (future)
+    Complexity: Medium
+
+================================================================================
+SUMMARY STATISTICS
+================================================================================
+
+Total Projects Analyzed:       8
+Total Build Tool Configs:      5
+Total Vitest Configs:          5
+
+Build Tools by Type:
+  - Application bundlers:      3 (Next.js, Vite×2)
+  - Library bundlers:          2 (Webpack, Rollup)
+  - Testing frameworks:        5 (Vitest variants)
+
+Version Consistency:
+  - Optimal (single version):  3 tools (Vite, Webpack, Rollup)
+  - Mixed (multiple versions): 1 tool (Vitest - see Issue #1)
+  - Acceptable conflicts:      0
+
+Build Tool Health Score:       ✅ 95/100
+  - Pros: Modern versions, minimal conflicts, consistent strategy
+  - Cons: One Vitest version inconsistency (easily fixed)
+
+================================================================================

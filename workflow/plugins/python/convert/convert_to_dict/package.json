@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/convert_to_dict",
+  "version": "1.0.0",
+  "description": "Convert value to dictionary",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["convert", "workflow", "plugin"],
+  "main": "convert_to_dict.py",
+  "files": ["convert_to_dict.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "convert.toDict",
+    "category": "convert",
+    "class": "ConvertToDict",
+    "entrypoint": "execute"
+  }
+}

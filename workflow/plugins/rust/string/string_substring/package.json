@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/string_substring",
+  "version": "1.0.0",
+  "description": "Extract a substring from a string",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["string", "workflow", "plugin"],
+  "main": "src/lib.rs",
+  "files": ["src/lib.rs", "src/factory.rs"],
+  "metadata": {
+    "plugin_type": "string.substring",
+    "category": "string",
+    "struct": "StringSubstring",
+    "entrypoint": "execute"
+  }
+}

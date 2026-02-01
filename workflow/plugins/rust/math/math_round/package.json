@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/math_round",
+  "version": "1.0.0",
+  "description": "Round a number to specified decimals",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["math", "workflow", "plugin"],
+  "main": "src/lib.rs",
+  "files": ["src/lib.rs", "src/factory.rs"],
+  "metadata": {
+    "plugin_type": "math.round",
+    "category": "math",
+    "struct": "MathRound",
+    "entrypoint": "execute"
+  }
+}

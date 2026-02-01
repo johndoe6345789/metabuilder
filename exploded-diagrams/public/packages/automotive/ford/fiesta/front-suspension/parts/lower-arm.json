@@ -1,0 +1,43 @@
+{
+  "id": "lower-arm",
+  "name": "Lower Control Arm",
+  "partNumber": "FD-1751350",
+  "material": "steel",
+  "quantity": 2,
+  "weight": 4100.0,
+  "weightUnit": "g",
+  "baseY": 300,
+  "description": "Front lower wishbone with integral ball joint",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "21mm", "required": true },
+      { "name": "Socket", "size": "18mm", "required": true },
+      { "name": "Torque wrench", "size": "80-150 Nm", "required": true },
+      { "name": "Ball joint separator", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Subframe pivot bolt (front)", "spec": "M14x1.5x90", "grade": "10.9", "qty": 1, "reusable": false },
+      { "name": "Subframe pivot bolt (rear)", "spec": "M12x1.5x80", "grade": "10.9", "qty": 1, "reusable": false },
+      { "name": "Ball joint pinch bolt", "spec": "M10x1.5x45", "grade": "10.9", "qty": 1, "reusable": false }
+    ],
+    "torque": [
+      { "fastener": "Front pivot bolt", "value": 125, "unit": "Nm", "sequence": "", "notes": "Torque at ride height" },
+      { "fastener": "Rear pivot bolt", "value": 95, "unit": "Nm", "sequence": "", "notes": "Torque at ride height" },
+      { "fastener": "Ball joint pinch bolt", "value": 48, "unit": "Nm", "sequence": "", "notes": "" }
+    ],
+    "notes": [
+      "Check bush condition - common wear item",
+      "Final torque with vehicle at ride height",
+      "Alignment required after replacement",
+      "Support hub carrier when disconnecting"
+    ]
+  },
+  "geometry": [
+    { "type": "polygon", "points": [-60, 0, 60, 0, 40, 30, -40, 30], "fill": "#5a5a5a" },
+    { "type": "circle", "r": 18, "offsetX": -50, "offsetY": 15 },
+    { "type": "circle", "r": 15, "offsetX": 50, "offsetY": 15 },
+    { "type": "circle", "r": 10, "offsetY": 15, "fill": "#444" },
+    { "type": "circle", "r": 8, "offsetX": -50, "offsetY": 15, "fill": "#333" },
+    { "type": "circle", "r": 8, "offsetX": 50, "offsetY": 15, "fill": "#333" }
+  ]
+}

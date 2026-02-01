@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/var_set",
+  "version": "1.0.0",
+  "description": "Set a variable in the workflow store",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["var", "workflow", "plugin"],
+  "main": "var_set.go",
+  "files": ["var_set.go", "factory.go"],
+  "metadata": {
+    "plugin_type": "var.set",
+    "category": "var",
+    "struct": "VarSet",
+    "entrypoint": "Execute"
+  }
+}

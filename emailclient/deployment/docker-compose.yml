@@ -1,0 +1,369 @@
+version: '3.9'
+
+# Phase 8 Email Client Implementation - Complete Docker Compose Stack
+# Full email service infrastructure with IMAP, SMTP, API, and supporting services
+
+services:
+  # ============================================================================
+  # Core Infrastructure Services
+  # ============================================================================
+
+  # PostgreSQL Database - Email metadata storage
+  postgres:
+    image: postgres:16-alpine
+    container_name: emailclient-postgres
+    hostname: postgres
+    environment:
+      POSTGRES_USER: ${DB_USER:-emailclient}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-secure_password}
+      POSTGRES_DB: ${DB_NAME:-emailclient_db}
+      POSTGRES_INITDB_ARGS: "-c max_connections=200"
+    ports:
+      - "${DB_PORT:-5433}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./deployment/docker/postgres/init-scripts:/docker-entrypoint-initdb.d
+    networks:
+      - emailclient-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-emailclient}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    labels:
+      - "com.metabuilder.service=database"
+      - "com.metabuilder.phase=8-email-client"
+
+  # Redis Cache & Message Broker - For Celery tasks and session storage
+  redis:
+    image: redis:7-alpine
+    container_name: emailclient-redis
+    hostname: redis
+    command: redis-server
+      --appendonly yes
+      --appendfsync everysec
+      --maxmemory 256mb
+      --maxmemory-policy allkeys-lru
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - emailclient-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    labels:
+      - "com.metabuilder.service=cache"
+      - "com.metabuilder.phase=8-email-client"
+
+  # ============================================================================
+  # Email Infrastructure Services
+  # ============================================================================
+
+  # Postfix Mail Server - SMTP relay and mail delivery
+  postfix:
+    build:
+      context: ..
+      dockerfile: ./emailclient/deployment/docker/postfix/Dockerfile
+    container_name: emailclient-postfix
+    hostname: postfix
+    environment:
+      POSTFIX_myhostname: ${POSTFIX_HOSTNAME:-emailclient.local}
+      POSTFIX_mydomain: ${POSTFIX_DOMAIN:-emailclient.local}
+      POSTFIX_mynetworks: ${POSTFIX_NETWORKS:-127.0.0.0/8 10.0.0.0/8 172.16.0.0/12}
+      POSTFIX_relayhost: ${POSTFIX_RELAYHOST:-}
+      POSTFIX_smtp_sasl_auth_enable: ${POSTFIX_SASL_AUTH:-no}
+      POSTFIX_smtp_tls_security_level: ${POSTFIX_TLS_LEVEL:-may}
+    ports:
+      - "${POSTFIX_SMTP_PORT:-25}:25"
+      - "${POSTFIX_SUBMISSION_PORT:-587}:587"
+      - "${POSTFIX_SMTPS_PORT:-465}:465"
+    volumes:
+      - postfix-data:/var/mail
+      - postfix-logs:/var/log
+      - postfix-spool:/var/spool/postfix
+    networks:
+      - emailclient-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "postfix", "status"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    labels:
+      - "com.metabuilder.service=smtp"
+      - "com.metabuilder.phase=8-email-client"
+
+  # Dovecot IMAP/POP3 Server - Email storage and access
+  dovecot:
+    build:
+      context: ..
+      dockerfile: ./emailclient/deployment/docker/dovecot/Dockerfile
+    container_name: emailclient-dovecot
+    hostname: dovecot
+    environment:
+      DOVECOT_MAIL_HOME: /var/mail
+      DOVECOT_PROTOCOLS: ${DOVECOT_PROTOCOLS:-imap pop3}
+      DOVECOT_LISTEN: ${DOVECOT_LISTEN:-*, ::}
+    ports:
+      - "${IMAP_PORT:-143}:143"
+      - "${IMAPS_PORT:-993}:993"
+      - "${POP3_PORT:-110}:110"
+      - "${POP3S_PORT:-995}:995"
+    volumes:
+      - dovecot-data:/var/mail
+      - dovecot-logs:/var/log/dovecot
+    networks:
+      - emailclient-net
+    depends_on:
+      - postfix
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "doveadm", "ping"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    labels:
+      - "com.metabuilder.service=imap-pop3"
+      - "com.metabuilder.phase=8-email-client"
+
+  # ============================================================================
+  # Email Service API (Phase 8)
+  # ============================================================================
+
+  # Email Service - Flask REST API
+  email-service:
+    build:
+      context: ..
+      dockerfile: ./emailclient/deployment/docker/email-service/Dockerfile
+    container_name: emailclient-email-service
+    hostname: email-service
+    environment:
+      # Flask Configuration
+      FLASK_ENV: ${FLASK_ENV:-production}
+      FLASK_HOST: 0.0.0.0
+      FLASK_PORT: 5000
+
+      # Database Configuration
+      DATABASE_URL: postgresql://${DB_USER:-emailclient}:${DB_PASSWORD:-secure_password}@postgres:5432/${DB_NAME:-emailclient_db}
+
+      # Redis Configuration
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_BACKEND: redis://redis:6379/1
+
+      # Security
+      JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
+      JWT_ALGORITHM: HS256
+      JWT_EXPIRATION_HOURS: 24
+
+      # CORS
+      CORS_ORIGINS: ${CORS_ORIGINS:-localhost:3000,emailclient.local:3000}
+
+      # Email Service Configuration
+      IMAP_TIMEOUT: 30
+      SMTP_TIMEOUT: 30
+      IMAP_POOL_SIZE: 10
+      SMTP_POOL_SIZE: 5
+
+      # Encryption
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:-change-me-in-production}
+
+      # Gunicorn Configuration
+      GUNICORN_WORKERS: 4
+      GUNICORN_THREADS: 2
+      GUNICORN_TIMEOUT: 120
+
+      # Logging
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+
+      # Feature Flags
+      ENABLE_IMAP_SYNC: "true"
+      ENABLE_SMTP_SEND: "true"
+      ENABLE_CELERY_TASKS: "true"
+      ENABLE_EMAIL_PARSING: "true"
+
+      # Rate Limiting
+      RATE_LIMIT_ENABLED: "true"
+      RATE_LIMIT_REQUESTS_PER_MINUTE: 60
+      RATE_LIMIT_REQUESTS_PER_HOUR: 1000
+
+      # Multi-tenant Configuration
+      TENANT_ID_HEADER: X-Tenant-ID
+      DEFAULT_TENANT_ID: default
+
+    ports:
+      - "${EMAIL_SERVICE_PORT:-5000}:5000"
+
+    volumes:
+      - email-service-logs:/app/logs
+      - email-service-data:/app/data
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      postfix:
+        condition: service_healthy
+      dovecot:
+        condition: service_healthy
+
+    networks:
+      - emailclient-net
+
+    restart: unless-stopped
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+    labels:
+      - "com.metabuilder.service=email-api"
+      - "com.metabuilder.phase=8-email-client"
+
+  # Celery Worker - Background job processing for async tasks
+  celery-worker:
+    build:
+      context: ..
+      dockerfile: ./emailclient/deployment/docker/email-service/Dockerfile
+    container_name: emailclient-celery-worker
+    hostname: celery-worker
+    command: celery -A tasks worker --loglevel=info --concurrency=4
+
+    environment:
+      # Database Configuration
+      DATABASE_URL: postgresql://${DB_USER:-emailclient}:${DB_PASSWORD:-secure_password}@postgres:5432/${DB_NAME:-emailclient_db}
+
+      # Redis Configuration
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_BACKEND: redis://redis:6379/1
+
+      # Email Service Configuration
+      IMAP_TIMEOUT: 30
+      SMTP_TIMEOUT: 30
+      IMAP_POOL_SIZE: 10
+      SMTP_POOL_SIZE: 5
+
+      # Encryption
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:-change-me-in-production}
+
+      # Logging
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+
+      # Feature Flags
+      ENABLE_IMAP_SYNC: "true"
+      ENABLE_SMTP_SEND: "true"
+      ENABLE_EMAIL_PARSING: "true"
+
+    volumes:
+      - email-service-logs:/app/logs
+      - email-service-data:/app/data
+
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      postfix:
+        condition: service_healthy
+
+    networks:
+      - emailclient-net
+
+    restart: unless-stopped
+
+    labels:
+      - "com.metabuilder.service=celery-worker"
+      - "com.metabuilder.phase=8-email-client"
+
+  # Celery Beat - Scheduled task scheduler
+  celery-beat:
+    build:
+      context: ..
+      dockerfile: ./emailclient/deployment/docker/email-service/Dockerfile
+    container_name: emailclient-celery-beat
+    hostname: celery-beat
+    command: celery -A tasks beat --loglevel=info
+
+    environment:
+      # Database Configuration
+      DATABASE_URL: postgresql://${DB_USER:-emailclient}:${DB_PASSWORD:-secure_password}@postgres:5432/${DB_NAME:-emailclient_db}
+
+      # Redis Configuration
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_BACKEND: redis://redis:6379/1
+
+      # Encryption
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:-change-me-in-production}
+
+      # Logging
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+
+    volumes:
+      - email-service-logs:/app/logs
+      - email-service-data:/app/data
+
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+
+    networks:
+      - emailclient-net
+
+    restart: unless-stopped
+
+    labels:
+      - "com.metabuilder.service=celery-beat"
+      - "com.metabuilder.phase=8-email-client"
+
+# ============================================================================
+# Persistent Volumes
+# ============================================================================
+
+volumes:
+  postgres-data:
+    driver: local
+  redis-data:
+    driver: local
+  postfix-data:
+    driver: local
+  postfix-logs:
+    driver: local
+  postfix-spool:
+    driver: local
+  dovecot-data:
+    driver: local
+  dovecot-logs:
+    driver: local
+  email-service-logs:
+    driver: local
+  email-service-data:
+    driver: local
+
+# ============================================================================
+# Networks
+# ============================================================================
+
+networks:
+  emailclient-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.25.0.0/16

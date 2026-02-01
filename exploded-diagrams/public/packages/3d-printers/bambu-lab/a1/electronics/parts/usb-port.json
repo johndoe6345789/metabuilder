@@ -1,0 +1,60 @@
+{
+  "id": "usb-port",
+  "name": "USB Connectivity Port",
+  "partNumber": "BL-A1-USB01",
+  "material": "plastic",
+  "quantity": 1,
+  "weight": 15.0,
+  "weightUnit": "g",
+  "baseY": 400,
+  "description": "USB Type-A and Type-C combo port assembly - for firmware updates and file transfer",
+  "installation": {
+    "tools": [
+      { "name": "Hex key", "size": "2mm", "required": true },
+      { "name": "ESD wrist strap", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "M2 screw", "spec": "M2x5", "qty": 2, "reusable": true },
+      { "name": "USB cable", "spec": "4-wire shielded", "qty": 1, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "M2 screws", "value": 0.2, "unit": "Nm", "sequence": "", "notes": "Light torque" }
+    ],
+    "notes": [
+      "USB-C port supports data transfer only - not power delivery",
+      "USB-A port for thumb drives and firmware updates",
+      "Shield must be grounded for EMI compliance",
+      "Check port alignment before tightening"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 45, "height": 18, "rx": 2, "fill": "#1a1a1a" },
+    { "type": "rect", "width": 15, "height": 8, "offsetX": -10, "fill": "#404040" },
+    { "type": "rect", "width": 12, "height": 5, "offsetX": -10, "fill": "#c0c0c0" },
+    { "type": "rect", "width": 10, "height": 4, "offsetX": 12, "rx": 2, "fill": "#404040" },
+    { "type": "rect", "width": 8, "height": 2.5, "offsetX": 12, "rx": 1, "fill": "#c0c0c0" }
+  ],
+  "geometry3d": [
+    { "type": "box", "width": 40, "height": 12, "depth": 22, "fill": "#1a1a1a" },
+
+    { "type": "box", "width": 14, "height": 7, "depth": 18, "offsetX": -10, "offsetY": 2, "fill": "#c0c0c0" },
+    { "type": "box", "width": 12, "height": 5, "depth": 20, "offsetX": -10, "offsetY": 2, "subtract": true },
+    { "type": "box", "width": 10, "height": 2, "depth": 10, "offsetX": -10, "offsetY": 2, "offsetZ": -3, "fill": "#2060cc" },
+
+    { "type": "box", "width": 10, "height": 4, "depth": 10, "offsetX": 10, "offsetY": 3, "fill": "#c0c0c0" },
+    { "type": "box", "width": 8.5, "height": 2.5, "depth": 12, "offsetX": 10, "offsetY": 3, "subtract": true },
+    { "type": "box", "width": 6, "height": 1, "depth": 5, "offsetX": 10, "offsetY": 3, "offsetZ": -1, "fill": "#303030" },
+
+    { "type": "box", "width": 42, "height": 3, "depth": 24, "offsetY": -7.5, "fill": "#006030" },
+
+    { "type": "box", "width": 4, "height": 4, "depth": 4, "offsetX": -16, "offsetY": -5.5, "fill": "#1a1a1a" },
+    { "type": "box", "width": 4, "height": 4, "depth": 4, "offsetX": 16, "offsetY": -5.5, "fill": "#1a1a1a" },
+
+    { "type": "box", "width": 35, "height": 2, "depth": 5, "offsetY": -10, "offsetZ": -8, "fill": "#c0c0c0" },
+
+    { "type": "cylinder", "r": 1, "height": 15, "offsetX": -18, "offsetY": 0, "offsetZ": -8, "fill": "#606060" },
+    { "type": "cylinder", "r": 1, "height": 15, "offsetX": 18, "offsetY": 0, "offsetZ": -8, "fill": "#606060" },
+
+    { "type": "box", "width": 2, "height": 1, "depth": 2, "offsetX": 0, "offsetY": -5.5, "offsetZ": 8, "fill": "#00cc00" }
+  ]
+}

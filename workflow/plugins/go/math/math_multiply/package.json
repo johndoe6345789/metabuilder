@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/math_multiply",
+  "version": "1.0.0",
+  "description": "Multiply two or more numbers",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["math", "workflow", "plugin"],
+  "main": "math_multiply.go",
+  "files": ["math_multiply.go", "factory.go"],
+  "metadata": {
+    "plugin_type": "math.multiply",
+    "category": "math",
+    "struct": "MathMultiply",
+    "entrypoint": "Execute"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/respond_json",
+  "version": "1.0.0",
+  "description": "Format JSON response",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["packagerepo", "workflow", "plugin", "http", "response"],
+  "main": "respond_json.py",
+  "files": ["respond_json.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "packagerepo.respond_json",
+    "category": "packagerepo",
+    "class": "RespondJson",
+    "entrypoint": "execute"
+  }
+}

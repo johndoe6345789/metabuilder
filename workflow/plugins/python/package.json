@@ -1,0 +1,29 @@
+{
+  "name": "@metabuilder/workflow-plugins-python",
+  "version": "1.0.0",
+  "description": "Python workflow plugins for MetaBuilder",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "main": "plugin.py",
+  "metadata": {
+    "language": "python",
+    "runtime": "python3"
+  },
+  "categories": [
+    "backend",
+    "control",
+    "convert",
+    "core",
+    "dict",
+    "list",
+    "logic",
+    "math",
+    "notifications",
+    "string",
+    "test",
+    "tools",
+    "utils",
+    "var",
+    "web"
+  ]
+}

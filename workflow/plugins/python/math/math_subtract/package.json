@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/math_subtract",
+  "version": "1.0.0",
+  "description": "Subtract b from a",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["math", "workflow", "plugin"],
+  "main": "math_subtract.py",
+  "files": ["math_subtract.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "math.subtract",
+    "category": "math",
+    "class": "MathSubtract",
+    "entrypoint": "execute"
+  }
+}

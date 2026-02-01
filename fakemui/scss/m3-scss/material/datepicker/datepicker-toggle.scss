@@ -1,0 +1,28 @@
+@use '@angular/cdk';
+@use './m3-datepicker';
+@use '../core/tokens/token-utils';
+
+$fallbacks: m3-datepicker.get-tokens();
+
+// We support the case where the form field is disabled, but the datepicker is not.
+// MDC sets `pointer-events: none` on disabled form fields which prevents clicks on the toggle.
+.mat-datepicker-toggle {
+  pointer-events: auto;
+  color: token-utils.slot(datepicker-toggle-icon-color, $fallbacks);
+
+  button {
+    color: inherit;
+  }
+}
+
+.mat-datepicker-toggle-active {
+  color: token-utils.slot(datepicker-toggle-active-state-icon-color, $fallbacks);
+}
+
+@include cdk.high-contrast {
+  .mat-datepicker-toggle-default-icon {
+    // On Chromium-based browsers the icon doesn't appear to inherit the text color in high
+    // contrast mode so we have to set it explicitly. This is a no-op on IE and Firefox.
+    color: CanvasText;
+  }
+}

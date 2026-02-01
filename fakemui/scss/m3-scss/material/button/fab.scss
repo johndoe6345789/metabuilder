@@ -1,0 +1,231 @@
+@use './button-base';
+@use '../core/tokens/token-utils';
+@use '../core/style/private' as style-private;
+@use '../core/style/vendor-prefixes';
+@use '../core/focus-indicators/private' as focus-indicators-private;
+@use './m3-fab';
+
+$fallbacks: m3-fab.get-tokens();
+
+.mat-mdc-fab-base {
+  @include vendor-prefixes.user-select(none);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border: none;
+  fill: currentColor;
+  text-decoration: none;
+  cursor: pointer;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  overflow: visible;
+  transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1), opacity 15ms linear 30ms,
+    transform 270ms 0ms cubic-bezier(0, 0, 0.2, 1);
+  flex-shrink: 0; // Prevent the button from shrinking since it's always supposed to be a circle.
+
+  // Due to the shape of the FAB, inheriting the shape looks off. Disable it explicitly.
+  @include button-base.mat-private-button-interactive($focus-indicator-inherits-shape: false);
+  @include style-private.private-animation-noop();
+
+  &::before {
+    position: absolute;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    border: 1px solid transparent;
+    border-radius: inherit;
+    content: '';
+    pointer-events: none;
+  }
+
+  // MDC used to include this and it seems like a lot of apps depend on it.
+  &[hidden] {
+    display: none;
+  }
+
+  &::-moz-focus-inner {
+    padding: 0;
+    border: 0;
+  }
+
+  &:active, &:focus {
+    outline: none;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  & > svg {
+    width: 100%;
+  }
+
+  // MDC expects the fab icon to contain this HTML content:
+  // ```html
+  //   <span class="mdc-fab__icon material-icons">favorite</span>
+  // ```
+  // However, Angular Material expects a `mat-icon` instead. The following
+  // mixin will style the icons appropriately.
+  // stylelint-disable-next-line selector-class-pattern
+  .mat-icon, .material-icons {
+    transition: transform 180ms 90ms cubic-bezier(0, 0, 0.2, 1);
+    fill: currentColor;
+    will-change: transform;
+  }
+
+  .mat-focus-indicator::before {
+    $default-border-width: focus-indicators-private.$default-border-width;
+    $border-width: var(--mat-focus-indicator-border-width, #{$default-border-width});
+    $offset: calc(#{$border-width} + 2px);
+    margin: calc(#{$offset} * -1);
+  }
+
+  @include button-base.mat-private-button-disabled {
+    // Necessary for interactive disabled buttons.
+    &, &:focus {
+      box-shadow: none;
+    }
+  }
+}
+
+.mat-mdc-fab {
+  background-color: token-utils.slot(fab-container-color, $fallbacks);
+  border-radius: token-utils.slot(fab-container-shape, $fallbacks);
+  color: token-utils.slot(fab-foreground-color, $fallbacks, inherit);
+  box-shadow: token-utils.slot(fab-container-elevation-shadow, $fallbacks);
+
+  @media (hover: hover) {
+    &:hover {
+      box-shadow: token-utils.slot(fab-hover-container-elevation-shadow, $fallbacks);
+    }
+  }
+
+  &:focus {
+    box-shadow: token-utils.slot(fab-focus-container-elevation-shadow, $fallbacks);
+  }
+
+  &:active, &:focus:active {
+    box-shadow: token-utils.slot(fab-pressed-container-elevation-shadow, $fallbacks);
+  }
+
+  @include button-base.mat-private-button-disabled {
+    color: token-utils.slot(fab-disabled-state-foreground-color, $fallbacks);
+    background-color: token-utils.slot(fab-disabled-state-container-color, $fallbacks);
+  }
+
+  @include button-base.mat-private-button-touch-target(true, fab-touch-target-size,
+    fab-touch-target-display, $fallbacks);
+  @include button-base.mat-private-button-ripple(fab-ripple-color, fab-state-layer-color,
+    fab-disabled-state-layer-color, fab-hover-state-layer-opacity, fab-focus-state-layer-opacity,
+    fab-pressed-state-layer-opacity, $fallbacks);
+}
+
+.mat-mdc-mini-fab {
+  width: 40px;
+  height: 40px;
+  background-color: token-utils.slot(fab-small-container-color, $fallbacks);
+  border-radius: token-utils.slot(fab-small-container-shape, $fallbacks);
+  color: token-utils.slot(fab-small-foreground-color, $fallbacks, inherit);
+  box-shadow: token-utils.slot(fab-small-container-elevation-shadow, $fallbacks);
+
+  @media (hover: hover) {
+    &:hover {
+      box-shadow: token-utils.slot(fab-small-hover-container-elevation-shadow, $fallbacks);
+    }
+  }
+
+  &:focus {
+    box-shadow: token-utils.slot(fab-small-focus-container-elevation-shadow, $fallbacks);
+  }
+
+  &:active, &:focus:active {
+    box-shadow: token-utils.slot(fab-small-pressed-container-elevation-shadow, $fallbacks);
+  }
+
+  @include button-base.mat-private-button-disabled {
+    color: token-utils.slot(fab-small-disabled-state-foreground-color, $fallbacks);
+    background-color: token-utils.slot(fab-small-disabled-state-container-color, $fallbacks);
+  }
+
+  @include button-base.mat-private-button-touch-target(true,
+    fab-small-touch-target-size, fab-small-touch-target-display, $fallbacks);
+  @include button-base.mat-private-button-ripple(fab-small-ripple-color,
+    fab-small-state-layer-color,
+    fab-small-disabled-state-layer-color, fab-small-hover-state-layer-opacity,
+    fab-small-focus-state-layer-opacity, fab-small-pressed-state-layer-opacity, $fallbacks);
+}
+
+.mat-mdc-extended-fab {
+  // Before tokens MDC included the font smoothing automatically, but with
+  // tokens it doesn't. We add it since it can cause tiny differences in
+  // screenshot tests and it generally looks better.
+  @include vendor-prefixes.smooth-font();
+  padding-left: 20px;
+  padding-right: 20px;
+  width: auto;
+  max-width: 100%;
+  line-height: normal;
+  box-shadow: token-utils.slot(fab-extended-container-elevation-shadow, $fallbacks);
+  height: token-utils.slot(fab-extended-container-height, $fallbacks);
+  border-radius: token-utils.slot(fab-extended-container-shape, $fallbacks);
+  font-family: token-utils.slot(fab-extended-label-text-font, $fallbacks);
+  font-size: token-utils.slot(fab-extended-label-text-size, $fallbacks);
+  font-weight: token-utils.slot(fab-extended-label-text-weight, $fallbacks);
+  letter-spacing: token-utils.slot(fab-extended-label-text-tracking, $fallbacks);
+
+  @media (hover: hover) {
+    &:hover {
+      box-shadow: token-utils.slot(fab-extended-hover-container-elevation-shadow, $fallbacks);
+    }
+  }
+
+  &:focus {
+    box-shadow: token-utils.slot(fab-extended-focus-container-elevation-shadow, $fallbacks);
+  }
+
+  &:active, &:focus:active {
+    box-shadow: token-utils.slot(fab-extended-pressed-container-elevation-shadow, $fallbacks);
+  }
+
+  @include button-base.mat-private-button-disabled {
+    // Necessary for interactive disabled buttons.
+    &, &:focus {
+      box-shadow: none;
+    }
+  }
+
+  // stylelint-disable selector-class-pattern
+  // For Extended FAB with text label followed by icon.
+  // We are checking for the a button class because white this is a FAB it
+  // uses the same template as button.
+  [dir='rtl'] & .mdc-button__label + .mat-icon,
+  [dir='rtl'] & .mdc-button__label + .material-icons,
+  > .mat-icon,
+  > .material-icons {
+    margin-left: -8px;
+    margin-right: 12px;
+  }
+
+  .mdc-button__label + .mat-icon,
+  .mdc-button__label + .material-icons,
+  [dir='rtl'] & > .mat-icon,
+  [dir='rtl'] & > .material-icons {
+    margin-left: 12px;
+    margin-right: -8px;
+  }
+  // stylelint-enable selector-class-pattern
+
+  // All FABs are square except the extended ones so we
+  // need to set the touch target back to full-width.
+  .mat-mdc-button-touch-target {
+    width: 100%;
+  }
+}
+

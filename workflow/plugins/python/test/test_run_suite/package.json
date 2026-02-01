@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/test_run_suite",
+  "version": "1.0.0",
+  "description": "Run a suite of test assertions and report results",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["test", "workflow", "plugin"],
+  "main": "test_run_suite.py",
+  "files": ["test_run_suite.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "test.run_suite",
+    "category": "test",
+    "class": "TestRunSuite",
+    "entrypoint": "execute"
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "id": "top-beam",
+  "name": "Top Horizontal Beam",
+  "partNumber": "BL-A1-004",
+  "material": "aluminum",
+  "quantity": 1,
+  "weight": 420.0,
+  "weightUnit": "g",
+  "baseY": 200,
+  "description": "Top horizontal aluminum extrusion beam connecting left and right Z-columns - provides gantry stability, supports X-axis components, and houses the spool holder mounting point",
+  "installation": {
+    "tools": [
+      { "name": "Hex key", "size": "4mm", "required": true },
+      { "name": "Hex key", "size": "3mm", "required": true },
+      { "name": "Spirit level", "size": "200mm", "required": true },
+      { "name": "Measuring tape", "size": "1m", "required": true }
+    ],
+    "hardware": [
+      { "name": "Beam mounting bolt", "spec": "M5x20", "grade": "12.9", "qty": 4, "reusable": true },
+      { "name": "T-slot nut", "spec": "M5", "qty": 4, "reusable": true },
+      { "name": "Corner gusset plate", "spec": "40x40mm", "qty": 2, "reusable": true },
+      { "name": "Spool holder bracket screw", "spec": "M4x12", "qty": 2, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Beam mounting bolts", "value": 4.5, "unit": "Nm", "sequence": "Hand tight, then final torque both sides", "notes": "Verify beam is level before final torque" },
+      { "fastener": "Corner gusset bolts", "value": 3.5, "unit": "Nm", "sequence": "Gusset adds rigidity", "notes": "Install after main beam is secured" }
+    ],
+    "notes": [
+      "Beam must be perfectly level for consistent Z-height",
+      "Install corner gussets for additional rigidity",
+      "Spool holder mounts to rear center of beam",
+      "Route any wiring through top channel before closing"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 180, "height": 30, "rx": 2, "fill": "#252525" },
+    { "type": "rect", "width": 170, "height": 6, "offsetY": -8, "fill": "#303030" },
+    { "type": "rect", "width": 170, "height": 6, "offsetY": 8, "fill": "#303030" },
+    { "type": "circle", "r": 4, "offsetX": -80, "offsetY": 0, "fill": "#444" },
+    { "type": "circle", "r": 4, "offsetX": 80, "offsetY": 0, "fill": "#444" },
+    { "type": "rect", "width": 20, "height": 12, "offsetX": 0, "offsetY": 0, "fill": "#404040" }
+  ],
+  "geometry3d": [
+    { "type": "box", "width": 260, "height": 30, "depth": 30, "fill": "#252525" },
+
+    { "type": "box", "width": 240, "height": 8, "depth": 8, "subtract": true },
+
+    { "type": "box", "width": 250, "height": 6, "depth": 12, "offsetY": 10, "fill": "#303030" },
+    { "type": "box", "width": 250, "height": 6, "depth": 12, "offsetY": -10, "fill": "#303030" },
+
+    { "type": "box", "width": 32, "height": 32, "depth": 32, "offsetX": -125, "fill": "#353535" },
+    { "type": "box", "width": 32, "height": 32, "depth": 32, "offsetX": 125, "fill": "#353535" },
+
+    { "type": "cylinder", "r": 3.5, "height": 40, "offsetX": -125, "offsetY": 8, "rotateZ": 90, "subtract": true },
+    { "type": "cylinder", "r": 3.5, "height": 40, "offsetX": -125, "offsetY": -8, "rotateZ": 90, "subtract": true },
+    { "type": "cylinder", "r": 3.5, "height": 40, "offsetX": 125, "offsetY": 8, "rotateZ": 90, "subtract": true },
+    { "type": "cylinder", "r": 3.5, "height": 40, "offsetX": 125, "offsetY": -8, "rotateZ": 90, "subtract": true },
+
+    { "type": "box", "width": 30, "height": 10, "depth": 20, "offsetX": 0, "offsetY": 18, "offsetZ": -10, "fill": "#404040" },
+    { "type": "cylinder", "r": 2.5, "height": 15, "offsetX": -8, "offsetY": 18, "offsetZ": -10, "subtract": true },
+    { "type": "cylinder", "r": 2.5, "height": 15, "offsetX": 8, "offsetY": 18, "offsetZ": -10, "subtract": true },
+
+    { "type": "cylinder", "r": 2, "height": 35, "offsetX": -60, "offsetZ": 0, "rotateZ": 90, "subtract": true },
+    { "type": "cylinder", "r": 2, "height": 35, "offsetX": -30, "offsetZ": 0, "rotateZ": 90, "subtract": true },
+    { "type": "cylinder", "r": 2, "height": 35, "offsetX": 30, "offsetZ": 0, "rotateZ": 90, "subtract": true },
+    { "type": "cylinder", "r": 2, "height": 35, "offsetX": 60, "offsetZ": 0, "rotateZ": 90, "subtract": true },
+
+    { "type": "box", "width": 240, "height": 4, "depth": 6, "offsetY": -13, "offsetZ": 8, "fill": "#383838" },
+
+    { "type": "box", "width": 8, "height": 20, "depth": 4, "offsetX": -100, "offsetY": 5, "offsetZ": 15, "fill": "#505050" },
+    { "type": "box", "width": 8, "height": 20, "depth": 4, "offsetX": 100, "offsetY": 5, "offsetZ": 15, "fill": "#505050" },
+
+    { "type": "box", "width": 50, "height": 8, "depth": 35, "offsetX": 0, "offsetY": -17, "offsetZ": 0, "fill": "#2a2a2a" },
+    { "type": "cylinder", "r": 4, "height": 40, "offsetX": 0, "offsetY": -17, "offsetZ": 0, "rotateX": 90, "subtract": true }
+  ]
+}

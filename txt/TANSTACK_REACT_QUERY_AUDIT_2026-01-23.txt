@@ -1,0 +1,49 @@
+@tanstack/react-query Version Audit
+Date: 2026-01-23
+Status: COMPLETE - NO ACTION REQUIRED
+
+OBJECTIVE
+---------
+Search for all @tanstack/react-query versions across the codebase and update any found
+to ^5.90.20 (minimum version established in CLAUDE.md dependency management).
+
+METHODOLOGY
+-----------
+1. Searched all package.json files (excluding node_modules) for "@tanstack/react-query"
+2. Searched for import statements using @tanstack/react-query in source code
+3. Checked root package.json and key workspace packages
+4. Verified devDependencies and peerDependencies
+
+FINDINGS
+--------
+✅ RESULT: NO @tanstack/react-query dependencies found in any source package.json files
+
+Scope Checked:
+- Root package.json: NOT PRESENT
+- workflowui/package.json: NOT PRESENT
+- codegen/package.json: NOT PRESENT
+- frontends/nextjs/package.json: NOT PRESENT
+- postgres/package.json: NOT PRESENT
+- pastebin/package.json: NOT PRESENT
+- All other workspace packages: NOT PRESENT
+- Source code imports (*.ts, *.tsx, *.js, *.jsx): NO IMPORTS FOUND
+
+Note: @tanstack/react-query v5.72.2 exists in node_modules as a transitive dependency
+of @prisma/studio-core, but is NOT directly used by the codebase.
+
+CONCLUSION
+----------
+✅ NO ACTION REQUIRED
+- The codebase does not directly depend on @tanstack/react-query
+- No versions need updating
+- No version conflicts to resolve
+- Transitive dependency from Prisma is acceptable
+
+RECOMMENDATION
+--------------
+If @tanstack/react-query is needed in the future for data fetching/caching:
+1. Install explicitly in the appropriate workspace(s)
+2. Use version ^5.90.20 or later
+3. Update CLAUDE.md dependency table if added
+
+Audit completed successfully.

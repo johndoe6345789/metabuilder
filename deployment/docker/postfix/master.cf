@@ -1,0 +1,265 @@
+# Postfix Master Process Configuration - MetaBuilder Email Client Phase 8
+# This file defines how Postfix daemons should be run
+# Format: service_name type private unpriv chroot wakeup maxproc command + args
+# Reference: http://www.postfix.org/master.5.html
+
+# ============================================================================
+# SMTP SERVICE (Port 25) - Relay and local mail acceptance
+# ============================================================================
+
+# Standard SMTP daemon on port 25 (mail relay from Python app and network)
+# Type: inet = listen on network
+# Private: n = public service
+# Unpriv: - = no privilege separation
+# Chroot: - = no chroot jail
+# Wakeup: 0 = not woken by time
+# Maxproc: 100 = max 100 concurrent processes
+smtp inet n - n - - smtpd
+    -o smtpd_sasl_auth_enable=yes
+    -o smtpd_reject_unlisted_recipient=yes
+    -o smtpd_relay_restrictions=permit_mynetworks,permit_sasl_authenticated,defer_unauth_destination
+    -o smtpd_recipient_restrictions=permit_mynetworks,permit_sasl_authenticated,reject_unauth_destination,permit
+
+# ============================================================================
+# SMTP SUBMISSION SERVICE (Port 587) - Client submission with authentication
+# ============================================================================
+
+# SMTP Submission port (RFC 6409) for authenticated clients
+# Port 587 is standard for client mail submission (MUA to MSA)
+# Requires SASL authentication
+submission inet n - n - - smtpd
+    -o syslog_name=postfix/submission
+    -o smtpd_tls_security_level=encrypt
+    -o smtpd_sasl_auth_enable=yes
+    -o smtpd_sasl_type=dovecot
+    -o smtpd_sasl_path=private/auth
+    -o smtpd_sasl_security_options=noanonymous
+    -o smtpd_reject_unlisted_recipient=no
+    -o smtpd_relay_restrictions=permit_sasl_authenticated,defer_unauth_destination
+    -o milter_macro_daemon_name=ORIGINATING
+    -o smtpd_recipient_restrictions=permit_sasl_authenticated,reject_unauth_destination,permit
+
+# ============================================================================
+# SMTPS SERVICE (Port 465) - SMTP with implicit TLS
+# ============================================================================
+
+# SMTP with implicit TLS (legacy, but still widely used)
+# Modern clients prefer STARTTLS on port 587, but this is provided for compatibility
+smtps inet n - n - - smtpd
+    -o syslog_name=postfix/smtps
+    -o smtpd_tls_security_level=encrypt
+    -o smtpd_sasl_auth_enable=yes
+    -o smtpd_sasl_type=dovecot
+    -o smtpd_sasl_path=private/auth
+    -o smtpd_sasl_security_options=noanonymous
+    -o smtpd_relay_restrictions=permit_sasl_authenticated,defer_unauth_destination
+    -o milter_macro_daemon_name=ORIGINATING
+
+# ============================================================================
+# PICKUP SERVICE - Local message injection
+# ============================================================================
+
+# Pickup service handles messages from the maildrop directory
+# Type: unix = listen on Unix socket
+# Private: n = not private
+# Unpriv: - = default
+# Chroot: n = no chroot
+# Wakeup: 60 = wake up every 60 seconds
+# Maxproc: 1 = single process (must be unique)
+pickup unix n - n 60 1 pickup
+
+# ============================================================================
+# CLEANUP SERVICE - Message filtering and header normalization
+# ============================================================================
+
+# Cleanup service processes all messages before queueing
+cleanup unix n - n - 0 cleanup
+
+# ============================================================================
+# QMGR SERVICE - Queue Manager
+# ============================================================================
+
+# Queue manager controls mail delivery
+# Type: unix = listen on Unix socket
+# Private: n = not private
+# Unpriv: - = default
+# Chroot: n = no chroot
+# Wakeup: 300 = wake up every 300 seconds
+# Maxproc: 1 = single process (must be unique)
+qmgr unix n - n 300 1 qmgr
+
+# ============================================================================
+# TLS SESSION CACHE SERVICE
+# ============================================================================
+
+# TLS session cache for faster TLS handshakes
+tlsmgr unix - - n 1000? 1 tlsmgr
+    -o tlsmgr_service_name=postfix/tlsmgr
+
+# ============================================================================
+# REWRITE SERVICE
+# ============================================================================
+
+# Address rewriting service (optional, for simple address mapping)
+# Uncomment to enable:
+# rewrite unix - - n - - trivial-rewrite
+
+# ============================================================================
+# BOUNCE SERVICE
+# ============================================================================
+
+# Bounce mail service for generating bounce notifications
+# Type: unix = listen on Unix socket
+# Private: - = default
+# Unpriv: - = default
+# Chroot: n = no chroot
+# Wakeup: 0 = never woken by time (driven by incoming messages)
+# Maxproc: 0 = unlimited processes
+bounce unix - - n - 0 bounce
+
+# ============================================================================
+# DEFER SERVICE
+# ============================================================================
+
+# Deferred message service (delivers messages that couldn't be sent)
+defer unix - - n - 0 bounce
+
+# ============================================================================
+# TRACE SERVICE
+# ============================================================================
+
+# Trace service for mail routing diagnostics
+trace unix - - n - 0 bounce
+
+# ============================================================================
+# VERIFY SERVICE - Address verification
+# ============================================================================
+
+# Verify service for address verification (reduce bounces)
+verify unix - - n - 1 verify
+
+# ============================================================================
+# TRIVIAL REWRITE SERVICE
+# ============================================================================
+
+# Rewrites addresses and resolves routes
+trivial-rewrite unix - - n - - trivial-rewrite
+
+# ============================================================================
+# PROXYMAP SERVICE - Connection pooling
+# ============================================================================
+
+# Proxy map service for efficient connection pooling to Dovecot
+proxymap unix - - n - - proxymap
+
+# Dovecot-specific proxy service
+dovecot-auth unix - - n - - socket
+    -o listen=/var/run/dovecot/auth-postfix
+    -o mode=0600
+    -o user=dovecot
+
+# ============================================================================
+# LOCAL DELIVERY SERVICE
+# ============================================================================
+
+# Local delivery via Dovecot
+dovecot unix - n n - - pipe
+    flags=DRhu user=vmail:vmail argv=/usr/lib/dovecot/deliver -d ${recipient}
+
+# Standard local delivery (alternative - uses Dovecot deliver)
+local unix - n n - - local
+
+# ============================================================================
+# VIRTUAL DELIVERY SERVICE (if using virtual domains)
+# ============================================================================
+
+# Virtual mailbox delivery (optional - uncomment if using virtual domains)
+# virtual unix - n n - - virtual
+
+# ============================================================================
+# RELAY SERVICE - Mail relay for specific hosts/domains
+# ============================================================================
+
+# Relay service for delivering to relay hosts
+relay unix - - n - - smtp
+
+# ============================================================================
+# SMTP SERVICE FOR RELAYING TO EXTERNAL SERVERS
+# ============================================================================
+
+# SMTP service for outbound relay through external mail servers
+# (Used when relayhost is configured)
+smtp unix - - n - - smtp
+    -o smtp_sasl_auth_enable=${smtp_sasl_auth_enable}
+    -o smtp_sasl_security_options=${smtp_sasl_security_options}
+    -o smtp_tls_CAfile=${smtp_tls_CAfile}
+    -o smtp_tls_security_level=${smtp_tls_security_level}
+
+# ============================================================================
+# LMTP SERVICE - Local Message Transfer Protocol
+# ============================================================================
+
+# LMTP service (optional - uncomment to enable)
+# lmtp unix - - n - - lmtp
+
+# ============================================================================
+# POLICY SERVICE - Access controls and rate limiting
+# ============================================================================
+
+# Policy daemon for access control checks
+# Type: unix = listen on Unix socket
+# Private: n = public service
+# Unpriv: - = default
+# Chroot: n = no chroot
+# Wakeup: 0 = not woken by time
+# Maxproc: 0 = unlimited
+policy unix - - n - 0 spawn
+    user=nobody argv=/usr/bin/perl /usr/sbin/postfix-policyd
+
+# ============================================================================
+# RETRY SERVICE
+# ============================================================================
+
+# Retry service for handling delivery retries
+retry unix - - n - - error
+
+# ============================================================================
+# SHOWQ SERVICE - Queue listing (diagnostics)
+# ============================================================================
+
+# Showq service for mailq command
+showq unix n - n - - showq
+
+# ============================================================================
+# TLSPROXY SERVICE - TLS termination proxy
+# ============================================================================
+
+# TLS proxy service for handling TLS connections
+# (Advanced feature - enables faster TLS negotiation)
+tlsproxy unix - - n - 0 tlsproxy
+
+# ============================================================================
+# SCACHE SERVICE - Address/connection caching
+# ============================================================================
+
+# Scache service for optimizing deliveries
+scache unix - - n - 1 scache
+
+# ============================================================================
+# POSTDROP SERVICE - Maildrop directory management
+# ============================================================================
+
+# Postdrop service for handling local mail injection
+postdrop unix - - n - - postdrop
+
+# ============================================================================
+# UNIX SOCKET SERVICE FOR DOVECOT
+# ============================================================================
+
+# Unix socket service for Dovecot socket-based delivery
+# Uncomment if using socket-based delivery instead of pipe
+# dovecot unix - - n - - socket
+#     -o listen=/run/dovecot/postfix
+#     -o mode=0600
+#     -o user=dovecot
+#     -o group=dovecot

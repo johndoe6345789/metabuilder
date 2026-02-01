@@ -1,0 +1,275 @@
+# Email Service Docker Compose Configuration
+# Multi-tenant email client with IMAP/SMTP backend
+# Includes PostgreSQL database, Python email service, and supporting services
+#
+# Usage:
+#   Development:  docker-compose -f deployment/docker/docker-compose.email-service.yml up
+#   Production:   docker-compose -f deployment/docker/docker-compose.email-service.yml -f deployment/docker/docker-compose.email-service.prod.yml up -d
+#
+# Requires:
+#   - docker-compose 2.0+
+#   - 2GB RAM minimum (PostgreSQL + email service)
+#   - 5GB disk for PostgreSQL data volume
+
+version: '3.8'
+
+services:
+  # ============================================================================
+  # PostgreSQL - Email Service Database
+  # Multi-tenant database with IMAP/SMTP support, RLS, and comprehensive indexes
+  # ============================================================================
+  email-postgres:
+    build:
+      context: ./postgres
+      dockerfile: Dockerfile
+    container_name: metabuilder-email-postgres
+    environment:
+      # Database configuration
+      POSTGRES_DB: email_service
+      POSTGRES_USER: email_service
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_INITDB_ARGS: "-E UTF8 --locale=C"
+
+      # Connection pooling
+      POSTGRES_MAX_CONNECTIONS: 200
+
+      # Performance tuning
+      POSTGRES_SHARED_BUFFERS: 256MB
+      POSTGRES_EFFECTIVE_CACHE_SIZE: 1GB
+      POSTGRES_MAINTENANCE_WORK_MEM: 64MB
+      POSTGRES_CHECKPOINT_COMPLETION_TARGET: 0.9
+      POSTGRES_WAL_BUFFERS: 16MB
+      POSTGRES_DEFAULT_STATISTICS_TARGET: 100
+
+    volumes:
+      # Data persistence
+      - email_postgres_data:/var/lib/postgresql/data
+      - email_postgres_logs:/var/log/postgresql
+
+      # Initialization scripts (run in order)
+      - ./postgres/init-email-service.sql:/docker-entrypoint-initdb.d/01-init-email-service.sql:ro
+      - ./postgres/init-indexes.sql:/docker-entrypoint-initdb.d/02-init-indexes.sql:ro
+      - ./postgres/init-connection-pooling.sql:/docker-entrypoint-initdb.d/03-init-connection-pooling.sql:ro
+
+    ports:
+      - "${POSTGRES_PORT:-5434}:5432"  # Port 5434 to avoid conflicts
+
+    networks:
+      - email-service-network
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U email_service -d email_service"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+    restart: unless-stopped
+
+    # Resource limits (production)
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '2'
+    #       memory: 2G
+    #     reservations:
+    #       cpus: '1'
+    #       memory: 1G
+
+    # Logging configuration
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ============================================================================
+  # Python Email Service (Placeholder for future implementation)
+  # Handles IMAP/POP3/SMTP protocol operations, Celery background jobs
+  # ============================================================================
+  # email-service:
+  #   build:
+  #     context: ../../services/email_service
+  #     dockerfile: Dockerfile
+  #   container_name: metabuilder-email-service
+  #   environment:
+  #     DATABASE_URL: postgresql://email_service:${POSTGRES_PASSWORD:-postgres}@email-postgres:5432/email_service
+  #     REDIS_URL: redis://email-redis:6379/0
+  #     CELERY_BROKER_URL: redis://email-redis:6379/1
+  #     FLASK_ENV: development
+  #     LOG_LEVEL: DEBUG
+  #   ports:
+  #     - "5000:5000"  # Flask API
+  #   depends_on:
+  #     email-postgres:
+  #       condition: service_healthy
+  #     email-redis:
+  #       condition: service_healthy
+  #   networks:
+  #     - email-service-network
+  #   restart: unless-stopped
+  #   volumes:
+  #     - ../../services/email_service:/app:ro
+  #     - email_service_logs:/var/log/email-service
+
+  # ============================================================================
+  # Redis Cache (for email service and Celery)
+  # Used for session storage, caching, and job queue
+  # ============================================================================
+  # email-redis:
+  #   image: redis:7-alpine
+  #   container_name: metabuilder-email-redis
+  #   command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy allkeys-lru
+  #   volumes:
+  #     - email_redis_data:/data
+  #   ports:
+  #     - "6380:6379"  # Port 6380 to avoid conflicts
+  #   networks:
+  #     - email-service-network
+  #   healthcheck:
+  #     test: ["CMD", "redis-cli", "ping"]
+  #     interval: 10s
+  #     timeout: 3s
+  #     retries: 5
+  #   restart: unless-stopped
+
+  # ============================================================================
+  # Adminer - Database Management UI
+  # Web interface for PostgreSQL management and debugging
+  # Access: http://localhost:8085
+  # ============================================================================
+  email-adminer:
+    image: adminer:latest
+    container_name: metabuilder-email-adminer
+    environment:
+      ADMINER_DEFAULT_SERVER: email-postgres
+    ports:
+      - "8085:8080"
+    depends_on:
+      - email-postgres
+    networks:
+      - email-service-network
+    restart: unless-stopped
+
+volumes:
+  email_postgres_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${PWD}/data/email-postgres
+
+  email_postgres_logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${PWD}/logs/email-postgres
+
+  # email_redis_data:
+  #   driver: local
+
+  # email_service_logs:
+  #   driver: local
+
+networks:
+  email-service-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.22.0.0/16
+
+# ============================================================================
+# Networking Architecture
+# ============================================================================
+#
+# Services on email-service-network (172.22.0.0/16):
+#   - email-postgres (172.22.0.2)
+#   - email-service (172.22.0.3) - TBD
+#   - email-redis (172.22.0.4) - TBD
+#   - email-adminer (172.22.0.5)
+#
+# DNS resolution (within network):
+#   - email-postgres:5432  (direct connection from Python)
+#   - email-redis:6379     (cache and job queue)
+#   - email-adminer:8080   (web interface)
+#
+# External access (from host):
+#   - email-postgres:5434  (PostgreSQL client tools: psql, DBeaver)
+#   - email-adminer:8085   (http://localhost:8085)
+
+# ============================================================================
+# Environment Variables (create .env file)
+# ============================================================================
+#
+# POSTGRES_PASSWORD=secure_password_here
+# POSTGRES_PORT=5434
+#
+# For email-service (future):
+# FLASK_ENV=development
+# LOG_LEVEL=DEBUG
+# IMAP_POLL_INTERVAL=300
+# SMTP_TIMEOUT=30
+
+# ============================================================================
+# Startup Order
+# ============================================================================
+#
+# 1. email-postgres starts and runs init scripts (est. 30-60 seconds)
+#    - Initialization scripts run in order: 01-, 02-, 03-
+#    - email_service database created
+#    - 4 tables created with RLS
+#    - 30+ indexes created
+#    - Health check passes when database is ready
+#
+# 2. email-adminer starts (instant)
+#    - Waits for email-postgres to be healthy
+#    - Ready at http://localhost:8085
+#
+# 3. email-service (future) starts
+#    - Depends on healthy email-postgres and email-redis
+#    - Initializes connection pool to database
+#    - Ready at http://localhost:5000
+
+# ============================================================================
+# Troubleshooting
+# ============================================================================
+#
+# PostgreSQL won't start:
+#   docker logs metabuilder-email-postgres
+#   Check: POSTGRES_PASSWORD is set in .env
+#
+# Health check failing:
+#   docker logs metabuilder-email-postgres
+#   Verify: data directory is writable
+#   Try: docker system prune -a (reset volumes)
+#
+# Permission denied on volumes:
+#   mkdir -p data/email-postgres logs/email-postgres
+#   chmod 755 data/email-postgres logs/email-postgres
+#
+# Port conflicts:
+#   Update POSTGRES_PORT in .env (default: 5434)
+#   Update ports in docker-compose.yml
+#
+# Slow initialization:
+#   First start creates indexes (30-60 seconds)
+#   Subsequent starts are instant (reads from volume)
+
+# ============================================================================
+# Monitoring
+# ============================================================================
+#
+# View logs:
+#   docker logs -f metabuilder-email-postgres
+#
+# Connect to database:
+#   psql postgresql://email_service:password@localhost:5434/email_service
+#
+# Check connection pool status:
+#   SELECT * FROM pg_stat_activity;
+#
+# Monitor performance:
+#   docker exec metabuilder-email-postgres psql \
+#     -U email_service -d email_service \
+#     -c "SELECT * FROM pg_stat_statements ORDER BY total_time DESC LIMIT 10;"

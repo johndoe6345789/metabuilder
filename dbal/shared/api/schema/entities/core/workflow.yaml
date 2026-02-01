@@ -1,75 +1,299 @@
-entity: Workflow
-version: "1.0"
-description: "Workflow definitions for automation"
+# Workflow Entity - DAG workflow definitions with multi-tenant support
+# Version: 1.0.0
+# Last Updated: 2026-01-23
 
+name: workflow
+displayName: Workflow
+description: |
+  Directed Acyclic Graph (DAG) workflow definitions with n8n schema support.
+  Supports multi-tenant isolation, versioning, and execution tracking.
+
+# Multi-tenant isolation
+tenantId: true
+
+# Field definitions
 fields:
   id:
-    type: uuid
-    primary: true
-    generated: true
-
-  tenantId:
-    type: uuid
-    optional: true
-    nullable: true
+    type: string
+    description: Unique workflow identifier (generated from name)
+    required: true
+    unique: true
+    example: "workflow_data_processing"
 
   name:
     type: string
+    description: Human-readable workflow name
     required: true
-    max_length: 255
+    minLength: 1
+    maxLength: 255
+    example: "Data Processing Pipeline"
 
   description:
-    type: text
-    optional: true
-
-  nodes:
     type: string
-    required: true
-    description: "Workflow node graph"
-
-  edges:
-    type: string
-    required: true
-    description: "Workflow edge graph"
-
-  enabled:
-    type: boolean
-    required: true
-    default: true
-
-  version:
-    type: integer
-    required: true
-    default: 1
-
-  createdAt:
-    type: bigint
-    optional: true
+    description: Detailed workflow description
+    maxLength: 2000
     nullable: true
 
+  version:
+    type: string
+    description: Semantic version following n8n v3.0.0+ spec
+    required: true
+    pattern: "^\\d+\\.\\d+\\.\\d+$"
+    example: "3.0.0"
+
+  category:
+    type: string
+    description: Workflow category for organization
+    enum:
+      - data_processing
+      - integration
+      - automation
+      - validation
+      - utilities
+      - custom
+    default: custom
+
+  status:
+    type: string
+    description: Workflow deployment status
+    enum:
+      - draft
+      - published
+      - deprecated
+      - active
+      - paused
+    default: draft
+
+  nodes:
+    type: json
+    description: Array of workflow nodes (n8n node format)
+    required: true
+    example:
+      - id: "node_1"
+        name: "Start"
+        type: "frame.begin"
+        typeVersion: 1
+        position: [0, 0]
+        parameters:
+          inputs:
+            delta: "frame.delta"
+
+  connections:
+    type: json
+    description: |
+      N8N adjacency map defining node connections.
+      Format: { nodeId: { main|error: { 0|1: [{ node, type, index }] } } }
+    required: true
+    example:
+      node_1:
+        main:
+          "0":
+            - node: "node_2"
+              type: "main"
+              index: 0
+
+  metadata:
+    type: json
+    description: Additional workflow metadata
+    nullable: true
+    default: {}
+    fields:
+      author:
+        type: string
+        maxLength: 255
+      tags:
+        type: string[]
+        maxLength: 20
+      labels:
+        type: object
+        additionalProperties:
+          type: string
+
+  executionConfig:
+    type: json
+    description: Execution behavior configuration
+    default: {}
+    fields:
+      timeout:
+        type: integer
+        minimum: 100
+        maximum: 3600000
+        description: Execution timeout in milliseconds
+        default: 30000
+      retryStrategy:
+        type: string
+        enum:
+          - fail
+          - fallback
+          - skip
+          - retry
+        default: fail
+      maxRetries:
+        type: integer
+        minimum: 0
+        maximum: 10
+        default: 3
+      parallelNodes:
+        type: boolean
+        description: Allow parallel node execution
+        default: false
+
+  validationStatus:
+    type: json
+    description: Latest validation results
+    nullable: true
+    default: {}
+    fields:
+      valid:
+        type: boolean
+      lastValidated:
+        type: datetime
+      errors:
+        type: string[]
+      warnings:
+        type: string[]
+
+  executionHistory:
+    type: relationship
+    description: Historical execution records
+    entity: workflow_execution
+    relation: one-to-many
+    foreignKey: workflowId
+
+  isPublished:
+    type: boolean
+    description: Whether workflow is available for execution
+    default: false
+
+  isArchived:
+    type: boolean
+    description: Whether workflow is archived
+    default: false
+
+  createdAt:
+    type: datetime
+    description: Workflow creation timestamp
+    required: true
+    autoValue: now
+
   updatedAt:
-    type: bigint
-    optional: true
+    type: datetime
+    description: Last modification timestamp
+    required: true
+    autoValue: now
+    onUpdate: now
+
+  publishedAt:
+    type: datetime
+    description: Last publication timestamp
     nullable: true
 
   createdBy:
-    type: uuid
-    optional: true
-    nullable: true
-    foreign_key:
-      entity: User
-      field: id
+    type: string
+    description: User ID of creator
+    maxLength: 255
 
+  updatedBy:
+    type: string
+    description: User ID of last updater
+    maxLength: 255
+
+# Indexes for performance
 indexes:
-  - fields: [tenantId]
-  - fields: [enabled]
+  - fields: [tenantId, name]
+    unique: true
+  - fields: [tenantId, status]
+  - fields: [tenantId, category]
+  - fields: [tenantId, isPublished]
+  - fields: [tenantId, createdAt]
+  - fields: [tenantId, updatedAt]
 
+# Validation rules
+validations:
+  - name: "nodes_not_empty"
+    condition: "nodes.length > 0"
+    message: "Workflow must have at least one node"
+
+  - name: "connections_valid"
+    condition: "validateConnections(nodes, connections)"
+    message: "Connection references must exist in nodes"
+
+  - name: "no_circular_references"
+    condition: "!hasCircularReferences(connections)"
+    message: "Workflow connections must be acyclic (DAG)"
+
+  - name: "version_format"
+    condition: "/^\\d+\\.\\d+\\.\\d+$/.test(version)"
+    message: "Version must follow semantic versioning (X.Y.Z)"
+
+# Access control (multi-tenant + role-based)
 acl:
-  create:
-    role: [god, supergod]
-  read:
-    role: [admin, god, supergod]
-  update:
-    role: [god, supergod]
-  delete:
-    role: [god, supergod]
+  # Tenant isolation: all operations filter by tenantId
+  default:
+    filter: "{ tenantId: context.tenantId }"
+
+  # Role-based permissions
+  permissions:
+    owner:
+      - create
+      - read
+      - update
+      - delete
+      - publish
+    editor:
+      - read
+      - update
+    viewer:
+      - read
+    admin:
+      - "*"
+
+# Rate limiting
+rateLimits:
+  list: 100  # per minute
+  create: 20
+  update: 50
+  delete: 10
+  execute: 200
+
+# Soft delete support
+softDelete: true
+softDeleteField: isArchived
+
+# Event tracking
+events:
+  - name: workflow.created
+    description: Workflow created
+    payload: [id, name, tenantId, createdBy]
+
+  - name: workflow.updated
+    description: Workflow updated
+    payload: [id, version, updatedBy, changes]
+
+  - name: workflow.published
+    description: Workflow published
+    payload: [id, version, tenantId]
+
+  - name: workflow.executed
+    description: Workflow execution started
+    payload: [id, executionId, tenantId]
+
+  - name: workflow.validated
+    description: Workflow validation completed
+    payload: [id, valid, errors, warnings]
+
+# Caching strategy
+caching:
+  ttl: 3600  # 1 hour default
+  patterns:
+    - key: "workflow:{id}"
+      ttl: 3600
+    - key: "workflows:{tenantId}"
+      ttl: 1800
+    - key: "workflows:{tenantId}:{status}"
+      ttl: 1800
+  invalidateOn:
+    - update
+    - publish
+    - delete
+

@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/list_sort",
+  "version": "1.0.0",
+  "description": "Sort list by key or naturally",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["list", "workflow", "plugin"],
+  "main": "list_sort.py",
+  "files": ["list_sort.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "list.sort",
+    "category": "list",
+    "class": "ListSort",
+    "entrypoint": "execute"
+  }
+}

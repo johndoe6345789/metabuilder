@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/logic_equals",
+  "version": "1.0.0",
+  "description": "Check if two values are equal",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["logic", "workflow", "plugin"],
+  "main": "logic_equals.py",
+  "files": ["logic_equals.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "logic.equals",
+    "category": "logic",
+    "class": "LogicEquals",
+    "entrypoint": "execute"
+  }
+}

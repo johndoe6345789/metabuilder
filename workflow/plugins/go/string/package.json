@@ -1,0 +1,19 @@
+{
+  "name": "@metabuilder/workflow-plugins-string",
+  "version": "1.0.0",
+  "description": "String manipulation plugins",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["string", "workflow", "plugins"],
+  "metadata": {
+    "category": "string",
+    "plugin_count": 5
+  },
+  "plugins": [
+    "string_concat",
+    "string_lower",
+    "string_replace",
+    "string_split",
+    "string_upper"
+  ]
+}

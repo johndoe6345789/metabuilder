@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/var_delete",
+  "version": "1.0.0",
+  "description": "Delete a variable from the workflow store",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["var", "workflow", "plugin"],
+  "main": "var_delete.go",
+  "files": ["var_delete.go", "factory.go"],
+  "metadata": {
+    "plugin_type": "var.delete",
+    "category": "var",
+    "struct": "VarDelete",
+    "entrypoint": "Execute"
+  }
+}

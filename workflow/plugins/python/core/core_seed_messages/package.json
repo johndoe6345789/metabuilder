@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/core_seed_messages",
+  "version": "1.0.0",
+  "description": "Initialize the message list from the prompt configuration",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["core", "workflow", "plugin"],
+  "main": "core_seed_messages.py",
+  "files": ["core_seed_messages.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "core.seed_messages",
+    "category": "core",
+    "class": "CoreSeedMessages",
+    "entrypoint": "execute"
+  }
+}

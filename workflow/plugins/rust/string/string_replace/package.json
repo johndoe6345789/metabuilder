@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/string_replace",
+  "version": "1.0.0",
+  "description": "Replace occurrences in a string",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["string", "workflow", "plugin"],
+  "main": "src/lib.rs",
+  "files": ["src/lib.rs", "src/factory.rs"],
+  "metadata": {
+    "plugin_type": "string.replace",
+    "category": "string",
+    "struct": "StringReplace",
+    "entrypoint": "execute"
+  }
+}

@@ -1,0 +1,594 @@
+================================================================================
+IMAP SYNC PLUGIN - ARCHITECTURE & DATA FLOW DIAGRAMS
+================================================================================
+
+Date: January 24, 2026
+Purpose: Visual representations of plugin architecture and execution flow
+
+================================================================================
+1. COMPONENT ARCHITECTURE
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         WORKFLOW ENGINE                                  │
+│  (Executes WorkflowNode with INodeExecutor implementations)              │
+└────────────────────┬────────────────────────────────────────────────────┘
+                     │
+                     │ execute(node, context, state)
+                     ↓
+┌─────────────────────────────────────────────────────────────────────────┐
+│                    IMAPSyncExecutor                                       │
+│  ┌─────────────────────────────────────────────────────────────────┐    │
+│  │ PUBLIC INTERFACE                                                 │    │
+│  │  • nodeType: 'imap-sync'                                         │    │
+│  │  • category: 'email-integration'                                 │    │
+│  │  • execute(): Promise<NodeResult>                               │    │
+│  │  • validate(): ValidationResult                                  │    │
+│  └──────────────────────┬──────────────────────────────────────────┘    │
+│                         │                                                 │
+│  ┌──────────────────────v──────────────────────────────────────────┐    │
+│  │ PRIVATE METHODS                                                  │    │
+│  │  ├─ _validateConfig(): void                                      │    │
+│  │  ├─ _executeWithRetry(): Promise<SyncResult>                    │    │
+│  │  ├─ _isRetryableError(): boolean                                 │    │
+│  │  ├─ _performIncrementalSync(): SyncResult                        │    │
+│  │  ├─ _fetchMessageHeaders(): Message[]                           │    │
+│  │  ├─ _isValidSyncToken(): boolean                                 │    │
+│  │  └─ _delay(): Promise<void>                                      │    │
+│  └─────────────────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────────────────┘
+          ↓                  ↓                    ↓                  ↓
+    ┌─────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐
+    │   DBAL      │  │  Credential  │  │  Workflow    │  │ Error        │
+    │   Layer     │  │  Entity      │  │  Context     │  │ Handler      │
+    │             │  │              │  │              │  │              │
+    │ Read/Write  │  │ Auth creds   │  │ tenantId     │  │ Categorize   │
+    │ Multi-tenant│  │ FK refs      │  │ userId       │  │ Retry logic  │
+    │ ACL         │  │ Encryption   │  │ variables    │  │ Metrics      │
+    └─────────────┘  └──────────────┘  └──────────────┘  └──────────────┘
+
+================================================================================
+2. DATA FLOW: SUCCESSFUL INCREMENTAL SYNC
+================================================================================
+
+                          Workflow Input
+                               ↓
+          ┌────────────────────────────────────────────┐
+          │  IMAPSyncConfig                            │
+          │  {                                          │
+          │    imapId: "gmail-work-123",              │
+          │    folderId: "inbox-456",                 │
+          │    syncToken: "42:1500",  // Previous     │
+          │    maxMessages: 100                       │
+          │  }                                          │
+          └───────────┬──────────────────────────────┘
+                      ↓
+          ┌────────────────────────────────────────────┐
+          │  Validate Configuration                    │
+          │  ✓ imapId present and valid               │
+          │  ✓ folderId present and valid             │
+          │  ✓ maxMessages in range [1, 500]          │
+          │  ✓ syncToken matches UIDVALIDITY:UIDNEXT  │
+          └───────────┬──────────────────────────────┘
+                      ↓
+          ┌────────────────────────────────────────────┐
+          │  Parse Sync Token                          │
+          │  "42:1500" →                               │
+          │  {                                          │
+          │    lastUidValidity: 42,                    │
+          │    lastUidNext: 1500                       │
+          │  }                                          │
+          └───────────┬──────────────────────────────┘
+                      ↓
+          ┌────────────────────────────────────────────┐
+          │  Fetch IMAP Folder State                   │
+          │  {                                          │
+          │    currentUidValidity: 42,  // Same       │
+          │    currentUidNext: 1523     // Advanced   │
+          │  }                                          │
+          │                                             │
+          │  Detection: UIDVALIDITY unchanged           │
+          │            → Incremental sync              │
+          └───────────┬──────────────────────────────┘
+                      ↓
+          ┌────────────────────────────────────────────┐
+          │  Calculate Message Range                   │
+          │  New messages: 1523 - 1500 = 23            │
+          │  Requested: min(23, 100) = 23              │
+          │  Range: UID 1500-1523                      │
+          └───────────┬──────────────────────────────┘
+                      ↓
+          ┌────────────────────────────────────────────┐
+          │  Fetch Message Headers                     │
+          │  UID  | Subject              | Size        │
+          │  1501 | "Project Meeting"    | 12.5 KB     │
+          │  1502 | "Lunch Plans?"       | 8.2 KB      │
+          │  ...  | ...                  | ...         │
+          │  1523 | "Final thoughts"     | 45.3 KB     │
+          │                                             │
+          │  Total: 23 messages                         │
+          └───────────┬──────────────────────────────┘
+                      ↓
+          ┌────────────────────────────────────────────┐
+          │  Generate Sync Result                      │
+          │  {                                          │
+          │    syncedCount: 23,                        │
+          │    errors: [],                             │
+          │    newSyncToken: "42:1523",                │
+          │    lastSyncAt: 1705997400000,              │
+          │    stats: {                                 │
+          │      folderTotalCount: 1522,               │
+          │      newMessageCount: 23,                  │
+          │      deletedCount: 0,                      │
+          │      bytesSynced: 523402                   │
+          │    },                                       │
+          │    isPartial: false                        │
+          │  }                                          │
+          └───────────┬──────────────────────────────┘
+                      ↓
+          ┌────────────────────────────────────────────┐
+          │  Return NodeResult                         │
+          │  {                                          │
+          │    status: "success",                      │
+          │    output: {                               │
+          │      status: "synced",                     │
+          │      data: { ... SyncResult ... }          │
+          │    },                                       │
+          │    timestamp: 1705997400000,               │
+          │    duration: 2341                          │
+          │  }                                          │
+          └───────────┬──────────────────────────────┘
+                      ↓
+                    Success!
+
+================================================================================
+3. DATA FLOW: PARTIAL SYNC WITH RECOVERY
+================================================================================
+
+                          Workflow Input
+                               ↓
+          ┌────────────────────────────────────────────┐
+          │  IMAPSyncConfig (Large sync)               │
+          │  {                                          │
+          │    imapId: "gmail-work-123",              │
+          │    folderId: "inbox-456",                 │
+          │    syncToken: "42:1000",                  │
+          │    maxMessages: 50                        │
+          │  }                                          │
+          └───────────┬──────────────────────────────┘
+                      ↓
+          ┌────────────────────────────────────────────┐
+          │  Calculate to-fetch: 100+ new messages     │
+          │  Limit: 50 per execution                   │
+          │  UID range: 1000-1050                      │
+          └───────────┬──────────────────────────────┘
+                      ↓
+          ┌────────────────────────────────────────────┐
+          │  Fetch Message Headers (0-50)              │
+          │  Successfully retrieved: 45 messages       │
+          │  ⚠ Network timeout on message 46           │
+          │                                             │
+          │  isPartial = true (interrupted)            │
+          │  nextUidMarker = "1045"                    │
+          └───────────┬──────────────────────────────┘
+                      ↓
+          ┌────────────────────────────────────────────┐
+          │  Return Partial Result                     │
+          │  {                                          │
+          │    syncedCount: 45,                        │
+          │    errors: [{                              │
+          │      uid: "1046",                          │
+          │      error: "Network timeout",             │
+          │      errorCode: "TIMEOUT",                 │
+          │      retryable: true                       │
+          │    }],                                      │
+          │    newSyncToken: "42:1523",                │
+          │    isPartial: true,                        │
+          │    nextUidMarker: "1045"                   │
+          │  }                                          │
+          └───────────┬──────────────────────────────┘
+                      ↓
+          ┌────────────────────────────────────────────┐
+          │  Workflow Decision Node                    │
+          │  if (status === 'partial') {               │
+          │    // Schedule retry with recovery marker  │
+          │  }                                          │
+          └───────────┬──────────────────────────────┘
+                      ↓
+          ┌────────────────────────────────────────────┐
+          │  NEXT EXECUTION: Resume from Marker        │
+          │  {                                          │
+          │    imapId: "gmail-work-123",              │
+          │    folderId: "inbox-456",                 │
+          │    syncToken: "42:1045",  // Use marker   │
+          │    maxMessages: 50                        │
+          │  }                                          │
+          │                                             │
+          │  This will continue syncing UID 1045-1095  │
+          └───────────┬──────────────────────────────┘
+                      ↓
+                  Continue Sync
+
+================================================================================
+4. DATA FLOW: ERROR SCENARIO
+================================================================================
+
+                          Workflow Input
+                               ↓
+          ┌────────────────────────────────────────────┐
+          │  IMAPSyncConfig (Missing Parameter)        │
+          │  {                                          │
+          │    // imapId: MISSING!                     │
+          │    folderId: "inbox-456"                  │
+          │  }                                          │
+          └───────────┬──────────────────────────────┘
+                      ↓
+          ┌────────────────────────────────────────────┐
+          │  Validate Configuration                    │
+          │  ✗ imapId missing                          │
+          │                                             │
+          │  throw Error("IMAP Sync requires 'imapId'  │
+          │             parameter")                    │
+          └───────────┬──────────────────────────────┘
+                      ↓
+          ┌────────────────────────────────────────────┐
+          │  Catch Block (in execute)                  │
+          │  error.message includes 'imapId'           │
+          │  → errorCode = 'INVALID_PARAMS'            │
+          └───────────┬──────────────────────────────┘
+                      ↓
+          ┌────────────────────────────────────────────┐
+          │  Return Error Result                       │
+          │  {                                          │
+          │    status: "error",                        │
+          │    error: "IMAP Sync requires 'imapId'...",│
+          │    errorCode: "INVALID_PARAMS",            │
+          │    timestamp: 1705997400000,               │
+          │    duration: 12                            │
+          │  }                                          │
+          └───────────┬──────────────────────────────┘
+                      ↓
+          ┌────────────────────────────────────────────┐
+          │  Workflow Error Handler                    │
+          │  → Log error                               │
+          │  → Notify user                             │
+          │  → Stop workflow                           │
+          └───────────┬──────────────────────────────┘
+                      ↓
+                     Failure
+
+================================================================================
+5. RETRY MECHANISM: EXPONENTIAL BACKOFF
+================================================================================
+
+Network error occurs during sync
+              ↓
+        Attempt 1
+      ╱──────────╲
+     ✗
+  (ECONNREFUSED)
+      │
+      └─ isRetryableError() = true
+         delay(100ms)
+         Retry...
+              ↓
+        Attempt 2
+      ╱──────────╲
+     ✗
+  (EHOSTUNREACH)
+      │
+      └─ isRetryableError() = true
+         delay(200ms)
+         Retry...
+              ↓
+        Attempt 3
+      ╱──────────╲
+     ✓ Success
+  (Connected)
+      │
+      └─ Proceed with sync
+         return SyncResult
+
+            Timeline:
+         T+0ms  : Attempt 1 fails
+         T+100ms: Attempt 2 fails
+         T+300ms: Attempt 3 succeeds (total 300ms with backoff)
+
+Config:
+  - maxRetries (default: 2) = up to 3 total attempts
+  - Backoff formula: 2^attempt * 100ms
+  - Only retries network/timeout errors
+  - Auth errors fail immediately
+
+================================================================================
+6. STATE MACHINE: SYNC STATES
+================================================================================
+
+         ┌─────────────────────────────┐
+         │      INITIALIZATION         │
+         │  Parse config & parameters  │
+         └────────────┬────────────────┘
+                      │
+                      ↓
+         ┌─────────────────────────────┐
+         │      VALIDATION             │
+         │  Verify all required params │
+         └────────┬────────────────────┘
+                  │
+          ┌───────┴───────┐
+          │               │
+         ✓                ✗
+          │               │
+          ↓               ↓
+    ┌──────────┐    ┌─────────┐
+    │ CONTINUE │    │  ERROR  │
+    └────┬─────┘    └────┬────┘
+         │               │
+         ↓               ↓
+    ┌──────────────────────────────┐
+    │   SYNC WITH RETRY            │
+    │ attempt = 0                  │
+    └────┬──────────────────────────┘
+         │
+         ↓
+    ┌──────────────────────────────┐
+    │   EXECUTE SYNC               │
+    │ _performIncrementalSync()    │
+    └────┬──────────────────────────┘
+         │
+    ┌────┴────┬────────┐
+    │         │        │
+   ✓         ✗        │ Timeout
+    │         │        │
+    │      ┌──v──┐  ┌──v──┐
+    │      │Retry│  │Auth  │
+    │      │able?│  │Error?│
+    │      └──┬──┘  └──┬───┘
+    │         │        │
+    │    ┌────┴─┐      │
+    │    │      │      │
+    │   YES    NO     YES
+    │    │      │      │
+    │    │      └──┐  ◄┘
+    │    │         │
+    │   ┌v─────────v──────┐
+    │   │ attempt < max?   │
+    │   └──┬───────┬───────┘
+    │      │       │
+    │     YES      NO
+    │      │       │
+    │   ┌──v──┐  ┌─v────┐
+    │   │Wait │  │Return│
+    │   │+Exp │  │Error │
+    │   │Back │  └──────┘
+    │   │off  │
+    │   └──┬──┘
+    │      │
+    │      └─ Retry
+    │         (back to EXECUTE SYNC)
+    │
+    └──────────────────┐
+                       ↓
+    ┌──────────────────────────────┐
+    │   GENERATE RESULT            │
+    │   Status: success/partial/err│
+    │   SyncResult metadata        │
+    │   Metrics & stats            │
+    └────┬──────────────────────────┘
+         │
+         ↓
+    ┌──────────────────────────────┐
+    │   RETURN TO WORKFLOW         │
+    │   NodeResult with output     │
+    └──────────────────────────────┘
+
+================================================================================
+7. DATABASE INTERACTION MODEL
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         DBAL Layer                                        │
+│  (Database Abstraction Layer with Multi-tenant ACL)                      │
+└──────────────────┬────────────────────────────────────────────────────────┘
+                   │
+      ┌────────────┼────────────┬───────────────┐
+      ↓            ↓            ↓               ↓
+┌──────────┐  ┌──────────┐  ┌─────────┐  ┌───────────┐
+│EmailClient │  │EmailFolder│  │Credential│ │EmailMessage│
+│          │  │          │  │         │  │           │
+│ Fields:  │  │ Fields:  │  │ Fields: │  │ Fields:   │
+│ • ID     │  │ • ID     │  │ • ID    │  │ • ID      │
+│ • Email  │  │ • ClientID│ │ • Acct  │  │ • FolderID│
+│ • Server │  │ • Path   │  │ • Type  │  │ • UID     │
+│ • CredID │  │ • UID*   │  │ • Hash  │  │ • Subject │
+│ • TenantID│ │ • TenantID│ │ • Port  │  │ • From    │
+│          │  │ • ACL    │  │ • Enc   │  │ • Body    │
+└──────┬───┘  └──────┬───┘  └────┬────┘  │ • TenantID│
+       │             │            │      │ • ACL    │
+       └───────┬─────┘            └─────►└───────────┘
+               │
+               │ * = UIDVALIDITY:UIDNEXT sync token
+               │
+       ┌───────v──────────┐
+       │ Query Pattern    │
+       │                  │
+       │ 1. Read folder   │
+       │    by folderId   │
+       │    & tenantId    │
+       │                  │
+       │ 2. Extract       │
+       │    syncToken     │
+       │                  │
+       │ 3. Perform sync  │
+       │                  │
+       │ 4. Update folder │
+       │    newSyncToken  │
+       │    lastSyncAt    │
+       │                  │
+       │ 5. Create        │
+       │    Messages      │
+       │    per UID       │
+       └──────────────────┘
+
+Multi-Tenant Safety:
+  Every query filters by tenantId (example):
+    const folder = dbal.read('EmailFolder', {
+      filter: {
+        folderId: '456',
+        tenantId: 'tenant-acme'  // ← REQUIRED
+      }
+    })
+
+ACL (Row-Level Access):
+  Only user_id who owns email account can sync:
+    {
+      folderId: '456',
+      tenantId: 'tenant-acme',
+      ownerId: 'user-789',
+      permissions: {
+        'user-789': ['read', 'write'],  // Owner
+        'admin-123': ['read', 'write']  // Admin
+      }
+    }
+
+================================================================================
+8. INTEGRATION WITH WORKFLOW ENGINE
+================================================================================
+
+                  ┌──────────────────┐
+                  │ Workflow Definition│
+                  │    (JSON)         │
+                  └──────────┬────────┘
+                             │
+                   ┌─────────v────────┐
+                   │ Node Registry    │
+                   │ Lookup executor  │
+                   │ for 'imap-sync'  │
+                   └─────────┬────────┘
+                             │
+                   ┌─────────v──────────┐
+                   │ Load Plugin        │
+                   │ @metabuilder/      │
+                   │ workflow-plugin-   │
+                   │ imap-sync          │
+                   └─────────┬──────────┘
+                             │
+                   ┌─────────v──────────┐
+                   │ Get Executor       │
+                   │ imapSyncExecutor   │
+                   │ (singleton)        │
+                   └─────────┬──────────┘
+                             │
+                   ┌─────────v──────────────┐
+                   │ Call execute()         │
+                   │ with WorkflowNode      │
+                   │    WorkflowContext     │
+                   │    ExecutionState      │
+                   └─────────┬──────────────┘
+                             │
+                   ┌─────────v──────────────┐
+                   │ Return NodeResult      │
+                   │ {                      │
+                   │  status: 'success'     │
+                   │  output: { ... }       │
+                   │  duration: 2341ms      │
+                   │ }                      │
+                   └─────────┬──────────────┘
+                             │
+              ┌──────────────┴──────────────┐
+              │                             │
+         ┌────v────┐             ┌────────v─────┐
+         │Next Node │             │ Error Handler│
+         │in flow   │             │ or loop back │
+         └──────────┘             └──────────────┘
+
+================================================================================
+9. SYNC TOKEN LIFECYCLE
+================================================================================
+
+Day 1, First Sync:
+  Input:  syncToken = null (first time)
+  Action: Fetch all messages from UID 1 to UIDNEXT
+  Output: newSyncToken = "42:1001"
+  Store:  EmailFolder.syncToken = "42:1001"
+
+Day 2, Incremental Sync:
+  Input:  syncToken = "42:1001"
+  Parse:  lastUidValidity=42, lastUidNext=1001
+  Server: currentUidValidity=42, currentUidNext=1050
+  Action: Fetch only UID 1001-1050 (49 new messages)
+  Output: newSyncToken = "42:1050"
+  Store:  EmailFolder.syncToken = "42:1050"
+
+Day 3, Mailbox Reset:
+  Input:  syncToken = "42:1050"
+  Parse:  lastUidValidity=42, lastUidNext=1050
+  Server: currentUidValidity=43, currentUidNext=100  (CHANGED!)
+  Action: UIDVALIDITY changed → Full resync
+           Fetch all messages UID 1-100
+  Output: newSyncToken = "43:100"
+  Store:  EmailFolder.syncToken = "43:100"
+
+Architecture Insight:
+  Token Format: "UIDVALIDITY:UIDNEXT"
+    ├─ UIDVALIDITY: Mailbox version (changes = full resync)
+    └─ UIDNEXT: Next UID to assign (track new messages)
+
+  Incremental Efficiency:
+    • First sync: Fetch all N messages
+    • Subsequent: Fetch only (N - lastUIDNEXT) messages
+    • Example: 1000 total, synced to 800, only fetch 200 next time
+
+================================================================================
+10. ERROR CATEGORIZATION & RECOVERY
+================================================================================
+
+Error Type: PARSE_ERROR
+  Trigger: Failed to parse RFC 5322 message
+  Example: Malformed headers, missing required fields
+  Retryable: true
+  Action: Log error, continue with next message
+  Recovery: Re-try in next sync, usually succeeds
+
+Error Type: TIMEOUT
+  Trigger: Network operation exceeded threshold
+  Example: FETCH command > 30s
+  Retryable: true
+  Action: Exponential backoff, up to 3 retries
+  Recovery: Usually succeeds on retry
+
+Error Type: NETWORK_ERROR
+  Trigger: Connection failure (ECONNREFUSED, EHOSTUNREACH)
+  Example: IMAP server unreachable
+  Retryable: true
+  Action: Exponential backoff, up to 3 retries
+  Recovery: Wait for server to come back online
+
+Error Type: AUTH_ERROR
+  Trigger: Invalid credentials or permission denied
+  Example: Expired password, 2FA required
+  Retryable: false
+  Action: Fail immediately, alert user
+  Recovery: User must update credentials in account settings
+
+Error Type: UNKNOWN
+  Trigger: Unexpected error
+  Example: Out of memory, internal IMAP library crash
+  Retryable: false
+  Action: Fail immediately, log full stack trace
+  Recovery: Investigate error, may require code changes
+
+Recovery Matrix:
+  ┌────────────────┬──────────┬────────────────┐
+  │ Error Type     │ Retryable│ Recovery Time  │
+  ├────────────────┼──────────┼────────────────┤
+  │ PARSE_ERROR    │ Yes      │ Next execution │
+  │ TIMEOUT        │ Yes      │ 100-400ms wait │
+  │ NETWORK_ERROR  │ Yes      │ 100-400ms wait │
+  │ AUTH_ERROR     │ No       │ Manual update  │
+  │ UNKNOWN        │ No       │ Engineer check │
+  └────────────────┴──────────┴────────────────┘
+
+================================================================================
+End of Diagrams
+================================================================================

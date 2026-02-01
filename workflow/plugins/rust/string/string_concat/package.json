@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/string_concat",
+  "version": "1.0.0",
+  "description": "Concatenate multiple strings",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["string", "workflow", "plugin"],
+  "main": "src/lib.rs",
+  "files": ["src/lib.rs", "src/factory.rs"],
+  "metadata": {
+    "plugin_type": "string.concat",
+    "category": "string",
+    "struct": "StringConcat",
+    "entrypoint": "execute"
+  }
+}

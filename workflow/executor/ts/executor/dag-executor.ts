@@ -1,11 +1,13 @@
 /**
  * DAG Workflow Executor - N8N-style execution engine
  * Supports branching, parallel execution, error handling, retry logic
+ * Enhanced with plugin registry integration and error recovery
  */
 
 import { PriorityQueue } from '../utils/priority-queue';
 import { WorkflowContext, ExecutionState, NodeResult, WorkflowDefinition } from '../types';
 import { interpolateTemplate, evaluateTemplate } from '../utils/template-engine';
+import { getNodeExecutorRegistry, NodeExecutorRegistry } from '../registry/node-executor-registry';
 
 export interface ExecutionMetrics {
   startTime: number;
@@ -17,6 +19,17 @@ export interface ExecutionMetrics {
   retriedNodes: number;
   totalRetries: number;
   peakMemory: number;
+  validationFailures: number;
+  recoveryAttempts: number;
+  recoverySuccesses: number;
+}
+
+export interface ErrorRecoveryStrategy {
+  strategy: 'fallback' | 'skip' | 'retry' | 'fail';
+  fallbackNodeType?: string;
+  maxRetries?: number;
+  retryDelay?: number;
+  allowPartialOutput?: boolean;
 }
 
 /**
@@ -41,17 +54,20 @@ export class DAGExecutor {
   private activeNodes: Set<string> = new Set();
   private aborted = false;
   private nodeExecutor: NodeExecutorFn;
+  private registry: NodeExecutorRegistry;
 
   constructor(
     executionId: string,
     workflow: WorkflowDefinition,
     context: WorkflowContext,
-    nodeExecutor: NodeExecutorFn
+    nodeExecutor: NodeExecutorFn,
+    registry?: NodeExecutorRegistry
   ) {
     this.executionId = executionId;
     this.workflow = workflow;
     this.context = context;
     this.nodeExecutor = nodeExecutor;
+    this.registry = registry || getNodeExecutorRegistry();
     this.queue = new PriorityQueue<string>();
     this.metrics = {
       startTime: Date.now(),
@@ -60,7 +76,10 @@ export class DAGExecutor {
       failedNodes: 0,
       retriedNodes: 0,
       totalRetries: 0,
-      peakMemory: 0
+      peakMemory: 0,
+      validationFailures: 0,
+      recoveryAttempts: 0,
+      recoverySuccesses: 0
     };
   }
 
@@ -160,6 +179,17 @@ export class DAGExecutor {
         return;
       }
 
+      // Pre-execution validation
+      const validation = await this._validateNodeType(node);
+      if (!validation.valid) {
+        const result = this._handleValidationFailure(node, validation);
+        this.nodeResults.set(nodeId, result);
+        this.state[nodeId] = result;
+        this._handleNodeError(node, result);
+        this.metrics.nodesExecuted++;
+        return;
+      }
+
       // Execute with retries
       const result = await this._executeNodeWithRetry(node);
       this.nodeResults.set(nodeId, result);
@@ -190,7 +220,7 @@ export class DAGExecutor {
   }
 
   /**
-   * Execute node with automatic retry logic
+   * Execute node with automatic retry logic and error recovery
    */
   private async _executeNodeWithRetry(node: any): Promise<NodeResult> {
     const retryPolicy = node.retryPolicy || this.workflow.retryPolicy || {};
@@ -226,11 +256,21 @@ export class DAGExecutor {
 
         // Check if error is retryable
         if (!this._isRetryableError(error, retryPolicy)) {
-          throw error;
+          // Apply error recovery strategy on non-retryable error
+          const recoveryStrategy: ErrorRecoveryStrategy = node.errorRecoveryStrategy ||
+            (this.workflow as any).errorRecovery ||
+            { strategy: 'fail' };
+
+          return this._handleErrorRecovery(node, error, recoveryStrategy);
         }
 
         if (attempt === maxAttempts - 1) {
-          throw error;
+          // Max retries reached - apply recovery strategy
+          const recoveryStrategy: ErrorRecoveryStrategy = node.errorRecoveryStrategy ||
+            (this.workflow as any).errorRecovery ||
+            { strategy: 'fail' };
+
+          return this._handleErrorRecovery(node, lastError, recoveryStrategy);
         }
       }
     }
@@ -442,5 +482,162 @@ export class DAGExecutor {
    */
   isComplete(): boolean {
     return this.queue.isEmpty() || this.aborted;
+  }
+
+  /**
+   * Validate node type and schema before execution
+   */
+  private async _validateNodeType(node: any): Promise<{ valid: boolean; errors: string[] }> {
+    const nodeType = node.nodeType;
+
+    // Check if executor exists in registry
+    if (!this.registry.has(nodeType)) {
+      return {
+        valid: false,
+        errors: [`Unknown node type: ${nodeType}`]
+      };
+    }
+
+    // Get plugin metadata for schema validation
+    const pluginInfo = this.registry.getPluginInfo(nodeType);
+    const errors: string[] = [];
+
+    // Check required fields from plugin metadata if available
+    if (pluginInfo && pluginInfo.metadata) {
+      const requiredFields = (pluginInfo.metadata as any).requiredFields;
+      if (requiredFields && Array.isArray(requiredFields)) {
+        for (const field of requiredFields) {
+          if (!(field in node.parameters)) {
+            errors.push(`Missing required parameter: ${field}`);
+          }
+        }
+      }
+    }
+
+    return {
+      valid: errors.length === 0,
+      errors
+    };
+  }
+
+  /**
+   * Handle validation failure
+   */
+  private _handleValidationFailure(node: any, validation: { valid: boolean; errors: string[] }): NodeResult {
+    this.metrics.validationFailures++;
+    console.warn(`[${this.executionId}] Node validation failed for ${node.id}: ${validation.errors.join('; ')}`);
+
+    return {
+      status: 'error',
+      error: validation.errors.join('; '),
+      errorCode: 'VALIDATION_FAILED',
+      timestamp: Date.now(),
+      validationErrors: validation.errors
+    };
+  }
+
+  /**
+   * Handle error recovery with fallback strategies
+   */
+  private async _handleErrorRecovery(
+    node: any,
+    error: any,
+    strategy: ErrorRecoveryStrategy
+  ): Promise<NodeResult> {
+    this.metrics.recoveryAttempts++;
+
+    console.log(
+      `[${this.executionId}] Applying ${strategy.strategy} recovery strategy for node ${node.id}`
+    );
+
+    switch (strategy.strategy) {
+      case 'fallback': {
+        // Use fallback node type if specified
+        if (!strategy.fallbackNodeType) {
+          return {
+            status: 'error',
+            error: String(error),
+            errorCode: 'NO_FALLBACK',
+            timestamp: Date.now(),
+            recoveryApplied: false
+          };
+        }
+
+        if (!this.registry.has(strategy.fallbackNodeType)) {
+          return {
+            status: 'error',
+            error: `Fallback node type not found: ${strategy.fallbackNodeType}`,
+            errorCode: 'FALLBACK_NOT_FOUND',
+            timestamp: Date.now(),
+            recoveryApplied: false
+          };
+        }
+
+        try {
+          console.log(
+            `[${this.executionId}] Executing fallback node type: ${strategy.fallbackNodeType}`
+          );
+
+          const result = await this.nodeExecutor(node.id, this.workflow, this.context, this.state);
+          this.metrics.recoverySuccesses++;
+
+          return {
+            ...result,
+            recoveryApplied: true,
+            fallbackNodeType: strategy.fallbackNodeType
+          };
+        } catch (fallbackError) {
+          return {
+            status: 'error',
+            error: `Fallback failed: ${String(fallbackError)}`,
+            errorCode: 'FALLBACK_FAILED',
+            timestamp: Date.now(),
+            recoveryApplied: false
+          };
+        }
+      }
+
+      case 'skip': {
+        // Skip node and continue with empty output
+        console.log(`[${this.executionId}] Skipping node ${node.id} due to error recovery`);
+        this.metrics.recoverySuccesses++;
+
+        return {
+          status: 'skipped',
+          output: strategy.allowPartialOutput ? {} : undefined,
+          timestamp: Date.now(),
+          recoveryApplied: true
+        };
+      }
+
+      case 'retry': {
+        // Re-raise error to trigger retry at higher level
+        throw error;
+      }
+
+      case 'fail':
+      default: {
+        // Fail the node
+        return {
+          status: 'error',
+          error: String(error),
+          errorCode: 'EXECUTION_ERROR',
+          timestamp: Date.now(),
+          recoveryApplied: false
+        };
+      }
+    }
+  }
+
+  /**
+   * Propagate multi-tenant context to node execution
+   */
+  private _getTenantContext(): Record<string, any> {
+    return {
+      tenantId: this.context.tenantId,
+      workflowTenantId: this.workflow.tenantId,
+      executionTenantId: this.context.tenantId,
+      multiTenancyPolicy: this.workflow.multiTenancy
+    };
   }
 }

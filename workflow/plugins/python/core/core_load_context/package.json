@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/core_load_context",
+  "version": "1.0.0",
+  "description": "Load SDLC context from ROADMAP.md and GitHub issues/PRs",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["core", "workflow", "plugin"],
+  "main": "core_load_context.py",
+  "files": ["core_load_context.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "core.load_context",
+    "category": "core",
+    "class": "CoreLoadContext",
+    "entrypoint": "execute"
+  }
+}

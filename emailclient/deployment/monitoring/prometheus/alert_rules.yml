@@ -1,0 +1,481 @@
+# Prometheus Alert Rules - Phase 8 Email Client
+# Comprehensive alerting for all infrastructure and application metrics
+# Last Updated: 2026-01-24
+
+groups:
+  # ============================================================================
+  # Infrastructure Alerts
+  # ============================================================================
+  - name: infrastructure
+    interval: 1m
+    rules:
+      # CPU Usage Alert
+      - alert: HighCPUUsage
+        expr: (100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)) > 80
+        for: 5m
+        labels:
+          severity: warning
+          component: system
+          tier: infrastructure
+        annotations:
+          summary: "High CPU usage on {{ $labels.instance }}"
+          description: "CPU usage is {{ $value }}% on {{ $labels.instance }}, expected < 80%"
+          dashboard: "System Resources"
+
+      # Memory Usage Alert
+      - alert: HighMemoryUsage
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+          component: system
+          tier: infrastructure
+        annotations:
+          summary: "High memory usage on {{ $labels.instance }}"
+          description: "Memory usage is {{ $value }}% on {{ $labels.instance }}, expected < 85%"
+          dashboard: "System Resources"
+
+      # Disk Usage Alert
+      - alert: HighDiskUsage
+        expr: (1 - (node_filesystem_avail_bytes{fstype!~"tmpfs|fuse.lowerfs"} / node_filesystem_size_bytes{fstype!~"tmpfs|fuse.lowerfs"})) * 100 > 85
+        for: 10m
+        labels:
+          severity: warning
+          component: system
+          tier: infrastructure
+        annotations:
+          summary: "High disk usage on {{ $labels.instance }}"
+          description: "Disk usage is {{ $value }}% on {{ $labels.device }}, expected < 85%"
+          dashboard: "Disk Usage"
+
+      # Out of Memory Alert
+      - alert: OutOfMemory
+        expr: node_memory_MemAvailable_bytes < (node_memory_MemTotal_bytes * 0.05)
+        for: 2m
+        labels:
+          severity: critical
+          component: system
+          tier: infrastructure
+        annotations:
+          summary: "Critical memory shortage on {{ $labels.instance }}"
+          description: "Available memory is below 5% on {{ $labels.instance }}, immediate intervention required"
+          dashboard: "System Resources"
+
+  # ============================================================================
+  # Database Alerts
+  # ============================================================================
+  - name: database
+    interval: 1m
+    rules:
+      # PostgreSQL Connection Pool Saturation
+      - alert: PostgreSQLConnectionPoolNearCapacity
+        expr: pg_stat_activity_count{datname="emailclient_db"} > (pg_settings_max_connections * 0.8)
+        for: 5m
+        labels:
+          severity: warning
+          component: postgres
+          tier: data
+        annotations:
+          summary: "PostgreSQL connection pool near capacity"
+          description: "Active connections: {{ $value }}, max capacity: {{ pg_settings_max_connections }}"
+          dashboard: "PostgreSQL Connections"
+
+      # Database Size Alert
+      - alert: PostgreSQLDatabaseLarge
+        expr: pg_database_size_bytes{datname="emailclient_db"} > (5 * 1024 * 1024 * 1024)  # 5 GB
+        for: 10m
+        labels:
+          severity: info
+          component: postgres
+          tier: data
+        annotations:
+          summary: "PostgreSQL database size is large"
+          description: "Database size: {{ $value | humanize }}B, consider optimization"
+          dashboard: "PostgreSQL Storage"
+
+      # Long-Running Queries
+      - alert: PostgreSQLLongRunningQueries
+        expr: count(pg_stat_activity_query_time_seconds > 300) > 0
+        for: 5m
+        labels:
+          severity: warning
+          component: postgres
+          tier: data
+        annotations:
+          summary: "PostgreSQL has long-running queries"
+          description: "{{ $value }} query(ies) running > 5 minutes"
+          dashboard: "PostgreSQL Queries"
+
+      # Slow Queries (replication lag)
+      - alert: PostgreSQLReplicationLag
+        expr: pg_replication_lag_seconds > 10
+        for: 5m
+        labels:
+          severity: warning
+          component: postgres
+          tier: data
+        annotations:
+          summary: "PostgreSQL replication lag detected"
+          description: "Replication lag: {{ $value }}s, expected < 10s"
+          dashboard: "PostgreSQL Replication"
+
+  # ============================================================================
+  # Cache & Message Broker Alerts
+  # ============================================================================
+  - name: cache_broker
+    interval: 1m
+    rules:
+      # Redis Memory Usage
+      - alert: RedisHighMemoryUsage
+        expr: redis_memory_used_bytes / redis_memory_max_bytes > 0.85
+        for: 5m
+        labels:
+          severity: warning
+          component: redis
+          tier: data
+        annotations:
+          summary: "Redis memory usage is high"
+          description: "Memory usage: {{ $value | humanizePercentage }}, expected < 85%"
+          dashboard: "Redis Memory"
+
+      # Redis Connected Clients
+      - alert: RedisHighClientConnections
+        expr: redis_connected_clients > 1000
+        for: 5m
+        labels:
+          severity: warning
+          component: redis
+          tier: data
+        annotations:
+          summary: "Redis has high number of client connections"
+          description: "Connected clients: {{ $value }}, investigate potential leak"
+          dashboard: "Redis Clients"
+
+      # Redis Evictions
+      - alert: RedisEvictions
+        expr: rate(redis_evicted_keys_total[5m]) > 0
+        for: 2m
+        labels:
+          severity: warning
+          component: redis
+          tier: data
+        annotations:
+          summary: "Redis is evicting keys (memory exceeded)"
+          description: "Eviction rate: {{ $value }} keys/sec, increase maxmemory"
+          dashboard: "Redis Memory"
+
+      # Redis Command Latency
+      - alert: RedisHighCommandLatency
+        expr: redis_command_duration_seconds{quantile="0.99"} > 0.1
+        for: 5m
+        labels:
+          severity: warning
+          component: redis
+          tier: data
+        annotations:
+          summary: "Redis command latency is high"
+          description: "P99 latency: {{ $value }}s, expected < 100ms"
+          dashboard: "Redis Performance"
+
+  # ============================================================================
+  # Email Service Alerts
+  # ============================================================================
+  - name: email_service
+    interval: 1m
+    rules:
+      # Email Service Down
+      - alert: EmailServiceDown
+        expr: up{job="email-service"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          component: email-service
+          tier: application
+        annotations:
+          summary: "Email service is down"
+          description: "Email service at {{ $labels.instance }} has been unreachable for 1 minute"
+          dashboard: "Email Service"
+
+      # High Error Rate
+      - alert: EmailServiceHighErrorRate
+        expr: (rate(flask_http_request_total{job="email-service",status=~"5.."}[5m]) / rate(flask_http_request_total{job="email-service"}[5m])) > 0.05
+        for: 3m
+        labels:
+          severity: warning
+          component: email-service
+          tier: application
+        annotations:
+          summary: "Email service high error rate"
+          description: "Error rate: {{ $value | humanizePercentage }}, expected < 5%"
+          dashboard: "Email Service Errors"
+
+      # High Request Latency
+      - alert: EmailServiceHighLatency
+        expr: histogram_quantile(0.99, rate(flask_http_request_duration_seconds_bucket{job="email-service"}[5m])) > 2
+        for: 5m
+        labels:
+          severity: warning
+          component: email-service
+          tier: application
+        annotations:
+          summary: "Email service has high request latency"
+          description: "P99 latency: {{ $value }}s, expected < 2s"
+          dashboard: "Email Service Performance"
+
+      # Database Connection Pool Saturation
+      - alert: EmailServiceDBConnectionPoolNearCapacity
+        expr: emailservice_db_connections_active / emailservice_db_connections_max > 0.8
+        for: 5m
+        labels:
+          severity: warning
+          component: email-service
+          tier: application
+        annotations:
+          summary: "Email service DB connection pool near capacity"
+          description: "Active connections: {{ $value | humanizePercentage }} of max"
+          dashboard: "Email Service Connections"
+
+      # IMAP Pool Exhaustion
+      - alert: IMAPPoolExhaustion
+        expr: emailservice_imap_pool_size / emailservice_imap_pool_max > 0.9
+        for: 3m
+        labels:
+          severity: warning
+          component: email-service
+          tier: application
+        annotations:
+          summary: "IMAP connection pool near exhaustion"
+          description: "IMAP pool: {{ $value | humanizePercentage }} utilized"
+          dashboard: "Email Service - IMAP"
+
+      # SMTP Pool Exhaustion
+      - alert: SMTPPoolExhaustion
+        expr: emailservice_smtp_pool_size / emailservice_smtp_pool_max > 0.9
+        for: 3m
+        labels:
+          severity: warning
+          component: email-service
+          tier: application
+        annotations:
+          summary: "SMTP connection pool near exhaustion"
+          description: "SMTP pool: {{ $value | humanizePercentage }} utilized"
+          dashboard: "Email Service - SMTP"
+
+  # ============================================================================
+  # Celery Task Queue Alerts
+  # ============================================================================
+  - name: celery_tasks
+    interval: 1m
+    rules:
+      # Queue Backup (Too Many Pending Tasks)
+      - alert: CeleryQueueBackup
+        expr: celery_queue_length > 1000
+        for: 5m
+        labels:
+          severity: warning
+          component: celery-worker
+          tier: application
+        annotations:
+          summary: "Celery task queue has significant backup"
+          description: "Queue length: {{ $value }} tasks, investigate worker capacity"
+          dashboard: "Celery Tasks"
+
+      # Task Processing Failure
+      - alert: CeleryHighTaskFailureRate
+        expr: (rate(celery_task_failed_total[5m]) / rate(celery_task_received_total[5m])) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+          component: celery-worker
+          tier: application
+        annotations:
+          summary: "Celery has high task failure rate"
+          description: "Failure rate: {{ $value | humanizePercentage }}, expected < 10%"
+          dashboard: "Celery Tasks"
+
+      # Worker Offline
+      - alert: CeleryWorkerOffline
+        expr: celery_worker_online == 0
+        for: 2m
+        labels:
+          severity: critical
+          component: celery-worker
+          tier: application
+        annotations:
+          summary: "Celery worker is offline"
+          description: "Worker {{ $labels.worker }} is offline"
+          dashboard: "Celery Workers"
+
+      # Celery Beat Down
+      - alert: CeleryBeatDown
+        expr: up{job="celery-beat"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          component: celery-beat
+          tier: application
+        annotations:
+          summary: "Celery Beat scheduler is down"
+          description: "Scheduled task processing has stopped"
+          dashboard: "Celery Beat"
+
+  # ============================================================================
+  # Email Protocol Alerts
+  # ============================================================================
+  - name: email_protocols
+    interval: 1m
+    rules:
+      # Postfix Down
+      - alert: PostfixDown
+        expr: up{job="postfix"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          component: postfix
+          tier: email-transport
+        annotations:
+          summary: "Postfix SMTP server is down"
+          description: "Postfix at {{ $labels.instance }} is unreachable"
+          dashboard: "Email Transport"
+
+      # Postfix Queue Backup
+      - alert: PostfixQueueBackup
+        expr: postfix_queue_length > 100
+        for: 10m
+        labels:
+          severity: warning
+          component: postfix
+          tier: email-transport
+        annotations:
+          summary: "Postfix has mail queue backup"
+          description: "Queue length: {{ $value }} messages"
+          dashboard: "Postfix Queue"
+
+      # Dovecot Down
+      - alert: DovecotDown
+        expr: up{job="dovecot"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          component: dovecot
+          tier: email-storage
+        annotations:
+          summary: "Dovecot IMAP/POP3 server is down"
+          description: "Dovecot at {{ $labels.instance }} is unreachable"
+          dashboard: "Email Storage"
+
+      # IMAP Connection Issues
+      - alert: DovecotHighConnectionErrors
+        expr: rate(dovecot_imap_connection_errors_total[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+          component: dovecot
+          tier: email-storage
+        annotations:
+          summary: "Dovecot has elevated IMAP connection errors"
+          description: "Error rate: {{ $value }} errors/sec"
+          dashboard: "Dovecot Connections"
+
+  # ============================================================================
+  # Container & Orchestration Alerts
+  # ============================================================================
+  - name: containers
+    interval: 1m
+    rules:
+      # Container High CPU
+      - alert: ContainerHighCPU
+        expr: (rate(container_cpu_usage_seconds_total[5m]) * 100) > 80
+        for: 5m
+        labels:
+          severity: warning
+          component: container
+          tier: infrastructure
+        annotations:
+          summary: "Container {{ $labels.name }} has high CPU usage"
+          description: "CPU usage: {{ $value }}%, expected < 80%"
+          dashboard: "Container Resources"
+
+      # Container Memory Pressure
+      - alert: ContainerMemoryPressure
+        expr: (container_memory_working_set_bytes / container_spec_memory_limit_bytes) > 0.85
+        for: 5m
+        labels:
+          severity: warning
+          component: container
+          tier: infrastructure
+        annotations:
+          summary: "Container {{ $labels.name }} memory near limit"
+          description: "Memory: {{ $value | humanizePercentage }} of limit"
+          dashboard: "Container Resources"
+
+      # Container Restart Loop
+      - alert: ContainerRestartLoop
+        expr: rate(container_last_seen[5m]) > 0.2
+        for: 5m
+        labels:
+          severity: critical
+          component: container
+          tier: infrastructure
+        annotations:
+          summary: "Container {{ $labels.name }} is restarting frequently"
+          description: "Restart rate: {{ $value }} per minute"
+          dashboard: "Container Status"
+
+  # ============================================================================
+  # Prometheus & Monitoring Alerts
+  # ============================================================================
+  - name: monitoring
+    interval: 1m
+    rules:
+      # Prometheus Down
+      - alert: PrometheusDown
+        expr: up{job="prometheus"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          component: prometheus
+          tier: infrastructure
+        annotations:
+          summary: "Prometheus server is down"
+          description: "Monitoring system is unavailable"
+          dashboard: "Prometheus"
+
+      # Alertmanager Down
+      - alert: AlertmanagerDown
+        expr: up{job="alertmanager"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          component: alertmanager
+          tier: infrastructure
+        annotations:
+          summary: "Alertmanager is down"
+          description: "Alert routing system is unavailable"
+          dashboard: "Alerting"
+
+      # High Prometheus Scrape Failure Rate
+      - alert: PrometheusHighScrapeFailureRate
+        expr: (increase(prometheus_sd_consul_rpc_duration_seconds_count{quantile="0.99"}[5m]) / increase(prometheus_sd_consul_rpc_duration_seconds_count[5m])) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+          component: prometheus
+          tier: infrastructure
+        annotations:
+          summary: "Prometheus has high scrape failure rate"
+          description: "Failure rate: {{ $value | humanizePercentage }}"
+          dashboard: "Prometheus Health"
+
+      # Prometheus Storage Issues
+      - alert: PrometheusStorageAlmostFull
+        expr: (prometheus_tsdb_symbol_table_size_bytes + prometheus_tsdb_index_heap_inuse_bytes) / prometheus_tsdb_retention_limit_bytes > 0.8
+        for: 10m
+        labels:
+          severity: warning
+          component: prometheus
+          tier: infrastructure
+        annotations:
+          summary: "Prometheus storage is nearly full"
+          description: "Storage usage: {{ $value | humanizePercentage }}"
+          dashboard: "Prometheus Storage"

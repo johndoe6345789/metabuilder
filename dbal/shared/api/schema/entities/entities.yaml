@@ -1,0 +1,37 @@
+# Master Entity Registry
+# This file imports and registers all entity schemas from across the MetaBuilder platform
+# Version: 1.0
+# Last Updated: Jan 23, 2026
+
+entities:
+  # Core Entities
+  - $ref: './core/user.yaml'
+  - $ref: './core/session.yaml'
+  - $ref: './core/workflow.yaml'
+  - $ref: './core/package.yaml'
+  - $ref: './core/ui_page.yaml'
+
+  # Access Control Entities
+  - $ref: './access/credential.yaml'
+  - $ref: './access/component_node.yaml'
+  - $ref: './access/page_config.yaml'
+
+  # Package Entities
+  - $ref: './packages/forum.yaml'
+  - $ref: './packages/notification.yaml'
+  - $ref: './packages/audit_log.yaml'
+  - $ref: './packages/media.yaml'
+  - $ref: './packages/irc.yaml'
+  - $ref: './packages/streaming.yaml'
+
+  # Email Client Package (New - Jan 23, 2026)
+  - $ref: './packages/email_client.yaml'
+  - $ref: './packages/email_folder.yaml'
+  - $ref: './packages/email_message.yaml'
+  - $ref: './packages/email_attachment.yaml'
+
+  # Domain-Specific Entities
+  - $ref: './ecommerce/product.yaml'
+  - $ref: './gaming/game.yaml'
+  - $ref: './spotify_clone/artist.yaml'
+  - $ref: './youtube_clone/video.yaml'

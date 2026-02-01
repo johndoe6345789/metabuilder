@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/control_switch",
+  "version": "1.0.0",
+  "description": "Switch/case control flow",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["control", "workflow", "plugin"],
+  "main": "control_switch.py",
+  "files": ["control_switch.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "control.switch",
+    "category": "control",
+    "class": "ControlSwitch",
+    "entrypoint": "execute"
+  }
+}

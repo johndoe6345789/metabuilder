@@ -1,0 +1,44 @@
+{
+  "id": "first-gear",
+  "name": "1st Gear",
+  "partNumber": "FD-1848321",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 680.0,
+  "weightUnit": "g",
+  "baseY": 280,
+  "description": "First gear - 3.58:1 ratio",
+  "installation": {
+    "tools": [
+      { "name": "Snap ring pliers", "size": "External 40mm", "required": true },
+      { "name": "Soft-face mallet", "size": "-", "required": true },
+      { "name": "Bearing separator", "size": "-", "required": false }
+    ],
+    "hardware": [
+      { "name": "Needle bearing", "spec": "K25x30x17", "qty": 1, "reusable": false },
+      { "name": "Thrust washer", "spec": "26x36x2", "qty": 1, "reusable": true },
+      { "name": "Snap ring", "spec": "40mm external", "qty": 1, "reusable": true }
+    ],
+    "torque": [],
+    "notes": [
+      "Check gear teeth for chips or pitting",
+      "Ensure needle bearing rolls smoothly",
+      "Verify gear spins freely on shaft",
+      "Check synchro cone surface for wear"
+    ]
+  },
+  "geometry": [
+    { "type": "gearRing", "teeth": 32, "outerRadius": 45, "toothHeight": 6 },
+    { "type": "cylinder", "rx": 38, "ry": 12, "height": 22 },
+    { "type": "circle", "r": 16, "fill": "#555" }
+  ],
+  "geometry3d": [
+    { "type": "cylinder", "r": 40, "height": 18, "fill": "#606570" },
+    { "type": "cylinder", "r": 38, "height": 16, "offsetY": 1, "fill": "#707580" },
+    { "type": "cylinder", "r": 32, "height": 12, "fill": "#808590" },
+    { "type": "cylinder", "r": 18, "height": 22, "fill": "#555560" },
+    { "type": "cylinder", "r": 16, "height": 24, "subtract": true },
+    { "type": "box", "width": 4, "height": 24, "depth": 34, "subtract": true },
+    { "type": "box", "width": 34, "height": 24, "depth": 4, "subtract": true }
+  ]
+}

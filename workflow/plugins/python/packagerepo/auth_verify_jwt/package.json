@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/auth_verify_jwt",
+  "version": "1.0.0",
+  "description": "Verify JWT token and extract principal",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["packagerepo", "workflow", "plugin", "auth", "jwt"],
+  "main": "auth_verify_jwt.py",
+  "files": ["auth_verify_jwt.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "packagerepo.auth_verify_jwt",
+    "category": "packagerepo",
+    "class": "AuthVerifyJwt",
+    "entrypoint": "execute"
+  }
+}

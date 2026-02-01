@@ -1,0 +1,14 @@
+{
+  "name": "@metabuilder/workflow-plugins-web-rust",
+  "version": "0.1.0",
+  "description": "Web operation plugins (Rust)",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["web", "workflow", "plugins", "rust"],
+  "metadata": {
+    "category": "web",
+    "runtime": "rust",
+    "plugin_count": 0
+  },
+  "plugins": []
+}

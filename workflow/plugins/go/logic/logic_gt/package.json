@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/logic_gt",
+  "version": "1.0.0",
+  "description": "Check if a is greater than b",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["logic", "workflow", "plugin"],
+  "main": "logic_gt.go",
+  "files": ["logic_gt.go", "factory.go"],
+  "metadata": {
+    "plugin_type": "logic.gt",
+    "category": "logic",
+    "struct": "LogicGt",
+    "entrypoint": "Execute"
+  }
+}

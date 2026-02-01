@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/logic_or",
+  "version": "1.0.0",
+  "description": "Perform logical OR on values",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["logic", "workflow", "plugin"],
+  "main": "logic_or.py",
+  "files": ["logic_or.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "logic.or",
+    "category": "logic",
+    "class": "LogicOr",
+    "entrypoint": "execute"
+  }
+}

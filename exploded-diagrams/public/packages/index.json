@@ -1,0 +1,17 @@
+{
+  "version": "1.0.0",
+  "categories": [
+    {
+      "id": "rc",
+      "name": "RC Vehicles",
+      "description": "Radio controlled cars, trucks, and buggies",
+      "meta": "3 manufacturers"
+    },
+    {
+      "id": "automotive",
+      "name": "Automotive",
+      "description": "Car and vehicle drivetrain components",
+      "meta": "1 manufacturer"
+    }
+  ]
+}

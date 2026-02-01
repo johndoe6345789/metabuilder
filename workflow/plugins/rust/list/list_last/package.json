@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/list_last",
+  "version": "1.0.0",
+  "description": "Get last element of list",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["list", "workflow", "plugin"],
+  "main": "src/lib.rs",
+  "files": ["src/lib.rs", "src/factory.rs"],
+  "metadata": {
+    "plugin_type": "list.last",
+    "category": "list",
+    "struct": "ListLast",
+    "entrypoint": "execute"
+  }
+}

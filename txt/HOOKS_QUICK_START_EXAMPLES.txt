@@ -1,0 +1,487 @@
+================================================================================
+DATA STRUCTURE HOOKS - QUICK START EXAMPLES
+================================================================================
+
+1. USESET - TAG SELECTION
+================================================================================
+
+import { useSet } from '@/hooks'
+
+export function TagSelector() {
+  const { values, toggle, add, remove, clear } = useSet<string>()
+  const availableTags = ['React', 'TypeScript', 'Next.js', 'Tailwind', 'Redux']
+
+  return (
+    <div className="p-4">
+      <h2>Select Tags</h2>
+      <div className="flex flex-wrap gap-2">
+        {availableTags.map(tag => (
+          <button
+            key={tag}
+            onClick={() => toggle(tag)}
+            className={`px-3 py-1 rounded ${
+              values.has(tag)
+                ? 'bg-blue-500 text-white'
+                : 'bg-gray-200 text-black'
+            }`}
+          >
+            {tag}
+          </button>
+        ))}
+      </div>
+      <p className="mt-4">Selected: {Array.from(values).join(', ')}</p>
+      <button onClick={clear} className="mt-2 px-3 py-1 bg-red-500 text-white rounded">
+        Clear All
+      </button>
+    </div>
+  )
+}
+
+
+2. USEMAP - FORM STATE MANAGEMENT
+================================================================================
+
+import { useMap } from '@/hooks'
+
+export function UserForm() {
+  const { data, set, get, clear } = useMap<string, string>([
+    ['firstName', ''],
+    ['lastName', ''],
+    ['email', ''],
+  ])
+
+  const handleChange = (field: string, value: string) => {
+    set(field, value)
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    const formData = Object.fromEntries(data)
+    console.log('Form submitted:', formData)
+    clear()
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="p-4 space-y-4">
+      <input
+        type="text"
+        value={get('firstName') || ''}
+        onChange={(e) => handleChange('firstName', e.target.value)}
+        placeholder="First Name"
+        className="w-full px-3 py-2 border rounded"
+      />
+      <input
+        type="text"
+        value={get('lastName') || ''}
+        onChange={(e) => handleChange('lastName', e.target.value)}
+        placeholder="Last Name"
+        className="w-full px-3 py-2 border rounded"
+      />
+      <input
+        type="email"
+        value={get('email') || ''}
+        onChange={(e) => handleChange('email', e.target.value)}
+        placeholder="Email"
+        className="w-full px-3 py-2 border rounded"
+      />
+      <div className="flex gap-2">
+        <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded">
+          Submit
+        </button>
+        <button
+          type="button"
+          onClick={clear}
+          className="px-4 py-2 bg-gray-500 text-white rounded"
+        >
+          Reset
+        </button>
+      </div>
+    </form>
+  )
+}
+
+
+3. USEARRAY - TODO LIST MANAGEMENT
+================================================================================
+
+import { useArray } from '@/hooks'
+
+interface Todo {
+  id: string
+  title: string
+  done: boolean
+}
+
+export function TodoList() {
+  const { items, push, remove, map, filter } = useArray<Todo>([
+    { id: '1', title: 'Learn React', done: false },
+    { id: '2', title: 'Learn TypeScript', done: true },
+  ])
+
+  const addTodo = (title: string) => {
+    push({
+      id: Date.now().toString(),
+      title,
+      done: false,
+    })
+  }
+
+  const removeTodo = (index: number) => {
+    remove(index)
+  }
+
+  const completedCount = map(todo => todo.done ? 1 : 0).reduce((a, b) => a + b, 0)
+
+  return (
+    <div className="p-4">
+      <h2>Todos ({completedCount}/{items.length})</h2>
+      <ul className="space-y-2">
+        {items.map((todo, i) => (
+          <li key={todo.id} className="flex items-center gap-2 p-2 border rounded">
+            <input
+              type="checkbox"
+              checked={todo.done}
+              onChange={(e) => {
+                items[i].done = e.target.checked
+              }}
+            />
+            <span className={todo.done ? 'line-through' : ''}>{todo.title}</span>
+            <button
+              onClick={() => removeTodo(i)}
+              className="ml-auto px-2 py-1 bg-red-500 text-white rounded"
+            >
+              Delete
+            </button>
+          </li>
+        ))}
+      </ul>
+      <input
+        type="text"
+        placeholder="Add new todo"
+        onKeyPress={(e) => {
+          if (e.key === 'Enter' && e.currentTarget.value) {
+            addTodo(e.currentTarget.value)
+            e.currentTarget.value = ''
+          }
+        }}
+        className="w-full mt-4 px-3 py-2 border rounded"
+      />
+    </div>
+  )
+}
+
+
+4. USESTACK - UNDO/REDO
+================================================================================
+
+import { useStack } from '@/hooks'
+
+export function TextEditor() {
+  const [text, setText] = useState('')
+  const history = useStack<string>()
+
+  const handleChange = (newText: string) => {
+    history.push(text)
+    setText(newText)
+  }
+
+  const handleUndo = () => {
+    const previous = history.pop()
+    if (previous !== undefined) {
+      setText(previous)
+    }
+  }
+
+  return (
+    <div className="p-4">
+      <button
+        onClick={handleUndo}
+        disabled={history.isEmpty}
+        className={`px-3 py-1 rounded mb-2 ${
+          history.isEmpty
+            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            : 'bg-blue-500 text-white cursor-pointer'
+        }`}
+      >
+        ↶ Undo (Stack size: {history.size})
+      </button>
+      <textarea
+        value={text}
+        onChange={(e) => handleChange(e.target.value)}
+        className="w-full h-64 p-3 border rounded"
+        placeholder="Start typing..."
+      />
+    </div>
+  )
+}
+
+
+5. USEQUEUE - TASK PROCESSOR
+================================================================================
+
+import { useQueue } from '@/hooks'
+
+interface Task {
+  id: string
+  name: string
+  status: 'pending' | 'processing' | 'done'
+}
+
+export function TaskQueue() {
+  const { items, enqueue, dequeue, peek, isEmpty, size } = useQueue<Task>()
+  const [processing, setProcessing] = useState(false)
+
+  const addTask = (name: string) => {
+    enqueue({
+      id: Date.now().toString(),
+      name,
+      status: 'pending',
+    })
+  }
+
+  const processNextTask = async () => {
+    const task = dequeue()
+    if (task) {
+      setProcessing(true)
+      try {
+        task.status = 'processing'
+        // Simulate processing
+        await new Promise(resolve => setTimeout(resolve, 2000))
+        task.status = 'done'
+      } finally {
+        setProcessing(false)
+      }
+    }
+  }
+
+  return (
+    <div className="p-4">
+      <h2>Task Queue (Size: {size})</h2>
+
+      <div className="mb-4 p-3 bg-blue-50 rounded">
+        <p className="font-semibold">Current Task:</p>
+        <p>{peek()?.name || 'No tasks in queue'}</p>
+      </div>
+
+      <button
+        onClick={processNextTask}
+        disabled={isEmpty || processing}
+        className={`px-4 py-2 rounded text-white mb-4 ${
+          isEmpty || processing
+            ? 'bg-gray-400 cursor-not-allowed'
+            : 'bg-green-500 cursor-pointer'
+        }`}
+      >
+        {processing ? 'Processing...' : 'Process Next'}
+      </button>
+
+      <input
+        type="text"
+        placeholder="Add new task"
+        onKeyPress={(e) => {
+          if (e.key === 'Enter' && e.currentTarget.value) {
+            addTask(e.currentTarget.value)
+            e.currentTarget.value = ''
+          }
+        }}
+        className="w-full px-3 py-2 border rounded mb-4"
+      />
+
+      <div>
+        <h3 className="font-semibold mb-2">Queued Tasks:</h3>
+        <ul className="space-y-1">
+          {items.map((task, i) => (
+            <li key={task.id} className="p-2 bg-gray-100 rounded">
+              {i + 1}. {task.name}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  )
+}
+
+
+6. COMBINED EXAMPLE - DYNAMIC FORM WITH VALIDATION
+================================================================================
+
+import { useSet, useMap } from '@/hooks'
+
+interface ValidationError {
+  field: string
+  message: string
+}
+
+export function AdvancedForm() {
+  const { data, set, get, clear } = useMap<string, string>()
+  const { values: errors, add: addError, remove: removeError, clear: clearErrors } = useSet<string>()
+
+  const fields = ['email', 'password', 'confirmPassword', 'username']
+
+  const validateEmail = (email: string) => {
+    const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+    if (!isValid) {
+      addError('email')
+    } else {
+      removeError('email')
+    }
+  }
+
+  const validatePassword = (password: string) => {
+    const isValid = password.length >= 8
+    if (!isValid) {
+      addError('password')
+    } else {
+      removeError('password')
+    }
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (errors.size === 0) {
+      console.log('Form is valid:', Object.fromEntries(data))
+      clear()
+      clearErrors()
+    } else {
+      console.log('Form has errors')
+    }
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="p-4 space-y-4 max-w-md">
+      {fields.map(field => (
+        <div key={field}>
+          <label className="block text-sm font-medium mb-1">{field}</label>
+          <input
+            type={field.includes('password') ? 'password' : 'text'}
+            value={get(field) || ''}
+            onChange={(e) => {
+              set(field, e.target.value)
+              if (field === 'email') validateEmail(e.target.value)
+              if (field === 'password') validatePassword(e.target.value)
+            }}
+            className={`w-full px-3 py-2 border rounded ${
+              errors.has(field) ? 'border-red-500' : 'border-gray-300'
+            }`}
+          />
+          {errors.has(field) && (
+            <p className="text-red-500 text-sm mt-1">Invalid {field}</p>
+          )}
+        </div>
+      ))}
+
+      <div className="flex gap-2 pt-4">
+        <button
+          type="submit"
+          disabled={errors.size > 0}
+          className={`flex-1 px-4 py-2 rounded text-white ${
+            errors.size > 0
+              ? 'bg-gray-400 cursor-not-allowed'
+              : 'bg-blue-500 cursor-pointer'
+          }`}
+        >
+          Submit
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            clear()
+            clearErrors()
+          }}
+          className="flex-1 px-4 py-2 rounded bg-gray-300 text-black"
+        >
+          Reset
+        </button>
+      </div>
+    </form>
+  )
+}
+
+
+IMPORT PATTERN
+================================================================================
+
+All hooks are exported from @/hooks:
+
+import {
+  useSet,
+  useMap,
+  useArray,
+  useStack,
+  useQueue,
+  // Optional: Import types if needed
+} from '@/hooks'
+
+import type {
+  UseSetReturn,
+  UseMapReturn,
+  UseArrayReturn,
+  UseStackReturn,
+  UseQueueReturn,
+} from '@/hooks'
+
+
+PERFORMANCE TIPS
+================================================================================
+
+1. useSet: Best for deduplication and membership testing
+   - Perfect for selected items, active filters
+   - Avoid for very large datasets (>10k items)
+
+2. useMap: Best for key-value lookups
+   - Use for configuration, caching, lookups
+   - More efficient than object for dynamic keys
+
+3. useArray: Best for indexed operations
+   - Use for lists that need reordering
+   - Avoid large arrays without pagination (>5k items)
+
+4. useStack: Best for undo/redo and navigation
+   - Perfect for browser history, undo stacks
+   - Limited by memory for very deep stacks
+
+5. useQueue: Best for task processing
+   - Use for job queues, event handling
+   - Efficient for FIFO processing patterns
+
+
+TYPESCRIPT TIPS
+================================================================================
+
+// Explicit typing
+const tags: UseSetReturn<string> = useSet<string>()
+
+// Type inference
+const formData = useMap<string, string>()  // types inferred
+
+// Generics with complex types
+interface MenuItem { id: string; label: string }
+const menu = useStack<MenuItem>()
+
+// Accessing iterators
+const { data: mapData } = useMap<string, number>()
+const allKeys: string[] = Array.from(mapData.keys())
+
+
+TESTING PATTERNS
+================================================================================
+
+// Test with renderHook
+import { renderHook, act } from '@testing-library/react'
+import { useQueue } from '@/hooks'
+
+test('processes tasks in FIFO order', () => {
+  const { result } = renderHook(() => useQueue<string>())
+
+  act(() => {
+    result.current.enqueue('task1')
+    result.current.enqueue('task2')
+  })
+
+  act(() => {
+    const first = result.current.dequeue()
+    expect(first).toBe('task1')
+  })
+})
+
+================================================================================

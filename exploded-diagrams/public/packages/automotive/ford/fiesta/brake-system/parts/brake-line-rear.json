@@ -1,0 +1,35 @@
+{
+  "id": "brake-line-rear",
+  "name": "Rear Brake Line",
+  "partNumber": "FD-1850310",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 350.0,
+  "weightUnit": "g",
+  "baseY": 210,
+  "description": "Steel brake line running to rear proportioning valve",
+  "installation": {
+    "tools": [
+      { "name": "Flare nut spanner", "size": "11mm", "required": true },
+      { "name": "Line clamp", "size": "-", "required": true },
+      { "name": "Brake bleeding kit", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Brake line clip", "spec": "P-clip", "qty": 8, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Flare nut", "value": 15, "unit": "Nm", "notes": "Do not overtighten" }
+    ],
+    "notes": [
+      "Long line running under floor",
+      "Inspect for corrosion along full length",
+      "Route along existing clips",
+      "Avoid fuel tank straps"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 200, "height": 4, "rx": 2, "fill": "#888" },
+    { "type": "circle", "r": 6, "offsetX": -100, "fill": "#666" },
+    { "type": "circle", "r": 6, "offsetX": 100, "fill": "#666" }
+  ]
+}

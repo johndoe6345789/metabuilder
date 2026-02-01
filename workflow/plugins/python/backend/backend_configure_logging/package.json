@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/backend_configure_logging",
+  "version": "1.0.0",
+  "description": "Configure logging for workflow runtime",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["backend", "workflow", "plugin", "logging"],
+  "main": "backend_configure_logging.py",
+  "files": ["backend_configure_logging.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "backend.configure_logging",
+    "category": "backend",
+    "class": "ConfigureLogging",
+    "entrypoint": "execute"
+  }
+}

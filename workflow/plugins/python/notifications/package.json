@@ -1,0 +1,17 @@
+{
+  "name": "@metabuilder/workflow-plugins-notifications",
+  "version": "1.0.0",
+  "description": "External notification plugins",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["notifications", "slack", "discord", "workflow", "plugins"],
+  "metadata": {
+    "category": "notifications",
+    "plugin_count": 3
+  },
+  "plugins": [
+    "notifications_discord",
+    "notifications_email",
+    "notifications_slack"
+  ]
+}

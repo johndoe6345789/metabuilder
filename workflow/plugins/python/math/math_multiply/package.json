@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/math_multiply",
+  "version": "1.0.0",
+  "description": "Multiply numbers together",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["math", "workflow", "plugin"],
+  "main": "math_multiply.py",
+  "files": ["math_multiply.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "math.multiply",
+    "category": "math",
+    "class": "MathMultiply",
+    "entrypoint": "execute"
+  }
+}

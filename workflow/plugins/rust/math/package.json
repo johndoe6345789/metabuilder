@@ -1,0 +1,25 @@
+{
+  "name": "@metabuilder/workflow-plugins-math-rust",
+  "version": "0.1.0",
+  "description": "Mathematical operation plugins (Rust)",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["math", "workflow", "plugins", "rust"],
+  "metadata": {
+    "category": "math",
+    "runtime": "rust",
+    "plugin_count": 10
+  },
+  "plugins": [
+    "math_add",
+    "math_subtract",
+    "math_multiply",
+    "math_divide",
+    "math_modulo",
+    "math_power",
+    "math_abs",
+    "math_round",
+    "math_floor",
+    "math_ceil"
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "id": "fuel-tank-straps",
+  "name": "Fuel Tank Straps",
+  "partNumber": "FD-1880310",
+  "material": "steel",
+  "quantity": 2,
+  "weight": 800.0,
+  "weightUnit": "g",
+  "baseY": 160,
+  "description": "Tank mounting straps with rubber insulators",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "15mm", "required": true },
+      { "name": "Extension bar", "size": "200mm", "required": true }
+    ],
+    "hardware": [
+      { "name": "Strap bolt", "spec": "M10x30", "qty": 2, "reusable": true },
+      { "name": "Rubber pad", "spec": "-", "qty": 2, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Strap bolts", "value": 35, "unit": "Nm" }
+    ],
+    "notes": [
+      "Support tank before loosening",
+      "Check rubber pads for deterioration",
+      "Inspect for rust - common MOT fail",
+      "Apply rust preventative after fitting"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 120, "height": 20, "rx": 3, "fill": "#666" },
+    { "type": "rect", "width": 110, "height": 15, "rx": 2, "fill": "#777" },
+    { "type": "circle", "r": 6, "offsetX": -50, "fill": "#555" },
+    { "type": "circle", "r": 6, "offsetX": 50, "fill": "#555" }
+  ]
+}

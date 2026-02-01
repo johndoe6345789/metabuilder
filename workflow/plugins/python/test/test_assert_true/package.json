@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/test_assert_true",
+  "version": "1.0.0",
+  "description": "Assert that a value is true",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["test", "workflow", "plugin"],
+  "main": "test_assert_true.py",
+  "files": ["test_assert_true.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "test.assert_true",
+    "category": "test",
+    "class": "TestAssertTrue",
+    "entrypoint": "execute"
+  }
+}

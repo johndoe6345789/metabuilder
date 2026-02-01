@@ -1,0 +1,110 @@
+@use '@angular/cdk';
+@use '../core/style/layout-common';
+@use './m3-checkbox';
+@use '../core/tokens/token-utils';
+@use './checkbox-common';
+
+@include checkbox-common.checkbox-structure(true);
+
+$fallbacks: m3-checkbox.get-tokens();
+
+.mat-mdc-checkbox {
+  // The host node defaults to `display: inline`, we have to change it in order for margins to work.
+  display: inline-block;
+  // Avoids issues in some CSS grid layouts (see #25153).
+  position: relative;
+  // Disable the browser's tap highlight since we indicate state with the ripple instead.
+  -webkit-tap-highlight-color: transparent;
+
+  @include checkbox-common.checkbox-noop-animations;
+
+  // Clicking the label toggles the checkbox, but MDC does not include any styles that inform the
+  // user of this. Therefore we add the pointer cursor on top of MDC's styles.
+  label {
+    cursor: pointer;
+  }
+
+  .mat-internal-form-field {
+    color: token-utils.slot(checkbox-label-text-color, $fallbacks);
+    font-family: token-utils.slot(checkbox-label-text-font, $fallbacks);
+    line-height: token-utils.slot(checkbox-label-text-line-height, $fallbacks);
+    font-size: token-utils.slot(checkbox-label-text-size, $fallbacks);
+    letter-spacing: token-utils.slot(checkbox-label-text-tracking, $fallbacks);
+    font-weight: token-utils.slot(checkbox-label-text-weight, $fallbacks);
+  }
+
+  &.mat-mdc-checkbox-disabled {
+    &.mat-mdc-checkbox-disabled-interactive {
+      pointer-events: auto;
+
+      input {
+        cursor: default;
+      }
+    }
+
+    label {
+      cursor: default;
+      color: token-utils.slot(checkbox-disabled-label-color, $fallbacks);
+
+      @include cdk.high-contrast {
+        color: GrayText;
+      }
+    }
+  }
+
+  // The MDC styles result in extra padding if the label is present but empty. To fix this we hide
+  // the label when it is empty.
+  label:empty {
+    display: none;
+  }
+
+  // Apply base styles to the MDC ripple when not hovered, focused, or pressed.
+  .mdc-checkbox__ripple {
+    opacity: 0;
+  }
+}
+
+.mat-mdc-checkbox .mat-mdc-checkbox-ripple,
+.mdc-checkbox__ripple {
+  @include layout-common.fill();
+
+  // Usually the ripple radius would be specified through the MatRipple input, but
+  // since we dynamically adjust the size of the ripple container, we cannot use a
+  // fixed ripple radius.
+  border-radius: 50%;
+  pointer-events: none;
+
+  // Fixes the ripples not clipping to the border radius on Safari. Uses `:not(:empty)`
+  // in order to avoid creating extra layers when there aren't any ripples.
+  &:not(:empty) {
+    transform: translateZ(0);
+  }
+}
+
+.mat-mdc-checkbox-ripple .mat-ripple-element {
+  opacity: 0.1;
+}
+
+// Element used to provide a larger tap target for users on touch devices.
+.mat-mdc-checkbox-touch-target {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: token-utils.slot(checkbox-touch-target-size, $fallbacks);
+  width: token-utils.slot(checkbox-touch-target-size, $fallbacks);
+  transform: translate(-50%, -50%);
+  display: token-utils.slot(checkbox-touch-target-display, $fallbacks);
+}
+
+// Checkbox components have to set `border-radius: 50%` in order to support density scaling
+// which will clip a square focus indicator so we have to turn it into a circle. Needs extra
+// specificity in case the ripple styles are loaded later which can override the shape.
+.mat-mdc-checkbox .mat-mdc-checkbox-ripple::before {
+  border-radius: 50%;
+}
+
+// For checkboxes render the focus indicator when we know
+// the hidden input is focused (slightly different for each control).
+.mdc-checkbox__native-control:focus-visible ~ .mat-focus-indicator::before {
+  content: '';
+}

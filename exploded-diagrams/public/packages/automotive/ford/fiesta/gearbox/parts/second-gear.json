@@ -1,0 +1,42 @@
+{
+  "id": "second-gear",
+  "name": "2nd Gear",
+  "partNumber": "FD-1848322",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 520.0,
+  "weightUnit": "g",
+  "baseY": 340,
+  "description": "Second gear - 1.95:1 ratio",
+  "installation": {
+    "tools": [
+      { "name": "Snap ring pliers", "size": "External 35mm", "required": true },
+      { "name": "Soft-face mallet", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Needle bearing", "spec": "K22x26x13", "qty": 1, "reusable": false },
+      { "name": "Thrust washer", "spec": "23x32x2", "qty": 1, "reusable": true },
+      { "name": "Snap ring", "spec": "35mm external", "qty": 1, "reusable": true }
+    ],
+    "torque": [],
+    "notes": [
+      "Shares synchro hub with 1st gear",
+      "Check needle bearing for flat spots",
+      "Inspect thrust washer for scoring"
+    ]
+  },
+  "geometry": [
+    { "type": "gearRing", "teeth": 28, "outerRadius": 38, "toothHeight": 5 },
+    { "type": "cylinder", "rx": 32, "ry": 10, "height": 18 },
+    { "type": "circle", "r": 14, "fill": "#555" }
+  ],
+  "geometry3d": [
+    { "type": "cylinder", "r": 36, "height": 16, "fill": "#606570" },
+    { "type": "cylinder", "r": 34, "height": 14, "offsetY": 1, "fill": "#707580" },
+    { "type": "cylinder", "r": 28, "height": 10, "fill": "#808590" },
+    { "type": "cylinder", "r": 18, "height": 20, "fill": "#555560" },
+    { "type": "cylinder", "r": 16, "height": 22, "subtract": true },
+    { "type": "box", "width": 4, "height": 22, "depth": 34, "subtract": true },
+    { "type": "box", "width": 34, "height": 22, "depth": 4, "subtract": true }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "id": "z-motor-mount",
+  "name": "Z-Axis Motor Mount",
+  "partNumber": "BL-A1-005",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 145.0,
+  "weightUnit": "g",
+  "baseY": 35,
+  "description": "Stamped steel Z-axis motor mounting bracket - precisely positions the Z stepper motor for belt-driven bed movement with integrated tensioner slot and anti-vibration mounting points",
+  "installation": {
+    "tools": [
+      { "name": "Hex key", "size": "2.5mm", "required": true },
+      { "name": "Hex key", "size": "3mm", "required": true },
+      { "name": "Phillips screwdriver", "size": "#2", "required": true },
+      { "name": "Belt tension gauge", "size": "-", "required": false }
+    ],
+    "hardware": [
+      { "name": "Motor mount bolt", "spec": "M3x8", "grade": "12.9", "qty": 4, "reusable": true },
+      { "name": "Frame mounting bolt", "spec": "M4x10", "grade": "12.9", "qty": 3, "reusable": true },
+      { "name": "T-slot nut", "spec": "M4", "qty": 3, "reusable": true },
+      { "name": "Vibration damper", "spec": "M3 silicone", "qty": 4, "reusable": false },
+      { "name": "Belt tensioner screw", "spec": "M4x16", "qty": 1, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Motor screws", "value": 0.8, "unit": "Nm", "sequence": "Diagonal pattern", "notes": "Use vibration dampers under motor" },
+      { "fastener": "Frame mount bolts", "value": 2.5, "unit": "Nm", "sequence": "Center bolt first", "notes": "Bracket should have slight float for alignment" }
+    ],
+    "notes": [
+      "Install vibration dampers to reduce motor noise",
+      "Tensioner slot allows belt adjustment",
+      "Motor shaft must align with belt path",
+      "Check motor clearance from base frame"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 70, "height": 55, "rx": 3, "fill": "#353535" },
+    { "type": "circle", "r": 12, "offsetX": -10, "offsetY": 0, "fill": "#252525" },
+    { "type": "circle", "r": 4, "offsetX": -30, "offsetY": -18, "fill": "#444" },
+    { "type": "circle", "r": 4, "offsetX": 10, "offsetY": -18, "fill": "#444" },
+    { "type": "circle", "r": 4, "offsetX": -30, "offsetY": 18, "fill": "#444" },
+    { "type": "circle", "r": 4, "offsetX": 10, "offsetY": 18, "fill": "#444" },
+    { "type": "rect", "width": 8, "height": 20, "offsetX": 28, "fill": "#303030" }
+  ],
+  "geometry3d": [
+    { "type": "box", "width": 60, "height": 8, "depth": 50, "fill": "#353535" },
+
+    { "type": "box", "width": 45, "height": 45, "depth": 8, "offsetX": -5, "offsetZ": -25, "fill": "#404040" },
+
+    { "type": "cylinder", "r": 12, "height": 50, "offsetX": -5, "offsetZ": -25, "rotateX": 90, "subtract": true },
+
+    { "type": "cylinder", "r": 2, "height": 15, "offsetX": -20, "offsetY": -18, "offsetZ": -25, "rotateX": 90, "subtract": true },
+    { "type": "cylinder", "r": 2, "height": 15, "offsetX": 10, "offsetY": -18, "offsetZ": -25, "rotateX": 90, "subtract": true },
+    { "type": "cylinder", "r": 2, "height": 15, "offsetX": -20, "offsetY": 18, "offsetZ": -25, "rotateX": 90, "subtract": true },
+    { "type": "cylinder", "r": 2, "height": 15, "offsetX": 10, "offsetY": 18, "offsetZ": -25, "rotateX": 90, "subtract": true },
+
+    { "type": "cylinder", "r": 4, "height": 12, "offsetX": -20, "offsetY": -18, "offsetZ": -22, "rotateX": 90, "fill": "#505050" },
+    { "type": "cylinder", "r": 4, "height": 12, "offsetX": 10, "offsetY": -18, "offsetZ": -22, "rotateX": 90, "fill": "#505050" },
+    { "type": "cylinder", "r": 4, "height": 12, "offsetX": -20, "offsetY": 18, "offsetZ": -22, "rotateX": 90, "fill": "#505050" },
+    { "type": "cylinder", "r": 4, "height": 12, "offsetX": 10, "offsetY": 18, "offsetZ": -22, "rotateX": 90, "fill": "#505050" },
+
+    { "type": "box", "width": 15, "height": 8, "depth": 30, "offsetX": 25, "fill": "#383838" },
+    { "type": "box", "width": 6, "height": 12, "depth": 18, "offsetX": 25, "subtract": true },
+
+    { "type": "cylinder", "r": 2.5, "height": 12, "offsetX": -25, "offsetZ": 0, "subtract": true },
+    { "type": "cylinder", "r": 2.5, "height": 12, "offsetX": -25, "offsetZ": 15, "subtract": true },
+    { "type": "cylinder", "r": 2.5, "height": 12, "offsetX": 20, "offsetZ": 15, "subtract": true },
+
+    { "type": "box", "width": 12, "height": 35, "depth": 6, "offsetX": -28, "offsetZ": 0, "fill": "#404040" },
+
+    { "type": "box", "width": 62, "height": 4, "depth": 52, "offsetY": -4, "fill": "#303030" },
+    { "type": "box", "width": 55, "height": 6, "depth": 45, "offsetY": -4, "subtract": true },
+
+    { "type": "box", "width": 8, "height": 12, "depth": 8, "offsetX": 28, "offsetY": 6, "offsetZ": -5, "fill": "#454545" },
+    { "type": "cylinder", "r": 2.5, "height": 15, "offsetX": 28, "offsetZ": -5, "subtract": true }
+  ]
+}

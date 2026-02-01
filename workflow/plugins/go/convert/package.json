@@ -1,0 +1,19 @@
+{
+  "name": "@metabuilder/workflow-plugins-convert",
+  "version": "1.0.0",
+  "description": "Type conversion plugins",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["convert", "workflow", "plugins"],
+  "metadata": {
+    "category": "convert",
+    "plugin_count": 5
+  },
+  "plugins": [
+    "convert_parse_json",
+    "convert_to_boolean",
+    "convert_to_json",
+    "convert_to_number",
+    "convert_to_string"
+  ]
+}

@@ -1,0 +1,400 @@
+{
+  "metadata": {
+    "reportId": "materialx-n8n-audit-20260122",
+    "workflow": "MaterialX Catalog",
+    "filePath": "/gameengine/packages/materialx/workflows/materialx_catalog.json",
+    "auditDate": "2026-01-22",
+    "auditVersion": "1.0.0",
+    "schemaVersion": "n8n-workflow.schema.json v2020-12"
+  },
+  "complianceScore": {
+    "overall": 84,
+    "rating": "PARTIALLY_COMPLIANT",
+    "maxScore": 100,
+    "targetScore": 95,
+    "gap": 11
+  },
+  "categories": {
+    "structure": {
+      "score": 100,
+      "status": "PASS",
+      "checks": 7,
+      "passed": 7,
+      "issues": 0
+    },
+    "nodes": {
+      "score": 100,
+      "status": "PASS",
+      "checks": 15,
+      "passed": 15,
+      "issues": 0
+    },
+    "connections": {
+      "score": 100,
+      "status": "PASS",
+      "checks": 8,
+      "passed": 8,
+      "issues": 0
+    },
+    "metadata": {
+      "score": 42,
+      "status": "PARTIAL",
+      "checks": 7,
+      "passed": 3,
+      "issues": 4,
+      "missingFields": ["id", "active", "settings", "tags"]
+    },
+    "versioning": {
+      "score": 0,
+      "status": "FAIL",
+      "checks": 3,
+      "passed": 0,
+      "issues": 3,
+      "missingFields": ["createdAt", "updatedAt", "versionId"]
+    },
+    "triggers": {
+      "score": 0,
+      "status": "FAIL",
+      "checks": 1,
+      "passed": 0,
+      "issues": 1,
+      "missingFields": ["triggers"]
+    }
+  },
+  "criticalIssues": {
+    "count": 0,
+    "issues": [],
+    "status": "NONE"
+  },
+  "warnings": {
+    "count": 8,
+    "issues": [
+      {
+        "id": "W001",
+        "severity": "MEDIUM",
+        "category": "metadata",
+        "field": "id",
+        "message": "Missing workflow unique identifier",
+        "impact": "Cannot track workflow in database",
+        "recommendation": "Add id: 'materialx-catalog-v1' or similar UUID"
+      },
+      {
+        "id": "W002",
+        "severity": "MEDIUM",
+        "category": "metadata",
+        "field": "active",
+        "message": "Missing active flag",
+        "impact": "Workflow defaults to disabled (active: false)",
+        "recommendation": "Add active: true to enable workflow"
+      },
+      {
+        "id": "W003",
+        "severity": "MEDIUM",
+        "category": "metadata",
+        "field": "settings",
+        "message": "Missing execution settings",
+        "impact": "Uses default execution configuration",
+        "recommendation": "Add settings with executionTimeout, saveDataSuccessExecution"
+      },
+      {
+        "id": "W004",
+        "severity": "LOW",
+        "category": "metadata",
+        "field": "tags",
+        "message": "Missing workflow tags",
+        "impact": "Cannot organize or filter workflows",
+        "recommendation": "Add tags: [{ name: 'gameengine' }, { name: 'materialx' }]"
+      },
+      {
+        "id": "W005",
+        "severity": "MEDIUM",
+        "category": "versioning",
+        "field": "createdAt",
+        "message": "Missing creation timestamp",
+        "impact": "No audit trail of workflow creation",
+        "recommendation": "Add createdAt: '2026-01-22T16:28:00Z'"
+      },
+      {
+        "id": "W006",
+        "severity": "MEDIUM",
+        "category": "versioning",
+        "field": "updatedAt",
+        "message": "Missing update timestamp",
+        "impact": "No record of last modification",
+        "recommendation": "Add updatedAt: '2026-01-22T16:28:00Z'"
+      },
+      {
+        "id": "W007",
+        "severity": "MEDIUM",
+        "category": "versioning",
+        "field": "versionId",
+        "message": "Missing version identifier",
+        "impact": "No optimistic concurrency control",
+        "recommendation": "Add versionId: '1.0.0'"
+      },
+      {
+        "id": "W008",
+        "severity": "HIGH",
+        "category": "triggers",
+        "field": "triggers",
+        "message": "Missing trigger declaration",
+        "impact": "No explicit workflow entry point",
+        "recommendation": "Add triggers: [{ nodeId: 'materialx_paths', kind: 'manual', enabled: true }]"
+      }
+    ]
+  },
+  "nodeAnalysis": {
+    "totalNodes": 2,
+    "nodes": [
+      {
+        "id": "materialx_paths",
+        "name": "MaterialX Paths",
+        "type": "list.literal",
+        "typeVersion": 1,
+        "typeValidation": "VALID",
+        "positionValidation": "VALID",
+        "parameterValidation": "VALID",
+        "status": "COMPLIANT",
+        "issues": 0
+      },
+      {
+        "id": "assert_materialx_paths",
+        "name": "Assert MaterialX Paths",
+        "type": "value.assert.type",
+        "typeVersion": 1,
+        "typeValidation": "VALID",
+        "positionValidation": "VALID",
+        "parameterValidation": "VALID",
+        "status": "COMPLIANT",
+        "issues": 0
+      }
+    ],
+    "validNodeTypes": 2,
+    "nodeTypeRegistry": "FULLY_REGISTERED"
+  },
+  "connectionAnalysis": {
+    "totalConnections": 1,
+    "connectionStatus": "VALID",
+    "connectionFlow": [
+      {
+        "source": "MaterialX Paths",
+        "target": "Assert MaterialX Paths",
+        "type": "main",
+        "outputIndex": 0,
+        "inputIndex": 0,
+        "validation": "PASS",
+        "comment": "Linear pipeline: list generation → type assertion"
+      }
+    ],
+    "orphanedNodes": [],
+    "unreachableNodes": [],
+    "cycleDetected": false,
+    "topology": "LINEAR"
+  },
+  "parameterAnalysis": {
+    "nodes": [
+      {
+        "nodeId": "materialx_paths",
+        "parameters": {
+          "items": {
+            "type": "array",
+            "value": ["libraries", "resources", "documents"],
+            "validation": "VALID"
+          },
+          "type": {
+            "type": "string",
+            "value": "string",
+            "validation": "VALID"
+          },
+          "outputs": {
+            "type": "object",
+            "value": { "list": "materialx.paths" },
+            "validation": "VALID"
+          }
+        },
+        "nestedParameterIssues": 0,
+        "serializationIssues": 0,
+        "status": "VALID"
+      },
+      {
+        "nodeId": "assert_materialx_paths",
+        "parameters": {
+          "inputs": {
+            "type": "object",
+            "value": { "value": "materialx.paths" },
+            "validation": "VALID"
+          },
+          "type": {
+            "type": "string",
+            "value": "string_list",
+            "validation": "VALID"
+          }
+        },
+        "nestedParameterIssues": 0,
+        "serializationIssues": 0,
+        "status": "VALID"
+      }
+    ],
+    "overallStatus": "COMPLIANT",
+    "flatteningRequired": false
+  },
+  "recommendedActions": {
+    "highPriority": [
+      {
+        "priority": 1,
+        "effort": "5_MIN",
+        "impact": "HIGH",
+        "action": "Add triggers array with manual trigger",
+        "reason": "Establishes workflow entry point",
+        "code": {
+          "field": "triggers",
+          "value": [
+            {
+              "nodeId": "materialx_paths",
+              "kind": "manual",
+              "enabled": true
+            }
+          ]
+        }
+      },
+      {
+        "priority": 2,
+        "effort": "5_MIN",
+        "impact": "MEDIUM",
+        "action": "Add workflow id for database tracking",
+        "reason": "Required for multi-tenant deployments",
+        "code": {
+          "field": "id",
+          "value": "materialx-catalog-v1"
+        }
+      },
+      {
+        "priority": 3,
+        "effort": "5_MIN",
+        "impact": "MEDIUM",
+        "action": "Set active flag to true",
+        "reason": "Workflow defaults to disabled without this",
+        "code": {
+          "field": "active",
+          "value": true
+        }
+      }
+    ],
+    "mediumPriority": [
+      {
+        "priority": 4,
+        "effort": "10_MIN",
+        "impact": "MEDIUM",
+        "action": "Add execution settings",
+        "reason": "Enables timeout control and data persistence settings",
+        "code": {
+          "field": "settings",
+          "value": {
+            "timezone": "UTC",
+            "executionTimeout": 60,
+            "saveExecutionProgress": true,
+            "saveDataSuccessExecution": "all"
+          }
+        }
+      },
+      {
+        "priority": 5,
+        "effort": "5_MIN",
+        "impact": "LOW",
+        "action": "Add version control fields",
+        "reason": "Enables audit trail and optimistic concurrency",
+        "code": {
+          "field": "versionId",
+          "value": "1.0.0",
+          "createdAt": "2026-01-22T16:28:00Z",
+          "updatedAt": "2026-01-22T16:28:00Z"
+        }
+      },
+      {
+        "priority": 6,
+        "effort": "5_MIN",
+        "impact": "LOW",
+        "action": "Add workflow tags",
+        "reason": "Improves workflow discovery in large systems",
+        "code": {
+          "field": "tags",
+          "value": [
+            { "name": "gameengine" },
+            { "name": "materialx" }
+          ]
+        }
+      }
+    ],
+    "estimatedTotalEffort": "35_MIN",
+    "expectedImprovementFromBaseline": "+11_POINTS_TO_95"
+  },
+  "productionReadinessCriteria": {
+    "criticalIssues": {
+      "required": 0,
+      "actual": 0,
+      "status": "PASS"
+    },
+    "blockingWarnings": {
+      "required": 0,
+      "actual": 0,
+      "status": "PASS"
+    },
+    "minimumScore": {
+      "required": 85,
+      "actual": 84,
+      "status": "FAIL",
+      "comment": "Score is 1 point below production threshold"
+    },
+    "nodeCompliance": {
+      "required": "100%",
+      "actual": "100%",
+      "status": "PASS"
+    },
+    "connectionCompliance": {
+      "required": "100%",
+      "actual": "100%",
+      "status": "PASS"
+    },
+    "overallStatus": "CONDITIONALLY_READY",
+    "conditions": [
+      "Fix high-priority recommendations (triggers, id, active flag)",
+      "Verify workflow execution in staging",
+      "Confirm multi-tenant context propagation"
+    ]
+  },
+  "multiTenantAnalysis": {
+    "hasTenantContext": false,
+    "recommendation": "Add tenantId to workflow variables or meta",
+    "requiredField": "variables.tenantId",
+    "suggestion": {
+      "field": "variables",
+      "value": {
+        "tenantId": {
+          "name": "tenantId",
+          "type": "string",
+          "required": true,
+          "description": "Tenant ID for scoped catalog operations"
+        }
+      }
+    }
+  },
+  "estimatedMetrics": {
+    "executionTime": "< 10ms",
+    "dataVolume": "SMALL",
+    "complexity": "MINIMAL",
+    "cycleDetected": false,
+    "branchingFactor": 1,
+    "maxDepth": 2
+  },
+  "comparisonWithBestPractices": {
+    "requiredFieldsCoverage": "100%",
+    "recommendedFieldsCoverage": "0%",
+    "overallPracticeAdherence": "43%"
+  },
+  "nextSteps": {
+    "immediate": "Add triggers array and workflow id",
+    "short_term": "Add remaining metadata fields (active, settings, tags)",
+    "medium_term": "Add version control fields",
+    "long_term": "Document multi-tenant strategy and update deployment manifests"
+  }
+}

@@ -1,0 +1,256 @@
+# TESTING PACKAGES - DETAILED MATRIX
+Date: 2026-01-23
+
+═══════════════════════════════════════════════════════════════════════════════
+PROJECT TESTING LIBRARY MATRIX
+═══════════════════════════════════════════════════════════════════════════════
+
+Package                              │ Framework  │ Version   │ @testing-library/react    │ @testing-library/jest-dom
+─────────────────────────────────────┼────────────┼───────────┼──────────────────────────┼─────────────────────────
+dbal/development                     │ vitest     │ ^4.0.16   │ [missing]                │ [missing]
+emailclient                          │ jest       │ [no ver]  │ [missing]                │ [missing]
+frontends/nextjs                     │ vitest     │ ^4.0.16   │ ^16.3.1                  │ ^10.4.1 (dom only)
+codegen                              │ vitest     │ [no ver]  │ [missing]                │ [missing]
+codegen/packages/spark-tools         │ vitest     │ ^3.0.9    │ ^16.0.1                  │ ^6.6.3
+workflowui                           │ jest       │ ^29.7.0   │ ^16.3.1                  │ ^6.6.3
+pastebin                             │ jest       │ ^29.7.0   │ ^14.1.2 [OUTDATED]        │ ^6.1.5 [OUTDATED]
+workflow                             │ jest       │ ^29.0.0   │ [missing]                │ [missing]
+postgres                             │ vitest     │ ^4.0.15   │ [missing]                │ [missing]
+redux/hooks                          │ jest       │ [no ver]  │ [missing]                │ [missing]
+redux/hooks-async                    │ jest       │ ^29.7.0   │ ^14.1.2 [OUTDATED]        │ [missing]
+redux/api-clients                    │ jest       │ [no ver]  │ [missing]                │ [missing]
+
+═══════════════════════════════════════════════════════════════════════════════
+
+SUMMARY STATISTICS
+───────────────────────────────────────────────────────────────────────────────
+
+Total Packages: 13
+
+By Framework:
+  Jest:   7 packages (emailclient, workflowui, pastebin, workflow, redux/hooks, redux/hooks-async, redux/api-clients)
+  Vitest: 6 packages (dbal, frontends/nextjs, codegen, codegen/spark-tools, postgres)
+
+By @testing-library/react Version:
+  v14.1.2:  2 packages (pastebin, redux/hooks-async) [OUTDATED]
+  v16.0.1:  1 package  (codegen/spark-tools)
+  v16.3.1:  2 packages (frontends/nextjs, workflowui)
+  Missing:  8 packages (need declaration)
+
+By @testing-library/jest-dom Version:
+  v6.1.5:   1 package  (pastebin) [OUTDATED]
+  v6.6.3:   2 packages (codegen/spark-tools, workflowui)
+  v10.4.1:  1 package  (frontends/nextjs only for dom)
+  Missing:  9 packages (need declaration)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+ISSUES BY SEVERITY
+═══════════════════════════════════════════════════════════════════════════════
+
+🔴 CRITICAL (Block npm/build)
+───────────────────────────────────────────────────────────────────────────────
+  Issue: 2 major version gap in @testing-library/react (v14 → v16)
+  Packages:
+    • pastebin (v14.1.2 needs → v16.3.1)
+    • redux/hooks-async (v14.1.2 needs → v16.3.1)
+  Cause: Likely manual/legacy updates
+  Impact: Different query APIs, incompatible test code
+  Action: Immediate upgrade required
+
+  Issue: Jest vs Vitest duplication (2 frameworks)
+  Framework split:
+    • Jest: 7 packages
+    • Vitest: 6 packages
+  Impact: Inconsistent testing experience, different configurations
+  Action: Standardize on ONE framework (recommend Jest)
+
+🟡 HIGH PRIORITY (Should fix in next sprint)
+───────────────────────────────────────────────────────────────────────────────
+  Issue: Missing testing library declarations (8 packages)
+  Packages missing @testing-library/react:
+    • dbal/development (vitest ^4.0.16)
+    • emailclient (jest no version)
+    • codegen (vitest no version)
+    • workflow (jest ^29.0.0)
+    • postgres (vitest ^4.0.15)
+    • redux/hooks (jest no version)
+    • redux/api-clients (jest no version)
+  Impact: Tests may fail, no DOM testing utilities
+  Action: Add explicit declarations
+
+  Issue: Vitest version inconsistency
+  Package:
+    • codegen/packages/spark-tools @^3.0.9 (should be ^4.0.16)
+  Impact: Different vitest behavior, may not work with other v4 packages
+  Action: Upgrade to ^4.0.16
+
+🟠 MEDIUM PRIORITY (Good to have)
+───────────────────────────────────────────────────────────────────────────────
+  Issue: Jest version inconsistency
+  Package:
+    • workflow @^29.0.0 (should be ^29.7.0)
+  Impact: May miss security patches, inconsistent with workflowui/pastebin
+  Action: Upgrade to ^29.7.0
+
+  Issue: @testing-library/jest-dom version gap
+  Package:
+    • pastebin @^6.1.5 (should be ^6.6.3)
+  Impact: Missing 5 minor releases of matchers/fixes
+  Action: Upgrade to ^6.6.3
+
+═══════════════════════════════════════════════════════════════════════════════
+
+RECOMMENDED STANDARDIZATION PLAN
+═══════════════════════════════════════════════════════════════════════════════
+
+OPTION A: STANDARDIZE ON JEST (Recommended) [3-4 hours]
+──────────────────────────────────────────────────────────
+
+Standard Package Versions:
+  jest:                        ^29.7.0
+  @testing-library/react:      ^16.3.1
+  @testing-library/dom:        ^10.4.1
+  @testing-library/jest-dom:   ^6.6.3
+  @testing-library/user-event: ^14.5.1
+
+Migrate (vitest → jest) [4 packages]:
+  1. dbal/development         (vitest ^4.0.16 → jest ^29.7.0)
+  2. frontends/nextjs         (vitest ^4.0.16 → jest ^29.7.0)
+  3. postgres                 (vitest ^4.0.15 → jest ^29.7.0)
+  4. codegen/packages/spark-tools (vitest ^3.0.9 → jest ^29.7.0)
+
+Upgrade (testing-library versions) [3 packages]:
+  1. pastebin                 (upgrade all @testing-library/*)
+  2. redux/hooks-async        (@testing-library/react v14 → v16)
+  3. workflow                 (jest v29.0.0 → v29.7.0)
+
+Add Declarations [4 packages]:
+  1. emailclient              (add @testing-library/react, jest-dom)
+  2. redux/hooks              (add @testing-library/react, jest-dom)
+  3. redux/api-clients        (add @testing-library/react, jest-dom)
+  4. codegen                  (add @testing-library/react, jest-dom)
+
+Delete:
+  • config/test/vitest.config.ts
+  • frontends/nextjs/vitest.config.ts
+  • postgres/vitest.config.mts
+  • postgres/.storybook/vitest.config.mts
+
+Update Scripts:
+  • All "test": "vitest" → "test": "jest"
+  • All "test:watch": "vitest" → "test:watch": "jest --watch"
+
+Verify:
+  • npm install (from project root)
+  • npm run build
+  • npm run test (should pass all)
+  • npm run lint
+
+═══════════════════════════════════════════════════════════════════════════════
+
+OPTION B: STANDARDIZE ON VITEST (Alternative) [4-5 hours]
+──────────────────────────────────────────────────────────
+
+If vitest preferred:
+  • Migrate all Jest packages → vitest
+  • Update all test scripts to "vitest"
+  • Remove jest from all packages
+  • Delete jest.config.ts files
+  • NOTE: Still need @testing-library/jest-dom for matchers
+
+Note: Jest is more stable/mature; vitest is newer/faster. Jest preferred for production.
+
+═══════════════════════════════════════════════════════════════════════════════
+
+PACKAGE-SPECIFIC ACTIONS
+═══════════════════════════════════════════════════════════════════════════════
+
+dbal/development
+  Current: vitest ^4.0.16, no testing-library
+  Action:  Switch to jest ^29.7.0, add @testing-library/react + jest-dom
+  
+emailclient
+  Current: jest [no version], no testing-library
+  Action:  Specify jest ^29.7.0, add @testing-library/react + jest-dom
+
+frontends/nextjs
+  Current: vitest ^4.0.16, @testing-library/react ^16.3.1
+  Action:  Switch to jest ^29.7.0, keep/add @testing-library/jest-dom
+  Note:    Delete vitest.config.ts
+
+codegen
+  Current: vitest [no version], no testing-library
+  Action:  Switch to jest ^29.7.0, add @testing-library/react + jest-dom
+
+codegen/packages/spark-tools
+  Current: vitest ^3.0.9, @testing-library/react ^16.0.1, jest-dom ^6.6.3
+  Action:  Switch to jest ^29.7.0, upgrade @testing-library/react → ^16.3.1
+
+workflowui
+  Current: jest ^29.7.0, @testing-library/react ^16.3.1 ✅
+  Action:  No change needed (already standard)
+  Note:    Add @testing-library/jest-dom (has it) and @testing-library/user-event
+
+pastebin
+  Current: jest ^29.7.0, @testing-library/react ^14.1.2 (OUTDATED)
+  Action:  Upgrade @testing-library/react → ^16.3.1
+  Action:  Upgrade @testing-library/jest-dom ^6.1.5 → ^6.6.3
+  Action:  Ensure @testing-library/user-event ^14.5.1 included
+
+workflow
+  Current: jest ^29.0.0, no testing-library
+  Action:  Upgrade jest ^29.0.0 → ^29.7.0
+  Action:  Add @testing-library/react, @testing-library/jest-dom
+
+postgres
+  Current: vitest ^4.0.15, no testing-library
+  Action:  Switch to jest ^29.7.0, add @testing-library/react + jest-dom
+  Note:    Delete vitest.config.mts files
+
+redux/hooks
+  Current: jest [no version], no testing-library
+  Action:  Specify jest ^29.7.0, add @testing-library/react + jest-dom
+
+redux/hooks-async
+  Current: jest ^29.7.0, @testing-library/react ^14.1.2 (OUTDATED)
+  Action:  Upgrade @testing-library/react ^14.1.2 → ^16.3.1
+  Action:  Add @testing-library/jest-dom ^6.6.3
+
+redux/api-clients
+  Current: jest [no version], no testing-library
+  Action:  Specify jest ^29.7.0, add @testing-library/react + jest-dom
+
+═══════════════════════════════════════════════════════════════════════════════
+
+IMPLEMENTATION NOTES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. When migrating from vitest → jest:
+   • Copy jest.config.ts from existing jest project (e.g., workflowui)
+   • Adjust paths as needed
+   • Update test scripts in package.json
+   • Run "npm install" to get jest deps
+
+2. When upgrading @testing-library/react v14 → v16:
+   • API changes: Some query functions may differ
+   • Run tests after upgrade to identify breaking changes
+   • Consult @testing-library migration guide if issues
+
+3. Verification after all changes:
+   • npm install from project root (should succeed)
+   • npm run build (check all workspaces build)
+   • npm run test (run all test suites)
+   • npm run lint (ensure no linting issues)
+
+4. Version pinning:
+   • Use ^ caret (^X.Y.Z) for all testing deps
+   • Allows minor/patch updates, not major versions
+   • Keep consistent across all packages
+
+═══════════════════════════════════════════════════════════════════════════════
+
+END OF MATRIX
+
+For full audit details, see: TESTING_LIBRARIES_AUDIT_2026-01-23.txt
+

@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/core_append_user_instruction",
+  "version": "1.0.0",
+  "description": "Append the next user instruction to the message list",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["core", "workflow", "plugin"],
+  "main": "core_append_user_instruction.py",
+  "files": ["core_append_user_instruction.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "core.append_user_instruction",
+    "category": "core",
+    "class": "CoreAppendUserInstruction",
+    "entrypoint": "execute"
+  }
+}

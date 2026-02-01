@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/web_read_json",
+  "version": "1.0.0",
+  "description": "Read JSON file",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["web", "workflow", "plugin"],
+  "main": "web_read_json.py",
+  "files": ["web_read_json.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "web.read_json",
+    "category": "web",
+    "class": "WebReadJson",
+    "entrypoint": "execute"
+  }
+}

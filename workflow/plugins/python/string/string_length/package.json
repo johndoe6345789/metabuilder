@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/string_length",
+  "version": "1.0.0",
+  "description": "Get string length",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["string", "workflow", "plugin"],
+  "main": "string_length.py",
+  "files": ["string_length.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "string.length",
+    "category": "string",
+    "class": "StringLength",
+    "entrypoint": "execute"
+  }
+}

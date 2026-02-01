@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/backend_create_slack",
+  "version": "1.0.0",
+  "description": "Create Slack client for messaging",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["backend", "workflow", "plugin", "slack"],
+  "main": "backend_create_slack.py",
+  "files": ["backend_create_slack.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "backend.create_slack",
+    "category": "backend",
+    "class": "CreateSlack",
+    "entrypoint": "execute"
+  }
+}

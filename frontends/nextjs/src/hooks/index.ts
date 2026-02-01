@@ -13,6 +13,18 @@ export { useKV } from './useKV'
 export { useLevelRouting } from './data/useLevelRouting'
 export { useResolvedUser } from './data/useResolvedUser'
 
+// Data structure management hooks
+export type { UseSetReturn } from './useSet'
+export { useSet } from './useSet'
+export type { UseMapReturn } from './useMap'
+export { useMap } from './useMap'
+export type { UseArrayReturn } from './useArray'
+export { useArray } from './useArray'
+export type { UseStackReturn } from './useStack'
+export { useStack } from './useStack'
+export type { UseQueueReturn } from './useQueue'
+export { useQueue } from './useQueue'
+
 // Phase 3 User CRUD hooks
 export { useUsers } from './useUsers'
 export type { UseUsersReturn } from './useUsers'
@@ -28,3 +40,13 @@ export { usePackageActions } from './usePackageActions'
 export type { UsePackageActionsReturn } from './usePackageActions'
 export { usePackageDetails } from './usePackageDetails'
 export type { UsePackageDetailsReturn } from './usePackageDetails'
+
+// Form validation and state management hooks
+export { useValidation } from './useValidation'
+export type { ValidationSchema, ValidationErrors } from './useValidation'
+export { useInput } from './useInput'
+export { useCheckbox } from './useCheckbox'
+export { useSelect } from './useSelect'
+export type { SelectOption } from './useSelect'
+export { useFieldArray } from './useFieldArray'
+export type { FormField } from './useFieldArray'

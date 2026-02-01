@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/math_power",
+  "version": "1.0.0",
+  "description": "Raise base to exponent power",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["math", "workflow", "plugin"],
+  "main": "math_power.py",
+  "files": ["math_power.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "math.power",
+    "category": "math",
+    "class": "MathPower",
+    "entrypoint": "execute"
+  }
+}

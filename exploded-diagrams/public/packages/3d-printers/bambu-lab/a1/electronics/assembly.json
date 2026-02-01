@@ -1,0 +1,15 @@
+{
+  "id": "electronics",
+  "name": "Electronics Assembly",
+  "description": "Bambu Lab A1 electronics system - main control board, power supply, display, connectivity, and wiring",
+  "parts": [
+    "mainboard",
+    "power-supply",
+    "lcd-screen",
+    "wifi-module",
+    "stepper-driver",
+    "power-switch",
+    "usb-port",
+    "wiring-harness"
+  ]
+}

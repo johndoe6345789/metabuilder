@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/test_assert_exists",
+  "version": "1.0.0",
+  "description": "Assert that a value exists (is not None/null)",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["test", "workflow", "plugin"],
+  "main": "test_assert_exists.py",
+  "files": ["test_assert_exists.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "test.assert_exists",
+    "category": "test",
+    "class": "TestAssertExists",
+    "entrypoint": "execute"
+  }
+}

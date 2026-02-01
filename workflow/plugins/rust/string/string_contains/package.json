@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/string_contains",
+  "version": "1.0.0",
+  "description": "Check if string contains substring",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["string", "workflow", "plugin"],
+  "main": "src/lib.rs",
+  "files": ["src/lib.rs", "src/factory.rs"],
+  "metadata": {
+    "plugin_type": "string.contains",
+    "category": "string",
+    "struct": "StringContains",
+    "entrypoint": "execute"
+  }
+}

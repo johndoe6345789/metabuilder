@@ -1,0 +1,34 @@
+{
+  "name": "@metabuilder/plugin-logic",
+  "version": "1.0.0",
+  "description": "Logical and comparison operations workflow plugins for MetaBuilder",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["logic", "workflow", "plugin", "comparison", "boolean"],
+  "main": "src/index.ts",
+  "files": ["src/index.ts", "src/factory.ts"],
+  "metadata": {
+    "plugin_type": "logic",
+    "category": "logic",
+    "classes": [
+      "LogicAnd",
+      "LogicOr",
+      "LogicNot",
+      "LogicXor",
+      "LogicEquals",
+      "LogicNotEquals",
+      "LogicGt",
+      "LogicGte",
+      "LogicLt",
+      "LogicLte",
+      "LogicIn",
+      "LogicBetween",
+      "LogicIsNull",
+      "LogicIsEmpty",
+      "LogicTypeOf",
+      "LogicTernary",
+      "LogicCoalesce"
+    ],
+    "entrypoint": "execute"
+  }
+}

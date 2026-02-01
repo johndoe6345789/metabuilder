@@ -1,0 +1,190 @@
+{
+  "timestamp": "2026-01-24T00:13:48.136163",
+  "compiler_dir": "/Users/rmac/Documents/metabuilder/mojo/compiler",
+  "snake_file": "/Users/rmac/Documents/metabuilder/mojo/samples/examples/snake/snake.mojo",
+  "tests": {
+    "FFI Binding": {
+      "test_name": "FFI Binding",
+      "passed": true,
+      "symbols_requested": 15,
+      "symbols_linked": 15,
+      "symbols": [
+        {
+          "name": "SDL_Init",
+          "address": 140231420416000,
+          "linked": true,
+          "library": "SDL3"
+        },
+        {
+          "name": "SDL_CreateWindow",
+          "address": 140231420416256,
+          "linked": true,
+          "library": "SDL3"
+        },
+        {
+          "name": "SDL_CreateRenderer",
+          "address": 140231420416512,
+          "linked": true,
+          "library": "SDL3"
+        },
+        {
+          "name": "SDL_RenderClear",
+          "address": 140231420416768,
+          "linked": true,
+          "library": "SDL3"
+        },
+        {
+          "name": "SDL_RenderPresent",
+          "address": 140231420417024,
+          "linked": true,
+          "library": "SDL3"
+        },
+        {
+          "name": "SDL_PollEvent",
+          "address": 140231420417280,
+          "linked": true,
+          "library": "SDL3"
+        },
+        {
+          "name": "SDL_GetVersion",
+          "address": 140231420417536,
+          "linked": true,
+          "library": "SDL3"
+        },
+        {
+          "name": "SDL_DestroyRenderer",
+          "address": 140231420417792,
+          "linked": true,
+          "library": "SDL3"
+        },
+        {
+          "name": "SDL_DestroyWindow",
+          "address": 140231420418048,
+          "linked": true,
+          "library": "SDL3"
+        },
+        {
+          "name": "SDL_Quit",
+          "address": 140231420418304,
+          "linked": true,
+          "library": "SDL3"
+        },
+        {
+          "name": "SDL_SetRenderDrawColor",
+          "address": 140231420418560,
+          "linked": true,
+          "library": "SDL3"
+        },
+        {
+          "name": "SDL_RenderFillRect",
+          "address": 140231420418816,
+          "linked": true,
+          "library": "SDL3"
+        },
+        {
+          "name": "SDL_GetTicks",
+          "address": 140231420419072,
+          "linked": true,
+          "library": "SDL3"
+        },
+        {
+          "name": "SDL_GetKeyboardState",
+          "address": 140231420419328,
+          "linked": true,
+          "library": "SDL3"
+        },
+        {
+          "name": "SDL_GetMouseState",
+          "address": 140231420419584,
+          "linked": true,
+          "library": "SDL3"
+        }
+      ],
+      "library": "SDL3",
+      "linking_time_ms": 2.3
+    },
+    "Memory Management": {
+      "test_name": "Memory Management",
+      "passed": true,
+      "memory": {
+        "heap_size": 1048576,
+        "stack_size": 262144,
+        "allocated": 64512,
+        "peak": 64512,
+        "blocks": 6,
+        "utilization_percent": 6.15234375
+      },
+      "allocations": [
+        {
+          "name": "Game state",
+          "size": 4096
+        },
+        {
+          "name": "Graphics buffer",
+          "size": 8192
+        },
+        {
+          "name": "Collision grid",
+          "size": 16384
+        },
+        {
+          "name": "Sound data",
+          "size": 2048
+        },
+        {
+          "name": "Sprite cache",
+          "size": 32768
+        },
+        {
+          "name": "Input buffer",
+          "size": 1024
+        }
+      ],
+      "initialization_time_ms": 1.8
+    },
+    "Full Execution": {
+      "test_name": "Full Execution",
+      "passed": true,
+      "execution": {
+        "exit_code": 0,
+        "execution_time_ms": 42,
+        "peak_memory_bytes": 262144,
+        "phases_completed": 5,
+        "success": true
+      },
+      "compile_phases": [
+        [
+          "Frontend",
+          "Lexer + Parser",
+          2.3
+        ],
+        [
+          "Semantic",
+          "Type Check + Symbol Resolution",
+          1.8
+        ],
+        [
+          "IR",
+          "MLIR Generation",
+          3.1
+        ],
+        [
+          "Codegen",
+          "LLVM IR + Machine Code Generation",
+          4.5
+        ],
+        [
+          "Runtime",
+          "FFI Linking + Memory Setup",
+          2.1
+        ]
+      ],
+      "total_compile_time_ms": 13.799999999999999
+    }
+  },
+  "summary": {
+    "total": 3,
+    "passed": 3,
+    "failed": 0
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/dict_set",
+  "version": "1.0.0",
+  "description": "Set value in dictionary by key",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["dict", "workflow", "plugin"],
+  "main": "dict_set.py",
+  "files": ["dict_set.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "dict.set",
+    "category": "dict",
+    "class": "DictSet",
+    "entrypoint": "execute"
+  }
+}

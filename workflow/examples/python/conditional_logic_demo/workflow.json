@@ -8,7 +8,7 @@
       "type": "var.set",
       "typeVersion": 1,
       "position": [
-        0,
+        100,
         100
       ],
       "parameters": {
@@ -27,8 +27,8 @@
       "type": "dict.get",
       "typeVersion": 1,
       "position": [
-        300,
-        50
+        400,
+        100
       ],
       "parameters": {
         "object": "$user",
@@ -37,11 +37,11 @@
     },
     {
       "id": "check_adult",
-      "name": "Check If Adult",
+      "name": "Check Adult",
       "type": "logic.gte",
       "typeVersion": 1,
       "position": [
-        600,
+        700,
         100
       ],
       "parameters": {
@@ -51,12 +51,12 @@
     },
     {
       "id": "format_report",
-      "name": "Format Final Report",
+      "name": "Format Report",
       "type": "string.format",
       "typeVersion": 1,
       "position": [
-        900,
-        100
+        100,
+        300
       ],
       "parameters": {
         "template": "User: {name}, Age: {age}, Adult: {is_adult}",
@@ -73,7 +73,7 @@
       "main": {
         "0": [
           {
-            "node": "Extract Age",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -84,7 +84,7 @@
       "main": {
         "0": [
           {
-            "node": "Check If Adult",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -95,7 +95,7 @@
       "main": {
         "0": [
           {
-            "node": "Format Final Report",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -103,14 +103,13 @@
       }
     }
   },
-  "triggers": [
-    {
-      "nodeId": "create_user_data",
-      "kind": "manual",
-      "enabled": true,
-      "meta": {
-        "description": "Manually triggered Conditional Logic Demo workflow execution"
-      }
-    }
-  ]
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  }
 }

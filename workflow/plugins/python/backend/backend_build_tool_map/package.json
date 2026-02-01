@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/backend_build_tool_map",
+  "version": "1.0.0",
+  "description": "Build tool map for function dispatch",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["backend", "workflow", "plugin", "tools"],
+  "main": "backend_build_tool_map.py",
+  "files": ["backend_build_tool_map.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "backend.build_tool_map",
+    "category": "backend",
+    "class": "BuildToolMap",
+    "entrypoint": "execute"
+  }
+}

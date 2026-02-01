@@ -1,0 +1,275 @@
+# Postfix Main Configuration - MetaBuilder Email Client Phase 8
+# This file is the primary Postfix configuration file
+# Reference: http://www.postfix.org/postconf.5.html
+
+# ============================================================================
+# BASIC SETTINGS
+# ============================================================================
+
+# The internet hostname of this mail system
+# (Default: system FQDN)
+myhostname = postfix.metabuilder.local
+
+# The internet domain name of this mail system
+# Used for unqualified addresses
+mydomain = metabuilder.local
+
+# The domain name that locally-posted mail appears to come from
+myorigin = $mydomain
+
+# The list of domains that this mail system considers local
+mydestination = $myhostname, localhost.$mydomain, localhost, $mydomain
+
+# Network interfaces that Postfix listens on
+inet_interfaces = all
+
+# IP protocols to use for SMTP connections
+inet_protocols = ipv4
+
+# ============================================================================
+# NETWORK & RELAY SETTINGS
+# ============================================================================
+
+# List of trusted networks for mail relay (via SMTP)
+# - 127.0.0.1/8: localhost (always trusted)
+# - 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16: Docker networks
+mynetworks = 127.0.0.1/8, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16
+
+# List of hosts/domains to relay mail through
+# Empty by default - set via environment variable for external relay
+# Example: relayhost = gmail-smtp-in.l.google.com:587
+relayhost =
+
+# Address preference for outbound SMTP connections
+smtp_address_preference = ipv4
+
+# ============================================================================
+# SASL AUTHENTICATION (Relay & Dovecot Integration)
+# ============================================================================
+
+# Enable SASL authentication for incoming SMTP connections
+smtpd_sasl_auth_enable = yes
+
+# SASL authentication type (dovecot for Dovecot integration)
+smtpd_sasl_type = dovecot
+
+# Path to Dovecot auth socket (relative to Postfix spool directory)
+smtpd_sasl_path = private/auth
+
+# Local domain for SASL authentication
+smtpd_sasl_local_domain = $mydomain
+
+# SASL authentication options (noanonymous = require login)
+smtpd_sasl_security_options = noanonymous
+
+# ============================================================================
+# SMTPD RESTRICTIONS (Inbound SMTP Policy)
+# ============================================================================
+
+# SMTP client connection restrictions
+smtpd_client_restrictions =
+    permit_mynetworks,
+    permit_sasl_authenticated,
+    reject_unauth_pipelining,
+    permit
+
+# SMTP helo restrictions
+smtpd_helo_restrictions =
+    permit_mynetworks,
+    permit_sasl_authenticated,
+    reject_invalid_helo_hostname,
+    reject_non_fqdn_helo_hostname,
+    permit
+
+# SMTP sender restrictions (envelope sender)
+smtpd_sender_restrictions =
+    permit_mynetworks,
+    permit_sasl_authenticated,
+    reject_non_fqdn_sender,
+    permit
+
+# SMTP recipient restrictions (prevent open relay)
+smtpd_recipient_restrictions =
+    permit_mynetworks,
+    permit_sasl_authenticated,
+    reject_unauth_destination,
+    permit
+
+# Relay policy (determines who can relay mail through us)
+smtpd_relay_restrictions =
+    permit_mynetworks,
+    permit_sasl_authenticated,
+    defer_unauth_destination
+
+# ============================================================================
+# OUTBOUND SMTP SETTINGS (Relay Configuration)
+# ============================================================================
+
+# SMTP client authentication for relay
+smtp_sasl_auth_enable = no
+smtp_sasl_password_maps =
+smtp_sasl_security_options = noanonymous
+
+# SMTP client TLS security level for relay
+smtp_tls_security_level = may
+smtp_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
+
+# ============================================================================
+# TLS/SSL SETTINGS (Security & Encryption)
+# ============================================================================
+
+# Inbound SMTP TLS settings
+smtpd_tls_security_level = may
+smtpd_tls_cert_file = /etc/dovecot/certs/dovecot.crt
+smtpd_tls_key_file = /etc/dovecot/certs/dovecot.key
+smtpd_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
+
+# Outbound SMTP TLS settings
+smtp_tls_security_level = may
+smtp_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
+
+# TLS cipher settings (strong ciphers only)
+smtpd_tls_ciphers = high
+smtpd_tls_exclude_ciphers = aNULL, eNULL, EXPORT, DES, RC4, MD5, PSK, SRP, aSS
+
+# Enable/disable TLS session caching
+smtpd_tls_session_cache_database = btree:/var/lib/postfix/smtpd_tls_session_cache
+smtp_tls_session_cache_database = btree:/var/lib/postfix/smtp_tls_session_cache
+
+# ============================================================================
+# MESSAGE SIZE & DELIVERY LIMITS
+# ============================================================================
+
+# Maximum message size (bytes) - 50 MB default
+message_size_limit = 52428800
+
+# Maximum size of a mailbox (0 = unlimited)
+mailbox_size_limit = 0
+
+# Postfix bounce notice content size limit
+bounce_size_limit = 50000
+
+# Rate limiting
+default_process_limit = 100
+default_transport_rate_limit = 0
+default_destination_rate_limit = 0
+
+# Connection rate limiting
+default_delivery_slot_cost = 5
+default_delivery_slot_discount = 50
+
+# ============================================================================
+# LOCAL DELIVERY SETTINGS
+# ============================================================================
+
+# Program to deliver mail to local mailbox
+mailbox_command = /usr/lib/dovecot/deliver -d %u
+
+# Use Dovecot for local deliveries
+virtual_transport = dovecot
+dovecot_destination_recipient_limit = 1
+
+# Virtual mailbox (if using virtual domains)
+# virtual_mailbox_base = /var/mail/vhosts
+# virtual_mailbox_domains = $virtual_mailbox_maps
+
+# ============================================================================
+# ALIAS SETTINGS
+# ============================================================================
+
+# File containing local aliases
+alias_maps = hash:/etc/postfix/aliases
+alias_database = hash:/etc/postfix/aliases
+
+# Virtual alias maps (if using virtual domains)
+# virtual_alias_maps = hash:/etc/postfix/virtual_aliases
+
+# ============================================================================
+# ADDRESS VERIFICATION
+# ============================================================================
+
+# Enable address verification to reduce bounce mail
+address_verify_negative_cache = yes
+address_verify_negative_expire = 3d
+
+# Verify recipient addresses
+unverified_recipient_reject_codes = 450, 550
+unverified_sender_reject_codes = 450, 550
+
+# ============================================================================
+# LOGGING & DEBUGGING
+# ============================================================================
+
+# Debug level (0-4, higher = more verbose)
+debug_peer_level = 2
+
+# Log all mail transactions (verbose)
+# debug = yes
+
+# ============================================================================
+# QUEUE & BOUNCE SETTINGS
+# ============================================================================
+
+# How long to keep messages in the queue
+maximal_queue_lifetime = 5d
+
+# How long to keep bounce messages
+bounce_queue_lifetime = 5d
+
+# Notification settings for delivery delays
+delay_warning_time = 4h
+
+# ============================================================================
+# PERFORMANCE TUNING
+# ============================================================================
+
+# Number of delivery processes
+default_process_limit = 100
+
+# Maximum number of messages in active queue
+qmgr_message_recipient_limit = 20000
+
+# Scheduler tuning
+qmgr_default_delivery_slot_cost = 5
+qmgr_default_delivery_slot_discount = 50
+
+# Enable fast FLUSH support
+flush_service_name = flush
+
+# ============================================================================
+# MISCELLANEOUS
+# ============================================================================
+
+# Compatibility mode
+compatibility_level = 3.8
+
+# System mail recipient for policy violations
+policy_time_limit = 3600s
+
+# Enable null sender bounce addresses (DSN)
+bounce_notice_recipient = postmaster
+
+# Postfix daemon binding address (0.0.0.0 = all interfaces)
+smtp_bind_address = 0.0.0.0
+
+# SMTP client hostname lookup
+smtp_host_lookup = dns
+
+# ============================================================================
+# CONTENT FILTERING (Optional - can be enabled later)
+# ============================================================================
+
+# Uncomment to enable content filtering via external scripts
+# receive_override_options = no_address_mappings
+# content_filter = smtp-amavis:[127.0.0.1]:10024
+
+# ============================================================================
+# RATE LIMITING & ANTI-SPAM
+# ============================================================================
+
+# Limit concurrent connections from single client
+smtpd_client_connection_count_limit = 10
+smtpd_client_connection_rate_limit = 100
+
+# Per-domain connection limits
+smtpd_per_record_limit = 10000

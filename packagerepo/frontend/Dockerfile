@@ -15,6 +15,9 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1
+# Set backend URL for Next.js rewrites (Docker internal network)
+ARG BACKEND_URL=http://backend:5000
+ENV BACKEND_URL=${BACKEND_URL}
 
 # Ensure public directory exists (Next.js may not create it if no static assets)
 RUN mkdir -p public

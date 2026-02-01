@@ -1,0 +1,204 @@
+ZUSTAND vs REDUX STATE MANAGEMENT AUDIT
+========================================
+Date: 2026-01-23
+Status: Analysis Complete
+
+EXECUTIVE SUMMARY
+=================
+- Zustand: NOT USED in package.json files across main codebase
+- Redux: COMPREHENSIVE ecosystem with 13+ packages
+- Strategic Direction: Pure Redux consolidation (no competing state libraries)
+
+ZUSTAND FINDINGS
+================
+Location 1: exploded-diagrams/package-lock.json
+  - Found in lock file only (not in package.json)
+  - Versions referenced: ^4.3.2, ^5.0.1, ^5.0.3
+  - Reason: Transitive dependency of another package (jotai likely)
+  - Status: NOT INTENTIONALLY USED - just a dependency side-effect
+
+VERDICT: Zero intentional Zustand usage
+
+
+REDUX ECOSYSTEM (13+ PACKAGES)
+=============================
+
+1. CORE PACKAGES
+  - @reduxjs/toolkit: PRIMARY state container
+    - Versions: ^1.9.7 || ^2.5.2 (multi-version support)
+    - Usage: workflowui, codegen, frontends/nextjs, emailclient, pastebin, root
+    - Status: Standardized at ^2.5.2 (latest)
+
+  - redux: PEER DEPENDENCY
+    - Versions: ^5.0.1 (frontends), ^4.2.1 (redux/api-clients)
+    - Status: Minor version inconsistency (5.0 vs 4.2)
+
+2. REDUX HOOKS PACKAGES (9 packages)
+  - @metabuilder/hooks-async (1.0.0)
+    Description: Redux-backed async hooks (TanStack Query replacement)
+    Dependencies: @reduxjs/toolkit ^2.5.2
+
+  - @metabuilder/hooks-data (0.1.0)
+    Description: Data management with service adapters
+    Peer Dependencies: @reduxjs/toolkit ^1.9.7 || ^2.5.2
+
+  - @metabuilder/hooks-auth (0.1.0)
+    Description: Authentication hooks with service adapters
+    Peer Dependencies: @reduxjs/toolkit ^1.9.7 || ^2.5.2
+
+  - @metabuilder/hooks-canvas (0.1.0)
+    Description: Canvas operations with service injection
+    Peer Dependencies: @reduxjs/toolkit ^1.9.7 || ^2.5.2
+
+  - @metabuilder/hooks (0.1.0)
+    Description: General hooks (likely legacy umbrella)
+    Peer Dependencies: @reduxjs/toolkit ^1.9.7 || ^2.5.2
+
+  - @metabuilder/core-hooks (0.1.0)
+    Description: Generic React hooks (Redux-free)
+    Dependencies: @reduxjs/toolkit ^2.5.2
+
+  - @metabuilder/hooks-utils (1.0.0)
+    Description: Utility hooks (data tables, async, core)
+
+  - @metabuilder/hooks-forms (1.0.0)
+    Description: Form management with validation
+
+3. SLICES & CORE
+  - @metabuilder/redux-slices (0.1.0)
+    Description: Redux slices for workflow state
+    Dependencies: @reduxjs/toolkit ^2.5.2
+    Also supports: @reduxjs/toolkit ^1.9.7 || ^2.5.2 (multi-version)
+
+  - @metabuilder/redux-core (1.0.0)
+    Description: Core Redux slices (shared across all frontends)
+    Scope: Next.js, Qt6, CLI frontends
+
+4. SERVICE ADAPTERS
+  - @metabuilder/service-adapters (0.1.0)
+    Description: Service adapter interfaces for hook decoupling
+
+  - @metabuilder/api-clients (0.1.0)
+    Description: API client hooks (DBAL, GitHub integration)
+    Dependencies: redux ^4.2.1 (INCONSISTENT)
+
+5. UTILITIES
+  - @metabuilder/timing-utils (0.1.0)
+    Description: Debounced saves, timing utilities
+    Dependencies: @reduxjs/toolkit ^2.5.2
+
+  - @metabuilder/hooks-email (in redux/email/)
+    Description: Email functionality hooks
+    Dependencies: @reduxjs/toolkit ^1.9.7 || ^2.5.2
+
+
+MULTI-VERSION SUPPORT ANALYSIS
+===============================
+
+Packages Supporting Both ^1.9.7 and ^2.5.2:
+  1. redux-slices
+  2. hooks-auth
+  3. hooks-canvas
+  4. hooks-data
+  5. hooks-email
+
+Reason: Gradual upgrade strategy allowing consumers to choose version
+
+Version Inconsistencies (NEEDS FIX):
+  1. redux/api-clients uses redux ^4.2.1 while others use ^5.0.1
+     - Impact: Potential peer dependency conflicts
+     - Fix: Standardize to ^5.0.1
+
+  2. pastebin uses @reduxjs/toolkit ^2.5.0
+     - vs root/codegen/workflowui at ^2.5.2
+     - Impact: Minor - within patch compatibility
+
+
+STRATEGIC IMPLICATIONS
+======================
+
+1. NO STATE LIBRARY COMPETITION
+   - Zustand not adopted across main projects
+   - Redux is the exclusive state management solution
+   - Cohesive ecosystem design (all hooks derive from Redux)
+
+2. HOOK-BASED ARCHITECTURE
+   - Moved away from raw Redux action/reducer patterns
+   - Custom hooks (@metabuilder/hooks-*) provide ergonomic API
+   - Service adapter pattern enables dependency injection
+
+3. TanStack Query Replacement
+   - hooks-async package explicitly replaces TanStack React Query
+   - Redux acts as single source of truth for all async data
+   - Reduces library dependencies
+
+4. MULTI-VERSION COMPATIBILITY
+   - Intentional support for both RTK 1.9.7 and 2.5.2
+   - Allows gradual migration in large monorepos
+   - Can be phased out once all consumers upgraded
+
+
+RECOMMENDATIONS
+===============
+
+IMMEDIATE FIXES (High Priority)
+1. Standardize redux version across all packages
+   Current: ^4.2.1 and ^5.0.1 inconsistent
+   Target: Upgrade redux/api-clients from ^4.2.1 to ^5.0.1
+
+2. Standardize @reduxjs/toolkit version
+   Current: ^2.5.0 in pastebin, ^2.5.2 elsewhere
+   Target: Upgrade pastebin to ^2.5.2 (patch level compatible)
+
+MEDIUM PRIORITY (Next Sprint)
+1. Phase out multi-version support (@reduxjs/toolkit ^1.9.7 || ^2.5.2)
+   - Once all consumers upgraded to Redux 2.x
+   - Simplifies peer dependency management
+
+2. Merge redundant hook packages
+   Current: 9 separate hook packages
+   Target: Consider consolidating into 2-3 logical groups
+   - Core hooks (auth, canvas, data, async)
+   - Form hooks
+   - Utility hooks
+
+DOCUMENTATION UPDATES
+1. Add explanation of hook-based architecture to CLAUDE.md
+2. Document service adapter pattern for new developers
+3. Create migration guide from TanStack Query to hooks-async
+
+
+FILE LOCATIONS FOR FIXES
+========================
+
+redux/api-clients/package.json:
+  Line with: "redux": "^4.2.1"
+  Should be: "redux": "^5.0.1"
+  And: "redux": "^4.0.0" (in peerDependencies)
+  Should be: "redux": "^5.0.0"
+
+pastebin/package.json:
+  Line with: "@reduxjs/toolkit": "^2.5.0"
+  Should be: "@reduxjs/toolkit": "^2.5.2"
+
+redux/slices/package.json:
+  Current multi-version support is intentional
+  Status: Keep as-is (gradual upgrade strategy)
+
+
+RELATED DOCUMENTATION
+=====================
+See: txt/DEPENDENCY_UPDATES_INDEX_2026-01-23.txt
+     txt/PROJECT_WIDE_DEPENDENCY_REMEDIATION_PLAN_2026-01-23.txt
+
+
+CONCLUSION
+==========
+MetaBuilder has made a clear strategic choice:
+- Pure Redux for state management (no competing libraries)
+- Hook-based ergonomic API (@metabuilder/hooks-*)
+- Service adapter pattern for flexibility
+- TanStack Query replaced with Redux-backed async hooks
+
+This is a coherent, maintainable architecture with 0 library conflicts.
+The only issues are minor version inconsistencies in peer dependencies.

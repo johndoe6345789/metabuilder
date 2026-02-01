@@ -1,0 +1,13 @@
+{
+  "id": "ford",
+  "name": "Ford",
+  "description": "Ford Motor Company",
+  "products": [
+    {
+      "id": "fiesta",
+      "name": "Ford Fiesta",
+      "description": "Compact car drivetrain components",
+      "meta": "2008-2019 • Mk6/Mk7"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "name": "@metabuilder/workflow-plugins-packagerepo",
+  "version": "1.0.0",
+  "description": "Package repository operation plugins",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["packagerepo", "workflow", "plugins", "auth", "storage"],
+  "metadata": {
+    "category": "packagerepo",
+    "plugin_count": 11
+  },
+  "plugins": [
+    "auth_verify_jwt",
+    "auth_check_scopes",
+    "parse_path",
+    "normalize_entity",
+    "validate_entity",
+    "kv_get",
+    "kv_put",
+    "blob_put",
+    "index_upsert",
+    "respond_json",
+    "respond_error"
+  ]
+}

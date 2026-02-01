@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/logic_and",
+  "version": "1.0.0",
+  "description": "Perform logical AND on boolean values",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["logic", "workflow", "plugin"],
+  "main": "logic_and.go",
+  "files": ["logic_and.go", "factory.go"],
+  "metadata": {
+    "plugin_type": "logic.and",
+    "category": "logic",
+    "struct": "LogicAnd",
+    "entrypoint": "Execute"
+  }
+}

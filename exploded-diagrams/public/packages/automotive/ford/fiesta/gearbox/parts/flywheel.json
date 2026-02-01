@@ -1,0 +1,56 @@
+{
+  "id": "flywheel",
+  "name": "Flywheel",
+  "partNumber": "FD-1848101",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 8500.0,
+  "weightUnit": "g",
+  "baseY": -180,
+  "description": "Dual-mass flywheel - connects to crankshaft",
+  "installation": {
+    "tools": [
+      { "name": "Flywheel holder", "size": "Universal", "required": true },
+      { "name": "Socket", "size": "15mm", "required": true },
+      { "name": "Torque wrench", "size": "40-120 Nm", "required": true },
+      { "name": "Breaker bar", "size": "1/2\"", "required": false }
+    ],
+    "hardware": [
+      { "name": "Flywheel bolt", "spec": "M10x1.25x22", "grade": "10.9", "qty": 6, "reusable": false },
+      { "name": "Crankshaft seal", "spec": "35x48x7", "qty": 1, "reusable": false }
+    ],
+    "torque": [
+      { "fastener": "Flywheel bolts", "value": 85, "unit": "Nm", "sequence": "Star pattern", "notes": "New bolts only, do not reuse" }
+    ],
+    "notes": [
+      "Lock crankshaft before removing bolts",
+      "Check DMF for excessive play before refitting",
+      "Clean crankshaft mating surface thoroughly"
+    ]
+  },
+  "geometry": [
+    { "type": "circle", "r": 75, "fill": "#5a5a5a" },
+    { "type": "circle", "r": 65, "fill": "#6a6a6a" },
+    { "type": "circle", "r": 25, "fill": "#4a4a4a" },
+    { "type": "circle", "r": 8, "offsetX": -50, "offsetY": 0, "fill": "#333" },
+    { "type": "circle", "r": 8, "offsetX": 50, "offsetY": 0, "fill": "#333" },
+    { "type": "circle", "r": 8, "offsetX": 0, "offsetY": -50, "fill": "#333" },
+    { "type": "circle", "r": 8, "offsetX": 0, "offsetY": 50, "fill": "#333" },
+    { "type": "circle", "r": 8, "offsetX": -35, "offsetY": -35, "fill": "#333" },
+    { "type": "circle", "r": 8, "offsetX": 35, "offsetY": 35, "fill": "#333" },
+    { "type": "text", "content": "DMF", "offsetY": 3, "fill": "#888", "fontSize": 10 }
+  ],
+  "geometry3d": [
+    { "type": "cylinder", "r": 58, "height": 8, "fill": "#505560" },
+    { "type": "cylinder", "r": 55, "height": 25, "fill": "#606570" },
+    { "type": "cylinder", "r": 50, "height": 20, "offsetY": 2.5, "fill": "#707580" },
+    { "type": "cylinder", "r": 25, "height": 30, "fill": "#555560" },
+    { "type": "cylinder", "r": 15, "height": 35, "subtract": true },
+    { "type": "cylinder", "r": 5, "height": 30, "offsetX": 35, "subtract": true },
+    { "type": "cylinder", "r": 5, "height": 30, "offsetX": -35, "subtract": true },
+    { "type": "cylinder", "r": 5, "height": 30, "offsetY": 35, "subtract": true },
+    { "type": "cylinder", "r": 5, "height": 30, "offsetY": -35, "subtract": true },
+    { "type": "cylinder", "r": 5, "height": 30, "offsetX": 25, "offsetY": 25, "subtract": true },
+    { "type": "cylinder", "r": 5, "height": 30, "offsetX": -25, "offsetY": -25, "subtract": true }
+  ]
+}

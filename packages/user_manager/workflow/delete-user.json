@@ -1,0 +1,175 @@
+{
+  "name": "Delete User",
+  "active": false,
+  "nodes": [
+    {
+      "id": "check_permission",
+      "name": "Check Permission",
+      "type": "metabuilder.condition",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "condition": "{{ $context.user.level >= 3 }}",
+        "operation": "condition"
+      }
+    },
+    {
+      "id": "fetch_user",
+      "name": "Fetch User",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "filter": {
+          "id": "{{ $json.userId }}",
+          "tenantId": "{{ $context.tenantId }}"
+        },
+        "operation": "database_read",
+        "entity": "User"
+      }
+    },
+    {
+      "id": "count_admins",
+      "name": "Count Admins",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "filter": {
+          "tenantId": "{{ $context.tenantId }}",
+          "level": {
+            "$gte": 3
+          }
+        },
+        "operation": "database_count",
+        "entity": "User"
+      }
+    },
+    {
+      "id": "check_not_last_admin",
+      "name": "Check Not Last Admin",
+      "type": "metabuilder.condition",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "condition": "{{ !($steps.fetch_user.output.level >= 3 && $steps.count_admins.output <= 1) }}",
+        "operation": "condition"
+      }
+    },
+    {
+      "id": "delete_user",
+      "name": "Delete User",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "filter": {
+          "id": "{{ $json.userId }}"
+        },
+        "operation": "database_delete",
+        "entity": "User"
+      }
+    },
+    {
+      "id": "return_success",
+      "name": "Return Success",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "action": "http_response",
+        "status": 200,
+        "body": {
+          "message": "User deleted"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "check_permission": {
+      "main": [
+        [
+          {
+            "node": "fetch_user",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fetch_user": {
+      "main": [
+        [
+          {
+            "node": "count_admins",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "count_admins": {
+      "main": [
+        [
+          {
+            "node": "check_not_last_admin",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_not_last_admin": {
+      "main": [
+        [
+          {
+            "node": "delete_user",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "delete_user": {
+      "main": [
+        [
+          {
+            "node": "return_success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "id": "workflow_delete_user",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
+}

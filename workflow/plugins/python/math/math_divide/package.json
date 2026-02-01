@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/math_divide",
+  "version": "1.0.0",
+  "description": "Divide a by b",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["math", "workflow", "plugin"],
+  "main": "math_divide.py",
+  "files": ["math_divide.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "math.divide",
+    "category": "math",
+    "class": "MathDivide",
+    "entrypoint": "execute"
+  }
+}

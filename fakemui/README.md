@@ -23,7 +23,7 @@ CButton {
 
 ### Component Count
 
-- **104+ QML Components** in `qml-components/`
+- **104+ QML Components** in `qml/components/`
 - **24+ File Categories** organized by function
 - **Consistent API** following Material-UI patterns
 
@@ -59,7 +59,7 @@ fakemui/
     └── ThemeSelector.qml    # Theme switcher
 ```
 
-### 📁 QML Components (`qml-components/`)
+### 📁 QML Components (`qml/components/`)
 
 Material-UI style component library with **104+ components** organized by category:
 
@@ -235,7 +235,7 @@ import Fakemui 1.0
 
 ### Adding Components
 
-1. Create component in appropriate `qml-components/` category
+1. Create component in appropriate `qml/components/` category
 2. Follow C prefix naming convention
 3. Update `qmldir` if creating a new singleton
 4. Add to category documentation

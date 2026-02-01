@@ -1,0 +1,220 @@
+{
+  "name": "Authenticate User",
+  "active": false,
+  "nodes": [
+    {
+      "id": "parse_body",
+      "name": "Parse Body",
+      "type": "packagerepo.parse_json",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "input": "$request.body",
+        "out": "credentials"
+      }
+    },
+    {
+      "id": "validate_fields",
+      "name": "Validate Fields",
+      "type": "logic.if",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "condition": "$credentials.username == null || $credentials.password == null",
+        "then": "error_invalid_request",
+        "else": "verify_password"
+      }
+    },
+    {
+      "id": "verify_password",
+      "name": "Verify Password",
+      "type": "packagerepo.auth_verify_password",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "username": "$credentials.username",
+        "password": "$credentials.password",
+        "out": "user"
+      }
+    },
+    {
+      "id": "check_verified",
+      "name": "Check Verified",
+      "type": "logic.if",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "condition": "$user == null",
+        "then": "error_unauthorized",
+        "else": "generate_token"
+      }
+    },
+    {
+      "id": "generate_token",
+      "name": "Generate Token",
+      "type": "packagerepo.auth_generate_jwt",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "subject": "$user.username",
+        "scopes": "$user.scopes",
+        "expires_in": 86400,
+        "out": "token"
+      }
+    },
+    {
+      "id": "respond_success",
+      "name": "Respond Success",
+      "type": "packagerepo.respond_json",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "body": {
+          "ok": true,
+          "token": "$token",
+          "username": "$user.username",
+          "scopes": "$user.scopes",
+          "expires_in": 86400
+        },
+        "status": 200
+      }
+    },
+    {
+      "id": "error_invalid_request",
+      "name": "Error Invalid Request",
+      "type": "packagerepo.respond_error",
+      "typeVersion": 1,
+      "position": [
+        100,
+        500
+      ],
+      "parameters": {
+        "message": "Missing username or password",
+        "status": 400
+      }
+    },
+    {
+      "id": "error_unauthorized",
+      "name": "Error Unauthorized",
+      "type": "packagerepo.respond_error",
+      "typeVersion": 1,
+      "position": [
+        400,
+        500
+      ],
+      "parameters": {
+        "message": "Invalid username or password",
+        "status": 401
+      }
+    }
+  ],
+  "connections": {
+    "parse_body": {
+      "main": [
+        [
+          {
+            "node": "validate_fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "validate_fields": {
+      "main": [
+        [
+          {
+            "node": "verify_password",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "verify_password": {
+      "main": [
+        [
+          {
+            "node": "check_verified",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_verified": {
+      "main": [
+        [
+          {
+            "node": "generate_token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "generate_token": {
+      "main": [
+        [
+          {
+            "node": "respond_success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "respond_success": {
+      "main": [
+        [
+          {
+            "node": "error_invalid_request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "error_invalid_request": {
+      "main": [
+        [
+          {
+            "node": "error_unauthorized",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "id": "workflow_auth_login",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
+}

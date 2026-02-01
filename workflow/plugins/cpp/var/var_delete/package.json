@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/var_delete",
+  "version": "1.0.0",
+  "description": "Delete a variable from the runtime store",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["var", "workflow", "plugin"],
+  "main": "var_delete.hpp",
+  "metadata": {
+    "plugin_type": "var.delete",
+    "category": "var"
+  }
+}

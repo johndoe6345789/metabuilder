@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/backend_load_env",
+  "version": "1.0.0",
+  "description": "Load environment variables from .env file",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["backend", "workflow", "plugin", "env"],
+  "main": "backend_load_env.py",
+  "files": ["backend_load_env.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "backend.load_env",
+    "category": "backend",
+    "class": "LoadEnv",
+    "entrypoint": "execute"
+  }
+}

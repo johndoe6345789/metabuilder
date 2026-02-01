@@ -1,0 +1,14 @@
+{
+  "name": "@metabuilder/workflow-plugins-dbal",
+  "version": "1.0.0",
+  "description": "DBAL operation plugins for TypeScript",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["dbal", "workflow", "plugins", "typescript"],
+  "metadata": {
+    "category": "dbal",
+    "language": "typescript",
+    "plugin_count": 2
+  },
+  "plugins": ["dbal-read", "dbal-write"]
+}

@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/convert_to_boolean",
+  "version": "1.0.0",
+  "description": "Convert a value to boolean",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["convert", "workflow", "plugin"],
+  "main": "convert_to_boolean.go",
+  "files": ["convert_to_boolean.go", "factory.go"],
+  "metadata": {
+    "plugin_type": "convert.to_boolean",
+    "category": "convert",
+    "struct": "ConvertToBoolean",
+    "entrypoint": "Execute"
+  }
+}

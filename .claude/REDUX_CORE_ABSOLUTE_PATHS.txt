@@ -1,0 +1,241 @@
+================================================================================
+REDUX CORE PACKAGE - ABSOLUTE FILE PATHS
+================================================================================
+
+PACKAGE: @metabuilder/redux-core@1.0.0
+LOCATION: /Users/rmac/Documents/metabuilder/redux/core
+DATE: 2026-01-23
+
+================================================================================
+CONFIGURATION FILES
+================================================================================
+
+/Users/rmac/Documents/metabuilder/redux/core/package.json
+/Users/rmac/Documents/metabuilder/redux/core/tsconfig.json
+
+================================================================================
+SOURCE FILES - MAIN EXPORT
+================================================================================
+
+/Users/rmac/Documents/metabuilder/redux/core/src/index.ts
+
+================================================================================
+SOURCE FILES - SLICES (7 files)
+================================================================================
+
+/Users/rmac/Documents/metabuilder/redux/core/src/slices/index.ts
+/Users/rmac/Documents/metabuilder/redux/core/src/slices/authSlice.ts
+/Users/rmac/Documents/metabuilder/redux/core/src/slices/projectSlice.ts
+/Users/rmac/Documents/metabuilder/redux/core/src/slices/workspaceSlice.ts
+/Users/rmac/Documents/metabuilder/redux/core/src/slices/workflowSlice.ts
+/Users/rmac/Documents/metabuilder/redux/core/src/slices/nodesSlice.ts
+/Users/rmac/Documents/metabuilder/redux/core/src/slices/asyncDataSlice.ts
+
+================================================================================
+SOURCE FILES - TYPES (4 files)
+================================================================================
+
+/Users/rmac/Documents/metabuilder/redux/core/src/types/index.ts
+/Users/rmac/Documents/metabuilder/redux/core/src/types/project.ts
+/Users/rmac/Documents/metabuilder/redux/core/src/types/template.ts
+/Users/rmac/Documents/metabuilder/redux/core/src/types/workflow.ts
+
+================================================================================
+SOURCE FILES - STORE (1 file)
+================================================================================
+
+/Users/rmac/Documents/metabuilder/redux/core/src/store/index.ts
+
+================================================================================
+COMPILED OUTPUT - MAIN (4 files)
+================================================================================
+
+/Users/rmac/Documents/metabuilder/redux/core/dist/index.d.ts
+/Users/rmac/Documents/metabuilder/redux/core/dist/index.js
+/Users/rmac/Documents/metabuilder/redux/core/dist/index.d.ts.map
+/Users/rmac/Documents/metabuilder/redux/core/dist/index.js.map
+
+================================================================================
+COMPILED OUTPUT - SLICES (28 files)
+================================================================================
+
+Barrel Export:
+/Users/rmac/Documents/metabuilder/redux/core/dist/slices/index.d.ts
+/Users/rmac/Documents/metabuilder/redux/core/dist/slices/index.js
+/Users/rmac/Documents/metabuilder/redux/core/dist/slices/index.d.ts.map
+/Users/rmac/Documents/metabuilder/redux/core/dist/slices/index.js.map
+
+Auth Slice:
+/Users/rmac/Documents/metabuilder/redux/core/dist/slices/authSlice.d.ts
+/Users/rmac/Documents/metabuilder/redux/core/dist/slices/authSlice.js
+/Users/rmac/Documents/metabuilder/redux/core/dist/slices/authSlice.d.ts.map
+/Users/rmac/Documents/metabuilder/redux/core/dist/slices/authSlice.js.map
+
+Project Slice:
+/Users/rmac/Documents/metabuilder/redux/core/dist/slices/projectSlice.d.ts
+/Users/rmac/Documents/metabuilder/redux/core/dist/slices/projectSlice.js
+/Users/rmac/Documents/metabuilder/redux/core/dist/slices/projectSlice.d.ts.map
+/Users/rmac/Documents/metabuilder/redux/core/dist/slices/projectSlice.js.map
+
+Workspace Slice:
+/Users/rmac/Documents/metabuilder/redux/core/dist/slices/workspaceSlice.d.ts
+/Users/rmac/Documents/metabuilder/redux/core/dist/slices/workspaceSlice.js
+/Users/rmac/Documents/metabuilder/redux/core/dist/slices/workspaceSlice.d.ts.map
+/Users/rmac/Documents/metabuilder/redux/core/dist/slices/workspaceSlice.js.map
+
+Workflow Slice:
+/Users/rmac/Documents/metabuilder/redux/core/dist/slices/workflowSlice.d.ts
+/Users/rmac/Documents/metabuilder/redux/core/dist/slices/workflowSlice.js
+/Users/rmac/Documents/metabuilder/redux/core/dist/slices/workflowSlice.d.ts.map
+/Users/rmac/Documents/metabuilder/redux/core/dist/slices/workflowSlice.js.map
+
+Nodes Slice:
+/Users/rmac/Documents/metabuilder/redux/core/dist/slices/nodesSlice.d.ts
+/Users/rmac/Documents/metabuilder/redux/core/dist/slices/nodesSlice.js
+/Users/rmac/Documents/metabuilder/redux/core/dist/slices/nodesSlice.d.ts.map
+/Users/rmac/Documents/metabuilder/redux/core/dist/slices/nodesSlice.js.map
+
+Async Data Slice:
+/Users/rmac/Documents/metabuilder/redux/core/dist/slices/asyncDataSlice.d.ts
+/Users/rmac/Documents/metabuilder/redux/core/dist/slices/asyncDataSlice.js
+/Users/rmac/Documents/metabuilder/redux/core/dist/slices/asyncDataSlice.d.ts.map
+/Users/rmac/Documents/metabuilder/redux/core/dist/slices/asyncDataSlice.js.map
+
+================================================================================
+COMPILED OUTPUT - TYPES (20 files)
+================================================================================
+
+Barrel Export:
+/Users/rmac/Documents/metabuilder/redux/core/dist/types/index.d.ts
+/Users/rmac/Documents/metabuilder/redux/core/dist/types/index.js
+/Users/rmac/Documents/metabuilder/redux/core/dist/types/index.d.ts.map
+/Users/rmac/Documents/metabuilder/redux/core/dist/types/index.js.map
+
+Project Types:
+/Users/rmac/Documents/metabuilder/redux/core/dist/types/project.d.ts
+/Users/rmac/Documents/metabuilder/redux/core/dist/types/project.js
+/Users/rmac/Documents/metabuilder/redux/core/dist/types/project.d.ts.map
+/Users/rmac/Documents/metabuilder/redux/core/dist/types/project.js.map
+
+Template Types:
+/Users/rmac/Documents/metabuilder/redux/core/dist/types/template.d.ts
+/Users/rmac/Documents/metabuilder/redux/core/dist/types/template.js
+/Users/rmac/Documents/metabuilder/redux/core/dist/types/template.d.ts.map
+/Users/rmac/Documents/metabuilder/redux/core/dist/types/template.js.map
+
+Workflow Types:
+/Users/rmac/Documents/metabuilder/redux/core/dist/types/workflow.d.ts
+/Users/rmac/Documents/metabuilder/redux/core/dist/types/workflow.js
+/Users/rmac/Documents/metabuilder/redux/core/dist/types/workflow.d.ts.map
+/Users/rmac/Documents/metabuilder/redux/core/dist/types/workflow.js.map
+
+================================================================================
+COMPILED OUTPUT - STORE (4 files)
+================================================================================
+
+/Users/rmac/Documents/metabuilder/redux/core/dist/store/index.d.ts
+/Users/rmac/Documents/metabuilder/redux/core/dist/store/index.js
+/Users/rmac/Documents/metabuilder/redux/core/dist/store/index.d.ts.map
+/Users/rmac/Documents/metabuilder/redux/core/dist/store/index.js.map
+
+================================================================================
+DOCUMENTATION FILES (Created in /.claude/)
+================================================================================
+
+/Users/rmac/Documents/metabuilder/.claude/REDUX_CORE_SETUP_COMPLETE.md
+/Users/rmac/Documents/metabuilder/.claude/REDUX_CORE_QUICK_START.md
+/Users/rmac/Documents/metabuilder/.claude/REDUX_CORE_FILE_MANIFEST.md
+/Users/rmac/Documents/metabuilder/.claude/REDUX_CORE_ABSOLUTE_PATHS.txt
+
+================================================================================
+SUMMARY STATISTICS
+================================================================================
+
+Total Source Files:        15
+  - Configuration:         2 (package.json, tsconfig.json)
+  - Main Export:           1 (src/index.ts)
+  - Slices:                7 (including barrel export)
+  - Types:                 4 (including barrel export)
+  - Store:                 1
+
+Total Compiled Files:      52
+  - .d.ts files:           13
+  - .js files:             13
+  - .map files:            26
+
+Total Package Size:        ~115 KB
+  - Source:                ~40 KB
+  - Compiled:              ~75 KB
+
+================================================================================
+TIER 1 SLICES (6 Redux Slices)
+================================================================================
+
+1. authSlice              (2,466 bytes)
+2. projectSlice           (2,765 bytes)
+3. workspaceSlice         (2,955 bytes)
+4. workflowSlice          (5,381 bytes)
+5. nodesSlice             (2,863 bytes)
+6. asyncDataSlice         (11,389 bytes)
+
+Total Slice Code:         ~28 KB
+
+================================================================================
+CORE TYPES (3 Type Files)
+================================================================================
+
+1. project.ts             (4,290 bytes)
+2. workflow.ts            (2,893 bytes)
+3. template.ts            (2,251 bytes)
+
+Total Type Code:          ~9.4 KB
+
+================================================================================
+ENTRY POINTS
+================================================================================
+
+Default Entry:
+  File:    /Users/rmac/Documents/metabuilder/redux/core/dist/index.js
+  Types:   /Users/rmac/Documents/metabuilder/redux/core/dist/index.d.ts
+  Export:  package.json "."
+
+Slices Entry:
+  File:    /Users/rmac/Documents/metabuilder/redux/core/dist/slices/index.js
+  Types:   /Users/rmac/Documents/metabuilder/redux/core/dist/slices/index.d.ts
+  Export:  package.json "./slices"
+
+Types Entry:
+  File:    /Users/rmac/Documents/metabuilder/redux/core/dist/types/index.js
+  Types:   /Users/rmac/Documents/metabuilder/redux/core/dist/types/index.d.ts
+  Export:  package.json "./types"
+
+Store Entry:
+  File:    /Users/rmac/Documents/metabuilder/redux/core/dist/store/index.js
+  Types:   /Users/rmac/Documents/metabuilder/redux/core/dist/store/index.d.ts
+  Export:  package.json "./store"
+
+================================================================================
+PARENT LOCATIONS
+================================================================================
+
+Root Directory:
+  /Users/rmac/Documents/metabuilder
+
+Redux Folder:
+  /Users/rmac/Documents/metabuilder/redux
+
+Redux Core Package:
+  /Users/rmac/Documents/metabuilder/redux/core
+
+Source Root:
+  /Users/rmac/Documents/metabuilder/redux/core/src
+
+Compiled Root:
+  /Users/rmac/Documents/metabuilder/redux/core/dist
+
+Documentation Root:
+  /Users/rmac/Documents/metabuilder/.claude
+
+================================================================================
+GENERATED: 2026-01-23
+STATUS: Complete

@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/utils_update_roadmap",
+  "version": "1.0.0",
+  "description": "Update ROADMAP.md with new content",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["utils", "workflow", "plugin"],
+  "main": "utils_update_roadmap.py",
+  "files": ["utils_update_roadmap.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "utils.update_roadmap",
+    "category": "utils",
+    "class": "UpdateRoadmap",
+    "entrypoint": "execute"
+  }
+}

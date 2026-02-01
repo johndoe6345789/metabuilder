@@ -1,0 +1,38 @@
+{
+  "name": "@metabuilder/workflow-plugin-encryption",
+  "version": "1.0.0",
+  "description": "Email encryption plugin for MetaBuilder workflow engine (PGP/S/MIME encryption, signing, key management)",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint src/**/*.ts",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@metabuilder/workflow": "workspace:*"
+  },
+  "devDependencies": {
+    "@jest/globals": "^29.7.0",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.15.1",
+    "eslint": "^9.28.0",
+    "jest": "^29.7.0",
+    "typescript": "^5.9.3",
+    "ts-jest": "^29.1.4"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "testMatch": ["**/*.test.ts"],
+    "collectCoverageFrom": [
+      "src/**/*.ts",
+      "!src/**/*.d.ts",
+      "!src/**/*.test.ts"
+    ]
+  }
+}

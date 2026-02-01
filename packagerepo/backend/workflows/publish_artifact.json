@@ -1,0 +1,349 @@
+{
+  "name": "Publish Artifact",
+  "active": false,
+  "nodes": [
+    {
+      "id": "verify_auth",
+      "name": "Verify Auth",
+      "type": "packagerepo.auth_verify_jwt",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "token": "$request.headers.Authorization",
+        "out": "principal"
+      }
+    },
+    {
+      "id": "check_write_scope",
+      "name": "Check Write Scope",
+      "type": "packagerepo.auth_check_scopes",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "principal": "$principal",
+        "required_scopes": [
+          "write"
+        ]
+      }
+    },
+    {
+      "id": "parse_path",
+      "name": "Parse Path",
+      "type": "packagerepo.parse_path",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "path": "$request.path",
+        "pattern": "/v1/:namespace/:name/:version/:variant/blob",
+        "out": "entity"
+      }
+    },
+    {
+      "id": "normalize",
+      "name": "Normalize",
+      "type": "packagerepo.normalize_entity",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "entity": "$entity",
+        "out": "normalized"
+      }
+    },
+    {
+      "id": "validate",
+      "name": "Validate",
+      "type": "packagerepo.validate_entity",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "entity": "$normalized"
+      }
+    },
+    {
+      "id": "compute_digest",
+      "name": "Compute Digest",
+      "type": "string.sha256",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "input": "$request.body",
+        "out": "digest"
+      }
+    },
+    {
+      "id": "check_exists",
+      "name": "Check Exists",
+      "type": "packagerepo.kv_get",
+      "typeVersion": 1,
+      "position": [
+        100,
+        500
+      ],
+      "parameters": {
+        "key": "artifact/$entity.namespace/$entity.name/$entity.version/$entity.variant",
+        "out": "existing"
+      }
+    },
+    {
+      "id": "if_exists",
+      "name": "If Exists",
+      "type": "logic.if",
+      "typeVersion": 1,
+      "position": [
+        400,
+        500
+      ],
+      "parameters": {
+        "condition": "$existing != null",
+        "then": "error_exists",
+        "else": "write_blob"
+      }
+    },
+    {
+      "id": "write_blob",
+      "name": "Write Blob",
+      "type": "packagerepo.blob_put",
+      "typeVersion": 1,
+      "position": [
+        700,
+        500
+      ],
+      "parameters": {
+        "digest": "$digest",
+        "data": "$request.body"
+      }
+    },
+    {
+      "id": "write_meta",
+      "name": "Write Meta",
+      "type": "packagerepo.kv_put",
+      "typeVersion": 1,
+      "position": [
+        100,
+        700
+      ],
+      "parameters": {
+        "key": "artifact/$entity.namespace/$entity.name/$entity.version/$entity.variant",
+        "value": {
+          "digest": "$digest",
+          "size": "$request.content_length",
+          "uploaded_at": "$timestamp",
+          "uploaded_by": "$principal.sub"
+        }
+      }
+    },
+    {
+      "id": "update_index",
+      "name": "Update Index",
+      "type": "packagerepo.index_upsert",
+      "typeVersion": 1,
+      "position": [
+        400,
+        700
+      ],
+      "parameters": {
+        "key": "$entity.namespace/$entity.name",
+        "entry": {
+          "version": "$entity.version",
+          "variant": "$entity.variant",
+          "digest": "$digest"
+        }
+      }
+    },
+    {
+      "id": "success",
+      "name": "Success",
+      "type": "packagerepo.respond_json",
+      "typeVersion": 1,
+      "position": [
+        700,
+        700
+      ],
+      "parameters": {
+        "body": {
+          "ok": true,
+          "digest": "$digest"
+        },
+        "status": 201
+      }
+    },
+    {
+      "id": "error_exists",
+      "name": "Error Exists",
+      "type": "packagerepo.respond_error",
+      "typeVersion": 1,
+      "position": [
+        100,
+        900
+      ],
+      "parameters": {
+        "message": "Artifact already exists",
+        "status": 409
+      }
+    }
+  ],
+  "connections": {
+    "verify_auth": {
+      "main": [
+        [
+          {
+            "node": "check_write_scope",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_write_scope": {
+      "main": [
+        [
+          {
+            "node": "parse_path",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "parse_path": {
+      "main": [
+        [
+          {
+            "node": "normalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "normalize": {
+      "main": [
+        [
+          {
+            "node": "validate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "validate": {
+      "main": [
+        [
+          {
+            "node": "compute_digest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "compute_digest": {
+      "main": [
+        [
+          {
+            "node": "check_exists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_exists": {
+      "main": [
+        [
+          {
+            "node": "if_exists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "if_exists": {
+      "main": [
+        [
+          {
+            "node": "write_blob",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "write_blob": {
+      "main": [
+        [
+          {
+            "node": "write_meta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "write_meta": {
+      "main": [
+        [
+          {
+            "node": "update_index",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update_index": {
+      "main": [
+        [
+          {
+            "node": "success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "success": {
+      "main": [
+        [
+          {
+            "node": "error_exists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "id": "workflow_publish_artifact",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
+}

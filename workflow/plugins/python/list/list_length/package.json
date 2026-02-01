@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/list_length",
+  "version": "1.0.0",
+  "description": "Get length of list",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["list", "workflow", "plugin"],
+  "main": "list_length.py",
+  "files": ["list_length.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "list.length",
+    "category": "list",
+    "class": "ListLength",
+    "entrypoint": "execute"
+  }
+}

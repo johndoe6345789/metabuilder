@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/web_build_prompt_yaml",
+  "version": "1.0.0",
+  "description": "Build prompt YAML from system and user content",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["web", "workflow", "plugin"],
+  "main": "web_build_prompt_yaml.py",
+  "files": ["web_build_prompt_yaml.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "web.build_prompt_yaml",
+    "category": "web",
+    "class": "WebBuildPromptYaml",
+    "entrypoint": "execute"
+  }
+}

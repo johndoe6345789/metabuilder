@@ -6,6 +6,20 @@ import styles from './page.module.scss';
 import { getOperationLabel, getOperationDescription, getOperationCategory, getCategoryColor } from '../../utils/operations';
 import { getApiUrl } from '../../utils/api';
 
+// Helper to safely parse JSON - handles both already-parsed objects and JSON strings
+function safeParseJson(value, fallback = []) {
+  if (value === null || value === undefined) return fallback;
+  if (typeof value === 'object') return value; // Already parsed
+  if (typeof value === 'string') {
+    try {
+      return JSON.parse(value);
+    } catch {
+      return fallback;
+    }
+  }
+  return fallback;
+}
+
 export default function AdminPage() {
   const router = useRouter();
   const [user, setUser] = useState(null);
@@ -189,7 +203,7 @@ export default function AdminPage() {
                 <>
                   <div style={{ marginBottom: '16px' }}>
                     <strong>Protocols:</strong>{' '}
-                    {JSON.parse(config.capabilities.protocols || '[]').map((p, i) => (
+                    {safeParseJson(config.capabilities.protocols).map((p, i) => (
                       <span key={i} className={`${styles.badge} ${styles['badge--primary']}`}>
                         {p}
                       </span>
@@ -197,7 +211,7 @@ export default function AdminPage() {
                   </div>
                   <div style={{ marginBottom: '16px' }}>
                     <strong>Storage:</strong>{' '}
-                    {JSON.parse(config.capabilities.storage || '[]').map((s, i) => (
+                    {safeParseJson(config.capabilities.storage).map((s, i) => (
                       <span key={i} className={`${styles.badge} ${styles['badge--primary']}`}>
                         {s}
                       </span>
@@ -205,7 +219,7 @@ export default function AdminPage() {
                   </div>
                   <div>
                     <strong>Features:</strong>{' '}
-                    {JSON.parse(config.capabilities.features || '[]').map((f, i) => (
+                    {safeParseJson(config.capabilities.features).map((f, i) => (
                       <span key={i} className={`${styles.badge} ${styles['badge--success']}`}>
                         {f}
                       </span>
@@ -265,7 +279,7 @@ export default function AdminPage() {
                               <td><strong>{field.name}</strong></td>
                               <td>{field.type}</td>
                               <td>{field.optional ? '✓' : '✗'}</td>
-                              <td>{JSON.parse(field.normalizations || '[]').join(', ') || 'none'}</td>
+                              <td>{safeParseJson(field.normalizations).join(', ') || 'none'}</td>
                             </tr>
                           ))}
                         </tbody>
@@ -411,7 +425,7 @@ export default function AdminPage() {
           <div className={styles.section__content}>
             {config.api_routes && config.api_routes.length > 0 ? (
               config.api_routes.map((route, i) => {
-                const pipeline = JSON.parse(route.pipeline || '[]');
+                const pipeline = safeParseJson(route.pipeline);
                 const isExpanded = expandedRoute === i;
                 
                 return (
@@ -426,7 +440,7 @@ export default function AdminPage() {
                           {' '}
                           <code>{route.path}</code>
                           {' • '}
-                          {JSON.parse(route.tags || '[]').map((tag, j) => (
+                          {safeParseJson(route.tags).map((tag, j) => (
                             <span key={j} className={`${styles.badge} ${styles['badge--success']}`}>
                               {tag}
                             </span>
@@ -568,7 +582,7 @@ export default function AdminPage() {
                     {config.auth_scopes.map((scope, i) => (
                       <tr key={i}>
                         <td><strong>{scope.name}</strong></td>
-                        <td>{JSON.parse(scope.actions || '[]').join(', ')}</td>
+                        <td>{safeParseJson(scope.actions).join(', ')}</td>
                         <td>
                           <button className={`${styles.button} ${styles['button--secondary']} ${styles['button--small']}`}>
                             Edit
@@ -616,8 +630,8 @@ export default function AdminPage() {
                     </div>
                     <div className={styles.codeBlock}>
                       <pre>{JSON.stringify({
-                        conditions: JSON.parse(policy.conditions || '{}'),
-                        requirements: JSON.parse(policy.requirements || '{}')
+                        conditions: safeParseJson(policy.conditions, {}),
+                        requirements: safeParseJson(policy.requirements, {})
                       }, null, 2)}</pre>
                     </div>
                   </div>

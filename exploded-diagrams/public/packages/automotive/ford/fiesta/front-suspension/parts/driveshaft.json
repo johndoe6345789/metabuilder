@@ -1,0 +1,41 @@
+{
+  "id": "driveshaft",
+  "name": "Front Driveshaft",
+  "partNumber": "FD-1753210",
+  "material": "steel",
+  "quantity": 2,
+  "weight": 7200.0,
+  "weightUnit": "g",
+  "baseY": 850,
+  "description": "CV joint driveshaft assembly - with ABS ring",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "32mm", "required": true },
+      { "name": "Pry bar", "size": "Large", "required": true },
+      { "name": "Torque wrench", "size": "200-280 Nm", "required": true },
+      { "name": "CV boot clamp pliers", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Hub nut", "spec": "M24x1.5", "qty": 1, "reusable": false },
+      { "name": "Circlip", "spec": "Internal 40mm", "qty": 1, "reusable": false }
+    ],
+    "torque": [
+      { "fastener": "Hub nut", "value": 235, "unit": "Nm", "sequence": "", "notes": "Stake nut after torquing - critical" }
+    ],
+    "notes": [
+      "Do not pull on outer CV joint - can separate",
+      "Support inner CV when removing from gearbox",
+      "Check CV boots for splits - common failure",
+      "Differential seal may leak after removal",
+      "Clicking on turn indicates worn outer CV"
+    ]
+  },
+  "geometry": [
+    { "type": "cylinder", "rx": 12, "ry": 5, "height": 100 },
+    { "type": "ellipse", "rx": 30, "ry": 18, "offsetY": -55 },
+    { "type": "ellipse", "rx": 25, "ry": 15, "offsetY": -55, "fill": "#2a2a2a" },
+    { "type": "ellipse", "rx": 28, "ry": 16, "offsetY": 55 },
+    { "type": "ellipse", "rx": 22, "ry": 12, "offsetY": 55, "fill": "#2a2a2a" },
+    { "type": "gearRing", "teeth": 44, "outerRadius": 15, "toothHeight": 2, "offsetY": 40 }
+  ]
+}

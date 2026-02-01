@@ -1,0 +1,75 @@
+{
+  "source_file": "/Users/rmac/Documents/metabuilder/mojo/samples/examples/snake/snake.mojo",
+  "total_duration_ms": 1288.0020141601562,
+  "phases": [
+    {
+      "phase_name": "Phase 1: Frontend",
+      "status": "PASS",
+      "duration_ms": 260.6160640716553,
+      "metrics": {
+        "source_lines": "389",
+        "source_bytes": "11 KB",
+        "tokens_generated": "1101",
+        "ast_nodes": "~367",
+        "duration_ms": "260.62",
+        "tokens_per_ms": "4.2"
+      }
+    },
+    {
+      "phase_name": "Phase 2: Semantic Analysis",
+      "status": "PASS",
+      "duration_ms": 204.98108863830566,
+      "metrics": {
+        "symbols_defined": "149",
+        "type_errors": "0",
+        "scopes": "34",
+        "structs_found": "5",
+        "functions_found": "28",
+        "duration_ms": "204.98",
+        "symbols_per_ms": "0.7"
+      }
+    },
+    {
+      "phase_name": "Phase 3: IR Generation",
+      "status": "PASS",
+      "duration_ms": 255.13076782226562,
+      "metrics": {
+        "mlir_size": "38 KB",
+        "function_count": "28",
+        "struct_count": "5",
+        "mlir_lines": "778",
+        "duration_ms": "255.13",
+        "bytes_per_ms": "153"
+      }
+    },
+    {
+      "phase_name": "Phase 4: Code Generation",
+      "status": "PASS",
+      "duration_ms": 357.0899963378906,
+      "metrics": {
+        "llvm_ir_size": "51 KB",
+        "estimated_machine_code": "41 KB",
+        "mlir_reduction_percent": "25%",
+        "optimization_level": "2",
+        "target": "x86_64",
+        "duration_ms": "357.09",
+        "bytes_per_ms": "147"
+      }
+    },
+    {
+      "phase_name": "Phase 5: Runtime",
+      "status": "PASS",
+      "duration_ms": 210.04295349121094,
+      "metrics": {
+        "ffi_symbols_resolved": "42",
+        "estimated_heap": "16 MB",
+        "estimated_stack": "4 MB",
+        "total_memory": "20 MB",
+        "execution_ready": "YES",
+        "duration_ms": "210.04"
+      }
+    }
+  ],
+  "final_status": "COMPLETE",
+  "error_messages": []
+}

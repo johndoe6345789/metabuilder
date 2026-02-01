@@ -1,0 +1,33 @@
+{
+  "id": "tail-light",
+  "name": "Tail Light Cluster",
+  "partNumber": "FD-1879310",
+  "material": "blackPlastic",
+  "quantity": 2,
+  "weight": 950.0,
+  "weightUnit": "g",
+  "baseY": 730,
+  "description": "Rear LED tail light cluster",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "10mm", "required": true },
+      { "name": "Trim removal tool", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Tail light nut", "spec": "M6", "qty": 2, "reusable": true }
+    ],
+    "torque": [],
+    "notes": [
+      "Access from inside boot/trunk",
+      "Pull straight out to release clips",
+      "Check seal/gasket condition",
+      "Test all functions after fitting"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 40, "height": 50, "rx": 5, "fill": "#d94a4a" },
+    { "type": "rect", "width": 35, "height": 20, "offsetY": -10, "rx": 3, "fill": "#ff6b6b" },
+    { "type": "rect", "width": 35, "height": 10, "offsetY": 10, "rx": 2, "fill": "#ffeb3b" },
+    { "type": "rect", "width": 35, "height": 8, "offsetY": 20, "rx": 2, "fill": "#fff" }
+  ]
+}

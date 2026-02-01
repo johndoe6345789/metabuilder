@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/core_ai_request",
+  "version": "1.0.0",
+  "description": "Invoke the AI model with current messages and return the response",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["core", "workflow", "plugin"],
+  "main": "core_ai_request.py",
+  "files": ["core_ai_request.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "core.ai_request",
+    "category": "core",
+    "class": "CoreAiRequest",
+    "entrypoint": "execute"
+  }
+}

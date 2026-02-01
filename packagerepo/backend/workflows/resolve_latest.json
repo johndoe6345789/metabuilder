@@ -1,0 +1,219 @@
+{
+  "name": "Resolve Latest Version",
+  "active": false,
+  "nodes": [
+    {
+      "id": "parse_path",
+      "name": "Parse Path",
+      "type": "packagerepo.parse_path",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "path": "$request.path",
+        "pattern": "/v1/:namespace/:name/latest",
+        "out": "entity"
+      }
+    },
+    {
+      "id": "normalize",
+      "name": "Normalize",
+      "type": "packagerepo.normalize_entity",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "entity": "$entity",
+        "out": "normalized"
+      }
+    },
+    {
+      "id": "query_index",
+      "name": "Query Index",
+      "type": "packagerepo.index_query",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "key": "$entity.namespace/$entity.name",
+        "out": "versions"
+      }
+    },
+    {
+      "id": "check_exists",
+      "name": "Check Exists",
+      "type": "logic.if",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "condition": "$versions == null || $versions.length == 0",
+        "then": "error_not_found",
+        "else": "find_latest"
+      }
+    },
+    {
+      "id": "find_latest",
+      "name": "Find Latest",
+      "type": "packagerepo.resolve_latest_version",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "versions": "$versions",
+        "out": "latest"
+      }
+    },
+    {
+      "id": "get_meta",
+      "name": "Get Meta",
+      "type": "packagerepo.kv_get",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "key": "artifact/$entity.namespace/$entity.name/$latest.version/$latest.variant",
+        "out": "metadata"
+      }
+    },
+    {
+      "id": "respond_json",
+      "name": "Respond Json",
+      "type": "packagerepo.respond_json",
+      "typeVersion": 1,
+      "position": [
+        100,
+        500
+      ],
+      "parameters": {
+        "body": {
+          "namespace": "$entity.namespace",
+          "name": "$entity.name",
+          "version": "$latest.version",
+          "variant": "$latest.variant",
+          "digest": "$latest.digest",
+          "size": "$metadata.size",
+          "uploaded_at": "$metadata.uploaded_at"
+        },
+        "status": 200
+      }
+    },
+    {
+      "id": "error_not_found",
+      "name": "Error Not Found",
+      "type": "packagerepo.respond_error",
+      "typeVersion": 1,
+      "position": [
+        400,
+        500
+      ],
+      "parameters": {
+        "message": "Package not found",
+        "status": 404
+      }
+    }
+  ],
+  "connections": {
+    "parse_path": {
+      "main": [
+        [
+          {
+            "node": "normalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "normalize": {
+      "main": [
+        [
+          {
+            "node": "query_index",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "query_index": {
+      "main": [
+        [
+          {
+            "node": "check_exists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_exists": {
+      "main": [
+        [
+          {
+            "node": "find_latest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "find_latest": {
+      "main": [
+        [
+          {
+            "node": "get_meta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get_meta": {
+      "main": [
+        [
+          {
+            "node": "respond_json",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "respond_json": {
+      "main": [
+        [
+          {
+            "node": "error_not_found",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "id": "workflow_resolve_latest",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
+}

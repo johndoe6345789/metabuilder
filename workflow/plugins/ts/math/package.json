@@ -1,0 +1,34 @@
+{
+  "name": "@metabuilder/plugin-math",
+  "version": "1.0.0",
+  "description": "Mathematical operations workflow plugins for MetaBuilder",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["math", "workflow", "plugin", "arithmetic", "calculation"],
+  "main": "src/index.ts",
+  "files": ["src/index.ts", "src/factory.ts"],
+  "metadata": {
+    "plugin_type": "math",
+    "category": "math",
+    "classes": [
+      "MathAdd",
+      "MathSubtract",
+      "MathMultiply",
+      "MathDivide",
+      "MathModulo",
+      "MathPower",
+      "MathSqrt",
+      "MathAbs",
+      "MathRound",
+      "MathFloor",
+      "MathCeil",
+      "MathMin",
+      "MathMax",
+      "MathSum",
+      "MathAverage",
+      "MathRandom",
+      "MathClamp"
+    ],
+    "entrypoint": "execute"
+  }
+}

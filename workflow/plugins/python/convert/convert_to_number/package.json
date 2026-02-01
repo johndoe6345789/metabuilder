@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/convert_to_number",
+  "version": "1.0.0",
+  "description": "Convert value to number",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["convert", "workflow", "plugin"],
+  "main": "convert_to_number.py",
+  "files": ["convert_to_number.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "convert.toNumber",
+    "category": "convert",
+    "class": "ConvertToNumber",
+    "entrypoint": "execute"
+  }
+}

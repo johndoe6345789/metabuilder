@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/math_subtract",
+  "version": "1.0.0",
+  "description": "Subtract numbers sequentially from the first number",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["math", "workflow", "plugin"],
+  "main": "math_subtract.mojo",
+  "files": ["math_subtract.mojo", "factory.mojo"],
+  "metadata": {
+    "plugin_type": "math.subtract",
+    "category": "math",
+    "struct": "MathSubtract",
+    "entrypoint": "execute"
+  }
+}

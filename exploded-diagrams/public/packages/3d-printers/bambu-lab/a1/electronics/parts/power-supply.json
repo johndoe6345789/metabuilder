@@ -1,0 +1,88 @@
+{
+  "id": "power-supply",
+  "name": "24V Power Supply Unit",
+  "partNumber": "BL-A1-PSU24",
+  "material": "aluminum",
+  "quantity": 1,
+  "weight": 650.0,
+  "weightUnit": "g",
+  "baseY": 80,
+  "description": "24V 350W switching power supply - Mean Well style enclosed PSU with active cooling",
+  "installation": {
+    "tools": [
+      { "name": "Phillips screwdriver", "size": "PH2", "required": true },
+      { "name": "Hex key", "size": "3mm", "required": true },
+      { "name": "Wire stripper", "size": "18-22 AWG", "required": true },
+      { "name": "Multimeter", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "M4 screw", "spec": "M4x8", "qty": 4, "reusable": true },
+      { "name": "Ring terminal", "spec": "M4 14-16 AWG", "qty": 2, "reusable": false },
+      { "name": "IEC C14 connector", "spec": "10A 250V", "qty": 1, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "M4 mounting screws", "value": 1.2, "unit": "Nm", "sequence": "Corner to corner", "notes": "Ensure PSU is level" },
+      { "fastener": "Terminal screws", "value": 0.8, "unit": "Nm", "sequence": "", "notes": "Check wire is secure" }
+    ],
+    "notes": [
+      "DANGER: Mains voltage present - disconnect AC power first",
+      "Wait 5 minutes for capacitors to discharge",
+      "Verify input voltage selector matches local mains",
+      "Check output voltage is 24.0V +/- 0.5V before connecting",
+      "Ensure adequate ventilation around PSU"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 140, "height": 70, "rx": 2, "fill": "#404040" },
+    { "type": "rect", "width": 130, "height": 60, "rx": 1, "fill": "#353535" },
+    { "type": "rect", "width": 50, "height": 15, "offsetX": -35, "offsetY": -20, "fill": "#1a1a1a" },
+    { "type": "circle", "r": 20, "offsetX": 35, "offsetY": 0, "fill": "#2a2a2a" },
+    { "type": "circle", "r": 15, "offsetX": 35, "offsetY": 0, "fill": "#1a1a1a" },
+    { "type": "rect", "width": 8, "height": 5, "offsetX": -55, "offsetY": 25, "fill": "#c0c0c0" },
+    { "type": "rect", "width": 8, "height": 5, "offsetX": -40, "offsetY": 25, "fill": "#c0c0c0" },
+    { "type": "rect", "width": 8, "height": 5, "offsetX": -25, "offsetY": 25, "fill": "#c0c0c0" }
+  ],
+  "geometry3d": [
+    { "type": "box", "width": 115, "height": 50, "depth": 200, "fill": "#383840" },
+
+    { "type": "box", "width": 117, "height": 2, "depth": 202, "offsetY": 26, "fill": "#454550" },
+    { "type": "box", "width": 117, "height": 2, "depth": 202, "offsetY": -26, "fill": "#454550" },
+
+    { "type": "box", "width": 50, "height": 35, "depth": 8, "offsetX": -25, "offsetZ": -96, "fill": "#1a1a1a" },
+    { "type": "box", "width": 44, "height": 29, "depth": 20, "offsetX": -25, "offsetZ": -92, "subtract": true },
+
+    { "type": "cylinder", "r": 20, "height": 8, "rotateX": 90, "offsetX": 30, "offsetZ": 96, "fill": "#303035" },
+    { "type": "cylinder", "r": 18, "height": 10, "rotateX": 90, "offsetX": 30, "offsetZ": 96, "subtract": true },
+    { "type": "box", "width": 2, "height": 36, "depth": 5, "offsetX": 30, "offsetZ": 96, "fill": "#252530" },
+    { "type": "box", "width": 36, "height": 2, "depth": 5, "offsetX": 30, "offsetZ": 96, "fill": "#252530" },
+    { "type": "box", "width": 26, "height": 26, "depth": 5, "rotateZ": 45, "offsetX": 30, "offsetZ": 96, "fill": "#252530" },
+
+    { "type": "box", "width": 8, "height": 10, "depth": 12, "offsetX": -45, "offsetY": -20, "offsetZ": -96, "fill": "#c0c0c0" },
+    { "type": "box", "width": 8, "height": 10, "depth": 12, "offsetX": -32, "offsetY": -20, "offsetZ": -96, "fill": "#c0c0c0" },
+    { "type": "box", "width": 8, "height": 10, "depth": 12, "offsetX": -19, "offsetY": -20, "offsetZ": -96, "fill": "#c0c0c0" },
+    { "type": "box", "width": 8, "height": 10, "depth": 12, "offsetX": -6, "offsetY": -20, "offsetZ": -96, "fill": "#ffcc00" },
+    { "type": "box", "width": 8, "height": 10, "depth": 12, "offsetX": 7, "offsetY": -20, "offsetZ": -96, "fill": "#ffcc00" },
+
+    { "type": "cylinder", "r": 2, "height": 8, "offsetX": -45, "offsetY": -20, "offsetZ": -102, "fill": "#808080" },
+    { "type": "cylinder", "r": 2, "height": 8, "offsetX": -32, "offsetY": -20, "offsetZ": -102, "fill": "#808080" },
+    { "type": "cylinder", "r": 2, "height": 8, "offsetX": -19, "offsetY": -20, "offsetZ": -102, "fill": "#808080" },
+    { "type": "cylinder", "r": 2, "height": 8, "offsetX": -6, "offsetY": -20, "offsetZ": -102, "fill": "#808080" },
+    { "type": "cylinder", "r": 2, "height": 8, "offsetX": 7, "offsetY": -20, "offsetZ": -102, "fill": "#808080" },
+
+    { "type": "box", "width": 30, "height": 10, "depth": 5, "offsetX": 35, "offsetY": -20, "offsetZ": -98, "fill": "#00aa00" },
+
+    { "type": "cylinder", "r": 3, "height": 8, "offsetX": 25, "offsetY": -20, "offsetZ": -96, "fill": "#606060" },
+
+    { "type": "box", "width": 100, "height": 3, "depth": 180, "offsetY": 23, "fill": "#303035" },
+    { "type": "box", "width": 3, "height": 3, "depth": 170, "offsetX": -40, "offsetY": 23, "fill": "#404045" },
+    { "type": "box", "width": 3, "height": 3, "depth": 170, "offsetX": -20, "offsetY": 23, "fill": "#404045" },
+    { "type": "box", "width": 3, "height": 3, "depth": 170, "offsetX": 0, "offsetY": 23, "fill": "#404045" },
+    { "type": "box", "width": 3, "height": 3, "depth": 170, "offsetX": 20, "offsetY": 23, "fill": "#404045" },
+    { "type": "box", "width": 3, "height": 3, "depth": 170, "offsetX": 40, "offsetY": 23, "fill": "#404045" },
+
+    { "type": "cylinder", "r": 2.5, "height": 55, "offsetX": -52, "offsetY": 0, "offsetZ": -90, "fill": "#606060" },
+    { "type": "cylinder", "r": 2.5, "height": 55, "offsetX": 52, "offsetY": 0, "offsetZ": -90, "fill": "#606060" },
+    { "type": "cylinder", "r": 2.5, "height": 55, "offsetX": -52, "offsetY": 0, "offsetZ": 90, "fill": "#606060" },
+    { "type": "cylinder", "r": 2.5, "height": 55, "offsetX": 52, "offsetY": 0, "offsetZ": 90, "fill": "#606060" }
+  ]
+}

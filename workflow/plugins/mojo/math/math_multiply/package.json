@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/math_multiply",
+  "version": "1.0.0",
+  "description": "Multiply two or more numbers together",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["math", "workflow", "plugin"],
+  "main": "math_multiply.mojo",
+  "files": ["math_multiply.mojo", "factory.mojo"],
+  "metadata": {
+    "plugin_type": "math.multiply",
+    "category": "math",
+    "struct": "MathMultiply",
+    "entrypoint": "execute"
+  }
+}

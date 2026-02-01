@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/var_set",
+  "version": "1.0.0",
+  "description": "Set variable in workflow store",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["var", "workflow", "plugin"],
+  "main": "var_set.py",
+  "files": ["var_set.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "var.set",
+    "category": "var",
+    "class": "VarSet",
+    "entrypoint": "execute"
+  }
+}

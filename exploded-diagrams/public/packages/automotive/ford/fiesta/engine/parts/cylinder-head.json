@@ -1,0 +1,44 @@
+{
+  "id": "cylinder-head",
+  "name": "Cylinder Head",
+  "partNumber": "FD-CM5G-6090-BC",
+  "material": "castAluminum",
+  "quantity": 1,
+  "weight": 14500.0,
+  "weightUnit": "g",
+  "baseY": 360,
+  "description": "DOHC 12-valve aluminum cylinder head with integrated exhaust manifold",
+  "installation": {
+    "tools": [
+      { "name": "Torque wrench", "size": "20-80 Nm", "required": true },
+      { "name": "Angle gauge", "size": "-", "required": true },
+      { "name": "Socket", "size": "10mm 12pt", "required": true },
+      { "name": "Valve spring compressor", "size": "-", "required": false }
+    ],
+    "hardware": [
+      { "name": "Head bolt", "spec": "M10x1.25x120", "grade": "12.9", "qty": 10, "reusable": false },
+      { "name": "Head gasket", "spec": "MLS 0.95mm", "qty": 1, "reusable": false },
+      { "name": "Intake valve", "spec": "27mm", "qty": 6, "reusable": true },
+      { "name": "Exhaust valve", "spec": "23mm", "qty": 6, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Head bolts", "value": 25, "unit": "Nm + 90° + 90°", "sequence": "Center out spiral", "notes": "3-stage: 25Nm, +90°, +90° - new bolts only" }
+    ],
+    "notes": [
+      "Integrated exhaust manifold - unique design",
+      "Ensure block and head surfaces are clean",
+      "Do not use sealant on MLS gasket",
+      "Head bolt holes must be clean and dry",
+      "Recheck torque after heat cycle"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 110, "height": 70, "rx": 6 },
+    { "type": "rect", "width": 95, "height": 50, "fill": "#888" },
+    { "type": "circle", "r": 12, "offsetX": -30, "offsetY": 0, "fill": "#555" },
+    { "type": "circle", "r": 12, "offsetY": 0, "fill": "#555" },
+    { "type": "circle", "r": 12, "offsetX": 30, "offsetY": 0, "fill": "#555" },
+    { "type": "rect", "width": 40, "height": 20, "offsetX": 45, "offsetY": -15, "rx": 3, "fill": "#666" },
+    { "type": "text", "content": "DOHC", "offsetY": -30, "fill": "#333", "fontSize": 7 }
+  ]
+}

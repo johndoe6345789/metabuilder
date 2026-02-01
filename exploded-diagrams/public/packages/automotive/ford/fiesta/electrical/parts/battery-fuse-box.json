@@ -1,0 +1,38 @@
+{
+  "id": "battery-fuse-box",
+  "name": "Battery Junction Box",
+  "partNumber": "FD-1870410",
+  "material": "blackPlastic",
+  "quantity": 1,
+  "weight": 850.0,
+  "weightUnit": "g",
+  "baseY": 280,
+  "description": "Main fuse box with high-current fuses and relays",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "10mm", "required": true },
+      { "name": "Fuse puller", "size": "-", "required": true },
+      { "name": "Trim tool", "size": "-", "required": false }
+    ],
+    "hardware": [
+      { "name": "Mounting bolt", "spec": "M6x20", "qty": 2, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Mounting bolts", "value": 6, "unit": "Nm" }
+    ],
+    "notes": [
+      "Disconnect battery before removal",
+      "Note all wire positions - photograph first",
+      "Check fuse ratings match replacements",
+      "Contains main starter fuse"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 70, "height": 50, "rx": 3, "fill": "#2a2a2a" },
+    { "type": "rect", "width": 60, "height": 40, "rx": 2, "fill": "#333" },
+    { "type": "rect", "width": 8, "height": 12, "offsetX": -20, "offsetY": -10, "fill": "#27ae60" },
+    { "type": "rect", "width": 8, "height": 12, "offsetX": -5, "offsetY": -10, "fill": "#e74c3c" },
+    { "type": "rect", "width": 8, "height": 12, "offsetX": 10, "offsetY": -10, "fill": "#f39c12" },
+    { "type": "rect", "width": 8, "height": 12, "offsetX": 20, "offsetY": -10, "fill": "#3498db" }
+  ]
+}

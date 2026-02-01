@@ -1,0 +1,17 @@
+{
+  "id": "testing.playwright",
+  "name": "Playwright E2E Testing",
+  "version": "1.0.0",
+  "type": "node",
+  "category": "testing",
+  "description": "Execute Playwright E2E tests as workflow nodes",
+  "entry": "index.ts",
+  "tags": ["testing", "e2e", "automation", "browser"],
+  "dependencies": ["@playwright/test"],
+  "config": {
+    "browser": "chromium",
+    "headless": true,
+    "timeout": 30000,
+    "retries": 2
+  }
+}

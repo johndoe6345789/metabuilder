@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/math_add",
+  "version": "1.0.0",
+  "description": "Add two or more numbers together",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["math", "workflow", "plugin"],
+  "main": "math_add.mojo",
+  "files": ["math_add.mojo", "factory.mojo"],
+  "metadata": {
+    "plugin_type": "math.add",
+    "category": "math",
+    "struct": "MathAdd",
+    "entrypoint": "execute"
+  }
+}

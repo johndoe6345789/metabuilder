@@ -9,8 +9,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application files
 COPY backend/app.py backend/auth.py backend/config_db.py backend/auth_sqlalchemy.py backend/config_db_sqlalchemy.py backend/models.py backend/rocksdb_store.py ./
 
-# Copy schema from parent directory
-COPY schema.json /app/schema.json
+# Copy schema to where app.py expects it (parent of /app = /)
+COPY schema.json /schema.json
 
 # Create data directory
 RUN mkdir -p /data/blobs /data/meta

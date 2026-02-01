@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/convert_to_string",
+  "version": "1.0.0",
+  "description": "Convert any value to a string",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["convert", "workflow", "plugin"],
+  "main": "convert_to_string.hpp",
+  "metadata": {
+    "plugin_type": "convert.to_string",
+    "category": "convert"
+  }
+}

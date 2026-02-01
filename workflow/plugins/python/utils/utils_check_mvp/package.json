@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/utils_check_mvp",
+  "version": "1.0.0",
+  "description": "Check if the MVP section in ROADMAP.md is completed",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["utils", "workflow", "plugin"],
+  "main": "utils_check_mvp.py",
+  "files": ["utils_check_mvp.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "utils.check_mvp",
+    "category": "utils",
+    "class": "CheckMvp",
+    "entrypoint": "execute"
+  }
+}

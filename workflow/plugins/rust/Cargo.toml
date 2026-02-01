@@ -1,0 +1,75 @@
+[workspace]
+resolver = "2"
+members = [
+    # Math plugins
+    "math/math_add",
+    "math/math_subtract",
+    "math/math_multiply",
+    "math/math_divide",
+    "math/math_modulo",
+    "math/math_power",
+    "math/math_abs",
+    "math/math_round",
+    "math/math_floor",
+    "math/math_ceil",
+    # String plugins
+    "string/string_concat",
+    "string/string_split",
+    "string/string_replace",
+    "string/string_upper",
+    "string/string_lower",
+    "string/string_trim",
+    "string/string_length",
+    "string/string_contains",
+    "string/string_starts_with",
+    "string/string_ends_with",
+    "string/string_substring",
+    # Logic plugins
+    "logic/logic_and",
+    "logic/logic_or",
+    "logic/logic_not",
+    "logic/logic_xor",
+    "logic/logic_equals",
+    "logic/logic_gt",
+    "logic/logic_gte",
+    "logic/logic_lt",
+    "logic/logic_lte",
+    "logic/logic_in",
+    # List plugins
+    "list/list_concat",
+    "list/list_length",
+    "list/list_slice",
+    "list/list_reverse",
+    "list/list_first",
+    "list/list_last",
+    "list/list_at",
+    "list/list_contains",
+    "list/list_index_of",
+    "list/list_unique",
+    "list/list_sort",
+    # Convert plugins
+    "convert/convert_to_string",
+    "convert/convert_to_number",
+    "convert/convert_to_boolean",
+    "convert/convert_to_json",
+    "convert/convert_parse_json",
+    "convert/convert_to_list",
+    "convert/convert_to_object",
+    # Var plugins
+    "var/var_get",
+    "var/var_set",
+    "var/var_delete",
+    "var/var_exists",
+    "var/var_keys",
+    "var/var_clear",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+authors = ["MetaBuilder"]
+
+[workspace.dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"

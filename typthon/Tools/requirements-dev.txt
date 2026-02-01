@@ -1,7 +1,0 @@
-# Requirements file for external linters and checks we run on
-# Tools/clinic, Tools/cases_generator/, and Tools/peg_generator/ in CI
-mypy==1.19.1
-
-# needed for peg_generator:
-types-setuptools==80.9.0.20251223
-types-psutil==7.1.3.20251211

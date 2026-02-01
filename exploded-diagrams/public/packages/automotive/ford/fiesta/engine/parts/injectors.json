@@ -1,0 +1,37 @@
+{
+  "id": "injectors",
+  "name": "Fuel Injector",
+  "partNumber": "FD-CM5G-9F593-CA",
+  "material": "steel",
+  "quantity": 3,
+  "weight": 45.0,
+  "weightUnit": "g",
+  "baseY": 860,
+  "description": "Direct injection fuel injector - 6-hole",
+  "installation": {
+    "tools": [
+      { "name": "Injector puller", "size": "-", "required": true },
+      { "name": "Pick tool", "size": "-", "required": true },
+      { "name": "Torque wrench", "size": "5-15 Nm", "required": true }
+    ],
+    "hardware": [
+      { "name": "Injector O-ring (upper)", "spec": "Viton", "qty": 1, "reusable": false },
+      { "name": "Injector seal (lower)", "spec": "Teflon", "qty": 1, "reusable": false },
+      { "name": "Injector clip", "spec": "Spring steel", "qty": 1, "reusable": true }
+    ],
+    "torque": [],
+    "notes": [
+      "DI injector - sits in combustion chamber",
+      "Replace both seals on removal",
+      "Do not damage injector tip",
+      "Carbon buildup common - walnut blast to clean",
+      "Match injector flow rates if replacing"
+    ]
+  },
+  "geometry": [
+    { "type": "cylinder", "rx": 8, "ry": 4, "height": 45 },
+    { "type": "circle", "r": 10, "offsetY": -25, "fill": "#555" },
+    { "type": "rect", "width": 12, "height": 8, "offsetY": -30, "rx": 2, "fill": "#666" },
+    { "type": "circle", "r": 4, "offsetY": 22, "fill": "#333" }
+  ]
+}

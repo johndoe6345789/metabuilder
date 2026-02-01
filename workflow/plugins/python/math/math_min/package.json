@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/math_min",
+  "version": "1.0.0",
+  "description": "Get minimum of values",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["math", "workflow", "plugin"],
+  "main": "math_min.py",
+  "files": ["math_min.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "math.min",
+    "category": "math",
+    "class": "MathMin",
+    "entrypoint": "execute"
+  }
+}

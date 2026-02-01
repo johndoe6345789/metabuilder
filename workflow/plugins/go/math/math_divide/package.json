@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/math_divide",
+  "version": "1.0.0",
+  "description": "Divide the first number by subsequent numbers",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["math", "workflow", "plugin"],
+  "main": "math_divide.go",
+  "files": ["math_divide.go", "factory.go"],
+  "metadata": {
+    "plugin_type": "math.divide",
+    "category": "math",
+    "struct": "MathDivide",
+    "entrypoint": "Execute"
+  }
+}

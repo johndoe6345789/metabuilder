@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/utils_reduce_list",
+  "version": "1.0.0",
+  "description": "Reduce a list into a string",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["utils", "workflow", "plugin"],
+  "main": "utils_reduce_list.py",
+  "files": ["utils_reduce_list.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "utils.reduce_list",
+    "category": "utils",
+    "class": "ReduceList",
+    "entrypoint": "execute"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/string_split",
+  "version": "1.0.0",
+  "description": "Split string by separator",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["string", "workflow", "plugin"],
+  "main": "string_split.py",
+  "files": ["string_split.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "string.split",
+    "category": "string",
+    "class": "StringSplit",
+    "entrypoint": "execute"
+  }
+}

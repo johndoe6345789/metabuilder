@@ -1,0 +1,25 @@
+{
+  "name": "@metabuilder/workflow-plugins-logic-rust",
+  "version": "0.1.0",
+  "description": "Boolean logic operation plugins (Rust)",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["logic", "workflow", "plugins", "rust"],
+  "metadata": {
+    "category": "logic",
+    "runtime": "rust",
+    "plugin_count": 10
+  },
+  "plugins": [
+    "logic_and",
+    "logic_or",
+    "logic_not",
+    "logic_xor",
+    "logic_equals",
+    "logic_gt",
+    "logic_gte",
+    "logic_lt",
+    "logic_lte",
+    "logic_in"
+  ]
+}

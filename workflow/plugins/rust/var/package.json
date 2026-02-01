@@ -1,0 +1,21 @@
+{
+  "name": "@metabuilder/workflow-plugins-var-rust",
+  "version": "0.1.0",
+  "description": "Variable management plugins (Rust)",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["var", "variable", "workflow", "plugins", "rust"],
+  "metadata": {
+    "category": "var",
+    "runtime": "rust",
+    "plugin_count": 6
+  },
+  "plugins": [
+    "var_get",
+    "var_set",
+    "var_delete",
+    "var_exists",
+    "var_keys",
+    "var_clear"
+  ]
+}

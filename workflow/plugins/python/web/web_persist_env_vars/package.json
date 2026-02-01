@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/web_persist_env_vars",
+  "version": "1.0.0",
+  "description": "Persist environment variables to .env file",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["web", "workflow", "plugin"],
+  "main": "web_persist_env_vars.py",
+  "files": ["web_persist_env_vars.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "web.persist_env_vars",
+    "category": "web",
+    "class": "WebPersistEnvVars",
+    "entrypoint": "execute"
+  }
+}

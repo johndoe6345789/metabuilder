@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/tools_list_files",
+  "version": "1.0.0",
+  "description": "List files in a directory",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["tools", "workflow", "plugin"],
+  "main": "tools_list_files.py",
+  "files": ["tools_list_files.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "tools.list_files",
+    "category": "tools",
+    "class": "ToolsListFiles",
+    "entrypoint": "execute"
+  }
+}

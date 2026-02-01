@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/string_format",
+  "version": "1.0.0",
+  "description": "Format string with variables",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["string", "workflow", "plugin"],
+  "main": "string_format.py",
+  "files": ["string_format.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "string.format",
+    "category": "string",
+    "class": "StringFormat",
+    "entrypoint": "execute"
+  }
+}

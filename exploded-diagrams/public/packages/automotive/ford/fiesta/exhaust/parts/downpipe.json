@@ -1,0 +1,38 @@
+{
+  "id": "downpipe",
+  "name": "Turbo Downpipe",
+  "partNumber": "FD-CM5G-5246-BA",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 3200.0,
+  "weightUnit": "g",
+  "baseY": 0,
+  "description": "Turbo outlet downpipe with flex section",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "13mm", "required": true },
+      { "name": "Socket", "size": "15mm", "required": true },
+      { "name": "Penetrating oil", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "V-band clamp", "spec": "70mm", "qty": 1, "reusable": true },
+      { "name": "Downpipe gasket", "spec": "MLS", "qty": 1, "reusable": false },
+      { "name": "Exhaust stud", "spec": "M8x1.25", "qty": 2, "reusable": false }
+    ],
+    "torque": [
+      { "fastener": "V-band clamp", "value": 8, "unit": "Nm", "sequence": "", "notes": "Do not overtighten" },
+      { "fastener": "Downpipe nuts", "value": 22, "unit": "Nm", "sequence": "", "notes": "Apply anti-seize to studs" }
+    ],
+    "notes": [
+      "Allow exhaust to cool before working",
+      "Studs often corroded - soak with penetrant",
+      "Flex section prevents cracking",
+      "Check heat shields"
+    ]
+  },
+  "geometry": [
+    { "type": "ellipse", "rx": 30, "ry": 20 },
+    { "type": "rect", "width": 40, "height": 60, "offsetY": 40, "rx": 15 },
+    { "type": "ellipse", "rx": 22, "ry": 15, "offsetY": 70 }
+  ]
+}

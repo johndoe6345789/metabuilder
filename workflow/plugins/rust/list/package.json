@@ -1,0 +1,26 @@
+{
+  "name": "@metabuilder/workflow-plugins-list-rust",
+  "version": "0.1.0",
+  "description": "List/array operation plugins (Rust)",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["list", "array", "workflow", "plugins", "rust"],
+  "metadata": {
+    "category": "list",
+    "runtime": "rust",
+    "plugin_count": 11
+  },
+  "plugins": [
+    "list_concat",
+    "list_length",
+    "list_slice",
+    "list_reverse",
+    "list_first",
+    "list_last",
+    "list_at",
+    "list_contains",
+    "list_index_of",
+    "list_unique",
+    "list_sort"
+  ]
+}

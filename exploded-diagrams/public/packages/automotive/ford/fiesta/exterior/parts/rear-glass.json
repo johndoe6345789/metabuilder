@@ -1,0 +1,37 @@
+{
+  "id": "rear-glass",
+  "name": "Rear Glass",
+  "partNumber": "FD-1880310",
+  "material": "glass",
+  "quantity": 1,
+  "weight": 8500.0,
+  "weightUnit": "g",
+  "baseY": 590,
+  "description": "Heated rear window with aerial",
+  "installation": {
+    "tools": [
+      { "name": "Windscreen removal wire", "size": "-", "required": true },
+      { "name": "Suction cups", "size": "-", "required": true },
+      { "name": "Polyurethane gun", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Adhesive", "spec": "Polyurethane", "qty": 1, "reusable": false }
+    ],
+    "torque": [],
+    "notes": [
+      "Disconnect heated element connector",
+      "Bonded to tailgate - cut to remove",
+      "Check aerial connection",
+      "24-hour cure before water contact"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 100, "height": 50, "rx": 8, "fill": "#87ceeb" },
+    { "type": "rect", "width": 90, "height": 40, "rx": 5, "fill": "#add8e6" },
+    { "type": "rect", "width": 80, "height": 2, "offsetY": -12, "fill": "#b87333" },
+    { "type": "rect", "width": 80, "height": 2, "offsetY": -6, "fill": "#b87333" },
+    { "type": "rect", "width": 80, "height": 2, "offsetY": 0, "fill": "#b87333" },
+    { "type": "rect", "width": 80, "height": 2, "offsetY": 6, "fill": "#b87333" },
+    { "type": "rect", "width": 80, "height": 2, "offsetY": 12, "fill": "#b87333" }
+  ]
+}

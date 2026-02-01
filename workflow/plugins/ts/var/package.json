@@ -1,0 +1,31 @@
+{
+  "name": "@metabuilder/plugin-var",
+  "version": "1.0.0",
+  "description": "Variable management workflow plugins for MetaBuilder",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["var", "variable", "workflow", "plugin", "state"],
+  "main": "src/index.ts",
+  "files": ["src/index.ts", "src/factory.ts"],
+  "metadata": {
+    "plugin_type": "var",
+    "category": "var",
+    "classes": [
+      "VarGet",
+      "VarSet",
+      "VarSetMultiple",
+      "VarDelete",
+      "VarExists",
+      "VarIncrement",
+      "VarDecrement",
+      "VarToggle",
+      "VarAppend",
+      "VarConcat",
+      "VarList",
+      "VarGetAll",
+      "VarClear",
+      "VarMerge"
+    ],
+    "entrypoint": "execute"
+  }
+}

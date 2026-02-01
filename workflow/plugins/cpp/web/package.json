@@ -1,0 +1,14 @@
+{
+  "name": "@metabuilder/workflow-plugins-web",
+  "version": "1.0.0",
+  "description": "Web operation plugins (C++)",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["web", "workflow", "plugins", "cpp"],
+  "metadata": {
+    "category": "web",
+    "language": "cpp",
+    "plugin_count": 0
+  },
+  "plugins": []
+}

@@ -1,0 +1,14 @@
+{
+  "name": "@metabuilder/workflow-plugins-control",
+  "version": "1.0.0",
+  "description": "Control operation plugins for Go",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["control", "workflow", "plugins", "go"],
+  "metadata": {
+    "category": "control",
+    "language": "go",
+    "plugin_count": 0
+  },
+  "plugins": []
+}

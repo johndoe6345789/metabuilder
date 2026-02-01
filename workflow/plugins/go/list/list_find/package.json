@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/list_find",
+  "version": "1.0.0",
+  "description": "Find first element matching a condition",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["list", "workflow", "plugin"],
+  "main": "list_find.go",
+  "files": ["list_find.go", "factory.go"],
+  "metadata": {
+    "plugin_type": "list.find",
+    "category": "list",
+    "struct": "ListFind",
+    "entrypoint": "Execute"
+  }
+}

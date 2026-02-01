@@ -65,38 +65,41 @@ if(spdlog_FOUND)
     target_link_libraries(dbal_core spdlog::spdlog)
 endif()
 
-enable_testing()
+# Only build tests if test directory exists
+if(EXISTS "${DBAL_TEST_DIR}")
+    enable_testing()
 
-add_executable(client_test
-    ${DBAL_TEST_DIR}/unit/client_test.cpp
-)
+    add_executable(client_test
+        ${DBAL_TEST_DIR}/unit/client_test.cpp
+    )
 
-add_executable(query_test
-    ${DBAL_TEST_DIR}/unit/query_test.cpp
-)
+    add_executable(query_test
+        ${DBAL_TEST_DIR}/unit/query_test.cpp
+    )
 
-add_executable(integration_tests
-    ${DBAL_TEST_DIR}/integration/sqlite_test.cpp
-)
+    add_executable(integration_tests
+        ${DBAL_TEST_DIR}/integration/sqlite_test.cpp
+    )
 
-add_executable(conformance_tests
-    ${DBAL_TEST_DIR}/conformance/runner.cpp
-)
+    add_executable(conformance_tests
+        ${DBAL_TEST_DIR}/conformance/runner.cpp
+    )
 
-add_executable(http_server_security_test
-    ${DBAL_TEST_DIR}/security/http_server_security_test.cpp
-)
+    add_executable(http_server_security_test
+        ${DBAL_TEST_DIR}/security/http_server_security_test.cpp
+    )
 
-target_link_libraries(client_test dbal_core dbal_adapters)
-target_link_libraries(query_test dbal_core dbal_adapters)
-target_link_libraries(integration_tests dbal_core dbal_adapters)
-target_link_libraries(conformance_tests dbal_core dbal_adapters)
-target_link_libraries(http_server_security_test Threads::Threads)
+    target_link_libraries(client_test dbal_core dbal_adapters)
+    target_link_libraries(query_test dbal_core dbal_adapters)
+    target_link_libraries(integration_tests dbal_core dbal_adapters)
+    target_link_libraries(conformance_tests dbal_core dbal_adapters)
+    target_link_libraries(http_server_security_test Threads::Threads)
 
-add_test(NAME client_test COMMAND client_test)
-add_test(NAME query_test COMMAND query_test)
-add_test(NAME integration_tests COMMAND integration_tests)
-add_test(NAME conformance_tests COMMAND conformance_tests)
+    add_test(NAME client_test COMMAND client_test)
+    add_test(NAME query_test COMMAND query_test)
+    add_test(NAME integration_tests COMMAND integration_tests)
+    add_test(NAME conformance_tests COMMAND conformance_tests)
+endif()
 
 install(TARGETS dbal_daemon DESTINATION bin)
 install(DIRECTORY ${DBAL_INCLUDE_DIR}/dbal DESTINATION include)

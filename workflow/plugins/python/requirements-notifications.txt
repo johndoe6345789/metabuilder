@@ -1,0 +1,10 @@
+# Notifications Plugin Dependencies
+# These dependencies are required for notifications/* plugins
+# Last Updated: 2026-01-23
+
+# Include base requirements
+-r requirements.txt
+
+# Notification service clients
+slack-sdk>=3.23.0     # notifications_slack: Slack API client
+discord.py>=2.3.2     # notifications_discord: Discord API client

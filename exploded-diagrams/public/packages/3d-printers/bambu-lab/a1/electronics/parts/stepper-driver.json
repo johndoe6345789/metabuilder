@@ -1,0 +1,74 @@
+{
+  "id": "stepper-driver",
+  "name": "TMC Stepper Driver",
+  "partNumber": "BL-A1-TMC22",
+  "material": "pcb",
+  "quantity": 4,
+  "weight": 8.0,
+  "weightUnit": "g",
+  "baseY": 280,
+  "description": "TMC2209 silent stepper driver module - StealthChop/SpreadCycle with UART interface",
+  "installation": {
+    "tools": [
+      { "name": "ESD wrist strap", "size": "-", "required": true },
+      { "name": "Small flathead screwdriver", "size": "2mm", "required": true },
+      { "name": "Thermal paste", "size": "-", "required": false }
+    ],
+    "hardware": [
+      { "name": "Heatsink", "spec": "9x9x5mm", "qty": 1, "reusable": true },
+      { "name": "Thermal tape", "spec": "Double-sided", "qty": 1, "reusable": false }
+    ],
+    "torque": [],
+    "notes": [
+      "Ensure correct orientation before inserting - EN pin location varies",
+      "Set Vref to 1.0V for stock motors (0.8A RMS)",
+      "Heatsink required for reliable operation",
+      "StealthChop enabled by default - UART for SpreadCycle",
+      "Allow 30 seconds between power cycles"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 20, "height": 15, "rx": 1, "fill": "#006030" },
+    { "type": "rect", "width": 8, "height": 8, "offsetY": -1, "fill": "#303030" },
+    { "type": "rect", "width": 18, "height": 3, "offsetY": 5, "fill": "#c0c0c0" },
+    { "type": "circle", "r": 2, "offsetX": 7, "offsetY": -4, "fill": "#c0c0c0" }
+  ],
+  "geometry3d": [
+    { "type": "box", "width": 15, "height": 1.2, "depth": 20, "fill": "#006030" },
+
+    { "type": "box", "width": 6, "height": 1.5, "depth": 6, "offsetY": 1.35, "offsetZ": -3, "fill": "#1a1a1a" },
+
+    { "type": "box", "width": 9, "height": 5, "depth": 9, "offsetY": 4.6, "offsetZ": -3, "fill": "#202025" },
+    { "type": "box", "width": 8.5, "height": 1, "depth": 8.5, "offsetY": 7.6, "offsetZ": -3, "fill": "#303035" },
+    { "type": "box", "width": 7, "height": 0.5, "depth": 7, "offsetY": 7.35, "offsetZ": -3, "fill": "#252530" },
+
+    { "type": "box", "width": 13, "height": 2.5, "depth": 2.5, "offsetY": 1.85, "offsetZ": 7.5, "fill": "#c0c0c0" },
+    { "type": "box", "width": 13, "height": 2.5, "depth": 2.5, "offsetY": 1.85, "offsetZ": -13.5, "fill": "#c0c0c0" },
+
+    { "type": "cylinder", "r": 1.8, "height": 1.5, "offsetX": 5, "offsetY": 1.35, "offsetZ": 3, "fill": "#c0c0c0" },
+    { "type": "cylinder", "r": 1, "height": 0.5, "offsetX": 5, "offsetY": 2.35, "offsetZ": 3, "fill": "#606060" },
+
+    { "type": "box", "width": 2.5, "height": 1.5, "depth": 2.5, "offsetX": -5, "offsetY": 1.35, "offsetZ": 3, "fill": "#1a1a1a" },
+
+    { "type": "box", "width": 1.5, "height": 1, "depth": 1.5, "offsetX": 5, "offsetY": 1.1, "offsetZ": -3, "fill": "#1a1a1a" },
+    { "type": "box", "width": 1.5, "height": 1, "depth": 1.5, "offsetX": -5, "offsetY": 1.1, "offsetZ": -3, "fill": "#1a1a1a" },
+    { "type": "box", "width": 1.5, "height": 1, "depth": 1.5, "offsetX": 5, "offsetY": 1.1, "offsetZ": -8, "fill": "#1a1a1a" },
+    { "type": "box", "width": 1.5, "height": 1, "depth": 1.5, "offsetX": -5, "offsetY": 1.1, "offsetZ": -8, "fill": "#1a1a1a" },
+
+    { "type": "cylinder", "r": 0.3, "height": 3, "offsetX": -6, "offsetY": -1.5, "offsetZ": 8, "fill": "#c0c0c0" },
+    { "type": "cylinder", "r": 0.3, "height": 3, "offsetX": -4, "offsetY": -1.5, "offsetZ": 8, "fill": "#c0c0c0" },
+    { "type": "cylinder", "r": 0.3, "height": 3, "offsetX": -2, "offsetY": -1.5, "offsetZ": 8, "fill": "#c0c0c0" },
+    { "type": "cylinder", "r": 0.3, "height": 3, "offsetX": 0, "offsetY": -1.5, "offsetZ": 8, "fill": "#c0c0c0" },
+    { "type": "cylinder", "r": 0.3, "height": 3, "offsetX": 2, "offsetY": -1.5, "offsetZ": 8, "fill": "#c0c0c0" },
+    { "type": "cylinder", "r": 0.3, "height": 3, "offsetX": 4, "offsetY": -1.5, "offsetZ": 8, "fill": "#c0c0c0" },
+    { "type": "cylinder", "r": 0.3, "height": 3, "offsetX": 6, "offsetY": -1.5, "offsetZ": 8, "fill": "#c0c0c0" },
+
+    { "type": "cylinder", "r": 0.3, "height": 3, "offsetX": -6, "offsetY": -1.5, "offsetZ": -14, "fill": "#c0c0c0" },
+    { "type": "cylinder", "r": 0.3, "height": 3, "offsetX": -4, "offsetY": -1.5, "offsetZ": -14, "fill": "#c0c0c0" },
+    { "type": "cylinder", "r": 0.3, "height": 3, "offsetX": -2, "offsetY": -1.5, "offsetZ": -14, "fill": "#c0c0c0" },
+    { "type": "cylinder", "r": 0.3, "height": 3, "offsetX": 0, "offsetY": -1.5, "offsetZ": -14, "fill": "#c0c0c0" },
+    { "type": "cylinder", "r": 0.3, "height": 3, "offsetX": 2, "offsetY": -1.5, "offsetZ": -14, "fill": "#c0c0c0" },
+    { "type": "cylinder", "r": 0.3, "height": 3, "offsetX": 4, "offsetY": -1.5, "offsetZ": -14, "fill": "#c0c0c0" },
+    { "type": "cylinder", "r": 0.3, "height": 3, "offsetX": 6, "offsetY": -1.5, "offsetZ": -14, "fill": "#c0c0c0" }
+  ]
+}

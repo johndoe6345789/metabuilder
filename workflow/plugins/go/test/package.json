@@ -1,0 +1,14 @@
+{
+  "name": "@metabuilder/workflow-plugins-test",
+  "version": "1.0.0",
+  "description": "Test operation plugins for Go",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["test", "workflow", "plugins", "go"],
+  "metadata": {
+    "category": "test",
+    "language": "go",
+    "plugin_count": 0
+  },
+  "plugins": []
+}

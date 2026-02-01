@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/convert_to_list",
+  "version": "1.0.0",
+  "description": "Convert value to list",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["convert", "workflow", "plugin"],
+  "main": "convert_to_list.py",
+  "files": ["convert_to_list.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "convert.toList",
+    "category": "convert",
+    "class": "ConvertToList",
+    "entrypoint": "execute"
+  }
+}

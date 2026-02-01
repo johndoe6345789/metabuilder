@@ -1,0 +1,234 @@
+{
+  "name": "cross-project-demo",
+  "active": false,
+  "nodes": [
+    {
+      "id": "start",
+      "name": "Start",
+      "type": "metabuilder.trigger",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "operation": "manual"
+      }
+    },
+    {
+      "id": "check-postgres",
+      "name": "Check Postgres",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "host": "localhost",
+        "port": 5432,
+        "database": "metabuilder",
+        "user": "postgres",
+        "operation": "postgres.checkConnection"
+      }
+    },
+    {
+      "id": "list-containers",
+      "name": "List Containers",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "all": false,
+        "operation": "docker.listContainers"
+      }
+    },
+    {
+      "id": "create-3d-model",
+      "name": "Create 3d Model",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "length": 100,
+        "width": 50,
+        "height": 25,
+        "outputPath": "/tmp/demo-box.step",
+        "operation": "cadquery.box"
+      }
+    },
+    {
+      "id": "run-mojo-benchmark",
+      "name": "Run Mojo Benchmark",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "example": "life/benchmark.mojo",
+        "operation": "mojo.runExample"
+      }
+    },
+    {
+      "id": "aggregate-results",
+      "name": "Aggregate Results",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "expression": {
+          "database": {
+            "connected": "{{ $nodes['check-postgres'].success }}",
+            "version": "{{ $nodes['check-postgres'].version }}"
+          },
+          "docker": {
+            "containerCount": "{{ $nodes['list-containers'].containers.length }}",
+            "containers": "{{ $nodes['list-containers'].containers }}"
+          },
+          "cadquery": {
+            "modelCreated": "{{ $nodes['create-3d-model'].success }}",
+            "outputPath": "{{ $nodes['create-3d-model'].outputPath }}"
+          },
+          "mojo": {
+            "benchmarkRan": "{{ $nodes['run-mojo-benchmark'].success }}",
+            "executionTime": "{{ $nodes['run-mojo-benchmark'].executionTime }}"
+          }
+        },
+        "operation": "transform"
+      }
+    },
+    {
+      "id": "share-results",
+      "name": "Share Results",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        100,
+        500
+      ],
+      "parameters": {
+        "content": "{{ JSON.stringify($nodes['aggregate-results'].result, null, 2) }}",
+        "title": "Cross-Project Workflow Results",
+        "language": "json",
+        "expiresIn": "1d",
+        "operation": "pastebin.create"
+      }
+    },
+    {
+      "id": "send-notification",
+      "name": "Send Notification",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        400,
+        500
+      ],
+      "parameters": {
+        "from": "workflow@metabuilder.local",
+        "to": "admin@example.com",
+        "subject": "Cross-Project Workflow Complete",
+        "body": "Workflow completed successfully.\n\nResults: {{ $nodes['share-results'].url }}\n\nSummary:\n- Database: {{ $nodes['check-postgres'].success ? 'Connected' : 'Failed' }}\n- Docker Containers: {{ $nodes['list-containers'].containers.length }}\n- 3D Model: {{ $nodes['create-3d-model'].success ? 'Created' : 'Failed' }}\n- Mojo Benchmark: {{ $nodes['run-mojo-benchmark'].executionTime }}ms",
+        "operation": "smtp.sendEmail"
+      }
+    }
+  ],
+  "connections": {
+    "Start": {
+      "main": {
+        "0": [
+          {
+            "node": "[object Object]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Check Postgres": {
+      "main": {
+        "0": [
+          {
+            "node": "[object Object]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "List Containers": {
+      "main": {
+        "0": [
+          {
+            "node": "[object Object]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Create 3d Model": {
+      "main": {
+        "0": [
+          {
+            "node": "[object Object]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Run Mojo Benchmark": {
+      "main": {
+        "0": [
+          {
+            "node": "[object Object]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Aggregate Results": {
+      "main": {
+        "0": [
+          {
+            "node": "[object Object]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Share Results": {
+      "main": {
+        "0": [
+          {
+            "node": "[object Object]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    }
+  },
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  }
+}

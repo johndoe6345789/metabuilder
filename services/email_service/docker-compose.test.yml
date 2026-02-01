@@ -1,0 +1,196 @@
+version: '3.8'
+
+services:
+  # Redis for Celery Broker
+  redis-broker:
+    image: redis:7-alpine
+    container_name: email_service_redis_broker
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes --requirepass celery_test_pass
+    volumes:
+      - redis_broker_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "celery_test_pass", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - email_service_network
+
+  # Redis for Result Backend
+  redis-results:
+    image: redis:7-alpine
+    container_name: email_service_redis_results
+    ports:
+      - "6380:6379"
+    command: redis-server --appendonly yes --requirepass celery_results_pass
+    volumes:
+      - redis_results_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "celery_results_pass", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - email_service_network
+
+  # PostgreSQL for Email Service Data
+  postgres:
+    image: postgres:15-alpine
+    container_name: email_service_postgres
+    environment:
+      POSTGRES_USER: email_service
+      POSTGRES_PASSWORD: email_service_pass
+      POSTGRES_DB: email_service_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U email_service -d email_service_db"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - email_service_network
+
+  # Celery Worker - Sync Queue
+  celery-worker-sync:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: email_service_celery_sync
+    command: celery -A tasks.celery_app worker --loglevel=info --queues=sync --concurrency=2 --hostname=sync@%h
+    depends_on:
+      redis-broker:
+        condition: service_healthy
+      redis-results:
+        condition: service_healthy
+    environment:
+      REDIS_HOST: redis-broker
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: celery_test_pass
+      REDIS_BROKER_DB: 0
+      REDIS_RESULT_HOST: redis-results
+      REDIS_RESULT_PORT: 6379
+      REDIS_RESULT_PASSWORD: celery_results_pass
+      REDIS_RESULT_DB: 1
+      DATABASE_URL: postgresql://email_service:email_service_pass@postgres:5432/email_service_db
+    volumes:
+      - ./:/app
+    networks:
+      - email_service_network
+
+  # Celery Worker - Send Queue
+  celery-worker-send:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: email_service_celery_send
+    command: celery -A tasks.celery_app worker --loglevel=info --queues=send --concurrency=2 --hostname=send@%h
+    depends_on:
+      redis-broker:
+        condition: service_healthy
+      redis-results:
+        condition: service_healthy
+    environment:
+      REDIS_HOST: redis-broker
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: celery_test_pass
+      REDIS_BROKER_DB: 0
+      REDIS_RESULT_HOST: redis-results
+      REDIS_RESULT_PORT: 6379
+      REDIS_RESULT_PASSWORD: celery_results_pass
+      REDIS_RESULT_DB: 1
+      DATABASE_URL: postgresql://email_service:email_service_pass@postgres:5432/email_service_db
+    volumes:
+      - ./:/app
+    networks:
+      - email_service_network
+
+  # Celery Worker - Async Ops (delete, spam, etc)
+  celery-worker-async:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: email_service_celery_async
+    command: celery -A tasks.celery_app worker --loglevel=info --queues=delete,spam,periodic --concurrency=2 --hostname=async@%h
+    depends_on:
+      redis-broker:
+        condition: service_healthy
+      redis-results:
+        condition: service_healthy
+    environment:
+      REDIS_HOST: redis-broker
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: celery_test_pass
+      REDIS_BROKER_DB: 0
+      REDIS_RESULT_HOST: redis-results
+      REDIS_RESULT_PORT: 6379
+      REDIS_RESULT_PASSWORD: celery_results_pass
+      REDIS_RESULT_DB: 1
+      DATABASE_URL: postgresql://email_service:email_service_pass@postgres:5432/email_service_db
+    volumes:
+      - ./:/app
+    networks:
+      - email_service_network
+
+  # Celery Beat - Periodic Task Scheduler
+  celery-beat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: email_service_celery_beat
+    command: celery -A tasks.celery_app beat --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    depends_on:
+      redis-broker:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    environment:
+      REDIS_HOST: redis-broker
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: celery_test_pass
+      REDIS_BROKER_DB: 0
+      REDIS_RESULT_HOST: redis-results
+      REDIS_RESULT_PORT: 6379
+      REDIS_RESULT_PASSWORD: celery_results_pass
+      REDIS_RESULT_DB: 1
+      DATABASE_URL: postgresql://email_service:email_service_pass@postgres:5432/email_service_db
+    volumes:
+      - ./:/app
+    networks:
+      - email_service_network
+
+  # Flower - Celery Monitoring
+  flower:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: email_service_flower
+    command: celery -A tasks.celery_app flower --port=5555 --broker=redis://:celery_test_pass@redis-broker:6379/0 --result-backend=redis://:celery_results_pass@redis-results:6379/1
+    ports:
+      - "5555:5555"
+    depends_on:
+      - redis-broker
+      - redis-results
+      - celery-worker-sync
+      - celery-worker-send
+      - celery-worker-async
+    environment:
+      REDIS_HOST: redis-broker
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: celery_test_pass
+      REDIS_BROKER_DB: 0
+    networks:
+      - email_service_network
+
+networks:
+  email_service_network:
+    driver: bridge
+
+volumes:
+  redis_broker_data:
+  redis_results_data:
+  postgres_data:

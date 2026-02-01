@@ -1,0 +1,17 @@
+{
+  "name": "@metabuilder/workflow-plugins",
+  "version": "1.0.0",
+  "description": "MetaBuilder Workflow Plugins - Multi-language plugin ecosystem",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["workflow", "plugins", "multi-language"],
+  "languages": ["python", "go", "rust", "cpp", "mojo", "ts"],
+  "contents": {
+    "python": { "description": "Python workflow plugins", "path": "./python" },
+    "go": { "description": "Go workflow plugins", "path": "./go" },
+    "rust": { "description": "Rust workflow plugins", "path": "./rust" },
+    "cpp": { "description": "C++ header-only workflow plugins", "path": "./cpp" },
+    "mojo": { "description": "Mojo workflow plugins", "path": "./mojo" },
+    "ts": { "description": "TypeScript workflow plugins", "path": "./ts" }
+  }
+}

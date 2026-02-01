@@ -18,6 +18,7 @@ services:
       - metabuilder-data:/app/data
     depends_on:
       - dbal-daemon
+      - smtp-relay
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
@@ -25,6 +26,36 @@ services:
       timeout: 5s
       retries: 3
       start_period: 40s
+    networks:
+      - metabuilder-network
+
+  # SMTP Relay Service (Twisted Python)
+  smtp-relay:
+    build:
+      context: ./smtprelay
+      dockerfile: Dockerfile
+    container_name: metabuilder-smtp-relay
+    ports:
+      - "2525:2525"
+      - "8081:8080"
+    environment:
+      - SMTP_LISTEN_HOST=0.0.0.0
+      - SMTP_LISTEN_PORT=2525
+      - HTTP_LISTEN_HOST=0.0.0.0
+      - HTTP_LISTEN_PORT=8080
+      - GMAIL_USERNAME=${GMAIL_USERNAME:-}
+      - GMAIL_APP_PASSWORD=${GMAIL_APP_PASSWORD:-}
+      - FORWARD_TO=${FORWARD_TO:-noreply@metabuilder.local}
+      - ALLOW_ANY_RCPT=true
+      - ADD_X_HEADERS=true
+      - MAX_STORE=500
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
     networks:
       - metabuilder-network
 
@@ -40,9 +71,13 @@ services:
       - DATABASE_URL=file:/app/data/metabuilder.db
       - LOG_LEVEL=info
       - ENABLE_METRICS=true
+      - SMTP_RELAY_HOST=smtp-relay
+      - SMTP_RELAY_PORT=2525
     volumes:
       - metabuilder-data:/app/data
       - dbal-logs:/app/logs
+    depends_on:
+      - smtp-relay
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health"]

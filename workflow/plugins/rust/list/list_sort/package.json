@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/list_sort",
+  "version": "1.0.0",
+  "description": "Sort a list",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["list", "workflow", "plugin"],
+  "main": "src/lib.rs",
+  "files": ["src/lib.rs", "src/factory.rs"],
+  "metadata": {
+    "plugin_type": "list.sort",
+    "category": "list",
+    "struct": "ListSort",
+    "entrypoint": "execute"
+  }
+}

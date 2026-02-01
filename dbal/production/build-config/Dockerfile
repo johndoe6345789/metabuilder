@@ -15,22 +15,26 @@ RUN apt-get update && apt-get install -y \
     libsqlite3-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Set working directory
-WORKDIR /build
+# Set working directory - mirror the original structure
+WORKDIR /dbal
 
-# Copy source files
-COPY CMakeLists.txt conanfile.txt ./
+# Copy entire dbal/production structure
 COPY include/ include/
 COPY src/ src/
-COPY tests/ tests/
+
+# Copy build-config as a subdirectory (maintains CMakeLists.txt paths)
+COPY build-config/CMakeLists.txt build-config/CMakeLists.txt
+COPY build-config/conanfile.txt build-config/conanfile.txt
 
 # Install Conan and dependencies
 RUN pip3 install --no-cache-dir conan && \
     conan profile detect --force
 
-# Build the daemon
+# Build the daemon from build-config directory
+WORKDIR /dbal/build-config
 RUN conan install . --output-folder=build --build=missing && \
-    cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -S . -B build -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake && \
+    cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -S . -B build \
+        -DCMAKE_TOOLCHAIN_FILE=build/build/Release/generators/conan_toolchain.cmake && \
     cmake --build build --target dbal_daemon
 
 # Stage 2: Runtime
@@ -49,7 +53,7 @@ RUN useradd -r -u 1000 -m -s /bin/bash dbal
 WORKDIR /app
 
 # Copy binary from builder
-COPY --from=builder /build/build/dbal_daemon /app/dbal_daemon
+COPY --from=builder /dbal/build-config/build/dbal_daemon /app/dbal_daemon
 
 # Copy default config (can be overridden with volume mount)
 RUN echo "# DBAL Configuration" > /app/config.yaml

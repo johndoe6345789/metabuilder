@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/math_add",
+  "version": "1.0.0",
+  "description": "Add numbers together",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["math", "workflow", "plugin"],
+  "main": "math_add.py",
+  "files": ["math_add.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "math.add",
+    "category": "math",
+    "class": "MathAdd",
+    "entrypoint": "execute"
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "id": "gear-case",
+  "name": "Gear Case",
+  "partNumber": "FD-1848360",
+  "material": "castAluminum",
+  "quantity": 1,
+  "weight": 5800.0,
+  "weightUnit": "g",
+  "baseY": 760,
+  "description": "Main gearbox housing - rear section",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "13mm", "required": true },
+      { "name": "Torque wrench", "size": "20-40 Nm", "required": true },
+      { "name": "Gasket scraper", "size": "-", "required": true },
+      { "name": "RTV sealant gun", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Case bolt", "spec": "M8x1.25x25", "grade": "8.8", "qty": 12, "reusable": true },
+      { "name": "Dowel pin", "spec": "8x12mm", "qty": 2, "reusable": true },
+      { "name": "Output shaft seal", "spec": "40x55x8", "qty": 1, "reusable": false },
+      { "name": "Case gasket", "spec": "IB5", "qty": 1, "reusable": false }
+    ],
+    "torque": [
+      { "fastener": "Case bolts", "value": 28, "unit": "Nm", "sequence": "Crosshatch pattern from center", "notes": "Apply RTV to mating surfaces" }
+    ],
+    "notes": [
+      "Clean all old sealant from mating surfaces",
+      "Apply thin bead of RTV - do not over-apply",
+      "Align dowels before fitting case",
+      "Fill with 2.3L MTF-94 gear oil after assembly"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 160, "height": 90, "rx": 12 },
+    { "type": "rect", "width": 140, "height": 70, "rx": 8, "fill": "#777" },
+    { "type": "circle", "r": 25, "offsetY": -5, "fill": "#555" },
+    { "type": "circle", "r": 8, "offsetX": -65, "offsetY": -30, "fill": "#666" },
+    { "type": "circle", "r": 8, "offsetX": 65, "offsetY": -30, "fill": "#666" },
+    { "type": "circle", "r": 8, "offsetX": -65, "offsetY": 30, "fill": "#666" },
+    { "type": "circle", "r": 8, "offsetX": 65, "offsetY": 30, "fill": "#666" },
+    { "type": "rect", "width": 30, "height": 15, "offsetX": -50, "offsetY": 50, "fill": "#888" },
+    { "type": "text", "content": "IB5", "offsetY": 5, "fill": "#333", "fontSize": 12 }
+  ],
+  "geometry3d": [
+    { "type": "box", "width": 100, "height": 85, "depth": 130, "fill": "#606070" },
+    { "type": "box", "width": 80, "height": 65, "depth": 110, "offsetY": 5, "subtract": true },
+
+    { "type": "box", "width": 120, "height": 95, "depth": 12, "offsetZ": -65, "fill": "#707080" },
+
+    { "type": "cylinder", "r": 10, "height": 20, "offsetX": -50, "offsetY": -38, "offsetZ": -65, "fill": "#808090" },
+    { "type": "cylinder", "r": 10, "height": 20, "offsetX": 50, "offsetY": -38, "offsetZ": -65, "fill": "#808090" },
+    { "type": "cylinder", "r": 10, "height": 20, "offsetX": -50, "offsetY": 38, "offsetZ": -65, "fill": "#808090" },
+    { "type": "cylinder", "r": 10, "height": 20, "offsetX": 50, "offsetY": 38, "offsetZ": -65, "fill": "#808090" },
+    { "type": "cylinder", "r": 10, "height": 20, "offsetX": 0, "offsetY": -42, "offsetZ": -65, "fill": "#808090" },
+    { "type": "cylinder", "r": 10, "height": 20, "offsetX": 0, "offsetY": 42, "offsetZ": -65, "fill": "#808090" },
+
+    { "type": "cylinder", "r": 4, "height": 25, "offsetX": -50, "offsetY": -38, "offsetZ": -65, "subtract": true },
+    { "type": "cylinder", "r": 4, "height": 25, "offsetX": 50, "offsetY": -38, "offsetZ": -65, "subtract": true },
+    { "type": "cylinder", "r": 4, "height": 25, "offsetX": -50, "offsetY": 38, "offsetZ": -65, "subtract": true },
+    { "type": "cylinder", "r": 4, "height": 25, "offsetX": 50, "offsetY": 38, "offsetZ": -65, "subtract": true },
+    { "type": "cylinder", "r": 4, "height": 25, "offsetX": 0, "offsetY": -42, "offsetZ": -65, "subtract": true },
+    { "type": "cylinder", "r": 4, "height": 25, "offsetX": 0, "offsetY": 42, "offsetZ": -65, "subtract": true },
+
+    { "type": "box", "width": 8, "height": 70, "depth": 110, "offsetX": -42, "fill": "#555560" },
+    { "type": "box", "width": 8, "height": 70, "depth": 110, "offsetX": 42, "fill": "#555560" },
+    { "type": "box", "width": 8, "height": 70, "depth": 110, "offsetX": 0, "fill": "#555560" },
+
+    { "type": "cylinder", "r": 35, "height": 20, "rotateX": 90, "offsetZ": 55, "fill": "#707080" },
+    { "type": "cylinder", "r": 25, "height": 25, "rotateX": 90, "offsetZ": 55, "subtract": true },
+
+    { "type": "cylinder", "r": 38, "height": 15, "rotateX": 90, "offsetZ": -20, "fill": "#656575" },
+    { "type": "cylinder", "r": 30, "height": 90, "rotateX": 90, "offsetZ": -20, "subtract": true },
+
+    { "type": "cylinder", "r": 32, "height": 15, "rotateX": 90, "offsetZ": 20, "fill": "#656575" },
+    { "type": "cylinder", "r": 25, "height": 90, "rotateX": 90, "offsetZ": 20, "subtract": true },
+
+    { "type": "box", "width": 30, "height": 20, "depth": 25, "offsetX": -55, "offsetY": -30, "fill": "#606070" },
+    { "type": "cylinder", "r": 8, "height": 30, "offsetX": -55, "offsetY": -30, "subtract": true }
+  ]
+}

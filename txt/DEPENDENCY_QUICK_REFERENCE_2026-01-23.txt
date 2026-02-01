@@ -1,0 +1,336 @@
+================================================================================
+DEPENDENCY QUICK REFERENCE GUIDE
+MetaBuilder - Phase 4 Maintenance Infrastructure
+Created: 2026-01-23
+================================================================================
+
+CANONICAL VERSIONS (As of 2026-01-23)
+================================================================================
+
+CRITICAL INFRASTRUCTURE (Must Match Exactly)
+  Node.js           : 24.13.0
+  npm               : 11.7.0
+  TypeScript        : 5.9.3
+
+PRIMARY FRAMEWORKS (Use in New Projects)
+  React             : 19.2.3 (or 18.3.1 for stable)
+  Next.js           : 15.1.3+ (but 14.2.35, 16.1.1 acceptable per project)
+  Material-UI       : 7.3.6 (latest patch OK)
+
+DATABASE & TOOLS
+  Prisma            : 7.2.0
+  Vite              : 6.0.0+
+  Playwright        : Latest LTS
+  ESLint            : 8.x
+  Prettier          : 3.x
+
+VERSION STATUS BY PROJECT
+================================================================================
+
+Project                  React       Next.js     TypeScript    Notes
+--------                 -----       -------     ----------    -----
+workflowui               18.3.1      14.2.35     5.9.3         Stable release
+codegen                  19.2.3      ~           5.9.3         Latest React
+pastebin                 19.0.0      15.1.3      5.x           Cutting edge
+postgres                 19.2.3      16.1.1      5.9.3         Latest Next
+exploded-diagrams        19.0.0      15.3.4      5.0.0         Experimental
+frontends/nextjs         18.3.1      ~           5.9.3         Production stable
+storybook                18.3.1      ~           5.9.3         Documentation
+dbal/development         ~           ~           5.9.3         Backend service
+
+COMMON AUDIT COMMANDS
+================================================================================
+
+[Check for Security Vulnerabilities]
+$ npm audit --workspace root
+$ npm audit --workspace dbal/development
+$ npm audit --workspace frontends/nextjs
+# Run for each workspace package separately
+
+[View Outdated Packages]
+$ npm outdated --workspace root
+$ npm outdated --all                    # See all across workspace
+
+[Check Peer Dependencies]
+$ npm ls --depth=0 2>&1 | head -50    # Check for UNMET warnings
+$ npm ls --depth=1 2>&1 | grep UNMET  # Find problematic dependencies
+
+[Find Pre-release Packages]
+$ grep -r '"@.*":.*-alpha\|^.*-beta\|^.*-rc' --include="package.json"
+$ grep -r '0\.0\.0-' --include="package.json"
+
+[Check Version Consistency]
+$ grep -r '"typescript":' --include="package.json" | sort | uniq -c
+$ grep -r '"react":' --include="package.json" | sort | uniq -c
+$ grep -r '"@mui/material":' --include="package.json" | sort | uniq -c
+
+[Analyze Dependency Tree]
+$ npm ls typescript              # Full tree for specific package
+$ npm ls react --depth=0         # Top-level occurrences
+$ npm dedupe                     # Remove duplicate dependencies
+
+CRITICAL FILES TO CHECK MONTHLY
+================================================================================
+
+1. /Users/rmac/Documents/metabuilder/package.json
+   - Root workspace configuration
+   - TypeScript, ESLint, Prettier versions
+
+2. /Users/rmac/Documents/metabuilder/.npmrc
+   - Current setting: legacy-peer-deps=true
+   - Check Node/npm version requirements
+
+3. /Users/rmac/Documents/metabuilder/dbal/development/package.json
+   - Core backend dependencies
+   - Prisma version
+
+4. /Users/rmac/Documents/metabuilder/frontends/nextjs/package.json
+   - React version (primary web frontend)
+   - Next.js version
+
+5. /Users/rmac/Documents/metabuilder/codegen/package.json
+   - CodeForge IDE dependencies
+   - React version for low-code builder
+
+6. /Users/rmac/Documents/metabuilder/pastebin/package.json
+   - Experimental frontend
+   - Latest React/Next versions
+
+MONTHLY AUDIT CHECKLIST
+================================================================================
+
+Step 1: Security Scan (Run 1st of month)
+  [ ] npm audit --workspace root
+  [ ] npm audit --workspace dbal/development
+  [ ] npm audit --workspace frontends/nextjs
+  [ ] Check results for CRITICAL/HIGH vulnerabilities
+  [ ] Document findings in txt/AUDIT_REPORT_2026-{MONTH}.txt
+
+Step 2: Outdated Packages (2nd of month)
+  [ ] npm outdated --all
+  [ ] Identify security patches (prioritize)
+  [ ] Identify minor/patch updates (batch)
+  [ ] Review breaking changes for major versions
+
+Step 3: Peer Dependencies (3rd of month)
+  [ ] npm ls --depth=0 2>&1 | grep UNMET
+  [ ] Fix any peer dependency conflicts
+  [ ] Verify legacy-peer-deps=true is working
+
+Step 4: Pre-release Detection (4th of month)
+  [ ] Search for -alpha, -beta, -rc in all package.json files
+  [ ] Document where pre-releases are used and why
+  [ ] Plan replacements if stable versions available
+
+Step 5: Version Consistency (5th of month)
+  [ ] Check TypeScript: Should be 5.9.3 everywhere
+  [ ] Check React consistency (expected variation noted above)
+  [ ] Check Next.js consistency
+  [ ] Update CLAUDE.md if new canonical versions established
+
+When to Escalate
+================================================================================
+
+IMMEDIATE (within hours)
+  - Security vulnerability CVSS 9+
+  - npm install fails (dependency deadlock)
+  - All tests failing after automatic update
+
+SAME DAY
+  - Security vulnerability CVSS 7-8.9
+  - Production bug caused by dependency
+  - Build failures in CI/CD
+
+WITHIN 1 WEEK
+  - Security vulnerability CVSS 4-6.9
+  - Significant performance regression
+  - Multiple package peer dependency conflicts
+
+WITHIN 1 MONTH
+  - Minor version updates for utilities
+  - Bug fixes in non-critical features
+  - Maintenance releases
+
+PHASE 2 ESCALATION CRITERIA
+================================================================================
+
+Use Phase 2 procedures (comprehensive update) when:
+  - Need to update TypeScript (e.g., 5.9 → 6.0)
+  - React major version bump (e.g., 18 → 19)
+  - Next.js major version bump (>2 versions behind)
+  - Prisma migration (database schema changes)
+  - Breaking changes affect >3 packages
+  - Refactoring required across multiple projects
+
+Use Phase 3 procedures (dependency deadlock resolution) when:
+  - npm install fails consistently
+  - Peer dependency conflicts unresolvable
+  - Workspace won't install properly
+  - Multiple circular dependencies detected
+
+QUICK FIXES FOR COMMON ISSUES
+================================================================================
+
+Problem: npm install fails with peer dependency warnings
+Solution:
+  1. Verify .npmrc has: legacy-peer-deps=true
+  2. Delete node_modules and package-lock.json
+  3. Run: npm install
+  4. If still failing: npm ls --depth=0 (find conflicting packages)
+
+Problem: TypeScript version mismatch
+Solution:
+  1. Check all package.json files: grep '"typescript":' --include="package.json"
+  2. Update to canonical 5.9.3
+  3. Run: npm install
+  4. Run: npm run typecheck
+
+Problem: React version causing build failures
+Solution:
+  1. Identify which project has wrong React version
+  2. Update to canonical (19.2.3 or 18.3.1)
+  3. Run: npm install --workspace [project]
+  4. Test build: npm run build --workspace [project]
+
+Problem: Pre-release packages in node_modules
+Solution:
+  1. Identify pre-release: grep -r '0.0.0-' --include="package.json"
+  2. Find which package depends on it: npm ls [package]
+  3. Options:
+     a) Update dependency to stable release
+     b) If experimental project: document why needed
+     c) If no stable: file issue on GitHub
+
+Problem: Build time increasing or bundle size growing
+Solution:
+  1. Run: npm dedupe (remove duplicates)
+  2. Run: npm prune (remove unused)
+  3. Analyze: npm ls --all | grep duplicate
+  4. Consider: npm cache clean --force && npm install
+
+RATE LIMIT FOR UPDATES
+================================================================================
+
+By Category (how often to batch updates):
+
+Security Patches:       IMMEDIATE (same day)
+Critical Bug Fixes:     Weekly batch (Mondays)
+Minor/Patch Updates:    Monthly batch (1st week)
+Major Version Bumps:    Quarterly review (end of quarter)
+
+By Severity (npm audit levels):
+
+CRITICAL  → Update within 1 hour
+HIGH      → Update within 1 day
+MEDIUM    → Update within 1 week
+LOW       → Batch in monthly cycle
+
+VERSION DRIFT DETECTION
+================================================================================
+
+This spreadsheet shows acceptable version drift ranges:
+
+Package                  Min      Canonical    Max      Notes
+-------                  ---      ---------    ---      -----
+TypeScript               5.9.3    5.9.3        5.9.x    Must be exact minor.patch
+React                    18.3.1   19.2.3       19.x     Two major versions supported
+Next.js                  14.2.0   15.1.3       16.x     Multiple versions OK per project
+Material-UI              7.3.0    7.3.6        7.x      Patch variation acceptable
+Prisma                   7.2.0    7.2.0        7.2.x    Exact minor.patch preferred
+ESLint                   8.0.0    8.x          8.x      Any 8.x acceptable
+Prettier                 3.0.0    3.x          3.x      Any 3.x acceptable
+
+DOCUMENTATION UPDATES
+================================================================================
+
+When to Update CLAUDE.md:
+  1. New canonical version established
+  2. New pre-release package added (with justification)
+  3. Major version bump completed
+  4. Phase 2 or 3 procedure used
+  5. Security incident resolved
+  6. Monthly audit findings summary
+
+Format for CLAUDE.md Update:
+  - Add to "Dependencies" section
+  - Include date and canonical versions table
+  - Note any projects with non-canonical versions
+  - Include testing summary
+
+TEAM COMMUNICATION
+================================================================================
+
+Slack Channels:
+  #dependencies       - Dependency updates and issues
+  #security          - Security vulnerabilities
+  #devops            - Build/deployment issues
+
+GitHub Labels:
+  dependencies       - PR label for dependency changes
+  security           - Security-related changes
+  phase2-escalation  - Needs comprehensive update
+  phase3-escalation  - Dependency deadlock
+
+Notification Rules:
+  - Slack if CRITICAL security issue found
+  - GitHub issue if needs team input
+  - Weekly digest of pending updates
+  - Monthly report attached to issue
+
+HELPFUL RESOURCES
+================================================================================
+
+Core Documentation:
+  - docs/DEPENDENCY_MANAGEMENT_STRATEGY.md   (Full strategy guide)
+  - txt/DEPENDENCY_TEAM_GUIDE_2026-01-23.txt (For developers)
+  - docs/DEPENDENCY_UPDATE_SUMMARY_2026-01-23.md (Phases 1-3 summary)
+
+Previous Audit Reports:
+  - txt/AUDIT_REPORT_2026-{MONTH}.txt (Monthly reports)
+
+Commands Reference:
+  See "COMMON AUDIT COMMANDS" section above
+
+Troubleshooting:
+  See "QUICK FIXES FOR COMMON ISSUES" section above
+
+CONTACT & ESCALATION
+================================================================================
+
+Dependencies Team Lead: [To be assigned]
+Review Group: @metabuilder-core
+Security Reports: [security contact]
+
+For Questions:
+  1. Check this reference guide (DEPENDENCY_QUICK_REFERENCE)
+  2. Check strategy document (DEPENDENCY_MANAGEMENT_STRATEGY.md)
+  3. Check team guide (DEPENDENCY_TEAM_GUIDE_2026-01-23.txt)
+  4. File GitHub issue with label 'dependencies'
+  5. Ping team lead if blocking
+
+SCHEDULE
+================================================================================
+
+Monthly (1st of month):
+  - Run full audit cycle (steps 1-5 above)
+  - Create AUDIT_REPORT_2026-{MONTH}.txt
+  - Update canonical versions if needed
+
+Weekly (Mondays):
+  - Batch critical bug fixes
+  - Merge non-breaking security patches
+
+Quarterly (End of Q):
+  - Review major version upgrade opportunities
+  - Assess build time/bundle size trends
+  - Update CLAUDE.md summary section
+
+Yearly (January):
+  - Review entire dependency strategy
+  - Plan major upgrades for next year
+  - Assess Node/npm version upgrade needs
+
+================================================================================
+END OF QUICK REFERENCE
+Version: 1.0 | Last Updated: 2026-01-23 | Next Review: 2026-04-23 (Q2)
+================================================================================

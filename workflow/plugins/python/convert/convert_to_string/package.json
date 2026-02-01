@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/convert_to_string",
+  "version": "1.0.0",
+  "description": "Convert value to string",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["convert", "workflow", "plugin"],
+  "main": "convert_to_string.py",
+  "files": ["convert_to_string.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "convert.toString",
+    "category": "convert",
+    "class": "ConvertToString",
+    "entrypoint": "execute"
+  }
+}

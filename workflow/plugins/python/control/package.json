@@ -1,0 +1,18 @@
+{
+  "name": "@metabuilder/workflow-plugins-control",
+  "version": "1.0.0",
+  "description": "Control flow plugins",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["control", "flow", "workflow", "plugins"],
+  "metadata": {
+    "category": "control",
+    "plugin_count": 4
+  },
+  "plugins": [
+    "control_get_bot_status",
+    "control_start_bot",
+    "control_stop_bot",
+    "control_switch"
+  ]
+}

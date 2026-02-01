@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/notifications_slack",
+  "version": "1.0.0",
+  "description": "Send notifications to Slack channels",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["notifications", "workflow", "plugin"],
+  "main": "notifications_slack.py",
+  "files": ["notifications_slack.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "notifications.slack",
+    "category": "notifications",
+    "class": "NotificationsSlack",
+    "entrypoint": "execute"
+  }
+}

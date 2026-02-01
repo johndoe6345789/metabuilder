@@ -1,0 +1,324 @@
+# LINTING TOOLS AUDIT
+Date: 2026-01-23
+Status: Comprehensive Survey Complete
+
+## EXECUTIVE SUMMARY
+
+Codebase contains 11 MAJOR inconsistencies across linting/formatting tools:
+- ESLint versions: 5 different versions (^8, ^8.0.0, ^9.28.0, ^9.39.2)
+- Prettier versions: 2 different versions (^3.4.2 + missing in most projects)
+- ESLint plugins: 7 different plugins with inconsistent versions
+- TypeScript versions: Multiple ranges (^5, ~5.9.3, 5.9.3, ^5.0.0, ^5.3.3)
+
+## 1. ESLINT VERSIONS (11 Projects with ESLint)
+
+INCONSISTENT VERSIONS:
+
+┌─ Version ^8.0.0 (oldest, deprecated)
+│  └─ ./workflow/package.json: "eslint": "^8.0.0"
+
+├─ Version ^8 (vague range)
+│  └─ ./pastebin/package.json: "eslint": "^8"
+
+├─ Version ^9.28.0 (stable v9)
+│  └─ ./emailclient/package.json: "eslint": "^9.28.0"
+
+└─ Version ^9.39.2 (latest v9)
+   ├─ ./dbal/development/package.json: "eslint": "^9.39.2"
+   ├─ ./frontends/dbal/package.json: "eslint": "^9.39.2"
+   ├─ ./frontends/nextjs/package.json: "eslint": "^9.39.2"
+   ├─ ./dockerterminal/frontend/package.json: "eslint": "^9.39.2"
+   ├─ ./old/package.json: "eslint": "^9.39.2"
+   ├─ ./codegen/package.json: "eslint": "^9.39.2"
+   └─ ./postgres/package.json: "eslint": "^9.39.2"
+
+RECOMMENDATION: Standardize to ^9.39.2 everywhere
+
+## 2. @ESLINT/JS VERSIONS (3 Projects)
+
+├─ Version ^9.28.0
+│  └─ ./old/package.json: "@eslint/js": "^9.28.0"
+
+└─ Version ^9.39.2
+   ├─ ./frontends/nextjs/package.json: "@eslint/js": "^9.39.2"
+   └─ ./codegen/package.json: "@eslint/js": "^9.39.2"
+
+RECOMMENDATION: Standardize to ^9.39.2 everywhere
+
+## 3. PRETTIER VERSIONS (2 Projects Only!)
+
+└─ Version ^3.4.2
+   ├─ ./dbal/development/package.json: "prettier": "^3.4.2"
+   └─ ./frontends/nextjs/package.json: "prettier": "^3.4.2"
+
+⚠️ ISSUE: 9 out of 11 ESLint projects have NO Prettier!
+- ./emailclient/package.json (has eslint, no prettier)
+- ./workflow/package.json (has eslint, no prettier)
+- ./pastebin/package.json (has eslint, no prettier)
+- ./dockerterminal/frontend/package.json (has eslint, no prettier)
+- ./codegen/package.json (has eslint, no prettier)
+- ./postgres/package.json (has eslint, no prettier)
+- ./old/package.json (has eslint, no prettier)
+- ./workflowui/package.json (NO eslint, NO prettier)
+- ./frontends/dbal/package.json (has eslint, no prettier)
+
+RECOMMENDATION: Add prettier: ^3.4.2 to ALL projects
+
+## 4. ESLINT PLUGINS (7 Unique Plugins Found)
+
+### eslint-plugin-react
+├─ Version ^7.37.5
+│  ├─ ./frontends/nextjs/package.json
+│  └─ (Used with React projects)
+
+### eslint-plugin-react-hooks
+├─ Version ^5.2.0
+│  ├─ ./frontends/nextjs/package.json
+│  ├─ ./codegen/package.json
+│  └─ ./old/package.json
+│
+└─ Version ^7.0.1
+   └─ ./postgres/package.json
+
+⚠️ INCONSISTENCY: Two different major versions (5 vs 7)
+
+### eslint-plugin-react-refresh
+├─ Version ^0.4.19
+│  ├─ ./old/package.json
+│  └─ ./codegen/package.json
+│
+└─ Version ^0.4.26
+   └─ ./postgres/package.json
+
+### eslint-plugin-playwright
+└─ Version ^2.4.0
+   └─ ./postgres/package.json (testing plugin)
+
+### eslint-plugin-jsx-a11y
+└─ Version ^6.10.2
+   └─ ./postgres/package.json (accessibility plugin)
+
+### eslint-plugin-tailwindcss
+└─ Version ^4.0.0-beta.0 ⚠️ BETA VERSION!
+   └─ ./postgres/package.json
+
+### eslint-plugin-format
+└─ Version ^1.2.0
+   └─ ./postgres/package.json
+
+### eslint-plugin-storybook
+└─ Version ^10.1.11
+   └─ ./postgres/package.json
+
+## 5. TYPESCRIPT VERSIONS (32 Instances, Multiple Ranges)
+
+CONSOLIDATED BY VERSION RANGE:
+
+A. Version ^5.9.3 (Most Common - 10 projects)
+   ├─ ./storybook/package.json
+   ├─ ./emailclient/package.json
+   ├─ ./dbal/development/package.json
+   ├─ ./workflowui/package.json
+   ├─ ./codegen/package.json
+   ├─ ./redux/slices/package.json
+   ├─ ./redux/timing-utils/package.json
+   ├─ ./redux/hooks-canvas/package.json
+   ├─ ./redux/core-hooks/package.json
+   ├─ ./redux/hooks-auth/package.json
+   └─ ./redux/adapters/package.json
+
+B. Version ~5.9.3 (Strict Patch - 4 projects)
+   ├─ ./frontends/dbal/package.json
+   ├─ ./frontends/nextjs/package.json
+   ├─ ./codegen/package.json
+   └─ ./redux/api-clients/package.json
+
+C. Version 5.9.3 (Exact - 1 project)
+   └─ ./postgres/package.json
+
+D. Version ^5 (Vague Range - 2 projects)
+   ├─ ./dockerterminal/frontend/package.json
+   └─ ./pastebin/package.json
+
+E. Version ^5.3.3 (2 projects)
+   ├─ ./redux/core/package.json
+   └─ ./redux/hooks-async/package.json
+
+F. Version ^5.0.0 (Many projects - 12 instances)
+   ├─ ./hooks/package.json
+   ├─ ./workflow/package.json
+   ├─ ./workflow/plugins/ts/core/hooks/package.json
+   ├─ ./workflow/plugins/ts/dbal-read/package.json
+   ├─ ./workflow/plugins/ts/dbal/dbal-write/package.json
+   ├─ ./workflow/plugins/ts/dbal/dbal-read/package.json
+   ├─ ./workflow/plugins/ts/dbal-write/package.json
+   ├─ ./workflow/plugins/ts/integration/webhook-response/package.json
+   ├─ ./workflow/plugins/ts/integration/email-send/package.json
+   ├─ ./workflow/plugins/ts/integration/http-request/package.json
+   ├─ ./workflow/plugins/ts/integration/email/imap-sync/package.json
+   ├─ ./workflow/plugins/ts/integration/email/imap-search/package.json
+   └─ ./workflow/plugins/ts/utility/wait/package.json
+
+G. Version ^5 (Packages)
+   ├─ ./packages/geocities-app/package.json
+   └─ ./exploded-diagrams/package.json
+
+H. Version ^5.0.0 (Redux utilities)
+   ├─ ./redux/hooks-utils/package.json
+   └─ ./redux/hooks-forms/package.json
+
+⚠️ INCONSISTENCY: 6 different version ranges for TypeScript!
+   RECOMMENDATION: Standardize to ^5.9.3 everywhere
+
+## 6. NO LINTING FOUND IN:
+
+These projects have neither ESLint nor TypeScript defined:
+- ./storybook/package.json has TypeScript but...
+  Actually HAS TypeScript: ^5.9.3
+  
+Actually all main projects have TypeScript. 
+
+Projects with NO ESLint at all:
+- ./workflowui/package.json (has TypeScript ^5.9.3, NO ESLint!)
+- All workflow plugin subdirectories (some have TS only, no ESLint)
+- ./packages/geocities-app/package.json (has TS, no ESLint)
+- ./exploded-diagrams/package.json (has TS, no ESLint)
+
+Projects with NO Prettier:
+- 9 out of 11 ESLint projects missing Prettier!
+
+## 7. PROBLEMATIC VERSIONS
+
+BETA/PRE-RELEASE:
+- eslint-plugin-tailwindcss: ^4.0.0-beta.0 (postgres/package.json) 
+  -> Should update to stable version
+
+OLD/DEPRECATED:
+- eslint: ^8.0.0 (workflow/package.json)
+  -> Should update to ^9.39.2
+- eslint: ^8 (pastebin/package.json)
+  -> Should update to ^9.39.2
+- @eslint/js: ^9.28.0 (old/package.json)
+  -> Should update to ^9.39.2
+
+OVERLY BROAD RANGES:
+- eslint: ^8 (pastebin/package.json)
+  -> Could install 8.x, should use ^9.39.2
+- typescript: ^5 (dockerterminal, pastebin, packages)
+  -> Too broad, should use ^5.9.3
+
+MAJOR VERSION MISMATCHES:
+- eslint-plugin-react-hooks: ^5.2.0 vs ^7.0.1
+  -> Different major versions across projects
+
+## STANDARDIZATION ROADMAP
+
+### PHASE 1: ESLint & @eslint/js
+```
+Target:
+  eslint: ^9.39.2
+  @eslint/js: ^9.39.2
+
+Files to Update:
+  1. ./workflow/package.json (^8.0.0 → ^9.39.2)
+  2. ./pastebin/package.json (^8 → ^9.39.2)
+  3. ./emailclient/package.json (^9.28.0 → ^9.39.2)
+  4. ./old/package.json (@eslint/js: ^9.28.0 → ^9.39.2)
+```
+
+### PHASE 2: Add Missing Prettier
+```
+Target: prettier: ^3.4.2
+
+Files to Add:
+  1. ./emailclient/package.json
+  2. ./workflow/package.json
+  3. ./pastebin/package.json
+  4. ./dockerterminal/frontend/package.json
+  5. ./codegen/package.json (verify/update)
+  6. ./postgres/package.json
+  7. ./old/package.json
+  8. ./workflowui/package.json
+  9. ./frontends/dbal/package.json
+```
+
+### PHASE 3: ESLint Plugin Standardization
+```
+Audit required for:
+  - eslint-plugin-react-hooks: ^5.2.0 vs ^7.0.1 (find correct version)
+  - eslint-plugin-react-refresh: standardize version
+  - eslint-plugin-tailwindcss: upgrade from beta to stable
+  
+Files Affected:
+  1. ./postgres/package.json (multiple plugins)
+  2. ./codegen/package.json
+  3. ./old/package.json
+  4. ./frontends/nextjs/package.json
+```
+
+### PHASE 4: TypeScript Standardization
+```
+Target: typescript: ^5.9.3
+
+Files to Update (Current Range):
+  1. ./dockerterminal/frontend/package.json (^5 → ^5.9.3)
+  2. ./pastebin/package.json (^5 → ^5.9.3)
+  3. ./packages/geocities-app/package.json (^5 → ^5.9.3)
+  4. ./exploded-diagrams/package.json (^5.0.0 → ^5.9.3)
+  5. All redux/hooks-* packages (^5.0.0 → ^5.9.3)
+  6. All workflow/plugins/ts/* (^5.0.0 → ^5.9.3)
+  
+Keep Exact:
+  7. ./postgres/package.json (5.9.3 is fine)
+```
+
+### PHASE 5: Add ESLint to Missing Projects
+```
+Projects without ESLint:
+  1. ./workflowui/package.json (add eslint: ^9.39.2)
+  2. Workflow plugin subdirectories (if applicable)
+  3. Other packages missing linting
+```
+
+## CONSISTENCY MATRIX
+
+| Project | ESLint | @eslint/js | Prettier | TypeScript | React Plugins |
+|---------|--------|-----------|----------|------------|---------------|
+| dbal/development | ✓ ^9.39.2 | ✗ | ✓ ^3.4.2 | ✓ ^5.9.3 | ✗ |
+| frontends/dbal | ✓ ^9.39.2 | ✗ | ✗ | ✓ ~5.9.3 | ✗ |
+| frontends/nextjs | ✓ ^9.39.2 | ✓ ^9.39.2 | ✓ ^3.4.2 | ✓ ~5.9.3 | ✓ ^7.37.5 |
+| dockerterminal | ✓ ^9.39.2 | ✗ | ✗ | ✓ ^5 | ✗ |
+| emailclient | ✓ ^9.28.0 | ✗ | ✗ | ✓ ^5.9.3 | ✗ |
+| workflow | ✓ ^8.0.0 | ✗ | ✗ | ✓ ^5.0.0 | ✗ |
+| pastebin | ✓ ^8 | ✗ | ✗ | ✓ ^5 | ✗ |
+| codegen | ✓ ^9.39.2 | ✓ ^9.39.2 | ✗ | ✓ ~5.9.3 | ✓ ^5.2.0 |
+| old | ✓ ^9.39.2 | ✓ ^9.28.0 | ✗ | ✓ ^5.9.3 | ✓ ^5.2.0 |
+| postgres | ✓ ^9.39.2 | ✗ | ✗ | ✓ 5.9.3 | ✓ ^7.0.1 |
+| workflowui | ✗ MISSING | ✗ | ✗ | ✓ ~5.9.3 | ✗ |
+
+## CRITICAL ISSUES (PRIORITY 1)
+
+1. **workflowui has NO ESLint** - Should have eslint: ^9.39.2
+2. **9 projects missing Prettier** - Should have prettier: ^3.4.2
+3. **eslint-plugin-react-hooks major version mismatch** - ^5.2.0 vs ^7.0.1
+4. **eslint-plugin-tailwindcss still in beta** - Should upgrade to stable
+
+## SUMMARY STATISTICS
+
+- Total projects with linting tools: 11
+- Projects with ESLint: 11 (but 1 missing is workflowui)
+- Projects with Prettier: 2 (9 missing!)
+- ESLint version ranges: 5 different versions
+- TypeScript version ranges: 6 different ranges
+- ESLint plugins: 7 unique plugins
+- Plugin version conflicts: 2 (react-hooks, react-refresh)
+
+## NEXT STEPS
+
+1. Run this audit in Explore agent to verify findings
+2. Create standardization plan per phase (above)
+3. Execute Phase 1 (ESLint versions) first
+4. Verify with `npm install` at root
+5. Continue to Phase 2-5 sequentially
+6. Run `npm audit` to verify consistency
+7. Update CLAUDE.md with new standards

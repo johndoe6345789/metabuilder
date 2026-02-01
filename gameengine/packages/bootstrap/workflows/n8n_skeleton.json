@@ -6,7 +6,10 @@
       "name": "Load Config",
       "type": "config.load",
       "typeVersion": 1,
-      "position": [0, 0],
+      "position": [
+        0,
+        0
+      ],
       "parameters": {
         "inputs": {
           "path": "config.path"
@@ -21,7 +24,10 @@
       "name": "Validate Schema",
       "type": "config.schema.validate",
       "typeVersion": 1,
-      "position": [260, 0],
+      "position": [
+        260,
+        0
+      ],
       "parameters": {
         "inputs": {
           "document": "config.document",
@@ -34,9 +40,16 @@
     "Load Config": {
       "main": {
         "0": [
-          { "node": "Validate Schema", "type": "main", "index": 0 }
+          {
+            "node": "Validate Schema",
+            "type": "main",
+            "index": 0
+          }
         ]
       }
     }
-  }
+  },
+  "id": "workflow_n8n_skeleton",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
 }

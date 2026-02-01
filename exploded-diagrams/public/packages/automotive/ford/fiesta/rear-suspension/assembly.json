@@ -1,0 +1,16 @@
+{
+  "name": "Rear Suspension",
+  "description": "Twist-beam rear axle with coil springs",
+  "category": "automotive",
+  "parts": [
+    "twist-beam",
+    "trailing-arm-bush",
+    "rear-spring",
+    "rear-shock",
+    "rear-hub",
+    "rear-bearing",
+    "rear-brake-drum",
+    "wheel-cylinder",
+    "handbrake-cable"
+  ]
+}

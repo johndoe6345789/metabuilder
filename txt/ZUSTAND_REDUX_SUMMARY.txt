@@ -1,0 +1,191 @@
+ZUSTAND vs REDUX - QUICK REFERENCE
+===================================
+
+ZUSTAND STATUS: ZERO USAGE
+===========================
+✗ NOT in any package.json files
+✗ NOT intentionally used in main codebase
+✓ Found in exploded-diagrams/package-lock.json (transitive dependency only)
+
+REDUX STATUS: COMPREHENSIVE ECOSYSTEM
+======================================
+✓ 13+ packages across redux/ directory
+✓ 6 major consumer applications
+✓ Pure Redux strategy (no competing libraries)
+
+PROJECTS USING REDUX
+====================
+1. workflowui/ - Full Redux stack (@reduxjs/toolkit ^2.5.2)
+2. codegen/ - CodeForge IDE (@reduxjs/toolkit ^2.5.2)
+3. frontends/nextjs/ - Next.js app (redux ^5.0.1)
+4. frontends/dbal/ - DBAL frontend (redux ^5.0.1)
+5. emailclient/ - Email client (@reduxjs/toolkit ^2.5.2)
+6. pastebin/ - Paste sharing (@reduxjs/toolkit ^2.5.0)
+
+REDUX PACKAGES (13)
+===================
+Core:
+  @reduxjs/toolkit ^2.5.2 (or ^1.9.7 || ^2.5.2 in some)
+  redux ^5.0.1 (or ^4.2.1 in api-clients)
+
+Hooks (9 packages):
+  - hooks-async (replaces TanStack Query)
+  - hooks-auth
+  - hooks-canvas
+  - hooks-data
+  - hooks (generic)
+  - core-hooks
+  - hooks-forms
+  - hooks-utils
+  - email (in redux/email/)
+
+State Management:
+  - redux-core (shared across frontends)
+  - redux-slices (workflow state)
+  - service-adapters (dependency injection)
+
+Utilities:
+  - timing-utils (debounced saves)
+  - api-clients (GitHub, DBAL integration)
+
+VERSION CONSISTENCY REPORT
+==========================
+EXCELLENT (95%+):
+  ✓ @reduxjs/toolkit: Consistent at ^2.5.2 (5 projects)
+  ✓ Multi-version support: Intentional (5 packages)
+  ✓ Hook packages: All aligned
+  ✓ redux-slices: Supports both 1.9.7 and 2.5.2 (by design)
+
+MINOR ISSUES (fixable):
+  1. redux/api-clients:
+     ✗ redux: ^4.2.1 (should be ^5.0.1)
+     Files: redux/api-clients/package.json (2 locations)
+     Fix effort: 1 minute
+
+  2. pastebin:
+     ✗ @reduxjs/toolkit: ^2.5.0 (should be ^2.5.2)
+     File: pastebin/package.json
+     Fix effort: 1 minute
+
+NO BREAKING CHANGES - all updates are patch-compatible
+
+STRATEGIC ARCHITECTURE
+======================
+
+Layer 1 (Applications):
+  workflowui, codegen, pastebin, emailclient, etc
+  Each uses: @reduxjs/toolkit + custom hooks
+
+Layer 2 (Custom Hooks):
+  @metabuilder/hooks-*
+  Provides ergonomic API over Redux
+  Implements service adapter pattern
+
+Layer 3 (Redux Infrastructure):
+  redux-core, redux-slices, service-adapters
+  Defines stores, slices, actions
+
+Layer 4 (Redux Library):
+  @reduxjs/toolkit (modern Redux)
+  redux (base store)
+
+KEY ARCHITECTURAL DECISIONS
+===========================
+
+1. NO Zustand (intentional)
+   → Redux chosen as exclusive state management
+   → Prevents library fragmentation
+   → Single source of truth for all state
+
+2. Custom Hooks Pattern
+   → Wraps Redux for ergonomic usage
+   → Better encapsulation than raw actions
+   → Service adapter injection enabled
+
+3. TanStack Query Replacement
+   → hooks-async package replaces React Query
+   → Redux manages all async data
+   → Reduces external dependencies
+
+4. Intentional Multi-Version Support
+   → Some packages: @reduxjs/toolkit ^1.9.7 || ^2.5.2
+   → Allows gradual upgrade path
+   → Phase out when all consumers upgraded
+
+COMPARISON TABLE
+================
+
+Feature                  Zustand   Redux
+────────────────────────────────────────
+Used in MetaBuilder      NO        YES
+Package count            0         13+
+Bundle size              Small     Medium
+Boilerplate             Minimal   Some
+Hook integration         Yes       Yes (custom)
+Multi-version support    N/A       Yes
+Service adapters         No        Yes
+Community size          Growing   Mature
+DevTools support         Limited   Excellent
+Migration path          N/A       Clear
+────────────────────────────────────────
+
+QUESTIONS ANSWERED
+==================
+
+Q: Does MetaBuilder use Zustand?
+A: No. Zustand found in package-lock.json only (transitive dependency
+   from exploded-diagrams). Not intentionally used.
+
+Q: Why Redux instead of Zustand?
+A: - Mature ecosystem (13+ packages already built)
+   - Better DevTools support
+   - Service adapter pattern enables flexibility
+   - Replaced TanStack Query (single source of truth)
+
+Q: Are there version conflicts?
+A: Minor: redux ^4.2.1 in one package (should be ^5.0.1)
+   Minor: @reduxjs/toolkit ^2.5.0 in pastebin (should be ^2.5.2)
+   Both fixable in <5 minutes total.
+
+Q: Why have multiple versions of @reduxjs/toolkit?
+A: Intentional gradual upgrade strategy. 5 packages support both
+   1.9.7 and 2.5.2 to allow consumers to migrate at their own pace.
+
+Q: Is this architecture sustainable?
+A: Yes. Pure Redux choice is coherent, well-organized, and follows
+   established patterns. Multi-version support is temporary (phase out
+   when all consumers upgraded).
+
+NEXT STEPS
+==========
+
+Immediate (1 sprint):
+  1. Update redux/api-clients: ^4.2.1 → ^5.0.1 (2 files)
+  2. Update pastebin: ^2.5.0 → ^2.5.2 (1 file)
+  3. Verify: npm install clean (should already pass)
+
+Future (2+ sprints):
+  1. Consolidate 9 hook packages into 2-3 logical groups
+  2. Phase out multi-version peer dependencies
+  3. Update CLAUDE.md with hook architecture overview
+
+FILES TO EXAMINE
+================
+/Users/rmac/Documents/metabuilder/redux/api-clients/package.json
+/Users/rmac/Documents/metabuilder/pastebin/package.json
+/Users/rmac/Documents/metabuilder/redux/hooks-async/package.json
+/Users/rmac/Documents/metabuilder/redux/redux-slices/package.json
+/Users/rmac/Documents/metabuilder/workflowui/package.json
+
+DOCUMENTATION
+==============
+Full analysis: txt/ZUSTAND_AUDIT_2026-01-23.txt
+Architecture diagram: txt/REDUX_ARCHITECTURE_DIAGRAM_2026-01-23.txt
+Dependency status: txt/DEPENDENCY_UPDATES_INDEX_2026-01-23.txt
+
+CONCLUSION
+==========
+MetaBuilder has a mature, cohesive Redux state management architecture
+with zero competing libraries. Two minor version inconsistencies
+identified but otherwise in excellent shape. No action required on
+Zustand (not used). Strategic direction is clear and sustainable.

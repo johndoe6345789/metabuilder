@@ -8,8 +8,8 @@
       "type": "var.set",
       "typeVersion": 1,
       "position": [
-        0,
-        50
+        100,
+        100
       ],
       "parameters": {
         "key": "numbers",
@@ -29,12 +29,12 @@
     },
     {
       "id": "filter_even",
-      "name": "Filter Even Numbers",
+      "name": "Filter Even",
       "type": "utils.filter_list",
       "typeVersion": 1,
       "position": [
-        300,
-        50
+        400,
+        100
       ],
       "parameters": {
         "items": "$numbers",
@@ -44,12 +44,12 @@
     },
     {
       "id": "map_square",
-      "name": "Square Each Number",
+      "name": "Map Square",
       "type": "utils.map_list",
       "typeVersion": 1,
       "position": [
-        600,
-        50
+        700,
+        100
       ],
       "parameters": {
         "items": "$filtered_numbers",
@@ -58,12 +58,12 @@
     },
     {
       "id": "reduce_sum",
-      "name": "Sum All Values",
+      "name": "Reduce Sum",
       "type": "math.add",
       "typeVersion": 1,
       "position": [
-        900,
-        50
+        100,
+        300
       ],
       "parameters": {
         "numbers": "$squared_numbers"
@@ -71,12 +71,12 @@
     },
     {
       "id": "check_threshold",
-      "name": "Check If Sum > 50",
+      "name": "Check Threshold",
       "type": "logic.gt",
       "typeVersion": 1,
       "position": [
-        1200,
-        50
+        400,
+        300
       ],
       "parameters": {
         "a": "$sum",
@@ -85,12 +85,12 @@
     },
     {
       "id": "branch_result",
-      "name": "Branch On Result",
+      "name": "Branch Result",
       "type": "utils.branch_condition",
       "typeVersion": 1,
       "position": [
-        1500,
-        50
+        700,
+        300
       ],
       "parameters": {
         "condition": "$is_greater"
@@ -98,12 +98,12 @@
     },
     {
       "id": "format_success",
-      "name": "Format Success Message",
+      "name": "Format Success",
       "type": "string.format",
       "typeVersion": 1,
       "position": [
-        1800,
-        0
+        100,
+        500
       ],
       "parameters": {
         "template": "Success! Sum is {sum}, which is greater than 50.",
@@ -114,12 +114,12 @@
     },
     {
       "id": "format_failure",
-      "name": "Format Failure Message",
+      "name": "Format Failure",
       "type": "string.format",
       "typeVersion": 1,
       "position": [
-        1800,
-        100
+        400,
+        500
       ],
       "parameters": {
         "template": "Sum is {sum}, which is not greater than 50.",
@@ -130,12 +130,12 @@
     },
     {
       "id": "store_result",
-      "name": "Store Final Result",
+      "name": "Store Result",
       "type": "var.set",
       "typeVersion": 1,
       "position": [
-        2100,
-        50
+        700,
+        500
       ],
       "parameters": {
         "key": "final_message",
@@ -148,7 +148,7 @@
       "main": {
         "0": [
           {
-            "node": "Filter Even Numbers",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -159,7 +159,7 @@
       "main": {
         "0": [
           {
-            "node": "Square Each Number",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -170,7 +170,7 @@
       "main": {
         "0": [
           {
-            "node": "Sum All Values",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -181,7 +181,7 @@
       "main": {
         "0": [
           {
-            "node": "Check If Sum > 50",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -192,7 +192,7 @@
       "main": {
         "0": [
           {
-            "node": "Branch On Result",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -203,14 +203,7 @@
       "main": {
         "0": [
           {
-            "node": "Format Success Message",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        "1": [
-          {
-            "node": "Format Failure Message",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -221,7 +214,7 @@
       "main": {
         "0": [
           {
-            "node": "Store Final Result",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -232,7 +225,7 @@
       "main": {
         "0": [
           {
-            "node": "Store Final Result",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -240,14 +233,13 @@
       }
     }
   },
-  "triggers": [
-    {
-      "nodeId": "create_sample_data",
-      "kind": "manual",
-      "enabled": true,
-      "meta": {
-        "description": "Manually triggered Data Processing Demo workflow execution"
-      }
-    }
-  ]
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  }
 }

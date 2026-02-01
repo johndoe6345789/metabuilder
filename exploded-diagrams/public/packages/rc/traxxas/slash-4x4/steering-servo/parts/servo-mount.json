@@ -1,0 +1,20 @@
+{
+  "id": "servo-mount",
+  "name": "Servo Mount",
+  "partNumber": "TRA-2073",
+  "material": "aluminum",
+  "quantity": 1,
+  "weight": 18.0,
+  "weightUnit": "g",
+  "baseY": 280,
+  "description": "Aluminum servo mounting bracket",
+  "geometry": [
+    { "type": "rect", "width": 100, "height": 25, "rx": 3 },
+    { "type": "rect", "width": 70, "height": 55, "rx": 2, "offsetY": 15 },
+    { "type": "rect", "width": 56, "height": 35, "offsetY": 20, "fill": "#aaa" },
+    { "type": "circle", "r": 4, "offsetX": -42, "fill": "#888" },
+    { "type": "circle", "r": 4, "offsetX": 42, "fill": "#888" },
+    { "type": "circle", "r": 4, "offsetX": -42, "offsetY": 38, "fill": "#888" },
+    { "type": "circle", "r": 4, "offsetX": 42, "offsetY": 38, "fill": "#888" }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "id": "heatbed-plate",
+  "name": "Heated Bed Plate",
+  "partNumber": "BL-A1-HBP-001",
+  "material": "aluminum",
+  "quantity": 1,
+  "weight": 850.0,
+  "weightUnit": "g",
+  "baseY": 0,
+  "description": "256x256mm 6061-T6 aluminum heated bed plate with precision machined surface and integrated thermistor mount",
+  "installation": {
+    "tools": [
+      { "name": "Hex key", "size": "2.5mm", "required": true },
+      { "name": "Hex key", "size": "3mm", "required": true },
+      { "name": "Torque driver", "size": "1-5 Nm", "required": true },
+      { "name": "Thermal paste", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Bed mounting screw", "spec": "M3x8 SHCS", "grade": "12.9", "qty": 4, "reusable": true },
+      { "name": "Bed leveling spring", "spec": "OD8xID4x15mm", "qty": 4, "reusable": true },
+      { "name": "Adjustment knob", "spec": "M3 knurled", "qty": 4, "reusable": true },
+      { "name": "Thermistor mounting screw", "spec": "M2x4", "qty": 1, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Bed mounting screws", "value": 0.8, "unit": "Nm", "sequence": "Diagonal pattern", "notes": "Do not overtighten - springs must compress evenly" },
+      { "fastener": "Thermistor screw", "value": 0.3, "unit": "Nm", "sequence": "", "notes": "Apply thermal paste to thermistor first" }
+    ],
+    "notes": [
+      "Clean mating surfaces before installation",
+      "Ensure thermistor has good thermal contact",
+      "Level bed after installation using mesh calibration",
+      "Check flatness with straight edge - should be within 0.1mm"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 180, "height": 180, "rx": 4, "fill": "#707070" },
+    { "type": "rect", "width": 170, "height": 170, "rx": 2, "fill": "#808080" },
+    { "type": "circle", "r": 4, "offsetX": -80, "offsetY": -80, "fill": "#555" },
+    { "type": "circle", "r": 4, "offsetX": 80, "offsetY": -80, "fill": "#555" },
+    { "type": "circle", "r": 4, "offsetX": -80, "offsetY": 80, "fill": "#555" },
+    { "type": "circle", "r": 4, "offsetX": 80, "offsetY": 80, "fill": "#555" },
+    { "type": "rect", "width": 8, "height": 8, "offsetX": 70, "offsetY": 70, "fill": "#606060" },
+    { "type": "text", "content": "256x256", "offsetY": 0, "fill": "#555", "fontSize": 10 }
+  ],
+  "geometry3d": [
+    { "type": "box", "width": 256, "height": 4, "depth": 256, "fill": "#707070" },
+    { "type": "box", "width": 250, "height": 2, "depth": 250, "offsetY": 1.5, "fill": "#808080" },
+    { "type": "box", "width": 240, "height": 3, "depth": 240, "offsetY": -0.5, "fill": "#656565" },
+
+    { "type": "cylinder", "r": 5, "height": 6, "offsetX": -118, "offsetY": 0, "offsetZ": -118, "fill": "#505050" },
+    { "type": "cylinder", "r": 5, "height": 6, "offsetX": 118, "offsetY": 0, "offsetZ": -118, "fill": "#505050" },
+    { "type": "cylinder", "r": 5, "height": 6, "offsetX": -118, "offsetY": 0, "offsetZ": 118, "fill": "#505050" },
+    { "type": "cylinder", "r": 5, "height": 6, "offsetX": 118, "offsetY": 0, "offsetZ": 118, "fill": "#505050" },
+
+    { "type": "cylinder", "r": 2, "height": 8, "offsetX": -118, "offsetY": 0, "offsetZ": -118, "subtract": true },
+    { "type": "cylinder", "r": 2, "height": 8, "offsetX": 118, "offsetY": 0, "offsetZ": -118, "subtract": true },
+    { "type": "cylinder", "r": 2, "height": 8, "offsetX": -118, "offsetY": 0, "offsetZ": 118, "subtract": true },
+    { "type": "cylinder", "r": 2, "height": 8, "offsetX": 118, "offsetY": 0, "offsetZ": 118, "subtract": true },
+
+    { "type": "box", "width": 10, "height": 5, "depth": 10, "offsetX": 100, "offsetY": -2, "offsetZ": 100, "fill": "#606060" },
+    { "type": "cylinder", "r": 3, "height": 6, "offsetX": 100, "offsetY": -2, "offsetZ": 100, "subtract": true },
+
+    { "type": "box", "width": 30, "height": 2, "depth": 8, "offsetX": -100, "offsetY": -3, "offsetZ": 0, "fill": "#555555" },
+    { "type": "box", "width": 8, "height": 2, "depth": 30, "offsetX": 0, "offsetY": -3, "offsetZ": -100, "fill": "#555555" },
+
+    { "type": "box", "width": 256, "height": 1, "depth": 3, "offsetY": 2.5, "offsetZ": 0, "fill": "#606060" },
+    { "type": "box", "width": 3, "height": 1, "depth": 256, "offsetY": 2.5, "offsetX": 0, "fill": "#606060" },
+
+    { "type": "box", "width": 15, "height": 3, "depth": 10, "offsetX": 115, "offsetY": -3.5, "offsetZ": 0, "fill": "#505050" }
+  ]
+}

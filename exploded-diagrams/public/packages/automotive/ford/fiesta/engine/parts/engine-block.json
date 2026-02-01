@@ -1,0 +1,43 @@
+{
+  "id": "engine-block",
+  "name": "Engine Block",
+  "partNumber": "FD-CM5G-6015-DC",
+  "material": "castAluminum",
+  "quantity": 1,
+  "weight": 32000.0,
+  "weightUnit": "g",
+  "baseY": 0,
+  "description": "1.0L EcoBoost 3-cylinder aluminum block with iron liners",
+  "installation": {
+    "tools": [
+      { "name": "Engine crane", "size": "2 ton", "required": true },
+      { "name": "Engine leveler", "size": "-", "required": true },
+      { "name": "Socket set", "size": "Complete", "required": true },
+      { "name": "Torque wrench", "size": "10-200 Nm", "required": true }
+    ],
+    "hardware": [
+      { "name": "Engine mount bolt (left)", "spec": "M12x1.5x80", "grade": "10.9", "qty": 3, "reusable": true },
+      { "name": "Engine mount bolt (right)", "spec": "M10x1.5x60", "grade": "10.9", "qty": 3, "reusable": true },
+      { "name": "Engine-to-gearbox bolt", "spec": "M10x1.5x45", "grade": "10.9", "qty": 6, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Engine mount bolts", "value": 95, "unit": "Nm", "sequence": "", "notes": "" },
+      { "fastener": "Engine-to-gearbox bolts", "value": 48, "unit": "Nm", "sequence": "Crosshatch", "notes": "" }
+    ],
+    "notes": [
+      "Award-winning engine - International Engine of the Year 2012-2017",
+      "3-cylinder layout reduces friction",
+      "Oil squirters cool piston crowns",
+      "Balance shaft integrated into oil pump"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 100, "height": 120, "rx": 8, "fill": "#808080" },
+    { "type": "rect", "width": 85, "height": 100, "rx": 5, "fill": "#707070" },
+    { "type": "circle", "r": 20, "offsetY": -30, "fill": "#555" },
+    { "type": "circle", "r": 20, "offsetY": 10, "fill": "#555" },
+    { "type": "circle", "r": 20, "offsetY": 50, "fill": "#555" },
+    { "type": "rect", "width": 30, "height": 40, "offsetX": -55, "offsetY": 0, "rx": 3, "fill": "#666" },
+    { "type": "text", "content": "1.0 ECO", "offsetY": -55, "fill": "#333", "fontSize": 8 }
+  ]
+}

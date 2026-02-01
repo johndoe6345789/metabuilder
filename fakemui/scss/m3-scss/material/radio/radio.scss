@@ -1,0 +1,107 @@
+@use './m3-radio';
+@use '../core/tokens/token-utils';
+@use '../core/style/layout-common';
+@use './radio-common';
+
+$fallbacks: m3-radio.get-tokens();
+
+.mat-mdc-radio-button {
+  -webkit-tap-highlight-color: transparent;
+
+  @include radio-common.radio-structure(true);
+  @include radio-common.radio-noop-animations();
+
+  // Clicking the label toggles the radio, but MDC does not include any styles that inform the
+  // user of this. Therefore we add the pointer cursor on top of MDC's styles.
+  label {
+    cursor: pointer;
+  }
+
+  .mdc-radio__background::before {
+    background-color: token-utils.slot(radio-ripple-color, $fallbacks);
+  }
+
+  &.mat-mdc-radio-checked {
+    .mat-ripple-element,
+    .mdc-radio__background::before {
+      background-color: token-utils.slot(radio-checked-ripple-color, $fallbacks);
+    }
+  }
+
+  &.mat-mdc-radio-disabled-interactive .mdc-radio--disabled {
+    .mat-ripple-element,
+    .mdc-radio__background::before {
+      background-color: token-utils.slot(radio-ripple-color, $fallbacks);
+    }
+  }
+
+  .mat-internal-form-field {
+    color: token-utils.slot(radio-label-text-color, $fallbacks);
+    font-family: token-utils.slot(radio-label-text-font, $fallbacks);
+    line-height: token-utils.slot(radio-label-text-line-height, $fallbacks);
+    font-size: token-utils.slot(radio-label-text-size, $fallbacks);
+    letter-spacing: token-utils.slot(radio-label-text-tracking, $fallbacks);
+    font-weight: token-utils.slot(radio-label-text-weight, $fallbacks);
+  }
+
+  .mdc-radio--disabled + label {
+    color: token-utils.slot(radio-disabled-label-color, $fallbacks);
+  }
+
+  // This is necessary because we do not depend on MDC's ripple, but have our own that should be
+  // positioned correctly. This can be removed once we start using MDC's ripple implementation.
+  .mat-radio-ripple {
+    @include layout-common.fill;
+    pointer-events: none;
+    border-radius: 50%;
+
+    > .mat-ripple-element {
+      opacity: 0.14;
+    }
+
+    &::before {
+      border-radius: 50%;
+    }
+  }
+
+  // We don't inherit the border focus style from MDC since we don't use their ripple.
+  // Instead we need to replicate it here.
+  .mdc-radio > .mdc-radio__native-control:focus:enabled:not(:checked) {
+    & ~ .mdc-radio__background > .mdc-radio__outer-circle {
+      border-color: token-utils.slot(radio-unselected-focus-icon-color, $fallbacks);
+    }
+  }
+
+
+  // For radios render the focus indicator when we know
+  // the hidden input is focused (slightly different for each control).
+  &.cdk-focused .mat-focus-indicator::before {
+    content: '';
+  }
+}
+
+.mat-mdc-radio-disabled {
+  cursor: default;
+  pointer-events: none;
+
+  &.mat-mdc-radio-disabled-interactive {
+    pointer-events: auto;
+  }
+}
+
+// Element used to provide a larger tap target for users on touch devices.
+.mat-mdc-radio-touch-target {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: token-utils.slot(radio-touch-target-size, $fallbacks);
+  width: token-utils.slot(radio-touch-target-size, $fallbacks);
+  transform: translate(-50%, -50%);
+  display: token-utils.slot(radio-touch-target-display, $fallbacks);
+
+  [dir='rtl'] & {
+    left: auto;
+    right: 50%;
+    transform: translate(50%, -50%);
+  }
+}

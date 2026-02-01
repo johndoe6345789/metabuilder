@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/convert_parse_json",
+  "version": "1.0.0",
+  "description": "Parse JSON string to object",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["convert", "workflow", "plugin"],
+  "main": "convert_parse_json.py",
+  "files": ["convert_parse_json.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "convert.parseJson",
+    "category": "convert",
+    "class": "ConvertParseJson",
+    "entrypoint": "execute"
+  }
+}

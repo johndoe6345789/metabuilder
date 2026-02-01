@@ -1,0 +1,14 @@
+{
+  "name": "@metabuilder/workflow-plugins-control",
+  "version": "1.0.0",
+  "description": "Control flow operation plugins (C++)",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["control", "workflow", "plugins", "cpp"],
+  "metadata": {
+    "category": "control",
+    "language": "cpp",
+    "plugin_count": 0
+  },
+  "plugins": []
+}

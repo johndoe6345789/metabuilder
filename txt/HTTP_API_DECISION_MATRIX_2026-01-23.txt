@@ -1,0 +1,575 @@
+================================================================================
+HTTP/API UTILITIES - DETAILED COMPARISON & DECISION MATRIX
+Generated: 2026-01-23
+================================================================================
+
+QUICK COMPARISON: Native Fetch vs Redux Async vs TanStack Query vs Axios vs SWR
+
+┌─────────────────────────┬──────────────┬─────────────┬─────────┬────────┐
+│ Category                │ Fetch        │ Redux Async │ TanStack│ Axios  │
+├─────────────────────────┼──────────────┼─────────────┼─────────┼────────┤
+│ BUNDLE SIZE (gzipped)   │ 0 KB         │ <10 KB      │ 43.8 KB │ 18.4KB │
+│ SETUP COMPLEXITY        │ Minimal      │ Medium      │ Complex │ Low    │
+│ LEARNING CURVE          │ Very Low     │ Low         │ Medium  │ Low    │
+│ STATE MANAGEMENT        │ Manual       │ Redux-based │ Internal│ Manual │
+│ HTTP METHODS            │ ✅ All       │ ✅ All      │ ✅ All  │ ✅ All │
+│ RETRIES                 │ ❌ Manual    │ ✅ Auto     │ ✅ Auto │ ❌ Addon│
+│ REQUEST DEDUP           │ ❌ Manual    │ ✅ Auto     │ ✅ Auto │ ❌ No  │
+│ CACHING                 │ ❌ No        │ ✅ Manual   │ ✅ Auto │ ❌ No  │
+│ PAGINATION              │ ❌ No        │ ❌ Custom   │ ✅ Built│ ❌ No  │
+│ INFINITE QUERIES        │ ❌ No        │ ❌ No       │ ✅ Built│ ❌ No  │
+│ OPTIMISTIC UPDATES      │ ❌ No        │ ❌ No       │ ✅ Yes  │ ❌ No  │
+│ ERROR HANDLING          │ ⚠️ Manual    │ ✅ Built-in │ ✅ Auto │ ✅ Auto│
+│ TYPESCRIPT SUPPORT      │ ✅ Excellent │ ✅ Excel    │ ✅ Excel│ ✅ Good│
+│ DEVTOOLS INTEGRATION    │ ❌ No        │ ✅ Redux    │ ✅ TRQ  │ ❌ No  │
+│ MULTI-TENANT FILTERING  │ ⚠️ Manual    │ ✅ Enforced │ ⚠️ Manual│⚠️Manual│
+│ RATE LIMITING           │ ⚠️ Manual    │ ✅ Manual   │ ⚠️ Manual│ ✅ Auto│
+│ BROWSER SUPPORT         │ All modern   │ All modern  │ All     │ All    │
+│ NODE.JS SUPPORT         │ ✅ v18+      │ ✅ v16+     │ ✅ Any  │ ✅ Any │
+│ DOCUMENTATION           │ MDN (great)  │ Internal    │ Excellent│ Good  │
+│ COMMUNITY ADOPTION      │ 100% (native)│ Low (new)   │ Very High│ High  │
+│ PRODUCTION READY        │ ✅ Yes       │ ✅ Yes      │ ✅ Yes  │ ✅ Yes │
+│ METABUILDER STATUS      │ ✅ In use    │ ✅ In use   │ ❌ None │ ⚠️ 1pkg│
+└─────────────────────────┴──────────────┴─────────────┴─────────┴────────┘
+
+
+USE CASE MATRIX - Which to Choose?
+
+┌────────────────────────────────────┬──────────────┬──────────┬──────────┐
+│ Scenario                           │ Recommended  │ Acceptable│ Avoid    │
+├────────────────────────────────────┼──────────────┼──────────┼──────────┤
+│ Simple GET request                 │ Fetch        │ Redux    │ TanStack │
+│ With retry/reload logic            │ Redux Async  │ Fetch    │ Axios    │
+│ Complex async state management     │ Redux Async  │ Fetch    │ TanStack*│
+│ Paginated API responses            │ Redux Custom │ Fetch    │ TanStack │
+│ Infinite scroll lists              │ ❌ Redux     │ ❌ Fetch │ TanStack │
+│ Real-time WebSocket updates        │ Redux+WS    │ Fetch+WS │ None     │
+│ Server-side rendering (Next.js)    │ Fetch        │ Fetch    │ Redux    │
+│ Multi-tenant filtering required    │ Redux Async  │ Fetch    │ Any      │
+│ Rate limited endpoints             │ Redux Async  │ Fetch    │ Axios    │
+│ File uploads                       │ Fetch FormData│ Axios   │ Redux    │
+│ Authentication headers             │ Fetch headers│ Redux    │ Axios    │
+│ GraphQL queries                    │ Custom       │ TanStack │ None     │
+│ Offline-first app                 │ TanStack     │ Redux    │ Fetch    │
+│ Minimal bundle size (<50KB total)  │ Fetch        │ Redux    │ TanStack │
+│ Observable state (DevTools)        │ Redux        │ TanStack │ Fetch    │
+│ Optimistic updates needed          │ TanStack     │ Redux    │ Fetch    │
+│ Fastest development speed          │ TanStack     │ Fetch    │ Redux    │
+│ Long-term maintenance              │ Redux        │ Fetch    │ TanStack*│
+│ Team familiar with TanStack        │ TanStack     │ Redux    │ Fetch    │
+│ Team familiar with Redux           │ Redux        │ Fetch    │ TanStack │
+│ Existing Redux codebase            │ Redux Async  │ Fetch    │ TanStack │
+└────────────────────────────────────┴──────────────┴──────────┴──────────┘
+
+* TanStack is heavy for MetaBuilder given existing Redux usage
+
+
+DETAILED STRATEGY GUIDE
+================================================================================
+
+STRATEGY 1: NATIVE FETCH API
+==============================
+
+WHEN TO USE:
+  ✅ Simple GET requests (no complex state)
+  ✅ One-off API calls in non-critical paths
+  ✅ Server-side code (Node.js)
+  ✅ Minimal bundle size critical
+  ✅ Low cognitive overhead needed
+  ✅ No retry/caching needed
+  ✅ Quick prototyping
+
+WHEN NOT TO USE:
+  ❌ Complex async state management
+  ❌ Retry logic needed
+  ❌ Request deduplication important
+  ❌ Loading states required
+  ❌ Error handling complex
+  ❌ Observable state needed
+  ❌ Rate limiting enforcement
+  ❌ Multi-tenant scenarios
+
+CODE PATTERN:
+
+  // Basic fetch
+  const response = await fetch('/api/users')
+  const data = await response.json()
+
+  // With error handling
+  try {
+    const response = await fetch('/api/users')
+    if (!response.ok) throw new Error(`HTTP ${response.status}`)
+    const data = await response.json()
+    return data
+  } catch (error) {
+    console.error('Failed to fetch users:', error)
+    throw error
+  }
+
+  // With timeout
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), 5000)
+  try {
+    const response = await fetch('/api/users', { signal: controller.signal })
+    return response.json()
+  } finally {
+    clearTimeout(timeout)
+  }
+
+  // In React component
+  const [data, setData] = useState(null)
+  const [loading, setLoading] = useState(false)
+  
+  useEffect(() => {
+    setLoading(true)
+    fetch('/api/users')
+      .then(r => r.json())
+      .then(d => setData(d))
+      .finally(() => setLoading(false))
+  }, [])
+
+WHERE IN METABUILDER:
+  - storybook/src/                (loading package configs)
+  - emailclient/                  (simple page loads)
+  - dbal/development/             (HTTP executor nodes)
+  - codegen/src/lib/storage-adapter/ (Flask backend calls)
+
+PROS:
+  + Zero dependencies
+  + Native browser API (all browsers)
+  + Simple and straightforward
+  + Works in Node.js v18+
+  + Standards-based
+
+CONS:
+  - Manual state management
+  - No built-in retry logic
+  - Error handling verbose
+  - Easy to make mistakes
+  - Not observable
+
+
+STRATEGY 2: REDUX ASYNC HOOKS (@metabuilder/hooks-async)
+=========================================================
+
+WHEN TO USE:
+  ✅ Complex async state management
+  ✅ Retries and error handling needed
+  ✅ Request deduplication important
+  ✅ Observable via Redux DevTools
+  ✅ Multi-tenant scenarios
+  ✅ Rate limiting enforcement
+  ✅ Large async data pipelines
+  ✅ Long-term maintenance important
+  ✅ Redux already used in project
+
+WHEN NOT TO USE:
+  ❌ Simple one-off GET requests
+  ❌ Minimal bundle size critical
+  ❌ Redux not already in project
+  ❌ Team unfamiliar with Redux
+  ❌ Infinite scrolling (use TanStack)
+  ❌ Optimistic updates critical (use TanStack)
+
+CODE PATTERN:
+
+  // Basic fetch
+  import { useReduxAsyncData } from '@metabuilder/hooks-async'
+  
+  const { data, isLoading, error, refetch } = useReduxAsyncData(
+    async () => {
+      const res = await fetch('/api/users')
+      return res.json()
+    }
+  )
+
+  // With options
+  const { data, isLoading, error, refetch } = useReduxAsyncData(
+    async () => {
+      const res = await fetch(`/api/users?tenantId=${tenantId}`)
+      return res.json()
+    },
+    {
+      maxRetries: 3,
+      retryDelay: 1000,
+      refetchInterval: 30000,      // Auto-refetch every 30s
+      refetchOnFocus: true,         // Refetch when window regains focus
+      onSuccess: (data) => console.log('Success:', data),
+      onError: (error) => console.error('Error:', error),
+      dependencies: [tenantId]      // Like useEffect deps
+    }
+  )
+
+  // In component
+  if (isLoading) return <Spinner />
+  if (error) return <Error error={error} retry={refetch} />
+  return <UserList users={data} />
+
+  // Using mutation
+  import { useReduxMutation } from '@metabuilder/hooks-async'
+  
+  const { mutate, isLoading: isSaving } = useReduxMutation(
+    async (payload) => {
+      const res = await fetch('/api/users', {
+        method: 'POST',
+        body: JSON.stringify(payload)
+      })
+      return res.json()
+    },
+    {
+      onSuccess: (result) => {
+        toast.success('User created!')
+        refetch()  // Refetch list
+      }
+    }
+  )
+
+  // In form
+  const handleSubmit = async (formData) => {
+    await mutate(formData)
+  }
+
+WHERE IN METABUILDER:
+  - redux/hooks-async/           (Implementation)
+  - redux/api-clients/           (Wrapper)
+  - frontends/nextjs/            (Should migrate)
+  - workflowui/                  (Should migrate)
+  - codegen/                     (Should migrate)
+
+PROS:
+  + Observable via Redux DevTools
+  + Built-in retry logic
+  + Automatic request deduplication
+  + Consistent error handling
+  + Multi-tenant filtering capable
+  + Works with existing Redux store
+  + 100% API compatible with TanStack
+  + Fine-grained request lifecycle control
+
+CONS:
+  - Requires Redux setup
+  - Larger bundle than Fetch alone
+  - No infinite query support (yet)
+  - No built-in optimistic updates
+  - Team must understand Redux
+  - Learning curve vs simple fetch
+
+
+STRATEGY 3: TANSTACK REACT QUERY (Not Recommended for MetaBuilder)
+===================================================================
+
+STATUS IN METABUILDER:
+  ❌ NOT ADOPTED - Replaced by Redux async hooks
+  ❌ NOT RECOMMENDED - Redux solution sufficient
+
+WHEN TANSTACK WOULD BE BETTER:
+  ✅ No Redux in project
+  ✅ Infinite query support critical
+  ✅ Optimistic updates important
+  ✅ Team experienced with TanStack
+  ✅ Need offline-first behavior
+  ✅ Don't want Redux dependency
+  ✅ Minimal Redux configuration desired
+
+WHY NOT USED IN METABUILDER:
+  1. Redux already required for app state
+  2. Redux async hooks provide 90% of features
+  3. Better integration with Redux store
+  4. Observable via Redux DevTools
+  5. Reduced bundle size (10 KB vs 43.8 KB)
+  6. Project philosophy: minimize external deps
+  7. Redux provides fine-grained control
+
+MIGRATION STRATEGY (if ever needed):
+  Step 1: Create wrapper functions in @metabuilder/api-clients
+  Step 2: Export TanStack Query hooks (useQuery, useMutation)
+  Step 3: Gradually replace Redux hooks with TanStack
+  Step 4: Remove Redux async middleware
+  Step 5: Simplify Redux store (less async logic needed)
+
+Note: API is 100% compatible, so migration is possible if needed
+
+
+STRATEGY 4: AXIOS (Legacy - Not Recommended)
+==============================================
+
+STATUS IN METABUILDER:
+  ⚠️ FOUND in workflowui/package.json
+  ❌ NO USAGE found in source code
+  🎯 ACTION: Remove if unused, migrate if used
+
+WHEN AXIOS IS USEFUL:
+  ✅ Old browsers need automatic cookie handling
+  ✅ Complex request transformation pipelines
+  ✅ Built-in request/response interceptors
+  ✅ Automatic JSON stringify/parse
+  ✅ Automatic retry with exponential backoff
+  ✅ Team already deeply familiar with Axios
+
+WHY NOT RECOMMENDED FOR METABUILDER:
+  1. Fetch handles 99% of use cases
+  2. Redux hooks provide retry/interceptor logic
+  3. No advantage over Fetch + Redux
+  4. Adds unnecessary dependency
+  5. Larger bundle than Fetch
+  6. Fetch is native (no version conflicts)
+  7. Project uses Redux for state management
+
+MIGRATION PATH (if workflowui uses Axios):
+  1. Audit all axios imports in workflowui source
+  2. For each usage:
+     - Convert axios.get() → fetch() + useReduxAsyncData
+     - Convert axios.post() → fetch() + useReduxMutation
+     - Convert interceptors → Redux middleware
+  3. Test workflowui fully (build + runtime)
+  4. Remove axios from package.json
+  5. Document decision in CLAUDE.md
+
+
+STRATEGY 5: SWR (Not Applicable)
+=================================
+
+STATUS IN METABUILDER:
+  ❌ NOT USED
+  ❌ NOT RECOMMENDED
+
+WHEN SWR IS USEFUL:
+  ✅ Simple client-side GET requests only
+  ✅ Built-in stale-while-revalidate behavior
+  ✅ Minimal setup needed
+  ✅ Only need automatic periodic refetch
+  ✅ No mutations (POST/PUT/DELETE)
+  ✅ Team wants minimal dependencies
+
+WHY NOT USED IN METABUILDER:
+  1. Redux async hooks provide everything SWR does
+  2. SWR doesn't understand multi-tenant filtering
+  3. Mutations required (POST/PUT/DELETE)
+  4. Complex state management needed
+  5. Redux already chosen as state store
+  6. SWR overlaps with Redux responsibility
+  7. Adds unnecessary library
+
+
+================================================================================
+
+API CLIENT HOOK PATTERN - RECOMMENDED APPROACH
+===============================================
+
+Our implementation (@metabuilder/api-clients):
+
+LAYER 1: @metabuilder/api-clients
+  ├─ useDBAL()       → DBAL-specific queries
+  ├─ useAsyncData()  → Generic async data
+  ├─ useMutation()   → State mutations
+  └─ useGitHubFetcher() → GitHub API
+
+LAYER 2: @metabuilder/hooks-async
+  ├─ useReduxAsyncData()  → Redux-backed fetch
+  └─ useReduxMutation()   → Redux-backed mutations
+
+LAYER 3: @reduxjs/toolkit
+  ├─ createAsyncThunk()   → Async actions
+  ├─ Slice state management
+  └─ Redux DevTools integration
+
+LAYER 4: Native Fetch API
+  └─ Actual HTTP transport
+
+
+RECOMMENDED USAGE:
+
+For DBAL operations:
+  ```typescript
+  const { list, get, create } = useDBAL()
+  const users = await list<User>('users', { filter: { tenantId } })
+  ```
+
+For async data fetching:
+  ```typescript
+  const { data, isLoading, error, refetch } = useAsyncData(
+    async () => {
+      const response = await fetch('/api/data')
+      return response.json()
+    }
+  )
+  ```
+
+For mutations:
+  ```typescript
+  const { mutate, isLoading } = useMutation(
+    async (payload) => {
+      const response = await fetch('/api/create', {
+        method: 'POST',
+        body: JSON.stringify(payload)
+      })
+      return response.json()
+    }
+  )
+  ```
+
+
+================================================================================
+
+DECISION: WHY REDUX OVER TANSTACK QUERY
+========================================
+
+Technical Comparison:
+
+┌────────────────────────┬─────────────────┬──────────────────┐
+│ Criterion              │ Redux Async     │ TanStack Query   │
+├────────────────────────┼─────────────────┼──────────────────┤
+│ Bundle size increase   │ <10 KB          │ 43.8 KB          │
+│ Setup time             │ 10 minutes      │ 5 minutes        │
+│ Learning curve         │ Medium (Redux)  │ Low (TRQ-specific│
+│ Integration w/ Redux   │ Native          │ Separate system  │
+│ Observable state       │ ✅ Redux store  │ ⚠️ TRQ DevTools  │
+│ Team familiarity       │ High (Redis)    │ Low (TRQ)        │
+│ Customization          │ ✅ Complete     │ ⚠️ Limited       │
+│ Multi-tenant support   │ ✅ Dispatch arg │ ⚠️ Manual filter │
+│ Rate limiting          │ ✅ Middleware   │ ⚠️ Manual        │
+│ Production use (MB)    │ ✅ Yes (Phase 2)│ ❌ No            │
+└────────────────────────┴─────────────────┴──────────────────┘
+
+Business Rationale:
+
+1. ALREADY INVESTED IN REDUX
+   - Redux required for app state management
+   - Redux middleware patterns established
+   - Redux DevTools available and in use
+   - Team trained on Redux
+   → Extending Redux to async is natural evolution
+
+2. BUNDLE SIZE MATTERS
+   - MetaBuilder emphasizes lightweight architecture
+   - 43.8 KB (TanStack) vs 10 KB (Redux) = 4.4x difference
+   - Mobile frontends (Qt6, CLI) sensitive to size
+   - Next.js frontend wants minimal JS
+
+3. OBSERVABILITY
+   - Redux DevTools shows all state changes
+   - Can debug async operations timeline
+   - DevTools time-travel debugging
+   - Can inspect exact request lifecycle
+   → TanStack DevTools less integrated with Redux store
+
+4. FUTURE FLEXIBILITY
+   - Can implement optimistic updates later
+   - Can add infinite query support when needed
+   - Can extend with custom async patterns
+   - Not locked into TanStack's design decisions
+
+5. PROJECT PHILOSOPHY
+   - "95% JSON, 5% TypeScript infrastructure"
+   - Minimize external libraries
+   - Custom solutions when internal tools sufficient
+   - Redux is already minimal infrastructure
+
+6. MULTI-TENANT REQUIREMENTS
+   - All queries must filter by tenantId
+   - Redux dispatch can enforce this requirement
+   - Thunk can validate tenantId before API call
+   - TanStack would require component-level filtering (error-prone)
+
+7. GRADUAL MIGRATION PATH
+   - 100% API compatible with TanStack
+   - Can migrate back to TanStack if needed (unlikely)
+   - No consumer code changes required
+   - Drop-in replacement approach proven (Phase 2 complete)
+
+
+================================================================================
+
+MIGRATION ROADMAP
+=================
+
+PHASE 1: ✅ COMPLETE (Redux Slice + Hooks Created)
+  - Created @metabuilder/redux-slices with asyncDataSlice
+  - Created @metabuilder/hooks-async with useReduxAsyncData/useMutation
+  - Comprehensive Redux state machine for async operations
+  - Full test coverage and TypeScript types
+
+PHASE 2: ✅ COMPLETE (API Clients Layer)
+  - Created @metabuilder/api-clients wrapper
+  - useAsyncData delegates to Redux hooks
+  - useMutation delegates to Redux hooks
+  - 100% backward compatible with previous implementation
+  - useGitHubFetcher implemented
+  - useDBAL implemented
+
+PHASE 3: IN PROGRESS (Consumer Migration)
+  - codegen: Should migrate fetch patterns to useAsyncData
+  - frontends/nextjs: Should migrate to useAsyncData
+  - workflowui: Should remove axios, use useAsyncData
+  - frontends/dbal: Already uses useDBAL, good pattern
+  - postgres: Should migrate to useAsyncData
+
+PHASE 4: DOCUMENTATION & ENFORCEMENT
+  - Update CLAUDE.md with async patterns
+  - Create linting rules (forbid standalone fetch in components)
+  - Create ESLint plugin to enforce tenantId in dispatches
+  - Comprehensive async pattern guide
+  - E2E test scenarios for async operations
+
+
+================================================================================
+
+SUMMARY: WHEN TO USE WHAT
+==========================
+
+NATIVE FETCH:
+  USE FOR:
+    - Simple one-off GET requests
+    - Server-side code (Node.js)
+    - When Redux state not needed
+    - Minimal bundle size critical
+  
+  AVOID FOR:
+    - Complex state management
+    - Retries and caching needed
+    - Observable state required
+
+REDUX ASYNC HOOKS:
+  USE FOR:
+    - Complex async operations
+    - Retries, caching, deduplication
+    - Observable state (Redux DevTools)
+    - Multi-tenant scenarios
+    - Rate limiting enforcement
+  
+  AVOID FOR:
+    - Simple GET requests in non-critical paths
+    - When Redux not already in use
+
+TANSTACK QUERY:
+  ❌ NOT RECOMMENDED FOR METABUILDER
+  - Redux provides sufficient features
+  - Adds unnecessary complexity
+  - Reduces fine-grained control
+  - Larger bundle
+  
+  WOULD CONSIDER IF:
+    - Need infinite query support
+    - No Redux in project
+    - Team expert in TanStack
+
+AXIOS:
+  ❌ NOT RECOMMENDED
+  - Fetch + Redux covers all use cases
+  - Remove from workflowui
+  
+  WOULD USE IF:
+    - Old browser compatibility critical
+    - Complex interceptor pipelines needed
+
+SWR:
+  ❌ NOT APPLICABLE
+  - Redux already provides caching
+  - Doesn't fit multi-tenant requirements
+  - Overlaps with Redux responsibility
+
+
+================================================================================
+END OF DECISION MATRIX
+================================================================================
+

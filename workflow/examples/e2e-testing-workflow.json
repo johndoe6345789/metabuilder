@@ -1,0 +1,155 @@
+{
+  "name": "E2E Testing Pipeline",
+  "description": "Complete end-to-end testing workflow for web applications",
+  "version": "1.0.0",
+  "id": "workflow_e2e_testing",
+  "tenantId": "${TENANT_ID}",
+  "nodes": [
+    {
+      "id": "trigger",
+      "name": "Start Testing",
+      "type": "webhook",
+      "typeVersion": 1,
+      "position": [0, 0],
+      "parameters": {
+        "events": "workflow.test.start"
+      }
+    },
+    {
+      "id": "setup_chromium",
+      "name": "Setup Chromium Tests",
+      "type": "testing.playwright",
+      "typeVersion": 1,
+      "position": [300, 0],
+      "parameters": {
+        "browser": "chromium",
+        "headless": true,
+        "baseUrl": "http://localhost:3000"
+      }
+    },
+    {
+      "id": "setup_firefox",
+      "name": "Setup Firefox Tests",
+      "type": "testing.playwright",
+      "typeVersion": 1,
+      "position": [300, 150],
+      "parameters": {
+        "browser": "firefox",
+        "headless": true,
+        "baseUrl": "http://localhost:3000"
+      }
+    },
+    {
+      "id": "run_login_tests",
+      "name": "Run Login Tests",
+      "type": "testing.playwright",
+      "typeVersion": 1,
+      "position": [600, 0],
+      "parameters": {
+        "browser": "chromium",
+        "testFile": "e2e/tests/login.spec.ts",
+        "baseUrl": "http://localhost:3000"
+      }
+    },
+    {
+      "id": "run_workflow_tests",
+      "name": "Run Workflow Tests",
+      "type": "testing.playwright",
+      "typeVersion": 1,
+      "position": [600, 150],
+      "parameters": {
+        "browser": "firefox",
+        "testFile": "e2e/tests/workflows.spec.ts",
+        "baseUrl": "http://localhost:3000"
+      }
+    },
+    {
+      "id": "run_multi_tenant_tests",
+      "name": "Run Multi-Tenant Tests",
+      "type": "testing.playwright",
+      "typeVersion": 1,
+      "position": [600, 300],
+      "parameters": {
+        "browser": "chromium",
+        "testFile": "e2e/tests/multi-tenant.spec.ts",
+        "baseUrl": "http://localhost:3000"
+      }
+    },
+    {
+      "id": "aggregate_results",
+      "name": "Aggregate Results",
+      "type": "operation",
+      "typeVersion": 1,
+      "position": [900, 100],
+      "parameters": {
+        "operation": "aggregate",
+        "mode": "and"
+      }
+    },
+    {
+      "id": "notify_success",
+      "name": "Notify Success",
+      "type": "notification",
+      "typeVersion": 1,
+      "position": [1200, 0],
+      "parameters": {
+        "type": "slack",
+        "message": "E2E tests passed! All browsers supported."
+      }
+    },
+    {
+      "id": "notify_failure",
+      "name": "Notify Failure",
+      "type": "notification",
+      "typeVersion": 1,
+      "position": [1200, 100],
+      "parameters": {
+        "type": "slack",
+        "message": "E2E tests failed. Check workflow logs."
+      }
+    }
+  ],
+  "connections": {
+    "trigger": {
+      "main": {
+        "0": [
+          {"node": "setup_chromium", "type": "main", "index": 0},
+          {"node": "setup_firefox", "type": "main", "index": 0}
+        ]
+      }
+    },
+    "setup_chromium": {
+      "main": {
+        "0": [{"node": "run_login_tests", "type": "main", "index": 0}]
+      }
+    },
+    "setup_firefox": {
+      "main": {
+        "0": [{"node": "run_workflow_tests", "type": "main", "index": 0}]
+      }
+    },
+    "run_login_tests": {
+      "main": {
+        "0": [{"node": "run_multi_tenant_tests", "type": "main", "index": 0}]
+      }
+    },
+    "run_workflow_tests": {
+      "main": {
+        "0": [{"node": "run_multi_tenant_tests", "type": "main", "index": 0}]
+      }
+    },
+    "run_multi_tenant_tests": {
+      "main": {
+        "0": [{"node": "aggregate_results", "type": "main", "index": 0}]
+      }
+    },
+    "aggregate_results": {
+      "main": {
+        "0": [
+          {"node": "notify_success", "type": "main", "index": 0},
+          {"node": "notify_failure", "type": "main", "index": 0}
+        ]
+      }
+    }
+  }
+}

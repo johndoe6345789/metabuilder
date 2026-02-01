@@ -1,0 +1,44 @@
+{
+  "id": "steering-rack",
+  "name": "Steering Rack",
+  "partNumber": "FD-1697110",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 9800.0,
+  "weightUnit": "g",
+  "baseY": 330,
+  "description": "Electric power assisted steering rack (EPAS)",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "15mm", "required": true },
+      { "name": "Socket", "size": "18mm", "required": true },
+      { "name": "Torque wrench", "size": "40-100 Nm", "required": true },
+      { "name": "Ball joint separator", "size": "-", "required": true },
+      { "name": "Steering wheel lock", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Rack mounting bolt", "spec": "M10x1.5x45", "grade": "10.9", "qty": 2, "reusable": true },
+      { "name": "Track rod end nut", "spec": "M12x1.25", "qty": 2, "reusable": false },
+      { "name": "Steering column bolt", "spec": "M8x1.25x25", "grade": "8.8", "qty": 1, "reusable": false }
+    ],
+    "torque": [
+      { "fastener": "Rack mounting bolts", "value": 85, "unit": "Nm", "sequence": "Even", "notes": "" },
+      { "fastener": "Track rod end nuts", "value": 65, "unit": "Nm", "sequence": "", "notes": "New nuts, use split pin" },
+      { "fastener": "Steering column bolt", "value": 25, "unit": "Nm", "sequence": "", "notes": "Pinch bolt - critical safety" }
+    ],
+    "notes": [
+      "Lock steering wheel center before removal",
+      "Do not rotate steering column with rack disconnected",
+      "EPAS calibration required after installation",
+      "Check track rod end ball joints for play"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 140, "height": 18, "rx": 3 },
+    { "type": "cylinder", "rx": 12, "ry": 8, "height": 20, "offsetX": 0, "offsetY": 0 },
+    { "type": "rect", "width": 8, "height": 40, "offsetX": -75, "offsetY": 5 },
+    { "type": "rect", "width": 8, "height": 40, "offsetX": 75, "offsetY": 5 },
+    { "type": "circle", "r": 5, "offsetX": -75, "offsetY": 22, "fill": "#444" },
+    { "type": "circle", "r": 5, "offsetX": 75, "offsetY": 22, "fill": "#444" }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/notifications_all",
+  "version": "1.0.0",
+  "description": "Send notifications to all configured channels (Slack and Discord)",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["notifications", "workflow", "plugin"],
+  "main": "notifications_all.py",
+  "files": ["notifications_all.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "notifications.all",
+    "category": "notifications",
+    "class": "NotificationsAll",
+    "entrypoint": "execute"
+  }
+}

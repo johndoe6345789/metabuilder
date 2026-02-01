@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/backend_create_discord",
+  "version": "1.0.0",
+  "description": "Create Discord webhook client for notifications",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["backend", "workflow", "plugin", "discord"],
+  "main": "backend_create_discord.py",
+  "files": ["backend_create_discord.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "backend.create_discord",
+    "category": "backend",
+    "class": "CreateDiscord",
+    "entrypoint": "execute"
+  }
+}

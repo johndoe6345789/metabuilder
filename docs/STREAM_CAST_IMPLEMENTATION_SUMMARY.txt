@@ -1,0 +1,322 @@
+================================================================================
+  STREAM CAST WORKFLOW UPDATE PLAN - IMPLEMENTATION SUMMARY
+================================================================================
+
+PROJECT:          Stream Cast (stream_cast) - Live streaming control room
+SCOPE:            Update 4 workflows to n8n compliance standard
+STATUS:           Ready for Implementation
+CREATED:          2026-01-22
+TARGET COMPLETE:  2026-01-25
+
+================================================================================
+  THE 4 WORKFLOWS
+================================================================================
+
+1. stream-subscribe.json (4 nodes, linear)
+   Purpose: User subscribes to live stream
+   Status: PARTIAL (missing id, versionId, tenantId, tags, connections)
+
+2. stream-unsubscribe.json (3 nodes, linear)
+   Purpose: User unsubscribes from stream
+   Status: PARTIAL (missing id, versionId, tenantId, tags, connections)
+
+3. scene-transition.json (6 nodes, linear + broadcast)
+   Purpose: Moderator changes active scene
+   Status: PARTIAL (missing id, versionId, tenantId, tags, enhance auth)
+
+4. viewer-count-update.json (3 nodes, parallel operations)
+   Purpose: Periodically update viewer counts
+   Status: PARTIAL (missing id, versionId, tenantId, tags)
+
+================================================================================
+  MANDATORY CHANGES (Apply to ALL 4 Workflows)
+================================================================================
+
+ADD ROOT-LEVEL FIELDS:
+├── "id": "stream_cast_{workflow_name}_{version}"
+├── "versionId": "v1.0.0"
+├── "tenantId": "{{ $context.tenantId }}"
+├── "createdAt": "2026-01-22T00:00:00Z"
+├── "updatedAt": "2026-01-22T00:00:00Z"
+└── "tags": ["streaming", "category", ...]
+
+UPDATE CONNECTIONS FIELD:
+├── Change from: "connections": {}
+└── Change to: Explicit n8n adjacency map format
+    {
+      "nodeId": {
+        "main": [[{ "node": "targetNodeId", "index": 0 }]]
+      }
+    }
+
+ENSURE MULTI-TENANT SAFETY:
+├── All database filters MUST include "tenantId": "{{ $context.tenantId }}"
+├── All create operations MUST include tenantId in data payload
+└── All broadcasts MUST be scoped to tenant/channel
+
+POPULATE META OBJECT:
+├── "description": One sentence explaining workflow purpose
+├── "author": "MetaBuilder Team"
+└── "domain": "streaming"
+
+================================================================================
+  WORKFLOW-SPECIFIC IDS & TAGS
+================================================================================
+
+stream_cast_subscribe_001
+Tags: ["streaming", "subscription", "realtime", "user-action"]
+
+stream_cast_unsubscribe_001
+Tags: ["streaming", "subscription", "cleanup", "user-action"]
+
+stream_cast_scene_transition_001
+Tags: ["streaming", "scenes", "moderator-action", "privileged"]
+
+stream_cast_viewer_count_001
+Tags: ["streaming", "analytics", "scheduled", "broadcast"]
+
+================================================================================
+  MULTI-TENANT SAFETY REQUIREMENTS
+================================================================================
+
+CRITICAL: Every database operation must filter by tenantId
+
+WRONG:
+  "filter": { "id": "{{ $json.channelId }}" }
+
+CORRECT:
+  "filter": {
+    "id": "{{ $json.channelId }}",
+    "tenantId": "{{ $context.tenantId }}"
+  }
+
+Workflows affected:
+✓ Subscribe: fetch_channel, create_subscription
+✓ Unsubscribe: delete_subscription (also filter by userId)
+✓ Scene: fetch_channel, update_active_scene, emit broadcast
+✓ Viewer: fetch_active_streams, parallel tasks
+
+================================================================================
+  CONNECTION FORMAT (n8n Adjacency Map)
+================================================================================
+
+Subscribe (4-node linear):
+{
+  "validate_context": {
+    "main": [[{ "node": "fetch_channel", "index": 0 }]]
+  },
+  "fetch_channel": {
+    "main": [[{ "node": "create_subscription", "index": 0 }]]
+  },
+  "create_subscription": {
+    "main": [[{ "node": "setup_sse", "index": 0 }]]
+  }
+}
+
+Unsubscribe (3-node linear):
+{
+  "validate_context": {
+    "main": [[{ "node": "delete_subscription", "index": 0 }]]
+  },
+  "delete_subscription": {
+    "main": [[{ "node": "return_success", "index": 0 }]]
+  }
+}
+
+Scene (6-node linear):
+{
+  "validate_context": {
+    "main": [[{ "node": "check_authorization", "index": 0 }]]
+  },
+  "check_authorization": {
+    "main": [[{ "node": "fetch_channel", "index": 0 }]]
+  },
+  "fetch_channel": {
+    "main": [[{ "node": "update_active_scene", "index": 0 }]]
+  },
+  "update_active_scene": {
+    "main": [[{ "node": "emit_scene_change", "index": 0 }]]
+  },
+  "emit_scene_change": {
+    "main": [[{ "node": "return_success", "index": 0 }]]
+  }
+}
+
+Viewer (3-node linear):
+{
+  "fetch_active_streams": {
+    "main": [[{ "node": "update_viewer_counts", "index": 0 }]]
+  },
+  "update_viewer_counts": {
+    "main": [[{ "node": "broadcast_counts", "index": 0 }]]
+  }
+}
+
+================================================================================
+  IMPLEMENTATION TIMELINE
+================================================================================
+
+Day 1:
+├─ Update stream-subscribe.json
+├─ Update stream-unsubscribe.json
+└─ Run validation & testing
+
+Day 2:
+├─ Update scene-transition.json
+├─ Update viewer-count-update.json
+├─ Run validation & testing
+└─ Run full test suite (npm run test:e2e)
+
+Day 3:
+├─ Code review
+└─ Merge to main branch
+
+================================================================================
+  VALIDATION CHECKLIST
+================================================================================
+
+For each workflow before commit:
+
+STRUCTURE:
+☐ "id" field present
+☐ "versionId" field present
+☐ "tenantId" field present
+☐ "createdAt" field present
+☐ "updatedAt" field present
+☐ "tags" array present
+☐ "meta" object populated
+☐ "connections" properly mapped (not empty {})
+
+MULTI-TENANT SAFETY:
+☐ All database operations have tenantId filter
+☐ No cross-tenant access possible
+☐ Event broadcasts scoped to channel/tenant
+
+JSON VALIDITY:
+☐ Valid JSON syntax
+☐ No typos in field names
+☐ All node references valid
+☐ No circular connections
+
+TESTING:
+☐ JSON schema validation passes
+☐ TypeScript check passes
+☐ Build succeeds
+☐ E2E tests pass
+
+================================================================================
+  VALIDATION COMMANDS
+================================================================================
+
+Validate schema:
+npx ajv validate -s schemas/n8n-workflow.schema.json \
+  packages/stream_cast/workflow/stream-subscribe.json
+
+Format JSON:
+npx prettier --write packages/stream_cast/workflow/*.json
+
+Type check:
+npm run typecheck
+
+Build:
+npm run build
+
+Test:
+npm run test:e2e
+
+================================================================================
+  DOCUMENTATION PROVIDED
+================================================================================
+
+1. STREAM_CAST_WORKFLOW_README.md (THIS INDEX)
+   → Navigation guide by role
+   → Quick summary of all 4 workflows
+
+2. STREAM_CAST_WORKFLOW_QUICK_REFERENCE.md
+   → 1-page fast lookup
+   → Copy-paste templates
+   → Before/after examples
+
+3. STREAM_CAST_WORKFLOW_UPDATE_PLAN.md
+   → Complete implementation plan
+   → Detailed specifications per workflow
+   → Full validation checklist
+   → Testing strategy
+
+4. STREAM_CAST_WORKFLOW_TECHNICAL_DETAILS.md
+   → Technical deep dive
+   → Architecture diagrams
+   → Complete JSON specifications
+   → Node type registry
+   → Edge cases & error handling
+
+================================================================================
+  SUCCESS CRITERIA
+================================================================================
+
+✓ All 4 workflows have id, versionId, tenantId, timestamps, tags
+✓ All database operations filter by tenantId (multi-tenant safety)
+✓ All connections properly mapped using n8n format
+✓ All meta objects populated with description, author, domain
+✓ JSON schema validation: PASS
+✓ TypeScript check: PASS
+✓ Build: PASS
+✓ E2E tests: PASS (99%+ coverage)
+✓ Code review: APPROVED
+✓ Merged to main branch
+
+================================================================================
+  NEXT STEPS FOR DEVELOPER
+================================================================================
+
+1. Review STREAM_CAST_WORKFLOW_QUICK_REFERENCE.md (5 min)
+2. Copy connection templates from there
+3. Edit all 4 workflow files in packages/stream_cast/workflow/
+4. Run validation commands
+5. Create PR with implementation details
+6. Request code review
+
+================================================================================
+  KEY CONTACTS & REFERENCES
+================================================================================
+
+Related Documentation:
+- /docs/N8N_COMPLIANCE_AUDIT.md (compliance framework)
+- /docs/CLAUDE.md (multi-tenant, JSON-first principles)
+- /docs/AGENTS.md (domain-specific rules)
+- /schemas/n8n-workflow.schema.json (N8N specification)
+
+Package Location:
+- packages/stream_cast/
+
+Target Files:
+- packages/stream_cast/workflow/stream-subscribe.json
+- packages/stream_cast/workflow/stream-unsubscribe.json
+- packages/stream_cast/workflow/scene-transition.json
+- packages/stream_cast/workflow/viewer-count-update.json
+
+================================================================================
+  CRITICAL REMINDERS
+================================================================================
+
+1. EVERY database operation MUST have tenantId filter
+   → Missing this = data leak = security breach
+
+2. Use n8n adjacency map format for connections
+   → Don't leave "connections": {}
+
+3. Add all 6 required fields (id, versionId, tenantId, createdAt, updatedAt, tags)
+   → Ensures compliance and auditability
+
+4. Run validation before submitting PR
+   → All checks must pass
+
+5. Request code review from senior developer
+   → Multi-tenant safety critical
+
+================================================================================
+Document Version: 1.0
+Created: 2026-01-22
+Status: Ready for Implementation
+Target Completion: 2026-01-25
+================================================================================

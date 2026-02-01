@@ -1,0 +1,44 @@
+{
+  "id": "synchro-hub",
+  "name": "Synchro Hub Assembly",
+  "partNumber": "FD-1848340",
+  "material": "brass",
+  "quantity": 3,
+  "weight": 180.0,
+  "weightUnit": "g",
+  "baseY": 620,
+  "description": "Baulk ring synchronizer hub - 1st/2nd",
+  "installation": {
+    "tools": [
+      { "name": "Snap ring pliers", "size": "Internal", "required": true },
+      { "name": "Brass drift", "size": "10mm", "required": true },
+      { "name": "Soft-face mallet", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Synchro spring", "spec": "IB5 1/2", "qty": 3, "reusable": false },
+      { "name": "Synchro key", "spec": "IB5", "qty": 3, "reusable": true },
+      { "name": "Snap ring", "spec": "45mm internal", "qty": 1, "reusable": true }
+    ],
+    "torque": [],
+    "notes": [
+      "Check baulk ring thread depth - min 0.8mm",
+      "Springs must seat in hub grooves",
+      "Keys must move freely in hub slots",
+      "Replace as set if any component worn"
+    ]
+  },
+  "geometry": [
+    { "type": "cylinder", "rx": 28, "ry": 9, "height": 18 },
+    { "type": "gearRing", "teeth": 36, "outerRadius": 32, "toothHeight": 3 },
+    { "type": "circle", "r": 14, "fill": "#8B7355" },
+    { "type": "rect", "width": 4, "height": 14, "offsetX": -20, "fill": "#666" },
+    { "type": "rect", "width": 4, "height": 14, "offsetX": 20, "fill": "#666" }
+  ],
+  "geometry3d": [
+    { "type": "cylinder", "r": 28, "height": 15, "fill": "#777" },
+    { "type": "cylinder", "r": 24, "height": 18, "fill": "#888" },
+    { "type": "cylinder", "r": 18, "height": 15, "subtract": true },
+    { "type": "cylinder", "r": 26, "height": 3, "offsetZ": 6, "fill": "#666" },
+    { "type": "cylinder", "r": 26, "height": 3, "offsetZ": -6, "fill": "#666" }
+  ]
+}

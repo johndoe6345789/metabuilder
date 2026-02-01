@@ -1,0 +1,38 @@
+{
+  "id": "starter-motor",
+  "name": "Starter Motor",
+  "partNumber": "FD-CV6T-11000-AB",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 3800.0,
+  "weightUnit": "g",
+  "baseY": 1060,
+  "description": "Gear reduction starter motor",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "13mm", "required": true },
+      { "name": "Socket", "size": "10mm", "required": true },
+      { "name": "Extension bar", "size": "Long", "required": true }
+    ],
+    "hardware": [
+      { "name": "Starter bolt", "spec": "M10x1.5x50", "grade": "8.8", "qty": 2, "reusable": true },
+      { "name": "B+ terminal nut", "spec": "M8", "qty": 1, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Starter bolts", "value": 45, "unit": "Nm", "sequence": "", "notes": "" },
+      { "fastener": "B+ terminal nut", "value": 10, "unit": "Nm", "sequence": "", "notes": "Battery disconnected" }
+    ],
+    "notes": [
+      "Access from below - remove undertray",
+      "Disconnect battery before removal",
+      "Check ring gear teeth for damage",
+      "Shim if excessive engagement play"
+    ]
+  },
+  "geometry": [
+    { "type": "cylinder", "rx": 25, "ry": 15, "height": 70, "fill": "#5a5a5a" },
+    { "type": "cylinder", "rx": 12, "ry": 6, "height": 25, "offsetY": 40, "fill": "#666" },
+    { "type": "rect", "width": 20, "height": 25, "offsetY": -40, "rx": 2, "fill": "#444" },
+    { "type": "circle", "r": 6, "offsetX": 25, "offsetY": -20, "fill": "#d4a84a" }
+  ]
+}

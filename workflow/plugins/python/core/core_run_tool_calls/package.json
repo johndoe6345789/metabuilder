@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/core_run_tool_calls",
+  "version": "1.0.0",
+  "description": "Execute tool calls from an AI response and return results",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["core", "workflow", "plugin"],
+  "main": "core_run_tool_calls.py",
+  "files": ["core_run_tool_calls.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "core.run_tool_calls",
+    "category": "core",
+    "class": "CoreRunToolCalls",
+    "entrypoint": "execute"
+  }
+}

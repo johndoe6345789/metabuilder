@@ -1,0 +1,38 @@
+{
+  "printer": "Bambu Labs",
+  "nozzle_diameter_mm": 0.4,
+  "layer_height_mm": 0.2,
+  "rules": {
+    "minimum_wall_thickness_mm": 0.8,
+    "minimum_embossed_detail_height_mm": 0.2,
+    "minimum_engraved_detail_depth_mm": 0.2,
+    "minimum_text_height_mm": 4.0,
+    "minimum_text_line_thickness_mm": 0.5,
+    "minimum_hole_diameter_mm": 2.0,
+    "hole_size_tolerance_mm": 0.2,
+    "bridge_max_length_mm": 5.0,
+    "overhang_max_angle_deg": 45,
+    "minimum_clearance_between_parts_mm": 0.3,
+    "minimum_feature_size_mm": 0.4,
+    "recommended_support_gap_mm": 0.2,
+    "minimum_chamfer_or_fillet_mm": 0.5,
+    "max_model_size_mm": {
+      "X": 256,
+      "Y": 256,
+      "Z": 256
+    },
+    "maximum_file_triangle_count": 1000000,
+    "manifold_geometry_required": true,
+    "no_intersecting_geometry": true,
+    "no_open_edges": true,
+    "preferred_file_format": "STL",
+    "alternate_file_formats": ["3MF", "OBJ"]
+  },
+  "notes": [
+    "Values are tuned for typical Bambu Lab P1P, P1S, X1, or A1 with 0.4 mm nozzle.",
+    "Minimum feature sizes are physical—anything smaller may not print or adhere properly.",
+    "Bridge length and overhang angle assume no support and average cooling.",
+    "Clearance depends on material shrinkage—tune for specific filament types.",
+    "For press-fit or moving parts, increase clearance to 0.4–0.5 mm."
+  ]
+}

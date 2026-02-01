@@ -1,0 +1,36 @@
+{
+  "id": "brake-hose-front-right",
+  "name": "Front Right Brake Hose",
+  "partNumber": "FD-1850520",
+  "material": "rubber",
+  "quantity": 1,
+  "weight": 120.0,
+  "weightUnit": "g",
+  "baseY": 420,
+  "description": "Flexible brake hose connecting steel line to caliper",
+  "installation": {
+    "tools": [
+      { "name": "Flare nut spanner", "size": "11mm", "required": true },
+      { "name": "Spanner", "size": "14mm", "required": true },
+      { "name": "Brake bleeding kit", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Copper washer", "spec": "M10", "qty": 2, "reusable": false },
+      { "name": "Hose clip", "spec": "Spring clip", "qty": 1, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Banjo bolt", "value": 30, "unit": "Nm", "notes": "New copper washers required" }
+    ],
+    "notes": [
+      "Replace copper washers every time",
+      "Check for cracks and bulging",
+      "Do not twist hose during fitting",
+      "Ensure hose doesn't rub on suspension"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 8, "height": 60, "rx": 4, "fill": "#333" },
+    { "type": "rect", "width": 14, "height": 10, "offsetY": -30, "rx": 2, "fill": "#666" },
+    { "type": "rect", "width": 14, "height": 10, "offsetY": 30, "rx": 2, "fill": "#666" }
+  ]
+}

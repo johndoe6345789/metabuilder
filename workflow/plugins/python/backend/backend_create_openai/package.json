@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/backend_create_openai",
+  "version": "1.0.0",
+  "description": "Create OpenAI client for AI operations",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["backend", "workflow", "plugin", "openai", "ai"],
+  "main": "backend_create_openai.py",
+  "files": ["backend_create_openai.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "backend.create_openai",
+    "category": "backend",
+    "class": "CreateOpenAI",
+    "entrypoint": "execute"
+  }
+}

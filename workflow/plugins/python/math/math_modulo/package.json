@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/math_modulo",
+  "version": "1.0.0",
+  "description": "Calculate a modulo b",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["math", "workflow", "plugin"],
+  "main": "math_modulo.py",
+  "files": ["math_modulo.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "math.modulo",
+    "category": "math",
+    "class": "MathModulo",
+    "entrypoint": "execute"
+  }
+}

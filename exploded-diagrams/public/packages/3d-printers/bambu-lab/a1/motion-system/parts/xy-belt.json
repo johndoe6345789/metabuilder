@@ -1,0 +1,67 @@
+{
+  "id": "xy-belt",
+  "name": "GT2 Timing Belt",
+  "partNumber": "BL-A1-MR006",
+  "material": "rubber",
+  "quantity": 2,
+  "weight": 15.0,
+  "weightUnit": "g",
+  "baseY": 380,
+  "description": "GT2 timing belt 6mm width, fiberglass reinforced, for X and Y axis drive",
+  "installation": {
+    "tools": [
+      { "name": "Belt tension gauge", "size": "GT2", "required": true },
+      { "name": "Hex key", "size": "2.5mm", "required": true },
+      { "name": "Needle nose pliers", "size": "-", "required": false }
+    ],
+    "hardware": [
+      { "name": "Belt clip", "spec": "GT2 6mm", "qty": 2, "reusable": true },
+      { "name": "Belt anchor", "spec": "M3 crimp", "qty": 2, "reusable": false }
+    ],
+    "torque": [
+      { "fastener": "Belt anchor screws", "value": 0.5, "unit": "Nm", "sequence": "", "notes": "Ensure belt teeth fully engaged" }
+    ],
+    "notes": [
+      "Target belt tension: 40-50Hz frequency",
+      "Check belt for wear, cracks, or missing teeth",
+      "Route belt without twists",
+      "Replace if stretched more than 1%"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 180, "height": 6, "rx": 1, "fill": "#303030" },
+    { "type": "rect", "width": 175, "height": 2, "fill": "#252525" },
+    { "type": "line", "x1": -85, "y1": -1, "x2": 85, "y2": -1, "stroke": "#404040", "strokeWidth": 0.5 }
+  ],
+  "geometry3d": [
+    { "type": "box", "width": 400, "height": 1.5, "depth": 6, "fill": "#303030" },
+
+    { "type": "box", "width": 400, "height": 0.8, "depth": 6, "offsetY": 1.1, "fill": "#252525" },
+
+    { "type": "box", "width": 2, "height": 0.8, "depth": 6, "offsetX": -195, "offsetY": -0.5, "fill": "#404040" },
+    { "type": "box", "width": 2, "height": 0.8, "depth": 6, "offsetX": -191, "offsetY": -0.5, "fill": "#404040" },
+    { "type": "box", "width": 2, "height": 0.8, "depth": 6, "offsetX": -187, "offsetY": -0.5, "fill": "#404040" },
+    { "type": "box", "width": 2, "height": 0.8, "depth": 6, "offsetX": -183, "offsetY": -0.5, "fill": "#404040" },
+    { "type": "box", "width": 2, "height": 0.8, "depth": 6, "offsetX": -179, "offsetY": -0.5, "fill": "#404040" },
+    { "type": "box", "width": 2, "height": 0.8, "depth": 6, "offsetX": -175, "offsetY": -0.5, "fill": "#404040" },
+    { "type": "box", "width": 2, "height": 0.8, "depth": 6, "offsetX": -171, "offsetY": -0.5, "fill": "#404040" },
+    { "type": "box", "width": 2, "height": 0.8, "depth": 6, "offsetX": -167, "offsetY": -0.5, "fill": "#404040" },
+
+    { "type": "box", "width": 2, "height": 0.8, "depth": 6, "offsetX": 195, "offsetY": -0.5, "fill": "#404040" },
+    { "type": "box", "width": 2, "height": 0.8, "depth": 6, "offsetX": 191, "offsetY": -0.5, "fill": "#404040" },
+    { "type": "box", "width": 2, "height": 0.8, "depth": 6, "offsetX": 187, "offsetY": -0.5, "fill": "#404040" },
+    { "type": "box", "width": 2, "height": 0.8, "depth": 6, "offsetX": 183, "offsetY": -0.5, "fill": "#404040" },
+    { "type": "box", "width": 2, "height": 0.8, "depth": 6, "offsetX": 179, "offsetY": -0.5, "fill": "#404040" },
+    { "type": "box", "width": 2, "height": 0.8, "depth": 6, "offsetX": 175, "offsetY": -0.5, "fill": "#404040" },
+    { "type": "box", "width": 2, "height": 0.8, "depth": 6, "offsetX": 171, "offsetY": -0.5, "fill": "#404040" },
+    { "type": "box", "width": 2, "height": 0.8, "depth": 6, "offsetX": 167, "offsetY": -0.5, "fill": "#404040" },
+
+    { "type": "box", "width": 0.5, "height": 1.5, "depth": 6, "offsetX": 0, "fill": "#404040" },
+
+    { "type": "box", "width": 15, "height": 4, "depth": 10, "offsetX": -195, "offsetY": 3, "fill": "#505050" },
+    { "type": "cylinder", "r": 1.5, "height": 12, "offsetX": -195, "offsetY": 3, "rotateX": 90, "subtract": true },
+
+    { "type": "box", "width": 15, "height": 4, "depth": 10, "offsetX": 195, "offsetY": 3, "fill": "#505050" },
+    { "type": "cylinder", "r": 1.5, "height": 12, "offsetX": 195, "offsetY": 3, "rotateX": 90, "subtract": true }
+  ]
+}

@@ -1,0 +1,157 @@
+# TESTING LIBRARIES AUDIT - DOCUMENT INDEX
+Date: 2026-01-23
+
+This folder contains a complete audit of testing frameworks and libraries across the MetaBuilder codebase.
+
+═══════════════════════════════════════════════════════════════════════════════
+
+DOCUMENTS INCLUDED:
+
+1. TESTING_LIBRARIES_SUMMARY.txt [START HERE]
+   ├─ Quick visual reference
+   ├─ Framework breakdown (Jest vs Vitest)
+   ├─ Critical issues at a glance
+   ├─ Recommended standardization
+   └─ Estimated effort: 3-4 hours
+
+2. TESTING_LIBRARIES_AUDIT_2026-01-23.txt [COMPREHENSIVE]
+   ├─ Executive summary
+   ├─ Detailed testing framework analysis
+   ├─ @testing-library packages breakdown
+   ├─ Compatibility matrix
+   ├─ Configuration file inventory
+   ├─ Detailed issue breakdown (🔴 critical, 🟡 medium, 🟠 low)
+   ├─ Recommended standardization options (A: Jest, B: Vitest)
+   ├─ Full action plan with 6 phases
+   ├─ Impact analysis
+   ├─ Verification checklist
+   └─ Technical notes
+
+3. TESTING_PACKAGES_DETAILED_MATRIX.txt [REFERENCE TABLE]
+   ├─ Package-by-package matrix (13 packages × 4 testing attributes)
+   ├─ Summary statistics
+   ├─ Issues categorized by severity
+   ├─ Recommended standardization plan (A & B options)
+   ├─ Package-specific action items
+   └─ Implementation notes
+
+═══════════════════════════════════════════════════════════════════════════════
+
+HOW TO USE THESE DOCUMENTS:
+
+For Quick Understanding:
+  1. Read: TESTING_LIBRARIES_SUMMARY.txt (5 min)
+  2. skim: TESTING_PACKAGES_DETAILED_MATRIX.txt (10 min)
+
+For Implementation Planning:
+  1. Read: TESTING_LIBRARIES_AUDIT_2026-01-23.txt section "RECOMMENDED STANDARDIZATION"
+  2. Review: TESTING_PACKAGES_DETAILED_MATRIX.txt "PACKAGE-SPECIFIC ACTIONS"
+  3. Follow: TESTING_LIBRARIES_AUDIT_2026-01-23.txt "ACTION PLAN"
+
+For Detailed Reference:
+  1. Use: TESTING_PACKAGES_DETAILED_MATRIX.txt for package-by-package details
+  2. Consult: TESTING_LIBRARIES_AUDIT_2026-01-23.txt for deep analysis
+
+═══════════════════════════════════════════════════════════════════════════════
+
+KEY FINDINGS SUMMARY:
+
+CRITICAL ISSUES (3):
+  1. @testing-library/react version gap: 2 major versions (v14 → v16) in 2 packages
+  2. Framework fragmentation: 11 Jest vs 5 Vitest packages (2 different systems)
+  3. Missing testing library declarations: 8 packages have no explicit @testing-library
+
+HIGH PRIORITY ISSUES (2):
+  4. Vitest version inconsistency: codegen/spark-tools @v3.0.9 (behind v4.x)
+  5. Jest version inconsistency: workflow @v29.0.0 (not latest)
+
+MEDIUM PRIORITY ISSUES (1):
+  6. @testing-library/jest-dom gap: pastebin @v6.1.5 (5 minor versions behind)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+RECOMMENDED ACTION:
+
+Phase 1: STANDARDIZE ON JEST (Recommended)
+  • All frameworks: jest ^29.7.0
+  • All testing libraries: standardized versions
+  • Effort: 3-4 hours
+  • Impact: Clean npm install, consistent testing experience, fewer conflicts
+
+Packages to Migrate (4):
+  • dbal/development (vitest → jest)
+  • frontends/nextjs (vitest → jest)
+  • postgres (vitest → jest)
+  • codegen/packages/spark-tools (vitest → jest)
+
+Packages to Upgrade (3):
+  • pastebin (@testing-library/react v14 → v16, jest-dom v6.1 → v6.6)
+  • redux/hooks-async (@testing-library/react v14 → v16)
+  • workflow (jest v29.0 → v29.7)
+
+Packages to Add Declarations (4):
+  • emailclient
+  • redux/hooks
+  • redux/api-clients
+  • codegen
+
+═══════════════════════════════════════════════════════════════════════════════
+
+STANDARD VERSIONS (After Standardization):
+
+jest:                        ^29.7.0
+@testing-library/react:      ^16.3.1
+@testing-library/dom:        ^10.4.1
+@testing-library/jest-dom:   ^6.6.3
+@testing-library/user-event: ^14.5.1
+
+═══════════════════════════════════════════════════════════════════════════════
+
+VERIFICATION AFTER IMPLEMENTATION:
+
+Before considering done:
+  ✅ npm install succeeds at project root
+  ✅ npm run build succeeds (all workspaces)
+  ✅ npm run test passes (all packages)
+  ✅ npm run lint shows no issues
+  ✅ No vitest config files remain
+  ✅ All jest versions are ^29.7.0
+  ✅ All @testing-library/* versions match standard
+  ✅ All test scripts use jest
+
+═══════════════════════════════════════════════════════════════════════════════
+
+QUICK STATS:
+
+Total Packages Analyzed:         13
+  Jest (11):  emailclient, workflowui, pastebin, workflow, redux/hooks, redux/hooks-async, redux/api-clients + 4 no-version
+  Vitest (5): dbal/development, frontends/nextjs, codegen, codegen/spark-tools, postgres + 1 no-version
+
+Framework Split:                50% Jest, 46% Vitest (2 systems coexisting)
+Version Gaps in @testing-library/react: 3 major versions (v14, v16.0, v16.3)
+Missing Declarations:           8 packages missing @testing-library/react
+
+Critical Issues:                3 (blocking)
+High Priority:                  2 (should fix)
+Medium Priority:                1 (nice to have)
+Total Fix Effort:               3-4 hours
+
+═══════════════════════════════════════════════════════════════════════════════
+
+RELATED DOCUMENTS:
+
+Root-level analysis:
+  /txt/DEPENDENCY_AUDIT_DETAILS_2026-01-23.txt - Overall dependency vulnerabilities
+  /txt/DEPENDENCY_FIX_PLAN_2026-01-23.txt - Full dependency remediation plan
+
+CLAUDE.md notes:
+  See: /CLAUDE.md section "Dependency Management" → "npm/Node.js"
+
+═══════════════════════════════════════════════════════════════════════════════
+
+QUESTIONS?
+
+For implementation details: See TESTING_LIBRARIES_AUDIT_2026-01-23.txt
+For package-specific actions: See TESTING_PACKAGES_DETAILED_MATRIX.txt
+For quick overview: See TESTING_LIBRARIES_SUMMARY.txt
+

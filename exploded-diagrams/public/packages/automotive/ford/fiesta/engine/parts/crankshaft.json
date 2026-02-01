@@ -1,0 +1,45 @@
+{
+  "id": "crankshaft",
+  "name": "Crankshaft",
+  "partNumber": "FD-CM5G-6303-BA",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 12500.0,
+  "weightUnit": "g",
+  "baseY": 140,
+  "description": "Forged steel crankshaft with 4 main bearings",
+  "installation": {
+    "tools": [
+      { "name": "Plastigauge", "size": "Green", "required": true },
+      { "name": "Socket", "size": "17mm", "required": true },
+      { "name": "Torque wrench", "size": "20-80 Nm", "required": true },
+      { "name": "Angle gauge", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Main bearing cap bolt", "spec": "M10x1.25x60", "grade": "12.9", "qty": 8, "reusable": false },
+      { "name": "Main bearing shell (upper)", "spec": "Standard", "qty": 4, "reusable": false },
+      { "name": "Main bearing shell (lower)", "spec": "Standard", "qty": 4, "reusable": false },
+      { "name": "Thrust washer", "spec": "Std 2.3mm", "qty": 2, "reusable": false }
+    ],
+    "torque": [
+      { "fastener": "Main cap bolts", "value": 25, "unit": "Nm + 90°", "sequence": "Center out", "notes": "Torque then angle - new bolts only" }
+    ],
+    "notes": [
+      "Check bearing clearance with Plastigauge",
+      "Lubricate bearings with assembly lube",
+      "Check end float after installation",
+      "Ensure oil holes align with block passages"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 120, "height": 20, "rx": 10, "fill": "#5a5a5a" },
+    { "type": "circle", "r": 22, "offsetX": -45, "fill": "#4a4a4a" },
+    { "type": "circle", "r": 22, "offsetY": 0, "fill": "#4a4a4a" },
+    { "type": "circle", "r": 22, "offsetX": 45, "fill": "#4a4a4a" },
+    { "type": "circle", "r": 12, "offsetX": -45, "fill": "#333" },
+    { "type": "circle", "r": 12, "fill": "#333" },
+    { "type": "circle", "r": 12, "offsetX": 45, "fill": "#333" },
+    { "type": "ellipse", "rx": 12, "ry": 25, "offsetX": -22, "offsetY": 25, "fill": "#555" },
+    { "type": "ellipse", "rx": 12, "ry": 25, "offsetX": 22, "offsetY": 25, "fill": "#555" }
+  ]
+}

@@ -10,11 +10,15 @@ export interface TemplateContext {
   env?: Record<string, any>;
   steps?: Record<string, any>;
   utils?: Record<string, any>;
+  workflow?: {
+    variables?: Record<string, any>;
+    [key: string]: any;
+  };
 }
 
 /**
  * Interpolate template string with context variables
- * Supports: {{ $context.variable }}, {{ $json.field }}, {{ $env.VAR }}
+ * Supports: {{ $context.variable }}, {{ $json.field }}, {{ $env.VAR }}, {{ $workflow.variables.name }}
  */
 export function interpolateTemplate(template: any, context: TemplateContext): any {
   // Handle non-string values
@@ -53,7 +57,7 @@ export function interpolateTemplate(template: any, context: TemplateContext): an
 
 /**
  * Evaluate a template expression and return result
- * Supports: $context.var, $json.field, $env.VAR, $steps.nodeId.output
+ * Supports: $context.var, $json.field, $env.VAR, $steps.nodeId.output, $workflow.variables.name
  */
 export function evaluateTemplate(expression: string, context: TemplateContext): any {
   return evaluateExpression(expression, context);
@@ -80,6 +84,10 @@ function evaluateExpression(expression: string, context: TemplateContext): any {
     return getNestedValue(context.steps || {}, expression.substring(7));
   }
 
+  if (expression.startsWith('$workflow.')) {
+    return getNestedValue(context.workflow || {}, expression.substring(10));
+  }
+
   if (expression.startsWith('$utils.')) {
     return callUtility(expression.substring(7), context.utils || {});
   }
@@ -92,6 +100,7 @@ function evaluateExpression(expression: string, context: TemplateContext): any {
       context.json?.[varName] ??
       context.env?.[varName] ??
       context.steps?.[varName] ??
+      context.workflow?.[varName] ??
       undefined
     );
   }

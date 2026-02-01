@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/var_get",
+  "version": "1.0.0",
+  "description": "Get a variable from the runtime store",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["var", "workflow", "plugin"],
+  "main": "var_get.hpp",
+  "metadata": {
+    "plugin_type": "var.get",
+    "category": "var"
+  }
+}

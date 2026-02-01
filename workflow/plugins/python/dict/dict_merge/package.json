@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/dict_merge",
+  "version": "1.0.0",
+  "description": "Merge multiple dictionaries",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["dict", "workflow", "plugin"],
+  "main": "dict_merge.py",
+  "files": ["dict_merge.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "dict.merge",
+    "category": "dict",
+    "class": "DictMerge",
+    "entrypoint": "execute"
+  }
+}

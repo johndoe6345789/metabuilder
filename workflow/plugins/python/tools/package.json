@@ -1,0 +1,21 @@
+{
+  "name": "@metabuilder/workflow-plugins-tools",
+  "version": "1.0.0",
+  "description": "External tool integration plugins",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["tools", "external", "workflow", "plugins"],
+  "metadata": {
+    "category": "tools",
+    "plugin_count": 7
+  },
+  "plugins": [
+    "tools_create_branch",
+    "tools_create_pull_request",
+    "tools_list_files",
+    "tools_read_file",
+    "tools_run_docker",
+    "tools_run_lint",
+    "tools_run_tests"
+  ]
+}

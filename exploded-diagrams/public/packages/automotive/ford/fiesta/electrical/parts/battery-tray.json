@@ -1,0 +1,34 @@
+{
+  "id": "battery-tray",
+  "name": "Battery Tray",
+  "partNumber": "FD-1870210",
+  "material": "blackPlastic",
+  "quantity": 1,
+  "weight": 650.0,
+  "weightUnit": "g",
+  "baseY": 70,
+  "description": "Battery mounting tray with drain hole",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "10mm", "required": true },
+      { "name": "Extension bar", "size": "150mm", "required": true }
+    ],
+    "hardware": [
+      { "name": "Tray bolt", "spec": "M6x20", "qty": 3, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Tray bolts", "value": 8, "unit": "Nm" }
+    ],
+    "notes": [
+      "Remove battery first",
+      "Check drain hole is clear",
+      "Inspect for acid damage",
+      "Apply petroleum jelly to prevent corrosion"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 90, "height": 20, "rx": 2, "fill": "#333" },
+    { "type": "rect", "width": 85, "height": 15, "offsetY": 2, "rx": 2, "fill": "#2a2a2a" },
+    { "type": "circle", "r": 4, "offsetX": 35, "offsetY": 5, "fill": "#444" }
+  ]
+}

@@ -1,0 +1,12 @@
+# Tools Plugin Dependencies
+# These dependencies are required for tools/* plugins
+# Last Updated: 2026-01-23
+
+# Include base requirements
+-r requirements.txt
+
+# HTTP utilities
+requests>=2.31.0      # tools_create_pull_request, tools_list_files
+
+# Git and version control
+PyGithub>=2.1.1       # tools_create_pull_request: GitHub API client

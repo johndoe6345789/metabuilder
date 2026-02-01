@@ -8,8 +8,8 @@
       "type": "core.load_context",
       "typeVersion": 1,
       "position": [
-        0,
-        50
+        100,
+        100
       ],
       "parameters": {}
     },
@@ -19,8 +19,8 @@
       "type": "core.seed_messages",
       "typeVersion": 1,
       "position": [
-        300,
-        50
+        400,
+        100
       ],
       "parameters": {}
     },
@@ -30,8 +30,8 @@
       "type": "core.append_context_message",
       "typeVersion": 1,
       "position": [
-        600,
-        50
+        700,
+        100
       ],
       "parameters": {
         "messages": "$messages",
@@ -44,8 +44,8 @@
       "type": "core.append_user_instruction",
       "typeVersion": 1,
       "position": [
-        900,
-        50
+        100,
+        300
       ],
       "parameters": {
         "messages": "$messages"
@@ -57,8 +57,8 @@
       "type": "core.ai_request",
       "typeVersion": 1,
       "position": [
-        1200,
-        50
+        400,
+        300
       ],
       "parameters": {
         "messages": "$messages"
@@ -70,8 +70,8 @@
       "type": "core.run_tool_calls",
       "typeVersion": 1,
       "position": [
-        1500,
-        50
+        700,
+        300
       ],
       "parameters": {
         "response": "$llm_response"
@@ -83,8 +83,8 @@
       "type": "core.append_tool_results",
       "typeVersion": 1,
       "position": [
-        1800,
-        50
+        100,
+        500
       ],
       "parameters": {
         "messages": "$messages",
@@ -97,8 +97,8 @@
       "type": "core.ai_request",
       "typeVersion": 1,
       "position": [
-        2100,
-        50
+        400,
+        500
       ],
       "parameters": {
         "messages": "$messages"
@@ -110,27 +110,7 @@
       "main": {
         "0": [
           {
-            "node": "Append Context",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Append User Instruction",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Planner Request",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Append Tool Results",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Summary Request",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -141,7 +121,7 @@
       "main": {
         "0": [
           {
-            "node": "Append Context",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -152,7 +132,7 @@
       "main": {
         "0": [
           {
-            "node": "Run Tool Calls",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -163,7 +143,7 @@
       "main": {
         "0": [
           {
-            "node": "Append Tool Results",
+            "node": "[object Object]",
             "type": "main",
             "index": 0
           }
@@ -171,14 +151,13 @@
       }
     }
   },
-  "triggers": [
-    {
-      "nodeId": "load_context",
-      "kind": "manual",
-      "enabled": true,
-      "meta": {
-        "description": "Manually triggered meta.workflow_packages.plan_execute_summarize.label workflow execution"
-      }
-    }
-  ]
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  }
 }

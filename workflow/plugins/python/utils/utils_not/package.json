@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/utils_not",
+  "version": "1.0.0",
+  "description": "Negate a boolean value",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["utils", "workflow", "plugin"],
+  "main": "utils_not.py",
+  "files": ["utils_not.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "utils.not",
+    "category": "utils",
+    "class": "Not",
+    "entrypoint": "execute"
+  }
+}

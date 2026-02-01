@@ -1,0 +1,448 @@
+# Storybook Setup Audit - 2026-01-23
+
+## Executive Summary
+**Status**: Version Inconsistencies Detected ⚠️
+**Active Instances**: 3 (storybook/, workflowui/, postgres/)
+**Critical Issues**: 2 (version mismatches, framework compatibility)
+**Blocked Dependencies**: 59 packages with "storybook" in keywords
+
+---
+
+## Storybook Instances & Versions
+
+### 1. /storybook/ (Primary Storybook Package)
+**Location**: /storybook/package.json
+**Status**: VERSION CONFLICT
+
+#### Package Versions:
+```json
+{
+  "storybook": "^10.1.11",
+  "@storybook/react": "^10.1.11",
+  "@storybook/react-vite": "^10.1.11",
+  "@storybook/addon-essentials": "^8.6.15",     // ⚠️ MISMATCH
+  "@storybook/addon-interactions": "^8.6.15",   // ⚠️ MISMATCH
+  "@storybook/test": "^8.6.15"                  // ⚠️ MISMATCH
+}
+```
+
+#### React/TypeScript Versions:
+```json
+{
+  "react": "^18.3.1",
+  "react-dom": "^18.3.1",
+  "typescript": "^5.9.3",
+  "@types/react": "^19.2.8",      // ⚠️ TYPE MISMATCH
+  "@types/react-dom": "^18.3.5"   // ⚠️ TYPE MISMATCH
+}
+```
+
+#### Configuration:
+- **Framework**: @storybook/react-vite
+- **Config File**: .storybook/main.ts
+- **Stories Pattern**: src/**/*.stories.@(js|jsx|mjs|ts|tsx)
+- **Addons**: essentials, interactions
+- **Static Dirs**: packages/, schemas/, public/
+
+#### Issue Analysis:
+1. **Storybook Version Conflict**: Core (^10.1.11) vs Addons (^8.6.15)
+   - @storybook/test @ 8.6.15 may not work with @storybook/react @ 10.1.11
+   - Addon versions should match framework version
+   
+2. **Type Version Mismatch**: 
+   - @types/react @ 19.2.8 (React 19) vs react @ 18.3.1 (React 18)
+   - @types/react-dom @ 18.3.5 correct for React 18
+   - Type definitions don't match runtime version
+
+---
+
+### 2. /workflowui/ (Next.js Frontend)
+**Location**: /workflowui/package.json
+**Status**: VERSION CONFLICT
+
+#### Package Versions:
+```json
+{
+  "storybook": "dev -p 6006",     // ⚠️ NOT A VERSION
+  "@storybook/addon-essentials": "^8.6.0",
+  "@storybook/react": "^8.6.0"
+}
+```
+
+#### React/TypeScript Versions:
+```json
+{
+  "next": "^16.1.4",
+  "react": "^18.3.1",
+  "react-dom": "^18.3.1",
+  "typescript": "~5.9.3",
+  "@types/react": "^19.2.8",      // ⚠️ TYPE MISMATCH
+  "@types/react-dom": "^19.2.3"   // ✓ React 18/19 compatible
+}
+```
+
+#### Configuration:
+- **No .storybook directory** - No Storybook configured!
+- **Scripts**: "storybook": "storybook dev -p 6006" (script, not version)
+- **Storybook Version**: 8.6.0 (Stable)
+
+#### Issues:
+1. **Storybook Not Configured**: Scripts reference Storybook but no .storybook/ directory
+   - Must run `storybook init` to create configuration
+   
+2. **Type Mismatch**: @types/react @ 19.2.8 but react @ 18.3.1
+   - Type definitions don't match runtime
+
+3. **No Framework Specified**: Which Storybook preset? (React, React-Vite, Next.js?)
+
+---
+
+### 3. /postgres/ (PostgreSQL Dashboard)
+**Location**: /postgres/package.json
+**Status**: PARTIALLY CONFIGURED
+
+#### Package Versions:
+```json
+{
+  "storybook": "^10.1.11",
+  "@storybook/addon-a11y": "^10.1.11",      // ✓ Matches
+  "@storybook/addon-docs": "^10.1.11",      // ✓ Matches
+  "@storybook/addon-vitest": "^10.1.11",    // ✓ Matches
+  "@storybook/nextjs-vite": "^10.1.11"      // ✓ Matches
+}
+```
+
+#### React/TypeScript Versions:
+```json
+{
+  "react": "^19.2.3",         // ✓ Latest
+  "react-dom": "^19.2.3",     // ✓ Latest
+  "typescript": "5.9.3",      // ✓ Pinned
+  "@types/react": "^19.2.8",  // ✓ Matches
+  "@types/react-dom": "undefined" // ⚠️ Missing?
+}
+```
+
+#### Configuration:
+- **Framework**: @storybook/nextjs-vite (for Next.js)
+- **Config File**: .storybook/main.ts
+- **Addons**: addon-a11y, addon-docs, addon-vitest
+- **Features**: experimentalRSC enabled
+- **Static Dirs**: public/
+- **Telemetry**: Disabled
+
+#### Status:
+✓ Properly configured
+✓ Version consistency maintained
+✓ React 19 compatible
+
+---
+
+## Root Package.json
+**Location**: /package.json
+**Storybook Entry**: Listed as workspace
+```json
+{
+  "workspaces": [
+    ...
+    "storybook"
+  ],
+  "devDependencies": {
+    "@playwright/test": "^1.49.1",
+    "jsdom": "^27.4.0"
+  }
+}
+```
+
+**Status**: ✓ Correctly configured as workspace
+
+---
+
+## 59 Packages Referencing Storybook
+All 59 packages in `/packages/` have "storybook" in keywords:
+
+**Category**: Internal documentation/configuration
+**Impact**: None (keywords only, not dependencies)
+
+**Packages**:
+- ui_auth, ui_login, ui_pages, ui_dialogs, ui_home, ui_header, ui_footer
+- database_manager, package_manager, user_manager, role_editor, route_manager
+- admin, admin_dialog, dbal_demo
+- component_editor, schema_editor, theme_editor, code_editor, nerd_mode_ide
+- workflow_editor, codegen_studio
+- form_builder, data_table, stats_grid
+- forum_forge, notification_center, audit_log, media_center, stream_cast, irc_webchat, social_hub
+- csv_import, media_metadata_enricher, github_tools, screenshot_analyzer
+- dropdown_manager, config_summary, ui_permissions, quick_guide, testing, dashboard
+- ui_level2, ui_level3, ui_level4, ui_level5, ui_level6, ui_intro, arcade_lobby
+- json_script_example, smtp_config
+
+---
+
+## Compatibility Analysis
+
+### React 18 vs React 19
+| Project | React Version | @types/react | Status |
+|---------|--------------|--------------|--------|
+| storybook/ | 18.3.1 | 19.2.8 | ⚠️ TYPE MISMATCH |
+| workflowui/ | 18.3.1 | 19.2.8 | ⚠️ TYPE MISMATCH |
+| postgres/ | 19.2.3 | 19.2.8 | ✓ MATCHED |
+
+**Issue**: Type definitions (v19) don't match runtime (v18) in 2 projects
+- Potential: Runtime errors, missing type hints
+- Solution: Either upgrade React to 19 or downgrade @types/react to 18
+
+### TypeScript Compatibility
+| Project | TypeScript | Status |
+|---------|-----------|--------|
+| storybook/ | 5.9.3 | ✓ MATCHED |
+| workflowui/ | ~5.9.3 | ✓ MATCHED |
+| postgres/ | 5.9.3 | ✓ MATCHED |
+
+**Status**: ✓ All projects standardized on TypeScript 5.9.3
+
+### Storybook Framework Compatibility
+
+#### storybook/ → @storybook/react-vite
+- **Framework**: react-vite
+- **React Support**: 17+
+- **TypeScript**: 5.0+
+- **Vite**: 4.0+
+- **Status**: ✓ Compatible
+
+#### postgres/ → @storybook/nextjs-vite
+- **Framework**: nextjs-vite
+- **React Support**: 18-19
+- **TypeScript**: 5.0+
+- **Next.js**: 13+
+- **Vite**: 4.0+
+- **Status**: ✓ Compatible
+
+#### workflowui/ → None (Missing Config)
+- **Framework**: Should be @storybook/react (or next?)
+- **Status**: ⚠️ NOT CONFIGURED
+
+---
+
+## Critical Findings
+
+### ISSUE #1: Storybook Addon Version Mismatch (storybook/)
+**Severity**: HIGH
+**Files**: /storybook/package.json
+
+**Problem**:
+```
+Core Framework:        @storybook/react @ 10.1.11
+Addon-essentials:      @ 8.6.15  ← 1.5 major versions older
+Addon-interactions:    @ 8.6.15  ← 1.5 major versions older
+Addon-test:            @ 8.6.15  ← 1.5 major versions older
+```
+
+**Impact**:
+- Addon features may not work with Storybook 10
+- Possible missing components/utilities
+- May cause runtime errors during build
+
+**Recommended Fix**:
+```json
+{
+  "@storybook/react": "^10.1.11",
+  "@storybook/react-vite": "^10.1.11",
+  "@storybook/addon-essentials": "^10.1.11",     // Update to 10
+  "@storybook/addon-interactions": "^10.1.11",   // Update to 10
+  "@storybook/test": "^10.1.11"                  // Update to 10
+}
+```
+
+---
+
+### ISSUE #2: React Type Mismatch (storybook/ & workflowui/)
+**Severity**: HIGH
+**Files**: 
+- /storybook/package.json
+- /workflowui/package.json
+
+**Problem**:
+```
+React Runtime:    18.3.1 (TypeScript types for React 18)
+@types/react:     19.2.8 (TypeScript types for React 19)
+```
+
+**Impact**:
+- IDE shows incorrect type hints
+- May miss compatibility issues
+- Type guards don't match runtime behavior
+
+**Recommended Fix** (Choose one):
+
+Option A: Upgrade React to 19 (Breaking change)
+```json
+{
+  "react": "^19.2.3",
+  "react-dom": "^19.2.3",
+  "@types/react": "^19.2.8"      // Matches
+}
+```
+
+Option B: Downgrade types to 18 (Safer)
+```json
+{
+  "react": "^18.3.1",
+  "react-dom": "^18.3.1",
+  "@types/react": "^18.3.0",     // Matches
+  "@types/react-dom": "^18.3.0"  // Matches
+}
+```
+
+---
+
+### ISSUE #3: Storybook Not Configured (workflowui/)
+**Severity**: MEDIUM
+**Files**: /workflowui/package.json (missing /workflowui/.storybook/)
+
+**Problem**:
+- Scripts reference Storybook but no configuration directory
+- No framework specified (react-vite? next? next-vite?)
+- `npm run storybook` will fail
+
+**Impact**:
+- Cannot run Storybook
+- Stories cannot be discovered
+- Cannot document components
+
+**Recommended Fix**:
+```bash
+cd /workflowui
+npx storybook@8.6.0 init
+# or for Next.js:
+# npx storybook@8.6.0 init --builder @storybook/builder-vite --framework @storybook/nextjs-vite
+```
+
+---
+
+## Framework Recommendations
+
+### For React Projects (storybook/, workflowui/)
+
+**Option A**: Use @storybook/react-vite (Recommended)
+```json
+{
+  "storybook": "^10.1.11",
+  "@storybook/react": "^10.1.11",
+  "@storybook/react-vite": "^10.1.11",
+  "@storybook/addon-essentials": "^10.1.11",
+  "vite": "^7.3.1"
+}
+```
+- Pros: Fast (Vite), modern, no Next.js bloat
+- Cons: Doesn't support SSR/dynamic routes
+
+**Option B**: Use @storybook/nextjs-vite (If using Next.js)
+```json
+{
+  "storybook": "^10.1.11",
+  "@storybook/nextjs-vite": "^10.1.11",
+  "@storybook/addon-essentials": "^10.1.11",
+  "next": "^16.1.4"
+}
+```
+- Pros: Full Next.js support, Image optimization
+- Cons: Slower, heavier
+
+---
+
+## Recommended Actions (Priority Order)
+
+### Phase 1: Fix Critical Issues (BLOCKING)
+1. **storybook/**: Update addon versions to 10.1.11
+   - File: /storybook/package.json
+   - Changes: 3 addons
+   
+2. **workflowui/ & storybook/**: Fix React type versions
+   - Files: /workflowui/package.json, /storybook/package.json
+   - Choose Option A (React 19) or Option B (Types 18)
+   
+3. **workflowui/**: Initialize Storybook configuration
+   - Command: `cd workflowui && npx storybook@8.6.0 init`
+   - Creates: .storybook/main.ts, .storybook/preview.tsx
+
+### Phase 2: Verify Compatibility
+1. Run `npm install` at each project root
+2. Test Storybook startup: `npm run storybook` (should serve at :6006)
+3. Build check: `npm run build` for each project
+
+### Phase 3: Standardize Configuration
+1. Ensure all 3 projects use consistent addon versions
+2. Document framework choices in CLAUDE.md
+3. Add Storybook to CI/CD pipeline (if needed)
+
+---
+
+## Version Summary Table
+
+| Package | storybook/ | workflowui/ | postgres/ | Status |
+|---------|-----------|------------|-----------|--------|
+| **storybook** | ^10.1.11 | script | ^10.1.11 | ⚠️ Mixed |
+| **@storybook/react** | ^10.1.11 | ^8.6.0 | — | ⚠️ Different |
+| **@storybook/react-vite** | ^10.1.11 | — | — | ⚠️ Inconsistent |
+| **@storybook/addon-essentials** | ^8.6.15 | ^8.6.0 | — | ⚠️ Mismatched |
+| **@storybook/addon-docs** | — | — | ^10.1.11 | ⚠️ Missing |
+| **react** | ^18.3.1 | ^18.3.1 | ^19.2.3 | ⚠️ Mixed |
+| **@types/react** | ^19.2.8 | ^19.2.8 | ^19.2.8 | ⚠️ Mismatched runtime |
+| **typescript** | ^5.9.3 | ~5.9.3 | 5.9.3 | ✓ Consistent |
+
+---
+
+## File Inventory
+
+### Storybook Project Files
+```
+storybook/
+├── package.json              # ⚠️ VERSION CONFLICTS
+├── .storybook/
+│   ├── main.ts              # ✓ Correct
+│   └── preview.tsx          # ✓ Correct
+├── src/
+│   ├── stories/             # Story files
+│   └── components/          # Demo components
+└── README.md
+```
+
+### WorkflowUI Files
+```
+workflowui/
+├── package.json             # ⚠️ MISSING STORYBOOK CONFIG
+├── .storybook/              # ❌ MISSING DIRECTORY
+├── src/                     # Component source
+└── backend/                 # Python backend
+```
+
+### Postgres Dashboard Files
+```
+postgres/
+├── package.json             # ✓ Correct
+├── .storybook/
+│   ├── main.ts             # ✓ Correct
+│   ├── preview.ts          # ✓ Correct
+│   ├── vitest.config.mts   # ✓ Testing
+│   └── vitest.setup.ts     # ✓ Setup
+└── src/
+```
+
+---
+
+## Changelog
+
+### 2026-01-23 Initial Audit
+- Found 3 Storybook instances
+- Identified 2 critical version conflicts
+- Documented 59 packages with storybook keywords
+- Created comprehensive recommendations
+- Status: DISCOVERY COMPLETE
+
+---
+
+## References
+- **Storybook 10 Docs**: https://storybook.js.org/docs
+- **React 18 → 19 Migration**: https://react.dev/blog/2024/12/05/react-19
+- **TypeScript 5.9 Releases**: https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-9.html

@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/web_get_prompt_content",
+  "version": "1.0.0",
+  "description": "Get prompt content from prompt file",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["web", "workflow", "plugin"],
+  "main": "web_get_prompt_content.py",
+  "files": ["web_get_prompt_content.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "web.get_prompt_content",
+    "category": "web",
+    "class": "WebGetPromptContent",
+    "entrypoint": "execute"
+  }
+}

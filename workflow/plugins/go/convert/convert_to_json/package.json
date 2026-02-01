@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/convert_to_json",
+  "version": "1.0.0",
+  "description": "Convert a value to JSON string",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["convert", "workflow", "plugin"],
+  "main": "convert_to_json.go",
+  "files": ["convert_to_json.go", "factory.go"],
+  "metadata": {
+    "plugin_type": "convert.to_json",
+    "category": "convert",
+    "struct": "ConvertToJson",
+    "entrypoint": "Execute"
+  }
+}

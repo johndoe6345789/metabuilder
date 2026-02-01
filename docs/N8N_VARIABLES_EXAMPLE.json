@@ -1,0 +1,320 @@
+{
+  "$schema": "../schemas/n8n-workflow.schema.json",
+  "name": "E-commerce Order Processing with Variables",
+  "active": true,
+  "variables": {
+    "apiBaseUrl": {
+      "name": "apiBaseUrl",
+      "type": "string",
+      "description": "Base URL for all API endpoints",
+      "defaultValue": "https://api.mystore.com",
+      "required": true,
+      "scope": "workflow",
+      "validation": {
+        "pattern": "^https?://[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+      }
+    },
+    "apiTimeout": {
+      "name": "apiTimeout",
+      "type": "number",
+      "description": "HTTP request timeout in milliseconds",
+      "defaultValue": 5000,
+      "required": false,
+      "scope": "workflow",
+      "validation": {
+        "min": 1000,
+        "max": 30000
+      }
+    },
+    "maxRetries": {
+      "name": "maxRetries",
+      "type": "number",
+      "description": "Maximum retry attempts for failed requests",
+      "defaultValue": 3,
+      "required": false,
+      "scope": "workflow",
+      "validation": {
+        "min": 0,
+        "max": 10
+      }
+    },
+    "enableDebugLogging": {
+      "name": "enableDebugLogging",
+      "type": "boolean",
+      "description": "Enable verbose logging for debugging",
+      "defaultValue": false,
+      "required": false,
+      "scope": "execution"
+    },
+    "environment": {
+      "name": "environment",
+      "type": "string",
+      "description": "Deployment environment",
+      "defaultValue": "production",
+      "required": true,
+      "scope": "global",
+      "validation": {
+        "enum": ["development", "staging", "production"]
+      }
+    },
+    "allowedPaymentMethods": {
+      "name": "allowedPaymentMethods",
+      "type": "array",
+      "description": "Payment methods enabled for this workflow",
+      "defaultValue": ["credit_card", "paypal"],
+      "required": false,
+      "scope": "workflow"
+    },
+    "notificationConfig": {
+      "name": "notificationConfig",
+      "type": "object",
+      "description": "Notification settings",
+      "defaultValue": {
+        "email": true,
+        "sms": false,
+        "slack": true,
+        "channels": ["#orders"]
+      },
+      "required": false,
+      "scope": "workflow"
+    }
+  },
+  "nodes": [
+    {
+      "id": "start",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [100, 100],
+      "parameters": {
+        "path": "order-received",
+        "method": "POST"
+      }
+    },
+    {
+      "id": "validate_order",
+      "name": "Validate Order Data",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [300, 100],
+      "parameters": {
+        "input": "{{ $json }}",
+        "rules": {
+          "orderId": "required|string",
+          "amount": "required|number",
+          "paymentMethod": "required|string"
+        },
+        "timeout": "{{ $workflow.variables.apiTimeout }}",
+        "debug": "{{ $workflow.variables.enableDebugLogging }}"
+      }
+    },
+    {
+      "id": "check_payment_method",
+      "name": "Check Payment Method Allowed",
+      "type": "metabuilder.condition",
+      "typeVersion": 1,
+      "position": [500, 100],
+      "parameters": {
+        "condition": "{{ $workflow.variables.allowedPaymentMethods.includes($json.paymentMethod) }}",
+        "debug": "{{ $workflow.variables.enableDebugLogging }}"
+      }
+    },
+    {
+      "id": "fetch_order_details",
+      "name": "Fetch Order Details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [700, 100],
+      "parameters": {
+        "url": "{{ $workflow.variables.apiBaseUrl }}/orders/{{ $json.orderId }}",
+        "method": "GET",
+        "timeout": "{{ $workflow.variables.apiTimeout }}",
+        "options": {
+          "retry": {
+            "maxRetries": "{{ $workflow.variables.maxRetries }}",
+            "retryOnHttpStatus": [408, 429, 500, 502, 503, 504]
+          }
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": "{{ $workflow.variables.maxRetries }}",
+      "waitBetweenTries": 1000
+    },
+    {
+      "id": "process_payment",
+      "name": "Process Payment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [900, 100],
+      "parameters": {
+        "url": "{{ $workflow.variables.apiBaseUrl }}/payments",
+        "method": "POST",
+        "timeout": "{{ $workflow.variables.apiTimeout }}",
+        "body": {
+          "orderId": "{{ $json.orderId }}",
+          "amount": "{{ $json.amount }}",
+          "method": "{{ $json.paymentMethod }}",
+          "environment": "{{ $workflow.variables.environment }}"
+        },
+        "options": {
+          "retry": {
+            "maxRetries": "{{ $workflow.variables.maxRetries }}"
+          }
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": "{{ $workflow.variables.maxRetries }}",
+      "waitBetweenTries": 2000
+    },
+    {
+      "id": "send_notifications",
+      "name": "Send Order Notifications",
+      "type": "metabuilder.notification",
+      "typeVersion": 1,
+      "position": [1100, 100],
+      "parameters": {
+        "config": "{{ $workflow.variables.notificationConfig }}",
+        "message": "Order {{ $json.orderId }} processed successfully",
+        "orderId": "{{ $json.orderId }}",
+        "amount": "{{ $json.amount }}",
+        "timeout": "{{ $workflow.variables.apiTimeout }}",
+        "debug": "{{ $workflow.variables.enableDebugLogging }}"
+      }
+    },
+    {
+      "id": "log_completion",
+      "name": "Log Completion",
+      "type": "metabuilder.logger",
+      "typeVersion": 1,
+      "position": [1300, 100],
+      "parameters": {
+        "level": "{{ $workflow.variables.enableDebugLogging ? 'debug' : 'info' }}",
+        "message": "Order processing complete in {{ $workflow.variables.environment }} environment",
+        "data": {
+          "orderId": "{{ $json.orderId }}",
+          "timestamp": "{{ $now }}",
+          "environment": "{{ $workflow.variables.environment }}"
+        }
+      }
+    },
+    {
+      "id": "error_handler",
+      "name": "Handle Payment Method Error",
+      "type": "metabuilder.httpResponse",
+      "typeVersion": 1,
+      "position": [700, 250],
+      "parameters": {
+        "status": 400,
+        "body": {
+          "error": "Invalid payment method",
+          "message": "Payment method {{ $json.paymentMethod }} is not allowed",
+          "allowedMethods": "{{ $workflow.variables.allowedPaymentMethods }}"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": {
+        "0": [
+          {
+            "node": "Validate Order Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Validate Order Data": {
+      "main": {
+        "0": [
+          {
+            "node": "Check Payment Method Allowed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Check Payment Method Allowed": {
+      "main": {
+        "0": [
+          {
+            "node": "Fetch Order Details",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        "1": [
+          {
+            "node": "Handle Payment Method Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Fetch Order Details": {
+      "main": {
+        "0": [
+          {
+            "node": "Process Payment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Process Payment": {
+      "main": {
+        "0": [
+          {
+            "node": "Send Order Notifications",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Send Order Notifications": {
+      "main": {
+        "0": [
+          {
+            "node": "Log Completion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    }
+  },
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 300,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "triggers": [
+    {
+      "nodeId": "start",
+      "kind": "webhook",
+      "enabled": true,
+      "meta": {
+        "path": "/order-received",
+        "methods": ["POST"]
+      }
+    }
+  ],
+  "tags": [
+    { "name": "e-commerce" },
+    { "name": "order-processing" },
+    { "name": "payments" }
+  ],
+  "meta": {
+    "description": "Complete order processing workflow with payment validation, processing, and notifications",
+    "version": "1.0.0",
+    "author": "MetaBuilder Team",
+    "lastModified": "2026-01-22"
+  }
+}

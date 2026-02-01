@@ -1,0 +1,242 @@
+# Celery Worker Docker Compose Configuration
+# Phase 8: Email Service Background Task Processing
+#
+# This service definition configures the Celery worker for handling async email operations:
+# - Email synchronization (IMAP/POP3) via sync queue
+# - Email sending (SMTP) via send queue
+# - Batch deletions via delete queue
+# - Spam detection analysis via spam queue
+# - Periodic scheduled tasks via periodic queue
+#
+# Usage in main compose file:
+# 1. Include this file: docker-compose -f docker-compose.development.yml \
+#                                      -f docker/celery-worker/docker-compose.yml up
+# 2. Or merge services section into main docker-compose.yml
+
+version: '3.8'
+
+services:
+  # Celery Worker - Background Task Processing
+  celery-worker:
+    build:
+      context: ../..
+      dockerfile: deployment/docker/celery-worker/Dockerfile
+    container_name: metabuilder-celery-worker
+    environment:
+      # Redis Configuration
+      REDIS_URL: redis://redis:6379/0
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_BROKER_DB: 0
+      REDIS_RESULT_DB: 1
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+      REDIS_USE_SSL: "false"
+
+      # Database Configuration
+      DATABASE_URL: postgresql://metabuilder:dev_password@postgres:5432/metabuilder_dev
+      SQLALCHEMY_DATABASE_URL: postgresql://metabuilder:dev_password@postgres:5432/metabuilder_dev
+
+      # Celery Configuration
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/1
+      CELERY_RESULT_EXPIRES: 3600
+
+      # Worker Configuration
+      CELERYD_CONCURRENCY: 4                    # Number of concurrent worker processes
+      TASK_TIMEOUT: 300                         # Hard limit: 5 minutes
+      CELERY_TASK_SOFT_TIME_LIMIT: 280         # Soft limit: 4m 40s (for graceful shutdown)
+      CELERY_TASK_TIME_LIMIT: 300              # Hard limit: 5 minutes
+      CELERY_WORKER_PREFETCH_MULTIPLIER: 1     # Process one task per worker
+      CELERY_WORKER_MAX_TASKS_PER_CHILD: 1000  # Restart worker after 1000 tasks
+
+      # Logging
+      LOG_LEVEL: info
+      PYTHONUNBUFFERED: 1
+      PYTHONDONTWRITEBYTECODE: 1
+
+      # Email Service Configuration
+      FLASK_ENV: production
+      EMAIL_SERVICE_URL: http://email-service:5000
+
+    volumes:
+      # Persistent logs directory
+      - celery_worker_logs:/app/logs
+      # Optional: Mount source for development (uncomment for hot-reload)
+      # - ../../../services/email_service/tasks:/app/tasks:ro
+      # - ../../../services/email_service/src:/app/src:ro
+
+    ports:
+      # Celery Flower monitoring port (optional, uncomment if using)
+      # - "5555:5555"
+      - "5555:5555"  # Flower web UI for monitoring
+
+    # Restart policy
+    restart: unless-stopped
+
+    # Health check - verify Celery worker is responsive
+    healthcheck:
+      test: ["CMD", "celery", "-A", "tasks.celery_app", "inspect", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+    # Resource limits (optional, tune based on your hardware)
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 512M
+        reservations:
+          cpus: "1"
+          memory: 256M
+
+    # Dependencies - wait for services
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=celery-worker"
+
+    networks:
+      - metabuilder-dev-network
+
+    # Signals and timeouts
+    stop_grace_period: 30s
+    stop_signal: SIGTERM
+
+  # Celery Beat Scheduler - Triggers periodic tasks
+  celery-beat:
+    build:
+      context: ../..
+      dockerfile: deployment/docker/celery-worker/Dockerfile
+    container_name: metabuilder-celery-beat
+    environment:
+      # Same Redis/Database config as worker
+      REDIS_URL: redis://redis:6379/0
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      DATABASE_URL: postgresql://metabuilder:dev_password@postgres:5432/metabuilder_dev
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/1
+
+      # Logging
+      LOG_LEVEL: info
+      PYTHONUNBUFFERED: 1
+
+      # Beat Configuration
+      CELERY_BEAT_SCHEDULE_DB: /app/logs/celery-beat-schedule.db
+
+    volumes:
+      - celery_worker_logs:/app/logs
+
+    restart: unless-stopped
+
+    # Health check - verify Beat is responsive
+    healthcheck:
+      test: ["CMD", "ps", "aux"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      celery-worker:
+        condition: service_healthy
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=celery-beat"
+
+    networks:
+      - metabuilder-dev-network
+
+    # Run Celery Beat scheduler
+    # Spawns periodic tasks according to beat_schedule defined in celery_app.py:
+    # - sync-emails-every-5min: Triggers periodic_sync task every 5 minutes
+    # - cleanup-stale-tasks-hourly: Cleans up Redis task results every hour
+    command: ["celery", "-A", "tasks.celery_app", \
+      "beat", \
+      "--loglevel=${LOG_LEVEL:-info}", \
+      "--scheduler=celery.beat:PersistentScheduler", \
+      "--logfile=/app/logs/celery-beat.log"]
+
+    stop_grace_period: 30s
+    stop_signal: SIGTERM
+
+  # Flower - Celery Monitoring Dashboard
+  celery-flower:
+    image: mher/flower:2.0.1
+    container_name: metabuilder-celery-flower
+    environment:
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/1
+      FLOWER_PORT: 5555
+      FLOWER_PERSISTENT: "true"
+      FLOWER_DB: /data/flower.db
+      FLOWER_MAX_TASKS: 10000
+      FLOWER_TASK_PAGE_SIZE: 100
+
+    volumes:
+      # Persistent Flower database
+      - celery_flower_data:/data
+
+    ports:
+      - "5556:5555"  # Flower web UI (different port to avoid conflicts)
+
+    restart: unless-stopped
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5555/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+    depends_on:
+      redis:
+        condition: service_healthy
+      celery-worker:
+        condition: service_healthy
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=celery-flower"
+
+    networks:
+      - metabuilder-dev-network
+
+volumes:
+  # Celery worker logs volume
+  celery_worker_logs:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: "size=100m"
+
+  # Flower persistent database
+  celery_flower_data:
+    driver: local
+
+networks:
+  metabuilder-dev-network:
+    external: true  # Assumes network exists from main docker-compose

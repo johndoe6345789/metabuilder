@@ -181,7 +181,6 @@ import { helpers } from './helpers';
           'src/app.ts',
           `
 import React from 'react';
-import { useQuery } from '@tanstack/react-query';
 import lodash from 'lodash';
 import { Button } from './components/Button';
         `

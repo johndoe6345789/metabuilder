@@ -1,11 +1,11 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "1.1",
   "type_id": "acme.declarative_repo_type",
-  "description": "Mega schema: declarative repository type with closed-world ops, routes, storage, indexing, caching, replication, GC, invariants, and static validation.",
+  "description": "Declarative package repository supporting generic artifacts, Docker/OCI images, Conan packages, and OS packages with dependencies, signing, and metadata.",
   "capabilities": {
-    "protocols": ["http"],
+    "protocols": ["http", "oci"],
     "storage": ["blob", "kv", "index"],
-    "features": ["proxy", "virtual", "replication", "gc", "audit", "immutability"]
+    "features": ["proxy", "virtual", "replication", "gc", "audit", "immutability", "signing", "dependencies", "oci"]
   },
 
   "entities": {
@@ -26,6 +26,70 @@
         { "field": "variant", "regex": "^[a-z0-9][a-z0-9._-]{0,127}$", "when_present": true },
         { "field": "tag", "regex": "^[a-z0-9][a-z0-9._-]{0,127}$", "when_present": true },
         { "field": "digest", "regex": "^(sha256:)?[a-f0-9]{64}$", "when_present": true }
+      ]
+    },
+    "manifest": {
+      "description": "OCI/Docker manifest for container images",
+      "fields": {
+        "namespace": { "type": "string", "normalize": ["trim", "lower"] },
+        "name": { "type": "string", "normalize": ["trim", "lower", "replace:_:-"] },
+        "reference": { "type": "string", "normalize": ["trim"] },
+        "media_type": { "type": "string" },
+        "digest": { "type": "string", "normalize": ["trim", "lower"] }
+      },
+      "primary_key": ["namespace", "name", "reference"],
+      "constraints": [
+        { "field": "namespace", "regex": "^[a-z0-9][a-z0-9._-]{0,127}$" },
+        { "field": "name", "regex": "^[a-z0-9][a-z0-9._/-]{0,255}$" },
+        { "field": "reference", "regex": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$|^sha256:[a-f0-9]{64}$" },
+        { "field": "media_type", "regex": "^application/vnd\\.(oci|docker)\\..*$", "when_present": true },
+        { "field": "digest", "regex": "^sha256:[a-f0-9]{64}$", "when_present": true }
+      ]
+    },
+    "layer": {
+      "description": "OCI/Docker image layer blob",
+      "fields": {
+        "digest": { "type": "string", "normalize": ["trim", "lower"] },
+        "media_type": { "type": "string" },
+        "size": { "type": "integer" }
+      },
+      "primary_key": ["digest"],
+      "constraints": [
+        { "field": "digest", "regex": "^sha256:[a-f0-9]{64}$" }
+      ]
+    },
+    "dependency": {
+      "description": "Package dependency relationship",
+      "fields": {
+        "namespace": { "type": "string", "normalize": ["trim", "lower"] },
+        "name": { "type": "string", "normalize": ["trim", "lower"] },
+        "version": { "type": "string", "normalize": ["trim"] },
+        "variant": { "type": "string", "optional": true, "normalize": ["trim", "lower"] },
+        "dep_namespace": { "type": "string", "normalize": ["trim", "lower"] },
+        "dep_name": { "type": "string", "normalize": ["trim", "lower"] },
+        "dep_version_spec": { "type": "string" },
+        "dep_kind": { "type": "string", "optional": true }
+      },
+      "primary_key": ["namespace", "name", "version", "variant", "dep_namespace", "dep_name"],
+      "constraints": [
+        { "field": "dep_kind", "regex": "^(build|runtime|test|dev|optional)$", "when_present": true }
+      ]
+    },
+    "signature": {
+      "description": "Cryptographic signature for an artifact",
+      "fields": {
+        "namespace": { "type": "string", "normalize": ["trim", "lower"] },
+        "name": { "type": "string", "normalize": ["trim", "lower"] },
+        "version": { "type": "string", "normalize": ["trim"] },
+        "variant": { "type": "string", "optional": true, "normalize": ["trim", "lower"] },
+        "key_id": { "type": "string" },
+        "algo": { "type": "string" },
+        "signature": { "type": "string" }
+      },
+      "primary_key": ["namespace", "name", "version", "variant", "key_id"],
+      "constraints": [
+        { "field": "algo", "regex": "^(ed25519|rsa-sha256|ecdsa-p256)$" },
+        { "field": "key_id", "regex": "^[a-zA-Z0-9:_-]{1,128}$" }
       ]
     },
     "versioning": {
@@ -63,12 +127,32 @@
       "artifact_meta": {
         "store": "meta",
         "key_template": "artifact/{namespace}/{name}/{version}/{variant?}",
-        "schema": "ArtifactMetaV1"
+        "schema": "ArtifactMetaV2"
       },
       "tag_map": {
         "store": "meta",
         "key_template": "tag/{namespace}/{name}/{tag}",
         "schema": "TagMapV1"
+      },
+      "manifest": {
+        "store": "meta",
+        "key_template": "manifest/{namespace}/{name}/{reference}",
+        "schema": "ManifestV1"
+      },
+      "manifest_by_digest": {
+        "store": "meta",
+        "key_template": "manifest_digest/{namespace}/{name}/{digest}",
+        "schema": "ManifestV1"
+      },
+      "dependency_graph": {
+        "store": "meta",
+        "key_template": "deps/{namespace}/{name}/{version}/{variant?}",
+        "schema": "DependencyGraphV1"
+      },
+      "signature": {
+        "store": "meta",
+        "key_template": "sig/{namespace}/{name}/{version}/{variant?}/{key_id}",
+        "schema": "SignatureV1"
       }
     },
     "schemas": {
@@ -94,6 +178,93 @@
           }
         }
       },
+      "ArtifactMetaV2": {
+        "type": "object",
+        "required": ["namespace", "name", "version", "blob_digest", "created_at"],
+        "properties": {
+          "namespace": { "type": "string" },
+          "name": { "type": "string" },
+          "version": { "type": "string" },
+          "variant": { "type": "string" },
+          "blob_digest": { "type": "string" },
+          "blob_size": { "type": "integer" },
+          "created_at": { "type": "string" },
+          "created_by": { "type": "string" },
+          "labels": { "type": "object" },
+          "integrity": {
+            "type": "object",
+            "properties": {
+              "algo": { "type": "string" },
+              "digest": { "type": "string" }
+            }
+          },
+          "package_info": {
+            "type": "object",
+            "properties": {
+              "description": { "type": "string" },
+              "license": { "type": "string" },
+              "homepage": { "type": "string" },
+              "repository": { "type": "string" },
+              "authors": { "type": "array", "items": { "type": "string" } },
+              "keywords": { "type": "array", "items": { "type": "string" } },
+              "package_type": { "type": "string", "enum": ["generic", "conan", "docker", "os", "npm", "pip"] }
+            }
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name", "version_spec"],
+              "properties": {
+                "namespace": { "type": "string" },
+                "name": { "type": "string" },
+                "version_spec": { "type": "string" },
+                "kind": { "type": "string", "enum": ["build", "runtime", "test", "dev", "optional"] }
+              }
+            }
+          },
+          "signatures": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["key_id", "algo", "signature"],
+              "properties": {
+                "key_id": { "type": "string" },
+                "algo": { "type": "string" },
+                "signature": { "type": "string" },
+                "signed_at": { "type": "string" }
+              }
+            }
+          }
+        }
+      },
+      "ManifestV1": {
+        "type": "object",
+        "description": "OCI/Docker image manifest",
+        "required": ["namespace", "name", "reference", "media_type", "config_digest", "layers"],
+        "properties": {
+          "namespace": { "type": "string" },
+          "name": { "type": "string" },
+          "reference": { "type": "string" },
+          "media_type": { "type": "string" },
+          "config_digest": { "type": "string" },
+          "config_size": { "type": "integer" },
+          "layers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "digest": { "type": "string" },
+                "size": { "type": "integer" },
+                "media_type": { "type": "string" }
+              }
+            }
+          },
+          "annotations": { "type": "object" },
+          "created_at": { "type": "string" },
+          "total_size": { "type": "integer" }
+        }
+      },
       "TagMapV1": {
         "type": "object",
         "required": ["namespace", "name", "tag", "target_key", "updated_at"],
@@ -104,6 +275,32 @@
           "target_key": { "type": "string" },
           "updated_at": { "type": "string" },
           "updated_by": { "type": "string" }
+        }
+      },
+      "DependencyGraphV1": {
+        "type": "object",
+        "description": "Pre-computed dependency graph for a package",
+        "required": ["namespace", "name", "version"],
+        "properties": {
+          "namespace": { "type": "string" },
+          "name": { "type": "string" },
+          "version": { "type": "string" },
+          "variant": { "type": "string" },
+          "direct_deps": { "type": "array", "items": { "type": "string" } },
+          "transitive_deps": { "type": "array", "items": { "type": "string" } },
+          "computed_at": { "type": "string" }
+        }
+      },
+      "SignatureV1": {
+        "type": "object",
+        "description": "Cryptographic signature for a package artifact",
+        "required": ["key_id", "algo", "signature"],
+        "properties": {
+          "key_id": { "type": "string" },
+          "algo": { "type": "string" },
+          "signature": { "type": "string" },
+          "signed_at": { "type": "string" },
+          "signed_by": { "type": "string" }
         }
       }
     }
@@ -223,7 +420,13 @@
       "respond.redirect",
       "respond.error",
       "time.now_iso8601",
-      "string.format"
+      "string.format",
+      "sig.verify",
+      "sig.sign",
+      "oci.parse_manifest",
+      "oci.validate_manifest",
+      "deps.resolve",
+      "deps.graph"
     ],
     "limits": {
       "max_pipeline_ops": 128,
@@ -676,6 +879,476 @@
             }
           }
         ]
+      },
+
+      {
+        "id": "oci_push_blob",
+        "method": "PUT",
+        "path": "/v2/{namespace}/{name}/blobs/uploads/{upload_id}",
+        "tags": ["write_path", "oci"],
+        "description": "Upload a blob (layer or config) for OCI/Docker images",
+        "pipeline": [
+          { "op": "auth.require_scopes", "args": { "scopes": ["write"] } },
+          { "op": "parse.path", "args": { "entity": "layer" } },
+          { "op": "parse.query", "args": { "params": ["digest"] } },
+
+          { "op": "txn.begin", "args": { "isolation": "serializable" } },
+          {
+            "op": "blob.put",
+            "args": {
+              "store": "primary",
+              "from": "request.body",
+              "out": "computed_digest",
+              "out_size": "blob_size"
+            }
+          },
+          {
+            "op": "blob.verify_digest",
+            "args": { "digest": "{digest}", "computed": "$computed_digest" }
+          },
+          { "op": "txn.commit", "args": {} },
+
+          {
+            "op": "respond.json",
+            "args": {
+              "status": 201,
+              "headers": {
+                "Location": "/v2/{namespace}/{name}/blobs/{digest}",
+                "Docker-Content-Digest": "{digest}"
+              },
+              "body": {}
+            }
+          }
+        ]
+      },
+
+      {
+        "id": "oci_get_blob",
+        "method": "GET",
+        "path": "/v2/{namespace}/{name}/blobs/{digest}",
+        "tags": ["public", "oci"],
+        "description": "Fetch a blob by digest for OCI/Docker images",
+        "pipeline": [
+          { "op": "auth.require_scopes", "args": { "scopes": ["read"] } },
+          { "op": "parse.path", "args": { "entity": "layer" } },
+
+          {
+            "op": "blob.get",
+            "args": {
+              "store": "primary",
+              "digest": "{digest}",
+              "out": "blob"
+            }
+          },
+          {
+            "op": "respond.error",
+            "args": {
+              "when": { "is_null": "$blob" },
+              "status": 404,
+              "code": "BLOB_UNKNOWN",
+              "message": "Blob not found"
+            }
+          },
+          {
+            "op": "respond.bytes",
+            "args": {
+              "status": 200,
+              "headers": {
+                "Content-Type": "application/octet-stream",
+                "Docker-Content-Digest": "{digest}"
+              },
+              "body": "$blob"
+            }
+          }
+        ]
+      },
+
+      {
+        "id": "oci_push_manifest",
+        "method": "PUT",
+        "path": "/v2/{namespace}/{name}/manifests/{reference}",
+        "tags": ["write_path", "oci"],
+        "description": "Push an OCI/Docker image manifest",
+        "pipeline": [
+          { "op": "auth.require_scopes", "args": { "scopes": ["write"] } },
+          { "op": "parse.path", "args": { "entity": "manifest" } },
+          { "op": "parse.json", "args": { "out": "manifest_body" } },
+          { "op": "oci.parse_manifest", "args": { "manifest": "$manifest_body", "out": "parsed" } },
+          { "op": "oci.validate_manifest", "args": { "manifest": "$parsed" } },
+
+          { "op": "txn.begin", "args": { "isolation": "serializable" } },
+          {
+            "op": "blob.put",
+            "args": {
+              "store": "primary",
+              "from": "request.body",
+              "out": "manifest_digest",
+              "out_size": "manifest_size"
+            }
+          },
+          { "op": "time.now_iso8601", "args": { "out": "now" } },
+          {
+            "op": "kv.put",
+            "args": {
+              "doc": "manifest",
+              "key": "manifest/{namespace}/{name}/{reference}",
+              "value": {
+                "namespace": "{namespace}",
+                "name": "{name}",
+                "reference": "{reference}",
+                "media_type": "$parsed.media_type",
+                "config_digest": "$parsed.config.digest",
+                "layers": "$parsed.layers",
+                "created_at": "$now",
+                "total_size": "$parsed.total_size"
+              }
+            }
+          },
+          {
+            "op": "kv.put",
+            "args": {
+              "doc": "manifest_by_digest",
+              "key": "manifest_digest/{namespace}/{name}/$manifest_digest",
+              "value": {
+                "namespace": "{namespace}",
+                "name": "{name}",
+                "reference": "{reference}",
+                "media_type": "$parsed.media_type",
+                "config_digest": "$parsed.config.digest",
+                "layers": "$parsed.layers",
+                "created_at": "$now"
+              }
+            }
+          },
+          {
+            "op": "emit.event",
+            "args": {
+              "type": "manifest.pushed",
+              "payload": {
+                "namespace": "{namespace}",
+                "name": "{name}",
+                "reference": "{reference}",
+                "digest": "$manifest_digest",
+                "at": "$now",
+                "by": "{principal.sub}"
+              }
+            }
+          },
+          { "op": "txn.commit", "args": {} },
+
+          {
+            "op": "respond.json",
+            "args": {
+              "status": 201,
+              "headers": {
+                "Location": "/v2/{namespace}/{name}/manifests/$manifest_digest",
+                "Docker-Content-Digest": "$manifest_digest"
+              },
+              "body": {}
+            }
+          }
+        ]
+      },
+
+      {
+        "id": "oci_get_manifest",
+        "method": "GET",
+        "path": "/v2/{namespace}/{name}/manifests/{reference}",
+        "tags": ["public", "oci"],
+        "description": "Fetch an OCI/Docker image manifest by tag or digest",
+        "pipeline": [
+          { "op": "auth.require_scopes", "args": { "scopes": ["read"] } },
+          { "op": "parse.path", "args": { "entity": "manifest" } },
+
+          {
+            "op": "kv.get",
+            "args": {
+              "doc": "manifest",
+              "key": "manifest/{namespace}/{name}/{reference}",
+              "out": "manifest_meta"
+            }
+          },
+          {
+            "op": "respond.error",
+            "args": {
+              "when": { "is_null": "$manifest_meta" },
+              "status": 404,
+              "code": "MANIFEST_UNKNOWN",
+              "message": "Manifest not found"
+            }
+          },
+          {
+            "op": "blob.get",
+            "args": {
+              "store": "primary",
+              "digest": "$manifest_meta.config_digest",
+              "out": "manifest_blob"
+            }
+          },
+          {
+            "op": "respond.bytes",
+            "args": {
+              "status": 200,
+              "headers": {
+                "Content-Type": "$manifest_meta.media_type",
+                "Docker-Content-Digest": "$manifest_meta.config_digest"
+              },
+              "body": "$manifest_blob"
+            }
+          }
+        ]
+      },
+
+      {
+        "id": "publish_with_dependencies",
+        "method": "PUT",
+        "path": "/v1/{namespace}/{name}/{version}/{variant}/package",
+        "tags": ["write_path"],
+        "description": "Publish a package with metadata and dependencies",
+        "pipeline": [
+          { "op": "auth.require_scopes", "args": { "scopes": ["write"] } },
+          { "op": "parse.path", "args": { "entity": "artifact" } },
+          { "op": "normalize.entity", "args": { "entity": "artifact" } },
+          { "op": "validate.entity", "args": { "entity": "artifact" } },
+          { "op": "parse.json", "args": { "out": "pkg" } },
+          {
+            "op": "validate.json_schema",
+            "args": {
+              "schema": {
+                "type": "object",
+                "required": ["blob_digest"],
+                "properties": {
+                  "blob_digest": { "type": "string" },
+                  "description": { "type": "string" },
+                  "license": { "type": "string" },
+                  "homepage": { "type": "string" },
+                  "authors": { "type": "array", "items": { "type": "string" } },
+                  "keywords": { "type": "array", "items": { "type": "string" } },
+                  "package_type": { "type": "string" },
+                  "dependencies": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["name", "version_spec"],
+                      "properties": {
+                        "namespace": { "type": "string" },
+                        "name": { "type": "string" },
+                        "version_spec": { "type": "string" },
+                        "kind": { "type": "string" }
+                      }
+                    }
+                  }
+                }
+              },
+              "value": "$pkg"
+            }
+          },
+
+          { "op": "txn.begin", "args": { "isolation": "serializable" } },
+          { "op": "time.now_iso8601", "args": { "out": "now" } },
+
+          {
+            "op": "kv.cas_put",
+            "args": {
+              "doc": "artifact_meta",
+              "key": "artifact/{namespace}/{name}/{version}/{variant}",
+              "if_absent": true,
+              "value": {
+                "namespace": "{namespace}",
+                "name": "{name}",
+                "version": "{version}",
+                "variant": "{variant}",
+                "blob_digest": "$pkg.blob_digest",
+                "created_at": "$now",
+                "created_by": "{principal.sub}",
+                "package_info": {
+                  "description": "$pkg.description",
+                  "license": "$pkg.license",
+                  "homepage": "$pkg.homepage",
+                  "authors": "$pkg.authors",
+                  "keywords": "$pkg.keywords",
+                  "package_type": "$pkg.package_type"
+                },
+                "dependencies": "$pkg.dependencies"
+              }
+            }
+          },
+          {
+            "op": "index.upsert",
+            "args": {
+              "index": "artifact_versions",
+              "key": { "namespace": "{namespace}", "name": "{name}" },
+              "value": {
+                "namespace": "{namespace}",
+                "name": "{name}",
+                "version": "{version}",
+                "variant": "{variant}",
+                "blob_digest": "$pkg.blob_digest"
+              }
+            }
+          },
+          {
+            "op": "emit.event",
+            "args": {
+              "type": "artifact.published",
+              "payload": {
+                "namespace": "{namespace}",
+                "name": "{name}",
+                "version": "{version}",
+                "variant": "{variant}",
+                "blob_digest": "$pkg.blob_digest",
+                "at": "$now",
+                "by": "{principal.sub}",
+                "has_dependencies": true
+              }
+            }
+          },
+          { "op": "txn.commit", "args": {} },
+
+          {
+            "op": "respond.json",
+            "args": {
+              "status": 201,
+              "body": { "ok": true, "digest": "$pkg.blob_digest" }
+            }
+          }
+        ]
+      },
+
+      {
+        "id": "get_dependencies",
+        "method": "GET",
+        "path": "/v1/{namespace}/{name}/{version}/{variant}/dependencies",
+        "tags": ["public"],
+        "description": "Get dependencies for a package",
+        "pipeline": [
+          { "op": "auth.require_scopes", "args": { "scopes": ["read"] } },
+          { "op": "parse.path", "args": { "entity": "artifact" } },
+          { "op": "normalize.entity", "args": { "entity": "artifact" } },
+
+          {
+            "op": "kv.get",
+            "args": {
+              "doc": "artifact_meta",
+              "key": "artifact/{namespace}/{name}/{version}/{variant}",
+              "out": "meta"
+            }
+          },
+          {
+            "op": "respond.error",
+            "args": {
+              "when": { "is_null": "$meta" },
+              "status": 404,
+              "code": "NOT_FOUND",
+              "message": "Package not found"
+            }
+          },
+          {
+            "op": "respond.json",
+            "args": {
+              "status": 200,
+              "body": {
+                "namespace": "{namespace}",
+                "name": "{name}",
+                "version": "{version}",
+                "variant": "{variant}",
+                "dependencies": "$meta.dependencies"
+              }
+            }
+          }
+        ]
+      },
+
+      {
+        "id": "add_signature",
+        "method": "POST",
+        "path": "/v1/{namespace}/{name}/{version}/{variant}/signatures",
+        "tags": ["write_path"],
+        "description": "Add a cryptographic signature to a package",
+        "pipeline": [
+          { "op": "auth.require_scopes", "args": { "scopes": ["write"] } },
+          { "op": "parse.path", "args": { "entity": "artifact" } },
+          { "op": "normalize.entity", "args": { "entity": "artifact" } },
+          { "op": "parse.json", "args": { "out": "sig_data" } },
+          {
+            "op": "validate.json_schema",
+            "args": {
+              "schema": {
+                "type": "object",
+                "required": ["key_id", "algo", "signature"],
+                "properties": {
+                  "key_id": { "type": "string" },
+                  "algo": { "type": "string", "enum": ["ed25519", "rsa-sha256", "ecdsa-p256"] },
+                  "signature": { "type": "string" }
+                }
+              },
+              "value": "$sig_data"
+            }
+          },
+
+          {
+            "op": "kv.get",
+            "args": {
+              "doc": "artifact_meta",
+              "key": "artifact/{namespace}/{name}/{version}/{variant}",
+              "out": "meta"
+            }
+          },
+          {
+            "op": "respond.error",
+            "args": {
+              "when": { "is_null": "$meta" },
+              "status": 404,
+              "code": "NOT_FOUND",
+              "message": "Package not found"
+            }
+          },
+
+          {
+            "op": "sig.verify",
+            "args": {
+              "key_id": "$sig_data.key_id",
+              "algo": "$sig_data.algo",
+              "signature": "$sig_data.signature",
+              "data_digest": "$meta.blob_digest"
+            }
+          },
+
+          { "op": "txn.begin", "args": { "isolation": "serializable" } },
+          { "op": "time.now_iso8601", "args": { "out": "now" } },
+          {
+            "op": "kv.put",
+            "args": {
+              "doc": "signature",
+              "key": "sig/{namespace}/{name}/{version}/{variant}/$sig_data.key_id",
+              "value": {
+                "key_id": "$sig_data.key_id",
+                "algo": "$sig_data.algo",
+                "signature": "$sig_data.signature",
+                "signed_at": "$now",
+                "signed_by": "{principal.sub}"
+              }
+            }
+          },
+          {
+            "op": "emit.event",
+            "args": {
+              "type": "signature.added",
+              "payload": {
+                "namespace": "{namespace}",
+                "name": "{name}",
+                "version": "{version}",
+                "variant": "{variant}",
+                "key_id": "$sig_data.key_id",
+                "at": "$now",
+                "by": "{principal.sub}"
+              }
+            }
+          },
+          { "op": "txn.commit", "args": {} },
+
+          { "op": "respond.json", "args": { "status": 201, "body": { "ok": true } } }
+        ]
       }
     ]
   },
@@ -709,6 +1382,41 @@
         "name": "tag.updated",
         "durable": true,
         "schema": { "type": "object" }
+      },
+      {
+        "name": "manifest.pushed",
+        "durable": true,
+        "description": "Emitted when an OCI/Docker manifest is pushed",
+        "schema": {
+          "type": "object",
+          "required": ["namespace", "name", "reference", "digest", "at"],
+          "properties": {
+            "namespace": { "type": "string" },
+            "name": { "type": "string" },
+            "reference": { "type": "string" },
+            "digest": { "type": "string" },
+            "at": { "type": "string" },
+            "by": { "type": "string" }
+          }
+        }
+      },
+      {
+        "name": "signature.added",
+        "durable": true,
+        "description": "Emitted when a signature is added to a package",
+        "schema": {
+          "type": "object",
+          "required": ["namespace", "name", "version", "key_id", "at"],
+          "properties": {
+            "namespace": { "type": "string" },
+            "name": { "type": "string" },
+            "version": { "type": "string" },
+            "variant": { "type": "string" },
+            "key_id": { "type": "string" },
+            "at": { "type": "string" },
+            "by": { "type": "string" }
+          }
+        }
       }
     ]
   },
@@ -839,7 +1547,11 @@
   "features": {
     "mutable_tags": true,
     "allow_overwrite_artifacts": false,
-    "proxy_enabled": true
+    "proxy_enabled": true,
+    "gc_enabled": true,
+    "signing_enabled": true,
+    "oci_enabled": true,
+    "dependencies_enabled": true
   },
 
   "validation": {

@@ -1,0 +1,36 @@
+{
+  "id": "rear-silencer",
+  "name": "Rear Silencer",
+  "partNumber": "FD-1744310",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 6200.0,
+  "weightUnit": "g",
+  "baseY": 310,
+  "description": "Rear muffler/backbox with tailpipe",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "13mm", "required": true },
+      { "name": "Rubber mallet", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Exhaust clamp", "spec": "50mm", "qty": 1, "reusable": true },
+      { "name": "Exhaust hanger", "spec": "Rubber", "qty": 3, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Exhaust clamp", "value": 25, "unit": "Nm", "sequence": "", "notes": "" }
+    ],
+    "notes": [
+      "Support weight while fitting",
+      "Align tailpipe with bumper cutout",
+      "Check hangers not stretched",
+      "Internal baffles wear - causes drone"
+    ]
+  },
+  "geometry": [
+    { "type": "ellipse", "rx": 50, "ry": 25 },
+    { "type": "rect", "width": 85, "height": 45, "rx": 20, "fill": "#555" },
+    { "type": "ellipse", "rx": 18, "ry": 12, "offsetX": 55, "offsetY": 0, "fill": "#333" },
+    { "type": "ellipse", "rx": 15, "ry": 10, "offsetX": 55, "offsetY": 0, "fill": "#222" }
+  ]
+}

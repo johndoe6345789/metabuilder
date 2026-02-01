@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/string_starts_with",
+  "version": "1.0.0",
+  "description": "Check if string starts with prefix",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["string", "workflow", "plugin"],
+  "main": "src/lib.rs",
+  "files": ["src/lib.rs", "src/factory.rs"],
+  "metadata": {
+    "plugin_type": "string.starts_with",
+    "category": "string",
+    "struct": "StringStartsWith",
+    "entrypoint": "execute"
+  }
+}

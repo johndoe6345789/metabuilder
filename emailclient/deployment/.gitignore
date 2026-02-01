@@ -1,0 +1,243 @@
+# Environment Configuration Files
+# Never commit actual secrets or credentials to version control
+
+# ============================================================================
+# Environment Files (Local, Production, Staging)
+# ============================================================================
+.env
+.env.local
+.env.*.local
+.env.prod
+.env.production
+.env.staging
+.env.test
+.env.*.prod
+.env.*.production
+.env.*.staging
+
+# ============================================================================
+# Secrets & Credentials Files
+# ============================================================================
+*.secret
+*.key
+*.pem
+*.p8
+*.p12
+*.pfx
+*.jks
+secrets/
+.secrets
+private/
+credentials.json
+credentials.yaml
+credentials.yml
+oauth2_creds.json
+service_account_key.json
+
+# ============================================================================
+# SSL/TLS Certificates & Keys
+# ============================================================================
+*.crt
+*.cer
+*.pem
+*.key
+*.p7b
+*.p7s
+*.csr
+*.crl
+ssl/
+certs/
+certificates/
+/etc/ssl/
+/etc/letsencrypt/
+
+# ============================================================================
+# Database & Backup Files
+# ============================================================================
+*.sqlite
+*.sqlite3
+*.db
+*.sql
+*.sql.gz
+*.dump
+*.backup
+*.bak
+*.sql.bak
+postgres_data/
+mysql_data/
+backups/
+*.tar.gz
+*.zip
+
+# ============================================================================
+# Logs & Temporary Files
+# ============================================================================
+*.log
+logs/
+*.log.*
+*.out
+*.err
+.tmp/
+tmp/
+temp/
+cache/
+.cache
+**/node_modules/.cache/
+
+# ============================================================================
+# Docker & Container Files
+# ============================================================================
+.dockerignore
+docker-compose.override.yml
+docker-compose.*.override.yml
+
+# Container build artifacts
+*.tar
+*.tar.gz
+
+# ============================================================================
+# IDE & Editor Files
+# ============================================================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+*.sublime-project
+*.sublime-workspace
+
+# ============================================================================
+# Build Artifacts
+# ============================================================================
+dist/
+build/
+*.egg-info/
+__pycache__/
+*.pyc
+*.pyo
+node_modules/
+.next/
+out/
+
+# ============================================================================
+# OS-Specific Files
+# ============================================================================
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+.TemporaryItems
+
+# ============================================================================
+# Development Tools
+# ============================================================================
+.env.development.local
+.env.test.local
+.env.production.local
+
+# NPM
+npm-debug.log
+npm-debug.log.*
+.npm
+
+# Yarn
+yarn-error.log
+yarn-debug.log
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+
+# Python
+.venv
+venv/
+env/
+ENV/
+.mypy_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ============================================================================
+# AWS & Cloud Credentials
+# ============================================================================
+.aws/
+.aws/credentials
+.aws/config
+AWS_ACCESS_KEY_ID
+AWS_SECRET_ACCESS_KEY
+AWS_SECURITY_TOKEN
+AWS_SESSION_TOKEN
+
+# ============================================================================
+# Vault & Secret Management
+# ============================================================================
+.vault-token
+vault-unseal-keys.txt
+vault-root-token.txt
+
+# ============================================================================
+# CI/CD Artifacts
+# ============================================================================
+.github/workflows/secrets
+.gitlab-ci.yml.local
+.circleci/config.yml.local
+
+# ============================================================================
+# Documentation (Local & Generated)
+# ============================================================================
+# Note: Keep .md files, but exclude generated docs
+docs/generated/
+docs/api-reference/
+*.md.bak
+
+# ============================================================================
+# Testing
+# ============================================================================
+.pytest_cache/
+.coverage
+htmlcov/
+test-results/
+playwright-report/
+
+# ============================================================================
+# Package Manager Locks (optional - uncomment if needed)
+# ============================================================================
+# package-lock.json
+# yarn.lock
+# poetry.lock
+
+# ============================================================================
+# Editor Configuration (keep local)
+# ============================================================================
+.editorconfig.local
+
+# ============================================================================
+# Environment-Specific Directories
+# ============================================================================
+/volumes/
+/data/
+/var/
+**/data/
+**/volumes/
+
+# ============================================================================
+# Non-Committed Configuration
+# ============================================================================
+config.local.yaml
+config.local.yml
+config.local.json
+settings.local.py
+
+# ============================================================================
+# Whitelist: DO NOT Ignore These Files
+# ============================================================================
+# (Exceptions to the above rules)
+!.gitkeep
+!.env.example
+!.env.prod.example
+!.gitignore
+!docker-compose.example.yml
+!

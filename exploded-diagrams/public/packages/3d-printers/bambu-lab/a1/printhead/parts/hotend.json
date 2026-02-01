@@ -1,0 +1,381 @@
+{
+  "id": "hotend",
+  "name": "All-Metal Hotend Assembly",
+  "partNumber": "BL-A1-HE001",
+  "material": "Aluminum/Stainless Steel",
+  "quantity": 1,
+  "weight": 45,
+  "weightUnit": "g",
+  "baseY": 0,
+  "description": "All-metal hotend assembly featuring aluminum heatsink with cooling fins, stainless steel heat break for thermal isolation, and brass heat block. Designed for high-temperature printing up to 300°C with excellent heat dissipation.",
+  "installation": {
+    "tools": [
+      "2mm hex key",
+      "2.5mm hex key",
+      "7mm wrench",
+      "Thermal paste"
+    ],
+    "hardware": [
+      "M2.5x8 socket head cap screw x2",
+      "M3x6 socket head cap screw x2",
+      "Thermal compound"
+    ],
+    "torque": [
+      "Heat block screws: 0.5 Nm",
+      "Heatsink mounting: 0.8 Nm"
+    ],
+    "notes": [
+      "Apply thermal paste to heat break threads before installation",
+      "Ensure heatsink fins are oriented for proper airflow",
+      "Tighten nozzle while hot (200°C) for proper seal",
+      "Do not overtighten - can damage heat break"
+    ]
+  },
+  "geometry": [
+    {
+      "type": "rect",
+      "x": 5,
+      "y": 2,
+      "width": 30,
+      "height": 25,
+      "fill": "#505050",
+      "stroke": "#303030",
+      "strokeWidth": 1
+    },
+    {
+      "type": "rect",
+      "x": 8,
+      "y": 4,
+      "width": 24,
+      "height": 2,
+      "fill": "#707070"
+    },
+    {
+      "type": "rect",
+      "x": 8,
+      "y": 8,
+      "width": 24,
+      "height": 2,
+      "fill": "#707070"
+    },
+    {
+      "type": "rect",
+      "x": 8,
+      "y": 12,
+      "width": 24,
+      "height": 2,
+      "fill": "#707070"
+    },
+    {
+      "type": "rect",
+      "x": 8,
+      "y": 16,
+      "width": 24,
+      "height": 2,
+      "fill": "#707070"
+    },
+    {
+      "type": "rect",
+      "x": 8,
+      "y": 20,
+      "width": 24,
+      "height": 2,
+      "fill": "#707070"
+    },
+    {
+      "type": "rect",
+      "x": 17,
+      "y": 27,
+      "width": 6,
+      "height": 8,
+      "fill": "#808080",
+      "stroke": "#606060",
+      "strokeWidth": 1
+    },
+    {
+      "type": "rect",
+      "x": 15,
+      "y": 35,
+      "width": 10,
+      "height": 10,
+      "fill": "#c0a060",
+      "stroke": "#a08040",
+      "strokeWidth": 1
+    },
+    {
+      "type": "polygon",
+      "points": "17,45 23,45 21,52 19,52",
+      "fill": "#c0a060",
+      "stroke": "#a08040",
+      "strokeWidth": 1
+    }
+  ],
+  "geometry3d": [
+    {
+      "type": "cylinder",
+      "height": 3,
+      "r": 11,
+      "offsetX": 0,
+      "offsetY": 0,
+      "offsetZ": 0,
+      "fill": "#505050"
+    },
+    {
+      "type": "cylinder",
+      "height": 1.5,
+      "r": 13,
+      "offsetX": 0,
+      "offsetY": 3,
+      "offsetZ": 0,
+      "fill": "#606060"
+    },
+    {
+      "type": "cylinder",
+      "height": 1.5,
+      "r": 10,
+      "offsetX": 0,
+      "offsetY": 4.5,
+      "offsetZ": 0,
+      "fill": "#505050"
+    },
+    {
+      "type": "cylinder",
+      "height": 1.5,
+      "r": 13,
+      "offsetX": 0,
+      "offsetY": 6,
+      "offsetZ": 0,
+      "fill": "#606060"
+    },
+    {
+      "type": "cylinder",
+      "height": 1.5,
+      "r": 10,
+      "offsetX": 0,
+      "offsetY": 7.5,
+      "offsetZ": 0,
+      "fill": "#505050"
+    },
+    {
+      "type": "cylinder",
+      "height": 1.5,
+      "r": 13,
+      "offsetX": 0,
+      "offsetY": 9,
+      "offsetZ": 0,
+      "fill": "#606060"
+    },
+    {
+      "type": "cylinder",
+      "height": 1.5,
+      "r": 10,
+      "offsetX": 0,
+      "offsetY": 10.5,
+      "offsetZ": 0,
+      "fill": "#505050"
+    },
+    {
+      "type": "cylinder",
+      "height": 1.5,
+      "r": 13,
+      "offsetX": 0,
+      "offsetY": 12,
+      "offsetZ": 0,
+      "fill": "#606060"
+    },
+    {
+      "type": "cylinder",
+      "height": 1.5,
+      "r": 10,
+      "offsetX": 0,
+      "offsetY": 13.5,
+      "offsetZ": 0,
+      "fill": "#505050"
+    },
+    {
+      "type": "cylinder",
+      "height": 1.5,
+      "r": 13,
+      "offsetX": 0,
+      "offsetY": 15,
+      "offsetZ": 0,
+      "fill": "#606060"
+    },
+    {
+      "type": "cylinder",
+      "height": 1.5,
+      "r": 10,
+      "offsetX": 0,
+      "offsetY": 16.5,
+      "offsetZ": 0,
+      "fill": "#505050"
+    },
+    {
+      "type": "cylinder",
+      "height": 1.5,
+      "r": 13,
+      "offsetX": 0,
+      "offsetY": 18,
+      "offsetZ": 0,
+      "fill": "#606060"
+    },
+    {
+      "type": "cylinder",
+      "height": 3,
+      "r": 11,
+      "offsetX": 0,
+      "offsetY": 19.5,
+      "offsetZ": 0,
+      "fill": "#505050"
+    },
+    {
+      "type": "cylinder",
+      "height": 12,
+      "r": 3,
+      "offsetX": 0,
+      "offsetY": 22.5,
+      "offsetZ": 0,
+      "fill": "#808080"
+    },
+    {
+      "type": "cylinder",
+      "height": 2,
+      "r": 4,
+      "offsetX": 0,
+      "offsetY": 22.5,
+      "offsetZ": 0,
+      "fill": "#707070"
+    },
+    {
+      "type": "cylinder",
+      "height": 2,
+      "r": 4,
+      "offsetX": 0,
+      "offsetY": 32.5,
+      "offsetZ": 0,
+      "fill": "#707070"
+    },
+    {
+      "type": "box",
+      "offsetX": 0,
+      "offsetY": 37,
+      "offsetZ": 0,
+      "fill": "#c0a060",
+      "width": 16,
+      "height": 10,
+      "depth": 16
+    },
+    {
+      "type": "cylinder",
+      "height": 10,
+      "r": 3,
+      "offsetX": 6,
+      "offsetY": 37,
+      "offsetZ": 0,
+      "fill": "#b09050"
+    },
+    {
+      "type": "cylinder",
+      "height": 10,
+      "r": 2.5,
+      "offsetX": -6,
+      "offsetY": 37,
+      "offsetZ": 0,
+      "fill": "#b09050"
+    },
+    {
+      "type": "box",
+      "offsetX": 8,
+      "offsetY": 40,
+      "offsetZ": 0,
+      "fill": "#a08040",
+      "width": 4,
+      "height": 4,
+      "depth": 8
+    },
+    {
+      "type": "cylinder",
+      "height": 3,
+      "r": 5,
+      "offsetX": 0,
+      "offsetY": 47,
+      "offsetZ": 0,
+      "fill": "#c0a060"
+    },
+    {
+      "type": "cylinder",
+      "height": 4,
+      "r": 4,
+      "offsetX": 0,
+      "offsetY": 50,
+      "offsetZ": 0,
+      "fill": "#c0a060"
+    },
+    {
+      "type": "cylinder",
+      "height": 3,
+      "r": 2.5,
+      "offsetX": 0,
+      "offsetY": 54,
+      "offsetZ": 0,
+      "fill": "#c0a060"
+    },
+    {
+      "type": "cylinder",
+      "height": 1,
+      "r": 0.6,
+      "offsetX": 0,
+      "offsetY": 57,
+      "offsetZ": 0,
+      "fill": "#a08040"
+    },
+    {
+      "type": "box",
+      "offsetX": -10,
+      "offsetY": 5,
+      "offsetZ": 0,
+      "fill": "#404040",
+      "width": 3,
+      "height": 14,
+      "depth": 6
+    },
+    {
+      "type": "box",
+      "offsetX": 10,
+      "offsetY": 5,
+      "offsetZ": 0,
+      "fill": "#404040",
+      "width": 3,
+      "height": 14,
+      "depth": 6
+    },
+    {
+      "type": "cylinder",
+      "height": 4,
+      "rotation": [
+        90,
+        0,
+        0
+      ],
+      "r": 1.5,
+      "offsetX": -10,
+      "offsetY": 8,
+      "offsetZ": 0,
+      "fill": "#303030"
+    },
+    {
+      "type": "cylinder",
+      "height": 4,
+      "rotation": [
+        90,
+        0,
+        0
+      ],
+      "r": 1.5,
+      "offsetX": 10,
+      "offsetY": 8,
+      "offsetZ": 0,
+      "fill": "#303030"
+    }
+  ]
+}

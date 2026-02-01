@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/string_replace",
+  "version": "1.0.0",
+  "description": "Replace occurrences in string",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["string", "workflow", "plugin"],
+  "main": "string_replace.py",
+  "files": ["string_replace.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "string.replace",
+    "category": "string",
+    "class": "StringReplace",
+    "entrypoint": "execute"
+  }
+}

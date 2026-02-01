@@ -1,0 +1,18 @@
+{
+  "id": "servo-horn",
+  "name": "Servo Horn",
+  "partNumber": "TRA-2072",
+  "material": "blueAnodized",
+  "quantity": 1,
+  "weight": 4.5,
+  "weightUnit": "g",
+  "baseY": 0,
+  "description": "25T spline aluminum servo horn",
+  "geometry": [
+    { "type": "ellipse", "rx": 12, "ry": 8 },
+    { "type": "rect", "width": 100, "height": 10, "rx": 5, "offsetY": -4 },
+    { "type": "circle", "r": 4, "offsetX": -40, "fill": "#1a3a5a" },
+    { "type": "circle", "r": 4, "offsetX": 40, "fill": "#1a3a5a" },
+    { "type": "circle", "r": 6, "fill": "#1a3a5a" }
+  ]
+}

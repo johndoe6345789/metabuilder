@@ -1,0 +1,289 @@
+{
+  "id": "hotend-fan",
+  "name": "Heatsink Cooling Fan",
+  "partNumber": "BL-A1-HF001",
+  "material": "Plastic/Metal",
+  "quantity": 1,
+  "weight": 10,
+  "weightUnit": "g",
+  "baseY": 0,
+  "description": "Axial cooling fan (4010 size) for hotend heatsink thermal management. Runs continuously during printing to maintain cold-side temperature and prevent heat creep. Features ball bearing construction for long life and low noise.",
+  "installation": {
+    "tools": [
+      "2mm hex key",
+      "Phillips screwdriver"
+    ],
+    "hardware": [
+      "M3x16 socket head cap screw x2",
+      "Fan mounting bracket"
+    ],
+    "torque": [
+      "Fan mounting screws: 0.3 Nm"
+    ],
+    "notes": [
+      "Position fan to blow air onto heatsink fins",
+      "Verify correct airflow direction (arrow on fan housing)",
+      "Check for obstructions before powering on",
+      "Fan should run whenever hotend is above 50°C"
+    ]
+  },
+  "geometry": [
+    {
+      "type": "rect",
+      "x": 5,
+      "y": 5,
+      "width": 40,
+      "height": 10,
+      "fill": "#303030",
+      "stroke": "#202020",
+      "strokeWidth": 1
+    },
+    {
+      "type": "circle",
+      "cx": 25,
+      "cy": 10,
+      "r": 4,
+      "fill": "#404040"
+    },
+    {
+      "type": "circle",
+      "cx": 25,
+      "cy": 10,
+      "r": 2,
+      "fill": "#505050"
+    }
+  ],
+  "geometry3d": [
+    {
+      "type": "box",
+      "offsetX": 0,
+      "offsetY": 0,
+      "offsetZ": 0,
+      "fill": "#303030",
+      "width": 40,
+      "height": 10,
+      "depth": 40
+    },
+    {
+      "type": "cylinder",
+      "height": 10,
+      "r": 18,
+      "offsetX": 0,
+      "offsetY": 0,
+      "offsetZ": 0,
+      "fill": "#252525"
+    },
+    {
+      "type": "cylinder",
+      "height": 12,
+      "r": 6,
+      "offsetX": 0,
+      "offsetY": 0,
+      "offsetZ": 0,
+      "fill": "#404040"
+    },
+    {
+      "type": "cylinder",
+      "height": 14,
+      "r": 3,
+      "offsetX": 0,
+      "offsetY": 0,
+      "offsetZ": 0,
+      "fill": "#505050"
+    },
+    {
+      "type": "box",
+      "offsetX": 0,
+      "offsetY": 0,
+      "offsetZ": 8,
+      "fill": "#454545",
+      "width": 3,
+      "height": 8,
+      "depth": 14
+    },
+    {
+      "type": "box",
+      "offsetX": 0,
+      "offsetY": 0,
+      "offsetZ": -8,
+      "fill": "#454545",
+      "width": 3,
+      "height": 8,
+      "depth": 14
+    },
+    {
+      "type": "box",
+      "offsetX": 8,
+      "offsetY": 0,
+      "offsetZ": 0,
+      "fill": "#454545",
+      "width": 14,
+      "height": 8,
+      "depth": 3
+    },
+    {
+      "type": "box",
+      "offsetX": -8,
+      "offsetY": 0,
+      "offsetZ": 0,
+      "fill": "#454545",
+      "width": 14,
+      "height": 8,
+      "depth": 3
+    },
+    {
+      "type": "box",
+      "offsetX": 6,
+      "offsetY": 0,
+      "offsetZ": 6,
+      "fill": "#454545",
+      "width": 10,
+      "height": 8,
+      "depth": 3
+    },
+    {
+      "type": "box",
+      "offsetX": -6,
+      "offsetY": 0,
+      "offsetZ": -6,
+      "fill": "#454545",
+      "width": 10,
+      "height": 8,
+      "depth": 3
+    },
+    {
+      "type": "box",
+      "offsetX": 6,
+      "offsetY": 0,
+      "offsetZ": -6,
+      "fill": "#454545",
+      "width": 10,
+      "height": 8,
+      "depth": 3
+    },
+    {
+      "type": "box",
+      "offsetX": -6,
+      "offsetY": 0,
+      "offsetZ": 6,
+      "fill": "#454545",
+      "width": 10,
+      "height": 8,
+      "depth": 3
+    },
+    {
+      "type": "box",
+      "offsetX": 16,
+      "offsetY": 0,
+      "offsetZ": 16,
+      "fill": "#353535",
+      "width": 6,
+      "height": 10,
+      "depth": 6
+    },
+    {
+      "type": "box",
+      "offsetX": -16,
+      "offsetY": 0,
+      "offsetZ": 16,
+      "fill": "#353535",
+      "width": 6,
+      "height": 10,
+      "depth": 6
+    },
+    {
+      "type": "box",
+      "offsetX": 16,
+      "offsetY": 0,
+      "offsetZ": -16,
+      "fill": "#353535",
+      "width": 6,
+      "height": 10,
+      "depth": 6
+    },
+    {
+      "type": "box",
+      "offsetX": -16,
+      "offsetY": 0,
+      "offsetZ": -16,
+      "fill": "#353535",
+      "width": 6,
+      "height": 10,
+      "depth": 6
+    },
+    {
+      "type": "cylinder",
+      "height": 12,
+      "r": 1.6,
+      "offsetX": 16,
+      "offsetY": 0,
+      "offsetZ": 16,
+      "fill": "#252525"
+    },
+    {
+      "type": "cylinder",
+      "height": 12,
+      "r": 1.6,
+      "offsetX": -16,
+      "offsetY": 0,
+      "offsetZ": 16,
+      "fill": "#252525"
+    },
+    {
+      "type": "cylinder",
+      "height": 12,
+      "r": 1.6,
+      "offsetX": 16,
+      "offsetY": 0,
+      "offsetZ": -16,
+      "fill": "#252525"
+    },
+    {
+      "type": "cylinder",
+      "height": 12,
+      "r": 1.6,
+      "offsetX": -16,
+      "offsetY": 0,
+      "offsetZ": -16,
+      "fill": "#252525"
+    },
+    {
+      "type": "box",
+      "offsetX": -16,
+      "offsetY": 6,
+      "offsetZ": 0,
+      "fill": "#202020",
+      "width": 6,
+      "height": 3,
+      "depth": 8
+    },
+    {
+      "type": "cylinder",
+      "height": 10,
+      "r": 1,
+      "offsetX": -20,
+      "offsetY": 6,
+      "offsetZ": 2,
+      "fill": "#e04000"
+    },
+    {
+      "type": "cylinder",
+      "height": 10,
+      "r": 1,
+      "offsetX": -20,
+      "offsetY": 6,
+      "offsetZ": -2,
+      "fill": "#303030"
+    },
+    {
+      "type": "box",
+      "offsetX": 14,
+      "offsetY": 0,
+      "offsetZ": 0,
+      "fill": "#505050",
+      "width": 4,
+      "height": 8,
+      "depth": 2
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "id": "y-axis-rail",
+  "name": "Y-Axis Linear Rails",
+  "partNumber": "BL-A1-MR003",
+  "material": "steel",
+  "quantity": 2,
+  "weight": 120.0,
+  "weightUnit": "g",
+  "baseY": 180,
+  "description": "MGN12H linear rails for Y-axis bed movement, 256mm travel length, dual rail configuration",
+  "installation": {
+    "tools": [
+      { "name": "Hex key", "size": "2.5mm", "required": true },
+      { "name": "Torque screwdriver", "size": "0.5-2 Nm", "required": true },
+      { "name": "Precision straightedge", "size": "300mm", "required": true },
+      { "name": "Feeler gauge", "size": "0.02-0.1mm", "required": true }
+    ],
+    "hardware": [
+      { "name": "M3x8 socket head cap screw", "spec": "M3x0.5x8", "grade": "12.9", "qty": 16, "reusable": true },
+      { "name": "Rail alignment shim", "spec": "0.1mm", "qty": 4, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Rail mounting screws", "value": 0.8, "unit": "Nm", "sequence": "Center out alternating", "notes": "Verify parallelism between rails" }
+    ],
+    "notes": [
+      "Both rails must be parallel within 0.05mm",
+      "Clean mounting surface thoroughly",
+      "Apply thin film of grease to rail grooves",
+      "Check bed movement is square to X-axis"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 200, "height": 12, "rx": 2, "fill": "#606060" },
+    { "type": "rect", "width": 190, "height": 4, "fill": "#505050" },
+    { "type": "rect", "width": 200, "height": 12, "rx": 2, "offsetY": 30, "fill": "#606060" },
+    { "type": "rect", "width": 190, "height": 4, "offsetY": 30, "fill": "#505050" }
+  ],
+  "geometry3d": [
+    { "type": "box", "width": 12, "height": 8, "depth": 256, "offsetX": -80, "fill": "#505050" },
+    { "type": "box", "width": 12, "height": 8, "depth": 256, "offsetX": 80, "fill": "#505050" },
+
+    { "type": "box", "width": 4, "height": 3, "depth": 256, "offsetX": -80, "offsetY": 4, "fill": "#606060" },
+    { "type": "box", "width": 4, "height": 3, "depth": 256, "offsetX": 80, "offsetY": 4, "fill": "#606060" },
+
+    { "type": "box", "width": 2, "height": 2, "depth": 256, "offsetX": -84, "offsetY": 2, "fill": "#707070" },
+    { "type": "box", "width": 2, "height": 2, "depth": 256, "offsetX": -76, "offsetY": 2, "fill": "#707070" },
+    { "type": "box", "width": 2, "height": 2, "depth": 256, "offsetX": 84, "offsetY": 2, "fill": "#707070" },
+    { "type": "box", "width": 2, "height": 2, "depth": 256, "offsetX": 76, "offsetY": 2, "fill": "#707070" },
+
+    { "type": "cylinder", "r": 1.5, "height": 10, "offsetX": -80, "offsetZ": -120, "subtract": true },
+    { "type": "cylinder", "r": 1.5, "height": 10, "offsetX": -80, "offsetZ": -80, "subtract": true },
+    { "type": "cylinder", "r": 1.5, "height": 10, "offsetX": -80, "offsetZ": -40, "subtract": true },
+    { "type": "cylinder", "r": 1.5, "height": 10, "offsetX": -80, "offsetZ": 40, "subtract": true },
+    { "type": "cylinder", "r": 1.5, "height": 10, "offsetX": -80, "offsetZ": 80, "subtract": true },
+    { "type": "cylinder", "r": 1.5, "height": 10, "offsetX": -80, "offsetZ": 120, "subtract": true },
+
+    { "type": "cylinder", "r": 1.5, "height": 10, "offsetX": 80, "offsetZ": -120, "subtract": true },
+    { "type": "cylinder", "r": 1.5, "height": 10, "offsetX": 80, "offsetZ": -80, "subtract": true },
+    { "type": "cylinder", "r": 1.5, "height": 10, "offsetX": 80, "offsetZ": -40, "subtract": true },
+    { "type": "cylinder", "r": 1.5, "height": 10, "offsetX": 80, "offsetZ": 40, "subtract": true },
+    { "type": "cylinder", "r": 1.5, "height": 10, "offsetX": 80, "offsetZ": 80, "subtract": true },
+    { "type": "cylinder", "r": 1.5, "height": 10, "offsetX": 80, "offsetZ": 120, "subtract": true },
+
+    { "type": "cylinder", "r": 3, "height": 2, "offsetX": -80, "offsetZ": -120, "offsetY": -4, "fill": "#404040" },
+    { "type": "cylinder", "r": 3, "height": 2, "offsetX": -80, "offsetZ": 120, "offsetY": -4, "fill": "#404040" },
+    { "type": "cylinder", "r": 3, "height": 2, "offsetX": 80, "offsetZ": -120, "offsetY": -4, "fill": "#404040" },
+    { "type": "cylinder", "r": 3, "height": 2, "offsetX": 80, "offsetZ": 120, "offsetY": -4, "fill": "#404040" },
+
+    { "type": "box", "width": 14, "height": 10, "depth": 10, "offsetX": -80, "offsetZ": -123, "fill": "#606060" },
+    { "type": "box", "width": 14, "height": 10, "depth": 10, "offsetX": -80, "offsetZ": 123, "fill": "#606060" },
+    { "type": "box", "width": 14, "height": 10, "depth": 10, "offsetX": 80, "offsetZ": -123, "fill": "#606060" },
+    { "type": "box", "width": 14, "height": 10, "depth": 10, "offsetX": 80, "offsetZ": 123, "fill": "#606060" }
+  ]
+}

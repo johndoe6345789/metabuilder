@@ -1,0 +1,40 @@
+{
+  "id": "connecting-rod",
+  "name": "Connecting Rod",
+  "partNumber": "FD-CM5G-6200-AA",
+  "material": "steel",
+  "quantity": 3,
+  "weight": 420.0,
+  "weightUnit": "g",
+  "baseY": 290,
+  "description": "Forged steel connecting rod - fracture split",
+  "installation": {
+    "tools": [
+      { "name": "Plastigauge", "size": "Green", "required": true },
+      { "name": "Socket", "size": "12mm", "required": true },
+      { "name": "Torque wrench", "size": "20-60 Nm", "required": true },
+      { "name": "Angle gauge", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Con rod bolt", "spec": "M9x1.0x35", "grade": "12.9", "qty": 2, "reusable": false },
+      { "name": "Big end bearing shell", "spec": "Standard", "qty": 2, "reusable": false }
+    ],
+    "torque": [
+      { "fastener": "Con rod bolts", "value": 20, "unit": "Nm + 90°", "sequence": "Even", "notes": "Torque then angle - always new bolts" }
+    ],
+    "notes": [
+      "Fracture split design - do not swap caps",
+      "Keep matched sets together",
+      "Check big end bearing clearance",
+      "Lubricate bearings with assembly lube",
+      "Numbers must face same side"
+    ]
+  },
+  "geometry": [
+    { "type": "ellipse", "rx": 12, "ry": 20 },
+    { "type": "rect", "width": 14, "height": 55, "offsetY": 35 },
+    { "type": "ellipse", "rx": 20, "ry": 12, "offsetY": 65 },
+    { "type": "ellipse", "rx": 14, "ry": 8, "offsetY": 65, "fill": "#444" },
+    { "type": "circle", "r": 8, "fill": "#444" }
+  ]
+}

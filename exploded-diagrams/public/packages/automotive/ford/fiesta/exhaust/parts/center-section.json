@@ -1,0 +1,35 @@
+{
+  "id": "center-section",
+  "name": "Center Pipe",
+  "partNumber": "FD-1744280",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 2800.0,
+  "weightUnit": "g",
+  "baseY": 200,
+  "description": "Center exhaust section with resonator",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "13mm", "required": true },
+      { "name": "Exhaust clamp spreader", "size": "-", "required": false }
+    ],
+    "hardware": [
+      { "name": "Exhaust clamp", "spec": "55mm", "qty": 2, "reusable": true },
+      { "name": "Exhaust hanger", "spec": "Rubber", "qty": 2, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Exhaust clamps", "value": 25, "unit": "Nm", "sequence": "", "notes": "" }
+    ],
+    "notes": [
+      "Slide clamps on before fitting",
+      "Check for internal baffles rattling",
+      "Support from hangers while fitting"
+    ]
+  },
+  "geometry": [
+    { "type": "ellipse", "rx": 25, "ry": 15, "offsetY": -40 },
+    { "type": "rect", "width": 35, "height": 90, "rx": 12 },
+    { "type": "ellipse", "rx": 28, "ry": 18, "offsetY": 0, "fill": "#555" },
+    { "type": "ellipse", "rx": 22, "ry": 12, "offsetY": 50 }
+  ]
+}

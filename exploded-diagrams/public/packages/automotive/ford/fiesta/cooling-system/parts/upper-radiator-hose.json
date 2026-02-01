@@ -1,0 +1,33 @@
+{
+  "id": "upper-radiator-hose",
+  "name": "Upper Radiator Hose",
+  "partNumber": "FD-1860410",
+  "material": "rubber",
+  "quantity": 1,
+  "weight": 280.0,
+  "weightUnit": "g",
+  "baseY": 240,
+  "description": "Moulded upper coolant hose with quick-connect",
+  "installation": {
+    "tools": [
+      { "name": "Pliers", "size": "-", "required": true },
+      { "name": "Quick-connect tool", "size": "-", "required": false }
+    ],
+    "hardware": [
+      { "name": "Spring clamp", "spec": "35mm", "qty": 1, "reusable": true },
+      { "name": "Quick-connect clip", "spec": "-", "qty": 1, "reusable": true }
+    ],
+    "torque": [],
+    "notes": [
+      "Quick-connect end at radiator",
+      "Spring clamp at thermostat housing",
+      "Check for swelling or cracks",
+      "Ensure clips seat fully"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 80, "height": 18, "rx": 9, "fill": "#333" },
+    { "type": "ellipse", "rx": 12, "ry": 10, "offsetX": -45, "fill": "#444" },
+    { "type": "ellipse", "rx": 12, "ry": 10, "offsetX": 45, "fill": "#444" }
+  ]
+}

@@ -1,5 +1,6 @@
 // Fakemui - Material-UI inspired component library
 // Main barrel export file for all components
+// NOTE: Components requiring SCSS modules are commented out (Phase 5)
 
 // Icons
 export {
@@ -77,7 +78,7 @@ export {
   TimePicker,
   ColorPicker,
   FileUpload,
-} from './fakemui/inputs'
+} from './react/components/inputs'
 
 // Surfaces
 export {
@@ -95,7 +96,7 @@ export {
   AppBar,
   Toolbar,
   Drawer,
-} from './fakemui/surfaces'
+} from './react/components/surfaces'
 
 // Layout
 export {
@@ -107,9 +108,10 @@ export {
   ImageList,
   ImageListItem,
   ImageListItemBar,
-} from './fakemui/layout'
+} from './react/components/layout'
 
 // Data Display
+// NOTE: TreeView and Table excluded (require SCSS modules - Phase 5)
 export {
   Typography,
   Avatar,
@@ -124,30 +126,32 @@ export {
   ListItemAvatar,
   ListSubheader,
   AvatarGroup,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TableFooter,
-  TablePagination,
-  TableSortLabel,
+  // Table, (commented - requires SCSS)
+  // TableBody, (commented - requires SCSS)
+  // TableCell, (commented - requires SCSS)
+  // TableContainer, (commented - requires SCSS)
+  // TableHead, (commented - requires SCSS)
+  // TableRow, (commented - requires SCSS)
+  // TableFooter, (commented - requires SCSS)
+  // TablePagination, (commented - requires SCSS)
+  // TableSortLabel, (commented - requires SCSS)
   Tooltip,
-} from './fakemui/data-display'
+  Markdown,
+  Separator,
+  // TreeView (commented - requires SCSS - Phase 5)
+} from './react/components/data-display'
 
 // Feedback
+// NOTE: Progress excluded (requires SCSS modules - Phase 5)
 export {
   Alert,
   Backdrop,
   CircularProgress,
-  LinearProgress,
+  // LinearProgress, (commented - requires SCSS)
   Skeleton,
   Snackbar,
-} from './fakemui/feedback'
-
-// Note: Dialog components are available from utils module
-// Import Dialog, DialogTitle, DialogContent, DialogActions from '@/fakemui/utils'
+  Spinner,
+} from './react/components/feedback'
 
 // Navigation
 export {
@@ -172,16 +176,24 @@ export {
   SpeedDial,
   SpeedDialAction,
   SpeedDialIcon,
-} from './fakemui/navigation'
+} from './react/components/navigation'
 
 // Utils
 export {
   Modal,
+  Dialog,
+  DialogOverlay,
+  DialogPanel,
+  DialogHeader,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
   Popover,
   Popper,
   Portal,
   ClickAwayListener,
   CssBaseline,
+  ScopedCssBaseline,
   GlobalStyles,
   NoSsr,
   TextareaAutosize,
@@ -194,7 +206,11 @@ export {
   useMediaQueryUp,
   useMediaQueryDown,
   useMediaQueryBetween,
-} from './fakemui/utils'
+  ToastProvider,
+  useToast,
+  Iframe,
+  classNames,
+} from './react/components/utils'
 
 // Atoms
 export {
@@ -207,7 +223,7 @@ export {
   States,
   EditorWrapper,
   AutoGrid,
-} from './fakemui/atoms'
+} from './react/components/atoms'
 
 // Lab (Experimental)
 export {
@@ -220,14 +236,42 @@ export {
   TimelineConnector,
   TimelineContent,
   TimelineOppositeContent,
-  TreeView,
+  // TreeView as TreeViewComponent, (commented - requires SCSS - Phase 5)
   TreeItem,
-} from './fakemui/lab'
+} from './react/components/lab'
 
-// X (Advanced)
+// X (Advanced - pro/premium features)
 export {
   DataGrid,
-} from './fakemui/x'
+  DataGridPro,
+  DataGridPremium,
+  DatePicker as DatePickerAdvanced,
+  TimePicker as TimePickerAdvanced,
+  DateTimePicker,
+  DesktopDatePicker,
+  MobileDatePicker,
+  StaticDatePicker,
+  CalendarPicker,
+  ClockPicker,
+} from './react/components/x'
 
 // Theming
-export type { Theme, ThemeOptions } from './fakemui/theming'
+export type { Theme, ThemeOptions } from './react/components/theming'
+
+// Accessibility Utilities
+export {
+  generateTestId,
+  testId,
+  aria,
+  keyboard,
+  validate,
+} from './src/utils/accessibility'
+export type {
+  AccessibilityFeature,
+  AccessibilityComponent,
+  AccessibilityAction,
+} from './src/utils/accessibility'
+
+// Email Components
+// NOTE: Disabled - Phase 2 incomplete (component imports need fixing)
+// export * from './react/components/email'

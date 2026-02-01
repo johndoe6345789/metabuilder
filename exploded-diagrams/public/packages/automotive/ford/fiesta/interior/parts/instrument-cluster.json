@@ -1,0 +1,35 @@
+{
+  "id": "instrument-cluster",
+  "name": "Instrument Cluster",
+  "partNumber": "FD-1835120",
+  "material": "blackPlastic",
+  "quantity": 1,
+  "weight": 850.0,
+  "weightUnit": "g",
+  "baseY": 230,
+  "description": "Digital/analog instrument cluster with TFT display",
+  "installation": {
+    "tools": [
+      { "name": "Torx socket", "size": "T20", "required": true },
+      { "name": "Trim removal tool", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Cluster screw", "spec": "T20", "qty": 4, "reusable": true }
+    ],
+    "torque": [],
+    "notes": [
+      "Mileage stored in cluster - cannot swap",
+      "Must be coded to vehicle",
+      "Remove shroud first for access",
+      "Pull cluster towards you to release"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 120, "height": 45, "rx": 5 },
+    { "type": "circle", "r": 18, "offsetX": -35, "fill": "#111" },
+    { "type": "circle", "r": 18, "offsetX": 35, "fill": "#111" },
+    { "type": "rect", "width": 30, "height": 15, "rx": 2, "fill": "#111" },
+    { "type": "circle", "r": 2, "offsetX": -35, "offsetY": -12, "fill": "#d94a4a" },
+    { "type": "circle", "r": 2, "offsetX": 35, "offsetY": -12, "fill": "#00d4ff" }
+  ]
+}

@@ -256,6 +256,9 @@ export interface NodeResult {
   retries?: number;
   inputData?: any;
   outputData?: any;
+  recoveryApplied?: boolean;
+  fallbackNodeType?: string;
+  validationErrors?: string[];
 }
 
 export interface ExecutionRecord {
@@ -315,6 +318,113 @@ export interface ValidationResult {
   valid: boolean;
   errors: string[];
   warnings: string[];
+}
+
+/**
+ * Multi-Tenant Safety Types
+ */
+
+/**
+ * Tenant isolation policy - controls data access and execution boundaries
+ */
+export interface TenantPolicy {
+  /** Unique tenant identifier */
+  tenantId: string;
+
+  /** Isolation level: strict (no cross-tenant), standard (isolated contexts), relaxed (allow sharing) */
+  isolationLevel: 'strict' | 'standard' | 'relaxed';
+
+  /** Node types forbidden for this tenant */
+  restrictedNodeTypes: string[];
+
+  /** Whitelist of allowed node types (if empty, all non-restricted types allowed) */
+  allowedNodeTypes?: string[];
+
+  /** Users blacklisted from executing workflows */
+  blacklistedUsers?: string[];
+
+  /** Users whitelisted to execute workflows (if empty, all users allowed except blacklisted) */
+  whitelistedUsers?: string[];
+
+  /** Output data filters to apply to all node outputs */
+  outputFilters?: Array<{ path: string; action: 'remove' | 'mask' }>;
+
+  /** Field name patterns to redact from outputs (regex) */
+  sensitiveFieldPatterns?: string[];
+
+  /** Maximum output data size in MB per node execution */
+  maxOutputSizeMb?: number;
+
+  /** Enable cross-tenant data access (only if isolationLevel is relaxed) */
+  allowCrossTenantAccess?: boolean;
+
+  /** Enable comprehensive audit logging for this tenant */
+  auditLoggingEnabled: boolean;
+
+  /** Custom metadata for tenant-specific policies */
+  metadata?: Record<string, any>;
+}
+
+/**
+ * Runtime tenant context - track execution context and user identity
+ */
+export interface TenantContext {
+  /** Tenant identifier */
+  tenantId: string;
+
+  /** Execution identifier */
+  executionId: string;
+
+  /** User identifier */
+  userId: string;
+
+  /** User privilege level (0=guest, 1=user, 2=admin, 3=system) */
+  userLevel: number;
+
+  /** Timestamp when context was created */
+  timestamp: Date;
+}
+
+/**
+ * Multi-tenant error type enumeration
+ */
+export type MultiTenantErrorType =
+  | 'TENANT_NOT_REGISTERED'
+  | 'TENANT_ALREADY_REGISTERED'
+  | 'TENANT_MISMATCH'
+  | 'WORKFLOW_OWNERSHIP_MISMATCH'
+  | 'UNAUTHORIZED_USER'
+  | 'RESTRICTED_NODE_TYPE'
+  | 'NODE_NOT_WHITELISTED'
+  | 'CROSS_TENANT_CREDENTIAL'
+  | 'POLICY_VIOLATION'
+  | 'POLICY_NOT_FOUND'
+  | 'INVALID_POLICY'
+  | 'CROSS_TENANT_ATTEMPT'
+  | 'TENANT_NOT_FOUND';
+
+/**
+ * Multi-tenant safety error
+ */
+export class MultiTenantError extends Error {
+  constructor(
+    public code: MultiTenantErrorType,
+    message: string,
+    public context?: Record<string, any>
+  ) {
+    super(message);
+    this.name = 'MultiTenantError';
+    Object.setPrototypeOf(this, MultiTenantError.prototype);
+  }
+
+  toJSON() {
+    return {
+      name: this.name,
+      code: this.code,
+      message: this.message,
+      context: this.context
+    };
+  }
 }
 
 /**

@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/dict_items",
+  "version": "1.0.0",
+  "description": "Get dictionary items as list of key-value pairs",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["dict", "workflow", "plugin"],
+  "main": "dict_items.py",
+  "files": ["dict_items.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "dict.items",
+    "category": "dict",
+    "class": "DictItems",
+    "entrypoint": "execute"
+  }
+}

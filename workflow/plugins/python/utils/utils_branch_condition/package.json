@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/utils_branch_condition",
+  "version": "1.0.0",
+  "description": "Evaluate branch conditions using various comparison modes",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["utils", "workflow", "plugin"],
+  "main": "utils_branch_condition.py",
+  "files": ["utils_branch_condition.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "utils.branch_condition",
+    "category": "utils",
+    "class": "BranchCondition",
+    "entrypoint": "execute"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/backend_create_github",
+  "version": "1.0.0",
+  "description": "Create GitHub client for repository operations",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["backend", "workflow", "plugin", "github"],
+  "main": "backend_create_github.py",
+  "files": ["backend_create_github.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "backend.create_github",
+    "category": "backend",
+    "class": "CreateGitHub",
+    "entrypoint": "execute"
+  }
+}

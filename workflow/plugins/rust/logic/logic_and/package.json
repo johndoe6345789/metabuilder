@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/logic_and",
+  "version": "1.0.0",
+  "description": "Logical AND on boolean values",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["logic", "workflow", "plugin"],
+  "main": "src/lib.rs",
+  "files": ["src/lib.rs", "src/factory.rs"],
+  "metadata": {
+    "plugin_type": "logic.and",
+    "category": "logic",
+    "struct": "LogicAnd",
+    "entrypoint": "execute"
+  }
+}

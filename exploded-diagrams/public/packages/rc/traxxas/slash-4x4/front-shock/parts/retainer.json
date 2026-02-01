@@ -1,0 +1,15 @@
+{
+  "id": "retainer",
+  "name": "Spring Retainer",
+  "partNumber": "TRA-5465",
+  "material": "blueAnodized",
+  "quantity": 1,
+  "weight": 5.4,
+  "weightUnit": "g",
+  "baseY": 410,
+  "description": "Aluminum spring retainer / preload adjuster",
+  "geometry": [
+    {"type": "cylinder", "rx": 32, "ry": 10, "height": 14},
+    {"type": "ellipse", "rx": 12, "ry": 4, "fill": "#1a3a5a"}
+  ]
+}

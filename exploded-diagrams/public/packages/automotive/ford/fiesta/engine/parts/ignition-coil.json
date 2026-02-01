@@ -1,0 +1,35 @@
+{
+  "id": "ignition-coil",
+  "name": "Ignition Coil Pack",
+  "partNumber": "FD-CM5G-12029-FA",
+  "material": "blackPlastic",
+  "quantity": 3,
+  "weight": 180.0,
+  "weightUnit": "g",
+  "baseY": 920,
+  "description": "Coil-on-plug ignition coil",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "8mm", "required": true },
+      { "name": "Dielectric grease", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Coil bolt", "spec": "M6x1.0x25", "qty": 1, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Coil bolt", "value": 8, "unit": "Nm", "sequence": "", "notes": "" }
+    ],
+    "notes": [
+      "Apply dielectric grease to spark plug boot",
+      "Check for cracks in boots - causes misfire",
+      "Do not pull by wire - pull by boot",
+      "Replace if misfire codes present"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 30, "height": 55, "rx": 4, "fill": "#2a2a2a" },
+    { "type": "rect", "width": 25, "height": 15, "offsetY": -25, "rx": 2, "fill": "#333" },
+    { "type": "cylinder", "rx": 8, "ry": 4, "height": 20, "offsetY": 30 },
+    { "type": "circle", "r": 3, "offsetX": 8, "offsetY": -18, "fill": "#d4a84a" }
+  ]
+}

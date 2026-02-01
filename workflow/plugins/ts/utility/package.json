@@ -1,0 +1,14 @@
+{
+  "name": "@metabuilder/workflow-plugins-utility",
+  "version": "1.0.0",
+  "description": "Utility operation plugins for TypeScript",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["utility", "workflow", "plugins", "typescript"],
+  "metadata": {
+    "category": "utility",
+    "language": "typescript",
+    "plugin_count": 3
+  },
+  "plugins": ["set-variable", "transform", "wait"]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "spring",
+  "name": "Shock Spring",
+  "partNumber": "TRA-5442R",
+  "material": "spring",
+  "quantity": 1,
+  "weight": 22.0,
+  "weightUnit": "g",
+  "baseY": 250,
+  "description": "Progressive rate spring - Red (Firm)",
+  "geometry": [
+    {"type": "coilSpring", "coils": 8, "rx": 26, "ry": 8, "pitch": 18, "strokeWidth": 7}
+  ]
+}

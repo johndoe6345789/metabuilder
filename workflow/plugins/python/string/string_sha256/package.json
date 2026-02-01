@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/string_sha256",
+  "version": "1.0.0",
+  "description": "Compute SHA256 hash of input string or bytes",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["string", "workflow", "plugin", "hash", "sha256", "crypto"],
+  "main": "string_sha256.py",
+  "files": ["string_sha256.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "string.sha256",
+    "category": "string",
+    "class": "StringSha256",
+    "entrypoint": "execute"
+  }
+}

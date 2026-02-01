@@ -1,0 +1,240 @@
+{
+  "id": "nozzle",
+  "name": "Hardened Steel Nozzle",
+  "partNumber": "BL-A1-NZ001",
+  "material": "Hardened Steel",
+  "quantity": 1,
+  "weight": 4,
+  "weightUnit": "g",
+  "baseY": 0,
+  "description": "0.4mm hardened steel nozzle for abrasive filament compatibility. Features precision-machined orifice, optimized internal geometry for consistent flow, and hardened surface for extended life with carbon fiber and glass-filled materials. Temperature rated to 300°C.",
+  "installation": {
+    "tools": [
+      "7mm socket wrench",
+      "Heat-resistant gloves",
+      "Nozzle cleaning needle"
+    ],
+    "hardware": [],
+    "torque": [
+      "Nozzle: 1.0 Nm (when hot at 200°C)"
+    ],
+    "notes": [
+      "ALWAYS install nozzle when hot (200°C+)",
+      "Hand-tighten first, then final torque when heated",
+      "Do not overtighten - can damage threads",
+      "Clean threads before installation",
+      "Verify no filament blockage before use"
+    ]
+  },
+  "geometry": [
+    {
+      "type": "polygon",
+      "points": "12,5 28,5 30,10 30,18 28,22 12,22 10,18 10,10",
+      "fill": "#606060",
+      "stroke": "#404040",
+      "strokeWidth": 1
+    },
+    {
+      "type": "polygon",
+      "points": "16,22 24,22 22,32 18,32",
+      "fill": "#505050",
+      "stroke": "#404040",
+      "strokeWidth": 1
+    },
+    {
+      "type": "circle",
+      "cx": 20,
+      "cy": 32,
+      "r": 1.5,
+      "fill": "#303030"
+    }
+  ],
+  "geometry3d": [
+    {
+      "type": "cylinder",
+      "height": 3,
+      "r": 4,
+      "offsetX": 0,
+      "offsetY": 0,
+      "offsetZ": 0,
+      "fill": "#606060"
+    },
+    {
+      "type": "box",
+      "offsetX": 0,
+      "offsetY": 0,
+      "offsetZ": 0,
+      "fill": "#606060",
+      "width": 7.5,
+      "height": 5,
+      "depth": 6.5
+    },
+    {
+      "type": "box",
+      "offsetX": 0,
+      "offsetY": 0,
+      "offsetZ": 0,
+      "fill": "#555555",
+      "width": 6.5,
+      "height": 5,
+      "depth": 7.5
+    },
+    {
+      "type": "box",
+      "offsetX": 2.5,
+      "offsetY": 0,
+      "offsetZ": 2.5,
+      "fill": "#505050",
+      "width": 4,
+      "height": 5,
+      "depth": 4
+    },
+    {
+      "type": "box",
+      "offsetX": -2.5,
+      "offsetY": 0,
+      "offsetZ": 2.5,
+      "fill": "#505050",
+      "width": 4,
+      "height": 5,
+      "depth": 4
+    },
+    {
+      "type": "box",
+      "offsetX": 2.5,
+      "offsetY": 0,
+      "offsetZ": -2.5,
+      "fill": "#505050",
+      "width": 4,
+      "height": 5,
+      "depth": 4
+    },
+    {
+      "type": "box",
+      "offsetX": -2.5,
+      "offsetY": 0,
+      "offsetZ": -2.5,
+      "fill": "#505050",
+      "width": 4,
+      "height": 5,
+      "depth": 4
+    },
+    {
+      "type": "cylinder",
+      "height": 4,
+      "r": 3.2,
+      "offsetX": 0,
+      "offsetY": -4,
+      "offsetZ": 0,
+      "fill": "#555555"
+    },
+    {
+      "type": "cylinder",
+      "height": 3,
+      "r": 3,
+      "offsetX": 0,
+      "offsetY": -7,
+      "offsetZ": 0,
+      "fill": "#505050"
+    },
+    {
+      "type": "cylinder",
+      "height": 1,
+      "r": 3.4,
+      "offsetX": 0,
+      "offsetY": -5,
+      "offsetZ": 0,
+      "fill": "#606060"
+    },
+    {
+      "type": "cylinder",
+      "height": 1,
+      "r": 3.3,
+      "offsetX": 0,
+      "offsetY": -6.5,
+      "offsetZ": 0,
+      "fill": "#606060"
+    },
+    {
+      "type": "cylinder",
+      "height": 1,
+      "r": 3.2,
+      "offsetX": 0,
+      "offsetY": -8,
+      "offsetZ": 0,
+      "fill": "#606060"
+    },
+    {
+      "type": "cylinder",
+      "height": 2,
+      "r": 2.8,
+      "offsetX": 0,
+      "offsetY": -10,
+      "offsetZ": 0,
+      "fill": "#505050"
+    },
+    {
+      "type": "cylinder",
+      "height": 4,
+      "r": 2.2,
+      "offsetX": 0,
+      "offsetY": -13,
+      "offsetZ": 0,
+      "fill": "#454545"
+    },
+    {
+      "type": "cylinder",
+      "height": 3,
+      "r": 1.5,
+      "offsetX": 0,
+      "offsetY": -16,
+      "offsetZ": 0,
+      "fill": "#404040"
+    },
+    {
+      "type": "cylinder",
+      "height": 2,
+      "r": 1,
+      "offsetX": 0,
+      "offsetY": -18.5,
+      "offsetZ": 0,
+      "fill": "#353535"
+    },
+    {
+      "type": "cylinder",
+      "height": 1,
+      "r": 0.6,
+      "offsetX": 0,
+      "offsetY": -20,
+      "offsetZ": 0,
+      "fill": "#303030"
+    },
+    {
+      "type": "cylinder",
+      "height": 0.5,
+      "r": 0.2,
+      "offsetX": 0,
+      "offsetY": -20.5,
+      "offsetZ": 0,
+      "fill": "#252525"
+    },
+    {
+      "type": "cylinder",
+      "height": 22,
+      "r": 1.5,
+      "offsetX": 0,
+      "offsetY": 2,
+      "offsetZ": 0,
+      "fill": "#707070"
+    },
+    {
+      "type": "cylinder",
+      "height": 8,
+      "r": 1,
+      "offsetX": 0,
+      "offsetY": -14,
+      "offsetZ": 0,
+      "fill": "#606060"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "name": "@metabuilder/respond_error",
+  "version": "1.0.0",
+  "description": "Format error response",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "keywords": ["packagerepo", "workflow", "plugin", "http", "error"],
+  "main": "respond_error.py",
+  "files": ["respond_error.py", "factory.py"],
+  "metadata": {
+    "plugin_type": "packagerepo.respond_error",
+    "category": "packagerepo",
+    "class": "RespondError",
+    "entrypoint": "execute"
+  }
+}
