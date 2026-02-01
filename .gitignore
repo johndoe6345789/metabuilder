@@ -101,3 +101,6 @@ dist-old/
 .vscode/claudesync.json
 /package-lock.json
 bun.lockb
+
+# CodeQL local databases
+.codeql-dbs/
