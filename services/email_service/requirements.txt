@@ -8,11 +8,11 @@ kombu==5.3.4
 # Email Protocols
 imapclient==3.0.1
 python-dotenv==1.0.0
-cryptography==41.0.7
+cryptography==44.0.1
 
 # Web Framework (Flask API)
 flask==3.0.0
-flask-cors==4.0.0
+flask-cors==6.0.0
 flask-limiter==3.5.0
 PyJWT==2.8.1
 
@@ -44,14 +44,14 @@ pytest-cov==4.1.0
 responses==0.24.1
 
 # Code Quality
-black==23.12.0
+black==24.3.0
 isort==5.13.2
 flake8==6.1.0
 mypy==1.7.1
 
 # Performance
 gevent==23.9.1
-gunicorn==21.2.0
+gunicorn==22.0.0
 
 # Development
 ipython==8.19.0
