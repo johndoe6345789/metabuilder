@@ -4,8 +4,8 @@
   "description": "Visual workflow editor UI - Modern n8n-like interface for MetaBuilder workflows",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build || true",
+    "dev": "next dev --webpack",
+    "build": "next build --webpack || true",
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
@@ -44,8 +44,8 @@
     "@testing-library/react": "^16.3.1",
     "@types/lodash-es": "^4.17.12",
     "@types/node": "^22.10.5",
-    "@types/react": "^18.3.0",
-    "@types/react-dom": "^18.3.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
     "concurrently": "^9.1.0",
     "jest": "^29.7.0",
     "typescript": "~5.9.3"

@@ -1,17 +1,28 @@
 /**
- * useAccessible Hooks - Re-exported from @metabuilder/hooks
+ * useAccessible Hooks - Re-exported from root hooks folder
  *
- * BACKWARD COMPATIBILITY: This file re-exports from @metabuilder/hooks
- * for consumers still importing from @metabuilder/fakemui.
+ * This file re-exports from the root hooks folder to maintain backwards
+ * compatibility with existing imports in fakemui components.
  *
- * Prefer importing directly from @metabuilder/hooks:
- * import { useAccessible, useKeyboardNavigation } from '@metabuilder/hooks'
+ * Direct import from root hooks folder bypasses the barrel export
+ * to avoid pulling in hooks with project-specific dependencies.
  */
 
 export {
+  generateTestId,
+  testId,
+  aria,
+  keyboard,
+  validate,
   useAccessible,
   useKeyboardNavigation,
   useFocusManagement,
   useLiveRegion,
   useFocusTrap,
-} from '@metabuilder/hooks'
+} from '../../../hooks/useAccessible'
+
+export type {
+  AccessibilityFeature,
+  AccessibilityComponent,
+  AccessibilityAction,
+} from '../../../hooks/useAccessible'

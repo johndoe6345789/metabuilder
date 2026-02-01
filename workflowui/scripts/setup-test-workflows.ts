@@ -11,7 +11,7 @@
  *   npx ts-node scripts/setup-test-workflows.ts
  */
 
-import fetch from 'node-fetch';
+// Use native fetch (available in Node 18+)
 
 const API_BASE = process.env.API_BASE || 'http://localhost:5000';
 const TENANT_ID = 'default';

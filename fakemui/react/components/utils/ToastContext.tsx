@@ -1,25 +1,25 @@
 'use client'
 
 /**
- * ToastContext - Re-exported from @metabuilder/hooks
+ * ToastContext - Re-exported from root hooks folder
  *
- * BACKWARD COMPATIBILITY: This file re-exports from @metabuilder/hooks
- * for consumers still importing from @metabuilder/fakemui.
- *
- * Prefer importing directly from @metabuilder/hooks:
- * import { ToastProvider, useToast } from '@metabuilder/hooks'
+ * This provides toast notifications for FakeMUI components.
+ * Direct import from root hooks folder bypasses the barrel export
+ * to avoid pulling in hooks with project-specific dependencies.
  */
 
 export {
   ToastProvider,
   useToast,
-} from '@metabuilder/hooks'
+} from '../../../../hooks/useToast'
 
 export type {
   ToastSeverity,
   ToastOptions,
   ToastContextValue,
   ToastProviderProps,
-} from '@metabuilder/hooks'
+} from '../../../../hooks/useToast'
 
+// Re-export ToastProvider as default for backwards compatibility
+import { ToastProvider } from '../../../../hooks/useToast'
 export default ToastProvider

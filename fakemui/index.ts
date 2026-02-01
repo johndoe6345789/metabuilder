@@ -258,7 +258,7 @@ export {
 // Theming
 export type { Theme, ThemeOptions } from './react/components/theming'
 
-// Accessibility Utilities (re-exported from @metabuilder/hooks for backward compatibility)
+// Accessibility Utilities (direct import from root hooks folder - bypasses barrel export)
 export {
   generateTestId,
   testId,
@@ -270,12 +270,12 @@ export {
   useFocusManagement,
   useLiveRegion,
   useFocusTrap,
-} from '@metabuilder/hooks'
+} from '../hooks/useAccessible'
 export type {
   AccessibilityFeature,
   AccessibilityComponent,
   AccessibilityAction,
-} from '@metabuilder/hooks'
+} from '../hooks/useAccessible'
 
 // Email Components
 // NOTE: Disabled - Phase 2 incomplete (component imports need fixing)

@@ -1,11 +1,11 @@
 /**
- * useDragResize - Re-exported from @metabuilder/hooks
+ * useDragResize - Re-exported from root hooks folder
  *
- * BACKWARD COMPATIBILITY: This file re-exports from @metabuilder/hooks
- * for consumers still importing from @metabuilder/fakemui.
+ * Direct import from root hooks folder bypasses the barrel export
+ * to avoid pulling in hooks with project-specific dependencies.
  *
- * Prefer importing directly from @metabuilder/hooks:
- * import { useDragResize } from '@metabuilder/hooks'
+ * Import directly from the hooks folder for new code:
+ * import { useDragResize } from '@metabuilder/hooks/useDragResize'
  */
 
-export { useDragResize } from '@metabuilder/hooks'
+export { useDragResize } from '../../../../../hooks/useDragResize'

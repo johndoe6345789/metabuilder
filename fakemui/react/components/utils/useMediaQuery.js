@@ -1,22 +1,22 @@
 'use client'
 
 /**
- * useMediaQuery - Re-exported from @metabuilder/hooks
+ * useMediaQuery - Re-exported from root hooks folder
  *
- * BACKWARD COMPATIBILITY: This file re-exports from @metabuilder/hooks
- * for consumers still importing from @metabuilder/fakemui.
+ * Direct import from root hooks folder bypasses the barrel export
+ * to avoid pulling in hooks with project-specific dependencies.
  *
- * Prefer importing directly from @metabuilder/hooks:
- * import { useMediaQuery } from '@metabuilder/hooks'
+ * Import directly from the hooks folder for new code:
+ * import { useMediaQuery } from '@metabuilder/hooks/useMediaQuery'
  */
 
-// Re-export from hooks package (which has a more comprehensive TypeScript implementation)
-export { useMediaQuery } from '@metabuilder/hooks'
+// Re-export from root hooks folder (direct import, not barrel)
+export { useMediaQuery } from '../../../../hooks/useMediaQuery'
+
+// Import for use in convenience hooks
+import { useMediaQuery } from '../../../../hooks/useMediaQuery'
 
 // Convenience hooks for common breakpoints (matching MUI defaults)
-// These are kept here for backward compatibility - they use the hooks version internally
-import { useMediaQuery } from '@metabuilder/hooks'
-
 const breakpoints = {
   xs: 0,
   sm: 600,

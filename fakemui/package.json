@@ -35,8 +35,5 @@
   "peerDependencies": {
     "react": "18.x || 19.x",
     "react-dom": "18.x || 19.x"
-  },
-  "dependencies": {
-    "@metabuilder/hooks": "workspace:*"
   }
 }

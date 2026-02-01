@@ -10,6 +10,11 @@ const nextConfig = {
   typedRoutes: true,
   // Transpile local packages
   transpilePackages: ['@metabuilder/fakemui'],
+  // Turbopack config with root directory to silence workspace warning
+  // We use webpack mode (--webpack flag) due to SCSS handling requirements
+  turbopack: {
+    root: path.resolve(__dirname, '..'),
+  },
   sassOptions: {
     includePaths: [
       m3ScssPath,

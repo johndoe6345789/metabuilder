@@ -6,8 +6,8 @@
 import type { Metadata } from 'next';
 import React from 'react';
 import RootLayoutClient from '../components/Layout/RootLayoutClient';
-// SCSS from fakemui (relative path from src/app/ → workflowui/ → metabuilder/fakemui/)
-import '../../../fakemui/scss/index.scss';
+// Minimal theme CSS (avoids complex M3 SCSS module dependencies)
+import './globals.css';
 
 export const metadata: Metadata = {
   title: 'WorkflowUI - Visual Workflow Editor',
