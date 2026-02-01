@@ -258,19 +258,24 @@ export {
 // Theming
 export type { Theme, ThemeOptions } from './react/components/theming'
 
-// Accessibility Utilities
+// Accessibility Utilities (re-exported from @metabuilder/hooks for backward compatibility)
 export {
   generateTestId,
   testId,
   aria,
   keyboard,
   validate,
-} from './src/utils/accessibility'
+  useAccessible,
+  useKeyboardNavigation,
+  useFocusManagement,
+  useLiveRegion,
+  useFocusTrap,
+} from '@metabuilder/hooks'
 export type {
   AccessibilityFeature,
   AccessibilityComponent,
   AccessibilityAction,
-} from './src/utils/accessibility'
+} from '@metabuilder/hooks'
 
 // Email Components
 // NOTE: Disabled - Phase 2 incomplete (component imports need fixing)

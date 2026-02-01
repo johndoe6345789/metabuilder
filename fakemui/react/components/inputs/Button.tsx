@@ -3,13 +3,18 @@ import { useAccessible } from '../../../src/utils/useAccessible'
 
 /**
  * Valid button variants for styling
+ * Supports both FakeMUI native variants and MUI-style aliases
  */
-export type ButtonVariant = 'default' | 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'text'
+export type ButtonVariant =
+  | 'default' | 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'text'
+  // MUI-style aliases
+  | 'contained' | 'outlined'
 
 /**
  * Valid button sizes
+ * Supports both FakeMUI native sizes and MUI-style aliases
  */
-export type ButtonSize = 'sm' | 'md' | 'lg'
+export type ButtonSize = 'sm' | 'md' | 'lg' | 'small' | 'medium' | 'large'
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children?: React.ReactNode
@@ -17,6 +22,8 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   variant?: ButtonVariant
   /** Button size */
   size?: ButtonSize
+  /** MUI-style color prop (maps to variant) */
+  color?: 'primary' | 'secondary' | 'error' | 'warning' | 'info' | 'success' | 'inherit'
   /** @deprecated Use variant="primary" instead */
   primary?: boolean
   /** @deprecated Use variant="secondary" instead */
@@ -41,13 +48,42 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   endIcon?: React.ReactNode
   /** Unique identifier for testing and accessibility */
   testId?: string
+  /** MUI-style sx prop for inline styles */
+  sx?: Record<string, unknown>
+  /** Render as different element (for Link, etc.) */
+  component?: React.ElementType
+  /** URL for link buttons */
+  href?: string
+  /** Edge alignment for icon buttons in toolbars */
+  edge?: 'start' | 'end' | false
 }
 
 /**
- * Get variant class from props (supports legacy and new API)
+ * Map MUI-style variants to FakeMUI variants
+ */
+const normalizeVariant = (variant?: ButtonVariant, color?: string): string => {
+  // MUI variant aliases
+  if (variant === 'contained') return color === 'secondary' ? 'secondary' : 'primary'
+  if (variant === 'outlined') return 'outline'
+  return variant || ''
+}
+
+/**
+ * Map MUI-style sizes to FakeMUI sizes
+ */
+const normalizeSize = (size?: ButtonSize): string => {
+  if (size === 'small') return 'sm'
+  if (size === 'medium') return 'md'
+  if (size === 'large') return 'lg'
+  return size || ''
+}
+
+/**
+ * Get variant class from props (supports legacy, new API, and MUI-style)
  */
 const getVariantClass = (props: ButtonProps): string => {
-  if (props.variant) return `btn--${props.variant}`
+  const normalized = normalizeVariant(props.variant, props.color)
+  if (normalized) return `btn--${normalized}`
   if (props.primary) return 'btn--primary'
   if (props.secondary) return 'btn--secondary'
   if (props.outline) return 'btn--outline'
@@ -56,10 +92,11 @@ const getVariantClass = (props: ButtonProps): string => {
 }
 
 /**
- * Get size class from props (supports legacy and new API)
+ * Get size class from props (supports legacy, new API, and MUI-style)
  */
 const getSizeClass = (props: ButtonProps): string => {
-  if (props.size) return `btn--${props.size}`
+  const normalized = normalizeSize(props.size)
+  if (normalized) return `btn--${normalized}`
   if (props.sm) return 'btn--sm'
   if (props.lg) return 'btn--lg'
   return ''
@@ -81,6 +118,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       children,
       variant,
       size,
+      color,
       primary,
       secondary,
       outline,
@@ -96,6 +134,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       className = '',
       type = 'button',
       testId: customTestId,
+      sx,
+      component: Component,
+      href,
+      edge,
       'aria-busy': ariaBusy,
       'aria-label': ariaLabel,
       ...restProps
@@ -114,20 +156,26 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       icon ? 'btn--icon' : '',
       loading ? 'btn--loading' : '',
       fullWidth ? 'btn--full-width' : '',
+      edge === 'start' ? 'btn--edge-start' : '',
+      edge === 'end' ? 'btn--edge-end' : '',
+      color && color !== 'inherit' ? `btn--color-${color}` : '',
       className,
     ].filter(Boolean).join(' ')
 
+    // Support rendering as different element (for Next.js Link, etc.)
+    const Element = Component || 'button'
+    const elementProps = Component ? { ...restProps, href } : { ...restProps, type }
+
     return (
-      <button
+      <Element
         ref={ref}
-        type={type}
         className={classes}
         disabled={disabled || loading}
         data-testid={accessible['data-testid']}
         aria-label={ariaLabel || accessible['aria-label']}
         aria-busy={ariaBusy ?? loading}
         aria-disabled={disabled || loading}
-        {...restProps}
+        {...elementProps}
       >
         {loading && (
           <span className="btn__spinner" aria-hidden="true">
@@ -140,7 +188,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {startIcon && <span className="btn__start-icon" aria-hidden="true">{startIcon}</span>}
         {children && <span className="btn__content">{children}</span>}
         {endIcon && <span className="btn__end-icon" aria-hidden="true">{endIcon}</span>}
-      </button>
+      </Element>
     )
   }
 )

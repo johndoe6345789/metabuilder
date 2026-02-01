@@ -22,7 +22,7 @@ const ContentBlock: React.FC<{
 
   switch (type) {
     case 'heading':
-      const HeadingTag = (`h${level}` as keyof JSX.IntrinsicElements) || 'h2';
+      const HeadingTag = (`h${level}` as keyof React.JSX.IntrinsicElements) || 'h2';
       return React.createElement(
         HeadingTag,
         { style: { marginTop: '16px', marginBottom: '8px', fontWeight: 600 } },

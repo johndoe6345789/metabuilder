@@ -1,13 +1,20 @@
 import React, { forwardRef } from 'react'
+import { sxToStyle } from '../utils/sx'
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode
   clickable?: boolean
   raised?: boolean
+  variant?: 'elevation' | 'outlined'
+  sx?: Record<string, unknown>
 }
 
-export const Card: React.FC<CardProps> = ({ children, clickable, raised, className = '', ...props }) => (
-  <div className={`card ${clickable ? 'card--clickable' : ''} ${raised ? 'card--raised' : ''} ${className}`} {...props}>
+export const Card: React.FC<CardProps> = ({ children, clickable, raised, variant = 'elevation', className = '', sx, style, ...props }) => (
+  <div
+    className={`card card--${variant} ${clickable ? 'card--clickable' : ''} ${raised ? 'card--raised' : ''} ${className}`}
+    style={{ ...sxToStyle(sx), ...style }}
+    {...props}
+  >
     {children}
   </div>
 )
@@ -32,10 +39,11 @@ export const CardHeader: React.FC<CardHeaderProps> = ({ title, subheader, action
 
 export interface CardContentProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode
+  sx?: Record<string, unknown>
 }
 
-export const CardContent: React.FC<CardContentProps> = ({ children, className = '', ...props }) => (
-  <div className={`card-content ${className}`} {...props}>
+export const CardContent: React.FC<CardContentProps> = ({ children, className = '', sx, style, ...props }) => (
+  <div className={`card-content ${className}`} style={{ ...sxToStyle(sx), ...style }} {...props}>
     {children}
   </div>
 )
@@ -43,10 +51,11 @@ export const CardContent: React.FC<CardContentProps> = ({ children, className = 
 export interface CardActionsProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode
   disableSpacing?: boolean
+  sx?: Record<string, unknown>
 }
 
-export const CardActions: React.FC<CardActionsProps> = ({ children, disableSpacing, className = '', ...props }) => (
-  <div className={`card-actions ${disableSpacing ? 'card-actions--no-spacing' : ''} ${className}`} {...props}>
+export const CardActions: React.FC<CardActionsProps> = ({ children, disableSpacing, className = '', sx, style, ...props }) => (
+  <div className={`card-actions ${disableSpacing ? 'card-actions--no-spacing' : ''} ${className}`} style={{ ...sxToStyle(sx), ...style }} {...props}>
     {children}
   </div>
 )

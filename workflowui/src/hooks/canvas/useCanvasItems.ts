@@ -39,7 +39,7 @@ export interface UseCanvasItemsReturn {
 
 export function useCanvasItems(): UseCanvasItemsReturn {
   const dispatch = useDispatch<AppDispatch>();
-  const { showNotification } = useUI() as any;
+  const { error: showError, success: showSuccess } = useUI();
   const [isInitialized, setIsInitialized] = useState(false);
 
   const projectId = useSelector((state: RootState) => selectCurrentProjectId(state));
@@ -72,11 +72,11 @@ export function useCanvasItems(): UseCanvasItemsReturn {
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Failed to load canvas items';
       dispatch(setError(errorMsg));
-      showNotification(errorMsg, 'error');
+      showError(errorMsg);
     } finally {
       dispatch(setLoading(false));
     }
-  }, [projectId, dispatch, showNotification]);
+  }, [projectId, dispatch, showError]);
 
   // Delete canvas item
   const deleteCanvasItem = useCallback(
@@ -89,17 +89,17 @@ export function useCanvasItems(): UseCanvasItemsReturn {
         dispatch(removeCanvasItem(itemId));
         await projectCanvasItemDB.delete(itemId);
 
-        showNotification('Workflow removed from canvas', 'success');
+        showSuccess('Workflow removed from canvas');
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : 'Failed to remove from canvas';
         dispatch(setError(errorMsg));
-        showNotification(errorMsg, 'error');
+        showError(errorMsg);
         throw err;
       } finally {
         dispatch(setLoading(false));
       }
     },
-    [projectId, dispatch, showNotification]
+    [projectId, dispatch, showError, showSuccess]
   );
 
   // Set resizing state

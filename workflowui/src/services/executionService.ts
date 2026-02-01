@@ -49,7 +49,7 @@ class ExecutionService {
           await db.executions.update(executionId, {
             status: result.status || 'success',
             endTime: Date.now(),
-            outputs: result.outputs,
+            output: result.output,
             error: result.error
           });
         }

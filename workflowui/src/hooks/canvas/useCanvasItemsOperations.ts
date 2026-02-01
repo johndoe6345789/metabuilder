@@ -33,7 +33,7 @@ export interface UseCanvasItemsOperationsReturn {
 
 export function useCanvasItemsOperations(): UseCanvasItemsOperationsReturn {
   const dispatch = useDispatch<AppDispatch>();
-  const { showNotification } = useUI() as any;
+  const { error: showError, success: showSuccess } = useUI();
   const projectId = useSelector((state: RootState) => selectCurrentProjectId(state));
 
   // Create canvas item
@@ -47,18 +47,18 @@ export function useCanvasItemsOperations(): UseCanvasItemsOperationsReturn {
         dispatch(addCanvasItem(item));
         await projectCanvasItemDB.create(item);
 
-        showNotification('Workflow added to canvas', 'success');
+        showSuccess('Workflow added to canvas');
         return item;
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : 'Failed to add workflow to canvas';
         dispatch(setError(errorMsg));
-        showNotification(errorMsg, 'error');
+        showError(errorMsg);
         throw err;
       } finally {
         dispatch(setLoading(false));
       }
     },
-    [projectId, dispatch, showNotification]
+    [projectId, dispatch, showError, showSuccess]
   );
 
   // Update canvas item
@@ -75,11 +75,11 @@ export function useCanvasItemsOperations(): UseCanvasItemsOperationsReturn {
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : 'Failed to update canvas item';
         dispatch(setError(errorMsg));
-        showNotification(errorMsg, 'error');
+        showError(errorMsg);
         throw err;
       }
     },
-    [projectId, dispatch, showNotification]
+    [projectId, dispatch, showError]
   );
 
   // Bulk update canvas items
@@ -96,11 +96,11 @@ export function useCanvasItemsOperations(): UseCanvasItemsOperationsReturn {
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : 'Failed to update canvas items';
         dispatch(setError(errorMsg));
-        showNotification(errorMsg, 'error');
+        showError(errorMsg);
         throw err;
       }
     },
-    [projectId, dispatch, showNotification]
+    [projectId, dispatch, showError]
   );
 
   return {

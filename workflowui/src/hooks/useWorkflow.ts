@@ -23,7 +23,7 @@ import { Workflow, WorkflowNode, WorkflowConnection } from '../types/workflow';
 
 export function useWorkflow() {
   const dispatch = useDispatch();
-  const saveTimeoutRef = useRef<NodeJS.Timeout>();
+  const saveTimeoutRef = useRef<NodeJS.Timeout>(undefined);
 
   // Selectors
   const workflow = useSelector((state: RootState) => state.workflow.current);

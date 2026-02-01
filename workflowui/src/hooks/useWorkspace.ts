@@ -27,7 +27,7 @@ import { useUI } from './useUI';
 
 export function useWorkspace() {
   const dispatch = useDispatch<AppDispatch>();
-  const { showNotification } = useUI() as any;
+  const { error: showError, success: showSuccess } = useUI();
   const [isInitialized, setIsInitialized] = useState(false);
 
   // Selectors
@@ -71,11 +71,11 @@ export function useWorkspace() {
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Failed to load workspaces';
       dispatch(setError(errorMsg));
-      showNotification(errorMsg, 'error');
+      showError(errorMsg);
     } finally {
       dispatch(setLoading(false));
     }
-  }, [dispatch, getTenantId, currentWorkspaceId, showNotification]);
+  }, [dispatch, getTenantId, currentWorkspaceId, showError]);
 
   // Create workspace
   const createWorkspace = useCallback(
@@ -91,18 +91,18 @@ export function useWorkspace() {
         dispatch(addWorkspace(workspace));
         await workspaceDB.create(workspace);
 
-        showNotification(`Workspace "${workspace.name}" created successfully`, 'success');
+        showSuccess(`Workspace "${workspace.name}" created successfully`);
         return workspace;
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : 'Failed to create workspace';
         dispatch(setError(errorMsg));
-        showNotification(errorMsg, 'error');
+        showError(errorMsg);
         throw err;
       } finally {
         dispatch(setLoading(false));
       }
     },
-    [dispatch, getTenantId, showNotification]
+    [dispatch, getTenantId, showError, showSuccess]
   );
 
   // Update workspace
@@ -114,18 +114,18 @@ export function useWorkspace() {
         dispatch(updateWorkspace(updated));
         await workspaceDB.update(updated);
 
-        showNotification(`Workspace "${updated.name}" updated successfully`, 'success');
+        showSuccess(`Workspace "${updated.name}" updated successfully`);
         return updated;
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : 'Failed to update workspace';
         dispatch(setError(errorMsg));
-        showNotification(errorMsg, 'error');
+        showError(errorMsg);
         throw err;
       } finally {
         dispatch(setLoading(false));
       }
     },
-    [dispatch, showNotification]
+    [dispatch, showError, showSuccess]
   );
 
   // Delete workspace
@@ -137,17 +137,17 @@ export function useWorkspace() {
         dispatch(removeWorkspace(id));
         await workspaceDB.delete(id);
 
-        showNotification('Workspace deleted successfully', 'success');
+        showSuccess('Workspace deleted successfully');
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : 'Failed to delete workspace';
         dispatch(setError(errorMsg));
-        showNotification(errorMsg, 'error');
+        showError(errorMsg);
         throw err;
       } finally {
         dispatch(setLoading(false));
       }
     },
-    [dispatch, showNotification]
+    [dispatch, showError, showSuccess]
   );
 
   // Switch workspace

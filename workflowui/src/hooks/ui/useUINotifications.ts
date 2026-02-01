@@ -30,14 +30,22 @@ export function useUINotifications(): UseUINotificationsReturn {
 
   const notify = useCallback(
     (message: string, type: 'success' | 'error' | 'warning' | 'info' = 'info', duration: number = 5000) => {
+      const id = `notification-${Date.now()}-${Math.random()}`;
       dispatch(
         setNotification({
-          id: `notification-${Date.now()}-${Math.random()}`,
+          id,
           type,
           message,
           duration
         })
       );
+
+      // Auto-remove after duration (must be handled here, not in reducer)
+      if (duration > 0) {
+        setTimeout(() => {
+          dispatch(removeNotification(id));
+        }, duration);
+      }
     },
     [dispatch]
   );

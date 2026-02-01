@@ -7,6 +7,21 @@
 
 import React from 'react';
 import Link from 'next/link';
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CardActions,
+  Typography,
+  TextField,
+  CircularProgress,
+  Grid,
+  Chip,
+  Stack,
+  Paper,
+  Plus,
+} from '@metabuilder/fakemui';
 import { useDashboardLogic } from '../hooks';
 import { Breadcrumbs } from '../components/Navigation/Breadcrumbs';
 
@@ -24,99 +39,111 @@ export default function Dashboard() {
   } = useDashboardLogic();
 
   return (
-    <div >
+    <Box sx={{ p: 3 }}>
       <Breadcrumbs items={[{ label: '🏠 Workspaces', href: '/' }]} />
 
-      <div >
-        <div>
-          <h1>Workspaces</h1>
-          <p>Organize your projects and workflows</p>
-        </div>
-        <button
-          className={` btn btn-primary`}
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 3, mt: 2 }}>
+        <Box>
+          <Typography variant="h4" component="h1" gutterBottom>
+            Workspaces
+          </Typography>
+          <Typography variant="body1" color="text.secondary">
+            Organize your projects and workflows
+          </Typography>
+        </Box>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<Plus />}
           onClick={() => setShowCreateForm(true)}
         >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <line x1="12" y1="5" x2="12" y2="19" strokeWidth="2" />
-            <line x1="5" y1="12" x2="19" y2="12" strokeWidth="2" />
-          </svg>
           New Workspace
-        </button>
-      </div>
+        </Button>
+      </Box>
 
-      <div >
+      <Box>
         {isLoading ? (
-          <div >
-            <div ></div>
-            <p>Loading workspaces...</p>
-          </div>
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 8 }}>
+            <CircularProgress />
+            <Typography sx={{ mt: 2 }}>Loading workspaces...</Typography>
+          </Box>
         ) : (
           <>
             {/* Create Workspace Form */}
             {showCreateForm && (
-              <div >
-                <form onSubmit={handleCreateWorkspace} >
-                  <h3>Create New Workspace</h3>
-                  <input
-                    type="text"
+              <Paper sx={{ p: 3, mb: 3 }}>
+                <form onSubmit={handleCreateWorkspace}>
+                  <Typography variant="h6" gutterBottom>Create New Workspace</Typography>
+                  <TextField
+                    fullWidth
                     placeholder="Workspace name"
                     value={newWorkspaceName}
                     onChange={(e) => setNewWorkspaceName(e.target.value)}
                     autoFocus
-                    
+                    sx={{ mb: 2 }}
                   />
-                  <div >
-                    <button
+                  <Stack direction="row" spacing={2}>
+                    <Button
                       type="submit"
-                      className="btn btn-primary"
+                      variant="contained"
+                      color="primary"
                       disabled={!newWorkspaceName.trim()}
                     >
                       Create
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       type="button"
-                      className="btn btn-secondary"
+                      variant="outlined"
                       onClick={resetWorkspaceForm}
                     >
                       Cancel
-                    </button>
-                  </div>
+                    </Button>
+                  </Stack>
                 </form>
-              </div>
+              </Paper>
             )}
 
             {/* Workspaces Grid */}
             {workspaces.length === 0 && !showCreateForm ? (
               <EmptyState onCreateWorkspace={() => setShowCreateForm(true)} />
             ) : (
-              <div >
+              <Grid container spacing={3}>
                 {workspaces.map(workspace => (
-                  <div
-                    key={workspace.id}
-                    
-                    onClick={() => handleWorkspaceClick(workspace.id)}
-                  >
-                    <div
-                      
-                      style={{ backgroundColor: workspace.color || '#1976d2' }}
+                  <Grid item xs={12} sm={6} md={4} key={workspace.id}>
+                    <Card
+                      sx={{ cursor: 'pointer', '&:hover': { boxShadow: 4 } }}
+                      onClick={() => handleWorkspaceClick(workspace.id)}
                     >
-                      {workspace.icon || '📁'}
-                    </div>
-                    <div >
-                      <h3>{workspace.name}</h3>
-                      <p>{workspace.description || 'No description'}</p>
-                      <span >
-                        Created {new Date(workspace.createdAt).toLocaleDateString()}
-                      </span>
-                    </div>
-                  </div>
+                      <Box
+                        sx={{
+                          height: 80,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '2rem',
+                          backgroundColor: workspace.color || 'primary.main',
+                        }}
+                      >
+                        {workspace.icon || '📁'}
+                      </Box>
+                      <CardContent>
+                        <Typography variant="h6" gutterBottom>{workspace.name}</Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {workspace.description || 'No description'}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
+                          Created {new Date(workspace.createdAt).toLocaleDateString()}
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
                 ))}
-              </div>
+              </Grid>
             )}
           </>
         )}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }
 
@@ -126,18 +153,20 @@ interface EmptyStateProps {
 
 function EmptyState({ onCreateWorkspace }: EmptyStateProps) {
   return (
-    <div >
-      <div >
+    <Paper sx={{ textAlign: 'center', py: 8, px: 4 }}>
+      <Box sx={{ color: 'text.secondary', mb: 2 }}>
         <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor">
           <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" strokeWidth="2" />
         </svg>
-      </div>
-      <h2>No workspaces yet</h2>
-      <p>Create your first workspace to organize your projects</p>
-      <button className="btn btn-primary btn-lg" onClick={onCreateWorkspace}>
+      </Box>
+      <Typography variant="h5" gutterBottom>No workspaces yet</Typography>
+      <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+        Create your first workspace to organize your projects
+      </Typography>
+      <Button variant="contained" size="large" onClick={onCreateWorkspace}>
         Create Your First Workspace
-      </button>
-    </div>
+      </Button>
+    </Paper>
   );
 }
 
@@ -147,24 +176,35 @@ interface WorkflowGridProps {
 
 function WorkflowGrid({ workflows }: WorkflowGridProps) {
   return (
-    <div >
+    <Grid container spacing={3}>
       {workflows.map((workflow) => (
-        <div key={workflow.id} >
-          <div >
-            <h3>{workflow.name}</h3>
-            <span className="badge badge-info">{workflow.nodes?.length || 0} nodes</span>
-          </div>
-          <p >{workflow.description || 'No description'}</p>
-          <div >
-            <span >
-              Updated {new Date(workflow.updatedAt).toLocaleDateString()}
-            </span>
-            <Link href={`/editor/${workflow.id}` as any} className="btn btn-primary btn-sm">
-              Edit
-            </Link>
-          </div>
-        </div>
+        <Grid item xs={12} sm={6} md={4} key={workflow.id}>
+          <Card>
+            <CardContent>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                <Typography variant="h6">{workflow.name}</Typography>
+                <Chip label={`${workflow.nodes?.length || 0} nodes`} size="small" color="info" />
+              </Box>
+              <Typography variant="body2" color="text.secondary">
+                {workflow.description || 'No description'}
+              </Typography>
+            </CardContent>
+            <CardActions sx={{ justifyContent: 'space-between', px: 2, pb: 2 }}>
+              <Typography variant="caption" color="text.secondary">
+                Updated {new Date(workflow.updatedAt).toLocaleDateString()}
+              </Typography>
+              <Button
+                component={Link}
+                href={`/editor/${workflow.id}` as any}
+                variant="contained"
+                size="small"
+              >
+                Edit
+              </Button>
+            </CardActions>
+          </Card>
+        </Grid>
       ))}
-    </div>
+    </Grid>
   );
 }

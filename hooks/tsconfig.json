@@ -27,7 +27,6 @@
     "dist",
     "**/*.test.ts",
     "**/*.test.tsx",
-    "*.tsx",
     "hooks.ts",
     "I18nNavigation.ts",
     "ToastContext.tsx",

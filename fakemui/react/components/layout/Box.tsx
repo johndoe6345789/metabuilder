@@ -1,4 +1,5 @@
 import React, { forwardRef } from 'react'
+import { sxToStyle } from '../utils/sx'
 
 export interface BoxProps extends React.HTMLAttributes<HTMLElement> {
   children?: React.ReactNode
@@ -7,8 +8,13 @@ export interface BoxProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 export const Box = forwardRef<HTMLElement, BoxProps>(
-  ({ children, component: Component = 'div', className = '', sx, ...props }, ref) => (
-    <Component ref={ref} className={className} {...props}>
+  ({ children, component: Component = 'div', className = '', sx, style, ...props }, ref) => (
+    <Component
+      ref={ref}
+      className={className}
+      style={{ ...sxToStyle(sx), ...style }}
+      {...props}
+    >
       {children}
     </Component>
   )

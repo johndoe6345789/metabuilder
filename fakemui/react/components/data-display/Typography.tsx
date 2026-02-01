@@ -1,4 +1,5 @@
 import React from 'react'
+import { sxToStyle } from '../utils/sx'
 
 export type TypographyVariant = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'body1' | 'body2' | 'subtitle1' | 'subtitle2' | 'caption' | 'overline'
 
@@ -10,6 +11,7 @@ export interface TypographyProps extends React.HTMLAttributes<HTMLElement> {
   gutterBottom?: boolean
   noWrap?: boolean
   as?: React.ElementType
+  component?: React.ElementType  // MUI-compatible alias for 'as'
   sx?: Record<string, unknown>  // MUI sx prop for styling compatibility
 }
 
@@ -22,11 +24,15 @@ export const Typography: React.FC<TypographyProps> = ({
   noWrap,
   className = '',
   as,
+  component,
   sx,
+  style,
   ...props
 }) => {
+  // Support both 'as' and 'component' props (component is MUI-style)
   const Tag =
     as ||
+    component ||
     (variant === 'h1' ||
     variant === 'h2' ||
     variant === 'h3' ||
@@ -39,6 +45,7 @@ export const Typography: React.FC<TypographyProps> = ({
   return (
     <Tag
       className={`typography ${variant ? `typography--${variant}` : ''} ${color ? `text-${color}` : ''} ${align ? `text-${align}` : ''} ${gutterBottom ? 'mb-md' : ''} ${noWrap ? 'truncate' : ''} ${className}`}
+      style={{ ...sxToStyle(sx), ...style }}
       {...props}
     >
       {children}

@@ -1,0 +1,108 @@
+{
+  "name": "@metabuilder/components",
+  "version": "1.0.0",
+  "description": "Shared React components for MetaBuilder projects",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./vanilla": {
+      "import": "./dist/vanilla/index.mjs",
+      "require": "./dist/vanilla/index.js",
+      "types": "./dist/vanilla/index.d.ts"
+    },
+    "./vanilla/loading": {
+      "import": "./dist/vanilla/loading/index.mjs",
+      "require": "./dist/vanilla/loading/index.js",
+      "types": "./dist/vanilla/loading/index.d.ts"
+    },
+    "./vanilla/error": {
+      "import": "./dist/vanilla/error/index.mjs",
+      "require": "./dist/vanilla/error/index.js",
+      "types": "./dist/vanilla/error/index.d.ts"
+    },
+    "./vanilla/empty-state": {
+      "import": "./dist/vanilla/empty-state/index.mjs",
+      "require": "./dist/vanilla/empty-state/index.js",
+      "types": "./dist/vanilla/empty-state/index.d.ts"
+    },
+    "./vanilla/skeleton": {
+      "import": "./dist/vanilla/skeleton/index.mjs",
+      "require": "./dist/vanilla/skeleton/index.js",
+      "types": "./dist/vanilla/skeleton/index.d.ts"
+    },
+    "./radix": {
+      "import": "./dist/radix/index.mjs",
+      "require": "./dist/radix/index.js",
+      "types": "./dist/radix/index.d.ts"
+    },
+    "./fakemui": {
+      "import": "./dist/fakemui/index.mjs",
+      "require": "./dist/fakemui/index.js",
+      "types": "./dist/fakemui/index.d.ts"
+    },
+    "./loading": {
+      "import": "./dist/vanilla/loading/index.mjs",
+      "require": "./dist/vanilla/loading/index.js",
+      "types": "./dist/vanilla/loading/index.d.ts"
+    },
+    "./error": {
+      "import": "./dist/vanilla/error/index.mjs",
+      "require": "./dist/vanilla/error/index.js",
+      "types": "./dist/vanilla/error/index.d.ts"
+    },
+    "./empty-state": {
+      "import": "./dist/vanilla/empty-state/index.mjs",
+      "require": "./dist/vanilla/empty-state/index.js",
+      "types": "./dist/vanilla/empty-state/index.d.ts"
+    },
+    "./skeleton": {
+      "import": "./dist/vanilla/skeleton/index.mjs",
+      "require": "./dist/vanilla/skeleton/index.js",
+      "types": "./dist/vanilla/skeleton/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "vanilla",
+    "radix",
+    "fakemui"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . --ext .ts,.tsx"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.9.3"
+  },
+  "keywords": [
+    "react",
+    "components",
+    "loading",
+    "error-boundary",
+    "empty-state",
+    "skeleton",
+    "metabuilder"
+  ],
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/metabuilder/metabuilder.git",
+    "directory": "components"
+  }
+}

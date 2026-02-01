@@ -14,6 +14,29 @@ export { useFaviconDesigner } from './useFaviconDesigner'
 export { useDragResize } from './useDragResize'
 export { useGithubBuildStatus } from './use-github-build-status'
 
+// Accessibility hooks (migrated from @metabuilder/fakemui)
+export {
+  useAccessible,
+  useKeyboardNavigation,
+  useFocusManagement,
+  useLiveRegion,
+  useFocusTrap,
+  generateTestId,
+  testId,
+  aria,
+  keyboard,
+  validate,
+} from './useAccessible'
+export type {
+  AccessibilityFeature,
+  AccessibilityComponent,
+  AccessibilityAction,
+} from './useAccessible'
+
+// Toast hooks (migrated from @metabuilder/fakemui)
+export { ToastProvider, useToast } from './useToast'
+export type { ToastSeverity, ToastOptions, ToastContextValue, ToastProviderProps } from './useToast'
+
 // Data structure hooks (5 new)
 export { useSet } from './useSet'
 export { useMap } from './useMap'

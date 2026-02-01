@@ -4,6 +4,7 @@ import { FormHelperText } from './FormHelperText'
 import { Input, InputProps } from './Input'
 import { Select } from './Select'
 import { useAccessible } from '../../../src/utils/useAccessible'
+import { sxToStyle } from '../utils/sx'
 
 export interface TextFieldProps extends Omit<InputProps, 'size' | 'label' | 'helperText'> {
   label?: React.ReactNode
@@ -17,10 +18,12 @@ export interface TextFieldProps extends Omit<InputProps, 'size' | 'label' | 'hel
   size?: 'small' | 'medium'
   /** Unique identifier for testing and accessibility */
   testId?: string
+  /** MUI sx prop for styling */
+  sx?: Record<string, unknown>
 }
 
 export const TextField = forwardRef<HTMLInputElement | HTMLSelectElement, TextFieldProps>(
-  ({ label, helperText, error, className = '', id: providedId, select, children, size, testId: customTestId, ...props }, ref) => {
+  ({ label, helperText, error, className = '', id: providedId, select, children, size, testId: customTestId, sx, style, ...props }, ref) => {
     const generatedId = useId()
     const id = providedId ?? generatedId
     const helperTextId = `${id}-helper-text`
@@ -36,7 +39,7 @@ export const TextField = forwardRef<HTMLInputElement | HTMLSelectElement, TextFi
     })
 
     return (
-      <div className={`text-field ${error ? 'text-field--error' : ''} ${className}`}>
+      <div className={`text-field ${error ? 'text-field--error' : ''} ${className}`} style={{ ...sxToStyle(sx), ...style }}>
         {label && <FormLabel htmlFor={id}>{label}</FormLabel>}
         {select ? (
           <Select
