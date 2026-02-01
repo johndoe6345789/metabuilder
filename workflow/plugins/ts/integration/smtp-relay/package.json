@@ -14,7 +14,7 @@
   "author": "MetaBuilder Contributors",
   "license": "MIT",
   "dependencies": {
-    "nodemailer": "^6.9.7",
+    "nodemailer": "^7.0.13",
     "@metabuilder/workflow": "workspace:*"
   },
   "devDependencies": {
