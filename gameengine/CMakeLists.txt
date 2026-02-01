@@ -358,7 +358,6 @@ if(BUILD_SDL3_APP)
             src/services/impl/shader/shader_pipeline_validator.cpp
             $<$<NOT:$<BOOL:${ENABLE_VITA}>>:src/services/impl/gui/bgfx_gui_service.cpp>
             $<$<NOT:$<BOOL:${ENABLE_VITA}>>:src/services/impl/graphics/bgfx_shader_compiler.cpp>
-            src/services/impl/audio/audio_command_service.cpp
             src/services/impl/scene/physics_bridge_service.cpp
             src/services/impl/scene/mesh_service.cpp
             src/services/impl/platform/sdl_window_service.cpp
