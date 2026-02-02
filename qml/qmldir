@@ -1,0 +1,151 @@
+module QmlComponents
+
+# ============================================================================
+# MetaBuilder QML Component Library
+# Material Design 3 components for Qt6 desktop applications
+# ============================================================================
+
+# Core UI Components
+CButton 1.0 components/core/CButton.qml
+CCard 1.0 components/core/CCard.qml
+CChip 1.0 components/core/CChip.qml
+CListItem 1.0 components/core/CListItem.qml
+CToolbar 1.0 components/core/CToolbar.qml
+CIconButton 1.0 components/core/CIconButton.qml
+CLoadingOverlay 1.0 components/core/CLoadingOverlay.qml
+CIcon 1.0 components/core/CIcon.qml
+CFab 1.0 components/core/CFab.qml
+
+# Form Components
+CTextField 1.0 components/form/CTextField.qml
+CFormGroup 1.0 components/form/CFormGroup.qml
+CLabel 1.0 components/form/CLabel.qml
+CAutocomplete 1.0 components/form/CAutocomplete.qml
+CCheckbox 1.0 components/form/CCheckbox.qml
+CRadio 1.0 components/form/CRadio.qml
+CSwitch 1.0 components/form/CSwitch.qml
+CSelect 1.0 components/form/CSelect.qml
+CSlider 1.0 components/form/CSlider.qml
+CToggleButton 1.0 components/form/CToggleButton.qml
+CFormHelperText 1.0 components/form/CFormHelperText.qml
+CFormLabel 1.0 components/form/CFormLabel.qml
+CInput 1.0 components/form/CInput.qml
+CInputBase 1.0 components/form/CInputBase.qml
+CTextarea 1.0 components/form/CTextarea.qml
+CTextareaAutosize 1.0 components/form/CTextareaAutosize.qml
+CRating 1.0 components/form/CRating.qml
+
+# Layout Components
+CGrid 1.0 components/layout/CGrid.qml
+CGridItem 1.0 components/layout/CGridItem.qml
+CContainer 1.0 components/layout/CContainer.qml
+CBox 1.0 components/layout/CBox.qml
+CFlex 1.0 components/layout/CFlex.qml
+CStack 1.0 components/layout/CStack.qml
+CImageList 1.0 components/layout/CImageList.qml
+Spacer 1.0 components/layout/Spacer.qml
+FlexRow 1.0 components/layout/FlexRow.qml
+FlexCol 1.0 components/layout/FlexCol.qml
+
+# Data Display Components
+CTable 1.0 components/data-display/CTable.qml
+CStatBadge 1.0 components/data-display/CStatBadge.qml
+CStatusBadge 1.0 components/data-display/CStatusBadge.qml
+CAvatar 1.0 components/data-display/CAvatar.qml
+CBadge 1.0 components/data-display/CBadge.qml
+CDivider 1.0 components/data-display/CDivider.qml
+CTooltip 1.0 components/data-display/CTooltip.qml
+CList 1.0 components/data-display/CList.qml
+
+# Feedback Components
+CAlert 1.0 components/feedback/CAlert.qml
+CDialog 1.0 components/feedback/CDialog.qml
+CSnackbar 1.0 components/feedback/CSnackbar.qml
+CProgress 1.0 components/feedback/CProgress.qml
+CSpinner 1.0 components/feedback/CSpinner.qml
+CBackdrop 1.0 components/feedback/CBackdrop.qml
+CSkeleton 1.0 components/feedback/CSkeleton.qml
+CEmptyState 1.0 components/feedback/CEmptyState.qml
+CErrorState 1.0 components/feedback/CErrorState.qml
+
+# Navigation Components
+CTabBar 1.0 components/navigation/CTabBar.qml
+CBreadcrumbs 1.0 components/navigation/CBreadcrumbs.qml
+CMenu 1.0 components/navigation/CMenu.qml
+CPagination 1.0 components/navigation/CPagination.qml
+CStepper 1.0 components/navigation/CStepper.qml
+CTabs 1.0 components/navigation/CTabs.qml
+CBottomNavigation 1.0 components/navigation/CBottomNavigation.qml
+CLink 1.0 components/navigation/CLink.qml
+CSpeedDial 1.0 components/navigation/CSpeedDial.qml
+CSidebar 1.0 components/navigation/CSidebar.qml
+
+# Surfaces Components
+CAppBar 1.0 components/surfaces/CAppBar.qml
+CDrawer 1.0 components/surfaces/CDrawer.qml
+CPaper 1.0 components/surfaces/CPaper.qml
+CAccordion 1.0 components/surfaces/CAccordion.qml
+CAccordionItem 1.0 components/surfaces/CAccordionItem.qml
+
+# Lab Components (experimental)
+CLoadingButton 1.0 components/lab/CLoadingButton.qml
+CTimeline 1.0 components/lab/CTimeline.qml
+CTimelineItem 1.0 components/lab/CTimelineItem.qml
+CMasonry 1.0 components/lab/CMasonry.qml
+CTreeView 1.0 components/lab/CTreeView.qml
+CDataGrid 1.0 components/lab/CDataGrid.qml
+CDatePicker 1.0 components/lab/CDatePicker.qml
+CTimePicker 1.0 components/lab/CTimePicker.qml
+CDateTimePicker 1.0 components/lab/CDateTimePicker.qml
+
+# Utils Components
+CClickAwayListener 1.0 components/utils/CClickAwayListener.qml
+CCssBaseline 1.0 components/utils/CCssBaseline.qml
+CGlobalStyles 1.0 components/utils/CGlobalStyles.qml
+CModal 1.0 components/utils/CModal.qml
+CNoSsr 1.0 components/utils/CNoSsr.qml
+CPopper 1.0 components/utils/CPopper.qml
+CPortal 1.0 components/utils/CPortal.qml
+CTransitions 1.0 components/utils/CTransitions.qml
+CClassNames 1.0 components/utils/CClassNames.qml
+CUseMediaQuery 1.0 components/utils/CUseMediaQuery.qml
+CPopover 1.0 components/utils/CPopover.qml
+
+# Theming Components
+CThemeProvider 1.0 components/theming/CThemeProvider.qml
+CStyled 1.0 components/theming/CStyled.qml
+
+# Atoms/Building Blocks
+CPanel 1.0 components/atoms/CPanel.qml
+CSection 1.0 components/atoms/CSection.qml
+CTitle 1.0 components/atoms/CTitle.qml
+CMarkdown 1.0 components/atoms/CMarkdown.qml
+CProse 1.0 components/atoms/CProse.qml
+CHighlight 1.0 components/atoms/CHighlight.qml
+CBlockquote 1.0 components/atoms/CBlockquote.qml
+CCodeBlock 1.0 components/atoms/CCodeBlock.qml
+CCodeInline 1.0 components/atoms/CCodeInline.qml
+CText 1.0 components/atoms/CText.qml
+CAutoGrid 1.0 components/atoms/CAutoGrid.qml
+CEditorWrapper 1.0 components/atoms/CEditorWrapper.qml
+CStates 1.0 components/atoms/CStates.qml
+CTypography 1.0 components/atoms/CTypography.qml
+
+# Hybrid Application Components (complete Qt6 views)
+TaskList 1.0 hybrid/TaskList.qml
+TaskDetail 1.0 hybrid/TaskDetail.qml
+NewPrompt 1.0 hybrid/NewPrompt.qml
+UserInfo 1.0 hybrid/UserInfo.qml
+SearchDialog 1.0 hybrid/SearchDialog.qml
+Documentation 1.0 hybrid/Documentation.qml
+MarkdownRenderer 1.0 hybrid/MarkdownRenderer.qml
+
+# Widgets (specialized desktop widgets)
+AjaxQueueWidget 1.0 widgets/AjaxQueueWidget.qml
+DetailPane 1.0 widgets/DetailPane.qml
+LanguageSelector 1.0 widgets/LanguageSelector.qml
+NerdPanel 1.0 widgets/NerdPanel.qml
+PatchDialog 1.0 widgets/PatchDialog.qml
+SendPromptDialog 1.0 widgets/SendPromptDialog.qml
+TaskListItem 1.0 widgets/TaskListItem.qml
+ThemeSelector 1.0 widgets/ThemeSelector.qml

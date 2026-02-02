@@ -18,6 +18,7 @@
     "./react/components/atoms": "./react/components/atoms/index.ts",
     "./react/components/lab": "./react/components/lab/index.ts",
     "./react/components/x": "./react/components/x/index.ts",
+    "./react/components/email": "./react/components/email/index.ts",
     "./scss": "./scss/index.scss"
   },
   "sideEffects": [

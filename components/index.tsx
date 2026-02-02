@@ -119,8 +119,12 @@ export {
 // FAKEMUI COMPONENTS (Built on @metabuilder/fakemui)
 // =============================================================================
 
-// Add FakeMUI component exports here as they are created
-// export * from './fakemui'
+// Re-export all FakeMUI components
+// Components are available via:
+//   import { Button, Card } from '@metabuilder/components/fakemui'
+// Or via the main barrel export (with potential naming conflicts):
+//   import { Button } from '@metabuilder/components'
+export * from './fakemui'
 
 // =============================================================================
 // COMBINED STYLES
