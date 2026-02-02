@@ -1,6 +1,14 @@
 /**
- * Notification Container Component
- * Displays notifications from Redux state
+ * @deprecated This component is deprecated in favor of the shared NotificationContainer
+ * from @metabuilder/components. Use NotificationAdapter instead, which bridges
+ * the Redux state to the shared component.
+ *
+ * Migration guide:
+ * - Replace imports of NotificationContainer with NotificationAdapter
+ * - The adapter automatically connects to useUI() hook
+ *
+ * @see /src/components/UI/NotificationAdapter.tsx
+ * @see @metabuilder/components NotificationContainer
  */
 
 import React, { useEffect } from 'react';

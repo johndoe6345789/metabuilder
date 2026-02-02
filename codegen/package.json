@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@metabuilder/api-clients": "workspace:*",
+    "@metabuilder/components": "workspace:*",
     "@metabuilder/core-hooks": "workspace:*",
     "@metabuilder/fakemui": "workspace:*",
     "@metabuilder/hooks-auth": "workspace:*",

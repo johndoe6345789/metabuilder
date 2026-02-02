@@ -21,6 +21,7 @@
   "dependencies": {
     "@metabuilder/api-clients": "file:../../redux/api-clients",
     "@metabuilder/core-hooks": "file:../../redux/core-hooks",
+    "@metabuilder/components": "file:../components",
     "@metabuilder/fakemui": "file:../fakemui",
     "@reduxjs/toolkit": "^2.5.2",
     "axios": "^1.7.7",

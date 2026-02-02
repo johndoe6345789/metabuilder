@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@babel/standalone": "^7.24.0",
+    "@metabuilder/components": "file:../components",
     "@monaco-editor/react": "^4.6.0",
     "@phosphor-icons/react": "^2.1.7",
     "@reduxjs/toolkit": "^2.5.0",

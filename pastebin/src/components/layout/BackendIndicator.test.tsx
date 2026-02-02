@@ -4,6 +4,17 @@ import * as storageModule from '@/lib/storage';
 
 jest.mock('@/lib/storage');
 
+// Mock the styles injection to avoid DOM manipulation in tests
+jest.mock('@metabuilder/components', () => ({
+  BackendStatus: ({ status, showDot }: { status: string; showDot?: boolean }) => (
+    <div data-testid="status-badge" data-status={status} role="status">
+      <span>{status === 'connected' ? 'Connected' : 'Local'}</span>
+      {showDot && <span data-testid="activity-dot" />}
+    </div>
+  ),
+  statusIndicatorStyles: '',
+}));
+
 describe('BackendIndicator', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -22,37 +33,37 @@ describe('BackendIndicator', () => {
       expect(screen.getByText('Local')).toBeInTheDocument();
     });
 
-    test('has disconnected styling', () => {
+    test('has disconnected status', () => {
+      render(<BackendIndicator />);
+      const indicator = screen.getByTestId('status-badge');
+      expect(indicator).toHaveAttribute('data-status', 'disconnected');
+    });
+
+    test('renders wrapper with test id', () => {
+      render(<BackendIndicator />);
+      const wrapper = screen.getByTestId('backend-indicator');
+      expect(wrapper).toBeInTheDocument();
+    });
+
+    test('renders status badge', () => {
+      render(<BackendIndicator />);
+      const indicator = screen.getByTestId('status-badge');
+      expect(indicator).toBeInTheDocument();
+    });
+
+    test('has status role for accessibility', () => {
+      render(<BackendIndicator />);
+      const indicator = screen.getByRole('status');
+      expect(indicator).toBeInTheDocument();
+    });
+
+    test('renders with correct content', () => {
       render(<BackendIndicator />);
       const indicator = screen.getByTestId('backend-indicator');
       expect(indicator).toBeInTheDocument();
     });
 
-    test('renders database icon', () => {
-      render(<BackendIndicator />);
-      const indicator = screen.getByTestId('backend-indicator');
-      expect(indicator).toBeInTheDocument();
-    });
-
-    test('has styling applied', () => {
-      render(<BackendIndicator />);
-      const indicator = screen.getByTestId('backend-indicator');
-      expect(indicator).toHaveClass('flex');
-    });
-
-    test('renders with background and border', () => {
-      render(<BackendIndicator />);
-      const indicator = screen.getByTestId('backend-indicator');
-      expect(indicator).toBeInTheDocument();
-    });
-
-    test('renders with proper sizing', () => {
-      render(<BackendIndicator />);
-      const indicator = screen.getByTestId('backend-indicator');
-      expect(indicator).toBeInTheDocument();
-    });
-
-    test('has tooltip on hover', () => {
+    test('has proper structure', () => {
       render(<BackendIndicator />);
       const indicator = screen.getByTestId('backend-indicator');
       expect(indicator).toBeInTheDocument();
@@ -71,27 +82,27 @@ describe('BackendIndicator', () => {
       expect(screen.getByText('Connected')).toBeInTheDocument();
     });
 
-    test('has connected styling', () => {
+    test('has connected status', () => {
       render(<BackendIndicator />);
-      const indicator = screen.getByTestId('backend-indicator');
-      expect(indicator).toBeInTheDocument();
+      const indicator = screen.getByTestId('status-badge');
+      expect(indicator).toHaveAttribute('data-status', 'connected');
     });
 
     test('displays connected state', () => {
       render(<BackendIndicator />);
-      const indicator = screen.getByTestId('backend-indicator');
+      const indicator = screen.getByTestId('status-badge');
       expect(indicator).toBeInTheDocument();
     });
 
-    test('renders with accent styling', () => {
+    test('renders with connected styling', () => {
       render(<BackendIndicator />);
-      const indicator = screen.getByTestId('backend-indicator');
+      const indicator = screen.getByTestId('status-badge');
       expect(indicator).toBeInTheDocument();
     });
 
-    test('renders cloud check icon', () => {
+    test('renders status component', () => {
       render(<BackendIndicator />);
-      const indicator = screen.getByTestId('backend-indicator');
+      const indicator = screen.getByTestId('status-badge');
       expect(indicator).toBeInTheDocument();
     });
   });
@@ -105,8 +116,8 @@ describe('BackendIndicator', () => {
 
     test('shows dot indicator when auto-configured', () => {
       (process.env as any).NEXT_PUBLIC_FLASK_BACKEND_URL = 'http://localhost:5000';
-      const { container } = render(<BackendIndicator />);
-      const dot = container.querySelector('[class*="rounded-full"]');
+      render(<BackendIndicator />);
+      const dot = screen.getByTestId('activity-dot');
       expect(dot).toBeInTheDocument();
     });
 
@@ -117,20 +128,20 @@ describe('BackendIndicator', () => {
       });
       render(<BackendIndicator />);
       expect(screen.getByText('Connected')).toBeInTheDocument();
+      expect(screen.queryByTestId('activity-dot')).not.toBeInTheDocument();
     });
   });
 
   describe('Tooltip functionality', () => {
-    test('renders tooltip for local storage', () => {
+    test('renders status for local storage', () => {
       (storageModule.getStorageConfig as jest.Mock).mockReturnValue({
         backend: 'indexeddb',
       });
       render(<BackendIndicator />);
-      // Tooltip content is rendered in TooltipProvider
       expect(screen.getByTestId('backend-indicator')).toBeInTheDocument();
     });
 
-    test('renders tooltip for Flask backend', () => {
+    test('renders status for Flask backend', () => {
       (storageModule.getStorageConfig as jest.Mock).mockReturnValue({
         backend: 'flask',
       });
@@ -152,16 +163,16 @@ describe('BackendIndicator', () => {
       expect(indicator).toHaveTextContent('Local');
     });
 
-    test('renders with proper font weight', () => {
+    test('renders status badge component', () => {
       render(<BackendIndicator />);
-      const indicator = screen.getByTestId('backend-indicator');
+      const indicator = screen.getByTestId('status-badge');
       expect(indicator).toBeInTheDocument();
     });
 
-    test('renders flex container for alignment', () => {
+    test('renders wrapper element', () => {
       render(<BackendIndicator />);
       const indicator = screen.getByTestId('backend-indicator');
-      expect(indicator).toHaveClass('flex');
+      expect(indicator).toBeInTheDocument();
     });
   });
 

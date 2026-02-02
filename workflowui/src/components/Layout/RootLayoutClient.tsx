@@ -9,7 +9,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { store } from '../../store/store';
 import MainLayout from './MainLayout';
-import { NotificationContainer } from '../UI/NotificationContainer';
+import { NotificationAdapter } from '../UI/NotificationAdapter';
 import { LoadingOverlay } from '../UI/LoadingOverlay';
 import { AuthInitializer } from '../Auth/AuthInitializer';
 
@@ -24,7 +24,7 @@ export default function RootLayoutClient({ children }: RootLayoutClientProps) {
       <MainLayout showSidebar={true}>
         {children}
       </MainLayout>
-      <NotificationContainer />
+      <NotificationAdapter />
       <LoadingOverlay />
     </Provider>
   );
