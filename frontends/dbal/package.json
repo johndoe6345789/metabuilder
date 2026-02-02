@@ -17,7 +17,7 @@
     "@metabuilder/core-hooks": "file:../../redux/core-hooks",
     "@metabuilder/api-clients": "file:../../redux/api-clients",
     "next": "16.1.5",
-    "react": "19.2.3",
+    "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-redux": "^9.2.0",
     "redux": "^5.0.1",
@@ -26,7 +26,7 @@
   "devDependencies": {
     "@playwright/test": "^1.49.1",
     "@types/node": "^25.1.0",
-    "@types/react": "19.2.8",
+    "@types/react": "19.2.10",
     "@types/react-dom": "19.2.3",
     "autoprefixer": "10.4.23",
     "eslint": "^9.39.2",

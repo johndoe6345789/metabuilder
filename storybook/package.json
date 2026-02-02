@@ -10,7 +10,7 @@
     "preview": "npx serve storybook-static"
   },
   "dependencies": {
-    "react": "^18.3.1",
+    "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "fengari-web": "^0.1.4",
     "fengari-interop": "^0.1.4",
@@ -22,7 +22,7 @@
     "@storybook/react": "^10.2.0",
     "@storybook/react-vite": "^10.2.3",
     "@storybook/test": "^8.6.15",
-    "@types/react": "^18.3.0",
+    "@types/react": "^19.2.10",
     "@types/react-dom": "^18.3.5",
     "@vitejs/plugin-react": "^5.1.2",
     "sass": "^1.83.5",
