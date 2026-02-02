@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../../interfaces/i_audio_service.hpp"
-#include "../../interfaces/i_logger.hpp"
-#include "../../interfaces/i_workflow_step.hpp"
+#include "../../../interfaces/i_audio_service.hpp"
+#include "../../../interfaces/i_logger.hpp"
+#include "../../../interfaces/i_workflow_step.hpp"
 
 #include <memory>
 

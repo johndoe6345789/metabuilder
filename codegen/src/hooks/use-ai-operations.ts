@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { AIService } from '@/lib/ai-service'
 import { toast } from 'sonner'
-import { ProjectFile, PrismaModel, ThemeConfig } from '@/types/project'
 
 export function useAIOperations() {
   const [isProcessing, setIsProcessing] = useState(false)

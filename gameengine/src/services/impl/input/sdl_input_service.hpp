@@ -3,6 +3,7 @@
 #include "services/interfaces/i_input_service.hpp"
 #include "services/interfaces/i_logger.hpp"
 #include "services/interfaces/i_config_service.hpp"
+#include "services/interfaces/gui_types.hpp"
 #include "../../../events/i_event_bus.hpp"
 #include <memory>
 #include <unordered_map>

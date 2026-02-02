@@ -1,5 +1,4 @@
 import { useNavigate } from 'react-router-dom'
-import { Card } from '@/components/ui/card'
 import { 
   House, 
   ArrowLeft, 
@@ -11,13 +10,11 @@ import {
   ChartBar
 } from '@phosphor-icons/react'
 import {
-  EmptyState,
   ActionButton,
   Stack,
   Heading,
   Text,
   Kbd,
-  IconWrapper,
   GlowCard,
   ResponsiveGrid,
   Container

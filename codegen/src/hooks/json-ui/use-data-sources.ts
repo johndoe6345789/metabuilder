@@ -8,11 +8,6 @@ export function useDataSources(dataSources: DataSource[]) {
   const [data, setData] = useState<Record<string, any>>({})
   const [loading, setLoading] = useState(true)
 
-  const staticSources = useMemo(
-    () => dataSources.filter((ds) => ds.type === 'static'),
-    [dataSources]
-  )
-
   const derivedSources = useMemo(
     () => dataSources.filter((ds) => ds.expression || ds.valueTemplate),
     [dataSources]

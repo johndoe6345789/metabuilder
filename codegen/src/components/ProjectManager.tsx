@@ -10,7 +10,6 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Badge } from '@/components/ui/badge'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog'
 import { FloppyDisk, FolderOpen, Trash, Copy, DownloadSimple, UploadSimple, Plus, FolderPlus } from '@phosphor-icons/react'
-import { SavedProject } from '@/lib/project-service'
 import { Project } from '@/types/project'
 import { cn } from '@/lib/utils'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
@@ -36,7 +35,6 @@ export function ProjectManager({ currentProject, onProjectLoad }: ProjectManager
     newProjectDialogOpen,
     deleteDialogOpen,
     importDialogOpen,
-    projectToDelete,
     setSaveDialogOpen,
     setLoadDialogOpen,
     setNewProjectDialogOpen,

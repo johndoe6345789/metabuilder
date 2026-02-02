@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../interfaces/mesh_types.hpp"
-#include "../../core/vertex.hpp"
+#include "../../../core/vertex.hpp"
 
 #include <cstdint>
 #include <vector>

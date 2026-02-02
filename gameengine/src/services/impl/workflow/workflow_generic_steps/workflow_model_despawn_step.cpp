@@ -2,7 +2,7 @@
 
 #include "../workflow_step_io_resolver.hpp"
 #include "../workflow_step_parameter_resolver.hpp"
-#include "../../interfaces/scene_types.hpp"
+#include "../../../interfaces/scene_types.hpp"
 
 #include <stdexcept>
 #include <utility>

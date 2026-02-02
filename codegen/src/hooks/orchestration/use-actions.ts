@@ -1,7 +1,7 @@
 /// <reference path="../../global.d.ts" />
 
 import { useState, useCallback, useMemo } from 'react'
-import { PageSchema, ActionConfig } from '@/types/page-schema'
+import { ActionConfig } from '@/types/page-schema'
 import { toast } from 'sonner'
 
 export function useActions(actions: ActionConfig[] = [], context: Record<string, any> = {}) {

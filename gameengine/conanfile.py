@@ -44,6 +44,8 @@ class SDL3CppConan(ConanFile):
         self.requires("wayland/1.23.92", override=True)
         self.requires("libalsa/1.2.14", override=True)
         self.requires("pulseaudio/17.0", override=True)
+        # Disable 3mf exporter which uses kuba-zip to avoid duplicate symbols with libzip
+        self.options["assimp"].with_3mf_exporter = False
 
     def layout(self):
         cmake_layout(self)

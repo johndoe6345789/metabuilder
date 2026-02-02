@@ -105,7 +105,10 @@
       "Bash(do if grep -q \"@function get-tokens\" \"$file\")",
       "Bash(then echo \"✓ $file\")",
       "Bash(else echo \"✗ $file\")",
-      "Bash(git status:*)"
+      "Bash(git status:*)",
+      "Bash(head:*)",
+      "Bash(gh api:*)",
+      "Bash(codeql:*)"
     ]
   },
   "spinnerTipsEnabled": false

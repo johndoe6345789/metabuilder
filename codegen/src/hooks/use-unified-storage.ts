@@ -6,7 +6,6 @@ export function useUnifiedStorage<T>(
   defaultValue: T
 ): [T, (value: T | ((prev: T) => T)) => Promise<void>, () => Promise<void>] {
   const [value, setValue] = useState<T>(defaultValue)
-  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     let mounted = true

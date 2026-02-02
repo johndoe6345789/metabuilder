@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../../interfaces/camera_types.hpp"
-#include "../../interfaces/i_config_service.hpp"
-#include "../../interfaces/i_logger.hpp"
-#include "../../interfaces/i_workflow_step.hpp"
+#include "../../../interfaces/camera_types.hpp"
+#include "../../../interfaces/i_config_service.hpp"
+#include "../../../interfaces/i_logger.hpp"
+#include "../../../interfaces/i_workflow_step.hpp"
 
 #include <memory>
 

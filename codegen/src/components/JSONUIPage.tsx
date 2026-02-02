@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { JSONUIRenderer } from '@/lib/json-ui/renderer'
-import { Action, UIComponent, Layout } from '@/lib/json-ui/schema'
+import { Action, UIComponent } from '@/lib/json-ui/schema'
 import { toast } from 'sonner'
 
 interface JSONUIPageProps {

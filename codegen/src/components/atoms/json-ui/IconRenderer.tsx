@@ -1,7 +1,4 @@
-import { ReactNode } from 'react'
-import { ComponentSchema } from '@/types/json-ui'
 import * as Icons from '@phosphor-icons/react'
-import { cn } from '@/lib/utils'
 
 interface IconRendererProps {
   name: string
