@@ -74,12 +74,46 @@ export {
   type AccessDeniedProps,
 } from './vanilla/access-denied'
 
+// Notification components
+export {
+  NotificationContainer,
+  NotificationItem,
+  useNotificationState,
+  notificationStyles,
+  type NotificationData,
+  type NotificationType,
+  type NotificationPosition,
+  type NotificationContainerProps,
+  type NotificationItemProps,
+} from './vanilla/notifications'
+
+// Status indicator components
+export {
+  StatusBadge,
+  ConnectionStatus,
+  BackendStatus,
+  statusIndicatorStyles,
+  type StatusVariant,
+  type BackendStatusType,
+  type StatusBadgeProps,
+  type ConnectionStatusProps,
+  type BackendStatusProps,
+} from './vanilla/status-indicators'
+
 // =============================================================================
 // RADIX COMPONENTS (Built on @radix-ui primitives)
 // =============================================================================
 
-// Add Radix component exports here as they are created
-// export * from './radix'
+// Dialog components
+export {
+  KeyboardShortcutsContent,
+  ShortcutRow,
+  getPlatformModifier,
+  createShortcut,
+  type ShortcutItem,
+  type ShortcutCategory,
+  type KeyboardShortcutsDialogProps,
+} from './radix/dialogs/KeyboardShortcutsDialog'
 
 // =============================================================================
 // FAKEMUI COMPONENTS (Built on @metabuilder/fakemui)
@@ -145,11 +179,34 @@ export const allStyles = `
   animation: skeleton-pulse 1.5s ease-in-out infinite;
 }
 
+/* Notification animations */
+@keyframes notification-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Status indicator animations */
+@keyframes status-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+@keyframes status-spin {
+  to { transform: rotate(360deg); }
+}
+
 /* Accessibility: respect reduced motion preferences */
 @media (prefers-reduced-motion: reduce) {
   .empty-state-animated,
   .skeleton-animate,
-  .loading-spinner {
+  .loading-spinner,
+  [data-testid^="notification-"],
+  [data-testid="status-badge"] span {
     animation: none;
   }
 }

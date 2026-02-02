@@ -65,3 +65,29 @@ export {
   accessDeniedStyles,
   type AccessDeniedProps,
 } from './access-denied'
+
+// Notification components
+export {
+  NotificationContainer,
+  NotificationItem,
+  useNotificationState,
+  notificationStyles,
+  type NotificationData,
+  type NotificationType,
+  type NotificationPosition,
+  type NotificationContainerProps,
+  type NotificationItemProps,
+} from './notifications'
+
+// Status indicator components
+export {
+  StatusBadge,
+  ConnectionStatus,
+  BackendStatus,
+  statusIndicatorStyles,
+  type StatusVariant,
+  type BackendStatusType,
+  type StatusBadgeProps,
+  type ConnectionStatusProps,
+  type BackendStatusProps,
+} from './status-indicators'

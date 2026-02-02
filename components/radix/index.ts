@@ -7,7 +7,18 @@
  * Add Radix-based components here as they are created.
  */
 
-// Placeholder exports - add Radix components as they are created
+// Dialog components
+export {
+  KeyboardShortcutsContent,
+  ShortcutRow,
+  getPlatformModifier,
+  createShortcut,
+  type ShortcutItem,
+  type ShortcutCategory,
+  type KeyboardShortcutsDialogProps,
+} from './dialogs/KeyboardShortcutsDialog'
+
+// Placeholder exports - add more Radix components as they are created
 // Example:
 // export { Dialog, DialogContent, DialogHeader, DialogFooter } from './dialog'
 // export { Button } from './button'
