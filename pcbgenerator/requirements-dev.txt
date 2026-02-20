@@ -4,5 +4,5 @@ fonttools==4.60.2
 pytest==8.4.1
 pytest-timeout==2.4.0
 cairosvg==2.8.2
-pillow==11.3.0
+pillow==12.1.1
 shapely==2.1.1
