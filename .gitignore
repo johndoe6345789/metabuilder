@@ -111,4 +111,4 @@ bun.lockb
 .codeql-db/
 /.claude/worktrees
 *.tsbuildinfo
-frontends/pastebin/public/pyodide/
+# frontends/pastebin/public/pyodide/ # kept in fat repo
