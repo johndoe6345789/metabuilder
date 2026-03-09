@@ -294,7 +294,7 @@ class PlaywrightTestInterpreter {
 
 // Discover and register tests from workflowui/playwright directory
 function discoverAndRegisterWorkflowUITests(): void {
-  const workflowuiDir = resolve(__dirname, '../workflowui/playwright')
+  const workflowuiDir = resolve(__dirname, '../frontends/workflowui/playwright')
 
   if (!existsSync(workflowuiDir)) {
     console.warn('workflowui/playwright directory not found')

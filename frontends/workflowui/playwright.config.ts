@@ -4,7 +4,7 @@ import { join, resolve } from 'path';
 
 /**
  * Playwright E2E configuration for workflowui
- * Tests are defined in JSON format in /workflowui/playwright/*.json
+ * Tests are defined in JSON format in /frontends/workflowui/playwright/*.json
  */
 export default defineConfig({
   testDir: '../e2e',
