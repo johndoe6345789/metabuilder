@@ -308,67 +308,62 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install PyYAML
-        run: pip install pyyaml
-
-      - name: Validate DBAL entity YAML schemas
+      - name: Validate DBAL entity JSON schemas
         run: |
           python3 -c "
-          import yaml, sys, os, glob
+          import json, sys, os, glob
 
           schema_dir = 'dbal/shared/api/schema/entities'
           errors = []
           total_entities = 0
 
-          # 1. Validate entities.yaml registry exists and refs resolve
-          registry = os.path.join(schema_dir, 'entities.yaml')
+          # 1. Validate entities.json registry exists and refs resolve
+          registry = os.path.join(schema_dir, 'entities.json')
           if not os.path.exists(registry):
-              errors.append('Missing entities.yaml registry')
+              errors.append('Missing entities.json registry')
           else:
               with open(registry) as f:
-                  reg = yaml.safe_load(f)
+                  reg = json.load(f)
               refs = [e['\$ref'] for e in reg.get('entities', [])]
               for ref in refs:
-                  path = os.path.join(schema_dir, ref)
+                  path = os.path.join(schema_dir, ref.lstrip('./'))
                   if not os.path.exists(path):
                       errors.append(f'Registry ref not found: {ref}')
 
-          # 2. Validate each entity YAML (supports multi-doc files)
-          yamls = glob.glob(os.path.join(schema_dir, '**/*.yaml'), recursive=True)
-          entity_files = [f for f in yamls if os.path.basename(f) != 'entities.yaml']
+          # 2. Validate each entity JSON file
+          jsons = glob.glob(os.path.join(schema_dir, '**/*.json'), recursive=True)
+          entity_files = [f for f in jsons if os.path.basename(f) != 'entities.json']
 
-          def validate_doc(doc, rel, idx=''):
-              label = f'{rel}{idx}'
+          def validate_doc(doc, rel):
               if not doc or not isinstance(doc, dict):
-                  errors.append(f'{label}: empty or non-mapping document')
+                  errors.append(f'{rel}: empty or non-mapping document')
                   return
-              # Entity name can be 'entity', 'name', or 'displayName'
               has_name = any(k in doc for k in ('entity', 'name', 'displayName'))
               if not has_name:
-                  errors.append(f'{label}: missing entity/name/displayName key')
+                  errors.append(f'{rel}: missing entity/name/displayName key')
               if 'fields' not in doc:
-                  errors.append(f'{label}: missing fields key')
+                  errors.append(f'{rel}: missing fields key')
               elif not isinstance(doc['fields'], dict):
-                  errors.append(f'{label}: fields must be a mapping')
+                  errors.append(f'{rel}: fields must be a mapping')
               else:
                   for fname, fdef in doc['fields'].items():
                       if not isinstance(fdef, dict) or 'type' not in fdef:
-                          errors.append(f'{label}: field {fname} missing type')
+                          errors.append(f'{rel}: field {fname} missing type')
 
           for filepath in sorted(entity_files):
               rel = os.path.relpath(filepath, schema_dir)
               try:
                   with open(filepath) as f:
-                      docs = list(yaml.safe_load_all(f))
-                  if len(docs) == 1:
-                      validate_doc(docs[0], rel)
-                      total_entities += 1
-                  else:
-                      for i, doc in enumerate(docs):
-                          validate_doc(doc, rel, f'[{i}]')
+                      doc = json.load(f)
+                  if isinstance(doc, list):
+                      for i, item in enumerate(doc):
+                          validate_doc(item, f'{rel}[{i}]')
                           total_entities += 1
-              except yaml.YAMLError as e:
-                  errors.append(f'{rel}: YAML parse error: {e}')
+                  else:
+                      validate_doc(doc, rel)
+                      total_entities += 1
+              except json.JSONDecodeError as e:
+                  errors.append(f'{rel}: JSON parse error: {e}')
 
           print(f'Checked {len(entity_files)} files, {total_entities} entities')
           if errors:
