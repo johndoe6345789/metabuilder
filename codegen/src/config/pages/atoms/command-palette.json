@@ -1,7 +1,0 @@
-{
-  "type": "Command,\n  CommandDialog,\n  CommandEmpty,\n  CommandGroup,\n  CommandInput,\n  CommandItem,\n  CommandList,",
-  "props": {
-    "onSelect": "> void",
-    "onOpenChange": "> void"
-  }
-}

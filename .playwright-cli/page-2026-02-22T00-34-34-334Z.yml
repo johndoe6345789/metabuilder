@@ -1,0 +1,10 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - heading "EXPLODED DIAGRAMS" [level=1] [ref=e4]
+    - paragraph [ref=e5]: Modular Technical Illustrations
+  - navigation [ref=e6]:
+    - link "Home" [ref=e7] [cursor=pointer]:
+      - /url: /diagrams
+  - generic [ref=e8]:
+    - heading "Categories" [level=2] [ref=e9]
+    - paragraph [ref=e10]: Loading...

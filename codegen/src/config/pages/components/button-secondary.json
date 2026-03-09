@@ -1,7 +1,0 @@
-{
-  "id": "button-secondary",
-  "type": "Button",
-  "props": {
-    "variant": "secondary"
-  }
-}

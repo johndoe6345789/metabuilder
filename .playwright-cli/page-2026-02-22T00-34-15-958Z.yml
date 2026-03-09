@@ -1,0 +1,7 @@
+- generic [ref=e3]:
+  - heading "No Preview" [level=1] [ref=e4]
+  - paragraph [ref=e5]: Sorry, but you either have no stories or none are selected somehow.
+  - list [ref=e6]:
+    - listitem [ref=e7]: Please check the Storybook config.
+    - listitem [ref=e8]: Try reloading the page.
+  - paragraph [ref=e9]: If the problem persists, check the browser console, or the terminal you've run Storybook from.

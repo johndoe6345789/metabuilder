@@ -1,7 +1,0 @@
-{
-  "id": "json-conversion-showcase",
-  "type": "PageRenderer",
-  "props": {
-    "schema": "conversionShowcaseSchema"
-  }
-}

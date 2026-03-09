@@ -1,5 +1,0 @@
-export { TenantAwareBlobStorage } from './tenant-aware-storage/index'
-export type { TenantAwareDeps } from './tenant-aware-storage/context'
-export { scopeKey, unscopeKey } from './tenant-aware-storage/context'
-export { ensurePermission, resolveTenantContext } from './tenant-aware-storage/tenant-context'
-export { auditCopy, auditDeletion, auditUpload } from './tenant-aware-storage/audit-hooks'

@@ -1,7 +1,0 @@
-{
-  "type": "DataSourceCard",
-  "props": {
-    "onEdit": "> void",
-    "onDelete": "> void"
-  }
-}

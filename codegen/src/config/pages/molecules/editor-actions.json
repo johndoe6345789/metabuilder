@@ -1,7 +1,0 @@
-{
-  "type": "EditorActions",
-  "props": {
-    "onExplain": "> void",
-    "onImprove": "> void"
-  }
-}

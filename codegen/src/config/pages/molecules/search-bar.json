@@ -1,6 +1,0 @@
-{
-  "type": "SearchBar",
-  "props": {
-    "onChange": "> void"
-  }
-}

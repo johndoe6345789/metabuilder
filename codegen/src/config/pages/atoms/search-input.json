@@ -1,7 +1,0 @@
-{
-  "type": "SearchInput",
-  "props": {
-    "onChange": "> void",
-    "onClear": "> void"
-  }
-}

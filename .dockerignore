@@ -1,9 +1,15 @@
-# Dependencies
+# Dependencies (installed fresh via npm ci in multi-stage builds)
 node_modules
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+
+# Build output (built fresh inside Docker)
+**/.next
+**/out
+**/storybook-static
+**/dist
 
 # Testing
 coverage
@@ -16,23 +22,9 @@ __tests__
 __mocks__
 .vitest
 
-# Next.js
-.next
-out
-dist
-build
-
-# Production
-/build
-
 # Misc
 .DS_Store
 *.pem
-
-# Debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
 # Local env files
 .env
@@ -44,7 +36,7 @@ yarn-error.log*
 # Vercel
 .vercel
 
-# TypeScript
+# TypeScript build info
 *.tsbuildinfo
 next-env.d.ts
 
@@ -61,7 +53,6 @@ next-env.d.ts
 .gitattributes
 
 # Documentation
-*.md
 docs
 README*
 CHANGELOG*
@@ -72,22 +63,17 @@ LICENSE
 .gitlab-ci.yml
 azure-pipelines.yml
 
-# Docker
-Dockerfile*
+# Docker (Dockerfiles are referenced by path, not COPYed)
 docker-compose*
 .dockerignore
 
-# Development
+# Development config
 .editorconfig
 .prettierrc*
 .eslintrc*
 .eslintignore
 
-# Storybook
-.storybook
-storybook-static
-
-# E2E
+# E2E / test infrastructure
 e2e
 playwright-report
 test-results
@@ -97,3 +83,50 @@ tmp
 temp
 .tmp
 .cache
+
+# Large directories not needed by Node.js Docker builds
+gameengine
+dbal
+services
+old
+txt
+deployment
+prisma
+mojo
+spec
+scripts
+.claude
+dist
+
+# Allow specific dbal paths through for app builds
+!dbal/shared/ui
+!dbal/shared/api/schema/entities
+!dbal/shared/seeds/database
+
+# Allow conanfiles through for base image builds (negation overrides above exclusions)
+!dbal/production/build-config/conanfile.py
+!gameengine/conanfile.py
+!services/media_daemon/build-config/conanfile.txt
+!frontends/qt6/conanfile.txt
+!frontends/cli/conanfile.txt
+
+# Allow requirements.txt for base-pip-deps image
+!dbal/production/tests/integration/requirements.txt
+!services/email_service/requirements.txt
+!services/smtprelay/requirements.txt
+
+# Allow deployment config files for baked-in Docker images
+!deployment/portal
+!deployment/config/nginx/production.conf
+!deployment/config/prometheus/prometheus.yml
+!deployment/config/prometheus/alerts.yml
+!deployment/config/grafana/provisioning
+!deployment/config/loki/loki-config.yml
+!deployment/config/promtail/promtail-config.yml
+!deployment/config/alertmanager/alertmanager.yml
+
+# Allow DBAL templates for dbal-init volume seeder
+!dbal/templates/sql
+
+# Allow media daemon config for nginx-stream image
+!services/media_daemon/config/nginx-stream.conf

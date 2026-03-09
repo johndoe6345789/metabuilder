@@ -1,6 +1,0 @@
-{
-  "type": "Tag",
-  "props": {
-    "onRemove": "> void"
-  }
-}

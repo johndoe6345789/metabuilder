@@ -1,6 +1,0 @@
-{
-  "type": "StepIndicator",
-  "props": {
-    "onStepClick": "> void"
-  }
-}

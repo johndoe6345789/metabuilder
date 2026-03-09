@@ -1,0 +1,20 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - heading "EXPLODED DIAGRAMS" [level=1] [ref=e4]
+      - paragraph [ref=e5]: Modular Technical Illustrations
+    - navigation [ref=e6]:
+      - link "Home" [ref=e7] [cursor=pointer]:
+        - /url: /diagrams
+    - generic [ref=e8]:
+      - heading "Categories" [level=2] [ref=e9]
+      - generic [ref=e10]:
+        - link "RC Vehicles Radio controlled cars, trucks, and buggies" [ref=e11] [cursor=pointer]:
+          - /url: /diagrams/rc
+          - heading "RC Vehicles" [level=4] [ref=e12]
+          - paragraph [ref=e13]: Radio controlled cars, trucks, and buggies
+        - link "Automotive Car and vehicle drivetrain components" [ref=e14] [cursor=pointer]:
+          - /url: /diagrams/automotive
+          - heading "Automotive" [level=4] [ref=e15]
+          - paragraph [ref=e16]: Car and vehicle drivetrain components
+  - alert [ref=e17]

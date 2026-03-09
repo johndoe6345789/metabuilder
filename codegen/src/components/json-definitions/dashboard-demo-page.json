@@ -1,8 +1,0 @@
-{
-  "id": "dashboard-demo-page",
-  "type": "div",
-  "props": {
-    "className": "dashboard-demo-page"
-  },
-  "children": []
-}

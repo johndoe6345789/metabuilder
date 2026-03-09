@@ -1,8 +1,0 @@
-{
-  "id": "template-explorer",
-  "type": "div",
-  "props": {
-    "className": "template-explorer"
-  },
-  "children": []
-}

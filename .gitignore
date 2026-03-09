@@ -54,6 +54,7 @@ Thumbs.db
 .spark-workbench-id
 .spark-initial-sha
 _codeql_detected_source_root/
+.worktrees/
 
 # Database
 prisma/dev.db
@@ -61,6 +62,9 @@ prisma/dev.db-journal
 *.db
 *.sqlite
 *.sqlite3
+
+# Generated Prisma schema (produced by dbal/shared/tools/codegen/gen_prisma_schema.js)
+dbal/shared/prisma/
 
 # Testing
 /test-results/
@@ -104,3 +108,7 @@ bun.lockb
 
 # CodeQL local databases
 .codeql-dbs/
+.codeql-db/
+/.claude/worktrees
+*.tsbuildinfo
+frontends/pastebin/public/pyodide/

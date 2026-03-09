@@ -1,8 +1,0 @@
-{
-  "id": "error-panel",
-  "type": "div",
-  "props": {
-    "className": "error-panel"
-  },
-  "children": []
-}

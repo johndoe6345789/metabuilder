@@ -1,9 +1,0 @@
-{
-  "type": "CardTitle",
-  "source": "ui",
-  "load": {
-    "path": "@/components/ui/card",
-    "export": "CardTitle"
-  },
-  "props": {}
-}

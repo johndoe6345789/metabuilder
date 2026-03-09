@@ -1,6 +1,0 @@
-{
-  "type": "Radio",
-  "props": {
-    "onChange": "> void"
-  }
-}

@@ -1,8 +1,0 @@
-{
-  "shader": "gui_font",
-  "system": "materialx",
-  "material": "gui_font",
-  "bindings": {
-    "glyph_color": "PARAM_COLOR_0"
-  }
-}

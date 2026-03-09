@@ -1,7 +1,0 @@
-{
-  "id": "button-primary",
-  "type": "Button",
-  "props": {
-    "variant": "default"
-  }
-}

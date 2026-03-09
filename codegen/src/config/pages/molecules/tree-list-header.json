@@ -1,8 +1,0 @@
-{
-  "type": "TreeListHeader",
-  "props": {
-    "onCreateNew": "> void",
-    "onImportJson": "> void",
-    "onExportJson": "> void"
-  }
-}

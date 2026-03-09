@@ -1,6 +1,0 @@
-{
-  "type": "Button",
-  "props": {
-    "variant": "destructive"
-  }
-}

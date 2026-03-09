@@ -1,0 +1,127 @@
+- generic [active] [ref=e1]:
+  - alert [ref=e2]
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - generic [ref=e5]:
+        - button "Toggle sidebar" [ref=e6] [cursor=pointer]:
+          - img [ref=e7]
+        - generic [ref=e8]:
+          - img [ref=e9]
+          - heading "WorkflowUI" [level=1] [ref=e18]
+      - generic [ref=e19]:
+        - button "Notifications" [ref=e21] [cursor=pointer]:
+          - img [ref=e22]
+          - generic [ref=e24]: "2"
+        - button "Switch to dark mode" [ref=e25] [cursor=pointer]:
+          - img [ref=e26]
+    - generic [ref=e28]:
+      - complementary "Workflows sidebar" [ref=e29]:
+        - navigation [ref=e30]:
+          - generic [ref=e31]:
+            - heading "Main" [level=3] [ref=e32]
+            - list "Main navigation" [ref=e33]:
+              - listitem [ref=e34]:
+                - link "Dashboard" [ref=e35] [cursor=pointer]:
+                  - /url: /workflowui
+                  - img [ref=e37]
+                  - generic [ref=e39]: Dashboard
+              - listitem [ref=e40]:
+                - link "Notifications 2" [ref=e41] [cursor=pointer]:
+                  - /url: /workflowui/notifications
+                  - img [ref=e43]
+                  - generic [ref=e45]: Notifications
+                  - generic [ref=e46]: "2"
+          - generic [ref=e47]:
+            - heading "Workflows" [level=3] [ref=e48]
+            - list "Workflows navigation" [ref=e49]:
+              - listitem [ref=e50]:
+                - link "All Workflows" [ref=e51] [cursor=pointer]:
+                  - /url: /workflowui/workflows
+                  - img [ref=e53]
+                  - generic [ref=e55]: All Workflows
+              - listitem [ref=e56]:
+                - link "Recent" [ref=e57] [cursor=pointer]:
+                  - /url: /workflowui/workflows/recent
+                  - img [ref=e59]
+                  - generic [ref=e61]: Recent
+              - listitem [ref=e62]:
+                - link "Favorites" [ref=e63] [cursor=pointer]:
+                  - /url: /workflowui/workflows/favorites
+                  - img [ref=e65]
+                  - generic [ref=e67]: Favorites
+              - listitem [ref=e68]:
+                - link "Templates" [ref=e69] [cursor=pointer]:
+                  - /url: /workflowui/templates
+                  - img [ref=e71]
+                  - generic [ref=e73]: Templates
+          - generic [ref=e74]:
+            - heading "System" [level=3] [ref=e75]
+            - list "System navigation" [ref=e76]:
+              - listitem [ref=e77]:
+                - link "Plugins" [ref=e78] [cursor=pointer]:
+                  - /url: /workflowui/plugins
+                  - img [ref=e80]
+                  - generic [ref=e82]: Plugins
+              - listitem [ref=e83]:
+                - link "Settings" [ref=e84] [cursor=pointer]:
+                  - /url: /workflowui/settings
+                  - img [ref=e86]
+                  - generic [ref=e88]: Settings
+          - generic [ref=e89]:
+            - heading "Help" [level=3] [ref=e90]
+            - list "Help navigation" [ref=e91]:
+              - listitem [ref=e92]:
+                - link "Documentation" [ref=e93] [cursor=pointer]:
+                  - /url: /workflowui/docs
+                  - img [ref=e95]
+                  - generic [ref=e97]: Documentation
+              - listitem [ref=e98]:
+                - link "Help & Support" [ref=e99] [cursor=pointer]:
+                  - /url: /workflowui/help
+                  - img [ref=e101]
+                  - generic [ref=e103]: Help & Support
+        - button "+ New Workflow" [ref=e105] [cursor=pointer]:
+          - generic [ref=e107]: + New Workflow
+      - main [ref=e108]:
+        - generic [ref=e109]:
+          - generic [ref=e110]:
+            - generic [ref=e111]:
+              - img [ref=e113]
+              - generic [ref=e115]:
+                - generic [ref=e116]: "23"
+                - generic [ref=e117]: nodes today
+            - generic [ref=e118]:
+              - img [ref=e120]
+              - generic [ref=e122]:
+                - generic [ref=e123]: "5"
+                - generic [ref=e124]: runs today
+            - generic [ref=e125]:
+              - img [ref=e127]
+              - generic [ref=e129]:
+                - generic [ref=e130]: "1"
+                - generic [ref=e131]: failed
+            - generic [ref=e132]:
+              - img [ref=e134]
+              - generic [ref=e136]:
+                - generic [ref=e137]: 1.2h
+                - generic [ref=e138]: saved today
+            - generic [ref=e140]:
+              - generic "First Steps" [ref=e141]:
+                - img [ref=e142]
+              - generic "Node Master" [ref=e144]:
+                - img [ref=e145]
+              - link "+4 more" [ref=e147] [cursor=pointer]:
+                - /url: /workflowui/achievements
+          - generic [ref=e148]:
+            - generic [ref=e149]:
+              - heading "Workspaces" [level=1] [ref=e150]
+              - paragraph [ref=e151]: Organize your projects and workflows
+            - button "New Workspace" [ref=e152] [cursor=pointer]:
+              - img [ref=e155]
+              - generic [ref=e157]: New Workspace
+          - button "Open my workspace workspace" [ref=e159] [cursor=pointer]:
+            - generic [ref=e161]: MW
+            - generic [ref=e162]:
+              - heading "my workspace" [level=3] [ref=e163]
+              - paragraph [ref=e164]: No description
+              - generic [ref=e165]: Created 21/01/1970

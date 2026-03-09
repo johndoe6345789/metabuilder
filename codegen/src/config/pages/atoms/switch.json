@@ -1,6 +1,0 @@
-{
-  "type": "Switch as ShadcnSwitch",
-  "props": {
-    "onCheckedChange": "> void"
-  }
-}

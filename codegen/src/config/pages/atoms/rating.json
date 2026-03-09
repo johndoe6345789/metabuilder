@@ -1,7 +1,0 @@
-{
-  "type": "Rating",
-  "props": {
-    "onChange": "> void",
-    "length": "> {"
-  }
-}

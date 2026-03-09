@@ -1,7 +1,0 @@
-{
-  "id": "tag-root",
-  "type": "span",
-  "props": {
-    "className": "inline-flex items-center rounded-full font-medium transition-colors"
-  }
-}

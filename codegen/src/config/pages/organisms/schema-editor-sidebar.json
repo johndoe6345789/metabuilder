@@ -1,6 +1,0 @@
-{
-  "type": "SchemaEditorSidebar",
-  "props": {
-    "onDragStart": "> void"
-  }
-}

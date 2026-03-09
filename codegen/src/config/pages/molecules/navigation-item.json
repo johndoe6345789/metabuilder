@@ -1,6 +1,0 @@
-{
-  "type": "NavigationItem",
-  "props": {
-    "onClick": "> void"
-  }
-}

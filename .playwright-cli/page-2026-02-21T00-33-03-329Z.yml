@@ -1,0 +1,119 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - heading "Navigation" [level=2] [ref=e8]
+        - generic [ref=e9]:
+          - button "Expand All" [ref=e10]
+          - button "Collapse All" [ref=e11]
+      - generic [ref=e15]:
+        - generic [ref=e16]:
+          - button "Overview 1" [ref=e17]:
+            - img [ref=e18]
+            - heading "Overview" [level=3] [ref=e20]
+            - generic [ref=e21]: "1"
+          - button "Dashboard" [ref=e24]:
+            - generic [ref=e25]: Dashboard
+        - generic [ref=e26]:
+          - button "Development 4" [ref=e27]:
+            - img [ref=e28]
+            - heading "Development" [level=3] [ref=e30]
+            - generic [ref=e31]: "4"
+          - generic [ref=e32]:
+            - button "Code Editor" [ref=e34]:
+              - generic [ref=e35]: Code Editor
+            - button "Models" [ref=e37]:
+              - generic [ref=e38]: Models
+            - button "Components" [ref=e40]:
+              - generic [ref=e41]: Components
+            - button "Component Trees" [ref=e43]:
+              - generic [ref=e44]: Component Trees
+        - generic [ref=e45]:
+          - button "Automation 2" [ref=e46]:
+            - img [ref=e47]
+            - heading "Automation" [level=3] [ref=e49]
+            - generic [ref=e50]: "2"
+          - generic [ref=e51]:
+            - button "Workflows" [ref=e53]:
+              - generic [ref=e54]: Workflows
+            - button "Lambdas" [ref=e56]:
+              - generic [ref=e57]: Lambdas
+        - generic [ref=e58]:
+          - button "Design & Styling 6" [ref=e59]:
+            - img [ref=e60]
+            - heading "Design & Styling" [level=3] [ref=e62]
+            - generic [ref=e63]: "6"
+          - generic [ref=e64]:
+            - button "Styling" [ref=e66]:
+              - generic [ref=e67]: Styling
+            - button "Sass Styles" [ref=e69]:
+              - generic [ref=e70]: Sass Styles
+            - button "Favicon Designer" [ref=e72]:
+              - generic [ref=e73]: Favicon Designer
+            - button "Feature Ideas" [ref=e75]:
+              - generic [ref=e76]: Feature Ideas
+            - button "Schema Editor" [ref=e78]:
+              - generic [ref=e79]: Schema Editor
+            - button "JSON UI" [ref=e81]:
+              - generic [ref=e82]: JSON UI
+        - generic [ref=e83]:
+          - button "Backend 1" [ref=e84]:
+            - img [ref=e85]
+            - heading "Backend" [level=3] [ref=e87]
+            - generic [ref=e88]: "1"
+          - button "Flask API" [ref=e91]:
+            - generic [ref=e92]: Flask API
+        - generic [ref=e93]:
+          - button "Testing 3" [ref=e94]:
+            - img [ref=e95]
+            - heading "Testing" [level=3] [ref=e97]
+            - generic [ref=e98]: "3"
+          - generic [ref=e99]:
+            - button "Playwright" [ref=e101]:
+              - generic [ref=e102]: Playwright
+            - button "Storybook" [ref=e104]:
+              - generic [ref=e105]: Storybook
+            - button "Unit Tests" [ref=e107]:
+              - generic [ref=e108]: Unit Tests
+        - generic [ref=e109]:
+          - button "Tools & Configuration 6" [ref=e110]:
+            - img [ref=e111]
+            - heading "Tools & Configuration" [level=3] [ref=e113]
+            - generic [ref=e114]: "6"
+          - generic [ref=e115]:
+            - button "Error Repair" [ref=e117]:
+              - generic [ref=e118]: Error Repair
+            - button "Documentation" [ref=e120]:
+              - generic [ref=e121]: Documentation
+            - button "JSON Conversion Showcase" [ref=e123]:
+              - generic [ref=e124]: JSON Conversion Showcase
+            - button "Settings" [ref=e126]:
+              - generic [ref=e127]: Settings
+            - button "PWA" [ref=e129]:
+              - generic [ref=e130]: PWA
+            - button "Features" [ref=e132]:
+              - generic [ref=e133]: Features
+    - main [ref=e134]:
+      - generic [ref=e135]:
+        - generic [ref=e136]: layers
+        - generic [ref=e138]:
+          - generic [ref=e139]:
+            - heading "Project Dashboard" [level=1] [ref=e140]
+            - paragraph [ref=e141]: Overview of your CodeForge project
+          - generic [ref=e142]:
+            - generic [ref=e143]:
+              - generic [ref=e145]:
+                - img [ref=e147]
+                - text: Project Completeness
+              - generic [ref=e150]:
+                - generic [ref=e152]: 30%
+                - generic [ref=e153]: In Progress
+                - progressbar [ref=e154]
+                - paragraph [ref=e156]: Just getting started. Add some components and models.
+            - generic [ref=e157]:
+              - generic [ref=e159]: GitHub Build Status
+              - generic [ref=e161]: "Custom component: GitHubBuildStatus"
+    - generic [ref=e162]:
+      - heading "Command Palette" [level=2] [ref=e163]
+      - paragraph [ref=e164]: Search for a command to run...
+  - alert [ref=e165]

@@ -1,7 +1,0 @@
-{
-  "type": "Notification",
-  "props": {
-    "onClose": "> void",
-    "icon": "config[type]"
-  }
-}

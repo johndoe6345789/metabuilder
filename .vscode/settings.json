@@ -1,5 +1,5 @@
 {
-    "cmake.sourceDirectory": "/home/rewrich/Documents/GitHub/metabuilder/dbal/production/build-config",
+    "cmake.sourceDirectory": "/Users/rmac/Documents/metabuilder/gameengine",
     "chat.mcp.discovery.enabled": {
         "claude-desktop": true,
         "windsurf": true,
@@ -59,5 +59,25 @@
     "https://registry.npmjs.org/*": true
 },
 "claudeCode.allowDangerouslySkipPermissions": true,
-"claudeCode.initialPermissionMode": "bypassPermissions"
+"claudeCode.initialPermissionMode": "bypassPermissions",
+"files.watcherExclude": {
+    "**/node_modules/**": true,
+    "**/.git/**": true,
+    "**/build/**": true,
+    "**/_build/**": true,
+    "**/dist/**": true,
+    "**/playwright-report/**": true,
+    "**/test-results/**": true,
+    "**/.next/**": true,
+    "**/coverage/**": true
+},
+"search.exclude": {
+    "**/node_modules": true,
+    "**/build": true,
+    "**/_build": true,
+    "**/dist": true,
+    "**/.git": true,
+    "**/playwright-report": true,
+    "**/test-results": true
+}
 }

@@ -1,0 +1,169 @@
+name: DBAL Tests
+
+on:
+  push:
+    paths:
+      - 'dbal/**'
+      - '.github/workflows/dbal-tests.yml'
+  pull_request:
+    paths:
+      - 'dbal/**'
+
+jobs:
+  # ── Unit + security tests (no DB, no containers) ────────────────────────────
+  unit-tests:
+    name: Unit & Security Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install system deps
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            build-essential cmake ninja-build python3-pip \
+            libpq-dev libmysqlclient-dev
+
+      - name: Install Conan
+        run: pip3 install conan
+
+      - name: Detect Conan profile
+        run: conan profile detect --force
+
+      - name: Cache Conan packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.conan2/p
+          key: conan-unit-${{ hashFiles('dbal/production/build-config/conanfile.tests.py') }}
+          restore-keys: conan-unit-
+
+      - name: Install C++ test dependencies
+        working-directory: dbal/production
+        run: |
+          mkdir -p _build && cd _build
+          conan install ../build-config/conanfile.tests.py \
+            --output-folder=. \
+            --build=missing \
+            -s build_type=Release \
+            -s compiler.cppstd=20
+
+      - name: Configure CMake
+        working-directory: dbal/production/_build
+        run: |
+          cmake .. \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_TOOLCHAIN_FILE=./build/Release/generators/conan_toolchain.cmake \
+            -DBUILD_DAEMON=OFF \
+            -DBUILD_TESTING=ON \
+            -G Ninja
+
+      - name: Build
+        working-directory: dbal/production/_build
+        run: cmake --build . --target dbal_unit_tests --parallel
+
+      - name: Test
+        working-directory: dbal/production/_build
+        run: ctest -R dbal_unit_tests --output-on-failure
+
+      - name: Upload results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: unit-test-results
+          path: dbal/production/_build/test_results.xml
+
+  # ── Integration tests — containers managed by testcontainers-sidecar ────────
+  # Docker is available by default on ubuntu-latest (no services: block needed).
+  # testcontainers-go (via the sidecar) starts postgres/mysql containers itself,
+  # and Ryuk cleans them up after the test binary exits.
+  integration-tests:
+    name: Integration Tests (SQLite + PostgreSQL + MySQL via testcontainers)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Go (for testcontainers-sidecar)
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+
+      - name: Install system deps
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            build-essential cmake ninja-build python3-pip \
+            libpq-dev libmysqlclient-dev
+
+      - name: Install Conan
+        run: pip3 install conan
+
+      - name: Detect Conan profile
+        run: conan profile detect --force
+
+      - name: Configure Nexus as primary Conan remote
+        run: |
+          conan remote add nexus "${{ secrets.NEXUS_URL }}" --force
+          conan remote login nexus "${{ secrets.NEXUS_USER }}" \
+            --password "${{ secrets.NEXUS_PASS }}"
+          # Nexus first (has testcontainers-sidecar), Conan Center as fallback
+          conan remote update nexus --index 0
+        # If NEXUS_URL secret is not set, fall back to building sidecar from source
+        continue-on-error: true
+
+      - name: Build testcontainers-sidecar from source (fallback if no Nexus)
+        if: env.NEXUS_URL == ''
+        env:
+          NEXUS_URL: ${{ secrets.NEXUS_URL }}
+          TESTCONTAINERS_SIDECAR_SRC: ${{ github.workspace }}/dbal/testcontainers-sidecar
+        run: |
+          # Build and register in the local Conan cache so conan install succeeds below.
+          TESTCONTAINERS_SIDECAR_SRC="$TESTCONTAINERS_SIDECAR_SRC" \
+          conan create dbal/production/build-config/conan-recipes/testcontainers-sidecar \
+            -s build_type=Release -s compiler.cppstd=20
+
+      - name: Cache Conan packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.conan2/p
+          key: conan-integration-${{ hashFiles('dbal/production/build-config/conanfile.tests.py') }}
+          restore-keys: conan-integration-
+
+      - name: Install C++ test dependencies (with sidecar from Nexus)
+        working-directory: dbal/production
+        run: |
+          mkdir -p _build && cd _build
+          conan install ../build-config/conanfile.tests.py \
+            --output-folder=. \
+            --build=missing \
+            -s build_type=Release \
+            -s compiler.cppstd=20
+        continue-on-error: true
+
+      - name: Configure CMake
+        working-directory: dbal/production/_build
+        run: |
+          cmake .. \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_TOOLCHAIN_FILE=./build/Release/generators/conan_toolchain.cmake \
+            -DBUILD_DAEMON=OFF \
+            -DBUILD_INTEGRATION_TESTS=ON \
+            -G Ninja
+
+      - name: Build
+        working-directory: dbal/production/_build
+        run: cmake --build . --target dbal_integration_tests --parallel
+
+      - name: Run integration tests
+        working-directory: dbal/production/_build
+        # Docker socket is available by default on ubuntu-latest.
+        # testcontainers-go will start postgres and mysql containers automatically.
+        run: ctest -R dbal_integration_tests --output-on-failure -V
+
+      - name: Upload results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: integration-test-results
+          path: dbal/production/_build/integration_results.xml

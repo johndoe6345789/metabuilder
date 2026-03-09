@@ -1,8 +1,0 @@
-{
-  "id": "pwa-update-prompt",
-  "type": "div",
-  "props": {
-    "className": "pwa-update-prompt"
-  },
-  "children": []
-}

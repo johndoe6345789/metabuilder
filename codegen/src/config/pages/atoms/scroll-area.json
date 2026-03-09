@@ -1,6 +1,0 @@
-{
-  "type": "ScrollArea",
-  "props": {
-    "maxHeight": "== "
-  }
-}

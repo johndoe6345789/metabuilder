@@ -1,0 +1,7 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e4]:
+    - heading "404" [level=1] [ref=e5]
+    - paragraph [ref=e6]: Page not found
+    - link "Go to CodeForge" [ref=e7] [cursor=pointer]:
+      - /url: /codegen/
+  - alert [ref=e8]

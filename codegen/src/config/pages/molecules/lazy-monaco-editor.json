@@ -1,6 +1,0 @@
-{
-  "type": "LazyMonacoEditor",
-  "props": {
-    "onChange": "> void"
-  }
-}

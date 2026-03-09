@@ -1,6 +1,0 @@
-{
-  "type": "MonacoEditorPanel",
-  "props": {
-    "onChange": "> void"
-  }
-}

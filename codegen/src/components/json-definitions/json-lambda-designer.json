@@ -1,7 +1,0 @@
-{
-  "id": "json-lambda-designer",
-  "type": "PageRenderer",
-  "props": {
-    "schema": "lambdaDesignerSchema"
-  }
-}

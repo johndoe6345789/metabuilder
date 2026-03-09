@@ -1,0 +1,324 @@
+- generic [ref=e3]:
+  - banner "Storybook" [ref=e7]:
+    - heading "Storybook" [level=1] [ref=e8]
+    - img
+    - generic [ref=e12]:
+      - generic [ref=e14]:
+        - link "Skip to content" [ref=e15] [cursor=pointer]:
+          - /url: "#storybook-preview-wrapper"
+        - link "Storybook" [ref=e17] [cursor=pointer]:
+          - /url: ./
+          - img "Storybook" [ref=e18]
+        - switch "Settings" [ref=e23] [cursor=pointer]:
+          - img [ref=e24]
+      - generic [ref=e27]: Search for components
+      - search [ref=e28]:
+        - combobox "Search for components" [ref=e29]:
+          - generic:
+            - img
+          - searchbox "Search for components" [ref=e30]
+          - code:
+            - generic: ⌘
+            - text: K
+          - button "Tag filters" [ref=e32] [cursor=pointer]:
+            - img [ref=e33]
+      - navigation "Stories" [ref=e36]:
+        - heading "Stories" [level=2] [ref=e37]
+        - generic [ref=e39]:
+          - generic [ref=e40]:
+            - link "Introduction" [ref=e41] [cursor=pointer]:
+              - /url: /storybook/?path=/docs/introduction--docs
+              - img [ref=e43]
+              - text: Introduction
+            - link "Skip to content" [ref=e161] [cursor=pointer]:
+              - /url: "#storybook-preview-wrapper"
+          - generic [ref=e45]:
+            - button "Collapse" [expanded] [ref=e46] [cursor=pointer]:
+              - img [ref=e48]
+              - text: Developer
+            - button "Expand all" [ref=e50] [cursor=pointer]:
+              - img [ref=e51]
+          - link "Styles System" [ref=e54] [cursor=pointer]:
+            - /url: /storybook/?path=/docs/developer-styles-system--docs
+            - img [ref=e56]
+            - text: Styles System
+          - generic [ref=e58]:
+            - button "Collapse" [expanded] [ref=e59] [cursor=pointer]:
+              - img [ref=e61]
+              - text: Packages
+            - button "Expand all" [ref=e63] [cursor=pointer]:
+              - img [ref=e64]
+          - button "Auto-Discovered" [ref=e67] [cursor=pointer]:
+            - generic [ref=e68]:
+              - img [ref=e70]
+              - img [ref=e72]
+            - text: Auto-Discovered
+          - button "JSON Components" [ref=e75] [cursor=pointer]:
+            - generic [ref=e76]:
+              - img [ref=e78]
+              - img [ref=e80]
+            - text: JSON Components
+          - button "UI Home" [ref=e83] [cursor=pointer]:
+            - generic [ref=e84]:
+              - img [ref=e86]
+              - img [ref=e88]
+            - text: UI Home
+          - button "UI Level 2" [ref=e91] [cursor=pointer]:
+            - generic [ref=e92]:
+              - img [ref=e94]
+              - img [ref=e96]
+            - text: UI Level 2
+          - button "UI Level 3" [ref=e99] [cursor=pointer]:
+            - generic [ref=e100]:
+              - img [ref=e102]
+              - img [ref=e104]
+            - text: UI Level 3
+          - button "UI Level 4" [ref=e107] [cursor=pointer]:
+            - generic [ref=e108]:
+              - img [ref=e110]
+              - img [ref=e112]
+            - text: UI Level 4
+          - generic [ref=e114]:
+            - button "Collapse" [expanded] [ref=e115] [cursor=pointer]:
+              - img [ref=e117]
+              - text: Components
+            - button "Expand all" [ref=e119] [cursor=pointer]:
+              - img [ref=e120]
+          - button "Registry" [ref=e123] [cursor=pointer]:
+            - generic [ref=e124]:
+              - img [ref=e126]
+              - img [ref=e128]
+            - text: Registry
+          - generic [ref=e130]:
+            - button "Collapse" [expanded] [ref=e131] [cursor=pointer]:
+              - img [ref=e133]
+              - text: Design System
+            - button "Expand all" [ref=e135] [cursor=pointer]:
+              - img [ref=e136]
+          - button "Tokens" [ref=e139] [cursor=pointer]:
+            - generic [ref=e140]:
+              - img [ref=e142]
+              - img [ref=e144]
+            - text: Tokens
+  - generic [ref=e147]:
+    - region "Toolbar" [ref=e148]:
+      - heading "Toolbar" [level=2] [ref=e149]
+      - toolbar [ref=e150]:
+        - generic [ref=e162]:
+          - switch "Grid visibility" [ref=e163] [cursor=pointer]:
+            - img [ref=e164]
+          - button "Preview background" [ref=e166] [cursor=pointer]:
+            - img [ref=e167]
+          - switch "Outline tool" [ref=e170] [cursor=pointer]:
+            - img [ref=e171]
+        - button "Enter full screen" [ref=e174] [cursor=pointer]:
+          - img [ref=e175]
+    - main "Main preview area" [ref=e151]:
+      - heading "Main preview area" [level=2] [ref=e152]
+      - generic [ref=e156]:
+        - link "Skip to sidebar" [ref=e177] [cursor=pointer]:
+          - /url: "#introduction--docs"
+        - iframe [ref=e160]:
+          - generic [ref=f1e51]:
+            - heading "MetaBuilder Package Storybook" [level=1] [ref=f1e52]:
+              - link [ref=f1e53] [cursor=pointer]:
+                - /url: "#metabuilder-package-storybook"
+              - text: MetaBuilder Package Storybook
+            - paragraph [ref=f1e54]:
+              - text: This Storybook renders
+              - strong [ref=f1e55]: MetaBuilder packages backed by JSON scripts
+              - text: from the MetaBuilder platform without running the actual application.
+            - heading "Quick Start" [level=2] [ref=f1e56]:
+              - link [ref=f1e57] [cursor=pointer]:
+                - /url: "#quick-start"
+              - text: Quick Start
+            - list [ref=f1e58]:
+              - listitem [ref=f1e59]:
+                - strong [ref=f1e60]: Explorer
+                - text: "- Use the Auto-Discovered Packages → Explorer to browse all packages interactively"
+              - listitem [ref=f1e61]:
+                - strong [ref=f1e62]: Component Registry
+                - text: "- See all available components in Components → Registry"
+              - listitem [ref=f1e63]:
+                - strong [ref=f1e64]: Manual Stories
+                - text: "- Pre-configured stories in JSON package renders"
+            - heading "Auto-Discovery" [level=2] [ref=f1e65]:
+              - link [ref=f1e66] [cursor=pointer]:
+                - /url: "#auto-discovery"
+              - text: Auto-Discovery
+            - paragraph [ref=f1e67]:
+              - text: The storybook automatically discovers packages using
+              - code [ref=f1e68]: storybook.config.json
+              - text: ":"
+            - generic [ref=f1e70]:
+              - generic [ref=f1e75]: "{ \"discovery\": { \"enabled\": true, \"includedCategories\": [\"ui\", \"admin\", \"gaming\", \"social\", \"editors\"], \"excludedPackages\": [\"shared\", \"testing\"], \"minLevel\": 1, \"maxLevel\": 6 } }"
+              - button "Copy" [ref=f1e77] [cursor=pointer]
+            - heading "Context Variants" [level=3] [ref=f1e78]:
+              - link [ref=f1e79] [cursor=pointer]:
+                - /url: "#context-variants"
+              - text: Context Variants
+            - paragraph [ref=f1e80]: "Test packages with different user contexts:"
+            - list [ref=f1e81]:
+              - listitem [ref=f1e82]:
+                - strong [ref=f1e83]: Guest
+                - text: "- Level 1 user"
+              - listitem [ref=f1e84]:
+                - strong [ref=f1e85]: Admin
+                - text: "- Level 4 user"
+              - listitem [ref=f1e86]:
+                - strong [ref=f1e87]: Admin (Nerd Mode)
+                - text: "- Level 4 with nerdMode enabled"
+              - listitem [ref=f1e88]:
+                - strong [ref=f1e89]: Supergod
+                - text: "- Level 6 user"
+            - heading "How It Works" [level=2] [ref=f1e90]:
+              - link [ref=f1e91] [cursor=pointer]:
+                - /url: "#how-it-works"
+              - text: How It Works
+            - list [ref=f1e92]:
+              - listitem [ref=f1e93]:
+                - strong [ref=f1e94]: JSON script packages
+                - text: in
+                - code [ref=f1e95]: /packages/*/seed/scripts/
+                - text: define UI component trees
+              - listitem [ref=f1e96]:
+                - strong [ref=f1e97]: Mock data
+                - text: mirrors the output structure produced by the JSON scripts
+              - listitem [ref=f1e98]:
+                - strong [ref=f1e99]: PackageRenderer
+                - text: (still the runtime entry) converts the component tree to React components
+              - listitem [ref=f1e100]:
+                - strong [ref=f1e101]: Component Registry
+                - text: maps package-defined type names to React implementations
+            - heading "Package Structure" [level=2] [ref=f1e102]:
+              - link [ref=f1e103] [cursor=pointer]:
+                - /url: "#package-structure"
+              - text: Package Structure
+            - paragraph [ref=f1e104]: "Each JSON script package follows this structure:"
+            - generic [ref=f1e106]:
+              - generic [ref=f1e111]: "packages/ └── {package_name}/ └── seed/ ├── metadata.json # Package info ├── components.json # Component definitions └── scripts/ └── [script-name].json # JSON script definitions following script_schema.json # Must include full function implementations with bodies, # not just metadata declarations (e.g., automation.json)"
+              - button "Copy" [ref=f1e113] [cursor=pointer]
+            - heading "JSON Script Output" [level=2] [ref=f1e114]:
+              - link [ref=f1e115] [cursor=pointer]:
+                - /url: "#json-script-output"
+              - text: JSON Script Output
+            - paragraph [ref=f1e116]: "JSON script functions return component trees like:"
+            - generic [ref=f1e118]:
+              - generic [ref=f1e123]:
+                - text: "{ \"type\": \"Card\", \"props\": { \"className\": \"p-4\" }, \"children\": [ { \"type\": \"Typography\", \"props\": { \"variant\": \"h5\", \"text\": \"Title\" } }, { \"type\": \"Button\", \"props\": { \"children\": \"Click Me\" } } ]"
+                - text: "}"
+              - button "Copy" [ref=f1e125] [cursor=pointer]
+            - heading "Adding New Package Mocks" [level=2] [ref=f1e126]:
+              - link [ref=f1e127] [cursor=pointer]:
+                - /url: "#adding-new-package-mocks"
+              - text: Adding New Package Mocks
+            - list [ref=f1e128]:
+              - listitem [ref=f1e129]:
+                - text: Create a file in
+                - code [ref=f1e130]: "src/mocks/packages/{package-name}.ts"
+              - listitem [ref=f1e131]:
+                - text: Define the
+                - code [ref=f1e132]: MockPackageDefinition
+                - text: with metadata and renders
+              - listitem [ref=f1e133]:
+                - text: Call
+                - code [ref=f1e134]: registerMockPackage()
+                - text: to register it
+              - listitem [ref=f1e135]:
+                - text: Import it in
+                - code [ref=f1e136]: src/mocks/packages/index.ts
+              - listitem [ref=f1e137]:
+                - text: Create stories in
+                - code [ref=f1e138]: src/stories/
+            - heading "Available Component Types" [level=2] [ref=f1e139]:
+              - link [ref=f1e140] [cursor=pointer]:
+                - /url: "#available-component-types"
+              - text: Available Component Types
+            - paragraph [ref=f1e141]: "The component registry maps these package types to React:"
+            - heading "Layout" [level=3] [ref=f1e142]:
+              - link [ref=f1e143] [cursor=pointer]:
+                - /url: "#layout"
+              - text: Layout
+            - list [ref=f1e144]:
+              - listitem [ref=f1e145]:
+                - code [ref=f1e146]: Box
+                - text: ","
+                - code [ref=f1e147]: Stack
+                - text: ","
+                - code [ref=f1e148]: Flex
+                - text: ","
+                - code [ref=f1e149]: Grid
+                - text: ","
+                - code [ref=f1e150]: Container
+            - heading "Surfaces" [level=3] [ref=f1e151]:
+              - link [ref=f1e152] [cursor=pointer]:
+                - /url: "#surfaces"
+              - text: Surfaces
+            - list [ref=f1e153]:
+              - listitem [ref=f1e154]:
+                - code [ref=f1e155]: Card
+                - text: ","
+                - code [ref=f1e156]: CardHeader
+                - text: ","
+                - code [ref=f1e157]: CardContent
+                - text: ","
+                - code [ref=f1e158]: CardActions
+                - text: ","
+                - code [ref=f1e159]: Paper
+            - heading "Typography" [level=3] [ref=f1e160]:
+              - link [ref=f1e161] [cursor=pointer]:
+                - /url: "#typography"
+              - text: Typography
+            - list [ref=f1e162]:
+              - listitem [ref=f1e163]:
+                - code [ref=f1e164]: Typography
+                - text: "(with variants: h1-h6, body1, body2, caption, overline)"
+            - heading "Inputs" [level=3] [ref=f1e165]:
+              - link [ref=f1e166] [cursor=pointer]:
+                - /url: "#inputs"
+              - text: Inputs
+            - list [ref=f1e167]:
+              - listitem [ref=f1e168]:
+                - code [ref=f1e169]: Button
+                - text: "(variants: contained, outlined, text)"
+            - heading "Display" [level=3] [ref=f1e170]:
+              - link [ref=f1e171] [cursor=pointer]:
+                - /url: "#display"
+              - text: Display
+            - list [ref=f1e172]:
+              - listitem [ref=f1e173]:
+                - code [ref=f1e174]: Icon
+                - text: ","
+                - code [ref=f1e175]: Avatar
+                - text: ","
+                - code [ref=f1e176]: Badge
+                - text: ","
+                - code [ref=f1e177]: Chip
+                - text: ","
+                - code [ref=f1e178]: Divider
+                - text: ","
+                - code [ref=f1e179]: Alert
+            - heading "Navigation" [level=3] [ref=f1e180]:
+              - link [ref=f1e181] [cursor=pointer]:
+                - /url: "#navigation"
+              - text: Navigation
+            - list [ref=f1e182]:
+              - listitem [ref=f1e183]:
+                - code [ref=f1e184]: Tabs
+                - text: ","
+                - code [ref=f1e185]: Tab
+            - heading "App-Specific" [level=3] [ref=f1e186]:
+              - link [ref=f1e187] [cursor=pointer]:
+                - /url: "#app-specific"
+              - text: App-Specific
+            - list [ref=f1e188]:
+              - listitem [ref=f1e189]:
+                - code [ref=f1e190]: Level4Header
+                - text: ","
+                - code [ref=f1e191]: IntroSection
+                - text: ","
+                - code [ref=f1e192]: AppHeader
+                - text: ","
+                - code [ref=f1e193]: AppFooter
+                - text: ","
+                - code [ref=f1e194]: Sidebar

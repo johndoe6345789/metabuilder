@@ -1,0 +1,25 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - img [ref=e4]
+    - main [ref=e6]:
+      - generic [ref=e11]:
+        - generic [ref=e12]:
+          - heading "Project Dashboard" [level=1] [ref=e13]
+          - paragraph [ref=e14]: Overview of your CodeForge project
+        - generic [ref=e15]:
+          - generic [ref=e16]:
+            - generic [ref=e18]:
+              - img [ref=e20]
+              - text: Project Completeness
+            - generic [ref=e23]:
+              - generic [ref=e24]: 30%
+              - text: In Progress
+              - progressbar
+              - paragraph [ref=e25]: Just getting started. Add some components and models.
+          - generic [ref=e26]:
+            - generic [ref=e28]: GitHub Build Status
+            - generic [ref=e30]: "Custom component: GitHubBuildStatus"
+    - generic [ref=e32]:
+      - heading "Command Palette" [level=2] [ref=e33]
+      - paragraph [ref=e34]: Search for a command to run...
+  - alert [ref=e35]

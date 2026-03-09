@@ -1,0 +1,143 @@
+- generic [ref=e3]:
+  - banner "Storybook" [ref=e7]:
+    - heading "Storybook" [level=1] [ref=e8]
+    - img
+    - generic [ref=e12]:
+      - generic [ref=e14]:
+        - link "Skip to content" [ref=e15] [cursor=pointer]:
+          - /url: "#storybook-preview-wrapper"
+        - link "Storybook" [ref=e17] [cursor=pointer]:
+          - /url: ./
+          - img "Storybook" [ref=e18]
+        - switch "Settings" [ref=e23] [cursor=pointer]:
+          - img [ref=e24]
+      - generic [ref=e27]: Search for components
+      - search [ref=e28]:
+        - combobox "Search for components" [ref=e29]:
+          - generic:
+            - img
+          - searchbox "Search for components" [ref=e30]
+          - code:
+            - generic: ⌘
+            - text: K
+          - button "Tag filters" [ref=e32] [cursor=pointer]:
+            - img [ref=e33]
+      - navigation "Stories" [ref=e36]:
+        - heading "Stories" [level=2] [ref=e37]
+        - generic [ref=e39]:
+          - link "Introduction" [ref=e41] [cursor=pointer]:
+            - /url: /storybook/?path=/docs/introduction--docs
+            - img [ref=e43]
+            - text: Introduction
+          - generic [ref=e45]:
+            - button "Collapse" [expanded] [ref=e46] [cursor=pointer]:
+              - img [ref=e48]
+              - text: Developer
+            - button "Expand all" [ref=e50] [cursor=pointer]:
+              - img [ref=e51]
+          - link "Styles System" [ref=e54] [cursor=pointer]:
+            - /url: /storybook/?path=/docs/developer-styles-system--docs
+            - img [ref=e56]
+            - text: Styles System
+          - generic [ref=e58]:
+            - button "Collapse" [expanded] [ref=e59] [cursor=pointer]:
+              - img [ref=e61]
+              - text: Packages
+            - button "Expand all" [ref=e63] [cursor=pointer]:
+              - img [ref=e64]
+          - button "Auto-Discovered" [ref=e67] [cursor=pointer]:
+            - generic [ref=e68]:
+              - img [ref=e70]
+              - img [ref=e72]
+            - text: Auto-Discovered
+          - button "JSON Components" [ref=e75] [cursor=pointer]:
+            - generic [ref=e76]:
+              - img [ref=e78]
+              - img [ref=e80]
+            - text: JSON Components
+          - button "UI Home" [ref=e83] [cursor=pointer]:
+            - generic [ref=e84]:
+              - img [ref=e86]
+              - img [ref=e88]
+            - text: UI Home
+          - button "UI Level 2" [ref=e91] [cursor=pointer]:
+            - generic [ref=e92]:
+              - img [ref=e94]
+              - img [ref=e96]
+            - text: UI Level 2
+          - button "UI Level 3" [ref=e99] [cursor=pointer]:
+            - generic [ref=e100]:
+              - img [ref=e102]
+              - img [ref=e104]
+            - text: UI Level 3
+          - button "UI Level 4" [ref=e107] [cursor=pointer]:
+            - generic [ref=e108]:
+              - img [ref=e110]
+              - img [ref=e112]
+            - text: UI Level 4
+          - generic [ref=e114]:
+            - button "Collapse" [expanded] [ref=e115] [cursor=pointer]:
+              - img [ref=e117]
+              - text: Components
+            - button "Expand all" [ref=e119] [cursor=pointer]:
+              - img [ref=e120]
+          - button "Registry" [ref=e123] [cursor=pointer]:
+            - generic [ref=e124]:
+              - img [ref=e126]
+              - img [ref=e128]
+            - text: Registry
+          - generic [ref=e130]:
+            - button "Collapse" [expanded] [ref=e131] [cursor=pointer]:
+              - img [ref=e133]
+              - text: Design System
+            - button "Expand all" [ref=e135] [cursor=pointer]:
+              - img [ref=e136]
+          - button "Tokens" [ref=e139] [cursor=pointer]:
+            - generic [ref=e140]:
+              - img [ref=e142]
+              - img [ref=e144]
+            - text: Tokens
+  - generic [ref=e147]:
+    - region "Toolbar" [ref=e148]:
+      - heading "Toolbar" [level=2] [ref=e149]
+      - toolbar [ref=e150]
+    - main "Main preview area" [ref=e151]:
+      - heading "Main preview area" [level=2] [ref=e152]
+      - generic [ref=e153]:
+        - progressbar "Content is loading..." [ref=e155]
+        - iframe [ref=e160]:
+          - table [ref=f1e11]:
+            - rowgroup [ref=f1e12]:
+              - row [ref=f1e13]:
+                - columnheader [ref=f1e14]: Name
+                - columnheader [ref=f1e15]: Description
+                - columnheader [ref=f1e16]: Default
+                - columnheader [ref=f1e17]: Control
+            - rowgroup [ref=f1e18]:
+              - row [ref=f1e19]:
+                - cell [ref=f1e20]: propertyName*
+                - cell [ref=f1e21]:
+                  - generic [ref=f1e22]: This is a short description
+                  - generic [ref=f1e24]: summary
+                - cell [ref=f1e25]:
+                  - generic [ref=f1e26]: defaultValue
+                - cell [ref=f1e27]:
+                  - button [ref=f1e28] [cursor=pointer]: Set string
+              - row [ref=f1e29]:
+                - cell [ref=f1e30]: propertyName*
+                - cell [ref=f1e31]:
+                  - generic [ref=f1e32]: This is a short description
+                  - generic [ref=f1e34]: summary
+                - cell [ref=f1e35]:
+                  - generic [ref=f1e36]: defaultValue
+                - cell [ref=f1e37]:
+                  - button [ref=f1e38] [cursor=pointer]: Set string
+              - row [ref=f1e39]:
+                - cell [ref=f1e40]: propertyName*
+                - cell [ref=f1e41]:
+                  - generic [ref=f1e42]: This is a short description
+                  - generic [ref=f1e44]: summary
+                - cell [ref=f1e45]:
+                  - generic [ref=f1e46]: defaultValue
+                - cell [ref=f1e47]:
+                  - button [ref=f1e48] [cursor=pointer]: Set string

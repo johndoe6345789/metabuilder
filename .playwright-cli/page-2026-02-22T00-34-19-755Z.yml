@@ -1,0 +1,49 @@
+- generic [active] [ref=e1]:
+  - alert [ref=e2]
+  - generic [ref=e4]:
+    - banner [ref=e5]:
+      - generic [ref=e7]:
+        - generic [ref=e8]:
+          - button "Toggle navigation menu" [ref=e9]:
+            - img [ref=e10]
+          - img [ref=e13]
+          - text: CodeSnippet
+        - generic "Disconnected from backend - Using local storage" [ref=e17]:
+          - 'status "Status: Local" [ref=e18]':
+            - img [ref=e20]
+            - generic [ref=e24]: Local
+    - main [ref=e25]:
+      - region "Application status alerts" [ref=e27]:
+        - status [ref=e28]:
+          - img [ref=e29]
+          - heading "Workspace ready" [level=5] [ref=e31]
+          - generic [ref=e32]: Running in local-first mode so you can work offline without a backend.
+        - alert [ref=e33]:
+          - img [ref=e34]
+          - heading "Cloud backend unavailable" [level=5] [ref=e36]
+          - generic [ref=e37]: No Flask backend detected. Saving and loading will stay on this device until a server URL is configured.
+      - generic [ref=e38]:
+        - generic [ref=e39]:
+          - heading "My Snippets" [level=1] [ref=e40]
+          - paragraph [ref=e41]: Save, organize, and share your code snippets
+        - group "Namespace selector" [ref=e48]:
+          - generic [ref=e49]:
+            - img [ref=e50]
+            - generic [ref=e52]: "Namespace:"
+          - combobox "Select namespace" [ref=e53]:
+            - text: default
+            - img [ref=e55]
+        - status "No snippets available" [ref=e57]:
+          - status [ref=e58]: No snippets yet. Start building your code snippet library. Save reusable code for quick access anytime.
+          - img [ref=e60]
+          - heading "No snippets yet" [level=2] [ref=e63]
+          - paragraph [ref=e64]: Start building your code snippet library. Save reusable code for quick access anytime.
+          - button "Create new snippet from templates" [ref=e65] [cursor=pointer]:
+            - img [ref=e66]
+            - text: Create Your First Snippet
+            - img [ref=e68]
+    - contentinfo [ref=e42]:
+      - generic [ref=e44]:
+        - paragraph [ref=e45]: Save, organize, and share your code snippets with beautiful syntax highlighting and live execution
+        - paragraph [ref=e46]: Supports React preview and Python execution via Pyodide
+  - region "Notifications alt+T"

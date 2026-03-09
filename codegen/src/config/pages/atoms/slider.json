@@ -1,6 +1,0 @@
-{
-  "type": "Slider",
-  "props": {
-    "onChange": "> void"
-  }
-}

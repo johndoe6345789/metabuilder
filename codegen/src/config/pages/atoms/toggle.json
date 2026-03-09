@@ -1,6 +1,0 @@
-{
-  "type": "Toggle",
-  "props": {
-    "onChange": "> void"
-  }
-}

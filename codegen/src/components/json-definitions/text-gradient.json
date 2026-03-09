@@ -1,7 +1,0 @@
-{
-  "id": "text-gradient-root",
-  "type": "span",
-  "props": {
-    "className": "bg-clip-text text-transparent"
-  }
-}

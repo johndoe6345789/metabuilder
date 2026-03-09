@@ -1,7 +1,0 @@
-{
-  "id": "json-model-designer",
-  "type": "PageRenderer",
-  "props": {
-    "schema": "modelDesignerSchema"
-  }
-}
