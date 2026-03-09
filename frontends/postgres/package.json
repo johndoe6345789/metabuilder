@@ -69,6 +69,19 @@
     "esbuild": ">=0.25.0",
     "@esbuild-kit/core-utils": {
       "esbuild": ">=0.25.0"
+    },
+    "eslint-plugin-react": {
+      "eslint": "$eslint"
+    },
+    "eslint-plugin-jsx-a11y": {
+      "eslint": "$eslint"
+    },
+    "eslint-plugin-react-hooks": {
+      ".": "^7.0.1",
+      "eslint": "$eslint"
+    },
+    "eslint-plugin-format": {
+      "eslint": "$eslint"
     }
   },
   "devDependencies": {
