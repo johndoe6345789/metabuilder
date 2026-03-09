@@ -1,0 +1,34 @@
+{
+  "id": "social-link-root",
+  "type": "a",
+  "props": {
+    "className": "social-link"
+  },
+  "bindings": {
+    "href": "href",
+    "target": {
+      "source": "target",
+      "transform": "data || '_blank'"
+    },
+    "rel": {
+      "source": null,
+      "transform": "'noopener noreferrer'"
+    },
+    "aria-label": "ariaLabel"
+  },
+  "children": [
+    {
+      "id": "social-link-icon",
+      "type": "span",
+      "props": { "className": "social-link__icon" },
+      "bindings": { "children": "icon" },
+      "condition": "icon"
+    },
+    {
+      "id": "social-link-label",
+      "type": "span",
+      "bindings": { "children": "label" },
+      "condition": "label"
+    }
+  ]
+}

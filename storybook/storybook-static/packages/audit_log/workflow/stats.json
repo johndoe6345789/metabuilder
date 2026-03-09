@@ -1,0 +1,194 @@
+{
+  "name": "Calculate Audit Statistics",
+  "active": false,
+  "nodes": [
+    {
+      "id": "validate_context",
+      "name": "Validate Context",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $context.tenantId }}",
+        "operation": "validate",
+        "validator": "required",
+        "errorMessage": "tenantId is required"
+      }
+    },
+    {
+      "id": "get_date_range",
+      "name": "Get Date Range",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "output": {
+          "startDate": "{{ new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString() }}",
+          "endDate": "{{ new Date().toISOString() }}"
+        },
+        "operation": "transform_data"
+      }
+    },
+    {
+      "id": "count_by_action",
+      "name": "Count By Action",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "filter": {
+          "tenantId": "{{ $context.tenantId }}",
+          "timestamp": {
+            "$gte": "{{ $steps.get_date_range.output.startDate }}",
+            "$lte": "{{ $steps.get_date_range.output.endDate }}"
+          }
+        },
+        "groupBy": "action",
+        "aggregations": {
+          "count": "count"
+        },
+        "output": "actionStats",
+        "operation": "database_aggregate",
+        "entity": "AuditLog"
+      }
+    },
+    {
+      "id": "count_by_entity",
+      "name": "Count By Entity",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "filter": {
+          "tenantId": "{{ $context.tenantId }}",
+          "timestamp": {
+            "$gte": "{{ $steps.get_date_range.output.startDate }}",
+            "$lte": "{{ $steps.get_date_range.output.endDate }}"
+          }
+        },
+        "groupBy": "entity",
+        "aggregations": {
+          "count": "count"
+        },
+        "output": "entityStats",
+        "operation": "database_aggregate",
+        "entity": "AuditLog"
+      }
+    },
+    {
+      "id": "format_response",
+      "name": "Format Response",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "output": {
+          "dateRange": "{{ $steps.get_date_range.output }}",
+          "actionStatistics": "{{ $steps.count_by_action.output }}",
+          "entityStatistics": "{{ $steps.count_by_entity.output }}",
+          "totalEntries": "{{ $steps.count_by_action.output.reduce((sum, item) => sum + item.count, 0) }}"
+        },
+        "operation": "transform_data"
+      }
+    },
+    {
+      "id": "return_success",
+      "name": "Return Success",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "action": "http_response",
+        "status": 200,
+        "body": "{{ $steps.format_response.output }}"
+      }
+    }
+  ],
+  "connections": {
+    "validate_context": {
+      "main": [
+        [
+          {
+            "node": "get_date_range",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get_date_range": {
+      "main": [
+        [
+          {
+            "node": "count_by_action",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "count_by_action": {
+      "main": [
+        [
+          {
+            "node": "count_by_entity",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "count_by_entity": {
+      "main": [
+        [
+          {
+            "node": "format_response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "format_response": {
+      "main": [
+        [
+          {
+            "node": "return_success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "id": "workflow_stats",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
+}

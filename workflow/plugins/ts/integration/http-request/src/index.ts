@@ -24,7 +24,7 @@ export class HTTPRequestExecutor implements INodeExecutor {
     const startTime = Date.now();
 
     try {
-      const { url, method, body, headers, timeout } = node.parameters;
+      const { url, method, body, headers, timeout: _timeout } = node.parameters;
 
       if (!url) {
         throw new Error('HTTP request requires "url" parameter');
@@ -59,7 +59,8 @@ export class HTTPRequestExecutor implements INodeExecutor {
         body: { success: true },
         headers: requestHeaders,
         url: resolvedUrl,
-        method: method || 'GET'
+        method: method || 'GET',
+        requestBody: resolvedBody
       };
 
       const duration = Date.now() - startTime;

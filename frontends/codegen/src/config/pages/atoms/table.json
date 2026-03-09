@@ -1,0 +1,7 @@
+{
+  "type": "Table",
+  "props": {
+    "render": "> React.ReactNode",
+    "onRowClick": "> void"
+  }
+}

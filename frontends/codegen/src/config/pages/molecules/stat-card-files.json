@@ -1,0 +1,26 @@
+{
+  "id": "files-stat",
+  "$ref": "./stat-card-base.json",
+  "children": [
+    {
+      "id": "files-value",
+      "type": "div",
+      "props": {
+        "className": "text-2xl font-bold",
+        "children": "0"
+      },
+      "dataBinding": {
+        "source": "projectStats",
+        "path": "files"
+      }
+    },
+    {
+      "id": "files-label",
+      "type": "div",
+      "props": {
+        "className": "text-sm text-muted-foreground mt-2",
+        "children": "Code Files"
+      }
+    }
+  ]
+}

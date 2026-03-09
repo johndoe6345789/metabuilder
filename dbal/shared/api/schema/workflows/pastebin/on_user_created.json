@@ -1,0 +1,171 @@
+{
+  "name": "On User Created — Seed Data",
+  "description": "Creates Default + Examples namespaces and 5 seed snippets for every new pastebin user.",
+  "nodes": [
+    { "id": "uuid-ns1",  "type": "dbal.uuid",      "outputs": { "id": "ns_default_id"  } },
+    { "id": "uuid-ns2",  "type": "dbal.uuid",      "outputs": { "id": "ns_examples_id" } },
+    { "id": "uuid-s1",   "type": "dbal.uuid",      "outputs": { "id": "s1_id" } },
+    { "id": "uuid-s2",   "type": "dbal.uuid",      "outputs": { "id": "s2_id" } },
+    { "id": "uuid-s3",   "type": "dbal.uuid",      "outputs": { "id": "s3_id" } },
+    { "id": "uuid-s4",   "type": "dbal.uuid",      "outputs": { "id": "s4_id" } },
+    { "id": "uuid-s5",   "type": "dbal.uuid",      "outputs": { "id": "s5_id" } },
+    { "id": "now",       "type": "dbal.timestamp", "outputs": { "ts": "now" } },
+
+    {
+      "id": "ns-default",
+      "type": "dbal.entity.create",
+      "parameters": {
+        "entity": "Namespace",
+        "data": {
+          "id": "${ns_default_id}",
+          "name": "Default",
+          "isDefault": true,
+          "createdAt": "${now}",
+          "userId": "${event.id}",
+          "tenantId": "${event.tenantId}"
+        }
+      }
+    },
+
+    {
+      "id": "ns-examples",
+      "type": "dbal.entity.create",
+      "parameters": {
+        "entity": "Namespace",
+        "data": {
+          "id": "${ns_examples_id}",
+          "name": "Examples",
+          "isDefault": false,
+          "createdAt": "${now}",
+          "userId": "${event.id}",
+          "tenantId": "${event.tenantId}"
+        }
+      }
+    },
+
+    {
+      "id": "s1-hello-python",
+      "type": "dbal.entity.create",
+      "parameters": {
+        "entity": "Snippet",
+        "data": {
+          "id": "${s1_id}",
+          "title": "Hello, Python!",
+          "description": "A simple Python function with a parameter — run it with the Python runner.",
+          "language": "python",
+          "category": "example",
+          "functionName": "greet",
+          "entryPoint": "greet",
+          "code": "def greet(name: str = \"World\") -> str:\n    \"\"\"Return a personalised greeting.\"\"\"\n    return f\"Hello, {name}!\"\n\nprint(greet())\n",
+          "inputParameters": "[{\"name\":\"name\",\"type\":\"string\",\"default\":\"World\",\"label\":\"Your name\"}]",
+          "hasPreview": false,
+          "isTemplate": false,
+          "namespaceId": "${ns_examples_id}",
+          "createdAt": "${now}",
+          "userId": "${event.id}",
+          "tenantId": "${event.tenantId}"
+        }
+      }
+    },
+
+    {
+      "id": "s2-fibonacci",
+      "type": "dbal.entity.create",
+      "parameters": {
+        "entity": "Snippet",
+        "data": {
+          "id": "${s2_id}",
+          "title": "Fibonacci",
+          "description": "Classic recursive Fibonacci — supports up to n=30 before it gets slow.",
+          "language": "python",
+          "category": "example",
+          "functionName": "fibonacci",
+          "entryPoint": "fibonacci",
+          "code": "def fibonacci(n: int = 10) -> list[int]:\n    \"\"\"Return the first n Fibonacci numbers.\"\"\"\n    seq = [0, 1]\n    for _ in range(n - 2):\n        seq.append(seq[-1] + seq[-2])\n    return seq[:n]\n\nprint(fibonacci())\n",
+          "inputParameters": "[{\"name\":\"n\",\"type\":\"number\",\"default\":10,\"label\":\"n\"}]",
+          "hasPreview": false,
+          "isTemplate": false,
+          "namespaceId": "${ns_examples_id}",
+          "createdAt": "${now}",
+          "userId": "${event.id}",
+          "tenantId": "${event.tenantId}"
+        }
+      }
+    },
+
+    {
+      "id": "s3-binary-search",
+      "type": "dbal.entity.create",
+      "parameters": {
+        "entity": "Snippet",
+        "data": {
+          "id": "${s3_id}",
+          "title": "TypeScript — Binary Search",
+          "description": "O(log n) binary search on a sorted array. Returns the index or -1.",
+          "language": "typescript",
+          "category": "example",
+          "code": "function binarySearch(arr: number[], target: number): number {\n  let lo = 0, hi = arr.length - 1;\n  while (lo <= hi) {\n    const mid = (lo + hi) >>> 1;\n    if (arr[mid] === target) return mid;\n    if (arr[mid] < target) lo = mid + 1;\n    else hi = mid - 1;\n  }\n  return -1;\n}\n\nconst sorted = [1, 3, 5, 7, 9, 11, 13];\nconsole.log(binarySearch(sorted, 7));  // 3\nconsole.log(binarySearch(sorted, 6));  // -1\n",
+          "inputParameters": null,
+          "hasPreview": false,
+          "isTemplate": false,
+          "namespaceId": "${ns_examples_id}",
+          "createdAt": "${now}",
+          "userId": "${event.id}",
+          "tenantId": "${event.tenantId}"
+        }
+      }
+    },
+
+    {
+      "id": "s4-react-counter",
+      "type": "dbal.entity.create",
+      "parameters": {
+        "entity": "Snippet",
+        "data": {
+          "id": "${s4_id}",
+          "title": "React Counter",
+          "description": "A minimal stateful counter component — toggle the Preview tab to see it live.",
+          "language": "tsx",
+          "category": "example",
+          "code": "import { useState } from \"react\";\n\nexport default function Counter() {\n  const [count, setCount] = useState(0);\n  return (\n    <div style={{ fontFamily: \"sans-serif\", textAlign: \"center\", padding: 32 }}>\n      <h2>Count: {count}</h2>\n      <button onClick={() => setCount(prev => prev - 1)}>-</button>\n      {\" \"}\n      <button onClick={() => setCount(prev => prev + 1)}>+</button>\n      <br />\n      <button style={{ marginTop: 12 }} onClick={() => setCount(0)}>Reset</button>\n    </div>\n  );\n}\n",
+          "inputParameters": null,
+          "hasPreview": true,
+          "isTemplate": false,
+          "namespaceId": "${ns_examples_id}",
+          "createdAt": "${now}",
+          "userId": "${event.id}",
+          "tenantId": "${event.tenantId}"
+        }
+      }
+    },
+
+    {
+      "id": "s5-dark-card",
+      "type": "dbal.entity.create",
+      "parameters": {
+        "entity": "Snippet",
+        "data": {
+          "id": "${s5_id}",
+          "title": "React Dark Card",
+          "description": "A styled card component with dark theme — a good starting point for UI snippets.",
+          "language": "tsx",
+          "category": "example",
+          "code": "export default function DarkCard({ title = \"Card Title\", body = \"Card body text goes here.\" }) {\n  return (\n    <div style={{\n      background: \"#1e1e2e\", color: \"#cdd6f4\",\n      borderRadius: 12, padding: \"24px 28px\",\n      maxWidth: 360, fontFamily: \"sans-serif\",\n      boxShadow: \"0 4px 24px rgba(0,0,0,0.4)\"\n    }}>\n      <h3 style={{ margin: \"0 0 8px\", color: \"#89b4fa\" }}>{title}</h3>\n      <p style={{ margin: 0, lineHeight: 1.6 }}>{body}</p>\n    </div>\n  );\n}\n",
+          "inputParameters": null,
+          "hasPreview": true,
+          "isTemplate": true,
+          "namespaceId": "${ns_examples_id}",
+          "createdAt": "${now}",
+          "userId": "${event.id}",
+          "tenantId": "${event.tenantId}"
+        }
+      }
+    },
+
+    {
+      "id": "done",
+      "type": "dbal.log",
+      "parameters": { "message": "Seed complete for user ${event.id}" }
+    }
+  ]
+}

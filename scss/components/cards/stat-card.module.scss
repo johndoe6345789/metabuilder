@@ -1,0 +1,15 @@
+/**
+ * StatCard Component Styles
+ */
+
+.statCard {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.warning {
+  .value {
+    color: var(--mat-sys-error);
+  }
+}

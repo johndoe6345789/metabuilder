@@ -5,6 +5,8 @@ export interface HeadingProps extends React.HTMLAttributes<HTMLHeadingElement> {
   text?: string
   level?: 1 | 2 | 3 | 4 | 5 | 6
   variant?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
+  /** Test ID for automated testing */
+  testId?: string
 }
 
 /**
@@ -16,6 +18,7 @@ export const Heading: React.FC<HeadingProps> = ({
   text,
   level = 2,
   variant,
+  testId,
   className = '',
   ...props
 }) => {
@@ -23,7 +26,7 @@ export const Heading: React.FC<HeadingProps> = ({
   const Tag = `h${headingLevel}` as React.ElementType
   
   return (
-    <Tag className={`heading heading--level-${headingLevel} ${className}`} {...props}>
+    <Tag className={`heading heading--level-${headingLevel} ${className}`} data-testid={testId} {...props}>
       {text || children}
     </Tag>
   )

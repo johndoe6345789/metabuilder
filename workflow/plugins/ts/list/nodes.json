@@ -1,0 +1,119 @@
+{
+  "$schema": "../../../schemas/plugin-nodes.schema.json",
+  "category": {
+    "id": "data",
+    "name": "Data",
+    "color": "#96ceb4",
+    "icon": "database"
+  },
+  "nodes": [
+    {
+      "id": "list.concat",
+      "name": "Concat Arrays",
+      "description": "Concatenate multiple arrays",
+      "icon": "link",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "arrays": [] }
+    },
+    {
+      "id": "list.length",
+      "name": "Array Length",
+      "description": "Get array length",
+      "icon": "hash",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "array": [] }
+    },
+    {
+      "id": "list.slice",
+      "name": "Slice",
+      "description": "Extract portion of array",
+      "icon": "crop",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "array": [], "start": 0, "end": null }
+    },
+    {
+      "id": "list.find",
+      "name": "Find",
+      "description": "Find first matching item",
+      "icon": "search",
+      "inputs": ["main"],
+      "outputs": ["found", "notFound"],
+      "defaultConfig": { "array": [], "condition": "" }
+    },
+    {
+      "id": "list.filter",
+      "name": "Filter",
+      "description": "Filter array by condition",
+      "icon": "filter",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "array": [], "condition": "" }
+    },
+    {
+      "id": "list.map",
+      "name": "Map",
+      "description": "Transform each item in array",
+      "icon": "refresh-cw",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "array": [], "expression": "" }
+    },
+    {
+      "id": "list.reduce",
+      "name": "Reduce",
+      "description": "Reduce array to single value",
+      "icon": "minimize",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "array": [], "expression": "", "initial": null }
+    },
+    {
+      "id": "list.sort",
+      "name": "Sort",
+      "description": "Sort array",
+      "icon": "bar-chart",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "array": [], "key": "", "order": "asc" }
+    },
+    {
+      "id": "list.reverse",
+      "name": "Reverse",
+      "description": "Reverse array order",
+      "icon": "rotate-ccw",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "array": [] }
+    },
+    {
+      "id": "list.unique",
+      "name": "Unique",
+      "description": "Remove duplicate values",
+      "icon": "layers",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "array": [], "key": "" }
+    },
+    {
+      "id": "list.flatten",
+      "name": "Flatten",
+      "description": "Flatten nested arrays",
+      "icon": "align-justify",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "array": [], "depth": 1 }
+    },
+    {
+      "id": "list.groupBy",
+      "name": "Group By",
+      "description": "Group array items by key",
+      "icon": "folder",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "array": [], "key": "" }
+    }
+  ]
+}

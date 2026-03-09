@@ -1,6 +1,7 @@
 {
   "name": "@metabuilder/hooks-forms",
   "version": "1.0.0",
+  "type": "module",
   "description": "Form management hooks for MetaBuilder with validation and field arrays",
   "main": "src/index.ts",
   "types": "src/index.d.ts",

@@ -1,0 +1,6 @@
+{
+  "type": "Button",
+  "props": {
+    "onClick": "> void"
+  }
+}

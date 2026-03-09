@@ -1,0 +1,98 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "ui_pages",
+  "description": "UI pages access permissions",
+  "permissions": [
+    {
+      "id": "pages.bundle.access",
+      "name": "Access Bundled UI Pages",
+      "description": "Access bundled UI pages",
+      "resource": "pages",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 1
+    },
+    {
+      "id": "pages.level1.view",
+      "name": "View Level 1 Pages",
+      "description": "View public pages (level 1)",
+      "resource": "pages",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 1
+    },
+    {
+      "id": "pages.level2.view",
+      "name": "View Level 2 Pages",
+      "description": "View user pages (level 2)",
+      "resource": "pages",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 2
+    },
+    {
+      "id": "pages.level3.view",
+      "name": "View Level 3 Pages",
+      "description": "View moderator pages (level 3)",
+      "resource": "pages",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 3
+    },
+    {
+      "id": "pages.level4.view",
+      "name": "View Level 4 Pages",
+      "description": "View admin pages (level 4)",
+      "resource": "pages",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 4
+    },
+    {
+      "id": "pages.level5.view",
+      "name": "View Level 5 Pages",
+      "description": "View god pages (level 5)",
+      "resource": "pages",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "pages.level6.view",
+      "name": "View Level 6 Pages",
+      "description": "View supergod pages (level 6)",
+      "resource": "pages",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 6
+    },
+    {
+      "id": "pages.register",
+      "name": "Register Pages",
+      "description": "Register new page definitions",
+      "resource": "pages",
+      "action": "create",
+      "scope": "global",
+      "minLevel": 4
+    },
+    {
+      "id": "pages.unregister",
+      "name": "Unregister Pages",
+      "description": "Remove page definitions",
+      "resource": "pages",
+      "action": "delete",
+      "scope": "global",
+      "minLevel": 4
+    }
+  ],
+  "resources": [
+    {
+      "id": "pages",
+      "name": "UI Pages",
+      "type": "component",
+      "description": "UI page resources",
+      "actions": ["read", "create", "delete"]
+    }
+  ]
+}

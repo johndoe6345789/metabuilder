@@ -1,0 +1,48 @@
+{
+  "id": "pressure-plate",
+  "name": "Pressure Plate",
+  "partNumber": "FD-1848122",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 4800.0,
+  "weightUnit": "g",
+  "baseY": -60,
+  "description": "Diaphragm spring pressure plate assembly",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "13mm", "required": true },
+      { "name": "Torque wrench", "size": "10-30 Nm", "required": true },
+      { "name": "Clutch alignment tool", "size": "20mm spline", "required": true }
+    ],
+    "hardware": [
+      { "name": "Pressure plate bolt", "spec": "M8x1.25x18", "grade": "8.8", "qty": 6, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Pressure plate bolts", "value": 25, "unit": "Nm", "sequence": "Star pattern, 3 stages", "notes": "Tighten evenly in stages: 10Nm, 18Nm, 25Nm" }
+    ],
+    "notes": [
+      "Ensure clutch disc is centered before final torque",
+      "Check diaphragm spring fingers for wear/damage",
+      "Inspect flywheel surface for hot spots"
+    ]
+  },
+  "geometry": [
+    { "type": "circle", "r": 72, "fill": "#5a5a5a" },
+    { "type": "circle", "r": 60, "fill": "#4a4a4a" },
+    { "type": "circle", "r": 30, "fill": "#6a6a6a" },
+    { "type": "circle", "r": 22, "fill": "#3a3a3a" },
+    { "type": "rect", "width": 4, "height": 25, "offsetX": -15, "offsetY": 0, "fill": "#777", "rx": 1 },
+    { "type": "rect", "width": 4, "height": 25, "offsetX": 15, "offsetY": 0, "fill": "#777", "rx": 1 },
+    { "type": "rect", "width": 4, "height": 25, "offsetX": 0, "offsetY": 0, "fill": "#777", "rx": 1 },
+    { "type": "circle", "r": 6, "offsetX": -55, "offsetY": 0, "fill": "#333" },
+    { "type": "circle", "r": 6, "offsetX": 55, "offsetY": 0, "fill": "#333" },
+    { "type": "circle", "r": 6, "offsetX": 0, "offsetY": -55, "fill": "#333" },
+    { "type": "circle", "r": 6, "offsetX": 0, "offsetY": 55, "fill": "#333" }
+  ],
+  "geometry3d": [
+    { "type": "cylinder", "r": 52, "height": 15, "fill": "#555" },
+    { "type": "cylinder", "r": 45, "height": 10, "offsetZ": -2.5, "fill": "#666" },
+    { "type": "cylinder", "r": 20, "height": 15, "subtract": true },
+    { "type": "cylinder", "r": 48, "height": 3, "offsetZ": 6, "fill": "#777" }
+  ]
+}

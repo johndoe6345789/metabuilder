@@ -1,0 +1,171 @@
+// Code Preview Atoms - Material Design 3 (CSS Module)
+// ====================================================
+// Flat selectors for code preview/diff styling using M3 tokens
+
+// Code preview container
+.codePreview {
+  padding: 12px;
+  background: var(--mat-sys-surface-container);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--mat-sys-corner-medium);
+  font-family: var(--font-mono);
+  font-size: var(--mat-sys-body-small-size);
+  line-height: 1.5;
+  overflow: hidden;
+}
+
+// Individual line
+.codeLine {
+  display: flex;
+  gap: 12px;
+  padding: 2px 0;
+}
+
+// Line number
+.codeLineNum {
+  color: var(--mat-sys-on-surface-variant);
+  opacity: 0.5;
+  font-size: var(--mat-sys-label-small-size);
+  min-width: 24px;
+  text-align: right;
+  user-select: none;
+}
+
+// Line content
+.codeLineContent {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--mat-sys-on-surface);
+}
+
+// Diff added line
+.codeLineAdded {
+  composes: codeLine;
+  background: var(--color-success-container);
+}
+
+.codeLineAdded .codeLineContent {
+  color: var(--color-success);
+}
+
+.codeLineAdded::before {
+  content: '+';
+  color: var(--color-success);
+  font-weight: 600;
+  margin-right: 8px;
+}
+
+// Diff removed line
+.codeLineRemoved {
+  composes: codeLine;
+  background: color-mix(in srgb, var(--mat-sys-error) 12%, transparent);
+}
+
+.codeLineRemoved .codeLineContent {
+  color: var(--mat-sys-error);
+}
+
+.codeLineRemoved::before {
+  content: '-';
+  color: var(--mat-sys-error);
+  font-weight: 600;
+  margin-right: 8px;
+}
+
+// Diff modified line
+.codeLineModified {
+  composes: codeLine;
+  background: var(--color-warning-container);
+}
+
+.codeLineModified .codeLineContent {
+  color: var(--color-warning);
+}
+
+// Context line (unchanged)
+.codeLineContext {
+  composes: codeLine;
+  opacity: 0.7;
+}
+
+// Highlighted segment within line
+.codeHighlight {
+  background: color-mix(in srgb, var(--mat-sys-primary) 20%, transparent);
+  border-radius: 2px;
+  padding: 0 2px;
+}
+
+// Diff header
+.codePreviewHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  margin: -12px -12px 12px;
+  background: var(--mat-sys-surface-container-high);
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+
+.codePreviewFilename {
+  font-family: var(--mat-sys-label-small-font);
+  font-size: var(--mat-sys-label-small-size);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+// Stats (e.g., +10 -5)
+.codePreviewStats {
+  display: flex;
+  gap: 8px;
+  font-family: var(--mat-sys-label-small-font);
+  font-size: var(--mat-sys-label-small-size);
+}
+
+.codePreviewStatsAdded {
+  color: var(--color-success);
+}
+
+.codePreviewStatsRemoved {
+  color: var(--mat-sys-error);
+}
+
+// Expandable/collapsed indicator
+.codePreviewCollapsed {
+  composes: codePreview;
+  max-height: 150px;
+  overflow: hidden;
+  position: relative;
+}
+
+.codePreviewCollapsed::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 48px;
+  background: linear-gradient(transparent, var(--mat-sys-surface-container));
+  pointer-events: none;
+}
+
+// Expand button
+.codePreviewExpand {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 4px 12px;
+  background: var(--mat-sys-surface-container-high);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--mat-sys-corner-full);
+  font-family: var(--mat-sys-label-small-font);
+  font-size: var(--mat-sys-label-small-size);
+  color: var(--mat-sys-primary);
+  cursor: pointer;
+  z-index: 1;
+}
+
+.codePreviewExpand:hover {
+  background: var(--mat-sys-surface-container-highest);
+}

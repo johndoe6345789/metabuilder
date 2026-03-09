@@ -23,7 +23,7 @@ struct HttpResponse {
     
     HttpResponse() : status_code(200), status_text("OK") {
         headers["Content-Type"] = "application/json";
-        headers["Server"] = "DBAL/1.0.0";
+        headers["Server"] = "DBAL/1.2.1";
     }
 };
 

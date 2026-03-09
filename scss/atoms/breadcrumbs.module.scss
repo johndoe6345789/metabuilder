@@ -1,0 +1,59 @@
+// Breadcrumbs Atoms - Material Design 3 (CSS Module)
+// ===================================================
+// Navigation breadcrumbs using M3 tokens
+
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  padding: 8px 0;
+  font: var(--mat-sys-body-medium-font);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.breadcrumbsList {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  gap: 4px;
+}
+
+.breadcrumbsItem {
+  display: flex;
+  align-items: center;
+
+  &::after {
+    content: '/';
+    margin: 0 8px;
+    color: var(--mat-sys-outline);
+  }
+
+  &:last-child::after {
+    display: none;
+  }
+
+  a {
+    color: var(--mat-sys-primary);
+    text-decoration: none;
+    transition: color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.breadcrumbsCurrent {
+  color: var(--mat-sys-on-surface);
+  font-weight: 500;
+}
+
+.breadcrumbsSeparator {
+  color: var(--mat-sys-outline);
+  margin: 0 8px;
+}
+
+.breadcrumbsIcon {
+  margin-right: 4px;
+}

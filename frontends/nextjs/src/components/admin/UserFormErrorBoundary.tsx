@@ -38,7 +38,7 @@ export class UserFormErrorBoundary extends React.Component<Props, State> {
     }
   }
 
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+  override componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     // Log error for debugging
     console.error('UserForm Error:', error, errorInfo)
 
@@ -65,7 +65,7 @@ export class UserFormErrorBoundary extends React.Component<Props, State> {
     this.props.onNavigateBack?.()
   }
 
-  render() {
+  override render() {
     if (this.state.hasError) {
       return (
         <div className="rounded-md bg-red-50 p-4">

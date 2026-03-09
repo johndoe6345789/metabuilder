@@ -1,0 +1,67 @@
+{
+  "displayName": "Workspace",
+  "version": "1.0",
+  "description": "Organizational container for projects and workflows",
+  "tenantId": true,
+  "fields": {
+    "id": {
+      "type": "uuid",
+      "primary": true,
+      "generated": true,
+      "description": "Unique identifier"
+    },
+    "name": {
+      "type": "string",
+      "required": true,
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "Workspace name"
+    },
+    "description": {
+      "type": "text",
+      "nullable": true,
+      "description": "Workspace description"
+    },
+    "color": {
+      "type": "string",
+      "nullable": true,
+      "pattern": "^#[0-9A-Fa-f]{6}$",
+      "description": "Hex color code for workspace UI"
+    },
+    "icon": {
+      "type": "string",
+      "nullable": true,
+      "description": "Icon identifier or emoji"
+    },
+    "tenantId": {
+      "type": "string",
+      "required": true,
+      "description": "Tenant identifier"
+    },
+    "createdAt": {
+      "type": "datetime",
+      "generated": true,
+      "description": "Creation timestamp"
+    },
+    "updatedAt": {
+      "type": "datetime",
+      "generated": true,
+      "description": "Last update timestamp"
+    }
+  },
+  "indexes": [
+    {
+      "fields": [
+        "tenantId"
+      ],
+      "unique": false
+    },
+    {
+      "fields": [
+        "tenantId",
+        "name"
+      ],
+      "unique": true
+    }
+  ]
+}

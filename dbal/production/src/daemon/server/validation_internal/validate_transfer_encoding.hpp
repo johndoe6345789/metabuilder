@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "http_response.hpp"
+#include "../response/http_response.hpp"
 
 namespace dbal {
 namespace daemon {

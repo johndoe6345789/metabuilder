@@ -1,0 +1,57 @@
+{
+  "id": "alert-root",
+  "type": "div",
+  "props": {
+    "role": "alert"
+  },
+  "bindings": {
+    "className": {
+      "source": "variant",
+      "transform": "(() => { const modifiers = { info: 'alert--info', warning: 'alert--warning', success: 'alert--success', error: 'alert--error' }; return 'alert ' + (modifiers[data] || modifiers.info); })()"
+    }
+  },
+  "children": [
+    {
+      "id": "alert-icon",
+      "type": "AlertIcon",
+      "bindings": {
+        "variant": "variant"
+      },
+      "props": {
+        "className": "alert__icon"
+      }
+    },
+    {
+      "id": "alert-content",
+      "type": "div",
+      "props": {
+        "className": "alert__content"
+      },
+      "children": [
+        {
+          "id": "alert-title",
+          "type": "div",
+          "props": {
+            "className": "alert__title"
+          },
+          "bindings": {
+            "children": "title"
+          },
+          "conditional": {
+            "if": "title"
+          }
+        },
+        {
+          "id": "alert-message",
+          "type": "div",
+          "props": {
+            "className": "alert__message"
+          },
+          "bindings": {
+            "children": "children"
+          }
+        }
+      ]
+    }
+  ]
+}

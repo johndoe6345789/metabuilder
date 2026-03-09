@@ -1,0 +1,19 @@
+.container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+  background: color-mix(in srgb, var(--mat-sys-surface-variant) 50%, transparent);
+  border-radius: 8px;
+}
+
+.count {
+  font-size: 0.875rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.moveBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}

@@ -1,0 +1,143 @@
+{
+  "version": "1.0",
+  "description": "Package repository configuration for MetaBuilder",
+  "conflictResolution": "priority",
+  "sources": [
+    {
+      "id": "local",
+      "name": "Local Packages",
+      "type": "local",
+      "url": "/packages",
+      "priority": 0,
+      "enabled": true,
+      "description": "Packages in the local /packages directory",
+      "validation": {
+        "requirePackageJson": true,
+        "requireValidStructure": true,
+        "allowedCategories": null
+      },
+      "cache": {
+        "enabled": true,
+        "ttlSeconds": 3600,
+        "invalidateOnFileChange": true
+      }
+    }
+  ],
+  "discovery": {
+    "scanPatterns": [
+      "*/package.json",
+      "packages/*/package.json"
+    ],
+    "excludePatterns": [
+      "**/node_modules/**",
+      "**/dist/**",
+      "**/build/**",
+      "**/.git/**",
+      "**/tests/**",
+      "**/examples/**"
+    ],
+    "maxConcurrent": 10
+  },
+  "validation": {
+    "requiredFields": [
+      "packageId",
+      "name",
+      "version",
+      "description",
+      "author",
+      "license"
+    ],
+    "schemaUrl": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+    "enforceSchema": true,
+    "versionFormat": "semver",
+    "packageIdPattern": "^[a-z][a-z0-9_]*$",
+    "maxPackageIdLength": 64
+  },
+  "dependencies": {
+    "missingDependencies": "warn",
+    "allowVersionRanges": true,
+    "detectCircular": true,
+    "circularDependencies": "error"
+  },
+  "conflicts": {
+    "strategy": "priority",
+    "duplicateVersions": "newest",
+    "allowOverride": true
+  },
+  "cache": {
+    "enabled": true,
+    "directory": ".cache/packages",
+    "invalidateOn": [
+      "fileChange",
+      "configChange",
+      "dailySchedule"
+    ],
+    "keyStrategy": "content-hash"
+  },
+  "performance": {
+    "lazyLoad": true,
+    "preloadCorePackages": true,
+    "corePackagesList": "packages/core-packages.yaml",
+    "parallelValidation": true,
+    "parallelLoading": true
+  },
+  "security": {
+    "requireSignature": false,
+    "trustedSources": [
+      "local"
+    ],
+    "sandboxPackageScripts": true,
+    "allowedScriptActions": [
+      "read-entity",
+      "write-entity",
+      "call-api"
+    ],
+    "disallowedPatterns": [
+      "eval(",
+      "Function(",
+      "require(",
+      "import("
+    ]
+  },
+  "logging": {
+    "logLevel": "info",
+    "logPackageLoads": true,
+    "logValidationErrors": true,
+    "logConflicts": true
+  },
+  "metadata": {
+    "categories": [
+      "core",
+      "ui",
+      "tools",
+      "admin",
+      "content",
+      "communication",
+      "media",
+      "analytics",
+      "integration",
+      "development"
+    ],
+    "features": {
+      "enablePackageUpdates": true,
+      "enablePackageUninstall": true,
+      "enableDependencyAutoInstall": false,
+      "enableVersionRollback": true
+    }
+  },
+  "integration": {
+    "dbal": {
+      "validateEntityReferences": true,
+      "checkSchemaCompatibility": true
+    },
+    "frontend": {
+      "autoRegisterComponents": true,
+      "autoRegisterRoutes": true,
+      "autoRegisterScripts": true
+    },
+    "storybook": {
+      "autoDiscoverStories": true,
+      "generateDocsOnLoad": false
+    }
+  }
+}

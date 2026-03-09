@@ -1,0 +1,80 @@
+{
+  "id": "comment-card-container",
+  "type": "div",
+  "props": {
+    "className": "comment-card"
+  },
+  "children": [
+    {
+      "id": "comment-card-header",
+      "type": "div",
+      "props": {
+        "className": "comment-card__header"
+      },
+      "children": [
+        {
+          "id": "comment-card-avatar",
+          "type": "div",
+          "props": {
+            "className": "comment-card__avatar"
+          },
+          "bindings": {
+            "children": "avatarInitials"
+          }
+        },
+        {
+          "id": "comment-card-meta",
+          "type": "div",
+          "props": {
+            "className": "comment-card__meta"
+          },
+          "children": [
+            {
+              "id": "comment-card-author",
+              "type": "div",
+              "props": {
+                "className": "comment-card__author"
+              },
+              "bindings": {
+                "children": "author"
+              }
+            },
+            {
+              "id": "comment-card-timestamp",
+              "type": "div",
+              "props": {
+                "className": "comment-card__timestamp"
+              },
+              "bindings": {
+                "children": "timestamp"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "comment-card-body",
+      "type": "div",
+      "props": {
+        "className": "comment-card__body"
+      },
+      "bindings": {
+        "children": "body"
+      }
+    },
+    {
+      "id": "comment-card-actions",
+      "type": "div",
+      "props": {
+        "className": "comment-card__actions"
+      },
+      "bindings": {
+        "children": "actions"
+      },
+      "conditional": {
+        "if": "actions"
+      }
+    }
+  ]
+}

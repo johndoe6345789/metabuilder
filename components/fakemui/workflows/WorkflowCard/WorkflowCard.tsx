@@ -23,7 +23,7 @@ interface WorkflowCardProps {
   onDelete: (id: string) => void;
   onOpen: (workflowId: string) => void;
   zoom: number;
-  snap_to_grid: (pos: { x: number; y: number }) => { x: number; y: number };
+  snapToGrid: (pos: { x: number; y: number }) => { x: number; y: number };
 }
 
 export const WorkflowCard: React.FC<WorkflowCardProps> = ({
@@ -36,13 +36,13 @@ export const WorkflowCard: React.FC<WorkflowCardProps> = ({
   onDelete,
   onOpen,
   zoom,
-  snap_to_grid
+  snapToGrid
 }) => {
   const { cardRef, isDragging, handleDragStart, handleResizeStart } =
     useDragResize({
       item,
       zoom,
-      snap_to_grid,
+      snapToGrid,
       onUpdatePosition,
       onUpdateSize
     });
@@ -96,7 +96,7 @@ export const WorkflowCard: React.FC<WorkflowCardProps> = ({
         onDelete={onDelete}
         itemId={item.id}
       />
-      <WorkflowCardPreview nodeCount={nodeCount} isMinimized={item.minimized} />
+      <WorkflowCardPreview nodeCount={nodeCount} isMinimized={item.minimized ?? false} />
       <WorkflowCardFooter
         nodeCount={nodeCount}
         connectionCount={connectionCount}

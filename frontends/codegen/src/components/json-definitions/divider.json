@@ -1,0 +1,18 @@
+{
+  "id": "divider",
+  "type": "div",
+  "bindings": {
+    "role": {
+      "source": "decorative",
+      "transform": "data ? 'presentation' : 'separator'"
+    },
+    "aria-orientation": {
+      "source": "orientation",
+      "transform": "data || 'horizontal'"
+    },
+    "className": {
+      "source": ["orientation", "className"],
+      "transform": "const orientation = data[0] || 'horizontal'; const extra = data[1] || ''; const modifierClass = orientation === 'horizontal' ? 'divider--horizontal' : 'divider--vertical'; return ('divider ' + modifierClass + (extra ? ' ' + extra : '')).trim()"
+    }
+  }
+}

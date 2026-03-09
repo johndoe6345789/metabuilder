@@ -1,0 +1,425 @@
+// Form structure components — labels, helper text, input groups, progress,
+// ratings, steppers, timelines.
+// Uses MD3 CSS custom properties from var(--mat-sys-*)
+
+// ─── Form label ─────────────────────────────────────────────────────────────
+
+.form-label {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--mat-sys-on-surface);
+  line-height: 1;
+  cursor: default;
+
+  &--required {
+    // modifier kept for scoping; the indicator below handles the asterisk
+  }
+
+  &__required-indicator {
+    margin-left: 4px;
+    color: var(--mat-sys-error);
+  }
+
+  &--disabled {
+    cursor: not-allowed;
+    opacity: 0.38;
+  }
+}
+
+// ─── Helper / hint text ─────────────────────────────────────────────────────
+
+.helper-text {
+  display: block;
+  font-size: 12px;
+  margin-top: 4px;
+  color: var(--mat-sys-on-surface-variant);
+
+  &--error {
+    color: var(--mat-sys-error);
+  }
+
+  &--success {
+    color: #16a34a;
+  }
+}
+
+// ─── Input group (label + control + helper) ─────────────────────────────────
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  &__label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--mat-sys-on-surface);
+  }
+
+  &__control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__helper {
+    font-size: 12px;
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+// ─── Progress track & fill (linear) ─────────────────────────────────────────
+
+.progress-track {
+  height: 4px;
+  width: 100%;
+  border-radius: 2px;
+  background: var(--mat-sys-surface-container);
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: var(--mat-sys-primary);
+  transition: width 0.3s ease;
+}
+
+// ─── Progress bar (semantic wrapper with size/variant support) ───────────────
+
+.progress-bar {
+  width: 100%;
+
+  &__track {
+    position: relative;
+    width: 100%;
+    background: var(--mat-sys-outline-variant);
+    border-radius: 9999px;
+    overflow: hidden;
+
+    &--sm { height: 4px; }
+    &--md { height: 8px; }
+    &--lg { height: 12px; }
+  }
+
+  &__fill {
+    height: 100%;
+    border-radius: 9999px;
+    transition: width 0.3s ease-out;
+    background: var(--mat-sys-primary);
+
+    &--accent {
+      background: var(--mat-sys-secondary);
+    }
+
+    &--destructive {
+      background: var(--mat-sys-error);
+    }
+  }
+
+  &__label {
+    display: block;
+    font-size: 12px;
+    margin-top: 4px;
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+// ─── Circular progress ───────────────────────────────────────────────────────
+
+.circular-progress {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+
+  &__svg {
+    transform: rotate(-90deg);
+  }
+
+  &__track {
+    fill: none;
+    stroke: var(--mat-sys-outline-variant);
+  }
+
+  &__fill {
+    fill: none;
+    stroke: var(--mat-sys-primary);
+    transition: stroke-dashoffset 0.3s ease;
+  }
+
+  &__label {
+    position: absolute;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--mat-sys-on-surface);
+  }
+}
+
+// ─── Rating (star row) ───────────────────────────────────────────────────────
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &__stars {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+
+  &__star {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: var(--mat-sys-outline);
+    transition: color 0.15s ease;
+
+    &--filled {
+      color: var(--mat-sys-primary);
+    }
+
+    &:hover {
+      color: var(--mat-sys-primary);
+    }
+  }
+
+  &__value {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+// ─── Step indicator (compact dot/number row) ─────────────────────────────────
+
+.step-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--mat-sys-outline-variant);
+    transition: background 0.2s ease;
+
+    &--active {
+      background: var(--mat-sys-primary);
+    }
+
+    &--complete {
+      background: var(--mat-sys-primary);
+    }
+  }
+}
+
+// ─── Stepper (full step-by-step flow) ────────────────────────────────────────
+
+.stepper {
+  width: 100%;
+
+  &__steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  &__step {
+    display: flex;
+    gap: 12px;
+    position: relative;
+
+    &:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: 15px;
+      top: 32px;
+      bottom: 0;
+      width: 2px;
+      background: var(--mat-sys-outline-variant);
+    }
+
+    &--complete::after {
+      background: var(--mat-sys-primary);
+    }
+  }
+
+  &__icon {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+    border: 2px solid var(--mat-sys-outline-variant);
+    background: var(--mat-sys-surface);
+    color: var(--mat-sys-on-surface-variant);
+    z-index: 1;
+
+    &--active {
+      border-color: var(--mat-sys-primary);
+      background: var(--mat-sys-primary);
+      color: var(--mat-sys-on-primary, #fff);
+    }
+
+    &--complete {
+      border-color: var(--mat-sys-primary);
+      background: var(--mat-sys-primary);
+      color: var(--mat-sys-on-primary, #fff);
+    }
+  }
+
+  &__content {
+    flex: 1;
+    padding: 4px 0 24px;
+  }
+
+  &__title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--mat-sys-on-surface);
+    margin: 0 0 4px;
+  }
+
+  &__description {
+    font-size: 13px;
+    color: var(--mat-sys-on-surface-variant);
+    margin: 0;
+  }
+}
+
+// ─── Font selector ───────────────────────────────────────────────────────────
+
+.font-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  &__label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  &__preview {
+    padding: 8px 12px;
+    background: var(--mat-sys-surface-container);
+    border: 1px solid var(--mat-sys-outline-variant);
+    border-radius: 6px;
+    font-size: 16px;
+    color: var(--mat-sys-on-surface);
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 8px;
+  }
+
+  &__option {
+    padding: 8px;
+    border: 1px solid var(--mat-sys-outline-variant);
+    border-radius: 6px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 14px;
+    color: var(--mat-sys-on-surface);
+    background: var(--mat-sys-surface);
+    transition: border-color 0.15s ease, background 0.15s ease;
+
+    &--selected {
+      border-color: var(--mat-sys-primary);
+      background: color-mix(in srgb, var(--mat-sys-primary) 8%, transparent);
+      color: var(--mat-sys-primary);
+    }
+
+    &:hover {
+      border-color: var(--mat-sys-outline);
+    }
+  }
+}
+
+// ─── Timeline ────────────────────────────────────────────────────────────────
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  &__item {
+    display: flex;
+    gap: 12px;
+    position: relative;
+
+    &:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: 15px;
+      top: 32px;
+      bottom: -16px;
+      width: 2px;
+      background: var(--mat-sys-outline-variant);
+    }
+  }
+
+  &__marker {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid var(--mat-sys-outline-variant);
+    background: var(--mat-sys-surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+
+    &--active {
+      border-color: var(--mat-sys-primary);
+      background: var(--mat-sys-primary);
+    }
+
+    &--complete {
+      border-color: var(--mat-sys-primary);
+      background: var(--mat-sys-primary);
+    }
+
+    &--error {
+      border-color: var(--mat-sys-error);
+      background: var(--mat-sys-error);
+    }
+  }
+
+  &__content {
+    flex: 1;
+    padding: 4px 0 0;
+  }
+
+  &__title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--mat-sys-on-surface);
+    margin: 0 0 4px;
+  }
+
+  &__description {
+    font-size: 13px;
+    color: var(--mat-sys-on-surface-variant);
+    margin: 0;
+  }
+
+  &__timestamp {
+    font-size: 11px;
+    color: var(--mat-sys-on-surface-variant);
+    margin-top: 4px;
+  }
+}

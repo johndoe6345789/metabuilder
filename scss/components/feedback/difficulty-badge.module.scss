@@ -1,0 +1,13 @@
+// scss/components/feedback/difficulty-badge.module.scss
+
+.difficultyBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.icon {
+  font-size: 12px;
+}

@@ -10,6 +10,7 @@
 #include <chrono>
 
 namespace dbal {
+namespace blob {
 
 struct BlobMetadata {
     std::string key;
@@ -134,6 +135,7 @@ public:
     virtual Result<size_t> getObjectCount() = 0;
 };
 
+} // namespace blob
 } // namespace dbal
 
 #endif // DBAL_BLOB_STORAGE_HPP

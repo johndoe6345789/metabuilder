@@ -1,5 +1,5 @@
 export { Modal, Dialog } from './Modal'
-export { DialogOverlay, DialogPanel, DialogHeader, DialogTitle, DialogContent, DialogContentText, DialogActions } from './Dialog'
+export { DialogOverlay, DialogPanel, DialogHeader, DialogTitle, DialogContent, DialogContentText, DialogActions, DialogClose, DialogIcon } from './Dialog'
 export { Popover } from './Popover'
 export { Collapse, Fade, Grow, Slide, Zoom } from './Transitions'
 export { ClickAwayListener } from './ClickAwayListener'

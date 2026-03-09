@@ -1,0 +1,126 @@
+// Label Atoms - Material Design 3 (CSS Module)
+// =============================================
+// Flat selectors for label/metadata styling using M3 typography tokens
+
+// Base label (label-medium)
+.label {
+  font-family: var(--mat-sys-label-medium-font);
+  font-size: var(--mat-sys-label-medium-size);
+  font-weight: var(--mat-sys-label-medium-weight);
+  line-height: var(--mat-sys-label-medium-line-height);
+  letter-spacing: var(--mat-sys-label-medium-tracking);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+// Size variants
+.labelSm {
+  font-family: var(--mat-sys-label-small-font);
+  font-size: var(--mat-sys-label-small-size);
+  font-weight: var(--mat-sys-label-small-weight);
+  line-height: var(--mat-sys-label-small-line-height);
+  letter-spacing: var(--mat-sys-label-small-tracking);
+}
+
+.labelLg {
+  font-family: var(--mat-sys-label-large-font);
+  font-size: var(--mat-sys-label-large-size);
+  font-weight: var(--mat-sys-label-large-weight);
+  line-height: var(--mat-sys-label-large-line-height);
+  letter-spacing: var(--mat-sys-label-large-tracking);
+}
+
+// Uppercase variant (for section headers, metadata keys)
+.labelUppercase {
+  text-transform: uppercase;
+  letter-spacing: var(--mat-sys-label-small-tracking);
+}
+
+// Color variants
+.labelPrimary {
+  color: var(--mat-sys-primary);
+}
+
+.labelSecondary {
+  color: var(--mat-sys-secondary);
+}
+
+.labelError {
+  color: var(--mat-sys-error);
+}
+
+.labelSuccess {
+  color: var(--color-success);
+}
+
+.labelWarning {
+  color: var(--color-warning);
+}
+
+.labelInfo {
+  color: var(--color-info);
+}
+
+.labelOnSurface {
+  color: var(--mat-sys-on-surface);
+}
+
+// Required indicator
+.labelRequired::after {
+  content: ' *';
+  color: var(--mat-sys-error);
+}
+
+// Label with icon
+.labelWithIcon {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.labelWithIcon .icon {
+  width: 16px;
+  height: 16px;
+}
+
+// Form field label
+.fieldLabel {
+  display: block;
+  font-family: var(--mat-sys-body-small-font);
+  font-size: var(--mat-sys-body-small-size);
+  color: var(--mat-sys-on-surface-variant);
+  margin-bottom: 4px;
+}
+
+.fieldLabelError {
+  color: var(--mat-sys-error);
+}
+
+.fieldLabelFocused {
+  color: var(--mat-sys-primary);
+}
+
+// Helper text (below form fields)
+.helperText {
+  font-family: var(--mat-sys-body-small-font);
+  font-size: var(--mat-sys-body-small-size);
+  line-height: var(--mat-sys-body-small-line-height);
+  color: var(--mat-sys-on-surface-variant);
+  margin-top: 4px;
+}
+
+.helperTextError {
+  color: var(--mat-sys-error);
+}
+
+// Counter text (character count)
+.counterText {
+  font-family: var(--mat-sys-body-small-font);
+  font-size: var(--mat-sys-body-small-size);
+  color: var(--mat-sys-on-surface-variant);
+  text-align: right;
+  margin-top: 4px;
+}
+
+.counterTextError {
+  color: var(--mat-sys-error);
+}

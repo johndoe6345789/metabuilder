@@ -1,0 +1,85 @@
+// Codegen index styles - CSS custom properties and base typography
+
+:root {
+  // Sidebar variables
+  --sidebar-width: 16rem;
+  --sidebar-width-mobile: 18rem;
+  --sidebar-width-icon: 3rem;
+  --sidebar-bg: var(--mat-sys-surface-container-low);
+  --sidebar-fg: var(--mat-sys-on-surface);
+  --sidebar-border: var(--mat-sys-outline-variant);
+  --sidebar-accent: var(--mat-sys-primary);
+  --sidebar-accent-fg: var(--mat-sys-on-primary);
+  --sidebar-hover-bg: var(--mat-sys-surface-container-high);
+  --sidebar-active-bg: var(--mat-sys-secondary-container);
+  --sidebar-header-height: 4rem;
+  --sidebar-transition: 200ms;
+  --sidebar-z-index: 40;
+
+  // Core theme variables — mapped to M3 system tokens (auto light/dark)
+  --background: var(--mat-sys-surface);
+  --foreground: var(--mat-sys-on-surface);
+
+  --card: var(--mat-sys-surface-container);
+  --card-foreground: var(--mat-sys-on-surface);
+
+  --popover: var(--mat-sys-surface-container);
+  --popover-foreground: var(--mat-sys-on-surface);
+
+  --primary: var(--mat-sys-primary);
+  --primary-foreground: var(--mat-sys-on-primary);
+
+  --secondary: var(--mat-sys-secondary-container);
+  --secondary-foreground: var(--mat-sys-on-secondary-container);
+
+  --muted: var(--mat-sys-surface-variant);
+  --muted-foreground: var(--mat-sys-on-surface-variant);
+
+  --accent: var(--mat-sys-tertiary);
+  --accent-foreground: var(--mat-sys-on-tertiary);
+
+  --destructive: var(--mat-sys-error);
+  --destructive-foreground: var(--mat-sys-on-error);
+
+  --border: var(--mat-sys-outline-variant);
+  --input: var(--mat-sys-outline);
+  --ring: var(--mat-sys-primary);
+
+  --radius: var(--mat-sys-corner-medium, 0.75rem);
+
+  // Border radii — mapped to M3 shape tokens
+  --radius-sm: var(--mat-sys-corner-small, 0.5rem);
+  --radius-md: var(--mat-sys-corner-medium, 0.75rem);
+  --radius-lg: var(--mat-sys-corner-large, 1rem);
+  --radius-xl: var(--mat-sys-corner-extra-large, 1.75rem);
+  --radius-2xl: 2rem;
+  --radius-full: 9999px;
+}
+
+// Base styles — use M3 tokens for theme-aware body
+body {
+  font-family: var(--mat-sys-body-large-font, 'IBM Plex Sans', sans-serif);
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+h1, h2, h3 {
+  font-family: var(--mat-sys-headline-large-font, 'JetBrains Mono', monospace);
+}
+
+code, pre, textarea {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+// Sidebar utility classes
+.bg-sidebar {
+  background-color: var(--sidebar-bg);
+}
+
+.text-sidebar-foreground {
+  color: var(--sidebar-fg);
+}
+
+.border-sidebar-border {
+  border-color: var(--sidebar-border);
+}

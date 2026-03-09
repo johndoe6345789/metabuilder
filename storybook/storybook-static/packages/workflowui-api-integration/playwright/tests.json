@@ -1,0 +1,489 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "workflowui-api-integration",
+  "version": "1.0.0",
+  "description": "Intricate API integration tests with mocking and network inspection",
+  "tests": [
+    {
+      "name": "mock DBAL API and verify workflow list rendering",
+      "tags": ["@api", "@mock", "@workflows"],
+      "timeout": 30000,
+      "steps": [
+        {
+          "description": "Mock workflows API with sample data",
+          "action": "mockApi",
+          "url": "**/api/dbal/default/core/Workflow*",
+          "method": "GET",
+          "response": {
+            "success": true,
+            "data": {
+              "data": [
+                {
+                  "id": "wf-001",
+                  "name": "Data Processing Pipeline",
+                  "description": "ETL workflow for customer data",
+                  "status": "active",
+                  "category": "data",
+                  "createdAt": "2026-02-08T10:00:00Z",
+                  "updatedAt": "2026-02-08T10:00:00Z"
+                },
+                {
+                  "id": "wf-002",
+                  "name": "Email Campaign Automation",
+                  "description": "Automated email sender",
+                  "status": "draft",
+                  "category": "marketing",
+                  "createdAt": "2026-02-07T15:30:00Z",
+                  "updatedAt": "2026-02-08T09:00:00Z"
+                },
+                {
+                  "id": "wf-003",
+                  "name": "Invoice Generator",
+                  "description": "Monthly invoice generation",
+                  "status": "active",
+                  "category": "finance",
+                  "createdAt": "2026-02-06T08:00:00Z",
+                  "updatedAt": "2026-02-08T11:00:00Z"
+                }
+              ],
+              "total": 3,
+              "page": 1,
+              "pageSize": 10
+            }
+          },
+          "status": 200
+        },
+        {
+          "description": "Navigate to workflows page",
+          "action": "navigate",
+          "url": "/workflows"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Wait for API response",
+          "action": "waitForResponse",
+          "urlPattern": "/api/dbal",
+          "timeout": 5000
+        },
+        {
+          "action": "wait",
+          "timeout": 1000
+        },
+        {
+          "description": "Capture workflows with mocked data",
+          "action": "debugScreenshot",
+          "filename": "api-mock-01-workflows-rendered.png"
+        },
+        {
+          "description": "Verify first workflow renders",
+          "action": "expect",
+          "selector": "text=Data Processing Pipeline",
+          "assertion": {"matcher": "toBeVisible"}
+        },
+        {
+          "description": "Verify second workflow renders",
+          "action": "expect",
+          "selector": "text=Email Campaign Automation",
+          "assertion": {"matcher": "toBeVisible"}
+        },
+        {
+          "description": "Verify third workflow renders",
+          "action": "expect",
+          "selector": "text=Invoice Generator",
+          "assertion": {"matcher": "toBeVisible"}
+        },
+        {
+          "description": "Get all text to verify rendering",
+          "action": "getAllText"
+        }
+      ]
+    },
+    {
+      "name": "mock workspace creation and verify optimistic update",
+      "tags": ["@api", "@mock", "@workspace", "@optimistic"],
+      "timeout": 30000,
+      "steps": [
+        {
+          "description": "Mock empty workspace list",
+          "action": "mockApi",
+          "url": "**/api/dbal/default/core/Workspace*",
+          "method": "GET",
+          "response": {
+            "success": true,
+            "data": {
+              "data": [],
+              "total": 0
+            }
+          },
+          "status": 200
+        },
+        {
+          "description": "Navigate to dashboard",
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "wait",
+          "timeout": 1000
+        },
+        {
+          "description": "Capture empty state",
+          "action": "debugScreenshot",
+          "filename": "api-mock-02-empty-workspaces.png"
+        },
+        {
+          "description": "Mock successful workspace creation",
+          "action": "mockApi",
+          "url": "**/api/dbal/default/core/Workspace",
+          "method": "POST",
+          "response": {
+            "success": true,
+            "data": {
+              "id": "ws-new-001",
+              "name": "API Test Workspace",
+              "description": "Created via mock",
+              "color": "#7C3AED",
+              "createdAt": "2026-02-08T12:00:00Z"
+            }
+          },
+          "status": 201
+        },
+        {
+          "description": "Open create dialog",
+          "action": "click",
+          "role": "button",
+          "text": "New Workspace"
+        },
+        {
+          "action": "wait",
+          "timeout": 500
+        },
+        {
+          "description": "Fill form",
+          "action": "fill",
+          "placeholder": "Workspace name",
+          "value": "API Test Workspace"
+        },
+        {
+          "action": "fill",
+          "placeholder": "Description",
+          "value": "Created via mock"
+        },
+        {
+          "description": "Submit form",
+          "action": "click",
+          "role": "button",
+          "text": "Create Your First Workspace"
+        },
+        {
+          "description": "Wait for POST request",
+          "action": "waitForRequest",
+          "urlPattern": "/api/dbal",
+          "timeout": 5000
+        },
+        {
+          "action": "wait",
+          "timeout": 2000
+        },
+        {
+          "description": "Capture after creation",
+          "action": "debugScreenshot",
+          "filename": "api-mock-03-workspace-created.png"
+        },
+        {
+          "description": "Verify success notification or new workspace",
+          "action": "findByText",
+          "text": "API Test Workspace"
+        }
+      ]
+    },
+    {
+      "name": "mock API error and verify error handling",
+      "tags": ["@api", "@mock", "@errors"],
+      "timeout": 30000,
+      "steps": [
+        {
+          "description": "Mock API error response",
+          "action": "mockApi",
+          "url": "**/api/dbal/default/core/Workflow*",
+          "method": "GET",
+          "response": {
+            "success": false,
+            "error": {
+              "code": "DATABASE_ERROR",
+              "message": "Failed to fetch workflows from database",
+              "details": "Connection timeout after 5000ms"
+            }
+          },
+          "status": 500
+        },
+        {
+          "description": "Navigate to workflows",
+          "action": "navigate",
+          "url": "/workflows"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "wait",
+          "timeout": 2000
+        },
+        {
+          "description": "Capture error state",
+          "action": "debugScreenshot",
+          "filename": "api-mock-04-error-state.png"
+        },
+        {
+          "description": "Check for error message",
+          "action": "findByText",
+          "text": "error"
+        },
+        {
+          "description": "Get all text to verify error display",
+          "action": "getAllText"
+        }
+      ]
+    },
+    {
+      "name": "mock paginated API and test infinite scroll",
+      "tags": ["@api", "@mock", "@pagination"],
+      "timeout": 45000,
+      "steps": [
+        {
+          "description": "Mock first page of workflows",
+          "action": "mockApi",
+          "url": "**/api/dbal/default/core/Workflow?page=1*",
+          "method": "GET",
+          "response": {
+            "success": true,
+            "data": {
+              "data": [
+                {"id": "wf-001", "name": "Workflow 1", "status": "active"},
+                {"id": "wf-002", "name": "Workflow 2", "status": "active"},
+                {"id": "wf-003", "name": "Workflow 3", "status": "active"}
+              ],
+              "total": 10,
+              "page": 1,
+              "pageSize": 3
+            }
+          },
+          "status": 200
+        },
+        {
+          "description": "Navigate to workflows",
+          "action": "navigate",
+          "url": "/workflows"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "wait",
+          "timeout": 1000
+        },
+        {
+          "description": "Capture page 1",
+          "action": "debugScreenshot",
+          "filename": "api-mock-05-page-1.png"
+        },
+        {
+          "description": "Verify first 3 workflows",
+          "action": "expectCount",
+          "selector": "[class*='workflow'], [data-testid*='workflow']",
+          "count": 3
+        },
+        {
+          "description": "Mock second page",
+          "action": "mockApi",
+          "url": "**/api/dbal/default/core/Workflow?page=2*",
+          "method": "GET",
+          "response": {
+            "success": true,
+            "data": {
+              "data": [
+                {"id": "wf-004", "name": "Workflow 4", "status": "active"},
+                {"id": "wf-005", "name": "Workflow 5", "status": "draft"},
+                {"id": "wf-006", "name": "Workflow 6", "status": "active"}
+              ],
+              "total": 10,
+              "page": 2,
+              "pageSize": 3
+            }
+          },
+          "status": 200
+        },
+        {
+          "description": "Scroll to bottom to trigger load more",
+          "action": "scroll",
+          "x": 0,
+          "y": 10000
+        },
+        {
+          "action": "wait",
+          "timeout": 2000
+        },
+        {
+          "description": "Capture page 2 loaded",
+          "action": "debugScreenshot",
+          "filename": "api-mock-06-page-2.png"
+        }
+      ]
+    },
+    {
+      "name": "mock realtime updates via API polling",
+      "tags": ["@api", "@mock", "@realtime"],
+      "timeout": 45000,
+      "steps": [
+        {
+          "description": "Mock initial workflow list",
+          "action": "mockApi",
+          "url": "**/api/dbal/default/core/Workflow*",
+          "method": "GET",
+          "response": {
+            "success": true,
+            "data": {
+              "data": [
+                {"id": "wf-001", "name": "Original Workflow", "status": "active"}
+              ],
+              "total": 1
+            }
+          },
+          "status": 200
+        },
+        {
+          "action": "navigate",
+          "url": "/workflows"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "wait",
+          "timeout": 1000
+        },
+        {
+          "description": "Capture initial state",
+          "action": "debugScreenshot",
+          "filename": "api-mock-07-before-update.png"
+        },
+        {
+          "description": "Verify original workflow",
+          "action": "expect",
+          "selector": "text=Original Workflow",
+          "assertion": {"matcher": "toBeVisible"}
+        },
+        {
+          "description": "Mock updated workflow list (simulating realtime update)",
+          "action": "mockApi",
+          "url": "**/api/dbal/default/core/Workflow*",
+          "method": "GET",
+          "response": {
+            "success": true,
+            "data": {
+              "data": [
+                {"id": "wf-001", "name": "Original Workflow", "status": "active"},
+                {"id": "wf-002", "name": "Newly Created Workflow", "status": "draft"}
+              ],
+              "total": 2
+            }
+          },
+          "status": 200
+        },
+        {
+          "description": "Reload page to fetch updated data",
+          "action": "reload"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "wait",
+          "timeout": 1000
+        },
+        {
+          "description": "Capture after update",
+          "action": "debugScreenshot",
+          "filename": "api-mock-08-after-update.png"
+        },
+        {
+          "description": "Verify new workflow appears",
+          "action": "expect",
+          "selector": "text=Newly Created Workflow",
+          "assertion": {"matcher": "toBeVisible"}
+        }
+      ]
+    },
+    {
+      "name": "mock search API with debouncing verification",
+      "tags": ["@api", "@mock", "@search", "@performance"],
+      "timeout": 30000,
+      "steps": [
+        {
+          "description": "Mock search results for 'data'",
+          "action": "mockApi",
+          "url": "**/api/dbal/default/core/Workflow?search=data*",
+          "method": "GET",
+          "response": {
+            "success": true,
+            "data": {
+              "data": [
+                {"id": "wf-001", "name": "Data Pipeline", "status": "active"},
+                {"id": "wf-002", "name": "Data Sync", "status": "active"}
+              ],
+              "total": 2
+            }
+          },
+          "status": 200
+        },
+        {
+          "action": "navigate",
+          "url": "/workflows"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Type search query slowly (debouncing test)",
+          "action": "type",
+          "placeholder": "Search workflows...",
+          "text": "data",
+          "delay": 100
+        },
+        {
+          "action": "wait",
+          "timeout": 1000
+        },
+        {
+          "description": "Wait for search API call",
+          "action": "waitForRequest",
+          "urlPattern": "search=data",
+          "timeout": 5000
+        },
+        {
+          "description": "Capture search results",
+          "action": "debugScreenshot",
+          "filename": "api-mock-09-search-results.png"
+        },
+        {
+          "description": "Verify filtered results",
+          "action": "expect",
+          "selector": "text=Data Pipeline",
+          "assertion": {"matcher": "toBeVisible"}
+        }
+      ]
+    }
+  ]
+}

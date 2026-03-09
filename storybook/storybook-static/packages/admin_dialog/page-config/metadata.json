@@ -1,0 +1,6 @@
+{
+  "entity": "page-config",
+  "packageId": "admin_dialog",
+  "description": "Page routes for admin_dialog",
+  "version": "1.0.0"
+}

@@ -5,7 +5,6 @@
  */
 
 import { spawn } from 'child_process'
-import * as path from 'path'
 
 export interface StorybookBuildInput {
   command?: 'dev' | 'build' | 'test'
@@ -26,7 +25,7 @@ export interface StorybookBuildResult {
 }
 
 export class StorybookNode {
-  private process: any = null
+  private _process: any = null
 
   async execute(input: StorybookBuildInput): Promise<StorybookBuildResult> {
     const startTime = Date.now()
@@ -62,6 +61,16 @@ export class StorybookNode {
         output,
         errors
       }
+    }
+  }
+
+  /**
+   * Stop any running storybook process (e.g. dev server)
+   */
+  stop(): void {
+    if (this._process) {
+      this._process.kill();
+      this._process = null;
     }
   }
 
@@ -102,6 +111,7 @@ export class StorybookNode {
       const proc = spawn(command, args, {
         stdio: ['pipe', 'pipe', 'pipe']
       })
+      this._process = proc
 
       proc.stdout.on('data', (data: any) => {
         output.push(data.toString())
@@ -134,7 +144,7 @@ export class StorybookNode {
 /**
  * Workflow node factory
  */
-export async function createStorybookNode(config: any) {
+export async function createStorybookNode(_config: any) {
   return new StorybookNode()
 }
 

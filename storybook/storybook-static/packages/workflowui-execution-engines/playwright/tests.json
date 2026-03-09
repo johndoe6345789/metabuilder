@@ -1,0 +1,538 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "workflowui-execution-engines",
+  "version": "1.0.0",
+  "description": "Multi-language workflow execution tests - TypeScript, Python, and C++",
+  "tests": [
+    {
+      "name": "execute TypeScript workflow end-to-end",
+      "tags": ["@execution", "@typescript", "@e2e"],
+      "timeout": 60000,
+      "steps": [
+        {
+          "description": "Mock TypeScript workflow with HTTP node",
+          "action": "mockApi",
+          "url": "**/api/dbal/default/core/Workflow/ts-http-workflow",
+          "method": "GET",
+          "response": {
+            "success": true,
+            "data": {
+              "id": "ts-http-workflow",
+              "name": "TypeScript HTTP Request",
+              "language": "typescript",
+              "nodes": [
+                {
+                  "id": "start-1",
+                  "type": "trigger",
+                  "position": {"x": 100, "y": 100}
+                },
+                {
+                  "id": "http-1",
+                  "type": "http-request",
+                  "config": {
+                    "url": "https://api.github.com/users/octocat",
+                    "method": "GET"
+                  },
+                  "position": {"x": 300, "y": 100}
+                },
+                {
+                  "id": "log-1",
+                  "type": "console-log",
+                  "position": {"x": 500, "y": 100}
+                }
+              ],
+              "connections": [
+                {"from": "start-1", "to": "http-1"},
+                {"from": "http-1", "to": "log-1"}
+              ]
+            }
+          },
+          "status": 200
+        },
+        {
+          "description": "Navigate to workflow editor",
+          "action": "navigate",
+          "url": "/editor/ts-http-workflow"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "wait",
+          "timeout": 2000
+        },
+        {
+          "description": "Capture TypeScript workflow loaded",
+          "action": "debugScreenshot",
+          "filename": "exec-ts-01-workflow-loaded.png"
+        },
+        {
+          "description": "Verify workflow name",
+          "action": "expect",
+          "selector": "text=TypeScript HTTP Request",
+          "assertion": {"matcher": "toBeVisible"}
+        },
+        {
+          "description": "Mock execution endpoint",
+          "action": "mockApi",
+          "url": "**/api/workflows/ts-http-workflow/execute",
+          "method": "POST",
+          "response": {
+            "success": true,
+            "executionId": "exec-ts-001",
+            "status": "running",
+            "runtime": "typescript"
+          },
+          "status": 200
+        },
+        {
+          "description": "Mock execution status polling",
+          "action": "mockApi",
+          "url": "**/api/workflows/executions/exec-ts-001",
+          "method": "GET",
+          "response": {
+            "success": true,
+            "data": {
+              "id": "exec-ts-001",
+              "status": "completed",
+              "runtime": "typescript",
+              "duration": 1250,
+              "output": {
+                "http-1": {
+                  "statusCode": 200,
+                  "body": {"login": "octocat", "id": 583231}
+                },
+                "log-1": {
+                  "logged": "User: octocat, ID: 583231"
+                }
+              }
+            }
+          },
+          "status": 200
+        },
+        {
+          "description": "Click Execute button",
+          "action": "click",
+          "role": "button",
+          "text": "Execute"
+        },
+        {
+          "action": "wait",
+          "timeout": 2000
+        },
+        {
+          "description": "Capture execution started",
+          "action": "debugScreenshot",
+          "filename": "exec-ts-02-executing.png"
+        },
+        {
+          "description": "Wait for execution to complete",
+          "action": "waitForResponse",
+          "urlPattern": "/api/workflows/executions",
+          "timeout": 10000
+        },
+        {
+          "action": "wait",
+          "timeout": 1000
+        },
+        {
+          "description": "Capture execution completed",
+          "action": "debugScreenshot",
+          "filename": "exec-ts-03-completed.png"
+        },
+        {
+          "description": "Verify execution success indicator",
+          "action": "findByText",
+          "text": "completed"
+        }
+      ]
+    },
+    {
+      "name": "execute Python workflow with data transformation",
+      "tags": ["@execution", "@python", "@e2e"],
+      "timeout": 60000,
+      "steps": [
+        {
+          "description": "Mock Python workflow",
+          "action": "mockApi",
+          "url": "**/api/dbal/default/core/Workflow/py-data-workflow",
+          "method": "GET",
+          "response": {
+            "success": true,
+            "data": {
+              "id": "py-data-workflow",
+              "name": "Python Data Transform",
+              "language": "python",
+              "nodes": [
+                {
+                  "id": "start-1",
+                  "type": "trigger"
+                },
+                {
+                  "id": "python-1",
+                  "type": "python-code",
+                  "config": {
+                    "code": "import pandas as pd\\ndf = pd.DataFrame(data)\\nresult = df.sum()"
+                  }
+                },
+                {
+                  "id": "output-1",
+                  "type": "output"
+                }
+              ],
+              "connections": [
+                {"from": "start-1", "to": "python-1"},
+                {"from": "python-1", "to": "output-1"}
+              ]
+            }
+          },
+          "status": 200
+        },
+        {
+          "action": "navigate",
+          "url": "/editor/py-data-workflow"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "wait",
+          "timeout": 2000
+        },
+        {
+          "description": "Capture Python workflow",
+          "action": "debugScreenshot",
+          "filename": "exec-py-01-workflow-loaded.png"
+        },
+        {
+          "description": "Mock Python execution",
+          "action": "mockApi",
+          "url": "**/api/workflows/py-data-workflow/execute",
+          "method": "POST",
+          "response": {
+            "success": true,
+            "executionId": "exec-py-001",
+            "status": "running",
+            "runtime": "python"
+          },
+          "status": 200
+        },
+        {
+          "description": "Mock Python execution result",
+          "action": "mockApi",
+          "url": "**/api/workflows/executions/exec-py-001",
+          "method": "GET",
+          "response": {
+            "success": true,
+            "data": {
+              "id": "exec-py-001",
+              "status": "completed",
+              "runtime": "python",
+              "pythonVersion": "3.11.0",
+              "duration": 2340,
+              "output": {
+                "python-1": {
+                  "result": 42,
+                  "type": "int"
+                }
+              }
+            }
+          },
+          "status": 200
+        },
+        {
+          "description": "Execute Python workflow",
+          "action": "click",
+          "role": "button",
+          "text": "Execute"
+        },
+        {
+          "action": "wait",
+          "timeout": 3000
+        },
+        {
+          "description": "Capture Python execution result",
+          "action": "debugScreenshot",
+          "filename": "exec-py-02-completed.png"
+        },
+        {
+          "description": "Verify Python runtime indicated",
+          "action": "findByText",
+          "text": "python"
+        }
+      ]
+    },
+    {
+      "name": "execute C++ workflow (future support)",
+      "tags": ["@execution", "@cpp", "@future"],
+      "timeout": 60000,
+      "skip": true,
+      "steps": [
+        {
+          "description": "Mock C++ workflow for future",
+          "action": "mockApi",
+          "url": "**/api/dbal/default/core/Workflow/cpp-perf-workflow",
+          "method": "GET",
+          "response": {
+            "success": true,
+            "data": {
+              "id": "cpp-perf-workflow",
+              "name": "C++ Performance Critical",
+              "language": "cpp",
+              "nodes": [
+                {
+                  "id": "start-1",
+                  "type": "trigger"
+                },
+                {
+                  "id": "cpp-1",
+                  "type": "cpp-code",
+                  "config": {
+                    "code": "#include <vector>\\nstd::vector<int> process(const std::vector<int>& data) { return data; }"
+                  }
+                }
+              ]
+            }
+          },
+          "status": 200
+        },
+        {
+          "action": "navigate",
+          "url": "/editor/cpp-perf-workflow"
+        },
+        {
+          "action": "wait",
+          "timeout": 2000
+        },
+        {
+          "description": "Capture C++ workflow UI",
+          "action": "debugScreenshot",
+          "filename": "exec-cpp-01-workflow.png"
+        }
+      ]
+    },
+    {
+      "name": "runtime selection and comparison",
+      "tags": ["@execution", "@multi-language", "@comparison"],
+      "timeout": 60000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/workflows"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Mock workflows with different runtimes",
+          "action": "mockApi",
+          "url": "**/api/dbal/default/core/Workflow*",
+          "method": "GET",
+          "response": {
+            "success": true,
+            "data": {
+              "data": [
+                {
+                  "id": "wf-ts-001",
+                  "name": "TypeScript API Workflow",
+                  "language": "typescript",
+                  "status": "active"
+                },
+                {
+                  "id": "wf-py-001",
+                  "name": "Python Data Pipeline",
+                  "language": "python",
+                  "status": "active"
+                },
+                {
+                  "id": "wf-cpp-001",
+                  "name": "C++ High Performance",
+                  "language": "cpp",
+                  "status": "draft"
+                }
+              ],
+              "total": 3
+            }
+          },
+          "status": 200
+        },
+        {
+          "action": "reload"
+        },
+        {
+          "action": "wait",
+          "timeout": 2000
+        },
+        {
+          "description": "Capture multi-language workflows",
+          "action": "debugScreenshot",
+          "filename": "exec-multi-01-language-list.png"
+        },
+        {
+          "description": "Verify TypeScript workflow visible",
+          "action": "expect",
+          "selector": "text=TypeScript API Workflow",
+          "assertion": {"matcher": "toBeVisible"}
+        },
+        {
+          "description": "Verify Python workflow visible",
+          "action": "expect",
+          "selector": "text=Python Data Pipeline",
+          "assertion": {"matcher": "toBeVisible"}
+        },
+        {
+          "description": "Find language indicators",
+          "action": "findByText",
+          "text": "typescript"
+        },
+        {
+          "description": "Get all text to see language labels",
+          "action": "getAllText"
+        }
+      ]
+    },
+    {
+      "name": "execution history with runtime details",
+      "tags": ["@execution", "@history", "@monitoring"],
+      "timeout": 45000,
+      "steps": [
+        {
+          "description": "Mock execution history with different languages",
+          "action": "mockApi",
+          "url": "**/api/workflows/executions*",
+          "method": "GET",
+          "response": {
+            "success": true,
+            "data": {
+              "executions": [
+                {
+                  "id": "exec-001",
+                  "workflowId": "wf-ts-001",
+                  "runtime": "typescript",
+                  "status": "completed",
+                  "duration": 1250,
+                  "startedAt": "2026-02-08T14:00:00Z",
+                  "completedAt": "2026-02-08T14:00:01Z"
+                },
+                {
+                  "id": "exec-002",
+                  "workflowId": "wf-py-001",
+                  "runtime": "python",
+                  "pythonVersion": "3.11.0",
+                  "status": "completed",
+                  "duration": 2340,
+                  "startedAt": "2026-02-08T14:01:00Z",
+                  "completedAt": "2026-02-08T14:01:02Z"
+                },
+                {
+                  "id": "exec-003",
+                  "workflowId": "wf-ts-001",
+                  "runtime": "typescript",
+                  "status": "failed",
+                  "duration": 450,
+                  "error": "Network timeout",
+                  "startedAt": "2026-02-08T14:02:00Z"
+                }
+              ]
+            }
+          },
+          "status": 200
+        },
+        {
+          "action": "navigate",
+          "url": "/workflows/executions"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "wait",
+          "timeout": 2000
+        },
+        {
+          "description": "Capture execution history",
+          "action": "debugScreenshot",
+          "filename": "exec-history-01-list.png"
+        },
+        {
+          "description": "Verify TypeScript execution shown",
+          "action": "findByText",
+          "text": "typescript"
+        },
+        {
+          "description": "Verify Python execution shown",
+          "action": "findByText",
+          "text": "python"
+        },
+        {
+          "description": "Inspect execution row",
+          "action": "inspectPageStructure"
+        }
+      ]
+    },
+    {
+      "name": "workflow runtime error handling",
+      "tags": ["@execution", "@errors", "@debugging"],
+      "timeout": 45000,
+      "steps": [
+        {
+          "description": "Mock TypeScript workflow with error",
+          "action": "mockApi",
+          "url": "**/api/workflows/wf-ts-error/execute",
+          "method": "POST",
+          "response": {
+            "success": false,
+            "error": {
+              "code": "EXECUTION_ERROR",
+              "message": "TypeError: Cannot read property 'data' of undefined",
+              "runtime": "typescript",
+              "stackTrace": "at HttpNode.execute (http-node.ts:45:20)\\nat Workflow.run (workflow.ts:123:15)"
+            }
+          },
+          "status": 500
+        },
+        {
+          "action": "navigate",
+          "url": "/editor/wf-ts-error"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "wait",
+          "timeout": 1000
+        },
+        {
+          "description": "Execute workflow that will error",
+          "action": "click",
+          "role": "button",
+          "text": "Execute"
+        },
+        {
+          "action": "wait",
+          "timeout": 2000
+        },
+        {
+          "description": "Capture error state",
+          "action": "debugScreenshot",
+          "filename": "exec-error-01-typescript-error.png"
+        },
+        {
+          "description": "Verify error message displayed",
+          "action": "findByText",
+          "text": "error"
+        },
+        {
+          "description": "Check for stack trace",
+          "action": "findByText",
+          "text": "TypeError"
+        }
+      ]
+    }
+  ]
+}

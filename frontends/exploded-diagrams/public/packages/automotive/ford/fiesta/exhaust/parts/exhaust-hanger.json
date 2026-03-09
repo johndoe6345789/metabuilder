@@ -1,0 +1,30 @@
+{
+  "id": "exhaust-hanger",
+  "name": "Exhaust Hanger",
+  "partNumber": "FD-1744350",
+  "material": "blackPlastic",
+  "quantity": 5,
+  "weight": 85.0,
+  "weightUnit": "g",
+  "baseY": 400,
+  "description": "Rubber exhaust mounting hanger",
+  "installation": {
+    "tools": [
+      { "name": "Exhaust hanger removal tool", "size": "-", "required": false },
+      { "name": "WD-40", "size": "-", "required": true }
+    ],
+    "hardware": [],
+    "torque": [],
+    "notes": [
+      "Spray with lubricant for easy fitting",
+      "Check for cracks and perishing",
+      "Replace if stretched or torn",
+      "Isolates vibration from body"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 40, "height": 25, "rx": 8, "fill": "#2a2a2a" },
+    { "type": "ellipse", "rx": 8, "ry": 12, "offsetX": -12, "fill": "#333" },
+    { "type": "ellipse", "rx": 8, "ry": 12, "offsetX": 12, "fill": "#333" }
+  ]
+}

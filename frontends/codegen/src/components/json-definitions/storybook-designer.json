@@ -1,0 +1,548 @@
+{
+  "id": "storybook-designer-root",
+  "type": "div",
+  "className": "storybook-designer",
+  "children": [
+    {
+      "id": "story-list-panel",
+      "type": "div",
+      "className": "storybook-designer__list-panel",
+      "children": [
+        {
+          "id": "list-header",
+          "type": "div",
+          "className": "storybook-designer__list-header",
+          "children": [
+            {
+              "id": "list-title",
+              "type": "h2",
+              "props": { "className": "storybook-designer__list-title" },
+              "bindings": { "children": "designerState.copy.list.title" }
+            },
+            {
+              "id": "list-actions",
+              "type": "div",
+              "className": "storybook-designer__list-actions",
+              "children": [
+                {
+                  "id": "ai-generate-button",
+                  "type": "Button",
+                  "props": { "size": "sm", "variant": "outline" },
+                  "bindings": { "onClick": "designerState.handleGenerateWithAI" },
+                  "children": [
+                    {
+                      "id": "ai-icon",
+                      "type": "PhosphorIcon",
+                      "props": { "icon": "Sparkle", "size": 14, "weight": "duotone" }
+                    }
+                  ]
+                },
+                {
+                  "id": "add-story-button",
+                  "type": "Button",
+                  "props": { "size": "sm" },
+                  "bindings": { "onClick": "designerState.handleAddStory" },
+                  "children": [
+                    {
+                      "id": "add-icon",
+                      "type": "PhosphorIcon",
+                      "props": { "icon": "Plus", "size": 14 }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "stories-scroll-area",
+          "type": "ScrollArea",
+          "className": "storybook-designer__list-body",
+          "children": [
+            {
+              "id": "category-groups-list",
+              "type": "list",
+              "bindings": {
+                "items": "designerState.categoryGroups",
+                "keyPath": "category"
+              },
+              "itemTemplate": {
+                "type": "div",
+                "className": "storybook-designer__category-group",
+                "children": [
+                  {
+                    "id": "category-label",
+                    "type": "div",
+                    "props": { "className": "storybook-designer__category-label" },
+                    "bindings": { "children": "item.category" }
+                  },
+                  {
+                    "id": "category-stories",
+                    "type": "div",
+                    "props": { "className": "storybook-designer__category-items" },
+                    "children": [
+                      {
+                        "id": "stories-in-category",
+                        "type": "list",
+                        "bindings": {
+                          "items": "item.stories",
+                          "keyPath": "id"
+                        },
+                        "itemTemplate": {
+                          "type": "div",
+                          "bindings": {
+                            "className": "item.className",
+                            "onClick": "item.onSelect"
+                          },
+                          "children": [
+                            {
+                              "id": "story-info",
+                              "type": "div",
+                              "className": "storybook-designer__story-info",
+                              "children": [
+                                {
+                                  "id": "story-component-name",
+                                  "type": "div",
+                                  "props": { "className": "storybook-designer__story-component" },
+                                  "bindings": { "children": "item.componentName" }
+                                },
+                                {
+                                  "id": "story-name",
+                                  "type": "div",
+                                  "props": { "className": "storybook-designer__story-name" },
+                                  "bindings": { "children": "item.storyName" }
+                                }
+                              ]
+                            },
+                            {
+                              "id": "delete-story-button",
+                              "type": "Button",
+                              "props": {
+                                "size": "sm",
+                                "variant": "ghost"
+                              },
+                              "bindings": { "onClick": "item.onDelete" },
+                              "children": [
+                                {
+                                  "id": "delete-icon",
+                                  "type": "PhosphorIcon",
+                                  "props": { "icon": "Trash", "size": 14 }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "empty-list-message",
+              "type": "div",
+              "props": { "className": "empty-state" },
+              "conditional": { "if": "designerState.hasNoStories" },
+              "bindings": { "children": "designerState.copy.list.empty" }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "editor-panel",
+      "type": "div",
+      "className": "storybook-designer__editor-panel",
+      "children": [
+        {
+          "id": "editor-content",
+          "type": "conditional-group",
+          "conditional": {
+            "if": "designerState.selectedStory",
+            "then": {
+              "id": "story-editor-wrapper",
+              "type": "div",
+              "className": "storybook-designer__editor-content",
+              "children": [
+                {
+                  "id": "editor-header",
+                  "type": "div",
+                  "className": "storybook-designer__editor-header",
+                  "children": [
+                    {
+                      "id": "editor-title",
+                      "type": "h2",
+                      "props": { "className": "storybook-designer__editor-title" },
+                      "bindings": { "children": "designerState.copy.editor.title" }
+                    },
+                    {
+                      "id": "preview-button",
+                      "type": "Button",
+                      "props": { "variant": "outline" },
+                      "children": [
+                        {
+                          "id": "preview-icon",
+                          "type": "PhosphorIcon",
+                          "props": { "icon": "BookOpen", "size": 16, "weight": "fill" }
+                        },
+                        {
+                          "id": "preview-label",
+                          "type": "text",
+                          "bindings": { "children": "designerState.copy.editor.previewButton" }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "story-details-card",
+                  "type": "Card",
+                  "children": [
+                    {
+                      "id": "details-header",
+                      "type": "CardHeader",
+                      "children": [
+                        {
+                          "id": "details-title",
+                          "type": "CardTitle",
+                          "bindings": { "children": "designerState.copy.editor.detailsTitle" }
+                        }
+                      ]
+                    },
+                    {
+                      "id": "details-content",
+                      "type": "CardContent",
+                      "children": [
+                        {
+                          "id": "name-fields-row",
+                          "type": "div",
+                          "className": "storybook-designer__fields-grid",
+                          "children": [
+                            {
+                              "id": "component-name-field",
+                              "type": "div",
+                              "className": "storybook-designer__field",
+                              "children": [
+                                {
+                                  "id": "component-name-label",
+                                  "type": "Label",
+                                  "props": { "htmlFor": "component-name" },
+                                  "bindings": { "children": "designerState.copy.editor.componentNameLabel" }
+                                },
+                                {
+                                  "id": "component-name-input",
+                                  "type": "Input",
+                                  "props": { "id": "component-name" },
+                                  "bindings": {
+                                    "value": "designerState.selectedStory.componentName",
+                                    "onChange": "designerState.handleComponentNameChange",
+                                    "placeholder": "designerState.copy.editor.componentNamePlaceholder"
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "id": "story-name-field",
+                              "type": "div",
+                              "className": "storybook-designer__field",
+                              "children": [
+                                {
+                                  "id": "story-name-label",
+                                  "type": "Label",
+                                  "props": { "htmlFor": "story-name" },
+                                  "bindings": { "children": "designerState.copy.editor.storyNameLabel" }
+                                },
+                                {
+                                  "id": "story-name-input",
+                                  "type": "Input",
+                                  "props": { "id": "story-name" },
+                                  "bindings": {
+                                    "value": "designerState.selectedStory.storyName",
+                                    "onChange": "designerState.handleStoryNameChange",
+                                    "placeholder": "designerState.copy.editor.storyNamePlaceholder"
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "id": "category-field",
+                          "type": "div",
+                          "className": "storybook-designer__field",
+                          "children": [
+                            {
+                              "id": "category-label",
+                              "type": "Label",
+                              "props": { "htmlFor": "category" },
+                              "bindings": { "children": "designerState.copy.editor.categoryLabel" }
+                            },
+                            {
+                              "id": "category-input",
+                              "type": "Input",
+                              "props": { "id": "category" },
+                              "bindings": {
+                                "value": "designerState.selectedStory.category",
+                                "onChange": "designerState.handleCategoryChange",
+                                "placeholder": "designerState.copy.editor.categoryPlaceholder"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "id": "description-field",
+                          "type": "div",
+                          "className": "storybook-designer__field",
+                          "children": [
+                            {
+                              "id": "description-label",
+                              "type": "Label",
+                              "props": { "htmlFor": "description" },
+                              "bindings": { "children": "designerState.copy.editor.descriptionLabel" }
+                            },
+                            {
+                              "id": "description-textarea",
+                              "type": "Textarea",
+                              "props": { "id": "description" },
+                              "bindings": {
+                                "value": "designerState.selectedStory.description",
+                                "onChange": "designerState.handleDescriptionChange",
+                                "placeholder": "designerState.copy.editor.descriptionPlaceholder"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "story-args-card",
+                  "type": "Card",
+                  "children": [
+                    {
+                      "id": "args-header",
+                      "type": "CardHeader",
+                      "children": [
+                        {
+                          "id": "args-header-row",
+                          "type": "div",
+                          "className": "storybook-designer__editor-header",
+                          "children": [
+                            {
+                              "id": "args-title-block",
+                              "type": "div",
+                              "children": [
+                                {
+                                  "id": "args-title",
+                                  "type": "CardTitle",
+                                  "bindings": { "children": "designerState.copy.args.title" }
+                                },
+                                {
+                                  "id": "args-description",
+                                  "type": "CardDescription",
+                                  "bindings": { "children": "designerState.copy.args.description" }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "id": "args-content",
+                      "type": "CardContent",
+                      "children": [
+                        {
+                          "id": "add-arg-row",
+                          "type": "div",
+                          "className": "storybook-designer__args-row",
+                          "children": [
+                            {
+                              "id": "arg-name-input",
+                              "type": "Input",
+                              "bindings": {
+                                "placeholder": "designerState.copy.args.argNamePlaceholder",
+                                "value": "designerState.newArgKey",
+                                "onChange": "designerState.handleNewArgKeyChange"
+                              }
+                            },
+                            {
+                              "id": "arg-value-input",
+                              "type": "Input",
+                              "bindings": {
+                                "placeholder": "designerState.copy.args.argValuePlaceholder",
+                                "value": "designerState.newArgValue",
+                                "onChange": "designerState.handleNewArgValueChange"
+                              }
+                            },
+                            {
+                              "id": "add-arg-button",
+                              "type": "Button",
+                              "bindings": {
+                                "onClick": "designerState.handleAddArg",
+                                "disabled": "designerState.isAddArgDisabled"
+                              },
+                              "children": [
+                                {
+                                  "id": "add-arg-icon",
+                                  "type": "PhosphorIcon",
+                                  "props": { "icon": "Plus", "size": 14 }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "id": "args-scroll-area",
+                          "type": "ScrollArea",
+                          "children": [
+                            {
+                              "id": "args-list-container",
+                              "type": "div",
+                              "className": "storybook-designer__args-list",
+                              "children": [
+                                {
+                                  "id": "arg-entries-list",
+                                  "type": "list",
+                                  "bindings": {
+                                    "items": "designerState.argEntries",
+                                    "keyPath": "key"
+                                  },
+                                  "itemTemplate": {
+                                    "type": "Card",
+                                    "children": [
+                                      {
+                                        "id": "arg-card-content",
+                                        "type": "CardContent",
+                                        "props": { "className": "content-card" },
+                                        "children": [
+                                          {
+                                            "id": "arg-row",
+                                            "type": "div",
+                                            "className": "storybook-designer__arg-row",
+                                            "children": [
+                                              {
+                                                "id": "arg-details",
+                                                "type": "div",
+                                                "className": "storybook-designer__arg-details",
+                                                "children": [
+                                                  {
+                                                    "id": "arg-label-row",
+                                                    "type": "div",
+                                                    "className": "storybook-designer__arg-label-row",
+                                                    "children": [
+                                                      {
+                                                        "id": "arg-key-label",
+                                                        "type": "Label",
+                                                        "bindings": { "children": "item.key" }
+                                                      },
+                                                      {
+                                                        "id": "arg-type-badge",
+                                                        "type": "Badge",
+                                                        "props": { "variant": "outline" },
+                                                        "bindings": { "children": "item.typeLabel" }
+                                                      }
+                                                    ]
+                                                  },
+                                                  {
+                                                    "id": "arg-value-editor",
+                                                    "type": "Input",
+                                                    "bindings": {
+                                                      "value": "item.stringValue",
+                                                      "onChange": "item.onValueChange"
+                                                    }
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "id": "arg-delete-button",
+                                                "type": "Button",
+                                                "props": { "size": "sm", "variant": "ghost" },
+                                                "bindings": { "onClick": "item.onDelete" },
+                                                "children": [
+                                                  {
+                                                    "id": "arg-delete-icon",
+                                                    "type": "PhosphorIcon",
+                                                    "props": { "icon": "Trash", "size": 14 }
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "id": "empty-args-message",
+                                  "type": "div",
+                                  "props": { "className": "empty-state" },
+                                  "conditional": { "if": "designerState.hasNoArgs" },
+                                  "bindings": { "children": "designerState.copy.args.empty" }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "else": {
+              "id": "empty-story-state",
+              "type": "div",
+              "className": "storybook-designer__empty-state",
+              "children": [
+                {
+                  "id": "empty-state-content",
+                  "type": "div",
+                  "className": "storybook-designer__empty-state-content",
+                  "children": [
+                    {
+                      "id": "empty-state-icon",
+                      "type": "PhosphorIcon",
+                      "props": { "icon": "BookOpen", "size": 48 }
+                    },
+                    {
+                      "id": "empty-state-title",
+                      "type": "p",
+                      "props": { "className": "storybook-designer__empty-state-title" },
+                      "bindings": { "children": "designerState.copy.emptyState.title" }
+                    },
+                    {
+                      "id": "empty-state-subtitle",
+                      "type": "p",
+                      "props": { "className": "storybook-designer__empty-state-subtitle" },
+                      "bindings": { "children": "designerState.copy.emptyState.subtitle" }
+                    },
+                    {
+                      "id": "empty-state-add-button",
+                      "type": "Button",
+                      "bindings": { "onClick": "designerState.handleAddStory" },
+                      "children": [
+                        {
+                          "id": "empty-state-add-icon",
+                          "type": "PhosphorIcon",
+                          "props": { "icon": "Plus", "size": 16 }
+                        },
+                        {
+                          "id": "empty-state-add-label",
+                          "type": "text",
+                          "bindings": { "children": "designerState.copy.emptyState.button" }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

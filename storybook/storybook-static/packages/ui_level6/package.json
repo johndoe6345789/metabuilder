@@ -1,0 +1,83 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "ui_level6",
+  "name": "Level 6 - Supergod Panel",
+  "version": "1.0.0",
+  "description": "Supergod panel for tenant management and system administration",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "ui",
+  "icon": "static_content/icon.svg",
+  "minLevel": 6,
+  "primary": true,
+  "dependencies": {
+    "ui_permissions": "*",
+    "ui_header": "*",
+    "ui_intro": "*"
+  },
+  "devDependencies": {
+    "testing": "*"
+  },
+  "exports": {
+    "pages": [
+      "level6"
+    ],
+    "components": [
+      "SupergodSidebar",
+      "SupergodToolbar",
+      "SupergodContent",
+      "TenantList",
+      "TenantCard",
+      "CreateTenantForm",
+      "TransferForm",
+      "TransferHistory",
+      "SystemStats",
+      "SystemHealth",
+      "SystemLogs",
+      "MaintenanceMode"
+    ],
+    "scripts": [
+      "layout",
+      "tenants",
+      "transfer",
+      "system"
+    ]
+  },
+  "tests": {
+    "suites": [
+      "tests/metadata.test.json"
+    ]
+  },
+  "files": {
+    "directories": [
+      "components",
+      "permissions",
+      "static_content",
+      "storybook",
+      "styles",
+      "tests"
+    ],
+    "byType": {
+      "components": [
+        "components/ui.json"
+      ],
+      "tests": [
+        "tests/metadata.params.json",
+        "tests/metadata.test.json"
+      ],
+      "config": [
+        "package.json",
+        "storybook/stories.json"
+      ],
+      "permissions": [
+        "permissions/roles.json"
+      ],
+      "styles": [
+        "styles/tokens.json"
+      ],
+      "other": [
+        "static_content/icon.svg"
+      ]
+    }
+  }
+}

@@ -1,0 +1,152 @@
+// Tabs Component - Official Angular Material M3 SCSS (CSS Module)
+// ================================================================
+// Uses official Angular Material tabs styles
+
+@use '../m3-scss/material/tabs/tab-group.module';
+@use '../m3-scss/material/tabs/tab-header.module';
+@use '../m3-scss/material/tabs/tab-body.module';
+
+// Local class to satisfy CSS modules purity requirement
+// Apply this to wrap Angular Material tab elements
+.matTabs {
+  // This class can be empty - it just needs to exist for CSS modules
+  // The actual styling comes from the Angular Material classes below
+}
+
+// ================================================================
+// M3 class name exports for CSS Module resolution
+// ================================================================
+// CSS Modules only export classes directly declared in THIS file.
+// The @use imports above bring in styles, but their class names are
+// not exported as module keys. We re-declare each M3 class here so
+// the s() resolver in Tabs.tsx can map them to hashed names.
+
+// --- Tab group / container ---
+.mat-mdc-tab-group { /* exported for CSS Module resolution */ }
+.mat-mdc-tab-header { /* exported for CSS Module resolution */ }
+.mat-mdc-tab-label-container { /* exported for CSS Module resolution */ }
+.mat-mdc-tab-list { /* exported for CSS Module resolution */ }
+.mat-mdc-tab-labels { /* exported for CSS Module resolution */ }
+
+// --- Individual tab ---
+.mdc-tab { /* exported for CSS Module resolution */ }
+.mat-mdc-tab { /* exported for CSS Module resolution */ }
+.mdc-tab--active { /* exported for CSS Module resolution */ }
+.mat-mdc-tab-disabled { /* exported for CSS Module resolution */ }
+
+// --- Tab internals ---
+.mdc-tab__ripple { /* exported for CSS Module resolution */ }
+.mat-mdc-tab-ripple { /* exported for CSS Module resolution */ }
+.mdc-tab__content { /* exported for CSS Module resolution */ }
+.mdc-tab__text-label { /* exported for CSS Module resolution */ }
+
+// --- Tab indicator ---
+.mdc-tab-indicator { /* exported for CSS Module resolution */ }
+.mdc-tab-indicator__content { /* exported for CSS Module resolution */ }
+.mdc-tab-indicator__content--underline { /* exported for CSS Module resolution */ }
+.mdc-tab-indicator--active { /* exported for CSS Module resolution */ }
+
+// --- Tab body / panel ---
+.mat-mdc-tab-body { /* exported for CSS Module resolution */ }
+
+// Additional React-specific styles as local classes
+
+// Tab group container variants
+.fullWidth {
+  .mat-mdc-tab {
+    flex-grow: 1;
+  }
+}
+
+.centered {
+  .mat-mdc-tab-labels {
+    justify-content: center;
+  }
+}
+
+.scrollable {
+  .mat-mdc-tab {
+    flex-shrink: 0;
+  }
+}
+
+// Secondary tabs (pill style) - FakeMUI variant not in Angular Material
+.secondary {
+  border-bottom: none;
+  background: var(--mat-sys-surface-container);
+  border-radius: var(--mat-sys-corner-full);
+  padding: 4px;
+  gap: 4px;
+
+  .mat-mdc-tab {
+    border-radius: var(--mat-sys-corner-full);
+    height: 40px;
+    min-width: auto;
+    padding: 0 16px;
+
+    .mdc-tab-indicator {
+      display: none;
+    }
+
+    &.mdc-tab--active {
+      background: var(--mat-sys-secondary-container);
+
+      .mdc-tab__text-label {
+        color: var(--mat-sys-on-secondary-container);
+      }
+
+      &:hover {
+        background: color-mix(in srgb, var(--mat-sys-secondary-container) calc(100% - 8%), var(--mat-sys-on-secondary-container));
+      }
+    }
+  }
+}
+
+// Tab with icon layout
+.tabWithIcon {
+  .mdc-tab__content {
+    flex-direction: column;
+    height: 64px;
+    padding: 12px 16px;
+    gap: 4px;
+  }
+}
+
+// Tab icon styling
+.tabIcon {
+  font-size: 1.25rem;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+// Tab badge (notification count)
+.tabBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  margin-left: 8px;
+  border-radius: var(--mat-sys-corner-full);
+  background: var(--mat-sys-error);
+  color: var(--mat-sys-on-error);
+  font-size: 0.625rem;
+  font-weight: var(--mat-sys-label-small-weight);
+}
+
+// Tab panel animation
+.tabPanel {
+  animation: tabFadeIn var(--mat-sys-motion-duration-short4, 200ms) var(--mat-sys-motion-easing-emphasized-decelerate, cubic-bezier(0.2, 0, 0, 1));
+}
+
+@keyframes tabFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

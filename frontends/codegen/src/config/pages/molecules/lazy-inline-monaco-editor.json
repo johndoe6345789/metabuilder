@@ -1,0 +1,6 @@
+{
+  "type": "MetabuilderWidgetLazyInlineMonacoEditor",
+  "props": {
+    "onChange": "> void"
+  }
+}

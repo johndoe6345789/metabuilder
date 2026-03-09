@@ -38,10 +38,11 @@ export const useDashboardLogic = (): UseDashboardLogicReturn => {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [newWorkspaceName, setNewWorkspaceName] = useState('');
 
-  // Load workspaces on mount
+  // Load workspaces once on mount
   useEffect(() => {
     loadWorkspaces().finally(() => setIsLoading(false));
-  }, [loadWorkspaces]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const resetWorkspaceForm = useCallback(() => {
     setShowCreateForm(false);

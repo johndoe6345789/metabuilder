@@ -35,6 +35,8 @@ export interface PopperProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 
   popperOptions?: any
   popperRef?: React.Ref<HTMLDivElement>
   transition?: boolean
+  /** Test ID for automated testing */
+  testId?: string
 }
 
 /**
@@ -54,6 +56,7 @@ export function Popper({
   transition = false,
   className,
   style,
+  testId,
   ...props
 }: PopperProps) {
   const [position, setPosition] = useState({ top: 0, left: 0 })
@@ -174,6 +177,7 @@ export function Popper({
         ...style,
       }}
       data-popper-placement={actualPlacement}
+      data-testid={testId}
       {...props}
     >
       {typeof children === 'function'

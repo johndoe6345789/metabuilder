@@ -1,0 +1,39 @@
+{
+  "id": "intake-manifold",
+  "name": "Intake Manifold",
+  "partNumber": "FD-CM5G-9424-BE",
+  "material": "blackPlastic",
+  "quantity": 1,
+  "weight": 2200.0,
+  "weightUnit": "g",
+  "baseY": 670,
+  "description": "Composite intake manifold with integrated charge air cooler",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "10mm", "required": true },
+      { "name": "Torque wrench", "size": "8-15 Nm", "required": true },
+      { "name": "Pick tool", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Manifold bolt", "spec": "M6x1.0x30", "qty": 5, "reusable": true },
+      { "name": "Intake gasket", "spec": "Silicone", "qty": 1, "reusable": false },
+      { "name": "Charge pipe clamp", "spec": "T-bolt 60mm", "qty": 2, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Manifold bolts", "value": 10, "unit": "Nm", "sequence": "Center out", "notes": "Plastic manifold - do not overtighten" }
+    ],
+    "notes": [
+      "Integrated charge air cooler - no intercooler piping",
+      "Check all vacuum hose connections",
+      "Clean MAP sensor port before installation",
+      "Check throttle body seal"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 90, "height": 60, "rx": 8, "fill": "#2a2a2a" },
+    { "type": "rect", "width": 25, "height": 15, "offsetX": -25, "offsetY": -20, "rx": 3, "fill": "#333" },
+    { "type": "rect", "width": 25, "height": 15, "offsetY": -20, "rx": 3, "fill": "#333" },
+    { "type": "rect", "width": 25, "height": 15, "offsetX": 25, "offsetY": -20, "rx": 3, "fill": "#333" },
+    { "type": "circle", "r": 20, "offsetX": -35, "offsetY": 10, "fill": "#3a3a3a" }
+  ]
+}

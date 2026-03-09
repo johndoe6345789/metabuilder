@@ -1,0 +1,46 @@
+{
+  "id": "search-input-wrapper",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": "className",
+      "transform": "data || ''"
+    }
+  },
+  "children": [
+    {
+      "id": "search-input-field",
+      "type": "Input",
+      "bindings": {
+        "type": {
+          "source": null,
+          "transform": "'text'"
+        },
+        "value": {
+          "source": "value",
+          "transform": "data"
+        },
+        "onChange": {
+          "source": "onChange",
+          "transform": "(e) => data(e.target.value)"
+        },
+        "placeholder": {
+          "source": "placeholder",
+          "transform": "data || 'Search...'"
+        },
+        "className": {
+          "source": null,
+          "transform": "''"
+        },
+        "leftIcon": {
+          "source": null,
+          "transform": "{ type: 'MagnifyingGlass', size: 18 }"
+        },
+        "rightIcon": {
+          "source": ["value", "onClear"],
+          "transform": "const value = data[0]; const onClear = data[1]; if (!value) return null; return { type: 'button', onClick: () => { data[1]?.(); }, className: 'text-muted-foreground hover:text-foreground transition-colors', children: { type: 'X', size: 18 } }"
+        }
+      }
+    }
+  ]
+}

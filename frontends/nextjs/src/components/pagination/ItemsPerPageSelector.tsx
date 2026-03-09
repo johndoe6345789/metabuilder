@@ -26,15 +26,14 @@ export function ItemsPerPageSelector({
   label = 'Items per page',
 }: ItemsPerPageSelectorProps) {
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-     
     onChange(Number(event.target.value))
   }
 
   return (
-    <Box 
-      sx={{ 
-        display: 'flex', 
-        alignItems: 'center', 
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
         gap: 2,
       }}
     >
@@ -42,8 +41,8 @@ export function ItemsPerPageSelector({
         <FormLabel htmlFor="items-per-page-select">{label}</FormLabel>
         <Select
           id="items-per-page-select"
-          value={value}
-          onChange={handleChange}
+          value={String(value)}
+          onChange={handleChange as never}
           disabled={disabled}
           sx={{
             fontFamily: 'IBM Plex Sans, sans-serif',

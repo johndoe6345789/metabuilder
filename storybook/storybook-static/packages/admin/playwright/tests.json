@@ -1,0 +1,121 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "admin",
+  "description": "Critical admin workflows, permission checks, and error handling",
+  "version": "1.0",
+  "tags": ["@admin", "@critical-flows", "@phase-3"],
+  "tests": [
+    {
+      "name": "complete user creation to edit to deletion",
+      "description": "Admin completes full workflow: create user, edit, then delete",
+      "tags": ["@critical-flows", "@workflow"],
+      "timeout": 60000,
+      "steps": [
+        {"action": "navigate", "url": "/admin/users"},
+        {"action": "waitForLoadState", "state": "networkidle"},
+        {"action": "click", "role": "button", "text": "Create User"},
+        {"action": "waitForSelector", "selector": "[data-testid='user-form']"},
+        {"action": "fill", "label": "Username", "value": "workflow_user"},
+        {"action": "fill", "label": "Email Address", "value": "workflow@metabuilder.local"},
+        {"action": "select", "label": "Role", "value": "user"},
+        {"action": "click", "role": "button", "text": "Create"},
+        {"action": "waitForNavigation"},
+        {"action": "expect", "role": "alert", "assertion": {"matcher": "toContainText", "text": "User created successfully"}},
+        {"action": "click", "role": "button", "text": "Edit", "selector": "tr:has-text('workflow_user')"},
+        {"action": "waitForSelector", "selector": "[data-testid='user-form']"},
+        {"action": "fill", "label": "Bio", "value": "Test bio"},
+        {"action": "click", "role": "button", "text": "Save"},
+        {"action": "waitForNavigation"},
+        {"action": "expect", "role": "alert", "assertion": {"matcher": "toContainText", "text": "User updated successfully"}},
+        {"action": "click", "role": "button", "text": "Delete", "selector": "tr:has-text('workflow_user')"},
+        {"action": "waitForSelector", "selector": "[role='dialog']"},
+        {"action": "click", "role": "button", "text": "Confirm"},
+        {"action": "waitForNavigation"},
+        {"action": "expect", "role": "alert", "assertion": {"matcher": "toContainText", "text": "User deleted successfully"}}
+      ]
+    },
+    {
+      "name": "complete package install to uninstall",
+      "description": "Admin completes full package workflow: install, enable, disable, uninstall",
+      "tags": ["@critical-flows", "@workflow"],
+      "timeout": 60000,
+      "steps": [
+        {"action": "navigate", "url": "/admin/packages"},
+        {"action": "waitForLoadState", "state": "networkidle"},
+        {"action": "expect", "selector": "[data-testid='package-card']:has-text('Auth')", "assertion": {"matcher": "toBeVisible"}},
+        {"action": "click", "role": "button", "text": "Manage", "selector": "[data-testid='package-card']:has-text('Auth')"},
+        {"action": "click", "role": "menuitem", "text": "Disable"},
+        {"action": "waitForLoadState", "state": "networkidle"},
+        {"action": "expect", "role": "alert", "assertion": {"matcher": "toContainText", "text": "Package disabled successfully"}},
+        {"action": "click", "role": "button", "text": "Manage", "selector": "[data-testid='package-card']:has-text('Auth')"},
+        {"action": "click", "role": "menuitem", "text": "Enable"},
+        {"action": "waitForLoadState", "state": "networkidle"},
+        {"action": "expect", "role": "alert", "assertion": {"matcher": "toContainText", "text": "Package enabled successfully"}},
+        {"action": "click", "role": "button", "text": "Manage", "selector": "[data-testid='package-card']:has-text('Auth')"},
+        {"action": "click", "role": "menuitem", "text": "Uninstall"},
+        {"action": "waitForSelector", "selector": "[role='dialog']"},
+        {"action": "click", "role": "button", "text": "Confirm"},
+        {"action": "waitForLoadState", "state": "networkidle"},
+        {"action": "expect", "role": "alert", "assertion": {"matcher": "toContainText", "text": "Package uninstalled successfully"}}
+      ]
+    },
+    {
+      "name": "user without admin permission cannot access /admin/users",
+      "description": "Regular users are redirected from admin pages",
+      "tags": ["@critical-flows", "@permissions"],
+      "timeout": 30000,
+      "steps": [
+        {"action": "navigate", "url": "/admin/users"},
+        {"action": "waitForLoadState", "state": "networkidle"},
+        {"action": "expect", "role": "heading", "assertion": {"matcher": "toContainText", "text": "Access Denied"}},
+        {"action": "expect", "role": "alert", "assertion": {"matcher": "toContainText", "text": "You do not have permission to access this page"}}
+      ]
+    },
+    {
+      "name": "user without god permission cannot access /admin/packages",
+      "description": "Non-god users are redirected from package manager",
+      "tags": ["@critical-flows", "@permissions"],
+      "timeout": 30000,
+      "steps": [
+        {"action": "navigate", "url": "/admin/packages"},
+        {"action": "waitForLoadState", "state": "networkidle"},
+        {"action": "expect", "role": "heading", "assertion": {"matcher": "toContainText", "text": "Access Denied"}},
+        {"action": "expect", "role": "alert", "assertion": {"matcher": "toContainText", "text": "You do not have permission to access this page"}}
+      ]
+    },
+    {
+      "name": "shows error message on API failure",
+      "description": "Error messages displayed when API calls fail",
+      "tags": ["@critical-flows", "@error-handling"],
+      "timeout": 30000,
+      "steps": [
+        {"action": "navigate", "url": "/admin/users"},
+        {"action": "evaluate", "script": "window.fetch = () => Promise.reject(new Error('Network error'))"},
+        {"action": "click", "role": "button", "text": "Create User"},
+        {"action": "fill", "label": "Username", "value": "test"},
+        {"action": "fill", "label": "Email Address", "value": "test@test.com"},
+        {"action": "click", "role": "button", "text": "Create"},
+        {"action": "wait", "timeout": 1000},
+        {"action": "expect", "role": "alert", "assertion": {"matcher": "toContainText", "text": "Failed to create user"}}
+      ]
+    },
+    {
+      "name": "allows retry on network error",
+      "description": "Users can retry operations after network error",
+      "tags": ["@critical-flows", "@error-handling"],
+      "timeout": 30000,
+      "steps": [
+        {"action": "navigate", "url": "/admin/users"},
+        {"action": "waitForLoadState", "state": "networkidle"},
+        {"action": "click", "role": "button", "text": "Create User"},
+        {"action": "fill", "label": "Username", "value": "retry_test"},
+        {"action": "fill", "label": "Email Address", "value": "retry@test.com"},
+        {"action": "click", "role": "button", "text": "Create"},
+        {"action": "expect", "role": "alert", "assertion": {"matcher": "toBeVisible"}},
+        {"action": "click", "role": "button", "text": "Retry"},
+        {"action": "waitForNavigation"},
+        {"action": "expect", "role": "alert", "assertion": {"matcher": "toContainText", "text": "User created successfully"}}
+      ]
+    }
+  ]
+}

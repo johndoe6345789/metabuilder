@@ -1,0 +1,41 @@
+{
+  "id": "nav-item-button",
+  "type": "button",
+  "bindings": {
+    "className": {
+      "source": "isActive",
+      "transform": "data ? 'nav-item nav-item--active' : 'nav-item'"
+    },
+    "onClick": "onClick"
+  },
+  "children": [
+    {
+      "id": "nav-item-icon",
+      "type": "IconWrapper",
+      "props": {
+        "className": "nav-item__icon",
+        "size": "md"
+      },
+      "bindings": {
+        "icon": "icon",
+        "variant": { "source": "isActive", "transform": "data ? 'default' : 'muted'" }
+      }
+    },
+    {
+      "id": "nav-item-label",
+      "type": "Text",
+      "props": { "className": "nav-item__label", "variant": "small" },
+      "bindings": { "children": "label" }
+    },
+    {
+      "id": "nav-item-badge",
+      "type": "Badge",
+      "props": { "className": "nav-item__badge" },
+      "bindings": {
+        "variant": { "source": "isActive", "transform": "data ? 'secondary' : 'destructive'" },
+        "children": "badge"
+      },
+      "conditional": { "if": "badge !== undefined && badge > 0" }
+    }
+  ]
+}

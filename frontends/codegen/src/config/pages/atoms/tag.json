@@ -1,0 +1,6 @@
+{
+  "type": "MetabuilderDisplayTag",
+  "props": {
+    "onRemove": "> void"
+  }
+}

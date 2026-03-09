@@ -1,0 +1,39 @@
+{
+  "id": "group-avatar-root",
+  "type": "div",
+  "props": {
+    "className": "avatar-group"
+  },
+  "children": [
+    {
+      "id": "group-avatar-list",
+      "type": "repeat",
+      "bindings": {
+        "items": "avatars"
+      },
+      "template": {
+        "id": "group-avatar-item",
+        "type": "div",
+        "bindings": {
+          "className": {
+            "source": "size",
+            "transform": "(() => { const sizeMap = { xs: 'avatar--xs', sm: 'avatar--sm', md: '', lg: 'avatar--lg', xl: 'avatar--xl' }; const mod = sizeMap[data] || ''; return mod ? `avatar ${mod}` : 'avatar'; })()"
+          }
+        },
+        "children": [
+          {
+            "id": "group-avatar-item-image",
+            "type": "img",
+            "bindings": {
+              "src": "item.src",
+              "alt": "item.alt"
+            },
+            "props": {
+              "className": "avatar__image"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

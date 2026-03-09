@@ -50,8 +50,8 @@ export class EmailParserExecutor implements INodeExecutor {
 
   async execute(
     node: WorkflowNode,
-    context: WorkflowContext,
-    state: ExecutionState
+    _context: WorkflowContext,
+    _state: ExecutionState
   ): Promise<NodeResult> {
     const startTime = Date.now();
 
@@ -317,7 +317,7 @@ export class EmailParserExecutor implements INodeExecutor {
       const [, charset, encoding, data] = match;
       if (encoding === 'B') {
         // Base64 decoding (Node.js Buffer)
-        return Buffer.from(data, 'base64').toString(charset || 'utf-8');
+        return Buffer.from(data, 'base64').toString((charset || 'utf-8') as BufferEncoding);
       } else if (encoding === 'Q') {
         // Quoted-printable (simplified)
         return data.replace(/_/g, ' ').replace(/=([0-9A-F]{2})/g, (_, hex) => {

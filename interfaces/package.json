@@ -1,0 +1,52 @@
+{
+  "name": "@metabuilder/interfaces",
+  "version": "1.0.0",
+  "description": "Shared service contracts and request/response interfaces for MetaBuilder",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js",
+      "require": "./index.js"
+    },
+    "./requests": {
+      "types": "./requests.d.ts",
+      "import": "./requests.js",
+      "require": "./requests.js"
+    },
+    "./workspace": {
+      "types": "./workspace.d.ts",
+      "import": "./workspace.js",
+      "require": "./workspace.js"
+    },
+    "./templates": {
+      "types": "./templates.d.ts",
+      "import": "./templates.js",
+      "require": "./templates.js"
+    },
+    "./dashboard": {
+      "types": "./dashboard.d.ts",
+      "import": "./dashboard.js",
+      "require": "./dashboard.js"
+    }
+  },
+  "files": [
+    "*.ts",
+    "*.js",
+    "*.d.ts",
+    "*.d.ts.map",
+    "*.js.map"
+  ],
+  "dependencies": {
+    "@metabuilder/types": "*"
+  },
+  "keywords": [
+    "interfaces",
+    "contracts",
+    "typescript",
+    "metabuilder"
+  ],
+  "author": "MetaBuilder",
+  "license": "MIT"
+}

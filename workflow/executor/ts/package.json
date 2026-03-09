@@ -1,0 +1,24 @@
+{
+  "name": "@metabuilder/workflow-executor-ts",
+  "version": "3.0.0",
+  "description": "TypeScript DAG workflow executor runtime",
+  "private": true,
+  "scripts": {
+    "test": "jest",
+    "test:plugins": "jest --testPathPattern=__tests__",
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^25.3.0",
+    "jest": "^30.2.0",
+    "ts-jest": "^29.4.6",
+    "typescript": "^5.9.3"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "testMatch": ["**/__tests__/**/*.test.ts"]
+  }
+}

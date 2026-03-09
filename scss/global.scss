@@ -1,0 +1,17 @@
+// Global styles entry point - Material Design 3
+// Import order matters: theme → variables → mixins → atoms → global
+
+// 1. M3 Theme - generates all --mat-sys-* CSS custom properties
+@use '../scss/theme';
+
+// 2. Legacy variable aliases - maps old vars to M3 tokens for backward compatibility
+@use 'variables';
+
+// 3. Mixins - reusable patterns using M3 tokens
+@use 'mixins' as *;
+
+// 4. Atoms - atomic component styles
+@use 'atoms';
+
+// 5. Global utilities and reset
+@use 'global';

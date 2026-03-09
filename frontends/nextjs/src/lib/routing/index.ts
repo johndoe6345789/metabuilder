@@ -208,30 +208,30 @@ export async function executeDbalOperation(
     body?: unknown
   }
 ): Promise<{ success: boolean; data?: unknown; error?: string; meta?: unknown }> {
-  const { getAdapter } = await import('@/lib/db/dbal-client')
-  const adapter = getAdapter()
-  
+  const { db } = await import('@/lib/db-client')
+
   try {
     const { entity, operation, id } = op
     const tenantId = resolveTenantId(context)
     const filter = tenantId !== undefined ? { tenantId } : {}
-    
+    const ops = db.entity(entity)
+
     switch (operation) {
       case 'list': {
-        const result = await adapter.list(entity, { filter })
+        const result = await ops.list({ filter })
         return { success: true, data: result.data, meta: { count: result.data.length } }
       }
       case 'read': {
         if (id === undefined || id.length === 0) return { success: false, error: 'ID required for read operation' }
-        const record = await adapter.findFirst(entity, { where: { id, ...filter } })
-        if (record === null || record === undefined) return { success: false, error: 'Record not found' }
+        const record = await ops.read(id)
+        if (record === null) return { success: false, error: 'Record not found' }
         return { success: true, data: record }
       }
       case 'create': {
         const body = context?.body
         if (!isPlainObject(body)) return { success: false, error: 'Body required for create operation' }
         const data = { ...body, ...(tenantId !== undefined ? { tenantId } : {}) }
-        const created = await adapter.create(entity, data)
+        const created = await ops.create(data)
         return { success: true, data: created }
       }
       case 'update': {
@@ -239,20 +239,20 @@ export async function executeDbalOperation(
         const body = context?.body
         if (!isPlainObject(body)) return { success: false, error: 'Body required for update operation' }
         if (tenantId !== undefined) {
-          const existing = await adapter.findFirst(entity, { where: { id, tenantId } })
-          if (existing === null || existing === undefined) return { success: false, error: 'Record not found' }
+          const existing = await ops.read(id)
+          if (existing === null) return { success: false, error: 'Record not found' }
         }
         const data = { ...body, ...(tenantId !== undefined ? { tenantId } : {}) }
-        const updated = await adapter.update(entity, id, data)
+        const updated = await ops.update(id, data)
         return { success: true, data: updated }
       }
       case 'delete': {
         if (id === undefined || id.length === 0) return { success: false, error: 'ID required for delete operation' }
         if (tenantId !== undefined) {
-          const existing = await adapter.findFirst(entity, { where: { id, tenantId } })
-          if (existing === null || existing === undefined) return { success: false, error: 'Record not found' }
+          const existing = await ops.read(id)
+          if (existing === null) return { success: false, error: 'Record not found' }
         }
-        const deleted = await adapter.delete(entity, id)
+        const deleted = await ops.remove(id)
         if (!deleted) return { success: false, error: 'Record not found' }
         return { success: true, data: { deleted: id } }
       }
@@ -281,13 +281,11 @@ export async function executePackageAction(
   // Package actions are custom operations defined by packages
   // Load package config and execute the registered action handler
   try {
-    const { getAdapter } = await import('@/lib/db/dbal-client')
-    const adapter = getAdapter()
-    
+    const { db } = await import('@/lib/db-client')
+
     // Get package configuration
-    const pkg = await adapter.findFirst('InstalledPackage', {
-      where: { packageId, enabled: true },
-    })
+    const pkgResult = await db.installedPackages.list({ filter: { packageId, enabled: true } })
+    const pkg = pkgResult.data[0] ?? null
     
     if (pkg === null || pkg === undefined) {
       return options?.allowFallback === true
@@ -365,12 +363,10 @@ export async function validateTenantAccess(
   
   // For lower levels, verify tenant membership
   try {
-    const { getAdapter } = await import('@/lib/db/dbal-client')
-    const adapter = getAdapter()
-    
-    const tenant = await adapter.findFirst('Tenant', {
-      where: { slug: tenantSlug },
-    })
+    const { db } = await import('@/lib/db-client')
+
+    const tenantResult = await db.entity('Tenant').list({ filter: { slug: tenantSlug } })
+    const tenant = tenantResult.data[0] ?? null
     
     if (tenant === null || tenant === undefined) {
       return { allowed: false, reason: `Tenant not found: ${tenantSlug}` }

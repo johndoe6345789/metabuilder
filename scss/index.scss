@@ -1,0 +1,13 @@
+/* FakeMUI - Material Design 3 Styles */
+/* Note: Atom styles are now CSS Modules - import directly in components */
+
+/* Material Symbols (variable icon font) */
+@import '../icons/material-symbols/index.scss';
+
+/* Material Icons (legacy icon font) */
+@import '../icons/material-icons/css/material-icons.scss';
+
+@import './globals.scss';
+@import './theme.scss';
+@import './base.scss';
+@import './components.scss';

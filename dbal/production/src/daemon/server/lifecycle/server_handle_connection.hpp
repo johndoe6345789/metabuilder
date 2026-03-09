@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "server.hpp"
+#include "../server.hpp"
 
 namespace dbal {
 namespace daemon {

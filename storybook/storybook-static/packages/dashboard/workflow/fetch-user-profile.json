@@ -1,0 +1,153 @@
+{
+  "name": "Fetch User Profile",
+  "active": false,
+  "nodes": [
+    {
+      "id": "validate_context",
+      "name": "Validate Context",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $context.user.id }}",
+        "operation": "validate",
+        "validator": "required"
+      }
+    },
+    {
+      "id": "fetch_user",
+      "name": "Fetch User",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "filter": {
+          "id": "{{ $context.user.id }}",
+          "tenantId": "{{ $context.tenantId }}"
+        },
+        "operation": "database_read",
+        "entity": "User"
+      }
+    },
+    {
+      "id": "fetch_preferences",
+      "name": "Fetch Preferences",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "filter": {
+          "userId": "{{ $context.user.id }}",
+          "tenantId": "{{ $context.tenantId }}"
+        },
+        "operation": "database_read",
+        "entity": "UserPreferences"
+      }
+    },
+    {
+      "id": "format_response",
+      "name": "Format Response",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "output": {
+          "id": "{{ $steps.fetch_user.output.id }}",
+          "email": "{{ $steps.fetch_user.output.email }}",
+          "displayName": "{{ $steps.fetch_user.output.displayName }}",
+          "avatar": "{{ $steps.fetch_user.output.avatar }}",
+          "bio": "{{ $steps.fetch_user.output.bio }}",
+          "createdAt": "{{ $steps.fetch_user.output.createdAt }}",
+          "lastLogin": "{{ $steps.fetch_user.output.lastLogin }}",
+          "preferences": "{{ $steps.fetch_preferences.output }}"
+        },
+        "operation": "transform_data"
+      }
+    },
+    {
+      "id": "return_success",
+      "name": "Return Success",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "action": "http_response",
+        "status": 200,
+        "body": "{{ $steps.format_response.output }}"
+      }
+    }
+  ],
+  "connections": {
+    "validate_context": {
+      "main": [
+        [
+          {
+            "node": "fetch_user",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fetch_user": {
+      "main": [
+        [
+          {
+            "node": "fetch_preferences",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fetch_preferences": {
+      "main": [
+        [
+          {
+            "node": "format_response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "format_response": {
+      "main": [
+        [
+          {
+            "node": "return_success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "id": "workflow_fetch_user_profile",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
+}

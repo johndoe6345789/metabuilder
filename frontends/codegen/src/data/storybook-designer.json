@@ -1,0 +1,43 @@
+{
+  "defaults": {
+    "componentName": "Button",
+    "storyName": "Default",
+    "category": "Components"
+  },
+  "list": {
+    "title": "Stories",
+    "empty": "No stories yet. Click + to create one."
+  },
+  "editor": {
+    "title": "Story Configuration",
+    "previewButton": "Preview Story",
+    "detailsTitle": "Story Details",
+    "componentNameLabel": "Component Name",
+    "componentNamePlaceholder": "Button",
+    "storyNameLabel": "Story Name",
+    "storyNamePlaceholder": "Primary",
+    "categoryLabel": "Category",
+    "categoryPlaceholder": "Components",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Describe what this story demonstrates..."
+  },
+  "args": {
+    "title": "Args / Props",
+    "description": "Configure component props for this story",
+    "argNamePlaceholder": "Arg name",
+    "argValuePlaceholder": "Value (JSON or string)",
+    "empty": "No args configured yet. Add props above to showcase component variations."
+  },
+  "emptyState": {
+    "title": "No story selected",
+    "subtitle": "Create or select a story to configure",
+    "button": "Create Story"
+  },
+  "ai": {
+    "descriptionPrompt": "Describe the component and story you want to generate:",
+    "toastGenerating": "Generating story with AI...",
+    "toastSuccess": "Story generated successfully!",
+    "toastError": "Failed to generate story",
+    "promptTemplate": "You are a Storybook story generator. Create a story based on: \"{description}\"\n\nReturn a valid JSON object with a single property \"story\":\n{\n  \"story\": {\n    \"id\": \"unique-id\",\n    \"componentName\": \"ComponentName (e.g., Button, Card, Input)\",\n    \"storyName\": \"StoryName (e.g., Primary, Large, Disabled)\",\n    \"args\": {\n      \"variant\": \"primary\",\n      \"size\": \"large\",\n      \"disabled\": false\n    },\n    \"description\": \"Description of what this story demonstrates\",\n    \"category\": \"Components\" (e.g., Components, Forms, Layout, Data Display)\n  }\n}\n\nCreate appropriate props/args that showcase the component variation."
+  }
+}

@@ -1,0 +1,864 @@
+{
+  "id": "style-designer",
+  "name": "Style Designer",
+  "layout": {
+    "type": "single"
+  },
+  "dataSources": [
+    {
+      "id": "theme",
+      "type": "kv",
+      "key": "app-theme",
+      "defaultValue": {
+        "activeVariantId": "default",
+        "variants": [
+          {
+            "id": "default",
+            "name": "Default",
+            "colors": {
+              "primary": "#7c3aed",
+              "secondary": "#38bdf8",
+              "accent": "#5dd5f5",
+              "background": "#1E1E2E",
+              "foreground": "#E8E8EC",
+              "customColors": {}
+            }
+          }
+        ],
+        "typography": {
+          "headingFont": "Space Grotesk",
+          "bodyFont": "Inter",
+          "codeFont": "JetBrains Mono"
+        }
+      }
+    },
+    {
+      "id": "selectedTab",
+      "type": "static",
+      "defaultValue": "colors"
+    },
+    {
+      "id": "customColorDialogOpen",
+      "type": "static",
+      "defaultValue": false
+    },
+    {
+      "id": "newColorName",
+      "type": "static",
+      "defaultValue": ""
+    },
+    {
+      "id": "newColorValue",
+      "type": "static",
+      "defaultValue": "#000000"
+    },
+    {
+      "id": "activeVariant",
+      "type": "static",
+      "expression": "data.theme.variants.find(id === data.theme.activeVariantId)",
+      "dependencies": [
+        "theme"
+      ]
+    },
+    {
+      "id": "variantCount",
+      "type": "static",
+      "expression": "data.theme.variants.length",
+      "dependencies": [
+        "theme"
+      ]
+    },
+    {
+      "id": "customColorCount",
+      "type": "static",
+      "expression": "Object.keys(data.activeVariant.colors.customColors).length",
+      "dependencies": [
+        "activeVariant"
+      ]
+    }
+  ],
+  "components": [
+    {
+      "id": "root",
+      "type": "div",
+      "props": {
+        "className": "h-full flex bg-gradient-to-br from-background via-background to-primary/5"
+      },
+      "children": [
+        {
+          "id": "sidebar",
+          "type": "div",
+          "props": {
+            "className": "w-80 border-r border-border bg-card/50 backdrop-blur-sm flex flex-col"
+          },
+          "children": [
+            {
+              "id": "sidebar-header",
+              "type": "div",
+              "props": {
+                "className": "p-6 border-b border-border bg-gradient-to-br from-primary/10 to-accent/5"
+              },
+              "children": [
+                {
+                  "type": "div",
+                  "props": {
+                    "className": "flex items-center justify-between mb-4"
+                  },
+                  "children": [
+                    {
+                      "type": "h2",
+                      "props": {
+                        "className": "text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent"
+                      },
+                      "children": "Theme"
+                    },
+                    {
+                      "type": "MetabuilderDisplayBadge",
+                      "props": {
+                        "variant": "secondary",
+                        "className": "px-2.5 py-0.5"
+                      },
+                      "bindings": {
+                        "children": {
+                          "source": "variantCount"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "p",
+                  "props": {
+                    "className": "text-sm text-muted-foreground"
+                  },
+                  "children": "Customize your application's visual theme"
+                }
+              ]
+            },
+            {
+              "id": "variant-section",
+              "type": "div",
+              "props": {
+                "className": "p-6 border-b border-border"
+              },
+              "children": [
+                {
+                  "type": "MetabuilderDisplayLabel",
+                  "props": {
+                    "className": "text-sm font-semibold mb-3 block"
+                  },
+                  "children": "Active Variant"
+                },
+                {
+                  "type": "MetabuilderLayoutCard",
+                  "props": {
+                    "className": "border-2 border-primary/50 bg-primary/10"
+                  },
+                  "children": [
+                    {
+                      "type": "MetabuilderLayoutCardHeader",
+                      "props": {
+                        "className": "p-4"
+                      },
+                      "children": [
+                        {
+                          "type": "div",
+                          "props": {
+                            "className": "flex items-center gap-2"
+                          },
+                          "children": [
+                            {
+                              "type": "icon",
+                              "props": {
+                                "name": "Palette",
+                                "className": "h-5 w-5 text-primary",
+                                "weight": "duotone"
+                              }
+                            },
+                            {
+                              "type": "CardTitle",
+                              "props": {
+                                "className": "text-base"
+                              },
+                              "bindings": {
+                                "children": {
+                                  "source": "activeVariant",
+                                  "path": "name",
+                                  "default": "Default"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "color-stats",
+              "type": "div",
+              "props": {
+                "className": "p-6"
+              },
+              "children": [
+                {
+                  "type": "MetabuilderDisplayLabel",
+                  "props": {
+                    "className": "text-sm font-semibold mb-3 block"
+                  },
+                  "children": "Statistics"
+                },
+                {
+                  "type": "div",
+                  "props": {
+                    "className": "space-y-3"
+                  },
+                  "children": [
+                    {
+                      "type": "div",
+                      "props": {
+                        "className": "flex items-center justify-between p-3 bg-muted/50 rounded-lg"
+                      },
+                      "children": [
+                        {
+                          "type": "span",
+                          "props": {
+                            "className": "text-sm text-muted-foreground"
+                          },
+                          "children": "Base Colors"
+                        },
+                        {
+                          "type": "MetabuilderDisplayBadge",
+                          "props": {
+                            "variant": "secondary"
+                          },
+                          "children": "3"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "div",
+                      "props": {
+                        "className": "flex items-center justify-between p-3 bg-muted/50 rounded-lg"
+                      },
+                      "children": [
+                        {
+                          "type": "span",
+                          "props": {
+                            "className": "text-sm text-muted-foreground"
+                          },
+                          "children": "Custom Colors"
+                        },
+                        {
+                          "type": "MetabuilderDisplayBadge",
+                          "props": {
+                            "variant": "secondary"
+                          },
+                          "bindings": {
+                            "children": {
+                              "source": "customColorCount"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "main-content",
+          "type": "div",
+          "props": {
+            "className": "flex-1 overflow-auto"
+          },
+          "children": [
+            {
+              "type": "div",
+              "props": {
+                "className": "p-8"
+              },
+              "children": [
+                {
+                  "type": "div",
+                  "props": {
+                    "className": "max-w-4xl mx-auto space-y-6"
+                  },
+                  "children": [
+                    {
+                      "type": "div",
+                      "children": [
+                        {
+                          "type": "h1",
+                          "props": {
+                            "className": "text-3xl font-bold mb-2 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent"
+                          },
+                          "children": "Theme Designer"
+                        },
+                        {
+                          "type": "p",
+                          "props": {
+                            "className": "text-muted-foreground"
+                          },
+                          "children": "Customize colors, typography, and visual styling"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "MetabuilderNavTabs",
+                      "bindings": {
+                        "value": {
+                          "source": "selectedTab"
+                        }
+                      },
+                      "events": [
+                        {
+                          "event": "onValueChange",
+                          "actions": [
+                            {
+                              "type": "set-value",
+                              "target": "selectedTab",
+                              "expression": "event"
+                            }
+                          ]
+                        }
+                      ],
+                      "children": [
+                        {
+                          "type": "TabsList",
+                          "props": {
+                            "className": "grid w-full grid-cols-3"
+                          },
+                          "children": [
+                            {
+                              "type": "TabsTrigger",
+                              "props": {
+                                "value": "colors"
+                              },
+                              "children": [
+                                {
+                                  "type": "icon",
+                                  "props": {
+                                    "name": "PaintBrush",
+                                    "className": "mr-2 h-4 w-4"
+                                  }
+                                },
+                                "Colors"
+                              ]
+                            },
+                            {
+                              "type": "TabsTrigger",
+                              "props": {
+                                "value": "typography"
+                              },
+                              "children": [
+                                {
+                                  "type": "icon",
+                                  "props": {
+                                    "name": "TextAa",
+                                    "className": "mr-2 h-4 w-4"
+                                  }
+                                },
+                                "Typography"
+                              ]
+                            },
+                            {
+                              "type": "TabsTrigger",
+                              "props": {
+                                "value": "preview"
+                              },
+                              "children": [
+                                {
+                                  "type": "icon",
+                                  "props": {
+                                    "name": "Eye",
+                                    "className": "mr-2 h-4 w-4"
+                                  }
+                                },
+                                "Preview"
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "TabsContent",
+                          "props": {
+                            "value": "colors",
+                            "className": "space-y-6"
+                          },
+                          "children": [
+                            {
+                              "type": "MetabuilderLayoutCard",
+                              "props": {
+                                "className": "border-2"
+                              },
+                              "children": [
+                                {
+                                  "type": "MetabuilderLayoutCardHeader",
+                                  "children": [
+                                    {
+                                      "type": "CardTitle",
+                                      "children": "Base Colors"
+                                    },
+                                    {
+                                      "type": "CardDescription",
+                                      "children": "Primary color scheme for your application"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "MetabuilderDataCardContent",
+                                  "props": {
+                                    "className": "space-y-6"
+                                  },
+                                  "children": [
+                                    {
+                                      "type": "div",
+                                      "props": {
+                                        "className": "grid grid-cols-3 gap-4"
+                                      },
+                                      "children": [
+                                        {
+                                          "type": "div",
+                                          "children": [
+                                            {
+                                              "type": "MetabuilderDisplayLabel",
+                                              "props": {
+                                                "className": "mb-2 block"
+                                              },
+                                              "children": "Primary"
+                                            },
+                                            {
+                                              "type": "div",
+                                              "props": {
+                                                "className": "h-20 rounded-lg border-2 border-border"
+                                              },
+                                              "bindings": {
+                                                "style": {
+                                                  "source": "activeVariant",
+                                                  "path": "colors.primary",
+                                                  "transform": "color => ({ backgroundColor: color })"
+                                                }
+                                              }
+                                            },
+                                            {
+                                              "type": "p",
+                                              "props": {
+                                                "className": "mt-2 text-xs font-mono text-muted-foreground"
+                                              },
+                                              "bindings": {
+                                                "children": {
+                                                  "source": "activeVariant",
+                                                  "path": "colors.primary"
+                                                }
+                                              }
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "type": "div",
+                                          "children": [
+                                            {
+                                              "type": "MetabuilderDisplayLabel",
+                                              "props": {
+                                                "className": "mb-2 block"
+                                              },
+                                              "children": "Secondary"
+                                            },
+                                            {
+                                              "type": "div",
+                                              "props": {
+                                                "className": "h-20 rounded-lg border-2 border-border"
+                                              },
+                                              "bindings": {
+                                                "style": {
+                                                  "source": "activeVariant",
+                                                  "path": "colors.secondary",
+                                                  "transform": "color => ({ backgroundColor: color })"
+                                                }
+                                              }
+                                            },
+                                            {
+                                              "type": "p",
+                                              "props": {
+                                                "className": "mt-2 text-xs font-mono text-muted-foreground"
+                                              },
+                                              "bindings": {
+                                                "children": {
+                                                  "source": "activeVariant",
+                                                  "path": "colors.secondary"
+                                                }
+                                              }
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "type": "div",
+                                          "children": [
+                                            {
+                                              "type": "MetabuilderDisplayLabel",
+                                              "props": {
+                                                "className": "mb-2 block"
+                                              },
+                                              "children": "Accent"
+                                            },
+                                            {
+                                              "type": "div",
+                                              "props": {
+                                                "className": "h-20 rounded-lg border-2 border-border"
+                                              },
+                                              "bindings": {
+                                                "style": {
+                                                  "source": "activeVariant",
+                                                  "path": "colors.accent",
+                                                  "transform": "color => ({ backgroundColor: color })"
+                                                }
+                                              }
+                                            },
+                                            {
+                                              "type": "p",
+                                              "props": {
+                                                "className": "mt-2 text-xs font-mono text-muted-foreground"
+                                              },
+                                              "bindings": {
+                                                "children": {
+                                                  "source": "activeVariant",
+                                                  "path": "colors.accent"
+                                                }
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "MetabuilderLayoutCard",
+                              "props": {
+                                "className": "border-2"
+                              },
+                              "children": [
+                                {
+                                  "type": "MetabuilderLayoutCardHeader",
+                                  "children": [
+                                    {
+                                      "type": "div",
+                                      "props": {
+                                        "className": "flex items-center justify-between"
+                                      },
+                                      "children": [
+                                        {
+                                          "type": "div",
+                                          "children": [
+                                            {
+                                              "type": "CardTitle",
+                                              "children": "Custom Colors"
+                                            },
+                                            {
+                                              "type": "CardDescription",
+                                              "children": "Add additional colors for specific use cases"
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "type": "MetabuilderFormButton",
+                                          "props": {
+                                            "size": "sm"
+                                          },
+                                          "events": [
+                                            {
+                                              "event": "onClick",
+                                              "actions": [
+                                                {
+                                                  "type": "set-value",
+                                                  "target": "customColorDialogOpen",
+                                                  "value": true
+                                                }
+                                              ]
+                                            }
+                                          ],
+                                          "children": [
+                                            {
+                                              "type": "icon",
+                                              "props": {
+                                                "name": "Plus",
+                                                "className": "mr-2 h-4 w-4"
+                                              }
+                                            },
+                                            "Add Color"
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "MetabuilderDataCardContent",
+                                  "children": [
+                                    {
+                                      "type": "div",
+                                      "props": {
+                                        "className": "text-center py-8"
+                                      },
+                                      "conditional": {
+                                        "if": "customColorCount === 0"
+                                      },
+                                      "children": [
+                                        {
+                                          "type": "icon",
+                                          "props": {
+                                            "name": "PaintBrush",
+                                            "className": "h-12 w-12 text-muted-foreground/50 mx-auto mb-3",
+                                            "weight": "duotone"
+                                          }
+                                        },
+                                        {
+                                          "type": "p",
+                                          "props": {
+                                            "className": "text-sm text-muted-foreground"
+                                          },
+                                          "children": "No custom colors defined"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "div",
+                                      "props": {
+                                        "className": "text-sm text-muted-foreground"
+                                      },
+                                      "conditional": {
+                                        "if": "customColorCount > 0"
+                                      },
+                                      "children": "Custom colors will be displayed here"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "TabsContent",
+                          "props": {
+                            "value": "typography",
+                            "className": "space-y-6"
+                          },
+                          "children": [
+                            {
+                              "type": "MetabuilderLayoutCard",
+                              "props": {
+                                "className": "border-2"
+                              },
+                              "children": [
+                                {
+                                  "type": "MetabuilderLayoutCardHeader",
+                                  "children": [
+                                    {
+                                      "type": "CardTitle",
+                                      "children": "Font Families"
+                                    },
+                                    {
+                                      "type": "CardDescription",
+                                      "children": "Typography configuration for your application"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "MetabuilderDataCardContent",
+                                  "props": {
+                                    "className": "space-y-4"
+                                  },
+                                  "children": [
+                                    {
+                                      "type": "div",
+                                      "children": [
+                                        {
+                                          "type": "MetabuilderDisplayLabel",
+                                          "props": {
+                                            "className": "mb-2 block"
+                                          },
+                                          "children": "Heading Font"
+                                        },
+                                        {
+                                          "type": "p",
+                                          "props": {
+                                            "className": "text-sm font-semibold"
+                                          },
+                                          "bindings": {
+                                            "children": {
+                                              "source": "theme",
+                                              "path": "typography.headingFont",
+                                              "default": "Space Grotesk"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "div",
+                                      "children": [
+                                        {
+                                          "type": "MetabuilderDisplayLabel",
+                                          "props": {
+                                            "className": "mb-2 block"
+                                          },
+                                          "children": "Body Font"
+                                        },
+                                        {
+                                          "type": "p",
+                                          "props": {
+                                            "className": "text-sm"
+                                          },
+                                          "bindings": {
+                                            "children": {
+                                              "source": "theme",
+                                              "path": "typography.bodyFont",
+                                              "default": "Inter"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "div",
+                                      "children": [
+                                        {
+                                          "type": "MetabuilderDisplayLabel",
+                                          "props": {
+                                            "className": "mb-2 block"
+                                          },
+                                          "children": "Code Font"
+                                        },
+                                        {
+                                          "type": "p",
+                                          "props": {
+                                            "className": "text-sm font-mono"
+                                          },
+                                          "bindings": {
+                                            "children": {
+                                              "source": "theme",
+                                              "path": "typography.codeFont",
+                                              "default": "JetBrains Mono"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "TabsContent",
+                          "props": {
+                            "value": "preview",
+                            "className": "space-y-6"
+                          },
+                          "children": [
+                            {
+                              "type": "MetabuilderLayoutCard",
+                              "props": {
+                                "className": "border-2"
+                              },
+                              "children": [
+                                {
+                                  "type": "MetabuilderLayoutCardHeader",
+                                  "children": [
+                                    {
+                                      "type": "CardTitle",
+                                      "children": "Theme Preview"
+                                    },
+                                    {
+                                      "type": "CardDescription",
+                                      "children": "See how your theme looks in action"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "MetabuilderDataCardContent",
+                                  "props": {
+                                    "className": "space-y-4"
+                                  },
+                                  "children": [
+                                    {
+                                      "type": "div",
+                                      "props": {
+                                        "className": "flex gap-2"
+                                      },
+                                      "children": [
+                                        {
+                                          "type": "MetabuilderFormButton",
+                                          "children": "Primary Button"
+                                        },
+                                        {
+                                          "type": "MetabuilderFormButton",
+                                          "props": {
+                                            "variant": "secondary"
+                                          },
+                                          "children": "Secondary Button"
+                                        },
+                                        {
+                                          "type": "MetabuilderFormButton",
+                                          "props": {
+                                            "variant": "outline"
+                                          },
+                                          "children": "Outline Button"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "div",
+                                      "props": {
+                                        "className": "space-y-2"
+                                      },
+                                      "children": [
+                                        {
+                                          "type": "h1",
+                                          "props": {
+                                            "className": "text-3xl font-bold"
+                                          },
+                                          "children": "Heading 1"
+                                        },
+                                        {
+                                          "type": "h2",
+                                          "props": {
+                                            "className": "text-2xl font-semibold"
+                                          },
+                                          "children": "Heading 2"
+                                        },
+                                        {
+                                          "type": "p",
+                                          "props": {
+                                            "className": "text-base"
+                                          },
+                                          "children": "Body text with regular weight and normal sizing for readable content."
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

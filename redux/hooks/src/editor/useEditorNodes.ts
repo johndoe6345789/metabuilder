@@ -13,7 +13,7 @@ import {
   toggleNodeSelection,
   clearSelection,
   setSelection
-} from '@metabuilder/redux-slices'/editorSlice';
+} from '@metabuilder/redux-slices/editorSlice';
 
 export interface UseEditorNodesReturn {
   selectedNodes: Set<string>;

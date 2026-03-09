@@ -10,7 +10,7 @@ import {
   clearSelection,
   setSelection,
   setDrawing
-} from '@metabuilder/redux-slices'/editorSlice';
+} from '@metabuilder/redux-slices/editorSlice';
 
 export interface UseEditorSelectionReturn {
   selectedNodes: Set<string>;

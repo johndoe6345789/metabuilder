@@ -1,0 +1,11 @@
+{
+  "id": "error-panel-header",
+  "type": "Box",
+  "className": "error-panel__header",
+  "bindings": {
+    "children": {
+      "source": "props",
+      "type": "template"
+    }
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "entity": "Project",
+  "version": "1.0",
+  "description": "CodeForge project with files, models, theme, and component trees",
+  "tenantId": true,
+  "fields": {
+    "id": {
+      "type": "uuid",
+      "primary": true,
+      "generated": true,
+      "description": "Unique project identifier"
+    },
+    "name": {
+      "type": "string",
+      "required": true,
+      "min_length": 1,
+      "max_length": 255,
+      "description": "Project display name"
+    },
+    "description": {
+      "type": "text",
+      "optional": true,
+      "nullable": true,
+      "description": "Project description"
+    },
+    "version": {
+      "type": "string",
+      "required": true,
+      "default": "1.0.0",
+      "description": "Project version"
+    },
+    "status": {
+      "type": "enum",
+      "required": true,
+      "values": [
+        "draft",
+        "active",
+        "archived"
+      ],
+      "default": "draft",
+      "description": "Project lifecycle status"
+    },
+    "createdBy": {
+      "type": "string",
+      "required": true,
+      "description": "User ID of creator"
+    },
+    "createdAt": {
+      "type": "bigint",
+      "generated": true,
+      "description": "Creation timestamp"
+    },
+    "updatedAt": {
+      "type": "bigint",
+      "generated": true,
+      "description": "Last update timestamp"
+    }
+  },
+  "indexes": [
+    {
+      "fields": [
+        "tenantId",
+        "name"
+      ],
+      "unique": true
+    },
+    {
+      "fields": [
+        "tenantId",
+        "status"
+      ]
+    },
+    {
+      "fields": [
+        "createdBy"
+      ]
+    }
+  ],
+  "relations": {
+    "files": {
+      "type": "has-many",
+      "entity": "ProjectFile",
+      "foreign_key": "projectId",
+      "cascade_delete": true,
+      "description": "Source files in this project"
+    },
+    "models": {
+      "type": "has-many",
+      "entity": "ProjectModel",
+      "foreign_key": "projectId",
+      "cascade_delete": true,
+      "description": "Data models in this project"
+    },
+    "componentTrees": {
+      "type": "has-many",
+      "entity": "ComponentTree",
+      "foreign_key": "projectId",
+      "cascade_delete": true,
+      "description": "Component trees in this project"
+    },
+    "creator": {
+      "type": "belongs-to",
+      "entity": "User",
+      "foreign_key": "createdBy",
+      "on_delete": "restrict"
+    }
+  },
+  "acl": {
+    "create": {
+      "user": true,
+      "admin": true
+    },
+    "read": {
+      "self": true,
+      "admin": true
+    },
+    "update": {
+      "self": true,
+      "admin": true
+    },
+    "delete": {
+      "self": true,
+      "admin": true
+    }
+  }
+}

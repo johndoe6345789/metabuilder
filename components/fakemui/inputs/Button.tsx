@@ -1,18 +1,20 @@
 import React, { forwardRef } from 'react'
 import { useAccessible } from '../../../hooks/useAccessible'
 
+// Import official Angular Material button SCSS module
+import styles from '../../../scss/atoms/mat-button.module.scss'
+
 /**
- * Valid button variants for styling
- * Supports both FakeMUI native variants and MUI-style aliases
+ * Valid button variants - maps to Angular Material button types
  */
 export type ButtonVariant =
-  | 'default' | 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'text'
-  // MUI-style aliases
-  | 'contained' | 'outlined'
+  | 'text' | 'outlined' | 'filled' | 'tonal' | 'elevated'
+  // Aliases for compatibility
+  | 'default' | 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger'
+  | 'contained'
 
 /**
  * Valid button sizes
- * Supports both FakeMUI native sizes and MUI-style aliases
  */
 export type ButtonSize = 'sm' | 'md' | 'lg' | 'small' | 'medium' | 'large'
 
@@ -22,15 +24,15 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   variant?: ButtonVariant
   /** Button size */
   size?: ButtonSize
-  /** MUI-style color prop (maps to variant) */
+  /** MUI-style color prop */
   color?: 'primary' | 'secondary' | 'error' | 'warning' | 'info' | 'success' | 'inherit'
-  /** @deprecated Use variant="primary" instead */
+  /** @deprecated Use variant="filled" instead */
   primary?: boolean
-  /** @deprecated Use variant="secondary" instead */
+  /** @deprecated Use variant="tonal" instead */
   secondary?: boolean
-  /** @deprecated Use variant="outline" instead */
+  /** @deprecated Use variant="outlined" instead */
   outline?: boolean
-  /** @deprecated Use variant="ghost" instead */
+  /** @deprecated Use variant="text" instead */
   ghost?: boolean
   /** @deprecated Use size="sm" instead */
   sm?: boolean
@@ -59,56 +61,68 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 }
 
 /**
- * Map MUI-style variants to FakeMUI variants
+ * Map variant props to Angular Material button class key.
+ * Returns the CSS Module key from the styles object.
  */
-const normalizeVariant = (variant?: ButtonVariant, color?: string): string => {
-  // MUI variant aliases
-  if (variant === 'contained') return color === 'secondary' ? 'secondary' : 'primary'
-  if (variant === 'outlined') return 'outline'
-  return variant || ''
+const getButtonClass = (props: ButtonProps): string => {
+  const { variant, primary, secondary, outline, ghost } = props
+
+  // Legacy boolean props
+  if (primary) return 'mat-mdc-unelevated-button'
+  if (secondary) return 'mat-tonal-button'
+  if (outline) return 'mat-mdc-outlined-button'
+  if (ghost) return 'mat-mdc-button'
+
+  // Modern variant prop
+  switch (variant) {
+    case 'filled':
+    case 'primary':
+    case 'contained':
+      return 'mat-mdc-unelevated-button'
+    case 'elevated':
+      return 'mat-mdc-raised-button'
+    case 'tonal':
+    case 'secondary':
+      return 'mat-tonal-button'
+    case 'outlined':
+    case 'outline':
+      return 'mat-mdc-outlined-button'
+    case 'text':
+    case 'default':
+    case 'ghost':
+      return 'mat-mdc-button'
+    case 'danger':
+      return 'mat-mdc-unelevated-button'
+    default:
+      return 'mat-mdc-button'
+  }
 }
 
 /**
- * Map MUI-style sizes to FakeMUI sizes
+ * Get color class key for Angular Material
  */
-const normalizeSize = (size?: ButtonSize): string => {
-  if (size === 'small') return 'sm'
-  if (size === 'medium') return 'md'
-  if (size === 'large') return 'lg'
-  return size || ''
+const getColorClass = (props: ButtonProps): string => {
+  const { variant, color } = props
+
+  if (variant === 'danger' || color === 'error') return 'mat-warn'
+  if (color === 'secondary') return 'mat-accent'
+  return 'mat-primary'
 }
 
 /**
- * Get variant class from props (supports legacy, new API, and MUI-style)
+ * Resolve a class name through the CSS Module styles object.
+ * Falls back to raw string if not found (for child elements).
  */
-const getVariantClass = (props: ButtonProps): string => {
-  const normalized = normalizeVariant(props.variant, props.color)
-  if (normalized) return `btn--${normalized}`
-  if (props.primary) return 'btn--primary'
-  if (props.secondary) return 'btn--secondary'
-  if (props.outline) return 'btn--outline'
-  if (props.ghost) return 'btn--ghost'
-  return ''
-}
+const s = (key: string): string => styles[key] || key
 
 /**
- * Get size class from props (supports legacy, new API, and MUI-style)
- */
-const getSizeClass = (props: ButtonProps): string => {
-  const normalized = normalizeSize(props.size)
-  if (normalized) return `btn--${normalized}`
-  if (props.sm) return 'btn--sm'
-  if (props.lg) return 'btn--lg'
-  return ''
-}
-
-/**
- * Button component with Material-UI inspired styling
- * 
+ * Button component using official Angular Material M3 styles
+ *
  * @example
  * ```tsx
- * <Button variant="primary" size="md">Click me</Button>
- * <Button variant="outline" startIcon={<Plus />}>Add Item</Button>
+ * <Button variant="filled">Click me</Button>
+ * <Button variant="outlined" startIcon={<Plus />}>Add Item</Button>
+ * <Button variant="tonal">Secondary Action</Button>
  * <Button loading>Saving...</Button>
  * ```
  */
@@ -149,16 +163,15 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       identifier: customTestId || String(children)?.substring(0, 20),
     })
 
+    const isDisabled = disabled || loading
+
     const classes = [
-      'btn',
-      getVariantClass(props),
-      getSizeClass(props),
-      icon ? 'btn--icon' : '',
-      loading ? 'btn--loading' : '',
-      fullWidth ? 'btn--full-width' : '',
-      edge === 'start' ? 'btn--edge-start' : '',
-      edge === 'end' ? 'btn--edge-end' : '',
-      color && color !== 'inherit' ? `btn--color-${color}` : '',
+      s('mdc-button'),
+      s('mat-mdc-button-base'),
+      s(getButtonClass(props)),
+      s(getColorClass(props)),
+      isDisabled ? s('mat-mdc-button-disabled') : '',
+      fullWidth ? styles.fullWidth : '',
       className,
     ].filter(Boolean).join(' ')
 
@@ -166,28 +179,57 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const Element = Component || 'button'
     const elementProps = Component ? { ...restProps, href } : { ...restProps, type }
 
+    // Size styling via CSS custom properties
+    const sizeStyle: React.CSSProperties = {}
+    const normalizedSize = size === 'small' ? 'sm' : size === 'large' ? 'lg' : size
+    if (normalizedSize === 'sm' || sm) {
+      sizeStyle['--mat-button-text-container-height' as string] = '32px'
+    } else if (normalizedSize === 'lg' || lg) {
+      sizeStyle['--mat-button-text-container-height' as string] = '48px'
+    }
+
     return (
       <Element
         ref={ref}
         className={classes}
-        disabled={disabled || loading}
+        disabled={isDisabled}
         data-testid={accessible['data-testid']}
         aria-label={ariaLabel || accessible['aria-label']}
         aria-busy={ariaBusy ?? loading}
-        aria-disabled={disabled || loading}
+        aria-disabled={isDisabled}
+        style={sizeStyle}
         {...elementProps}
       >
+        {/* Touch target for accessibility (48px minimum) */}
+        <span className={s('mat-mdc-button-touch-target')} />
+
+        {/* Ripple container */}
+        <span className={s('mat-mdc-button-ripple')} />
+
+        {/* Persistent ripple for hover/focus/active states */}
+        <span className={s('mat-mdc-button-persistent-ripple')} />
+
+        {/* Focus indicator */}
+        <span className={s('mat-focus-indicator')} />
+
+        {/* Loading spinner */}
         {loading && (
-          <span className="btn__spinner" aria-hidden="true">
-            <svg className="btn__spinner-icon" viewBox="0 0 24 24" fill="none">
+          <span className={`${s('mat-icon')} ${styles.spinner}`} aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" style={{ width: '1.125rem', height: '1.125rem', animation: 'mat-button-spin 1s linear infinite' }}>
               <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" opacity="0.25" />
               <path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
             </svg>
           </span>
         )}
-        {startIcon && <span className="btn__start-icon" aria-hidden="true">{startIcon}</span>}
-        {children && <span className="btn__content">{children}</span>}
-        {endIcon && <span className="btn__end-icon" aria-hidden="true">{endIcon}</span>}
+
+        {/* Start icon */}
+        {startIcon && <span className={s('mat-icon')} aria-hidden="true">{startIcon}</span>}
+
+        {/* Label */}
+        <span className={s('mdc-button__label')}>{children}</span>
+
+        {/* End icon */}
+        {endIcon && <span className={s('mat-icon')} aria-hidden="true">{endIcon}</span>}
       </Element>
     )
   }

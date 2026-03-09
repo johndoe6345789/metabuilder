@@ -1,0 +1,164 @@
+{
+  "$schema": "../../../schemas/plugin-nodes.schema.json",
+  "category": {
+    "id": "math",
+    "name": "Math",
+    "color": "#f39c12",
+    "icon": "calculator"
+  },
+  "nodes": [
+    {
+      "id": "math.add",
+      "name": "Add",
+      "description": "Add two or more numbers",
+      "icon": "plus",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "values": [] }
+    },
+    {
+      "id": "math.subtract",
+      "name": "Subtract",
+      "description": "Subtract numbers",
+      "icon": "minus",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "a": "", "b": "" }
+    },
+    {
+      "id": "math.multiply",
+      "name": "Multiply",
+      "description": "Multiply two or more numbers",
+      "icon": "x",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "values": [] }
+    },
+    {
+      "id": "math.divide",
+      "name": "Divide",
+      "description": "Divide numbers",
+      "icon": "divide",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "a": "", "b": "" }
+    },
+    {
+      "id": "math.modulo",
+      "name": "Modulo",
+      "description": "Calculate remainder of division",
+      "icon": "percent",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "a": "", "b": "" }
+    },
+    {
+      "id": "math.power",
+      "name": "Power",
+      "description": "Raise number to a power",
+      "icon": "superscript",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "base": "", "exponent": "" }
+    },
+    {
+      "id": "math.sqrt",
+      "name": "Square Root",
+      "description": "Calculate square root",
+      "icon": "square",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "value": "" }
+    },
+    {
+      "id": "math.abs",
+      "name": "Absolute",
+      "description": "Get absolute value",
+      "icon": "hash",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "value": "" }
+    },
+    {
+      "id": "math.round",
+      "name": "Round",
+      "description": "Round to nearest integer or decimal places",
+      "icon": "circle",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "value": "", "decimals": 0 }
+    },
+    {
+      "id": "math.floor",
+      "name": "Floor",
+      "description": "Round down to nearest integer",
+      "icon": "arrow-down",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "value": "" }
+    },
+    {
+      "id": "math.ceil",
+      "name": "Ceiling",
+      "description": "Round up to nearest integer",
+      "icon": "arrow-up",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "value": "" }
+    },
+    {
+      "id": "math.min",
+      "name": "Minimum",
+      "description": "Get minimum value from array",
+      "icon": "arrow-down-circle",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "values": [] }
+    },
+    {
+      "id": "math.max",
+      "name": "Maximum",
+      "description": "Get maximum value from array",
+      "icon": "arrow-up-circle",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "values": [] }
+    },
+    {
+      "id": "math.sum",
+      "name": "Sum",
+      "description": "Sum all values in array",
+      "icon": "sigma",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "values": [] }
+    },
+    {
+      "id": "math.average",
+      "name": "Average",
+      "description": "Calculate average of values",
+      "icon": "activity",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "values": [] }
+    },
+    {
+      "id": "math.random",
+      "name": "Random",
+      "description": "Generate random number",
+      "icon": "shuffle",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "min": 0, "max": 1, "integer": false }
+    },
+    {
+      "id": "math.clamp",
+      "name": "Clamp",
+      "description": "Clamp value between min and max",
+      "icon": "sliders",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "value": "", "min": "", "max": "" }
+    }
+  ]
+}

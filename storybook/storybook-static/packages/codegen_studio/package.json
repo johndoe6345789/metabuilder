@@ -1,0 +1,69 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "codegen_studio",
+  "name": "Codegen Studio",
+  "version": "1.1.0",
+  "description": "Generate Next.js, React, CLI starters, and MetaBuilder packages from configurable templates.",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "tools",
+  "icon": "static_content/icon.svg",
+  "minLevel": 5,
+  "primary": true,
+  "dependencies": {},
+  "devDependencies": {
+    "testing": "*"
+  },
+  "exports": {
+    "components": [
+      "CodegenStudio",
+      "TemplateSelector",
+      "PackageGenerator"
+    ],
+    "scripts": [
+      "init",
+      "blueprint",
+      "package_template",
+      "package_template.generator",
+      "package_template.templates",
+      "package_template.cli"
+    ]
+  },
+  "tests": {
+    "suites": [
+      "tests/metadata.test.json"
+    ]
+  },
+  "files": {
+    "directories": [
+      "components",
+      "permissions",
+      "static_content",
+      "storybook",
+      "styles",
+      "tests"
+    ],
+    "byType": {
+      "components": [
+        "components/ui.json"
+      ],
+      "tests": [
+        "tests/metadata.params.json",
+        "tests/metadata.test.json"
+      ],
+      "config": [
+        "package.json",
+        "storybook/stories.json"
+      ],
+      "permissions": [
+        "permissions/roles.json"
+      ],
+      "styles": [
+        "styles/tokens.json"
+      ],
+      "other": [
+        "static_content/icon.svg"
+      ]
+    }
+  }
+}

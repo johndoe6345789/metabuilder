@@ -1,0 +1,27 @@
+// Card/Paper mixins - Material Design 3
+// Uses M3 surface containers and elevation tokens
+
+@mixin card {
+  background: var(--mat-sys-surface-container-low);
+  border-radius: var(--mat-sys-corner-medium);
+  box-shadow: var(--mat-sys-level1);
+}
+
+@mixin card-elevated {
+  background: var(--mat-sys-surface-container);
+  border-radius: var(--mat-sys-corner-medium);
+  box-shadow: var(--mat-sys-level2);
+}
+
+@mixin card-filled {
+  background: var(--mat-sys-surface-container-highest);
+  border-radius: var(--mat-sys-corner-medium);
+  box-shadow: none;
+}
+
+@mixin card-outlined {
+  background: var(--mat-sys-surface);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--mat-sys-corner-medium);
+  box-shadow: none;
+}

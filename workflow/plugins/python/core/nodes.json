@@ -1,0 +1,74 @@
+{
+  "$schema": "../../../../schemas/plugin-nodes.schema.json",
+  "category": {
+    "id": "core",
+    "name": "AI Core",
+    "color": "#e74c3c",
+    "icon": "cpu"
+  },
+  "nodes": [
+    {
+      "id": "core.ai_request",
+      "name": "AI Request",
+      "description": "Send request to AI model (OpenAI, Anthropic)",
+      "icon": "message-square",
+      "inputs": ["main"],
+      "outputs": ["main", "error"],
+      "defaultConfig": { "model": "gpt-4", "temperature": 0.7, "maxTokens": 4096 }
+    },
+    {
+      "id": "core.run_tool_calls",
+      "name": "Run Tool Calls",
+      "description": "Execute tool calls from AI response",
+      "icon": "play-circle",
+      "inputs": ["main"],
+      "outputs": ["main", "error"],
+      "defaultConfig": { "parallel": false, "timeout": 30000 }
+    },
+    {
+      "id": "core.append_tool_results",
+      "name": "Append Tool Results",
+      "description": "Append tool execution results to messages",
+      "icon": "plus-circle",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": {}
+    },
+    {
+      "id": "core.seed_messages",
+      "name": "Seed Messages",
+      "description": "Initialize conversation with system prompt",
+      "icon": "file-text",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "systemPrompt": "" }
+    },
+    {
+      "id": "core.append_user_instruction",
+      "name": "Append User Instruction",
+      "description": "Append user instruction to message list",
+      "icon": "user",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "instruction": "" }
+    },
+    {
+      "id": "core.append_context_message",
+      "name": "Append Context",
+      "description": "Append context information as system message",
+      "icon": "info",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "context": "" }
+    },
+    {
+      "id": "core.load_context",
+      "name": "Load Context",
+      "description": "Load SDLC context from ROADMAP.md and GitHub",
+      "icon": "download",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "sources": ["roadmap", "github"] }
+    }
+  ]
+}

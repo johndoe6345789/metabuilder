@@ -1,0 +1,6 @@
+{
+  "type": "MetabuilderFormCheckbox",
+  "props": {
+    "onChange": "> void"
+  }
+}

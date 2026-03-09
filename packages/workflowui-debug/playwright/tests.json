@@ -1,0 +1,238 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "workflowui-debug",
+  "version": "1.0.0",
+  "description": "WorkflowUI Debug tests - inspect and analyze pages with screenshots and JS",
+  "tests": [
+    {
+      "name": "inspect dashboard page structure",
+      "tags": [
+        "@debug",
+        "@inspect"
+      ],
+      "timeout": 15000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": ""
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "debugScreenshot",
+          "filename": "dashboard-full.png",
+          "fullPage": true
+        },
+        {
+          "action": "inspectPageStructure"
+        },
+        {
+          "action": "getAllText"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "inspect editor page and find ReactFlow",
+      "tags": [
+        "@debug",
+        "@editor"
+      ],
+      "timeout": 15000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "editor/test-workflow-001"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "wait",
+          "timeout": 2000
+        },
+        {
+          "action": "debugScreenshot",
+          "filename": "editor-page.png"
+        },
+        {
+          "action": "inspectPageStructure"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "debug workflows page with search",
+      "tags": [
+        "@debug",
+        "@retry"
+      ],
+      "timeout": 20000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "workflows"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "debugScreenshot",
+          "filename": "workflows-debug.png"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "inspect specific element details",
+      "tags": [
+        "@debug",
+        "@inspect"
+      ],
+      "timeout": 15000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": ""
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "debugScreenshot",
+          "filename": "dashboard-elements.png"
+        },
+        {
+          "action": "inspectPageStructure"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "find all buttons on page",
+      "tags": [
+        "@debug",
+        "@discovery"
+      ],
+      "timeout": 15000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": ""
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "getAllText"
+        },
+        {
+          "action": "debugScreenshot",
+          "filename": "dashboard-buttons.png"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "analyze plugins page for missing elements",
+      "tags": [
+        "@debug",
+        "@plugins"
+      ],
+      "timeout": 15000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "plugins"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "wait",
+          "timeout": 2000
+        },
+        {
+          "action": "debugScreenshot",
+          "filename": "plugins-page.png"
+        },
+        {
+          "action": "inspectPageStructure"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "retry flaky test with screenshots",
+      "tags": [
+        "@debug",
+        "@retry"
+      ],
+      "timeout": 30000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "workflows"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "debugScreenshot",
+          "filename": "workflows-retry.png"
+        },
+        {
+          "action": "expect",
+          "placeholder": "Search workflows...",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+// Color utility classes — uses CSS custom properties from app index.scss
+// Each app maps --background, --card, etc. to --mat-sys-* tokens
+
+// --- Background colors ---
+.bg-background { background-color: var(--background) }
+.bg-card { background-color: var(--card) }
+.bg-popover { background-color: var(--popover) }
+.bg-secondary { background-color: var(--secondary) }
+.bg-muted { background-color: var(--muted) }
+.bg-accent { background-color: var(--accent) }
+.bg-destructive { background-color: var(--destructive) }
+.bg-transparent { background-color: transparent }
+.bg-black { background-color: #000 }
+.bg-white { background-color: #fff }
+.bg-inherit { background-color: inherit }
+.bg-current { background-color: currentColor }
+
+// --- Text colors ---
+.text-foreground { color: var(--foreground) }
+.text-card-foreground { color: var(--card-foreground) }
+.text-popover-foreground { color: var(--popover-foreground) }
+.text-primary-foreground { color: var(--primary-foreground) }
+.text-secondary-foreground { color: var(--secondary-foreground) }
+.text-muted-foreground { color: var(--muted-foreground) }
+.text-accent-foreground { color: var(--accent-foreground) }
+.text-destructive { color: var(--destructive) }
+.text-destructive-foreground { color: var(--destructive-foreground) }
+.text-white { color: #fff }
+.text-black { color: #000 }
+.text-inherit { color: inherit }
+.text-current { color: currentColor }
+.text-transparent { color: transparent }
+
+// --- Border colors ---
+.border-border { border-color: var(--border) }
+.border-input { border-color: var(--input) }
+.border-primary { border-color: var(--primary) }
+.border-secondary { border-color: var(--secondary) }
+.border-destructive { border-color: var(--destructive) }
+.border-muted { border-color: var(--muted) }
+.border-accent { border-color: var(--accent) }
+.border-transparent { border-color: transparent }
+.border-white { border-color: #fff }
+.border-black { border-color: #000 }
+.border-current { border-color: currentColor }
+
+// --- Opacity modifiers (color-mix) ---
+.bg-background\/50 { background-color: color-mix(in srgb, var(--background) 50%, transparent) }
+.bg-background\/80 { background-color: color-mix(in srgb, var(--background) 80%, transparent) }
+.bg-background\/90 { background-color: color-mix(in srgb, var(--background) 90%, transparent) }
+.bg-background\/95 { background-color: color-mix(in srgb, var(--background) 95%, transparent) }
+.bg-primary\/5 { background-color: color-mix(in srgb, var(--primary) 5%, transparent) }
+.bg-primary\/10 { background-color: color-mix(in srgb, var(--primary) 10%, transparent) }
+.bg-primary\/20 { background-color: color-mix(in srgb, var(--primary) 20%, transparent) }
+.bg-primary\/30 { background-color: color-mix(in srgb, var(--primary) 30%, transparent) }
+.bg-primary\/50 { background-color: color-mix(in srgb, var(--primary) 50%, transparent) }
+.bg-muted\/50 { background-color: color-mix(in srgb, var(--muted) 50%, transparent) }
+.bg-muted\/80 { background-color: color-mix(in srgb, var(--muted) 80%, transparent) }
+.bg-accent\/10 { background-color: color-mix(in srgb, var(--accent) 10%, transparent) }
+.bg-accent\/20 { background-color: color-mix(in srgb, var(--accent) 20%, transparent) }
+.bg-accent\/50 { background-color: color-mix(in srgb, var(--accent) 50%, transparent) }
+.bg-destructive\/10 { background-color: color-mix(in srgb, var(--destructive) 10%, transparent) }
+.bg-destructive\/20 { background-color: color-mix(in srgb, var(--destructive) 20%, transparent) }
+.bg-destructive\/50 { background-color: color-mix(in srgb, var(--destructive) 50%, transparent) }
+.bg-card\/50 { background-color: color-mix(in srgb, var(--card) 50%, transparent) }
+.bg-card\/80 { background-color: color-mix(in srgb, var(--card) 80%, transparent) }
+.bg-secondary\/50 { background-color: color-mix(in srgb, var(--secondary) 50%, transparent) }
+.bg-secondary\/80 { background-color: color-mix(in srgb, var(--secondary) 80%, transparent) }
+
+// Black/white with opacity
+.bg-black\/5 { background-color: rgba(0, 0, 0, 0.05) }
+.bg-black\/10 { background-color: rgba(0, 0, 0, 0.1) }
+.bg-black\/20 { background-color: rgba(0, 0, 0, 0.2) }
+.bg-black\/25 { background-color: rgba(0, 0, 0, 0.25) }
+.bg-black\/30 { background-color: rgba(0, 0, 0, 0.3) }
+.bg-black\/40 { background-color: rgba(0, 0, 0, 0.4) }
+.bg-black\/50 { background-color: rgba(0, 0, 0, 0.5) }
+.bg-black\/60 { background-color: rgba(0, 0, 0, 0.6) }
+.bg-black\/70 { background-color: rgba(0, 0, 0, 0.7) }
+.bg-black\/75 { background-color: rgba(0, 0, 0, 0.75) }
+.bg-black\/80 { background-color: rgba(0, 0, 0, 0.8) }
+.bg-white\/5 { background-color: rgba(255, 255, 255, 0.05) }
+.bg-white\/10 { background-color: rgba(255, 255, 255, 0.1) }
+.bg-white\/20 { background-color: rgba(255, 255, 255, 0.2) }
+.bg-white\/50 { background-color: rgba(255, 255, 255, 0.5) }
+.bg-white\/80 { background-color: rgba(255, 255, 255, 0.8) }
+
+// Text with opacity
+.text-foreground\/50 { color: color-mix(in srgb, var(--foreground) 50%, transparent) }
+.text-foreground\/70 { color: color-mix(in srgb, var(--foreground) 70%, transparent) }
+.text-foreground\/80 { color: color-mix(in srgb, var(--foreground) 80%, transparent) }
+.text-muted-foreground\/50 { color: color-mix(in srgb, var(--muted-foreground) 50%, transparent) }
+.text-primary\/80 { color: color-mix(in srgb, var(--primary) 80%, transparent) }
+.text-white\/50 { color: rgba(255, 255, 255, 0.5) }
+.text-white\/70 { color: rgba(255, 255, 255, 0.7) }
+.text-white\/80 { color: rgba(255, 255, 255, 0.8) }
+
+// Border with opacity
+.border-border\/50 { border-color: color-mix(in srgb, var(--border) 50%, transparent) }
+.border-primary\/50 { border-color: color-mix(in srgb, var(--primary) 50%, transparent) }
+.border-white\/10 { border-color: rgba(255, 255, 255, 0.1) }
+.border-white\/20 { border-color: rgba(255, 255, 255, 0.2) }

@@ -1,0 +1,262 @@
+{
+  "name": "List User Media",
+  "active": false,
+  "nodes": [
+    {
+      "id": "validate_context",
+      "name": "Validate Context",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $context.tenantId }}",
+        "operation": "validate",
+        "validator": "required"
+      }
+    },
+    {
+      "id": "validate_user",
+      "name": "Validate User",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $context.user.id }}",
+        "operation": "validate",
+        "validator": "required"
+      }
+    },
+    {
+      "id": "extract_params",
+      "name": "Extract Params",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "output": {
+          "type": "{{ $json.type || null }}",
+          "sortBy": "{{ $json.sortBy || 'createdAt' }}",
+          "sortOrder": "{{ $json.sortOrder || 'desc' }}",
+          "limit": "{{ Math.min($json.limit || 50, 500) }}",
+          "offset": "{{ ($json.page || 1 - 1) * ($json.limit || 50) }}"
+        },
+        "operation": "transform_data"
+      }
+    },
+    {
+      "id": "build_filter",
+      "name": "Build Filter",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "output": {
+          "tenantId": "{{ $context.tenantId }}",
+          "uploadedBy": "{{ $context.user.id }}",
+          "type": "{{ $steps.extract_params.output.type }}"
+        },
+        "operation": "transform_data"
+      }
+    },
+    {
+      "id": "clean_filter",
+      "name": "Clean Filter",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "output": "{{ Object.entries($steps.build_filter.output).reduce((acc, [key, value]) => { if (value !== null && value !== undefined) acc[key] = value; return acc; }, {}) }}",
+        "operation": "transform_data"
+      }
+    },
+    {
+      "id": "fetch_media",
+      "name": "Fetch Media",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "filter": "{{ $steps.clean_filter.output }}",
+        "sort": {
+          "{{ $steps.extract_params.output.sortBy }}": "{{ $steps.extract_params.output.sortOrder === 'asc' ? 1 : -1 }}"
+        },
+        "limit": "{{ $steps.extract_params.output.limit }}",
+        "offset": "{{ $steps.extract_params.output.offset }}",
+        "operation": "database_read",
+        "entity": "MediaAsset"
+      }
+    },
+    {
+      "id": "count_total",
+      "name": "Count Total",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        100,
+        500
+      ],
+      "parameters": {
+        "filter": "{{ $steps.clean_filter.output }}",
+        "operation": "database_count",
+        "entity": "MediaAsset"
+      }
+    },
+    {
+      "id": "format_response",
+      "name": "Format Response",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        400,
+        500
+      ],
+      "parameters": {
+        "output": {
+          "assets": "{{ $steps.fetch_media.output }}",
+          "pagination": {
+            "total": "{{ $steps.count_total.output }}",
+            "page": "{{ $json.page || 1 }}",
+            "limit": "{{ $steps.extract_params.output.limit }}",
+            "hasMore": "{{ $steps.count_total.output > ($steps.extract_params.output.offset + $steps.extract_params.output.limit) }}"
+          }
+        },
+        "operation": "transform_data"
+      }
+    },
+    {
+      "id": "return_success",
+      "name": "Return Success",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        700,
+        500
+      ],
+      "parameters": {
+        "action": "http_response",
+        "status": 200,
+        "body": "{{ $steps.format_response.output }}"
+      }
+    }
+  ],
+  "connections": {
+    "validate_context": {
+      "main": [
+        [
+          {
+            "node": "validate_user",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "validate_user": {
+      "main": [
+        [
+          {
+            "node": "extract_params",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "extract_params": {
+      "main": [
+        [
+          {
+            "node": "build_filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "build_filter": {
+      "main": [
+        [
+          {
+            "node": "clean_filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "clean_filter": {
+      "main": [
+        [
+          {
+            "node": "fetch_media",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fetch_media": {
+      "main": [
+        [
+          {
+            "node": "count_total",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "count_total": {
+      "main": [
+        [
+          {
+            "node": "format_response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "format_response": {
+      "main": [
+        [
+          {
+            "node": "return_success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "id": "workflow_list_user_media",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
+}

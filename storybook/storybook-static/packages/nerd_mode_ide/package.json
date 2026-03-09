@@ -1,0 +1,81 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "nerd_mode_ide",
+  "name": "Nerd Mode IDE",
+  "version": "1.0.0",
+  "description": "Full-featured in-browser IDE with file explorer, editor panels, console, git integration, and test runner",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "tools",
+  "icon": "static_content/icon.svg",
+  "minLevel": 4,
+  "primary": false,
+  "keywords": [
+    "ide",
+    "editor",
+    "code",
+    "files",
+    "git",
+    "console",
+    "tests",
+    "development"
+  ],
+  "dependencies": {
+    "code_editor": "*",
+    "ui_permissions": "*"
+  },
+  "devDependencies": {
+    "testing": "*"
+  },
+  "exports": {
+    "components": [
+      "NerdModeIDE",
+      "NerdModeIDEHeader",
+      "NerdModeFileExplorer",
+      "NerdModeEditorPanel",
+      "NerdModeConsolePanel",
+      "NerdModeGitPanel",
+      "NerdModeTestsPanel"
+    ],
+    "scripts": [
+      "ide"
+    ]
+  },
+  "tests": {
+    "suites": [
+      "tests/metadata.test.json"
+    ]
+  },
+  "files": {
+    "directories": [
+      "components",
+      "permissions",
+      "static_content",
+      "storybook",
+      "styles",
+      "tests"
+    ],
+    "byType": {
+      "components": [
+        "components/ui.json"
+      ],
+      "tests": [
+        "tests/metadata.params.json",
+        "tests/metadata.test.json"
+      ],
+      "config": [
+        "package.json",
+        "storybook/config.json"
+      ],
+      "permissions": [
+        "permissions/roles.json"
+      ],
+      "styles": [
+        "styles/tokens.json"
+      ],
+      "other": [
+        "static_content/icon.svg"
+      ]
+    }
+  }
+}

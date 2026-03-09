@@ -1,0 +1,692 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "component_editor",
+  "description": "Visual component hierarchy editor for building dynamic component trees",
+  "components": [
+    {
+      "id": "component_hierarchy_editor",
+      "name": "ComponentHierarchyEditor",
+      "description": "Main component hierarchy editor with tree view and configuration panel",
+      "props": [
+        {
+          "name": "tenantId",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "pageId",
+          "type": "string",
+          "required": false,
+          "description": "Page to edit components for"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "component-hierarchy-editor",
+          "sx": { "height": "100%", "display": "flex", "flexDirection": "column" },
+          "children": [
+            {
+              "type": "Paper",
+              "elevation": 1,
+              "sx": { "p": 2, "mb": 2 },
+              "children": [
+                {
+                  "type": "Stack",
+                  "direction": "row",
+                  "justifyContent": "space-between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "Typography",
+                      "variant": "h5",
+                      "children": "Component Hierarchy Editor"
+                    },
+                    {
+                      "type": "Stack",
+                      "direction": "row",
+                      "spacing": 1,
+                      "children": [
+                        {
+                          "type": "Button",
+                          "variant": "outlined",
+                          "startIcon": {
+                            "type": "Icon",
+                            "name": "Visibility"
+                          },
+                          "onClick": "{{handlePreview}}",
+                          "children": "Preview"
+                        },
+                        {
+                          "type": "Button",
+                          "variant": "contained",
+                          "startIcon": {
+                            "type": "Icon",
+                            "name": "Save"
+                          },
+                          "onClick": "{{handleSave}}",
+                          "children": "Save"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Grid",
+              "container": true,
+              "spacing": 2,
+              "sx": { "flex": 1, "overflow": "hidden" },
+              "children": [
+                {
+                  "type": "Grid",
+                  "item": true,
+                  "xs": 12,
+                  "md": 3,
+                  "sx": { "height": "100%" },
+                  "children": [
+                    {
+                      "type": "ComponentRef",
+                      "ref": "component_catalog",
+                      "props": {
+                        "onSelect": "{{handleCatalogSelect}}"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "Grid",
+                  "item": true,
+                  "xs": 12,
+                  "md": 5,
+                  "sx": { "height": "100%" },
+                  "children": [
+                    {
+                      "type": "ComponentRef",
+                      "ref": "component_tree",
+                      "props": {
+                        "tree": "{{componentTree}}",
+                        "selectedId": "{{selectedComponent?.id}}",
+                        "onSelect": "{{handleTreeSelect}}",
+                        "onReorder": "{{handleReorder}}",
+                        "onDelete": "{{handleDelete}}"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "Grid",
+                  "item": true,
+                  "xs": 12,
+                  "md": 4,
+                  "sx": { "height": "100%" },
+                  "children": [
+                    {
+                      "type": "ComponentRef",
+                      "ref": "component_config",
+                      "props": {
+                        "component": "{{selectedComponent}}",
+                        "onChange": "{{handleConfigChange}}"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "component_catalog",
+      "name": "ComponentCatalog",
+      "description": "Browsable catalog of available components to add to the tree",
+      "props": [
+        {
+          "name": "onSelect",
+          "type": "function",
+          "required": true
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Paper",
+          "variant": "outlined",
+          "sx": { "height": "100%", "display": "flex", "flexDirection": "column" },
+          "children": [
+            {
+              "type": "Box",
+              "sx": { "p": 2, "borderBottom": 1, "borderColor": "divider" },
+              "children": [
+                {
+                  "type": "Typography",
+                  "variant": "subtitle1",
+                  "fontWeight": "bold",
+                  "children": "Component Catalog"
+                },
+                {
+                  "type": "TextField",
+                  "placeholder": "Search components...",
+                  "size": "small",
+                  "fullWidth": true,
+                  "value": "{{searchQuery}}",
+                  "onChange": "{{handleSearchChange}}",
+                  "sx": { "mt": 1 },
+                  "InputProps": {
+                    "startAdornment": {
+                      "type": "InputAdornment",
+                      "position": "start",
+                      "children": [
+                        {
+                          "type": "Icon",
+                          "name": "Search",
+                          "fontSize": "small"
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "Box",
+              "sx": { "flex": 1, "overflow": "auto", "p": 1 },
+              "children": [
+                {
+                  "type": "each",
+                  "items": "{{filteredCategories}}",
+                  "as": "category",
+                  "render": {
+                    "type": "Accordion",
+                    "defaultExpanded": "{{category.expanded}}",
+                    "children": [
+                      {
+                        "type": "AccordionSummary",
+                        "expandIcon": {
+                          "type": "Icon",
+                          "name": "ExpandMore"
+                        },
+                        "children": [
+                          {
+                            "type": "Typography",
+                            "variant": "body2",
+                            "fontWeight": "medium",
+                            "children": "{{category.name}}"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "AccordionDetails",
+                        "sx": { "p": 1 },
+                        "children": [
+                          {
+                            "type": "Stack",
+                            "spacing": 0.5,
+                            "children": [
+                              {
+                                "type": "each",
+                                "items": "{{category.components}}",
+                                "as": "comp",
+                                "render": {
+                                  "type": "Button",
+                                  "variant": "text",
+                                  "size": "small",
+                                  "fullWidth": true,
+                                  "sx": { "justifyContent": "flex-start", "textTransform": "none" },
+                                  "startIcon": {
+                                    "type": "Icon",
+                                    "name": "{{comp.icon || 'Widgets'}}",
+                                    "fontSize": "small"
+                                  },
+                                  "onClick": "{{() => onSelect(comp)}}",
+                                  "children": "{{comp.name}}"
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "component_tree",
+      "name": "ComponentTree",
+      "description": "Interactive tree view of the component hierarchy",
+      "props": [
+        {
+          "name": "tree",
+          "type": "object",
+          "required": true
+        },
+        {
+          "name": "selectedId",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "onSelect",
+          "type": "function",
+          "required": true
+        },
+        {
+          "name": "onReorder",
+          "type": "function",
+          "required": true
+        },
+        {
+          "name": "onDelete",
+          "type": "function",
+          "required": true
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Paper",
+          "variant": "outlined",
+          "sx": { "height": "100%", "display": "flex", "flexDirection": "column" },
+          "children": [
+            {
+              "type": "Box",
+              "sx": { "p": 2, "borderBottom": 1, "borderColor": "divider" },
+              "children": [
+                {
+                  "type": "Stack",
+                  "direction": "row",
+                  "justifyContent": "space-between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "Typography",
+                      "variant": "subtitle1",
+                      "fontWeight": "bold",
+                      "children": "Component Tree"
+                    },
+                    {
+                      "type": "Stack",
+                      "direction": "row",
+                      "spacing": 0.5,
+                      "children": [
+                        {
+                          "type": "Tooltip",
+                          "title": "Expand All",
+                          "children": [
+                            {
+                              "type": "IconButton",
+                              "size": "small",
+                              "onClick": "{{handleExpandAll}}",
+                              "children": [
+                                {
+                                  "type": "Icon",
+                                  "name": "UnfoldMore",
+                                  "fontSize": "small"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Tooltip",
+                          "title": "Collapse All",
+                          "children": [
+                            {
+                              "type": "IconButton",
+                              "size": "small",
+                              "onClick": "{{handleCollapseAll}}",
+                              "children": [
+                                {
+                                  "type": "Icon",
+                                  "name": "UnfoldLess",
+                                  "fontSize": "small"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Box",
+              "sx": { "flex": 1, "overflow": "auto", "p": 1 },
+              "children": [
+                {
+                  "type": "TreeView",
+                  "defaultCollapseIcon": {
+                    "type": "Icon",
+                    "name": "ExpandMore"
+                  },
+                  "defaultExpandIcon": {
+                    "type": "Icon",
+                    "name": "ChevronRight"
+                  },
+                  "expanded": "{{expandedNodes}}",
+                  "selected": "{{selectedId}}",
+                  "onNodeSelect": "{{handleNodeSelect}}",
+                  "children": [
+                    {
+                      "type": "ComponentRef",
+                      "ref": "tree_node_recursive",
+                      "props": {
+                        "node": "{{tree}}",
+                        "onSelect": "{{onSelect}}",
+                        "onDelete": "{{onDelete}}"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "condition": "{{!tree || tree.children.length === 0}}",
+              "then": {
+                "type": "Box",
+                "sx": { "p": 3, "textAlign": "center" },
+                "children": [
+                  {
+                    "type": "Typography",
+                    "variant": "body2",
+                    "color": "textSecondary",
+                    "children": "Drag components from the catalog to build your hierarchy"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "component_config",
+      "name": "ComponentConfig",
+      "description": "Configuration panel for the selected component",
+      "props": [
+        {
+          "name": "component",
+          "type": "object",
+          "required": false
+        },
+        {
+          "name": "onChange",
+          "type": "function",
+          "required": true
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Paper",
+          "variant": "outlined",
+          "sx": { "height": "100%", "display": "flex", "flexDirection": "column" },
+          "children": [
+            {
+              "type": "Box",
+              "sx": { "p": 2, "borderBottom": 1, "borderColor": "divider" },
+              "children": [
+                {
+                  "type": "Typography",
+                  "variant": "subtitle1",
+                  "fontWeight": "bold",
+                  "children": "Configuration"
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "condition": "{{component}}",
+              "then": {
+                "type": "Box",
+                "sx": { "flex": 1, "overflow": "auto", "p": 2 },
+                "children": [
+                  {
+                    "type": "Stack",
+                    "spacing": 2,
+                    "children": [
+                      {
+                        "type": "TextField",
+                        "label": "Component ID",
+                        "value": "{{component.id}}",
+                        "disabled": true,
+                        "size": "small",
+                        "fullWidth": true
+                      },
+                      {
+                        "type": "TextField",
+                        "label": "Component Type",
+                        "value": "{{component.type}}",
+                        "disabled": true,
+                        "size": "small",
+                        "fullWidth": true
+                      },
+                      {
+                        "type": "Divider"
+                      },
+                      {
+                        "type": "Typography",
+                        "variant": "subtitle2",
+                        "children": "Props"
+                      },
+                      {
+                        "type": "each",
+                        "items": "{{component.propDefinitions}}",
+                        "as": "prop",
+                        "render": {
+                          "type": "Box",
+                          "sx": { "mb": 2 },
+                          "children": [
+                            {
+                              "type": "conditional",
+                              "condition": "{{prop.type === 'string'}}",
+                              "then": {
+                                "type": "TextField",
+                                "label": "{{prop.name}}",
+                                "value": "{{component.props[prop.name] || ''}}",
+                                "onChange": "{{(e) => handlePropChange(prop.name, e.target.value)}}",
+                                "size": "small",
+                                "fullWidth": true,
+                                "helperText": "{{prop.description}}"
+                              }
+                            },
+                            {
+                              "type": "conditional",
+                              "condition": "{{prop.type === 'boolean'}}",
+                              "then": {
+                                "type": "FormControlLabel",
+                                "control": {
+                                  "type": "Switch",
+                                  "checked": "{{component.props[prop.name] || false}}",
+                                  "onChange": "{{(e) => handlePropChange(prop.name, e.target.checked)}}"
+                                },
+                                "label": "{{prop.name}}"
+                              }
+                            },
+                            {
+                              "type": "conditional",
+                              "condition": "{{prop.type === 'number'}}",
+                              "then": {
+                                "type": "TextField",
+                                "label": "{{prop.name}}",
+                                "type": "number",
+                                "value": "{{component.props[prop.name] || 0}}",
+                                "onChange": "{{(e) => handlePropChange(prop.name, Number(e.target.value))}}",
+                                "size": "small",
+                                "fullWidth": true,
+                                "helperText": "{{prop.description}}"
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "else": {
+                "type": "Box",
+                "sx": { "p": 3, "textAlign": "center" },
+                "children": [
+                  {
+                    "type": "Typography",
+                    "variant": "body2",
+                    "color": "textSecondary",
+                    "children": "Select a component to configure"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "component_preview",
+      "name": "ComponentPreview",
+      "description": "Live preview of the component hierarchy",
+      "props": [
+        {
+          "name": "tree",
+          "type": "object",
+          "required": true
+        },
+        {
+          "name": "open",
+          "type": "boolean",
+          "required": true
+        },
+        {
+          "name": "onClose",
+          "type": "function",
+          "required": true
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Dialog",
+          "open": "{{open}}",
+          "onClose": "{{onClose}}",
+          "maxWidth": "lg",
+          "fullWidth": true,
+          "children": [
+            {
+              "type": "DialogTitle",
+              "children": [
+                {
+                  "type": "Stack",
+                  "direction": "row",
+                  "justifyContent": "space-between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "Typography",
+                      "variant": "h6",
+                      "children": "Component Preview"
+                    },
+                    {
+                      "type": "Stack",
+                      "direction": "row",
+                      "spacing": 1,
+                      "children": [
+                        {
+                          "type": "ToggleButtonGroup",
+                          "size": "small",
+                          "value": "{{previewMode}}",
+                          "exclusive": true,
+                          "onChange": "{{handleModeChange}}",
+                          "children": [
+                            {
+                              "type": "ToggleButton",
+                              "value": "desktop",
+                              "children": [
+                                {
+                                  "type": "Icon",
+                                  "name": "Computer",
+                                  "fontSize": "small"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "ToggleButton",
+                              "value": "tablet",
+                              "children": [
+                                {
+                                  "type": "Icon",
+                                  "name": "Tablet",
+                                  "fontSize": "small"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "ToggleButton",
+                              "value": "mobile",
+                              "children": [
+                                {
+                                  "type": "Icon",
+                                  "name": "PhoneAndroid",
+                                  "fontSize": "small"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "DialogContent",
+              "dividers": true,
+              "children": [
+                {
+                  "type": "Box",
+                  "sx": {
+                    "width": "{{previewMode === 'mobile' ? 375 : previewMode === 'tablet' ? 768 : '100%'}}",
+                    "mx": "auto",
+                    "border": 1,
+                    "borderColor": "divider",
+                    "borderRadius": 1,
+                    "overflow": "hidden",
+                    "minHeight": 400
+                  },
+                  "children": [
+                    {
+                      "type": "RenderComponent",
+                      "component": "{{tree}}"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "DialogActions",
+              "children": [
+                {
+                  "type": "Button",
+                  "onClick": "{{onClose}}",
+                  "children": "Close"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

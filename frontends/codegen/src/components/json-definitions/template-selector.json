@@ -1,0 +1,424 @@
+{
+  "id": "template-selector-root",
+  "type": "div",
+  "props": { "style": { "padding": "0 24px" } },
+  "children": [
+    {
+      "id": "template-selector-tabs",
+      "type": "Tabs",
+      "bindings": {
+        "value": "hookData.activeTab",
+        "onChange": "hookData.handleTabChange"
+      },
+      "children": [
+        {
+          "id": "templates-tab",
+          "type": "Tab",
+          "props": { "label": "Templates", "value": "templates" }
+        },
+        {
+          "id": "explorer-tab",
+          "type": "Tab",
+          "props": { "label": "Explorer", "value": "explorer" }
+        }
+      ]
+    },
+    {
+      "id": "templates-tab-panel",
+      "type": "div",
+      "props": { "role": "tabpanel" },
+      "condition": "hookData.activeTab === 'templates'",
+      "children": [
+        {
+          "id": "template-header",
+          "type": "div",
+          "props": { "style": { "marginBottom": "24px" } },
+          "children": [
+            {
+              "id": "template-header-title",
+              "type": "h2",
+              "bindings": { "children": "hookData.ui.header.title" }
+            },
+            {
+              "id": "template-header-description",
+              "type": "p",
+              "props": { "style": { "color": "var(--mat-sys-on-surface-variant)", "marginTop": "4px" } },
+              "bindings": { "children": "hookData.ui.header.description" }
+            }
+          ]
+        },
+        {
+          "id": "template-cards-grid",
+          "type": "list",
+          "props": { "style": { "display": "grid", "gridTemplateColumns": "repeat(auto-fill, minmax(300px, 1fr))", "gap": "32px", "padding": "8px 0" } },
+          "bindings": {
+            "items": "hookData.templates",
+            "keyPath": "id"
+          },
+          "itemTemplate": {
+            "id": "template-card",
+            "type": "Card",
+            "props": { "variant": "outlined" },
+            "children": [
+              {
+                "id": "template-card-header",
+                "type": "CardHeader",
+                "bindings": {
+                  "title": "item.name",
+                  "subheader": "item.description",
+                  "avatar": "item.icon"
+                }
+              },
+              {
+                "id": "template-card-content",
+                "type": "CardContent",
+                "props": { "style": { "paddingTop": "16px", "paddingBottom": "12px" } },
+                "children": [
+                  {
+                    "id": "template-card-features-list",
+                    "type": "list",
+                    "props": { "style": { "display": "flex", "flexWrap": "wrap", "gap": "8px" } },
+                    "bindings": { "items": "item.features" },
+                    "itemTemplate": {
+                      "id": "feature-chip",
+                      "type": "Chip",
+                      "props": { "size": "sm", "variant": "outlined" },
+                      "bindings": { "label": "item" }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "template-card-actions",
+                "type": "CardActions",
+                "props": { "style": { "padding": "12px 16px 16px", "marginTop": "auto", "borderTop": "1px solid var(--mat-sys-outline-variant)", "gap": "8px" } },
+                "children": [
+                  {
+                    "id": "template-load-button",
+                    "type": "Button",
+                    "props": { "variant": "filled", "size": "sm" },
+                    "bindings": {
+                      "onClick": "item.onReplace",
+                      "disabled": "hookData.isLoading"
+                    },
+                    "children": [
+                      {
+                        "id": "load-button-content",
+                        "type": "span",
+                        "props": { "style": { "display": "inline-flex", "alignItems": "center", "gap": "6px" } },
+                        "children": [
+                          {
+                            "id": "load-button-icon",
+                            "type": "Download",
+                            "props": { "size": 16 }
+                          },
+                          {
+                            "id": "load-button-text",
+                            "type": "text",
+                            "bindings": { "children": "hookData.ui.buttons.loadTemplate" }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "id": "template-merge-button",
+                    "type": "Button",
+                    "props": { "variant": "outlined", "size": "sm" },
+                    "bindings": {
+                      "onClick": "item.onMerge",
+                      "disabled": "hookData.isLoading"
+                    },
+                    "children": [
+                      {
+                        "id": "merge-button-content",
+                        "type": "span",
+                        "props": { "style": { "display": "inline-flex", "alignItems": "center", "gap": "6px" } },
+                        "children": [
+                          {
+                            "id": "merge-button-icon",
+                            "type": "Plus",
+                            "props": { "size": 16 }
+                          },
+                          {
+                            "id": "merge-button-text",
+                            "type": "text",
+                            "bindings": { "children": "hookData.ui.buttons.merge" }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "template-actions-alert",
+          "type": "Alert",
+          "props": { "severity": "info", "variant": "outlined" },
+          "children": [
+            {
+              "id": "alert-load-title",
+              "type": "strong",
+              "bindings": { "children": "hookData.ui.alerts.loadTitle" }
+            },
+            {
+              "id": "alert-load-space",
+              "type": "text",
+              "children": " "
+            },
+            {
+              "id": "alert-load-text",
+              "type": "text",
+              "bindings": { "children": "hookData.ui.alerts.loadDescription" }
+            },
+            {
+              "id": "alert-br",
+              "type": "br"
+            },
+            {
+              "id": "alert-merge-title",
+              "type": "strong",
+              "bindings": { "children": "hookData.ui.alerts.mergeTitle" }
+            },
+            {
+              "id": "alert-merge-space",
+              "type": "text",
+              "children": " "
+            },
+            {
+              "id": "alert-merge-text",
+              "type": "text",
+              "bindings": { "children": "hookData.ui.alerts.mergeDescription" }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "explorer-tab-panel",
+      "type": "div",
+      "props": { "role": "tabpanel" },
+      "condition": "hookData.activeTab === 'explorer'",
+      "children": [
+        {
+          "id": "template-explorer-component",
+          "type": "MetabuilderWidgetTemplateExplorer"
+        }
+      ]
+    },
+    {
+      "id": "confirm-dialog",
+      "type": "Dialog",
+      "bindings": {
+        "open": "hookData.confirmDialog.open",
+        "onClose": "hookData.handleDialogClose"
+      },
+      "props": { "maxWidth": "sm" },
+      "children": [
+        {
+          "id": "confirm-dialog-header",
+          "type": "DialogHeader",
+          "children": [
+            {
+              "id": "confirm-dialog-title-replace",
+              "type": "DialogTitle",
+              "conditional": { "if": "hookData.confirmDialog.actionType === 'replace'" },
+              "children": "Replace All Data"
+            },
+            {
+              "id": "confirm-dialog-title-merge",
+              "type": "DialogTitle",
+              "conditional": { "if": "hookData.confirmDialog.actionType === 'merge'" },
+              "children": "Merge Data"
+            }
+          ]
+        },
+        {
+          "id": "confirm-dialog-content",
+          "type": "DialogContent",
+          "children": [
+            {
+              "id": "confirm-dialog-description-replace",
+              "type": "DialogContentText",
+              "conditional": { "if": "hookData.confirmDialog.actionType === 'replace'" },
+              "children": [
+                {
+                  "id": "replace-text",
+                  "type": "text",
+                  "bindings": { "children": "hookData.ui.dialog.replace.prefix" }
+                },
+                {
+                  "id": "replace-space",
+                  "type": "text",
+                  "children": " "
+                },
+                {
+                  "id": "replace-emphasis",
+                  "type": "strong",
+                  "props": { "style": { "color": "var(--mat-sys-error)" } },
+                  "bindings": { "children": "hookData.ui.dialog.replace.emphasis" }
+                },
+                {
+                  "id": "replace-space-before-middle",
+                  "type": "text",
+                  "children": " "
+                },
+                {
+                  "id": "replace-middle",
+                  "type": "text",
+                  "bindings": { "children": "hookData.ui.dialog.replace.middle" }
+                },
+                {
+                  "id": "replace-space-after-middle",
+                  "type": "text",
+                  "children": " "
+                },
+                {
+                  "id": "replace-template-name",
+                  "type": "strong",
+                  "bindings": { "children": "hookData.confirmDialog.template" }
+                },
+                {
+                  "id": "replace-space-before-suffix",
+                  "type": "text",
+                  "children": " "
+                },
+                {
+                  "id": "replace-suffix",
+                  "type": "text",
+                  "bindings": { "children": "hookData.ui.dialog.replace.suffix" }
+                }
+              ]
+            },
+            {
+              "id": "confirm-dialog-description-merge",
+              "type": "DialogContentText",
+              "conditional": { "if": "hookData.confirmDialog.actionType === 'merge'" },
+              "children": [
+                {
+                  "id": "merge-text",
+                  "type": "text",
+                  "bindings": { "children": "hookData.ui.dialog.merge.prefix" }
+                },
+                {
+                  "id": "merge-space",
+                  "type": "text",
+                  "children": " "
+                },
+                {
+                  "id": "merge-emphasis",
+                  "type": "strong",
+                  "bindings": { "children": "hookData.ui.dialog.merge.emphasis" }
+                },
+                {
+                  "id": "merge-space-before-middle",
+                  "type": "text",
+                  "children": " "
+                },
+                {
+                  "id": "merge-middle",
+                  "type": "text",
+                  "bindings": { "children": "hookData.ui.dialog.merge.middle" }
+                },
+                {
+                  "id": "merge-space-after-middle",
+                  "type": "text",
+                  "children": " "
+                },
+                {
+                  "id": "merge-template-name",
+                  "type": "strong",
+                  "bindings": { "children": "hookData.confirmDialog.template" }
+                },
+                {
+                  "id": "merge-space-before-suffix",
+                  "type": "text",
+                  "children": " "
+                },
+                {
+                  "id": "merge-suffix",
+                  "type": "text",
+                  "bindings": { "children": "hookData.ui.dialog.merge.suffix" }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "confirm-dialog-actions",
+          "type": "DialogActions",
+          "children": [
+            {
+              "id": "cancel-button",
+              "type": "Button",
+              "props": { "variant": "text" },
+              "bindings": { "onClick": "hookData.handleDialogCancel" },
+              "children": [
+                {
+                  "id": "cancel-button-text",
+                  "type": "text",
+                  "bindings": { "children": "hookData.ui.buttons.cancel" }
+                }
+              ]
+            },
+            {
+              "id": "confirm-button-replace",
+              "type": "Button",
+              "conditional": { "if": "hookData.confirmDialog.actionType === 'replace'" },
+              "props": { "variant": "filled", "color": "error" },
+              "bindings": { "onClick": "hookData.handleConfirmLoad" },
+              "children": [
+                {
+                  "id": "confirm-replace-content",
+                  "type": "span",
+                  "props": { "style": { "display": "inline-flex", "alignItems": "center", "gap": "6px" } },
+                  "children": [
+                    {
+                      "id": "confirm-replace-icon",
+                      "type": "Trash",
+                      "props": { "size": 16 }
+                    },
+                    {
+                      "id": "confirm-replace-text",
+                      "type": "text",
+                      "bindings": { "children": "hookData.ui.buttons.replaceAllData" }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "confirm-button-merge",
+              "type": "Button",
+              "conditional": { "if": "hookData.confirmDialog.actionType === 'merge'" },
+              "props": { "variant": "filled" },
+              "bindings": { "onClick": "hookData.handleConfirmLoad" },
+              "children": [
+                {
+                  "id": "confirm-merge-content",
+                  "type": "span",
+                  "props": { "style": { "display": "inline-flex", "alignItems": "center", "gap": "6px" } },
+                  "children": [
+                    {
+                      "id": "confirm-merge-icon",
+                      "type": "Plus",
+                      "props": { "size": 16 }
+                    },
+                    {
+                      "id": "confirm-merge-text",
+                      "type": "text",
+                      "bindings": { "children": "hookData.ui.buttons.mergeData" }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

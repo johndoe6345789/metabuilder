@@ -2,10 +2,10 @@ import { useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 import copy from '@/data/favicon-designer.json'
 import { useKV } from '@/hooks/use-kv'
-import { DEFAULT_DESIGN, PRESET_SIZES } from './constants'
-import { drawCanvas } from './canvasUtils'
-import { formatCopy } from './formatCopy'
-import { BrushEffect, FaviconDesign, FaviconElement } from './types'
+import { DEFAULT_DESIGN, PRESET_SIZES } from './_types/favicon/constants'
+import { drawCanvas } from './_types/favicon/canvasUtils'
+import { formatCopy } from './_types/favicon/formatCopy'
+import type { BrushEffect, FaviconDesign, FaviconElement } from './_types/favicon/types'
 
 export const useFaviconDesigner = () => {
   const [designs, setDesigns] = useKV<FaviconDesign[]>('favicon-designs', [DEFAULT_DESIGN])

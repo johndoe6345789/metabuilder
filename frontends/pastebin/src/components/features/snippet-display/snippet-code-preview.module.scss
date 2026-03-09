@@ -1,0 +1,21 @@
+.previewContainer {
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--mat-sys-surface-variant) 30%, transparent);
+  padding: 12px;
+  border: 1px solid var(--mat-sys-outline-variant);
+}
+
+.code {
+  font-size: 0.75rem;
+  color: var(--mat-sys-on-surface-variant);
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: var(--mat-sys-body-small-font, monospace);
+}
+
+.truncatedNotice {
+  font-size: 0.75rem;
+  color: var(--mat-sys-primary);
+  margin-top: 8px;
+}

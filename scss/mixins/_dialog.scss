@@ -1,0 +1,53 @@
+// Dialog/Modal mixins - Material Design 3
+// Uses M3 surface containers, scrim, and elevation tokens
+@use 'scrollbar' as *;
+
+@mixin dialog-overlay($align: flex-start, $padding-top: 10vh) {
+  position: fixed;
+  inset: 0;
+  background: var(--mat-sys-scrim);
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: $align;
+  justify-content: center;
+  padding-top: $padding-top;
+  animation: fadeIn var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+}
+
+@mixin dialog-panel($width: 600px, $min-height: auto, $max-height: 80vh) {
+  background: var(--mat-sys-surface-container-high);
+  border-radius: var(--mat-sys-corner-extra-large);
+  width: 100%;
+  max-width: $width;
+  min-height: $min-height;
+  max-height: $max-height;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--mat-sys-level3);
+  animation: slideDown var(--mat-sys-motion-duration-medium2) var(--mat-sys-motion-easing-emphasized-decelerate);
+}
+
+@mixin dialog-header($padding: 24px) {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: $padding;
+  padding-bottom: 16px;
+}
+
+@mixin dialog-content($padding: 24px) {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 $padding 24px;
+  color: var(--mat-sys-on-surface-variant);
+  @include custom-scrollbar;
+}
+
+@mixin dialog-actions($padding: 24px) {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: $padding;
+  padding-top: 0;
+}

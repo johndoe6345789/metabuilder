@@ -10,7 +10,7 @@
  */
 
 import { getNodeExecutorRegistry, NodeExecutorRegistry } from './node-executor-registry';
-import { PluginRegistry, PluginMetadata } from './plugin-registry';
+import { PluginMetadata } from './plugin-registry';
 import { INodeExecutor, WorkflowNode, WorkflowContext, ExecutionState, NodeResult, ValidationResult } from '../types';
 
 /**
@@ -26,13 +26,15 @@ import { INodeExecutor, WorkflowNode, WorkflowContext, ExecutionState, NodeResul
  * - timeout: number (default: 30000)
  */
 export class PlaywrightExecutor implements INodeExecutor {
+  nodeType = 'testing.playwright';
+
   /**
    * Execute Playwright tests
    */
   async execute(
     node: WorkflowNode,
-    context: WorkflowContext,
-    state: ExecutionState
+    _context: WorkflowContext,
+    _state: ExecutionState
   ): Promise<NodeResult> {
     const startTime = Date.now();
     const { parameters } = node;
@@ -61,7 +63,7 @@ export class PlaywrightExecutor implements INodeExecutor {
       // For now, return a structured result
       const result: NodeResult = {
         status: 'success',
-        data: {
+        output: {
           browser,
           baseUrl,
           testFile,
@@ -153,13 +155,15 @@ export class PlaywrightExecutor implements INodeExecutor {
  * - docs: boolean (default: true)
  */
 export class StorybookExecutor implements INodeExecutor {
+  nodeType = 'documentation.storybook';
+
   /**
    * Execute Storybook command
    */
   async execute(
     node: WorkflowNode,
-    context: WorkflowContext,
-    state: ExecutionState
+    _context: WorkflowContext,
+    _state: ExecutionState
   ): Promise<NodeResult> {
     const startTime = Date.now();
     const { parameters } = node;
@@ -188,7 +192,7 @@ export class StorybookExecutor implements INodeExecutor {
       // For now, return a structured result
       const result: NodeResult = {
         status: 'success',
-        data: {
+        output: {
           command,
           port,
           outputDir,
@@ -197,10 +201,8 @@ export class StorybookExecutor implements INodeExecutor {
           docs,
           duration: Date.now() - startTime,
           message: `Storybook ${command} completed successfully`,
-          output: {
-            files: command === 'build' ? ['index.html', 'static/main.js'] : [],
-            warnings: []
-          }
+          files: command === 'build' ? ['index.html', 'static/main.js'] : [],
+          warnings: []
         },
         timestamp: Date.now(),
         duration: Date.now() - startTime
@@ -279,9 +281,7 @@ export const PLUGIN_REGISTRY_CONFIG = {
       experimental: false,
       requiredFields: ['browser'],
       supportedVersions: ['1.x', '2.x'],
-      dependencies: {
-        '@playwright/test': '>=1.40.0'
-      }
+      dependencies: ['@playwright/test']
     } as PluginMetadata
   },
   'documentation.storybook': {
@@ -297,9 +297,7 @@ export const PLUGIN_REGISTRY_CONFIG = {
       experimental: false,
       requiredFields: ['command'],
       supportedVersions: ['7.x', '8.x'],
-      dependencies: {
-        '@storybook/react': '>=7.0.0'
-      }
+      dependencies: ['@storybook/react']
     } as PluginMetadata
   }
 };

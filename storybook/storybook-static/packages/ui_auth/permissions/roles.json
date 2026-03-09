@@ -1,0 +1,67 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "ui_auth",
+  "description": "Authentication UI access permissions",
+  "permissions": [
+    {
+      "id": "auth.gate.access",
+      "name": "Access Auth-Gated Content",
+      "description": "Access content protected by auth gates",
+      "resource": "auth_gate",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 2
+    },
+    {
+      "id": "auth.gate.bypass",
+      "name": "Bypass Auth Gate",
+      "description": "Bypass authentication requirements (admin only)",
+      "resource": "auth_gate",
+      "action": "admin",
+      "scope": "global",
+      "minLevel": 4
+    },
+    {
+      "id": "auth.denied.view",
+      "name": "View Access Denied Page",
+      "description": "View the access denied page",
+      "resource": "access_denied",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 0
+    },
+    {
+      "id": "auth.loader.configure",
+      "name": "Configure Page Loader",
+      "description": "Configure page loader appearance",
+      "resource": "page_loader",
+      "action": "update",
+      "scope": "global",
+      "minLevel": 3
+    }
+  ],
+  "resources": [
+    {
+      "id": "auth_gate",
+      "name": "Auth Gate",
+      "type": "custom",
+      "description": "Authentication gate wrapper",
+      "actions": ["read", "admin"]
+    },
+    {
+      "id": "access_denied",
+      "name": "Access Denied",
+      "type": "component",
+      "description": "Access denied page component",
+      "actions": ["read"]
+    },
+    {
+      "id": "page_loader",
+      "name": "Page Loader",
+      "type": "component",
+      "description": "Page loading component",
+      "actions": ["read", "update"]
+    }
+  ]
+}

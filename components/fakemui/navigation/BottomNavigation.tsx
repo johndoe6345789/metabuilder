@@ -4,10 +4,12 @@ export interface BottomNavigationProps extends Omit<React.HTMLAttributes<HTMLEle
   children?: React.ReactNode
   value?: any
   onChange?: (event: React.SyntheticEvent, value: any) => void
+  /** Test ID for automated testing */
+  testId?: string
 }
 
-export const BottomNavigation: React.FC<BottomNavigationProps> = ({ children, value, onChange, className = '', ...props }) => (
-  <nav className={`bottom-nav ${className}`} {...props}>
+export const BottomNavigation: React.FC<BottomNavigationProps> = ({ children, value, onChange, className = '', testId, ...props }) => (
+  <nav className={`bottom-nav ${className}`} role="navigation" data-testid={testId} {...props}>
     {children}
   </nav>
 )

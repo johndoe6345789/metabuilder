@@ -1,0 +1,167 @@
+// ============================================
+// Theme Variables - Material Design 3 + Legacy Aliases
+// ============================================
+//
+// This file provides legacy CSS variable aliases that map to M3 tokens.
+// The actual M3 tokens are defined in scss/tokens.scss and scss/theme.scss.
+// These aliases ensure backward compatibility with existing code.
+
+:root {
+  // ============================================
+  // Legacy Color Aliases → M3 Tokens
+  // ============================================
+
+  // Primary colors
+  --color-primary: var(--mat-sys-primary);
+  --color-primary-dark: var(--mat-sys-primary);
+  --color-primary-light: var(--mat-sys-primary-container);
+  --color-primary-alpha: color-mix(in srgb, var(--mat-sys-primary) 20%, transparent);
+  --color-secondary: var(--mat-sys-secondary);
+
+  // Background colors → M3 surface hierarchy
+  --color-bg: var(--mat-sys-surface);
+  --color-bg-paper: var(--mat-sys-surface-container-low);
+  --color-bg-elevated: var(--mat-sys-surface-container);
+  --color-bg-hover: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
+
+  // Text colors → M3 on-surface variants
+  --color-text: var(--mat-sys-on-surface);
+  --color-text-secondary: var(--mat-sys-on-surface-variant);
+  --color-text-disabled: color-mix(in srgb, var(--mat-sys-on-surface) 38%, transparent);
+
+  // Border/divider colors → M3 outline
+  --color-border: var(--mat-sys-outline);
+  --color-divider: var(--mat-sys-outline-variant);
+
+  // ============================================
+  // Extended Semantic Colors (not in M3 spec)
+  // ============================================
+  // M3 only defines error. We extend with success/warning/info.
+  // These follow M3 naming conventions: color, on-color, color-container, on-color-container
+
+  // Success (green)
+  --color-success: #4caf50;
+  --color-on-success: #ffffff;
+  --color-success-container: color-mix(in srgb, #4caf50 12%, var(--mat-sys-surface));
+  --color-on-success-container: #2e7d32;
+
+  // Warning (amber/orange)
+  --color-warning: #ff9800;
+  --color-on-warning: #000000;
+  --color-warning-container: color-mix(in srgb, #ff9800 12%, var(--mat-sys-surface));
+  --color-on-warning-container: #e65100;
+
+  // Info (blue)
+  --color-info: #2196f3;
+  --color-on-info: #ffffff;
+  --color-info-container: color-mix(in srgb, #2196f3 12%, var(--mat-sys-surface));
+  --color-on-info-container: #0d47a1;
+
+  // Search/Find highlight (yellow - universal standard)
+  --color-search-highlight: #ffeb3b;
+  --color-on-search-highlight: #000000;
+  --color-search-highlight-current: #fdd835;
+  --color-search-highlight-ring: #fbc02d;
+
+  // Error (from M3)
+  --color-error: var(--mat-sys-error);
+  --color-on-error: var(--mat-sys-on-error);
+  --color-error-container: var(--mat-sys-error-container);
+  --color-on-error-container: var(--mat-sys-on-error-container);
+
+  // Legacy background aliases
+  --color-success-bg: var(--color-success-container);
+  --color-warning-bg: var(--color-warning-container);
+  --color-error-bg: var(--color-error-container);
+  --color-info-bg: var(--color-info-container);
+
+  // ============================================
+  // Legacy Spacing Aliases (M3 uses 4px grid)
+  // ============================================
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+
+  // ============================================
+  // Legacy Border Radius → M3 Corner Tokens
+  // ============================================
+  --radius-sm: var(--mat-sys-corner-small);
+  --radius-md: var(--mat-sys-corner-medium);
+  --radius-lg: var(--mat-sys-corner-large);
+  --radius-full: var(--mat-sys-corner-full);
+
+  // ============================================
+  // Legacy Shadows → M3 Elevation Levels
+  // ============================================
+  --shadow-sm: var(--mat-sys-level1);
+  --shadow-md: var(--mat-sys-level2);
+  --shadow-lg: var(--mat-sys-level3);
+  --shadow-xl: var(--mat-sys-level4);
+
+  // ============================================
+  // State Layer & Disabled Opacities (M3 spec)
+  // ============================================
+  --state-hover-opacity: 0.08;
+  --state-focus-opacity: 0.12;
+  --state-pressed-opacity: 0.12;
+  --state-dragged-opacity: 0.16;
+  --disabled-container-opacity: 0.12;
+  --disabled-content-opacity: 0.38;
+
+  // ============================================
+  // Legacy Typography → M3 Type Scale
+  // ============================================
+  --font-family: var(--mat-sys-body-large-font);
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, monospace;
+
+  --font-size-xs: var(--mat-sys-label-small-size);
+  --font-size-sm: var(--mat-sys-body-small-size);
+  --font-size-md: var(--mat-sys-body-medium-size);
+  --font-size-lg: var(--mat-sys-body-large-size);
+  --font-size-xl: var(--mat-sys-title-large-size);
+  --font-size-2xl: var(--mat-sys-headline-medium-size);
+
+  // ============================================
+  // Code Block Colors (extended theme)
+  // ============================================
+  --color-code-bg: var(--mat-sys-surface-container-highest);
+  --color-code-text: var(--mat-sys-on-surface);
+  --color-code-keyword: #569cd6;
+  --color-code-string: #ce9178;
+  --color-code-comment: #6a9955;
+  --color-code-function: #dcdcaa;
+
+  // ============================================
+  // Legacy Transitions → M3 Motion Tokens
+  // ============================================
+  --transition-fast: var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+  --transition-normal: var(--mat-sys-motion-duration-medium2) var(--mat-sys-motion-easing-standard);
+  --transition-slow: var(--mat-sys-motion-duration-long2) var(--mat-sys-motion-easing-standard);
+
+  // ============================================
+  // Z-index Layers (M3-aligned stacking order)
+  // ============================================
+  // Local stacking (within components)
+  --z-local: 1;
+  --z-local-elevated: 10;
+
+  // Global stacking (overlays)
+  --z-dropdown: 1000;
+  --z-sticky: 1100;
+  --z-drawer: 1200;
+  --z-modal: 1300;
+  --z-snackbar: 1400;
+  --z-tooltip: 1500;
+  --z-overlay-max: 9999;
+}
+
+// ============================================
+// Theme variant overrides are now handled by M3
+// theme.scss generates --mat-sys-* tokens which
+// automatically cascade to these legacy aliases.
+//
+// For custom themes, override --mat-sys-* tokens
+// rather than these legacy variables.
+// ============================================

@@ -1,0 +1,16 @@
+{
+  "id": "output-gear",
+  "name": "Output Gear",
+  "partNumber": "TRA-2074",
+  "material": "brass",
+  "quantity": 1,
+  "weight": 6.2,
+  "weightUnit": "g",
+  "baseY": 105,
+  "description": "Brass output gear with 25T spline",
+  "geometry": [
+    { "type": "gearRing", "teeth": 20, "outerRadius": 18, "toothHeight": 4 },
+    { "type": "cylinder", "rx": 16, "ry": 5, "height": 15 },
+    { "type": "ellipse", "rx": 6, "ry": 2, "fill": "#806020" }
+  ]
+}

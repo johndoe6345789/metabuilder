@@ -7,8 +7,8 @@
 
 #include "dbal/types.hpp"
 #include "dbal/errors.hpp"
-#include "../store/in_memory_store.hpp"
-#include "update_package.hpp"
+#include "../../../store/in_memory_store.hpp"
+#include "../crud/update_package.hpp"
 
 namespace dbal {
 namespace entities {

@@ -1,0 +1,10 @@
+{
+  "id": "heading-root",
+  "type": "h2",
+  "props": {
+    "className": "section-heading"
+  },
+  "bindings": {
+    "children": "children"
+  }
+}

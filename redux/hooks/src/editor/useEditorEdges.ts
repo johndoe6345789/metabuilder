@@ -12,7 +12,7 @@ import {
   removeEdgeFromSelection,
   clearSelection,
   setSelection
-} from '@metabuilder/redux-slices'/editorSlice';
+} from '@metabuilder/redux-slices/editorSlice';
 
 export interface UseEditorEdgesReturn {
   selectedEdges: Set<string>;

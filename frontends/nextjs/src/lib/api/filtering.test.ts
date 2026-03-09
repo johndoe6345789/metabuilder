@@ -6,9 +6,9 @@ import { describe, it, expect } from 'vitest'
 import {
   parseFilterString,
   parseFilterObject,
-  buildPrismaWhere,
+  buildQueryWhere,
   parseSortString,
-  buildPrismaOrderBy,
+  buildQueryOrderBy,
   isValidFieldName,
   validateFilters,
   validateSort,
@@ -74,7 +74,7 @@ describe('filtering and sorting utilities', () => {
     })
   })
 
-  describe('buildPrismaWhere', () => {
+  describe('buildQueryWhere', () => {
     it.each([
       {
         input: [{ field: 'name', operator: 'eq' as const, value: 'John' }],
@@ -137,7 +137,7 @@ describe('filtering and sorting utilities', () => {
         description: 'is not null',
       },
     ])('should build where clause for $description', ({ input, expected }) => {
-      expect(buildPrismaWhere(input)).toEqual(expected)
+      expect(buildQueryWhere(input)).toEqual(expected)
     })
 
     it('should build where clause with multiple conditions', () => {
@@ -147,7 +147,7 @@ describe('filtering and sorting utilities', () => {
         { field: 'active', operator: 'eq' as const, value: true },
       ]
 
-      const result = buildPrismaWhere(conditions)
+      const result = buildQueryWhere(conditions)
 
       expect(result).toEqual({
         name: 'John',
@@ -168,7 +168,7 @@ describe('filtering and sorting utilities', () => {
     })
   })
 
-  describe('buildPrismaOrderBy', () => {
+  describe('buildQueryOrderBy', () => {
     it.each([
       {
         input: [{ field: 'name', direction: 'asc' as const }],
@@ -189,7 +189,7 @@ describe('filtering and sorting utilities', () => {
         description: 'multiple fields',
       },
     ])('should build orderBy for $description', ({ input, expected }) => {
-      expect(buildPrismaOrderBy(input)).toEqual(expected)
+      expect(buildQueryOrderBy(input)).toEqual(expected)
     })
   })
 

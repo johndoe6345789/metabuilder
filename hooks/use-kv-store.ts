@@ -1,12 +1,9 @@
-// Legacy hook - KV operations are available via getDBALClient()
-
-import { getDBALClient } from '@/dbal'
-
 /**
- * Hook for KV store access via DBAL client
+ * Legacy compatibility re-export for useKVStore.
+ * The actual implementation is in ./src/useKVStore.ts and uses
+ * the C++ DBAL REST API via fetch() instead of the TypeScript client.
+ *
+ * @deprecated Import from './src/useKVStore' or '@metabuilder/hooks' instead.
  */
-export function useKVStore(tenantId: string = 'default', userId: string = 'system') {
-  return {
-    getClient: getDBALClient,
-  }
-}
+export { useKVStore } from './src/useKVStore'
+export type { UseKVStoreReturn } from './src/useKVStore'

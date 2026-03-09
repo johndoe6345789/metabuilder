@@ -5,7 +5,7 @@
  * Integrates with the Python Twisted-based smtprelay project.
  */
 
-import { execSync, spawn } from 'child_process';
+import { spawn } from 'child_process';
 import * as path from 'path';
 import * as net from 'net';
 

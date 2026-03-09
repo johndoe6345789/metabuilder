@@ -1,87 +1,97 @@
 {
   "name": "@metabuilder/components",
   "version": "1.0.0",
+  "type": "module",
   "description": "Shared React components for MetaBuilder projects",
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "main": "./index.tsx",
+  "types": "./index.tsx",
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js",
+      "import": "./index.tsx",
       "types": "./dist/index.d.ts"
     },
     "./vanilla": {
-      "import": "./dist/vanilla/index.mjs",
-      "require": "./dist/vanilla/index.js",
-      "types": "./dist/vanilla/index.d.ts"
+      "import": "./vanilla/index.ts",
+      "types": "./vanilla/index.ts"
     },
     "./vanilla/loading": {
-      "import": "./dist/vanilla/loading/index.mjs",
-      "require": "./dist/vanilla/loading/index.js",
-      "types": "./dist/vanilla/loading/index.d.ts"
+      "import": "./vanilla/loading/index.tsx",
+      "types": "./vanilla/loading/index.tsx"
     },
     "./vanilla/error": {
-      "import": "./dist/vanilla/error/index.mjs",
-      "require": "./dist/vanilla/error/index.js",
-      "types": "./dist/vanilla/error/index.d.ts"
+      "import": "./vanilla/error/index.tsx",
+      "types": "./vanilla/error/index.tsx"
     },
     "./vanilla/empty-state": {
-      "import": "./dist/vanilla/empty-state/index.mjs",
-      "require": "./dist/vanilla/empty-state/index.js",
-      "types": "./dist/vanilla/empty-state/index.d.ts"
+      "import": "./vanilla/empty-state/index.tsx",
+      "types": "./vanilla/empty-state/index.tsx"
     },
     "./vanilla/skeleton": {
-      "import": "./dist/vanilla/skeleton/index.mjs",
-      "require": "./dist/vanilla/skeleton/index.js",
-      "types": "./dist/vanilla/skeleton/index.d.ts"
+      "import": "./vanilla/skeleton/index.tsx",
+      "types": "./vanilla/skeleton/index.tsx"
     },
     "./radix": {
-      "import": "./dist/radix/index.mjs",
-      "require": "./dist/radix/index.js",
-      "types": "./dist/radix/index.d.ts"
+      "import": "./radix/index.ts",
+      "types": "./radix/index.ts"
     },
     "./fakemui": {
-      "import": "./dist/fakemui/index.mjs",
-      "require": "./dist/fakemui/index.js",
-      "types": "./dist/fakemui/index.d.ts"
+      "import": "./fakemui/index.ts",
+      "types": "./fakemui/index.ts"
     },
     "./loading": {
-      "import": "./dist/vanilla/loading/index.mjs",
-      "require": "./dist/vanilla/loading/index.js",
-      "types": "./dist/vanilla/loading/index.d.ts"
+      "import": "./vanilla/loading/index.tsx",
+      "types": "./vanilla/loading/index.tsx"
     },
     "./error": {
-      "import": "./dist/vanilla/error/index.mjs",
-      "require": "./dist/vanilla/error/index.js",
-      "types": "./dist/vanilla/error/index.d.ts"
+      "import": "./vanilla/error/index.tsx",
+      "types": "./vanilla/error/index.tsx"
     },
     "./empty-state": {
-      "import": "./dist/vanilla/empty-state/index.mjs",
-      "require": "./dist/vanilla/empty-state/index.js",
-      "types": "./dist/vanilla/empty-state/index.d.ts"
+      "import": "./vanilla/empty-state/index.tsx",
+      "types": "./vanilla/empty-state/index.tsx"
     },
     "./skeleton": {
-      "import": "./dist/vanilla/skeleton/index.mjs",
-      "require": "./dist/vanilla/skeleton/index.js",
-      "types": "./dist/vanilla/skeleton/index.d.ts"
+      "import": "./vanilla/skeleton/index.tsx",
+      "types": "./vanilla/skeleton/index.tsx"
     },
     "./access-denied": {
-      "import": "./dist/vanilla/access-denied/index.mjs",
-      "require": "./dist/vanilla/access-denied/index.js",
-      "types": "./dist/vanilla/access-denied/index.d.ts"
+      "import": "./vanilla/access-denied/index.tsx",
+      "types": "./vanilla/access-denied/index.tsx"
     },
     "./vanilla/access-denied": {
-      "import": "./dist/vanilla/access-denied/index.mjs",
-      "require": "./dist/vanilla/access-denied/index.js",
-      "types": "./dist/vanilla/access-denied/index.d.ts"
+      "import": "./vanilla/access-denied/index.tsx",
+      "types": "./vanilla/access-denied/index.tsx"
+    },
+    "./fakemui/database": {
+      "import": "./fakemui/database/index.ts",
+      "types": "./fakemui/database/index.ts"
+    },
+    "./cards": {
+      "import": "./cards/index.ts",
+      "types": "./cards/index.ts"
+    },
+    "./layout": {
+      "import": "./layout/index.ts",
+      "types": "./layout/index.ts"
+    },
+    "./navigation": {
+      "import": "./navigation/index.ts",
+      "types": "./navigation/index.ts"
+    },
+    "./forms": {
+      "import": "./forms/index.ts",
+      "types": "./forms/index.ts"
     }
   },
   "files": [
-    "dist",
+    "cards",
+    "forms",
+    "layout",
+    "navigation",
     "vanilla",
     "radix",
-    "fakemui"
+    "fakemui",
+    "database"
   ],
   "scripts": {
     "build": "tsup",
@@ -90,13 +100,19 @@
     "lint": "eslint . --ext .ts,.tsx"
   },
   "peerDependencies": {
+    "framer-motion": "^11.0.0 || ^12.0.0",
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0"
   },
+  "peerDependenciesMeta": {
+    "framer-motion": {
+      "optional": true
+    }
+  },
   "devDependencies": {
-    "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.2.0",
-    "tsup": "^8.0.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "tsup": "^8.5.1",
     "typescript": "^5.9.3"
   },
   "keywords": [
@@ -106,6 +122,8 @@
     "error-boundary",
     "empty-state",
     "skeleton",
+    "database",
+    "admin",
     "metabuilder"
   ],
   "author": "MetaBuilder",

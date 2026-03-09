@@ -1,0 +1,497 @@
+// =============================================================================
+// Form Inputs – BEM components using MD3 design tokens
+// Covers: Input, Select, Textarea, Checkbox, Switch, Slider, RangeSlider,
+//         FilterInput, PasswordInput, FormField
+// =============================================================================
+
+// ---------------------------------------------------------------------------
+// Shared helpers
+// ---------------------------------------------------------------------------
+
+// Applies to every editable field (input, select, textarea)
+%form-field-base {
+  display: flex;
+  width: 100%;
+  background: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  border: 1px solid var(--mat-sys-outline);
+  border-radius: 4px;
+  font-size: 0.875rem; // 14px
+  font-family: inherit;
+  line-height: 1.5;
+  transition: border-color 150ms ease, outline 150ms ease, opacity 150ms ease;
+  outline: none;
+
+  &::placeholder {
+    color: var(--mat-sys-on-surface);
+    opacity: 0.42; // MD3 placeholder token approximation
+  }
+
+  &:focus {
+    outline: 2px solid var(--mat-sys-primary);
+    outline-offset: 2px;
+    border-color: var(--mat-sys-primary);
+  }
+
+  &:disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Wrapper / label shared across form components
+// ---------------------------------------------------------------------------
+
+.form-wrapper {
+  width: 100%;
+
+  &__label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 0.375rem; // ~6px (mb-1.5)
+    color: var(--mat-sys-on-surface);
+  }
+
+  &__container {
+    position: relative;
+  }
+
+  &__helper {
+    font-size: 0.75rem; // 12px
+    margin-top: 0.375rem;
+    color: var(--mat-sys-on-surface);
+    opacity: 0.7;
+
+    &--error {
+      color: var(--mat-sys-error);
+      opacity: 1;
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Icon decorators (left / right icons inside input container)
+// ---------------------------------------------------------------------------
+
+.form-input-icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--mat-sys-on-surface);
+  opacity: 0.6;
+  pointer-events: none;
+  transition: color 150ms ease;
+
+  &--left {
+    left: 0.75rem; // 12px
+  }
+
+  &--right {
+    right: 0.75rem;
+  }
+
+  &--focused {
+    color: var(--mat-sys-primary);
+    opacity: 1;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// .form-input  (text / number / email / date … <input> elements)
+// ---------------------------------------------------------------------------
+
+.form-input {
+  @extend %form-field-base;
+  height: 2.5rem; // 40px (h-10)
+  padding: 0 0.75rem; // px-3
+
+  &--has-left-icon {
+    padding-left: 2.5rem; // pl-10
+  }
+
+  &--has-right-icon {
+    padding-right: 2.5rem; // pr-10
+  }
+
+  &--error {
+    border-color: var(--mat-sys-error);
+
+    &:focus {
+      outline-color: var(--mat-sys-error);
+      border-color: var(--mat-sys-error);
+    }
+  }
+
+  &--disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// .form-select  (<select> element)
+// ---------------------------------------------------------------------------
+
+.form-select {
+  @extend %form-field-base;
+  height: 2.5rem; // 40px
+  padding: 0 0.75rem;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  padding-right: 2.25rem;
+
+  &--error {
+    border-color: var(--mat-sys-error);
+
+    &:focus {
+      outline-color: var(--mat-sys-error);
+      border-color: var(--mat-sys-error);
+    }
+  }
+
+  &--disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// .form-textarea  (<textarea> element)
+// ---------------------------------------------------------------------------
+
+.form-textarea {
+  @extend %form-field-base;
+  height: auto;
+  min-height: 5rem; // 80px – reasonable default
+  padding: 0.5rem 0.75rem; // py-2 px-3
+  resize: vertical;
+
+  &--error {
+    border-color: var(--mat-sys-error);
+
+    &:focus {
+      outline-color: var(--mat-sys-error);
+      border-color: var(--mat-sys-error);
+    }
+  }
+
+  &--disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+    pointer-events: none;
+    resize: none;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// .form-checkbox  (custom checkbox built from <button role="checkbox">)
+// ---------------------------------------------------------------------------
+
+.form-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; // gap-2
+  cursor: pointer;
+
+  &--disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  &__button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--mat-sys-outline);
+    border-radius: 3px;
+    background: var(--mat-sys-surface);
+    transition: background-color 150ms ease, border-color 150ms ease;
+    flex-shrink: 0;
+
+    &:focus-visible {
+      outline: 2px solid var(--mat-sys-primary);
+      outline-offset: 2px;
+    }
+
+    // Size variants
+    &--sm {
+      width: 1rem;   // 16px
+      height: 1rem;
+    }
+
+    &--md {
+      width: 1.25rem; // 20px
+      height: 1.25rem;
+    }
+
+    &--lg {
+      width: 1.5rem;  // 24px
+      height: 1.5rem;
+    }
+
+    // Checked / indeterminate state
+    &--checked,
+    &--indeterminate {
+      background: var(--mat-sys-primary);
+      border-color: var(--mat-sys-primary);
+      color: var(--mat-sys-on-primary);
+    }
+
+    // Unchecked hover
+    &--unchecked {
+      &:hover {
+        border-color: var(--mat-sys-outline-variant);
+      }
+    }
+  }
+
+  &__label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    user-select: none;
+    color: var(--mat-sys-on-surface);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// .form-switch  (wraps the Radix/Shadcn <Switch> primitive)
+// ---------------------------------------------------------------------------
+
+.form-switch {
+  // Outer wrapper – width driven by the Switch primitive itself
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  &__label {
+    font-size: 0.875rem;
+    color: var(--mat-sys-on-surface);
+  }
+
+  // Override Radix token colours with MD3 equivalents when rendered inside
+  // this BEM block – keeps the primitive functional while aligning visuals.
+  [data-state="checked"] {
+    background-color: var(--mat-sys-primary);
+  }
+
+  [data-state="unchecked"] {
+    background-color: var(--mat-sys-outline-variant);
+  }
+
+  &--disabled {
+    opacity: 0.38;
+    pointer-events: none;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// .form-slider  (single-thumb slider)
+// ---------------------------------------------------------------------------
+
+.form-slider {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--mat-sys-on-surface);
+  }
+
+  &__value {
+    font-size: 0.875rem;
+    color: var(--mat-sys-on-surface);
+    opacity: 0.7;
+  }
+
+  // Track & thumb overrides for Radix Slider via MD3 vars
+  [role="slider"] {
+    border-color: var(--mat-sys-primary);
+    background: var(--mat-sys-primary);
+
+    &:focus-visible {
+      outline: 2px solid var(--mat-sys-primary);
+      outline-offset: 2px;
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// .form-range-slider  (two-thumb range slider)
+// ---------------------------------------------------------------------------
+
+.form-range-slider {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem; // space-y-2
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--mat-sys-on-surface);
+  }
+
+  &__value {
+    font-size: 0.875rem;
+    color: var(--mat-sys-on-surface);
+    opacity: 0.7;
+  }
+
+  [role="slider"] {
+    border-color: var(--mat-sys-primary);
+    background: var(--mat-sys-primary);
+
+    &:focus-visible {
+      outline: 2px solid var(--mat-sys-primary);
+      outline-offset: 2px;
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// .form-filter-input  (search/filter input with magnifying glass + clear btn)
+// ---------------------------------------------------------------------------
+
+.form-filter-input {
+  position: relative;
+  width: 100%;
+
+  &__icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--mat-sys-on-surface);
+    opacity: 0.5;
+    pointer-events: none;
+    transition: color 150ms ease, opacity 150ms ease;
+
+    &--focused {
+      color: var(--mat-sys-primary);
+      opacity: 1;
+    }
+  }
+
+  &__field {
+    // Inherits .form-input behaviour; padding adjusted for icons
+    padding-left: 2.25rem;  // pr-9 ≈ 36px
+    padding-right: 2.25rem;
+  }
+
+  &__clear {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: var(--mat-sys-on-surface);
+    opacity: 0.5;
+    transition: color 150ms ease, opacity 150ms ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      opacity: 1;
+      color: var(--mat-sys-on-surface);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--mat-sys-primary);
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// .form-password-input  (wraps Input; the toggle button is the rightIcon slot)
+// ---------------------------------------------------------------------------
+
+.form-password-input {
+  // No extra layout needed – the component delegates to .form-input via Input.
+  // This block exists to style the visibility-toggle button rendered as rightIcon.
+
+  &__toggle {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: var(--mat-sys-on-surface);
+    opacity: 0.6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 150ms ease, opacity 150ms ease;
+
+    &:hover {
+      opacity: 1;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--mat-sys-primary);
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// .form-field  (generic form field container / slot wrapper)
+// ---------------------------------------------------------------------------
+
+.form-field {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+
+  &__label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--mat-sys-on-surface);
+  }
+
+  &__content {
+    // Slot / children area – no extra styles needed by default
+  }
+
+  &__error {
+    font-size: 0.75rem;
+    color: var(--mat-sys-error);
+    margin-top: 0.25rem;
+  }
+
+  &__helper {
+    font-size: 0.75rem;
+    color: var(--mat-sys-on-surface);
+    opacity: 0.7;
+    margin-top: 0.25rem;
+  }
+}

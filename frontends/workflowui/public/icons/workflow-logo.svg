@@ -1,0 +1,43 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="512" height="512" rx="96" fill="#1a1a2e"/>
+
+  <!-- Outer glow ring -->
+  <circle cx="256" cy="256" r="180" stroke="url(#gradient1)" stroke-width="8" fill="none" opacity="0.3"/>
+
+  <!-- Node circles - workflow nodes -->
+  <circle cx="96" cy="256" r="48" fill="#6366f1"/>
+  <circle cx="256" cy="96" r="48" fill="#8b5cf6"/>
+  <circle cx="256" cy="416" r="48" fill="#8b5cf6"/>
+  <circle cx="416" cy="256" r="48" fill="#06b6d4"/>
+
+  <!-- Connection lines -->
+  <path d="M144 256h64" stroke="#64748b" stroke-width="8" stroke-linecap="round"/>
+  <path d="M304 256h64" stroke="#64748b" stroke-width="8" stroke-linecap="round"/>
+  <path d="M256 144v64" stroke="#64748b" stroke-width="8" stroke-linecap="round"/>
+  <path d="M256 304v64" stroke="#64748b" stroke-width="8" stroke-linecap="round"/>
+
+  <!-- Center hub - larger -->
+  <circle cx="256" cy="256" r="56" fill="url(#gradient2)"/>
+  <circle cx="256" cy="256" r="40" fill="#f8fafc"/>
+
+  <!-- Inner play/flow arrow -->
+  <path d="M244 236l24 20-24 20V236z" fill="#1a1a2e"/>
+
+  <!-- Node highlights -->
+  <circle cx="96" cy="256" r="20" fill="#818cf8" opacity="0.6"/>
+  <circle cx="256" cy="96" r="20" fill="#a78bfa" opacity="0.6"/>
+  <circle cx="256" cy="416" r="20" fill="#a78bfa" opacity="0.6"/>
+  <circle cx="416" cy="256" r="20" fill="#22d3ee" opacity="0.6"/>
+
+  <defs>
+    <linearGradient id="gradient1" x1="76" y1="76" x2="436" y2="436" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6366f1"/>
+      <stop offset="1" stop-color="#06b6d4"/>
+    </linearGradient>
+    <linearGradient id="gradient2" x1="200" y1="200" x2="312" y2="312" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6366f1"/>
+      <stop offset="1" stop-color="#8b5cf6"/>
+    </linearGradient>
+  </defs>
+</svg>

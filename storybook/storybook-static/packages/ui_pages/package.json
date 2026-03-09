@@ -1,0 +1,81 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "ui_pages",
+  "name": "UI Pages Bundle",
+  "version": "2.0.0",
+  "description": "Meta-package that bundles all UI page packages for multi-level navigation",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "ui",
+  "icon": "static_content/icon.svg",
+  "minLevel": 1,
+  "primary": false,
+  "dependencies": {
+    "ui_permissions": "*",
+    "ui_header": "*",
+    "ui_footer": "*",
+    "ui_intro": "*",
+    "ui_login": "*",
+    "ui_home": "*",
+    "ui_level2": "*",
+    "ui_level3": "*",
+    "ui_level4": "*",
+    "ui_level5": "*",
+    "ui_level6": "*"
+  },
+  "devDependencies": {
+    "testing": "*"
+  },
+  "exports": {
+    "components": [
+      "PageLayout",
+      "NavigationBar",
+      "AppFooter"
+    ],
+    "scripts": [
+      "pages",
+      "types"
+    ],
+    "pages": [
+      "level1",
+      "login"
+    ]
+  },
+  "tests": {
+    "suites": [
+      "tests/metadata.test.json"
+    ]
+  },
+  "files": {
+    "directories": [
+      "components",
+      "permissions",
+      "static_content",
+      "storybook",
+      "styles",
+      "tests"
+    ],
+    "byType": {
+      "components": [
+        "components/ui.json"
+      ],
+      "tests": [
+        "tests/metadata.params.json",
+        "tests/metadata.test.json"
+      ],
+      "config": [
+        "package.json",
+        "storybook/stories.json"
+      ],
+      "permissions": [
+        "permissions/roles.json"
+      ],
+      "styles": [
+        "styles/tokens.json"
+      ],
+      "other": [
+        "static_content/icon.svg"
+      ]
+    }
+  }
+}

@@ -1,0 +1,138 @@
+@use '@angular/cdk';
+
+@use '../core/focus-indicators/private';
+@use '../core/tokens/token-utils';
+@use './m3-datepicker';
+
+$calendar-padding: 8px !default;
+$calendar-header-divider-width: 1px !default;
+$calendar-controls-vertical-padding: 5%;
+// We use the same padding as the month / year label, but subtract 16px since there is padding
+// between the edge of the button and the text. This ensures that the button text lines up with
+// the month / year label text.
+$calendar-controls-side-margin: calc(33% / 7 - 16px);
+
+$calendar-arrow-size: 5px !default;
+$calendar-arrow-disabled-opacity: 0.5 !default;
+
+$fallbacks: m3-datepicker.get-tokens();
+
+.mat-calendar {
+  display: block;
+
+  // Prevents layout issues if the line height bleeds in from the body (see #29756).
+  line-height: normal;
+
+  font-family: token-utils.slot(datepicker-calendar-text-font, $fallbacks);
+  font-size: token-utils.slot(datepicker-calendar-text-size, $fallbacks);
+}
+
+.mat-calendar-header {
+  padding: $calendar-padding $calendar-padding 0 $calendar-padding;
+}
+
+.mat-calendar-content {
+  padding: 0 $calendar-padding $calendar-padding $calendar-padding;
+  outline: none;
+}
+
+.mat-calendar-controls {
+  display: flex;
+  align-items: center;
+  margin: $calendar-controls-vertical-padding $calendar-controls-side-margin;
+}
+
+.mat-calendar-spacer {
+  flex: 1 1 auto;
+}
+
+.mat-calendar-period-button {
+  min-width: 0;
+  margin: 0 8px;
+
+  font-size: token-utils.slot(datepicker-calendar-period-button-text-size, $fallbacks);
+  font-weight: token-utils.slot(datepicker-calendar-period-button-text-weight, $fallbacks);
+  --mat-button-text-label-text-color: #{
+      token-utils.slot(datepicker-calendar-period-button-text-color, $fallbacks)};
+}
+
+.mat-calendar-arrow {
+  display: inline-block;
+  width: $calendar-arrow-size * 2;
+  height: $calendar-arrow-size;
+  margin: 0 0 0 $calendar-arrow-size;
+  vertical-align: middle;
+
+  fill: token-utils.slot(datepicker-calendar-period-button-icon-color, $fallbacks);
+
+  &.mat-calendar-invert {
+    transform: rotate(180deg);
+  }
+
+  [dir='rtl'] & {
+    margin: 0 $calendar-arrow-size 0 0;
+  }
+
+  @include cdk.high-contrast {
+    // Setting the fill to `currentColor` doesn't work on Chromium browsers.
+    fill: CanvasText;
+  }
+}
+
+.mat-calendar-previous-button,
+.mat-calendar-next-button {
+  // Needs need a bit more specificity to avoid being overwritten by the .mat-icon-button.
+  .mat-datepicker-content &:not(.mat-mdc-button-disabled) {
+    color: token-utils.slot(datepicker-calendar-navigation-button-icon-color, $fallbacks);
+  }
+
+  [dir='rtl'] & {
+    transform: rotate(180deg);
+  }
+}
+
+.mat-calendar-table {
+  border-spacing: 0;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.mat-calendar-table-header th {
+  text-align: center;
+  padding: 0 0 $calendar-padding 0;
+  color: token-utils.slot(datepicker-calendar-header-text-color, $fallbacks);
+  font-size: token-utils.slot(datepicker-calendar-header-text-size, $fallbacks);
+  font-weight: token-utils.slot(datepicker-calendar-header-text-weight, $fallbacks);
+}
+
+.mat-calendar-table-header-divider {
+  position: relative;
+  height: $calendar-header-divider-width;
+
+  // We use an absolutely positioned pseudo-element as the divider line for the table header so we
+  // can extend it all the way to the edge of the calendar.
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -$calendar-padding;
+    right: -$calendar-padding;
+    height: $calendar-header-divider-width;
+    background: token-utils.slot(datepicker-calendar-header-divider-color, $fallbacks);
+  }
+}
+
+// For the calendar element, default inset/offset values are necessary to ensure that
+// the focus indicator is sufficiently contrastive and renders appropriately.
+.mat-calendar-body-cell-content::before {
+  $border-width: var(--mat-focus-indicator-border-width, #{private.$default-border-width});
+  $offset: calc(#{$border-width} + 3px);
+  margin: calc(#{$offset} * -1);
+}
+
+// For calendar cells, render the focus indicator when the parent cell is
+// focused.
+.mat-calendar-body-cell:focus-visible .mat-focus-indicator::before {
+  content: '';
+}
+

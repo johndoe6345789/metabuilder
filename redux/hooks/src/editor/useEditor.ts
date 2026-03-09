@@ -12,7 +12,7 @@ import {
   hideContextMenu,
   setCanvasSize,
   resetEditor
-} from '@metabuilder/redux-slices'/editorSlice';
+} from '@metabuilder/redux-slices/editorSlice';
 import { useEditorZoom, UseEditorZoomReturn } from './useEditorZoom';
 import { useEditorPan, UseEditorPanReturn } from './useEditorPan';
 import { useEditorNodes, UseEditorNodesReturn } from './useEditorNodes';

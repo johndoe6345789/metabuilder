@@ -1,0 +1,37 @@
+- generic [ref=e3]:
+  - banner "Storybook" [ref=e7]:
+    - heading "Storybook" [level=1] [ref=e8]
+    - img
+    - generic [ref=e12]:
+      - generic [ref=e14]:
+        - link "Skip to content" [ref=e15] [cursor=pointer]:
+          - /url: "#storybook-preview-wrapper"
+        - link "Storybook" [ref=e17] [cursor=pointer]:
+          - /url: ./
+          - img "Storybook" [ref=e18]
+        - switch "Settings" [ref=e23] [cursor=pointer]:
+          - img [ref=e24]
+      - generic [ref=e27]: Search for components
+      - search [ref=e28]:
+        - combobox "Search for components" [ref=e29]:
+          - generic:
+            - img
+          - searchbox "Search for components" [ref=e30]
+          - code:
+            - generic: ⌘
+            - text: K
+      - navigation "Stories" [ref=e32]:
+        - heading "Stories" [level=2] [ref=e33]
+  - generic [ref=e54]:
+    - region "Toolbar" [ref=e55]:
+      - heading "Toolbar" [level=2] [ref=e56]
+      - toolbar [ref=e57]
+    - main "Main preview area" [ref=e58]:
+      - heading "Main preview area" [level=2] [ref=e59]
+      - generic [ref=e60]:
+        - progressbar "Content is loading..." [ref=e62]
+        - iframe [ref=e67]:
+          - generic [active] [ref=f1e1]:
+            - heading "404 Not Found" [level=1] [ref=f1e3]
+            - separator [ref=f1e4]
+            - generic [ref=f1e5]: nginx

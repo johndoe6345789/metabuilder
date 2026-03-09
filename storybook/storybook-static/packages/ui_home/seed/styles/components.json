@@ -1,0 +1,91 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-styles.schema.json",
+  "schemaVersion": "2.0.0",
+  "description": "Component style definitions for ui_home package",
+  "components": {
+    "Button": {
+      "base": {
+        "display": "inline-flex",
+        "padding": "12px",
+        "backgroundColor": "#2563eb",
+        "color": "#ffffff",
+        "borderRadius": "6px",
+        "borderWidth": "0",
+        "borderStyle": "solid",
+        "cursor": "pointer",
+        "fontSize": "14px",
+        "fontWeight": "600",
+        "transition": "all 0.2s ease"
+      },
+      "variants": {
+        "size": {
+          "sm": {
+            "padding": "8px",
+            "fontSize": "12px"
+          },
+          "lg": {
+            "padding": "16px",
+            "fontSize": "16px"
+          }
+        },
+        "color": {
+          "primary": {
+            "backgroundColor": "#2563eb",
+            "color": "#ffffff"
+          },
+          "secondary": {
+            "backgroundColor": "#64748b",
+            "color": "#ffffff"
+          }
+        }
+      },
+      "states": {
+        "hover": {
+          "opacity": 0.9
+        },
+        "active": {
+          "opacity": 0.8
+        },
+        "disabled": {
+          "opacity": 0.5,
+          "cursor": "not-allowed"
+        }
+      }
+    },
+    "Card": {
+      "base": {
+        "display": "flex",
+        "flexDirection": "column",
+        "padding": "24px",
+        "backgroundColor": "#ffffff",
+        "borderRadius": "8px",
+        "borderWidth": "1px",
+        "borderColor": "#e5e7eb",
+        "borderStyle": "solid"
+      }
+    },
+    "Badge": {
+      "base": {
+        "display": "inline-flex",
+        "padding": "6px",
+        "backgroundColor": "#e5e7eb",
+        "color": "#1f2937",
+        "borderRadius": "6px",
+        "fontSize": "12px",
+        "fontWeight": "500"
+      },
+      "variants": {
+        "color": {
+          "primary": {
+            "backgroundColor": "#dbeafe",
+            "color": "#1e40af"
+          },
+          "error": {
+            "backgroundColor": "#fee2e2",
+            "color": "#991b1b"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "id": "spider-gears",
+  "name": "Spider Gears",
+  "partNumber": "TRA-5382",
+  "material": "steel",
+  "quantity": 4,
+  "weight": 8.0,
+  "weightUnit": "g",
+  "baseY": 175,
+  "description": "Hardened steel spider gear set with cross pin",
+  "geometry": [
+    { "type": "cylinder", "rx": 18, "ry": 6, "height": 15, "offsetX": -30 },
+    { "type": "circle", "r": 5, "offsetX": -30, "fill": "#3a3a3a" },
+    { "type": "cylinder", "rx": 18, "ry": 6, "height": 15, "offsetX": 30 },
+    { "type": "circle", "r": 5, "offsetX": 30, "fill": "#3a3a3a" },
+    { "type": "rect", "width": 16, "height": 25, "rx": 2, "offsetY": -5 }
+  ]
+}

@@ -1,0 +1,249 @@
+{
+  "id": "project-manager-dropdown",
+  "type": "div",
+  "props": {
+    "style": { "position": "relative" }
+  },
+  "children": [
+    {
+      "id": "pm-trigger",
+      "type": "button",
+      "bindings": {
+        "onClick": { "source": "hookData.toggleOpen" }
+      },
+      "props": {
+        "type": "button",
+        "style": {
+          "display": "flex",
+          "alignItems": "center",
+          "gap": "6px",
+          "padding": "4px 12px",
+          "fontSize": "13px",
+          "fontWeight": 500,
+          "borderRadius": "6px",
+          "border": "1px solid var(--mat-sys-outline-variant)",
+          "background": "transparent",
+          "color": "inherit",
+          "cursor": "pointer",
+          "transition": "background 0.15s"
+        }
+      },
+      "children": [
+        {
+          "id": "pm-trigger-icon",
+          "type": "Folder",
+          "props": { "size": 16, "weight": "duotone" }
+        },
+        {
+          "id": "pm-trigger-name",
+          "type": "span",
+          "props": { "style": { "maxWidth": "120px", "overflow": "hidden", "textOverflow": "ellipsis", "whiteSpace": "nowrap" } },
+          "bindings": {
+            "children": { "source": "hookData.currentName" }
+          }
+        },
+        {
+          "id": "pm-trigger-caret",
+          "type": "CaretDown",
+          "props": { "size": 12 }
+        }
+      ]
+    },
+    {
+      "id": "pm-popover",
+      "type": "div",
+      "condition": { "source": "hookData.open" },
+      "props": {
+        "style": {
+          "position": "absolute",
+          "right": 0,
+          "top": "100%",
+          "marginTop": "8px",
+          "width": "288px",
+          "borderRadius": "8px",
+          "border": "1px solid var(--mat-sys-outline-variant)",
+          "background": "var(--mat-sys-surface-container)",
+          "boxShadow": "0 4px 12px rgba(0,0,0,0.15)",
+          "zIndex": 50
+        }
+      },
+      "children": [
+        {
+          "id": "pm-header",
+          "type": "div",
+          "props": { "style": { "padding": "8px 12px", "borderBottom": "1px solid var(--mat-sys-outline-variant)" } },
+          "children": [
+            {
+              "id": "pm-header-text",
+              "type": "span",
+              "props": { "style": { "fontSize": "11px", "fontWeight": 600, "color": "var(--mat-sys-on-surface-variant)", "textTransform": "uppercase", "letterSpacing": "0.05em" } },
+              "children": ["Project"]
+            }
+          ]
+        },
+        {
+          "id": "pm-actions",
+          "type": "div",
+          "props": { "style": { "padding": "4px", "borderBottom": "1px solid var(--mat-sys-outline-variant)" } },
+          "children": [
+            {
+              "id": "pm-new-btn",
+              "type": "button",
+              "props": {
+                "type": "button",
+                "style": { "display": "flex", "alignItems": "center", "gap": "8px", "width": "100%", "padding": "6px 8px", "fontSize": "13px", "borderRadius": "4px", "border": "none", "background": "transparent", "color": "inherit", "cursor": "pointer", "textAlign": "left" }
+              },
+              "bindings": { "onClick": { "source": "hookData.handleNew" } },
+              "children": [
+                { "id": "pm-new-icon", "type": "Plus", "props": { "size": 14 } },
+                { "id": "pm-new-text", "type": "span", "children": ["New Project"] }
+              ]
+            },
+            {
+              "id": "pm-save-btn",
+              "type": "button",
+              "props": {
+                "type": "button",
+                "style": { "display": "flex", "alignItems": "center", "gap": "8px", "width": "100%", "padding": "6px 8px", "fontSize": "13px", "borderRadius": "4px", "border": "none", "background": "transparent", "color": "inherit", "cursor": "pointer", "textAlign": "left" }
+              },
+              "bindings": { "onClick": { "source": "hookData.handleSave" } },
+              "children": [
+                { "id": "pm-save-icon", "type": "FloppyDisk", "props": { "size": 14 } },
+                { "id": "pm-save-text", "type": "span", "children": ["Save"] }
+              ]
+            },
+            {
+              "id": "pm-saveas-toggle",
+              "type": "button",
+              "props": {
+                "type": "button",
+                "style": { "display": "flex", "alignItems": "center", "gap": "8px", "width": "100%", "padding": "6px 8px", "fontSize": "13px", "borderRadius": "4px", "border": "none", "background": "transparent", "color": "inherit", "cursor": "pointer", "textAlign": "left" }
+              },
+              "bindings": {
+                "onClick": { "source": "hookData.showSaveAsForm" }
+              },
+              "children": [
+                { "id": "pm-saveas-icon", "type": "Copy", "props": { "size": 14 } },
+                { "id": "pm-saveas-text", "type": "span", "children": ["Save As..."] }
+              ]
+            },
+            {
+              "id": "pm-saveas-form",
+              "type": "div",
+              "condition": { "source": "hookData.showSaveAs" },
+              "props": { "style": { "display": "flex", "gap": "4px", "padding": "4px 8px" } },
+              "children": [
+                {
+                  "id": "pm-saveas-input",
+                  "type": "input",
+                  "bindings": {
+                    "value": { "source": "hookData.saveAsName" },
+                    "onChange": { "source": "hookData.handleSaveAsNameChange" }
+                  },
+                  "props": {
+                    "placeholder": "Project name",
+                    "style": { "height": "28px", "fontSize": "12px", "flex": 1, "padding": "0 8px", "borderRadius": "4px", "border": "1px solid var(--mat-sys-outline-variant)", "background": "var(--mat-sys-surface)", "color": "var(--mat-sys-on-surface)" }
+                  }
+                },
+                {
+                  "id": "pm-saveas-confirm",
+                  "type": "button",
+                  "bindings": { "onClick": { "source": "hookData.handleSaveAs" } },
+                  "props": {
+                    "type": "button",
+                    "style": { "height": "28px", "padding": "0 8px", "fontSize": "12px", "borderRadius": "4px", "border": "1px solid var(--mat-sys-outline-variant)", "background": "var(--mat-sys-primary)", "color": "var(--mat-sys-on-primary)", "cursor": "pointer" }
+                  },
+                  "children": [
+                    { "id": "pm-saveas-confirm-text", "type": "span", "children": ["Save"] }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "pm-io-actions",
+          "type": "div",
+          "props": { "style": { "padding": "4px", "borderBottom": "1px solid var(--mat-sys-outline-variant)" } },
+          "children": [
+            {
+              "id": "pm-import-btn",
+              "type": "button",
+              "props": {
+                "type": "button",
+                "style": { "display": "flex", "alignItems": "center", "gap": "8px", "width": "100%", "padding": "6px 8px", "fontSize": "13px", "borderRadius": "4px", "border": "none", "background": "transparent", "color": "inherit", "cursor": "pointer", "textAlign": "left" }
+              },
+              "bindings": { "onClick": { "source": "hookData.triggerImport" } },
+              "children": [
+                { "id": "pm-import-icon", "type": "Upload", "props": { "size": 14 } },
+                { "id": "pm-import-text", "type": "span", "children": ["Import JSON"] }
+              ]
+            },
+            {
+              "id": "pm-export-btn",
+              "type": "button",
+              "props": {
+                "type": "button",
+                "style": { "display": "flex", "alignItems": "center", "gap": "8px", "width": "100%", "padding": "6px 8px", "fontSize": "13px", "borderRadius": "4px", "border": "none", "background": "transparent", "color": "inherit", "cursor": "pointer", "textAlign": "left" }
+              },
+              "bindings": { "onClick": { "source": "hookData.handleExport" } },
+              "children": [
+                { "id": "pm-export-icon", "type": "Download", "props": { "size": 14 } },
+                { "id": "pm-export-text", "type": "span", "children": ["Export JSON"] }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "pm-projects-section",
+          "type": "div",
+          "props": { "style": { "maxHeight": "192px", "overflowY": "auto" } },
+          "children": [
+            {
+              "id": "pm-projects-header",
+              "type": "div",
+              "props": { "style": { "padding": "6px 12px" } },
+              "children": [
+                {
+                  "id": "pm-projects-label",
+                  "type": "span",
+                  "props": { "style": { "fontSize": "11px", "fontWeight": 600, "color": "var(--mat-sys-on-surface-variant)", "textTransform": "uppercase", "letterSpacing": "0.05em" } },
+                  "children": ["Saved Projects"]
+                }
+              ]
+            },
+            {
+              "id": "pm-loading-indicator",
+              "type": "div",
+              "condition": { "source": "hookData.isLoading" },
+              "props": { "style": { "padding": "8px 12px", "fontSize": "12px", "color": "var(--mat-sys-on-surface-variant)" } },
+              "children": [
+                { "id": "pm-loading-text", "type": "span", "children": ["Loading..."] }
+              ]
+            },
+            {
+              "id": "pm-empty-state",
+              "type": "div",
+              "condition": { "source": "hookData.showEmpty" },
+              "props": { "style": { "padding": "16px 12px", "fontSize": "12px", "color": "var(--mat-sys-on-surface-variant)", "textAlign": "center" } },
+              "children": [
+                { "id": "pm-empty-text", "type": "span", "children": ["No saved projects"] }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pm-backdrop",
+      "type": "div",
+      "condition": { "source": "hookData.open" },
+      "bindings": {
+        "onClick": { "source": "hookData.closePopover" }
+      },
+      "props": {
+        "style": { "position": "fixed", "top": 0, "left": 0, "right": 0, "bottom": 0, "zIndex": 40 }
+      }
+    }
+  ]
+}

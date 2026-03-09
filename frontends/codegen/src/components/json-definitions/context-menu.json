@@ -1,0 +1,236 @@
+{
+  "id": "context-menu",
+  "type": "ContextMenu",
+  "bindings": {},
+  "children": [
+    {
+      "id": "trigger",
+      "type": "ContextMenuTrigger",
+      "bindings": {
+        "asChild": {
+          "source": null,
+          "transform": "true"
+        }
+      },
+      "children": [
+        {"type": "slot", "source": "trigger"}
+      ]
+    },
+    {
+      "id": "content",
+      "type": "ContextMenuContent",
+      "children": [
+        {
+          "id": "menu-items",
+          "type": "Fragment",
+          "_map": {
+            "source": "items",
+            "itemVar": "item",
+            "indexVar": "index"
+          },
+          "children": [
+            {
+              "id": "menu-item",
+              "type": "ContextMenuSeparator",
+              "bindings": {
+                "_if": {
+                  "source": "item.separator",
+                  "transform": "data"
+                }
+              }
+            },
+            {
+              "id": "submenu",
+              "type": "ContextMenuSub",
+              "bindings": {
+                "_if": {
+                  "source": ["item.submenu", "item.separator"],
+                  "transform": "data[0] && data[0].length > 0 && !data[1]"
+                }
+              },
+              "children": [
+                {
+                  "id": "submenu-trigger",
+                  "type": "ContextMenuSubTrigger",
+                  "children": [
+                    {
+                      "id": "submenu-icon",
+                      "type": "span",
+                      "bindings": {
+                        "_if": {
+                          "source": "item.icon",
+                          "transform": "data"
+                        },
+                        "className": {
+                          "source": null,
+                          "transform": "'mr-2'"
+                        }
+                      },
+                      "children": [
+                        {"type": "slot", "source": "item.icon"}
+                      ]
+                    },
+                    {
+                      "id": "submenu-label",
+                      "type": "span",
+                      "children": [
+                        {"type": "text", "content": {"source": "item.label"}}
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "submenu-content",
+                  "type": "ContextMenuSubContent",
+                  "children": [
+                    {
+                      "id": "nested-items",
+                      "type": "Fragment",
+                      "_map": {
+                        "source": "item.submenu",
+                        "itemVar": "subitem",
+                        "indexVar": "subindex"
+                      },
+                      "children": [
+                        {
+                          "id": "nested-item",
+                          "type": "ContextMenuItem",
+                          "bindings": {
+                            "onSelect": {
+                              "source": "subitem.onSelect",
+                              "transform": "data"
+                            },
+                            "disabled": {
+                              "source": "subitem.disabled",
+                              "transform": "data"
+                            }
+                          },
+                          "children": [
+                            {
+                              "id": "nested-icon",
+                              "type": "span",
+                              "bindings": {
+                                "_if": {
+                                  "source": "subitem.icon",
+                                  "transform": "data"
+                                },
+                                "className": {
+                                  "source": null,
+                                  "transform": "'mr-2'"
+                                }
+                              },
+                              "children": [
+                                {"type": "slot", "source": "subitem.icon"}
+                              ]
+                            },
+                            {
+                              "id": "nested-label",
+                              "type": "span",
+                              "bindings": {
+                                "className": {
+                                  "source": null,
+                                  "transform": "'flex-1'"
+                                }
+                              },
+                              "children": [
+                                {"type": "text", "content": {"source": "subitem.label"}}
+                              ]
+                            },
+                            {
+                              "id": "nested-shortcut",
+                              "type": "span",
+                              "bindings": {
+                                "_if": {
+                                  "source": "subitem.shortcut",
+                                  "transform": "data"
+                                },
+                                "className": {
+                                  "source": null,
+                                  "transform": "'ml-auto text-xs text-muted-foreground'"
+                                }
+                              },
+                              "children": [
+                                {"type": "text", "content": {"source": "subitem.shortcut"}}
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "regular-item",
+              "type": "ContextMenuItem",
+              "bindings": {
+                "_if": {
+                  "source": ["item.submenu", "item.separator"],
+                  "transform": "(!data[0] || data[0].length === 0) && !data[1]"
+                },
+                "onSelect": {
+                  "source": "item.onSelect",
+                  "transform": "data"
+                },
+                "disabled": {
+                  "source": "item.disabled",
+                  "transform": "data"
+                }
+              },
+              "children": [
+                {
+                  "id": "item-icon",
+                  "type": "span",
+                  "bindings": {
+                    "_if": {
+                      "source": "item.icon",
+                      "transform": "data"
+                    },
+                    "className": {
+                      "source": null,
+                      "transform": "'mr-2'"
+                    }
+                  },
+                  "children": [
+                    {"type": "slot", "source": "item.icon"}
+                  ]
+                },
+                {
+                  "id": "item-label",
+                  "type": "span",
+                  "bindings": {
+                    "className": {
+                      "source": null,
+                      "transform": "'flex-1'"
+                    }
+                  },
+                  "children": [
+                    {"type": "text", "content": {"source": "item.label"}}
+                  ]
+                },
+                {
+                  "id": "item-shortcut",
+                  "type": "span",
+                  "bindings": {
+                    "_if": {
+                      "source": "item.shortcut",
+                      "transform": "data"
+                    },
+                    "className": {
+                      "source": null,
+                      "transform": "'ml-auto text-xs text-muted-foreground'"
+                    }
+                  },
+                  "children": [
+                    {"type": "text", "content": {"source": "item.shortcut"}}
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

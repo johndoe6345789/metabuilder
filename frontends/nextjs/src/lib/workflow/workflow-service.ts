@@ -5,8 +5,6 @@
  * For now, it's a placeholder to unblock Phase 4 validation
  */
 
-import { v4 as uuidv4 } from 'uuid'
-
 // PHASE 5: Workflow service integration - commented out
 // import { db } from '@/lib/db-client'
 // import {
@@ -25,7 +23,7 @@ import { v4 as uuidv4 } from 'uuid'
 // } from '@metabuilder/workflow'
 
 export class WorkflowService {
-  private static executor: any | null = null
+  private static executor: any = null
 
   /**
    * Initialize the workflow engine
@@ -41,9 +39,9 @@ export class WorkflowService {
    * Phase 5: Integrate with DAGExecutor
    */
   static async executeWorkflow(
-    workflowId: string,
-    tenantId: string,
-    input: Record<string, unknown> = {},
+    _workflowId: string,
+    _tenantId: string,
+    _input: Record<string, unknown> = {},
   ): Promise<any> {
     throw new Error('WorkflowService: Phase 5 - Workflow execution not yet implemented')
   }
@@ -54,9 +52,9 @@ export class WorkflowService {
    */
   static async saveExecutionRecord(
     executionId: string,
-    workflowId: string,
-    tenantId: string,
-    result: any,
+    _workflowId: string,
+    _tenantId: string,
+    _result: any,
   ): Promise<void> {
     console.warn(`WorkflowService: Phase 5 - Execution record deferred (${executionId})`)
   }
@@ -66,8 +64,8 @@ export class WorkflowService {
    * Phase 5: Integrate with DBAL
    */
   static async loadWorkflow(
-    workflowId: string,
-    tenantId: string,
+    _workflowId: string,
+    _tenantId: string,
   ): Promise<any> {
     throw new Error('WorkflowService: Phase 5 - Workflow loading not yet implemented')
   }
@@ -77,8 +75,8 @@ export class WorkflowService {
    * Phase 5: Query execution records from database
    */
   static async getExecutionStatus(
-    executionId: string,
-    tenantId: string,
+    _executionId: string,
+    _tenantId: string,
   ): Promise<any> {
     throw new Error('WorkflowService: Phase 5 - Execution status not yet implemented')
   }
@@ -88,10 +86,10 @@ export class WorkflowService {
    * Phase 5: Query execution records with filtering
    */
   static async listExecutions(
-    workflowId: string,
-    tenantId: string,
-    limit: number = 50,
-    offset: number = 0,
+    _workflowId: string,
+    _tenantId: string,
+    _limit: number = 50,
+    _offset: number = 0,
   ): Promise<any[]> {
     throw new Error('WorkflowService: Phase 5 - Execution listing not yet implemented')
   }
@@ -101,8 +99,8 @@ export class WorkflowService {
    * Phase 5: Signal abort to executor
    */
   static async abortExecution(
-    executionId: string,
-    tenantId: string,
+    _executionId: string,
+    _tenantId: string,
   ): Promise<void> {
     throw new Error('WorkflowService: Phase 5 - Execution abort not yet implemented')
   }

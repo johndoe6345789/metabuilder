@@ -1,0 +1,42 @@
+{
+  "id": "third-gear",
+  "name": "3rd Gear",
+  "partNumber": "FD-1848323",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 420.0,
+  "weightUnit": "g",
+  "baseY": 395,
+  "description": "Third gear - 1.36:1 ratio",
+  "installation": {
+    "tools": [
+      { "name": "Snap ring pliers", "size": "External 32mm", "required": true },
+      { "name": "Soft-face mallet", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Needle bearing", "spec": "K20x24x13", "qty": 1, "reusable": false },
+      { "name": "Thrust washer", "spec": "21x30x1.5", "qty": 1, "reusable": true },
+      { "name": "Snap ring", "spec": "32mm external", "qty": 1, "reusable": true }
+    ],
+    "torque": [],
+    "notes": [
+      "Shares synchro hub with 4th gear",
+      "Most commonly used gear - inspect carefully",
+      "Check for wear patterns on cone surface"
+    ]
+  },
+  "geometry": [
+    { "type": "gearRing", "teeth": 24, "outerRadius": 32, "toothHeight": 5 },
+    { "type": "cylinder", "rx": 26, "ry": 8, "height": 16 },
+    { "type": "circle", "r": 12, "fill": "#555" }
+  ],
+  "geometry3d": [
+    { "type": "cylinder", "r": 32, "height": 14, "fill": "#606570" },
+    { "type": "cylinder", "r": 30, "height": 12, "offsetY": 1, "fill": "#707580" },
+    { "type": "cylinder", "r": 24, "height": 8, "fill": "#808590" },
+    { "type": "cylinder", "r": 18, "height": 18, "fill": "#555560" },
+    { "type": "cylinder", "r": 16, "height": 20, "subtract": true },
+    { "type": "box", "width": 4, "height": 20, "depth": 34, "subtract": true },
+    { "type": "box", "width": 34, "height": 20, "depth": 4, "subtract": true }
+  ]
+}

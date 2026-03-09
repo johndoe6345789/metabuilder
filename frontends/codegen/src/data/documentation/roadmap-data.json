@@ -1,0 +1,147 @@
+{
+  "title": "Product Roadmap",
+  "subtitle": "Features delivered and planned for CodeForge development",
+  "sections": {
+    "completedTitle": "Completed Features",
+    "plannedTitle": "Planned Features"
+  },
+  "completed": [
+    {
+      "title": "Monaco Code Editor Integration",
+      "description": "Full-featured code editor with syntax highlighting, multi-file tabs, and auto-save",
+      "version": "v1.0"
+    },
+    {
+      "title": "Prisma Schema Designer",
+      "description": "Visual database model designer with fields, relations, and schema generation",
+      "version": "v1.0"
+    },
+    {
+      "title": "Component Tree Builder",
+      "description": "Hierarchical React component structure builder with Material UI components",
+      "version": "v1.0"
+    },
+    {
+      "title": "Theme Designer",
+      "description": "Material UI theme customizer with color palettes and typography configuration",
+      "version": "v1.1"
+    },
+    {
+      "title": "OpenAI Integration",
+      "description": "AI-powered generation across models, components, themes, and code",
+      "version": "v2.0"
+    },
+    {
+      "title": "Multi-Theme Variants",
+      "description": "Support for light, dark, and custom theme variants with unlimited custom colors",
+      "version": "v2.1"
+    },
+    {
+      "title": "Playwright Test Designer",
+      "description": "Visual E2E test builder with step-by-step configuration and AI generation",
+      "version": "v3.0"
+    },
+    {
+      "title": "Storybook Story Designer",
+      "description": "Component story builder with args configuration and category organization",
+      "version": "v3.0"
+    },
+    {
+      "title": "Unit Test Designer",
+      "description": "Comprehensive test suite builder for components, functions, hooks, and integration tests",
+      "version": "v3.0"
+    },
+    {
+      "title": "Auto Error Detection & Repair",
+      "description": "Automated error scanning with AI-powered context-aware code repair",
+      "version": "v3.1"
+    },
+    {
+      "title": "Responsive UI Improvements",
+      "description": "Multi-row tab support and improved layout for complex applications",
+      "version": "v3.2"
+    },
+    {
+      "title": "Flask Backend Designer",
+      "description": "Python Flask REST API designer with blueprints, endpoints, and CORS configuration",
+      "version": "v4.0"
+    },
+    {
+      "title": "Project Settings Designer",
+      "description": "Next.js configuration, npm package management, and build script customization",
+      "version": "v4.0"
+    },
+    {
+      "title": "CI/CD Configuration",
+      "description": "Complete CI/CD pipelines for GitHub Actions, GitLab CI, Jenkins, and CircleCI",
+      "version": "v4.2"
+    },
+    {
+      "title": "Docker Containerization",
+      "description": "Multi-stage Docker builds with Nginx, docker-compose, and health checks",
+      "version": "v4.2"
+    }
+  ],
+  "planned": [
+    {
+      "title": "Real-Time Preview",
+      "description": "Live preview of generated applications with hot reload",
+      "version": "v4.1"
+    },
+    {
+      "title": "Database Seeding Designer",
+      "description": "Visual interface for creating seed data for Prisma models",
+      "version": "v4.2"
+    },
+    {
+      "title": "API Client Generator",
+      "description": "Generate TypeScript API clients from Flask backend definitions",
+      "version": "v4.2"
+    },
+    {
+      "title": "Form Builder",
+      "description": "Visual form designer with validation, field types, and submission handling",
+      "version": "v4.3"
+    },
+    {
+      "title": "Authentication Designer",
+      "description": "Configure authentication flows (JWT, OAuth, sessions) for both frontend and backend",
+      "version": "v5.0"
+    },
+    {
+      "title": "Docker Configuration",
+      "description": "Generate Docker and docker-compose files for containerized deployment",
+      "version": "v5.0"
+    },
+    {
+      "title": "GraphQL API Designer",
+      "description": "Alternative to Flask REST - design GraphQL schemas and resolvers",
+      "version": "v5.1"
+    },
+    {
+      "title": "State Management Designer",
+      "description": "Configure Redux, Zustand, or Jotai state management patterns",
+      "version": "v5.2"
+    },
+    {
+      "title": "CI/CD Pipeline Generator",
+      "description": "Generate GitHub Actions, GitLab CI, or CircleCI configuration files",
+      "version": "v5.3"
+    },
+    {
+      "title": "Component Library Export",
+      "description": "Export designed components as a standalone npm package",
+      "version": "v6.0"
+    },
+    {
+      "title": "Design System Generator",
+      "description": "Create complete design systems with tokens, components, and documentation",
+      "version": "v6.0"
+    },
+    {
+      "title": "Collaboration Features",
+      "description": "Real-time collaborative editing and commenting system",
+      "version": "v6.1"
+    }
+  ]
+}

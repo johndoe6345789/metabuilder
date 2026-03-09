@@ -1,0 +1,66 @@
+[
+  {
+    "id": "page_database_manager_home",
+    "packageId": "ui_database_manager",
+    "path": "/admin/database",
+    "title": "Database Manager",
+    "description": "Browse and manage database entities and records",
+    "component": "DatabaseManagerLayout",
+    "level": 3,
+    "requiresAuth": true,
+    "isPublished": true,
+    "icon": "Database",
+    "breadcrumbs": [
+      { "label": "Admin", "href": "/admin" },
+      { "label": "Database", "href": "/admin/database" }
+    ],
+    "layout": {
+      "type": "TwoColumn",
+      "leftPanel": {
+        "width": 280,
+        "title": "Entities",
+        "component": "EntityBrowser"
+      },
+      "rightPanel": {
+        "title": "Data Viewer",
+        "flex": 1,
+        "component": "DataViewer"
+      }
+    }
+  },
+  {
+    "id": "page_database_manager_record",
+    "packageId": "ui_database_manager",
+    "path": "/admin/database/[entity]/[id]",
+    "title": "Record Editor",
+    "description": "Edit individual database record",
+    "component": "RecordEditor",
+    "level": 3,
+    "requiresAuth": true,
+    "isPublished": true,
+    "icon": "Edit",
+    "breadcrumbs": [
+      { "label": "Admin", "href": "/admin" },
+      { "label": "Database", "href": "/admin/database" },
+      { "label": "{{entity}}", "href": "/admin/database/{{entity}}" },
+      { "label": "{{id}}", "href": "/admin/database/{{entity}}/{{id}}" }
+    ]
+  },
+  {
+    "id": "page_database_manager_import_export",
+    "packageId": "ui_database_manager",
+    "path": "/admin/database/tools/import-export",
+    "title": "Import/Export",
+    "description": "Import and export database records",
+    "component": "ImportExportManager",
+    "level": 4,
+    "requiresAuth": true,
+    "isPublished": true,
+    "icon": "FileExchange",
+    "breadcrumbs": [
+      { "label": "Admin", "href": "/admin" },
+      { "label": "Database", "href": "/admin/database" },
+      { "label": "Import/Export", "href": "/admin/database/tools/import-export" }
+    ]
+  }
+]

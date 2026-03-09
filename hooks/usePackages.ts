@@ -50,6 +50,11 @@ import { PackageErrorCode } from '@/lib/types/package-admin-types'
 
 interface UsePackagesOptions {
   /**
+   * Base URL prefix for API calls (e.g. '/workflowui')
+   */
+  baseUrl?: string
+
+  /**
    * Initial page limit
    * @default 10
    */
@@ -124,6 +129,7 @@ async function parseApiError(response: Response): Promise<PackageError> {
 
 export function usePackages(options: UsePackagesOptions = {}): UsePackagesReturn {
   const {
+    baseUrl = '',
     initialLimit = 10,
     debounceMs = 300,
     onSuccess,
@@ -185,7 +191,7 @@ export function usePackages(options: UsePackagesOptions = {}): UsePackagesReturn
           ...(status !== 'all' && { status }),
         })
 
-        const response = await fetch(`/api/admin/packages?${params}`, {
+        const response = await fetch(`${baseUrl}/api/admin/packages?${params}`, {
           signal: abortControllerRef.current.signal,
         })
 

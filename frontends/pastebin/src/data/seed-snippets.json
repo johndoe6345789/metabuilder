@@ -1,0 +1,78 @@
+[
+  {
+    "id": "seed-1",
+    "title": "React Counter Hook",
+    "description": "Basic state management with useState",
+    "code": "import { useState } from 'react'\n\nfunction Counter() {\n  const [count, setCount] = useState(0)\n  \n  return (\n    <div className=\"p-6 space-y-4\">\n      <p className=\"text-2xl font-bold\">Count: {count}</p>\n      <div className=\"flex gap-2\">\n        <button \n          onClick={() => setCount(count + 1)}\n          className=\"px-4 py-2 bg-primary text-primary-foreground rounded\"\n        >\n          Increment\n        </button>\n        <button \n          onClick={() => setCount(count - 1)}\n          className=\"px-4 py-2 bg-secondary text-secondary-foreground rounded\"\n        >\n          Decrement\n        </button>\n      </div>\n    </div>\n  )\n}\n\nexport default Counter",
+    "language": "tsx",
+    "category": "React Hooks",
+    "hasPreview": true,
+    "functionName": "Counter",
+    "inputParameters": [],
+    "createdAt": 0,
+    "updatedAt": 0
+  },
+  {
+    "id": "seed-2",
+    "title": "Todo List Component",
+    "description": "Complete todo list with add, toggle, and delete",
+    "code": "import { useState } from 'react'\nimport { Button } from '@/components/ui/button'\nimport { Input } from '@/components/ui/input'\nimport { Card } from '@/components/ui/card'\nimport { Checkbox } from '@/components/ui/checkbox'\nimport { Trash2 } from '@phosphor-icons/react'\n\nfunction TodoList() {\n  const [todos, setTodos] = useState([\n    { id: 1, text: 'Learn React', completed: false },\n    { id: 2, text: 'Build a project', completed: false }\n  ])\n  const [input, setInput] = useState('')\n\n  const addTodo = () => {\n    if (input.trim()) {\n      setTodos([...todos, { id: Date.now(), text: input, completed: false }])\n      setInput('')\n    }\n  }\n\n  const toggleTodo = (id) => {\n    setTodos(todos.map(todo => \n      todo.id === id ? { ...todo, completed: !todo.completed } : todo\n    ))\n  }\n\n  const deleteTodo = (id) => {\n    setTodos(todos.filter(todo => todo.id !== id))\n  }\n\n  return (\n    <Card className=\"p-6 max-w-md mx-auto\">\n      <h2 className=\"text-2xl font-bold mb-4\">My Todos</h2>\n      <div className=\"flex gap-2 mb-4\">\n        <Input\n          value={input}\n          onChange={(e) => setInput(e.target.value)}\n          onKeyPress={(e) => e.key === 'Enter' && addTodo()}\n          placeholder=\"Add a new todo...\"\n        />\n        <Button onClick={addTodo}>Add</Button>\n      </div>\n      <div className=\"space-y-2\">\n        {todos.map(todo => (\n          <div key={todo.id} className=\"flex items-center gap-2 p-2 hover:bg-muted rounded\">\n            <Checkbox\n              checked={todo.completed}\n              onCheckedChange={() => toggleTodo(todo.id)}\n            />\n            <span className={todo.completed ? 'line-through text-muted-foreground flex-1' : 'flex-1'}>\n              {todo.text}\n            </span>\n            <Button\n              variant=\"ghost\"\n              size=\"icon\"\n              onClick={() => deleteTodo(todo.id)}\n            >\n              <Trash2 size={16} />\n            </Button>\n          </div>\n        ))}\n      </div>\n    </Card>\n  )\n}\n\nexport default TodoList",
+    "language": "tsx",
+    "category": "Components",
+    "hasPreview": true,
+    "functionName": "TodoList",
+    "inputParameters": [],
+    "createdAt": 0,
+    "updatedAt": 0
+  },
+  {
+    "id": "seed-3",
+    "title": "Fetch Data Hook",
+    "description": "Custom hook for API data fetching",
+    "code": "import { useState, useEffect } from 'react'\n\nfunction useFetch(url) {\n  const [data, setData] = useState(null)\n  const [loading, setLoading] = useState(true)\n  const [error, setError] = useState(null)\n\n  useEffect(() => {\n    const fetchData = async () => {\n      try {\n        setLoading(true)\n        const response = await fetch(url)\n        if (!response.ok) throw new Error('Network response was not ok')\n        const json = await response.json()\n        setData(json)\n        setError(null)\n      } catch (err) {\n        setError(err.message)\n      } finally {\n        setLoading(false)\n      }\n    }\n\n    fetchData()\n  }, [url])\n\n  return { data, loading, error }\n}",
+    "language": "tsx",
+    "category": "React Hooks",
+    "hasPreview": false,
+    "createdAt": 0,
+    "updatedAt": 0
+  },
+  {
+    "id": "seed-4",
+    "title": "Animated Card",
+    "description": "Card with hover animation using Framer Motion",
+    "code": "import { motion } from 'framer-motion'\nimport { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'\n\nfunction AnimatedCard({ title = 'Animated Card', description = 'Hover to see the effect' }) {\n  return (\n    <motion.div\n      whileHover={{ scale: 1.05, rotateZ: 2 }}\n      whileTap={{ scale: 0.95 }}\n      transition={{ type: 'spring', stiffness: 300, damping: 20 }}\n    >\n      <Card className=\"cursor-pointer\">\n        <CardHeader>\n          <CardTitle>{title}</CardTitle>\n          <CardDescription>{description}</CardDescription>\n        </CardHeader>\n        <CardContent>\n          <p>This card has smooth animations on hover and tap!</p>\n        </CardContent>\n      </Card>\n    </motion.div>\n  )\n}\n\nexport default AnimatedCard",
+    "language": "tsx",
+    "category": "Components",
+    "hasPreview": true,
+    "functionName": "AnimatedCard",
+    "inputParameters": [
+      {
+        "name": "title",
+        "type": "string",
+        "defaultValue": "Animated Card",
+        "description": "Card title"
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "defaultValue": "Hover to see the effect",
+        "description": "Card description"
+      }
+    ],
+    "createdAt": 0,
+    "updatedAt": 0
+  },
+  {
+    "id": "seed-5",
+    "title": "Form Validation",
+    "description": "Form with react-hook-form validation",
+    "code": "import { useForm } from 'react-hook-form'\nimport { Button } from '@/components/ui/button'\nimport { Input } from '@/components/ui/input'\nimport { Label } from '@/components/ui/label'\nimport { Card } from '@/components/ui/card'\n\nfunction ContactForm() {\n  const { register, handleSubmit, formState: { errors } } = useForm()\n\n  const onSubmit = (data) => {\n    console.log('Form data:', data)\n    alert('Form submitted successfully!')\n  }\n\n  return (\n    <Card className=\"p-6 max-w-md mx-auto\">\n      <h2 className=\"text-2xl font-bold mb-4\">Contact Form</h2>\n      <form onSubmit={handleSubmit(onSubmit)} className=\"space-y-4\">\n        <div>\n          <Label htmlFor=\"name\">Name</Label>\n          <Input\n            id=\"name\"\n            {...register('name', { required: 'Name is required' })}\n          />\n          {errors.name && (\n            <p className=\"text-destructive text-sm mt-1\">{errors.name.message}</p>\n          )}\n        </div>\n\n        <div>\n          <Label htmlFor=\"email\">Email</Label>\n          <Input\n            id=\"email\"\n            type=\"email\"\n            {...register('email', {\n              required: 'Email is required',\n              pattern: {\n                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\\\.[A-Z]{2,}$/i,\n                message: 'Invalid email address'\n              }\n            })}\n          />\n          {errors.email && (\n            <p className=\"text-destructive text-sm mt-1\">{errors.email.message}</p>\n          )}\n        </div>\n\n        <Button type=\"submit\" className=\"w-full\">Submit</Button>\n      </form>\n    </Card>\n  )\n}\n\nexport default ContactForm",
+    "language": "tsx",
+    "category": "Forms",
+    "hasPreview": true,
+    "functionName": "ContactForm",
+    "inputParameters": [],
+    "createdAt": 0,
+    "updatedAt": 0
+  }
+]

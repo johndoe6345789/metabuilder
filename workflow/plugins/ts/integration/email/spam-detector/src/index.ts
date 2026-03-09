@@ -227,7 +227,7 @@ export class SpamDetectorExecutor implements INodeExecutor {
   async execute(
     node: WorkflowNode,
     context: WorkflowContext,
-    state: ExecutionState
+    _state: ExecutionState
   ): Promise<NodeResult> {
     const startTime = Date.now();
 
@@ -345,7 +345,7 @@ export class SpamDetectorExecutor implements INodeExecutor {
    */
   private async _analyzeSpam(
     config: SpamDetectorConfig,
-    context: WorkflowContext
+    _context: WorkflowContext
   ): Promise<SpamDetectionResult> {
     const startTime = Date.now();
     const indicators: SpamIndicator[] = [];
@@ -755,7 +755,7 @@ export class SpamDetectorExecutor implements INodeExecutor {
    * Analyze sender reputation
    */
   private _analyzeSenderReputation(
-    from: string,
+    _from: string,
     senderReputation?: SenderReputation
   ): { senderRep?: SenderReputation; reputationScore: number } {
     let score = 0;
@@ -977,9 +977,9 @@ export class SpamDetectorExecutor implements INodeExecutor {
     confidenceScore: number,
     indicators: SpamIndicator[],
     authentication: AuthenticationStatus,
-    config: SpamDetectorConfig,
+    _config: SpamDetectorConfig,
     dnsblResults: DnsblResult[],
-    startTime: number,
+    _startTime: number,
     flagForReview: boolean,
     reviewReason?: string
   ): SpamDetectionResult {

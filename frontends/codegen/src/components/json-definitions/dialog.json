@@ -1,0 +1,85 @@
+{
+  "id": "dialog-root",
+  "type": "Dialog",
+  "bindings": {
+    "open": "data.open",
+    "onOpenChange": "handlers.handleOpenChange"
+  },
+  "children": [
+    {
+      "id": "dialog-trigger",
+      "type": "DialogTrigger",
+      "bindings": {
+        "asChild": true
+      },
+      "children": [
+        {
+          "id": "dialog-trigger-content",
+          "type": "slot",
+          "slot": "trigger",
+          "defaultContent": {
+            "id": "trigger-button",
+            "type": "Button",
+            "bindings": {
+              "children": "data.triggerLabel || 'Open'"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "dialog-content",
+      "type": "DialogContent",
+      "children": [
+        {
+          "id": "dialog-header",
+          "type": "DialogHeader",
+          "children": [
+            {
+              "id": "dialog-title",
+              "type": "DialogTitle",
+              "bindings": {
+                "children": "data.title"
+              }
+            },
+            {
+              "id": "dialog-description",
+              "type": "DialogDescription",
+              "bindings": {
+                "children": "data.description"
+              }
+            }
+          ]
+        },
+        {
+          "id": "dialog-body",
+          "type": "slot",
+          "slot": "children"
+        },
+        {
+          "id": "dialog-footer",
+          "type": "DialogFooter",
+          "children": [
+            {
+              "id": "dialog-close-button",
+              "type": "Button",
+              "bindings": {
+                "variant": "outline",
+                "children": "data.cancelLabel || 'Cancel'",
+                "onClick": "handlers.handleCancel"
+              }
+            },
+            {
+              "id": "dialog-submit-button",
+              "type": "Button",
+              "bindings": {
+                "children": "data.submitLabel || 'Submit'",
+                "onClick": "handlers.handleSubmit"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

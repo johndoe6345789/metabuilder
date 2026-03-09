@@ -1,0 +1,412 @@
+// Dialog, accordion, collapsible, code editor, save indicator, pagination, binding editor
+// Uses MD3 CSS custom properties from var(--mat-sys-*)
+
+// ─── Dialog ────────────────────────────────────────────────────────────────
+
+.dialog {
+  &__content {
+    background: var(--mat-sys-surface);
+    color: var(--mat-sys-on-surface);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+    padding: 24px;
+    max-width: 560px;
+    width: 100%;
+  }
+
+  &__header {
+    margin-bottom: 16px;
+  }
+
+  &__title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--mat-sys-on-surface);
+    margin: 0 0 6px;
+  }
+
+  &__description {
+    font-size: 13px;
+    color: var(--mat-sys-on-surface-variant);
+    margin: 0;
+  }
+
+  &__body {
+    margin-bottom: 24px;
+  }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+}
+
+// ─── Preview Dialog ─────────────────────────────────────────────────────────
+
+.preview-dialog {
+  background: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+// ─── Accordion ─────────────────────────────────────────────────────────────
+
+.accordion {
+  display: flex;
+  flex-direction: column;
+
+  &__item {
+    border: 1px solid var(--mat-sys-outline-variant);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 8px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    &--disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+  }
+
+  &__trigger {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    background: var(--mat-sys-surface-container);
+    border: none;
+    color: var(--mat-sys-on-surface);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 150ms ease;
+
+    &:hover {
+      background: color-mix(in srgb, var(--mat-sys-on-surface) 5%, var(--mat-sys-surface-container));
+    }
+
+    &--open {
+      border-bottom: 1px solid var(--mat-sys-outline-variant);
+    }
+  }
+
+  &__trigger-icon {
+    width: 20px;
+    height: 20px;
+    transition: transform 200ms ease;
+    flex-shrink: 0;
+
+    &--open {
+      transform: rotate(180deg);
+    }
+  }
+
+  &__content {
+    padding: 16px;
+    background: var(--mat-sys-surface);
+    color: var(--mat-sys-on-surface-variant);
+    font-size: 14px;
+    animation: accordion-slide-in 150ms ease;
+  }
+}
+
+@keyframes accordion-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ─── Collapsible Section ────────────────────────────────────────────────────
+
+.collapsible {
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 8px;
+  overflow: hidden;
+
+  &__trigger {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--mat-sys-surface-container);
+    border: none;
+    color: var(--mat-sys-on-surface);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 150ms ease;
+
+    &:hover {
+      background: color-mix(in srgb, var(--mat-sys-on-surface) 5%, var(--mat-sys-surface-container));
+    }
+  }
+
+  &__content {
+    padding: 12px 16px;
+    background: var(--mat-sys-surface);
+    border-top: 1px solid var(--mat-sys-outline-variant);
+    color: var(--mat-sys-on-surface-variant);
+    font-size: 13px;
+  }
+}
+
+// ─── Code Editor Container ──────────────────────────────────────────────────
+
+.code-editor-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--mat-sys-surface);
+
+  &__empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 12px;
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  &__empty-title {
+    font-size: 13px;
+    color: var(--mat-sys-on-surface-variant);
+    margin: 0;
+  }
+
+  &__empty-subtitle {
+    font-size: 12px;
+    opacity: 0.7;
+    color: var(--mat-sys-on-surface-variant);
+    margin: 0;
+  }
+
+  &__tab-bar {
+    display: flex;
+    border-bottom: 1px solid var(--mat-sys-outline-variant);
+    background: color-mix(in srgb, var(--mat-sys-on-surface) 4%, var(--mat-sys-surface));
+    overflow-x: auto;
+    flex-shrink: 0;
+
+    &::-webkit-scrollbar {
+      height: 2px;
+    }
+  }
+
+  &__editor-area {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__editor-viewport {
+    flex: 1;
+    min-height: 0;
+  }
+}
+
+.code-editor-tab {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 16px;
+  font-size: 12px;
+  border: none;
+  background: transparent;
+  color: var(--mat-sys-on-surface-variant);
+  cursor: pointer;
+  white-space: nowrap;
+  border-right: 1px solid var(--mat-sys-outline-variant);
+  transition: background 150ms ease, color 150ms ease;
+
+  &:hover {
+    background: color-mix(in srgb, var(--mat-sys-on-surface) 5%, transparent);
+    color: var(--mat-sys-on-surface);
+  }
+
+  &--active {
+    background: var(--mat-sys-surface);
+    color: var(--mat-sys-on-surface);
+    border-bottom: 2px solid var(--mat-sys-primary);
+  }
+
+  &__close {
+    opacity: 0.5;
+    cursor: pointer;
+    margin-left: 4px;
+    line-height: 1;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+// ─── Save Indicator ─────────────────────────────────────────────────────────
+
+.save-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--mat-sys-on-surface-variant);
+
+  &--saving {
+    color: var(--mat-sys-primary);
+  }
+
+  &--saved {
+    color: #16a34a;
+  }
+
+  &__label {
+    @media (max-width: 639px) {
+      display: none;
+    }
+  }
+}
+
+// ─── Pagination ─────────────────────────────────────────────────────────────
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
+  margin-inline: auto;
+
+  &__btn {
+    padding: 6px 10px;
+    border-radius: 4px;
+    border: 1px solid var(--mat-sys-outline-variant);
+    background: transparent;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--mat-sys-on-surface);
+    transition: background 150ms ease, color 150ms ease;
+
+    &:hover {
+      background: color-mix(in srgb, var(--mat-sys-on-surface) 6%, transparent);
+    }
+
+    &--active {
+      background: var(--mat-sys-primary);
+      color: var(--mat-sys-on-primary);
+      border-color: transparent;
+
+      &:hover {
+        background: var(--mat-sys-primary);
+      }
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// ─── Binding Editor ─────────────────────────────────────────────────────────
+
+.binding-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  &__section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__section-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--mat-sys-on-surface);
+  }
+
+  &__empty-message {
+    font-size: 13px;
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  &__binding-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px;
+    background: color-mix(in srgb, var(--mat-sys-on-surface) 4%, var(--mat-sys-surface));
+    border-radius: 4px;
+    border: 1px solid var(--mat-sys-outline-variant);
+  }
+
+  &__binding-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__prop-name {
+    font-size: 13px;
+    font-family: monospace;
+    color: var(--mat-sys-on-surface);
+  }
+
+  &__arrow {
+    color: var(--mat-sys-on-surface-variant);
+    font-size: 13px;
+  }
+
+  &__add-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--mat-sys-outline-variant);
+  }
+
+  &__add-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--mat-sys-on-surface);
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__field-label {
+    font-size: 11px;
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  &__add-btn {
+    width: 100%;
+  }
+}

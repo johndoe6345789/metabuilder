@@ -1,0 +1,18 @@
+{
+  "id": "piston",
+  "name": "Piston",
+  "partNumber": "TRA-5467",
+  "material": "blackPlastic",
+  "quantity": 1,
+  "weight": 3.1,
+  "weightUnit": "g",
+  "baseY": 195,
+  "description": "PTFE composite piston with 4-hole pattern",
+  "geometry": [
+    {"type": "cylinder", "rx": 22, "ry": 7, "height": 14},
+    {"type": "circle", "r": 3, "offsetX": -10, "fill": "#0a0a0a"},
+    {"type": "circle", "r": 3, "offsetX": 10, "fill": "#0a0a0a"},
+    {"type": "circle", "r": 3, "offsetY": -4, "fill": "#0a0a0a"},
+    {"type": "circle", "r": 3, "offsetY": 4, "fill": "#0a0a0a"}
+  ]
+}

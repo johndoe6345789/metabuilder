@@ -7,41 +7,62 @@ export interface ServerHealth {
   latencyMs?: number
 }
 
-const baseStatuses: ServerHealth[] = [
-  {
-    name: 'DBAL TypeScript Client',
-    status: 'online',
-    message: 'Handling CLI and server workflows via Prisma.',
-    latencyMs: 14,
-  },
-  {
-    name: 'Prisma ORM',
-    status: 'online',
-    message: 'Schema validated & migrations ready (Postgres/MySQL).',
-    latencyMs: 32,
-  },
-  {
-    name: 'C++ DBAL Daemon (Phase 3)',
-    status: 'degraded',
-    message: 'Running the in-memory prototype while SQL adapters mature.',
-    latencyMs: 48,
-  },
-  {
-    name: 'Server Side Metrics',
-    status: 'online',
-    message: 'Audit logs streaming successfully and metrics exported.',
-    latencyMs: 5,
-  },
-]
-
 export interface StatusResponse {
   updatedAt: string
   statuses: ServerHealth[]
 }
 
-export function getStatusResponse(): StatusResponse {
+const DBAL_DAEMON_URL = process.env.DBAL_DAEMON_URL ?? 'http://localhost:8080'
+
+export async function getStatusResponse(): Promise<StatusResponse> {
+  const statuses: ServerHealth[] = []
+  const start = Date.now()
+
+  try {
+    const response = await fetch(`${DBAL_DAEMON_URL}/health`, {
+      signal: AbortSignal.timeout(5000),
+    })
+    const latency = Date.now() - start
+
+    if (response.ok) {
+      const data = await response.json()
+      statuses.push({
+        name: 'DBAL Daemon',
+        status: 'online',
+        message: `Version ${data.version ?? 'unknown'}, uptime ${data.uptime ?? 'n/a'}`,
+        latencyMs: latency,
+      })
+
+      if (data.adapters && Array.isArray(data.adapters)) {
+        for (const adapter of data.adapters) {
+          statuses.push({
+            name: adapter.name ?? adapter.type,
+            status: adapter.connected ? 'online' : 'offline',
+            message: adapter.connected
+              ? `Connected (${adapter.type})`
+              : `Disconnected: ${adapter.error ?? 'unknown'}`,
+            latencyMs: adapter.latencyMs,
+          })
+        }
+      }
+    } else {
+      statuses.push({
+        name: 'DBAL Daemon',
+        status: 'degraded',
+        message: `Health check returned ${response.status}`,
+        latencyMs: latency,
+      })
+    }
+  } catch (err) {
+    statuses.push({
+      name: 'DBAL Daemon',
+      status: 'offline',
+      message: err instanceof Error ? err.message : 'Unable to reach daemon',
+    })
+  }
+
   return {
     updatedAt: new Date().toISOString(),
-    statuses: baseStatuses,
+    statuses,
   }
 }

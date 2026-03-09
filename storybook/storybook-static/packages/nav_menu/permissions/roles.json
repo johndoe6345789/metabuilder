@@ -1,0 +1,76 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "nav_menu",
+  "description": "Navigation menu access permissions",
+  "permissions": [
+    {
+      "id": "nav.menu.view",
+      "name": "View Navigation Menu",
+      "description": "View navigation menus",
+      "resource": "navigation",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 2
+    },
+    {
+      "id": "nav.menu.configure",
+      "name": "Configure Navigation Menu",
+      "description": "Configure navigation menus and menu items",
+      "resource": "navigation",
+      "action": "manage",
+      "scope": "global",
+      "minLevel": 4
+    },
+    {
+      "id": "nav.sidebar.view",
+      "name": "View Sidebar",
+      "description": "View sidebar navigation",
+      "resource": "sidebar",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 2
+    },
+    {
+      "id": "nav.sidebar.configure",
+      "name": "Configure Sidebar",
+      "description": "Configure sidebar items and layout",
+      "resource": "sidebar",
+      "action": "manage",
+      "scope": "global",
+      "minLevel": 4
+    },
+    {
+      "id": "nav.breadcrumbs.view",
+      "name": "View Breadcrumbs",
+      "description": "View breadcrumb navigation",
+      "resource": "breadcrumbs",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 0
+    }
+  ],
+  "resources": [
+    {
+      "id": "navigation",
+      "name": "Navigation Menu",
+      "type": "component",
+      "description": "Horizontal navigation menu resources",
+      "actions": ["read", "manage"]
+    },
+    {
+      "id": "sidebar",
+      "name": "Sidebar",
+      "type": "component",
+      "description": "Sidebar navigation resources",
+      "actions": ["read", "manage"]
+    },
+    {
+      "id": "breadcrumbs",
+      "name": "Breadcrumbs",
+      "type": "component",
+      "description": "Breadcrumb navigation resources",
+      "actions": ["read"]
+    }
+  ]
+}

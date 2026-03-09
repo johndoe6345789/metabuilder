@@ -6,7 +6,7 @@
 
 'use client'
 
-import { ComponentType } from 'react'
+import type { ComponentType } from 'react'
 
 /**
  * FAKEMUI_REGISTRY - EMPTY FOR PHASE 4

@@ -1,0 +1,118 @@
+{
+  "id": "user-card-root",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": "onClick",
+      "transform": "data ? 'user-card user-card--clickable' : 'user-card'"
+    },
+    "onClick": "onClick"
+  },
+  "children": [
+    {
+      "id": "user-card-avatar",
+      "type": "div",
+      "bindings": {
+        "className": {
+          "source": "size",
+          "transform": "(() => { const sizeMap = { sm: 'avatar--sm', md: '', lg: 'avatar--lg' }; const mod = sizeMap[data] || ''; return mod ? `avatar ${mod}` : 'avatar'; })()"
+        }
+      },
+      "children": [
+        {
+          "id": "user-card-avatar-img",
+          "type": "img",
+          "props": {
+            "className": "avatar__image"
+          },
+          "bindings": {
+            "src": "avatar",
+            "alt": "name",
+            "_if": {
+              "source": "avatar",
+              "transform": "!!data"
+            }
+          }
+        },
+        {
+          "id": "user-card-avatar-initials",
+          "type": "span",
+          "props": {
+            "className": "avatar__initials"
+          },
+          "bindings": {
+            "children": {
+              "source": "name",
+              "transform": "data ? data.slice(0, 2).toUpperCase() : '?'"
+            },
+            "_if": {
+              "source": "avatar",
+              "transform": "!data"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "user-card-info",
+      "type": "div",
+      "props": {
+        "className": "user-card__info"
+      },
+      "children": [
+        {
+          "id": "user-card-name",
+          "type": "p",
+          "props": {
+            "className": "user-card__name"
+          },
+          "bindings": {
+            "children": "name"
+          }
+        },
+        {
+          "id": "user-card-email",
+          "type": "p",
+          "props": {
+            "className": "user-card__email"
+          },
+          "bindings": {
+            "children": "email",
+            "_if": {
+              "source": "email",
+              "transform": "!!data"
+            }
+          }
+        },
+        {
+          "id": "user-card-role",
+          "type": "p",
+          "props": {
+            "className": "user-card__role"
+          },
+          "bindings": {
+            "children": "role",
+            "_if": {
+              "source": "role",
+              "transform": "!!data"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "user-card-actions",
+      "type": "div",
+      "props": {
+        "className": "user-card__actions"
+      },
+      "bindings": {
+        "_if": {
+          "source": "actions",
+          "transform": "data && data.length > 0"
+        },
+        "children": "actions"
+      }
+    }
+  ]
+}

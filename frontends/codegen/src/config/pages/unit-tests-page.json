@@ -1,0 +1,36 @@
+{
+  "id": "unit-tests-page",
+  "name": "Unit Tests",
+  "description": "Unit test designer",
+  "icon": "TestTube",
+  "layout": {
+    "$ref": "./layouts/single-column.json"
+  },
+  "dataSources": [
+    {
+      "id": "tests",
+      "$ref": "./data-sources/kv-storage.json",
+      "key": "unit-tests",
+      "defaultValue": []
+    }
+  ],
+  "components": [
+    {
+      "$ref": "./molecules/page-header-standard.json",
+      "children": [
+        {
+          "$ref": "./atoms/heading-1.json",
+          "props": {
+            "children": "Unit Tests"
+          }
+        },
+        {
+          "$ref": "./atoms/text-muted.json",
+          "props": {
+            "children": "Create unit tests for your code"
+          }
+        }
+      ]
+    }
+  ]
+}

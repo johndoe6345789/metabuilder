@@ -1,0 +1,73 @@
+{
+  "id": "workflows-page",
+  "name": "Workflows",
+  "description": "Design automation workflows",
+  "icon": "GitBranch",
+  "layout": {
+    "$ref": "./layouts/single-column.json"
+  },
+  "dataSources": [
+    {
+      "id": "workflows",
+      "$ref": "./data-sources/kv-storage.json",
+      "key": "workflows",
+      "defaultValue": []
+    }
+  ],
+  "components": [
+    {
+      "id": "workflows-header",
+      "$ref": "./molecules/page-header-standard.json",
+      "children": [
+        {
+          "id": "page-title",
+          "$ref": "./atoms/heading-1.json",
+          "props": {
+            "children": "Workflows"
+          }
+        },
+        {
+          "id": "page-description",
+          "$ref": "./atoms/text-muted.json",
+          "props": {
+            "children": "Create and manage automation workflows"
+          }
+        }
+      ]
+    },
+    {
+      "id": "workflows-toolbar",
+      "$ref": "./molecules/toolbar-with-actions.json",
+      "children": [
+        {
+          "id": "toolbar-left",
+          "type": "div",
+          "props": {
+            "className": "flex items-center gap-4"
+          },
+          "children": [
+            {
+              "$ref": "./atoms/text-muted.json",
+              "dataBinding": {
+                "source": "workflows",
+                "transform": "data => `${data.length} workflows`"
+              }
+            }
+          ]
+        },
+        {
+          "id": "toolbar-right",
+          "type": "div",
+          "children": [
+            {
+              "$ref": "./components/button-primary.json",
+              "props": {
+                "children": "New Workflow"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

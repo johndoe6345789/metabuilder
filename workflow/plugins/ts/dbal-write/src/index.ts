@@ -1,6 +1,6 @@
 /**
  * DBAL Write Node Executor Plugin
- * Handles create/update/upsert database operations
+ * Executes create/update/delete against the C++ DBAL REST API via fetch().
  */
 
 import {
@@ -13,6 +13,8 @@ import {
 } from '@metabuilder/workflow';
 import { interpolateTemplate } from '@metabuilder/workflow';
 
+const DBAL_API_URL = process.env.DBAL_API_URL ?? 'http://localhost:8080';
+
 export class DBALWriteExecutor implements INodeExecutor {
   nodeType = 'dbal-write';
 
@@ -24,56 +26,94 @@ export class DBALWriteExecutor implements INodeExecutor {
     const startTime = Date.now();
 
     try {
-      const { entity, operation, data, id, filter } = node.parameters;
+      const { entity, operation, data, id, filter, packageId } = node.parameters;
 
       if (!entity) {
         throw new Error('DBAL write node requires "entity" parameter');
       }
 
-      if (!operation || !['create', 'update', 'upsert'].includes(operation)) {
-        throw new Error('DBAL write requires operation: create, update, or upsert');
+      if (!operation || !['create', 'update', 'delete'].includes(operation)) {
+        throw new Error('DBAL write requires operation: create, update, or delete');
       }
 
-      const resolvedData = interpolateTemplate(data, { context, state, json: context.triggerData });
+      const pkg = packageId ?? 'default';
+      const tenant = context.tenantId ?? 'default';
+      const baseUrl = `${DBAL_API_URL}/api/v1/${tenant}/${pkg}/${entity}`;
+      const headers = { 'Content-Type': 'application/json' };
 
-      if (context.tenantId) {
-        resolvedData.tenantId = context.tenantId;
-      }
-
-      resolvedData.updatedAt = new Date();
-      if (operation === 'create') {
-        resolvedData.createdAt = new Date();
-        resolvedData.createdBy = context.userId;
-      }
-      resolvedData.updatedBy = context.userId;
-
+      let response: Response;
       let result: any;
 
       switch (operation) {
-        case 'create':
-          result = { operation, entity, data: resolvedData, created: true };
+        case 'create': {
+          const resolvedData = interpolateTemplate(data, { context, state, json: context.triggerData });
+          if (context.tenantId) resolvedData.tenantId = context.tenantId;
+
+          response = await fetch(baseUrl, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(resolvedData),
+          });
+
+          if (!response.ok) {
+            throw new Error(`DBAL create failed: ${response.status} ${response.statusText}`);
+          }
+
+          result = await response.json();
           break;
-        case 'update':
+        }
+
+        case 'update': {
           if (!id && !filter) {
             throw new Error('Update requires either id or filter parameter');
           }
-          result = { operation, entity, data: resolvedData, updated: true };
-          break;
-        case 'upsert':
-          if (!filter) {
-            throw new Error('Upsert requires filter parameter');
-          }
-          result = { operation, entity, data: resolvedData, upserted: true };
-          break;
-      }
 
-      const duration = Date.now() - startTime;
+          const resolvedData = interpolateTemplate(data, { context, state, json: context.triggerData });
+          if (context.tenantId) resolvedData.tenantId = context.tenantId;
+
+          const url = id ? `${baseUrl}/${id}` : baseUrl;
+          const body = id
+            ? resolvedData
+            : { filter: interpolateTemplate(filter, { context, state, json: context.triggerData }), data: resolvedData };
+
+          response = await fetch(url, {
+            method: 'PUT',
+            headers,
+            body: JSON.stringify(body),
+          });
+
+          if (!response.ok) {
+            throw new Error(`DBAL update failed: ${response.status} ${response.statusText}`);
+          }
+
+          result = await response.json();
+          break;
+        }
+
+        case 'delete': {
+          if (!id) {
+            throw new Error('Delete requires id parameter');
+          }
+
+          response = await fetch(`${baseUrl}/${id}`, {
+            method: 'DELETE',
+            headers,
+          });
+
+          if (!response.ok) {
+            throw new Error(`DBAL delete failed: ${response.status} ${response.statusText}`);
+          }
+
+          result = await response.json();
+          break;
+        }
+      }
 
       return {
         status: 'success',
         output: result,
         timestamp: Date.now(),
-        duration
+        duration: Date.now() - startTime
       };
     } catch (error) {
       return {
@@ -95,15 +135,19 @@ export class DBALWriteExecutor implements INodeExecutor {
     }
 
     if (!node.parameters.operation) {
-      errors.push('Operation is required (create, update, or upsert)');
+      errors.push('Operation is required (create, update, or delete)');
     }
 
-    if (!node.parameters.data) {
-      errors.push('Data is required');
+    if (node.parameters.operation !== 'delete' && !node.parameters.data) {
+      errors.push('Data is required for create/update operations');
     }
 
     if (node.parameters.operation === 'update' && !node.parameters.id && !node.parameters.filter) {
       errors.push('Update operation requires either id or filter');
+    }
+
+    if (node.parameters.operation === 'delete' && !node.parameters.id) {
+      errors.push('Delete operation requires id');
     }
 
     return {

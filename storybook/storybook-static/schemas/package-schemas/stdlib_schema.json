@@ -1,0 +1,216 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://metabuilder.dev/schemas/stdlib.schema.json",
+  "title": "MetaBuilder Standard Library",
+  "description": "Built-in functions and utilities available to all JSON scripts",
+  "type": "object",
+  "required": ["version", "modules"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "JSON Schema reference"
+    },
+    "version": {
+      "type": "string",
+      "description": "Standard library version",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "default": "1.0.0"
+    },
+    "description": {
+      "type": "string",
+      "description": "Library description"
+    },
+    "modules": {
+      "type": "object",
+      "description": "Modules grouping related functions",
+      "additionalProperties": {
+        "$ref": "#/definitions/module"
+      }
+    }
+  },
+  "definitions": {
+    "module": {
+      "type": "object",
+      "required": ["name", "functions"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Module name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Module description"
+        },
+        "icon": {
+          "type": "string",
+          "description": "Module icon (emoji or identifier)"
+        },
+        "color": {
+          "type": "string",
+          "description": "Module color for visual grouping",
+          "pattern": "^#[0-9A-Fa-f]{6}$"
+        },
+        "functions": {
+          "type": "array",
+          "description": "Functions in this module",
+          "items": {
+            "$ref": "#/definitions/stdFunction"
+          }
+        }
+      }
+    },
+    "stdFunction": {
+      "type": "object",
+      "required": ["name", "params", "returnType"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Function name (camelCase)",
+          "pattern": "^[a-z][a-zA-Z0-9]*$"
+        },
+        "category": {
+          "type": "string",
+          "description": "Function category",
+          "enum": ["string", "array", "object", "math", "date", "validation", "http", "database", "utility", "conversion"]
+        },
+        "description": {
+          "type": "string",
+          "description": "Function description"
+        },
+        "icon": {
+          "type": "string",
+          "description": "Function icon (emoji)",
+          "default": "⚡"
+        },
+        "color": {
+          "type": "string",
+          "description": "Color for visual programming",
+          "pattern": "^#[0-9A-Fa-f]{6}$",
+          "default": "#3498db"
+        },
+        "params": {
+          "type": "array",
+          "description": "Function parameters",
+          "items": {
+            "$ref": "#/definitions/param"
+          }
+        },
+        "returnType": {
+          "type": "string",
+          "description": "Return type",
+          "enum": ["string", "number", "boolean", "object", "array", "any", "void", "Promise<string>", "Promise<number>", "Promise<boolean>", "Promise<object>", "Promise<array>", "Promise<any>"]
+        },
+        "async": {
+          "type": "boolean",
+          "description": "Whether function is async",
+          "default": false
+        },
+        "pure": {
+          "type": "boolean",
+          "description": "Whether function is pure (no side effects)",
+          "default": true
+        },
+        "higherOrder": {
+          "type": "boolean",
+          "description": "Whether function takes function arguments",
+          "default": false
+        },
+        "complexity": {
+          "type": "string",
+          "description": "Time complexity (Big O notation)",
+          "pattern": "^O\\([a-zA-Z0-9 +*^()]+\\)$",
+          "examples": ["O(1)", "O(n)", "O(n log n)", "O(n^2)"]
+        },
+        "sideEffects": {
+          "type": "array",
+          "description": "Side effects this function may have",
+          "items": {
+            "type": "string",
+            "enum": ["network", "database", "filesystem", "console", "storage", "dom", "state"]
+          }
+        },
+        "permissions": {
+          "type": "array",
+          "description": "Required permissions",
+          "items": { "type": "string" }
+        },
+        "examples": {
+          "type": "array",
+          "description": "Usage examples",
+          "items": {
+            "$ref": "#/definitions/example"
+          }
+        },
+        "since": {
+          "type": "string",
+          "description": "Version when added"
+        },
+        "deprecated": {
+          "oneOf": [
+            { "type": "boolean" },
+            {
+              "type": "object",
+              "properties": {
+                "since": { "type": "string" },
+                "reason": { "type": "string" },
+                "alternative": { "type": "string" }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "param": {
+      "type": "object",
+      "required": ["name", "type"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Parameter name"
+        },
+        "type": {
+          "type": "string",
+          "description": "Parameter type"
+        },
+        "description": {
+          "type": "string",
+          "description": "Parameter description"
+        },
+        "optional": {
+          "type": "boolean",
+          "description": "Whether parameter is optional",
+          "default": false
+        },
+        "default": {
+          "description": "Default value"
+        },
+        "rest": {
+          "type": "boolean",
+          "description": "Whether this is a rest parameter (...args)",
+          "default": false
+        }
+      }
+    },
+    "example": {
+      "type": "object",
+      "required": ["code", "result"],
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Example title"
+        },
+        "code": {
+          "type": "string",
+          "description": "Example code"
+        },
+        "result": {
+          "description": "Expected result"
+        },
+        "description": {
+          "type": "string",
+          "description": "Example explanation"
+        }
+      }
+    }
+  }
+}

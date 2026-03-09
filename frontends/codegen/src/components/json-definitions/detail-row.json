@@ -1,0 +1,58 @@
+{
+  "id": "detail-row-container",
+  "type": "div",
+  "props": {
+    "className": "detail-row"
+  },
+  "children": [
+    {
+      "id": "detail-row-left",
+      "type": "div",
+      "props": {
+        "className": "detail-row__left"
+      },
+      "children": [
+        {
+          "id": "detail-row-icon",
+          "type": "span",
+          "props": {
+            "className": "detail-row__icon"
+          },
+          "bindings": {
+            "children": {
+              "source": "icon",
+              "transform": "data"
+            }
+          }
+        },
+        {
+          "id": "detail-row-label",
+          "type": "span",
+          "props": {
+            "className": "detail-row__label"
+          },
+          "bindings": {
+            "children": {
+              "source": "label",
+              "transform": "data"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "detail-row-badge",
+      "type": "Badge",
+      "bindings": {
+        "variant": {
+          "source": null,
+          "transform": "'secondary'"
+        },
+        "children": {
+          "source": "value",
+          "transform": "data"
+        }
+      }
+    }
+  ]
+}

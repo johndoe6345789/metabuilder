@@ -1,0 +1,83 @@
+{
+  "$schema": "../../../../schemas/plugin-nodes.schema.json",
+  "category": {
+    "id": "web",
+    "name": "Web Server",
+    "color": "#2ecc71",
+    "icon": "globe"
+  },
+  "nodes": [
+    {
+      "id": "web.create_flask_app",
+      "name": "Create Flask App",
+      "description": "Initialize Flask application instance",
+      "icon": "server",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "name": "__main__", "config": {} }
+    },
+    {
+      "id": "web.register_routes",
+      "name": "Register Routes",
+      "description": "Register API routes from JSON configuration",
+      "icon": "map",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "blueprint_name": "api", "routes": [] }
+    },
+    {
+      "id": "web.start_server",
+      "name": "Start Server",
+      "description": "Start Flask development server",
+      "icon": "play",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "host": "0.0.0.0", "port": 8000, "debug": false }
+    },
+    {
+      "id": "web.build_prompt_yaml",
+      "name": "Build Prompt YAML",
+      "description": "Build YAML configuration for prompts",
+      "icon": "file-text",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "template": "" }
+    },
+    {
+      "id": "web.write_prompt",
+      "name": "Write Prompt",
+      "description": "Write prompt to storage",
+      "icon": "save",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "path": "" }
+    },
+    {
+      "id": "web.get_prompt_content",
+      "name": "Get Prompt Content",
+      "description": "Retrieve prompt content from storage",
+      "icon": "file",
+      "inputs": ["main"],
+      "outputs": ["main", "notFound"],
+      "defaultConfig": { "promptId": "" }
+    },
+    {
+      "id": "web.get_env_vars",
+      "name": "Get Env Vars",
+      "description": "Load environment variables",
+      "icon": "key",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "prefix": "" }
+    },
+    {
+      "id": "web.persist_env_vars",
+      "name": "Persist Env Vars",
+      "description": "Save environment variables to .env file",
+      "icon": "save",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "path": ".env" }
+    }
+  ]
+}

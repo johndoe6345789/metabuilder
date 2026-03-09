@@ -1,0 +1,77 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "workflowui-achievements",
+  "version": "1.0.0",
+  "description": "WorkflowUI Achievements page tests - gamification and badges",
+  "tests": [
+    {
+      "name": "should display achievements page",
+      "tags": ["@achievements", "@critical"],
+      "timeout": 10000,
+      "steps": [
+        {
+          "description": "Navigate to achievements",
+          "action": "navigate",
+          "url": "/achievements"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Verify achievements page loaded",
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toContainText",
+            "expected": "Achievement"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should display achievement badges or cards",
+      "tags": ["@achievements", "@content"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/achievements"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "networkidle"
+        },
+        {
+          "description": "Verify achievement display",
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should show progress or stats",
+      "tags": ["@achievements", "@stats"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/achievements"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Check for progress indicators",
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    }
+  ]
+}

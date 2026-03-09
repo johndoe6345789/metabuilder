@@ -1,0 +1,104 @@
+{
+  "id": "unit-test-designer-root",
+  "type": "div",
+  "props": { "className": "workspace__body" },
+  "children": [
+    {
+      "id": "test-suite-list",
+      "type": "TestSuiteList",
+      "bindings": {
+        "tests": "tests",
+        "selectedTestId": "designerState.selectedTestId",
+        "onSelectTest": "designerState.setSelectedTestId",
+        "onAddTest": "designerState.handleAddTest",
+        "onDeleteTest": "designerState.handleDeleteTest",
+        "onGenerateWithAI": "designerState.handleGenerateWithAI"
+      }
+    },
+    {
+      "id": "right-panel",
+      "type": "div",
+      "props": { "className": "unit-test-editor" },
+      "children": [
+        {
+          "id": "selected-content",
+          "type": "div",
+          "props": { "className": "unit-test-editor__content" },
+          "conditional": { "if": "designerState.selectedTest" },
+          "children": [
+            {
+              "id": "test-suite-editor",
+              "type": "TestSuiteEditor",
+              "bindings": {
+                "test": "designerState.selectedTest",
+                "onUpdateTest": "designerState.handleUpdateTest"
+              }
+            },
+            {
+              "id": "test-cases-panel",
+              "type": "TestCasesPanel",
+              "bindings": {
+                "testCases": "designerState.selectedTest.testCases",
+                "onAddTestCase": "designerState.handleAddTestCase",
+                "onDeleteTestCase": "designerState.handleDeleteTestCase",
+                "onUpdateTestCase": "designerState.handleUpdateTestCase",
+                "onAddAssertion": "designerState.handleAddAssertion",
+                "onUpdateAssertion": "designerState.handleUpdateAssertion",
+                "onDeleteAssertion": "designerState.handleDeleteAssertion"
+              }
+            }
+          ]
+        },
+        {
+          "id": "empty-state",
+          "type": "div",
+          "props": { "className": "unit-test-editor__empty" },
+          "conditional": { "if": "!designerState.selectedTest" },
+          "children": [
+            {
+              "id": "empty-state-inner",
+              "type": "div",
+              "props": { "className": "unit-test-editor__empty-inner" },
+              "children": [
+                {
+                  "id": "empty-icon",
+                  "type": "PhosphorIcon",
+                  "props": { "icon": "Flask", "size": 48 }
+                },
+                {
+                  "id": "empty-title",
+                  "type": "p",
+                  "props": { "className": "unit-test-editor__empty-title" },
+                  "bindings": { "children": "designerState.copy.labels.noTestSuiteSelected" }
+                },
+                {
+                  "id": "empty-body",
+                  "type": "p",
+                  "props": { "className": "unit-test-editor__empty-body" },
+                  "bindings": { "children": "designerState.copy.labels.noTestSuiteSelectedBody" }
+                },
+                {
+                  "id": "create-button",
+                  "type": "Button",
+                  "bindings": { "onClick": "designerState.handleAddTest" },
+                  "children": [
+                    {
+                      "id": "create-button-icon",
+                      "type": "PhosphorIcon",
+                      "props": { "icon": "Plus", "size": 16 }
+                    },
+                    {
+                      "id": "create-button-text",
+                      "type": "text",
+                      "bindings": { "children": "designerState.copy.labels.createTestSuite" }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

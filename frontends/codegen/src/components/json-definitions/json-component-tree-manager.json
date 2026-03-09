@@ -1,0 +1,7 @@
+{
+  "id": "json-component-tree-manager-root",
+  "type": "div",
+  "props": {
+    "className": "tree-manager"
+  }
+}

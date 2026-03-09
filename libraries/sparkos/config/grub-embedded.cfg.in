@@ -1,0 +1,36 @@
+# Embedded bootstrap configuration for GRUB
+# This config tells GRUB where to find the real configuration file
+
+# Set proper terminal and video output
+terminal_input console
+terminal_output console
+
+# Load essential modules
+insmod part_gpt
+insmod fat
+insmod ext2
+insmod normal
+insmod linux
+insmod all_video
+insmod video_bochs
+insmod video_cirrus
+insmod gfxterm
+
+# Set graphics mode for better compatibility
+set gfxmode=auto
+set gfxpayload=keep
+
+# Search for ESP by label
+search --no-floppy --set=root --label @ESP_LABEL@
+
+# Try to load the main config file
+if [ -e /boot/grub/grub.cfg ]; then
+    configfile /boot/grub/grub.cfg
+else
+    echo "Error: Could not find /boot/grub/grub.cfg"
+    echo "Root device: $root"
+    echo "Press any key to enter GRUB command line..."
+    # Sleep for a very long time (interruptible by any key press)
+    # This provides an effective "wait for keypress" in GRUB
+    sleep --verbose --interruptible 99999
+fi

@@ -1,0 +1,11 @@
+{
+  "type": "Card, CardContent, CardDescription, CardHeader, CardTitle",
+  "props": {
+    "renderStatus": "> React.ReactNode",
+    "renderBadge": "> React.ReactNode",
+    "formatTime": "> string",
+    "onCopyBadge": "> void",
+    "getBadgeUrl": "> string",
+    "getBadgeMarkdown": "> string"
+  }
+}

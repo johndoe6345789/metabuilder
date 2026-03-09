@@ -28,6 +28,7 @@ import type { User } from '@/lib/level-types'
 import { validateUserForm, type UserFormData, type UserFormErrors } from '@/lib/validation/user-validation'
 
 interface UseUserFormOptions {
+  baseUrl?: string
   initialData?: Partial<User>
   onSuccess?: (user: User) => void
   onError?: (error: string) => void
@@ -70,6 +71,7 @@ const DEFAULT_FORM_DATA: UserFormData = {
  */
 export function useUserForm(options?: UseUserFormOptions): UseUserFormReturn {
   // Initialize form data from provided initial data or defaults
+  const baseUrl = options?.baseUrl ?? ''
   const initialFormData: UserFormData = {
     username: options?.initialData?.username ?? '',
     email: options?.initialData?.email ?? '',
@@ -87,7 +89,7 @@ export function useUserForm(options?: UseUserFormOptions): UseUserFormReturn {
   const isDirty = JSON.stringify(formData) !== JSON.stringify(initialFormData)
 
   // Determine if form is valid (no errors and all required fields filled)
-  const isValid = Object.keys(errors).length === 0 && formData.username && formData.email
+  const isValid = Object.keys(errors).length === 0 && !!formData.username && !!formData.email
 
   /**
    * Update a single form field
@@ -169,7 +171,7 @@ export function useUserForm(options?: UseUserFormOptions): UseUserFormReturn {
         }
 
         // Make API request
-        const response = await fetch('/api/v1/default/user_manager/users', {
+        const response = await fetch(`${baseUrl}/api/v1/default/user_manager/users`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(requestData),
@@ -246,7 +248,7 @@ export function useUserForm(options?: UseUserFormOptions): UseUserFormReturn {
         }
 
         // Make API request
-        const response = await fetch(`/api/v1/default/user_manager/users/${userId}`, {
+        const response = await fetch(`${baseUrl}/api/v1/default/user_manager/users/${userId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(requestData),

@@ -25,6 +25,7 @@ export const useFormControl = () => useContext(FormControlContext)
  * Props for FormControl component
  */
 export interface FormControlProps extends React.HTMLAttributes<HTMLDivElement> {
+  testId?: string
   children?: React.ReactNode
   /** Whether the field is required */
   required?: boolean
@@ -63,9 +64,9 @@ export interface FormControlProps extends React.HTMLAttributes<HTMLDivElement> {
 export const FormControl = forwardRef<HTMLDivElement, FormControlProps>(
   (
     { 
-      children, 
-      required = false, 
-      disabled = false, 
+      children,
+      required = false,
+      disabled = false,
       error = false,
       fullWidth = false,
       margin = 'none',
@@ -73,9 +74,10 @@ export const FormControl = forwardRef<HTMLDivElement, FormControlProps>(
       variant = 'outlined',
       filled = false,
       focused = false,
-      className = '', 
+      testId,
+      className = '',
       sx,
-      ...props 
+      ...props
     }, 
     ref
   ) => {
@@ -102,6 +104,7 @@ export const FormControl = forwardRef<HTMLDivElement, FormControlProps>(
             ${focused ? 'form-control--focused' : ''}
             ${className}
           `.trim().replace(/\s+/g, ' ')}
+          data-testid={testId}
           {...props}
         >
           {children}

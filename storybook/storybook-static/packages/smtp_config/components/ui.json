@@ -1,0 +1,550 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "smtp_config",
+  "description": "SMTP configuration components including config editor and test panel",
+  "components": [
+    {
+      "id": "smtp_config_editor",
+      "name": "SMTPConfigEditor",
+      "description": "Form for SMTP server configuration with host, port, authentication, and encryption settings",
+      "props": [
+        {
+          "name": "config",
+          "type": "object",
+          "required": false,
+          "description": "Current SMTP configuration object"
+        },
+        {
+          "name": "readonly",
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Whether the form is read-only"
+        },
+        {
+          "name": "onSave",
+          "type": "function",
+          "required": false,
+          "description": "Callback when configuration is saved"
+        },
+        {
+          "name": "onCancel",
+          "type": "function",
+          "required": false,
+          "description": "Callback when cancel is clicked"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "smtp-config-editor",
+          "children": [
+            {
+              "type": "Box",
+              "sx": { "p": 3, "borderBottom": 1, "borderColor": "divider" },
+              "children": [
+                {
+                  "type": "Text",
+                  "variant": "h5",
+                  "fontWeight": "bold",
+                  "children": "SMTP Configuration"
+                },
+                {
+                  "type": "Text",
+                  "variant": "body2",
+                  "color": "text.secondary",
+                  "children": "Configure your outgoing email server settings"
+                }
+              ]
+            },
+            {
+              "type": "Box",
+              "sx": { "p": 3 },
+              "children": [
+                {
+                  "type": "Stack",
+                  "spacing": 3,
+                  "children": [
+                    {
+                      "type": "Text",
+                      "variant": "subtitle1",
+                      "fontWeight": "bold",
+                      "children": "Server Settings"
+                    },
+                    {
+                      "type": "Stack",
+                      "direction": "row",
+                      "spacing": 2,
+                      "children": [
+                        {
+                          "type": "TextField",
+                          "label": "SMTP Host",
+                          "value": "{{state.config.host}}",
+                          "onChange": "updateHost",
+                          "placeholder": "smtp.example.com",
+                          "required": true,
+                          "fullWidth": true,
+                          "disabled": "{{props.readonly}}",
+                          "helperText": "SMTP server hostname or IP address"
+                        },
+                        {
+                          "type": "TextField",
+                          "label": "Port",
+                          "inputType": "number",
+                          "value": "{{state.config.port}}",
+                          "onChange": "updatePort",
+                          "placeholder": "587",
+                          "required": true,
+                          "disabled": "{{props.readonly}}",
+                          "helperText": "Common ports: 25, 465, 587",
+                          "sx": { "minWidth": 120, "maxWidth": 150 }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Select",
+                      "label": "Encryption",
+                      "value": "{{state.config.encryption}}",
+                      "onChange": "updateEncryption",
+                      "disabled": "{{props.readonly}}",
+                      "fullWidth": true,
+                      "options": [
+                        { "value": "none", "label": "None" },
+                        { "value": "tls", "label": "TLS" },
+                        { "value": "ssl", "label": "SSL" },
+                        { "value": "starttls", "label": "STARTTLS" }
+                      ],
+                      "helperText": "Select the encryption method for secure connection"
+                    },
+                    {
+                      "type": "TextField",
+                      "label": "Timeout (seconds)",
+                      "inputType": "number",
+                      "value": "{{state.config.timeout}}",
+                      "onChange": "updateTimeout",
+                      "placeholder": "30",
+                      "disabled": "{{props.readonly}}",
+                      "helperText": "Connection timeout in seconds",
+                      "sx": { "maxWidth": 200 }
+                    }
+                  ]
+                },
+                {
+                  "type": "Divider",
+                  "sx": { "my": 3 }
+                },
+                {
+                  "type": "Stack",
+                  "spacing": 3,
+                  "children": [
+                    {
+                      "type": "Text",
+                      "variant": "subtitle1",
+                      "fontWeight": "bold",
+                      "children": "Authentication"
+                    },
+                    {
+                      "type": "Select",
+                      "label": "Authentication Method",
+                      "value": "{{state.config.authMethod}}",
+                      "onChange": "updateAuthMethod",
+                      "disabled": "{{props.readonly}}",
+                      "fullWidth": true,
+                      "options": [
+                        { "value": "plain", "label": "Plain" },
+                        { "value": "login", "label": "Login" },
+                        { "value": "cram-md5", "label": "CRAM-MD5" },
+                        { "value": "oauth2", "label": "OAuth2" }
+                      ],
+                      "helperText": "Select the authentication method supported by your server"
+                    },
+                    {
+                      "type": "TextField",
+                      "label": "Username",
+                      "value": "{{state.config.username}}",
+                      "onChange": "updateUsername",
+                      "placeholder": "user@example.com",
+                      "required": true,
+                      "fullWidth": true,
+                      "disabled": "{{props.readonly}}",
+                      "helperText": "SMTP authentication username"
+                    },
+                    {
+                      "type": "TextField",
+                      "label": "Password",
+                      "inputType": "password",
+                      "value": "{{state.config.password}}",
+                      "onChange": "updatePassword",
+                      "placeholder": "••••••••",
+                      "required": true,
+                      "fullWidth": true,
+                      "disabled": "{{props.readonly}}",
+                      "helperText": "SMTP authentication password (stored encrypted)"
+                    }
+                  ]
+                },
+                {
+                  "type": "Divider",
+                  "sx": { "my": 3 }
+                },
+                {
+                  "type": "Stack",
+                  "spacing": 3,
+                  "children": [
+                    {
+                      "type": "Text",
+                      "variant": "subtitle1",
+                      "fontWeight": "bold",
+                      "children": "Sender Information"
+                    },
+                    {
+                      "type": "Stack",
+                      "direction": "row",
+                      "spacing": 2,
+                      "children": [
+                        {
+                          "type": "TextField",
+                          "label": "From Email",
+                          "value": "{{state.config.fromEmail}}",
+                          "onChange": "updateFromEmail",
+                          "placeholder": "noreply@example.com",
+                          "required": true,
+                          "fullWidth": true,
+                          "disabled": "{{props.readonly}}",
+                          "helperText": "Default sender email address"
+                        },
+                        {
+                          "type": "TextField",
+                          "label": "From Name",
+                          "value": "{{state.config.fromName}}",
+                          "onChange": "updateFromName",
+                          "placeholder": "My Application",
+                          "required": true,
+                          "fullWidth": true,
+                          "disabled": "{{props.readonly}}",
+                          "helperText": "Default sender display name"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "TextField",
+                      "label": "Reply-To Email",
+                      "value": "{{state.config.replyTo}}",
+                      "onChange": "updateReplyTo",
+                      "placeholder": "support@example.com",
+                      "fullWidth": true,
+                      "disabled": "{{props.readonly}}",
+                      "helperText": "Optional reply-to address (defaults to From Email if empty)"
+                    }
+                  ]
+                },
+                {
+                  "type": "Divider",
+                  "sx": { "my": 3 }
+                },
+                {
+                  "type": "Stack",
+                  "spacing": 2,
+                  "children": [
+                    {
+                      "type": "Text",
+                      "variant": "subtitle1",
+                      "fontWeight": "bold",
+                      "children": "Advanced Settings"
+                    },
+                    {
+                      "type": "TextField",
+                      "label": "Max Retries",
+                      "inputType": "number",
+                      "value": "{{state.config.maxRetries}}",
+                      "onChange": "updateMaxRetries",
+                      "placeholder": "3",
+                      "disabled": "{{props.readonly}}",
+                      "helperText": "Maximum number of retry attempts on failure",
+                      "sx": { "maxWidth": 200 }
+                    },
+                    {
+                      "type": "Box",
+                      "sx": { "display": "flex", "alignItems": "center", "gap": 2 },
+                      "children": [
+                        {
+                          "type": "Switch",
+                          "checked": "{{state.config.verifyTls}}",
+                          "onChange": "toggleVerifyTls",
+                          "disabled": "{{props.readonly}}"
+                        },
+                        {
+                          "type": "Text",
+                          "variant": "body2",
+                          "children": "Verify TLS Certificate"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Box",
+              "sx": { "p": 3, "borderTop": 1, "borderColor": "divider", "display": "flex", "justifyContent": "flex-end", "gap": 2 },
+              "children": [
+                {
+                  "type": "Button",
+                  "variant": "outlined",
+                  "onClick": "onCancel",
+                  "disabled": "{{!props.onCancel}}",
+                  "children": "Cancel"
+                },
+                {
+                  "type": "Button",
+                  "variant": "contained",
+                  "color": "primary",
+                  "onClick": "onSave",
+                  "disabled": "{{props.readonly || !state.isValid}}",
+                  "children": "Save Configuration"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "smtp_test_panel",
+      "name": "SMTPTestPanel",
+      "description": "Panel to test SMTP connection and send test emails",
+      "props": [
+        {
+          "name": "config",
+          "type": "object",
+          "required": true,
+          "description": "SMTP configuration to test"
+        },
+        {
+          "name": "onTestComplete",
+          "type": "function",
+          "required": false,
+          "description": "Callback when test completes"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "smtp-test-panel",
+          "children": [
+            {
+              "type": "Box",
+              "sx": { "p": 3, "borderBottom": 1, "borderColor": "divider" },
+              "children": [
+                {
+                  "type": "Text",
+                  "variant": "h6",
+                  "fontWeight": "bold",
+                  "children": "Test SMTP Connection"
+                },
+                {
+                  "type": "Text",
+                  "variant": "body2",
+                  "color": "text.secondary",
+                  "children": "Verify your SMTP configuration by testing the connection and sending a test email"
+                }
+              ]
+            },
+            {
+              "type": "Box",
+              "sx": { "p": 3 },
+              "children": [
+                {
+                  "type": "conditional",
+                  "condition": "{{state.testResult !== null}}",
+                  "then": {
+                    "type": "Alert",
+                    "severity": "{{state.testResult.success ? 'success' : 'error'}}",
+                    "sx": { "mb": 3 },
+                    "children": "{{state.testResult.message}}"
+                  }
+                },
+                {
+                  "type": "Stack",
+                  "spacing": 3,
+                  "children": [
+                    {
+                      "type": "Box",
+                      "children": [
+                        {
+                          "type": "Text",
+                          "variant": "subtitle2",
+                          "fontWeight": "bold",
+                          "sx": { "mb": 2 },
+                          "children": "Connection Test"
+                        },
+                        {
+                          "type": "Button",
+                          "variant": "outlined",
+                          "color": "primary",
+                          "onClick": "testConnection",
+                          "disabled": "{{state.isTesting}}",
+                          "startIcon": "NetworkCheck",
+                          "children": "{{state.isTesting ? 'Testing...' : 'Test Connection'}}"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Divider"
+                    },
+                    {
+                      "type": "Stack",
+                      "spacing": 2,
+                      "children": [
+                        {
+                          "type": "Text",
+                          "variant": "subtitle2",
+                          "fontWeight": "bold",
+                          "children": "Send Test Email"
+                        },
+                        {
+                          "type": "TextField",
+                          "label": "Recipient Email",
+                          "value": "{{state.testEmail}}",
+                          "onChange": "updateTestEmail",
+                          "placeholder": "test@example.com",
+                          "required": true,
+                          "fullWidth": true,
+                          "helperText": "Email address to send the test message to"
+                        },
+                        {
+                          "type": "TextField",
+                          "label": "Subject",
+                          "value": "{{state.testSubject}}",
+                          "onChange": "updateTestSubject",
+                          "placeholder": "SMTP Test Email",
+                          "fullWidth": true,
+                          "helperText": "Subject line for the test email"
+                        },
+                        {
+                          "type": "TextField",
+                          "label": "Message Body",
+                          "value": "{{state.testBody}}",
+                          "onChange": "updateTestBody",
+                          "placeholder": "This is a test email from MetaBuilder.",
+                          "multiline": true,
+                          "rows": 4,
+                          "fullWidth": true,
+                          "helperText": "Content of the test email"
+                        },
+                        {
+                          "type": "Button",
+                          "variant": "contained",
+                          "color": "primary",
+                          "onClick": "sendTestEmail",
+                          "disabled": "{{state.isSending || !state.testEmail}}",
+                          "startIcon": "Send",
+                          "children": "{{state.isSending ? 'Sending...' : 'Send Test Email'}}"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "condition": "{{state.testResult && state.testResult.details}}",
+              "then": {
+                "type": "Box",
+                "sx": { "p": 3, "borderTop": 1, "borderColor": "divider", "backgroundColor": "action.hover" },
+                "children": [
+                  {
+                    "type": "Text",
+                    "variant": "subtitle2",
+                    "fontWeight": "bold",
+                    "sx": { "mb": 2 },
+                    "children": "Connection Details"
+                  },
+                  {
+                    "type": "Stack",
+                    "spacing": 1,
+                    "children": [
+                      {
+                        "type": "Box",
+                        "sx": { "display": "flex", "alignItems": "center", "gap": 1 },
+                        "children": [
+                          {
+                            "type": "Icon",
+                            "name": "{{state.testResult.details.connected ? 'CheckCircle' : 'Cancel'}}",
+                            "color": "{{state.testResult.details.connected ? 'success' : 'error'}}",
+                            "size": "small"
+                          },
+                          {
+                            "type": "Text",
+                            "variant": "body2",
+                            "children": "Connection: {{state.testResult.details.connected ? 'Established' : 'Failed'}}"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "Box",
+                        "sx": { "display": "flex", "alignItems": "center", "gap": 1 },
+                        "children": [
+                          {
+                            "type": "Icon",
+                            "name": "{{state.testResult.details.authenticated ? 'CheckCircle' : 'Cancel'}}",
+                            "color": "{{state.testResult.details.authenticated ? 'success' : 'error'}}",
+                            "size": "small"
+                          },
+                          {
+                            "type": "Text",
+                            "variant": "body2",
+                            "children": "Authentication: {{state.testResult.details.authenticated ? 'Success' : 'Failed'}}"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "Box",
+                        "sx": { "display": "flex", "alignItems": "center", "gap": 1 },
+                        "children": [
+                          {
+                            "type": "Icon",
+                            "name": "{{state.testResult.details.tlsEnabled ? 'Lock' : 'LockOpen'}}",
+                            "color": "{{state.testResult.details.tlsEnabled ? 'success' : 'warning'}}",
+                            "size": "small"
+                          },
+                          {
+                            "type": "Text",
+                            "variant": "body2",
+                            "children": "TLS: {{state.testResult.details.tlsEnabled ? 'Enabled' : 'Disabled'}}"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "Text",
+                        "variant": "body2",
+                        "color": "text.secondary",
+                        "children": "Response time: {{state.testResult.duration}}ms"
+                      },
+                      {
+                        "type": "Text",
+                        "variant": "caption",
+                        "color": "text.secondary",
+                        "sx": { "fontFamily": "monospace" },
+                        "children": "Server: {{state.testResult.details.serverResponse}}"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "exports": {
+    "components": ["SMTPConfigEditor", "SMTPTestPanel"]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "entity": "SnippetRevision",
+  "version": "1.0",
+  "description": "Auto-saved revision of a snippet, created on every debounced edit",
+  "fields": {
+    "id":        { "type": "uuid",   "primary": true, "required": true },
+    "snippetId": { "type": "string", "required": true },
+    "code":      { "type": "text",   "required": true },
+    "files":     { "type": "text",   "optional": true, "nullable": true },
+    "createdAt": { "type": "bigint", "required": true },
+    "userId":    { "type": "string", "required": true },
+    "tenantId":  { "type": "string", "optional": true, "nullable": true }
+  },
+  "indexes": [
+    { "fields": ["snippetId"] },
+    { "fields": ["snippetId", "createdAt"] },
+    { "fields": ["userId"] }
+  ]
+}

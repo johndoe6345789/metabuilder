@@ -1,0 +1,130 @@
+// Error State Atoms - Material Design 3 (CSS Module)
+// ===================================================
+// Flat selectors for error state styling using M3 tokens
+
+// Base error state
+.errorState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--mat-sys-error);
+}
+
+// Icon
+.errorStateIcon {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 16px;
+  color: var(--mat-sys-error);
+}
+
+// Title
+.errorStateTitle {
+  font-family: var(--mat-sys-title-medium-font);
+  font-size: var(--mat-sys-title-medium-size);
+  font-weight: var(--mat-sys-title-medium-weight);
+  line-height: var(--mat-sys-title-medium-line-height);
+  color: var(--mat-sys-on-surface);
+  margin: 0 0 8px;
+}
+
+// Description
+.errorStateDescription {
+  font-family: var(--mat-sys-body-medium-font);
+  font-size: var(--mat-sys-body-medium-size);
+  line-height: var(--mat-sys-body-medium-line-height);
+  color: var(--mat-sys-on-surface-variant);
+  margin: 0;
+  max-width: 400px;
+}
+
+// Error code/details
+.errorStateCode {
+  font-family: var(--font-mono);
+  font-size: var(--mat-sys-label-small-size);
+  color: var(--mat-sys-error);
+  background: color-mix(in srgb, var(--mat-sys-error) 8%, transparent);
+  padding: 8px 16px;
+  border-radius: var(--mat-sys-corner-small);
+  margin-top: 16px;
+}
+
+// Actions
+.errorStateActions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+// Size variants
+.errorStateSm {
+  composes: errorState;
+  padding: 24px 16px;
+}
+
+.errorStateSm .errorStateIcon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 12px;
+}
+
+// With background container
+.errorStateContained {
+  composes: errorState;
+  background: var(--mat-sys-error-container);
+  border-radius: var(--mat-sys-corner-large);
+}
+
+.errorStateContained .errorStateIcon {
+  color: var(--mat-sys-on-error-container);
+}
+
+.errorStateContained .errorStateTitle {
+  color: var(--mat-sys-on-error-container);
+}
+
+.errorStateContained .errorStateDescription {
+  color: var(--mat-sys-on-error-container);
+  opacity: 0.8;
+}
+
+// Inline error (horizontal)
+.errorStateInline {
+  composes: errorState;
+  flex-direction: row;
+  gap: 16px;
+  padding: 16px;
+  text-align: left;
+  background: color-mix(in srgb, var(--mat-sys-error) 8%, transparent);
+  border-radius: var(--mat-sys-corner-medium);
+  border-left: 4px solid var(--mat-sys-error);
+}
+
+.errorStateInline .errorStateIcon {
+  width: 24px;
+  height: 24px;
+  margin-bottom: 0;
+  flex-shrink: 0;
+}
+
+// Compact error (for inline forms)
+.errorStateCompact {
+  composes: errorState;
+  padding: 8px 12px;
+  flex-direction: row;
+  gap: 8px;
+  text-align: left;
+}
+
+.errorStateCompact .errorStateIcon {
+  width: 20px;
+  height: 20px;
+  margin-bottom: 0;
+}
+
+.errorStateCompact .errorStateDescription {
+  font-size: var(--mat-sys-body-small-size);
+}

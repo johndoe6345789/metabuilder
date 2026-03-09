@@ -1,0 +1,149 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "package_manager",
+  "description": "Package management admin panel - Install, enable, disable, uninstall packages",
+  "version": "1.0",
+  "tags": ["@admin", "@package-management", "@phase-3"],
+  "tests": [
+    {
+      "name": "admin can view list of packages",
+      "description": "Package list displays all available and installed packages",
+      "tags": ["@package-management", "@smoke"],
+      "timeout": 30000,
+      "steps": [
+        {"action": "navigate", "url": "/admin/packages"},
+        {"action": "waitForLoadState", "state": "networkidle"},
+        {"action": "expect", "testId": "package-list-grid", "assertion": {"matcher": "toBeVisible"}},
+        {"action": "expect", "selector": "[data-testid='package-card']", "assertion": {"matcher": "toHaveCount", "count": 12}},
+        {"action": "expect", "selector": "[data-testid='package-card']:first-child h3", "assertion": {"matcher": "toContainText", "text": "User Manager"}}
+      ]
+    },
+    {
+      "name": "can search packages by name",
+      "description": "Package list can be filtered by name search",
+      "tags": ["@package-management", "@search"],
+      "timeout": 30000,
+      "steps": [
+        {"action": "navigate", "url": "/admin/packages"},
+        {"action": "waitForLoadState", "state": "networkidle"},
+        {"action": "fill", "placeholder": "Search packages...", "value": "User Manager"},
+        {"action": "wait", "timeout": 500},
+        {"action": "expect", "selector": "[data-testid='package-card']", "assertion": {"matcher": "toHaveCount", "count": 1}},
+        {"action": "expect", "selector": "[data-testid='package-card'] h3", "assertion": {"matcher": "toContainText", "text": "User Manager"}}
+      ]
+    },
+    {
+      "name": "can filter by installation status",
+      "description": "Package list can be filtered by installed/available status",
+      "tags": ["@package-management", "@filter"],
+      "timeout": 30000,
+      "steps": [
+        {"action": "navigate", "url": "/admin/packages"},
+        {"action": "waitForLoadState", "state": "networkidle"},
+        {"action": "click", "testId": "status-filter-button"},
+        {"action": "click", "role": "option", "text": "Installed"},
+        {"action": "wait", "timeout": 500},
+        {"action": "expect", "selector": "[data-testid='package-card']:not(.disabled)", "assertion": {"matcher": "toHaveCount", "count": 12}}
+      ]
+    },
+    {
+      "name": "can install available package",
+      "description": "User can install an available package",
+      "tags": ["@package-management", "@install"],
+      "timeout": 30000,
+      "steps": [
+        {"action": "navigate", "url": "/admin/packages"},
+        {"action": "waitForLoadState", "state": "networkidle"},
+        {"action": "click", "role": "button", "text": "Install", "selector": "[data-testid='package-card']:has-text('Auth')"},
+        {"action": "waitForLoadState", "state": "networkidle"},
+        {"action": "expect", "role": "alert", "assertion": {"matcher": "toContainText", "text": "Package installed successfully"}}
+      ]
+    },
+    {
+      "name": "installed package shows installed badge",
+      "description": "Installed packages display installed status badge",
+      "tags": ["@package-management", "@status"],
+      "timeout": 30000,
+      "steps": [
+        {"action": "navigate", "url": "/admin/packages"},
+        {"action": "waitForLoadState", "state": "networkidle"},
+        {"action": "expect", "selector": "[data-testid='package-card']:has-text('User Manager') [data-testid='installed-badge']", "assertion": {"matcher": "toBeVisible"}},
+        {"action": "expect", "selector": "[data-testid='package-card']:has-text('User Manager') [data-testid='installed-badge']", "assertion": {"matcher": "toContainText", "text": "Installed"}}
+      ]
+    },
+    {
+      "name": "can view package details in modal",
+      "description": "Click details shows package information in modal",
+      "tags": ["@package-management", "@details"],
+      "timeout": 30000,
+      "steps": [
+        {"action": "navigate", "url": "/admin/packages"},
+        {"action": "waitForLoadState", "state": "networkidle"},
+        {"action": "click", "role": "button", "text": "Details", "selector": "[data-testid='package-card']:first-child"},
+        {"action": "waitForSelector", "selector": "[role='dialog']"},
+        {"action": "expect", "role": "dialog", "assertion": {"matcher": "toBeVisible"}},
+        {"action": "expect", "selector": "[data-testid='package-description']", "assertion": {"matcher": "toBeVisible"}},
+        {"action": "expect", "selector": "[data-testid='package-version']", "assertion": {"matcher": "toContainText", "text": "1.0"}}
+      ]
+    },
+    {
+      "name": "can uninstall package",
+      "description": "User can uninstall a previously installed package",
+      "tags": ["@package-management", "@uninstall"],
+      "timeout": 30000,
+      "steps": [
+        {"action": "navigate", "url": "/admin/packages"},
+        {"action": "waitForLoadState", "state": "networkidle"},
+        {"action": "click", "role": "button", "text": "Manage", "selector": "[data-testid='package-card']:has-text('Auth')"},
+        {"action": "waitForSelector", "selector": "[data-testid='package-menu']"},
+        {"action": "click", "role": "menuitem", "text": "Uninstall"},
+        {"action": "waitForSelector", "selector": "[role='dialog']"},
+        {"action": "click", "role": "button", "text": "Confirm"},
+        {"action": "waitForLoadState", "state": "networkidle"},
+        {"action": "expect", "role": "alert", "assertion": {"matcher": "toContainText", "text": "Package uninstalled successfully"}}
+      ]
+    },
+    {
+      "name": "can enable disabled package",
+      "description": "User can enable a previously disabled package",
+      "tags": ["@package-management", "@enable"],
+      "timeout": 30000,
+      "steps": [
+        {"action": "navigate", "url": "/admin/packages"},
+        {"action": "click", "role": "button", "text": "Manage", "selector": "[data-testid='package-card']:has-text('Dashboard')"},
+        {"action": "click", "role": "menuitem", "text": "Disable"},
+        {"action": "waitForLoadState", "state": "networkidle"},
+        {"action": "click", "role": "button", "text": "Manage", "selector": "[data-testid='package-card']:has-text('Dashboard')"},
+        {"action": "click", "role": "menuitem", "text": "Enable"},
+        {"action": "waitForLoadState", "state": "networkidle"},
+        {"action": "expect", "role": "alert", "assertion": {"matcher": "toContainText", "text": "Package enabled successfully"}}
+      ]
+    },
+    {
+      "name": "can disable enabled package",
+      "description": "User can disable an enabled package",
+      "tags": ["@package-management", "@disable"],
+      "timeout": 30000,
+      "steps": [
+        {"action": "navigate", "url": "/admin/packages"},
+        {"action": "click", "role": "button", "text": "Manage", "selector": "[data-testid='package-card']:has-text('Dashboard')"},
+        {"action": "click", "role": "menuitem", "text": "Disable"},
+        {"action": "waitForLoadState", "state": "networkidle"},
+        {"action": "expect", "role": "alert", "assertion": {"matcher": "toContainText", "text": "Package disabled successfully"}},
+        {"action": "expect", "selector": "[data-testid='package-card']:has-text('Dashboard')", "assertion": {"matcher": "toHaveClass", "className": "disabled"}}
+      ]
+    },
+    {
+      "name": "package version displayed correctly",
+      "description": "Package version chip displays current version",
+      "tags": ["@package-management", "@version"],
+      "timeout": 30000,
+      "steps": [
+        {"action": "navigate", "url": "/admin/packages"},
+        {"action": "waitForLoadState", "state": "networkidle"},
+        {"action": "expect", "selector": "[data-testid='package-card']:has-text('User Manager') [data-testid='version-chip']", "assertion": {"matcher": "toBeVisible"}},
+        {"action": "expect", "selector": "[data-testid='package-card']:has-text('User Manager') [data-testid='version-chip']", "assertion": {"matcher": "toContainText", "text": "1.0"}}
+      ]
+    }
+  ]
+}

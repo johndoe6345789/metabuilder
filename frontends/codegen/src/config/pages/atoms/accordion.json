@@ -1,0 +1,15 @@
+{
+  "type": "MetabuilderWidgetAccordion",
+  "jsonCompatible": false,
+  "wrapperRequired": true,
+  "load": {
+    "path": "@/components/atoms/Accordion",
+    "export": "Accordion"
+  },
+  "props": {
+    "id": "> {"
+  },
+  "metadata": {
+    "notes": "Contains hooks - needs wrapper"
+  }
+}

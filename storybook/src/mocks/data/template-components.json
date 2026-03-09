@@ -1,0 +1,165 @@
+{
+  "$schema": "../../storybook-config.schema.json",
+  "metadata": {
+    "packageId": "template_components",
+    "name": "Template Components",
+    "version": "1.0.0",
+    "description": "Template card, list item, filters, and sidebar components",
+    "category": "ui"
+  },
+  "renders": {
+    "template-icon.default": {
+      "description": "Template icon with default size",
+      "component": {
+        "type": "TemplateIcon",
+        "props": {
+          "icon": "📋",
+          "color": "#4F46E5"
+        }
+      }
+    },
+    "template-icon.large": {
+      "description": "Large template icon",
+      "component": {
+        "type": "TemplateIcon",
+        "props": {
+          "icon": "🚀",
+          "color": "#10B981",
+          "size": "large"
+        }
+      }
+    },
+    "difficulty-badge.beginner": {
+      "description": "Beginner difficulty badge",
+      "component": {
+        "type": "TemplateDifficultyBadge",
+        "props": {
+          "difficulty": "beginner"
+        }
+      }
+    },
+    "difficulty-badge.intermediate": {
+      "description": "Intermediate difficulty badge",
+      "component": {
+        "type": "TemplateDifficultyBadge",
+        "props": {
+          "difficulty": "intermediate"
+        }
+      }
+    },
+    "difficulty-badge.advanced": {
+      "description": "Advanced difficulty badge",
+      "component": {
+        "type": "TemplateDifficultyBadge",
+        "props": {
+          "difficulty": "advanced"
+        }
+      }
+    },
+    "template-rating.high": {
+      "description": "High rating (5 stars)",
+      "component": {
+        "type": "TemplateRating",
+        "props": {
+          "rating": 4.8
+        }
+      }
+    },
+    "template-rating.medium": {
+      "description": "Medium rating (3 stars)",
+      "component": {
+        "type": "TemplateRating",
+        "props": {
+          "rating": 3.2
+        }
+      }
+    },
+    "template-card.default": {
+      "description": "Default template card",
+      "component": {
+        "type": "TemplateCard",
+        "props": {
+          "template": {
+            "id": "1",
+            "name": "E-commerce Starter",
+            "description": "Complete e-commerce workflow with inventory and payment processing",
+            "icon": "🛒",
+            "color": "#4F46E5",
+            "category": "automation",
+            "difficulty": "intermediate",
+            "tags": ["e-commerce", "payments", "inventory"],
+            "workflows": [
+              { "id": "w1", "name": "Order Processing", "description": "Process customer orders" },
+              { "id": "w2", "name": "Inventory Sync", "description": "Sync inventory levels" }
+            ],
+            "metadata": {
+              "featured": false,
+              "rating": 4.5,
+              "downloads": 1234,
+              "author": "MetaBuilder Team",
+              "createdAt": "2026-01-01",
+              "updatedAt": "2026-02-01"
+            }
+          }
+        }
+      }
+    },
+    "template-card.featured": {
+      "description": "Featured template card",
+      "component": {
+        "type": "TemplateCard",
+        "props": {
+          "template": {
+            "id": "2",
+            "name": "AI Analytics Pipeline",
+            "description": "Machine learning workflow for data analysis and insights",
+            "icon": "🤖",
+            "color": "#10B981",
+            "category": "analytics",
+            "difficulty": "advanced",
+            "tags": ["AI", "ML", "analytics"],
+            "workflows": [
+              { "id": "w3", "name": "Data Preprocessing", "description": "Clean and prepare data" },
+              { "id": "w4", "name": "Model Training", "description": "Train ML models" }
+            ],
+            "metadata": {
+              "featured": true,
+              "rating": 4.9,
+              "downloads": 5678,
+              "author": "AI Team",
+              "createdAt": "2026-01-15",
+              "updatedAt": "2026-02-03"
+            }
+          }
+        }
+      }
+    },
+    "template-list-item.default": {
+      "description": "Template list item",
+      "component": {
+        "type": "TemplateListItem",
+        "props": {
+          "template": {
+            "id": "3",
+            "name": "Social Media Manager",
+            "description": "Automate social media posting and engagement tracking",
+            "icon": "📱",
+            "color": "#EF4444",
+            "category": "marketing",
+            "difficulty": "beginner",
+            "tags": ["social", "automation", "marketing", "analytics", "content"],
+            "workflows": [],
+            "metadata": {
+              "featured": false,
+              "rating": 4.2,
+              "downloads": 890,
+              "author": "Marketing Team",
+              "createdAt": "2026-01-20",
+              "updatedAt": "2026-01-25"
+            }
+          }
+        }
+      }
+    }
+  }
+}

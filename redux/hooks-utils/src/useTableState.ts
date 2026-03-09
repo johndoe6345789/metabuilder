@@ -73,7 +73,7 @@ export interface UseTableStateReturn<T> {
   goToLastPage: () => void
 
   // Sorting
-  sort: SortConfig<T> | null
+  sortConfig: SortConfig<T> | null
   sort: (field: keyof T, direction?: 'asc' | 'desc') => void
   clearSort: () => void
 
@@ -295,7 +295,7 @@ export function useTableState<T extends Record<string, any>>(
     prevPage: handlePrevPage,
     goToFirstPage: () => setCurrentPage(1),
     goToLastPage: () => setCurrentPage(totalPages),
-    sort: sortConfig,
+    sortConfig,
     sort: handleSort,
     clearSort: () => setSortConfig(null),
     filters,

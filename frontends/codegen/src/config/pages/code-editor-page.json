@@ -1,0 +1,17 @@
+{
+  "$schema": "./schema/page-schema.json",
+  "id": "code-editor-page",
+  "name": "Code Editor",
+  "description": "Edit your project files",
+  "icon": "Code",
+  "layout": {
+    "$ref": "./layouts/single-column.json"
+  },
+  "components": [
+    {
+      "id": "code-editor-component",
+      "type": "CodeEditor",
+      "props": {}
+    }
+  ]
+}

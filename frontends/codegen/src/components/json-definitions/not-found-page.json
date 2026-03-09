@@ -1,0 +1,8 @@
+{
+  "id": "not-found-page",
+  "type": "div",
+  "props": {
+    "className": "not-found-page"
+  },
+  "children": []
+}

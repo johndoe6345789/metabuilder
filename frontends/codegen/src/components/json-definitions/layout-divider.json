@@ -1,0 +1,33 @@
+{
+  "id": "layout-divider-root",
+  "type": "div",
+  "props": {
+    "className": "layout-divider"
+  },
+  "bindings": {
+    "role": {
+      "source": null,
+      "transform": "'separator'"
+    }
+  },
+  "children": [
+    {
+      "id": "layout-divider-line-start",
+      "type": "div",
+      "props": { "className": "layout-divider__line" }
+    },
+    {
+      "id": "layout-divider-label",
+      "type": "span",
+      "props": { "className": "layout-divider__label" },
+      "bindings": { "children": "label" },
+      "condition": "label"
+    },
+    {
+      "id": "layout-divider-line-end",
+      "type": "div",
+      "props": { "className": "layout-divider__line" },
+      "condition": "label"
+    }
+  ]
+}

@@ -1,0 +1,264 @@
+// Grid Atoms - Material Design 3 (CSS Module)
+// ============================================
+// Flat selectors for responsive grid layouts using M3 spacing
+
+@use '../mixins/responsive' as *;
+
+// Base grid
+.grid {
+  display: grid;
+  gap: 16px;
+}
+
+// Gap variants
+.gridGapXs {
+  gap: 4px;
+}
+
+.gridGapSm {
+  gap: 8px;
+}
+
+.gridGapMd {
+  gap: 16px;
+}
+
+.gridGapLg {
+  gap: 24px;
+}
+
+.gridGapXl {
+  gap: 32px;
+}
+
+// Fixed column grids
+.gridCols1 {
+  grid-template-columns: repeat(1, 1fr);
+}
+
+.gridCols2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.gridCols3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.gridCols4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.gridCols5 {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.gridCols6 {
+  grid-template-columns: repeat(6, 1fr);
+}
+
+// Auto-fit grid (responsive)
+.autoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.autoGridXs {
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+}
+
+.autoGridSm {
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+}
+
+.autoGridMd {
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+}
+
+.autoGridLg {
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+}
+
+.autoGridXl {
+  grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
+}
+
+// Masonry-like grid (using CSS columns)
+.masonryGrid {
+  column-count: 3;
+  column-gap: 16px;
+}
+
+.masonryGrid2 {
+  column-count: 2;
+}
+
+.masonryGrid4 {
+  column-count: 4;
+}
+
+.masonryGridItem {
+  break-inside: avoid;
+  margin-bottom: 16px;
+}
+
+// Responsive grid breakpoints (M3 window size classes)
+@include compact {
+  .gridCols2,
+  .gridCols3,
+  .gridCols4,
+  .gridCols5,
+  .gridCols6 {
+    grid-template-columns: 1fr;
+  }
+
+  .masonryGrid {
+    column-count: 1;
+  }
+}
+
+@include medium {
+  .gridCols4,
+  .gridCols5,
+  .gridCols6 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .masonryGrid4 {
+    column-count: 2;
+  }
+}
+
+// Grid item utilities
+.gridSpan2 {
+  grid-column: span 2;
+}
+
+.gridSpan3 {
+  grid-column: span 3;
+}
+
+.gridSpanFull {
+  grid-column: 1 / -1;
+}
+
+.gridRowSpan2 {
+  grid-row: span 2;
+}
+
+// Alignment utilities
+.gridItemsStart {
+  align-items: start;
+}
+
+.gridItemsCenter {
+  align-items: center;
+}
+
+.gridItemsEnd {
+  align-items: end;
+}
+
+.gridItemsStretch {
+  align-items: stretch;
+}
+
+// Dense grid (auto-placement fills gaps)
+.gridDense {
+  grid-auto-flow: dense;
+}
+
+// ============================================
+// Flexbox grid (Bootstrap-style)
+// ============================================
+
+.gridContainer {
+  display: flex;
+  flex-wrap: wrap;
+  margin: -12px;
+  width: calc(100% + 24px);
+}
+
+.gridItem {
+  padding: 12px;
+  box-sizing: border-box;
+}
+
+// Column classes (12-column grid)
+.col12 { width: 100%; }
+.col11 { width: 91.666667%; }
+.col10 { width: 83.333333%; }
+.col9 { width: 75%; }
+.col8 { width: 66.666667%; }
+.col7 { width: 58.333333%; }
+.col6 { width: 50%; }
+.col5 { width: 41.666667%; }
+.col4 { width: 33.333333%; }
+.col3 { width: 25%; }
+.col2 { width: 16.666667%; }
+.col1 { width: 8.333333%; }
+
+// Small breakpoint (600px+)
+@media (min-width: 600px) {
+  .colSm12 { width: 100%; }
+  .colSm11 { width: 91.666667%; }
+  .colSm10 { width: 83.333333%; }
+  .colSm9 { width: 75%; }
+  .colSm8 { width: 66.666667%; }
+  .colSm7 { width: 58.333333%; }
+  .colSm6 { width: 50%; }
+  .colSm5 { width: 41.666667%; }
+  .colSm4 { width: 33.333333%; }
+  .colSm3 { width: 25%; }
+  .colSm2 { width: 16.666667%; }
+  .colSm1 { width: 8.333333%; }
+}
+
+// Medium breakpoint (900px+)
+@media (min-width: 900px) {
+  .colMd12 { width: 100%; }
+  .colMd11 { width: 91.666667%; }
+  .colMd10 { width: 83.333333%; }
+  .colMd9 { width: 75%; }
+  .colMd8 { width: 66.666667%; }
+  .colMd7 { width: 58.333333%; }
+  .colMd6 { width: 50%; }
+  .colMd5 { width: 41.666667%; }
+  .colMd4 { width: 33.333333%; }
+  .colMd3 { width: 25%; }
+  .colMd2 { width: 16.666667%; }
+  .colMd1 { width: 8.333333%; }
+}
+
+// Large breakpoint (1200px+)
+@media (min-width: 1200px) {
+  .colLg12 { width: 100%; }
+  .colLg6 { width: 50%; }
+  .colLg4 { width: 33.333333%; }
+  .colLg3 { width: 25%; }
+}
+
+// ============================================
+// Utility classes
+// ============================================
+
+.gap1 { gap: 4px; }
+.gap2 { gap: 8px; }
+.gap3 { gap: 12px; }
+.gap4 { gap: 16px; }
+.gap5 { gap: 20px; }
+.gap6 { gap: 24px; }
+
+.mbSm { margin-bottom: 8px; }
+.mbMd { margin-bottom: 16px; }
+.mbLg { margin-bottom: 24px; }
+.mbXl { margin-bottom: 32px; }
+
+.mtSm { margin-top: 8px; }
+.mtMd { margin-top: 16px; }
+.mtLg { margin-top: 24px; }
+.mtXl { margin-top: 32px; }
+
+.textSecondary {
+  color: var(--mat-sys-on-surface-variant);
+}

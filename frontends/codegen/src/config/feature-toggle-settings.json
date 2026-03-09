@@ -1,0 +1,98 @@
+[
+  {
+    "key": "codeEditor",
+    "label": "Code Editor",
+    "description": "Monaco-based code editor with syntax highlighting",
+    "icon": "Code"
+  },
+  {
+    "key": "models",
+    "label": "Database Models",
+    "description": "Prisma schema designer for database models",
+    "icon": "Database"
+  },
+  {
+    "key": "components",
+    "label": "Component Builder",
+    "description": "Visual component tree builder for React components",
+    "icon": "Tree"
+  },
+  {
+    "key": "componentTrees",
+    "label": "Component Trees Manager",
+    "description": "Manage multiple component tree configurations",
+    "icon": "Tree"
+  },
+  {
+    "key": "workflows",
+    "label": "Workflow Designer",
+    "description": "n8n-style visual workflow automation builder",
+    "icon": "FlowArrow"
+  },
+  {
+    "key": "lambdas",
+    "label": "Lambda Functions",
+    "description": "Serverless function editor with multiple runtimes",
+    "icon": "Code"
+  },
+  {
+    "key": "styling",
+    "label": "Theme Designer",
+    "description": "Material UI theme customization and styling",
+    "icon": "PaintBrush"
+  },
+  {
+    "key": "flaskApi",
+    "label": "Flask API Designer",
+    "description": "Python Flask backend API endpoint designer",
+    "icon": "Flask"
+  },
+  {
+    "key": "playwright",
+    "label": "Playwright Tests",
+    "description": "E2E testing with Playwright configuration",
+    "icon": "Play"
+  },
+  {
+    "key": "storybook",
+    "label": "Storybook Stories",
+    "description": "Component documentation and development",
+    "icon": "BookOpen"
+  },
+  {
+    "key": "unitTests",
+    "label": "Unit Tests",
+    "description": "Component and function unit test designer",
+    "icon": "Cube"
+  },
+  {
+    "key": "errorRepair",
+    "label": "Error Repair",
+    "description": "Auto-detect and fix code errors",
+    "icon": "Wrench"
+  },
+  {
+    "key": "documentation",
+    "label": "Documentation",
+    "description": "Project documentation, roadmap, and guides",
+    "icon": "FileText"
+  },
+  {
+    "key": "sassStyles",
+    "label": "Sass Styles",
+    "description": "Custom Sass/SCSS styling showcase",
+    "icon": "PaintBrush"
+  },
+  {
+    "key": "faviconDesigner",
+    "label": "Favicon Designer",
+    "description": "Design and generate app favicons and icons",
+    "icon": "Image"
+  },
+  {
+    "key": "ideaCloud",
+    "label": "Feature Idea Cloud",
+    "description": "Brainstorm and organize feature ideas",
+    "icon": "Lightbulb"
+  }
+]

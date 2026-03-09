@@ -6,7 +6,7 @@
 #pragma once
 
 #include <sstream>
-#include "server.hpp"
+#include "../server.hpp"
 
 namespace dbal {
 namespace daemon {

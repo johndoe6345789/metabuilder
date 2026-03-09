@@ -1,6 +1,7 @@
 {
   "name": "@metabuilder/hooks-auth",
   "version": "0.1.0",
+  "type": "module",
   "description": "Authentication hooks with service adapter injection for MetaBuilder",
   "main": "src/index.ts",
   "types": "src/index.ts",

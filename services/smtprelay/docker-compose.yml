@@ -1,0 +1,51 @@
+version: '3.9'
+
+services:
+  postfix:
+    build:
+      context: ../..
+      dockerfile: deployment/docker/postfix/Dockerfile
+    container_name: smtprelay-postfix
+    hostname: postfix.local
+    ports:
+      - "25:25"
+      - "587:587"
+      - "465:465"
+    environment:
+      - POSTFIX_myhostname=postfix.local
+      - POSTFIX_mydomain=postfix.local
+      - POSTFIX_mynetworks=127.0.0.1/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+    restart: unless-stopped
+    networks:
+      - smtp-relay-net
+
+  smtp-relay:
+    build: .
+    ports:
+      - "2525:2525"
+      - "8080:8080"
+    environment:
+      # Required (dummy values for Postfix mode):
+      - GMAIL_USERNAME=${GMAIL_USERNAME:-relay@postfix.local}
+      - GMAIL_APP_PASSWORD=${GMAIL_APP_PASSWORD:-dummy}
+      - FORWARD_TO=${FORWARD_TO:-admin@example.com}
+      # Postfix configuration:
+      - GMAIL_HOST=postfix
+      - GMAIL_PORT=25
+      # Optional:
+      - SMTP_LISTEN_HOST=0.0.0.0
+      - SMTP_LISTEN_PORT=2525
+      - HTTP_LISTEN_HOST=0.0.0.0
+      - HTTP_LISTEN_PORT=8080
+      - ALLOW_ANY_RCPT=true
+      - ADD_X_HEADERS=true
+      - MAX_STORE=200
+    depends_on:
+      - postfix
+    restart: unless-stopped
+    networks:
+      - smtp-relay-net
+
+networks:
+  smtp-relay-net:
+    driver: bridge

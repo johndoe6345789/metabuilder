@@ -1,0 +1,6 @@
+{
+  "type": "Card, CardContent",
+  "props": {
+    "onClick": "> void"
+  }
+}

@@ -28,6 +28,7 @@ tests/
 
 # Conan cache
 .conan/
+build-config/conan-cache/
 
 # Temporary files
 *.log

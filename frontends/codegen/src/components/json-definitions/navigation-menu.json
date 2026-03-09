@@ -1,0 +1,202 @@
+{
+  "id": "navigation-menu-container",
+  "type": "Sidebar",
+  "props": {
+    "side": "left",
+    "collapsible": "offcanvas"
+  },
+  "children": [
+    {
+      "id": "navigation-header",
+      "type": "SidebarHeader",
+      "props": {
+        "className": "nav-menu__header"
+      },
+      "children": [
+        {
+          "id": "nav-title",
+          "type": "h2",
+          "props": {
+            "className": "nav-menu__title",
+            "children": "Navigation"
+          }
+        },
+        {
+          "id": "nav-controls",
+          "type": "div",
+          "props": {
+            "className": "nav-menu__controls"
+          },
+          "children": [
+            {
+              "id": "expand-all-button",
+              "type": "Button",
+              "props": {
+                "variant": "outline",
+                "size": "sm",
+                "children": "Expand All"
+              },
+              "bindings": {
+                "onClick": "menuState.expandAll"
+              }
+            },
+            {
+              "id": "collapse-all-button",
+              "type": "Button",
+              "props": {
+                "variant": "outline",
+                "size": "sm",
+                "children": "Collapse All"
+              },
+              "bindings": {
+                "onClick": "menuState.collapseAll"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sidebar-content",
+      "type": "SidebarContent",
+      "children": [
+        {
+          "id": "scroll-area",
+          "type": "ScrollArea",
+          "props": {
+            "className": "nav-menu__body"
+          },
+          "children": [
+            {
+              "id": "groups-container",
+              "type": "div",
+              "props": {
+                "className": "nav-menu__groups"
+              },
+              "children": [
+                {
+                  "id": "groups-list",
+                  "type": "list",
+                  "bindings": {
+                    "items": "menuState.renderedGroups",
+                    "keyPath": "id"
+                  },
+                  "itemTemplate": {
+                    "type": "div",
+                    "className": "nav-menu__group",
+                    "children": [
+                      {
+                        "id": "group-trigger",
+                        "type": "button",
+                        "props": {
+                          "type": "button",
+                          "className": "nav-menu__group-trigger"
+                        },
+                        "bindings": {
+                          "onClick": "item.onToggle"
+                        },
+                        "children": [
+                          {
+                            "id": "group-caret",
+                            "type": "CaretDown",
+                            "props": {
+                              "size": 16,
+                              "weight": "bold"
+                            },
+                            "bindings": {
+                              "className": "item.caretClassName"
+                            }
+                          },
+                          {
+                            "id": "group-label",
+                            "type": "h3",
+                            "props": {
+                              "className": "nav-menu__group-label"
+                            },
+                            "bindings": {
+                              "children": "item.label"
+                            }
+                          },
+                          {
+                            "id": "group-count",
+                            "type": "span",
+                            "props": {
+                              "className": "nav-menu__group-count"
+                            },
+                            "bindings": {
+                              "children": "item.visibleCount"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "id": "group-content",
+                        "type": "div",
+                        "condition": "item.isExpanded",
+                        "props": {
+                          "className": "nav-menu__group-items"
+                        },
+                        "children": [
+                          {
+                            "id": "items-list",
+                            "type": "list",
+                            "bindings": {
+                              "items": "item.items",
+                              "keyPath": "id"
+                            },
+                            "itemTemplate": {
+                              "type": "div",
+                              "bindings": {
+                                "onMouseEnter": "item.onMouseEnter",
+                                "onMouseLeave": "item.onMouseLeave"
+                              },
+                              "children": [
+                                {
+                                  "id": "nav-item-button",
+                                  "type": "button",
+                                  "props": {
+                                    "type": "button"
+                                  },
+                                  "bindings": {
+                                    "onClick": "item.onClick",
+                                    "className": "item.className"
+                                  },
+                                  "children": [
+                                    {
+                                      "id": "item-icon",
+                                      "type": "span",
+                                      "props": {
+                                        "className": "nav-menu__item-icon"
+                                      },
+                                      "bindings": {
+                                        "children": "item.icon"
+                                      }
+                                    },
+                                    {
+                                      "id": "item-label",
+                                      "type": "span",
+                                      "props": {
+                                        "className": "nav-menu__item-label"
+                                      },
+                                      "bindings": {
+                                        "children": "item.label"
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

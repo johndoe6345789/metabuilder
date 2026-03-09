@@ -21,7 +21,6 @@
 import React, { useState, useEffect } from 'react'
 import type {
   ExecutionRecord,
-  ExecutionState,
   NodeResult,
   LogEntry,
 } from '@metabuilder/workflow'
@@ -83,7 +82,7 @@ export const ExecutionMonitor: React.FC<ExecutionMonitorProps> = ({
       }
     }
 
-    loadExecution()
+    void loadExecution()
   }, [selectedExecutionId, tenant])
 
   const handleExecutionSelect = (id: string) => {
@@ -102,7 +101,7 @@ export const ExecutionMonitor: React.FC<ExecutionMonitorProps> = ({
           <h3>Execution History</h3>
           <button
             className={styles.refreshButton}
-            onClick={() => refresh()}
+            onClick={() => { void refresh() }}
             disabled={loading}
           >
             ⟳ Refresh
@@ -313,11 +312,7 @@ const NodeExecutionItem: React.FC<NodeExecutionItemProps> = ({
   onToggle,
 }) => {
   const getDurationMs = () => {
-    if (result.duration) return result.duration
-    if (result.timestamp) {
-      return new Date(result.timestamp).getTime() - Date.now()
-    }
-    return 0
+    return result.duration ?? 0
   }
 
   return (

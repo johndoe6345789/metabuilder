@@ -1,0 +1,30 @@
+{
+  "type": "MetabuilderLayoutCard",
+  "children": [
+    {
+      "id": "card-header",
+      "type": "MetabuilderLayoutCardHeader",
+      "children": [
+        {
+          "id": "card-title",
+          "type": "CardTitle"
+        },
+        {
+          "id": "card-description",
+          "type": "CardDescription"
+        }
+      ]
+    },
+    {
+      "id": "card-content",
+      "type": "MetabuilderDataCardContent"
+    },
+    {
+      "id": "card-footer",
+      "type": "MetabuilderLayoutCardFooter",
+      "props": {
+        "className": "flex justify-end gap-2"
+      }
+    }
+  ]
+}

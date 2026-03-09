@@ -1,0 +1,21 @@
+/**
+ * StatsGrid Component Styles
+ */
+
+.statsGrid {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 16px 24px;
+  background: linear-gradient(135deg, var(--mat-sys-primary-container) 0%, var(--mat-sys-secondary-container) 100%);
+  border-radius: var(--mat-sys-corner-large);
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.divider {
+  width: 1px;
+  height: 40px;
+  background: var(--mat-sys-outline-variant);
+  margin: 0 8px;
+}

@@ -1,0 +1,155 @@
+// RadioGroup Component - Material Design 3
+// =========================================
+// Radio button and group styling using M3 tokens
+
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  &--row {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+}
+
+.radio {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+
+  &:hover .radio-dot {
+    border-color: var(--mat-sys-primary);
+  }
+
+  &:hover .radio-dot::before {
+    background: color-mix(in srgb, var(--mat-sys-primary) 8%, transparent);
+  }
+
+  &-input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+
+    &:checked + .radio-dot {
+      border-color: var(--mat-sys-primary);
+
+      &::after {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+      }
+    }
+
+    &:focus-visible + .radio-dot {
+      outline: 2px solid var(--mat-sys-primary);
+      outline-offset: 2px;
+    }
+
+    &:disabled {
+      & + .radio-dot {
+        border-color: color-mix(in srgb, var(--mat-sys-on-surface) 38%, transparent);
+        cursor: not-allowed;
+      }
+
+      &:checked + .radio-dot::after {
+        background-color: color-mix(in srgb, var(--mat-sys-on-surface) 38%, transparent);
+      }
+
+      & ~ .radio-label {
+        color: color-mix(in srgb, var(--mat-sys-on-surface) 38%, transparent);
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  &-dot {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--mat-sys-on-surface-variant);
+    border-radius: var(--mat-sys-corner-full);
+    background-color: transparent;
+    transition: border-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+    flex-shrink: 0;
+
+    // State layer
+    &::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 40px;
+      height: 40px;
+      border-radius: var(--mat-sys-corner-full);
+      background: transparent;
+      transform: translate(-50%, -50%);
+      transition: background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+    }
+
+    // Inner dot
+    &::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 10px;
+      height: 10px;
+      border-radius: var(--mat-sys-corner-full);
+      background-color: var(--mat-sys-primary);
+      transform: translate(-50%, -50%) scale(0);
+      opacity: 0;
+      transition: transform var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard),
+                  opacity var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+    }
+  }
+
+  &-label {
+    font-family: var(--mat-sys-body-large-font);
+    font-size: var(--mat-sys-body-large-size);
+    line-height: var(--mat-sys-body-large-line-height);
+    color: var(--mat-sys-on-surface);
+  }
+}
+
+// Size variants
+.radio--small {
+  gap: 8px;
+
+  .radio-dot {
+    width: 16px;
+    height: 16px;
+
+    &::before {
+      width: 32px;
+      height: 32px;
+    }
+
+    &::after {
+      width: 8px;
+      height: 8px;
+    }
+  }
+
+  .radio-label {
+    font-size: var(--mat-sys-body-medium-size);
+  }
+}
+
+// Color variants
+.radio--error {
+  .radio-dot {
+    border-color: var(--mat-sys-error);
+  }
+
+  .radio-input:checked + .radio-dot::after {
+    background-color: var(--mat-sys-error);
+  }
+
+  &:hover .radio-dot::before {
+    background: color-mix(in srgb, var(--mat-sys-error) 8%, transparent);
+  }
+}

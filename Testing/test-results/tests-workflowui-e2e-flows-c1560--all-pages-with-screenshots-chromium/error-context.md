@@ -1,0 +1,159 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - button "Toggle sidebar" [ref=e5] [cursor=pointer]:
+          - img [ref=e6]
+        - generic [ref=e7]:
+          - img [ref=e8]
+          - heading "WorkflowUI" [level=1] [ref=e17]
+      - generic [ref=e18]:
+        - button "Notifications" [ref=e20] [cursor=pointer]:
+          - img [ref=e21]
+          - generic [ref=e23]: "2"
+        - button "Switch to dark mode" [ref=e24] [cursor=pointer]:
+          - img [ref=e25]
+    - generic [ref=e27]:
+      - complementary "Workflows sidebar" [ref=e28]:
+        - navigation [ref=e29]:
+          - generic [ref=e30]:
+            - heading "Main" [level=3] [ref=e31]
+            - list "Main navigation" [ref=e32]:
+              - listitem [ref=e33]:
+                - link "Dashboard" [ref=e34] [cursor=pointer]:
+                  - /url: /
+                  - img [ref=e36]
+                  - generic [ref=e38]: Dashboard
+              - listitem [ref=e39]:
+                - link "Notifications 2" [ref=e40] [cursor=pointer]:
+                  - /url: /notifications
+                  - img [ref=e42]
+                  - generic [ref=e44]: Notifications
+                  - generic [ref=e45]: "2"
+          - generic [ref=e46]:
+            - heading "Workflows" [level=3] [ref=e47]
+            - list "Workflows navigation" [ref=e48]:
+              - listitem [ref=e49]:
+                - link "All Workflows" [active] [ref=e50] [cursor=pointer]:
+                  - /url: /workflows
+                  - img [ref=e52]
+                  - generic [ref=e54]: All Workflows
+              - listitem [ref=e55]:
+                - link "Recent" [ref=e56] [cursor=pointer]:
+                  - /url: /workflows/recent
+                  - img [ref=e58]
+                  - generic [ref=e60]: Recent
+              - listitem [ref=e61]:
+                - link "Favorites" [ref=e62] [cursor=pointer]:
+                  - /url: /workflows/favorites
+                  - img [ref=e64]
+                  - generic [ref=e66]: Favorites
+              - listitem [ref=e67]:
+                - link "Templates" [ref=e68] [cursor=pointer]:
+                  - /url: /templates
+                  - img [ref=e70]
+                  - generic [ref=e72]: Templates
+          - generic [ref=e73]:
+            - heading "System" [level=3] [ref=e74]
+            - list "System navigation" [ref=e75]:
+              - listitem [ref=e76]:
+                - link "Plugins" [ref=e77] [cursor=pointer]:
+                  - /url: /plugins
+                  - img [ref=e79]
+                  - generic [ref=e81]: Plugins
+              - listitem [ref=e82]:
+                - link "Settings" [ref=e83] [cursor=pointer]:
+                  - /url: /settings
+                  - img [ref=e85]
+                  - generic [ref=e87]: Settings
+          - generic [ref=e88]:
+            - heading "Help" [level=3] [ref=e89]
+            - list "Help navigation" [ref=e90]:
+              - listitem [ref=e91]:
+                - link "Documentation" [ref=e92] [cursor=pointer]:
+                  - /url: /docs
+                  - img [ref=e94]
+                  - generic [ref=e96]: Documentation
+              - listitem [ref=e97]:
+                - link "Help & Support" [ref=e98] [cursor=pointer]:
+                  - /url: /help
+                  - img [ref=e100]
+                  - generic [ref=e102]: Help & Support
+        - button "+ New Workflow" [ref=e104] [cursor=pointer]:
+          - generic [ref=e106]: + New Workflow
+      - main [ref=e107]:
+        - generic [ref=e108]:
+          - generic [ref=e109]:
+            - generic [ref=e110]:
+              - img [ref=e112]
+              - generic [ref=e114]:
+                - generic [ref=e115]: "23"
+                - generic [ref=e116]: nodes today
+            - generic [ref=e117]:
+              - img [ref=e119]
+              - generic [ref=e121]:
+                - generic [ref=e122]: "5"
+                - generic [ref=e123]: runs today
+            - generic [ref=e124]:
+              - img [ref=e126]
+              - generic [ref=e128]:
+                - generic [ref=e129]: "1"
+                - generic [ref=e130]: failed
+            - generic [ref=e131]:
+              - img [ref=e133]
+              - generic [ref=e135]:
+                - generic [ref=e136]: 1.2h
+                - generic [ref=e137]: saved today
+            - generic [ref=e139]:
+              - generic "First Steps" [ref=e140]:
+                - img [ref=e141]
+              - generic "Node Master" [ref=e143]:
+                - img [ref=e144]
+              - link "+4 more" [ref=e146] [cursor=pointer]:
+                - /url: /achievements
+          - generic [ref=e147]:
+            - generic [ref=e148]:
+              - heading "Workspaces" [level=1] [ref=e149]
+              - paragraph [ref=e150]: Organize your projects and workflows
+            - button "New Workspace" [ref=e151] [cursor=pointer]:
+              - img [ref=e154]
+              - generic [ref=e156]: New Workspace
+          - generic [ref=e157]:
+            - img [ref=e159]
+            - heading "No workspaces yet" [level=2] [ref=e161]
+            - paragraph [ref=e162]: Create your first workspace to organize your projects
+            - button "Create Your First Workspace" [ref=e163] [cursor=pointer]:
+              - img [ref=e166]
+              - generic [ref=e168]: Create Your First Workspace
+  - generic [ref=e173] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=e174]:
+      - img [ref=e175]
+    - generic [ref=e178]:
+      - button "Open issues overlay" [ref=e179]:
+        - generic [ref=e180]:
+          - generic [ref=e181]: "0"
+          - generic [ref=e182]: "1"
+        - generic [ref=e183]: Issue
+      - button "Collapse issues badge" [ref=e184]:
+        - img [ref=e185]
+  - alert [ref=e187]
+  - generic "Notifications" [ref=e188]:
+    - alert [ref=e189]:
+      - text: ✕Unexpected token '<', "<html> <he"... is not valid JSON
+      - button "Close notification" [ref=e190] [cursor=pointer]: ×
+    - alert [ref=e191]:
+      - text: ✕Unexpected token '<', "<html> <he"... is not valid JSON
+      - button "Close notification" [ref=e192] [cursor=pointer]: ×
+    - alert [ref=e193]:
+      - text: ✕Unexpected token '<', "<html> <he"... is not valid JSON
+      - button "Close notification" [ref=e194] [cursor=pointer]: ×
+    - alert [ref=e195]:
+      - text: ✕Unexpected token '<', "<html> <he"... is not valid JSON
+      - button "Close notification" [ref=e196] [cursor=pointer]: ×
+    - alert [ref=e197]:
+      - text: ✕Unexpected token '<', "<html> <he"... is not valid JSON
+      - button "Close notification" [ref=e198] [cursor=pointer]: ×
+```

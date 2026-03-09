@@ -1,0 +1,328 @@
+# Prometheus Configuration - Phase 8 Email Client Monitoring
+# Comprehensive metrics scraping for all services in the email client infrastructure
+# Last Updated: 2026-01-24
+
+global:
+  scrape_interval: 15s      # Default interval for scraping metrics
+  evaluation_interval: 15s  # Interval for evaluating alert rules
+  external_labels:
+    cluster: 'emailclient-phase8'
+    environment: 'production'
+    tenant: 'default'
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - 'alertmanager:9093'
+
+# Load rules once and periodically evaluate them
+rule_files:
+  - '/etc/prometheus/rules/*.yml'
+
+# Scrape configurations
+scrape_configs:
+  # ============================================================================
+  # Prometheus Self-Monitoring
+  # ============================================================================
+  - job_name: 'prometheus'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['localhost:9090']
+    scrape_interval: 30s
+    scrape_timeout: 10s
+
+  # ============================================================================
+  # Email Service API (Flask + Gunicorn)
+  # ============================================================================
+  - job_name: 'email-service'
+    scheme: http
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+    scrape_timeout: 5s
+
+    # Relabel to add service labels
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+      - source_labels: [__scheme__]
+        target_label: scheme
+
+    # Metric path transformations
+    metric_relabel_configs:
+      - source_labels: [__name__]
+        regex: 'python_.*'
+        action: keep
+      - source_labels: [__name__]
+        regex: 'process_.*'
+        action: keep
+      - source_labels: [__name__]
+        regex: 'flask_.*'
+        action: keep
+
+    static_configs:
+      - targets: ['email-service:5000']
+        labels:
+          service: 'email-service'
+          component: 'api'
+          language: 'python'
+          tier: 'application'
+
+  # ============================================================================
+  # Celery Worker & Beat Monitoring
+  # ============================================================================
+  - job_name: 'celery-worker'
+    scheme: http
+    metrics_path: '/metrics'
+    scrape_interval: 15s
+    scrape_timeout: 10s
+
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+
+    metric_relabel_configs:
+      - source_labels: [__name__]
+        regex: 'celery_.*'
+        action: keep
+      - source_labels: [__name__]
+        regex: 'python_.*'
+        action: keep
+
+    static_configs:
+      - targets: ['celery-worker:9999']
+        labels:
+          service: 'celery-worker'
+          component: 'async-tasks'
+          tier: 'application'
+
+  - job_name: 'celery-beat'
+    scheme: http
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+    scrape_timeout: 10s
+
+    static_configs:
+      - targets: ['celery-beat:9999']
+        labels:
+          service: 'celery-beat'
+          component: 'scheduler'
+          tier: 'application'
+
+  # ============================================================================
+  # PostgreSQL Database Monitoring
+  # ============================================================================
+  - job_name: 'postgres'
+    scheme: http
+    metrics_path: '/metrics'
+    scrape_interval: 15s
+    scrape_timeout: 10s
+
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+
+    metric_relabel_configs:
+      - source_labels: [__name__]
+        regex: 'pg_.*'
+        action: keep
+
+    static_configs:
+      - targets: ['postgres-exporter:9187']
+        labels:
+          service: 'postgres'
+          component: 'database'
+          tier: 'data'
+
+  # ============================================================================
+  # Redis Cache & Message Broker Monitoring
+  # ============================================================================
+  - job_name: 'redis'
+    scheme: http
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+    scrape_timeout: 5s
+
+    metric_relabel_configs:
+      - source_labels: [__name__]
+        regex: 'redis_.*'
+        action: keep
+
+    static_configs:
+      - targets: ['redis-exporter:9121']
+        labels:
+          service: 'redis'
+          component: 'cache-broker'
+          tier: 'data'
+
+  # ============================================================================
+  # Postfix SMTP Server Monitoring
+  # ============================================================================
+  - job_name: 'postfix'
+    scheme: http
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+    scrape_timeout: 10s
+
+    metric_relabel_configs:
+      - source_labels: [__name__]
+        regex: 'postfix_.*'
+        action: keep
+
+    static_configs:
+      - targets: ['postfix-exporter:9307']
+        labels:
+          service: 'postfix'
+          component: 'smtp'
+          tier: 'email-transport'
+
+  # ============================================================================
+  # Dovecot IMAP/POP3 Server Monitoring
+  # ============================================================================
+  - job_name: 'dovecot'
+    scheme: http
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+    scrape_timeout: 10s
+
+    static_configs:
+      - targets: ['dovecot-exporter:9998']
+        labels:
+          service: 'dovecot'
+          component: 'imap-pop3'
+          tier: 'email-storage'
+
+  # ============================================================================
+  # Docker Container Metrics (cAdvisor)
+  # ============================================================================
+  - job_name: 'docker'
+    scheme: http
+    metrics_path: '/metrics'
+    scrape_interval: 15s
+    scrape_timeout: 10s
+
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+
+    metric_relabel_configs:
+      - source_labels: [__name__]
+        regex: 'container_.*'
+        action: keep
+      - source_labels: [__name__]
+        regex: 'machine_.*'
+        action: keep
+
+    static_configs:
+      - targets: ['cadvisor:8080']
+        labels:
+          service: 'docker-cadvisor'
+          component: 'container-metrics'
+          tier: 'infrastructure'
+
+  # ============================================================================
+  # System Metrics (Node Exporter)
+  # ============================================================================
+  - job_name: 'system'
+    scheme: http
+    metrics_path: '/metrics'
+    scrape_interval: 15s
+    scrape_timeout: 10s
+
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+
+    metric_relabel_configs:
+      - source_labels: [__name__]
+        regex: 'node_.*'
+        action: keep
+      - source_labels: [__name__]
+        regex: 'process_.*'
+        action: keep
+
+    static_configs:
+      - targets: ['node-exporter:9100']
+        labels:
+          service: 'system'
+          component: 'host-metrics'
+          tier: 'infrastructure'
+
+  # ============================================================================
+  # Alertmanager Self-Monitoring
+  # ============================================================================
+  - job_name: 'alertmanager'
+    scheme: http
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+    scrape_timeout: 10s
+
+    static_configs:
+      - targets: ['alertmanager:9093']
+        labels:
+          service: 'alertmanager'
+          component: 'alerts'
+          tier: 'infrastructure'
+
+  # ============================================================================
+  # Log Aggregation Stack
+  # ============================================================================
+  - job_name: 'elasticsearch'
+    scheme: http
+    metrics_path: '/_prometheus/metrics'
+    scrape_interval: 30s
+    scrape_timeout: 10s
+
+    basic_auth:
+      username: 'elastic'
+      password: 'changeme'
+
+    static_configs:
+      - targets: ['elasticsearch:9200']
+        labels:
+          service: 'elasticsearch'
+          component: 'search-engine'
+          tier: 'logging'
+
+  - job_name: 'kibana'
+    scheme: http
+    metrics_path: '/api/prometheus/metrics'
+    scrape_interval: 30s
+    scrape_timeout: 10s
+
+    static_configs:
+      - targets: ['kibana:5601']
+        labels:
+          service: 'kibana'
+          component: 'logging-ui'
+          tier: 'logging'
+
+  # ============================================================================
+  # OpenTelemetry Collector (Optional)
+  # ============================================================================
+  - job_name: 'otel-collector'
+    scheme: http
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+    scrape_timeout: 10s
+
+    static_configs:
+      - targets: ['otel-collector:8888']
+        labels:
+          service: 'otel-collector'
+          component: 'tracing'
+          tier: 'observability'
+
+# Global settings for all scrape configs
+remote_write:
+  # Optional: Send metrics to remote storage (e.g., Thanos, VictoriaMetrics)
+  # - url: http://victoriametrics:8428/api/v1/write
+  #   queue_config:
+  #     capacity: 10000
+  #     max_shards: 200
+  #     min_shards: 1
+  #     max_samples_per_send: 500
+  #     batch_send_wait: 5s
+  #     min_backoff: 30ms
+  #     max_backoff: 100ms

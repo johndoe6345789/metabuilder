@@ -1,0 +1,479 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://metabuilder.dev/schemas/migrations.schema.json",
+  "title": "Migrations Schema",
+  "description": "Database migration definitions for MetaBuilder packages",
+  "type": "object",
+  "required": ["schemaVersion", "package"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "JSON Schema reference"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "description": "Schema version",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "default": "2.0.0"
+    },
+    "package": {
+      "type": "string",
+      "description": "Package identifier"
+    },
+    "description": {
+      "type": "string",
+      "description": "Migration module description"
+    },
+    "migrations": {
+      "type": "array",
+      "description": "Migration definitions",
+      "items": {
+        "$ref": "#/definitions/migration"
+      }
+    },
+    "config": {
+      "$ref": "#/definitions/migrationConfig"
+    }
+  },
+  "definitions": {
+    "migration": {
+      "type": "object",
+      "required": ["version", "timestamp", "description"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "description": "Migration version (semver or sequential)",
+          "pattern": "^(\\d+\\.\\d+\\.\\d+|\\d+)$",
+          "examples": ["1.0.0", "001", "20231225120000"]
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Migration creation timestamp"
+        },
+        "description": {
+          "type": "string",
+          "description": "Migration description"
+        },
+        "author": {
+          "type": "string",
+          "description": "Migration author"
+        },
+        "dependencies": {
+          "type": "array",
+          "description": "Versions this migration depends on",
+          "items": { "type": "string" }
+        },
+        "up": {
+          "type": "array",
+          "description": "Forward migration operations",
+          "items": {
+            "$ref": "#/definitions/operation"
+          }
+        },
+        "down": {
+          "type": "array",
+          "description": "Rollback migration operations",
+          "items": {
+            "$ref": "#/definitions/operation"
+          }
+        },
+        "checksum": {
+          "type": "string",
+          "description": "Migration checksum for integrity verification"
+        },
+        "transactional": {
+          "type": "boolean",
+          "description": "Run migration in transaction",
+          "default": true
+        },
+        "timeout": {
+          "type": "integer",
+          "description": "Migration timeout in milliseconds"
+        },
+        "tags": {
+          "type": "array",
+          "description": "Migration tags",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "operation": {
+      "oneOf": [
+        { "$ref": "#/definitions/createTableOp" },
+        { "$ref": "#/definitions/dropTableOp" },
+        { "$ref": "#/definitions/alterTableOp" },
+        { "$ref": "#/definitions/addColumnOp" },
+        { "$ref": "#/definitions/dropColumnOp" },
+        { "$ref": "#/definitions/modifyColumnOp" },
+        { "$ref": "#/definitions/renameColumnOp" },
+        { "$ref": "#/definitions/addIndexOp" },
+        { "$ref": "#/definitions/dropIndexOp" },
+        { "$ref": "#/definitions/addConstraintOp" },
+        { "$ref": "#/definitions/dropConstraintOp" },
+        { "$ref": "#/definitions/sqlOp" },
+        { "$ref": "#/definitions/seedOp" },
+        { "$ref": "#/definitions/customOp" }
+      ]
+    },
+    "createTableOp": {
+      "type": "object",
+      "required": ["type", "table", "columns"],
+      "properties": {
+        "type": { "const": "createTable" },
+        "table": {
+          "type": "string",
+          "description": "Table name"
+        },
+        "columns": {
+          "type": "array",
+          "description": "Column definitions",
+          "items": {
+            "$ref": "#/definitions/columnDefinition"
+          }
+        },
+        "primaryKey": {
+          "oneOf": [
+            { "type": "string" },
+            {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          ]
+        },
+        "indexes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/indexDefinition"
+          }
+        },
+        "foreignKeys": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/foreignKeyDefinition"
+          }
+        },
+        "options": {
+          "type": "object",
+          "description": "Database-specific options",
+          "properties": {
+            "engine": { "type": "string" },
+            "charset": { "type": "string" },
+            "collation": { "type": "string" },
+            "comment": { "type": "string" }
+          },
+          "additionalProperties": true
+        }
+      }
+    },
+    "dropTableOp": {
+      "type": "object",
+      "required": ["type", "table"],
+      "properties": {
+        "type": { "const": "dropTable" },
+        "table": { "type": "string" },
+        "ifExists": {
+          "type": "boolean",
+          "default": false
+        },
+        "cascade": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "alterTableOp": {
+      "type": "object",
+      "required": ["type", "table"],
+      "properties": {
+        "type": { "const": "alterTable" },
+        "table": { "type": "string" },
+        "rename": { "type": "string" },
+        "options": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "addColumnOp": {
+      "type": "object",
+      "required": ["type", "table", "column"],
+      "properties": {
+        "type": { "const": "addColumn" },
+        "table": { "type": "string" },
+        "column": {
+          "$ref": "#/definitions/columnDefinition"
+        },
+        "after": {
+          "type": "string",
+          "description": "Column to add after"
+        },
+        "first": {
+          "type": "boolean",
+          "description": "Add as first column"
+        }
+      }
+    },
+    "dropColumnOp": {
+      "type": "object",
+      "required": ["type", "table", "column"],
+      "properties": {
+        "type": { "const": "dropColumn" },
+        "table": { "type": "string" },
+        "column": { "type": "string" },
+        "ifExists": { "type": "boolean", "default": false }
+      }
+    },
+    "modifyColumnOp": {
+      "type": "object",
+      "required": ["type", "table", "column"],
+      "properties": {
+        "type": { "const": "modifyColumn" },
+        "table": { "type": "string" },
+        "column": {
+          "$ref": "#/definitions/columnDefinition"
+        }
+      }
+    },
+    "renameColumnOp": {
+      "type": "object",
+      "required": ["type", "table", "from", "to"],
+      "properties": {
+        "type": { "const": "renameColumn" },
+        "table": { "type": "string" },
+        "from": { "type": "string" },
+        "to": { "type": "string" }
+      }
+    },
+    "addIndexOp": {
+      "type": "object",
+      "required": ["type", "table", "index"],
+      "properties": {
+        "type": { "const": "addIndex" },
+        "table": { "type": "string" },
+        "index": {
+          "$ref": "#/definitions/indexDefinition"
+        }
+      }
+    },
+    "dropIndexOp": {
+      "type": "object",
+      "required": ["type", "table", "name"],
+      "properties": {
+        "type": { "const": "dropIndex" },
+        "table": { "type": "string" },
+        "name": { "type": "string" },
+        "ifExists": { "type": "boolean", "default": false }
+      }
+    },
+    "addConstraintOp": {
+      "type": "object",
+      "required": ["type", "table", "constraint"],
+      "properties": {
+        "type": { "const": "addConstraint" },
+        "table": { "type": "string" },
+        "constraint": {
+          "oneOf": [
+            { "$ref": "#/definitions/foreignKeyDefinition" },
+            { "$ref": "#/definitions/checkConstraint" },
+            { "$ref": "#/definitions/uniqueConstraint" }
+          ]
+        }
+      }
+    },
+    "dropConstraintOp": {
+      "type": "object",
+      "required": ["type", "table", "name"],
+      "properties": {
+        "type": { "const": "dropConstraint" },
+        "table": { "type": "string" },
+        "name": { "type": "string" },
+        "ifExists": { "type": "boolean", "default": false }
+      }
+    },
+    "sqlOp": {
+      "type": "object",
+      "required": ["type", "sql"],
+      "properties": {
+        "type": { "const": "sql" },
+        "sql": {
+          "oneOf": [
+            { "type": "string" },
+            {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          ]
+        }
+      }
+    },
+    "seedOp": {
+      "type": "object",
+      "required": ["type", "table", "data"],
+      "properties": {
+        "type": { "const": "seed" },
+        "table": { "type": "string" },
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "updateOnConflict": {
+          "type": "boolean",
+          "default": false
+        },
+        "conflictColumns": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "customOp": {
+      "type": "object",
+      "required": ["type", "handler"],
+      "properties": {
+        "type": { "const": "custom" },
+        "handler": {
+          "type": "string",
+          "description": "Custom operation handler function reference"
+        },
+        "params": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "columnDefinition": {
+      "type": "object",
+      "required": ["name", "type"],
+      "properties": {
+        "name": { "type": "string" },
+        "type": {
+          "type": "string",
+          "enum": [
+            "string", "text", "integer", "bigint", "float", "double", "decimal",
+            "boolean", "date", "datetime", "timestamp", "time",
+            "json", "jsonb", "binary", "uuid", "enum"
+          ]
+        },
+        "length": { "type": "integer" },
+        "precision": { "type": "integer" },
+        "scale": { "type": "integer" },
+        "unsigned": { "type": "boolean" },
+        "nullable": { "type": "boolean", "default": true },
+        "default": { "description": "Default value" },
+        "autoIncrement": { "type": "boolean", "default": false },
+        "unique": { "type": "boolean", "default": false },
+        "primary": { "type": "boolean", "default": false },
+        "enum": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "comment": { "type": "string" }
+      }
+    },
+    "indexDefinition": {
+      "type": "object",
+      "required": ["columns"],
+      "properties": {
+        "name": { "type": "string" },
+        "columns": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "unique": { "type": "boolean", "default": false },
+        "type": {
+          "type": "string",
+          "enum": ["btree", "hash", "gist", "gin", "fulltext"]
+        }
+      }
+    },
+    "foreignKeyDefinition": {
+      "type": "object",
+      "required": ["columns", "references"],
+      "properties": {
+        "name": { "type": "string" },
+        "columns": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "references": {
+          "type": "object",
+          "required": ["table", "columns"],
+          "properties": {
+            "table": { "type": "string" },
+            "columns": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "onDelete": {
+          "type": "string",
+          "enum": ["CASCADE", "SET NULL", "RESTRICT", "NO ACTION", "SET DEFAULT"],
+          "default": "NO ACTION"
+        },
+        "onUpdate": {
+          "type": "string",
+          "enum": ["CASCADE", "SET NULL", "RESTRICT", "NO ACTION", "SET DEFAULT"],
+          "default": "NO ACTION"
+        }
+      }
+    },
+    "checkConstraint": {
+      "type": "object",
+      "required": ["check"],
+      "properties": {
+        "name": { "type": "string" },
+        "check": { "type": "string" }
+      }
+    },
+    "uniqueConstraint": {
+      "type": "object",
+      "required": ["columns"],
+      "properties": {
+        "name": { "type": "string" },
+        "columns": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "migrationConfig": {
+      "type": "object",
+      "properties": {
+        "tableName": {
+          "type": "string",
+          "description": "Migration tracking table name",
+          "default": "migrations"
+        },
+        "directory": {
+          "type": "string",
+          "description": "Migration files directory"
+        },
+        "autoRun": {
+          "type": "boolean",
+          "description": "Auto-run pending migrations on startup",
+          "default": false
+        },
+        "validateChecksums": {
+          "type": "boolean",
+          "description": "Validate migration checksums",
+          "default": true
+        },
+        "allowOutOfOrder": {
+          "type": "boolean",
+          "description": "Allow out-of-order migrations",
+          "default": false
+        },
+        "lockTimeout": {
+          "type": "integer",
+          "description": "Migration lock timeout in seconds",
+          "default": 300
+        }
+      }
+    }
+  }
+}

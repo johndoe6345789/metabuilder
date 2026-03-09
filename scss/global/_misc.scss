@@ -1,0 +1,98 @@
+// Miscellaneous utility classes
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.not-sr-only {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: 0;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+.aspect-auto { aspect-ratio: auto }
+.aspect-square { aspect-ratio: 1 / 1 }
+.aspect-video { aspect-ratio: 16 / 9 }
+
+.object-contain { object-fit: contain }
+.object-cover { object-fit: cover }
+.object-fill { object-fit: fill }
+.object-none { object-fit: none }
+.object-scale-down { object-fit: scale-down }
+.object-center { object-position: center }
+.object-top { object-position: top }
+.object-bottom { object-position: bottom }
+
+.list-none { list-style-type: none }
+.list-disc { list-style-type: disc }
+.list-decimal { list-style-type: decimal }
+.list-inside { list-style-position: inside }
+.list-outside { list-style-position: outside }
+
+.float-left { float: left }
+.float-right { float: right }
+.float-none { float: none }
+.clear-both { clear: both }
+
+.isolate { isolation: isolate }
+.isolation-auto { isolation: auto }
+
+.visible { visibility: visible }
+.invisible { visibility: hidden }
+.collapse { visibility: collapse }
+
+.line-clamp-1 { display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden }
+.line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden }
+.line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden }
+.line-clamp-4 { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden }
+.line-clamp-none { display: block; -webkit-line-clamp: unset; overflow: visible }
+
+.fill-current { fill: currentColor }
+.stroke-current { stroke: currentColor }
+
+.box-border { box-sizing: border-box }
+.box-content { box-sizing: content-box }
+
+// Display
+.block { display: block }
+.inline-block { display: inline-block }
+.inline { display: inline }
+.hidden { display: none }
+.contents { display: contents }
+.table { display: table }
+
+// Overflow
+.overflow-hidden { overflow: hidden }
+.overflow-auto { overflow: auto }
+.overflow-scroll { overflow: scroll }
+.overflow-visible { overflow: visible }
+.overflow-clip { overflow: clip }
+.overflow-x-auto { overflow-x: auto }
+.overflow-x-hidden { overflow-x: hidden }
+.overflow-x-scroll { overflow-x: scroll }
+.overflow-y-auto { overflow-y: auto }
+.overflow-y-hidden { overflow-y: hidden }
+.overflow-y-scroll { overflow-y: scroll }
+
+// Self alignment
+.self-start { align-self: flex-start }
+.self-center { align-self: center }
+.self-end { align-self: flex-end }
+.self-stretch { align-self: stretch }
+.self-auto { align-self: auto }
+
+.place-items-center { place-items: center }
+.place-content-center { place-content: center }

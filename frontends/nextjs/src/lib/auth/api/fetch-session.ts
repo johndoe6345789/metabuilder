@@ -5,6 +5,7 @@
  */
 
 import type { User } from '@/lib/types/level-types'
+import type { DbalUserRecord, DbalSessionRecord } from '@/lib/auth/types'
 import { db } from '@/lib/db-client'
 import { cookies } from 'next/headers'
 
@@ -27,14 +28,14 @@ export async function fetchSession(): Promise<User | null> {
       filter: { token: sessionToken }
     })
     
-    const session = sessions.data?.[0]
-    
+    const session = sessions.data?.[0] as DbalSessionRecord | undefined
+
     if (!session) {
       return null
     }
 
     // Get user from session using DBAL
-    const user = await db.users.read(session.userId)
+    const user = await db.users.read(session.userId) as DbalUserRecord | null
 
     if (!user) {
       return null

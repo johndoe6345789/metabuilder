@@ -1,0 +1,175 @@
+// Editor Atoms - Material Design 3 (CSS Module)
+// ==============================================
+// Flat selectors for code editor wrapper styling using M3 tokens
+
+// Base editor wrapper
+.editorWrapper {
+  border-radius: var(--mat-sys-corner-medium);
+  overflow: hidden;
+  height: 400px;
+  border: 1px solid var(--mat-sys-outline-variant);
+  background: var(--mat-sys-surface-container);
+}
+
+// Size variants
+.editorWrapperXs {
+  height: 200px;
+}
+
+.editorWrapperSm {
+  height: 300px;
+}
+
+.editorWrapperMd {
+  height: 400px;
+}
+
+.editorWrapperLg {
+  height: 500px;
+}
+
+.editorWrapperXl {
+  height: 600px;
+}
+
+.editorWrapperFull {
+  height: 100%;
+  min-height: 400px;
+}
+
+// With header (filename, tabs)
+.editorWrapperWithHeader {
+  display: flex;
+  flex-direction: column;
+}
+
+.editorHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--mat-sys-surface-container-high);
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  flex-shrink: 0;
+}
+
+.editorHeaderTitle {
+  font-family: var(--mat-sys-label-medium-font);
+  font-size: var(--mat-sys-label-medium-size);
+  color: var(--mat-sys-on-surface);
+}
+
+.editorHeaderActions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+}
+
+// Editor content area
+.editorContent {
+  flex: 1;
+  min-height: 0;
+}
+
+// With footer (status bar)
+.editorFooter {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 4px 12px;
+  background: var(--mat-sys-surface-container);
+  border-top: 1px solid var(--mat-sys-outline-variant);
+  font-family: var(--mat-sys-label-small-font);
+  font-size: var(--mat-sys-label-small-size);
+  color: var(--mat-sys-on-surface-variant);
+  flex-shrink: 0;
+}
+
+.editorFooterItem {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.editorFooterSpacer {
+  flex: 1;
+}
+
+// Focused state
+.editorWrapper:focus-within {
+  border-color: var(--mat-sys-primary);
+  box-shadow: 0 0 0 1px var(--mat-sys-primary);
+}
+
+// Error state
+.editorWrapperError {
+  border-color: var(--mat-sys-error);
+}
+
+.editorWrapperError:focus-within {
+  box-shadow: 0 0 0 1px var(--mat-sys-error);
+}
+
+// Read-only state
+.editorWrapperReadonly {
+  background: var(--mat-sys-surface-container-lowest);
+}
+
+.editorWrapperReadonly .editorHeader {
+  background: var(--mat-sys-surface-container);
+}
+
+// Elevated variant
+.editorWrapperElevated {
+  box-shadow: var(--mat-sys-level1);
+  border: none;
+}
+
+// Tabs in editor header
+.editorTabs {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex: 1;
+  overflow-x: auto;
+}
+
+.editorTab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-family: var(--mat-sys-label-medium-font);
+  font-size: var(--mat-sys-label-medium-size);
+  color: var(--mat-sys-on-surface-variant);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+}
+
+.editorTab:hover {
+  background: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
+}
+
+.editorTabActive {
+  color: var(--mat-sys-on-surface);
+  background: var(--mat-sys-surface-container);
+}
+
+.editorTabClose {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: var(--mat-sys-corner-extra-small);
+  opacity: 0.6;
+}
+
+.editorTabClose:hover {
+  opacity: 1;
+  background: color-mix(in srgb, var(--mat-sys-on-surface) 12%, transparent);
+}

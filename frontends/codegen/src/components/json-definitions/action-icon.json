@@ -1,0 +1,10 @@
+{
+  "id": "action-icon-root",
+  "type": "ActionIcon",
+  "bindings": {
+    "action": "action",
+    "size": "size",
+    "weight": "weight",
+    "className": "className"
+  }
+}

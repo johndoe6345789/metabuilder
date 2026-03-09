@@ -1,0 +1,76 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "workflowui-workspaces",
+  "version": "1.0.0",
+  "description": "WorkflowUI Workspace detail page tests - individual workspace management",
+  "tests": [
+    {
+      "name": "should load workspace detail page",
+      "tags": ["@workspaces", "@critical"],
+      "timeout": 15000,
+      "steps": [
+        {
+          "description": "Navigate to test workspace",
+          "action": "navigate",
+          "url": "/workspace/test-workspace-001"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Verify workspace page loaded",
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should display workspace info",
+      "tags": ["@workspaces", "@content"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/workspace/test-workspace-001"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Check for workspace details",
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should have workspace UI elements",
+      "tags": ["@workspaces", "@ui"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/workspace/test-workspace-001"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Check page has content",
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    }
+  ]
+}

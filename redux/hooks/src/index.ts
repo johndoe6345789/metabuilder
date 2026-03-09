@@ -27,7 +27,6 @@ export * from './ui'
 
 // Utility Hooks
 export { useCanvasVirtualization } from './useCanvasVirtualization'
-export type { CanvasVirtualizationReturn } from './useCanvasVirtualization'
 
 export { useResponsiveSidebar } from './useResponsiveSidebar'
 export type { UseResponsiveSidebarReturn } from './useResponsiveSidebar'

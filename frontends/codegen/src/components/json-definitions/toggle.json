@@ -1,0 +1,7 @@
+{
+  "id": "toggle-root",
+  "type": "label",
+  "props": {
+    "className": "toggle"
+  }
+}

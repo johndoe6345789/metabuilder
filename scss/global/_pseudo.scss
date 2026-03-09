@@ -1,0 +1,129 @@
+// Pseudo-class variant utility classes (hover, focus, active, disabled, etc.)
+
+// --- Hover: background ---
+.hover\:bg-accent:hover { background-color: var(--accent) }
+.hover\:bg-muted:hover { background-color: var(--muted) }
+.hover\:bg-secondary:hover { background-color: var(--secondary) }
+.hover\:bg-destructive:hover { background-color: var(--destructive) }
+.hover\:bg-primary:hover { background-color: var(--primary) }
+.hover\:bg-card:hover { background-color: var(--card) }
+.hover\:bg-background:hover { background-color: var(--background) }
+.hover\:bg-transparent:hover { background-color: transparent }
+.hover\:bg-white:hover { background-color: #fff }
+.hover\:bg-black:hover { background-color: #000 }
+
+// Hover background with opacity
+.hover\:bg-accent\/50:hover { background-color: color-mix(in srgb, var(--accent) 50%, transparent) }
+.hover\:bg-accent\/80:hover { background-color: color-mix(in srgb, var(--accent) 80%, transparent) }
+.hover\:bg-muted\/50:hover { background-color: color-mix(in srgb, var(--muted) 50%, transparent) }
+.hover\:bg-muted\/80:hover { background-color: color-mix(in srgb, var(--muted) 80%, transparent) }
+.hover\:bg-primary\/10:hover { background-color: color-mix(in srgb, var(--primary) 10%, transparent) }
+.hover\:bg-primary\/20:hover { background-color: color-mix(in srgb, var(--primary) 20%, transparent) }
+.hover\:bg-primary\/80:hover { background-color: color-mix(in srgb, var(--primary) 80%, transparent) }
+.hover\:bg-primary\/90:hover { background-color: color-mix(in srgb, var(--primary) 90%, transparent) }
+.hover\:bg-destructive\/80:hover { background-color: color-mix(in srgb, var(--destructive) 80%, transparent) }
+.hover\:bg-destructive\/90:hover { background-color: color-mix(in srgb, var(--destructive) 90%, transparent) }
+.hover\:bg-secondary\/80:hover { background-color: color-mix(in srgb, var(--secondary) 80%, transparent) }
+
+// --- Hover: text ---
+.hover\:text-foreground:hover { color: var(--foreground) }
+.hover\:text-primary:hover { color: var(--primary) }
+.hover\:text-accent:hover { color: var(--accent) }
+.hover\:text-accent-foreground:hover { color: var(--accent-foreground) }
+.hover\:text-primary-foreground:hover { color: var(--primary-foreground) }
+.hover\:text-destructive:hover { color: var(--destructive) }
+.hover\:text-muted-foreground:hover { color: var(--muted-foreground) }
+.hover\:text-white:hover { color: #fff }
+
+// --- Hover: decoration, opacity, border ---
+.hover\:underline:hover { text-decoration: underline }
+.hover\:no-underline:hover { text-decoration: none }
+.hover\:opacity-100:hover { opacity: 1 }
+.hover\:opacity-90:hover { opacity: 0.9 }
+.hover\:opacity-80:hover { opacity: 0.8 }
+.hover\:opacity-75:hover { opacity: 0.75 }
+.hover\:opacity-50:hover { opacity: 0.5 }
+.hover\:shadow-md:hover { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1) }
+.hover\:shadow-lg:hover { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1) }
+.hover\:border-primary:hover { border-color: var(--primary) }
+.hover\:border-accent:hover { border-color: var(--accent) }
+.hover\:border-foreground:hover { border-color: var(--foreground) }
+.hover\:scale-105:hover { transform: scale(1.05) }
+.hover\:ring-2:hover { box-shadow: 0 0 0 2px var(--ring) }
+
+// --- Focus variants ---
+.focus\:outline-none:focus { outline: 2px solid transparent; outline-offset: 2px }
+.focus\:ring-1:focus { box-shadow: 0 0 0 1px var(--ring) }
+.focus\:ring-2:focus { box-shadow: 0 0 0 2px var(--ring) }
+.focus\:ring-ring:focus { --ring: var(--ring) }
+.focus\:ring-primary:focus { --ring: var(--primary) }
+.focus\:border-primary:focus { border-color: var(--primary) }
+.focus\:border-ring:focus { border-color: var(--ring) }
+.focus\:bg-accent:focus { background-color: var(--accent) }
+.focus\:text-accent-foreground:focus { color: var(--accent-foreground) }
+
+// --- Focus-visible variants ---
+.focus-visible\:outline-none:focus-visible { outline: 2px solid transparent; outline-offset: 2px }
+.focus-visible\:ring-1:focus-visible { box-shadow: 0 0 0 1px var(--ring) }
+.focus-visible\:ring-2:focus-visible { box-shadow: 0 0 0 2px var(--ring) }
+.focus-visible\:ring-ring:focus-visible { box-shadow: 0 0 0 2px var(--ring) }
+.focus-visible\:ring-offset-2:focus-visible { box-shadow: 0 0 0 2px var(--background), 0 0 0 4px var(--ring) }
+.focus-visible\:ring-offset-background:focus-visible { --tw-ring-offset-color: var(--background) }
+.focus-visible\:border-ring:focus-visible { border-color: var(--ring) }
+
+// --- Active variants ---
+.active\:scale-95:active { transform: scale(0.95) }
+.active\:bg-primary:active { background-color: var(--primary) }
+.active\:bg-accent:active { background-color: var(--accent) }
+.active\:opacity-80:active { opacity: 0.8 }
+
+// --- Disabled variants ---
+.disabled\:pointer-events-none:disabled { pointer-events: none }
+.disabled\:cursor-not-allowed:disabled { cursor: not-allowed }
+.disabled\:opacity-50:disabled { opacity: 0.5 }
+.disabled\:opacity-40:disabled { opacity: 0.4 }
+.disabled\:bg-muted:disabled { background-color: var(--muted) }
+.disabled\:text-muted-foreground:disabled { color: var(--muted-foreground) }
+
+// --- Group hover variants ---
+.group:hover .group-hover\:visible { visibility: visible }
+.group:hover .group-hover\:opacity-100 { opacity: 1 }
+.group:hover .group-hover\:text-foreground { color: var(--foreground) }
+.group:hover .group-hover\:text-primary { color: var(--primary) }
+.group:hover .group-hover\:bg-accent { background-color: var(--accent) }
+.group:hover .group-hover\:scale-105 { transform: scale(1.05) }
+
+// --- Peer variants ---
+.peer:checked ~ .peer-checked\:bg-primary { background-color: var(--primary) }
+.peer:focus ~ .peer-focus\:ring-2 { box-shadow: 0 0 0 2px var(--ring) }
+
+// --- Data-state variants (Radix UI) ---
+[data-state="open"] > .data-\[state\=open\]\:rotate-180 { transform: rotate(180deg) }
+[data-state="open"] > .data-\[state\=open\]\:bg-accent { background-color: var(--accent) }
+[data-state="open"] > .data-\[state\=open\]\:text-muted-foreground { color: var(--muted-foreground) }
+[data-state="checked"] > .data-\[state\=checked\]\:bg-primary { background-color: var(--primary) }
+[data-state="checked"] > .data-\[state\=checked\]\:text-primary-foreground { color: var(--primary-foreground) }
+[data-state="checked"] > .data-\[state\=checked\]\:border-primary { border-color: var(--primary) }
+[data-state="active"] > .data-\[state\=active\]\:bg-background { background-color: var(--background) }
+[data-state="active"] > .data-\[state\=active\]\:text-foreground { color: var(--foreground) }
+[data-state="active"] > .data-\[state\=active\]\:shadow-sm { box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) }
+
+// Direct match (without parent combinator)
+.data-\[state\=open\]\:rotate-180[data-state="open"] { transform: rotate(180deg) }
+.data-\[state\=open\]\:bg-accent[data-state="open"] { background-color: var(--accent) }
+.data-\[state\=checked\]\:bg-primary[data-state="checked"] { background-color: var(--primary) }
+.data-\[state\=active\]\:bg-background[data-state="active"] { background-color: var(--background) }
+
+// --- Aria variants ---
+.aria-selected\:bg-accent[aria-selected="true"] { background-color: var(--accent) }
+.aria-selected\:text-accent-foreground[aria-selected="true"] { color: var(--accent-foreground) }
+
+// --- First/last child ---
+.first\:mt-0:first-child { margin-top: 0 }
+.first\:border-t-0:first-child { border-top-width: 0 }
+.last\:mb-0:last-child { margin-bottom: 0 }
+.last\:border-b-0:last-child { border-bottom-width: 0 }
+
+// --- Placeholder ---
+.placeholder\:text-muted-foreground::placeholder { color: var(--muted-foreground) }
+.placeholder\:text-transparent::placeholder { color: transparent }

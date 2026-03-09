@@ -1,0 +1,480 @@
+// Media components — avatar, image, video, lightbox, code, chat, user card
+// Uses MD3 CSS custom properties from var(--mat-sys-*)
+
+// ─── Avatar ────────────────────────────────────────────────────────────────
+
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  font-size: 16px;
+  font-weight: 500;
+  background: color-mix(in srgb, var(--mat-sys-primary) 20%, transparent);
+  color: var(--mat-sys-primary);
+  position: relative;
+
+  &--xs {
+    width: 24px;
+    height: 24px;
+    font-size: 10px;
+  }
+
+  &--sm {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+
+  &--lg {
+    width: 56px;
+    height: 56px;
+    font-size: 22px;
+  }
+
+  &--xl {
+    width: 80px;
+    height: 80px;
+    font-size: 32px;
+  }
+
+  &__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__initials {
+    font-weight: 500;
+    color: var(--mat-sys-primary);
+  }
+}
+
+// ─── Avatar Group ──────────────────────────────────────────────────────────
+
+.avatar-group {
+  display: flex;
+
+  .avatar {
+    margin-left: -8px;
+    border: 2px solid var(--mat-sys-surface);
+
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+
+  &__remainder {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 2px solid var(--mat-sys-surface);
+    background: var(--mat-sys-surface-container);
+    color: var(--mat-sys-on-surface);
+    font-weight: 500;
+    margin-left: -8px;
+    width: 40px;
+    height: 40px;
+    font-size: 13px;
+    flex-shrink: 0;
+
+    &--xs {
+      width: 24px;
+      height: 24px;
+      font-size: 10px;
+    }
+
+    &--sm {
+      width: 28px;
+      height: 28px;
+      font-size: 10px;
+    }
+
+    &--lg {
+      width: 56px;
+      height: 56px;
+      font-size: 16px;
+    }
+  }
+}
+
+// ─── Icon Wrapper ──────────────────────────────────────────────────────────
+
+.icon-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--mat-sys-primary) 12%, transparent);
+  color: var(--mat-sys-primary);
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+
+  &--sm {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+  }
+
+  &--lg {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+  }
+
+  &--xl {
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+  }
+}
+
+// ─── Image ─────────────────────────────────────────────────────────────────
+
+.image-container {
+  position: relative;
+  overflow: hidden;
+
+  &__loading-overlay {
+    position: absolute;
+    inset: 0;
+    background: var(--mat-sys-surface-container);
+    animation: image-pulse 1.5s ease-in-out infinite;
+  }
+
+  &__element {
+    width: 100%;
+    height: 100%;
+    transition: opacity 0.2s ease;
+    object-fit: cover;
+
+    &--loading {
+      opacity: 0;
+    }
+
+    &--loaded {
+      opacity: 1;
+    }
+
+    &--contain {
+      object-fit: contain;
+    }
+
+    &--fill {
+      object-fit: fill;
+    }
+
+    &--none {
+      object-fit: none;
+    }
+
+    &--scale-down {
+      object-fit: scale-down;
+    }
+  }
+}
+
+@keyframes image-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+// ─── Video Player ──────────────────────────────────────────────────────────
+
+.video-player {
+  position: relative;
+  width: 100%;
+  background: #000;
+  border-radius: 8px;
+  overflow: hidden;
+
+  &__element {
+    width: 100%;
+    display: block;
+  }
+
+  &__controls {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 12px 16px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 100%);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &__play-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--mat-sys-primary);
+    color: var(--mat-sys-on-primary, #fff);
+    border: none;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  &__progress {
+    flex: 1;
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+  }
+
+  &__time {
+    font-size: 12px;
+    color: #fff;
+    white-space: nowrap;
+  }
+
+  &__overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.4);
+  }
+}
+
+// ─── Lightbox ──────────────────────────────────────────────────────────────
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &__close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    z-index: 1;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+  }
+
+  &__prev,
+  &__next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: #fff;
+    cursor: pointer;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+  }
+
+  &__prev { left: 16px; }
+  &__next { right: 16px; }
+
+  &__content {
+    max-width: 90vw;
+    max-height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__image {
+    max-width: 100%;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: 4px;
+  }
+
+  &__caption {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+    text-align: center;
+    padding: 4px 16px;
+  }
+}
+
+// ─── Chat Message ──────────────────────────────────────────────────────────
+
+.chat-message {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  max-width: 80%;
+
+  &--own {
+    flex-direction: row-reverse;
+    margin-left: auto;
+
+    .chat-message__bubble {
+      background: var(--mat-sys-primary);
+      color: var(--mat-sys-on-primary, #fff);
+      border-radius: 18px 18px 4px 18px;
+    }
+
+    .chat-message__meta {
+      text-align: right;
+    }
+  }
+
+  &__bubble {
+    background: var(--mat-sys-surface-container);
+    color: var(--mat-sys-on-surface);
+    border-radius: 18px 18px 18px 4px;
+    padding: 10px 14px;
+    font-size: 14px;
+    line-height: 1.5;
+    word-break: break-word;
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+    font-size: 11px;
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  &__sender {
+    font-weight: 500;
+    color: var(--mat-sys-on-surface);
+  }
+
+  &__time {
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+// ─── User Card ─────────────────────────────────────────────────────────────
+
+.user-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  background: var(--mat-sys-surface-container);
+  border: 1px solid var(--mat-sys-outline-variant);
+
+  &--clickable {
+    cursor: pointer;
+
+    &:hover {
+      background: color-mix(in srgb, var(--mat-sys-on-surface) 4%, var(--mat-sys-surface-container));
+    }
+  }
+
+  &__info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--mat-sys-on-surface);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__email {
+    font-size: 12px;
+    color: var(--mat-sys-on-surface-variant);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 2px;
+  }
+
+  &__role {
+    font-size: 11px;
+    color: var(--mat-sys-on-surface-variant);
+    margin-top: 2px;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+}
+
+// ─── Code Block ────────────────────────────────────────────────────────────
+
+.code-block {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  background: var(--mat-sys-surface-container);
+  border-radius: 6px;
+  padding: 16px;
+  overflow-x: auto;
+  border: 1px solid var(--mat-sys-outline-variant);
+  color: var(--mat-sys-on-surface);
+
+  &--inline {
+    display: inline;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.875em;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 16px;
+    border-bottom: 1px solid var(--mat-sys-outline-variant);
+    background: var(--mat-sys-surface);
+    border-radius: 6px 6px 0 0;
+    margin: -16px -16px 16px;
+  }
+
+  &__lang {
+    font-size: 11px;
+    color: var(--mat-sys-on-surface-variant);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+}

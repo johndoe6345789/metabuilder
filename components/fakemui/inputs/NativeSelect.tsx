@@ -5,6 +5,7 @@ import { useFormControl } from './FormControl'
  * Props for NativeSelect component
  */
 export interface NativeSelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
+  testId?: string
   children?: React.ReactNode
   /** Visual variant */
   variant?: 'standard' | 'outlined' | 'filled'
@@ -33,15 +34,16 @@ export interface NativeSelectProps extends React.SelectHTMLAttributes<HTMLSelect
 export const NativeSelect = forwardRef<HTMLSelectElement, NativeSelectProps>(
   (
     { 
-      children, 
+      children,
       variant = 'outlined',
       IconComponent,
       inputProps,
       fullWidth = false,
       error: errorProp,
       disabled: disabledProp,
-      className = '', 
-      ...props 
+      testId,
+      className = '',
+      ...props
     }, 
     ref
   ) => {
@@ -50,15 +52,16 @@ export const NativeSelect = forwardRef<HTMLSelectElement, NativeSelectProps>(
     const disabled = disabledProp ?? formControl.disabled
 
     return (
-      <div 
+      <div
         className={`
-          native-select 
+          native-select
           native-select--${variant}
-          ${fullWidth ? 'native-select--full-width' : ''} 
-          ${error ? 'native-select--error' : ''} 
+          ${fullWidth ? 'native-select--full-width' : ''}
+          ${error ? 'native-select--error' : ''}
           ${disabled ? 'native-select--disabled' : ''}
           ${className}
         `.trim().replace(/\s+/g, ' ')}
+        data-testid={testId}
       >
         <select
           ref={ref}

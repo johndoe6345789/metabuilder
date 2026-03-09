@@ -1,0 +1,13 @@
+{
+  "type": "sonner",
+  "jsonCompatible": false,
+  "wrapperRequired": true,
+  "load": {
+    "path": "@/components/ui/sonner",
+    "export": "sonner"
+  },
+  "props": {},
+  "metadata": {
+    "notes": "Contains hooks - needs wrapper"
+  }
+}

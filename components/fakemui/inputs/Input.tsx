@@ -1,4 +1,6 @@
 import React, { forwardRef, useId } from 'react'
+import classNames from 'classnames'
+import styles from '../../../scss/atoms/form.module.scss'
 
 /**
  * Valid input sizes
@@ -6,6 +8,7 @@ import React, { forwardRef, useId } from 'react'
 export type InputSize = 'sm' | 'md' | 'lg'
 
 export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
+  testId?: string
   /** Input size */
   size?: InputSize
   /** @deprecated Use size="sm" instead */
@@ -64,6 +67,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       fullWidth,
       startAdornment,
       endAdornment,
+      testId,
       className = '',
       id: idProp,
       'aria-describedby': ariaDescribedBy,
@@ -75,15 +79,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     const helperId = `${id}-helper`
     const errorId = `${id}-error`
 
-    const classes = [
-      'input',
-      getSizeClass(props),
-      error ? 'input--error' : '',
-      fullWidth ? 'input--full-width' : '',
-      startAdornment ? 'input--has-start' : '',
-      endAdornment ? 'input--has-end' : '',
-      className,
-    ].filter(Boolean).join(' ')
+    const classes = classNames(
+      styles.input,
+      getSizeClass(props) && styles[getSizeClass(props).replace('input--', 'input')],
+      error && styles.inputError,
+      fullWidth && styles.inputFullWidth,
+      className
+    )
 
     // Build aria-describedby
     const describedByParts: string[] = []
@@ -93,17 +95,18 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     const describedBy = describedByParts.length > 0 ? describedByParts.join(' ') : undefined
 
     const inputElement = (
-      <div className={`input-wrapper ${fullWidth ? 'input-wrapper--full-width' : ''}`}>
-        {startAdornment && <span className="input__adornment input__adornment--start">{startAdornment}</span>}
+      <div className={classNames(styles.inputWrapper, fullWidth && styles.inputWrapperFullWidth)}>
+        {startAdornment && <span className={classNames(styles.inputAdornment, styles.inputAdornmentStart)}>{startAdornment}</span>}
         <input
           ref={ref}
           id={id}
           className={classes}
           aria-invalid={error}
           aria-describedby={describedBy}
+          data-testid={testId}
           {...restProps}
         />
-        {endAdornment && <span className="input__adornment input__adornment--end">{endAdornment}</span>}
+        {endAdornment && <span className={classNames(styles.inputAdornment, styles.inputAdornmentEnd)}>{endAdornment}</span>}
       </div>
     )
 
@@ -113,21 +116,21 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     }
 
     return (
-      <div className={`input-field ${fullWidth ? 'input-field--full-width' : ''}`}>
+      <div className={classNames(styles.inputField, fullWidth && styles.inputFieldFullWidth)}>
         {label && (
-          <label htmlFor={id} className="input__label">
+          <label htmlFor={id} className={styles.inputLabel}>
             {label}
-            {restProps.required && <span className="input__required" aria-hidden="true"> *</span>}
+            {restProps.required && <span className={styles.inputRequired} aria-hidden="true"> *</span>}
           </label>
         )}
         {inputElement}
         {error && errorMessage && (
-          <span id={errorId} className="input__error-message" role="alert">
+          <span id={errorId} className={styles.inputErrorMessage} role="alert">
             {errorMessage}
           </span>
         )}
         {!error && helperText && (
-          <span id={helperId} className="input__helper-text">
+          <span id={helperId} className={styles.inputHelperText}>
             {helperText}
           </span>
         )}

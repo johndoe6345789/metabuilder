@@ -5,6 +5,7 @@ import { FormLabel } from './FormLabel'
 import { FormHelperText } from './FormHelperText'
 
 export interface ColorPickerProps {
+  testId?: string
   label?: React.ReactNode
   helperText?: React.ReactNode
   error?: boolean
@@ -28,6 +29,7 @@ const DEFAULT_PRESET_COLORS = [
 export const ColorPicker = forwardRef<HTMLInputElement, ColorPickerProps>(
   (
     {
+      testId,
       label,
       helperText,
       error,
@@ -65,7 +67,7 @@ export const ColorPicker = forwardRef<HTMLInputElement, ColorPickerProps>(
     }, [onChange])
 
     return (
-      <div className={`color-picker ${error ? 'color-picker--error' : ''} ${disabled ? 'color-picker--disabled' : ''} ${className}`}>
+      <div className={`color-picker ${error ? 'color-picker--error' : ''} ${disabled ? 'color-picker--disabled' : ''} ${className}`} data-testid={testId} aria-label={typeof label === 'string' ? label : undefined}>
         {label && <FormLabel required={required}>{label}</FormLabel>}
         <div className="color-picker__controls">
           <input

@@ -1,6 +1,7 @@
 {
   "name": "@metabuilder/hooks-data",
   "version": "0.1.0",
+  "type": "module",
   "description": "Data management hooks with service adapter injection for MetaBuilder",
   "main": "src/index.ts",
   "types": "src/index.ts",
@@ -15,7 +16,8 @@
     "@metabuilder/service-adapters": "*"
   },
   "dependencies": {
-    "@metabuilder/redux-slices": "*"
+    "@metabuilder/redux-slices": "*",
+    "@metabuilder/types": "*"
   },
   "devDependencies": {
     "@types/node": "^25.1.0",

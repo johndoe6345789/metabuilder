@@ -1,0 +1,251 @@
+// Table Component - Official Angular Material M3 SCSS (CSS Module)
+// ==================================================================
+// Uses official Angular Material table styles
+
+@use '../m3-scss/material/table/table.module';
+
+// Local class to satisfy CSS modules purity requirement
+// Apply this to wrap Angular Material table elements
+.matTable {
+  // This class can be empty - it just needs to exist for CSS modules
+  // The actual styling comes from the Angular Material classes below
+}
+
+// Additional React-specific styles as local classes
+
+// Table container for scrollable tables
+.tableContainer {
+  display: block;
+  width: 100%;
+  overflow: auto;
+}
+
+// Striped rows (not in Angular Material by default)
+.striped tbody tr:nth-child(even) {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+// Bordered variant
+.bordered {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+}
+
+// Compact mode - reduces padding
+.compact {
+  :global(.mdc-data-table__cell),
+  :global(.mdc-data-table__header-cell) {
+    padding: 0 8px;
+  }
+}
+
+// Size variants
+.small {
+  :global(.mat-mdc-header-row) {
+    height: 40px;
+  }
+  :global(.mat-mdc-row) {
+    height: 36px;
+  }
+  :global(.mat-mdc-footer-row) {
+    height: 36px;
+  }
+}
+
+.medium {
+  // Default size - matches Angular Material defaults
+}
+
+.large {
+  :global(.mat-mdc-header-row) {
+    height: 64px;
+  }
+  :global(.mat-mdc-row) {
+    height: 60px;
+  }
+  :global(.mat-mdc-footer-row) {
+    height: 60px;
+  }
+}
+
+// Hover effect on rows
+.hover:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+// Selected row state
+.selected {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+// Clickable row styling
+.clickable {
+  cursor: pointer;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.04);
+  }
+
+  &:active {
+    background: rgba(0, 0, 0, 0.08);
+  }
+}
+
+// Cell alignment utilities
+.alignLeft {
+  text-align: left;
+}
+
+.alignCenter {
+  text-align: center;
+}
+
+.alignRight {
+  text-align: right;
+}
+
+.alignJustify {
+  text-align: justify;
+}
+
+// Padding variants for cells
+.paddingCheckbox {
+  width: 48px;
+  padding: 0 0 0 4px;
+}
+
+.paddingNone {
+  padding: 0;
+}
+
+// Sort label styles
+.sortLabel {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &:focus {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+}
+
+.active {
+  font-weight: 600;
+}
+
+.sortIcon {
+  display: inline-flex;
+  margin-left: 4px;
+  transition: transform 200ms ease;
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.asc {
+  transform: rotate(0deg);
+}
+
+.desc {
+  transform: rotate(180deg);
+}
+
+// Pagination styles
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+  padding: 8px 16px;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.87);
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.paginationLabel {
+  white-space: nowrap;
+}
+
+.paginationSelect {
+  border: 1px solid rgba(0, 0, 0, 0.23);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 14px;
+  background: transparent;
+  cursor: pointer;
+
+  &:focus {
+    outline: 2px solid currentColor;
+    outline-offset: 1px;
+  }
+}
+
+.paginationDisplayed {
+  white-space: nowrap;
+}
+
+.paginationActions {
+  display: flex;
+  gap: 4px;
+}
+
+.paginationBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  transition: background-color 150ms ease;
+
+  &:hover:not(:disabled) {
+    background: rgba(0, 0, 0, 0.04);
+  }
+
+  &:disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+// Table head, body, footer sections (for inheritance)
+.head {
+  background: inherit;
+}
+
+.body {
+  background: inherit;
+}
+
+.footer {
+  background: inherit;
+}
+
+// Row styling (base)
+.row {
+  background: inherit;
+}
+
+// Cell styling (base)
+.cell {
+  box-sizing: border-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

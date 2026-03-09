@@ -1,0 +1,167 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://metabuilder.dev/schemas/test-parameters.schema.json",
+  "title": "Test Parameters Schema",
+  "description": "Schema for defining parameterized test input parameters",
+  "type": "object",
+  "required": ["schemaVersion", "package"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "JSON Schema reference"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "description": "Schema version",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "default": "2.0.0"
+    },
+    "package": {
+      "type": "string",
+      "description": "Package identifier"
+    },
+    "description": {
+      "type": "string",
+      "description": "Test parameters module description"
+    },
+    "parameters": {
+      "type": "array",
+      "description": "Parameter set definitions for tests",
+      "items": {
+        "$ref": "#/definitions/parameterSet"
+      }
+    }
+  },
+  "definitions": {
+    "parameterSet": {
+      "type": "object",
+      "required": ["id", "name", "params"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique parameter set identifier"
+        },
+        "name": {
+          "type": "string",
+          "description": "Descriptive name for this parameter set"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of what this parameter set tests"
+        },
+        "tags": {
+          "type": "array",
+          "description": "Tags for categorization (e.g., 'edge-case', 'happy-path', 'validation')",
+          "items": {
+            "type": "string"
+          }
+        },
+        "params": {
+          "type": "object",
+          "description": "Parameter definitions",
+          "additionalProperties": {
+            "$ref": "#/definitions/parameter"
+          }
+        },
+        "fixtures": {
+          "type": "object",
+          "description": "Shared fixtures for this parameter set",
+          "additionalProperties": true
+        }
+      }
+    },
+    "parameter": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Parameter data type",
+          "enum": [
+            "string",
+            "number",
+            "integer",
+            "boolean",
+            "object",
+            "array",
+            "null",
+            "any"
+          ]
+        },
+        "description": {
+          "type": "string",
+          "description": "Parameter description"
+        },
+        "default": {
+          "description": "Default value for this parameter"
+        },
+        "enum": {
+          "type": "array",
+          "description": "Allowed enum values"
+        },
+        "pattern": {
+          "type": "string",
+          "description": "Regex pattern for string validation"
+        },
+        "minimum": {
+          "type": "number",
+          "description": "Minimum value for numbers"
+        },
+        "maximum": {
+          "type": "number",
+          "description": "Maximum value for numbers"
+        },
+        "minLength": {
+          "type": "integer",
+          "description": "Minimum length for strings/arrays"
+        },
+        "maxLength": {
+          "type": "integer",
+          "description": "Maximum length for strings/arrays"
+        },
+        "items": {
+          "description": "Schema for array items",
+          "$ref": "#/definitions/parameter"
+        },
+        "properties": {
+          "type": "object",
+          "description": "Properties for object type",
+          "additionalProperties": {
+            "$ref": "#/definitions/parameter"
+          }
+        },
+        "required": {
+          "type": "array",
+          "description": "Required properties for object type",
+          "items": {
+            "type": "string"
+          }
+        },
+        "nullable": {
+          "type": "boolean",
+          "description": "Whether this parameter can be null",
+          "default": false
+        },
+        "generator": {
+          "type": "object",
+          "description": "Configuration for generating test values",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "random",
+                "sequential",
+                "faker",
+                "custom"
+              ]
+            },
+            "config": {
+              "type": "object",
+              "description": "Generator-specific configuration"
+            }
+          }
+        }
+      }
+    }
+  }
+}

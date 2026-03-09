@@ -1,0 +1,206 @@
+[
+  {
+    "id": "rollup-missing",
+    "category": "Dependencies",
+    "title": "Rollup Platform-Specific Binary Missing",
+    "pattern": "Cannot find module @rollup/rollup-*",
+    "explanation": "Rollup uses platform-specific native binaries that are installed as optional dependencies. In Docker multi-platform builds, npm may not install the correct optional dependencies for all target platforms.",
+    "solutions": [
+      {
+        "title": "Install Optional Dependencies Explicitly",
+        "description": "Force npm to install all optional dependencies during the Docker build.",
+        "steps": [
+          "Modify the RUN npm install command in your Dockerfile",
+          "Add the --include=optional flag",
+          "Rebuild your Docker image"
+        ],
+        "code": "RUN npm install --legacy-peer-deps --include=optional",
+        "codeLanguage": "dockerfile"
+      }
+    ]
+  },
+  {
+    "id": "multi-platform",
+    "category": "Architecture",
+    "title": "Multi-Platform Build Issues",
+    "pattern": "--platform linux/amd64,linux/arm64",
+    "explanation": "Building Docker images for multiple CPU architectures (amd64 and arm64) requires proper setup of buildx and may encounter platform-specific dependency issues.",
+    "solutions": [
+      {
+        "title": "Build for Single Platform Only",
+        "description": "Simplify by targeting only one architecture.",
+        "steps": [
+          "Choose the primary platform (usually linux/amd64)",
+          "Remove multi-platform flags from build command",
+          "Update deployment configuration"
+        ],
+        "code": "docker build --platform linux/amd64 -t myimage:latest .",
+        "codeLanguage": "bash"
+      }
+    ]
+  },
+  {
+    "id": "node-modules",
+    "category": "Dependencies",
+    "title": "Node Modules Not Found",
+    "pattern": "MODULE_NOT_FOUND",
+    "explanation": "A required npm package is missing from node_modules, either because npm install failed, the package isn't in package.json, or Docker layer caching is stale.",
+    "solutions": [
+      {
+        "title": "Verify Dockerfile Order",
+        "description": "Ensure proper layer ordering in your Dockerfile.",
+        "steps": [
+          "Copy package.json and package-lock.json first",
+          "Run npm install",
+          "Then copy the rest of the source code",
+          "Finally run the build"
+        ],
+        "code": "COPY package*.json ./\nRUN npm install\nCOPY . .\nRUN npm run build",
+        "codeLanguage": "dockerfile"
+      }
+    ]
+  },
+  {
+    "id": "build-exit-1",
+    "category": "Build Process",
+    "title": "Build Process Exit Code 1",
+    "pattern": "exit code: 1",
+    "explanation": "The build command failed with a generic error code. This usually indicates a compilation error, missing dependency, or configuration issue.",
+    "solutions": [
+      {
+        "title": "Check Build Logs for Specific Error",
+        "description": "Look earlier in the build output for the actual error message.",
+        "steps": [
+          "Scroll up to find the first ERROR or Error message",
+          "Look for stack traces or line numbers",
+          "Test the build locally with the same commands",
+          "Check for environment-specific issues"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "network-timeout",
+    "category": "Network",
+    "title": "Network Timeout During Build",
+    "pattern": "timeout|ETIMEDOUT|ECONNREFUSED",
+    "explanation": "Docker build couldn't connect to external services like npm registry, causing the build to fail.",
+    "solutions": [
+      {
+        "title": "Configure Network Settings",
+        "description": "Adjust Docker network configuration and retry logic.",
+        "steps": [
+          "Check Docker daemon network settings",
+          "Configure npm registry timeout",
+          "Consider using a mirror or proxy",
+          "Retry the build"
+        ],
+        "code": "# In Dockerfile, before npm install:\nRUN npm config set fetch-timeout 60000\nRUN npm config set fetch-retries 5",
+        "codeLanguage": "dockerfile"
+      }
+    ]
+  },
+  {
+    "id": "memory-limit",
+    "category": "Resources",
+    "title": "Out of Memory During Build",
+    "pattern": "JavaScript heap out of memory|ENOMEM",
+    "explanation": "The Node.js build process exceeded available memory limits, common with large applications or many dependencies.",
+    "solutions": [
+      {
+        "title": "Increase Node Memory Limit",
+        "description": "Allocate more memory to the Node.js process during build.",
+        "steps": [
+          "Set NODE_OPTIONS environment variable",
+          "Increase max-old-space-size value",
+          "Rebuild Docker image"
+        ],
+        "code": "# In Dockerfile, before build command:\nENV NODE_OPTIONS=\"--max-old-space-size=4096\"\nRUN npm run build",
+        "codeLanguage": "dockerfile"
+      }
+    ]
+  },
+  {
+    "id": "cache-corruption",
+    "category": "Cache",
+    "title": "Docker Layer Cache Issues",
+    "pattern": "Cached layer|using cache",
+    "explanation": "Docker's layer caching can sometimes use stale or corrupted cached layers, leading to inconsistent builds.",
+    "solutions": [
+      {
+        "title": "Clear Build Cache",
+        "description": "Force a clean build without using cached layers.",
+        "steps": [
+          "Run docker builder prune to clear cache",
+          "Build with --no-cache flag",
+          "Verify the clean build succeeds"
+        ],
+        "code": "docker builder prune -af\ndocker build --no-cache -t myimage:latest .",
+        "codeLanguage": "bash"
+      }
+    ]
+  },
+  {
+    "id": "base-image-issue",
+    "category": "Images",
+    "title": "Base Image Not Found or Incompatible",
+    "pattern": "pull access denied|manifest unknown|not found",
+    "explanation": "The base image specified in FROM instruction is unavailable, misspelled, or incompatible with the target platform.",
+    "solutions": [
+      {
+        "title": "Verify Base Image",
+        "description": "Check that the base image exists and is accessible.",
+        "steps": [
+          "Verify image name and tag on Docker Hub",
+          "Check if the image supports your target platform",
+          "Try pulling the image manually first",
+          "Consider using a different tag or base image"
+        ],
+        "code": "# Test pulling the image first:\ndocker pull node:20-alpine\n\n# Verify platform support:\ndocker manifest inspect node:20-alpine",
+        "codeLanguage": "bash"
+      }
+    ]
+  },
+  {
+    "id": "dockerfile-syntax",
+    "category": "Configuration",
+    "title": "Dockerfile Syntax Error",
+    "pattern": "unknown instruction|unexpected token",
+    "explanation": "The Dockerfile contains syntax errors or uses unsupported instructions.",
+    "solutions": [
+      {
+        "title": "Validate Dockerfile Syntax",
+        "description": "Check your Dockerfile for common syntax issues.",
+        "steps": [
+          "Ensure all instructions are uppercase (FROM, RUN, COPY)",
+          "Check for typos in instruction names",
+          "Verify line continuations with backslash",
+          "Use hadolint to lint your Dockerfile"
+        ],
+        "code": "# Install and run hadolint:\ndocker run --rm -i hadolint/hadolint < Dockerfile",
+        "codeLanguage": "bash"
+      }
+    ]
+  },
+  {
+    "id": "copy-failed",
+    "category": "Files",
+    "title": "COPY Instruction Failed",
+    "pattern": "COPY failed|no such file or directory",
+    "explanation": "Docker couldn't find the files or directories specified in a COPY instruction, or they're excluded by .dockerignore.",
+    "solutions": [
+      {
+        "title": "Check File Paths and Context",
+        "description": "Verify files exist and are included in build context.",
+        "steps": [
+          "Confirm files exist in your repository",
+          "Check .dockerignore isn't excluding them",
+          "Ensure COPY paths are relative to build context",
+          "List build context: docker build -t test --progress=plain ."
+        ],
+        "code": "# In .dockerignore, check for overly broad patterns:\n# These might exclude too much:\n# *\n# node_modules/*\n# src/*",
+        "codeLanguage": "text"
+      }
+    ]
+  }
+]

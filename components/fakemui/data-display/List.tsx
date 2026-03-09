@@ -1,5 +1,9 @@
 import React, { forwardRef } from 'react'
 import { sxToStyle } from '../utils/sx'
+import styles from '../../../scss/atoms/mat-list.module.scss'
+
+/** Resolve a class name through CSS Modules; falls back to the raw key if not found */
+const s = (key: string): string => styles[key] || key
 
 export interface ListProps extends React.HTMLAttributes<HTMLElement> {
   children?: React.ReactNode
@@ -11,6 +15,8 @@ export interface ListProps extends React.HTMLAttributes<HTMLElement> {
   disablePadding?: boolean
   /** MUI sx prop */
   sx?: Record<string, unknown>
+  /** Test ID for automated testing */
+  testId?: string
 }
 
 export const List: React.FC<ListProps> = ({
@@ -19,19 +25,34 @@ export const List: React.FC<ListProps> = ({
   spaced,
   component: Component = 'ul',
   disablePadding,
+  testId,
   className = '',
   sx,
   style,
   ...props
-}) => (
-  <Component
-    className={`list ${dense ? 'list--dense' : ''} ${spaced ? 'list--spaced' : ''} ${disablePadding ? 'list--no-padding' : ''} ${className}`}
-    style={{ ...sxToStyle(sx), ...style }}
-    {...props}
-  >
-    {children}
-  </Component>
-)
+}) => {
+  const classNames = [
+    s('matList'),
+    s('mdc-list'),
+    s('mat-mdc-list-base'),
+    dense ? s('dense') : '',
+    spaced ? s('spaced') : '',
+    disablePadding ? s('noPadding') : '',
+    className
+  ].filter(Boolean).join(' ')
+
+  return (
+    <Component
+      className={classNames}
+      style={{ ...sxToStyle(sx), ...style }}
+      data-testid={testId}
+      role={Component !== 'ul' && Component !== 'ol' ? 'list' : undefined}
+      {...props}
+    >
+      {children}
+    </Component>
+  )
+}
 
 export interface ListItemProps extends React.LiHTMLAttributes<HTMLLIElement> {
   children?: React.ReactNode
@@ -59,19 +80,36 @@ export const ListItem: React.FC<ListItemProps> = ({
   sx,
   style,
   ...props
-}) => (
-  <li
-    className={`list-item ${clickable ? 'list-item--clickable' : ''} ${selected ? 'list-item--selected' : ''} ${disabled ? 'list-item--disabled' : ''} ${borderless ? 'list-item--borderless' : ''} ${disablePadding ? 'list-item--no-padding' : ''} ${disableGutters ? 'list-item--no-gutters' : ''} ${className}`}
-    style={{ ...sxToStyle(sx), ...style }}
-    {...props}
-  >
-    {children}
-  </li>
-)
+}) => {
+  const classNames = [
+    s('mdc-list-item'),
+    s('mat-mdc-list-item'),
+    s('mdc-list-item--with-one-line'),
+    clickable ? s('mat-mdc-list-item-interactive') : '',
+    selected ? s('mdc-list-item--selected') : '',
+    disabled ? s('mdc-list-item--disabled') : '',
+    borderless ? s('borderless') : '',
+    disablePadding ? s('noPadding') : '',
+    disableGutters ? s('noGutters') : '',
+    className
+  ].filter(Boolean).join(' ')
+
+  return (
+    <li
+      className={classNames}
+      style={{ ...sxToStyle(sx), ...style }}
+      {...props}
+    >
+      <span className={s('mat-focus-indicator')} />
+      {children}
+    </li>
+  )
+}
 
 export interface ListItemButtonProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   children?: React.ReactNode
   selected?: boolean
+  disabled?: boolean
   /** Render as different element */
   component?: React.ElementType
   /** MUI sx prop */
@@ -79,18 +117,29 @@ export interface ListItemButtonProps extends React.AnchorHTMLAttributes<HTMLAnch
 }
 
 export const ListItemButton = forwardRef<HTMLAnchorElement | HTMLButtonElement, ListItemButtonProps>(
-  ({ children, selected, component, href, className = '', sx, style, ...props }, ref) => {
+  ({ children, selected, disabled, component, href, className = '', sx, style, ...props }, ref) => {
     // If href is provided, render as anchor, otherwise render as button (or custom component)
     const Component = component || (href ? 'a' : 'button')
     const elementProps = href ? { href, ...props } : props
 
+    const classNames = [
+      s('mdc-list-item'),
+      s('mat-mdc-list-item'),
+      s('mat-mdc-list-item-interactive'),
+      s('mdc-list-item--with-one-line'),
+      selected ? `${s('mdc-list-item--selected')} ${s('mdc-list-item--activated')}` : '',
+      disabled ? s('mdc-list-item--disabled') : '',
+      className
+    ].filter(Boolean).join(' ')
+
     return (
       <Component
         ref={ref}
-        className={`list-item-button ${selected ? 'list-item-button--selected' : ''} ${className}`}
+        className={classNames}
         style={{ ...sxToStyle(sx), ...style }}
         {...elementProps}
       >
+        <span className={s('mat-focus-indicator')} />
         {children}
       </Component>
     )
@@ -104,7 +153,7 @@ export interface ListItemIconProps extends React.HTMLAttributes<HTMLSpanElement>
 }
 
 export const ListItemIcon: React.FC<ListItemIconProps> = ({ children, className = '', ...props }) => (
-  <span className={`list-item-icon ${className}`} {...props}>
+  <span className={`${s('mdc-list-item__start')} ${s('mat-mdc-list-item-icon')} ${className}`.trim()} {...props}>
     {children}
   </span>
 )
@@ -115,9 +164,9 @@ export interface ListItemTextProps extends React.HTMLAttributes<HTMLDivElement> 
 }
 
 export const ListItemText: React.FC<ListItemTextProps> = ({ primary, secondary, className = '', ...props }) => (
-  <div className={`list-item-text ${className}`} {...props}>
-    {primary && <span className="list-item-title">{primary}</span>}
-    {secondary && <span className="list-item-meta">{secondary}</span>}
+  <div className={`${s('mdc-list-item__content')} ${className}`.trim()} {...props}>
+    {primary && <span className={s('mdc-list-item__primary-text')}>{primary}</span>}
+    {secondary && <span className={`${s('mdc-list-item__secondary-text')} ${s('mat-mdc-list-item-line')}`}>{secondary}</span>}
   </div>
 )
 
@@ -126,7 +175,7 @@ export interface ListItemAvatarProps extends React.HTMLAttributes<HTMLDivElement
 }
 
 export const ListItemAvatar: React.FC<ListItemAvatarProps> = ({ children, className = '', ...props }) => (
-  <div className={`list-item-avatar ${className}`} {...props}>
+  <div className={`${s('mdc-list-item__start')} ${s('mat-mdc-list-item-avatar')} ${className}`.trim()} {...props}>
     {children}
   </div>
 )
@@ -136,7 +185,7 @@ export interface ListSubheaderProps extends React.LiHTMLAttributes<HTMLLIElement
 }
 
 export const ListSubheader: React.FC<ListSubheaderProps> = ({ children, className = '', ...props }) => (
-  <li className={`list-subheader ${className}`} {...props}>
+  <li className={`${s('mdc-list-group__subheader')} ${className}`.trim()} {...props}>
     {children}
   </li>
 )

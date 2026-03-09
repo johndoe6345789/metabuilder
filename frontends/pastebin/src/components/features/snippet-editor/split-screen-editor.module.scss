@@ -1,0 +1,67 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.viewModeBar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 6px;
+  background-color: var(--mat-sys-surface-variant);
+}
+
+.viewModeBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+}
+
+.btnLabel {
+  display: none;
+
+  @media (min-width: 640px) {
+    display: inline;
+  }
+}
+
+.iconSm {
+  width: 16px;
+  height: 16px;
+}
+
+.editorContainer {
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--mat-sys-outline-variant);
+  background-color: var(--mat-sys-surface);
+}
+
+.splitGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background-color: var(--mat-sys-outline-variant);
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+  }
+}
+
+.splitPane {
+  overflow: auto;
+  background-color: var(--mat-sys-surface);
+
+  @media (min-width: 768px) {
+    flex: 1;
+  }
+}

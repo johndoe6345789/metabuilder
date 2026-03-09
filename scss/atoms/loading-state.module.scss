@@ -1,0 +1,148 @@
+// Loading State Atoms - Material Design 3 (CSS Module)
+// =====================================================
+// Flat selectors for loading state styling using M3 tokens
+
+// Base loading state
+.loadingState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 24px;
+}
+
+// Loading text
+.loadingStateText {
+  font-family: var(--mat-sys-body-medium-font);
+  font-size: var(--mat-sys-body-medium-size);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+// Loading progress text
+.loadingStateProgress {
+  font-family: var(--mat-sys-label-small-font);
+  font-size: var(--mat-sys-label-small-size);
+  color: var(--mat-sys-on-surface-variant);
+  opacity: 0.7;
+}
+
+// Size variants
+.loadingStateSm {
+  composes: loadingState;
+  gap: 12px;
+  padding: 16px;
+}
+
+.loadingStateSm .loadingStateText {
+  font-size: var(--mat-sys-body-small-size);
+}
+
+.loadingStateLg {
+  composes: loadingState;
+  gap: 24px;
+  padding: 48px;
+}
+
+.loadingStateLg .loadingStateText {
+  font-family: var(--mat-sys-title-medium-font);
+  font-size: var(--mat-sys-title-medium-size);
+}
+
+// Inline loading (horizontal)
+.loadingStateInline {
+  composes: loadingState;
+  flex-direction: row;
+  padding: 8px 12px;
+  gap: 12px;
+}
+
+// Overlay loading (full container)
+.loadingStateOverlay {
+  composes: loadingState;
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--mat-sys-surface) 80%, transparent);
+  z-index: var(--z-local-elevated);
+  backdrop-filter: blur(2px);
+}
+
+// Full page loading
+.loadingStateFullpage {
+  composes: loadingState;
+  position: fixed;
+  inset: 0;
+  background: var(--mat-sys-surface);
+  z-index: var(--z-overlay-max);
+}
+
+// Skeleton loading placeholder
+.loadingSkeleton {
+  background: linear-gradient(
+    90deg,
+    var(--mat-sys-surface-container) 25%,
+    var(--mat-sys-surface-container-high) 50%,
+    var(--mat-sys-surface-container) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.5s ease-in-out infinite;
+  border-radius: var(--mat-sys-corner-small);
+}
+
+@keyframes skeletonShimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+// Skeleton variants
+.loadingSkeletonText {
+  composes: loadingSkeleton;
+  height: 1em;
+  width: 100%;
+}
+
+.loadingSkeletonTitle {
+  composes: loadingSkeleton;
+  height: 1.5em;
+  width: 60%;
+}
+
+.loadingSkeletonAvatar {
+  composes: loadingSkeleton;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--mat-sys-corner-full);
+}
+
+.loadingSkeletonButton {
+  composes: loadingSkeleton;
+  height: 40px;
+  width: 120px;
+  border-radius: var(--mat-sys-corner-full);
+}
+
+.loadingSkeletonCard {
+  composes: loadingSkeleton;
+  height: 200px;
+  width: 100%;
+  border-radius: var(--mat-sys-corner-medium);
+}
+
+// Pulse animation variant
+.loadingSkeletonPulse {
+  composes: loadingSkeleton;
+  animation: skeletonPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes skeletonPulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}

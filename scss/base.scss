@@ -1,0 +1,112 @@
+// Base styles - Material Design 3
+// CSS reset and global element styles using M3 tokens
+// M3 tokens are defined in scss/theme.scss and scss/tokens.scss
+
+// CSS Reset
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  color-scheme: light dark;
+}
+
+body {
+  font-family: var(--mat-sys-body-large-font);
+  font-size: var(--mat-sys-body-large-size);
+  line-height: var(--mat-sys-body-large-line-height);
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  min-height: 100vh;
+}
+
+// Links
+a {
+  color: var(--mat-sys-primary);
+  text-decoration: none;
+  transition: color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+// Lists
+ul, ol {
+  list-style: none;
+}
+
+// Images
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+// Tables
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+// Forms
+button, input, select, textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  background: none;
+  border: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+// Code
+code, pre {
+  font-family: var(--font-mono);
+  font-feature-settings: "tnum" on, "lnum" on;
+}
+
+// Selection - M3 uses primary with transparency
+::selection {
+  background-color: color-mix(in srgb, var(--mat-sys-primary) 30%, transparent);
+  color: var(--mat-sys-on-surface);
+}
+
+// Scrollbar (webkit) - M3 styling
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--mat-sys-outline-variant);
+  border-radius: var(--mat-sys-corner-full);
+
+  &:hover {
+    background: var(--mat-sys-outline);
+  }
+}
+
+// Focus outline - M3 uses primary color
+:focus-visible {
+  outline: 2px solid var(--mat-sys-primary);
+  outline-offset: 2px;
+}
+
+// Disabled state - M3 uses 38% opacity
+:disabled {
+  cursor: not-allowed;
+  opacity: var(--disabled-content-opacity);
+}

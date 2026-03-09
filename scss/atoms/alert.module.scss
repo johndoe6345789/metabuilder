@@ -1,0 +1,201 @@
+// Alert Atoms - Material Design 3 (CSS Modules)
+// ==============================================
+// CSS Module selectors for alert/banner styling using M3 tokens
+
+// Base alert
+.alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  border-radius: var(--mat-sys-corner-medium);
+  font-family: var(--mat-sys-body-medium-font);
+  font-size: var(--mat-sys-body-medium-size);
+  line-height: var(--mat-sys-body-medium-line-height);
+  background: var(--mat-sys-surface-container);
+  color: var(--mat-sys-on-surface);
+}
+
+// Alert icon
+.alertIcon {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// Alert content
+.alertContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.alertTitle {
+  font-family: var(--mat-sys-title-small-font);
+  font-size: var(--mat-sys-title-small-size);
+  font-weight: var(--mat-sys-title-small-weight);
+  line-height: var(--mat-sys-title-small-line-height);
+  margin: 0 0 4px;
+}
+
+.alertMessage {
+  margin: 0;
+}
+
+// Alert actions
+.alertActions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+// Close button
+.alertClose {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: var(--mat-sys-corner-full);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  transition: background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+}
+
+.alertClose:hover {
+  background: color-mix(in srgb, currentColor 8%, transparent);
+}
+
+.alertClose:focus-visible {
+  outline: 2px solid var(--mat-sys-primary);
+  outline-offset: 2px;
+}
+
+// ============================================
+// Severity Variants
+// ============================================
+
+// Error (high importance)
+.alertError {
+  background: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
+}
+
+.alertError .alertIcon {
+  color: var(--mat-sys-error);
+}
+
+// Warning
+.alertWarning {
+  background: var(--color-warning-container);
+  color: var(--mat-sys-on-surface);
+}
+
+.alertWarning .alertIcon {
+  color: var(--color-on-warning-container);
+}
+
+// Success
+.alertSuccess {
+  background: var(--color-success-container);
+  color: var(--mat-sys-on-surface);
+}
+
+.alertSuccess .alertIcon {
+  color: var(--color-on-success-container);
+}
+
+// Info (default)
+.alertInfo {
+  background: var(--mat-sys-surface-container-high);
+  color: var(--mat-sys-on-surface);
+}
+
+.alertInfo .alertIcon {
+  color: var(--mat-sys-primary);
+}
+
+// ============================================
+// Outlined Variants
+// ============================================
+
+.alertOutlined {
+  background: transparent;
+  border: 1px solid var(--mat-sys-outline);
+}
+
+.alertOutlined.alertError {
+  border-color: var(--mat-sys-error);
+}
+
+.alertOutlined.alertWarning {
+  border-color: var(--color-warning);
+}
+
+.alertOutlined.alertSuccess {
+  border-color: var(--color-success);
+}
+
+.alertOutlined.alertInfo {
+  border-color: var(--mat-sys-primary);
+}
+
+// ============================================
+// Filled Variants (Higher Emphasis)
+// ============================================
+
+.alertFilled.alertError {
+  background: var(--mat-sys-error);
+  color: var(--mat-sys-on-error);
+}
+
+.alertFilled.alertError .alertIcon {
+  color: var(--mat-sys-on-error);
+}
+
+.alertFilled.alertWarning {
+  background: var(--color-warning);
+  color: var(--color-on-warning);
+}
+
+.alertFilled.alertWarning .alertIcon {
+  color: var(--color-on-warning);
+}
+
+.alertFilled.alertSuccess {
+  background: var(--color-success);
+  color: var(--color-on-success);
+}
+
+.alertFilled.alertSuccess .alertIcon {
+  color: var(--color-on-success);
+}
+
+.alertFilled.alertInfo {
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+}
+
+.alertFilled.alertInfo .alertIcon {
+  color: var(--mat-sys-on-primary);
+}
+
+// ============================================
+// Dense variant
+// ============================================
+
+.alertDense {
+  padding: 8px 12px;
+  gap: 8px;
+}
+
+.alertDense .alertIcon {
+  width: 20px;
+  height: 20px;
+}

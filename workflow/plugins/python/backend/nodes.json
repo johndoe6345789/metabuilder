@@ -1,0 +1,146 @@
+{
+  "$schema": "../../../../schemas/plugin-nodes.schema.json",
+  "category": {
+    "id": "backend",
+    "name": "Backend Bootstrap",
+    "color": "#34495e",
+    "icon": "server"
+  },
+  "nodes": [
+    {
+      "id": "backend.load_env",
+      "name": "Load Environment",
+      "description": "Load environment variables from .env",
+      "icon": "key",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "path": ".env" }
+    },
+    {
+      "id": "backend.parse_cli_args",
+      "name": "Parse CLI Args",
+      "description": "Parse command line arguments",
+      "icon": "terminal",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": {}
+    },
+    {
+      "id": "backend.configure_logging",
+      "name": "Configure Logging",
+      "description": "Set up logging configuration",
+      "icon": "file-text",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "level": "INFO", "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s" }
+    },
+    {
+      "id": "backend.load_messages",
+      "name": "Load Messages",
+      "description": "Load conversation messages from storage",
+      "icon": "message-circle",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": {}
+    },
+    {
+      "id": "backend.load_metadata",
+      "name": "Load Metadata",
+      "description": "Load workflow metadata",
+      "icon": "info",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": {}
+    },
+    {
+      "id": "backend.load_prompt",
+      "name": "Load Prompt",
+      "description": "Load system prompt from file",
+      "icon": "file-text",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "path": "" }
+    },
+    {
+      "id": "backend.create_github",
+      "name": "Create GitHub Client",
+      "description": "Initialize GitHub API client",
+      "icon": "github",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "tokenEnvVar": "GITHUB_TOKEN" }
+    },
+    {
+      "id": "backend.create_openai",
+      "name": "Create OpenAI Client",
+      "description": "Initialize OpenAI API client",
+      "icon": "cpu",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "apiKeyEnvVar": "OPENAI_API_KEY", "model": "gpt-4" }
+    },
+    {
+      "id": "backend.create_discord",
+      "name": "Create Discord Client",
+      "description": "Initialize Discord bot client",
+      "icon": "message-circle",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "tokenEnvVar": "DISCORD_TOKEN" }
+    },
+    {
+      "id": "backend.create_slack",
+      "name": "Create Slack Client",
+      "description": "Initialize Slack API client",
+      "icon": "slack",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "tokenEnvVar": "SLACK_TOKEN" }
+    },
+    {
+      "id": "backend.load_tools",
+      "name": "Load Tools",
+      "description": "Load tool definitions for AI",
+      "icon": "tool",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "toolsPath": "" }
+    },
+    {
+      "id": "backend.load_tool_registry",
+      "name": "Load Tool Registry",
+      "description": "Load tool registry configuration",
+      "icon": "list",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": {}
+    },
+    {
+      "id": "backend.load_tool_policies",
+      "name": "Load Tool Policies",
+      "description": "Load tool execution policies",
+      "icon": "shield",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": {}
+    },
+    {
+      "id": "backend.build_tool_map",
+      "name": "Build Tool Map",
+      "description": "Build mapping of tool names to implementations",
+      "icon": "map",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": {}
+    },
+    {
+      "id": "backend.load_plugins",
+      "name": "Load Plugins",
+      "description": "Dynamically load workflow plugins",
+      "icon": "plug",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "pluginsPath": "workflow/plugins" }
+    }
+  ]
+}

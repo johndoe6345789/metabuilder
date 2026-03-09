@@ -1,0 +1,117 @@
+// Toast Atoms - Material Design 3 (CSS Modules)
+// =============================================
+// Imperative toast notification system — drop-in sonner replacement
+
+// ── Container ────────────────────────────────────────────────────────────────
+
+.container {
+  position: fixed;
+  z-index: 9000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+
+  // Position variants
+  &.bottom_right  { bottom: 24px; right:  24px; align-items: flex-end; }
+  &.bottom_left   { bottom: 24px; left:   24px; align-items: flex-start; }
+  &.bottom_center { bottom: 24px; left: 50%; transform: translateX(-50%); align-items: center; }
+  &.top_right     { top:    24px; right:  24px; align-items: flex-end; }
+  &.top_left      { top:    24px; left:   24px; align-items: flex-start; }
+  &.top_center    { top:    24px; left: 50%; transform: translateX(-50%); align-items: center; }
+}
+
+// ── Toast item ────────────────────────────────────────────────────────────────
+
+.toast {
+  pointer-events: all;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 240px;
+  max-width: 400px;
+  padding: 12px 14px;
+  border-radius: var(--mat-sys-corner-small, 6px);
+  background: var(--mat-sys-inverse-surface, #313033);
+  color: var(--mat-sys-inverse-on-surface, #f4eff4);
+  font-family: var(--mat-sys-body-medium-font, system-ui, sans-serif);
+  font-size: var(--mat-sys-body-medium-size, 0.875rem);
+  line-height: 1.4;
+  box-shadow: var(--mat-sys-level3,
+    0 4px 8px 3px rgba(0, 0, 0, .15),
+    0 1px 3px rgba(0, 0, 0, .30));
+  animation: toast-in 200ms cubic-bezier(0.2, 0, 0, 1) forwards;
+
+  // Severity overrides
+  &.success {
+    background: var(--mat-sys-primary-container, #21005d);
+    color: var(--mat-sys-on-primary-container, #eaddff);
+    .icon { color: var(--mat-sys-primary, #6750a4); }
+  }
+
+  &.error {
+    background: var(--mat-sys-error-container, #93000a);
+    color: var(--mat-sys-on-error-container, #ffdad6);
+    .icon { color: var(--mat-sys-error, #ffb4ab); }
+  }
+
+  &.warning {
+    background: var(--mat-sys-tertiary-container, #31111d);
+    color: var(--mat-sys-on-tertiary-container, #ffd8e4);
+    .icon { color: var(--mat-sys-tertiary, #efb8c8); }
+  }
+
+  &.info {
+    background: var(--mat-sys-secondary-container, #1d192b);
+    color: var(--mat-sys-on-secondary-container, #e8def8);
+    .icon { color: var(--mat-sys-secondary, #ccc2dc); }
+  }
+}
+
+// ── Parts ─────────────────────────────────────────────────────────────────────
+
+.icon {
+  flex-shrink: 0;
+  font-size: 20px;
+}
+
+.message {
+  flex: 1;
+  word-break: break-word;
+}
+
+.dismiss {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 2px;
+  cursor: pointer;
+  color: inherit;
+  opacity: 0.7;
+  border-radius: 50%;
+  transition: opacity 150ms, background 150ms;
+  font-size: 18px;
+
+  &:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  span { font-size: 18px; }
+}
+
+// ── Animation ─────────────────────────────────────────────────────────────────
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

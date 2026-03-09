@@ -1,0 +1,13 @@
+[
+  {
+    "id": "page_role_editor_list",
+    "path": "/admin/roles",
+    "title": "Role Management",
+    "packageId": "role_editor",
+    "component": "role_list_admin",
+    "level": 3,
+    "requiresAuth": true,
+    "isPublished": true,
+    "sortOrder": 0
+  }
+]

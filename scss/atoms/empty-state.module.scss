@@ -1,0 +1,121 @@
+// Empty State Atoms - Material Design 3 (CSS Module)
+// ===================================================
+// Flat selectors for empty state placeholder styling using M3 tokens
+
+// Base empty state
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+// Icon
+.emptyStateIcon {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 16px;
+  color: var(--mat-sys-on-surface-variant);
+  opacity: 0.6;
+}
+
+.emptyStateIconLg {
+  composes: emptyStateIcon;
+  width: 96px;
+  height: 96px;
+}
+
+// Title
+.emptyStateTitle {
+  font-family: var(--mat-sys-title-medium-font);
+  font-size: var(--mat-sys-title-medium-size);
+  font-weight: var(--mat-sys-title-medium-weight);
+  line-height: var(--mat-sys-title-medium-line-height);
+  color: var(--mat-sys-on-surface);
+  margin: 0 0 8px;
+}
+
+// Description
+.emptyStateDescription {
+  font-family: var(--mat-sys-body-medium-font);
+  font-size: var(--mat-sys-body-medium-size);
+  line-height: var(--mat-sys-body-medium-line-height);
+  color: var(--mat-sys-on-surface-variant);
+  margin: 0;
+  max-width: 320px;
+}
+
+// Hint text (smaller, more subtle)
+.emptyStateHint {
+  font-family: var(--mat-sys-body-small-font);
+  font-size: var(--mat-sys-body-small-size);
+  color: var(--mat-sys-on-surface-variant);
+  opacity: 0.7;
+  margin-top: 8px;
+}
+
+// Actions (buttons)
+.emptyStateActions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+// Size variants
+.emptyStateSm {
+  composes: emptyState;
+  padding: 24px 16px;
+}
+
+.emptyStateSm .emptyStateIcon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 12px;
+}
+
+.emptyStateSm .emptyStateTitle {
+  font-family: var(--mat-sys-title-small-font);
+  font-size: var(--mat-sys-title-small-size);
+}
+
+.emptyStateLg {
+  composes: emptyState;
+  padding: 64px 32px;
+}
+
+.emptyStateLg .emptyStateIcon {
+  width: 96px;
+  height: 96px;
+  margin-bottom: 24px;
+}
+
+.emptyStateLg .emptyStateTitle {
+  font-family: var(--mat-sys-headline-small-font);
+  font-size: var(--mat-sys-headline-small-size);
+}
+
+// With illustration
+.emptyStateIllustration {
+  width: 200px;
+  height: auto;
+  margin-bottom: 24px;
+  opacity: 0.8;
+}
+
+// Inline empty state (horizontal layout)
+.emptyStateInline {
+  composes: emptyState;
+  flex-direction: row;
+  gap: 16px;
+  padding: 16px;
+  text-align: left;
+}
+
+.emptyStateInline .emptyStateIcon {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 0;
+}

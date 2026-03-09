@@ -1,0 +1,36 @@
+{
+  "id": "shell",
+  "name": "Body Shell",
+  "partNumber": "FD-BIW-001",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 258000.0,
+  "weightUnit": "g",
+  "baseY": 0,
+  "description": "Painted monocoque body-in-white with seam sealer and cavity wax",
+  "installation": {
+    "tools": [
+      { "name": "Body rotisserie", "size": "Universal", "required": false },
+      { "name": "Engine crane", "size": "2 ton", "required": true },
+      { "name": "Panel dolly", "size": "-", "required": true }
+    ],
+    "hardware": [],
+    "torque": [],
+    "notes": [
+      "Shell arrives from paint with all apertures masked",
+      "Remove all masking before component installation",
+      "Check all drain holes are clear",
+      "Apply additional cavity wax to any exposed metal"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 180, "height": 70, "rx": 8, "fill": "#2a5a8a" },
+    { "type": "rect", "width": 160, "height": 40, "rx": 12, "offsetY": -30, "fill": "#3a6a9a" },
+    { "type": "rect", "width": 50, "height": 25, "rx": 4, "offsetX": -55, "offsetY": -5, "fill": "#1a4a7a" },
+    { "type": "rect", "width": 50, "height": 25, "rx": 4, "offsetX": 55, "offsetY": -5, "fill": "#1a4a7a" },
+    { "type": "ellipse", "rx": 20, "ry": 8, "offsetX": -60, "offsetY": 25, "fill": "#222" },
+    { "type": "ellipse", "rx": 20, "ry": 8, "offsetX": 60, "offsetY": 25, "fill": "#222" },
+    { "type": "rect", "width": 140, "height": 20, "rx": 3, "offsetY": -55, "fill": "#4a7aaa" },
+    { "type": "text", "content": "FIESTA", "offsetY": -52, "fill": "#fff", "fontSize": 8 }
+  ]
+}

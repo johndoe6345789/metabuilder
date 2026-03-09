@@ -1,0 +1,7 @@
+{
+  "id": "table-root",
+  "type": "div",
+  "props": {
+    "className": "data-table__wrapper"
+  }
+}

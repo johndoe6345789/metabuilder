@@ -1,0 +1,86 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/jobs.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "complete-example",
+  "description": "Background jobs for complete example package",
+  "jobs": [
+    {
+      "id": "cleanup_old_users",
+      "name": "Cleanup Old Users",
+      "description": "Remove inactive users older than 1 year",
+      "handler": "jobs.cleanupOldUsers",
+      "queue": "maintenance",
+      "schedule": "0 2 * * *",
+      "enabled": true,
+      "priority": 0,
+      "timeout": 300000,
+      "retry": {
+        "enabled": true,
+        "maxAttempts": 3,
+        "backoff": "exponential"
+      }
+    },
+    {
+      "id": "send_daily_digest",
+      "name": "Send Daily Digest",
+      "description": "Send daily digest emails to users",
+      "handler": "jobs.sendDailyDigest",
+      "queue": "emails",
+      "schedule": {
+        "cron": "0 9 * * *",
+        "timezone": "America/New_York"
+      },
+      "enabled": true,
+      "notifications": {
+        "onFailure": ["admin@example.com"],
+        "channels": ["email"]
+      }
+    },
+    {
+      "id": "process_analytics",
+      "name": "Process Analytics",
+      "description": "Process and aggregate analytics data",
+      "handler": "jobs.processAnalytics",
+      "queue": "default",
+      "schedule": {
+        "interval": 3600000
+      },
+      "enabled": true,
+      "concurrency": 1
+    },
+    {
+      "id": "backup_database",
+      "name": "Backup Database",
+      "description": "Create database backup",
+      "handler": "jobs.backupDatabase",
+      "queue": "maintenance",
+      "schedule": "0 0 * * *",
+      "enabled": true,
+      "priority": 10,
+      "timeout": 600000
+    }
+  ],
+  "queues": [
+    {
+      "name": "default",
+      "description": "Default job queue",
+      "concurrency": 5,
+      "priority": false
+    },
+    {
+      "name": "emails",
+      "description": "Email sending queue",
+      "concurrency": 3,
+      "rateLimit": {
+        "max": 100,
+        "window": 60000
+      }
+    },
+    {
+      "name": "maintenance",
+      "description": "Maintenance tasks queue",
+      "concurrency": 1,
+      "priority": true
+    }
+  ]
+}

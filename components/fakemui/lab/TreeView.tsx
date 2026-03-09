@@ -2,11 +2,13 @@
 
 import React, { useState, createContext, useContext, forwardRef } from 'react'
 import { classNames } from '../utils/classNames'
+import styles from '../../../scss/TreeView.module.scss'
 
 interface TreeViewContextType {
   expanded: string[]
   selected: string[]
   multiSelect: boolean
+  dense: boolean
   onNodeToggle: (event: React.SyntheticEvent, nodeId: string) => void
   onNodeSelect: (event: React.SyntheticEvent, nodeId: string) => void
   defaultCollapseIcon?: React.ReactNode
@@ -19,6 +21,7 @@ const TreeViewContext = createContext<TreeViewContextType>({
   expanded: [],
   selected: [],
   multiSelect: false,
+  dense: false,
   onNodeToggle: () => {},
   onNodeSelect: () => {},
 })
@@ -34,9 +37,12 @@ export interface TreeViewProps extends React.HTMLAttributes<HTMLUListElement> {
   selected?: string | string[]
   defaultSelected?: string | string[]
   multiSelect?: boolean
+  dense?: boolean
   onNodeToggle?: (event: React.SyntheticEvent, nodeIds: string[]) => void
   onNodeSelect?: (event: React.SyntheticEvent, nodeIds: string | string[]) => void
   disableSelection?: boolean
+  /** Test ID for automated testing */
+  testId?: string
 }
 
 export function TreeView({
@@ -50,10 +56,12 @@ export function TreeView({
   selected: controlledSelected,
   defaultSelected = [],
   multiSelect = false,
+  dense = false,
   onNodeToggle,
   onNodeSelect,
   disableSelection = false,
   className,
+  testId,
   ...props
 }: TreeViewProps) {
   const [internalExpanded, setInternalExpanded] = useState<string[]>(defaultExpanded)
@@ -97,6 +105,7 @@ export function TreeView({
         expanded,
         selected: Array.isArray(selected) ? selected : [selected],
         multiSelect,
+        dense,
         onNodeToggle: handleNodeToggle,
         onNodeSelect: handleNodeSelect,
         defaultCollapseIcon,
@@ -105,7 +114,7 @@ export function TreeView({
         defaultParentIcon,
       }}
     >
-      <ul className={classNames('fakemui-tree-view', className)} role="tree" aria-multiselectable={multiSelect} {...props}>
+      <ul className={classNames(styles.treeView, className)} role="tree" aria-multiselectable={multiSelect} data-testid={testId} {...props}>
         {children}
       </ul>
     </TreeViewContext.Provider>
@@ -129,7 +138,7 @@ export const TreeItem = forwardRef<HTMLLIElement, TreeItemProps>(function TreeIt
   { nodeId, label, children, icon, expandIcon, collapseIcon, endIcon, disabled = false, className, ContentComponent, ContentProps = {}, ...props },
   ref
 ) {
-  const { expanded, selected, onNodeToggle, onNodeSelect, defaultCollapseIcon, defaultEndIcon, defaultExpandIcon } =
+  const { expanded, selected, dense, onNodeToggle, onNodeSelect, defaultCollapseIcon, defaultEndIcon, defaultExpandIcon } =
     useContext(TreeViewContext)
 
   const isExpanded = expanded.includes(nodeId)
@@ -153,32 +162,35 @@ export const TreeItem = forwardRef<HTMLLIElement, TreeItemProps>(function TreeIt
       : expandIcon || defaultExpandIcon || '▶'
     : endIcon || defaultEndIcon || null
 
+  const contentClasses = classNames(styles.treeItemContent, {
+    [styles.selected]: isSelected,
+    [styles.disabled]: disabled,
+    [styles.dense]: dense,
+  })
+
   return (
     <li
       ref={ref}
-      className={classNames('fakemui-tree-item', className, {
-        'fakemui-tree-item-expanded': isExpanded,
-        'fakemui-tree-item-selected': isSelected,
-        'fakemui-tree-item-disabled': disabled,
-      })}
+      className={classNames(styles.treeItem, className)}
       role="treeitem"
       aria-expanded={hasChildren ? isExpanded : undefined}
       aria-selected={isSelected}
       aria-disabled={disabled}
       {...props}
     >
-      <div className="fakemui-tree-item-content" onClick={handleClick} {...ContentProps}>
+      <div className={contentClasses} onClick={handleClick} {...ContentProps}>
         {hasChildren && (
-          <span className="fakemui-tree-item-icon-container" onClick={handleExpandClick}>
+          <span className={styles.treeItemIcon} onClick={handleExpandClick}>
             {displayIcon}
           </span>
         )}
-        {!hasChildren && displayIcon && <span className="fakemui-tree-item-icon-container">{displayIcon}</span>}
-        {icon && <span className="fakemui-tree-item-icon">{icon}</span>}
-        <span className="fakemui-tree-item-label">{label}</span>
+        {!hasChildren && displayIcon && <span className={styles.treeItemIcon}>{displayIcon}</span>}
+        {!hasChildren && !displayIcon && <span className={styles.treeItemIconPlaceholder} />}
+        {icon && <span className={styles.treeItemNodeIcon}>{icon}</span>}
+        <span className={styles.treeItemLabel}>{label}</span>
       </div>
       {hasChildren && isExpanded && (
-        <ul className="fakemui-tree-item-group" role="group">
+        <ul className={styles.treeItemChildren} role="group">
           {children}
         </ul>
       )}

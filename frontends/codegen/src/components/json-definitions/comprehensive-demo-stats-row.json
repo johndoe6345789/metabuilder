@@ -1,0 +1,155 @@
+{
+  "id": "comprehensive-demo-stats-row-container",
+  "type": "Box",
+  "className": "demo-stats-row",
+  "children": [
+    {
+      "id": "stats-total-card",
+      "type": "Card",
+      "className": "demo-stats-row__card",
+      "children": [
+        {
+          "type": "CardContent",
+          "className": "demo-stats-row__card-inner",
+          "children": [
+            {
+              "type": "Box",
+              "className": "demo-stats-row__card-inner",
+              "children": [
+                {
+                  "type": "Paragraph",
+                  "className": "demo-stats-row__label",
+                  "children": [{ "type": "Text", "value": "{totalLabel}" }]
+                },
+                {
+                  "type": "Box",
+                  "className": "demo-stats-row__value",
+                  "children": [{ "type": "Text", "value": "{total}" }]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "stats-completed-card",
+      "type": "Card",
+      "className": "demo-stats-row__card demo-stats-row__card--success",
+      "children": [
+        {
+          "type": "CardContent",
+          "children": [
+            {
+              "type": "Flex",
+              "align": "start",
+              "justify": "between",
+              "className": "demo-stats-row__card-row",
+              "children": [
+                {
+                  "type": "Box",
+                  "className": "demo-stats-row__card-inner",
+                  "children": [
+                    {
+                      "type": "Paragraph",
+                      "className": "demo-stats-row__label",
+                      "children": [{ "type": "Text", "value": "{completedLabel}" }]
+                    },
+                    {
+                      "type": "Box",
+                      "className": "demo-stats-row__value demo-stats-row__value--success",
+                      "children": [{ "type": "Text", "value": "{completed}" }]
+                    }
+                  ]
+                },
+                {
+                  "type": "Icon",
+                  "name": "Check",
+                  "size": 24,
+                  "weight": "duotone",
+                  "className": "demo-stats-row__icon demo-stats-row__icon--success"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "stats-pending-card",
+      "type": "Card",
+      "className": "demo-stats-row__card demo-stats-row__card--info",
+      "children": [
+        {
+          "type": "CardContent",
+          "children": [
+            {
+              "type": "Flex",
+              "align": "start",
+              "justify": "between",
+              "className": "demo-stats-row__card-row",
+              "children": [
+                {
+                  "type": "Box",
+                  "className": "demo-stats-row__card-inner",
+                  "children": [
+                    {
+                      "type": "Paragraph",
+                      "className": "demo-stats-row__label",
+                      "children": [{ "type": "Text", "value": "{pendingLabel}" }]
+                    },
+                    {
+                      "type": "Box",
+                      "className": "demo-stats-row__value demo-stats-row__value--info",
+                      "children": [{ "type": "Text", "value": "{pending}" }]
+                    }
+                  ]
+                },
+                {
+                  "type": "Icon",
+                  "name": "Clock",
+                  "size": 24,
+                  "weight": "duotone",
+                  "className": "demo-stats-row__icon demo-stats-row__icon--info"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "stats-completion-card",
+      "type": "Card",
+      "className": "demo-stats-row__card demo-stats-row__card--info",
+      "children": [
+        {
+          "type": "CardContent",
+          "children": [
+            {
+              "type": "Box",
+              "className": "demo-stats-row__card-inner",
+              "children": [
+                {
+                  "type": "Paragraph",
+                  "className": "demo-stats-row__label",
+                  "children": [{ "type": "Text", "value": "{completionLabel}" }]
+                },
+                {
+                  "type": "Box",
+                  "className": "demo-stats-row__value demo-stats-row__value--info",
+                  "children": [{ "type": "Text", "value": "{completionRate}%" }]
+                },
+                {
+                  "type": "ProgressBar",
+                  "value": "{completionRate}",
+                  "className": "demo-stats-row__progress"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

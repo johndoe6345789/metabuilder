@@ -6,7 +6,6 @@ import type {
   ConfirmationOptions,
   ToastOptions,
   PackageInfo,
-  OptimisticUpdate,
 } from '@/lib/types/package-admin-types'
 
 /**
@@ -94,16 +93,6 @@ function getErrorMessage(code: string, defaultMessage: string): string {
 }
 
 /**
- * Create optimistic update helper
- */
-function createOptimisticUpdate<T>(data: T): OptimisticUpdate<T> {
-  return {
-    previousData: data,
-    optimisticData: data,
-  }
-}
-
-/**
  * Factory function to create all page handlers
  */
 export function createPackagePageHandlers(
@@ -131,7 +120,7 @@ export function createPackagePageHandlers(
     try {
       await usePackages.handlers.filterByStatus(status)
     } catch (err) {
-      const error = err instanceof Error ? err : new Error(String(err))
+      const _error = err instanceof Error ? err : new Error(String(err))
       showToast({
         type: 'error',
         message: 'Failed to filter packages',
@@ -145,7 +134,7 @@ export function createPackagePageHandlers(
   const handlePageChange = async (page: number): Promise<void> => {
     try {
       await usePackages.handlers.changePage(page)
-    } catch (err) {
+    } catch (_err) {
       showToast({
         type: 'error',
         message: 'Failed to change page',
@@ -159,7 +148,7 @@ export function createPackagePageHandlers(
   const handleLimitChange = async (limit: number): Promise<void> => {
     try {
       await usePackages.handlers.changeLimit(limit)
-    } catch (err) {
+    } catch (_err) {
       showToast({
         type: 'error',
         message: 'Failed to change page size',

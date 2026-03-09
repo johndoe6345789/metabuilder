@@ -247,7 +247,7 @@ export interface ExecutionState {
 }
 
 export interface NodeResult {
-  status: 'success' | 'error' | 'skipped' | 'pending';
+  status: 'success' | 'error' | 'skipped' | 'pending' | 'partial' | 'blocked';
   output?: any;
   error?: string;
   errorCode?: string;

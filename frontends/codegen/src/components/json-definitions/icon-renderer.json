@@ -1,0 +1,15 @@
+{
+  "id": "icon-renderer-container",
+  "type": "span",
+  "children": [
+    {
+      "id": "icon-renderer-icon",
+      "type": "${name}",
+      "bindings": {
+        "size": "size",
+        "weight": "weight",
+        "className": "className"
+      }
+    }
+  ]
+}

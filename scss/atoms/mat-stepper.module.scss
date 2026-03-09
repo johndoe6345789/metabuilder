@@ -1,0 +1,422 @@
+// Stepper Component - Material Design 3 (CSS Modules)
+// ====================================================
+// Based on Angular Material M3 stepper.scss and step-header.scss
+// Uses official Angular Material class naming conventions
+
+@use '../m3-scss/material/stepper/stepper.module';
+@use '../m3-scss/material/stepper/step-header.module';
+
+// Local wrapper class for CSS modules purity
+.matStepper {
+  // Wrapper class - actual styles applied via Angular Material classes
+}
+
+// ============================================
+// Stepper Container
+// ============================================
+
+.matStepperVertical,
+.matStepperHorizontal {
+  display: block;
+  font-family: var(--mat-stepper-container-text-font, var(--mat-sys-body-medium-font));
+  background: var(--mat-stepper-container-color, var(--mat-sys-surface));
+}
+
+// ============================================
+// Horizontal Stepper Layout
+// ============================================
+
+.matHorizontalStepperHeaderWrapper {
+  align-items: center;
+  display: flex;
+}
+
+.matHorizontalStepperHeaderContainer {
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.matStepperLabelPositionBottom .matHorizontalStepperHeaderContainer {
+  align-items: flex-start;
+}
+
+.matStepperHeaderPositionBottom .matHorizontalStepperHeaderContainer {
+  order: 1;
+}
+
+// ============================================
+// Horizontal Stepper Line
+// ============================================
+
+.matStepperHorizontalLine {
+  border-top-width: 1px;
+  border-top-style: solid;
+  flex: auto;
+  height: 0;
+  margin: 0 0px;
+  min-width: 32px;
+  border-top-color: var(--mat-stepper-line-color, var(--mat-sys-outline));
+}
+
+.matStepperLabelPositionBottom .matStepperHorizontalLine {
+  margin: 0;
+  min-width: 0;
+  position: relative;
+  top: calc(calc(var(--mat-stepper-header-height, 72px) - 24px) / 2 + 12px);
+}
+
+// ============================================
+// Step Header
+// ============================================
+
+.matStepHeader {
+  overflow: hidden;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+  box-sizing: content-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.matStepHeader:focus-visible .matFocusIndicator::before {
+  content: '';
+}
+
+.matStepHeader[aria-disabled='true']:hover {
+  cursor: default;
+}
+
+.matStepHeader:hover:not([aria-disabled]),
+.matStepHeader:hover[aria-disabled='false'] {
+  background-color: var(--mat-stepper-header-hover-state-layer-color, color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent));
+  border-radius: var(--mat-stepper-header-hover-state-layer-shape, var(--mat-sys-corner-medium));
+}
+
+.matStepHeader.cdkKeyboardFocused,
+.matStepHeader.cdkProgramFocused {
+  background-color: var(--mat-stepper-header-focus-state-layer-color, color-mix(in srgb, var(--mat-sys-on-surface) 12%, transparent));
+  border-radius: var(--mat-stepper-header-focus-state-layer-shape, var(--mat-sys-corner-medium));
+}
+
+@media (hover: none) {
+  .matStepHeader:hover {
+    background: none;
+  }
+}
+
+// ============================================
+// Horizontal Step Header
+// ============================================
+
+.matHorizontalStepperHeader {
+  display: flex;
+  overflow: hidden;
+  align-items: center;
+  padding: 0 24px;
+  height: var(--mat-stepper-header-height, 72px);
+}
+
+.matHorizontalStepperHeader .matStepIcon {
+  margin-right: 8px;
+  flex: none;
+}
+
+[dir='rtl'] .matHorizontalStepperHeader .matStepIcon {
+  margin-right: 0;
+  margin-left: 8px;
+}
+
+.matHorizontalStepperHeader.matStepHeaderEmptyLabel .matStepIcon {
+  margin: 0;
+}
+
+.matStepperLabelPositionBottom .matHorizontalStepperHeader {
+  box-sizing: border-box;
+  flex-direction: column;
+  height: auto;
+  padding: calc(calc(var(--mat-stepper-header-height, 72px) - 24px) / 2) 24px;
+}
+
+.matStepperLabelPositionBottom .matHorizontalStepperHeader .matStepIcon {
+  margin-right: 0;
+  margin-left: 0;
+}
+
+.matStepperLabelPositionBottom .matHorizontalStepperHeader .matStepLabel {
+  padding: 16px 0 0 0;
+  text-align: center;
+  width: 100%;
+}
+
+// ============================================
+// Vertical Step Header
+// ============================================
+
+.matVerticalStepperHeader {
+  display: flex;
+  align-items: center;
+  height: 24px;
+  padding: calc(calc(var(--mat-stepper-header-height, 72px) - 24px) / 2) 24px;
+}
+
+.matVerticalStepperHeader .matStepIcon {
+  margin-right: 12px;
+}
+
+[dir='rtl'] .matVerticalStepperHeader .matStepIcon {
+  margin-right: 0;
+  margin-left: 12px;
+}
+
+// ============================================
+// Step Icon
+// ============================================
+
+.matStepIcon {
+  border-radius: 50%;
+  height: 24px;
+  width: 24px;
+  flex-shrink: 0;
+  position: relative;
+  color: var(--mat-stepper-header-icon-foreground-color, var(--mat-sys-surface));
+  background-color: var(--mat-stepper-header-icon-background-color, var(--mat-sys-on-surface-variant));
+}
+
+.matStepIconContent {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mat-sys-label-large-font);
+  font-size: var(--mat-sys-label-large-size);
+  font-weight: var(--mat-sys-label-large-weight);
+}
+
+.matStepIcon .matIcon {
+  font-size: 16px;
+  height: 16px;
+  width: 16px;
+}
+
+.matStepIconSelected {
+  background-color: var(--mat-stepper-header-selected-state-icon-background-color, var(--mat-sys-primary));
+  color: var(--mat-stepper-header-selected-state-icon-foreground-color, var(--mat-sys-on-primary));
+}
+
+.matStepIconStateDone {
+  background-color: var(--mat-stepper-header-done-state-icon-background-color, var(--mat-sys-primary));
+  color: var(--mat-stepper-header-done-state-icon-foreground-color, var(--mat-sys-on-primary));
+}
+
+.matStepIconStateEdit {
+  background-color: var(--mat-stepper-header-edit-state-icon-background-color, var(--mat-sys-primary));
+  color: var(--mat-stepper-header-edit-state-icon-foreground-color, var(--mat-sys-on-primary));
+}
+
+.matStepIconStateError {
+  background-color: var(--mat-stepper-header-error-state-icon-background-color, transparent);
+  color: var(--mat-stepper-header-error-state-icon-foreground-color, var(--mat-sys-error));
+}
+
+.matStepIconStateError .matIcon {
+  font-size: 24px;
+  height: 24px;
+  width: 24px;
+}
+
+// ============================================
+// Step Label
+// ============================================
+
+.matStepLabel {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 50px;
+  vertical-align: middle;
+  font-family: var(--mat-stepper-header-label-text-font, var(--mat-sys-title-small-font));
+  font-size: var(--mat-stepper-header-label-text-size, var(--mat-sys-title-small-size));
+  font-weight: var(--mat-stepper-header-label-text-weight, var(--mat-sys-title-small-weight));
+  color: var(--mat-stepper-header-label-text-color, var(--mat-sys-on-surface-variant));
+}
+
+.matStepLabel.matStepLabelActive {
+  color: var(--mat-stepper-header-selected-state-label-text-color, var(--mat-sys-on-surface-variant));
+}
+
+.matStepLabel.matStepLabelError {
+  color: var(--mat-stepper-header-error-state-label-text-color, var(--mat-sys-error));
+  font-size: var(--mat-stepper-header-error-state-label-text-size, var(--mat-sys-title-small-size));
+}
+
+.matStepLabel.matStepLabelSelected {
+  font-size: var(--mat-stepper-header-selected-state-label-text-size, var(--mat-sys-title-small-size));
+  font-weight: var(--mat-stepper-header-selected-state-label-text-weight, var(--mat-sys-title-small-weight));
+}
+
+.matStepHeaderEmptyLabel .matStepLabel {
+  min-width: 0;
+}
+
+.matStepTextLabel {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+// ============================================
+// Step Optional Label
+// ============================================
+
+.matStepOptional {
+  font-size: 12px;
+  color: var(--mat-stepper-header-optional-label-text-color, var(--mat-sys-on-surface-variant));
+}
+
+.matStepSubLabelError {
+  font-size: 12px;
+  font-weight: normal;
+}
+
+// ============================================
+// Step Header Ripple
+// ============================================
+
+.matStepHeader .matStepHeaderRipple {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+// ============================================
+// Horizontal Stepper Wrapper & Content
+// ============================================
+
+.matHorizontalStepperWrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.matHorizontalStepperContent {
+  visibility: hidden;
+  overflow: hidden;
+  outline: 0;
+  height: 0;
+}
+
+.matStepperAnimationsEnabled .matHorizontalStepperContent {
+  transition: transform var(--mat-stepper-animation-duration, 0) cubic-bezier(0.35, 0, 0.25, 1);
+}
+
+.matHorizontalStepperContent.matHorizontalStepperContentPrevious {
+  transform: translate3d(-100%, 0, 0);
+}
+
+.matHorizontalStepperContent.matHorizontalStepperContentNext {
+  transform: translate3d(100%, 0, 0);
+}
+
+.matHorizontalStepperContent.matHorizontalStepperContentCurrent {
+  visibility: visible;
+  transform: none;
+  height: auto;
+}
+
+.matStepperHorizontal:not(.matStepperAnimating) .matHorizontalStepperContent.matHorizontalStepperContentCurrent {
+  overflow: visible;
+}
+
+.matHorizontalContentContainer {
+  overflow: hidden;
+  padding: 0 24px 24px 24px;
+}
+
+.matStepperHeaderPositionBottom .matHorizontalContentContainer {
+  padding: 24px 24px 0 24px;
+}
+
+// ============================================
+// Vertical Stepper Content
+// ============================================
+
+.matVerticalContentContainer {
+  display: grid;
+  grid-template-rows: 0fr;
+  grid-template-columns: 100%;
+  margin-left: 36px;
+  border: 0;
+  position: relative;
+}
+
+.matStepperAnimationsEnabled .matVerticalContentContainer {
+  transition: grid-template-rows var(--mat-stepper-animation-duration, 0) cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.matVerticalContentContainer.matVerticalContentContainerActive {
+  grid-template-rows: 1fr;
+}
+
+.matStep:last-child .matVerticalContentContainer {
+  border: none;
+}
+
+[dir='rtl'] .matVerticalContentContainer {
+  margin-left: 0;
+  margin-right: 36px;
+}
+
+@supports not (grid-template-rows: 0fr) {
+  .matVerticalContentContainer {
+    height: 0;
+  }
+
+  .matVerticalContentContainer.matVerticalContentContainerActive {
+    height: auto;
+  }
+}
+
+// ============================================
+// Vertical Stepper Line
+// ============================================
+
+.matStepperVerticalLine::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  border-left-width: 1px;
+  border-left-style: solid;
+  border-left-color: var(--mat-stepper-line-color, var(--mat-sys-outline));
+  top: calc(8px - calc(calc(var(--mat-stepper-header-height, 72px) - 24px) / 2));
+  bottom: calc(8px - calc(calc(var(--mat-stepper-header-height, 72px) - 24px) / 2));
+}
+
+[dir='rtl'] .matStepperVerticalLine::before {
+  left: auto;
+  right: 0;
+}
+
+.matVerticalStepperContent {
+  overflow: hidden;
+  outline: 0;
+  visibility: hidden;
+}
+
+.matStepperAnimationsEnabled .matVerticalStepperContent {
+  transition: visibility var(--mat-stepper-animation-duration, 0) linear;
+}
+
+.matVerticalContentContainerActive > .matVerticalStepperContent {
+  visibility: visible;
+}
+
+.matVerticalContent {
+  padding: 0 24px 24px 24px;
+}

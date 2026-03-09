@@ -1,16 +1,113 @@
 {
   "name": "@metabuilder/redux-slices",
   "version": "0.1.0",
+  "type": "module",
   "description": "Redux slices for workflow state management",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./canvasSlice": {
+      "types": "./src/slices/canvasSlice.ts",
+      "import": "./src/slices/canvasSlice.ts",
+      "default": "./src/slices/canvasSlice.ts"
+    },
+    "./canvasItemsSlice": {
+      "types": "./src/slices/canvasItemsSlice.ts",
+      "import": "./src/slices/canvasItemsSlice.ts",
+      "default": "./src/slices/canvasItemsSlice.ts"
+    },
+    "./editorSlice": {
+      "types": "./src/slices/editorSlice.ts",
+      "import": "./src/slices/editorSlice.ts",
+      "default": "./src/slices/editorSlice.ts"
+    },
+    "./uiSlice": {
+      "types": "./src/slices/uiSlice.ts",
+      "import": "./src/slices/uiSlice.ts",
+      "default": "./src/slices/uiSlice.ts"
+    },
+    "./workflowSlice": {
+      "types": "./src/slices/workflowSlice.ts",
+      "import": "./src/slices/workflowSlice.ts",
+      "default": "./src/slices/workflowSlice.ts"
+    },
+    "./connectionSlice": {
+      "types": "./src/slices/connectionSlice.ts",
+      "import": "./src/slices/connectionSlice.ts",
+      "default": "./src/slices/connectionSlice.ts"
+    },
+    "./authSlice": {
+      "types": "./src/slices/authSlice.ts",
+      "import": "./src/slices/authSlice.ts",
+      "default": "./src/slices/authSlice.ts"
+    },
+    "./projectSlice": {
+      "types": "./src/slices/projectSlice.ts",
+      "import": "./src/slices/projectSlice.ts",
+      "default": "./src/slices/projectSlice.ts"
+    },
+    "./nodesSlice": {
+      "types": "./src/slices/nodesSlice.ts",
+      "import": "./src/slices/nodesSlice.ts",
+      "default": "./src/slices/nodesSlice.ts"
+    },
+    "./workspaceSlice": {
+      "types": "./src/slices/workspaceSlice.ts",
+      "import": "./src/slices/workspaceSlice.ts",
+      "default": "./src/slices/workspaceSlice.ts"
+    },
+    "./collaborationSlice": {
+      "types": "./src/slices/collaborationSlice.ts",
+      "import": "./src/slices/collaborationSlice.ts",
+      "default": "./src/slices/collaborationSlice.ts"
+    },
+    "./realtimeSlice": {
+      "types": "./src/slices/realtimeSlice.ts",
+      "import": "./src/slices/realtimeSlice.ts",
+      "default": "./src/slices/realtimeSlice.ts"
+    },
+    "./documentationSlice": {
+      "types": "./src/slices/documentationSlice.ts",
+      "import": "./src/slices/documentationSlice.ts",
+      "default": "./src/slices/documentationSlice.ts"
+    },
+    "./asyncDataSlice": {
+      "types": "./src/slices/asyncDataSlice.ts",
+      "import": "./src/slices/asyncDataSlice.ts",
+      "default": "./src/slices/asyncDataSlice.ts"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "canvasSlice": ["src/slices/canvasSlice.ts"],
+      "canvasItemsSlice": ["src/slices/canvasItemsSlice.ts"],
+      "editorSlice": ["src/slices/editorSlice.ts"],
+      "uiSlice": ["src/slices/uiSlice.ts"],
+      "workflowSlice": ["src/slices/workflowSlice.ts"],
+      "connectionSlice": ["src/slices/connectionSlice.ts"],
+      "authSlice": ["src/slices/authSlice.ts"],
+      "projectSlice": ["src/slices/projectSlice.ts"],
+      "nodesSlice": ["src/slices/nodesSlice.ts"],
+      "workspaceSlice": ["src/slices/workspaceSlice.ts"],
+      "collaborationSlice": ["src/slices/collaborationSlice.ts"],
+      "realtimeSlice": ["src/slices/realtimeSlice.ts"],
+      "documentationSlice": ["src/slices/documentationSlice.ts"],
+      "asyncDataSlice": ["src/slices/asyncDataSlice.ts"]
+    }
+  },
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch"
   },
   "dependencies": {
-    "@reduxjs/toolkit": "^2.5.2",
-    "react": "^19.2.3",
+    "@metabuilder/types": "*",
+    "@reduxjs/toolkit": "^2.11.2",
+    "react": "^19.2.4",
     "react-redux": "^9.2.0"
   },
   "peerDependencies": {
@@ -22,6 +119,6 @@
     "typescript": "^5.9.3"
   },
   "files": [
-    "dist"
+    "src"
   ]
 }

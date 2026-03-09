@@ -13,7 +13,7 @@ export class PluginValidator {
   /**
    * Validate node against plugin metadata
    */
-  validateNode(nodeType: string, nodeConfig: any, metadata?: any): ValidationResult {
+  validateNode(_nodeType: string, nodeConfig: any, _metadata?: any): ValidationResult {
     const errors: string[] = [];
     const warnings: string[] = [];
 

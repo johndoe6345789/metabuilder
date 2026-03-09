@@ -1,0 +1,235 @@
+{
+  "$schema": "../types/page-schema.json",
+  "id": "project-settings",
+  "name": "Project Settings",
+  "description": "Configure project settings and preferences",
+  "layout": {
+    "type": "single"
+  },
+  "dataSources": [
+    {
+      "id": "settings",
+      "type": "kv",
+      "key": "project-settings",
+      "defaultValue": {
+        "projectName": "My Project",
+        "description": "",
+        "version": "1.0.0",
+        "author": "",
+        "license": "MIT",
+        "repository": ""
+      }
+    }
+  ],
+  "components": [
+    {
+      "id": "root",
+      "type": "div",
+      "props": {
+        "className": "h-full overflow-auto p-6"
+      },
+      "children": [
+        {
+          "id": "header",
+          "type": "Stack",
+          "props": {
+            "direction": "vertical",
+            "spacing": "xs",
+            "className": "mb-6"
+          },
+          "children": [
+            {
+              "id": "title",
+              "type": "Heading",
+              "props": {
+                "level": 1,
+                "className": "text-3xl font-bold",
+                "children": "Project Settings"
+              }
+            },
+            {
+              "id": "subtitle",
+              "type": "Text",
+              "props": {
+                "variant": "muted",
+                "children": "Configure your project metadata and preferences"
+              }
+            }
+          ]
+        },
+        {
+          "id": "settings-card",
+          "type": "Card",
+          "props": {
+            "className": "max-w-2xl"
+          },
+          "children": [
+            {
+              "id": "card-header",
+              "type": "CardHeader",
+              "children": [
+                {
+                  "id": "card-title",
+                  "type": "CardTitle",
+                  "props": {
+                    "children": "General Information"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "card-content",
+              "type": "CardContent",
+              "children": [
+                {
+                  "id": "settings-form",
+                  "type": "Stack",
+                  "props": {
+                    "direction": "vertical",
+                    "spacing": "md"
+                  },
+                  "children": [
+                    {
+                      "id": "project-name-field",
+                      "type": "div",
+                      "children": [
+                        {
+                          "id": "project-name-label",
+                          "type": "Label",
+                          "props": {
+                            "htmlFor": "projectName",
+                            "children": "Project Name"
+                          }
+                        },
+                        {
+                          "id": "project-name-input",
+                          "type": "Input",
+                          "props": {
+                            "id": "projectName",
+                            "placeholder": "Enter project name"
+                          },
+                          "bindings": {
+                            "value": {
+                              "source": "settings",
+                              "path": "projectName"
+                            }
+                          },
+                          "events": {
+                            "onChange": "updateSettings"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "id": "description-field",
+                      "type": "div",
+                      "children": [
+                        {
+                          "id": "description-label",
+                          "type": "Label",
+                          "props": {
+                            "htmlFor": "description",
+                            "children": "Description"
+                          }
+                        },
+                        {
+                          "id": "description-textarea",
+                          "type": "TextArea",
+                          "props": {
+                            "id": "description",
+                            "placeholder": "Brief description of your project",
+                            "rows": 3
+                          },
+                          "bindings": {
+                            "value": {
+                              "source": "settings",
+                              "path": "description"
+                            }
+                          },
+                          "events": {
+                            "onChange": "updateSettings"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "id": "version-author-row",
+                      "type": "div",
+                      "props": {
+                        "className": "grid grid-cols-2 gap-4"
+                      },
+                      "children": [
+                        {
+                          "id": "version-field",
+                          "type": "div",
+                          "children": [
+                            {
+                              "id": "version-label",
+                              "type": "Label",
+                              "props": {
+                                "htmlFor": "version",
+                                "children": "Version"
+                              }
+                            },
+                            {
+                              "id": "version-input",
+                              "type": "Input",
+                              "props": {
+                                "id": "version",
+                                "placeholder": "1.0.0"
+                              },
+                              "bindings": {
+                                "value": {
+                                  "source": "settings",
+                                  "path": "version"
+                                }
+                              },
+                              "events": {
+                                "onChange": "updateSettings"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "id": "author-field",
+                          "type": "div",
+                          "children": [
+                            {
+                              "id": "author-label",
+                              "type": "Label",
+                              "props": {
+                                "htmlFor": "author",
+                                "children": "Author"
+                              }
+                            },
+                            {
+                              "id": "author-input",
+                              "type": "Input",
+                              "props": {
+                                "id": "author",
+                                "placeholder": "Your name"
+                              },
+                              "bindings": {
+                                "value": {
+                                  "source": "settings",
+                                  "path": "author"
+                                }
+                              },
+                              "events": {
+                                "onChange": "updateSettings"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

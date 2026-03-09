@@ -1,4 +1,6 @@
 import React, { forwardRef, createContext, useContext, Children, cloneElement, isValidElement, useId } from 'react'
+import classNames from 'classnames'
+import styles from '../../../scss/atoms/mat-radio.module.scss'
 
 /**
  * RadioGroup context value
@@ -20,6 +22,7 @@ export const useRadioGroup = () => useContext(RadioGroupContext)
  * Props for RadioGroup component
  */
 export interface RadioGroupProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
+  testId?: string
   children?: React.ReactNode
   /** Name attribute for all radio buttons */
   name?: string
@@ -35,7 +38,9 @@ export interface RadioGroupProps extends Omit<React.HTMLAttributes<HTMLDivElemen
 
 /**
  * RadioGroup - Groups Radio buttons with shared name and selection state
- * 
+ *
+ * Uses Angular Material M3 styling via CSS modules.
+ *
  * @example
  * ```tsx
  * <RadioGroup name="size" value={size} onChange={handleChange}>
@@ -47,20 +52,30 @@ export interface RadioGroupProps extends Omit<React.HTMLAttributes<HTMLDivElemen
  */
 export const RadioGroup = forwardRef<HTMLDivElement, RadioGroupProps>(
   (
-    { 
-      children, 
-      name: nameProp, 
-      value, 
-      defaultValue, 
+    {
+      children,
+      name: nameProp,
+      value,
+      defaultValue,
       onChange,
       row = false,
-      className = '', 
-      ...props 
-    }, 
+      testId,
+      className,
+      ...props
+    },
     ref
   ) => {
     const generatedName = useId()
     const name = nameProp ?? generatedName
+
+    // Build class list using Angular Material styles
+    const groupClasses = classNames(
+      styles.radioGroup,
+      {
+        [styles.radioGroupRow]: row,
+      },
+      className
+    )
 
     // Enhance child Radio components with group context
     const enhancedChildren = Children.map(children, (child) => {
@@ -81,7 +96,8 @@ export const RadioGroup = forwardRef<HTMLDivElement, RadioGroupProps>(
         <div
           ref={ref}
           role="radiogroup"
-          className={`radio-group ${row ? 'radio-group--row' : ''} ${className}`}
+          className={groupClasses}
+          data-testid={testId}
           {...props}
         >
           {enhancedChildren}

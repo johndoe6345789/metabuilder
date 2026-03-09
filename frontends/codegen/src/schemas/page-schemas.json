@@ -1,0 +1,288 @@
+{
+  "stateBindingsDemoSchema": {
+    "id": "state-bindings-demo",
+    "name": "State & Bindings Demo",
+    "layout": {
+      "type": "single"
+    },
+    "dataSources": [
+      {
+        "id": "statusItems",
+        "type": "static",
+        "defaultValue": ["KV Ready", "Components Loaded", "Sync Enabled"]
+      }
+    ],
+    "components": [
+      {
+        "id": "state-demo-root",
+        "type": "div",
+        "props": {
+          "className": "space-y-4 rounded-lg border border-border bg-card p-6"
+        },
+        "children": [
+          {
+            "id": "state-demo-title",
+            "type": "MetabuilderDisplayHeading",
+            "props": {
+              "className": "text-xl font-semibold",
+              "children": "Renderer State Binding Demo"
+            }
+          },
+          {
+            "id": "state-demo-theme",
+            "type": "MetabuilderDisplayText",
+            "props": {
+              "className": "text-sm text-muted-foreground"
+            },
+            "bindings": {
+              "children": {
+                "sourceType": "state",
+                "source": "settings",
+                "path": "settings.theme"
+              }
+            }
+          },
+          {
+            "id": "state-demo-list",
+            "type": "div",
+            "props": {
+              "className": "space-y-2"
+            },
+            "loop": {
+              "source": "statusItems",
+              "itemVar": "statusItem"
+            },
+            "children": [
+              {
+                "id": "state-demo-list-item",
+                "type": "MetabuilderDisplayText",
+                "props": {
+                  "className": "text-sm"
+                },
+                "bindings": {
+                  "children": {
+                    "sourceType": "bindings",
+                    "source": "statusItem"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "dataComponentsDemoSchema": {
+    "id": "data-components-demo",
+    "name": "Data Components Demo",
+    "layout": {
+      "type": "single"
+    },
+    "dataSources": [
+      {
+        "id": "metricCards",
+        "type": "static",
+        "defaultValue": [
+          { "label": "Active Users", "value": 1248, "trend": { "value": 12.4, "direction": "up" } },
+          { "label": "Churn Rate", "value": "3.2%", "trend": { "value": 1.1, "direction": "down" } },
+          { "label": "Net Revenue", "value": "$48.3k", "trend": { "value": 6.8, "direction": "up" } }
+        ]
+      },
+      {
+        "id": "tableColumns",
+        "type": "static",
+        "defaultValue": [
+          { "key": "initiative", "header": "Initiative" },
+          { "key": "owner", "header": "Owner" },
+          { "key": "status", "header": "Status" }
+        ]
+      },
+      {
+        "id": "tableRows",
+        "type": "static",
+        "defaultValue": [
+          { "initiative": "Landing Page", "owner": "Avery", "status": "In Progress" },
+          { "initiative": "Retention Emails", "owner": "Jordan", "status": "Review" },
+          { "initiative": "Billing Update", "owner": "Riley", "status": "Done" }
+        ]
+      },
+      {
+        "id": "listItems",
+        "type": "static",
+        "defaultValue": ["Prepare briefing deck", "Confirm stakeholder approvals", "Publish roadmap update"]
+      },
+      {
+        "id": "timelineItems",
+        "type": "static",
+        "defaultValue": [
+          {
+            "title": "Kickoff",
+            "description": "Align on scope and milestones",
+            "timestamp": "Mon 9:00 AM",
+            "status": "completed"
+          },
+          {
+            "title": "Execution",
+            "description": "Deliver initial workstream",
+            "timestamp": "Tue 11:00 AM",
+            "status": "current"
+          },
+          {
+            "title": "Review",
+            "description": "Stakeholder walkthrough",
+            "timestamp": "Thu 3:00 PM",
+            "status": "pending"
+          }
+        ]
+      }
+    ],
+    "components": [
+      {
+        "id": "data-components-root",
+        "type": "div",
+        "props": {
+          "className": "space-y-6 rounded-lg border border-border bg-card p-6"
+        },
+        "children": [
+          {
+            "id": "data-components-title",
+            "type": "MetabuilderDisplayHeading",
+            "props": {
+              "className": "text-xl font-semibold",
+              "children": "Data Components Showcase"
+            }
+          },
+          {
+            "id": "data-components-metrics-grid",
+            "type": "div",
+            "props": {
+              "className": "grid gap-4 md:grid-cols-3"
+            },
+            "loop": {
+              "source": "metricCards",
+              "itemVar": "metricCard"
+            },
+            "children": [
+              {
+                "id": "data-components-metric-card",
+                "type": "MetabuilderDataMetricCard",
+                "bindings": {
+                  "label": { "sourceType": "bindings", "source": "metricCard", "path": "label" },
+                  "value": { "sourceType": "bindings", "source": "metricCard", "path": "value" },
+                  "trend": { "sourceType": "bindings", "source": "metricCard", "path": "trend" }
+                }
+              }
+            ]
+          },
+          {
+            "id": "data-components-table",
+            "type": "MetabuilderDataDataTable",
+            "props": {
+              "className": "bg-background",
+              "emptyMessage": "No initiatives found"
+            },
+            "bindings": {
+              "columns": { "source": "tableColumns", "sourceType": "data" },
+              "data": { "source": "tableRows", "sourceType": "data" }
+            }
+          },
+          {
+            "id": "data-components-list",
+            "type": "MetabuilderDataDataList",
+            "props": {
+              "className": "space-y-3",
+              "itemClassName": "rounded-md border border-border bg-card/50 px-4 py-2 text-sm",
+              "emptyMessage": "No action items"
+            },
+            "bindings": {
+              "items": { "source": "listItems", "sourceType": "data" }
+            }
+          },
+          {
+            "id": "data-components-timeline",
+            "type": "MetabuilderDataTimeline",
+            "bindings": {
+              "items": { "source": "timelineItems", "sourceType": "data" }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "progressComponentsDemoSchema": {
+    "id": "progress-components-demo",
+    "name": "Progress Components Demo",
+    "layout": {
+      "type": "single"
+    },
+    "dataSources": [
+      {
+        "id": "progressValues",
+        "type": "static",
+        "defaultValue": {
+          "linear": 72,
+          "circular": 48,
+          "max": 100
+        }
+      }
+    ],
+    "components": [
+      {
+        "id": "progress-components-root",
+        "type": "div",
+        "props": {
+          "className": "space-y-6 rounded-lg border border-border bg-card p-6"
+        },
+        "children": [
+          {
+            "id": "progress-components-title",
+            "type": "MetabuilderDisplayHeading",
+            "props": {
+              "className": "text-xl font-semibold",
+              "children": "Progress Indicators"
+            }
+          },
+          {
+            "id": "progress-components-divider-top",
+            "type": "MetabuilderDisplayDivider",
+            "props": {
+              "orientation": "horizontal"
+            }
+          },
+          {
+            "id": "progress-components-linear",
+            "type": "MetabuilderDisplayProgressBar",
+            "props": {
+              "size": "md",
+              "variant": "accent",
+              "showLabel": true
+            },
+            "bindings": {
+              "value": { "source": "progressValues", "sourceType": "data", "path": "linear" },
+              "max": { "source": "progressValues", "sourceType": "data", "path": "max" }
+            }
+          },
+          {
+            "id": "progress-components-divider-middle",
+            "type": "MetabuilderDisplayDivider",
+            "props": {
+              "orientation": "horizontal"
+            }
+          },
+          {
+            "id": "progress-components-circular",
+            "type": "MetabuilderDisplayCircularProgress",
+            "props": {
+              "size": "md",
+              "showLabel": true
+            },
+            "bindings": {
+              "value": { "source": "progressValues", "sourceType": "data", "path": "circular" },
+              "max": { "source": "progressValues", "sourceType": "data", "path": "max" }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "socket_types.hpp"
+#include "../socket_types.hpp"
 
 namespace dbal {
 namespace daemon {

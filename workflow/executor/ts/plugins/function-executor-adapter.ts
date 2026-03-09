@@ -74,16 +74,24 @@ export function createExecutor(
 
 /**
  * Batch create executors from a plugin map
- * @param plugins Map of nodeType -> function
+ * @param plugins Map of nodeType -> function or class constructor
  * @param category Category name for all plugins
  */
 export function createExecutorsFromMap(
-  plugins: Record<string, PluginFunction>,
+  plugins: Record<string, PluginFunction | (new () => any)>,
   category?: string
 ): INodeExecutor[] {
-  return Object.entries(plugins).map(([nodeType, fn]) =>
-    createExecutor(nodeType, fn, { category })
-  );
+  return Object.entries(plugins).map(([nodeType, fnOrClass]) => {
+    if (typeof fnOrClass === 'function' && fnOrClass.prototype && fnOrClass.prototype.execute) {
+      // Class constructor - instantiate and wrap
+      const instance = new (fnOrClass as new () => any)();
+      return createExecutor(nodeType, (node, context, state) => {
+        const result = instance.execute({ node, context, state });
+        return Promise.resolve(result);
+      }, { category });
+    }
+    return createExecutor(nodeType, fnOrClass as PluginFunction, { category });
+  });
 }
 
 /**
@@ -91,7 +99,7 @@ export function createExecutorsFromMap(
  */
 export function registerPluginMap(
   registry: { register(nodeType: string, executor: INodeExecutor): void },
-  plugins: Record<string, PluginFunction>,
+  plugins: Record<string, PluginFunction | (new () => any)>,
   category?: string
 ): void {
   const executors = createExecutorsFromMap(plugins, category);

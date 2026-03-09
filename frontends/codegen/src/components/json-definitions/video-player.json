@@ -1,0 +1,65 @@
+{
+  "id": "video-player-root",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": "className",
+      "transform": "data ? `video-player ${data}` : 'video-player'"
+    }
+  },
+  "children": [
+    {
+      "id": "video-player-element",
+      "type": "video",
+      "props": {
+        "className": "video-player__element"
+      },
+      "bindings": {
+        "src": "src",
+        "poster": "poster",
+        "controls": {
+          "source": "controls",
+          "transform": "data !== false"
+        },
+        "autoPlay": "autoPlay",
+        "muted": "muted",
+        "loop": "loop"
+      }
+    },
+    {
+      "id": "video-player-overlay",
+      "type": "div",
+      "props": {
+        "className": "video-player__overlay"
+      },
+      "bindings": {
+        "_if": {
+          "source": "showOverlay",
+          "transform": "data"
+        }
+      },
+      "children": [
+        {
+          "id": "video-player-play-btn",
+          "type": "button",
+          "props": {
+            "className": "video-player__play-btn",
+            "aria-label": "Play"
+          },
+          "bindings": {
+            "onClick": "onPlay"
+          },
+          "children": [
+            {
+              "id": "video-player-play-icon",
+              "type": "span",
+              "props": {
+                "children": "▶"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

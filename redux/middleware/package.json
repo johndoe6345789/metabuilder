@@ -1,0 +1,37 @@
+{
+  "name": "@metabuilder/redux-middleware",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Redux middleware for MetaBuilder applications",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "require": "./src/index.ts",
+      "types": "./src/index.ts"
+    },
+    "./authMiddleware": {
+      "import": "./src/authMiddleware.ts",
+      "require": "./src/authMiddleware.ts",
+      "types": "./src/authMiddleware.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "@reduxjs/toolkit": "^1.9.7 || ^2.5.2",
+    "react": "^18.0.0 || ^19.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/metabuilder/metabuilder.git",
+    "directory": "redux/middleware"
+  },
+  "license": "MIT"
+}

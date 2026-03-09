@@ -1,0 +1,130 @@
+// Divider Component - Material Design 3 SCSS (CSS Module)
+// ========================================================
+// Local classes using M3 design tokens
+
+// Base divider class
+.divider {
+  border: none;
+  border-top: 1px solid var(--mat-sys-outline-variant, rgba(0, 0, 0, 0.12));
+  margin: 0;
+}
+
+// Legacy wrapper class
+.matDivider {
+  composes: divider;
+}
+
+// Vertical orientation
+.dividerVertical {
+  border-top: none;
+  border-right: 1px solid var(--mat-sys-outline-variant, rgba(0, 0, 0, 0.12));
+  height: 100%;
+  width: 0;
+}
+
+// Full-bleed variant (no margin)
+.dividerFullBleed {
+  margin: 0 !important;
+}
+
+// Inset variants using Angular Material's inset margin
+.dividerInset {
+  margin-left: 16px;
+
+  [dir='rtl'] & {
+    margin-left: auto;
+    margin-right: 16px;
+  }
+}
+
+.dividerInsetStart {
+  margin-left: 72px; // Accounts for leading icon/avatar per M3 spec
+
+  [dir='rtl'] & {
+    margin-left: auto;
+    margin-right: 72px;
+  }
+}
+
+.dividerInsetEnd {
+  margin-right: 16px;
+
+  [dir='rtl'] & {
+    margin-right: auto;
+    margin-left: 16px;
+  }
+}
+
+.dividerInsetBoth {
+  margin-left: 16px;
+  margin-right: 16px;
+}
+
+// Middle inset (same as insetBoth)
+.dividerMiddle {
+  margin-left: 16px;
+  margin-right: 16px;
+}
+
+// Flex container helper
+.dividerFlexItem {
+  margin: 0 8px;
+}
+
+// Thicker divider (2px instead of 1px)
+.dividerThick {
+  border-top-width: 2px;
+
+  &.dividerVertical {
+    border-right-width: 2px;
+  }
+}
+
+// Color variants using M3 design tokens
+.dividerLight {
+  border-color: color-mix(in srgb, var(--mat-sys-outline-variant) 50%, transparent);
+}
+
+.dividerDark {
+  border-color: var(--mat-sys-outline);
+}
+
+// Divider with text/label
+.dividerWithText {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 16px 0;
+  border: none;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--mat-sys-outline-variant, rgba(0, 0, 0, 0.12));
+  }
+}
+
+.dividerWithTextStart::before {
+  flex: 0 0 24px;
+}
+
+.dividerWithTextEnd::after {
+  flex: 0 0 24px;
+}
+
+.dividerText {
+  font-family: var(--mat-sys-label-medium-font, Roboto, sans-serif);
+  font-size: var(--mat-sys-label-medium-size, 12px);
+  font-weight: var(--mat-sys-label-medium-weight, 500);
+  color: var(--mat-sys-on-surface-variant, #49454f);
+  white-space: nowrap;
+}
+
+// Section divider (used to separate major sections)
+.dividerSection {
+  border: none;
+  height: 8px;
+  background: var(--mat-sys-surface-container, #f3edf7);
+}

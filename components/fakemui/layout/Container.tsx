@@ -6,6 +6,7 @@ export interface ContainerProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode
   maxWidth?: ContainerMaxWidth
   disableGutters?: boolean
+  testId?: string
 }
 
 export const Container: React.FC<ContainerProps> = ({
@@ -13,10 +14,12 @@ export const Container: React.FC<ContainerProps> = ({
   maxWidth,
   disableGutters,
   className = '',
+  testId,
   ...props
 }) => (
   <div
     className={`container ${maxWidth ? `container--${maxWidth}` : ''} ${disableGutters ? 'container--no-gutters' : ''} ${className}`}
+    data-testid={testId}
     {...props}
   >
     {children}

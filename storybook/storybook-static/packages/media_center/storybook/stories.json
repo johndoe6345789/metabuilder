@@ -1,0 +1,82 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "package": "media_center",
+  "description": "Storybook stories for Media Center components",
+  "stories": [
+    {
+      "id": "media_dashboard",
+      "name": "Media Dashboard",
+      "component": "MediaDashboard",
+      "description": "Main media center dashboard with stats",
+      "category": "pages",
+      "args": {
+        "stats": {
+          "pending_jobs": 5,
+          "queue_utilization": 60,
+          "radio_live": 3,
+          "radio_listeners": 42,
+          "tv_live": 2,
+          "tv_viewers": 156
+        }
+      }
+    },
+    {
+      "id": "job_queue",
+      "name": "Job Queue",
+      "component": "JobQueue",
+      "description": "Media processing job queue table",
+      "category": "components",
+      "args": {
+        "jobs": []
+      }
+    },
+    {
+      "id": "job_submit_form",
+      "name": "Job Submit Form",
+      "component": "JobSubmitForm",
+      "description": "Form for submitting new media jobs",
+      "category": "forms"
+    },
+    {
+      "id": "radio_player",
+      "name": "Radio Player",
+      "component": "RadioPlayer",
+      "description": "Audio player for radio channels",
+      "category": "players",
+      "args": {
+        "channel": {
+          "name": "Demo Radio",
+          "streamUrl": "https://example.com/stream"
+        }
+      }
+    },
+    {
+      "id": "media_player",
+      "name": "Media Player",
+      "component": "MediaPlayer",
+      "description": "Video/audio media player",
+      "category": "players"
+    },
+    {
+      "id": "retro_game_launcher",
+      "name": "Retro Game Launcher",
+      "component": "RetroGameLauncher",
+      "description": "Game selection and launch interface",
+      "category": "retro"
+    },
+    {
+      "id": "retro_game_player",
+      "name": "Retro Game Player",
+      "component": "RetroGamePlayer",
+      "description": "Emulator display and controls",
+      "category": "retro"
+    },
+    {
+      "id": "save_state_manager",
+      "name": "Save State Manager",
+      "component": "SaveStateManager",
+      "description": "Game save state management UI",
+      "category": "retro"
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "entity": "Game",
+  "version": "1.0",
+  "package": "gaming",
+  "description": "Retro arcade games for the built-in gaming platform",
+  "records": [
+    {
+      "id": "game_snake_classic",
+      "tenantId": "default",
+      "name": "Snake Classic",
+      "description": "Guide the snake to eat food and grow longer without hitting walls or yourself. A faithful recreation of the Nokia 3310 classic with smooth controls and progressive speed increase.",
+      "thumbnailUrl": "/images/games/snake-classic.webp",
+      "gameType": "snake",
+      "difficulty": "easy",
+      "playCount": 14832,
+      "isActive": true,
+      "maxPlayers": 1,
+      "createdAt": 0,
+      "updatedAt": 0
+    },
+    {
+      "id": "game_tetris_neon",
+      "tenantId": "default",
+      "name": "Neon Tetris",
+      "description": "Stack falling tetrominoes to clear lines in this neon-themed Tetris variant. Features ghost pieces, hold queue, and T-spin detection with a synthwave soundtrack.",
+      "thumbnailUrl": "/images/games/neon-tetris.webp",
+      "gameType": "tetris",
+      "difficulty": "medium",
+      "playCount": 23471,
+      "isActive": true,
+      "maxPlayers": 1,
+      "createdAt": 0,
+      "updatedAt": 0
+    },
+    {
+      "id": "game_pong_duel",
+      "tenantId": "default",
+      "name": "Pong Duel",
+      "description": "The original competitive game reimagined with power-ups, curved paddles, and online multiplayer. First to 11 points wins. Supports keyboard and gamepad input.",
+      "thumbnailUrl": "/images/games/pong-duel.webp",
+      "gameType": "pong",
+      "difficulty": "medium",
+      "playCount": 8956,
+      "isActive": true,
+      "maxPlayers": 2,
+      "createdAt": 0,
+      "updatedAt": 0
+    },
+    {
+      "id": "game_breakout_fury",
+      "tenantId": "default",
+      "name": "Breakout Fury",
+      "description": "Smash through 50 levels of destructible bricks with multi-ball, laser, and magnet power-ups. Boss battles every 10 levels. Leaderboard-tracked scoring system.",
+      "thumbnailUrl": "/images/games/breakout-fury.webp",
+      "gameType": "breakout",
+      "difficulty": "hard",
+      "playCount": 6204,
+      "isActive": true,
+      "maxPlayers": 1,
+      "createdAt": 0,
+      "updatedAt": 0
+    },
+    {
+      "id": "game_space_invaders_redux",
+      "tenantId": "default",
+      "name": "Space Invaders Redux",
+      "description": "Defend Earth from waves of pixelated aliens in this enhanced Space Invaders. New enemy types, shield mechanics, and a branching upgrade tree between waves.",
+      "thumbnailUrl": "/images/games/space-invaders-redux.webp",
+      "gameType": "spaceinvaders",
+      "difficulty": "extreme",
+      "playCount": 11387,
+      "isActive": true,
+      "maxPlayers": 1,
+      "createdAt": 0,
+      "updatedAt": 0
+    },
+    {
+      "id": "game_maze_runner",
+      "tenantId": "default",
+      "name": "Maze Runner: Procedural",
+      "description": "Navigate procedurally generated mazes that grow in complexity. Uses recursive backtracking and Kruskal's algorithm for unique layouts every run. Time-attack mode with ghost replays.",
+      "thumbnailUrl": "/images/games/maze-runner.webp",
+      "gameType": "custom",
+      "difficulty": "hard",
+      "playCount": 3719,
+      "isActive": true,
+      "maxPlayers": 4,
+      "createdAt": 0,
+      "updatedAt": 0
+    }
+  ],
+  "metadata": {
+    "bootstrap": false,
+    "skipIfExists": true,
+    "timestampField": "createdAt",
+    "useCurrentTimestamp": true
+  }
+}

@@ -13,6 +13,7 @@ export interface FlexProps extends React.HTMLAttributes<HTMLDivElement> {
   wrap?: boolean
   inline?: boolean
   gap?: string | number
+  testId?: string
 }
 
 export const Flex: React.FC<FlexProps> = ({
@@ -29,10 +30,12 @@ export const Flex: React.FC<FlexProps> = ({
   inline,
   gap,
   className = '',
+  testId,
   ...props
 }) => (
   <div
     className={`${inline ? 'inline-flex' : 'flex'} ${col ? 'flex-col' : ''} ${row ? 'flex-row' : ''} ${center ? 'flex-center' : ''} ${between ? 'flex-between' : ''} ${around ? 'justify-around' : ''} ${evenly ? 'justify-evenly' : ''} ${start ? 'items-start' : ''} ${end ? 'items-end' : ''} ${wrap ? 'flex-wrap' : ''} ${gap ? `gap-${gap}` : ''} ${className}`}
+    data-testid={testId}
     {...props}
   >
     {children}

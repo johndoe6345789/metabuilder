@@ -1,0 +1,6 @@
+// Button Component - Uses Official Angular Material M3 SCSS
+// =========================================================
+// This imports the official M3 button styles from Angular Material
+
+@use '../m3-scss/material/button/button.module';
+@use '../m3-scss/cdk' as cdk;

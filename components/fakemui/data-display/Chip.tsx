@@ -1,5 +1,6 @@
 import React from 'react'
 import { sxToStyle } from '../utils/sx'
+import styles from '../../../scss/atoms/mat-chip.module.scss'
 
 export interface ChipProps extends React.HTMLAttributes<HTMLSpanElement> {
   /** Chip content (FakeMUI native) */
@@ -32,6 +33,10 @@ export interface ChipProps extends React.HTMLAttributes<HTMLSpanElement> {
   outline?: boolean
   /** MUI sx prop */
   sx?: Record<string, unknown>
+  /** Disabled state */
+  disabled?: boolean
+  /** Test ID for automated testing */
+  testId?: string
 }
 
 export const Chip: React.FC<ChipProps> = ({
@@ -49,39 +54,85 @@ export const Chip: React.FC<ChipProps> = ({
   info,
   variant,
   outline,
+  disabled,
+  testId,
   className = '',
   sx,
   style,
   ...props
 }) => {
-  // Determine color class (support both old boolean props and new color prop)
-  const colorClass = color
-    ? `chip--${color}`
-    : success ? 'chip--success'
-    : error ? 'chip--error'
-    : warning ? 'chip--warning'
-    : info ? 'chip--info'
-    : ''
+  // Build class list using CSS module
+  const classNames: string[] = [styles.chip]
 
-  // Determine size class
-  const sizeClass = size === 'small' || sm ? 'chip--sm' : ''
+  // Clickable state
+  if (clickable) {
+    classNames.push(styles.chipClickable)
+  }
 
-  // Determine variant class
-  const variantClass = variant === 'outlined' || outline ? 'chip--outline' : ''
+  // Variant classes
+  if (variant === 'outlined' || outline) {
+    classNames.push(styles.chipOutlined)
+  }
+
+  // Color classes (support both old boolean props and new color prop)
+  if (color === 'primary') {
+    classNames.push(styles.chipPrimary)
+  } else if (color === 'secondary') {
+    classNames.push(styles.chipSecondary)
+  } else if (color === 'success' || success) {
+    classNames.push(styles.chipSuccess)
+  } else if (color === 'error' || error) {
+    classNames.push(styles.chipError)
+  } else if (color === 'warning' || warning) {
+    classNames.push(styles.chipWarning)
+  } else if (color === 'info' || info) {
+    classNames.push(styles.chipInfo)
+  }
+
+  // Size classes
+  if (size === 'small' || sm) {
+    classNames.push(styles.chipSmall)
+  }
+
+  // Deletable chip has different padding
+  if (onDelete) {
+    classNames.push(styles.chipDeletable)
+  }
+
+  // Disabled state
+  if (disabled) {
+    classNames.push(styles.chipDisabled)
+  }
+
+  // Add custom className
+  if (className) {
+    classNames.push(className)
+  }
 
   // Use label prop if provided, otherwise use children
   const content = label ?? children
 
   return (
     <span
-      className={`chip ${clickable ? 'chip--clickable' : ''} ${sizeClass} ${colorClass} ${variantClass} ${className}`}
+      className={classNames.join(' ')}
       style={{ ...sxToStyle(sx), ...style }}
+      data-testid={testId}
+      role={(clickable || onDelete) ? 'button' : undefined}
       {...props}
     >
-      {icon && <span className="chip-icon">{icon}</span>}
+      {icon && (
+        <span className={`${styles.chipIcon} ${styles.chipIconLeading}`}>
+          {icon}
+        </span>
+      )}
       {content}
       {onDelete && (
-        <button className="chip-delete" onClick={onDelete}>
+        <button
+          className={styles.chipDelete}
+          onClick={onDelete}
+          type="button"
+          aria-label="Remove"
+        >
           ×
         </button>
       )}

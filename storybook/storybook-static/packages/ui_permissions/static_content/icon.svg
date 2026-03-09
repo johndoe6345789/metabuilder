@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Lock with checkmark -->
+  <rect x="22" y="28" width="20" height="24" rx="2" fill="none"/>
+  <path d="M26 28 L26 20 C26 16 28 12 32 12 C36 12 38 16 38 20 L38 28" fill="none"/>
+  <path d="M28 38 L30 40 L36 34" stroke-width="2.5"/>
+</svg>

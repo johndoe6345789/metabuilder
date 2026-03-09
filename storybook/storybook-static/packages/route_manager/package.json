@@ -1,0 +1,77 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "route_manager",
+  "name": "Route Manager",
+  "version": "1.0.0",
+  "description": "Page route configuration, URL management, access level settings, and route validation",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "tools",
+  "icon": "static_content/icon.svg",
+  "minLevel": 4,
+  "primary": true,
+  "keywords": [
+    "routes",
+    "pages",
+    "navigation",
+    "urls",
+    "access-control"
+  ],
+  "dependencies": {
+    "data_table": "*",
+    "ui_permissions": "*"
+  },
+  "devDependencies": {
+    "testing": "*"
+  },
+  "exports": {
+    "components": [
+      "RouteManager",
+      "RouteEditor",
+      "RouteList",
+      "AccessControlSettings",
+      "RoutePreview"
+    ],
+    "scripts": [
+      "routes",
+      "validation"
+    ]
+  },
+  "tests": {
+    "suites": [
+      "tests/metadata.test.json"
+    ]
+  },
+  "files": {
+    "directories": [
+      "components",
+      "permissions",
+      "static_content",
+      "storybook",
+      "styles",
+      "tests"
+    ],
+    "byType": {
+      "components": [
+        "components/ui.json"
+      ],
+      "tests": [
+        "tests/metadata.params.json",
+        "tests/metadata.test.json"
+      ],
+      "config": [
+        "package.json",
+        "storybook/config.json"
+      ],
+      "permissions": [
+        "permissions/roles.json"
+      ],
+      "styles": [
+        "styles/tokens.json"
+      ],
+      "other": [
+        "static_content/icon.svg"
+      ]
+    }
+  }
+}

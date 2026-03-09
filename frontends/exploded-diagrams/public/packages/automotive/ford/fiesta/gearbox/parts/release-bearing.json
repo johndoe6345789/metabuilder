@@ -1,0 +1,40 @@
+{
+  "id": "release-bearing",
+  "name": "Release Bearing",
+  "partNumber": "FD-1848138",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 320.0,
+  "weightUnit": "g",
+  "baseY": -30,
+  "description": "Clutch release bearing (throwout bearing)",
+  "installation": {
+    "tools": [
+      { "name": "Snap ring pliers", "size": "Internal", "required": true },
+      { "name": "Grease", "size": "High-temp bearing grease", "required": true }
+    ],
+    "hardware": [
+      { "name": "Retaining clip", "spec": "28mm internal", "qty": 1, "reusable": false }
+    ],
+    "torque": [],
+    "notes": [
+      "Apply thin layer of grease to guide sleeve",
+      "Always replace when replacing clutch",
+      "Check fork pivot for wear",
+      "Ensure smooth sliding action on guide tube"
+    ]
+  },
+  "geometry": [
+    { "type": "circle", "r": 28, "fill": "#5a5a5a" },
+    { "type": "circle", "r": 22, "fill": "#4a4a4a" },
+    { "type": "circle", "r": 15, "fill": "#3a3a3a" },
+    { "type": "circle", "r": 10, "fill": "#2a2a2a" }
+  ],
+  "geometry3d": [
+    { "type": "cylinder", "r": 24, "height": 12, "fill": "#505560" },
+    { "type": "cylinder", "r": 22, "height": 18, "fill": "#606570" },
+    { "type": "cylinder", "r": 20, "height": 14, "offsetY": 2, "fill": "#707580" },
+    { "type": "cylinder", "r": 16, "height": 8, "offsetY": 7, "fill": "#808590" },
+    { "type": "cylinder", "r": 14, "height": 20, "subtract": true }
+  ]
+}

@@ -1,0 +1,156 @@
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - generic [ref=e5]:
+        - button "Toggle sidebar" [ref=e6] [cursor=pointer]:
+          - generic [ref=e7]: menu
+        - generic [ref=e8]:
+          - generic [ref=e9]: code
+          - heading "CodeForge" [level=1] [ref=e10]
+      - button "Switch to light mode" [active] [ref=e181] [cursor=pointer]:
+        - generic [ref=e13]: light_mode
+    - generic [ref=e14]:
+      - complementary "Navigation sidebar" [ref=e15]:
+        - generic [ref=e16]:
+          - paragraph: Navigation
+        - navigation:
+          - generic:
+            - heading "Main" [level=3] [ref=e20]
+            - list:
+              - listitem:
+                - link "dashboard Dashboard" [ref=e23] [cursor=pointer]:
+                  - /url: /codegen
+                  - generic [ref=e24]: dashboard
+                  - generic: Dashboard
+              - listitem:
+                - link "code Code Editor" [ref=e27] [cursor=pointer]:
+                  - /url: /codegen/code
+                  - generic [ref=e28]: code
+                  - generic: Code Editor
+              - listitem:
+                - link "widgets Components" [ref=e31] [cursor=pointer]:
+                  - /url: /codegen/components
+                  - generic [ref=e32]: widgets
+                  - generic: Components
+              - listitem:
+                - link "schema Models" [ref=e35] [cursor=pointer]:
+                  - /url: /codegen/models
+                  - generic [ref=e36]: schema
+                  - generic: Models
+          - generic:
+            - heading "Design" [level=3] [ref=e39]
+            - list:
+              - listitem:
+                - link "account_tree Component Trees" [ref=e42] [cursor=pointer]:
+                  - /url: /codegen/component-trees
+                  - generic [ref=e43]: account_tree
+                  - generic: Component Trees
+              - listitem:
+                - link "palette Styling" [ref=e46] [cursor=pointer]:
+                  - /url: /codegen/styling
+                  - generic [ref=e47]: palette
+                  - generic: Styling
+              - listitem:
+                - link "style Sass" [ref=e50] [cursor=pointer]:
+                  - /url: /codegen/sass
+                  - generic [ref=e51]: style
+                  - generic: Sass
+              - listitem:
+                - link "library_books Atomic Library" [ref=e54] [cursor=pointer]:
+                  - /url: /codegen/atomic-library
+                  - generic [ref=e55]: library_books
+                  - generic: Atomic Library
+              - listitem:
+                - link "content_copy Templates" [ref=e58] [cursor=pointer]:
+                  - /url: /codegen/templates
+                  - generic [ref=e59]: content_copy
+                  - generic: Templates
+          - generic:
+            - heading "Workflows" [level=3] [ref=e62]
+            - list:
+              - listitem:
+                - link "share Workflows" [ref=e65] [cursor=pointer]:
+                  - /url: /codegen/workflows
+                  - generic [ref=e66]: share
+                  - generic: Workflows
+              - listitem:
+                - link "functions Lambdas" [ref=e69] [cursor=pointer]:
+                  - /url: /codegen/lambdas
+                  - generic [ref=e70]: functions
+                  - generic: Lambdas
+          - generic:
+            - heading "Tools" [level=3] [ref=e73]
+            - list:
+              - listitem:
+                - link "data_object JSON UI" [ref=e76] [cursor=pointer]:
+                  - /url: /codegen/json-ui
+                  - generic [ref=e77]: data_object
+                  - generic: JSON UI
+              - listitem:
+                - link "edit_note Schema Editor" [ref=e80] [cursor=pointer]:
+                  - /url: /codegen/schema-editor
+                  - generic [ref=e81]: edit_note
+                  - generic: Schema Editor
+              - listitem:
+                - link "link Data Binding" [ref=e84] [cursor=pointer]:
+                  - /url: /codegen/data-binding
+                  - generic [ref=e85]: link
+                  - generic: Data Binding
+              - listitem:
+                - link "api Flask API" [ref=e88] [cursor=pointer]:
+                  - /url: /codegen/flask
+                  - generic [ref=e89]: api
+                  - generic: Flask API
+          - generic:
+            - heading "Testing" [level=3] [ref=e92]
+            - list:
+              - listitem:
+                - link "bug_report Playwright" [ref=e95] [cursor=pointer]:
+                  - /url: /codegen/playwright
+                  - generic [ref=e96]: bug_report
+                  - generic: Playwright
+              - listitem:
+                - link "science Unit Tests" [ref=e99] [cursor=pointer]:
+                  - /url: /codegen/unit-tests
+                  - generic [ref=e100]: science
+                  - generic: Unit Tests
+              - listitem:
+                - link "auto_stories Storybook" [ref=e103] [cursor=pointer]:
+                  - /url: /codegen/storybook
+                  - generic [ref=e104]: auto_stories
+                  - generic: Storybook
+          - generic:
+            - heading "System" [level=3] [ref=e107]
+            - list:
+              - listitem:
+                - link "settings Settings" [ref=e110] [cursor=pointer]:
+                  - /url: /codegen/settings
+                  - generic [ref=e111]: settings
+                  - generic: Settings
+              - listitem:
+                - link "description Documentation" [ref=e114] [cursor=pointer]:
+                  - /url: /codegen/docs
+                  - generic [ref=e115]: description
+                  - generic: Documentation
+              - listitem:
+                - link "toggle_on Features" [ref=e118] [cursor=pointer]:
+                  - /url: /codegen/features
+                  - generic [ref=e119]: toggle_on
+                  - generic: Features
+              - listitem:
+                - link "error Errors" [ref=e122] [cursor=pointer]:
+                  - /url: /codegen/errors
+                  - generic [ref=e123]: error
+                  - generic: Errors
+              - listitem:
+                - link "storage Persistence" [ref=e126] [cursor=pointer]:
+                  - /url: /codegen/persistence
+                  - generic [ref=e127]: storage
+                  - generic: Persistence
+              - listitem:
+                - link "install_desktop PWA" [ref=e130] [cursor=pointer]:
+                  - /url: /codegen/pwa
+                  - generic [ref=e131]: install_desktop
+                  - generic: PWA
+      - main [ref=e133]
+  - alert [ref=e158]

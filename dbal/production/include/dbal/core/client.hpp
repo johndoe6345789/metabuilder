@@ -5,6 +5,7 @@
 #include <map>
 #include <optional>
 #include <string>
+#include <nlohmann/json.hpp>
 #include "types.hpp"
 #include "errors.hpp"
 #include "adapters/adapter.hpp"
@@ -93,6 +94,22 @@ public:
     Result<int> batchCreatePackages(const std::vector<CreatePackageInput>& inputs);
     Result<int> batchUpdatePackages(const std::vector<UpdatePackageBatchItem>& updates);
     Result<int> batchDeletePackages(const std::vector<std::string>& ids);
+
+    // ===== Generic Entity CRUD (works for ANY entity loaded from YAML) =====
+
+    Result<nlohmann::json> createEntity(const std::string& entityName, const nlohmann::json& data);
+    Result<nlohmann::json> getEntity(const std::string& entityName, const std::string& id);
+    Result<nlohmann::json> updateEntity(const std::string& entityName, const std::string& id, const nlohmann::json& data);
+    Result<bool> deleteEntity(const std::string& entityName, const std::string& id);
+    Result<adapters::ListResult<nlohmann::json>> listEntities(const std::string& entityName, const ListOptions& options);
+
+    // ===== Transaction Operations =====
+
+    Result<bool> beginTransaction();
+    Result<bool> commitTransaction();
+    Result<bool> rollbackTransaction();
+
+    adapters::Adapter& adapter() { return *adapter_; }
 
     void close();
 

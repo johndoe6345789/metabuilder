@@ -1,0 +1,4 @@
+# Ignore log files
+cadquerywrapper.log
+__pycache__/
+.venv/

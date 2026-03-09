@@ -7,8 +7,8 @@
 #ifndef DBAL_REQUEST_PARSER_HPP
 #define DBAL_REQUEST_PARSER_HPP
 
-#include "http_types.hpp"
-#include "security_limits.hpp"
+#include "../http_types.hpp"
+#include "../server/security_limits.hpp"
 #include <string>
 #include <sstream>
 #include <algorithm>
@@ -182,8 +182,11 @@ inline bool parseRequest(socket_t client_fd, HttpRequest& request, HttpResponse&
                         return false;
                     }
                     content_length = static_cast<size_t>(cl);
-                } catch (...) {
+                } catch (const std::invalid_argument&) {
                     error_response = HttpResponse::error(400, "Bad Request", "Invalid Content-Length");
+                    return false;
+                } catch (const std::out_of_range&) {
+                    error_response = HttpResponse::error(400, "Bad Request", "Content-Length out of range");
                     return false;
                 }
             }

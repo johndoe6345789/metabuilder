@@ -112,9 +112,9 @@ function parseValue(value: string): unknown {
 }
 
 /**
- * Build Prisma where clause from filter conditions
+ * Build query where clause from filter conditions
  */
-export function buildPrismaWhere(conditions: FilterCondition[]): Record<string, unknown> {
+export function buildQueryWhere(conditions: FilterCondition[]): Record<string, unknown> {
   const where: Record<string, unknown> = {}
 
   for (const condition of conditions) {
@@ -197,9 +197,9 @@ export function parseSortString(sortStr: string): SortCondition[] {
 }
 
 /**
- * Build Prisma orderBy from sort conditions
+ * Build query orderBy from sort conditions
  */
-export function buildPrismaOrderBy(conditions: SortCondition[]): Record<string, SortDirection>[] {
+export function buildQueryOrderBy(conditions: SortCondition[]): Record<string, SortDirection>[] {
   return conditions.map(condition => ({
     [condition.field]: condition.direction,
   }))

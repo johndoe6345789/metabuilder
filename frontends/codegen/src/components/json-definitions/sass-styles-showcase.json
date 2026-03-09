@@ -1,0 +1,266 @@
+{
+  "id": "sass-styles-showcase",
+  "type": "div",
+  "props": {
+    "className": "h-full w-full overflow-auto bg-background p-6 space-y-8"
+  },
+  "children": [
+    {
+      "id": "sass-header",
+      "type": "div",
+      "props": { "className": "mb-2" },
+      "children": [
+        { "id": "sass-title", "type": "h1", "props": { "className": "text-2xl font-bold mb-1", "children": "Custom Material UI Sass Styles" } },
+        { "id": "sass-desc", "type": "p", "props": { "className": "text-muted-foreground", "children": "Non-standard Material UI CSS components built with Sass" } }
+      ]
+    },
+    {
+      "id": "buttons-section",
+      "type": "section",
+      "props": { "className": "space-y-4" },
+      "children": [
+        { "id": "buttons-title", "type": "h2", "props": { "className": "text-xl font-semibold border-b pb-2", "children": "Buttons" } },
+        {
+          "id": "buttons-row-1",
+          "type": "div",
+          "props": { "className": "flex flex-wrap gap-3" },
+          "children": [
+            { "id": "btn-primary", "type": "button", "props": { "className": "mui-custom-button mui-custom-button--primary", "children": "Primary Button" } },
+            { "id": "btn-secondary", "type": "button", "props": { "className": "mui-custom-button mui-custom-button--secondary", "children": "Secondary Button" } },
+            { "id": "btn-accent", "type": "button", "props": { "className": "mui-custom-button mui-custom-button--accent", "children": "Accent Button" } }
+          ]
+        },
+        {
+          "id": "buttons-row-2",
+          "type": "div",
+          "props": { "className": "flex flex-wrap gap-3" },
+          "children": [
+            { "id": "btn-outline", "type": "button", "props": { "className": "mui-custom-button mui-custom-button--outline", "children": "Outline Button" } },
+            { "id": "btn-ghost", "type": "button", "props": { "className": "mui-custom-button mui-custom-button--ghost", "children": "Ghost Button" } }
+          ]
+        },
+        {
+          "id": "buttons-code",
+          "type": "div",
+          "props": { "className": "rounded-md bg-muted p-4 mt-2" },
+          "children": [
+            { "id": "buttons-code-label", "type": "p", "props": { "className": "text-xs font-mono text-muted-foreground mb-2", "children": "Usage" } },
+            { "id": "buttons-code-sample", "type": "p", "props": { "className": "text-sm font-mono whitespace-pre-wrap", "children": "<button className=\"mui-custom-button mui-custom-button--primary\">\n  Primary Button\n</button>" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "inputs-section",
+      "type": "section",
+      "props": { "className": "space-y-4" },
+      "children": [
+        { "id": "inputs-title", "type": "h2", "props": { "className": "text-xl font-semibold border-b pb-2", "children": "Inputs" } },
+        {
+          "id": "inputs-fields",
+          "type": "div",
+          "props": { "className": "space-y-3 max-w-md" },
+          "children": [
+            { "id": "input-default", "type": "input", "props": { "className": "mui-custom-input w-full", "placeholder": "Default input" } },
+            { "id": "input-error", "type": "input", "props": { "className": "mui-custom-input mui-custom-input--error w-full", "placeholder": "Error state" } },
+            { "id": "input-success", "type": "input", "props": { "className": "mui-custom-input mui-custom-input--success w-full", "placeholder": "Success state" } }
+          ]
+        },
+        {
+          "id": "inputs-code",
+          "type": "div",
+          "props": { "className": "rounded-md bg-muted p-4 mt-2" },
+          "children": [
+            { "id": "inputs-code-label", "type": "p", "props": { "className": "text-xs font-mono text-muted-foreground mb-2", "children": "Usage" } },
+            { "id": "inputs-code-sample", "type": "p", "props": { "className": "text-sm font-mono whitespace-pre-wrap", "children": "<input className=\"mui-custom-input\" placeholder=\"Your input\" />\n<input className=\"mui-custom-input mui-custom-input--error\" placeholder=\"Error\" />" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cards-section",
+      "type": "section",
+      "props": { "className": "space-y-4" },
+      "children": [
+        { "id": "cards-title", "type": "h2", "props": { "className": "text-xl font-semibold border-b pb-2", "children": "Cards" } },
+        {
+          "id": "cards-grid",
+          "type": "div",
+          "props": { "className": "grid grid-cols-1 md:grid-cols-3 gap-4" },
+          "children": [
+            {
+              "id": "card-standard",
+              "type": "div",
+              "props": { "className": "mui-custom-card p-6" },
+              "children": [
+                { "id": "card-standard-title", "type": "h3", "props": { "className": "font-semibold mb-2", "children": "Standard Card" } },
+                { "id": "card-standard-desc", "type": "p", "props": { "className": "text-sm text-muted-foreground", "children": "Basic card with elevation and hover effect" } }
+              ]
+            },
+            {
+              "id": "card-gradient",
+              "type": "div",
+              "props": { "className": "mui-custom-card mui-custom-card--gradient p-6" },
+              "children": [
+                { "id": "card-gradient-title", "type": "h3", "props": { "className": "font-semibold mb-2", "children": "Gradient Card" } },
+                { "id": "card-gradient-desc", "type": "p", "props": { "className": "text-sm opacity-90", "children": "Card with gradient background" } }
+              ]
+            },
+            {
+              "id": "card-glass",
+              "type": "div",
+              "props": { "className": "mui-custom-card mui-custom-card--glass p-6" },
+              "children": [
+                { "id": "card-glass-title", "type": "h3", "props": { "className": "font-semibold mb-2", "children": "Glass Card" } },
+                { "id": "card-glass-desc", "type": "p", "props": { "className": "text-sm text-muted-foreground", "children": "Glassmorphism effect card" } }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "cards-code",
+          "type": "div",
+          "props": { "className": "rounded-md bg-muted p-4 mt-2" },
+          "children": [
+            { "id": "cards-code-label", "type": "p", "props": { "className": "text-xs font-mono text-muted-foreground mb-2", "children": "Usage" } },
+            { "id": "cards-code-sample", "type": "p", "props": { "className": "text-sm font-mono whitespace-pre-wrap", "children": "<div className=\"mui-custom-card\">Standard</div>\n<div className=\"mui-custom-card mui-custom-card--gradient\">Gradient</div>\n<div className=\"mui-custom-card mui-custom-card--glass\">Glass</div>" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chips-section",
+      "type": "section",
+      "props": { "className": "space-y-4" },
+      "children": [
+        { "id": "chips-title", "type": "h2", "props": { "className": "text-xl font-semibold border-b pb-2", "children": "Chips & Tags" } },
+        {
+          "id": "chips-subtitle", "type": "h3", "props": { "className": "text-lg font-medium", "children": "Custom Chip/Badge Styles" }
+        },
+        {
+          "id": "chips-row",
+          "type": "div",
+          "props": { "className": "flex flex-wrap gap-2" },
+          "children": [
+            { "id": "chip-primary", "type": "span", "props": { "className": "mui-custom-chip mui-custom-chip--primary", "children": "Primary" } },
+            { "id": "chip-secondary", "type": "span", "props": { "className": "mui-custom-chip mui-custom-chip--secondary", "children": "Secondary" } },
+            { "id": "chip-accent", "type": "span", "props": { "className": "mui-custom-chip mui-custom-chip--accent", "children": "Accent" } },
+            { "id": "chip-success", "type": "span", "props": { "className": "mui-custom-chip mui-custom-chip--success", "children": "Success" } },
+            { "id": "chip-error", "type": "span", "props": { "className": "mui-custom-chip mui-custom-chip--error", "children": "Error" } },
+            { "id": "chip-warning", "type": "span", "props": { "className": "mui-custom-chip mui-custom-chip--warning", "children": "Warning" } }
+          ]
+        },
+        { "id": "tags-subtitle", "type": "h3", "props": { "className": "text-lg font-medium mt-4", "children": "Custom Tags" } },
+        {
+          "id": "tags-row",
+          "type": "div",
+          "props": { "className": "flex flex-wrap gap-2" },
+          "children": [
+            { "id": "tag-default", "type": "span", "props": { "className": "custom-mui-tag", "children": "Default" } },
+            { "id": "tag-sm", "type": "span", "props": { "className": "custom-mui-tag custom-mui-tag--sm", "children": "Small" } },
+            { "id": "tag-lg", "type": "span", "props": { "className": "custom-mui-tag custom-mui-tag--lg", "children": "Large" } }
+          ]
+        },
+        {
+          "id": "chips-code",
+          "type": "div",
+          "props": { "className": "rounded-md bg-muted p-4 mt-2" },
+          "children": [
+            { "id": "chips-code-label", "type": "p", "props": { "className": "text-xs font-mono text-muted-foreground mb-2", "children": "Usage" } },
+            { "id": "chips-code-sample", "type": "p", "props": { "className": "text-sm font-mono whitespace-pre-wrap", "children": "<span className=\"mui-custom-chip mui-custom-chip--primary\">Primary</span>\n<span className=\"mui-custom-chip mui-custom-chip--success\">Success</span>" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "layout-section",
+      "type": "section",
+      "props": { "className": "space-y-4" },
+      "children": [
+        { "id": "layout-title", "type": "h2", "props": { "className": "text-xl font-semibold border-b pb-2", "children": "Layout" } },
+        { "id": "stack-label", "type": "h3", "props": { "className": "text-lg font-medium", "children": "Custom Stack" } },
+        {
+          "id": "stack-demo",
+          "type": "div",
+          "props": { "className": "custom-mui-stack custom-mui-stack--gap-3" },
+          "children": [
+            { "id": "stack-item-1", "type": "div", "props": { "className": "p-4 bg-card border rounded", "children": "Item 1" } },
+            { "id": "stack-item-2", "type": "div", "props": { "className": "p-4 bg-card border rounded", "children": "Item 2" } },
+            { "id": "stack-item-3", "type": "div", "props": { "className": "p-4 bg-card border rounded", "children": "Item 3" } }
+          ]
+        },
+        { "id": "grid-label", "type": "h3", "props": { "className": "text-lg font-medium mt-4", "children": "Custom Grid (Responsive)" } },
+        {
+          "id": "grid-demo",
+          "type": "div",
+          "props": { "className": "custom-mui-grid custom-mui-grid--responsive" },
+          "children": [
+            { "id": "grid-item-1", "type": "div", "props": { "className": "p-4 bg-card border rounded", "children": "Grid 1" } },
+            { "id": "grid-item-2", "type": "div", "props": { "className": "p-4 bg-card border rounded", "children": "Grid 2" } },
+            { "id": "grid-item-3", "type": "div", "props": { "className": "p-4 bg-card border rounded", "children": "Grid 3" } },
+            { "id": "grid-item-4", "type": "div", "props": { "className": "p-4 bg-card border rounded", "children": "Grid 4" } }
+          ]
+        },
+        { "id": "surface-label", "type": "h3", "props": { "className": "text-lg font-medium mt-4", "children": "Custom Surface" } },
+        {
+          "id": "surface-demo",
+          "type": "div",
+          "props": { "className": "custom-mui-surface custom-mui-surface--interactive" },
+          "children": [
+            { "id": "surface-text", "type": "p", "props": { "className": "p-4", "children": "Interactive surface with hover effects" } }
+          ]
+        },
+        {
+          "id": "layout-code",
+          "type": "div",
+          "props": { "className": "rounded-md bg-muted p-4 mt-2" },
+          "children": [
+            { "id": "layout-code-label", "type": "p", "props": { "className": "text-xs font-mono text-muted-foreground mb-2", "children": "Usage" } },
+            { "id": "layout-code-sample", "type": "p", "props": { "className": "text-sm font-mono whitespace-pre-wrap", "children": "<div className=\"custom-mui-stack custom-mui-stack--gap-3\">\n  <div>Item 1</div>\n</div>\n\n<div className=\"custom-mui-grid custom-mui-grid--responsive\">\n  <div>Grid Item</div>\n</div>" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "animations-section",
+      "type": "section",
+      "props": { "className": "space-y-4" },
+      "children": [
+        { "id": "animations-title", "type": "h2", "props": { "className": "text-xl font-semibold border-b pb-2", "children": "Animations" } },
+        {
+          "id": "animations-grid",
+          "type": "div",
+          "props": { "className": "grid grid-cols-2 md:grid-cols-3 gap-3" },
+          "children": [
+            { "id": "anim-fade", "type": "div", "props": { "className": "p-4 bg-card border rounded animate-fade-in text-center", "children": "Fade In" } },
+            { "id": "anim-slide", "type": "div", "props": { "className": "p-4 bg-card border rounded animate-slide-in-up text-center", "children": "Slide Up" } },
+            { "id": "anim-scale", "type": "div", "props": { "className": "p-4 bg-card border rounded animate-scale-in text-center", "children": "Scale In" } },
+            { "id": "anim-pulse", "type": "div", "props": { "className": "p-4 bg-card border rounded animate-pulse text-center", "children": "Pulse" } },
+            { "id": "anim-bounce", "type": "div", "props": { "className": "p-4 bg-card border rounded animate-bounce text-center", "children": "Bounce" } },
+            { "id": "anim-float", "type": "div", "props": { "className": "p-4 bg-card border rounded animate-float text-center", "children": "Float" } }
+          ]
+        },
+        { "id": "skeleton-title", "type": "h3", "props": { "className": "text-lg font-medium mt-4", "children": "Skeleton Loading" } },
+        {
+          "id": "skeleton-demos",
+          "type": "div",
+          "props": { "className": "space-y-2 max-w-md" },
+          "children": [
+            { "id": "skeleton-text-1", "type": "div", "props": { "className": "mui-custom-skeleton mui-custom-skeleton--text" } },
+            { "id": "skeleton-text-2", "type": "div", "props": { "className": "mui-custom-skeleton mui-custom-skeleton--text" } },
+            { "id": "skeleton-rect", "type": "div", "props": { "className": "mui-custom-skeleton mui-custom-skeleton--rect" } }
+          ]
+        },
+        {
+          "id": "animations-code",
+          "type": "div",
+          "props": { "className": "rounded-md bg-muted p-4 mt-2" },
+          "children": [
+            { "id": "animations-code-label", "type": "p", "props": { "className": "text-xs font-mono text-muted-foreground mb-2", "children": "Usage" } },
+            { "id": "animations-code-sample", "type": "p", "props": { "className": "text-sm font-mono whitespace-pre-wrap", "children": "<div className=\"animate-fade-in\">Fade In</div>\n<div className=\"animate-slide-in-up\">Slide Up</div>\n<div className=\"animate-pulse\">Pulse</div>" } }
+          ]
+        }
+      ]
+    }
+  ]
+}

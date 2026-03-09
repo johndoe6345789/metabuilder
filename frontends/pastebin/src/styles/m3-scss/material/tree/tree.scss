@@ -1,0 +1,32 @@
+@use '../core/tokens/token-utils';
+@use './m3-tree';
+
+$fallbacks: m3-tree.get-tokens();
+
+.mat-tree {
+  display: block;
+  background-color: token-utils.slot(tree-container-background-color, $fallbacks);
+}
+
+.mat-tree-node,
+.mat-nested-tree-node {
+  color: token-utils.slot(tree-node-text-color, $fallbacks);
+  font-family: token-utils.slot(tree-node-text-font, $fallbacks);
+  font-size: token-utils.slot(tree-node-text-size, $fallbacks);
+  font-weight: token-utils.slot(tree-node-text-weight, $fallbacks);
+}
+
+.mat-tree-node {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  word-wrap: break-word;
+
+  // TODO: before tokens were introduced, the `min-height` only applied to the
+  // non-nested tree node. Should it apply to the nested one as well?
+  min-height: token-utils.slot(tree-node-min-height, $fallbacks);
+}
+
+.mat-nested-tree-node {
+  border-bottom-width: 0;
+}

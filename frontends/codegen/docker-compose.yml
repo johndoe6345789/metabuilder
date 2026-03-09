@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ..
+      dockerfile: codegen/Dockerfile
+    ports:
+      - '3000:3000'
+    environment:
+      - NODE_ENV=production
+      - USE_FLASK_BACKEND=true
+      - FLASK_BACKEND_URL=http://backend:5001
+    depends_on:
+      - backend
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'wget', '--quiet', '--tries=1', '--spider', 'http://localhost/health']
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.codeforge.rule=Host(`codeforge.example.com`)'
+      - 'traefik.http.services.codeforge.loadbalancer.server.port=80'
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001"
+    volumes:
+      - codeforge-data:/data
+    environment:
+      - PORT=5001
+      - DEBUG=false
+      - DATABASE_PATH=/data/codeforge.db
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:5001/health']
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+volumes:
+  codeforge-data:
+
+networks:
+  default:
+    name: codeforge-network

@@ -1,0 +1,468 @@
+// Form Atoms - Material Design 3 (CSS Module)
+// ============================================
+// Flat selectors for form elements using M3 tokens
+
+// ============================================
+// Form Group
+// ============================================
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.formLabel {
+  font-family: var(--mat-sys-label-large-font);
+  font-size: var(--mat-sys-label-large-size);
+  font-weight: var(--mat-sys-label-large-weight);
+  line-height: var(--mat-sys-label-large-line-height);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.formHelperText {
+  font-family: var(--mat-sys-body-small-font);
+  font-size: var(--mat-sys-body-small-size);
+  line-height: var(--mat-sys-body-small-line-height);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.formHelperTextError {
+  color: var(--mat-sys-error);
+}
+
+// ============================================
+// Text Input (Outlined Variant)
+// ============================================
+
+.input {
+  width: 100%;
+  position: relative;
+  padding: 16px;
+  border: 1px solid var(--mat-sys-outline);
+  border-radius: var(--mat-sys-corner-extra-small);
+  background: transparent;
+  color: var(--mat-sys-on-surface);
+  font-family: var(--mat-sys-body-large-font);
+  font-size: var(--mat-sys-body-large-size);
+  line-height: var(--mat-sys-body-large-line-height);
+  caret-color: var(--mat-sys-primary);
+  transition:
+    border-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard),
+    outline var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+}
+
+.input:hover:not(:disabled):not(:focus) {
+  border-color: var(--mat-sys-on-surface);
+}
+
+.input:focus {
+  outline: 2px solid var(--mat-sys-primary);
+  outline-offset: -1px;
+  border-color: var(--mat-sys-primary);
+}
+
+.input:disabled {
+  opacity: var(--disabled-content-opacity);
+  cursor: not-allowed;
+  border-color: color-mix(in srgb, var(--mat-sys-on-surface) var(--disabled-container-opacity), transparent);
+}
+
+.input::placeholder {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+// Autofill override - prevent browser's teal/turquoise background
+.input:-webkit-autofill,
+.input:-webkit-autofill:hover,
+.input:-webkit-autofill:focus,
+.input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px var(--mat-sys-surface-container) inset !important;
+  -webkit-text-fill-color: var(--mat-sys-on-surface) !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+.inputError {
+  border-color: var(--mat-sys-error);
+  caret-color: var(--mat-sys-error);
+}
+
+.inputError:focus {
+  outline-color: var(--mat-sys-error);
+  border-color: var(--mat-sys-error);
+}
+
+// Size variants
+.inputSm {
+  padding: 12px;
+  font-size: var(--mat-sys-body-medium-size);
+}
+
+.inputLg {
+  padding: 20px;
+  font-size: var(--mat-sys-body-large-size);
+}
+
+// Width variants
+.inputFullWidth {
+  width: 100%;
+}
+
+// ============================================
+// Textarea
+// ============================================
+
+.textarea {
+  width: 100%;
+  padding: 16px;
+  border: 1px solid var(--mat-sys-outline);
+  border-radius: var(--mat-sys-corner-extra-small);
+  background: transparent;
+  color: var(--mat-sys-on-surface);
+  font-family: var(--mat-sys-body-large-font);
+  font-size: var(--mat-sys-body-large-size);
+  line-height: 1.5;
+  caret-color: var(--mat-sys-primary);
+  min-height: 120px;
+  resize: vertical;
+  transition:
+    border-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard),
+    outline var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+}
+
+.textarea:hover:not(:disabled):not(:focus) {
+  border-color: var(--mat-sys-on-surface);
+}
+
+.textarea:focus {
+  outline: 2px solid var(--mat-sys-primary);
+  outline-offset: -1px;
+  border-color: var(--mat-sys-primary);
+}
+
+.textarea:disabled {
+  opacity: var(--disabled-content-opacity);
+  cursor: not-allowed;
+}
+
+.textarea::placeholder {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.textareaError {
+  border-color: var(--mat-sys-error);
+}
+
+.textareaError:focus {
+  outline-color: var(--mat-sys-error);
+}
+
+// ============================================
+// Select
+// ============================================
+
+.select {
+  width: 100%;
+  position: relative;
+  padding: 16px;
+  padding-right: 48px;
+  border: 1px solid var(--mat-sys-outline);
+  border-radius: var(--mat-sys-corner-extra-small);
+  background: transparent;
+  color: var(--mat-sys-on-surface);
+  font-family: var(--mat-sys-body-large-font);
+  font-size: var(--mat-sys-body-large-size);
+  line-height: var(--mat-sys-body-large-line-height);
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2349454f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 24px;
+  transition:
+    border-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard),
+    outline var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+}
+
+.select:hover:not(:disabled):not(:focus) {
+  border-color: var(--mat-sys-on-surface);
+}
+
+.select:focus {
+  outline: 2px solid var(--mat-sys-primary);
+  outline-offset: -1px;
+  border-color: var(--mat-sys-primary);
+}
+
+.select:disabled {
+  opacity: var(--disabled-content-opacity);
+  cursor: not-allowed;
+}
+
+.selectError {
+  border-color: var(--mat-sys-error);
+}
+
+.selectError:focus {
+  outline-color: var(--mat-sys-error);
+}
+
+.selectSm {
+  padding: 12px;
+  padding-right: 40px;
+  font-size: var(--mat-sys-body-medium-size);
+  background-size: 20px;
+}
+
+// ============================================
+// Checkbox
+// ============================================
+
+.checkbox {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.checkboxInput {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.checkboxBox {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--mat-sys-on-surface-variant);
+  border-radius: 2px;
+  transition:
+    background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard),
+    border-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+}
+
+.checkboxInput:checked + .checkboxBox {
+  background: var(--mat-sys-primary);
+  border-color: var(--mat-sys-primary);
+}
+
+.checkboxInput:focus-visible + .checkboxBox {
+  outline: 2px solid var(--mat-sys-primary);
+  outline-offset: 2px;
+}
+
+.checkboxInput:disabled + .checkboxBox {
+  opacity: var(--disabled-content-opacity);
+  cursor: not-allowed;
+}
+
+.checkboxLabel {
+  font-family: var(--mat-sys-body-medium-font);
+  font-size: var(--mat-sys-body-medium-size);
+  color: var(--mat-sys-on-surface);
+}
+
+.checkboxDisabled {
+  cursor: not-allowed;
+  opacity: var(--disabled-content-opacity);
+}
+
+.checkboxError .checkboxBox {
+  border-color: var(--mat-sys-error);
+}
+
+.checkboxError .checkboxInput:checked + .checkboxBox {
+  background: var(--mat-sys-error);
+  border-color: var(--mat-sys-error);
+}
+
+// Color variants
+.checkboxColorSecondary .checkboxInput:checked + .checkboxBox {
+  background: var(--mat-sys-secondary);
+  border-color: var(--mat-sys-secondary);
+}
+
+.checkboxColorError .checkboxInput:checked + .checkboxBox {
+  background: var(--mat-sys-error);
+  border-color: var(--mat-sys-error);
+}
+
+.checkboxColorSuccess .checkboxInput:checked + .checkboxBox {
+  background: var(--mat-sys-tertiary);
+  border-color: var(--mat-sys-tertiary);
+}
+
+.checkboxColorWarning .checkboxInput:checked + .checkboxBox {
+  background: var(--mat-sys-warning, #fb8c00);
+  border-color: var(--mat-sys-warning, #fb8c00);
+}
+
+// Size variants
+.checkboxSizeSm {
+  gap: 8px;
+}
+
+.checkboxSizeSm .checkboxBox {
+  width: 14px;
+  height: 14px;
+}
+
+.checkboxSizeSm .checkboxLabel {
+  font-size: var(--mat-sys-body-small-size);
+}
+
+.checkboxSizeLg {
+  gap: 16px;
+}
+
+.checkboxSizeLg .checkboxBox {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+}
+
+.checkboxSizeLg .checkboxLabel {
+  font-size: var(--mat-sys-body-large-size);
+}
+
+// ============================================
+// Radio
+// ============================================
+
+.radio {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.radioInput {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.radioCircle {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--mat-sys-on-surface-variant);
+  border-radius: var(--mat-sys-corner-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    border-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+}
+
+.radioCircle::after {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: var(--mat-sys-corner-full);
+  background: var(--mat-sys-primary);
+  transform: scale(0);
+  transition: transform var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+}
+
+.radioInput:checked + .radioCircle {
+  border-color: var(--mat-sys-primary);
+}
+
+.radioInput:checked + .radioCircle::after {
+  transform: scale(1);
+}
+
+.radioInput:focus-visible + .radioCircle {
+  outline: 2px solid var(--mat-sys-primary);
+  outline-offset: 2px;
+}
+
+.radioInput:disabled + .radioCircle {
+  opacity: var(--disabled-content-opacity);
+  cursor: not-allowed;
+}
+
+.radioLabel {
+  font-family: var(--mat-sys-body-medium-font);
+  font-size: var(--mat-sys-body-medium-size);
+  color: var(--mat-sys-on-surface);
+}
+
+// ============================================
+// Switch
+// ============================================
+
+.switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.switchInput {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.switchTrack {
+  width: 52px;
+  height: 32px;
+  background: var(--mat-sys-surface-container-highest);
+  border: 2px solid var(--mat-sys-outline);
+  border-radius: var(--mat-sys-corner-full);
+  position: relative;
+  transition:
+    background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard),
+    border-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+}
+
+.switchThumb {
+  position: absolute;
+  top: 50%;
+  left: 6px;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  background: var(--mat-sys-outline);
+  border-radius: var(--mat-sys-corner-full);
+  transition:
+    left var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard),
+    width var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard),
+    height var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard),
+    background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+}
+
+.switchInput:checked + .switchTrack {
+  background: var(--mat-sys-primary);
+  border-color: var(--mat-sys-primary);
+}
+
+.switchInput:checked + .switchTrack .switchThumb {
+  left: 26px;
+  width: 24px;
+  height: 24px;
+  background: var(--mat-sys-on-primary);
+}
+
+.switchInput:focus-visible + .switchTrack {
+  outline: 2px solid var(--mat-sys-primary);
+  outline-offset: 2px;
+}
+
+.switchInput:disabled + .switchTrack {
+  opacity: var(--disabled-content-opacity);
+  cursor: not-allowed;
+}
+
+.switchLabel {
+  font-family: var(--mat-sys-body-medium-font);
+  font-size: var(--mat-sys-body-medium-size);
+  color: var(--mat-sys-on-surface);
+}

@@ -1,0 +1,66 @@
+// Form input mixins - Material Design 3
+// Uses M3 outlined text field styling
+
+@mixin input-field($height: auto, $padding: 16px) {
+  width: 100%;
+  padding: $padding;
+  font-family: var(--mat-sys-body-large-font);
+  font-size: var(--mat-sys-body-large-size);
+  line-height: var(--mat-sys-body-large-line-height);
+  border: 1px solid var(--mat-sys-outline);
+  border-radius: var(--mat-sys-corner-extra-small);
+  background: transparent;
+  color: var(--mat-sys-on-surface);
+  outline: none;
+  transition: border-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard),
+              box-shadow var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+  caret-color: var(--mat-sys-primary);
+
+  @if $height != auto {
+    height: $height;
+  }
+
+  &::placeholder {
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  &:hover:not(:focus):not(:disabled) {
+    border-color: var(--mat-sys-on-surface);
+  }
+
+  &:disabled {
+    opacity: var(--disabled-content-opacity);
+    cursor: not-allowed;
+  }
+}
+
+@mixin input-focus {
+  border-color: var(--mat-sys-primary);
+  border-width: 2px;
+  padding: 15px; // Compensate for border width change
+}
+
+@mixin input-error {
+  border-color: var(--mat-sys-error);
+  caret-color: var(--mat-sys-error);
+
+  &:focus {
+    border-color: var(--mat-sys-error);
+  }
+}
+
+@mixin input-filled {
+  background: var(--mat-sys-surface-container-highest);
+  border: none;
+  border-bottom: 1px solid var(--mat-sys-on-surface-variant);
+  border-radius: var(--mat-sys-corner-extra-small) var(--mat-sys-corner-extra-small) 0 0;
+
+  &:hover:not(:focus):not(:disabled) {
+    background: color-mix(in srgb, var(--mat-sys-on-surface) 8%, var(--mat-sys-surface-container-highest));
+  }
+
+  &:focus {
+    border-bottom-width: 2px;
+    border-bottom-color: var(--mat-sys-primary);
+  }
+}

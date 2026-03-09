@@ -1,0 +1,35 @@
+// Interactivity utility classes
+
+.cursor-pointer { cursor: pointer }
+.cursor-default { cursor: default }
+.cursor-not-allowed { cursor: not-allowed }
+.cursor-wait { cursor: wait }
+.cursor-text { cursor: text }
+.cursor-move { cursor: move }
+.cursor-grab { cursor: grab }
+.cursor-grabbing { cursor: grabbing }
+
+.pointer-events-none { pointer-events: none }
+.pointer-events-auto { pointer-events: auto }
+
+.select-none { user-select: none }
+.select-text { user-select: text }
+.select-all { user-select: all }
+.select-auto { user-select: auto }
+
+.resize-none { resize: none }
+.resize { resize: both }
+.resize-x { resize: horizontal }
+.resize-y { resize: vertical }
+
+.outline-none { outline: 2px solid transparent; outline-offset: 2px }
+.outline { outline-style: solid }
+.outline-dashed { outline-style: dashed }
+.outline-dotted { outline-style: dotted }
+.outline-offset-2 { outline-offset: 2px }
+.outline-offset-4 { outline-offset: 4px }
+
+.touch-none { touch-action: none }
+.touch-manipulation { touch-action: manipulation }
+.scroll-smooth { scroll-behavior: smooth }
+.appearance-none { appearance: none }

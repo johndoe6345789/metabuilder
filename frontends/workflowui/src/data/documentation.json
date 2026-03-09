@@ -1,0 +1,846 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": 1705984000000,
+  "sections": [
+    {
+      "id": "getting-started-section",
+      "title": "Getting Started",
+      "description": "Learn the basics of WorkflowUI",
+      "category": "getting-started",
+      "pages": ["doc-welcome", "doc-workspace-basics", "doc-first-workflow"],
+      "icon": "🚀",
+      "order": 1
+    },
+    {
+      "id": "canvas-section",
+      "title": "Canvas Guide",
+      "description": "Master the infinite canvas and workflow arrangement",
+      "category": "canvas",
+      "pages": ["doc-canvas-intro", "doc-drag-drop", "doc-zoom-pan", "doc-canvas-shortcuts"],
+      "icon": "🎨",
+      "order": 2
+    },
+    {
+      "id": "workflows-section",
+      "title": "Workflows",
+      "description": "Create and manage workflows",
+      "category": "workflows",
+      "pages": ["doc-workflow-basics", "doc-workflow-nodes", "doc-workflow-execution"],
+      "icon": "⚙️",
+      "order": 3
+    },
+    {
+      "id": "settings-section",
+      "title": "Settings",
+      "description": "Customize your workspace and preferences",
+      "category": "settings",
+      "pages": ["doc-workspace-settings", "doc-canvas-settings", "doc-notifications"],
+      "icon": "⚙️",
+      "order": 4
+    },
+    {
+      "id": "shortcuts-section",
+      "title": "Keyboard Shortcuts",
+      "description": "Speed up your workflow with keyboard shortcuts",
+      "category": "keyboard-shortcuts",
+      "pages": ["doc-canvas-shortcuts", "doc-editor-shortcuts"],
+      "icon": "⌨️",
+      "order": 5
+    },
+    {
+      "id": "help-section",
+      "title": "Help & Support",
+      "description": "Troubleshooting and frequently asked questions",
+      "category": "troubleshooting",
+      "pages": ["doc-faq", "doc-troubleshooting"],
+      "icon": "❓",
+      "order": 6
+    }
+  ],
+  "pages": {
+    "doc-welcome": {
+      "id": "doc-welcome",
+      "title": "Welcome to WorkflowUI",
+      "category": "getting-started",
+      "description": "An introduction to WorkflowUI and its core concepts",
+      "difficulty": "beginner",
+      "estimatedReadTime": 3,
+      "content": [
+        {
+          "type": "heading",
+          "content": "Welcome to WorkflowUI",
+          "level": 1
+        },
+        {
+          "type": "text",
+          "content": "WorkflowUI is a powerful, visual workflow editor that lets you create, organize, and execute complex workflows with an intuitive infinite canvas interface, similar to Miro or FigJam."
+        },
+        {
+          "type": "heading",
+          "content": "Core Concepts",
+          "level": 2
+        },
+        {
+          "type": "list",
+          "items": [
+            "Workspaces: Top-level containers for organizing your projects",
+            "Projects: Group related workflows together on a shared canvas",
+            "Workflows: Individual workflow definitions with nodes and connections",
+            "Canvas: Infinite space for arranging workflow cards spatially",
+            "Nodes: Building blocks within workflows that perform operations"
+          ]
+        },
+        {
+          "type": "callout",
+          "content": "New to WorkflowUI? Start with our Getting Started guide to set up your first workspace.",
+          "variant": "info",
+          "icon": "💡"
+        }
+      ],
+      "keywords": ["introduction", "overview", "concepts"],
+      "relatedPages": ["doc-workspace-basics", "doc-canvas-intro"]
+    },
+    "doc-workspace-basics": {
+      "id": "doc-workspace-basics",
+      "title": "Workspace Basics",
+      "category": "getting-started",
+      "description": "Learn how to create and manage workspaces",
+      "difficulty": "beginner",
+      "estimatedReadTime": 5,
+      "content": [
+        {
+          "type": "heading",
+          "content": "Workspace Basics",
+          "level": 1
+        },
+        {
+          "type": "text",
+          "content": "A workspace is the top-level container in WorkflowUI. Each workspace can contain multiple projects, each with its own set of workflows arranged on an infinite canvas."
+        },
+        {
+          "type": "heading",
+          "content": "Creating a Workspace",
+          "level": 2
+        },
+        {
+          "type": "step",
+          "content": "Click on the workspace selector in the header (top-left corner)",
+          "icon": "1️⃣"
+        },
+        {
+          "type": "step",
+          "content": "Select 'Create New Workspace' from the dropdown menu",
+          "icon": "2️⃣"
+        },
+        {
+          "type": "step",
+          "content": "Enter a name and optional description",
+          "icon": "3️⃣"
+        },
+        {
+          "type": "step",
+          "content": "Click 'Create' to add your workspace",
+          "icon": "4️⃣"
+        },
+        {
+          "type": "callout",
+          "content": "Choose descriptive names for your workspaces (e.g., 'Q1 Projects', 'Client Work', 'Personal')",
+          "variant": "info",
+          "icon": "💡"
+        }
+      ],
+      "keywords": ["workspace", "create", "organize"],
+      "relatedPages": ["doc-welcome", "doc-canvas-intro"]
+    },
+    "doc-first-workflow": {
+      "id": "doc-first-workflow",
+      "title": "Create Your First Workflow",
+      "category": "getting-started",
+      "description": "Step-by-step guide to creating your first workflow",
+      "difficulty": "beginner",
+      "estimatedReadTime": 8,
+      "content": [
+        {
+          "type": "heading",
+          "content": "Create Your First Workflow",
+          "level": 1
+        },
+        {
+          "type": "step",
+          "content": "Navigate to a project by selecting it from the sidebar",
+          "icon": "1️⃣"
+        },
+        {
+          "type": "step",
+          "content": "Click the '+' button in the Projects section to create a new project if needed",
+          "icon": "2️⃣"
+        },
+        {
+          "type": "step",
+          "content": "Click the '+' button on the canvas to add a new workflow",
+          "icon": "3️⃣"
+        },
+        {
+          "type": "step",
+          "content": "Give your workflow a name and optional description",
+          "icon": "4️⃣"
+        },
+        {
+          "type": "step",
+          "content": "Click on the workflow card to open the editor",
+          "icon": "5️⃣"
+        },
+        {
+          "type": "callout",
+          "content": "Pro tip: Use meaningful names and descriptions to help you remember what each workflow does.",
+          "variant": "success",
+          "icon": "⭐"
+        }
+      ],
+      "keywords": ["workflow", "create", "beginner", "first"],
+      "relatedPages": ["doc-workflow-basics", "doc-workflow-nodes"]
+    },
+    "doc-canvas-intro": {
+      "id": "doc-canvas-intro",
+      "title": "Understanding the Canvas",
+      "category": "canvas",
+      "description": "Learn how to navigate and use the infinite canvas",
+      "difficulty": "beginner",
+      "estimatedReadTime": 5,
+      "content": [
+        {
+          "type": "heading",
+          "content": "The Infinite Canvas",
+          "level": 1
+        },
+        {
+          "type": "text",
+          "content": "The canvas is an infinite workspace where you can arrange workflow cards. Unlike traditional list views, the canvas lets you organize workflows spatially, creating visual relationships and workflows."
+        },
+        {
+          "type": "heading",
+          "content": "Canvas Features",
+          "level": 2
+        },
+        {
+          "type": "list",
+          "items": [
+            "Infinite space: Pan in any direction without limits",
+            "Zoom: Use scroll wheel or zoom controls to focus on specific areas",
+            "Drag & drop: Move workflow cards to organize them spatially",
+            "Grid: Optional grid overlay to help with alignment",
+            "Snap to grid: Automatic alignment for precise arrangement"
+          ]
+        },
+        {
+          "type": "callout",
+          "content": "Use the zoom controls (bottom-right) or your mouse scroll wheel to zoom in and out.",
+          "variant": "info",
+          "icon": "💡"
+        }
+      ],
+      "keywords": ["canvas", "infinite", "navigate", "zoom"],
+      "relatedPages": ["doc-zoom-pan", "doc-drag-drop", "doc-canvas-shortcuts"]
+    },
+    "doc-drag-drop": {
+      "id": "doc-drag-drop",
+      "title": "Dragging & Resizing Workflow Cards",
+      "category": "canvas",
+      "description": "Learn how to drag, resize, and arrange workflow cards on the canvas",
+      "difficulty": "intermediate",
+      "estimatedReadTime": 4,
+      "content": [
+        {
+          "type": "heading",
+          "content": "Dragging & Resizing",
+          "level": 1
+        },
+        {
+          "type": "heading",
+          "content": "Moving Workflow Cards",
+          "level": 2
+        },
+        {
+          "type": "text",
+          "content": "Click and drag any workflow card to move it to a new position on the canvas. Cards will snap to the grid if grid snapping is enabled in settings."
+        },
+        {
+          "type": "heading",
+          "content": "Resizing Cards",
+          "level": 2
+        },
+        {
+          "type": "text",
+          "content": "Hover over the edge of a workflow card to reveal resize handles. Drag any handle to resize the card."
+        },
+        {
+          "type": "heading",
+          "content": "Multi-Select",
+          "level": 2
+        },
+        {
+          "type": "list",
+          "items": [
+            "Hold Shift and click cards to add/remove from selection",
+            "Drag to create a selection box around multiple cards",
+            "Move all selected cards together by dragging any one of them"
+          ]
+        },
+        {
+          "type": "callout",
+          "content": "You can move multiple selected cards at once for quick reorganization.",
+          "variant": "success",
+          "icon": "⭐"
+        }
+      ],
+      "keywords": ["drag", "drop", "resize", "move", "canvas"],
+      "relatedPages": ["doc-canvas-intro", "doc-canvas-shortcuts"]
+    },
+    "doc-zoom-pan": {
+      "id": "doc-zoom-pan",
+      "title": "Zoom & Pan Controls",
+      "category": "canvas",
+      "description": "Master zooming and panning the canvas",
+      "difficulty": "beginner",
+      "estimatedReadTime": 3,
+      "content": [
+        {
+          "type": "heading",
+          "content": "Zoom & Pan",
+          "level": 1
+        },
+        {
+          "type": "heading",
+          "content": "Zooming",
+          "level": 2
+        },
+        {
+          "type": "list",
+          "items": [
+            "Scroll wheel: Zoom in/out at your current cursor position",
+            "Zoom buttons: Use + and - buttons in the zoom toolbar (bottom-right)",
+            "Reset zoom: Click the reset button to return to 100%",
+            "Zoom range: 10% to 300%"
+          ]
+        },
+        {
+          "type": "heading",
+          "content": "Panning",
+          "level": 2
+        },
+        {
+          "type": "list",
+          "items": [
+            "Space + drag: Hold space and drag to pan the canvas",
+            "Middle mouse button: Click middle mouse button and drag to pan",
+            "Arrow keys: Use arrow keys to pan in cardinal directions"
+          ]
+        }
+      ],
+      "keywords": ["zoom", "pan", "navigate", "scroll"],
+      "relatedPages": ["doc-canvas-intro", "doc-canvas-shortcuts"]
+    },
+    "doc-canvas-shortcuts": {
+      "id": "doc-canvas-shortcuts",
+      "title": "Canvas Keyboard Shortcuts",
+      "category": "keyboard-shortcuts",
+      "description": "Quick reference for canvas keyboard shortcuts",
+      "difficulty": "intermediate",
+      "estimatedReadTime": 3,
+      "content": [
+        {
+          "type": "heading",
+          "content": "Canvas Shortcuts",
+          "level": 1
+        },
+        {
+          "type": "table",
+          "columns": ["Shortcut", "Action"],
+          "rows": [
+            ["Space + Drag", "Pan canvas"],
+            ["Scroll wheel", "Zoom in/out"],
+            ["Ctrl/Cmd + 0", "Reset zoom to 100%"],
+            ["Arrow keys", "Pan in four directions"],
+            ["Shift + Click", "Multi-select cards"],
+            ["Ctrl/Cmd + A", "Select all cards"],
+            ["Delete", "Delete selected cards"],
+            ["Ctrl/Cmd + D", "Duplicate selected cards"],
+            ["Ctrl/Cmd + F", "Search workflows"]
+          ]
+        },
+        {
+          "type": "callout",
+          "content": "Use Mac Cmd instead of Ctrl on macOS. Shortcuts may vary by system.",
+          "variant": "info",
+          "icon": "💻"
+        }
+      ],
+      "keywords": ["keyboard", "shortcuts", "canvas", "hotkeys"],
+      "relatedPages": ["doc-canvas-intro", "doc-zoom-pan"]
+    },
+    "doc-workflow-basics": {
+      "id": "doc-workflow-basics",
+      "title": "Workflow Basics",
+      "category": "workflows",
+      "description": "Learn the fundamentals of creating workflows",
+      "difficulty": "intermediate",
+      "estimatedReadTime": 6,
+      "content": [
+        {
+          "type": "heading",
+          "content": "Workflow Basics",
+          "level": 1
+        },
+        {
+          "type": "text",
+          "content": "Workflows are automated sequences of operations. Each workflow consists of nodes connected together, with data flowing from one node to the next."
+        },
+        {
+          "type": "heading",
+          "content": "Workflow Structure",
+          "level": 2
+        },
+        {
+          "type": "list",
+          "items": [
+            "Nodes: Individual operations or data transformations",
+            "Connections: Links between nodes showing data flow",
+            "Inputs: Entry points for data into the workflow",
+            "Outputs: Results produced by the workflow"
+          ]
+        },
+        {
+          "type": "heading",
+          "content": "Creating a Workflow",
+          "level": 2
+        },
+        {
+          "type": "step",
+          "content": "Open a project from the sidebar",
+          "icon": "1️⃣"
+        },
+        {
+          "type": "step",
+          "content": "Click the '+' button to add a new workflow card",
+          "icon": "2️⃣"
+        },
+        {
+          "type": "step",
+          "content": "Click the card to open the workflow editor",
+          "icon": "3️⃣"
+        },
+        {
+          "type": "step",
+          "content": "Add nodes from the node palette on the left",
+          "icon": "4️⃣"
+        }
+      ],
+      "keywords": ["workflow", "basics", "nodes", "create"],
+      "relatedPages": ["doc-workflow-nodes", "doc-workflow-execution"]
+    },
+    "doc-workflow-nodes": {
+      "id": "doc-workflow-nodes",
+      "title": "Working with Nodes",
+      "category": "workflows",
+      "description": "Learn how to add, configure, and connect nodes",
+      "difficulty": "intermediate",
+      "estimatedReadTime": 8,
+      "content": [
+        {
+          "type": "heading",
+          "content": "Nodes",
+          "level": 1
+        },
+        {
+          "type": "text",
+          "content": "Nodes are the building blocks of workflows. Each node performs a specific operation and can be connected to other nodes to create data pipelines."
+        },
+        {
+          "type": "heading",
+          "content": "Adding Nodes",
+          "level": 2
+        },
+        {
+          "type": "step",
+          "content": "Open the workflow editor",
+          "icon": "1️⃣"
+        },
+        {
+          "type": "step",
+          "content": "Browse the node palette on the left side",
+          "icon": "2️⃣"
+        },
+        {
+          "type": "step",
+          "content": "Drag a node onto the canvas to add it",
+          "icon": "3️⃣"
+        },
+        {
+          "type": "heading",
+          "content": "Node Types",
+          "level": 2
+        },
+        {
+          "type": "list",
+          "items": [
+            "Operation: Mathematical or logical operations",
+            "HTTP: Make API calls to external services",
+            "Database: Query and manipulate data",
+            "Transform: Convert data between formats",
+            "Control: Flow control (if/then/loop)",
+            "Notification: Send alerts or messages"
+          ]
+        }
+      ],
+      "keywords": ["nodes", "workflow", "operations", "add"],
+      "relatedPages": ["doc-workflow-basics", "doc-workflow-execution"]
+    },
+    "doc-workflow-execution": {
+      "id": "doc-workflow-execution",
+      "title": "Executing Workflows",
+      "category": "workflows",
+      "description": "Learn how to run and monitor workflow execution",
+      "difficulty": "intermediate",
+      "estimatedReadTime": 5,
+      "content": [
+        {
+          "type": "heading",
+          "content": "Workflow Execution",
+          "level": 1
+        },
+        {
+          "type": "heading",
+          "content": "Running a Workflow",
+          "level": 2
+        },
+        {
+          "type": "step",
+          "content": "Open the workflow in the editor",
+          "icon": "1️⃣"
+        },
+        {
+          "type": "step",
+          "content": "Click the 'Run' or 'Execute' button in the toolbar",
+          "icon": "2️⃣"
+        },
+        {
+          "type": "step",
+          "content": "Provide any required input values",
+          "icon": "3️⃣"
+        },
+        {
+          "type": "step",
+          "content": "Monitor progress in the execution panel",
+          "icon": "4️⃣"
+        },
+        {
+          "type": "heading",
+          "content": "Understanding Results",
+          "level": 2
+        },
+        {
+          "type": "list",
+          "items": [
+            "Success: Workflow completed with output",
+            "Error: Workflow failed at a specific node",
+            "Timeout: Workflow took too long to complete",
+            "Cancelled: Workflow was stopped by user"
+          ]
+        },
+        {
+          "type": "callout",
+          "content": "Check the execution log for detailed information about each node execution.",
+          "variant": "info",
+          "icon": "📋"
+        }
+      ],
+      "keywords": ["execution", "run", "workflow", "monitor"],
+      "relatedPages": ["doc-workflow-basics", "doc-workflow-nodes"]
+    },
+    "doc-workspace-settings": {
+      "id": "doc-workspace-settings",
+      "title": "Workspace Settings",
+      "category": "settings",
+      "description": "Configure workspace preferences",
+      "difficulty": "beginner",
+      "estimatedReadTime": 4,
+      "content": [
+        {
+          "type": "heading",
+          "content": "Workspace Settings",
+          "level": 1
+        },
+        {
+          "type": "heading",
+          "content": "Accessing Settings",
+          "level": 2
+        },
+        {
+          "type": "step",
+          "content": "Click the settings icon in the header (top-right)",
+          "icon": "⚙️"
+        },
+        {
+          "type": "step",
+          "content": "Navigate to the Settings tab",
+          "icon": "📋"
+        },
+        {
+          "type": "heading",
+          "content": "Available Settings",
+          "level": 2
+        },
+        {
+          "type": "list",
+          "items": [
+            "Workspace name and description",
+            "Default workspace for new sessions",
+            "Workspace color and icon",
+            "Member permissions and roles"
+          ]
+        }
+      ],
+      "keywords": ["settings", "workspace", "preferences"],
+      "relatedPages": ["doc-canvas-settings", "doc-notifications"]
+    },
+    "doc-canvas-settings": {
+      "id": "doc-canvas-settings",
+      "title": "Canvas Settings",
+      "category": "settings",
+      "description": "Configure canvas appearance and behavior",
+      "difficulty": "beginner",
+      "estimatedReadTime": 3,
+      "content": [
+        {
+          "type": "heading",
+          "content": "Canvas Settings",
+          "level": 1
+        },
+        {
+          "type": "heading",
+          "content": "Available Options",
+          "level": 2
+        },
+        {
+          "type": "list",
+          "items": [
+            "Grid visibility: Show or hide the canvas grid",
+            "Grid snapping: Automatically snap cards to grid",
+            "Grid size: Adjust grid cell size (10-50px)",
+            "Grid style: Choose dots or lines",
+            "Zoom level: Set default zoom percentage",
+            "Pan behavior: Choose pan trigger (space/middle-click)",
+            "Card animations: Enable/disable movement animations"
+          ]
+        },
+        {
+          "type": "callout",
+          "content": "Disable animations if you experience performance issues with large canvases.",
+          "variant": "info",
+          "icon": "⚡"
+        }
+      ],
+      "keywords": ["canvas", "settings", "grid", "zoom"],
+      "relatedPages": ["doc-workspace-settings", "doc-canvas-intro"]
+    },
+    "doc-notifications": {
+      "id": "doc-notifications",
+      "title": "Notification Settings",
+      "category": "settings",
+      "description": "Configure notification preferences",
+      "difficulty": "beginner",
+      "estimatedReadTime": 3,
+      "content": [
+        {
+          "type": "heading",
+          "content": "Notification Settings",
+          "level": 1
+        },
+        {
+          "type": "heading",
+          "content": "Notification Types",
+          "level": 2
+        },
+        {
+          "type": "list",
+          "items": [
+            "Workflow execution: Notify when workflows complete",
+            "Workflow errors: Alert on workflow failures",
+            "Project updates: Notify of project changes",
+            "Collaboration: Alerts when others edit your projects",
+            "System: Important system and security notifications"
+          ]
+        },
+        {
+          "type": "heading",
+          "content": "Notification Channels",
+          "level": 2
+        },
+        {
+          "type": "list",
+          "items": [
+            "In-app: Notifications displayed in the application",
+            "Email: Notifications sent via email",
+            "Desktop: Browser desktop notifications",
+            "Sounds: Audio alerts for important events"
+          ]
+        }
+      ],
+      "keywords": ["notifications", "settings", "alerts"],
+      "relatedPages": ["doc-workspace-settings"]
+    },
+    "doc-editor-shortcuts": {
+      "id": "doc-editor-shortcuts",
+      "title": "Workflow Editor Shortcuts",
+      "category": "keyboard-shortcuts",
+      "description": "Keyboard shortcuts for the workflow editor",
+      "difficulty": "intermediate",
+      "estimatedReadTime": 3,
+      "content": [
+        {
+          "type": "heading",
+          "content": "Editor Shortcuts",
+          "level": 1
+        },
+        {
+          "type": "table",
+          "columns": ["Shortcut", "Action"],
+          "rows": [
+            ["Ctrl/Cmd + Z", "Undo"],
+            ["Ctrl/Cmd + Shift + Z", "Redo"],
+            ["Ctrl/Cmd + C", "Copy selected nodes"],
+            ["Ctrl/Cmd + V", "Paste nodes"],
+            ["Ctrl/Cmd + X", "Cut selected nodes"],
+            ["Delete", "Delete selected nodes"],
+            ["Enter", "Execute workflow"],
+            ["Shift + Click", "Multi-select nodes"],
+            ["Ctrl/Cmd + A", "Select all nodes"],
+            ["Space + Drag", "Pan editor canvas"],
+            ["Scroll wheel", "Zoom in/out"]
+          ]
+        }
+      ],
+      "keywords": ["editor", "shortcuts", "keyboard", "workflow"],
+      "relatedPages": ["doc-canvas-shortcuts", "doc-workflow-basics"]
+    },
+    "doc-faq": {
+      "id": "doc-faq",
+      "title": "Frequently Asked Questions",
+      "category": "faq",
+      "description": "Common questions and answers",
+      "difficulty": "beginner",
+      "estimatedReadTime": 5,
+      "content": [
+        {
+          "type": "heading",
+          "content": "FAQ",
+          "level": 1
+        },
+        {
+          "type": "heading",
+          "content": "How do I organize my workflows?",
+          "level": 3
+        },
+        {
+          "type": "text",
+          "content": "Use workspaces for high-level organization (e.g., by project or team), projects within workspaces for grouping related workflows, and arrange cards spatially on the canvas to show relationships."
+        },
+        {
+          "type": "heading",
+          "content": "Can I export my workflows?",
+          "level": 3
+        },
+        {
+          "type": "text",
+          "content": "Yes! Workflows are automatically saved and can be exported as JSON for version control or sharing with team members."
+        },
+        {
+          "type": "heading",
+          "content": "What's the maximum number of nodes in a workflow?",
+          "level": 3
+        },
+        {
+          "type": "text",
+          "content": "There's no hard limit, but performance may degrade with very large workflows (1000+). Consider breaking large workflows into smaller, reusable sub-workflows."
+        },
+        {
+          "type": "heading",
+          "content": "Can I collaborate with team members?",
+          "level": 3
+        },
+        {
+          "type": "text",
+          "content": "Yes! Share workspaces and projects with team members, set permissions, and see real-time collaboration features."
+        }
+      ],
+      "keywords": ["faq", "questions", "answers"],
+      "relatedPages": ["doc-troubleshooting"]
+    },
+    "doc-troubleshooting": {
+      "id": "doc-troubleshooting",
+      "title": "Troubleshooting",
+      "category": "troubleshooting",
+      "description": "Solutions to common issues",
+      "difficulty": "intermediate",
+      "estimatedReadTime": 5,
+      "content": [
+        {
+          "type": "heading",
+          "content": "Troubleshooting",
+          "level": 1
+        },
+        {
+          "type": "heading",
+          "content": "Workflow won't execute",
+          "level": 3
+        },
+        {
+          "type": "list",
+          "items": [
+            "Check that all required inputs are provided",
+            "Verify node connections are valid",
+            "Check the browser console for error messages",
+            "Try refreshing the page and running again"
+          ]
+        },
+        {
+          "type": "heading",
+          "content": "Canvas is slow or laggy",
+          "level": 3
+        },
+        {
+          "type": "list",
+          "items": [
+            "Disable card animations in canvas settings",
+            "Try zooming out to reduce render load",
+            "Close other browser tabs/applications",
+            "Try using a different browser"
+          ]
+        },
+        {
+          "type": "heading",
+          "content": "Cannot save workflow",
+          "level": 3
+        },
+        {
+          "type": "list",
+          "items": [
+            "Check your internet connection",
+            "Verify you have permission to edit the workflow",
+            "Try refreshing the page",
+            "Check for browser console errors"
+          ]
+        },
+        {
+          "type": "callout",
+          "content": "If issues persist, contact support or check the documentation for more help.",
+          "variant": "warning",
+          "icon": "⚠️"
+        }
+      ],
+      "keywords": ["troubleshooting", "help", "issues", "problems"],
+      "relatedPages": ["doc-faq"]
+    }
+  },
+  "searchIndex": []
+}

@@ -1,0 +1,17 @@
+# SparkOS System Profile
+
+export PATH=/bin:/sbin:/usr/bin:/usr/sbin
+export PS1='SparkOS:\w\$ '
+export TERM=linux
+
+# Set HOME based on user
+if [ "$(id -u)" = "0" ]; then
+    export HOME=/root
+else
+    export HOME=/home/$(whoami)
+fi
+
+# Welcome message
+echo "Welcome to SparkOS!"
+echo "Type 'help' for available commands"
+echo ""

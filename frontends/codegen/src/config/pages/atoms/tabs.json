@@ -1,0 +1,7 @@
+{
+  "type": "MetabuilderNavTabs",
+  "props": {
+    "onChange": "> void",
+    "tab": "true]:border-accent"
+  }
+}

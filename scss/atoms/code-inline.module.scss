@@ -1,0 +1,105 @@
+// Inline Code Atoms - Material Design 3 (CSS Module)
+// ===================================================
+// Flat selectors for inline code styling using M3 tokens
+
+// Base inline code
+.codeInline {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  background: var(--mat-sys-surface-container-high);
+  color: var(--mat-sys-on-surface);
+  padding: 2px 6px;
+  border-radius: var(--mat-sys-corner-extra-small);
+  white-space: nowrap;
+}
+
+// Outlined variant
+.codeInlineOutlined {
+  composes: codeInline;
+  background: transparent;
+  border: 1px solid var(--mat-sys-outline-variant);
+}
+
+// Color variants (for semantic highlighting)
+.codeInlineKeyword {
+  composes: codeInline;
+  color: var(--mat-sys-primary);
+}
+
+.codeInlineString {
+  composes: codeInline;
+  color: var(--mat-sys-tertiary);
+}
+
+.codeInlineNumber {
+  composes: codeInline;
+  color: var(--mat-sys-secondary);
+}
+
+.codeInlineFunction {
+  composes: codeInline;
+  color: var(--color-warning);
+}
+
+.codeInlineError {
+  composes: codeInline;
+  color: var(--mat-sys-error);
+  background: var(--color-error-container);
+}
+
+.codeInlineSuccess {
+  composes: codeInline;
+  color: var(--color-success);
+  background: var(--color-success-container);
+}
+
+.codeInlineWarning {
+  composes: codeInline;
+  color: var(--color-warning);
+  background: var(--color-warning-container);
+}
+
+.codeInlineInfo {
+  composes: codeInline;
+  color: var(--color-info);
+  background: var(--color-info-container);
+}
+
+// Selectable variant (clickable)
+.codeInlineSelectable {
+  composes: codeInline;
+  cursor: pointer;
+  transition: background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+}
+
+.codeInlineSelectable:hover {
+  background: var(--mat-sys-surface-container-highest);
+}
+
+// With copy button
+.codeInlineWrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.codeInlineCopy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--mat-sys-on-surface-variant);
+  cursor: pointer;
+  border-radius: var(--mat-sys-corner-extra-small);
+  opacity: 0.6;
+  transition: opacity var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+}
+
+.codeInlineCopy:hover {
+  opacity: 1;
+  background: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
+}

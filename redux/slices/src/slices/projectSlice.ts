@@ -83,6 +83,9 @@ export const {
   clearProject
 } = projectSlice.actions;
 
+// Re-export for convenience
+export type { ProjectState };
+
 // Selectors
 export const selectProjects = (state: { project: ProjectState }) =>
   state.project.projects;

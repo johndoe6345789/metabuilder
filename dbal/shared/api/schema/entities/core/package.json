@@ -1,0 +1,76 @@
+{
+  "entity": "InstalledPackage",
+  "version": "1.0",
+  "description": "Installed package metadata",
+  "fields": {
+    "packageId": {
+      "type": "string",
+      "primary": true,
+      "description": "Package identifier"
+    },
+    "tenantId": {
+      "type": "string",
+      "optional": true,
+      "nullable": true
+    },
+    "installedAt": {
+      "type": "bigint",
+      "optional": true,
+      "nullable": true
+    },
+    "version": {
+      "type": "string",
+      "required": true,
+      "description": "Semantic version"
+    },
+    "enabled": {
+      "type": "boolean",
+      "required": true
+    },
+    "config": {
+      "type": "string",
+      "optional": true,
+      "nullable": true,
+      "description": "JSON package configuration"
+    }
+  },
+  "indexes": [
+    {
+      "fields": [
+        "tenantId"
+      ]
+    }
+  ],
+  "relations": {
+    "pages": {
+      "type": "has-many",
+      "entity": "UIPage",
+      "foreign_key": "packageId",
+      "cascade_delete": true,
+      "description": "UI pages belonging to this package"
+    }
+  },
+  "acl": {
+    "create": {
+      "role": [
+        "supergod"
+      ]
+    },
+    "read": {
+      "role": [
+        "god",
+        "supergod"
+      ]
+    },
+    "update": {
+      "role": [
+        "supergod"
+      ]
+    },
+    "delete": {
+      "role": [
+        "supergod"
+      ]
+    }
+  }
+}

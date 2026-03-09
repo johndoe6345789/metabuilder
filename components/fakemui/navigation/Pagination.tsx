@@ -25,6 +25,8 @@ export interface PaginationProps extends Omit<React.HTMLAttributes<HTMLElement>,
   renderItem?: (item: PaginationRenderItemParams) => React.ReactNode
   getItemAriaLabel?: (type: string, page: number, selected: boolean) => string
   sx?: Record<string, unknown>  // MUI sx prop for styling compatibility
+  /** Test ID for automated testing */
+  testId?: string
 }
 
 export const Pagination: React.FC<PaginationProps> = ({
@@ -46,6 +48,7 @@ export const Pagination: React.FC<PaginationProps> = ({
   getItemAriaLabel,
   className = '',
   sx,
+  testId,
   ...props
 }) => {
   const generateItems = (): PaginationRenderItemParams[] => {
@@ -114,7 +117,9 @@ export const Pagination: React.FC<PaginationProps> = ({
   return (
     <nav
       className={`pagination pagination--${size} pagination--${color} pagination--${variant} pagination--${shape} ${className}`}
-      aria-label="pagination navigation"
+      role="navigation"
+      aria-label="Pagination"
+      data-testid={testId}
       {...props}
     >
       {items.map((item, index) => {

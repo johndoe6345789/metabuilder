@@ -1,0 +1,134 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "role_editor",
+  "description": "Role editor access permissions",
+  "permissions": [
+    {
+      "id": "role.view",
+      "name": "View Roles",
+      "description": "View roles and their permissions",
+      "resource": "role",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 3
+    },
+    {
+      "id": "role.create",
+      "name": "Create Roles",
+      "description": "Create new roles",
+      "resource": "role",
+      "action": "create",
+      "scope": "global",
+      "minLevel": 4
+    },
+    {
+      "id": "role.edit",
+      "name": "Edit Roles",
+      "description": "Edit existing roles and their permissions",
+      "resource": "role",
+      "action": "update",
+      "scope": "global",
+      "minLevel": 4
+    },
+    {
+      "id": "role.assign",
+      "name": "Assign Roles",
+      "description": "Assign roles to users",
+      "resource": "role",
+      "action": "manage",
+      "scope": "global",
+      "minLevel": 4
+    },
+    {
+      "id": "role.delete",
+      "name": "Delete Roles",
+      "description": "Delete roles",
+      "resource": "role",
+      "action": "delete",
+      "scope": "global",
+      "minLevel": 5
+    }
+  ],
+  "resources": [
+    {
+      "id": "role",
+      "name": "Role",
+      "type": "entity",
+      "description": "User role resources",
+      "actions": ["read", "create", "update", "manage", "delete"]
+    }
+  ],
+  "roleDefinitions": {
+    "public": {
+      "label": "Public",
+      "level": 0,
+      "blurb": "Read-only access for guest viewers.",
+      "highlights": [
+        "View public resources",
+        "No authentication needed"
+      ],
+      "badge": "Visibility",
+      "variant": "secondary"
+    },
+    "user": {
+      "label": "User",
+      "level": 1,
+      "blurb": "Standard workspace member with personal settings.",
+      "highlights": [
+        "Create content",
+        "Access shared libraries"
+      ],
+      "badge": "Person",
+      "variant": "secondary"
+    },
+    "moderator": {
+      "label": "Moderator",
+      "level": 2,
+      "blurb": "Content moderator with collaboration tools.",
+      "highlights": [
+        "Manage comments",
+        "Resolve reports",
+        "Escalate to admins"
+      ],
+      "badge": "Shield",
+      "variant": "secondary"
+    },
+    "admin": {
+      "label": "Admin",
+      "level": 3,
+      "blurb": "Tenant-level administrator controls.",
+      "highlights": [
+        "Invite users",
+        "Configure pages",
+        "Reset credentials"
+      ],
+      "badge": "AdminPanelSettings",
+      "variant": "secondary"
+    },
+    "god": {
+      "label": "God",
+      "level": 4,
+      "blurb": "Power user with platform configuration access.",
+      "highlights": [
+        "Manage integrations",
+        "Run advanced scripts",
+        "Override safety flags"
+      ],
+      "badge": "Bolt",
+      "variant": "default"
+    },
+    "supergod": {
+      "label": "Supergod",
+      "level": 5,
+      "blurb": "Instance owner with full control.",
+      "highlights": [
+        "Edit system settings",
+        "Manage tenants",
+        "Bypass feature gates"
+      ],
+      "badge": "Star",
+      "variant": "default"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "entity": "page-config",
+  "packageId": "ui_login",
+  "description": "Page routes for ui_login",
+  "version": "1.0.0"
+}

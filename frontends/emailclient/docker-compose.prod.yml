@@ -1,0 +1,143 @@
+# Docker Compose Production Configuration
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
+version: '3.8'
+
+services:
+  # Production Redis with strict security
+  redis:
+    restart: always
+    environment:
+      # Generate strong password in production: openssl rand -base64 32
+      REDIS_PASSWORD: ${REDIS_PASSWORD_PROD:?Please set REDIS_PASSWORD_PROD environment variable}
+      REDIS_MAXMEMORY: ${REDIS_MAXMEMORY_PROD:-1gb}
+      REDIS_MAXMEMORY_POLICY: volatile-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD_PROD}", "--raw", "incr", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "10"
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 2gb
+        reservations:
+          cpus: '0.5'
+          memory: 1gb
+
+  # Production Email Service
+  email-service:
+    restart: always
+    environment:
+      FLASK_ENV: production
+      FLASK_DEBUG: '0'
+      LOG_LEVEL: INFO
+      REDIS_PASSWORD: ${REDIS_PASSWORD_PROD:?Please set REDIS_PASSWORD_PROD environment variable}
+      REDIS_URL: redis://:${REDIS_PASSWORD_PROD}@redis:6379/0
+      CELERY_BROKER_URL: redis://:${REDIS_PASSWORD_PROD}@redis:6379/0
+      CELERY_RESULT_BACKEND: redis://:${REDIS_PASSWORD_PROD}@redis:6379/0
+      # Disable sync task execution in production
+      CELERY_TASK_ALWAYS_EAGER: 'false'
+      # Production task limits
+      CELERY_TASK_TIME_LIMIT: 7200
+      CELERY_TASK_SOFT_TIME_LIMIT: 6000
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "10"
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2gb
+        reservations:
+          cpus: '1'
+          memory: 1gb
+
+  # Production Postfix
+  postfix:
+    restart: always
+    environment:
+      # Production SMTP settings
+      POSTFIX_message_size_limit: 52428800  # 50MB
+      POSTFIX_mailbox_size_limit: 1073741824  # 1GB per user
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "10"
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512mb
+        reservations:
+          cpus: '0.5'
+          memory: 256mb
+
+  # Production Dovecot
+  dovecot:
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "10"
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2gb
+        reservations:
+          cpus: '1'
+          memory: 1gb
+
+  # Production PostgreSQL
+  postgres:
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER_PROD:?Please set POSTGRES_USER_PROD environment variable}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD_PROD:?Please set POSTGRES_PASSWORD_PROD environment variable}
+      POSTGRES_DB: ${POSTGRES_DB_PROD:?Please set POSTGRES_DB_PROD environment variable}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "10"
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4gb
+        reservations:
+          cpus: '1'
+          memory: 2gb
+
+# Production volume configuration
+volumes:
+  redis-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /mnt/data/redis  # Use external mount for production
+  postgres-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /mnt/data/postgres  # Use external mount for production
+  dovecot-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /mnt/data/dovecot  # Use external mount for production

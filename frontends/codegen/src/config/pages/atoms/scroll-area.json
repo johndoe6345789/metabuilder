@@ -1,0 +1,6 @@
+{
+  "type": "MetabuilderWidgetScrollArea",
+  "props": {
+    "maxHeight": "== "
+  }
+}

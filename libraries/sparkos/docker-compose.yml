@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  sparkos:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: sparkos:local
+    container_name: sparkos-test
+    # The container will run the test script and exit
+    # Use 'docker-compose up' to test the build

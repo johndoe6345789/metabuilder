@@ -1,0 +1,275 @@
+{
+  "id": "extruder-gears",
+  "name": "Dual Drive Gear Assembly",
+  "partNumber": "BL-A1-EG001",
+  "material": "Hardened Steel",
+  "quantity": 1,
+  "weight": 12,
+  "weightUnit": "g",
+  "baseY": 0,
+  "description": "Dual-drive extruder gear assembly with hardened steel gears featuring precision-cut teeth for reliable filament grip. Includes primary drive gear and synchronized idler gear for consistent extrusion force on both sides of filament.",
+  "installation": {
+    "tools": [
+      "1.5mm hex key",
+      "Needle nose pliers",
+      "Tweezers"
+    ],
+    "hardware": [
+      "M3 set screw x2",
+      "Bearing 3x8x3mm x2",
+      "Idler arm spring"
+    ],
+    "torque": [
+      "Set screws: 0.3 Nm"
+    ],
+    "notes": [
+      "Align gear teeth for smooth filament feeding",
+      "Ensure set screw engages motor shaft flat",
+      "Clean gears of debris before installation",
+      "Check gear mesh clearance - should be minimal backlash"
+    ]
+  },
+  "geometry": [
+    {
+      "type": "circle",
+      "cx": 15,
+      "cy": 20,
+      "r": 8,
+      "fill": "#505050",
+      "stroke": "#404040",
+      "strokeWidth": 1
+    },
+    {
+      "type": "circle",
+      "cx": 15,
+      "cy": 20,
+      "r": 5,
+      "fill": "#606060",
+      "stroke": "#505050",
+      "strokeWidth": 1
+    },
+    {
+      "type": "circle",
+      "cx": 30,
+      "cy": 20,
+      "r": 8,
+      "fill": "#505050",
+      "stroke": "#404040",
+      "strokeWidth": 1
+    },
+    {
+      "type": "circle",
+      "cx": 30,
+      "cy": 20,
+      "r": 5,
+      "fill": "#606060",
+      "stroke": "#505050",
+      "strokeWidth": 1
+    },
+    {
+      "type": "rect",
+      "x": 20,
+      "y": 15,
+      "width": 5,
+      "height": 10,
+      "fill": "#707070"
+    }
+  ],
+  "geometry3d": [
+    {
+      "type": "cylinder",
+      "height": 8,
+      "r": 6,
+      "offsetX": -8,
+      "offsetY": 0,
+      "offsetZ": 0,
+      "fill": "#505050"
+    },
+    {
+      "type": "cylinder",
+      "height": 4,
+      "r": 7,
+      "offsetX": -8,
+      "offsetY": 0,
+      "offsetZ": 0,
+      "fill": "#606060"
+    },
+    {
+      "type": "cylinder",
+      "height": 3,
+      "r": 4,
+      "offsetX": -8,
+      "offsetY": -3,
+      "offsetZ": 0,
+      "fill": "#454545"
+    },
+    {
+      "type": "cylinder",
+      "height": 3,
+      "r": 4,
+      "offsetX": -8,
+      "offsetY": 5,
+      "offsetZ": 0,
+      "fill": "#454545"
+    },
+    {
+      "type": "cylinder",
+      "height": 14,
+      "r": 2.5,
+      "offsetX": -8,
+      "offsetY": 0,
+      "offsetZ": 0,
+      "fill": "#353535"
+    },
+    {
+      "type": "box",
+      "offsetX": -8,
+      "offsetY": 0,
+      "offsetZ": 3,
+      "fill": "#404040",
+      "width": 2,
+      "height": 8,
+      "depth": 3
+    },
+    {
+      "type": "cylinder",
+      "height": 8,
+      "r": 6,
+      "offsetX": 8,
+      "offsetY": 0,
+      "offsetZ": 0,
+      "fill": "#505050"
+    },
+    {
+      "type": "cylinder",
+      "height": 4,
+      "r": 7,
+      "offsetX": 8,
+      "offsetY": 0,
+      "offsetZ": 0,
+      "fill": "#606060"
+    },
+    {
+      "type": "cylinder",
+      "height": 3,
+      "r": 4,
+      "offsetX": 8,
+      "offsetY": -3,
+      "offsetZ": 0,
+      "fill": "#454545"
+    },
+    {
+      "type": "cylinder",
+      "height": 3,
+      "r": 4,
+      "offsetX": 8,
+      "offsetY": 5,
+      "offsetZ": 0,
+      "fill": "#454545"
+    },
+    {
+      "type": "cylinder",
+      "height": 2,
+      "r": 4,
+      "offsetX": 8,
+      "offsetY": -4,
+      "offsetZ": 0,
+      "fill": "#707070"
+    },
+    {
+      "type": "cylinder",
+      "height": 2,
+      "r": 4,
+      "offsetX": 8,
+      "offsetY": 6,
+      "offsetZ": 0,
+      "fill": "#707070"
+    },
+    {
+      "type": "cylinder",
+      "height": 16,
+      "r": 2,
+      "offsetX": 8,
+      "offsetY": 0,
+      "offsetZ": 0,
+      "fill": "#606060"
+    },
+    {
+      "type": "box",
+      "offsetX": 0,
+      "offsetY": 0,
+      "offsetZ": 0,
+      "fill": "#808080",
+      "width": 4,
+      "height": 3,
+      "depth": 4
+    },
+    {
+      "type": "cylinder",
+      "height": 6,
+      "r": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "offsetZ": 0,
+      "fill": "#909090"
+    },
+    {
+      "type": "box",
+      "offsetX": -8,
+      "offsetY": 2,
+      "offsetZ": 5,
+      "fill": "#303030",
+      "width": 3,
+      "height": 2,
+      "depth": 4
+    },
+    {
+      "type": "cylinder",
+      "height": 4,
+      "rotation": [
+        90,
+        0,
+        0
+      ],
+      "r": 1,
+      "offsetX": -8,
+      "offsetY": 2,
+      "offsetZ": 7,
+      "fill": "#252525"
+    },
+    {
+      "type": "box",
+      "offsetX": 12,
+      "offsetY": 0,
+      "offsetZ": 0,
+      "fill": "#404040",
+      "width": 6,
+      "height": 10,
+      "depth": 12
+    },
+    {
+      "type": "cylinder",
+      "height": 6,
+      "rotation": [
+        0,
+        0,
+        90
+      ],
+      "r": 1.5,
+      "offsetX": 15,
+      "offsetY": 0,
+      "offsetZ": 4,
+      "fill": "#505050"
+    },
+    {
+      "type": "box",
+      "offsetX": 16,
+      "offsetY": 0,
+      "offsetZ": -4,
+      "fill": "#606060",
+      "width": 2,
+      "height": 6,
+      "depth": 6
+    }
+  ]
+}

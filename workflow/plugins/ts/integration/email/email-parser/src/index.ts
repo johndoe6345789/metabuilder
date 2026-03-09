@@ -185,8 +185,8 @@ export class EmailParserExecutor implements INodeExecutor {
    */
   async execute(
     node: WorkflowNode,
-    context: WorkflowContext,
-    state: ExecutionState
+    _context: WorkflowContext,
+    _state: ExecutionState
   ): Promise<NodeResult> {
     const startTime = Date.now();
 
@@ -650,10 +650,11 @@ export class EmailParserExecutor implements INodeExecutor {
     const boundaryDelimiter = `--${boundary}`;
     const boundaryEnd = `--${boundary}--`;
 
-    let currentIndex = 0;
+    let currentPartCount = 0;
     let partIndex = body.indexOf(boundaryDelimiter);
 
-    while (partIndex !== -1) {
+    const maxParts = 1000;
+    while (partIndex !== -1 && currentPartCount < maxParts) {
       if (body.substring(partIndex, partIndex + boundaryEnd.length) === boundaryEnd) {
         break;
       }
@@ -686,6 +687,7 @@ export class EmailParserExecutor implements INodeExecutor {
       part.headers = headers;
 
       parts.push(part);
+      currentPartCount++;
 
       partIndex = nextBoundaryIndex;
     }
@@ -845,7 +847,7 @@ export class EmailParserExecutor implements INodeExecutor {
   private _decodeQuotedPrintable(content: string): string {
     return content
       .replace(/=\r?\n/g, '') // Remove soft line breaks
-      .replace(/=([0-9A-F]{2})/gi, (match, hex) => {
+      .replace(/=([0-9A-F]{2})/gi, (_match, hex) => {
         return String.fromCharCode(parseInt(hex, 16));
       });
   }

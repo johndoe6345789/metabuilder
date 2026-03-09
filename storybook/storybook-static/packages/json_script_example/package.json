@@ -1,0 +1,83 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "json_script_example",
+  "name": "JSON Script Example",
+  "version": "1.0.0",
+  "description": "Comprehensive example demonstrating the full JSON script specification",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "examples",
+  "icon": "static_content/icon.svg",
+  "minLevel": 0,
+  "primary": false,
+  "dependencies": {},
+  "devDependencies": {
+    "testing": "*"
+  },
+  "exports": {
+    "components": [
+      "ExpressionDemo",
+      "OperatorDemo",
+      "ResultDisplay"
+    ],
+    "scripts": [
+      "all_expressions",
+      "all_statements",
+      "all_operators",
+      "control_flow",
+      "data_structures"
+    ],
+    "types": [
+      "ArithmeticResult",
+      "ComparisonResult",
+      "LogicalResult",
+      "OperatorsDemoResult",
+      "ExpressionsDemoResult",
+      "StatementsDemoResult",
+      "DataStructuresResult",
+      "Classification",
+      "TestResult",
+      "ValidationResult"
+    ]
+  },
+  "tests": {
+    "parameterized": [
+      {
+        "logic": "tests/math.test.logic.json",
+        "parameters": "tests/math.test.parameters.json"
+      }
+    ]
+  },
+  "files": {
+    "directories": [
+      "components",
+      "permissions",
+      "static_content",
+      "storybook",
+      "styles",
+      "tests"
+    ],
+    "byType": {
+      "components": [
+        "components/ui.json"
+      ],
+      "tests": [
+        "tests/metadata.params.json",
+        "tests/metadata.test.json"
+      ],
+      "config": [
+        "package.json",
+        "storybook/stories.json"
+      ],
+      "permissions": [
+        "permissions/roles.json"
+      ],
+      "styles": [
+        "styles/tokens.json"
+      ],
+      "other": [
+        "static_content/icon.svg"
+      ]
+    }
+  }
+}

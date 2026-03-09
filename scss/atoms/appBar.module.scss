@@ -1,0 +1,92 @@
+// App Bar Atoms - Material Design 3 (CSS Module)
+// ===============================================
+// Top app bar / navigation bar using M3 tokens
+
+// Base app bar
+.appBar {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background: var(--mat-sys-surface-container);
+  color: var(--mat-sys-on-surface);
+  z-index: 1100;
+}
+
+// Position variants
+.appBarStatic {
+  position: relative;
+}
+
+.appBarFixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.appBarSticky {
+  position: sticky;
+  top: 0;
+}
+
+.appBarAbsolute {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+// Elevation variants
+.appBarFlat {
+  box-shadow: none;
+}
+
+.appBarElevated {
+  box-shadow: var(--mat-sys-level2);
+}
+
+// Color variants
+.appBarPrimary {
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+}
+
+.appBarTransparent {
+  background: transparent;
+}
+
+// App bar toolbar (inner container)
+.appBar .toolbar,
+.appBarToolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+  min-height: 64px;
+  width: 100%;
+}
+
+.appBar .toolbarDense,
+.appBarToolbarDense {
+  min-height: 48px;
+}
+
+// App bar title
+.appBarTitle {
+  font: var(--mat-sys-title-large-font);
+  color: inherit;
+  margin: 0;
+  flex: 1;
+}
+
+// App bar spacer
+.appBarSpacer {
+  flex: 1;
+}
+
+// App bar actions
+.appBarActions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}

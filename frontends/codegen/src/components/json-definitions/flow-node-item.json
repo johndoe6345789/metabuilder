@@ -1,0 +1,63 @@
+{
+  "id": "flow-node-item-container",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": "selected",
+      "transform": "data ? 'flow-node flow-node--selected' : 'flow-node'"
+    },
+    "onClick": {
+      "source": "onClick",
+      "transform": "data"
+    }
+  },
+  "children": [
+    {
+      "id": "flow-node-icon",
+      "type": "div",
+      "props": {
+        "className": "flow-node__icon"
+      },
+      "bindings": {
+        "children": {
+          "source": "icon",
+          "transform": "data"
+        },
+        "_if": {
+          "source": "icon",
+          "transform": "!!data"
+        }
+      }
+    },
+    {
+      "id": "flow-node-label",
+      "type": "span",
+      "props": {
+        "className": "flow-node__label"
+      },
+      "bindings": {
+        "children": {
+          "source": "label",
+          "transform": "data"
+        }
+      }
+    },
+    {
+      "id": "flow-node-badge",
+      "type": "div",
+      "props": {
+        "className": "flow-node__badge"
+      },
+      "bindings": {
+        "children": {
+          "source": "badge",
+          "transform": "data"
+        },
+        "_if": {
+          "source": "badge",
+          "transform": "!!data"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+- generic:
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - button
+                - button
+      - main:
+        - generic:
+          - generic:
+            - img:
+              - img
+              - img
+      - generic:
+        - heading [level=2]: Command Palette
+        - paragraph: Search for a command to run...
+    - region "Notifications alt+T"
+  - alert
+  - dialog "Command Palette" [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e5]:
+        - img [ref=e6]
+        - combobox [expanded] [active] [ref=e9]: searchQuery
+      - listbox "Suggestions" [ref=e10]:
+        - generic [ref=e12]:
+          - img [ref=e13]
+          - paragraph [ref=e16]: No results found
+    - button "Close" [ref=e17]:
+      - img
+      - generic [ref=e18]: Close

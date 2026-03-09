@@ -21,7 +21,7 @@ import { registerPluginMap } from './function-executor-adapter';
 import { dbalReadExecutor } from '../../../plugins/ts/dbal-read/src/index';
 import { dbalWriteExecutor } from '../../../plugins/ts/dbal-write/src/index';
 import { httpRequestExecutor } from '../../../plugins/ts/integration/http-request/src/index';
-import { emailSendExecutor, setEmailService } from '../../../plugins/ts/integration/email-send/src/index';
+import { emailSendExecutor } from '../../../plugins/ts/integration/email-send/src/index';
 import { smtpRelayExecutor, setSMTPService } from '../../../plugins/ts/integration/smtp-relay/src/index';
 import { conditionExecutor } from '../../../plugins/ts/control-flow/condition/src/index';
 import { transformExecutor } from '../../../plugins/ts/utility/transform/src/index';
@@ -33,13 +33,13 @@ import { webhookResponseExecutor } from '../../../plugins/ts/integration/webhook
 // FUNCTION-BASED PLUGIN MAP IMPORTS
 // ============================================================================
 
-import { stringPlugins } from '../../../plugins/ts/string/src/index';
-import { mathPlugins } from '../../../plugins/ts/math/src/index';
-import { logicPlugins } from '../../../plugins/ts/logic/src/index';
-import { listPlugins } from '../../../plugins/ts/list/src/index';
-import { dictPlugins } from '../../../plugins/ts/dict/src/index';
-import { convertPlugins } from '../../../plugins/ts/convert/src/index';
-import { varPlugins } from '../../../plugins/ts/var/src/index';
+import stringPlugins from '../../../plugins/ts/string/src/index';
+import mathPlugins from '../../../plugins/ts/math/src/index';
+import logicPlugins from '../../../plugins/ts/logic/src/index';
+import listPlugins from '../../../plugins/ts/list/src/index';
+import dictPlugins from '../../../plugins/ts/dict/src/index';
+import convertPlugins from '../../../plugins/ts/convert/src/index';
+import varPlugins from '../../../plugins/ts/var/src/index';
 
 // ============================================================================
 // BACKWARD COMPATIBILITY EXPORTS
@@ -54,7 +54,6 @@ export {
   dbalWriteExecutor,
   httpRequestExecutor,
   emailSendExecutor,
-  setEmailService,
   smtpRelayExecutor,
   setSMTPService,
   conditionExecutor,

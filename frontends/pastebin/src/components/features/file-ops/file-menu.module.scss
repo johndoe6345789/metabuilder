@@ -1,0 +1,62 @@
+.menu {
+  position: fixed;
+  z-index: 2000;
+  min-width: 160px;
+  background: var(--mat-sys-surface-container-high);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 4px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+  padding: 3px 0;
+  animation: menuIn 0.08s ease;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--mat-sys-on-surface);
+  font-size: 12px;
+  text-align: left;
+  white-space: nowrap;
+  transition: background 0.05s;
+
+  &:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
+  }
+
+  &:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+}
+
+.itemDanger {
+  color: var(--mat-sys-error);
+
+  &:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--mat-sys-error) 10%, transparent);
+  }
+}
+
+.shortcut {
+  margin-left: auto;
+  font-size: 10px;
+  color: var(--mat-sys-on-surface-variant);
+  font-family: inherit;
+}
+
+.sep {
+  height: 1px;
+  background: var(--mat-sys-outline-variant);
+  margin: 3px 0;
+}
+
+@keyframes menuIn {
+  from { opacity: 0; transform: translateY(-4px) }
+  to   { opacity: 1; transform: translateY(0) }
+}

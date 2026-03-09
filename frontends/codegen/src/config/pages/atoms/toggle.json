@@ -1,0 +1,6 @@
+{
+  "type": "MetabuilderFormToggle",
+  "props": {
+    "onChange": "> void"
+  }
+}

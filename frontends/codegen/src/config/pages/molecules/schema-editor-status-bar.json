@@ -1,0 +1,20 @@
+{
+  "id": "schema-editor-status-bar",
+  "$ref": "../atoms/div-flex.json",
+  "props": {
+    "className": "flex items-center justify-between border-t p-2 text-sm bg-muted/30"
+  },
+  "children": [
+    {
+      "id": "status-left",
+      "$ref": "../atoms/text-muted.json",
+      "props": {
+        "children": "Ready"
+      }
+    },
+    {
+      "id": "status-right",
+      "$ref": "../atoms/text-muted.json"
+    }
+  ]
+}

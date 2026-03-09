@@ -1,0 +1,64 @@
+{
+  "entity": "SnippetComment",
+  "version": "1.0",
+  "description": "Markdown comment on a code snippet",
+  "fields": {
+    "id": {
+      "type": "uuid",
+      "primary": true,
+      "required": true,
+      "description": "Unique comment identifier (client-generated UUID)"
+    },
+    "snippetId": {
+      "type": "string",
+      "required": true,
+      "description": "Parent snippet ID"
+    },
+    "authorId": {
+      "type": "string",
+      "required": true,
+      "description": "Comment author user ID"
+    },
+    "authorUsername": {
+      "type": "string",
+      "required": true,
+      "max_length": 50,
+      "description": "Author username at time of posting (denormalized)"
+    },
+    "content": {
+      "type": "text",
+      "required": true,
+      "description": "Markdown comment body"
+    },
+    "createdAt": {
+      "type": "bigint",
+      "required": true,
+      "description": "Creation timestamp (Unix milliseconds)"
+    },
+    "tenantId": {
+      "type": "string",
+      "optional": true,
+      "nullable": true
+    }
+  },
+  "indexes": [
+    { "fields": ["snippetId"] },
+    { "fields": ["authorId"] },
+    { "fields": ["tenantId", "snippetId"] },
+    { "fields": ["createdAt"] }
+  ],
+  "relations": {
+    "snippet": {
+      "type": "belongs-to",
+      "entity": "Snippet",
+      "foreign_key": "snippetId",
+      "on_delete": "cascade"
+    }
+  },
+  "acl": {
+    "create": { "user": true },
+    "read":   { "public": true },
+    "update": { "self": true, "admin": true },
+    "delete": { "self": true, "admin": true }
+  }
+}

@@ -5,7 +5,7 @@
  */
 
 #include <string>
-#include "secure_random_hex.hpp"
+#include "../crypto/secure_random_hex.hpp"
 
 namespace dbal::security {
 

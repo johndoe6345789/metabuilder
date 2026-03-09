@@ -1,0 +1,33 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/test-parameters.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "theme_editor",
+  "description": "Parameterized test data for theme editor tests",
+
+  "parameters": {
+    "colorConversions": [
+      { "hex": "#ffffff", "rgb": { "r": 255, "g": 255, "b": 255 } },
+      { "hex": "#000000", "rgb": { "r": 0, "g": 0, "b": 0 } },
+      { "hex": "#1976d2", "rgb": { "r": 25, "g": 118, "b": 210 } },
+      { "hex": "#ff5722", "rgb": { "r": 255, "g": 87, "b": 34 } }
+    ],
+    "validColors": [
+      { "value": "#ffffff", "valid": true },
+      { "value": "#fff", "valid": true },
+      { "value": "rgb(255, 255, 255)", "valid": true },
+      { "value": "invalid", "valid": false },
+      { "value": "#gggggg", "valid": false }
+    ],
+    "contrastColors": [
+      { "background": "#ffffff", "contrast": "#000000" },
+      { "background": "#000000", "contrast": "#ffffff" },
+      { "background": "#1976d2", "contrast": "#ffffff" },
+      { "background": "#ffeb3b", "contrast": "#000000" }
+    ],
+    "fontFamilies": [
+      { "type": "body", "fonts": ["IBM Plex Sans", "Inter", "Roboto", "Open Sans"] },
+      { "type": "heading", "fonts": ["Space Grotesk", "IBM Plex Sans", "Montserrat"] },
+      { "type": "code", "fonts": ["JetBrains Mono", "Fira Code", "Source Code Pro"] }
+    ]
+  }
+}

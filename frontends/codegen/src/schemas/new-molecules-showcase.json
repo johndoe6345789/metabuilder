@@ -1,0 +1,398 @@
+{
+  "id": "new-molecules-showcase",
+  "name": "New Molecules Showcase",
+  "layout": {
+    "type": "single"
+  },
+  "dataSources": [
+    {
+      "id": "appTitle",
+      "type": "static",
+      "defaultValue": "Nova Workspace"
+    },
+    {
+      "id": "appSubtitle",
+      "type": "static",
+      "defaultValue": "Operational Control Center"
+    },
+    {
+      "id": "itemCount",
+      "type": "static",
+      "defaultValue": 42
+    },
+    {
+      "id": "overdueCount",
+      "type": "static",
+      "defaultValue": 3
+    },
+    {
+      "id": "isLoading",
+      "type": "static",
+      "defaultValue": false
+    },
+    {
+      "id": "loadingMessage",
+      "type": "static",
+      "defaultValue": "Syncing workspace assets..."
+    },
+    {
+      "id": "loadingSize",
+      "type": "static",
+      "defaultValue": "lg"
+    },
+    {
+      "id": "fallbackMessage",
+      "type": "static",
+      "defaultValue": "Fetching editor state..."
+    },
+    {
+      "id": "navGroup",
+      "type": "static",
+      "defaultValue": {
+        "label": "Workspace",
+        "count": 12,
+        "isExpanded": true
+      }
+    }
+  ],
+  "components": [
+    {
+      "id": "root",
+      "type": "div",
+      "props": {
+        "className": "h-full overflow-auto p-8 bg-background"
+      },
+      "children": [
+        {
+          "id": "page-header",
+          "type": "div",
+          "props": { "className": "mb-8" },
+          "children": [
+            {
+              "id": "page-title",
+              "type": "MetabuilderDisplayHeading",
+              "props": {
+                "level": 1,
+                "className": "text-4xl font-bold mb-2",
+                "children": "New JSON-Compatible Molecules"
+              }
+            },
+            {
+              "id": "page-description",
+              "type": "MetabuilderDisplayText",
+              "props": {
+                "className": "text-muted-foreground text-lg",
+                "children": "Showcasing the newly added molecular components"
+              }
+            }
+          ]
+        },
+        {
+          "id": "showcase-grid",
+          "type": "MetabuilderLayoutGrid",
+          "props": { "cols": 2, "gap": "lg", "className": "max-w-5xl" },
+          "children": [
+            {
+              "id": "branding-card",
+              "type": "MetabuilderLayoutCard",
+              "children": [
+                {
+                  "id": "branding-header",
+                  "type": "MetabuilderLayoutCardHeader",
+                  "children": [
+                    {
+                      "id": "branding-title",
+                      "type": "CardTitle",
+                      "props": { "children": "AppBranding" }
+                    },
+                    {
+                      "id": "branding-description",
+                      "type": "CardDescription",
+                      "props": { "children": "Application branding with logo, title, and subtitle" }
+                    }
+                  ]
+                },
+                {
+                  "id": "branding-content",
+                  "type": "MetabuilderDataCardContent",
+                  "props": { "className": "space-y-4" },
+                  "children": [
+                    {
+                      "id": "branding-demo",
+                      "type": "MetabuilderWidgetAppBranding",
+                      "bindings": {
+                        "title": { "source": "appTitle" },
+                        "subtitle": { "source": "appSubtitle" }
+                      }
+                    },
+                    {
+                      "id": "branding-demo-default",
+                      "type": "MetabuilderWidgetAppBranding"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "label-badge-card",
+              "type": "MetabuilderLayoutCard",
+              "children": [
+                {
+                  "id": "label-badge-header",
+                  "type": "MetabuilderLayoutCardHeader",
+                  "children": [
+                    {
+                      "id": "label-badge-title",
+                      "type": "CardTitle",
+                      "props": { "children": "LabelWithBadge" }
+                    },
+                    {
+                      "id": "label-badge-description",
+                      "type": "CardDescription",
+                      "props": { "children": "Label with optional badge indicator" }
+                    }
+                  ]
+                },
+                {
+                  "id": "label-badge-content",
+                  "type": "MetabuilderDataCardContent",
+                  "props": { "className": "space-y-3" },
+                  "children": [
+                    {
+                      "id": "label-badge-demo-1",
+                      "type": "MetabuilderFeedbackLabelWithBadge",
+                      "props": {
+                        "label": "Total Items",
+                        "badgeVariant": "secondary"
+                      },
+                      "bindings": {
+                        "badge": { "source": "itemCount" }
+                      }
+                    },
+                    {
+                      "id": "label-badge-demo-2",
+                      "type": "MetabuilderFeedbackLabelWithBadge",
+                      "props": {
+                        "label": "Overdue Tasks",
+                        "badgeVariant": "destructive"
+                      },
+                      "bindings": {
+                        "badge": { "source": "overdueCount" }
+                      }
+                    },
+                    {
+                      "id": "label-badge-demo-3",
+                      "type": "MetabuilderFeedbackLabelWithBadge",
+                      "props": {
+                        "label": "Success",
+                        "badge": "New",
+                        "badgeVariant": "default"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "empty-state-card",
+              "type": "MetabuilderLayoutCard",
+              "children": [
+                {
+                  "id": "empty-state-header",
+                  "type": "MetabuilderLayoutCardHeader",
+                  "children": [
+                    {
+                      "id": "empty-state-title",
+                      "type": "CardTitle",
+                      "props": { "children": "EmptyEditorState" }
+                    },
+                    {
+                      "id": "empty-state-description",
+                      "type": "CardDescription",
+                      "props": { "children": "Empty state display for editor contexts" }
+                    }
+                  ]
+                },
+                {
+                  "id": "empty-state-content",
+                  "type": "MetabuilderDataCardContent",
+                  "props": { "className": "h-48" },
+                  "children": [
+                    {
+                      "id": "empty-state-demo",
+                      "type": "MetabuilderFeedbackEmptyEditorState",
+                      "props": {}
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "loading-fallback-card",
+              "type": "MetabuilderLayoutCard",
+              "children": [
+                {
+                  "id": "loading-fallback-header",
+                  "type": "MetabuilderLayoutCardHeader",
+                  "children": [
+                    {
+                      "id": "loading-fallback-title",
+                      "type": "CardTitle",
+                      "props": { "children": "LoadingFallback" }
+                    },
+                    {
+                      "id": "loading-fallback-description",
+                      "type": "CardDescription",
+                      "props": { "children": "Inline loading message with spinner" }
+                    }
+                  ]
+                },
+                {
+                  "id": "loading-fallback-content",
+                  "type": "MetabuilderDataCardContent",
+                  "children": [
+                    {
+                      "id": "loading-fallback-wrapper",
+                      "type": "div",
+                      "props": { "className": "h-24 border border-border rounded-md" },
+                      "children": [
+                        {
+                          "id": "loading-fallback-demo",
+                          "type": "MetabuilderFeedbackLoadingFallback",
+                          "bindings": {
+                            "message": { "source": "fallbackMessage" }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "loading-state-card",
+              "type": "MetabuilderLayoutCard",
+              "children": [
+                {
+                  "id": "loading-state-header",
+                  "type": "MetabuilderLayoutCardHeader",
+                  "children": [
+                    {
+                      "id": "loading-state-title",
+                      "type": "CardTitle",
+                      "props": { "children": "LoadingState" }
+                    },
+                    {
+                      "id": "loading-state-description",
+                      "type": "CardDescription",
+                      "props": { "children": "Standalone loading state with size variants" }
+                    }
+                  ]
+                },
+                {
+                  "id": "loading-state-content",
+                  "type": "MetabuilderDataCardContent",
+                  "props": { "className": "space-y-3" },
+                  "children": [
+                    {
+                      "id": "loading-state-demo",
+                      "type": "MetabuilderFeedbackLoadingState",
+                      "props": {
+                        "size": "sm"
+                      },
+                      "bindings": {
+                        "message": { "source": "loadingMessage" }
+                      }
+                    },
+                    {
+                      "id": "loading-state-demo-lg",
+                      "type": "MetabuilderFeedbackLoadingState",
+                      "bindings": {
+                        "message": { "source": "loadingMessage" },
+                        "size": { "source": "loadingSize" }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "nav-header-card",
+              "type": "MetabuilderLayoutCard",
+              "props": { "className": "col-span-2" },
+              "children": [
+                {
+                  "id": "nav-header-header",
+                  "type": "MetabuilderLayoutCardHeader",
+                  "children": [
+                    {
+                      "id": "nav-header-title",
+                      "type": "CardTitle",
+                      "props": { "children": "NavigationGroupHeader" }
+                    },
+                    {
+                      "id": "nav-header-description",
+                      "type": "CardDescription",
+                      "props": { "children": "Collapsible navigation group header (Note: requires Collapsible wrapper in production)" }
+                    }
+                  ]
+                },
+                {
+                  "id": "nav-header-content",
+                  "type": "MetabuilderDataCardContent",
+                  "props": { "className": "space-y-2" },
+                  "children": [
+                    {
+                      "id": "nav-header-demo",
+                      "type": "MetabuilderNavNavigationGroupHeader",
+                      "bindings": {
+                        "label": { "source": "navGroup", "path": "label" },
+                        "count": { "source": "navGroup", "path": "count" },
+                        "isExpanded": { "source": "navGroup", "path": "isExpanded" }
+                      }
+                    },
+                    {
+                      "id": "nav-header-demo-collapsed",
+                      "type": "MetabuilderNavNavigationGroupHeader",
+                      "props": {
+                        "label": "Workflows",
+                        "count": 6,
+                        "isExpanded": false
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "info-section",
+          "type": "MetabuilderFeedbackAlert",
+          "props": {
+            "className": "max-w-5xl mt-8"
+          },
+          "children": [
+            {
+              "id": "info-title",
+              "type": "div",
+              "props": {
+                "className": "font-semibold mb-2",
+                "children": "✅ Successfully Added to JSON Registry"
+              }
+            },
+            {
+              "id": "info-text",
+              "type": "div",
+              "props": {
+                "className": "text-sm",
+                "children": "All components shown above are now available in the JSON UI component registry and can be used in JSON schemas."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "globalActions": []
+}

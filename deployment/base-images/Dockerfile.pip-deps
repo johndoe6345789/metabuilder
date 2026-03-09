@@ -1,0 +1,73 @@
+# metabuilder/base-pip-deps
+#
+# Python 3.14-slim with every requirements.txt across all Python services
+# pre-installed in site-packages.
+#
+# Build:  docker build -f Dockerfile.pip-deps -t metabuilder/base-pip-deps:latest ../../
+# App Dockerfiles:
+#   FROM metabuilder/base-pip-deps:latest
+
+FROM python:3.14-slim
+
+# Build-time deps for native extensions (psycopg2, cryptography, etc.)
+RUN for i in 1 2 3 4 5; do \
+      apt-get update && apt-get install -y --no-install-recommends \
+        gcc g++ libpq-dev libssl-dev libffi-dev python3-dev \
+      && break \
+      || (echo "apt-get failed (attempt $i/5), retrying in $((i*10))s..." && sleep $((i*10))); \
+    done && rm -rf /var/lib/apt/lists/*
+
+# Copy ALL requirements files from across the project.
+# Files with -r includes are kept in subdirectories to preserve relative paths.
+
+# Email services
+COPY frontends/emailclient/deployment/docker/email-service/requirements.txt   /deps/flat/email-service.txt
+COPY frontends/emailclient/tests/requirements.txt                              /deps/flat/email-tests.txt
+COPY services/email_service/requirements.txt                                   /deps/flat/legacy-email-service.txt
+
+# Backend services
+COPY services/smtprelay/requirements.txt                                       /deps/flat/smtprelay.txt
+COPY frontends/dockerterminal/backend/requirements.txt                         /deps/flat/dockerterminal.txt
+COPY frontends/codegen/backend/requirements.txt                                /deps/flat/codegen-backend.txt
+COPY frontends/pastebin/backend/requirements.txt                               /deps/flat/pastebin-backend.txt
+COPY frontends/packagerepo/backend/requirements.txt                            /deps/flat/packagerepo-backend.txt
+COPY frontends/workflowui/backend/requirements.txt                             /deps/flat/workflowui-backend.txt
+
+# PCB generator (no -r includes)
+COPY libraries/pcbgenerator/requirements.txt                                   /deps/flat/pcbgenerator.txt
+COPY libraries/pcbgenerator/requirements-dev.txt                               /deps/flat/pcbgenerator-dev.txt
+
+# Tests (no -r includes)
+COPY dbal/production/tests/integration/requirements.txt                        /deps/flat/dbal-tests.txt
+
+# CAD tools — preserve directory for -r requirements.txt in -dev.txt
+COPY libraries/cadquerywrapper/requirements.txt                                /deps/cadquerywrapper/requirements.txt
+COPY libraries/cadquerywrapper/requirements-dev.txt                            /deps/cadquerywrapper/requirements-dev.txt
+
+# Workflow Python plugins — preserve directory so chained -r includes work
+COPY workflow/plugins/python/requirements.txt                                  /deps/workflow/requirements.txt
+COPY workflow/plugins/python/requirements-backend.txt                          /deps/workflow/requirements-backend.txt
+COPY workflow/plugins/python/requirements-web.txt                              /deps/workflow/requirements-web.txt
+COPY workflow/plugins/python/requirements-tools.txt                            /deps/workflow/requirements-tools.txt
+COPY workflow/plugins/python/requirements-notifications.txt                    /deps/workflow/requirements-notifications.txt
+COPY workflow/plugins/python/requirements-packagerepo.txt                      /deps/workflow/requirements-packagerepo.txt
+COPY workflow/plugins/python/requirements-testing.txt                          /deps/workflow/requirements-testing.txt
+COPY workflow/plugins/python/requirements-dev.txt                              /deps/workflow/requirements-dev.txt
+
+# Install in two passes:
+# 1. Main deps (everything except cadquerywrapper which has native dep conflicts)
+# 2. cadquerywrapper best-effort (cadquery-ocp may not resolve on all platforms)
+RUN for i in 1 2 3 4 5; do \
+      pip install --no-cache-dir \
+        $(find /deps -name '*.txt' -not -path '*/cadquerywrapper/*' -exec echo "-r {}" \;) \
+      && break \
+      || (echo "pip install failed (attempt $i/5), retrying in $((i*10))s..." && sleep $((i*10))); \
+    done && \
+    pip install --no-cache-dir \
+      -r /deps/cadquerywrapper/requirements.txt \
+      -r /deps/cadquerywrapper/requirements-dev.txt \
+      2>/dev/null || echo "WARN: cadquerywrapper deps failed (cadquery-ocp platform issue)" && \
+    rm -rf /deps
+
+LABEL org.metabuilder.image="base-pip-deps" \
+      org.metabuilder.description="All Python pip dependencies pre-installed"

@@ -1,0 +1,76 @@
+// Responsive breakpoint mixins - Material Design 3
+// M3 breakpoints: compact (<600), medium (600-839), expanded (840+)
+
+$breakpoint-compact: 600px;
+$breakpoint-medium: 840px;
+$breakpoint-expanded: 1200px;
+$breakpoint-large: 1600px;
+
+// Legacy aliases
+$breakpoint-sm: $breakpoint-compact;
+$breakpoint-md: $breakpoint-medium;
+$breakpoint-lg: $breakpoint-expanded;
+
+// M3 window size classes
+@mixin compact {
+  @media (max-width: #{$breakpoint-compact - 1px}) {
+    @content;
+  }
+}
+
+@mixin medium {
+  @media (min-width: $breakpoint-compact) and (max-width: #{$breakpoint-medium - 1px}) {
+    @content;
+  }
+}
+
+@mixin expanded {
+  @media (min-width: $breakpoint-medium) {
+    @content;
+  }
+}
+
+@mixin large {
+  @media (min-width: $breakpoint-expanded) {
+    @content;
+  }
+}
+
+@mixin extra-large {
+  @media (min-width: $breakpoint-large) {
+    @content;
+  }
+}
+
+// Legacy aliases for compatibility
+@mixin mobile {
+  @include compact {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @include medium {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @include expanded {
+    @content;
+  }
+}
+
+// Min-width queries
+@mixin min-width($width) {
+  @media (min-width: $width) {
+    @content;
+  }
+}
+
+// Max-width queries
+@mixin max-width($width) {
+  @media (max-width: $width) {
+    @content;
+  }
+}

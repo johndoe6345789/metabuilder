@@ -1,0 +1,362 @@
+[
+  {
+    "entity": "ForumCategory",
+    "version": "1.0",
+    "description": "Forum category for organizing discussion threads",
+    "package": "forum_forge",
+    "fields": {
+      "id": {
+        "type": "cuid",
+        "primary": true,
+        "generated": true,
+        "description": "Unique category identifier"
+      },
+      "tenantId": {
+        "type": "string",
+        "required": true,
+        "index": true,
+        "description": "Tenant this category belongs to"
+      },
+      "name": {
+        "type": "string",
+        "required": true,
+        "max_length": 100,
+        "description": "Category name"
+      },
+      "description": {
+        "type": "string",
+        "nullable": true,
+        "description": "Category description"
+      },
+      "icon": {
+        "type": "string",
+        "nullable": true,
+        "description": "Category icon"
+      },
+      "slug": {
+        "type": "string",
+        "required": true,
+        "max_length": 100,
+        "pattern": "^[a-z0-9-]+$",
+        "description": "URL-friendly slug"
+      },
+      "sortOrder": {
+        "type": "integer",
+        "default": 0,
+        "description": "Display order"
+      },
+      "parentId": {
+        "type": "cuid",
+        "nullable": true,
+        "index": true,
+        "description": "Parent category for nesting"
+      },
+      "createdAt": {
+        "type": "bigint",
+        "required": true,
+        "description": "Creation timestamp"
+      }
+    },
+    "indexes": [
+      {
+        "fields": [
+          "tenantId",
+          "slug"
+        ],
+        "unique": true,
+        "name": "tenant_slug"
+      }
+    ],
+    "relations": {
+      "parent": {
+        "type": "belongs-to",
+        "entity": "ForumCategory",
+        "foreign_key": "parentId",
+        "nullable": true,
+        "on_delete": "set_null",
+        "description": "Parent category for nested categories"
+      },
+      "children": {
+        "type": "has-many",
+        "entity": "ForumCategory",
+        "foreign_key": "parentId",
+        "description": "Sub-categories"
+      },
+      "threads": {
+        "type": "has-many",
+        "entity": "ForumThread",
+        "foreign_key": "categoryId",
+        "cascade_delete": true,
+        "description": "Threads in this category"
+      }
+    },
+    "acl": {
+      "create": {
+        "admin": true
+      },
+      "read": {
+        "public": true
+      },
+      "update": {
+        "admin": true
+      },
+      "delete": {
+        "admin": true
+      }
+    }
+  },
+  {
+    "entity": "ForumThread",
+    "version": "1.0",
+    "description": "Forum discussion thread",
+    "package": "forum_forge",
+    "fields": {
+      "id": {
+        "type": "cuid",
+        "primary": true,
+        "generated": true,
+        "description": "Unique thread identifier"
+      },
+      "tenantId": {
+        "type": "string",
+        "required": true,
+        "index": true,
+        "description": "Tenant this thread belongs to"
+      },
+      "categoryId": {
+        "type": "cuid",
+        "required": true,
+        "index": true,
+        "description": "Parent category"
+      },
+      "authorId": {
+        "type": "uuid",
+        "required": true,
+        "index": true,
+        "description": "Thread author"
+      },
+      "title": {
+        "type": "string",
+        "required": true,
+        "max_length": 200,
+        "description": "Thread title"
+      },
+      "content": {
+        "type": "string",
+        "required": true,
+        "description": "First post content"
+      },
+      "slug": {
+        "type": "string",
+        "required": true,
+        "pattern": "^[a-z0-9-]+$",
+        "description": "URL-friendly slug"
+      },
+      "isPinned": {
+        "type": "boolean",
+        "default": false,
+        "description": "Whether thread is pinned"
+      },
+      "isLocked": {
+        "type": "boolean",
+        "default": false,
+        "description": "Whether thread is locked"
+      },
+      "viewCount": {
+        "type": "integer",
+        "default": 0,
+        "description": "Number of views"
+      },
+      "replyCount": {
+        "type": "integer",
+        "default": 0,
+        "description": "Number of replies"
+      },
+      "lastReplyAt": {
+        "type": "bigint",
+        "nullable": true,
+        "description": "Timestamp of last reply"
+      },
+      "lastReplyBy": {
+        "type": "uuid",
+        "nullable": true,
+        "description": "User who last replied"
+      },
+      "createdAt": {
+        "type": "bigint",
+        "required": true,
+        "description": "Creation timestamp"
+      },
+      "updatedAt": {
+        "type": "bigint",
+        "nullable": true,
+        "description": "Last update timestamp"
+      }
+    },
+    "indexes": [
+      {
+        "fields": [
+          "tenantId",
+          "slug"
+        ],
+        "unique": true
+      },
+      {
+        "fields": [
+          "isPinned",
+          "lastReplyAt"
+        ],
+        "name": "pinned_recent"
+      }
+    ],
+    "relations": {
+      "category": {
+        "type": "belongs-to",
+        "entity": "ForumCategory",
+        "foreign_key": "categoryId",
+        "on_delete": "cascade",
+        "description": "Category this thread belongs to"
+      },
+      "author": {
+        "type": "belongs-to",
+        "entity": "User",
+        "foreign_key": "authorId",
+        "on_delete": "restrict",
+        "description": "Thread creator"
+      },
+      "lastReplier": {
+        "type": "belongs-to",
+        "entity": "User",
+        "foreign_key": "lastReplyBy",
+        "nullable": true,
+        "on_delete": "set_null",
+        "description": "User who posted the last reply"
+      },
+      "posts": {
+        "type": "has-many",
+        "entity": "ForumPost",
+        "foreign_key": "threadId",
+        "cascade_delete": true,
+        "description": "Replies to this thread"
+      }
+    },
+    "acl": {
+      "create": {
+        "user": true
+      },
+      "read": {
+        "public": true
+      },
+      "update": {
+        "self": true,
+        "row_level": "authorId = $user.id",
+        "moderator": true
+      },
+      "delete": {
+        "self": true,
+        "row_level": "authorId = $user.id",
+        "moderator": true
+      }
+    }
+  },
+  {
+    "entity": "ForumPost",
+    "version": "1.0",
+    "description": "Forum reply/post within a thread",
+    "package": "forum_forge",
+    "fields": {
+      "id": {
+        "type": "cuid",
+        "primary": true,
+        "generated": true,
+        "description": "Unique post identifier"
+      },
+      "tenantId": {
+        "type": "string",
+        "required": true,
+        "index": true,
+        "description": "Tenant this post belongs to"
+      },
+      "threadId": {
+        "type": "cuid",
+        "required": true,
+        "index": true,
+        "description": "Parent thread"
+      },
+      "authorId": {
+        "type": "uuid",
+        "required": true,
+        "index": true,
+        "description": "Post author"
+      },
+      "content": {
+        "type": "string",
+        "required": true,
+        "description": "Post content"
+      },
+      "likes": {
+        "type": "integer",
+        "default": 0,
+        "description": "Like count"
+      },
+      "isEdited": {
+        "type": "boolean",
+        "default": false,
+        "description": "Whether post was edited"
+      },
+      "createdAt": {
+        "type": "bigint",
+        "required": true,
+        "description": "Creation timestamp"
+      },
+      "updatedAt": {
+        "type": "bigint",
+        "nullable": true,
+        "description": "Last update timestamp"
+      }
+    },
+    "indexes": [
+      {
+        "fields": [
+          "threadId",
+          "createdAt"
+        ],
+        "name": "thread_time"
+      }
+    ],
+    "relations": {
+      "thread": {
+        "type": "belongs-to",
+        "entity": "ForumThread",
+        "foreign_key": "threadId",
+        "on_delete": "cascade",
+        "description": "Thread this post belongs to"
+      },
+      "author": {
+        "type": "belongs-to",
+        "entity": "User",
+        "foreign_key": "authorId",
+        "on_delete": "restrict",
+        "description": "Post author"
+      }
+    },
+    "acl": {
+      "create": {
+        "user": true
+      },
+      "read": {
+        "public": true
+      },
+      "update": {
+        "self": true,
+        "row_level": "authorId = $user.id",
+        "moderator": true
+      },
+      "delete": {
+        "self": true,
+        "row_level": "authorId = $user.id",
+        "moderator": true
+      }
+    }
+  }
+]

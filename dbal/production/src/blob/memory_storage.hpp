@@ -11,16 +11,16 @@
 #include <mutex>
 
 #include "memory/blob_data.hpp"
-#include "memory/generate_etag.hpp"
-#include "memory/make_blob_metadata.hpp"
-#include "memory/memory_upload.hpp"
-#include "memory/memory_download.hpp"
-#include "memory/memory_delete.hpp"
-#include "memory/memory_exists.hpp"
-#include "memory/memory_get_metadata.hpp"
-#include "memory/memory_list.hpp"
-#include "memory/memory_copy.hpp"
-#include "memory/memory_stats.hpp"
+#include "memory/metadata/generate_etag.hpp"
+#include "memory/metadata/make_blob_metadata.hpp"
+#include "memory/operations/transfer/memory_upload.hpp"
+#include "memory/operations/transfer/memory_download.hpp"
+#include "memory/operations/memory_delete.hpp"
+#include "memory/operations/query/memory_exists.hpp"
+#include "memory/metadata/memory_get_metadata.hpp"
+#include "memory/operations/query/memory_list.hpp"
+#include "memory/operations/transfer/memory_copy.hpp"
+#include "memory/operations/query/memory_stats.hpp"
 
 namespace dbal {
 namespace blob {

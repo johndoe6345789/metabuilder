@@ -58,11 +58,13 @@ export const fetchMessages = createAsyncThunk<
     pageSize?: number
     filter?: string
     search?: string
+    baseUrl?: string
   },
   { rejectValue: string }
 >(
   'emailList/fetchMessages',
   async (params, { rejectWithValue }) => {
+    const baseUrl = params.baseUrl ?? ''
     try {
       const query = new URLSearchParams({
         folderId: params.folderId,
@@ -72,7 +74,7 @@ export const fetchMessages = createAsyncThunk<
         ...(params.search && { search: params.search })
       })
 
-      const response = await fetch(`/api/v1/email/messages?${query}`)
+      const response = await fetch(`${baseUrl}/api/v1/email/messages?${query}`)
       if (!response.ok) {
         throw new Error('Failed to fetch messages')
       }

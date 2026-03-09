@@ -1,0 +1,43 @@
+{
+  "id": "hover-card-root",
+  "type": "HoverCard",
+  "children": [
+    {
+      "id": "hover-card-trigger",
+      "type": "HoverCardTrigger",
+      "bindings": {
+        "asChild": true
+      },
+      "children": [
+        {
+          "id": "hover-trigger-content",
+          "type": "slot",
+          "slot": "trigger",
+          "defaultContent": {
+            "id": "trigger-element",
+            "type": "span",
+            "bindings": {
+              "children": "data.triggerLabel || 'Hover'"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "hover-card-content",
+      "type": "HoverCardContent",
+      "bindings": {
+        "side": "data.side || 'bottom'",
+        "align": "data.align || 'center'",
+        "className": "data.className"
+      },
+      "children": [
+        {
+          "id": "hover-content",
+          "type": "slot",
+          "slot": "children"
+        }
+      ]
+    }
+  ]
+}

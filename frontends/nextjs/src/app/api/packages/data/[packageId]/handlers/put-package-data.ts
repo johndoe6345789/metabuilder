@@ -56,13 +56,14 @@ export async function PUT(
     // Save package data using DBAL
     const dataJson = JSON.stringify(body.data)
     
-    // Use upsert to create or update
-    const { getAdapter } = await import('@/lib/db/dbal-client')
-    const adapter = getAdapter()
-    await adapter.upsert('PackageData', 
-      { packageId: resolvedParams.packageId },
-      { packageId: resolvedParams.packageId, data: dataJson }
-    )
+    // Try update first, create if not found
+    const ops = db.entity('PackageData')
+    const existing = await ops.list({ filter: { packageId: resolvedParams.packageId } })
+    if (existing.data.length > 0 && existing.data[0]?.id) {
+      await ops.update(existing.data[0].id as string, { data: dataJson })
+    } else {
+      await ops.create({ packageId: resolvedParams.packageId, data: dataJson })
+    }
     
     return NextResponse.json({ saved: true })
   } catch (error) {

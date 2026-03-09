@@ -1,0 +1,350 @@
+{
+  "$schema": "./schemas/component-registry-schema.json",
+  "version": "1.0.0",
+  "components": [
+    {
+      "name": "ProjectDashboard",
+      "path": "@/components/ProjectDashboard",
+      "export": "ProjectDashboard",
+      "type": "feature",
+      "preload": true,
+      "preloadPriority": "high",
+      "category": "dashboard",
+      "description": "Main project dashboard with metrics and overview"
+    },
+    {
+      "name": "MetabuilderWidgetFileExplorer",
+      "path": "@/lib/json-ui/json-components",
+      "export": "MetabuilderWidgetFileExplorer",
+      "type": "feature",
+      "preload": true,
+      "preloadPriority": "high",
+      "category": "editor",
+      "description": "File tree navigation and management"
+    },
+    {
+      "name": "MetabuilderWidgetCodeEditor",
+      "path": "@/lib/json-ui/json-components",
+      "export": "MetabuilderWidgetCodeEditor",
+      "type": "feature",
+      "preload": false,
+      "category": "editor",
+      "dependencies": ["monaco-editor"],
+      "preloadDependencies": ["preloadMonacoEditor"],
+      "description": "Monaco-based code editor with file tabs"
+    },
+    {
+      "name": "MetabuilderWidgetJSONModelDesigner",
+      "path": "@/lib/json-ui/json-components",
+      "export": "MetabuilderWidgetJSONModelDesigner",
+      "type": "feature",
+      "preload": false,
+      "category": "designer",
+      "description": "JSON-based model designer"
+    },
+    {
+      "name": "MetabuilderWidgetComponentTreeBuilder",
+      "path": "@/lib/json-ui/json-components",
+      "export": "MetabuilderWidgetComponentTreeBuilder",
+      "type": "feature",
+      "preload": false,
+      "category": "designer",
+      "description": "Visual component tree builder"
+    },
+    {
+      "name": "MetabuilderWidgetJSONComponentTreeManager",
+      "path": "@/lib/json-ui/json-components",
+      "export": "MetabuilderWidgetJSONComponentTreeManager",
+      "type": "feature",
+      "preload": false,
+      "category": "designer",
+      "description": "JSON-based component tree manager"
+    },
+    {
+      "name": "MetabuilderWidgetJSONWorkflowDesigner",
+      "path": "@/lib/json-ui/json-components",
+      "export": "MetabuilderWidgetJSONWorkflowDesigner",
+      "type": "feature",
+      "preload": false,
+      "category": "designer",
+      "dependencies": ["monaco-editor"],
+      "preloadDependencies": ["preloadMonacoEditor"],
+      "description": "JSON-based workflow designer"
+    },
+    {
+      "name": "MetabuilderWidgetJSONLambdaDesigner",
+      "path": "@/lib/json-ui/json-components",
+      "export": "MetabuilderWidgetJSONLambdaDesigner",
+      "type": "feature",
+      "preload": false,
+      "category": "designer",
+      "dependencies": ["monaco-editor"],
+      "preloadDependencies": ["preloadMonacoEditor"],
+      "description": "JSON-based lambda designer"
+    },
+    {
+      "name": "MetabuilderWidgetJSONStyleDesigner",
+      "path": "@/lib/json-ui/json-components",
+      "export": "MetabuilderWidgetJSONStyleDesigner",
+      "type": "feature",
+      "preload": false,
+      "category": "designer",
+      "description": "JSON-based theme and styling designer"
+    },
+    {
+      "name": "MetabuilderWidgetPlaywrightDesigner",
+      "path": "@/lib/json-ui/json-components",
+      "export": "MetabuilderWidgetPlaywrightDesigner",
+      "type": "feature",
+      "preload": false,
+      "category": "testing",
+      "description": "Visual E2E test builder with Playwright"
+    },
+    {
+      "name": "MetabuilderWidgetStorybookDesigner",
+      "path": "@/lib/json-ui/json-components",
+      "export": "MetabuilderWidgetStorybookDesigner",
+      "type": "feature",
+      "preload": false,
+      "category": "testing",
+      "description": "Component story builder for Storybook"
+    },
+    {
+      "name": "MetabuilderWidgetUnitTestDesigner",
+      "path": "@/lib/json-ui/json-components",
+      "export": "MetabuilderWidgetUnitTestDesigner",
+      "type": "feature",
+      "preload": false,
+      "category": "testing",
+      "description": "Unit test suite builder"
+    },
+    {
+      "name": "MetabuilderWidgetJSONFlaskDesigner",
+      "path": "@/lib/json-ui/json-components",
+      "export": "MetabuilderWidgetJSONFlaskDesigner",
+      "type": "feature",
+      "preload": false,
+      "category": "backend",
+      "description": "JSON-based Flask REST API designer"
+    },
+    {
+      "name": "MetabuilderWidgetProjectSettingsDesigner",
+      "path": "@/lib/json-ui/json-components",
+      "export": "MetabuilderWidgetProjectSettingsDesigner",
+      "type": "feature",
+      "preload": false,
+      "category": "settings",
+      "description": "Next.js and npm package configuration"
+    },
+    {
+      "name": "MetabuilderWidgetErrorPanel",
+      "path": "@/lib/json-ui/json-components",
+      "export": "MetabuilderWidgetErrorPanel",
+      "type": "feature",
+      "preload": false,
+      "category": "debugging",
+      "description": "Error detection and auto-repair panel"
+    },
+    {
+      "name": "MetabuilderWidgetDocumentationView",
+      "path": "@/lib/json-ui/json-components",
+      "export": "MetabuilderWidgetDocumentationView",
+      "type": "feature",
+      "preload": false,
+      "category": "documentation",
+      "description": "In-app documentation viewer"
+    },
+    {
+      "name": "MetabuilderWidgetSassStylesShowcase",
+      "path": "@/lib/json-ui/json-components",
+      "export": "MetabuilderWidgetSassStylesShowcase",
+      "type": "feature",
+      "preload": false,
+      "category": "styling",
+      "description": "SASS styles demonstration"
+    },
+    {
+      "name": "MetabuilderWidgetFeatureToggleSettings",
+      "path": "@/lib/json-ui/json-components",
+      "export": "MetabuilderWidgetFeatureToggleSettings",
+      "type": "feature",
+      "preload": false,
+      "category": "settings",
+      "description": "Feature toggle management interface"
+    },
+    {
+      "name": "MetabuilderWidgetPWASettings",
+      "path": "@/lib/json-ui/json-components",
+      "export": "MetabuilderWidgetPWASettings",
+      "type": "feature",
+      "preload": false,
+      "category": "pwa",
+      "description": "Progressive Web App settings and status"
+    },
+    {
+      "name": "MetabuilderWidgetFaviconDesigner",
+      "path": "@/lib/json-ui/json-components",
+      "export": "MetabuilderWidgetFaviconDesigner",
+      "type": "feature",
+      "preload": false,
+      "category": "designer",
+      "description": "Visual favicon and icon designer"
+    },
+    {
+      "name": "MetabuilderWidgetFeatureIdeaCloud",
+      "path": "@/lib/json-ui/json-components",
+      "export": "MetabuilderWidgetFeatureIdeaCloud",
+      "type": "feature",
+      "preload": false,
+      "category": "planning",
+      "description": "Interactive feature idea voting cloud"
+    },
+    {
+      "name": "MetabuilderWidgetTemplateSelector",
+      "path": "@/lib/json-ui/json-components",
+      "export": "MetabuilderWidgetTemplateSelector",
+      "type": "feature",
+      "preload": false,
+      "category": "templates",
+      "description": "Project template selection and preview"
+    },
+    {
+      "name": "MetabuilderWidgetPersistenceDashboard",
+      "path": "@/lib/json-ui/json-components",
+      "export": "MetabuilderWidgetPersistenceDashboard",
+      "type": "feature",
+      "preload": false,
+      "category": "database",
+      "description": "Redux persistence middleware monitoring and control dashboard"
+    },
+    {
+      "name": "MetabuilderWidgetPersistenceExample",
+      "path": "@/lib/json-ui/json-components",
+      "export": "MetabuilderWidgetPersistenceExample",
+      "type": "feature",
+      "preload": false,
+      "category": "database",
+      "description": "Interactive example demonstrating automatic persistence"
+    },
+    {
+      "name": "MetabuilderWidgetJSONUIShowcasePage",
+      "path": "@/lib/json-ui/json-components",
+      "export": "MetabuilderWidgetJSONUIShowcasePage",
+      "type": "feature",
+      "preload": false,
+      "category": "showcase",
+      "description": "JSON UI system demonstration"
+    },
+    {
+      "name": "MetabuilderWidgetJSONConversionShowcase",
+      "path": "@/lib/json-ui/json-components",
+      "export": "MetabuilderWidgetJSONConversionShowcase",
+      "type": "feature",
+      "preload": false,
+      "category": "showcase",
+      "description": "JSON conversion showcase overview"
+    },
+    {
+      "name": "MetabuilderWidgetSchemaEditorPage",
+      "path": "@/lib/json-ui/json-components",
+      "export": "MetabuilderWidgetSchemaEditorPage",
+      "type": "feature",
+      "preload": false,
+      "category": "designer",
+      "description": "JSON schema editor and validator"
+    },
+    {
+      "name": "MetabuilderWidgetDataBindingDesigner",
+      "path": "@/lib/json-ui/json-components",
+      "export": "MetabuilderWidgetDataBindingDesigner",
+      "type": "feature",
+      "preload": false,
+      "category": "designer",
+      "description": "Data binding configuration designer"
+    },
+    {
+      "name": "MetabuilderWidgetDockerBuildDebugger",
+      "path": "@/lib/json-ui/json-components",
+      "export": "MetabuilderWidgetDockerBuildDebugger",
+      "type": "feature",
+      "preload": false,
+      "category": "debugging",
+      "description": "Docker build analysis and debugging tools"
+    },
+    {
+      "name": "MetabuilderWidgetAtomicLibraryShowcase",
+      "path": "@/lib/json-ui/json-components",
+      "export": "MetabuilderWidgetAtomicLibraryShowcase",
+      "type": "feature",
+      "preload": false,
+      "category": "showcase",
+      "description": "Atomic component library demonstration"
+    },
+    {
+      "name": "MetabuilderWidgetConflictResolutionPage",
+      "path": "@/lib/json-ui/json-components",
+      "export": "MetabuilderWidgetConflictResolutionPage",
+      "type": "feature",
+      "preload": false,
+      "category": "sync",
+      "description": "Conflict resolution UI for handling sync conflicts between local and remote data"
+    }
+  ],
+  "dialogs": [
+    {
+      "name": "MetabuilderWidgetGlobalSearch",
+      "path": "@/lib/json-ui/json-components",
+      "export": "MetabuilderWidgetGlobalSearch",
+      "type": "dialog",
+      "preload": false,
+      "description": "Global search for files, models, components, etc."
+    },
+    {
+      "name": "KeyboardShortcutsDialog",
+      "path": "@/components/KeyboardShortcutsDialog",
+      "export": "KeyboardShortcutsDialog",
+      "type": "dialog",
+      "preload": false,
+      "description": "Keyboard shortcuts reference dialog"
+    },
+    {
+      "name": "MetabuilderWidgetPreviewDialog",
+      "path": "@/lib/json-ui/json-components",
+      "export": "MetabuilderWidgetPreviewDialog",
+      "type": "dialog",
+      "preload": false,
+      "description": "Live preview dialog for generated code"
+    }
+  ],
+  "pwa": [
+    {
+      "name": "PWAInstallPrompt",
+      "path": "@/components/PWAInstallPrompt",
+      "export": "PWAInstallPrompt",
+      "type": "pwa",
+      "preload": false,
+      "description": "PWA installation prompt component"
+    },
+    {
+      "name": "PWAUpdatePrompt",
+      "path": "@/components/PWAUpdatePrompt",
+      "export": "PWAUpdatePrompt",
+      "type": "pwa",
+      "preload": false,
+      "description": "PWA update notification prompt"
+    },
+    {
+      "name": "PWAStatusBar",
+      "path": "@/components/PWAStatusBar",
+      "export": "PWAStatusBar",
+      "type": "pwa",
+      "preload": false,
+      "description": "PWA status indicator bar"
+    }
+  ],
+  "preloadStrategy": {
+    "critical": ["ProjectDashboard", "MetabuilderWidgetFileExplorer"],
+    "onDemand": "all-others",
+    "preloadDelay": 100
+  }
+}

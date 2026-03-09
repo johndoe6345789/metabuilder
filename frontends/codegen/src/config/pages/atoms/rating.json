@@ -1,0 +1,7 @@
+{
+  "type": "MetabuilderWidgetRating",
+  "props": {
+    "onChange": "> void",
+    "length": "> {"
+  }
+}

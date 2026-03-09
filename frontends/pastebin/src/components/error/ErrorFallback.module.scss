@@ -1,0 +1,54 @@
+.root {
+  min-height: 100vh;
+  background: var(--mat-sys-background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.inner {
+  width: 100%;
+  max-width: 48rem;
+}
+
+.alertBody {
+  margin-top: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.messageRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.errorCode {
+  font-size: 0.875rem;
+  background: color-mix(in srgb, var(--mat-sys-error) 20%, transparent);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  flex: 1;
+  word-break: break-all;
+}
+
+.stackContent {
+  margin-top: 1rem;
+}
+
+.stackPre {
+  font-size: 0.75rem;
+  background: color-mix(in srgb, var(--mat-sys-error) 10%, transparent);
+  padding: 0.75rem;
+  border-radius: 4px;
+  overflow: auto;
+  max-height: 15rem;
+}
+
+.reloadBtn {
+  width: 100%;
+  margin-top: 1.5rem;
+}

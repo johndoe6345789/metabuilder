@@ -1,0 +1,44 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "json_script_example",
+  "description": "Permission definitions for JSON Script Example package",
+  "permissions": [
+    {
+      "id": "example.view",
+      "name": "View Examples",
+      "description": "View JSON script examples and demos",
+      "resource": "json_script_example",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 0
+    },
+    {
+      "id": "example.execute",
+      "name": "Execute Examples",
+      "description": "Execute JSON script example functions",
+      "resource": "json_script_example",
+      "action": "execute",
+      "scope": "global",
+      "minLevel": 1
+    },
+    {
+      "id": "example.modify",
+      "name": "Modify Examples",
+      "description": "Modify and experiment with JSON script examples",
+      "resource": "json_script_example",
+      "action": "update",
+      "scope": "global",
+      "minLevel": 2
+    }
+  ],
+  "resources": [
+    {
+      "id": "json_script_example",
+      "name": "JSON Script Example",
+      "type": "component",
+      "description": "JSON script example and demonstration resources",
+      "actions": ["read", "execute", "update"]
+    }
+  ]
+}

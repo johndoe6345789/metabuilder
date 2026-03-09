@@ -1,0 +1,83 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/test-parameters.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "test-examples",
+  "description": "Basic test parameter examples",
+
+  "parameters": [
+    {
+      "id": "addition-test-params",
+      "name": "Addition Test Parameters",
+      "description": "Simple addition test cases",
+      "tags": ["math", "basic"],
+      "params": {
+        "a": {
+          "type": "number",
+          "description": "First number"
+        },
+        "b": {
+          "type": "number",
+          "description": "Second number"
+        },
+        "expected": {
+          "type": "number",
+          "description": "Expected sum"
+        }
+      }
+    },
+    {
+      "id": "string-validation-params",
+      "name": "String Validation Parameters",
+      "description": "String format validation test cases",
+      "tags": ["validation", "strings"],
+      "params": {
+        "input": {
+          "type": "string",
+          "description": "String to validate"
+        },
+        "format": {
+          "type": "string",
+          "description": "Expected format",
+          "enum": ["email", "phone", "url", "uuid"]
+        },
+        "shouldBeValid": {
+          "type": "boolean",
+          "description": "Whether string should be valid for format"
+        }
+      }
+    },
+    {
+      "id": "edge-case-params",
+      "name": "Edge Case Parameters",
+      "description": "Common edge cases for testing",
+      "tags": ["edge-cases", "boundaries"],
+      "params": {
+        "value": {
+          "type": "any",
+          "description": "Value to test",
+          "nullable": true
+        },
+        "testType": {
+          "type": "string",
+          "description": "Type of edge case",
+          "enum": [
+            "null",
+            "undefined",
+            "empty-string",
+            "empty-array",
+            "empty-object",
+            "zero",
+            "negative",
+            "max-int",
+            "min-int"
+          ]
+        },
+        "expectedBehavior": {
+          "type": "string",
+          "description": "Expected behavior",
+          "enum": ["accept", "reject", "throw"]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "id": "workflow-node-details-container",
+  "type": "div",
+  "props": {
+    "className": "workflow-node-details"
+  },
+  "children": [
+    {
+      "id": "workflow-node-details-header",
+      "type": "div",
+      "props": {
+        "className": "workflow-node-details__header"
+      },
+      "children": [
+        {
+          "id": "workflow-node-details-icon",
+          "type": "div",
+          "props": {
+            "className": "workflow-node-details__icon"
+          },
+          "bindings": {
+            "children": {
+              "source": "icon",
+              "transform": "data"
+            },
+            "_if": {
+              "source": "icon",
+              "transform": "!!data"
+            }
+          }
+        },
+        {
+          "id": "workflow-node-details-heading",
+          "type": "div",
+          "children": [
+            {
+              "id": "workflow-node-details-title",
+              "type": "p",
+              "props": {
+                "className": "workflow-node-details__title"
+              },
+              "bindings": {
+                "children": {
+                  "source": "title",
+                  "transform": "data"
+                }
+              }
+            },
+            {
+              "id": "workflow-node-details-subtitle",
+              "type": "p",
+              "props": {
+                "className": "workflow-node-details__subtitle"
+              },
+              "bindings": {
+                "children": {
+                  "source": "subtitle",
+                  "transform": "data"
+                },
+                "_if": {
+                  "source": "subtitle",
+                  "transform": "!!data"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "workflow-node-details-section",
+      "type": "div",
+      "props": {
+        "className": "workflow-node-details__section"
+      },
+      "bindings": {
+        "children": {
+          "source": "children",
+          "transform": "data"
+        },
+        "_if": {
+          "source": "children",
+          "transform": "!!data"
+        }
+      }
+    }
+  ]
+}

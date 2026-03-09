@@ -27,12 +27,13 @@ struct SqlConnectionConfig {
     std::string options;
     std::string prisma_bridge_url;
     std::string prisma_bridge_token;
+    size_t max_connections = 10;
 };
 
 class SqlConnection {
 public:
     explicit SqlConnection(const SqlConnectionConfig& config)
-        : config_(config), connected_(false) {}
+        : config_(config), connected_(false), lastActivity_(std::chrono::steady_clock::now()) {}
 
     ~SqlConnection() {
         disconnect();

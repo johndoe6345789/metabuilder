@@ -1,0 +1,16 @@
+{
+  "id": "brake-system",
+  "name": "Brake System",
+  "description": "Hydraulic brake lines, fluid reservoir and proportioning valve",
+  "parts": [
+    "brake-fluid-reservoir",
+    "brake-line-front-left",
+    "brake-line-front-right",
+    "brake-line-rear",
+    "proportioning-valve",
+    "brake-hose-front-left",
+    "brake-hose-front-right",
+    "brake-hose-rear-left",
+    "brake-hose-rear-right"
+  ]
+}

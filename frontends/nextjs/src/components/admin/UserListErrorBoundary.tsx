@@ -37,7 +37,7 @@ export class UserListErrorBoundary extends React.Component<Props, State> {
     }
   }
 
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+  override componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     // Log error for debugging
     console.error('UserList Error:', error, errorInfo)
 
@@ -55,7 +55,7 @@ export class UserListErrorBoundary extends React.Component<Props, State> {
     this.props.onReset?.()
   }
 
-  render() {
+  override render() {
     if (this.state.hasError) {
       return (
         <div className="rounded-md bg-red-50 p-4">

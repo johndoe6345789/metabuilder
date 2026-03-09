@@ -1,0 +1,62 @@
+name: E2E Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm install
+    
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps chromium
+    
+    - name: Check if E2E tests exist
+      id: check-tests
+      run: |
+        if [ -d "e2e" ] && [ "$(ls -A e2e/*.spec.ts 2>/dev/null)" ]; then
+          echo "has_tests=true" >> $GITHUB_OUTPUT
+        else
+          echo "has_tests=false" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: Run Playwright tests
+      if: steps.check-tests.outputs.has_tests == 'true'
+      run: npx playwright test
+      timeout-minutes: 30
+    
+    - name: Skip E2E tests
+      if: steps.check-tests.outputs.has_tests == 'false'
+      run: echo "No E2E tests configured - skipping"
+    
+    - name: Upload Playwright Report
+      uses: actions/upload-artifact@v4
+      if: always() && steps.check-tests.outputs.has_tests == 'true'
+      with:
+        name: playwright-report
+        path: playwright-report/
+        retention-days: 30
+    
+    - name: Upload Test Results
+      uses: actions/upload-artifact@v4
+      if: always() && steps.check-tests.outputs.has_tests == 'true'
+      with:
+        name: test-results
+        path: test-results/
+        retention-days: 30

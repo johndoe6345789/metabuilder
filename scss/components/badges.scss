@@ -1,0 +1,341 @@
+// Badge, Chip, Tag, Status, Count, Error, Read-Only, Phase, User, Binding Indicator
+// MD3 CSS custom properties — no Tailwind, no inline styles
+
+// ─── Chip (general-purpose pill with optional remove button) ─────────────────
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 10px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  background: color-mix(in srgb, var(--mat-sys-primary) 12%, transparent);
+  color: var(--mat-sys-primary);
+  transition: background 150ms ease;
+
+  &--sm {
+    padding: 1px 6px;
+    font-size: 11px;
+    gap: 4px;
+  }
+
+  &--lg {
+    padding: 4px 12px;
+    font-size: 13px;
+    gap: 8px;
+  }
+
+  &--primary {
+    background: color-mix(in srgb, var(--mat-sys-primary) 12%, transparent);
+    color: var(--mat-sys-primary);
+  }
+
+  &--secondary {
+    background: color-mix(in srgb, var(--mat-sys-secondary) 12%, transparent);
+    color: var(--mat-sys-secondary);
+  }
+
+  &--tertiary {
+    background: color-mix(in srgb, var(--mat-sys-tertiary) 12%, transparent);
+    color: var(--mat-sys-tertiary);
+  }
+
+  &--error {
+    background: color-mix(in srgb, var(--mat-sys-error) 12%, transparent);
+    color: var(--mat-sys-error);
+  }
+
+  &--muted {
+    background: color-mix(in srgb, var(--mat-sys-on-surface-variant) 12%, transparent);
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  &__remove {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 1px;
+    color: inherit;
+    transition: background 120ms ease;
+
+    &:hover {
+      background: color-mix(in srgb, currentColor 12%, transparent);
+    }
+  }
+
+  &__remove-icon--sm {
+    width: 12px;
+    height: 12px;
+  }
+
+  &__remove-icon--md {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+// ─── Tag (minimal pill label, variant + size from parent) ───────────────────
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 16px;
+  font-weight: 500;
+  transition: background 150ms ease;
+
+  &--sm {
+    padding: 1px 6px;
+    font-size: 11px;
+  }
+
+  &--md {
+    padding: 2px 10px;
+    font-size: 12px;
+  }
+
+  &--lg {
+    padding: 4px 12px;
+    font-size: 13px;
+  }
+
+  &--primary {
+    background: color-mix(in srgb, var(--mat-sys-primary) 12%, transparent);
+    color: var(--mat-sys-primary);
+  }
+
+  &--secondary {
+    background: color-mix(in srgb, var(--mat-sys-secondary) 12%, transparent);
+    color: var(--mat-sys-secondary);
+  }
+
+  &--muted {
+    background: color-mix(in srgb, var(--mat-sys-on-surface-variant) 12%, transparent);
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+// ─── Status badge ───────────────────────────────────────────────────────────
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 500;
+  background: color-mix(in srgb, var(--mat-sys-on-surface-variant) 12%, transparent);
+  color: var(--mat-sys-on-surface-variant);
+
+  &--active {
+    background: color-mix(in srgb, #16a34a 12%, transparent);
+    color: #16a34a;
+  }
+
+  &--inactive {
+    background: color-mix(in srgb, var(--mat-sys-on-surface-variant) 12%, transparent);
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  &--pending {
+    background: color-mix(in srgb, #d97706 12%, transparent);
+    color: #d97706;
+  }
+
+  &--error {
+    background: color-mix(in srgb, var(--mat-sys-error) 12%, transparent);
+    color: var(--mat-sys-error);
+  }
+
+  &--primary {
+    background: color-mix(in srgb, var(--mat-sys-primary) 12%, transparent);
+    color: var(--mat-sys-primary);
+  }
+}
+
+// ─── Count badge (absolute-positioned numeric bubble) ───────────────────────
+
+.count-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  padding: 0;
+  font-weight: 600;
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: var(--mat-sys-error);
+  color: var(--mat-sys-on-error);
+  line-height: 1;
+
+  &--sm {
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+  }
+
+  &--md {
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+  }
+
+  &--destructive {
+    background: var(--mat-sys-error);
+    color: var(--mat-sys-on-error);
+  }
+
+  &--primary {
+    background: var(--mat-sys-primary);
+    color: var(--mat-sys-on-primary);
+  }
+}
+
+// ─── Error badge (alias of count-badge with error semantics) ─────────────────
+
+.error-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  padding: 0;
+  font-weight: 600;
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: var(--mat-sys-error);
+  color: var(--mat-sys-on-error);
+  line-height: 1;
+
+  &--sm {
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+  }
+
+  &--md {
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+  }
+
+  &--destructive {
+    background: var(--mat-sys-error);
+    color: var(--mat-sys-on-error);
+  }
+}
+
+// ─── Read-only badge ────────────────────────────────────────────────────────
+
+.read-only-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 500;
+  background: color-mix(in srgb, var(--mat-sys-surface-variant) 60%, transparent);
+  color: var(--mat-sys-on-surface-variant);
+  border: 1px solid var(--mat-sys-outline-variant);
+}
+
+// ─── Phase badge ────────────────────────────────────────────────────────────
+
+.phase-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: color-mix(in srgb, var(--mat-sys-tertiary) 12%, transparent);
+  color: var(--mat-sys-tertiary);
+
+  &--complete {
+    background: color-mix(in srgb, #16a34a 12%, transparent);
+    color: #16a34a;
+  }
+
+  &--active {
+    background: color-mix(in srgb, var(--mat-sys-primary) 12%, transparent);
+    color: var(--mat-sys-primary);
+  }
+
+  &--pending {
+    background: color-mix(in srgb, #d97706 12%, transparent);
+    color: #d97706;
+  }
+}
+
+// ─── User badge ─────────────────────────────────────────────────────────────
+
+.user-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px 3px 3px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  background: color-mix(in srgb, var(--mat-sys-primary) 10%, transparent);
+  color: var(--mat-sys-primary);
+
+  &__avatar {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--mat-sys-primary);
+    color: var(--mat-sys-on-primary);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  &__name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+// ─── Binding indicator ──────────────────────────────────────────────────────
+
+.binding-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  background: color-mix(in srgb, var(--mat-sys-secondary) 10%, transparent);
+  color: var(--mat-sys-secondary);
+  border: 1px solid color-mix(in srgb, var(--mat-sys-secondary) 30%, transparent);
+
+  &__icon {
+    width: 12px;
+    height: 12px;
+    flex-shrink: 0;
+  }
+
+  &__text {
+    font-family: monospace;
+  }
+}
+
+.binding-indicator-tooltip {
+  font-size: 12px;
+}

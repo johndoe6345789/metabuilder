@@ -17,6 +17,8 @@ export interface SkeletonProps extends React.HTMLAttributes<HTMLSpanElement> {
   fullWidth?: boolean
   /** Custom component to render as skeleton root */
   component?: React.ElementType
+  /** Test ID for testing */
+  testId?: string
 }
 
 /**
@@ -43,6 +45,7 @@ export const Skeleton: React.FC<SkeletonProps> = ({
   component: Component = 'span',
   className,
   style,
+  testId,
   ...props
 }) => {
   const rootClassName = classNames(
@@ -59,7 +62,7 @@ export const Skeleton: React.FC<SkeletonProps> = ({
     height,
   }
 
-  return <Component className={rootClassName} style={rootStyle} {...props} />
+  return <Component className={rootClassName} style={rootStyle} data-testid={testId} aria-hidden="true" {...props} />
 }
 
 export default Skeleton

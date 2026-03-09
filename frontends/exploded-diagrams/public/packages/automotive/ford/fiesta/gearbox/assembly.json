@@ -1,0 +1,23 @@
+{
+  "name": "5-Speed Manual Gearbox",
+  "description": "IB5 Manual Transmission with Clutch Assembly - Ford Fiesta Mk7",
+  "category": "automotive",
+  "parts": [
+    "flywheel",
+    "clutch-disc",
+    "pressure-plate",
+    "release-bearing",
+    "bell-housing",
+    "input-shaft",
+    "layshaft",
+    "first-gear",
+    "second-gear",
+    "third-gear",
+    "fourth-gear",
+    "fifth-gear",
+    "output-shaft",
+    "synchro-hub",
+    "selector-fork",
+    "gear-case"
+  ]
+}

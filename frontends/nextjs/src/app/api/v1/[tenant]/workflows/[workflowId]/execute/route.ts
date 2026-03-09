@@ -3,14 +3,15 @@
  * PHASE 5: Full workflow integration
  */
 
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 
 export async function POST(
-  req: NextRequest,
+  _req: NextRequest,
   { params }: { params: Promise<{ tenant: string; workflowId: string }> },
 ) {
   try {
-    const { tenant, workflowId } = await params
+    const { tenant: _tenant, workflowId: _workflowId } = await params
 
     return NextResponse.json(
       {
@@ -20,7 +21,7 @@ export async function POST(
       },
       { status: 501 },
     )
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 },
@@ -29,8 +30,8 @@ export async function POST(
 }
 
 export async function GET(
-  req: NextRequest,
-  { params }: { params: Promise<{ tenant: string; workflowId: string }> },
+  _req: NextRequest,
+  { params: _params }: { params: Promise<{ tenant: string; workflowId: string }> },
 ) {
   return NextResponse.json(
     {

@@ -60,7 +60,7 @@ export interface UseClickOutsideOptions {
 
 export interface UseClickOutsideReturn<T extends HTMLElement = HTMLDivElement> {
   /** Ref to attach to the target element */
-  ref: React.RefObject<T>
+  ref: React.RefObject<T | null>
   /** Whether the element is currently open/visible */
   isOpen: boolean
   /** Set the open state */

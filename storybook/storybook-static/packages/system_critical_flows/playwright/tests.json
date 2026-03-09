@@ -1,0 +1,611 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "system_critical_flows",
+  "version": "1.0.0",
+  "description": "System-wide critical user flows - proves all essential functionality works",
+  "baseURL": "http://localhost:3000",
+  "setup": {
+    "beforeAll": [
+      {
+        "action": "seed",
+        "description": "Seed database with test data"
+      }
+    ]
+  },
+  "fixtures": {
+    "testUser": {
+      "email": "testuser@metabuilder.dev",
+      "password": "TestPassword123!"
+    },
+    "adminUser": {
+      "email": "admin@metabuilder.dev",
+      "password": "AdminPassword123!"
+    }
+  },
+  "tests": [
+    {
+      "name": "Flow 1.1: Hero page loads with marketing content",
+      "tags": ["@smoke", "@critical", "@public"],
+      "description": "Validates home page loads with hero section and CTA",
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Verify h1 heading is visible",
+          "action": "expect",
+          "role": "heading",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        },
+        {
+          "description": "Verify Get Started CTA button exists",
+          "action": "expect",
+          "role": "button",
+          "text": "Get Started",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Flow 1.2: Features section is visible",
+      "tags": ["@smoke", "@public"],
+      "description": "Validates features section displays on home page",
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "networkidle"
+        },
+        {
+          "description": "Verify features section is visible",
+          "action": "expect",
+          "testId": "features-section",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Flow 1.3: Navigation to login from CTA",
+      "tags": ["@smoke", "@critical", "@public"],
+      "description": "Validates clicking Get Started button navigates to login",
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "click",
+          "role": "button",
+          "text": "Get Started"
+        },
+        {
+          "action": "waitForNavigation"
+        },
+        {
+          "description": "Verify URL contains /login",
+          "action": "expect",
+          "assertion": {
+            "matcher": "toHaveURL",
+            "expected": "**/login"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Flow 2.1: Login page renders with form",
+      "tags": ["@smoke", "@auth"],
+      "description": "Validates login page displays email, password, and submit button",
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/login"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Verify email input exists",
+          "action": "expect",
+          "role": "textbox",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        },
+        {
+          "description": "Verify password input exists",
+          "action": "expect",
+          "selector": "input[type=\"password\"]",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        },
+        {
+          "description": "Verify login button exists",
+          "action": "expect",
+          "role": "button",
+          "text": "Login",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Flow 2.2: Login validation - empty form rejected",
+      "tags": ["@auth", "@validation"],
+      "description": "Validates form rejects empty submission",
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/login"
+        },
+        {
+          "action": "click",
+          "role": "button",
+          "text": "Login"
+        },
+        {
+          "action": "wait",
+          "timeout": 500
+        },
+        {
+          "description": "Verify still on login page",
+          "action": "expect",
+          "selector": "input[type=\"password\"]",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Flow 2.3: Login with test credentials",
+      "tags": ["@critical", "@auth"],
+      "description": "Validates successful login with test user credentials",
+      "timeout": 10000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/login"
+        },
+        {
+          "description": "Fill email field",
+          "action": "fill",
+          "selector": "input[type=\"email\"]",
+          "value": "testuser@metabuilder.dev"
+        },
+        {
+          "description": "Fill password field",
+          "action": "fill",
+          "selector": "input[type=\"password\"]",
+          "value": "TestPassword123!"
+        },
+        {
+          "action": "click",
+          "role": "button",
+          "text": "Login"
+        },
+        {
+          "action": "waitForNavigation"
+        },
+        {
+          "description": "Verify not on login page",
+          "action": "expect",
+          "assertion": {
+            "matcher": "toHaveURL",
+            "not": true,
+            "expected": "**/login"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Flow 2.4: Session persists on page reload",
+      "tags": ["@critical", "@auth"],
+      "description": "Validates session persists after page reload",
+      "timeout": 10000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/login"
+        },
+        {
+          "action": "fill",
+          "selector": "input[type=\"email\"]",
+          "value": "testuser@metabuilder.dev"
+        },
+        {
+          "action": "fill",
+          "selector": "input[type=\"password\"]",
+          "value": "TestPassword123!"
+        },
+        {
+          "action": "click",
+          "role": "button",
+          "text": "Login"
+        },
+        {
+          "action": "wait",
+          "timeout": 2000
+        },
+        {
+          "description": "Reload page",
+          "action": "evaluate",
+          "script": "window.location.reload();"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "networkidle"
+        },
+        {
+          "description": "Verify still authenticated",
+          "action": "expect",
+          "assertion": {
+            "matcher": "toHaveURL",
+            "not": true,
+            "expected": "**/login"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Flow 3.1: Dashboard displays user profile",
+      "tags": ["@critical", "@user"],
+      "description": "Validates dashboard loads with user profile section",
+      "timeout": 10000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/dashboard"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Verify dashboard header",
+          "action": "expect",
+          "role": "heading",
+          "text": "Dashboard",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Flow 3.2: Dashboard shows available packages",
+      "tags": ["@critical", "@packages"],
+      "description": "Validates packages section displays on dashboard",
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/dashboard"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "networkidle"
+        },
+        {
+          "description": "Verify packages section",
+          "action": "expect",
+          "testId": "packages-section",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Flow 3.3: Dashboard navigation menu works",
+      "tags": ["@navigation", "@user"],
+      "description": "Validates navigation menu displays with logout option",
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/dashboard"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Verify navigation",
+          "action": "expect",
+          "role": "navigation",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        },
+        {
+          "description": "Verify logout button",
+          "action": "expect",
+          "role": "button",
+          "text": "Logout",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Flow 4.1: Admin can access user management",
+      "tags": ["@admin", "@critical"],
+      "description": "Validates admin user management page is accessible",
+      "timeout": 10000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/admin/users"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Verify page loaded",
+          "action": "expect",
+          "role": "heading",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Flow 4.2: User list displays with pagination",
+      "tags": ["@admin", "@list"],
+      "description": "Validates user list displays on management page",
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/admin/users"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "networkidle"
+        },
+        {
+          "description": "Verify user list",
+          "action": "expect",
+          "selector": "table, [data-testid=\"user-list\"]",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Flow 4.3: Admin can view role management",
+      "tags": ["@admin", "@roles"],
+      "description": "Validates role management page is accessible",
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/admin/roles"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Verify roles section",
+          "action": "expect",
+          "role": "heading",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Flow 5.1: Package manager accessible",
+      "tags": ["@admin", "@packages"],
+      "description": "Validates package manager page is accessible",
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/admin/packages"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Verify packages header",
+          "action": "expect",
+          "role": "heading",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Flow 5.2: Available packages displayed",
+      "tags": ["@admin", "@packages"],
+      "description": "Validates package list displays",
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/admin/packages"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "networkidle"
+        },
+        {
+          "description": "Verify packages list",
+          "action": "expect",
+          "testId": "packages-list",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Flow 5.3: Can interact with package controls",
+      "tags": ["@admin", "@packages"],
+      "description": "Validates package action buttons are visible",
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/admin/packages"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "networkidle"
+        },
+        {
+          "description": "Verify action buttons",
+          "action": "expect",
+          "role": "button",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Flow 6.1: Header navigation works",
+      "tags": ["@smoke", "@navigation"],
+      "description": "Validates header is visible on home page",
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Verify header",
+          "action": "expect",
+          "role": "heading",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Flow 6.2: Footer contains links",
+      "tags": ["@smoke", "@navigation"],
+      "description": "Validates footer is visible after scrolling",
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "networkidle"
+        },
+        {
+          "description": "Scroll to bottom",
+          "action": "evaluate",
+          "script": "window.scrollTo(0, document.body.scrollHeight);"
+        },
+        {
+          "description": "Verify footer",
+          "action": "expect",
+          "role": "contentinfo",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Flow 6.3: Mobile responsive navigation",
+      "tags": ["@responsive", "@mobile"],
+      "description": "Validates header works on mobile viewport",
+      "steps": [
+        {
+          "action": "evaluate",
+          "script": "window.resizeTo(375, 667);"
+        },
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Verify header on mobile",
+          "action": "expect",
+          "role": "navigation",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Flow 7.1: 404 page displays for invalid routes",
+      "tags": ["@error-handling"],
+      "description": "Validates 404 page displays for invalid routes",
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/invalid-route-xyz-12345"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Verify page has content",
+          "action": "expect",
+          "role": "main",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Flow 7.2: Page loads in reasonable time",
+      "tags": ["@performance", "@critical"],
+      "description": "Validates home page loads within acceptable time",
+      "timeout": 6000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "networkidle"
+        },
+        {
+          "description": "Verify content",
+          "action": "expect",
+          "role": "main",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    }
+  ]
+}

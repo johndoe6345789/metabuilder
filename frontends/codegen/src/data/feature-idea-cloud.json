@@ -1,0 +1,120 @@
+{
+  "ideas": [
+    {
+      "id": "idea-1",
+      "title": "AI Code Assistant",
+      "description": "Integrate an AI assistant that can suggest code improvements and answer questions",
+      "category": "AI/ML",
+      "priority": "high",
+      "status": "completed",
+      "createdAtOffset": -10000000
+    },
+    {
+      "id": "idea-2",
+      "title": "Real-time Collaboration",
+      "description": "Allow multiple developers to work on the same project simultaneously",
+      "category": "Collaboration",
+      "priority": "high",
+      "status": "idea",
+      "createdAtOffset": -9000000
+    },
+    {
+      "id": "idea-3",
+      "title": "Component Marketplace",
+      "description": "A marketplace where users can share and download pre-built components",
+      "category": "Community",
+      "priority": "medium",
+      "status": "idea",
+      "createdAtOffset": -8000000
+    },
+    {
+      "id": "idea-4",
+      "title": "Visual Git Integration",
+      "description": "Git operations through a visual interface with branch visualization",
+      "category": "DevOps",
+      "priority": "high",
+      "status": "planned",
+      "createdAtOffset": -7000000
+    },
+    {
+      "id": "idea-5",
+      "title": "API Mock Server",
+      "description": "Built-in mock server for testing API integrations",
+      "category": "Testing",
+      "priority": "medium",
+      "status": "idea",
+      "createdAtOffset": -6000000
+    },
+    {
+      "id": "idea-6",
+      "title": "Performance Profiler",
+      "description": "Analyze and optimize application performance with visual metrics",
+      "category": "Performance",
+      "priority": "medium",
+      "status": "idea",
+      "createdAtOffset": -5000000
+    },
+    {
+      "id": "idea-7",
+      "title": "Theme Presets",
+      "description": "Pre-designed theme templates for quick project setup",
+      "category": "Design",
+      "priority": "low",
+      "status": "completed",
+      "createdAtOffset": -4000000
+    },
+    {
+      "id": "idea-8",
+      "title": "Database Schema Migrations",
+      "description": "Visual tool for creating and managing database migrations",
+      "category": "Database",
+      "priority": "high",
+      "status": "in-progress",
+      "createdAtOffset": -3000000
+    },
+    {
+      "id": "idea-9",
+      "title": "Mobile App Preview",
+      "description": "Live preview on actual mobile devices or simulators",
+      "category": "Mobile",
+      "priority": "medium",
+      "status": "planned",
+      "createdAtOffset": -2000000
+    },
+    {
+      "id": "idea-10",
+      "title": "Accessibility Checker",
+      "description": "Automated accessibility testing and suggestions",
+      "category": "Accessibility",
+      "priority": "high",
+      "status": "idea",
+      "createdAtOffset": -1000000
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-1",
+      "source": "idea-1",
+      "target": "idea-8",
+      "sourceHandle": "right-0",
+      "targetHandle": "left-0",
+      "label": "requires"
+    },
+    {
+      "id": "edge-2",
+      "source": "idea-2",
+      "target": "idea-4",
+      "sourceHandle": "bottom-0",
+      "targetHandle": "top-0",
+      "label": "works with"
+    },
+    {
+      "id": "edge-3",
+      "source": "idea-8",
+      "target": "idea-5",
+      "sourceHandle": "bottom-0",
+      "targetHandle": "left-0",
+      "label": "includes"
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "actions": {
+    "navigate": "Navigate",
+    "click": "Click",
+    "fill": "Fill",
+    "expect": "Expect",
+    "wait": "Wait",
+    "select": "Select",
+    "check": "Check",
+    "uncheck": "Uncheck"
+  },
+  "buttons": {
+    "addStep": "Add Step",
+    "createTest": "Create Test",
+    "runTest": "Run Test"
+  },
+  "defaults": {
+    "newTestName": "New Test"
+  },
+  "descriptions": {
+    "testSteps": "Define the actions for this test"
+  },
+  "emptyStates": {
+    "noSteps": "No steps yet. Click \"Add Step\" to create test actions.",
+    "noTestSelectedBody": "Create or select a test to configure",
+    "noTestSelectedTitle": "No test selected",
+    "noTests": "No tests yet. Click + to create one."
+  },
+  "fields": {
+    "action": "Action",
+    "assertion": "Assertion",
+    "description": "Description",
+    "pageUrl": "Page URL",
+    "selector": "Selector",
+    "testName": "Test Name",
+    "timeout": "Timeout (ms)",
+    "value": "Value"
+  },
+  "headers": {
+    "testConfiguration": "Test Configuration",
+    "testDetails": "Test Details",
+    "testSteps": "Test Steps",
+    "tests": "E2E Tests"
+  },
+  "labels": {
+    "steps": "steps",
+    "stepPrefix": "Step"
+  },
+  "messages": {
+    "generated": "Test generated successfully!",
+    "generating": "Generating test with AI...",
+    "failed": "Failed to generate test"
+  },
+  "placeholders": {
+    "assertion": "toBeVisible(), toHaveText('...')",
+    "description": "What does this test verify?",
+    "pageUrl": "/login",
+    "selector": "button, #login, [data-testid='submit']",
+    "value": "Text to enter"
+  },
+  "prompts": {
+    "describeTest": "Describe the E2E test you want to generate:",
+    "template": "You are a Playwright test generator. Create an E2E test based on: \"{description}\"\n\nReturn a valid JSON object with a single property \"test\":\n{\n  \"test\": {\n    \"id\": \"unique-id\",\n    \"name\": \"Test Name\",\n    \"description\": \"What this test does\",\n    \"pageUrl\": \"/path\",\n    \"steps\": [\n      {\n        \"id\": \"step-id\",\n        \"action\": \"navigate\" | \"click\" | \"fill\" | \"expect\" | \"wait\" | \"select\" | \"check\" | \"uncheck\",\n        \"selector\": \"css selector or text\",\n        \"value\": \"value for fill/select actions\",\n        \"assertion\": \"expected value for expect action\",\n        \"timeout\": 5000\n      }\n    ]\n  }\n}\n\nCreate a complete test flow with appropriate selectors and assertions."
+  }
+}

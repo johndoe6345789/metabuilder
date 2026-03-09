@@ -6,9 +6,9 @@
 #pragma once
 
 #include "server.hpp"
-#include "server_start.hpp"
-#include "server_stop.hpp"
-#include "server_accept_loop.hpp"
-#include "server_handle_connection.hpp"
-#include "server_parse_request.hpp"
-#include "server_process_request.hpp"
+#include "lifecycle/server_start.hpp"
+#include "lifecycle/server_stop.hpp"
+#include "lifecycle/server_accept_loop.hpp"
+#include "lifecycle/server_handle_connection.hpp"
+#include "parsing/server_parse_request.hpp"
+#include "lifecycle/server_process_request.hpp"

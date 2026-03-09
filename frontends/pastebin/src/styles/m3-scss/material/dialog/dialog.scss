@@ -1,0 +1,263 @@
+@use '@angular/cdk';
+@use './m3-dialog';
+@use '../core/tokens/token-utils';
+@use '../core/style/variables';
+
+// Dialog content max height. This has been copied from the standard dialog
+// and is needed to make the dialog content scrollable.
+$mat-dialog-content-max-height: 65vh !default;
+// Dialog button horizontal margin. This has been extracted from MDC as they
+// don't expose this value as variable.
+$mat-dialog-button-horizontal-margin: 8px !default;
+
+// Dialog container max height. This has been given a default value so the
+// flex-children can be calculated and not overflow on smaller screens.
+// Fixes b/323588333
+$mat-dialog-container-max-height: 95vh !default;
+
+$fallbacks: m3-dialog.get-tokens();
+
+// Note that we disable fallback declarations, but we don't disable fallback
+// values, because there are a lot of internal apps that don't include a proper
+// theme in their tests.
+.mat-mdc-dialog-container {
+  width: 100%;
+  height: 100%;
+  display: block;
+  box-sizing: border-box;
+  max-height: inherit;
+  min-height: inherit;
+  min-width: inherit;
+  max-width: inherit;
+
+  // The dialog container is focusable. We remove the default outline shown in browsers.
+  outline: 0;
+}
+
+// This needs extra specificity so it doesn't get overwritten by the CDK structural styles.
+.cdk-overlay-pane.mat-mdc-dialog-panel {
+  max-width: token-utils.slot(dialog-container-max-width, $fallbacks);
+  min-width: token-utils.slot(dialog-container-min-width, $fallbacks);
+
+  @media (variables.$xsmall) {
+    max-width: token-utils.slot(dialog-container-small-max-width, $fallbacks);
+  }
+}
+
+.mat-mdc-dialog-inner-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  box-sizing: border-box;
+  height: 100%;
+  opacity: 0;
+  transition: opacity linear var(--mat-dialog-transition-duration, 0ms);
+  max-height: inherit;
+  min-height: inherit;
+  min-width: inherit;
+  max-width: inherit;
+
+  .mdc-dialog--closing & {
+    transition: opacity 75ms linear;
+    transform: none;
+  }
+
+  .mdc-dialog--open & {
+    opacity: 1;
+  }
+
+  ._mat-animation-noopable & {
+    transition: none;
+  }
+}
+
+.mat-mdc-dialog-surface {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 0;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow-y: auto;
+  outline: 0;
+  transform: scale(0.8);
+  transition: transform var(--mat-dialog-transition-duration, 0ms) cubic-bezier(0, 0, 0.2, 1);
+  max-height: inherit;
+  min-height: inherit;
+  min-width: inherit;
+  max-width: inherit;
+
+  box-shadow: token-utils.slot(dialog-container-elevation-shadow, $fallbacks, none);
+
+  border-radius: token-utils.slot(dialog-container-shape, $fallbacks, 4px);
+  background-color: token-utils.slot(dialog-container-color, $fallbacks, white);
+
+  [dir='rtl'] & {
+    text-align: right;
+  }
+
+  .mdc-dialog--open &,
+  .mdc-dialog--closing & {
+    transform: none;
+  }
+
+  ._mat-animation-noopable & {
+    transition: none;
+  }
+
+  &::before {
+    // Renders an outline in high contrast mode.
+    position: absolute;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    border: 2px solid transparent;
+    border-radius: inherit;
+    content: '';
+    pointer-events: none;
+  }
+}
+
+.mat-mdc-dialog-title {
+  display: block;
+  position: relative;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  margin: 0 0 1px;
+
+  padding: token-utils.slot(dialog-headline-padding, $fallbacks, 6px 24px 13px);
+
+  // This was used by MDC to set the text baseline. We should figure out a way to
+  // remove it, because it can introduce unnecessary whitespace at the beginning
+  // of the element.
+  &::before {
+    display: inline-block;
+    width: 0;
+    height: 40px;
+    content: '';
+    vertical-align: 0;
+  }
+
+  [dir='rtl'] & {
+    text-align: right;
+  }
+
+  // Nested to maintain the old specificity.
+  .mat-mdc-dialog-container & {
+    color: token-utils.slot(dialog-subhead-color, $fallbacks, rgba(0, 0, 0, 0.87));
+    font-family: token-utils.slot(dialog-subhead-font, $fallbacks, inherit);
+    line-height: token-utils.slot(dialog-subhead-line-height, $fallbacks, 1.5rem);
+    font-size: token-utils.slot(dialog-subhead-size, $fallbacks, 1rem);
+    font-weight: token-utils.slot(dialog-subhead-weight, $fallbacks, 400);
+    letter-spacing: token-utils.slot(dialog-subhead-tracking, $fallbacks, 0.03125em);
+  }
+}
+
+.mat-mdc-dialog-content {
+  display: block;
+  flex-grow: 1;
+  box-sizing: border-box;
+  margin: 0;
+  overflow: auto;
+  max-height: $mat-dialog-content-max-height;
+
+  > :first-child {
+    margin-top: 0;
+  }
+
+  > :last-child {
+    margin-bottom: 0;
+  }
+
+  // Nested to maintain the old specificity.
+  .mat-mdc-dialog-container & {
+      color: token-utils.slot(dialog-supporting-text-color, $fallbacks, rgba(0, 0, 0, 0.6));
+      font-family: token-utils.slot(dialog-supporting-text-font, $fallbacks, inherit);
+      line-height: token-utils.slot(dialog-supporting-text-line-height, $fallbacks, 1.5rem);
+      font-size: token-utils.slot(dialog-supporting-text-size, $fallbacks, 1rem);
+      font-weight: token-utils.slot(dialog-supporting-text-weight, $fallbacks, 400);
+      letter-spacing: token-utils.slot(dialog-supporting-text-tracking, $fallbacks, 0.03125em);
+  }
+
+  // These styles need a bit more specificity.
+  .mat-mdc-dialog-container & {
+    padding: token-utils.slot(dialog-content-padding, $fallbacks, 20px 24px 0);
+  }
+
+  // Note: we can achieve this with a `:has` selector, but it results in an
+  // increased specificity which breaks a lot of internal clients.
+  .mat-mdc-dialog-container-with-actions & {
+    padding: token-utils.slot(dialog-with-actions-content-padding, $fallbacks, 20px 24px 0);
+  }
+
+  .mat-mdc-dialog-container .mat-mdc-dialog-title + & {
+    padding-top: 0;
+  }
+}
+
+.mat-mdc-dialog-actions {
+  display: flex;
+  position: relative;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  align-items: center;
+  box-sizing: border-box;
+  min-height: 52px;
+  margin: 0;
+  border-top: 1px solid transparent;
+
+  // For backwards compatibility, actions align at start by default. MDC usually
+  // aligns actions at the end of the container.
+  padding: token-utils.slot(dialog-actions-padding, $fallbacks, 16px 24px);
+  justify-content: token-utils.slot(dialog-actions-alignment, $fallbacks, flex-end);
+
+  @include cdk.high-contrast {
+    border-top-color: CanvasText;
+  }
+
+  // .mat-mdc-dialog-actions-align-{start|center|end} are set by directive input "align"
+  // [align='start'], [align='center'] and [align='right'] are kept for backwards compability
+  &.mat-mdc-dialog-actions-align-start, &[align='start'] {
+    justify-content: start;
+  }
+
+  &.mat-mdc-dialog-actions-align-center, &[align='center'] {
+    justify-content: center;
+  }
+
+  &.mat-mdc-dialog-actions-align-end, &[align='end'] {
+    justify-content: flex-end;
+  }
+
+  // MDC applies horizontal margin to buttons that have an explicit `mdc-dialog__button`
+  // class applied. We can't set this class for projected buttons that consumers of the
+  // dialog create. To workaround this, we select all Material Design buttons we know and
+  // add the necessary spacing similar to how MDC applies spacing.
+  .mat-button-base + .mat-button-base,
+  .mat-mdc-button-base + .mat-mdc-button-base {
+    margin-left: $mat-dialog-button-horizontal-margin;
+
+    [dir='rtl'] & {
+      margin-left: 0;
+      margin-right: $mat-dialog-button-horizontal-margin;
+    }
+  }
+}
+
+// When a component is passed into the dialog, the host element interrupts
+// the `display:flex` from affecting the dialog title, content, and
+// actions. To fix this, we make the component host `display: contents` by
+// marking its host with the `mat-mdc-dialog-component-host` class.
+//
+// Note that this problem does not exist when a template ref is used since
+// the title, contents, and actions are then nested directly under the
+// dialog surface.
+.mat-mdc-dialog-component-host {
+  display: contents;
+}
+

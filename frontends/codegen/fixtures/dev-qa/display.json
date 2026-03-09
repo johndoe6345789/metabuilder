@@ -1,0 +1,42 @@
+{
+  "id": "smoke-display",
+  "name": "Smoke Display",
+  "layout": {
+    "type": "single"
+  },
+  "dataSources": [],
+  "components": [
+    {
+      "id": "display-section",
+      "type": "section",
+      "children": [
+        {
+          "id": "display-heading",
+          "type": "Heading",
+          "props": {
+            "level": 3,
+            "children": "Display Smoke Check"
+          }
+        },
+        {
+          "id": "display-text",
+          "type": "Text",
+          "props": {
+            "children": "Checks text, badges, and separators for QA verification."
+          }
+        },
+        {
+          "id": "display-badge",
+          "type": "Badge",
+          "props": {
+            "children": "QA"
+          }
+        },
+        {
+          "id": "display-divider",
+          "type": "Divider"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,164 @@
+{
+  "$schema": "../../../schemas/plugin-nodes.schema.json",
+  "category": {
+    "id": "logic",
+    "name": "Logic",
+    "color": "#45b7d1",
+    "icon": "git-branch"
+  },
+  "nodes": [
+    {
+      "id": "logic.and",
+      "name": "AND",
+      "description": "Logical AND - returns true if all values are truthy",
+      "icon": "git-branch",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "values": [] }
+    },
+    {
+      "id": "logic.or",
+      "name": "OR",
+      "description": "Logical OR - returns true if any value is truthy",
+      "icon": "git-branch",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "values": [] }
+    },
+    {
+      "id": "logic.not",
+      "name": "NOT",
+      "description": "Logical NOT - inverts boolean value",
+      "icon": "git-branch",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "value": "" }
+    },
+    {
+      "id": "logic.xor",
+      "name": "XOR",
+      "description": "Logical XOR - returns true if values are different",
+      "icon": "git-branch",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "a": "", "b": "" }
+    },
+    {
+      "id": "logic.equals",
+      "name": "Equals",
+      "description": "Equality check (strict or loose comparison)",
+      "icon": "equal",
+      "inputs": ["main"],
+      "outputs": ["true", "false"],
+      "defaultConfig": { "a": "", "b": "", "strict": true }
+    },
+    {
+      "id": "logic.notEquals",
+      "name": "Not Equals",
+      "description": "Inequality check",
+      "icon": "equal",
+      "inputs": ["main"],
+      "outputs": ["true", "false"],
+      "defaultConfig": { "a": "", "b": "", "strict": true }
+    },
+    {
+      "id": "logic.gt",
+      "name": "Greater Than",
+      "description": "Check if a > b",
+      "icon": "chevron-right",
+      "inputs": ["main"],
+      "outputs": ["true", "false"],
+      "defaultConfig": { "a": "", "b": "" }
+    },
+    {
+      "id": "logic.gte",
+      "name": "Greater or Equal",
+      "description": "Check if a >= b",
+      "icon": "chevron-right",
+      "inputs": ["main"],
+      "outputs": ["true", "false"],
+      "defaultConfig": { "a": "", "b": "" }
+    },
+    {
+      "id": "logic.lt",
+      "name": "Less Than",
+      "description": "Check if a < b",
+      "icon": "chevron-left",
+      "inputs": ["main"],
+      "outputs": ["true", "false"],
+      "defaultConfig": { "a": "", "b": "" }
+    },
+    {
+      "id": "logic.lte",
+      "name": "Less or Equal",
+      "description": "Check if a <= b",
+      "icon": "chevron-left",
+      "inputs": ["main"],
+      "outputs": ["true", "false"],
+      "defaultConfig": { "a": "", "b": "" }
+    },
+    {
+      "id": "logic.in",
+      "name": "In List",
+      "description": "Check if value is in array",
+      "icon": "list",
+      "inputs": ["main"],
+      "outputs": ["true", "false"],
+      "defaultConfig": { "value": "", "array": [] }
+    },
+    {
+      "id": "logic.between",
+      "name": "Between",
+      "description": "Check if value is between min and max",
+      "icon": "sliders",
+      "inputs": ["main"],
+      "outputs": ["true", "false"],
+      "defaultConfig": { "value": "", "min": "", "max": "" }
+    },
+    {
+      "id": "logic.isNull",
+      "name": "Is Null",
+      "description": "Check if value is null or undefined",
+      "icon": "help-circle",
+      "inputs": ["main"],
+      "outputs": ["true", "false"],
+      "defaultConfig": { "value": "" }
+    },
+    {
+      "id": "logic.isEmpty",
+      "name": "Is Empty",
+      "description": "Check if value is empty (null, undefined, empty string, empty array)",
+      "icon": "help-circle",
+      "inputs": ["main"],
+      "outputs": ["true", "false"],
+      "defaultConfig": { "value": "" }
+    },
+    {
+      "id": "logic.typeOf",
+      "name": "Type Of",
+      "description": "Get the type of a value",
+      "icon": "type",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "value": "" }
+    },
+    {
+      "id": "logic.ternary",
+      "name": "Ternary",
+      "description": "Conditional expression: condition ? ifTrue : ifFalse",
+      "icon": "help-circle",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "condition": "", "ifTrue": "", "ifFalse": "" }
+    },
+    {
+      "id": "logic.coalesce",
+      "name": "Coalesce",
+      "description": "Return first non-null value",
+      "icon": "layers",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "values": [] }
+    }
+  ]
+}

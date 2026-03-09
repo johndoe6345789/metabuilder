@@ -1,0 +1,6 @@
+{
+  "type": "Dialog,\n  DialogContent,\n  DialogDescription,\n  DialogHeader,\n  DialogTitle,",
+  "props": {
+    "onOpenChange": "> void"
+  }
+}

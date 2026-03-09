@@ -1,0 +1,575 @@
+@use '../core/style/layout-common';
+@use '../core/style/vendor-prefixes';
+@use '../core/tokens/token-utils';
+@use './m3-slide-toggle';
+@use 'cdk';
+
+$_interactive-disabled-selector: '.mat-mdc-slide-toggle-disabled-interactive.mdc-switch--disabled';
+
+$fallbacks: m3-slide-toggle.get-tokens();
+
+.mdc-switch {
+  align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  flex-shrink: 0;
+  margin: 0;
+  outline: none;
+  overflow: visible;
+  padding: 0;
+  position: relative;
+
+  width: token-utils.slot(slide-toggle-track-width, $fallbacks);
+
+  &.mdc-switch--disabled {
+    cursor: default;
+    pointer-events: none;
+  }
+
+  &.mat-mdc-slide-toggle-disabled-interactive {
+    pointer-events: auto;
+  }
+}
+
+// Ensure no label element (with a click handler) present to ensure hidden from screen readers.
+label:empty {
+  display: none;
+}
+
+.mdc-switch__track {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+
+  height: token-utils.slot(slide-toggle-track-height, $fallbacks);
+  border-radius: token-utils.slot(slide-toggle-track-shape, $fallbacks);
+
+  .mdc-switch--disabled.mdc-switch & {
+    opacity: token-utils.slot(slide-toggle-disabled-track-opacity, $fallbacks);
+  }
+
+  &::before,
+  &::after {
+    border: 1px solid transparent;
+    border-radius: inherit;
+    box-sizing: border-box;
+    content: '';
+    height: 100%;
+    left: 0;
+    position: absolute;
+    width: 100%;
+
+    border-width: token-utils.slot(slide-toggle-track-outline-width, $fallbacks);
+    border-color: token-utils.slot(slide-toggle-track-outline-color, $fallbacks);
+
+    .mdc-switch--selected & {
+      border-width: token-utils.slot(slide-toggle-selected-track-outline-width, $fallbacks);
+      border-color: token-utils.slot(slide-toggle-selected-track-outline-color, $fallbacks);
+    }
+
+    .mdc-switch--disabled & {
+      border-width: token-utils.slot(
+        slide-toggle-disabled-unselected-track-outline-width,
+        $fallbacks
+      );
+      border-color: token-utils.slot(
+        slide-toggle-disabled-unselected-track-outline-color,
+        $fallbacks
+      );
+    }
+  }
+
+  @include cdk.high-contrast {
+    border-color: currentColor;
+  }
+
+  &::before {
+    transition: transform 75ms 0ms cubic-bezier(0, 0, 0.2, 1);
+    transform: translateX(0);
+
+    background: token-utils.slot(slide-toggle-unselected-track-color, $fallbacks);
+
+    .mdc-switch--selected & {
+      transition: transform 75ms 0ms cubic-bezier(0.4, 0, 0.6, 1);
+      transform: translateX(100%);
+
+      [dir='rtl'] .mdc-switch--selected & {
+        transform: translateX(-100%);
+      }
+    }
+
+    .mdc-switch--selected & {
+      opacity: token-utils.slot(slide-toggle-hidden-track-opacity, $fallbacks);
+      transition: token-utils.slot(slide-toggle-hidden-track-transition, $fallbacks);
+    }
+
+    .mdc-switch--unselected & {
+      opacity: token-utils.slot(slide-toggle-visible-track-opacity, $fallbacks);
+      transition: token-utils.slot(slide-toggle-visible-track-transition, $fallbacks);
+    }
+
+    .mdc-switch:enabled:hover:not(:focus):not(:active) & {
+      background: token-utils.slot(slide-toggle-unselected-hover-track-color, $fallbacks);
+    }
+
+    .mdc-switch:enabled:focus:not(:active) & {
+      background: token-utils.slot(slide-toggle-unselected-focus-track-color, $fallbacks);
+    }
+
+    .mdc-switch:enabled:active & {
+      background: token-utils.slot(slide-toggle-unselected-pressed-track-color, $fallbacks);
+    }
+
+    #{$_interactive-disabled-selector}:hover:not(:focus):not(:active) &,
+    #{$_interactive-disabled-selector}:focus:not(:active) &,
+    #{$_interactive-disabled-selector}:active &,
+    .mdc-switch.mdc-switch--disabled & {
+      background: token-utils.slot(slide-toggle-disabled-unselected-track-color, $fallbacks);
+    }
+  }
+
+  &::after {
+    transform: translateX(-100%);
+
+    background: token-utils.slot(slide-toggle-selected-track-color, $fallbacks);
+
+    [dir='rtl'] & {
+      transform: translateX(100%);
+    }
+
+    .mdc-switch--selected & {
+      transform: translateX(0);
+    }
+
+    .mdc-switch--selected & {
+      opacity: token-utils.slot(slide-toggle-visible-track-opacity, $fallbacks);
+      transition: token-utils.slot(slide-toggle-visible-track-transition, $fallbacks);
+    }
+
+    .mdc-switch--unselected & {
+      opacity: token-utils.slot(slide-toggle-hidden-track-opacity, $fallbacks);
+      transition: token-utils.slot(slide-toggle-hidden-track-transition, $fallbacks);
+    }
+
+    .mdc-switch:enabled:hover:not(:focus):not(:active) & {
+      background: token-utils.slot(slide-toggle-selected-hover-track-color, $fallbacks);
+    }
+
+    .mdc-switch:enabled:focus:not(:active) & {
+      background: token-utils.slot(slide-toggle-selected-focus-track-color, $fallbacks);
+    }
+
+    .mdc-switch:enabled:active & {
+      background: token-utils.slot(slide-toggle-selected-pressed-track-color, $fallbacks);
+    }
+
+    #{$_interactive-disabled-selector}:hover:not(:focus):not(:active) &,
+    #{$_interactive-disabled-selector}:focus:not(:active) &,
+    #{$_interactive-disabled-selector}:active &,
+    .mdc-switch.mdc-switch--disabled & {
+      background: token-utils.slot(slide-toggle-disabled-selected-track-color, $fallbacks);
+    }
+  }
+}
+
+.mdc-switch__handle-track {
+  height: 100%;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  transition: transform 75ms 0ms cubic-bezier(0.4, 0, 0.2, 1);
+  left: 0;
+  right: auto;
+  transform: translateX(0);
+
+  width: calc(100% - #{token-utils.slot(slide-toggle-handle-width, $fallbacks)});
+
+  [dir='rtl'] & {
+    left: auto;
+    right: 0;
+  }
+
+  .mdc-switch--selected & {
+    transform: translateX(100%);
+
+    [dir='rtl'] & {
+      transform: translateX(-100%);
+    }
+  }
+}
+
+.mdc-switch__handle {
+  display: flex;
+  pointer-events: auto;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 0;
+  right: auto;
+
+  // Used for M3 animations. Does not affect the M2 slide-toggle
+  // because the width and height are static, and the margin is unused.
+  transition:
+    width 75ms cubic-bezier(0.4, 0, 0.2, 1),
+    height 75ms cubic-bezier(0.4, 0, 0.2, 1),
+    margin 75ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  width: token-utils.slot(slide-toggle-handle-width, $fallbacks);
+  height: token-utils.slot(slide-toggle-handle-height, $fallbacks);
+  border-radius: token-utils.slot(slide-toggle-handle-shape, $fallbacks);
+
+  [dir='rtl'] & {
+    left: auto;
+    right: 0;
+  }
+
+  .mat-mdc-slide-toggle .mdc-switch--unselected & {
+    width: token-utils.slot(slide-toggle-unselected-handle-size, $fallbacks);
+    height: token-utils.slot(slide-toggle-unselected-handle-size, $fallbacks);
+    margin: token-utils.slot(slide-toggle-unselected-handle-horizontal-margin, $fallbacks);
+
+    &:has(.mdc-switch__icons) {
+      margin: token-utils.slot(
+        slide-toggle-unselected-with-icon-handle-horizontal-margin,
+        $fallbacks
+      );
+    }
+  }
+
+  .mat-mdc-slide-toggle .mdc-switch--selected & {
+    width: token-utils.slot(slide-toggle-selected-handle-size, $fallbacks);
+    height: token-utils.slot(slide-toggle-selected-handle-size, $fallbacks);
+    margin: token-utils.slot(slide-toggle-selected-handle-horizontal-margin, $fallbacks);
+
+    &:has(.mdc-switch__icons) {
+      margin: token-utils.slot(
+        slide-toggle-selected-with-icon-handle-horizontal-margin,
+        $fallbacks
+      );
+    }
+  }
+
+  .mat-mdc-slide-toggle &:has(.mdc-switch__icons) {
+    width: token-utils.slot(slide-toggle-with-icon-handle-size, $fallbacks);
+    height: token-utils.slot(slide-toggle-with-icon-handle-size, $fallbacks);
+  }
+
+  .mat-mdc-slide-toggle .mdc-switch:active:not(.mdc-switch--disabled) & {
+    width: token-utils.slot(slide-toggle-pressed-handle-size, $fallbacks);
+    height: token-utils.slot(slide-toggle-pressed-handle-size, $fallbacks);
+  }
+
+  .mat-mdc-slide-toggle .mdc-switch--selected:active:not(.mdc-switch--disabled) & {
+    margin: token-utils.slot(slide-toggle-selected-pressed-handle-horizontal-margin, $fallbacks);
+  }
+
+  .mat-mdc-slide-toggle .mdc-switch--unselected:active:not(.mdc-switch--disabled) & {
+    margin: token-utils.slot(slide-toggle-unselected-pressed-handle-horizontal-margin, $fallbacks);
+  }
+
+  .mdc-switch--disabled.mdc-switch--selected &::after {
+    opacity: token-utils.slot(slide-toggle-disabled-selected-handle-opacity, $fallbacks);
+  }
+
+  .mdc-switch--disabled.mdc-switch--unselected &::after {
+    opacity: token-utils.slot(slide-toggle-disabled-unselected-handle-opacity, $fallbacks);
+  }
+
+  &::before,
+  &::after {
+    border: 1px solid transparent;
+    border-radius: inherit;
+    box-sizing: border-box;
+    content: '';
+    width: 100%;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    transition:
+      background-color 75ms 0ms cubic-bezier(0.4, 0, 0.2, 1),
+      border-color 75ms 0ms cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: -1;
+
+    @include cdk.high-contrast {
+      border-color: currentColor;
+    }
+  }
+
+  &::after {
+    .mdc-switch--selected:enabled & {
+      background: token-utils.slot(slide-toggle-selected-handle-color, $fallbacks);
+    }
+
+    .mdc-switch--selected:enabled:hover:not(:focus):not(:active) & {
+      background: token-utils.slot(slide-toggle-selected-hover-handle-color, $fallbacks);
+    }
+
+    .mdc-switch--selected:enabled:focus:not(:active) & {
+      background: token-utils.slot(slide-toggle-selected-focus-handle-color, $fallbacks);
+    }
+
+    .mdc-switch--selected:enabled:active & {
+      background: token-utils.slot(slide-toggle-selected-pressed-handle-color, $fallbacks);
+    }
+
+    #{$_interactive-disabled-selector}.mdc-switch--selected:hover:not(:focus):not(:active) &,
+    #{$_interactive-disabled-selector}.mdc-switch--selected:focus:not(:active) &,
+    #{$_interactive-disabled-selector}.mdc-switch--selected:active &,
+    .mdc-switch--selected.mdc-switch--disabled & {
+      background: token-utils.slot(slide-toggle-disabled-selected-handle-color, $fallbacks);
+    }
+
+    .mdc-switch--unselected:enabled & {
+      background: token-utils.slot(slide-toggle-unselected-handle-color, $fallbacks);
+    }
+
+    .mdc-switch--unselected:enabled:hover:not(:focus):not(:active) & {
+      background: token-utils.slot(slide-toggle-unselected-hover-handle-color, $fallbacks);
+    }
+
+    .mdc-switch--unselected:enabled:focus:not(:active) & {
+      background: token-utils.slot(slide-toggle-unselected-focus-handle-color, $fallbacks);
+    }
+
+    .mdc-switch--unselected:enabled:active & {
+      background: token-utils.slot(slide-toggle-unselected-pressed-handle-color, $fallbacks);
+    }
+
+    .mdc-switch--unselected.mdc-switch--disabled & {
+      background: token-utils.slot(slide-toggle-disabled-unselected-handle-color, $fallbacks);
+    }
+  }
+
+  &::before {
+    background: token-utils.slot(slide-toggle-handle-surface-color, $fallbacks);
+  }
+}
+
+.mdc-switch__shadow {
+  border-radius: inherit;
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+
+  .mdc-switch:enabled & {
+    box-shadow: token-utils.slot(slide-toggle-handle-elevation-shadow, $fallbacks);
+  }
+
+  #{$_interactive-disabled-selector}:hover:not(:focus):not(:active) &,
+  #{$_interactive-disabled-selector}:focus:not(:active) &,
+  #{$_interactive-disabled-selector}:active &,
+  .mdc-switch.mdc-switch--disabled & {
+    box-shadow: token-utils.slot(slide-toggle-disabled-handle-elevation-shadow, $fallbacks);
+  }
+}
+
+.mdc-switch__ripple {
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+
+  width: token-utils.slot(slide-toggle-state-layer-size, $fallbacks);
+  height: token-utils.slot(slide-toggle-state-layer-size, $fallbacks);
+
+  &::after {
+    content: '';
+    opacity: 0;
+
+    .mdc-switch--disabled & {
+      display: none;
+    }
+
+    .mat-mdc-slide-toggle-disabled-interactive & {
+      display: block;
+    }
+
+    .mdc-switch:hover & {
+      transition: 75ms opacity cubic-bezier(0, 0, 0.2, 1);
+    }
+
+    #{$_interactive-disabled-selector}:enabled:focus &,
+    #{$_interactive-disabled-selector}:enabled:active &,
+    #{$_interactive-disabled-selector}:enabled:hover:not(:focus) &,
+    .mdc-switch--unselected:enabled:hover:not(:focus) & {
+      background: token-utils.slot(slide-toggle-unselected-hover-state-layer-color, $fallbacks);
+      opacity: token-utils.slot(slide-toggle-unselected-hover-state-layer-opacity, $fallbacks);
+    }
+
+    .mdc-switch--unselected:enabled:focus & {
+      background: token-utils.slot(slide-toggle-unselected-focus-state-layer-color, $fallbacks);
+      opacity: token-utils.slot(slide-toggle-unselected-focus-state-layer-opacity, $fallbacks);
+    }
+
+    .mdc-switch--unselected:enabled:active & {
+      background: token-utils.slot(slide-toggle-unselected-pressed-state-layer-color, $fallbacks);
+      opacity: token-utils.slot(slide-toggle-unselected-pressed-state-layer-opacity, $fallbacks);
+      transition: opacity 75ms linear;
+    }
+
+    .mdc-switch--selected:enabled:hover:not(:focus) & {
+      background: token-utils.slot(slide-toggle-selected-hover-state-layer-color, $fallbacks);
+      opacity: token-utils.slot(slide-toggle-selected-hover-state-layer-opacity, $fallbacks);
+    }
+
+    .mdc-switch--selected:enabled:focus & {
+      background: token-utils.slot(slide-toggle-selected-focus-state-layer-color, $fallbacks);
+      opacity: token-utils.slot(slide-toggle-selected-focus-state-layer-opacity, $fallbacks);
+    }
+
+    .mdc-switch--selected:enabled:active & {
+      background: token-utils.slot(slide-toggle-selected-pressed-state-layer-color, $fallbacks);
+      opacity: token-utils.slot(slide-toggle-selected-pressed-state-layer-opacity, $fallbacks);
+      transition: opacity 75ms linear;
+    }
+  }
+}
+
+.mdc-switch__icons {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+
+  // Works around a rendering issue in Safari 18.3 (see #30487).
+  transform: translateZ(0);
+
+  .mdc-switch--disabled.mdc-switch--unselected & {
+    opacity: token-utils.slot(slide-toggle-disabled-unselected-icon-opacity, $fallbacks);
+  }
+
+  .mdc-switch--disabled.mdc-switch--selected & {
+    opacity: token-utils.slot(slide-toggle-disabled-selected-icon-opacity, $fallbacks);
+  }
+}
+
+.mdc-switch__icon {
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  position: absolute;
+  right: 0;
+  top: 0;
+  opacity: 0;
+  transition: opacity 30ms 0ms cubic-bezier(0.4, 0, 1, 1);
+
+  .mdc-switch--unselected & {
+    width: token-utils.slot(slide-toggle-unselected-icon-size, $fallbacks);
+    height: token-utils.slot(slide-toggle-unselected-icon-size, $fallbacks);
+    fill: token-utils.slot(slide-toggle-unselected-icon-color, $fallbacks);
+  }
+
+  .mdc-switch--unselected.mdc-switch--disabled & {
+    fill: token-utils.slot(slide-toggle-disabled-unselected-icon-color, $fallbacks);
+  }
+
+  .mdc-switch--selected & {
+    width: token-utils.slot(slide-toggle-selected-icon-size, $fallbacks);
+    height: token-utils.slot(slide-toggle-selected-icon-size, $fallbacks);
+    fill: token-utils.slot(slide-toggle-selected-icon-color, $fallbacks);
+  }
+
+  .mdc-switch--selected.mdc-switch--disabled & {
+    fill: token-utils.slot(slide-toggle-disabled-selected-icon-color, $fallbacks);
+  }
+}
+
+.mdc-switch--selected .mdc-switch__icon--on,
+.mdc-switch--unselected .mdc-switch__icon--off {
+  opacity: 1;
+  transition: opacity 45ms 30ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.mat-mdc-slide-toggle {
+  @include vendor-prefixes.user-select(none);
+  display: inline-block;
+  -webkit-tap-highlight-color: transparent;
+
+  // Remove the native outline since we use the ripple for focus indication.
+  outline: 0;
+
+  // The ripple needs extra specificity so the base ripple styling doesn't override its `position`.
+  .mat-mdc-slide-toggle-ripple,
+  .mdc-switch__ripple::after {
+    @include layout-common.fill();
+    border-radius: 50%;
+    // Disable pointer events for the ripple container so that it doesn't eat the mouse events meant
+    // for the input. Pointer events can be safely disabled because the ripple trigger element is
+    // the host element.
+    pointer-events: none;
+    // Fixes the ripples not clipping to the border radius on Safari. Uses `:not(:empty)`
+    // in order to avoid creating extra layers when there aren't any ripples.
+    &:not(:empty) {
+      transform: translateZ(0);
+    }
+  }
+
+  // Needs a little more specificity so the :hover styles don't override it.
+  // For slide-toggles render the focus indicator when we know
+  // the hidden input is focused (slightly different for each control).
+  &.mat-mdc-slide-toggle-focused .mat-focus-indicator::before {
+    content: '';
+  }
+
+  .mat-internal-form-field {
+    color: token-utils.slot(slide-toggle-label-text-color, $fallbacks);
+    font-family: token-utils.slot(slide-toggle-label-text-font, $fallbacks);
+    line-height: token-utils.slot(slide-toggle-label-text-line-height, $fallbacks);
+    font-size: token-utils.slot(slide-toggle-label-text-size, $fallbacks);
+    letter-spacing: token-utils.slot(slide-toggle-label-text-tracking, $fallbacks);
+    font-weight: token-utils.slot(slide-toggle-label-text-weight, $fallbacks);
+  }
+
+  .mat-ripple-element {
+    opacity: 0.12;
+  }
+
+  // Slide-toggle components have to set `border-radius: 50%` in order to support density scaling
+  // which will clip a square focus indicator so we have to turn it into a circle.
+  .mat-focus-indicator::before {
+    border-radius: 50%;
+  }
+
+  &._mat-animation-noopable {
+    .mdc-switch__handle-track,
+    .mdc-switch__icon,
+    .mdc-switch__handle::before,
+    .mdc-switch__handle::after,
+    .mdc-switch__track::before,
+    .mdc-switch__track::after {
+      transition: none;
+    }
+  }
+
+  // If our slide-toggle is enabled the cursor on label should appear as a pointer.
+  .mdc-switch:enabled + .mdc-label {
+    cursor: pointer;
+  }
+
+  .mdc-switch--disabled + label {
+    color: token-utils.slot(slide-toggle-disabled-label-text-color, $fallbacks);
+  }
+}
+
+// Element used to provide a larger tap target for users on touch devices.
+.mat-mdc-slide-toggle-touch-target {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: token-utils.slot(slide-toggle-touch-target-size, $fallbacks);
+  width: 100%;
+  transform: translate(-50%, -50%);
+  display: token-utils.slot(slide-toggle-touch-target-display, $fallbacks);
+
+  [dir='rtl'] & {
+    left: auto;
+    right: 50%;
+    transform: translate(50%, -50%);
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "entity": "ProjectFile",
+  "version": "1.0",
+  "description": "Source file belonging to a CodeForge project",
+  "tenantId": true,
+  "fields": {
+    "id": {
+      "type": "uuid",
+      "primary": true,
+      "generated": true,
+      "description": "Unique file identifier"
+    },
+    "projectId": {
+      "type": "string",
+      "required": true,
+      "description": "Parent project ID"
+    },
+    "name": {
+      "type": "string",
+      "required": true,
+      "max_length": 255,
+      "description": "File name (e.g. page.tsx)"
+    },
+    "path": {
+      "type": "string",
+      "required": true,
+      "max_length": 1024,
+      "description": "File path within project (e.g. /src/app/page.tsx)"
+    },
+    "content": {
+      "type": "text",
+      "required": true,
+      "description": "File source content"
+    },
+    "language": {
+      "type": "enum",
+      "required": true,
+      "values": [
+        "typescript",
+        "javascript",
+        "css",
+        "scss",
+        "html",
+        "json",
+        "yaml",
+        "markdown",
+        "python",
+        "go",
+        "rust"
+      ],
+      "default": "typescript",
+      "description": "Programming language"
+    },
+    "createdAt": {
+      "type": "bigint",
+      "generated": true
+    },
+    "updatedAt": {
+      "type": "bigint",
+      "generated": true
+    }
+  },
+  "indexes": [
+    {
+      "fields": [
+        "projectId"
+      ]
+    },
+    {
+      "fields": [
+        "projectId",
+        "path"
+      ],
+      "unique": true
+    },
+    {
+      "fields": [
+        "tenantId"
+      ]
+    }
+  ],
+  "relations": {
+    "project": {
+      "type": "belongs-to",
+      "entity": "Project",
+      "foreign_key": "projectId",
+      "on_delete": "cascade"
+    }
+  },
+  "acl": {
+    "create": {
+      "user": true
+    },
+    "read": {
+      "self": true,
+      "admin": true
+    },
+    "update": {
+      "self": true
+    },
+    "delete": {
+      "self": true
+    }
+  }
+}

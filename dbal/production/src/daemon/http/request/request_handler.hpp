@@ -7,7 +7,7 @@
 #ifndef DBAL_REQUEST_HANDLER_HPP
 #define DBAL_REQUEST_HANDLER_HPP
 
-#include "http_types.hpp"
+#include "../http_types.hpp"
 #include <string>
 #include <sstream>
 
@@ -35,7 +35,7 @@ inline HttpResponse processRequest(const HttpRequest& request, const std::string
     
     // API endpoints
     if (request.path == "/api/version" || request.path == "/version") {
-        response.body = R"({"version":"1.0.0","service":"DBAL Daemon"})";
+        response.body = R"({"version":"1.2.1","service":"DBAL Daemon"})";
         return response;
     }
     

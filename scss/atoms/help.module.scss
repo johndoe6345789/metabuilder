@@ -1,0 +1,94 @@
+// scss/atoms/help.module.scss
+
+.helpPage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  padding: var(--spacing-4);
+}
+
+.header {
+  background-color: var(--color-background-paper);
+  padding: var(--spacing-4);
+  border-radius: var(--border-radius-md);
+  margin-bottom: var(--spacing-2);
+}
+
+.searchBar {
+  margin-top: var(--spacing-3);
+}
+
+.mainLayout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-4);
+}
+
+.categorySection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.categoryCard {
+  cursor: pointer;
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
+.categoryIcon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--border-radius-md);
+  font-size: 24px;
+  margin-bottom: var(--spacing-2);
+}
+
+.categoryContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+.categoryTitle {
+  font-weight: 600;
+}
+
+.categoryDescription {
+  color: var(--mat-sys-on-surface-variant);
+  line-height: 1.5;
+}
+
+.articleList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+  list-style: none;
+  padding: 0;
+  margin: var(--spacing-2) 0 0 0;
+}
+
+.articleItem {
+  padding: var(--spacing-1) 0;
+  color: var(--mat-sys-primary);
+  cursor: pointer;
+  font-size: 0.875rem;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.contactSection {
+  background-color: var(--color-background-paper);
+  padding: var(--spacing-4);
+  border-radius: var(--border-radius-md);
+  text-align: center;
+  margin-top: var(--spacing-4);
+}

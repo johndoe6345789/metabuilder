@@ -1,0 +1,49 @@
+{
+  "name": "@metabuilder/ui_schema_editor",
+  "version": "1.0.0",
+  "description": "Visual schema/entity editor for creating database entities through admin UI",
+  "type": "module",
+  "keywords": [
+    "metabuilder",
+    "admin",
+    "schema",
+    "entity",
+    "editor",
+    "visual"
+  ],
+  "packageId": "ui_schema_editor",
+  "permissions": {
+    "minLevel": 5,
+    "description": "Supergod only - system-wide entity creation"
+  },
+  "features": {
+    "visual_entity_builder": true,
+    "field_type_selector": true,
+    "constraint_editor": true,
+    "json_schema_export": true,
+    "validation_rules": true,
+    "relationship_mapping": true
+  },
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "ui",
+  "files": {
+    "directories": [
+      "component",
+      "page-config",
+      "seed",
+      "workflow"
+    ],
+    "byType": {
+      "config": [
+        "package.json"
+      ],
+      "other": [
+        "seed/component.json",
+        "seed/metadata.json",
+        "seed/page-config.json"
+      ]
+    }
+  }
+}

@@ -1,0 +1,267 @@
+name: Build and Release Disk Image
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+    tags:
+      - 'v*'
+  pull_request:
+    branches:
+      - main
+      - develop
+  workflow_dispatch:
+
+jobs:
+  build-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build disk image using Docker
+        run: |
+          echo "Building SparkOS disk image..."
+          # Build the image builder container
+          docker buildx build \
+            --file Dockerfile.image \
+            --target image-builder \
+            --tag sparkos:image-builder \
+            --load \
+            .
+          
+          # Create a container and extract the image
+          echo "Extracting disk image..."
+          CONTAINER_ID=$(docker create sparkos:image-builder)
+          docker cp "$CONTAINER_ID:/output/sparkos.img.gz" ./sparkos.img.gz
+          docker rm "$CONTAINER_ID"
+          
+          echo "Disk image created successfully!"
+          ls -lh sparkos.img.gz
+
+      - name: Verify disk image
+        run: |
+          echo "Verifying UEFI-bootable disk image..."
+          if [ ! -f sparkos.img.gz ]; then
+            echo "ERROR: Disk image not found!"
+            exit 1
+          fi
+          
+          # Show file info
+          ls -lh sparkos.img.gz
+          file sparkos.img.gz
+          
+          # Decompress and check
+          echo "Decompressing to verify..."
+          gunzip -c sparkos.img.gz > sparkos.img
+          ls -lh sparkos.img
+          file sparkos.img
+          
+          # Show partition table (should be GPT)
+          echo ""
+          echo "=== Partition Table (GPT) ==="
+          sudo fdisk -l sparkos.img || true
+          sudo parted sparkos.img print || true
+          
+          # Try to mount and inspect partitions
+          echo ""
+          echo "=== Inspecting Partitions ==="
+          mkdir -p /tmp/sparkos_esp /tmp/sparkos_root
+          
+          # Set up loop device
+          LOOP_DEV=$(sudo losetup -fP --show sparkos.img)
+          echo "Loop device: $LOOP_DEV"
+          ls -la ${LOOP_DEV}*
+          
+          # Mount and check ESP
+          if sudo mount -o ro ${LOOP_DEV}p1 /tmp/sparkos_esp 2>/dev/null; then
+            echo "✓ EFI System Partition mounted"
+            echo "ESP contents:"
+            ls -laR /tmp/sparkos_esp/
+            if [ -f /tmp/sparkos_esp/EFI/BOOT/BOOTX64.EFI ]; then
+              echo "✓ UEFI bootloader (GRUB) found"
+            fi
+            if [ -f /tmp/sparkos_esp/boot/vmlinuz ]; then
+              echo "✓ Kernel found"
+            fi
+            sudo umount /tmp/sparkos_esp
+          fi
+          
+          # Mount and check root partition
+          if sudo mount -o ro ${LOOP_DEV}p2 /tmp/sparkos_root 2>/dev/null; then
+            echo "✓ Root partition mounted"
+            echo "Root contents:"
+            ls -la /tmp/sparkos_root/
+            if [ -f /tmp/sparkos_root/sbin/init ]; then
+              echo "✓ Init binary found"
+              ls -lh /tmp/sparkos_root/sbin/init
+            fi
+            if [ -f /tmp/sparkos_root/bin/busybox ]; then
+              echo "✓ Busybox found"
+            fi
+            sudo umount /tmp/sparkos_root
+          fi
+          
+          # Cleanup
+          sudo losetup -d $LOOP_DEV
+          
+          echo ""
+          echo "=== Verification Complete ==="
+          echo "✓ UEFI-bootable image with GPT partition table"
+          echo "✓ EFI System Partition with GRUB"
+          echo "✓ Root partition with init system and busybox"
+
+      - name: Create release package
+        run: |
+          echo "Creating release package..."
+          mkdir -p release
+          
+          # Move the compressed image
+          mv sparkos.img.gz release/
+          
+          # Copy the README for the release
+          cp config/image-release-readme.txt release/README.txt
+          
+          # Create a ZIP with the image and README
+          cd release || exit 1
+          zip sparkos-image.zip sparkos.img.gz README.txt
+          cd .. || exit 1
+          
+          echo "Release package created!"
+          ls -lh release/
+
+      - name: Upload image artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sparkos-image-${{ github.sha }}
+          path: release/sparkos-image.zip
+          retention-days: 90
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: release/sparkos-image.zip
+          body: |
+            # SparkOS UEFI-Bootable Disk Image Release ${{ github.ref_name }}
+            
+            This release includes a **UEFI-bootable** disk image with SparkOS.
+            
+            ## What's Included
+            
+            - **sparkos-image.zip**: Complete package with compressed disk image and README
+            
+            ## Features
+            
+            ✅ **UEFI Boot Support** - Boot on modern UEFI systems  
+            ✅ **GPT Partition Table** - Modern partitioning scheme  
+            ✅ **GRUB Bootloader** - Reliable UEFI bootloader  
+            ✅ **Linux Kernel** - Full kernel included  
+            ✅ **SparkOS Init System** - Custom init with busybox  
+            ✅ **Ready to Boot** - Write to USB and boot immediately  
+            
+            ## Quick Start
+            
+            ### Write to USB and Boot
+            
+            ```bash
+            # Download and extract the package
+            wget https://github.com/johndoe6345789/SparkOS/releases/download/${{ github.ref_name }}/sparkos-image.zip
+            unzip sparkos-image.zip
+            
+            # Decompress the image
+            gunzip sparkos.img.gz
+            
+            # Write to USB drive (Linux - BE CAREFUL!)
+            sudo dd if=sparkos.img of=/dev/sdX bs=4M status=progress oflag=sync
+            ```
+            
+            **⚠️ WARNING**: Replace `/dev/sdX` with your actual USB device (e.g., `/dev/sdb`). This will **ERASE ALL DATA** on the target drive!
+            
+            ### Boot Instructions
+            
+            1. Insert the USB drive into a UEFI-capable system
+            2. Enter BIOS/UEFI settings (usually F2, F12, DEL, or ESC at boot)
+            3. Select the USB drive as boot device
+            4. SparkOS will boot automatically after 3 seconds
+            
+            ### Inspect Partitions (Advanced)
+            
+            ```bash
+            # Set up loop device
+            LOOP_DEV=$(sudo losetup -fP --show sparkos.img)
+            
+            # Mount ESP (EFI System Partition)
+            sudo mount ${LOOP_DEV}p1 /mnt
+            ls -la /mnt/EFI  # View bootloader and kernel
+            sudo umount /mnt
+            
+            # Mount root partition
+            sudo mount ${LOOP_DEV}p2 /mnt
+            ls -la /mnt      # View SparkOS filesystem
+            sudo umount /mnt
+            
+            # Cleanup
+            sudo losetup -d $LOOP_DEV
+            ```
+            
+            ## Technical Details
+            
+            - **Size**: ~1GB (compressed)
+            - **Partition Table**: GPT
+            - **ESP**: 200MB FAT32 (EFI System Partition)
+            - **Root**: ~800MB ext4
+            - **Bootloader**: GRUB (UEFI)
+            - **Kernel**: Linux kernel (from Ubuntu)
+            - **Init**: SparkOS custom init system
+            - **Shell**: Busybox
+            
+            ## Docker Image
+            
+            A Docker image is also available:
+            ```bash
+            docker pull ghcr.io/johndoe6345789/sparkos:${{ github.ref_name }}
+            ```
+            
+            ## Documentation
+            
+            See [README.md](https://github.com/johndoe6345789/SparkOS/blob/main/README.md) for full documentation.
+            
+            ## What's Changed
+            
+            See commit history for detailed changes.
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Output summary
+        run: |
+          echo "### Disk Image Build Summary 💾" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Status:** ✅ Success" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Disk Image:**" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          ls -lh release/sparkos.img.gz >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Release Package:**" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          ls -lh release/sparkos-image.zip >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            echo "**Release:** Created GitHub release for ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Download from: https://github.com/${{ github.repository }}/releases/tag/${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "**Artifact:** Uploaded as workflow artifact (available for 90 days)" >> $GITHUB_STEP_SUMMARY
+          fi

@@ -1,0 +1,18 @@
+{
+  "id": "tag-root",
+  "type": "span",
+  "bindings": {
+    "className": {
+      "source": "variant",
+      "transform": "(() => { const variant = data || 'primary'; const variantMap = { default: 'tag--muted', primary: 'tag--primary', secondary: 'tag--secondary', muted: 'tag--muted' }; const variantClass = variantMap[variant] || variantMap.primary; const size = $props.size || 'md'; const sizeMap = { sm: 'tag--sm', md: 'tag--md', lg: 'tag--lg' }; const sizeClass = sizeMap[size] || 'tag--md'; return ('tag ' + variantClass + ' ' + sizeClass).trim(); })()"
+    }
+  },
+  "children": [
+    {
+      "id": "tag-content",
+      "bindings": {
+        "children": "children"
+      }
+    }
+  ]
+}

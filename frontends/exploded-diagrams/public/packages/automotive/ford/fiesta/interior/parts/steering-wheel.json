@@ -1,0 +1,37 @@
+{
+  "id": "steering-wheel",
+  "name": "Steering Wheel",
+  "partNumber": "FD-1697450",
+  "material": "blackPlastic",
+  "quantity": 1,
+  "weight": 3200.0,
+  "weightUnit": "g",
+  "baseY": 160,
+  "description": "Leather steering wheel with airbag and controls",
+  "installation": {
+    "tools": [
+      { "name": "Torx socket", "size": "T30", "required": true },
+      { "name": "Socket", "size": "21mm", "required": true },
+      { "name": "Torque wrench", "size": "30-60 Nm", "required": true }
+    ],
+    "hardware": [
+      { "name": "Steering wheel bolt", "spec": "M14x1.5", "qty": 1, "reusable": false }
+    ],
+    "torque": [
+      { "fastener": "Steering wheel bolt", "value": 52, "unit": "Nm", "sequence": "", "notes": "Mark position before removal" }
+    ],
+    "notes": [
+      "AIRBAG - disconnect battery, wait 1 minute",
+      "Mark wheel and column before removal",
+      "Airbag connector is yellow - handle carefully",
+      "Clock spring behind wheel - do not rotate"
+    ]
+  },
+  "geometry": [
+    { "type": "circle", "r": 55, "fill": "#2a2a2a" },
+    { "type": "circle", "r": 45, "fill": "#333" },
+    { "type": "circle", "r": 25, "fill": "#222" },
+    { "type": "rect", "width": 35, "height": 25, "rx": 5, "fill": "#444" },
+    { "type": "text", "content": "FORD", "offsetY": 0, "fill": "#666", "fontSize": 8 }
+  ]
+}

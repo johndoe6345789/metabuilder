@@ -1,122 +1,63 @@
 /**
  * Service Adapter Types
- * Minimal, framework-agnostic interfaces for all service dependencies
+ *
+ * Re-exports canonical types from @metabuilder/types and defines
+ * adapter-specific interfaces for service implementations.
  */
 
 // ============================================================================
-// ENTITY TYPES
+// RE-EXPORTED CANONICAL TYPES
 // ============================================================================
 
-export interface Project {
-  id: string;
-  name: string;
-  description?: string;
-  workspaceId: string;
-  tenantId: string;
-  createdAt: number;
-  updatedAt: number;
-}
+// Workflow types from canonical source
+export type {
+  Workflow,
+  WorkflowNode,
+  WorkflowConnection,
+  ExecutionResult,
+  ExecutionStats,
+  ExecutionStatus,
+  NodeExecutionResult,
+} from '@metabuilder/types';
 
-export interface CreateProjectRequest {
-  name: string;
-  description?: string;
-  workspaceId: string;
-  tenantId: string;
-}
+// Project types from canonical source
+export type {
+  Project,
+  Workspace,
+  CreateProjectRequest,
+  UpdateProjectRequest,
+  CreateWorkspaceRequest,
+  UpdateWorkspaceRequest,
+  ProjectCanvasItem,
+  CanvasPosition,
+  CanvasSize,
+  ProjectCanvasState,
+} from '@metabuilder/types';
 
-export interface UpdateProjectRequest {
-  name?: string;
-  description?: string;
-}
+// ============================================================================
+// ADAPTER-SPECIFIC TYPES
+// ============================================================================
 
-export interface Workspace {
-  id: string;
-  name: string;
-  description?: string;
-  tenantId: string;
-  createdAt: number;
-  updatedAt: number;
-}
-
-export interface CreateWorkspaceRequest {
-  name: string;
-  description?: string;
-  tenantId: string;
-}
-
-export interface UpdateWorkspaceRequest {
-  name?: string;
-  description?: string;
-}
-
-export interface ProjectCanvasItem {
-  id: string;
-  projectId: string;
-  workflowId: string;
-  position: { x: number; y: number };
-  size?: { width: number; height: number };
-  createdAt: number;
-  updatedAt: number;
-}
-
+/**
+ * Request to create a canvas item (adapter-specific, minimal fields)
+ */
 export interface CreateCanvasItemRequest {
   workflowId: string;
   position: { x: number; y: number };
   size?: { width: number; height: number };
 }
 
+/**
+ * Request to update a canvas item (adapter-specific, partial updates)
+ */
 export interface UpdateCanvasItemRequest {
   position?: { x: number; y: number };
   size?: { width: number; height: number };
 }
 
-export interface WorkflowNode {
-  id: string;
-  type: string;
-  position: { x: number; y: number };
-  data: Record<string, any>;
-}
-
-export interface WorkflowConnection {
-  id?: string;
-  source: string;
-  target: string;
-}
-
-export interface Workflow {
-  id: string;
-  name: string;
-  description?: string;
-  version: string;
-  tenantId: string;
-  nodes: WorkflowNode[];
-  connections: WorkflowConnection[];
-  tags?: string[];
-  createdAt: number;
-  updatedAt: number;
-}
-
-export interface ExecutionResult {
-  id: string;
-  workflowId: string;
-  workflowName: string;
-  status: 'running' | 'success' | 'error' | 'stopped' | 'cancelled';
-  startTime: number;
-  endTime?: number;
-  nodes: any[];
-  output?: any;
-  error?: any;
-  tenantId: string;
-}
-
-export interface ExecutionStats {
-  totalExecutions: number;
-  successCount: number;
-  errorCount: number;
-  averageDuration: number;
-  lastExecution?: ExecutionResult;
-}
-
+/**
+ * User entity for authentication
+ */
 export interface User {
   id: string;
   email: string;
@@ -124,6 +65,9 @@ export interface User {
   created_at?: string;
 }
 
+/**
+ * Authentication response
+ */
 export interface AuthResponse {
   success: boolean;
   user: User;
@@ -133,6 +77,19 @@ export interface AuthResponse {
 // ============================================================================
 // SERVICE ADAPTER INTERFACES
 // ============================================================================
+
+import type {
+  Project,
+  Workspace,
+  Workflow,
+  ExecutionResult,
+  ExecutionStats,
+  ProjectCanvasItem,
+  CreateProjectRequest,
+  UpdateProjectRequest,
+  CreateWorkspaceRequest,
+  UpdateWorkspaceRequest,
+} from '@metabuilder/types';
 
 export interface IProjectServiceAdapter {
   listProjects(tenantId: string, workspaceId?: string): Promise<Project[]>;

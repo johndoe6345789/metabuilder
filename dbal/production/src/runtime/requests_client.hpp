@@ -2,7 +2,7 @@
 #define DBAL_REQUESTS_CLIENT_HPP
 
 #include <cpr/cpr.h>
-#include <json/json.h>
+#include <nlohmann/json.hpp>
 
 #include <memory>
 #include <stdexcept>
@@ -15,7 +15,7 @@ namespace runtime {
 struct RequestsResponse {
     int statusCode;
     std::string body;
-    ::Json::Value json;
+    nlohmann::json json;
     std::unordered_map<std::string, std::string> headers;
 };
 
@@ -72,13 +72,12 @@ public:
         }
 
         if (!response.text.empty()) {
-            ::Json::CharReaderBuilder builder;
-            std::string errs;
-            std::unique_ptr<::Json::CharReader> reader(builder.newCharReader());
-            reader->parse(response.text.data(),
-                          response.text.data() + response.text.size(),
-                          &result.json,
-                          &errs);
+            try {
+                result.json = nlohmann::json::parse(response.text);
+            } catch (const nlohmann::json::parse_error&) {
+                // If parsing fails, leave json empty
+                result.json = nlohmann::json();
+            }
         }
 
         return result;

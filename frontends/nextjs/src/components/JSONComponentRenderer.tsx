@@ -1,6 +1,5 @@
 'use client'
 
-import React from 'react'
 import { renderJSONComponent } from '@/lib/packages/json/render-json-component'
 import type { JSONComponent } from '@/lib/packages/json/types'
 import type { JsonValue } from '@/types/utility-types'

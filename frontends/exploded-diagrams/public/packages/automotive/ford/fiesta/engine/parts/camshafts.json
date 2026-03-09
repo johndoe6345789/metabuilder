@@ -1,0 +1,42 @@
+{
+  "id": "camshafts",
+  "name": "Camshafts",
+  "partNumber": "FD-CM5G-6250-CA",
+  "material": "steel",
+  "quantity": 2,
+  "weight": 2100.0,
+  "weightUnit": "g",
+  "baseY": 440,
+  "description": "DOHC camshafts with VCT phaser on intake",
+  "installation": {
+    "tools": [
+      { "name": "Camshaft locking tool", "size": "303-1097", "required": true },
+      { "name": "Crankshaft locking tool", "size": "303-1098", "required": true },
+      { "name": "Socket", "size": "10mm", "required": true },
+      { "name": "Torque wrench", "size": "10-30 Nm", "required": true }
+    ],
+    "hardware": [
+      { "name": "Cam cap bolt", "spec": "M6x1.0x35", "qty": 10, "reusable": true },
+      { "name": "VCT phaser bolt", "spec": "M10x1.25x25", "qty": 1, "reusable": false },
+      { "name": "Camshaft seal", "spec": "25x35x7", "qty": 1, "reusable": false }
+    ],
+    "torque": [
+      { "fastener": "Cam cap bolts", "value": 12, "unit": "Nm", "sequence": "Center out - each cam", "notes": "Do not overtighten" },
+      { "fastener": "VCT phaser bolt", "value": 55, "unit": "Nm", "sequence": "", "notes": "New bolt - with lock tab" }
+    ],
+    "notes": [
+      "Lock crankshaft and camshafts before removal",
+      "VCT system oil-fed - ensure passages clear",
+      "Cam lobes must not contact valves during install",
+      "Tighten cam caps evenly in stages"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 100, "height": 12, "rx": 6, "fill": "#5a5a5a" },
+    { "type": "ellipse", "rx": 10, "ry": 18, "offsetX": -35, "fill": "#4a4a4a" },
+    { "type": "ellipse", "rx": 10, "ry": 18, "fill": "#4a4a4a" },
+    { "type": "ellipse", "rx": 10, "ry": 18, "offsetX": 35, "fill": "#4a4a4a" },
+    { "type": "circle", "r": 18, "offsetX": -50, "fill": "#555" },
+    { "type": "gearRing", "teeth": 36, "outerRadius": 18, "toothHeight": 3, "offsetX": -50 }
+  ]
+}

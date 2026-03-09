@@ -1,0 +1,160 @@
+{
+  "id": "data-binding-designer",
+  "type": "div",
+  "props": { "className": "page" },
+  "children": [
+    {
+      "id": "dbd-header",
+      "type": "div",
+      "props": { "className": "page__header" },
+      "children": [
+        {
+          "id": "dbd-title",
+          "type": "h1",
+          "props": { "className": "page__title" },
+          "bindings": { "children": "designerState.dataBindingCopy.header.title" }
+        },
+        {
+          "id": "dbd-description",
+          "type": "p",
+          "props": { "className": "page__subtitle" },
+          "bindings": { "children": "designerState.dataBindingCopy.header.description" }
+        }
+      ]
+    },
+    {
+      "id": "dbd-body",
+      "type": "div",
+      "props": { "className": "page__body page__body--grid2" },
+      "children": [
+        {
+          "id": "dbd-data-sources-card",
+          "type": "div",
+          "props": { "className": "content-card" },
+          "children": [
+            {
+              "id": "dbd-ds-card-title",
+              "type": "h2",
+              "props": { "className": "content-card__title" },
+              "children": "Data Sources"
+            },
+            {
+              "id": "dbd-ds-list",
+              "type": "div",
+              "props": { "className": "list-rows", "keyPath": "id" },
+              "bindings": { "items": "designerState.dataSources" },
+              "itemTemplate": {
+                "id": "dbd-ds-item",
+                "type": "div",
+                "props": { "className": "list-row" },
+                "children": [
+                  {
+                    "id": "dbd-ds-item-info",
+                    "type": "div",
+                    "props": { "className": "list-row__info" },
+                    "children": [
+                      {
+                        "id": "dbd-ds-item-id",
+                        "type": "span",
+                        "props": { "className": "list-row__name" },
+                        "bindings": { "children": "item.id" }
+                      },
+                      {
+                        "id": "dbd-ds-item-key",
+                        "type": "span",
+                        "props": { "className": "list-row__sub" },
+                        "bindings": { "children": "item.key" }
+                      }
+                    ]
+                  },
+                  {
+                    "id": "dbd-ds-item-type",
+                    "type": "span",
+                    "props": { "className": "badge" },
+                    "bindings": { "children": "item.type" }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "dbd-components-card",
+          "type": "div",
+          "props": { "className": "content-card" },
+          "children": [
+            {
+              "id": "dbd-comp-card-title",
+              "type": "h2",
+              "props": { "className": "content-card__title" },
+              "bindings": { "children": "designerState.dataBindingCopy.bindingsCard.title" }
+            },
+            {
+              "id": "dbd-comp-card-desc",
+              "type": "p",
+              "props": { "className": "content-card__desc" },
+              "bindings": { "children": "designerState.dataBindingCopy.bindingsCard.description" }
+            },
+            {
+              "id": "dbd-comp-list",
+              "type": "div",
+              "props": { "className": "list-rows", "keyPath": "id" },
+              "bindings": { "items": "designerState.mockComponents" },
+              "itemTemplate": {
+                "id": "dbd-comp-item",
+                "type": "div",
+                "props": { "className": "list-row" },
+                "children": [
+                  {
+                    "id": "dbd-comp-item-info",
+                    "type": "div",
+                    "props": { "className": "list-row__info" },
+                    "children": [
+                      {
+                        "id": "dbd-comp-item-id",
+                        "type": "span",
+                        "props": { "className": "list-row__name" },
+                        "bindings": { "children": "item.id" }
+                      },
+                      {
+                        "id": "dbd-comp-item-type",
+                        "type": "span",
+                        "props": { "className": "list-row__sub" },
+                        "bindings": { "children": "item.type" }
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "dbd-how-it-works",
+          "type": "div",
+          "props": { "className": "content-card content-card--full" },
+          "children": [
+            {
+              "id": "dbd-hiw-title",
+              "type": "h2",
+              "props": { "className": "content-card__title" },
+              "bindings": { "children": "designerState.dataBindingCopy.howItWorks.title" }
+            },
+            {
+              "id": "dbd-hiw-steps",
+              "type": "ol",
+              "props": { "className": "step-list" },
+              "bindings": { "items": "designerState.dataBindingCopy.howItWorks.steps" },
+              "itemTemplate": {
+                "id": "dbd-hiw-step",
+                "type": "li",
+                "props": { "className": "step-list__item" },
+                "bindings": { "children": "item" }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

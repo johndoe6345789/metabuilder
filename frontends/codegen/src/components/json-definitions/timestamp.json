@@ -1,0 +1,11 @@
+{
+  "id": "timestamp-root",
+  "type": "time",
+  "props": {
+    "className": "timestamp"
+  },
+  "bindings": {
+    "dateTime": "dateTime",
+    "children": "children"
+  }
+}

@@ -112,7 +112,7 @@ export class POP3SyncExecutor implements INodeExecutor {
   async execute(
     node: WorkflowNode,
     context: WorkflowContext,
-    state: ExecutionState
+    _state: ExecutionState
   ): Promise<NodeResult> {
     const startTime = Date.now();
 
@@ -455,7 +455,7 @@ export class POP3SyncExecutor implements INodeExecutor {
    * Simulate establishing POP3 connection and authentication
    * In production: actual socket connection with TLS and POP3 protocol
    */
-  private _establishConnection(config: POP3SyncConfig): POP3ConnectionState {
+  private _establishConnection(_config: POP3SyncConfig): POP3ConnectionState {
     // Simulate connection state
     return {
       connected: true,

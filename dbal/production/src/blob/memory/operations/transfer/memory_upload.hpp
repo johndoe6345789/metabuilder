@@ -9,9 +9,9 @@
 #include <mutex>
 #include "dbal/blob_storage.hpp"
 #include "dbal/errors.hpp"
-#include "blob_data.hpp"
-#include "generate_etag.hpp"
-#include "make_blob_metadata.hpp"
+#include "../../blob_data.hpp"
+#include "../../metadata/generate_etag.hpp"
+#include "../../metadata/make_blob_metadata.hpp"
 
 namespace dbal {
 namespace blob {

@@ -1,0 +1,492 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "title": "JSON Script Components",
+  "description": "Declarative UI component definitions for JSON scripts",
+  "type": "object",
+  "required": ["schemaVersion", "package"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "JSON Schema reference"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "description": "Schema version",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "package": {
+      "type": "string",
+      "description": "Package identifier"
+    },
+    "description": {
+      "type": "string",
+      "description": "Component file description"
+    },
+    "exports": {
+      "type": "object",
+      "description": "Exported components",
+      "properties": {
+        "components": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "components": {
+      "type": "array",
+      "description": "Component definitions",
+      "items": {
+        "$ref": "#/definitions/component"
+      }
+    }
+  },
+  "definitions": {
+    "component": {
+      "type": "object",
+      "required": ["id", "name", "render"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique component identifier (snake_case)",
+          "pattern": "^[a-z][a-z0-9_]*$"
+        },
+        "name": {
+          "type": "string",
+          "description": "Component name (PascalCase)",
+          "pattern": "^[A-Z][a-zA-Z0-9]*$"
+        },
+        "exported": {
+          "type": "boolean",
+          "description": "Whether component is exported",
+          "default": false
+        },
+        "docstring": {
+          "$ref": "#/definitions/docstring"
+        },
+        "props": {
+          "type": "array",
+          "description": "Component prop definitions",
+          "items": {
+            "$ref": "#/definitions/prop"
+          }
+        },
+        "state": {
+          "type": "object",
+          "description": "Component state with initial values",
+          "additionalProperties": true
+        },
+        "handlers": {
+          "type": "object",
+          "description": "Event handler definitions",
+          "additionalProperties": {
+            "$ref": "#/definitions/handler"
+          }
+        },
+        "computed": {
+          "type": "object",
+          "description": "Computed property definitions",
+          "additionalProperties": {
+            "$ref": "#/definitions/computedProperty"
+          }
+        },
+        "render": {
+          "$ref": "#/definitions/renderDefinition"
+        }
+      }
+    },
+    "prop": {
+      "type": "object",
+      "required": ["name", "type"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Prop name"
+        },
+        "type": {
+          "type": "string",
+          "description": "Prop type",
+          "enum": ["string", "number", "boolean", "object", "array", "function", "any", "node"]
+        },
+        "optional": {
+          "type": "boolean",
+          "description": "Whether prop is optional",
+          "default": false
+        },
+        "default": {
+          "description": "Default prop value"
+        },
+        "description": {
+          "type": "string",
+          "description": "Prop description"
+        },
+        "validator": {
+          "type": "string",
+          "description": "Custom validation function reference"
+        }
+      }
+    },
+    "handler": {
+      "type": "object",
+      "required": ["body"],
+      "properties": {
+        "params": {
+          "type": "array",
+          "description": "Handler parameter names",
+          "items": { "type": "string" }
+        },
+        "body": {
+          "type": "array",
+          "description": "Handler statements",
+          "items": {
+            "$ref": "#/definitions/statement"
+          }
+        }
+      }
+    },
+    "computedProperty": {
+      "type": "object",
+      "required": ["deps", "compute"],
+      "properties": {
+        "deps": {
+          "type": "array",
+          "description": "Dependencies to watch (state/props paths)",
+          "items": { "type": "string" }
+        },
+        "compute": {
+          "description": "Computation expression or call"
+        },
+        "cache": {
+          "type": "boolean",
+          "description": "Whether to cache computed value",
+          "default": true
+        }
+      }
+    },
+    "renderDefinition": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Render type",
+          "enum": ["component", "element"]
+        },
+        "template": {
+          "$ref": "#/definitions/templateNode"
+        }
+      }
+    },
+    "templateNode": {
+      "type": "object",
+      "required": ["type"],
+      "allOf": [
+        {
+          "properties": {
+            "type": {
+              "type": "string",
+              "description": "HTML element type or 'component'"
+            },
+            "key": {
+              "type": "string",
+              "description": "Unique key for list items"
+            },
+            "className": {
+              "type": "string",
+              "description": "CSS class name"
+            },
+            "style": {
+              "type": "object",
+              "description": "Inline styles",
+              "additionalProperties": { "type": "string" }
+            },
+            "children": {
+              "description": "Child nodes - string for text content, array for multiple children",
+              "oneOf": [
+                { "type": "string" },
+                { 
+                  "type": "array", 
+                  "items": {
+                    "oneOf": [
+                      { "type": "string" },
+                      { "$ref": "#/definitions/templateNode" }
+                    ]
+                  }
+                }
+              ]
+            },
+            "if": {
+              "description": "Conditional rendering expression"
+            },
+            "each": {
+              "type": "string",
+              "description": "Array reference for iteration"
+            },
+            "as": {
+              "type": "string",
+              "description": "Item variable name for iteration"
+            },
+            "index": {
+              "type": "string",
+              "description": "Index variable name for iteration"
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": { "type": { "const": "component" } }
+          },
+          "then": {
+            "required": ["name"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Component name"
+              },
+              "props": {
+                "type": "object",
+                "description": "Component props"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": { "type": { "const": "input" } }
+          },
+          "then": {
+            "properties": {
+              "inputType": {
+                "type": "string",
+                "description": "Input type",
+                "enum": ["text", "number", "email", "password", "checkbox", "radio", "date", "file", "tel", "url", "search", "range"]
+              },
+              "value": {
+                "description": "Input value binding"
+              },
+              "checked": {
+                "description": "Checked state binding (for checkbox/radio)"
+              },
+              "placeholder": {
+                "type": "string",
+                "description": "Placeholder text"
+              },
+              "disabled": {
+                "description": "Disabled state"
+              },
+              "required": {
+                "type": "boolean",
+                "description": "Required field"
+              },
+              "onChange": {
+                "type": "string",
+                "description": "Change handler reference (must exist in handlers)"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": { "type": { "const": "button" } }
+          },
+          "then": {
+            "properties": {
+              "onClick": {
+                "type": "string",
+                "description": "Click handler reference (must exist in handlers)"
+              },
+              "disabled": {
+                "description": "Disabled state"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": { "type": { "const": "select" } }
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "description": "Selected value binding"
+              },
+              "onChange": {
+                "type": "string",
+                "description": "Change handler reference"
+              },
+              "multiple": {
+                "type": "boolean",
+                "description": "Allow multiple selections"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": { "type": { "const": "textarea" } }
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "description": "Textarea value binding"
+              },
+              "placeholder": {
+                "type": "string"
+              },
+              "rows": {
+                "type": "integer"
+              },
+              "cols": {
+                "type": "integer"
+              },
+              "onChange": {
+                "type": "string",
+                "description": "Change handler reference"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "statement": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Statement type",
+          "enum": [
+            "setState",
+            "call_expression",
+            "if_statement",
+            "return",
+            "const_declaration",
+            "let_declaration",
+            "assignment",
+            "comment",
+            "for_each_loop",
+            "try_catch"
+          ]
+        },
+        "updates": {
+          "type": "object",
+          "description": "State updates (for setState)"
+        },
+        "callee": {
+          "type": "string",
+          "description": "Function to call"
+        },
+        "args": {
+          "type": "array",
+          "description": "Function arguments"
+        },
+        "condition": {
+          "description": "Condition expression (for if_statement)"
+        },
+        "then": {
+          "type": "array",
+          "description": "Then branch statements",
+          "items": { "$ref": "#/definitions/statement" }
+        },
+        "else": {
+          "type": "array",
+          "description": "Else branch statements",
+          "items": { "$ref": "#/definitions/statement" }
+        },
+        "name": {
+          "type": "string",
+          "description": "Variable name (for declarations)"
+        },
+        "value": {
+          "description": "Value or expression"
+        },
+        "target": {
+          "type": "string",
+          "description": "Assignment target"
+        },
+        "text": {
+          "type": "string",
+          "description": "Comment text"
+        },
+        "iterator": {
+          "type": "string",
+          "description": "Loop iterator variable"
+        },
+        "iterable": {
+          "description": "Iterable expression"
+        },
+        "body": {
+          "type": "array",
+          "description": "Loop/try body",
+          "items": { "$ref": "#/definitions/statement" }
+        },
+        "catch": {
+          "type": "object",
+          "properties": {
+            "param": { "type": "string" },
+            "body": {
+              "type": "array",
+              "items": { "$ref": "#/definitions/statement" }
+            }
+          }
+        },
+        "finally": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/statement" }
+        }
+      }
+    },
+    "docstring": {
+      "type": "object",
+      "properties": {
+        "summary": {
+          "type": "string",
+          "description": "Brief summary"
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed description"
+        },
+        "props": {
+          "type": "array",
+          "description": "Prop documentation",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "type": { "type": "string" },
+              "description": { "type": "string" },
+              "optional": { "type": "boolean" },
+              "default": {}
+            }
+          }
+        },
+        "examples": {
+          "type": "array",
+          "description": "Usage examples",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": { "type": "string" },
+              "code": { "type": "string" }
+            }
+          }
+        },
+        "since": {
+          "type": "string",
+          "description": "Version when added"
+        },
+        "tags": {
+          "type": "array",
+          "description": "Documentation tags",
+          "items": { "type": "string" }
+        },
+        "see": {
+          "type": "array",
+          "description": "Related references",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

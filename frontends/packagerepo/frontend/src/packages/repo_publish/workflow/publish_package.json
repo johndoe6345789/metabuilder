@@ -1,0 +1,163 @@
+{
+  "name": "Publish Package",
+  "description": "Workflow to publish a package to the repository",
+  "version": "3.0.0",
+  "nodes": [
+    {
+      "id": "validate_form",
+      "name": "Validate Form",
+      "type": "validate.required",
+      "parameters": {
+        "fields": [
+          "namespace",
+          "name",
+          "version",
+          "variant",
+          "file"
+        ],
+        "input": "$form"
+      }
+    },
+    {
+      "id": "build_url",
+      "name": "Build Upload URL",
+      "type": "string.format",
+      "parameters": {
+        "template": "/v1/{namespace}/{name}/{version}/{variant}/blob",
+        "values": "$form",
+        "out": "url"
+      }
+    },
+    {
+      "id": "upload_blob",
+      "name": "Upload Blob",
+      "type": "api.put",
+      "parameters": {
+        "endpoint": "$url",
+        "body": "$form.file",
+        "contentType": "application/octet-stream",
+        "out": "response"
+      }
+    },
+    {
+      "id": "check_success",
+      "name": "Check Success",
+      "type": "logic.if",
+      "parameters": {
+        "condition": "$response.ok",
+        "then": "success",
+        "else": "error"
+      }
+    },
+    {
+      "id": "success",
+      "name": "Return Success",
+      "type": "output.set",
+      "parameters": {
+        "key": "result",
+        "value": {
+          "type": "success",
+          "msg": "Published! Digest: $response.digest"
+        }
+      }
+    },
+    {
+      "id": "error",
+      "name": "Return Error",
+      "type": "output.set",
+      "parameters": {
+        "key": "result",
+        "value": {
+          "type": "error",
+          "msg": "$response.error.message"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "validate_form": {
+      "main": [
+        [
+          {
+            "node": "build_url",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "build_url": {
+      "main": [
+        [
+          {
+            "node": "upload_blob",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "upload_blob": {
+      "main": [
+        [
+          {
+            "node": "check_success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_success": {
+      "main": [
+        [
+          {
+            "node": "success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "success": {
+      "main": [
+        [
+          {
+            "node": "error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "inputs": {
+    "form": {
+      "type": "object",
+      "properties": {
+        "namespace": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "variant": {
+          "type": "string"
+        },
+        "file": {
+          "type": "file"
+        }
+      }
+    }
+  },
+  "outputs": {
+    "result": {
+      "type": "object"
+    }
+  },
+  "id": "workflow_publish_package",
+  "tenantId": "${TENANT_ID}"
+}

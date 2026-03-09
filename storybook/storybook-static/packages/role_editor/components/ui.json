@@ -1,0 +1,480 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "role_editor",
+  "description": "Role editor components including role cards and permission management",
+  "components": [
+    {
+      "id": "role_editor",
+      "name": "RoleEditor",
+      "description": "Main editor with role selection and permission toggles",
+      "props": [
+        {
+          "name": "allowedRoles",
+          "type": "array",
+          "required": false,
+          "description": "List of roles to show in the editor"
+        },
+        {
+          "name": "readonly",
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Whether the editor is in readonly mode"
+        },
+        {
+          "name": "showInstanceOwner",
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Show instance owner toggle"
+        },
+        {
+          "name": "onSave",
+          "type": "function",
+          "required": false,
+          "description": "Callback when changes are saved"
+        },
+        {
+          "name": "onCancel",
+          "type": "function",
+          "required": false,
+          "description": "Callback when changes are cancelled"
+        }
+      ],
+      "state": [
+        {
+          "name": "selectedRole",
+          "type": "string",
+          "default": null,
+          "description": "Currently selected role"
+        },
+        {
+          "name": "selectedRoleInfo",
+          "type": "object",
+          "default": null,
+          "description": "Information about the selected role"
+        },
+        {
+          "name": "isDirty",
+          "type": "boolean",
+          "default": false,
+          "description": "Whether there are unsaved changes"
+        },
+        {
+          "name": "permissions",
+          "type": "array",
+          "default": [],
+          "description": "List of permissions for the selected role"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "role-editor",
+          "children": [
+            {
+              "type": "Box",
+              "className": "role-editor-header",
+              "sx": {
+                "p": 3,
+                "borderBottom": 1,
+                "borderColor": "divider"
+              },
+              "children": [
+                {
+                  "type": "Flex",
+                  "justifyContent": "space-between",
+                  "alignItems": "center",
+                  "sx": { "mb": 2 },
+                  "children": [
+                    {
+                      "type": "Text",
+                      "variant": "h5",
+                      "fontWeight": "bold",
+                      "children": "Role Editor"
+                    },
+                    {
+                      "type": "conditional",
+                      "condition": "{{state.isDirty}}",
+                      "then": {
+                        "type": "Chip",
+                        "label": "Unsaved Changes",
+                        "color": "warning",
+                        "size": "small"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "Grid",
+                  "container": true,
+                  "spacing": 2,
+                  "children": {
+                    "type": "loop",
+                    "source": "{{roles}}",
+                    "template": {
+                      "type": "Grid",
+                      "item": true,
+                      "xs": 12,
+                      "sm": 6,
+                      "md": 4,
+                      "lg": 2,
+                      "children": [
+                        {
+                          "type": "ComponentRef",
+                          "ref": "role_card",
+                          "props": {
+                            "role": "{{item.role}}",
+                            "info": "{{item.info}}",
+                            "selected": "{{state.selectedRole === item.role}}"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "Box",
+              "className": "role-editor-content",
+              "sx": { "p": 3 },
+              "children": [
+                {
+                  "type": "Flex",
+                  "alignItems": "center",
+                  "gap": 2,
+                  "sx": { "mb": 3 },
+                  "children": [
+                    {
+                      "type": "Text",
+                      "variant": "h6",
+                      "fontWeight": "bold",
+                      "children": "{{state.selectedRoleInfo.label}}"
+                    },
+                    {
+                      "type": "Chip",
+                      "label": "Level {{state.selectedRoleInfo.level}}",
+                      "color": "primary",
+                      "size": "small",
+                      "variant": "outlined"
+                    }
+                  ]
+                },
+                {
+                  "type": "Box",
+                  "className": "role-editor-permissions",
+                  "children": [
+                    {
+                      "type": "Text",
+                      "variant": "subtitle1",
+                      "fontWeight": "bold",
+                      "sx": { "mb": 2 },
+                      "children": "Permissions"
+                    },
+                    {
+                      "type": "List",
+                      "dense": true,
+                      "children": {
+                        "type": "loop",
+                        "source": "{{state.permissions}}",
+                        "template": {
+                          "type": "ListItem",
+                          "divider": true,
+                          "children": [
+                            {
+                              "type": "ListItemText",
+                              "primary": "{{item.name}}",
+                              "secondary": "{{item.description}}"
+                            },
+                            {
+                              "type": "conditional",
+                              "condition": "{{item.inherited}}",
+                              "then": {
+                                "type": "Chip",
+                                "label": "Inherited",
+                                "size": "small",
+                                "color": "secondary",
+                                "variant": "outlined",
+                                "sx": { "mr": 2 }
+                              }
+                            },
+                            {
+                              "type": "Switch",
+                              "checked": "{{item.enabled}}",
+                              "disabled": "{{props.readonly || item.inherited}}",
+                              "onChange": "togglePermission",
+                              "color": "primary"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Box",
+              "className": "role-editor-footer",
+              "sx": {
+                "p": 2,
+                "borderTop": 1,
+                "borderColor": "divider",
+                "display": "flex",
+                "justifyContent": "flex-end",
+                "gap": 2
+              },
+              "children": [
+                {
+                  "type": "Button",
+                  "variant": "outlined",
+                  "color": "secondary",
+                  "onClick": "handleCancel",
+                  "disabled": "{{!state.isDirty}}",
+                  "children": "Cancel"
+                },
+                {
+                  "type": "Button",
+                  "variant": "contained",
+                  "color": "primary",
+                  "onClick": "handleSave",
+                  "disabled": "{{!state.isDirty || props.readonly}}",
+                  "children": "Save Changes"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "scripts": {
+        "init": "role.initialize",
+        "selectRole": "role.selectRole",
+        "togglePermission": "role.togglePermission",
+        "handleSave": "role.saveChanges",
+        "handleCancel": "role.cancelChanges"
+      }
+    },
+    {
+      "id": "role_card",
+      "name": "RoleCard",
+      "description": "A card showing role name, level, and permission summary",
+      "props": [
+        {
+          "name": "role",
+          "type": "string",
+          "required": true,
+          "description": "Role identifier"
+        },
+        {
+          "name": "info",
+          "type": "object",
+          "required": true,
+          "description": "Role information object"
+        },
+        {
+          "name": "selected",
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Whether this card is selected"
+        },
+        {
+          "name": "showBadge",
+          "type": "boolean",
+          "required": false,
+          "default": true,
+          "description": "Whether to show the role badge icon"
+        },
+        {
+          "name": "ownPermissionCount",
+          "type": "number",
+          "required": false,
+          "default": 0,
+          "description": "Number of own permissions"
+        },
+        {
+          "name": "inheritedPermissionCount",
+          "type": "number",
+          "required": false,
+          "default": 0,
+          "description": "Number of inherited permissions"
+        },
+        {
+          "name": "onClick",
+          "type": "function",
+          "required": false,
+          "description": "Click handler"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "role-card",
+          "sx": {
+            "cursor": "pointer",
+            "transition": "all 0.2s ease-in-out",
+            "position": "relative",
+            "&:hover": {
+              "borderColor": "primary.main",
+              "transform": "translateY(-2px)"
+            }
+          },
+          "onClick": "handleCardClick",
+          "children": [
+            {
+              "type": "conditional",
+              "condition": "{{props.selected}}",
+              "then": {
+                "type": "Box",
+                "sx": {
+                  "position": "absolute",
+                  "top": 0,
+                  "left": 0,
+                  "right": 0,
+                  "height": 3,
+                  "backgroundColor": "primary.main",
+                  "borderRadius": "4px 4px 0 0"
+                }
+              }
+            },
+            {
+              "type": "Box",
+              "sx": { "p": 2 },
+              "children": [
+                {
+                  "type": "Flex",
+                  "justifyContent": "space-between",
+                  "alignItems": "flex-start",
+                  "sx": { "mb": 1 },
+                  "children": [
+                    {
+                      "type": "conditional",
+                      "condition": "{{props.showBadge}}",
+                      "then": {
+                        "type": "Box",
+                        "sx": { "fontSize": 24 },
+                        "children": [
+                          {
+                            "type": "Icon",
+                            "name": "{{props.info.badge}}",
+                            "color": "primary"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Chip",
+                      "label": "L{{props.info.level}}",
+                      "size": "small",
+                      "color": "default",
+                      "variant": "{{props.info.variant}}"
+                    }
+                  ]
+                },
+                {
+                  "type": "Text",
+                  "variant": "subtitle1",
+                  "fontWeight": "bold",
+                  "sx": { "mb": 0.5 },
+                  "children": "{{props.info.label}}"
+                },
+                {
+                  "type": "Text",
+                  "variant": "body2",
+                  "color": "text.secondary",
+                  "sx": { "mb": 2 },
+                  "children": "{{props.info.blurb}}"
+                },
+                {
+                  "type": "Stack",
+                  "spacing": 0.5,
+                  "children": {
+                    "type": "loop",
+                    "source": "{{props.info.highlights}}",
+                    "template": {
+                      "type": "Flex",
+                      "alignItems": "center",
+                      "gap": 1,
+                      "children": [
+                        {
+                          "type": "Icon",
+                          "name": "Check",
+                          "size": "small",
+                          "color": "success"
+                        },
+                        {
+                          "type": "Text",
+                          "variant": "caption",
+                          "color": "text.secondary",
+                          "children": "{{item}}"
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "Box",
+              "sx": {
+                "px": 2,
+                "py": 1,
+                "borderTop": 1,
+                "borderColor": "divider",
+                "backgroundColor": "action.hover"
+              },
+              "children": [
+                {
+                  "type": "Flex",
+                  "justifyContent": "space-between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "Text",
+                      "variant": "caption",
+                      "color": "text.secondary",
+                      "children": "Permissions"
+                    },
+                    {
+                      "type": "Flex",
+                      "gap": 0.5,
+                      "children": [
+                        {
+                          "type": "Chip",
+                          "label": "{{props.ownPermissionCount}}",
+                          "size": "small",
+                          "color": "primary",
+                          "variant": "filled"
+                        },
+                        {
+                          "type": "conditional",
+                          "condition": "{{props.inheritedPermissionCount > 0}}",
+                          "then": {
+                            "type": "Chip",
+                            "label": "+{{props.inheritedPermissionCount}}",
+                            "size": "small",
+                            "color": "secondary",
+                            "variant": "outlined"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "scripts": {
+        "handleCardClick": "role.handleCardClick"
+      }
+    }
+  ]
+}

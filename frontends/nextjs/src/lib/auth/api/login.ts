@@ -5,6 +5,7 @@
  */
 
 import type { User } from '@/lib/types/level-types'
+import type { DbalUserRecord, DbalCredentialRecord } from '@/lib/auth/types'
 import { db } from '@/lib/db-client'
 import crypto from 'crypto'
 
@@ -44,8 +45,8 @@ export async function login(identifier: string, password: string): Promise<Login
       }
     })
     
-    let user = users.data?.[0]
-    
+    let user = users.data?.[0] as DbalUserRecord | undefined
+
     // If not found by username, try email
     if (!user) {
       const usersByEmail = await db.users.list({
@@ -53,7 +54,7 @@ export async function login(identifier: string, password: string): Promise<Login
           email: identifier
         }
       })
-      user = usersByEmail.data?.[0]
+      user = usersByEmail.data?.[0] as DbalUserRecord | undefined
     }
     
     if (!user) {
@@ -65,13 +66,10 @@ export async function login(identifier: string, password: string): Promise<Login
     }
 
     // Get credential for this user
-    const { getAdapter } = await import('@/lib/db/dbal-client')
-    const adapter = getAdapter()
-    const credential = await adapter.findFirst('Credential', {
-      where: { username: user.username }
-    })
+    const credResult = await db.credentials.list({ filter: { username: user.username } })
+    const credential = (credResult.data[0] as DbalCredentialRecord | undefined) ?? null
     
-    if (!credential || !credential.passwordHash) {
+    if (!credential?.passwordHash) {
       return {
         success: false,
         user: null,

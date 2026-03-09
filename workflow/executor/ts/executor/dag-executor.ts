@@ -6,7 +6,7 @@
 
 import { PriorityQueue } from '../utils/priority-queue';
 import { WorkflowContext, ExecutionState, NodeResult, WorkflowDefinition } from '../types';
-import { interpolateTemplate, evaluateTemplate } from '../utils/template-engine';
+import { evaluateTemplate } from '../utils/template-engine';
 import { getNodeExecutorRegistry, NodeExecutorRegistry } from '../registry/node-executor-registry';
 
 export interface ExecutionMetrics {
@@ -50,7 +50,7 @@ export class DAGExecutor {
   private metrics: ExecutionMetrics;
   private queue: PriorityQueue<string>;
   private nodeResults: Map<string, NodeResult> = new Map();
-  private retryAttempts: Map<string, number> = new Map();
+  private _retryAttempts: Map<string, number> = new Map();
   private activeNodes: Set<string> = new Set();
   private aborted = false;
   private nodeExecutor: NodeExecutorFn;
@@ -228,6 +228,7 @@ export class DAGExecutor {
     let lastError: any;
 
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
+      this._retryAttempts.set(node.id, attempt);
       try {
         if (attempt > 0) {
           this.metrics.retriedNodes++;
@@ -248,8 +249,10 @@ export class DAGExecutor {
           await new Promise((resolve) => setTimeout(resolve, delay));
         }
 
-        // Execute node operation
-        const result = await this.nodeExecutor(node.id, this.workflow, this.context, this.state);
+        // Execute node operation with tenant context propagation
+        const tenantContext = this._getTenantContext();
+        const contextWithTenant = { ...this.context, ...tenantContext };
+        const result = await this.nodeExecutor(node.id, this.workflow, contextWithTenant, this.state);
         return result;
       } catch (error) {
         lastError = error;
@@ -352,7 +355,7 @@ export class DAGExecutor {
     }
 
     // Route to all connected inputs
-    Object.entries(portConnections).forEach(([outputIndex, targets]) => {
+    Object.entries(portConnections).forEach(([_outputIndex, targets]) => {
       (targets as any[]).forEach((target) => {
         // Check conditional routing
         if (target.conditional && target.condition) {
@@ -418,7 +421,7 @@ export class DAGExecutor {
   /**
    * Route error output to error ports
    */
-  private _routeErrorOutput(node: any, result: NodeResult): void {
+  private _routeErrorOutput(node: any, _result: NodeResult): void {
     const connections = this.workflow.connections[node.id];
     if (!connections || !connections.error) {
       return;
@@ -439,7 +442,7 @@ export class DAGExecutor {
     const connections = this.workflow.connections;
 
     for (const [fromNodeId, portMap] of Object.entries(connections)) {
-      for (const [outputType, indexMap] of Object.entries(portMap as any)) {
+      for (const [_outputType, indexMap] of Object.entries(portMap as any)) {
         for (const targets of Object.values(indexMap as any)) {
           const shouldCheck = (targets as any[]).some((t) => t.node === node.id);
           if (shouldCheck) {

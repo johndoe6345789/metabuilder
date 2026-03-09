@@ -1,0 +1,6 @@
+{
+  "type": "button",
+  "props": {
+    "disabled": "size-"
+  }
+}

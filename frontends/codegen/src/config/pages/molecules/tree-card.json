@@ -1,0 +1,9 @@
+{
+  "type": "MetabuilderLayoutTreeCard",
+  "props": {
+    "onSelect": "> void",
+    "onEdit": "> void",
+    "onDuplicate": "> void",
+    "onDelete": "> void"
+  }
+}

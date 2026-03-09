@@ -6,7 +6,7 @@ import {
   loadSchemaRegistry,
   saveSchemaRegistry,
   getPendingMigrations,
-  generatePrismaFragment,
+  generateSchemaFragment,
   approveMigration,
   rejectMigration,
   type SchemaRegistry,
@@ -17,8 +17,8 @@ import { getRoleLevel, ROLE_LEVELS } from '@/lib/constants'
 import { z } from '@/lib/validation'
 
 // Use consistent path resolution
-const getRegistryPath = () => path.join(process.cwd(), '..', '..', '..', 'prisma', 'schema-registry.json')
-const getPrismaOutputPath = () => path.join(process.cwd(), '..', '..', '..', 'prisma', 'generated-from-packages.prisma')
+const getRegistryPath = () => path.join(process.cwd(), '..', '..', '..', 'schema', 'schema-registry.json')
+const getSchemaOutputPath = () => path.join(process.cwd(), '..', '..', '..', 'schema', 'generated-from-packages.schema')
 
 // Schema operation request validation
 const SchemaActionSchema = z.object({
@@ -160,8 +160,8 @@ function handleScan(registry: SchemaRegistry, registryPath: string) {
 }
 
 function handleGenerate(registry: SchemaRegistry) {
-  const fragment = generatePrismaFragment(registry)
-  const prismaOutputPath = getPrismaOutputPath()
+  const fragment = generateSchemaFragment(registry)
+  const schemaOutputPath = getSchemaOutputPath()
   
   if (fragment.trim().length === 0) {
     return NextResponse.json({
@@ -172,14 +172,14 @@ function handleGenerate(registry: SchemaRegistry) {
     })
   }
   
-  fs.writeFileSync(prismaOutputPath, fragment)
+  fs.writeFileSync(schemaOutputPath, fragment)
   
   return NextResponse.json({
     status: 'ok',
     action: 'generate',
-    message: `Generated Prisma fragment at ${prismaOutputPath}`,
+    message: `Generated Prisma fragment at ${schemaOutputPath}`,
     generated: true,
-    path: prismaOutputPath,
+    path: schemaOutputPath,
     nextStep: 'Run: npx prisma migrate dev --name package-schemas',
   })
 }

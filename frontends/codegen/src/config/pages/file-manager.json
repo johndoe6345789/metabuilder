@@ -1,0 +1,168 @@
+{
+  "id": "file-manager",
+  "name": "File Manager",
+  "description": "Manage project files with split view editor",
+  "layout": {
+    "type": "split",
+    "direction": "horizontal",
+    "sizes": [25, 75]
+  },
+  "components": [
+    {
+      "id": "file-list",
+      "type": "MetabuilderLayoutCard",
+      "props": {
+        "className": "h-full p-4"
+      },
+      "children": [
+        {
+          "id": "file-list-header",
+          "type": "div",
+          "props": {
+            "className": "flex items-center justify-between mb-4"
+          },
+          "children": [
+            {
+              "id": "file-list-title",
+              "type": "h2",
+              "props": {
+                "className": "text-lg font-semibold"
+              },
+              "children": [
+                {
+                  "id": "title-text",
+                  "type": "span",
+                  "props": {
+                    "children": "Files"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "add-file-button",
+              "type": "MetabuilderFormButton",
+              "props": {
+                "variant": "outline",
+                "size": "sm"
+              },
+              "events": [
+                {
+                  "event": "onClick",
+                  "action": "add-file"
+                }
+              ],
+              "children": [
+                {
+                  "id": "button-text",
+                  "type": "span",
+                  "props": {
+                    "children": "Add File"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "files-container",
+          "type": "div",
+          "props": {
+            "className": "space-y-2"
+          },
+          "bindings": [
+            {
+              "source": "files",
+              "target": "children",
+              "transform": "value.map(file => ({ id: file.id, type: 'Button', props: { variant: 'ghost', className: 'w-full justify-start', children: file.name } }))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "file-editor",
+      "type": "MetabuilderLayoutCard",
+      "props": {
+        "className": "h-full p-4"
+      },
+      "children": [
+        {
+          "id": "editor-header",
+          "type": "div",
+          "props": {
+            "className": "mb-4"
+          },
+          "children": [
+            {
+              "id": "file-name",
+              "type": "h3",
+              "props": {
+                "className": "text-md font-medium"
+              },
+              "bindings": [
+                {
+                  "source": "activeFile.name",
+                  "target": "children"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "editor-content",
+          "type": "Textarea",
+          "props": {
+            "className": "h-full font-mono"
+          },
+          "bindings": [
+            {
+              "source": "activeFile.content",
+              "target": "value"
+            }
+          ],
+          "events": [
+            {
+              "event": "onChange",
+              "action": "update-file-content"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "data": [
+    {
+      "id": "activeFile",
+      "type": "static",
+      "expression": "data.files.0",
+      "dependencies": [
+        "files"
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "id": "add-file",
+      "type": "create",
+      "trigger": "button-click",
+      "params": {
+        "target": "Files",
+        "data": {
+          "id": "new-file",
+          "name": "new-file.tsx",
+          "path": "/src/new-file.tsx",
+          "content": "",
+          "language": "typescript"
+        }
+      }
+    },
+    {
+      "id": "update-file-content",
+      "type": "update",
+      "trigger": "input-change",
+      "params": {
+        "target": "Files"
+      }
+    }
+  ]
+}

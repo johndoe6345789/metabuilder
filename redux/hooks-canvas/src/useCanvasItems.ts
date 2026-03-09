@@ -17,8 +17,8 @@ import {
   selectProjectIsLoading,
   selectProjectError,
   selectCurrentProjectId,
-  setLoading,
-  setError,
+  setProjectLoading,
+  setProjectError,
 } from '@metabuilder/redux-slices'
 import {
   setCanvasItems,
@@ -77,17 +77,17 @@ export function useCanvasItems(): UseCanvasItemsReturn {
   const loadCanvasItems = useCallback(async () => {
     if (!projectId) return
 
-    dispatch(setLoading(true))
+    dispatch(setProjectLoading(true))
     try {
       const items = await projectService.getCanvasItems(projectId)
       dispatch(setCanvasItems(items))
-      dispatch(setError(null))
+      dispatch(setProjectError(null))
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Failed to load canvas items'
-      dispatch(setError(errorMsg))
+      dispatch(setProjectError(errorMsg))
       throw err
     } finally {
-      dispatch(setLoading(false))
+      dispatch(setProjectLoading(false))
     }
   }, [projectId, dispatch, projectService])
 
@@ -98,16 +98,16 @@ export function useCanvasItems(): UseCanvasItemsReturn {
     async (itemId: string) => {
       if (!projectId) return
 
-      dispatch(setLoading(true))
+      dispatch(setProjectLoading(true))
       try {
         await projectService.deleteCanvasItem(projectId, itemId)
         dispatch(removeCanvasItem(itemId))
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : 'Failed to delete canvas item'
-        dispatch(setError(errorMsg))
+        dispatch(setProjectError(errorMsg))
         throw err
       } finally {
-        dispatch(setLoading(false))
+        dispatch(setProjectLoading(false))
       }
     },
     [projectId, dispatch, projectService]

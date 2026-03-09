@@ -1,0 +1,212 @@
+// Markdown Atoms - Material Design 3 (CSS Module)
+// ================================================
+// Flat selectors for rendered markdown content using M3 tokens
+
+// Inline code
+.markdown code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  background: var(--mat-sys-surface-container-high);
+  color: var(--mat-sys-on-surface);
+  padding: 2px 6px;
+  border-radius: var(--mat-sys-corner-extra-small);
+}
+
+// Code blocks
+.markdown pre {
+  background: var(--mat-sys-surface-container-highest);
+  padding: 16px;
+  border-radius: var(--mat-sys-corner-medium);
+  overflow-x: auto;
+  margin: 16px 0;
+}
+
+.markdown pre code {
+  background: transparent;
+  padding: 0;
+  font-size: var(--mat-sys-body-small-size);
+  line-height: 1.6;
+}
+
+// Blockquotes
+.markdown blockquote {
+  border-left: 4px solid var(--mat-sys-primary);
+  margin: 16px 0;
+  padding: 12px 16px;
+  background: var(--mat-sys-surface-container-low);
+  border-radius: 0 var(--mat-sys-corner-small) var(--mat-sys-corner-small) 0;
+}
+
+.markdown blockquote p {
+  margin: 0;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.markdown blockquote p + p {
+  margin-top: 8px;
+}
+
+// Tables
+.markdown table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+}
+
+.markdown th,
+.markdown td {
+  border: 1px solid var(--mat-sys-outline-variant);
+  padding: 12px 16px;
+  text-align: left;
+}
+
+.markdown th {
+  background: var(--mat-sys-surface-container);
+  font-family: var(--mat-sys-title-small-font);
+  font-size: var(--mat-sys-title-small-size);
+  font-weight: var(--mat-sys-title-small-weight);
+  color: var(--mat-sys-on-surface);
+}
+
+.markdown td {
+  font-family: var(--mat-sys-body-medium-font);
+  font-size: var(--mat-sys-body-medium-size);
+  color: var(--mat-sys-on-surface);
+}
+
+.markdown tr:nth-child(even) {
+  background: var(--mat-sys-surface-container-low);
+}
+
+// Links
+.markdown a {
+  color: var(--mat-sys-primary);
+  text-decoration: none;
+  transition: color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+}
+
+.markdown a:hover {
+  text-decoration: underline;
+}
+
+.markdown a:visited {
+  color: var(--mat-sys-tertiary);
+}
+
+// Images
+.markdown img {
+  max-width: 100%;
+  border-radius: var(--mat-sys-corner-medium);
+  margin: 16px 0;
+}
+
+// Horizontal rules
+.markdown hr {
+  border: none;
+  height: 1px;
+  background: var(--mat-sys-outline-variant);
+  margin: 24px 0;
+}
+
+// Lists
+.markdown ul,
+.markdown ol {
+  padding-left: 24px;
+  margin: 16px 0;
+}
+
+.markdown li {
+  margin: 8px 0;
+  line-height: 1.6;
+}
+
+.markdown li::marker {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+// Nested lists
+.markdown ul ul,
+.markdown ol ol,
+.markdown ul ol,
+.markdown ol ul {
+  margin: 8px 0;
+}
+
+// Task lists
+.markdown input[type="checkbox"] {
+  margin-right: 8px;
+  accent-color: var(--mat-sys-primary);
+}
+
+// Headings (styled separately in _prose.scss)
+.markdown h1,
+.markdown h2,
+.markdown h3,
+.markdown h4,
+.markdown h5,
+.markdown h6 {
+  color: var(--mat-sys-on-surface);
+  margin-top: 24px;
+  margin-bottom: 12px;
+}
+
+.markdown h1 {
+  font-family: var(--mat-sys-headline-large-font);
+  font-size: var(--mat-sys-headline-large-size);
+  font-weight: var(--mat-sys-headline-large-weight);
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  padding-bottom: 8px;
+}
+
+.markdown h2 {
+  font-family: var(--mat-sys-headline-medium-font);
+  font-size: var(--mat-sys-headline-medium-size);
+  font-weight: var(--mat-sys-headline-medium-weight);
+}
+
+.markdown h3 {
+  font-family: var(--mat-sys-headline-small-font);
+  font-size: var(--mat-sys-headline-small-size);
+  font-weight: var(--mat-sys-headline-small-weight);
+}
+
+.markdown h4 {
+  font-family: var(--mat-sys-title-large-font);
+  font-size: var(--mat-sys-title-large-size);
+  font-weight: var(--mat-sys-title-large-weight);
+}
+
+.markdown h5,
+.markdown h6 {
+  font-family: var(--mat-sys-title-medium-font);
+  font-size: var(--mat-sys-title-medium-size);
+  font-weight: var(--mat-sys-title-medium-weight);
+}
+
+// Paragraphs
+.markdown p {
+  margin: 16px 0;
+  line-height: 1.7;
+}
+
+// Strong and emphasis
+.markdown strong {
+  font-weight: 600;
+  color: var(--mat-sys-on-surface);
+}
+
+.markdown em {
+  font-style: italic;
+}
+
+// Strikethrough
+.markdown del {
+  text-decoration: line-through;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+// Abbreviations
+.markdown abbr {
+  text-decoration: underline dotted;
+  cursor: help;
+}

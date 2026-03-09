@@ -1,0 +1,126 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "database_manager",
+  "description": "Database administration panel - Statistics, entity browser, export/import",
+  "version": "1.0",
+  "tags": ["@admin", "@database-management", "@phase-3"],
+  "tests": [
+    {
+      "name": "can view database statistics",
+      "description": "Database stats tab displays system statistics",
+      "tags": ["@database-admin", "@stats"],
+      "timeout": 30000,
+      "steps": [
+        {"action": "navigate", "url": "/admin/database"},
+        {"action": "waitForLoadState", "state": "networkidle"},
+        {"action": "click", "role": "tab", "text": "Statistics"},
+        {"action": "expect", "testId": "stats-panel", "assertion": {"matcher": "toBeVisible"}},
+        {"action": "expect", "selector": "[data-testid='user-count']", "assertion": {"matcher": "toContainText", "text": "3"}},
+        {"action": "expect", "selector": "[data-testid='package-count']", "assertion": {"matcher": "toContainText", "text": "12"}}
+      ]
+    },
+    {
+      "name": "can refresh database statistics",
+      "description": "Refresh button updates statistics",
+      "tags": ["@database-admin", "@stats"],
+      "timeout": 30000,
+      "steps": [
+        {"action": "navigate", "url": "/admin/database"},
+        {"action": "click", "role": "tab", "text": "Statistics"},
+        {"action": "waitForSelector", "selector": "[data-testid='stats-panel']"},
+        {"action": "click", "role": "button", "text": "Refresh"},
+        {"action": "wait", "timeout": 1000},
+        {"action": "expect", "selector": "[data-testid='user-count']", "assertion": {"matcher": "toBeVisible"}}
+      ]
+    },
+    {
+      "name": "stats show health indicator",
+      "description": "Database statistics show health indicator badge",
+      "tags": ["@database-admin", "@stats"],
+      "timeout": 30000,
+      "steps": [
+        {"action": "navigate", "url": "/admin/database"},
+        {"action": "click", "role": "tab", "text": "Statistics"},
+        {"action": "expect", "selector": "[data-testid='health-badge']", "assertion": {"matcher": "toBeVisible"}},
+        {"action": "expect", "selector": "[data-testid='health-badge']", "assertion": {"matcher": "toHaveClass", "className": "badge-success"}}
+      ]
+    },
+    {
+      "name": "can browse entity records",
+      "description": "Entity browser displays records for selected entity type",
+      "tags": ["@database-admin", "@browser"],
+      "timeout": 30000,
+      "steps": [
+        {"action": "navigate", "url": "/admin/database"},
+        {"action": "click", "role": "tab", "text": "Entity Browser"},
+        {"action": "click", "label": "Entity Type"},
+        {"action": "click", "role": "option", "text": "User"},
+        {"action": "waitForLoadState", "state": "networkidle"},
+        {"action": "expect", "testId": "entity-table", "assertion": {"matcher": "toBeVisible"}},
+        {"action": "expect", "selector": "tbody tr", "assertion": {"matcher": "toHaveCount", "count": 3}}
+      ]
+    },
+    {
+      "name": "can sort entity records",
+      "description": "Entity browser table columns can be sorted",
+      "tags": ["@database-admin", "@browser"],
+      "timeout": 30000,
+      "steps": [
+        {"action": "navigate", "url": "/admin/database"},
+        {"action": "click", "role": "tab", "text": "Entity Browser"},
+        {"action": "click", "label": "Entity Type"},
+        {"action": "click", "role": "option", "text": "User"},
+        {"action": "waitForLoadState", "state": "networkidle"},
+        {"action": "click", "role": "columnheader", "text": "Username"},
+        {"action": "wait", "timeout": 500},
+        {"action": "expect", "selector": "tbody tr:first-child", "assertion": {"matcher": "toContainText", "text": "admin"}}
+      ]
+    },
+    {
+      "name": "can filter entity records",
+      "description": "Entity browser records can be filtered",
+      "tags": ["@database-admin", "@browser"],
+      "timeout": 30000,
+      "steps": [
+        {"action": "navigate", "url": "/admin/database"},
+        {"action": "click", "role": "tab", "text": "Entity Browser"},
+        {"action": "click", "label": "Entity Type"},
+        {"action": "click", "role": "option", "text": "User"},
+        {"action": "waitForLoadState", "state": "networkidle"},
+        {"action": "fill", "placeholder": "Filter records...", "value": "admin"},
+        {"action": "wait", "timeout": 500},
+        {"action": "expect", "selector": "tbody tr", "assertion": {"matcher": "toHaveCount", "count": 1}}
+      ]
+    },
+    {
+      "name": "can export database as JSON",
+      "description": "User can export database as JSON format",
+      "tags": ["@database-admin", "@export"],
+      "timeout": 30000,
+      "steps": [
+        {"action": "navigate", "url": "/admin/database"},
+        {"action": "click", "role": "tab", "text": "Export/Import"},
+        {"action": "click", "label": "Export Format"},
+        {"action": "click", "role": "option", "text": "JSON"},
+        {"action": "click", "role": "button", "text": "Export"},
+        {"action": "wait", "timeout": 2000},
+        {"action": "expect", "role": "alert", "assertion": {"matcher": "toContainText", "text": "Export successful"}}
+      ]
+    },
+    {
+      "name": "can export database as YAML",
+      "description": "User can export database as YAML format",
+      "tags": ["@database-admin", "@export"],
+      "timeout": 30000,
+      "steps": [
+        {"action": "navigate", "url": "/admin/database"},
+        {"action": "click", "role": "tab", "text": "Export/Import"},
+        {"action": "click", "label": "Export Format"},
+        {"action": "click", "role": "option", "text": "YAML"},
+        {"action": "click", "role": "button", "text": "Export"},
+        {"action": "wait", "timeout": 2000},
+        {"action": "expect", "role": "alert", "assertion": {"matcher": "toContainText", "text": "Export successful"}}
+      ]
+    }
+  ]
+}

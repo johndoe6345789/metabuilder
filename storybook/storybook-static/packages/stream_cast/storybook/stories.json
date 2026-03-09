@@ -1,0 +1,149 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": true,
+  "title": "Stream Cast Components",
+  "description": "Live streaming control room with schedules, scenes, and audience telemetry",
+  "stories": [
+    {
+      "name": "ControlRoom",
+      "render": "control_room",
+      "description": "Main streaming control room with stats and scene management",
+      "args": {
+        "viewers": 3482,
+        "scenesLoaded": 6,
+        "moderators": 5
+      }
+    },
+    {
+      "name": "SceneManager",
+      "render": "scene_manager",
+      "description": "Scene switcher interface for managing stream layouts",
+      "args": {
+        "scenes": [
+          { "id": "intro", "name": "Intro", "active": false },
+          { "id": "main", "name": "Main", "active": true },
+          { "id": "qa", "name": "Q&A", "active": false }
+        ],
+        "activeSceneId": "main"
+      }
+    },
+    {
+      "name": "StreamSchedule",
+      "render": "stream_schedule",
+      "description": "Run of show schedule display",
+      "args": {
+        "segments": [
+          { "id": "opening", "title": "Opening roll", "time": "00:00", "description": "Countdown + intro scene" },
+          { "id": "guest", "title": "Guest spotlight", "time": "00:10", "description": "Dual cam + highlight reel" }
+        ]
+      }
+    },
+    {
+      "name": "StreamPlayer",
+      "render": "player",
+      "description": "Video player component for live streams",
+      "args": {
+        "streamUrl": "rtmp://stream.example.com/live",
+        "state": "PLAYING",
+        "viewers": 3482
+      }
+    },
+    {
+      "name": "AudiencePulse",
+      "render": "audience_pulse",
+      "description": "Real-time audience engagement indicator",
+      "args": {
+        "chatVelocity": 78,
+        "message": "Chat velocity is spiking. Moderators recommended."
+      }
+    },
+    {
+      "name": "ModerationControls",
+      "render": "moderation_controls",
+      "description": "Quick moderation actions for live streams",
+      "args": {
+        "slowModeEnabled": false
+      }
+    }
+  ],
+  "renders": {
+    "control_room": {
+      "description": "Full control room interface",
+      "featured": true
+    },
+    "scene_manager": {
+      "description": "Scene switcher panel"
+    },
+    "stream_schedule": {
+      "description": "Run of show schedule"
+    },
+    "player": {
+      "description": "Stream player with controls"
+    },
+    "audience_pulse": {
+      "description": "Audience engagement metrics"
+    },
+    "moderation_controls": {
+      "description": "Moderator action panel"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "demo-user",
+      "username": "demo_streamer",
+      "level": 3,
+      "email": "streamer@example.com"
+    },
+    "tenant": {
+      "id": "demo-tenant",
+      "name": "Demo Broadcasting"
+    }
+  },
+  "contextVariants": [
+    {
+      "name": "Viewer",
+      "description": "Can only view streams",
+      "context": {
+        "user": {
+          "username": "viewer",
+          "level": 2
+        }
+      }
+    },
+    {
+      "name": "Streamer",
+      "description": "Can broadcast and manage scenes",
+      "context": {
+        "user": {
+          "username": "streamer",
+          "level": 3
+        }
+      }
+    },
+    {
+      "name": "Admin",
+      "description": "Full control over all streaming features",
+      "context": {
+        "user": {
+          "username": "admin",
+          "level": 4
+        }
+      }
+    }
+  ],
+  "scripts": {
+    "renderFunctions": ["control_room", "scene_manager", "stream_schedule", "player", "audience_pulse", "moderation_controls"],
+    "ignoredScripts": ["tests", "db"]
+  },
+  "parameters": {
+    "layout": "fullscreen",
+    "backgrounds": {
+      "default": "dark",
+      "values": [
+        { "name": "light", "value": "#f5f5f5" },
+        { "name": "dark", "value": "#1a1a1a" },
+        { "name": "control-room", "value": "#0f172a" }
+      ]
+    }
+  }
+}

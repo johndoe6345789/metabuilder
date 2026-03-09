@@ -1,0 +1,6 @@
+{
+  "type": "MetabuilderFormRadio",
+  "props": {
+    "onChange": "> void"
+  }
+}

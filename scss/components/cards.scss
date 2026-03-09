@@ -1,0 +1,583 @@
+// Card components — Material Design 3
+// BEM classes for card JSON definitions.
+// All values use MD3 CSS custom properties (var(--mat-sys-*)).
+
+// ─── Base card ──────────────────────────────────────────────────────────────
+
+.card {
+  background: var(--mat-sys-surface-container);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 8px;
+  padding: 24px;
+  transition: box-shadow 0.2s ease;
+
+  // Variants
+  &--elevated {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    border: none;
+  }
+
+  &--flat {
+    background: var(--mat-sys-surface-variant);
+    border: none;
+  }
+
+  &--bordered {
+    background: var(--mat-sys-surface);
+    border: 2px solid var(--mat-sys-outline);
+  }
+
+  &--interactive {
+    cursor: pointer;
+
+    &:hover {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  &--disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  // Padding modifiers
+  &--sm {
+    padding: 12px;
+  }
+
+  &--md {
+    padding: 24px;
+  }
+
+  &--lg {
+    padding: 32px;
+  }
+
+  &--no-padding {
+    padding: 0;
+  }
+
+  // Sub-elements
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  &__body {
+    color: var(--mat-sys-on-surface);
+  }
+
+  &__footer {
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__title {
+    margin: 0 0 4px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--mat-sys-on-surface);
+  }
+
+  &__description {
+    margin: 0;
+    font-size: 13px;
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+// ─── Action card ────────────────────────────────────────────────────────────
+
+.action-card {
+  background: var(--mat-sys-surface-container);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 8px;
+  padding: 16px;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    border-color: var(--mat-sys-primary);
+  }
+
+  &--disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  &__content {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  &__icon-wrapper {
+    flex-shrink: 0;
+    padding: 8px;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--mat-sys-primary) 12%, transparent);
+    color: var(--mat-sys-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__text {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--mat-sys-on-surface);
+    margin: 0 0 4px;
+  }
+
+  &__description {
+    font-size: 12px;
+    color: var(--mat-sys-on-surface-variant);
+    margin: 0;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  &__caret {
+    flex-shrink: 0;
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+// ─── Info card ──────────────────────────────────────────────────────────────
+
+.info-card {
+  background: var(--mat-sys-surface-container);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 8px;
+  padding: 20px;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  &__icon {
+    color: var(--mat-sys-primary);
+    flex-shrink: 0;
+  }
+
+  &__title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--mat-sys-on-surface);
+    margin: 0;
+  }
+
+  &__body {
+    font-size: 13px;
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  &__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--mat-sys-outline-variant);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &__label {
+    font-size: 12px;
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  &__value {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--mat-sys-on-surface);
+  }
+}
+
+// ─── Status card ────────────────────────────────────────────────────────────
+
+.status-card {
+  background: var(--mat-sys-surface-container);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 8px;
+  padding: 20px;
+
+  &__content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__count {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--mat-sys-on-surface);
+  }
+
+  &__label {
+    font-size: 12px;
+    color: var(--mat-sys-on-surface-variant);
+    margin-top: 2px;
+  }
+
+  &__icon {
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+// ─── Gallery card ───────────────────────────────────────────────────────────
+
+.gallery-card {
+  background: var(--mat-sys-surface-container);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  }
+
+  &__image {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    display: block;
+    background: var(--mat-sys-surface-variant);
+  }
+
+  &__body {
+    padding: 16px;
+  }
+
+  &__title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--mat-sys-on-surface);
+    margin: 0 0 6px;
+  }
+
+  &__description {
+    font-size: 12px;
+    color: var(--mat-sys-on-surface-variant);
+    margin: 0;
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-top: 1px solid var(--mat-sys-outline-variant);
+  }
+}
+
+// ─── Glow card ──────────────────────────────────────────────────────────────
+
+.glow-card {
+  background: var(--mat-sys-surface-container);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 8px;
+  padding: 24px;
+  transition: box-shadow 0.3s ease;
+
+  &--clickable {
+    cursor: pointer;
+
+    &:hover {
+      transform: scale(1.02);
+    }
+  }
+
+  // Color variants — glow via box-shadow
+  &--primary {
+    box-shadow: 0 2px 16px color-mix(in srgb, var(--mat-sys-primary) 20%, transparent);
+
+    &:hover {
+      box-shadow: 0 4px 24px color-mix(in srgb, var(--mat-sys-primary) 30%, transparent);
+    }
+  }
+
+  &--accent {
+    box-shadow: 0 2px 16px color-mix(in srgb, var(--mat-sys-secondary) 20%, transparent);
+
+    &:hover {
+      box-shadow: 0 4px 24px color-mix(in srgb, var(--mat-sys-secondary) 30%, transparent);
+    }
+  }
+
+  &--success {
+    box-shadow: 0 2px 16px rgba(22, 163, 74, 0.15);
+
+    &:hover {
+      box-shadow: 0 4px 24px rgba(22, 163, 74, 0.25);
+    }
+  }
+
+  &--warning {
+    box-shadow: 0 2px 16px rgba(234, 179, 8, 0.15);
+
+    &:hover {
+      box-shadow: 0 4px 24px rgba(234, 179, 8, 0.25);
+    }
+  }
+
+  &--error {
+    box-shadow: 0 2px 16px color-mix(in srgb, var(--mat-sys-error) 15%, transparent);
+
+    &:hover {
+      box-shadow: 0 4px 24px color-mix(in srgb, var(--mat-sys-error) 25%, transparent);
+    }
+  }
+
+  // Intensity modifiers
+  &--low {
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  &--high {
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+  }
+}
+
+// ─── How-it-works card ──────────────────────────────────────────────────────
+
+.how-it-works-card {
+  background: color-mix(in srgb, var(--mat-sys-secondary) 6%, var(--mat-sys-surface));
+  border: 1px solid color-mix(in srgb, var(--mat-sys-secondary) 20%, transparent);
+  border-radius: 8px;
+  padding: 20px;
+
+  &__title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--mat-sys-on-surface);
+    margin: 0 0 16px;
+  }
+
+  &__steps {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__step {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    font-size: 13px;
+  }
+
+  &__step-number {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--mat-sys-primary) 20%, transparent);
+    color: var(--mat-sys-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  &__step-text {
+    color: var(--mat-sys-on-surface-variant);
+    line-height: 1.5;
+  }
+}
+
+// ─── Tips card ──────────────────────────────────────────────────────────────
+
+.tips-card {
+  background: rgba(234, 179, 8, 0.08);
+  border: 1px solid rgba(234, 179, 8, 0.2);
+  border-radius: 8px;
+  padding: 20px;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  &__icon {
+    color: rgb(234, 179, 8);
+    flex-shrink: 0;
+  }
+
+  &__title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--mat-sys-on-surface);
+    margin: 0;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__item {
+    font-size: 13px;
+    color: var(--mat-sys-on-surface-variant);
+    line-height: 1.5;
+  }
+}
+
+// ─── Comment card ───────────────────────────────────────────────────────────
+
+.comment-card {
+  background: var(--mat-sys-surface-container);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 8px;
+  padding: 16px;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  &__avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--mat-sys-primary) 15%, transparent);
+    color: var(--mat-sys-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  &__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__author {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--mat-sys-on-surface);
+  }
+
+  &__timestamp {
+    font-size: 11px;
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  &__body {
+    font-size: 13px;
+    color: var(--mat-sys-on-surface);
+    line-height: 1.6;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+  }
+}
+
+// ─── Connection info card ────────────────────────────────────────────────────
+
+.connection-info-card {
+  background: var(--mat-sys-surface-container);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 8px;
+  padding: 20px;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  &__status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+
+    &--connected {
+      background: #16a34a;
+    }
+
+    &--disconnected {
+      background: var(--mat-sys-error);
+    }
+
+    &--pending {
+      background: rgb(234, 179, 8);
+    }
+  }
+
+  &__title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--mat-sys-on-surface);
+    margin: 0;
+  }
+
+  &__rows {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--mat-sys-outline-variant);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &__label {
+    font-size: 12px;
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  &__value {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--mat-sys-on-surface);
+    font-family: monospace;
+  }
+}

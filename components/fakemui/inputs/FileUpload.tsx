@@ -5,6 +5,7 @@ import { FormLabel } from './FormLabel'
 import { FormHelperText } from './FormHelperText'
 
 export interface FileUploadProps {
+  testId?: string
   label?: React.ReactNode
   helperText?: React.ReactNode
   error?: boolean
@@ -26,6 +27,7 @@ export interface FileUploadProps {
 export const FileUpload = forwardRef<HTMLInputElement, FileUploadProps>(
   (
     {
+      testId,
       label,
       helperText,
       error,
@@ -127,7 +129,7 @@ export const FileUpload = forwardRef<HTMLInputElement, FileUploadProps>(
     const displayError = errorMessage || (error ? helperText : null)
 
     return (
-      <div className={`file-upload file-upload--${variant} ${error || errorMessage ? 'file-upload--error' : ''} ${disabled ? 'file-upload--disabled' : ''} ${className}`}>
+      <div className={`file-upload file-upload--${variant} ${error || errorMessage ? 'file-upload--error' : ''} ${disabled ? 'file-upload--disabled' : ''} ${className}`} data-testid={testId} aria-label={typeof label === 'string' ? label : undefined}>
         {label && <FormLabel required={required}>{label}</FormLabel>}
         
         <div

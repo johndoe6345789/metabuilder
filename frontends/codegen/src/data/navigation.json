@@ -1,0 +1,58 @@
+{
+  "sections": [
+    {
+      "title": "Main",
+      "items": [
+        { "href": "/", "label": "Dashboard", "icon": "dashboard" },
+        { "href": "/code", "label": "Code Editor", "icon": "code" },
+        { "href": "/components", "label": "Components", "icon": "widgets" },
+        { "href": "/models", "label": "Models", "icon": "schema" }
+      ]
+    },
+    {
+      "title": "Design",
+      "items": [
+        { "href": "/component-trees", "label": "Component Trees", "icon": "account_tree" },
+        { "href": "/styling", "label": "Styling", "icon": "palette" },
+        { "href": "/sass", "label": "Sass", "icon": "style" },
+        { "href": "/atomic-library", "label": "Atomic Library", "icon": "library_books" },
+        { "href": "/templates", "label": "Templates", "icon": "content_copy" }
+      ]
+    },
+    {
+      "title": "Workflows",
+      "items": [
+        { "href": "/workflows", "label": "Workflows", "icon": "share" },
+        { "href": "/lambdas", "label": "Lambdas", "icon": "functions" }
+      ]
+    },
+    {
+      "title": "Tools",
+      "items": [
+        { "href": "/json-ui", "label": "JSON UI", "icon": "data_object" },
+        { "href": "/schema-editor", "label": "Schema Editor", "icon": "edit_note" },
+        { "href": "/data-binding", "label": "Data Binding", "icon": "link" },
+        { "href": "/database", "label": "Database", "icon": "database" }
+      ]
+    },
+    {
+      "title": "Testing",
+      "items": [
+        { "href": "/playwright", "label": "Playwright", "icon": "bug_report" },
+        { "href": "/unit-tests", "label": "Unit Tests", "icon": "science" },
+        { "href": "/storybook", "label": "Storybook", "icon": "auto_stories" }
+      ]
+    },
+    {
+      "title": "System",
+      "items": [
+        { "href": "/settings", "label": "Settings", "icon": "settings" },
+        { "href": "/docs", "label": "Documentation", "icon": "description" },
+        { "href": "/features", "label": "Features", "icon": "toggle_on" },
+        { "href": "/errors", "label": "Errors", "icon": "error" },
+        { "href": "/persistence", "label": "Persistence", "icon": "storage" },
+        { "href": "/pwa", "label": "PWA", "icon": "install_desktop" }
+      ]
+    }
+  ]
+}

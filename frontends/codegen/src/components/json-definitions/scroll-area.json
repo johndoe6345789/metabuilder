@@ -1,0 +1,12 @@
+{
+  "id": "scroll-area-root",
+  "type": "ScrollArea",
+  "props": {
+    "className": "scroll-area"
+  },
+  "bindings": {
+    "className": "className",
+    "maxHeight": "maxHeight"
+  },
+  "children": "children"
+}

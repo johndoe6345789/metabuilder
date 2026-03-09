@@ -1,0 +1,77 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "theme_editor",
+  "name": "Theme Editor",
+  "version": "1.0.0",
+  "description": "Theme customization with color palette editor, CSS variable management, and live preview",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "tools",
+  "icon": "static_content/icon.svg",
+  "minLevel": 3,
+  "primary": true,
+  "keywords": [
+    "theme",
+    "colors",
+    "styling",
+    "css",
+    "customization",
+    "dark-mode"
+  ],
+  "dependencies": {
+    "ui_permissions": "*"
+  },
+  "devDependencies": {
+    "testing": "*"
+  },
+  "exports": {
+    "components": [
+      "ThemeEditor",
+      "ColorPicker",
+      "ThemePreview",
+      "CSSVariableEditor",
+      "FontSelector"
+    ],
+    "scripts": [
+      "theme",
+      "colors"
+    ]
+  },
+  "tests": {
+    "suites": [
+      "tests/metadata.test.json"
+    ]
+  },
+  "files": {
+    "directories": [
+      "components",
+      "permissions",
+      "static_content",
+      "storybook",
+      "styles",
+      "tests"
+    ],
+    "byType": {
+      "components": [
+        "components/ui.json"
+      ],
+      "tests": [
+        "tests/metadata.params.json",
+        "tests/metadata.test.json"
+      ],
+      "config": [
+        "package.json",
+        "storybook/config.json"
+      ],
+      "permissions": [
+        "permissions/roles.json"
+      ],
+      "styles": [
+        "styles/tokens.json"
+      ],
+      "other": [
+        "static_content/icon.svg"
+      ]
+    }
+  }
+}

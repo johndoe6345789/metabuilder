@@ -1,0 +1,6 @@
+{
+  "type": "MetabuilderFormSelect",
+  "props": {
+    "onChange": "> void"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "id": "fuel-filter",
+  "name": "Fuel Filter",
+  "partNumber": "FD-1880810",
+  "material": "aluminum",
+  "quantity": 1,
+  "weight": 350.0,
+  "weightUnit": "g",
+  "baseY": 600,
+  "description": "Inline fuel filter (diesel models have water separator)",
+  "installation": {
+    "tools": [
+      { "name": "Quick-connect tool", "size": "-", "required": true },
+      { "name": "Socket", "size": "10mm", "required": true },
+      { "name": "Drain pan", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Mounting bolt", "spec": "M6x15", "qty": 1, "reusable": true }
+    ],
+    "torque": [],
+    "notes": [
+      "Petrol filter often in tank with pump",
+      "Diesel filter is serviceable - replace regularly",
+      "Prime diesel system after replacement",
+      "Note flow direction arrow"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 35, "height": 60, "rx": 5, "fill": "#888" },
+    { "type": "rect", "width": 30, "height": 50, "rx": 3, "fill": "#aaa" },
+    { "type": "ellipse", "rx": 8, "ry": 5, "offsetY": -35, "fill": "#666" },
+    { "type": "ellipse", "rx": 8, "ry": 5, "offsetY": 35, "fill": "#666" },
+    { "type": "rect", "width": 20, "height": 2, "offsetY": 0, "fill": "#444" }
+  ]
+}

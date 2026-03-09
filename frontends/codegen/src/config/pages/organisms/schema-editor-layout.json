@@ -1,0 +1,29 @@
+{
+  "type": "MetabuilderWidgetSchemaEditorLayout",
+  "jsonCompatible": false,
+  "wrapperRequired": true,
+  "load": {
+    "path": "@/components/organisms/SchemaEditorLayout",
+    "export": "SchemaEditorLayout"
+  },
+  "props": {
+    "onSelect": "> void",
+    "onHover": "> void",
+    "onHoverEnd": "> void",
+    "onComponentDragStart": "> void",
+    "onTreeDragStart": "> void",
+    "onDragOver": "> void",
+    "onDragLeave": "> void",
+    "onDrop": "> void",
+    "onUpdate": "> void",
+    "onDelete": "> void",
+    "onImport": "> void",
+    "onExport": "> void",
+    "onCopy": "> void",
+    "onPreview": "> void",
+    "onClear": "> void"
+  },
+  "metadata": {
+    "notes": "Complex logic - needs wrapper"
+  }
+}

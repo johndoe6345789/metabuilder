@@ -1,0 +1,67 @@
+.wrapper {
+  /* prose-like container */
+}
+
+.card {
+  background: color-mix(in srgb, var(--mat-sys-surface-container-low) 50%, transparent);
+  border-radius: 8px;
+  padding: 1rem;
+  border: 1px solid var(--mat-sys-outline-variant);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--mat-sys-on-surface);
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.h2 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--mat-sys-on-surface);
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.orderedItem {
+  color: color-mix(in srgb, var(--mat-sys-on-surface) 90%, transparent);
+  margin-left: 0.5rem;
+}
+
+.listItem {
+  color: color-mix(in srgb, var(--mat-sys-on-surface) 90%, transparent);
+  margin-left: 1rem;
+}
+
+.paragraph {
+  color: color-mix(in srgb, var(--mat-sys-on-surface) 80%, transparent);
+  font-size: 0.875rem;
+  line-height: 1.625;
+}
+
+.inlineCode {
+  font-family: 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 0.8125rem;
+  background: color-mix(in srgb, var(--mat-sys-primary) 12%, transparent);
+  color: var(--mat-sys-primary);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.pre {
+  background: var(--mat-sys-surface-container);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  overflow-x: auto;
+  font-family: 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--mat-sys-on-surface);
+  white-space: pre;
+}

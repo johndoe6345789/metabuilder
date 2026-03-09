@@ -1,0 +1,12 @@
+{
+  "cookie": {
+    "name": "sidebar_state",
+    "maxAgeSeconds": 604800
+  },
+  "keyboardShortcut": "b",
+  "labels": {
+    "toggleSidebar": "Toggle Sidebar",
+    "sidebarTitle": "Sidebar",
+    "sidebarDescription": "Displays the mobile sidebar."
+  }
+}

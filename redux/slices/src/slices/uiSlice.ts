@@ -60,13 +60,7 @@ export const uiSlice = createSlice({
     // Notification management
     setNotification: (state, action: PayloadAction<Notification>) => {
       state.notifications.push(action.payload);
-
-      // Auto-remove after duration
-      if (action.payload.duration) {
-        setTimeout(() => {
-          state.notifications = state.notifications.filter((n) => n.id !== action.payload.id);
-        }, action.payload.duration);
-      }
+      // Note: Auto-remove handled by useUINotifications hook, not here
     },
 
     removeNotification: (state, action: PayloadAction<string>) => {

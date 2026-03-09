@@ -51,13 +51,13 @@ const initialState: EmailDetailState = {
  */
 export const fetchEmailDetail = createAsyncThunk<
   EmailDetail,
-  string,
+  { messageId: string; baseUrl?: string },
   { rejectValue: string }
 >(
   'emailDetail/fetchEmailDetail',
-  async (messageId, { rejectWithValue }) => {
+  async ({ messageId, baseUrl = '' }, { rejectWithValue }) => {
     try {
-      const response = await fetch(`/api/v1/email/messages/${messageId}`)
+      const response = await fetch(`${baseUrl}/api/v1/email/messages/${messageId}`)
       if (!response.ok) {
         throw new Error('Failed to fetch email details')
       }
@@ -75,13 +75,13 @@ export const fetchEmailDetail = createAsyncThunk<
  */
 export const fetchConversationThread = createAsyncThunk<
   ThreadMessage[],
-  string,
+  { conversationId: string; baseUrl?: string },
   { rejectValue: string }
 >(
   'emailDetail/fetchConversationThread',
-  async (conversationId, { rejectWithValue }) => {
+  async ({ conversationId, baseUrl = '' }, { rejectWithValue }) => {
     try {
-      const response = await fetch(`/api/v1/email/conversations/${conversationId}`)
+      const response = await fetch(`${baseUrl}/api/v1/email/conversations/${conversationId}`)
       if (!response.ok) {
         throw new Error('Failed to fetch conversation thread')
       }

@@ -1,0 +1,1125 @@
+# MetaBuilder Full Stack
+#
+# Gateway:    nginx on port 80 with welcome portal + subpath routing
+# Apps:       WorkflowUI, CodeForge, Pastebin, Postgres Dashboard,
+#             Email Client, Exploded Diagrams, Storybook, Frontend App
+# Backend:    DBAL C++, Email Service (Flask), Pastebin Backend (Flask)
+# Infra:      PostgreSQL, MySQL, MongoDB, Redis, Elasticsearch,
+#             phpMyAdmin, Mongo Express, RedisInsight, Kibana
+# Mail:       Postfix, Dovecot, SMTP Relay
+#
+# Optional profiles:
+#   --profile monitoring   Prometheus, Grafana, Loki, Promtail, exporters, Alertmanager
+#   --profile media        Media daemon (FFmpeg/radio/retro), native HTTP streaming, HLS
+#
+# Usage:
+#   docker compose -f docker-compose.stack.yml up -d
+#   docker compose -f docker-compose.stack.yml --profile monitoring up -d
+#   docker compose -f docker-compose.stack.yml --profile media up -d
+#   docker compose -f docker-compose.stack.yml --profile monitoring --profile media up -d
+#
+# Access:
+#   http://localhost              Welcome portal
+#   http://localhost/workflowui   WorkflowUI
+#   http://localhost/codegen      CodeForge IDE
+#   http://localhost/pastebin     Pastebin
+#   http://localhost/postgres     Postgres Dashboard
+#   http://localhost/emailclient  Email Client
+#   http://localhost/diagrams     Exploded Diagrams
+#   http://localhost/storybook    Storybook
+#   http://localhost/app          Frontend App
+#   http://localhost/api          DBAL API
+#   http://localhost/pastebin-api Pastebin Flask API
+#   http://localhost/phpmyadmin/  phpMyAdmin (MySQL admin)
+#   http://localhost/mongo-express/ Mongo Express (MongoDB admin)
+#   http://localhost/redis-insight/ RedisInsight (Redis admin)
+#   http://localhost/kibana/      Kibana (Elasticsearch admin)
+
+services:
+  # ============================================================================
+  # Core Services
+  # ============================================================================
+
+  # PostgreSQL - Primary database
+  postgres:
+    image: postgres:15-alpine
+    container_name: metabuilder-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-metabuilder}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-metabuilder}
+      POSTGRES_DB: ${POSTGRES_DB:-metabuilder}
+      POSTGRES_INITDB_ARGS: "-E UTF8"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-metabuilder}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - metabuilder
+
+  # Redis - Cache layer
+  redis:
+    image: redis:7-alpine
+    container_name: metabuilder-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks:
+      - metabuilder
+
+  # Elasticsearch - Search layer
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    container_name: metabuilder-elasticsearch
+    restart: unless-stopped
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - cluster.name=metabuilder
+      - node.name=metabuilder-node-1
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://127.0.0.1:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - metabuilder
+
+  # MySQL - Alternative SQL database
+  mysql:
+    image: mysql:8.0
+    container_name: metabuilder-mysql
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-metabuilder}
+      MYSQL_USER: ${MYSQL_USER:-metabuilder}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-metabuilder}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-metabuilder}
+      MYSQL_CHARSET: utf8mb4
+    volumes:
+      - mysql-data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-metabuilder}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - metabuilder
+
+  # MongoDB - Document database
+  mongodb:
+    image: mongo:7.0
+    container_name: metabuilder-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER:-metabuilder}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:-metabuilder}
+      MONGO_INITDB_DATABASE: ${MONGO_DB:-metabuilder}
+    volumes:
+      - mongodb-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')", "--quiet"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - metabuilder
+
+  # phpMyAdmin - MySQL web admin
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: metabuilder-phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: ${MYSQL_USER:-metabuilder}
+      PMA_PASSWORD: ${MYSQL_PASSWORD:-metabuilder}
+      PMA_ABSOLUTE_URI: http://localhost/phpmyadmin/
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-metabuilder}
+    depends_on:
+      mysql:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:80/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - metabuilder
+
+  # Mongo Express - MongoDB web admin
+  mongo-express:
+    image: mongo-express:latest
+    container_name: metabuilder-mongo-express
+    restart: unless-stopped
+    ports:
+      - "8082:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_USER:-metabuilder}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_PASSWORD:-metabuilder}
+      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_USER:-metabuilder}:${MONGO_PASSWORD:-metabuilder}@mongodb:27017/?authSource=admin
+      ME_CONFIG_BASICAUTH: "false"
+      ME_CONFIG_SITE_BASEURL: /mongo-express
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:8081/mongo-express/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    networks:
+      - metabuilder
+
+  # RedisInsight - Redis web admin
+  redisinsight:
+    image: redis/redisinsight:latest
+    container_name: metabuilder-redisinsight
+    restart: unless-stopped
+    ports:
+      - "8083:5540"
+    environment:
+      RI_PROXY_PATH: /redis-insight
+    volumes:
+      - redisinsight-data:/data
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:5540/redis-insight/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - metabuilder
+
+  # Kibana - Elasticsearch web admin
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.11.0
+    container_name: metabuilder-kibana
+    restart: unless-stopped
+    ports:
+      - "5601:5601"
+    environment:
+      ELASTICSEARCH_HOSTS: '["http://elasticsearch:9200"]'
+      SERVER_BASEPATH: /kibana
+      SERVER_REWRITEBASEPATH: "true"
+      XPACK_SECURITY_ENABLED: "false"
+      XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY: "metabuilder-kibana-encryption-key-32ch"
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:5601/kibana/api/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    networks:
+      - metabuilder
+
+  # DBAL config seeder — copies schemas and SQL templates into named volumes
+  dbal-init:
+    build:
+      context: ..
+      dockerfile: deployment/config/dbal/Dockerfile.init
+    container_name: metabuilder-dbal-init
+    volumes:
+      - dbal-schemas:/target/schemas/entities
+      - dbal-templates:/target/templates/sql
+    networks:
+      - metabuilder
+
+  # DBAL Daemon - C++ backend
+  dbal:
+    build:
+      context: ../dbal
+      dockerfile: production/build-config/Dockerfile
+      args:
+        BUILD_TYPE: Release
+        BUILDKIT_INLINE_CACHE: 1
+    container_name: metabuilder-dbal
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      DBAL_ADAPTER: postgres
+      DATABASE_URL: postgresql://${POSTGRES_USER:-metabuilder}:${POSTGRES_PASSWORD:-metabuilder}@postgres:5432/${POSTGRES_DB:-metabuilder}
+      DBAL_CACHE_URL: redis://redis:6379/0?ttl=300&pattern=read-through
+      DBAL_SEARCH_URL: http://elasticsearch:9200?index=metabuilder&refresh=true
+      DBAL_SCHEMA_DIR: /app/schemas/entities
+      DBAL_TEMPLATE_DIR: /app/templates/sql
+      DBAL_SEED_DIR: /app/seeds/database
+      DBAL_SEED_ON_STARTUP: "true"
+      DBAL_BIND_ADDRESS: 0.0.0.0
+      DBAL_PORT: 8080
+      DBAL_MODE: production
+      DBAL_DAEMON: "true"
+      DBAL_LOG_LEVEL: trace
+      DBAL_LOG_FORMAT: json
+      DBAL_LOG_SQL_QUERIES: "true"
+      DBAL_LOG_PERFORMANCE: "true"
+      DBAL_AUTO_CREATE_TABLES: "true"
+      DBAL_ENABLE_METRICS: "true"
+      DBAL_ENABLE_HEALTH_CHECK: "true"
+      DBAL_MYSQL_URL: mysql://${MYSQL_USER:-metabuilder}:${MYSQL_PASSWORD:-metabuilder}@mysql:3306/${MYSQL_DATABASE:-metabuilder}
+      DBAL_MONGODB_URL: mongodb://${MONGO_USER:-metabuilder}:${MONGO_PASSWORD:-metabuilder}@mongodb:27017/${MONGO_DB:-metabuilder}?authSource=admin
+      DBAL_POOL_MIN_SIZE: 2
+      DBAL_POOL_MAX_SIZE: 10
+      DBAL_POOL_IDLE_TIMEOUT_SECONDS: 300
+      # Security: Admin API authentication and CORS
+      DBAL_ADMIN_TOKEN: ${DBAL_ADMIN_TOKEN:-069e6487a710300381cd52120eab95d56d7f53beee21479cbeba9128217cbea9}
+      DBAL_CORS_ORIGIN: ${DBAL_CORS_ORIGIN:-*}
+      # JWT entity auth — must match JWT_SECRET_KEY used by pastebin-backend Flask app
+      JWT_SECRET_KEY: "${JWT_SECRET_KEY:-changeme-in-production}"
+      # Blob storage — powers media service and package repo
+      DBAL_BLOB_BACKEND: ${DBAL_BLOB_BACKEND:-filesystem}
+      DBAL_BLOB_ROOT: /app/data/blobs
+    volumes:
+      - dbal-schemas:/app/schemas/entities:ro
+      - dbal-templates:/app/templates/sql:ro
+      - dbal-logs:/var/log/dbal
+      - dbal-blobs:/app/data/blobs
+    depends_on:
+      dbal-init:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - metabuilder
+
+  # WorkflowUI - Visual workflow editor (n8n-style)
+  workflowui:
+    build:
+      context: ..
+      dockerfile: frontends/workflowui/Dockerfile
+      args:
+        NODE_ENV: production
+    container_name: metabuilder-workflowui
+    restart: unless-stopped
+    ports:
+      - "3001:3000"
+    environment:
+      NEXT_PUBLIC_DBAL_API_URL: http://dbal:8080
+      NEXT_PUBLIC_API_BASE_URL: http://localhost:8080
+      NODE_ENV: production
+      PORT: 3000
+      DBAL_ENDPOINT: http://dbal:8080
+    depends_on:
+      dbal:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:3000/workflowui"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+    networks:
+      - metabuilder
+
+  # Postfix - SMTP server (submission on 587, relay on 25)
+  postfix:
+    image: boky/postfix:latest
+    container_name: metabuilder-postfix
+    restart: unless-stopped
+    ports:
+      - "1025:25"
+      - "1587:587"
+    environment:
+      ALLOWED_SENDER_DOMAINS: "localhost emailclient.local metabuilder.local"
+      POSTFIX_myhostname: "metabuilder.local"
+      POSTFIX_mynetworks: "127.0.0.0/8 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16"
+      POSTFIX_smtpd_tls_security_level: "may"
+    healthcheck:
+      test: ["CMD-SHELL", "postfix status || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    networks:
+      - metabuilder
+
+  # Dovecot - IMAP/POP3 server with TLS
+  dovecot:
+    build:
+      context: ../frontends/emailclient/deployment/docker/dovecot
+      dockerfile: Dockerfile
+    container_name: metabuilder-dovecot
+    restart: unless-stopped
+    ports:
+      - "1143:143"
+      - "1993:993"
+      - "1110:110"
+      - "1995:995"
+    volumes:
+      - dovecot-data:/var/mail
+    healthcheck:
+      test: ["CMD-SHELL", "doveadm service status imap-login || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - metabuilder
+
+  # SMTP Relay - Twisted relay pointing at local Postfix
+  smtp-relay:
+    build:
+      context: ../services/smtprelay
+      dockerfile: Dockerfile
+    container_name: metabuilder-smtp-relay
+    restart: unless-stopped
+    ports:
+      - "2525:2525"
+      - "8025:8080"
+    environment:
+      SMTP_LISTEN_HOST: "0.0.0.0"
+      SMTP_LISTEN_PORT: "2525"
+      HTTP_LISTEN_HOST: "0.0.0.0"
+      HTTP_LISTEN_PORT: "8080"
+      GMAIL_HOST: "postfix"
+      GMAIL_PORT: "25"
+      GMAIL_USERNAME: "relay@metabuilder.local"
+      GMAIL_APP_PASSWORD: "relay"
+      FORWARD_TO: "demo@localhost"
+      ALLOW_ANY_RCPT: "true"
+      ADD_X_HEADERS: "true"
+      MAX_STORE: "500"
+    depends_on:
+      postfix:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/', timeout=3).read()"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - metabuilder
+
+  # Email Service - Flask backend for IMAP/SMTP operations
+  email-service:
+    build:
+      context: ../frontends/emailclient
+      dockerfile: deployment/docker/email-service/Dockerfile
+    container_name: metabuilder-email-service
+    restart: unless-stopped
+    ports:
+      - "8500:5000"
+    environment:
+      POSTFIX_HOST: "postfix"
+      POSTFIX_PORT: "25"
+      DOVECOT_HOST: "dovecot"
+      DOVECOT_IMAP_PORT: "143"
+      DOVECOT_IMAP_SSL_PORT: "993"
+      DOVECOT_POP3_PORT: "110"
+      DOVECOT_POP3_SSL_PORT: "995"
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-metabuilder}:${POSTGRES_PASSWORD:-metabuilder}@postgres:5432/${POSTGRES_DB:-metabuilder}"
+      REDIS_URL: "redis://redis:6379/1"
+      CELERY_BROKER_URL: "redis://redis:6379/1"
+      CELERY_RESULT_BACKEND: "redis://redis:6379/1"
+      FLASK_ENV: "development"
+      FLASK_HOST: "0.0.0.0"
+      FLASK_PORT: "5000"
+      IMAP_SYNC_INTERVAL: "300"
+      SMTP_TIMEOUT: "30"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      postfix:
+        condition: service_healthy
+      dovecot:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    networks:
+      - metabuilder
+
+  # ============================================================================
+  # Gateway
+  # ============================================================================
+
+  # nginx - Reverse proxy + welcome portal (config baked into image)
+  nginx:
+    build:
+      context: ..
+      dockerfile: deployment/config/nginx/Dockerfile
+    container_name: metabuilder-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      - metabuilder
+
+  # ============================================================================
+  # Web Applications
+  # ============================================================================
+
+  # CodeForge IDE - Next.js + Monaco code editor
+  codegen:
+    build:
+      context: ..
+      dockerfile: frontends/codegen/Dockerfile
+    container_name: metabuilder-codegen
+    restart: unless-stopped
+    ports:
+      - "3002:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      HOSTNAME: "0.0.0.0"
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:3000/codegen"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    networks:
+      - metabuilder
+
+  # Pastebin - Code snippet sharing (dev mode: Turbopack + hot reload)
+  pastebin:
+    build:
+      context: ..
+      dockerfile: frontends/pastebin/Dockerfile.dev
+    container_name: metabuilder-pastebin
+    restart: unless-stopped
+    ports:
+      - "3003:3000"
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      HOSTNAME: "0.0.0.0"
+      NEXT_PUBLIC_DBAL_API_URL: /api/dbal
+      NEXT_PUBLIC_FLASK_BACKEND_URL: /pastebin-api
+      NEXT_TELEMETRY_DISABLED: "1"
+    depends_on:
+      pastebin-backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:3000/pastebin"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+    networks:
+      - metabuilder
+
+  # Pastebin Flask Backend - REST API for snippet storage
+  pastebin-backend:
+    build:
+      context: ..
+      dockerfile: frontends/pastebin/backend/Dockerfile
+    container_name: metabuilder-pastebin-backend
+    restart: unless-stopped
+    environment:
+      DATABASE_PATH: /app/data/snippets.db
+      CORS_ALLOWED_ORIGINS: "*"
+      PYTHON_RUNNER_IMAGE: "${PYTHON_RUNNER_IMAGE:-python:3.11-slim}"
+      PYTHON_RUN_TIMEOUT: "${PYTHON_RUN_TIMEOUT:-10}"
+      MYSQL_RUNNER_IMAGE: "${MYSQL_RUNNER_IMAGE:-mysql:8.0}"
+      POSTGRES_RUNNER_IMAGE: "${POSTGRES_RUNNER_IMAGE:-postgres:16-alpine}"
+      SQL_RUN_TIMEOUT: "${SQL_RUN_TIMEOUT:-120}"
+      JWT_SECRET_KEY: "${JWT_SECRET_KEY:-changeme-in-production}"
+      SMTP_HOST: "smtp-relay"
+      SMTP_PORT: "2525"
+      MAIL_FROM: "noreply@codesnippet.local"
+      APP_BASE_URL: "http://localhost/pastebin"
+      DBAL_BASE_URL: "http://dbal:8080"
+      DBAL_TENANT_ID: "pastebin"
+      DBAL_ADMIN_TOKEN: "069e6487a710300381cd52120eab95d56d7f53beee21479cbeba9128217cbea9"
+    volumes:
+      - pastebin-backend-data:/app/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:5000/health')"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    networks:
+      - metabuilder
+
+  # Postgres Dashboard - Database admin
+  postgres-dashboard:
+    build:
+      context: ..
+      dockerfile: frontends/postgres/Dockerfile
+    container_name: metabuilder-postgres-dashboard
+    restart: unless-stopped
+    ports:
+      - "3004:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-metabuilder}:${POSTGRES_PASSWORD:-metabuilder}@postgres:5432/${POSTGRES_DB:-metabuilder}"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:3000/postgres/admin/dashboard"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    networks:
+      - metabuilder
+
+  # Email Client - Email management UI
+  emailclient-app:
+    build:
+      context: ..
+      dockerfile: frontends/emailclient/Dockerfile
+    container_name: metabuilder-emailclient-app
+    restart: unless-stopped
+    ports:
+      - "3005:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      HOSTNAME: "0.0.0.0"
+      EMAIL_SERVICE_URL: http://email-service:5000
+    depends_on:
+      - email-service
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:3000/emailclient"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    networks:
+      - metabuilder
+
+  # Exploded Diagrams - Interactive 3D viewer
+  exploded-diagrams:
+    build:
+      context: ..
+      dockerfile: frontends/exploded-diagrams/Dockerfile
+    container_name: metabuilder-exploded-diagrams
+    restart: unless-stopped
+    ports:
+      - "3006:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      HOSTNAME: "0.0.0.0"
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:3000/diagrams"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    networks:
+      - metabuilder
+
+  # Storybook - Component library
+  storybook:
+    build:
+      context: ..
+      dockerfile: storybook/Dockerfile
+    container_name: metabuilder-storybook
+    restart: unless-stopped
+    ports:
+      - "3007:3000"
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:3000/storybook/"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    networks:
+      - metabuilder
+
+  # Frontend App - Main Next.js application
+  frontend-app:
+    build:
+      context: ..
+      dockerfile: frontends/nextjs/Dockerfile
+    container_name: metabuilder-frontend-app
+    restart: unless-stopped
+    ports:
+      - "3008:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      HOSTNAME: "0.0.0.0"
+      DBAL_API_URL: http://dbal:8080
+      DBAL_WS_URL: ws://dbal:50051
+    depends_on:
+      dbal:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "-O", "/dev/null", "http://127.0.0.1:3000/app/api/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+    networks:
+      - metabuilder
+
+  # ============================================================================
+  # Monitoring (--profile monitoring)
+  # ============================================================================
+
+  # Prometheus - Metrics collection (config baked into image)
+  prometheus:
+    build:
+      context: ..
+      dockerfile: deployment/config/prometheus/Dockerfile
+    container_name: metabuilder-prometheus
+    restart: unless-stopped
+    profiles: [monitoring]
+    ports:
+      - "9090:9090"
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=30d'
+      - '--web.enable-lifecycle'
+    volumes:
+      - prometheus-data:/prometheus
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:9090/-/healthy"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      - metabuilder
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+
+  # Grafana - Metrics visualization (config baked into image)
+  grafana:
+    build:
+      context: ..
+      dockerfile: deployment/config/grafana/Dockerfile
+    container_name: metabuilder-grafana
+    restart: unless-stopped
+    profiles: [monitoring]
+    ports:
+      - "3009:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
+      GF_INSTALL_PLUGINS: grafana-clock-panel,grafana-simple-json-datasource
+      GF_AUTH_ANONYMOUS_ENABLED: "false"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
+      - loki
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:3000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      - metabuilder
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+
+  # Loki - Log aggregation (config baked into image)
+  loki:
+    build:
+      context: ..
+      dockerfile: deployment/config/loki/Dockerfile
+    container_name: metabuilder-loki
+    restart: unless-stopped
+    profiles: [monitoring]
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - loki-data:/loki
+    healthcheck:
+      # loki uses a scratch-based image with no shell tools — check via /proc
+      disable: true
+    networks:
+      - metabuilder
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+
+  # Promtail - Log shipper (config baked into image; host log paths are system mounts)
+  promtail:
+    build:
+      context: ..
+      dockerfile: deployment/config/promtail/Dockerfile
+    container_name: metabuilder-promtail
+    restart: unless-stopped
+    profiles: [monitoring]
+    command: -config.file=/etc/promtail/config.yml
+    volumes:
+      - /var/log:/var/log:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+    depends_on:
+      - loki
+    healthcheck:
+      disable: true
+    networks:
+      - metabuilder
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+
+  # Node Exporter - Host metrics
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: metabuilder-node-exporter
+    restart: unless-stopped
+    profiles: [monitoring]
+    ports:
+      - "9100:9100"
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://127.0.0.1:9100/metrics || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      - metabuilder
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+
+  # Postgres Exporter - Database metrics
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter:latest
+    container_name: metabuilder-postgres-exporter
+    restart: unless-stopped
+    profiles: [monitoring]
+    ports:
+      - "9187:9187"
+    environment:
+      DATA_SOURCE_NAME: "postgresql://${POSTGRES_USER:-metabuilder}:${POSTGRES_PASSWORD:-metabuilder}@postgres:5432/${POSTGRES_DB:-metabuilder}?sslmode=disable"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://127.0.0.1:9187/metrics || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    networks:
+      - metabuilder
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 128M
+
+  # Redis Exporter - Cache metrics
+  redis-exporter:
+    image: oliver006/redis_exporter:latest
+    container_name: metabuilder-redis-exporter
+    restart: unless-stopped
+    profiles: [monitoring]
+    ports:
+      - "9121:9121"
+    environment:
+      REDIS_ADDR: redis:6379
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "/redis_exporter", "--version"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - metabuilder
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 128M
+
+  # cAdvisor - Container metrics
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: metabuilder-cadvisor
+    restart: unless-stopped
+    profiles: [monitoring]
+    privileged: true
+    ports:
+      - "8084:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://127.0.0.1:8080/healthz || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    networks:
+      - metabuilder
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  # Alertmanager - Alert routing (config baked into image)
+  alertmanager:
+    build:
+      context: ..
+      dockerfile: deployment/config/alertmanager/Dockerfile
+    container_name: metabuilder-alertmanager
+    restart: unless-stopped
+    profiles: [monitoring]
+    ports:
+      - "9093:9093"
+    command:
+      - '--config.file=/etc/alertmanager/config.yml'
+      - '--storage.path=/alertmanager'
+    volumes:
+      - alertmanager-data:/alertmanager
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://127.0.0.1:9093/-/healthy || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      - metabuilder
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+
+  # ============================================================================
+  # Media (--profile media)
+  # ============================================================================
+
+  # Media Processing Daemon - FFmpeg, Radio, Retro Gaming
+  media-daemon:
+    build:
+      context: ../services/media_daemon
+      dockerfile: Dockerfile
+    container_name: metabuilder-media-daemon
+    restart: unless-stopped
+    profiles: [media]
+    ports:
+      - "8090:8090"
+      - "8000:8000"
+    environment:
+      MEDIA_BIND_ADDRESS: 0.0.0.0
+      MEDIA_PORT: 8090
+      MEDIA_WORKERS: 4
+      DBAL_URL: http://dbal:8080
+      DBAL_API_KEY: ${DBAL_API_KEY:-}
+      MEDIA_VIDEO_WORKERS: 2
+      MEDIA_AUDIO_WORKERS: 4
+      MEDIA_DOC_WORKERS: 4
+      MEDIA_IMAGE_WORKERS: 8
+      MEDIA_RADIO_ENABLED: "true"
+      MEDIA_TV_ENABLED: "true"
+      MEDIA_RETRO_ENABLED: "true"
+      ICECAST_HOST: localhost
+      ICECAST_PASSWORD: ${ICECAST_PASSWORD:-hackme}
+      ICECAST_SOURCE_PASSWORD: ${ICECAST_PASSWORD:-hackme}
+      ICECAST_ADMIN_PASSWORD: ${ICECAST_ADMIN_PASSWORD:-hackme}
+      ICECAST_RELAY_PASSWORD: ${ICECAST_PASSWORD:-hackme}
+      ICECAST_HOSTNAME: ${ICECAST_HOSTNAME:-localhost}
+      ICECAST_MAX_CLIENTS: 1000
+      ICECAST_MAX_SOURCES: 20
+      LIBRETRO_CORES_DIR: /data/cores
+      LIBRETRO_SYSTEM_DIR: /data/system
+      LIBRETRO_SAVES_DIR: /data/saves
+    volumes:
+      - media-library:/data/media:ro
+      - media-output:/data/output
+      - media-cache:/data/cache
+      - hls-output:/data/hls
+      - media-temp:/data/temp
+      - retro-cores:/data/cores
+      - retro-system:/data/system
+      - retro-saves:/data/saves
+      - retro-roms:/data/roms:ro
+    depends_on:
+      dbal:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:8090/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - metabuilder
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 4G
+        reservations:
+          cpus: '1'
+          memory: 1G
+
+  # HLS/DASH Streaming Server (config baked into image)
+  nginx-stream:
+    build:
+      context: ..
+      dockerfile: deployment/config/nginx/Dockerfile.stream
+    container_name: metabuilder-nginx-stream
+    restart: unless-stopped
+    profiles: [media]
+    ports:
+      - "8088:80"
+    volumes:
+      - hls-output:/data/hls:ro
+    depends_on:
+      - media-daemon
+    healthcheck:
+      # 404 is fine — no HLS content yet; just verify nginx is accepting connections
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://127.0.0.1:80/ 2>&1 | grep -qE 'connected|404|200' || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      - metabuilder
+
+# ============================================================================
+# Volumes
+# ============================================================================
+volumes:
+  # Core
+  postgres-data:
+    driver: local
+  redis-data:
+    driver: local
+  elasticsearch-data:
+    driver: local
+  mysql-data:
+    driver: local
+  mongodb-data:
+    driver: local
+  dbal-schemas:
+    driver: local
+  dbal-templates:
+    driver: local
+  dbal-logs:
+    driver: local
+  dbal-blobs:
+    driver: local
+  redisinsight-data:
+    driver: local
+  dovecot-data:
+    driver: local
+  # Monitoring
+  prometheus-data:
+    driver: local
+  grafana-data:
+    driver: local
+  loki-data:
+    driver: local
+  alertmanager-data:
+    driver: local
+  # Media
+  media-library:
+    driver: local
+  media-output:
+    driver: local
+  media-cache:
+    driver: local
+  media-temp:
+    driver: local
+  hls-output:
+    driver: local
+  retro-cores:
+    driver: local
+  retro-system:
+    driver: local
+  retro-saves:
+    driver: local
+  retro-roms:
+    driver: local
+  pastebin-backend-data:
+    driver: local
+
+# ============================================================================
+# Networks
+# ============================================================================
+networks:
+  metabuilder:
+    driver: bridge
+    name: metabuilder-network

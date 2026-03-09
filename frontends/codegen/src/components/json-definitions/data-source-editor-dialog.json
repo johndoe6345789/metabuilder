@@ -1,0 +1,141 @@
+{
+  "id": "data-source-editor-dialog",
+  "type": "Dialog",
+  "bindings": {
+    "open": "open",
+    "onOpenChange": "onOpenChange"
+  },
+  "children": [
+    {
+      "id": "data-source-editor-dialog-content",
+      "type": "DialogContent",
+      "bindings": {
+        "className": "contentClassName"
+      },
+      "children": [
+        {
+          "id": "data-source-editor-dialog-header",
+          "type": "DialogHeader",
+          "children": [
+            {
+              "id": "data-source-editor-dialog-title",
+              "type": "DialogTitle",
+              "bindings": {
+                "children": "title"
+              }
+            },
+            {
+              "id": "data-source-editor-dialog-description",
+              "type": "DialogDescription",
+              "bindings": {
+                "children": "description"
+              }
+            }
+          ]
+        },
+        {
+          "id": "data-source-editor-dialog-body",
+          "type": "div",
+          "props": {
+            "className": "space-y-4"
+          },
+          "children": [
+            {
+              "id": "data-source-editor-dialog-empty",
+              "type": "p",
+              "props": {
+                "className": "text-sm text-muted-foreground"
+              },
+              "bindings": {
+                "children": "emptyMessage"
+              },
+              "conditional": {
+                "if": "!fields || fields.length === 0"
+              }
+            },
+            {
+              "id": "data-source-editor-dialog-fields",
+              "type": "div",
+              "props": {
+                "className": "space-y-4"
+              },
+              "conditional": {
+                "if": "fields && fields.length > 0"
+              },
+              "loop": {
+                "source": "fields",
+                "itemVar": "field"
+              },
+              "children": [
+                {
+                  "id": "data-source-editor-dialog-field",
+                  "type": "div",
+                  "props": {
+                    "className": "space-y-2"
+                  },
+                  "children": [
+                    {
+                      "id": "data-source-editor-dialog-field-label",
+                      "type": "Label",
+                      "bindings": {
+                        "children": "field.label"
+                      }
+                    },
+                    {
+                      "id": "data-source-editor-dialog-field-input",
+                      "type": "Input",
+                      "bindings": {
+                        "value": "field.value",
+                        "placeholder": "field.placeholder",
+                        "onChange": "onFieldChange",
+                        "data-field-id": "field.id"
+                      }
+                    },
+                    {
+                      "id": "data-source-editor-dialog-field-helper",
+                      "type": "p",
+                      "props": {
+                        "className": "text-xs text-muted-foreground"
+                      },
+                      "bindings": {
+                        "children": "field.helperText"
+                      },
+                      "conditional": {
+                        "if": "field.helperText"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "data-source-editor-dialog-footer",
+          "type": "DialogFooter",
+          "children": [
+            {
+              "id": "data-source-editor-dialog-cancel",
+              "type": "Button",
+              "props": {
+                "variant": "outline"
+              },
+              "bindings": {
+                "onClick": "onCancel",
+                "children": "cancelLabel"
+              }
+            },
+            {
+              "id": "data-source-editor-dialog-save",
+              "type": "Button",
+              "bindings": {
+                "onClick": "onSave",
+                "children": "saveLabel"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,96 @@
+{
+  "id": "date-picker-wrapper",
+  "type": "Popover",
+  "children": [
+    {
+      "id": "date-picker-trigger",
+      "type": "PopoverTrigger",
+      "bindings": {
+        "asChild": {
+          "source": null,
+          "transform": "true"
+        }
+      },
+      "children": [
+        {
+          "id": "date-picker-button",
+          "type": "Button",
+          "bindings": {
+            "variant": {
+              "source": null,
+              "transform": "'outline'"
+            },
+            "disabled": {
+              "source": "disabled",
+              "transform": "data"
+            },
+            "className": {
+              "source": ["value", "className"],
+              "transform": "const value = data[0]; const className = data[1] || ''; const baseClasses = 'w-full justify-start text-left font-normal'; const valueClass = !value ? 'text-muted-foreground' : ''; return `${baseClasses} ${valueClass} ${className}`.trim()"
+            },
+            "children": [
+              {
+                "id": "date-picker-icon",
+                "type": "CalendarBlank",
+                "bindings": {
+                  "className": {
+                    "source": null,
+                    "transform": "'mr-2'"
+                  },
+                  "size": {
+                    "source": null,
+                    "transform": "16"
+                  }
+                }
+              },
+              {
+                "id": "date-picker-label",
+                "type": "span",
+                "bindings": {
+                  "children": {
+                    "source": ["value", "placeholder"],
+                    "transform": "const value = data[0]; const placeholder = data[1] || 'Pick a date'; return value ? new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' }).format(value) : placeholder"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "date-picker-content",
+      "type": "PopoverContent",
+      "bindings": {
+        "className": {
+          "source": null,
+          "transform": "'w-auto p-0'"
+        },
+        "align": {
+          "source": null,
+          "transform": "'start'"
+        }
+      },
+      "children": [
+        {
+          "id": "date-picker-calendar",
+          "type": "Calendar",
+          "bindings": {
+            "mode": {
+              "source": null,
+              "transform": "'single'"
+            },
+            "selected": {
+              "source": "value",
+              "transform": "data"
+            },
+            "onSelect": {
+              "source": "onChange",
+              "transform": "data"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "type": "MetabuilderWidgetSearchBar",
+  "props": {
+    "onChange": "> void"
+  }
+}

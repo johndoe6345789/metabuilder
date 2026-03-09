@@ -10,7 +10,7 @@ import {
   setCanvasZoom,
   resetCanvasView,
   selectCanvasZoom
-} from '@metabuilder/redux-slices'/canvasSlice';
+} from '@metabuilder/redux-slices/canvasSlice';
 
 export interface UseCanvasZoomReturn {
   zoom: number;

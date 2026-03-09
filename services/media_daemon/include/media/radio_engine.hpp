@@ -9,6 +9,10 @@
 #include <atomic>
 #include <condition_variable>
 
+// Forward declaration — avoids a circular include between radio_engine and
+// stream_broadcaster (server.cpp ties them together at link time).
+namespace media { class StreamBroadcaster; }
+
 namespace media {
 
 /**
@@ -263,7 +267,14 @@ public:
      * Get total listener count across all channels
      */
     int get_total_listeners() const;
-    
+
+    /**
+     * Attach a StreamBroadcaster so stream_thread() can push audio chunks
+     * to connected HTTP listeners instead of writing to an external Icecast.
+     * Must be called before start_channel().
+     */
+    void set_broadcaster(StreamBroadcaster* b) { broadcaster_ = b; }
+
 private:
     /**
      * Stream thread function
@@ -302,10 +313,13 @@ private:
     // Configuration
     RadioEngineConfig config_;
     PluginManager* plugin_manager_ = nullptr;
-    
+
+    // Audio broadcaster (native HTTP streaming — replaces Icecast)
+    StreamBroadcaster* broadcaster_ = nullptr;
+
     // State
     std::atomic<bool> initialized_{false};
-    
+
     // Channels
     mutable std::mutex channels_mutex_;
     std::map<std::string, std::unique_ptr<RadioChannelState>> channels_;

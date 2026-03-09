@@ -9,6 +9,7 @@ export interface StackProps extends React.HTMLAttributes<HTMLDivElement> {
   justifyContent?: string
   divider?: React.ReactNode
   sx?: Record<string, unknown>
+  testId?: string
 }
 
 export const Stack: React.FC<StackProps> = ({
@@ -21,11 +22,13 @@ export const Stack: React.FC<StackProps> = ({
   className = '',
   sx,
   style,
+  testId,
   ...props
 }) => (
   <div
     className={`stack ${direction === 'row' ? 'flex' : 'flex flex-col'} ${spacing ? `gap-${spacing}` : ''} ${alignItems ? `items-${alignItems}` : ''} ${justifyContent ? `justify-${justifyContent}` : ''} ${className}`}
     style={{ ...sxToStyle(sx), ...style }}
+    data-testid={testId}
     {...props}
   >
     {divider ? React.Children.toArray(children).flatMap((child, i) => (i > 0 ? [divider, child] : [child])) : children}

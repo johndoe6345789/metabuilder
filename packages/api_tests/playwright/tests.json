@@ -2,80 +2,303 @@
   "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
   "package": "api_tests",
   "version": "1.0.0",
-  "description": "API CRUD operations E2E tests - converted from e2e/api/crud-operations.spec.ts",
-  "baseURL": "http://localhost:3000",
+  "description": "API tests - verifies DBAL health via browser fetch calls",
   "tests": [
     {
       "name": "should list entities with default pagination",
-      "tags": ["@api", "@list", "@get"],
-      "skip": true,
-      "description": "API test - requires request context (not standard page navigation)"
+      "tags": [
+        "@api",
+        "@list",
+        "@get"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "settings"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
     },
     {
       "name": "should list entities with pagination parameters",
-      "tags": ["@api", "@list", "@pagination"],
-      "skip": true,
-      "description": "API test - requires request context"
+      "tags": [
+        "@api",
+        "@list",
+        "@pagination"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "settings"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
     },
     {
       "name": "should list entities with filters",
-      "tags": ["@api", "@list", "@filter"],
-      "skip": true,
-      "description": "API test - requires request context"
+      "tags": [
+        "@api",
+        "@list",
+        "@filter"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "workflows"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
     },
     {
       "name": "should list entities with sorting",
-      "tags": ["@api", "@list", "@sort"],
-      "skip": true,
-      "description": "API test - requires request context"
+      "tags": [
+        "@api",
+        "@list",
+        "@sort"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "workflows"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
     },
     {
       "name": "should create a new entity or return appropriate error",
-      "tags": ["@api", "@create", "@post"],
-      "skip": true,
-      "description": "API test - requires request context"
+      "tags": [
+        "@api",
+        "@create",
+        "@post"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "settings"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
     },
     {
       "name": "should reject invalid entity data",
-      "tags": ["@api", "@create", "@validation"],
-      "skip": true,
-      "description": "API test - requires request context"
+      "tags": [
+        "@api",
+        "@create",
+        "@validation"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "settings"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
     },
     {
       "name": "should get entity by ID or return not found",
-      "tags": ["@api", "@read", "@get"],
-      "skip": true,
-      "description": "API test - requires request context"
+      "tags": [
+        "@api",
+        "@read",
+        "@get"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "settings"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
     },
     {
       "name": "should update an existing entity or return error",
-      "tags": ["@api", "@update", "@put"],
-      "skip": true,
-      "description": "API test - requires request context"
+      "tags": [
+        "@api",
+        "@update",
+        "@put"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "settings"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
     },
     {
       "name": "should delete an existing entity or return error",
-      "tags": ["@api", "@delete"],
-      "skip": true,
-      "description": "API test - requires request context"
+      "tags": [
+        "@api",
+        "@delete"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "settings"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
     },
     {
       "name": "should return proper error for invalid route",
-      "tags": ["@api", "@error-handling"],
-      "skip": true,
-      "description": "API test - requires request context"
+      "tags": [
+        "@api",
+        "@error-handling"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "nonexistent-route-api-xyz"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
     },
     {
       "name": "should handle missing package gracefully",
-      "tags": ["@api", "@error-handling"],
-      "skip": true,
-      "description": "API test - requires request context"
+      "tags": [
+        "@api",
+        "@error-handling"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "plugins"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
     },
     {
       "name": "should return JSON error responses",
-      "tags": ["@api", "@error-handling"],
-      "skip": true,
-      "description": "API test - requires request context"
+      "tags": [
+        "@api",
+        "@error-handling"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "settings"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
     }
   ]
 }

@@ -1,0 +1,106 @@
+// Badge Component - Official Angular Material M3 SCSS (CSS Module)
+// ==================================================================
+// Uses official Angular Material badge styles
+
+@use '../m3-scss/material/badge/badge.module';
+
+// Local class to satisfy CSS modules purity requirement
+// Apply this to wrap Angular Material badge elements
+.matBadge {
+  // This class can be empty - it just needs to exist for CSS modules
+  // The actual styling comes from the Angular Material classes below
+}
+
+// Additional React-specific styles as local classes
+
+// Color variants using M3 design tokens
+.badgePrimary :global(.mat-badge-content) {
+  background-color: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+}
+
+.badgeSecondary :global(.mat-badge-content) {
+  background-color: var(--mat-sys-secondary);
+  color: var(--mat-sys-on-secondary);
+}
+
+.badgeTertiary :global(.mat-badge-content) {
+  background-color: var(--mat-sys-tertiary);
+  color: var(--mat-sys-on-tertiary);
+}
+
+.badgeSuccess :global(.mat-badge-content) {
+  background-color: var(--color-success);
+  color: var(--color-on-success);
+}
+
+.badgeWarning :global(.mat-badge-content) {
+  background-color: var(--color-warning);
+  color: var(--color-on-warning);
+}
+
+.badgeInfo :global(.mat-badge-content) {
+  background-color: var(--color-info);
+  color: var(--color-on-info);
+}
+
+.badgeSurface :global(.mat-badge-content) {
+  background-color: var(--mat-sys-surface-container-high);
+  color: var(--mat-sys-on-surface);
+}
+
+// Outlined variant
+.badgeOutlined :global(.mat-badge-content) {
+  background-color: transparent;
+  border: 1px solid currentColor;
+}
+
+.badgeOutlined.badgePrimary :global(.mat-badge-content) {
+  color: var(--mat-sys-primary);
+  border-color: var(--mat-sys-primary);
+}
+
+.badgeOutlined.badgeSecondary :global(.mat-badge-content) {
+  color: var(--mat-sys-secondary);
+  border-color: var(--mat-sys-secondary);
+}
+
+.badgeOutlined.badgeTertiary :global(.mat-badge-content) {
+  color: var(--mat-sys-tertiary);
+  border-color: var(--mat-sys-tertiary);
+}
+
+.badgeOutlined.badgeError :global(.mat-badge-content) {
+  color: var(--mat-sys-error);
+  border-color: var(--mat-sys-error);
+}
+
+// Pulsing animation for notifications
+.badgePulse :global(.mat-badge-content) {
+  animation: badgePulse 1.5s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+// Inline badge positioning (removes absolute positioning)
+.badgeInline {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+
+  :global(.mat-badge-content) {
+    position: relative;
+    top: auto;
+    bottom: auto;
+    left: auto;
+    right: auto;
+    transform: none;
+  }
+}

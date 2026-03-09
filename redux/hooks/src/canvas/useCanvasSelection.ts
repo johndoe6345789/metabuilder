@@ -14,12 +14,12 @@ import {
   setSelection,
   clearSelection,
   selectSelectedItemIds
-} from '@metabuilder/redux-slices'/canvasSlice';
+} from '@metabuilder/redux-slices/canvasSlice';
 import {
   selectCanvasItems,
   selectCanvasItemsByIds
-} from '@metabuilder/redux-slices'/canvasItemsSlice';
-import { ProjectCanvasItem } from '../../types/project';
+} from '@metabuilder/redux-slices/canvasItemsSlice';
+import { ProjectCanvasItem } from '@metabuilder/redux-slices';
 
 export interface UseCanvasSelectionReturn {
   selectedItemIds: string[];

@@ -1,0 +1,71 @@
+{
+  "id": "search-result-item-container",
+  "type": "div",
+  "props": {
+    "className": "search-result-item"
+  },
+  "bindings": {
+    "onClick": {
+      "source": "onClick",
+      "transform": "data"
+    }
+  },
+  "children": [
+    {
+      "id": "search-result-item-icon",
+      "type": "div",
+      "props": {
+        "className": "search-result-item__icon"
+      },
+      "bindings": {
+        "children": {
+          "source": "icon",
+          "transform": "data"
+        },
+        "_if": {
+          "source": "icon",
+          "transform": "!!data"
+        }
+      }
+    },
+    {
+      "id": "search-result-item-body",
+      "type": "div",
+      "props": {
+        "className": "search-result-item__body"
+      },
+      "children": [
+        {
+          "id": "search-result-item-title",
+          "type": "span",
+          "props": {
+            "className": "search-result-item__title"
+          },
+          "bindings": {
+            "children": {
+              "source": "title",
+              "transform": "data"
+            }
+          }
+        },
+        {
+          "id": "search-result-item-meta",
+          "type": "span",
+          "props": {
+            "className": "search-result-item__meta"
+          },
+          "bindings": {
+            "children": {
+              "source": "meta",
+              "transform": "data"
+            },
+            "_if": {
+              "source": "meta",
+              "transform": "!!data"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

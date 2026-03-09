@@ -1,0 +1,240 @@
+{
+  "name": "Create Forum Post",
+  "active": false,
+  "nodes": [
+    {
+      "id": "validate_tenant",
+      "name": "Validate Tenant",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $context.tenantId }}",
+        "operation": "validate",
+        "validator": "required"
+      }
+    },
+    {
+      "id": "validate_input",
+      "name": "Validate Input",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $json }}",
+        "operation": "validate",
+        "rules": {
+          "content": "required|string|minLength:3|maxLength:5000"
+        }
+      }
+    },
+    {
+      "id": "check_thread_exists",
+      "name": "Check Thread Exists",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "filter": {
+          "id": "{{ $json.threadId }}",
+          "tenantId": "{{ $context.tenantId }}"
+        },
+        "operation": "database_read",
+        "entity": "ForumThread"
+      }
+    },
+    {
+      "id": "check_thread_locked",
+      "name": "Check Thread Locked",
+      "type": "metabuilder.condition",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "condition": "{{ $steps.check_thread_exists.output.isLocked !== true }}",
+        "operation": "condition"
+      }
+    },
+    {
+      "id": "create_post",
+      "name": "Create Post",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "data": {
+          "tenantId": "{{ $context.tenantId }}",
+          "threadId": "{{ $json.threadId }}",
+          "authorId": "{{ $context.user.id }}",
+          "content": "{{ $json.content }}",
+          "editedAt": null,
+          "isDeleted": false,
+          "createdAt": "{{ new Date().toISOString() }}"
+        },
+        "operation": "database_create",
+        "entity": "ForumPost"
+      }
+    },
+    {
+      "id": "increment_thread_count",
+      "name": "Increment Thread Count",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "filter": {
+          "id": "{{ $json.threadId }}"
+        },
+        "data": {
+          "postCount": "{{ $steps.check_thread_exists.output.postCount + 1 }}",
+          "updatedAt": "{{ new Date().toISOString() }}"
+        },
+        "operation": "database_update",
+        "entity": "ForumThread"
+      }
+    },
+    {
+      "id": "emit_event",
+      "name": "Emit Event",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        100,
+        500
+      ],
+      "parameters": {
+        "data": {
+          "postId": "{{ $steps.create_post.output.id }}",
+          "threadId": "{{ $json.threadId }}",
+          "authorId": "{{ $context.user.id }}"
+        },
+        "action": "emit_event",
+        "event": "post_created",
+        "channel": "{{ 'forum:thread:' + $json.threadId }}"
+      }
+    },
+    {
+      "id": "return_success",
+      "name": "Return Success",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        400,
+        500
+      ],
+      "parameters": {
+        "action": "http_response",
+        "status": 201,
+        "body": "{{ $steps.create_post.output }}"
+      }
+    }
+  ],
+  "connections": {
+    "validate_tenant": {
+      "main": [
+        [
+          {
+            "node": "validate_input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "validate_input": {
+      "main": [
+        [
+          {
+            "node": "check_thread_exists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_thread_exists": {
+      "main": [
+        [
+          {
+            "node": "check_thread_locked",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_thread_locked": {
+      "main": [
+        [
+          {
+            "node": "create_post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create_post": {
+      "main": [
+        [
+          {
+            "node": "increment_thread_count",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "increment_thread_count": {
+      "main": [
+        [
+          {
+            "node": "emit_event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "emit_event": {
+      "main": [
+        [
+          {
+            "node": "return_success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "id": "workflow_create_post",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
+}

@@ -1,6 +1,7 @@
 #ifndef DBAL_RPC_RESTFUL_HANDLER_HPP
 #define DBAL_RPC_RESTFUL_HANDLER_HPP
 
+#include "response_formatter.hpp"
 #include <functional>
 #include <json/json.h>
 #include <string>
@@ -65,9 +66,6 @@ std::string toPascalCase(const std::string& snake_case);
  * @brief Convert string to lowercase
  */
 std::string toLower(const std::string& str);
-
-using ResponseSender = std::function<void(const ::Json::Value&)>;
-using ErrorSender = std::function<void(const std::string&, int)>;
 
 /**
  * @brief Handle a RESTful DBAL request

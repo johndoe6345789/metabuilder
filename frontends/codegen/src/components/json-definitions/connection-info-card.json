@@ -1,0 +1,54 @@
+{
+  "id": "connection-info-card-container",
+  "type": "div",
+  "props": {
+    "className": "connection-info-card"
+  },
+  "children": [
+    {
+      "id": "connection-info-card-header",
+      "type": "div",
+      "props": {
+        "className": "connection-info-card__header"
+      },
+      "children": [
+        {
+          "id": "connection-info-card-status-dot",
+          "type": "div",
+          "bindings": {
+            "className": {
+              "source": "status",
+              "transform": "const s = data || 'disconnected'; const stateClass = { connected: 'connection-info-card__status-dot--connected', disconnected: 'connection-info-card__status-dot--disconnected', pending: 'connection-info-card__status-dot--pending' }[s] || 'connection-info-card__status-dot--disconnected'; return `connection-info-card__status-dot ${stateClass}`"
+            }
+          }
+        },
+        {
+          "id": "connection-info-card-title",
+          "type": "div",
+          "props": {
+            "className": "connection-info-card__title"
+          },
+          "bindings": {
+            "children": "title"
+          }
+        }
+      ]
+    },
+    {
+      "id": "connection-info-card-rows",
+      "type": "div",
+      "props": {
+        "className": "connection-info-card__rows"
+      },
+      "bindings": {
+        "children": {
+          "source": "rows",
+          "transform": "source.map((row, index) => ({ id: `conn-row-${index}`, type: 'div', className: 'connection-info-card__row', children: [{ type: 'div', className: 'connection-info-card__label', children: [{ type: 'Text', value: row.label }] }, { type: 'div', className: 'connection-info-card__value', children: [{ type: 'Text', value: row.value }] }] }))"
+        }
+      },
+      "conditional": {
+        "if": "rows"
+      }
+    }
+  ]
+}

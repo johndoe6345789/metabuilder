@@ -52,7 +52,11 @@ export class MockProjectServiceAdapter implements IProjectServiceAdapter {
     const id = `proj-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
     const project: Project = {
       id,
-      ...data,
+      name: data.name,
+      description: data.description,
+      workspaceId: data.workspaceId,
+      tenantId: data.tenantId || 'default-tenant',
+      color: data.color,
       createdAt: Date.now(),
       updatedAt: Date.now(),
     }
@@ -80,10 +84,15 @@ export class MockProjectServiceAdapter implements IProjectServiceAdapter {
 
   async createCanvasItem(projectId: string, data: CreateCanvasItemRequest): Promise<ProjectCanvasItem> {
     const id = `item-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+    const existingItems = Array.from(this.canvasItems.values()).filter(i => i.projectId === projectId)
+    const maxZIndex = existingItems.length > 0 ? Math.max(...existingItems.map(i => i.zIndex)) : 0
     const item: ProjectCanvasItem = {
       id,
       projectId,
-      ...data,
+      workflowId: data.workflowId,
+      position: data.position,
+      size: data.size || { width: 200, height: 150 },
+      zIndex: maxZIndex + 1,
       createdAt: Date.now(),
       updatedAt: Date.now(),
     }
@@ -150,7 +159,10 @@ export class MockWorkspaceServiceAdapter implements IWorkspaceServiceAdapter {
     const id = `ws-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
     const workspace: Workspace = {
       id,
-      ...data,
+      name: data.name,
+      description: data.description,
+      tenantId: data.tenantId || 'default-tenant',
+      color: data.color,
       createdAt: Date.now(),
       updatedAt: Date.now(),
     }
@@ -228,11 +240,18 @@ export class MockWorkflowServiceAdapter implements IWorkflowServiceAdapter {
     }
   }
 
-  async getWorkflowMetrics(workflow: Workflow) {
+  async getWorkflowMetrics(workflow: Workflow): Promise<{
+    nodeCount: number;
+    connectionCount: number;
+    complexity: 'simple' | 'moderate' | 'complex';
+    depth: number;
+  }> {
+    const complexity: 'simple' | 'moderate' | 'complex' =
+      workflow.nodes.length > 20 ? 'complex' : workflow.nodes.length > 5 ? 'moderate' : 'simple'
     return {
       nodeCount: workflow.nodes.length,
       connectionCount: workflow.connections.length,
-      complexity: (workflow.nodes.length > 20 ? 'complex' : workflow.nodes.length > 5 ? 'moderate' : 'simple') as const,
+      complexity,
       depth: 1,
     }
   }
@@ -252,14 +271,26 @@ export class MockExecutionServiceAdapter implements IExecutionServiceAdapter {
     tenantId?: string
   ): Promise<ExecutionResult> {
     const id = `exec-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+    const startTime = Date.now()
+    const endTime = startTime + 1000
     const execution: ExecutionResult = {
       id,
       workflowId,
       workflowName: 'Test Workflow',
       status: 'success',
-      startTime: Date.now(),
-      endTime: Date.now() + 1000,
-      nodes: data.nodes,
+      startTime,
+      endTime,
+      duration: endTime - startTime,
+      nodes: data.nodes.map(node => ({
+        nodeId: node.id,
+        nodeName: node.name || node.type,
+        status: 'success' as const,
+        startTime,
+        endTime,
+        duration: endTime - startTime,
+        output: {},
+      })),
+      input: data.inputs,
       output: {},
       tenantId: tenantId || 'test-tenant',
     }
@@ -287,13 +318,14 @@ export class MockExecutionServiceAdapter implements IExecutionServiceAdapter {
 
     const durations = successful.map(e => (e.endTime || 0) - e.startTime)
     const avgDuration = durations.length > 0 ? durations.reduce((a, b) => a + b, 0) / durations.length : 0
+    const lastExecution = executions[executions.length - 1]
 
     return {
       totalExecutions: executions.length,
-      successCount: successful.length,
-      errorCount: failed.length,
+      successfulExecutions: successful.length,
+      failedExecutions: failed.length,
       averageDuration: avgDuration,
-      lastExecution: executions[executions.length - 1],
+      lastExecutionTime: lastExecution?.endTime,
     }
   }
 

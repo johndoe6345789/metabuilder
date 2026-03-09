@@ -1,0 +1,66 @@
+// Spacing utility classes — full Tailwind-compatible 4px scale
+// Used by: codegen JSON components, TSX className strings
+
+$spacing: (
+  '0': 0,
+  '0\\.5': 2px,
+  '1': 4px,
+  '1\\.5': 6px,
+  '2': 8px,
+  '2\\.5': 10px,
+  '3': 12px,
+  '3\\.5': 14px,
+  '4': 16px,
+  '5': 20px,
+  '6': 24px,
+  '7': 28px,
+  '8': 32px,
+  '9': 36px,
+  '10': 40px,
+  '11': 44px,
+  '12': 48px,
+  '14': 56px,
+  '16': 64px,
+  '20': 80px,
+  '24': 96px,
+);
+
+@each $key, $value in $spacing {
+  .p-#{$key} { padding: $value }
+  .px-#{$key} { padding-left: $value; padding-right: $value }
+  .py-#{$key} { padding-top: $value; padding-bottom: $value }
+  .pt-#{$key} { padding-top: $value }
+  .pb-#{$key} { padding-bottom: $value }
+  .pl-#{$key} { padding-left: $value }
+  .pr-#{$key} { padding-right: $value }
+
+  .m-#{$key} { margin: $value }
+  .mx-#{$key} { margin-left: $value; margin-right: $value }
+  .my-#{$key} { margin-top: $value; margin-bottom: $value }
+  .mt-#{$key} { margin-top: $value }
+  .mb-#{$key} { margin-bottom: $value }
+  .ml-#{$key} { margin-left: $value }
+  .mr-#{$key} { margin-right: $value }
+
+  .gap-#{$key} { gap: $value }
+  .gap-x-#{$key} { column-gap: $value }
+  .gap-y-#{$key} { row-gap: $value }
+
+  .space-y-#{$key} > :not(:first-child) { margin-top: $value }
+  .space-x-#{$key} > :not(:first-child) { margin-left: $value }
+}
+
+// Auto margin utilities
+.mx-auto { margin-left: auto; margin-right: auto }
+.ml-auto { margin-left: auto }
+.mr-auto { margin-right: auto }
+.mt-auto { margin-top: auto }
+.mb-auto { margin-bottom: auto }
+
+// Negative margins
+.-mt-1 { margin-top: -4px }
+.-mt-2 { margin-top: -8px }
+.-ml-1 { margin-left: -4px }
+.-ml-2 { margin-left: -8px }
+.-mr-1 { margin-right: -4px }
+.-mr-2 { margin-right: -8px }

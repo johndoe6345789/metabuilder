@@ -1,0 +1,76 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "codegen_studio",
+  "description": "Codegen Studio access permissions for template viewing, creation, and generation",
+  "permissions": [
+    {
+      "id": "codegen.templates.view",
+      "name": "View Templates",
+      "description": "View available code templates",
+      "resource": "codegen_templates",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "codegen.templates.create",
+      "name": "Create Templates",
+      "description": "Create custom templates",
+      "resource": "codegen_templates",
+      "action": "create",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "codegen.generate",
+      "name": "Generate Code",
+      "description": "Generate code from templates",
+      "resource": "codegen_output",
+      "action": "create",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "codegen.package.create",
+      "name": "Create Packages",
+      "description": "Create new MetaBuilder packages",
+      "resource": "codegen_packages",
+      "action": "create",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "codegen.package.scaffold",
+      "name": "Scaffold Packages",
+      "description": "Generate package scaffolding",
+      "resource": "codegen_packages",
+      "action": "create",
+      "scope": "global",
+      "minLevel": 5
+    }
+  ],
+  "resources": [
+    {
+      "id": "codegen_templates",
+      "name": "Code Templates",
+      "type": "file",
+      "description": "Code generation templates",
+      "actions": ["read", "create", "update", "delete"]
+    },
+    {
+      "id": "codegen_output",
+      "name": "Generated Output",
+      "type": "file",
+      "description": "Generated code and files",
+      "actions": ["create", "read"]
+    },
+    {
+      "id": "codegen_packages",
+      "name": "Package Scaffolding",
+      "type": "file",
+      "description": "MetaBuilder package scaffolding",
+      "actions": ["create", "read"]
+    }
+  ]
+}

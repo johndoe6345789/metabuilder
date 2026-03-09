@@ -1,0 +1,10 @@
+{
+  "type": "MetabuilderWidgetJSONComponentTreeManager",
+  "jsonCompatible": false,
+  "wrapperRequired": true,
+  "load": {
+    "path": "@/components/JSONComponentTreeManager",
+    "export": "JSONComponentTreeManager"
+  },
+  "props": {}
+}

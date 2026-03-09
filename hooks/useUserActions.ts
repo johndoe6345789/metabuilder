@@ -22,6 +22,7 @@ import type { User } from '@/lib/level-types'
 type OperationType = 'delete' | 'updateRole' | 'updateStatus' | 'none'
 
 interface UseUserActionsOptions {
+  baseUrl?: string
   onSuccess?: (action: string, user?: User) => void
   onError?: (action: string, error: string) => void
 }
@@ -48,6 +49,7 @@ interface UseUserActionsReturn extends UseUserActionsState {
  * Hook for managing individual user operations
  */
 export function useUserActions(options?: UseUserActionsOptions): UseUserActionsReturn {
+  const baseUrl = options?.baseUrl ?? ''
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [operationInProgress, setOperationInProgress] = useState<OperationType>('none')
@@ -71,7 +73,7 @@ export function useUserActions(options?: UseUserActionsOptions): UseUserActionsR
 
       try {
         // Make DELETE request
-        const response = await fetch(`/api/v1/default/user_manager/users/${userId}`, {
+        const response = await fetch(`${baseUrl}/api/v1/default/user_manager/users/${userId}`, {
           method: 'DELETE',
         })
 
@@ -133,7 +135,7 @@ export function useUserActions(options?: UseUserActionsOptions): UseUserActionsR
         }
 
         // Make PUT request
-        const response = await fetch(`/api/v1/default/user_manager/users/${userId}`, {
+        const response = await fetch(`${baseUrl}/api/v1/default/user_manager/users/${userId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ role: newRole.toUpperCase() }),
@@ -195,7 +197,7 @@ export function useUserActions(options?: UseUserActionsOptions): UseUserActionsR
         }
 
         // Make PUT request
-        const response = await fetch(`/api/v1/default/user_manager/users/${userId}`, {
+        const response = await fetch(`${baseUrl}/api/v1/default/user_manager/users/${userId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ status }),

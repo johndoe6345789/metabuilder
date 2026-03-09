@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MetaBuilder - Database Settings</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: #0a0a0a;
+      color: #e0e0e0;
+      min-height: 100vh;
+    }
+
+    /* Navigation */
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 1.5rem 2rem 0;
+    }
+    nav a {
+      color: #888;
+      text-decoration: none;
+      font-size: 0.875rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: color 0.2s;
+    }
+    nav a:hover { color: #e0e0e0; }
+
+    /* Header */
+    header {
+      text-align: center;
+      padding: 2rem 1rem 1.5rem;
+    }
+    header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #60a5fa, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    header p {
+      margin-top: 0.5rem;
+      color: #888;
+      font-size: 0.95rem;
+    }
+
+    /* Layout */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 2rem 3rem;
+    }
+
+    /* Section labels */
+    .section-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #555;
+      font-weight: 600;
+      margin: 1.5rem 0 0.5rem;
+    }
+
+    /* Cards */
+    .card {
+      background: #161616;
+      border: 1px solid #262626;
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .card h2 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #f0f0f0;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .card-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    /* Status info rows */
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid #1e1e1e;
+    }
+    .info-row:last-child { border-bottom: none; }
+    .info-label {
+      font-size: 0.8rem;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .info-value {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.875rem;
+      color: #e0e0e0;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .badge-green { background: #1a3a2a; color: #4ade80; }
+    .badge-red { background: #3a1a1a; color: #f87171; }
+    .badge-yellow { background: #3a3a1a; color: #fbbf24; }
+    .badge-blue { background: #1e3a5f; color: #60a5fa; }
+    .badge-gray { background: #2a2a2a; color: #888; }
+
+    /* Forms */
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      color: #aaa;
+      margin-bottom: 0.35rem;
+      font-weight: 500;
+    }
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 0.6rem 0.75rem;
+      background: #0e0e0e;
+      border: 1px solid #333;
+      border-radius: 6px;
+      color: #e0e0e0;
+      font-family: inherit;
+      font-size: 0.875rem;
+      transition: border-color 0.2s;
+    }
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #60a5fa;
+    }
+    .form-group input::placeholder {
+      color: #555;
+    }
+    .form-group select option {
+      background: #161616;
+      color: #e0e0e0;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    @media (max-width: 600px) {
+      .form-row { grid-template-columns: 1fr; }
+    }
+
+    /* Dynamic fields container */
+    #dynamic-fields {
+      margin-top: 0.5rem;
+    }
+
+    /* Buttons */
+    .btn-row {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1.25rem;
+    }
+    .btn {
+      padding: 0.6rem 1.25rem;
+      border: none;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .btn:hover { opacity: 0.9; }
+    .btn:active { transform: scale(0.98); }
+    .btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #3b82f6, #7c3aed);
+      color: #fff;
+    }
+    .btn-secondary {
+      background: #262626;
+      color: #e0e0e0;
+      border: 1px solid #333;
+    }
+
+    /* Status messages */
+    .status-msg {
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      display: none;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .status-msg.visible { display: flex; }
+    .status-msg.success {
+      background: #1a3a2a;
+      color: #4ade80;
+      border: 1px solid #2a5a3a;
+    }
+    .status-msg.error {
+      background: #3a1a1a;
+      color: #f87171;
+      border: 1px solid #5a2a2a;
+    }
+    .status-msg.loading {
+      background: #1e3a5f;
+      color: #60a5fa;
+      border: 1px solid #2a4a6f;
+    }
+
+    /* Backends grid */
+    .backends-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+    .backend-item {
+      background: #0e0e0e;
+      border: 1px solid #222;
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .backend-item.active {
+      border-color: #3b82f6;
+      background: #111827;
+    }
+    .backend-name {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #e0e0e0;
+    }
+
+    /* Spinner */
+    .spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(96, 165, 250, 0.3);
+      border-top-color: #60a5fa;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Color accents matching index.html */
+    .bg-blue   { background: #1e3a5f; }
+    .bg-purple { background: #3b2667; }
+    .bg-green  { background: #1a3a2a; }
+    .bg-orange { background: #4a2c1a; }
+    .bg-cyan   { background: #1a3a3a; }
+
+    /* URL preview */
+    .url-preview {
+      margin-top: 0.75rem;
+      padding: 0.6rem 0.75rem;
+      background: #0a0a0a;
+      border: 1px solid #222;
+      border-radius: 6px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.8rem;
+      color: #888;
+      word-break: break-all;
+      line-height: 1.4;
+    }
+    .url-preview .label {
+      color: #555;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    /* Loading skeleton */
+    .skeleton {
+      background: linear-gradient(90deg, #1a1a1a 25%, #222 50%, #1a1a1a 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s ease-in-out infinite;
+      border-radius: 4px;
+      height: 1em;
+      width: 120px;
+      display: inline-block;
+    }
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="/">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10 12L6 8l4-4"/>
+      </svg>
+      Portal Home
+    </a>
+  </nav>
+
+  <header>
+    <h1>Database Settings</h1>
+    <p>Manage DBAL adapter configuration</p>
+  </header>
+
+  <div class="container">
+
+    <!-- Current Database -->
+    <div class="section-label">Current Configuration</div>
+    <div class="card" id="current-db-card">
+      <h2>
+        <span class="card-icon bg-cyan">DB</span>
+        Current Database
+      </h2>
+      <div id="current-config-loading">
+        <div class="info-row">
+          <span class="info-label">Adapter</span>
+          <span class="skeleton"></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Status</span>
+          <span class="skeleton"></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">URL</span>
+          <span class="skeleton" style="width: 200px;"></span>
+        </div>
+      </div>
+      <div id="current-config-data" style="display: none;"></div>
+      <div id="current-config-error" class="status-msg error"></div>
+    </div>
+
+    <!-- Switch Database -->
+    <div class="section-label">Switch Database</div>
+    <div class="card">
+      <h2>
+        <span class="card-icon bg-purple">&#x21C4;</span>
+        Switch Database
+      </h2>
+
+      <div class="form-group">
+        <label for="adapter-select">Adapter</label>
+        <select id="adapter-select">
+          <option value="" disabled selected>Loading adapters...</option>
+        </select>
+      </div>
+
+      <div id="dynamic-fields"></div>
+
+      <div id="url-preview" class="url-preview" style="display: none;">
+        <span class="label">Connection URL</span>
+        <span id="url-preview-text"></span>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" id="btn-test" disabled>
+          Test Connection
+        </button>
+        <button class="btn btn-primary" id="btn-apply" disabled>
+          Apply
+        </button>
+      </div>
+
+      <div id="switch-status" class="status-msg"></div>
+    </div>
+
+    <!-- Supported Backends -->
+    <div class="section-label">Supported Backends</div>
+    <div class="card">
+      <h2>
+        <span class="card-icon bg-green">&#x2713;</span>
+        All Adapters
+      </h2>
+      <div id="backends-grid" class="backends-grid">
+        <div class="backend-item"><span class="skeleton"></span></div>
+        <div class="backend-item"><span class="skeleton"></span></div>
+        <div class="backend-item"><span class="skeleton"></span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // =========================================================================
+    // Adapter field definitions
+    // =========================================================================
+    var ADAPTER_FIELDS = {
+      postgres: {
+        fields: [
+          { name: 'host', label: 'Host', placeholder: 'localhost', defaultVal: 'localhost' },
+          { name: 'port', label: 'Port', placeholder: '5432', defaultVal: '5432', half: true },
+          { name: 'database', label: 'Database', placeholder: 'metabuilder', defaultVal: 'metabuilder', half: true },
+          { name: 'user', label: 'User', placeholder: 'postgres', defaultVal: 'postgres' },
+          { name: 'password', label: 'Password', placeholder: 'password', type: 'password' }
+        ],
+        buildUrl: function(f) { return 'postgresql://' + f.user + ':' + f.password + '@' + f.host + ':' + f.port + '/' + f.database; }
+      },
+      mysql: {
+        fields: [
+          { name: 'host', label: 'Host', placeholder: 'localhost', defaultVal: 'localhost' },
+          { name: 'port', label: 'Port', placeholder: '3306', defaultVal: '3306', half: true },
+          { name: 'database', label: 'Database', placeholder: 'metabuilder', defaultVal: 'metabuilder', half: true },
+          { name: 'user', label: 'User', placeholder: 'root', defaultVal: 'root' },
+          { name: 'password', label: 'Password', placeholder: 'password', type: 'password' }
+        ],
+        buildUrl: function(f) { return 'mysql://' + f.user + ':' + f.password + '@' + f.host + ':' + f.port + '/' + f.database; }
+      },
+      mariadb: {
+        fields: [
+          { name: 'host', label: 'Host', placeholder: 'localhost', defaultVal: 'localhost' },
+          { name: 'port', label: 'Port', placeholder: '3306', defaultVal: '3306', half: true },
+          { name: 'database', label: 'Database', placeholder: 'metabuilder', defaultVal: 'metabuilder', half: true },
+          { name: 'user', label: 'User', placeholder: 'root', defaultVal: 'root' },
+          { name: 'password', label: 'Password', placeholder: 'password', type: 'password' }
+        ],
+        buildUrl: function(f) { return 'mariadb://' + f.user + ':' + f.password + '@' + f.host + ':' + f.port + '/' + f.database; }
+      },
+      cockroachdb: {
+        fields: [
+          { name: 'host', label: 'Host', placeholder: 'localhost', defaultVal: 'localhost' },
+          { name: 'port', label: 'Port', placeholder: '26257', defaultVal: '26257', half: true },
+          { name: 'database', label: 'Database', placeholder: 'metabuilder', defaultVal: 'metabuilder', half: true },
+          { name: 'user', label: 'User', placeholder: 'root', defaultVal: 'root' },
+          { name: 'password', label: 'Password', placeholder: 'password', type: 'password' }
+        ],
+        buildUrl: function(f) { return 'postgresql://' + f.user + ':' + f.password + '@' + f.host + ':' + f.port + '/' + f.database + '?sslmode=verify-full'; }
+      },
+      tidb: {
+        fields: [
+          { name: 'host', label: 'Host', placeholder: 'localhost', defaultVal: 'localhost' },
+          { name: 'port', label: 'Port', placeholder: '4000', defaultVal: '4000', half: true },
+          { name: 'database', label: 'Database', placeholder: 'metabuilder', defaultVal: 'metabuilder', half: true },
+          { name: 'user', label: 'User', placeholder: 'root', defaultVal: 'root' },
+          { name: 'password', label: 'Password', placeholder: 'password', type: 'password' }
+        ],
+        buildUrl: function(f) { return 'mysql://' + f.user + ':' + f.password + '@' + f.host + ':' + f.port + '/' + f.database; }
+      },
+      mongodb: {
+        fields: [
+          { name: 'connectionString', label: 'Connection String', placeholder: 'mongodb://localhost:27017', defaultVal: 'mongodb://localhost:27017' },
+          { name: 'database', label: 'Database', placeholder: 'metabuilder', defaultVal: 'metabuilder' }
+        ],
+        buildUrl: function(f) { return f.connectionString + '/' + f.database; }
+      },
+      sqlite: {
+        fields: [
+          { name: 'path', label: 'Database Path', placeholder: '/data/metabuilder.db', defaultVal: ':memory:' }
+        ],
+        buildUrl: function(f) { return 'sqlite://' + f.path; }
+      },
+      memory: {
+        fields: [],
+        buildUrl: function() { return ':memory:'; }
+      },
+      redis: {
+        fields: [
+          { name: 'host', label: 'Host', placeholder: 'localhost', defaultVal: 'localhost' },
+          { name: 'port', label: 'Port', placeholder: '6379', defaultVal: '6379', half: true },
+          { name: 'dbIndex', label: 'DB Index', placeholder: '0', defaultVal: '0', half: true }
+        ],
+        buildUrl: function(f) { return 'redis://' + f.host + ':' + f.port + '/' + f.dbIndex; }
+      },
+      elasticsearch: {
+        fields: [
+          { name: 'host', label: 'Host', placeholder: 'localhost', defaultVal: 'localhost' },
+          { name: 'port', label: 'Port', placeholder: '9200', defaultVal: '9200', half: true },
+          { name: 'index', label: 'Index', placeholder: 'dbal_search', defaultVal: 'dbal_search', half: true }
+        ],
+        buildUrl: function(f) { return 'http://' + f.host + ':' + f.port + '?index=' + f.index; }
+      },
+      cassandra: {
+        fields: [
+          { name: 'host', label: 'Host', placeholder: 'localhost', defaultVal: 'localhost' },
+          { name: 'port', label: 'Port', placeholder: '9042', defaultVal: '9042', half: true },
+          { name: 'keyspace', label: 'Keyspace', placeholder: 'metabuilder', defaultVal: 'metabuilder', half: true }
+        ],
+        buildUrl: function(f) { return 'cassandra://' + f.host + ':' + f.port + '/' + f.keyspace; }
+      },
+      surrealdb: {
+        fields: [
+          { name: 'host', label: 'Host', placeholder: 'localhost', defaultVal: 'localhost' },
+          { name: 'port', label: 'Port', placeholder: '8000', defaultVal: '8000', half: true },
+          { name: 'namespace', label: 'Namespace', placeholder: 'metabuilder', defaultVal: 'metabuilder', half: true },
+          { name: 'database', label: 'Database', placeholder: 'main', defaultVal: 'main' }
+        ],
+        buildUrl: function(f) { return 'surrealdb://' + f.host + ':' + f.port + '?ns=' + f.namespace + '&db=' + f.database; }
+      },
+      supabase: {
+        fields: [
+          { name: 'host', label: 'Project Host', placeholder: 'your-project.supabase.co', defaultVal: '' },
+          { name: 'apiKey', label: 'API Key (anon)', placeholder: 'eyJ...', type: 'password' },
+          { name: 'database', label: 'Database', placeholder: 'postgres', defaultVal: 'postgres' }
+        ],
+        buildUrl: function(f) { return 'supabase://' + f.host + '/' + f.database + '?apikey=' + f.apiKey; }
+      },
+      prisma: {
+        fields: [
+          { name: 'host', label: 'Prisma Bridge Host', placeholder: 'localhost', defaultVal: 'localhost' },
+          { name: 'port', label: 'Port', placeholder: '4466', defaultVal: '4466', half: true },
+          { name: 'database', label: 'Database', placeholder: 'metabuilder', defaultVal: 'metabuilder', half: true }
+        ],
+        buildUrl: function(f) { return 'prisma://' + f.host + ':' + f.port + '/' + f.database; }
+      }
+    };
+
+    // =========================================================================
+    // State
+    // =========================================================================
+    var currentAdapter = null;
+    var adaptersData = [];
+
+    // =========================================================================
+    // DOM references
+    // =========================================================================
+    var adapterSelect = document.getElementById('adapter-select');
+    var dynamicFields = document.getElementById('dynamic-fields');
+    var urlPreview = document.getElementById('url-preview');
+    var urlPreviewText = document.getElementById('url-preview-text');
+    var btnTest = document.getElementById('btn-test');
+    var btnApply = document.getElementById('btn-apply');
+    var switchStatus = document.getElementById('switch-status');
+
+    // =========================================================================
+    // Safe DOM helpers
+    // =========================================================================
+    function createEl(tag, attrs, children) {
+      var el = document.createElement(tag);
+      if (attrs) {
+        Object.keys(attrs).forEach(function(key) {
+          if (key === 'className') el.className = attrs[key];
+          else if (key === 'textContent') el.textContent = attrs[key];
+          else el.setAttribute(key, attrs[key]);
+        });
+      }
+      if (children) {
+        children.forEach(function(child) {
+          if (typeof child === 'string') {
+            el.appendChild(document.createTextNode(child));
+          } else if (child) {
+            el.appendChild(child);
+          }
+        });
+      }
+      return el;
+    }
+
+    function createInfoRow(label, valueEl) {
+      var row = createEl('div', { className: 'info-row' });
+      row.appendChild(createEl('span', { className: 'info-label', textContent: label }));
+      row.appendChild(valueEl);
+      return row;
+    }
+
+    function createBadge(text, badgeClass) {
+      return createEl('span', { className: 'badge ' + badgeClass, textContent: text });
+    }
+
+    // =========================================================================
+    // API helpers
+    // =========================================================================
+    function apiGet(path) {
+      return fetch(path).then(function(res) {
+        if (!res.ok) throw new Error(res.status + ' ' + res.statusText);
+        return res.json();
+      });
+    }
+
+    function apiPost(path, body) {
+      return fetch(path, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      }).then(function(res) {
+        return res.json().then(function(data) {
+          if (!res.ok) throw new Error(data.error || res.status + ' ' + res.statusText);
+          return data;
+        });
+      });
+    }
+
+    // =========================================================================
+    // Load current config
+    // =========================================================================
+    function loadCurrentConfig() {
+      var loadingEl = document.getElementById('current-config-loading');
+      var dataEl = document.getElementById('current-config-data');
+      var errorEl = document.getElementById('current-config-error');
+
+      apiGet('/api/admin/config').then(function(config) {
+        currentAdapter = config.adapter;
+
+        // Clear and rebuild data element safely
+        while (dataEl.firstChild) dataEl.removeChild(dataEl.firstChild);
+
+        // Adapter row
+        var adapterValue = createEl('span', { className: 'info-value', textContent: config.adapter });
+        dataEl.appendChild(createInfoRow('Adapter', adapterValue));
+
+        // Status row
+        var statusBadge;
+        if (config.status === 'connected') {
+          statusBadge = createBadge('Connected', 'badge-green');
+        } else if (config.status === 'error') {
+          statusBadge = createBadge('Error', 'badge-red');
+        } else {
+          statusBadge = createBadge(config.status || 'Unknown', 'badge-yellow');
+        }
+        dataEl.appendChild(createInfoRow('Status', statusBadge));
+
+        // URL row
+        var urlValue = createEl('span', { className: 'info-value', textContent: config.database_url || '(not set)' });
+        dataEl.appendChild(createInfoRow('URL', urlValue));
+
+        loadingEl.style.display = 'none';
+        dataEl.style.display = 'block';
+      }).catch(function(err) {
+        loadingEl.style.display = 'none';
+        errorEl.textContent = 'Failed to load config: ' + err.message;
+        errorEl.classList.add('visible');
+      });
+    }
+
+    // =========================================================================
+    // Load adapters list
+    // =========================================================================
+    function loadAdapters() {
+      apiGet('/api/admin/adapters').then(function(data) {
+        adaptersData = data.adapters || data;
+        populateAdapterSelect(adaptersData);
+        renderBackendsGrid(adaptersData);
+      }).catch(function() {
+        // Populate with known adapters as fallback
+        var fallback = Object.keys(ADAPTER_FIELDS).map(function(name) {
+          return { name: name, supported: true };
+        });
+        adaptersData = fallback;
+        populateAdapterSelect(fallback);
+        renderBackendsGrid(fallback);
+      });
+    }
+
+    function populateAdapterSelect(adapters) {
+      while (adapterSelect.firstChild) adapterSelect.removeChild(adapterSelect.firstChild);
+
+      var defaultOpt = createEl('option', { value: '', disabled: 'disabled', selected: 'selected', textContent: 'Select an adapter...' });
+      adapterSelect.appendChild(defaultOpt);
+
+      var list = Array.isArray(adapters) ? adapters : [];
+      list.forEach(function(a) {
+        var name = typeof a === 'string' ? a : a.name;
+        var opt = createEl('option', { value: name, textContent: name });
+        adapterSelect.appendChild(opt);
+      });
+    }
+
+    // =========================================================================
+    // Render backends grid
+    // =========================================================================
+    function renderBackendsGrid(adapters) {
+      var grid = document.getElementById('backends-grid');
+      while (grid.firstChild) grid.removeChild(grid.firstChild);
+
+      var list = Array.isArray(adapters) ? adapters : [];
+      list.forEach(function(a) {
+        var name = typeof a === 'string' ? a : a.name;
+        var active = typeof a === 'object' && a.active;
+        var supported = typeof a === 'string' || a.supported;
+
+        var item = createEl('div', { className: 'backend-item' + (active ? ' active' : '') });
+        item.appendChild(createEl('span', { className: 'backend-name', textContent: name }));
+
+        if (active) {
+          item.appendChild(createBadge('Active', 'badge-blue'));
+        } else if (supported) {
+          item.appendChild(createBadge('Supported', 'badge-green'));
+        } else {
+          item.appendChild(createBadge('Unavailable', 'badge-gray'));
+        }
+
+        grid.appendChild(item);
+      });
+    }
+
+    // =========================================================================
+    // Render dynamic form fields for selected adapter
+    // =========================================================================
+    function renderFields(adapterName) {
+      while (dynamicFields.firstChild) dynamicFields.removeChild(dynamicFields.firstChild);
+      urlPreview.style.display = 'none';
+      btnTest.disabled = true;
+      btnApply.disabled = true;
+      hideStatus();
+
+      var config = ADAPTER_FIELDS[adapterName];
+      if (!config) {
+        // Unknown adapter: show raw URL field
+        var group = createEl('div', { className: 'form-group' });
+        var label = createEl('label', { textContent: 'Database URL' });
+        label.setAttribute('for', 'raw-url');
+        group.appendChild(label);
+        var input = createEl('input', { type: 'text', id: 'raw-url', placeholder: 'Enter full database URL' });
+        input.addEventListener('input', function() {
+          updateUrlPreview();
+          updateButtons();
+        });
+        group.appendChild(input);
+        dynamicFields.appendChild(group);
+        return;
+      }
+
+      if (config.fields.length === 0) {
+        var msg = createEl('p', { textContent: 'No configuration needed for this adapter.' });
+        msg.style.color = '#888';
+        msg.style.fontSize = '0.85rem';
+        dynamicFields.appendChild(msg);
+        updateUrlPreview();
+        btnTest.disabled = false;
+        btnApply.disabled = false;
+        return;
+      }
+
+      // Build fields, pairing half-width fields into rows
+      var i = 0;
+      while (i < config.fields.length) {
+        var field = config.fields[i];
+        var next = config.fields[i + 1];
+
+        if (field.half && next && next.half) {
+          var row = createEl('div', { className: 'form-row' });
+          row.appendChild(createFormGroup(field));
+          row.appendChild(createFormGroup(next));
+          dynamicFields.appendChild(row);
+          i += 2;
+        } else {
+          dynamicFields.appendChild(createFormGroup(field));
+          i += 1;
+        }
+      }
+
+      // Attach input listeners
+      config.fields.forEach(function(field) {
+        var el = document.getElementById('field-' + field.name);
+        if (el) {
+          el.addEventListener('input', function() {
+            updateUrlPreview();
+            updateButtons();
+          });
+        }
+      });
+
+      updateUrlPreview();
+      updateButtons();
+    }
+
+    function createFormGroup(field) {
+      var type = field.type || 'text';
+      var val = field.defaultVal || '';
+
+      var group = createEl('div', { className: 'form-group' });
+      var label = createEl('label', { textContent: field.label });
+      label.setAttribute('for', 'field-' + field.name);
+      group.appendChild(label);
+
+      var input = createEl('input', {
+        type: type,
+        id: 'field-' + field.name,
+        placeholder: field.placeholder || '',
+        value: val,
+        autocomplete: 'off'
+      });
+      group.appendChild(input);
+      return group;
+    }
+
+    // =========================================================================
+    // Build connection URL from current form state
+    // =========================================================================
+    function buildConnectionUrl() {
+      var adapter = adapterSelect.value;
+      if (!adapter) return '';
+
+      var config = ADAPTER_FIELDS[adapter];
+      if (!config) {
+        var rawInput = document.getElementById('raw-url');
+        return rawInput ? rawInput.value.trim() : '';
+      }
+
+      if (config.fields.length === 0) {
+        return config.buildUrl({});
+      }
+
+      var values = {};
+      config.fields.forEach(function(field) {
+        var el = document.getElementById('field-' + field.name);
+        values[field.name] = el ? el.value : (field.defaultVal || '');
+      });
+
+      return config.buildUrl(values);
+    }
+
+    function updateUrlPreview() {
+      var url = buildConnectionUrl();
+      if (url) {
+        // Redact password in preview
+        var redacted = url.replace(/:([^@:\/]+)@/, ':***@');
+        urlPreviewText.textContent = redacted;
+        urlPreview.style.display = 'block';
+      } else {
+        urlPreview.style.display = 'none';
+      }
+    }
+
+    function updateButtons() {
+      var adapter = adapterSelect.value;
+      var url = buildConnectionUrl();
+      var config = ADAPTER_FIELDS[adapter];
+
+      if (config && config.fields.length === 0) {
+        btnTest.disabled = false;
+        btnApply.disabled = false;
+        return;
+      }
+
+      var hasUrl = url.length > 0;
+      btnTest.disabled = !hasUrl;
+      btnApply.disabled = !hasUrl;
+    }
+
+    // =========================================================================
+    // Test connection
+    // =========================================================================
+    function testConnection() {
+      var adapter = adapterSelect.value;
+      var url = buildConnectionUrl();
+      if (!adapter) return;
+
+      showStatus('loading', 'Testing connection...');
+      btnTest.disabled = true;
+
+      apiPost('/api/admin/test-connection', {
+        adapter: adapter,
+        database_url: url
+      }).then(function(result) {
+        showStatus('success', 'Connection successful' + (result.message ? ': ' + result.message : ''));
+      }).catch(function(err) {
+        showStatus('error', 'Connection failed: ' + err.message);
+      }).finally(function() {
+        btnTest.disabled = false;
+      });
+    }
+
+    // =========================================================================
+    // Apply adapter switch
+    // =========================================================================
+    function applyAdapter() {
+      var adapter = adapterSelect.value;
+      var url = buildConnectionUrl();
+      if (!adapter) return;
+
+      showStatus('loading', 'Applying configuration...');
+      btnApply.disabled = true;
+      btnTest.disabled = true;
+
+      apiPost('/api/admin/config', {
+        adapter: adapter,
+        database_url: url
+      }).then(function(result) {
+        showStatus('success', 'Adapter switched to ' + adapter + (result.message ? '. ' + result.message : ''));
+        // Reload current config to reflect change
+        loadCurrentConfig();
+        // Re-render backends to update active badge
+        if (adaptersData.length > 0) {
+          adaptersData = adaptersData.map(function(a) {
+            if (typeof a === 'object') {
+              return Object.assign({}, a, { active: a.name === adapter });
+            }
+            return a;
+          });
+          renderBackendsGrid(adaptersData);
+        }
+      }).catch(function(err) {
+        showStatus('error', 'Failed to apply: ' + err.message);
+      }).finally(function() {
+        btnApply.disabled = false;
+        btnTest.disabled = false;
+      });
+    }
+
+    // =========================================================================
+    // Status message helpers
+    // =========================================================================
+    function showStatus(type, message) {
+      switchStatus.className = 'status-msg visible ' + type;
+      // Clear existing children
+      while (switchStatus.firstChild) switchStatus.removeChild(switchStatus.firstChild);
+
+      if (type === 'loading') {
+        var spinner = createEl('span', { className: 'spinner' });
+        switchStatus.appendChild(spinner);
+        switchStatus.appendChild(document.createTextNode(' ' + message));
+      } else {
+        var iconText = type === 'success' ? '\u2713 ' : '\u2717 ';
+        switchStatus.appendChild(document.createTextNode(iconText + message));
+      }
+    }
+
+    function hideStatus() {
+      switchStatus.className = 'status-msg';
+      while (switchStatus.firstChild) switchStatus.removeChild(switchStatus.firstChild);
+    }
+
+    // =========================================================================
+    // Event listeners
+    // =========================================================================
+    adapterSelect.addEventListener('change', function() {
+      renderFields(adapterSelect.value);
+    });
+
+    btnTest.addEventListener('click', testConnection);
+    btnApply.addEventListener('click', applyAdapter);
+
+    // =========================================================================
+    // Init
+    // =========================================================================
+    loadCurrentConfig();
+    loadAdapters();
+  </script>
+</body>
+</html>

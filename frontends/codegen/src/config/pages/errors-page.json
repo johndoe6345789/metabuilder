@@ -1,0 +1,23 @@
+{
+  "id": "errors-page",
+  "name": "Errors",
+  "description": "Error diagnosis",
+  "icon": "Warning",
+  "layout": {
+    "$ref": "./layouts/single-column.json"
+  },
+  "dataSources": [],
+  "components": [
+    {
+      "$ref": "./molecules/page-header-standard.json",
+      "children": [
+        {
+          "$ref": "./atoms/heading-1.json",
+          "props": {
+            "children": "Errors & Diagnostics"
+          }
+        }
+      ]
+    }
+  ]
+}

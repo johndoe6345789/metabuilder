@@ -1,0 +1,13 @@
+{
+  "type": "drawer",
+  "jsonCompatible": false,
+  "wrapperRequired": true,
+  "load": {
+    "path": "@/components/ui/drawer",
+    "export": "drawer"
+  },
+  "props": {},
+  "metadata": {
+    "notes": "Complex logic - needs wrapper"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/test-parameters.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "ui_level2",
+  "description": "Test parameters for metadata validation",
+
+  "parameters": [
+    {
+      "id": "package-id-params",
+      "name": "Package ID Test Parameters",
+      "description": "Parameters for testing package ID validation",
+      "tags": ["metadata", "validation"],
+      "params": {
+        "packageId": {
+          "type": "string",
+          "description": "Expected package ID"
+        }
+      }
+    },
+    {
+      "id": "icon-file-params",
+      "name": "Icon File Test Parameters",
+      "description": "Parameters for testing icon file existence",
+      "tags": ["metadata", "assets"],
+      "params": {
+        "iconPath": {
+          "type": "string",
+          "description": "Path to icon file relative to packages directory"
+        }
+      }
+    },
+    {
+      "id": "schema-validation-params",
+      "name": "Schema Validation Test Parameters",
+      "description": "Parameters for JSON schema validation",
+      "tags": ["metadata", "schema"],
+      "params": {
+        "filePath": {
+          "type": "string",
+          "description": "Path to file to validate"
+        },
+        "schemaUrl": {
+          "type": "string",
+          "description": "URL of JSON schema to validate against"
+        }
+      }
+    }
+  ]
+}

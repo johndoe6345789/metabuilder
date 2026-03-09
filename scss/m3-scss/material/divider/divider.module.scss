@@ -1,0 +1,29 @@
+@use '../core/tokens/token-utils';
+@use './m3-divider';
+
+$inset-margin: 80px;
+
+$fallbacks: m3-divider.get-tokens();
+
+.mat-divider {
+  display: block;
+  margin: 0;
+  border-top-style: solid;
+  border-top-color: token-utils.slot(divider-color, $fallbacks);
+  border-top-width: token-utils.slot(divider-width, $fallbacks);
+
+  &.mat-divider-vertical {
+    border-top: 0;
+    border-right-style: solid;
+    border-right-color: token-utils.slot(divider-color, $fallbacks);
+    border-right-width: token-utils.slot(divider-width, $fallbacks);
+  }
+
+  &.mat-divider-inset {
+    margin-left: $inset-margin;
+    [dir='rtl'] & {
+      margin-left: auto;
+      margin-right: $inset-margin;
+    }
+  }
+}

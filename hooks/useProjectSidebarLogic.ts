@@ -4,7 +4,7 @@
  */
 
 import { useState, useCallback, useMemo } from 'react';
-import { Project } from '../types/project';
+import type { Project } from '@metabuilder/types';
 
 export interface UseProjectSidebarLogicReturn {
   isCollapsed: boolean;

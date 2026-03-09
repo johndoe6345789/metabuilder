@@ -5,11 +5,11 @@
  * Integrates with the dockerterminal project.
  */
 
-import { execSync, spawn } from 'child_process';
+import { execSync } from 'child_process';
 import * as path from 'path';
 
-const DOCKER_PATH = path.resolve(__dirname, '../../../../dockerterminal');
-const DEFAULT_API_URL = 'http://localhost:3002';
+export const DOCKER_PATH = path.resolve(__dirname, '../../../../dockerterminal');
+export const DEFAULT_API_URL = 'http://localhost:3002';
 
 export interface DockerContainerInfo {
   id: string;

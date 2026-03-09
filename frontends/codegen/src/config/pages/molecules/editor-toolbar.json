@@ -1,0 +1,9 @@
+{
+  "type": "MetabuilderWidgetEditorToolbar",
+  "props": {
+    "onFileSelect": "> void",
+    "onFileClose": "> void",
+    "onExplain": "> void",
+    "onImprove": "> void"
+  }
+}

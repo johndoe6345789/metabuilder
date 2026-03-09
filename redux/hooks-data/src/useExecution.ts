@@ -19,7 +19,7 @@ import {
   selectCurrentExecution,
   selectExecutionHistory,
 } from '@metabuilder/redux-slices'
-import type { ExecutionResult, ExecutionStats } from '@metabuilder/service-adapters'
+import type { ExecutionResult, ExecutionStats } from '@metabuilder/types'
 import type { AppDispatch, RootState } from '@metabuilder/redux-slices'
 
 /**

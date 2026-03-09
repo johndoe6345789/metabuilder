@@ -7,7 +7,7 @@
 
 import * as path from 'path';
 
-const PASTEBIN_PATH = path.resolve(__dirname, '../../../../pastebin');
+export const PASTEBIN_PATH = path.resolve(__dirname, '../../../../pastebin');
 const DEFAULT_API_URL = 'http://localhost:3001';
 
 export interface PasteCreateInput {

@@ -1,0 +1,6 @@
+{
+  "type": "MetabuilderNavNavigationItem",
+  "props": {
+    "onClick": "> void"
+  }
+}

@@ -1,0 +1,146 @@
+[
+  {
+    "entity": "Namespace",
+    "version": "1.0",
+    "description": "demo user namespaces",
+    "records": [
+      {
+        "id": "d0000001-0000-0000-0000-000000000001",
+        "name": "Default",
+        "isDefault": true,
+        "userId": "11111111-1111-1111-1111-111111111111",
+        "tenantId": "pastebin",
+        "createdAt": 0
+      },
+      {
+        "id": "d0000001-0000-0000-0000-000000000002",
+        "name": "Python Recipes",
+        "isDefault": false,
+        "userId": "11111111-1111-1111-1111-111111111111",
+        "tenantId": "pastebin",
+        "createdAt": 0
+      },
+      {
+        "id": "d0000001-0000-0000-0000-000000000003",
+        "name": "SQL Patterns",
+        "isDefault": false,
+        "userId": "11111111-1111-1111-1111-111111111111",
+        "tenantId": "pastebin",
+        "createdAt": 0
+      },
+      {
+        "id": "d0000001-0000-0000-0000-000000000004",
+        "name": "Utilities",
+        "isDefault": false,
+        "userId": "11111111-1111-1111-1111-111111111111",
+        "tenantId": "pastebin",
+        "createdAt": 0
+      }
+    ],
+    "metadata": { "useCurrentTimestamp": true, "timestampField": "createdAt" }
+  },
+  {
+    "entity": "Namespace",
+    "version": "1.0",
+    "description": "alice user namespaces",
+    "records": [
+      {
+        "id": "a0000002-0000-0000-0000-000000000001",
+        "name": "Default",
+        "isDefault": true,
+        "userId": "22222222-2222-2222-2222-222222222222",
+        "tenantId": "pastebin",
+        "createdAt": 0
+      },
+      {
+        "id": "a0000002-0000-0000-0000-000000000002",
+        "name": "React Components",
+        "isDefault": false,
+        "userId": "22222222-2222-2222-2222-222222222222",
+        "tenantId": "pastebin",
+        "createdAt": 0
+      },
+      {
+        "id": "a0000002-0000-0000-0000-000000000003",
+        "name": "CSS Tricks",
+        "isDefault": false,
+        "userId": "22222222-2222-2222-2222-222222222222",
+        "tenantId": "pastebin",
+        "createdAt": 0
+      },
+      {
+        "id": "a0000002-0000-0000-0000-000000000004",
+        "name": "JS Utilities",
+        "isDefault": false,
+        "userId": "22222222-2222-2222-2222-222222222222",
+        "tenantId": "pastebin",
+        "createdAt": 0
+      }
+    ],
+    "metadata": { "useCurrentTimestamp": true, "timestampField": "createdAt" }
+  },
+  {
+    "entity": "Namespace",
+    "version": "1.0",
+    "description": "bob user namespaces",
+    "records": [
+      {
+        "id": "b0000003-0000-0000-0000-000000000001",
+        "name": "Default",
+        "isDefault": true,
+        "userId": "33333333-3333-3333-3333-333333333333",
+        "tenantId": "pastebin",
+        "createdAt": 0
+      },
+      {
+        "id": "b0000003-0000-0000-0000-000000000002",
+        "name": "Go Patterns",
+        "isDefault": false,
+        "userId": "33333333-3333-3333-3333-333333333333",
+        "tenantId": "pastebin",
+        "createdAt": 0
+      },
+      {
+        "id": "b0000003-0000-0000-0000-000000000003",
+        "name": "Bash Scripts",
+        "isDefault": false,
+        "userId": "33333333-3333-3333-3333-333333333333",
+        "tenantId": "pastebin",
+        "createdAt": 0
+      },
+      {
+        "id": "b0000003-0000-0000-0000-000000000004",
+        "name": "API Design",
+        "isDefault": false,
+        "userId": "33333333-3333-3333-3333-333333333333",
+        "tenantId": "pastebin",
+        "createdAt": 0
+      }
+    ],
+    "metadata": { "useCurrentTimestamp": true, "timestampField": "createdAt" }
+  },
+  {
+    "entity": "Namespace",
+    "version": "1.0",
+    "description": "playwright test user namespaces",
+    "records": [
+      {
+        "id": "e0000004-0000-0000-0000-000000000001",
+        "name": "Default",
+        "isDefault": true,
+        "userId": "44444444-4444-4444-4444-444444444444",
+        "tenantId": "pastebin",
+        "createdAt": 0
+      },
+      {
+        "id": "e0000004-0000-0000-0000-000000000002",
+        "name": "Test Snippets",
+        "isDefault": false,
+        "userId": "44444444-4444-4444-4444-444444444444",
+        "tenantId": "pastebin",
+        "createdAt": 0
+      }
+    ],
+    "metadata": { "useCurrentTimestamp": true, "timestampField": "createdAt" }
+  }
+]

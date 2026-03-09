@@ -1,0 +1,14 @@
+// scss/atoms/settings.module.scss
+
+.settingsPage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+  padding: var(--spacing-4);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.pageHeader {
+  margin-bottom: var(--spacing-2);
+}

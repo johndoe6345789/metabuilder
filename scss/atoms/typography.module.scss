@@ -1,0 +1,145 @@
+// Typography Atoms - Material Design 3 (CSS Modules)
+// ==================================================
+// Typography scale using M3 tokens
+
+.typography {
+  margin: 0;
+  color: var(--mat-sys-on-surface);
+}
+
+// Display
+.typographyDisplayLarge {
+  font: var(--mat-sys-display-large-font);
+}
+
+.typographyDisplayMedium {
+  font: var(--mat-sys-display-medium-font);
+}
+
+.typographyDisplaySmall {
+  font: var(--mat-sys-display-small-font);
+}
+
+// Headline
+.typographyHeadlineLarge,
+.typographyH1 {
+  font: var(--mat-sys-headline-large-font);
+}
+
+.typographyHeadlineMedium,
+.typographyH2 {
+  font: var(--mat-sys-headline-medium-font);
+}
+
+.typographyHeadlineSmall,
+.typographyH3 {
+  font: var(--mat-sys-headline-small-font);
+}
+
+// Title
+.typographyTitleLarge,
+.typographyH4 {
+  font: var(--mat-sys-title-large-font);
+}
+
+.typographyTitleMedium,
+.typographyH5 {
+  font: var(--mat-sys-title-medium-font);
+}
+
+.typographyTitleSmall,
+.typographyH6 {
+  font: var(--mat-sys-title-small-font);
+}
+
+// Body
+.typographyBodyLarge,
+.typographyBody1 {
+  font: var(--mat-sys-body-large-font);
+}
+
+.typographyBodyMedium,
+.typographyBody2 {
+  font: var(--mat-sys-body-medium-font);
+}
+
+.typographyBodySmall {
+  font: var(--mat-sys-body-small-font);
+}
+
+// Label
+.typographyLabelLarge {
+  font: var(--mat-sys-label-large-font);
+}
+
+.typographyLabelMedium {
+  font: var(--mat-sys-label-medium-font);
+}
+
+.typographyLabelSmall {
+  font: var(--mat-sys-label-small-font);
+}
+
+// Subtitle (aliases)
+.typographySubtitle1 {
+  font: var(--mat-sys-title-medium-font);
+}
+
+.typographySubtitle2 {
+  font: var(--mat-sys-title-small-font);
+}
+
+// Caption
+.typographyCaption {
+  font: var(--mat-sys-body-small-font);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+// Overline
+.typographyOverline {
+  font: var(--mat-sys-label-small-font);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+// Color modifiers
+.typographyPrimary {
+  color: var(--mat-sys-primary);
+}
+
+.typographySecondary {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.typographyError {
+  color: var(--mat-sys-error);
+}
+
+.typographyInherit {
+  color: inherit;
+}
+
+// Alignment
+.typographyCenter {
+  text-align: center;
+}
+
+.typographyRight {
+  text-align: right;
+}
+
+// Truncation
+.typographyTruncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Gutters
+.typographyGutterBottom {
+  margin-bottom: 0.35em;
+}
+
+.typographyNoWrap {
+  white-space: nowrap;
+}

@@ -1,0 +1,150 @@
+// CSS Reset - Material Design 3
+// Modern, minimal reset using M3 tokens for consistent cross-browser rendering
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  color-scheme: light dark;
+}
+
+body {
+  min-height: 100vh;
+  font-family: var(--mat-sys-body-large-font);
+  font-size: var(--mat-sys-body-large-size);
+  line-height: var(--mat-sys-body-large-line-height);
+  color: var(--mat-sys-on-surface);
+  background-color: var(--mat-sys-surface);
+}
+
+// Typography defaults using M3 type scale
+h1 {
+  font-family: var(--mat-sys-display-large-font);
+  font-size: var(--mat-sys-display-large-size);
+  font-weight: var(--mat-sys-display-large-weight);
+  line-height: var(--mat-sys-display-large-line-height);
+  letter-spacing: var(--mat-sys-display-large-tracking);
+}
+
+h2 {
+  font-family: var(--mat-sys-display-medium-font);
+  font-size: var(--mat-sys-display-medium-size);
+  font-weight: var(--mat-sys-display-medium-weight);
+  line-height: var(--mat-sys-display-medium-line-height);
+  letter-spacing: var(--mat-sys-display-medium-tracking);
+}
+
+h3 {
+  font-family: var(--mat-sys-headline-large-font);
+  font-size: var(--mat-sys-headline-large-size);
+  font-weight: var(--mat-sys-headline-large-weight);
+  line-height: var(--mat-sys-headline-large-line-height);
+  letter-spacing: var(--mat-sys-headline-large-tracking);
+}
+
+h4 {
+  font-family: var(--mat-sys-headline-medium-font);
+  font-size: var(--mat-sys-headline-medium-size);
+  font-weight: var(--mat-sys-headline-medium-weight);
+  line-height: var(--mat-sys-headline-medium-line-height);
+  letter-spacing: var(--mat-sys-headline-medium-tracking);
+}
+
+h5 {
+  font-family: var(--mat-sys-headline-small-font);
+  font-size: var(--mat-sys-headline-small-size);
+  font-weight: var(--mat-sys-headline-small-weight);
+  line-height: var(--mat-sys-headline-small-line-height);
+  letter-spacing: var(--mat-sys-headline-small-tracking);
+}
+
+h6 {
+  font-family: var(--mat-sys-title-large-font);
+  font-size: var(--mat-sys-title-large-size);
+  font-weight: var(--mat-sys-title-large-weight);
+  line-height: var(--mat-sys-title-large-line-height);
+  letter-spacing: var(--mat-sys-title-large-tracking);
+}
+
+// Lists
+ul, ol {
+  list-style: none;
+}
+
+// Links
+a {
+  color: var(--mat-sys-primary);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+// Media elements
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+// Form elements inherit fonts
+input, button, textarea, select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+// Tables
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+// Focus visible - M3 uses outline instead of ring
+:focus-visible {
+  outline: 2px solid var(--mat-sys-primary);
+  outline-offset: 2px;
+}
+
+// Disabled state - M3 uses 38% opacity for content
+:disabled {
+  cursor: not-allowed;
+  opacity: var(--disabled-content-opacity);
+}
+
+// Text wrapping
+p, h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word;
+}
+
+// Code blocks
+code, kbd, samp, pre {
+  font-family: var(--font-mono);
+  font-feature-settings: "tnum" on, "lnum" on;
+}
+
+// Hidden attribute
+[hidden] {
+  display: none !important;
+}
+
+// Selection styling
+::selection {
+  background-color: color-mix(in srgb, var(--mat-sys-primary) 30%, transparent);
+  color: var(--mat-sys-on-surface);
+}

@@ -1,0 +1,174 @@
+// FormControl Component - Material Design 3
+// ==========================================
+// Form control wrapper styling using M3 tokens
+
+.form-control {
+  display: inline-flex;
+  flex-direction: column;
+  position: relative;
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  vertical-align: top;
+
+  &--full-width {
+    display: flex;
+    width: 100%;
+  }
+
+  // Margin variants
+  &--margin-none {
+    margin: 0;
+  }
+
+  &--margin-dense {
+    margin-top: 8px;
+    margin-bottom: 4px;
+  }
+
+  &--margin-normal {
+    margin-top: 16px;
+    margin-bottom: 8px;
+  }
+
+  // Size variants
+  &--small {
+    .form-control__label {
+      font-family: var(--mat-sys-body-small-font);
+      font-size: var(--mat-sys-body-small-size);
+    }
+  }
+
+  &--medium {
+    .form-control__label {
+      font-family: var(--mat-sys-body-medium-font);
+      font-size: var(--mat-sys-body-medium-size);
+    }
+  }
+
+  // States
+  &--disabled {
+    opacity: var(--disabled-content-opacity);
+    pointer-events: none;
+  }
+
+  &--error {
+    .form-control__label,
+    .form-control__helper-text {
+      color: var(--mat-sys-error);
+    }
+
+    input,
+    textarea,
+    select {
+      border-color: var(--mat-sys-error);
+
+      &:focus {
+        border-color: var(--mat-sys-error);
+        box-shadow: 0 0 0 1px var(--mat-sys-error);
+      }
+    }
+  }
+
+  &--focused {
+    .form-control__label {
+      color: var(--mat-sys-primary);
+    }
+  }
+
+  &--required {
+    .form-control__label::after {
+      content: " *";
+      color: var(--mat-sys-error);
+    }
+  }
+
+  // Variant styles - Outlined
+  &--outlined {
+    input,
+    textarea,
+    select {
+      border: 1px solid var(--mat-sys-outline);
+      border-radius: var(--mat-sys-corner-small);
+      padding: 16px 14px;
+      background: transparent;
+      color: var(--mat-sys-on-surface);
+      transition: border-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+
+      &:hover:not(:disabled) {
+        border-color: var(--mat-sys-on-surface);
+      }
+
+      &:focus {
+        outline: none;
+        border-color: var(--mat-sys-primary);
+        box-shadow: 0 0 0 1px var(--mat-sys-primary);
+      }
+    }
+  }
+
+  // Variant styles - Filled
+  &--filled {
+    input,
+    textarea,
+    select {
+      background-color: var(--mat-sys-surface-container-highest);
+      border: none;
+      border-bottom: 1px solid var(--mat-sys-on-surface-variant);
+      border-radius: var(--mat-sys-corner-extra-small) var(--mat-sys-corner-extra-small) 0 0;
+      padding: 24px 16px 8px;
+      color: var(--mat-sys-on-surface);
+      transition: background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard),
+                  border-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+
+      &:hover:not(:disabled) {
+        background-color: var(--mat-sys-surface-container-high);
+      }
+
+      &:focus {
+        outline: none;
+        border-bottom-width: 2px;
+        border-bottom-color: var(--mat-sys-primary);
+      }
+    }
+  }
+
+  // Variant styles - Standard (underline only)
+  &--standard {
+    input,
+    textarea,
+    select {
+      border: none;
+      border-bottom: 1px solid var(--mat-sys-on-surface-variant);
+      border-radius: 0;
+      padding: 4px 0 5px;
+      background: transparent;
+      color: var(--mat-sys-on-surface);
+      transition: border-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+
+      &:focus {
+        outline: none;
+        border-bottom-width: 2px;
+        border-bottom-color: var(--mat-sys-primary);
+      }
+    }
+  }
+}
+
+// Label
+.form-control__label {
+  font-family: var(--mat-sys-body-small-font);
+  font-size: var(--mat-sys-body-small-size);
+  color: var(--mat-sys-on-surface-variant);
+  margin-bottom: 4px;
+  transition: color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+}
+
+// Helper text
+.form-control__helper-text {
+  font-family: var(--mat-sys-body-small-font);
+  font-size: var(--mat-sys-body-small-size);
+  color: var(--mat-sys-on-surface-variant);
+  margin-top: 4px;
+}

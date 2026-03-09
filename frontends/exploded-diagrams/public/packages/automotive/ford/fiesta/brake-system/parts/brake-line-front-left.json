@@ -1,0 +1,35 @@
+{
+  "id": "brake-line-front-left",
+  "name": "Front Left Brake Line",
+  "partNumber": "FD-1850210",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 180.0,
+  "weightUnit": "g",
+  "baseY": 70,
+  "description": "Steel brake line from master cylinder to front left hose",
+  "installation": {
+    "tools": [
+      { "name": "Flare nut spanner", "size": "11mm", "required": true },
+      { "name": "Line clamp", "size": "-", "required": true },
+      { "name": "Brake bleeding kit", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Brake line clip", "spec": "P-clip", "qty": 4, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Flare nut", "value": 15, "unit": "Nm", "notes": "Do not overtighten" }
+    ],
+    "notes": [
+      "Use flare nut spanner to avoid rounding",
+      "Bleed system after replacement",
+      "Check for leaks at all connections",
+      "Route away from exhaust heat"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 120, "height": 4, "rx": 2, "fill": "#888" },
+    { "type": "circle", "r": 6, "offsetX": -60, "fill": "#666" },
+    { "type": "circle", "r": 6, "offsetX": 60, "fill": "#666" }
+  ]
+}

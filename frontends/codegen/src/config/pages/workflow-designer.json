@@ -1,0 +1,293 @@
+{
+  "id": "workflow-designer",
+  "name": "Workflow Designer",
+  "layout": {
+    "type": "single"
+  },
+  "dataSources": [
+    {
+      "id": "workflows",
+      "key": "app-workflows",
+      "type": "kv"
+    },
+    {
+      "id": "selectedWorkflowId",
+      "type": "static",
+      "defaultValue": null
+    },
+    {
+      "id": "selectedNodeId",
+      "type": "static",
+      "defaultValue": null
+    },
+    {
+      "id": "statusFilter",
+      "type": "static",
+      "defaultValue": "all"
+    },
+    {
+      "id": "createDialogOpen",
+      "type": "static",
+      "defaultValue": false
+    },
+    {
+      "id": "selectedWorkflow",
+      "type": "static",
+      "expression": "data.workflows.find(id === data.selectedWorkflowId)",
+      "dependencies": [
+        "workflows",
+        "selectedWorkflowId"
+      ]
+    },
+    {
+      "id": "workflowCount",
+      "type": "static",
+      "expression": "data.workflows.length",
+      "dependencies": [
+        "workflows"
+      ]
+    }
+  ],
+  "components": [
+    {
+      "id": "root",
+      "type": "div",
+      "props": {
+        "className": "h-full flex bg-gradient-to-br from-background via-background to-primary/5"
+      },
+      "children": [
+        {
+          "id": "sidebar",
+          "type": "div",
+          "props": {
+            "className": "w-80 border-r border-border bg-card/50 backdrop-blur flex flex-col"
+          },
+          "children": [
+            {
+              "id": "sidebar-header",
+              "type": "div",
+              "props": {
+                "className": "p-4 border-b border-border"
+              },
+              "children": [
+                {
+                  "id": "header-title",
+                  "type": "h2",
+                  "props": {
+                    "className": "text-xl font-bold mb-2 flex items-center gap-2"
+                  },
+                  "children": [
+                    "Workflows"
+                  ]
+                },
+                {
+                  "id": "create-button",
+                  "type": "MetabuilderFormButton",
+                  "props": {
+                    "className": "w-full"
+                  },
+                  "events": [
+                    {
+                      "event": "onClick",
+                      "actions": [
+                        {
+                          "type": "set-value",
+                          "target": "createDialogOpen",
+                          "value": true
+                        }
+                      ]
+                    }
+                  ],
+                  "children": [
+                    {
+                      "type": "icon",
+                      "props": {
+                        "name": "Plus",
+                        "className": "mr-2 h-4 w-4"
+                      }
+                    },
+                    "Create Workflow"
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "filter-tabs",
+              "type": "div",
+              "props": {
+                "className": "p-4 space-y-2"
+              },
+              "children": [
+                {
+                  "id": "filter-label",
+                  "type": "MetabuilderDisplayLabel",
+                  "props": {
+                    "className": "text-sm text-muted-foreground"
+                  },
+                  "children": [
+                    "Status Filter"
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "workflow-list",
+              "type": "div",
+              "props": {
+                "className": "flex-1 overflow-auto p-4 space-y-2"
+              },
+              "children": [
+                {
+                  "type": "div",
+                  "conditional": {
+                    "if": "workflowCount === 0"
+                  },
+                  "props": {
+                    "className": "text-center py-8 text-muted-foreground"
+                  },
+                  "children": [
+                    "No workflows yet"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "main-content",
+          "type": "div",
+          "props": {
+            "className": "flex-1 flex flex-col"
+          },
+          "children": [
+            {
+              "id": "workflow-selection-state",
+              "type": "div",
+              "conditional": {
+                "if": "selectedWorkflow != null",
+                "then": {
+                  "id": "workflow-editor",
+                  "type": "div",
+                  "props": {
+                    "className": "flex-1 p-6 overflow-auto"
+                  },
+                  "children": [
+                    {
+                      "id": "workflow-header",
+                      "type": "div",
+                      "props": {
+                        "className": "mb-6"
+                      },
+                      "children": [
+                        {
+                          "id": "workflow-name",
+                          "type": "h1",
+                          "props": {
+                            "className": "text-3xl font-bold mb-2"
+                          },
+                          "bindings": {
+                            "children": {
+                              "source": "selectedWorkflow",
+                              "path": "name"
+                            }
+                          }
+                        },
+                        {
+                          "id": "workflow-description",
+                          "type": "p",
+                          "props": {
+                            "className": "text-muted-foreground"
+                          },
+                          "bindings": {
+                            "children": {
+                              "source": "selectedWorkflow",
+                              "path": "description"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "id": "workflow-canvas",
+                      "type": "MetabuilderLayoutCard",
+                      "props": {
+                        "className": "min-h-[400px] bg-muted/20"
+                      },
+                      "children": [
+                        {
+                          "id": "canvas-content",
+                          "type": "MetabuilderDataCardContent",
+                          "props": {
+                            "className": "p-6"
+                          },
+                          "children": [
+                            {
+                              "id": "canvas-placeholder",
+                              "type": "div",
+                              "props": {
+                                "className": "text-center text-muted-foreground py-12"
+                              },
+                              "children": [
+                                "Workflow canvas - Add nodes to build your workflow"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "else": {
+                  "id": "empty-state",
+                  "type": "div",
+                  "props": {
+                    "className": "flex-1 flex items-center justify-center"
+                  },
+                  "children": [
+                    {
+                      "id": "empty-state-content",
+                      "type": "div",
+                      "props": {
+                        "className": "text-center space-y-4"
+                      },
+                      "children": [
+                        {
+                          "type": "icon",
+                          "props": {
+                            "name": "GitBranch",
+                            "className": "h-20 w-20 text-muted-foreground/50 mx-auto",
+                            "weight": "duotone"
+                          }
+                        },
+                        {
+                          "id": "empty-state-title",
+                          "type": "h3",
+                          "props": {
+                            "className": "text-2xl font-bold text-muted-foreground"
+                          },
+                          "children": [
+                            "No Workflow Selected"
+                          ]
+                        },
+                        {
+                          "id": "empty-state-description",
+                          "type": "p",
+                          "props": {
+                            "className": "text-muted-foreground"
+                          },
+                          "children": [
+                            "Select a workflow from the sidebar or create a new one"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

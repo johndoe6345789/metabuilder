@@ -1,0 +1,257 @@
+// Snackbar Component - Official Angular Material M3 SCSS (CSS Module)
+// ====================================================================
+// Uses official Angular Material snack-bar styles from m3-scss/material/snack-bar/
+// Angular Material class names: .mat-mdc-snack-bar-container, .mat-mdc-snackbar-surface,
+// .mdc-snackbar__label, .mat-mdc-snack-bar-actions, .mat-mdc-simple-snack-bar
+
+@use '../m3-scss/material/snack-bar/snack-bar-container.module';
+@use '../m3-scss/material/snack-bar/simple-snack-bar.module';
+
+// Local class to satisfy CSS modules purity requirement
+// Apply this to wrap Angular Material snackbar elements
+.matSnackbar {
+  // This class can be empty - it just needs to exist for CSS modules
+  // The actual styling comes from the Angular Material classes
+}
+
+// ──────────────────────────────────────────────────────────
+// Angular Material M3 class declarations for CSS Module export
+// These must be declared locally so CSS Modules hashes them
+// and the s() resolver in Snackbar.tsx can look them up.
+// ──────────────────────────────────────────────────────────
+
+.mat-mdc-snack-bar-container {
+  @extend .matSnackbar;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  pointer-events: auto;
+  min-width: 344px;
+  max-width: 672px;
+  border-radius: var(--mdc-snackbar-container-shape, 4px);
+}
+
+.mat-mdc-snackbar-surface {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 48px;
+  padding: 0;
+  border-radius: inherit;
+  background-color: var(--mdc-snackbar-container-color, var(--mat-sys-inverse-surface, #313033));
+  color: var(--mdc-snackbar-supporting-text-color, var(--mat-sys-inverse-on-surface, #f4eff4));
+  font-family: var(--mdc-snackbar-supporting-text-font, var(--mat-sys-body-medium-font, Roboto, sans-serif));
+  font-size: var(--mdc-snackbar-supporting-text-size, var(--mat-sys-body-medium-size, 0.875rem));
+  font-weight: var(--mdc-snackbar-supporting-text-weight, var(--mat-sys-body-medium-weight, 400));
+  line-height: var(--mdc-snackbar-supporting-text-line-height, var(--mat-sys-body-medium-line-height, 1.25rem));
+  box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 6px 10px 0 rgba(0,0,0,.14), 0 1px 18px 0 rgba(0,0,0,.12);
+}
+
+.mat-mdc-simple-snack-bar {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.mdc-snackbar__label {
+  flex: 1;
+  padding: 14px 16px;
+}
+
+.mat-mdc-snack-bar-label {
+  // Combined with mdc-snackbar__label for text content
+  color: inherit;
+  font: inherit;
+}
+
+.mat-mdc-snack-bar-actions {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 8px;
+  margin-left: auto;
+
+  // Action button styling
+  button,
+  [role="button"] {
+    color: var(--mat-snack-bar-button-color, var(--mat-sys-inverse-primary, #d0bcff));
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.089em;
+
+    &:hover {
+      opacity: 0.87;
+    }
+  }
+}
+
+// Snackbar positioning wrapper (React-specific)
+// Angular Material uses overlay positioning; we need fixed positioning for React
+.snackbarWrapper {
+  position: fixed;
+  z-index: var(--z-snackbar, 1400);
+  display: flex;
+  pointer-events: none;
+
+  // Allow clicks on the actual snackbar
+  > * {
+    pointer-events: auto;
+  }
+}
+
+// Position variants (React-specific)
+.snackbarBottom {
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.snackbarBottomLeft {
+  bottom: 24px;
+  left: 24px;
+  transform: none;
+}
+
+.snackbarBottomRight {
+  bottom: 24px;
+  right: 24px;
+  left: auto;
+  transform: none;
+}
+
+.snackbarTop {
+  top: 24px;
+  bottom: auto;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.snackbarTopLeft {
+  top: 24px;
+  bottom: auto;
+  left: 24px;
+  transform: none;
+}
+
+.snackbarTopRight {
+  top: 24px;
+  bottom: auto;
+  right: 24px;
+  left: auto;
+  transform: none;
+}
+
+// Animations enabled class (maps to Angular Material animation states)
+.snackbarAnimationsEnabled {
+  opacity: 0;
+
+  // Fallback in case animation fails
+  &.snackbarFallbackVisible {
+    opacity: 1;
+  }
+
+  // Enter animation (maps to .mat-snack-bar-container-enter)
+  &.snackbarEnter {
+    animation: matSnackBarEnter 150ms cubic-bezier(0, 0, 0.2, 1) forwards;
+  }
+
+  // Exit animation (maps to .mat-snack-bar-container-exit)
+  &.snackbarExit {
+    animation: matSnackBarExit 75ms cubic-bezier(0.4, 0, 1, 1) forwards;
+  }
+}
+
+// Use Angular Material keyframes naming
+@keyframes matSnackBarEnter {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes matSnackBarExit {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+// Handset mode (mobile) - React-specific wrapper class
+.snackbarHandset {
+  width: 100vw;
+  left: 0;
+  right: 0;
+  transform: none;
+  bottom: 0;
+  padding: 0 8px 8px;
+}
+
+// Stacked snackbars container (React-specific)
+.snackbarStack {
+  position: fixed;
+  z-index: var(--z-snackbar, 1400);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.snackbarStackBottom {
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.snackbarStackTop {
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.snackbarStack > * {
+  position: relative;
+  pointer-events: auto;
+}
+
+// Severity variants - extend Angular Material with color variants
+// Uses local .mat-mdc-snackbar-surface (hashed by CSS modules) instead of :global()
+.snackbarSuccess {
+  .mat-mdc-snackbar-surface {
+    background-color: var(--mat-sys-primary-container, #e8def8);
+    color: var(--mat-sys-on-primary-container, #21005d);
+  }
+}
+
+.snackbarError {
+  .mat-mdc-snackbar-surface {
+    background-color: var(--mat-sys-error-container, #f9dedc);
+    color: var(--mat-sys-on-error-container, #410e0b);
+  }
+}
+
+.snackbarWarning {
+  .mat-mdc-snackbar-surface {
+    background-color: var(--mat-sys-tertiary-container, #ffd8e4);
+    color: var(--mat-sys-on-tertiary-container, #31111d);
+  }
+}
+
+.snackbarInfo {
+  .mat-mdc-snackbar-surface {
+    background-color: var(--mat-sys-secondary-container, #e8def8);
+    color: var(--mat-sys-on-secondary-container, #1d192b);
+  }
+}

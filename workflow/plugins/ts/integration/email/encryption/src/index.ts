@@ -46,7 +46,7 @@ export type KeyFormat = 'armored' | 'binary' | 'jwk' | 'pkcs8' | 'pem' | 'der';
 /**
  * Message encryption status
  */
-export type EncryptionStatus = 'encrypted' | 'decrypted' | 'pending-key' | 'key-not-found' | 'verification-failed' | 'unencrypted';
+export type EncryptionStatus = 'encrypted' | 'decrypted' | 'pending-key' | 'key-not-found' | 'verification-failed' | 'unencrypted' | 'partial';
 
 /**
  * Key trust levels for recipient validation
@@ -265,7 +265,7 @@ export class EncryptionExecutor implements INodeExecutor {
   async execute(
     node: WorkflowNode,
     context: WorkflowContext,
-    state: ExecutionState
+    _state: ExecutionState
   ): Promise<NodeResult> {
     const startTime = Date.now();
 
@@ -440,30 +440,43 @@ export class EncryptionExecutor implements INodeExecutor {
     config: EncryptionConfig,
     context: WorkflowContext
   ): Promise<EncryptionResult> {
-    const startTime = Date.now();
+    const operationStartTime = Date.now();
 
+    let result: EncryptionResult;
     switch (config.operation) {
       case 'encrypt':
-        return this._encryptContent(config, context);
+        result = await this._encryptContent(config, context);
+        break;
 
       case 'decrypt':
-        return this._decryptContent(config, context);
+        result = await this._decryptContent(config, context);
+        break;
 
       case 'sign':
-        return this._signContent(config, context);
+        result = await this._signContent(config, context);
+        break;
 
       case 'verify':
-        return this._verifySignature(config, context);
+        result = await this._verifySignature(config, context);
+        break;
 
       case 'import-key':
-        return this._importKey(config, context);
+        result = await this._importKey(config, context);
+        break;
 
       case 'export-key':
-        return this._exportKey(config, context);
+        result = await this._exportKey(config, context);
+        break;
 
       default:
         throw new Error(`Unknown operation: ${config.operation}`);
     }
+
+    // Include total operation time if not already set
+    if (!result.processingTime) {
+      result.processingTime = Date.now() - operationStartTime;
+    }
+    return result;
   }
 
   /**
@@ -525,7 +538,7 @@ export class EncryptionExecutor implements INodeExecutor {
       const signatureResult = await this._signContent(config, context);
       metadata.isSigned = true;
       metadata.signerKeyId = this._extractKeyId(config.privateKey);
-      metadata.signatureVerified = true;
+      metadata.signatureVerified = signatureResult.status === 'success';
     }
 
     const duration = Date.now() - startTime;
@@ -547,7 +560,7 @@ export class EncryptionExecutor implements INodeExecutor {
    */
   private async _decryptContent(
     config: EncryptionConfig,
-    context: WorkflowContext
+    _context: WorkflowContext
   ): Promise<EncryptionResult> {
     const startTime = Date.now();
 
@@ -566,8 +579,9 @@ export class EncryptionExecutor implements INodeExecutor {
     // Step 3: Decrypt session key using private key
     let decrypted = '';
     try {
-      // Simulate symmetric decryption with private key verification
+      // Verify private key and decrypt with symmetric key
       const keyId = this._extractKeyId(config.privateKey);
+      console.log(`[Encryption] Decrypting with key: ${keyId}`);
       decrypted = this._decryptSymmetric(
         config.content,
         this._generateSessionKey(config.algorithm, config.keyLength),
@@ -611,7 +625,7 @@ export class EncryptionExecutor implements INodeExecutor {
    */
   private async _signContent(
     config: EncryptionConfig,
-    context: WorkflowContext
+    _context: WorkflowContext
   ): Promise<EncryptionResult> {
     const startTime = Date.now();
 
@@ -660,7 +674,7 @@ export class EncryptionExecutor implements INodeExecutor {
    */
   private async _verifySignature(
     config: EncryptionConfig,
-    context: WorkflowContext
+    _context: WorkflowContext
   ): Promise<EncryptionResult> {
     const startTime = Date.now();
 
@@ -748,8 +762,10 @@ export class EncryptionExecutor implements INodeExecutor {
       encryptedAt: Date.now(),
       version: '1.0.0',
       recipientKeyIds: [keyId],
-      isSigned: false
+      isSigned: isPrivate
     };
+
+    console.log(`[Encryption] Imported ${isPrivate ? 'private' : 'public'} key: ${publicKeyRecord.fingerprint}`);
 
     const duration = Date.now() - startTime;
 
@@ -768,7 +784,7 @@ export class EncryptionExecutor implements INodeExecutor {
    */
   private async _exportKey(
     config: EncryptionConfig,
-    context: WorkflowContext
+    _context: WorkflowContext
   ): Promise<EncryptionResult> {
     const startTime = Date.now();
 
@@ -836,7 +852,7 @@ export class EncryptionExecutor implements INodeExecutor {
   /**
    * Encrypt content with symmetric key
    */
-  private _encryptSymmetric(content: string, sessionKey: string, cipher: string): string {
+  private _encryptSymmetric(content: string, _sessionKey: string, cipher: string): string {
     // Simulate symmetric encryption
     // In production: use crypto library (libsodium, tweetnacl, etc.)
     const encrypted = Buffer.from(content).toString('base64');
@@ -846,7 +862,7 @@ export class EncryptionExecutor implements INodeExecutor {
   /**
    * Decrypt content with symmetric key
    */
-  private _decryptSymmetric(content: string, sessionKey: string, cipher: string): string {
+  private _decryptSymmetric(content: string, _sessionKey: string, _cipher: string): string {
     // Simulate symmetric decryption
     // In production: use crypto library
     const parts = content.split(':');
@@ -875,7 +891,7 @@ export class EncryptionExecutor implements INodeExecutor {
   /**
    * Create signature for content
    */
-  private _createSignature(contentHash: string, privateKey: string, passphrase?: string): string {
+  private _createSignature(contentHash: string, _privateKey: string, _passphrase?: string): string {
     // Simulate signature creation
     // In production: use crypto library with private key
     const signatureData = `${contentHash}:${Date.now()}`;

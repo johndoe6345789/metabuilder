@@ -1,0 +1,13 @@
+[
+  {
+    "id": "page_package_manager_list",
+    "path": "/admin/packages",
+    "title": "Package Management",
+    "packageId": "package_manager",
+    "component": "package_list_admin",
+    "level": 4,
+    "requiresAuth": true,
+    "isPublished": true,
+    "sortOrder": 0
+  }
+]

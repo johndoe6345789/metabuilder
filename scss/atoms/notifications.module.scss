@@ -1,0 +1,236 @@
+/**
+ * Notifications Page - Material Design 3
+ */
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 24px 0 16px;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.title {
+  font: var(--mat-sys-headline-medium-font);
+  color: var(--mat-sys-on-surface);
+  margin: 0;
+}
+
+.unreadBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 16px;
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.headerActions {
+  display: flex;
+  gap: 8px;
+}
+
+.filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.filterChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 20px;
+  background: transparent;
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+
+  &:hover {
+    background: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
+  }
+}
+
+.filterChipActive {
+  background: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
+  border-color: transparent;
+}
+
+.filterCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background: var(--mat-sys-error);
+  color: var(--mat-sys-on-error);
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--mat-sys-outline-variant);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px 20px;
+  background: var(--mat-sys-surface);
+  cursor: pointer;
+  position: relative;
+  transition: background var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+
+  &:hover {
+    background: var(--mat-sys-surface-container-low);
+
+    .itemDelete {
+      opacity: 1;
+    }
+  }
+}
+
+.itemUnread {
+  background: var(--mat-sys-surface-container-lowest);
+
+  .itemTitle {
+    font-weight: 600;
+  }
+}
+
+.itemIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: color-mix(in srgb, currentColor 12%, transparent);
+  flex-shrink: 0;
+}
+
+.itemContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.itemHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.itemTitle {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--mat-sys-on-surface);
+}
+
+.itemTime {
+  font-size: 0.75rem;
+  color: var(--mat-sys-outline);
+  white-space: nowrap;
+}
+
+.itemMessage {
+  font-size: 0.875rem;
+  color: var(--mat-sys-on-surface-variant);
+  margin: 0 0 8px;
+  line-height: 1.4;
+}
+
+.itemMeta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.itemType {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--mat-sys-outline);
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--mat-sys-surface-container);
+}
+
+.itemDate {
+  font-size: 0.75rem;
+  color: var(--mat-sys-outline);
+}
+
+.itemDelete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--mat-sys-on-surface-variant);
+  cursor: pointer;
+  opacity: 0;
+  transition: all var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+
+  &:hover {
+    background: var(--mat-sys-error-container);
+    color: var(--mat-sys-on-error-container);
+  }
+}
+
+.unreadDot {
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--mat-sys-primary);
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 24px;
+  background: var(--mat-sys-surface);
+  border-radius: 16px;
+  color: var(--mat-sys-on-surface-variant);
+
+  p {
+    margin: 16px 0 0;
+    font-size: 1rem;
+  }
+}

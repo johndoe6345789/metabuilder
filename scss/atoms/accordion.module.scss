@@ -1,0 +1,178 @@
+// Accordion Atoms - Material Design 3
+// ====================================
+// Flat selectors for accordion/expansion panel styling using M3 tokens
+
+// Accordion container
+.accordion {
+  background: var(--mat-sys-surface);
+  border-radius: var(--mat-sys-corner-medium);
+  overflow: hidden;
+}
+
+// Multiple accordions in a group
+.accordionGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.accordionGroupFlush {
+  gap: 0;
+}
+
+.accordionGroupFlush .accordion {
+  border-radius: 0;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+
+.accordionGroupFlush .accordion:first-child {
+  border-top-left-radius: var(--mat-sys-corner-medium);
+  border-top-right-radius: var(--mat-sys-corner-medium);
+}
+
+.accordionGroupFlush .accordion:last-child {
+  border-bottom-left-radius: var(--mat-sys-corner-medium);
+  border-bottom-right-radius: var(--mat-sys-corner-medium);
+  border-bottom: none;
+}
+
+// Accordion header (trigger)
+.accordionHeader {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 16px;
+  border: none;
+  background: transparent;
+  color: var(--mat-sys-on-surface);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+}
+
+.accordionHeader:hover {
+  background: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
+}
+
+.accordionHeader:focus-visible {
+  outline: none;
+  background: color-mix(in srgb, var(--mat-sys-on-surface) 12%, transparent);
+}
+
+.accordionHeader:active {
+  background: color-mix(in srgb, var(--mat-sys-on-surface) 12%, transparent);
+}
+
+// Disabled accordion
+.accordionDisabled .accordionHeader {
+  color: color-mix(in srgb, var(--mat-sys-on-surface) 38%, transparent);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+// Accordion title
+.accordionTitle {
+  flex: 1;
+  font-family: var(--mat-sys-title-medium-font);
+  font-size: var(--mat-sys-title-medium-size);
+  font-weight: var(--mat-sys-title-medium-weight);
+  line-height: var(--mat-sys-title-medium-line-height);
+  margin: 0;
+}
+
+// Accordion subtitle/description
+.accordionSubtitle {
+  font-family: var(--mat-sys-body-medium-font);
+  font-size: var(--mat-sys-body-medium-size);
+  color: var(--mat-sys-on-surface-variant);
+  margin: 0;
+}
+
+// Leading icon/element
+.accordionLeading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 1.5rem;
+}
+
+// Expand/collapse icon
+.accordionIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: var(--mat-sys-on-surface-variant);
+  transition: transform var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+}
+
+// Rotated icon when open
+.accordionOpen .accordionIcon {
+  transform: rotate(180deg);
+}
+
+// Accordion content wrapper (for animation)
+.accordionCollapse {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--mat-sys-motion-duration-medium2) var(--mat-sys-motion-easing-emphasized);
+}
+
+.accordionOpen .accordionCollapse {
+  grid-template-rows: 1fr;
+}
+
+.accordionCollapseInner {
+  overflow: hidden;
+}
+
+// Accordion content
+.accordionContent {
+  padding: 0 16px 16px;
+  font-family: var(--mat-sys-body-medium-font);
+  font-size: var(--mat-sys-body-medium-size);
+  line-height: var(--mat-sys-body-medium-line-height);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+// Content with top padding (when no header subtitle)
+.accordionContentPadded {
+  padding-top: 8px;
+}
+
+// Accordion actions (buttons at bottom)
+.accordionActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 8px 16px 16px;
+}
+
+// Elevated variant
+.accordionElevated {
+  box-shadow: var(--mat-sys-level1);
+}
+
+.accordionElevated.accordionOpen {
+  box-shadow: var(--mat-sys-level2);
+}
+
+// Outlined variant
+.accordionOutlined {
+  border: 1px solid var(--mat-sys-outline-variant);
+  background: transparent;
+}
+
+// Filled variant
+.accordionFilled {
+  background: var(--mat-sys-surface-container);
+}
+
+.accordionFilled .accordionHeader:hover {
+  background: color-mix(in srgb, var(--mat-sys-on-surface) 8%, var(--mat-sys-surface-container));
+}

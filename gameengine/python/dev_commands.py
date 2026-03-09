@@ -58,10 +58,6 @@ DEFAULT_VCVARSALL = (
     "C:\\Program Files\\Microsoft Visual Studio\\2022\\Professional"
     "\\VC\\Auxiliary\\Build\\vcvarsall.bat"
 )
-VITA_ENV_VAR = "VITASDK"
-DEFAULT_VITA_SDK_PATH = "/usr/local/vitasdk"
-VITA_PRESETS = {"vita-release"}
-
 
 def _sh_quote(s: str) -> str:
     """Minimal POSIX-style quoting for display purposes on non-Windows."""
@@ -161,72 +157,6 @@ def _has_cache_arg(cmake_args: Sequence[str] | None, name: str) -> bool:
     return False
 
 
-def _cmake_cache_arg_value(cmake_args: Sequence[str] | None, name: str) -> str | None:
-    if not cmake_args:
-        return None
-    key = f"-D{name}"
-    for arg in cmake_args:
-        if not arg.startswith(key):
-            continue
-        if "=" not in arg:
-            return ""
-        return arg.split("=", 1)[1]
-    return None
-
-
-def _cmake_cache_enabled(cmake_args: Sequence[str] | None, name: str) -> bool:
-    value = _cmake_cache_arg_value(cmake_args, name)
-    if value is None:
-        return False
-    return value.strip().upper() in {"ON", "TRUE", "1", "YES"}
-
-
-def _read_cmake_cache_value(build_dir: str, name: str) -> str | None:
-    cache_path = Path(build_dir) / "CMakeCache.txt"
-    if not cache_path.is_file():
-        return None
-    try:
-        content = cache_path.read_text(encoding="utf-8", errors="ignore")
-    except OSError as exc:
-        _trace(f"Unable to read CMake cache at {cache_path}: {exc}")
-        return None
-    needle = f"{name}:"
-    for line in content.splitlines():
-        if not line.startswith(needle):
-            continue
-        if "=" not in line:
-            return ""
-        return line.split("=", 1)[1].strip()
-    return None
-
-
-def _is_vita_build_dir(build_dir: str) -> bool:
-    value = _read_cmake_cache_value(build_dir, "ENABLE_VITA")
-    if not value:
-        return False
-    return value.upper() in {"ON", "TRUE", "1", "YES"}
-
-
-def _vita_env_overrides(reason: str) -> dict[str, str]:
-    _trace(f"Setting {VITA_ENV_VAR} for {reason}: {DEFAULT_VITA_SDK_PATH}")
-    return {VITA_ENV_VAR: DEFAULT_VITA_SDK_PATH}
-
-
-def _resolve_vita_env_for_configure(
-    preset: str | None,
-    cmake_args: Sequence[str] | None,
-) -> dict[str, str] | None:
-    if preset in VITA_PRESETS:
-        return _vita_env_overrides(f"preset {preset}")
-    if _cmake_cache_enabled(cmake_args, "ENABLE_VITA"):
-        return _vita_env_overrides("explicit ENABLE_VITA cache arg")
-    return None
-
-
-def _resolve_vita_env_for_build(build_dir: str) -> dict[str, str] | None:
-    if _is_vita_build_dir(build_dir):
-        return _vita_env_overrides(f"build dir {build_dir}")
-    return None
 
 
 def _find_conan_toolchain(build_type: str) -> Path | None:
@@ -256,7 +186,7 @@ def _has_cmake_cache(build_dir: str) -> bool:
 def dependencies(args: argparse.Namespace) -> None:
     """Run Conan profile detection and install dependencies."""
     cmd_detect = ["conan", "profile", "detect", "-f"]
-    cmd_install = ["conan", "install", ".", "-of", "build-ninja", "-b", "missing", "-c", "tools.build:cxxflags=[\"-include\",\"cstdint\"]"]
+    cmd_install = ["conan", "install", ".", "-of", "build-ninja", "-b", "missing"]
     conan_install_args = _strip_leading_double_dash(args.conan_install_args)
     if conan_install_args:
         cmd_install.extend(conan_install_args)
@@ -270,8 +200,7 @@ def configure(args: argparse.Namespace) -> None:
         cmake_extra_args = _strip_leading_double_dash(args.cmake_args)
         if cmake_extra_args:
             cmake_args.extend(cmake_extra_args)
-        vita_env = _resolve_vita_env_for_configure(args.preset, cmake_extra_args)
-        run_argvs([cmake_args], args.dry_run, env_overrides=vita_env)
+        run_argvs([cmake_args], args.dry_run)
         return
     generator = args.generator or DEFAULT_GENERATOR
     build_dir = _as_build_dir(
@@ -296,8 +225,7 @@ def configure(args: argparse.Namespace) -> None:
     cmake_extra_args = _strip_leading_double_dash(args.cmake_args)
     if cmake_extra_args:
         cmake_args.extend(cmake_extra_args)
-    vita_env = _resolve_vita_env_for_configure(None, cmake_extra_args)
-    run_argvs([cmake_args], args.dry_run, env_overrides=vita_env)
+    run_argvs([cmake_args], args.dry_run)
 
 
 def build(args: argparse.Namespace) -> None:
@@ -311,14 +239,12 @@ def build(args: argparse.Namespace) -> None:
     if build_tool_args:
         cmd.append("--")
         cmd.extend(build_tool_args)
-    vita_env = _resolve_vita_env_for_build(args.build_dir)
-    run_argvs([cmd], args.dry_run, env_overrides=vita_env)
+    run_argvs([cmd], args.dry_run)
 
 
 def tests(args: argparse.Namespace) -> None:
     """Build (optional) and run ctest for a given build directory."""
     build_dir = _as_build_dir(args.build_dir, DEFAULT_BUILD_DIR)
-    vita_env = _resolve_vita_env_for_build(build_dir)
     argvs: list[list[str]] = []
 
     if args.build_first:
@@ -341,7 +267,7 @@ def tests(args: argparse.Namespace) -> None:
         ctest_cmd.extend(ctest_args)
     argvs.append(ctest_cmd)
 
-    run_argvs(argvs, args.dry_run, env_overrides=vita_env)
+    run_argvs(argvs, args.dry_run)
 
 
 def _cmd_one_liner_vcvars_then(bat: str, arch: str, then_parts: Sequence[str]) -> list[str]:
@@ -410,10 +336,7 @@ def _sync_assets(build_dir: str, dry_run: bool) -> None:
 
     # Define asset directories to sync
     asset_dirs = [
-        ("scripts", ["*.lua"]),
-        ("shaders", ["*.vert", "*.frag", "*.geom", "*.tesc", "*.tese", "*.comp", "*.spv"]),
-        ("scripts/models", ["*.stl", "*.obj", "*.fbx"]),
-        ("config", ["*.json"]),
+        ("packages", ["*.json"]),
     ]
     asset_trees = [
         "MaterialX/libraries",
@@ -489,11 +412,10 @@ def gui(args: argparse.Namespace) -> None:
         from PyQt6.QtWidgets import (
             QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
             QPushButton, QLabel, QTextEdit, QComboBox, QListWidget, QListWidgetItem,
-            QSplitter, QMenuBar, QDialog, QDialogButtonBox, QFormLayout, QMessageBox,
-            QPlainTextEdit, QTabWidget, QLineEdit
+            QDialog, QDialogButtonBox, QFormLayout, QMessageBox,
         )
-        from PyQt6.QtCore import Qt, QProcess, QProcessEnvironment, QSize, QTimer
-        from PyQt6.QtGui import QFont, QPalette, QColor, QAction, QSyntaxHighlighter, QTextCharFormat, QTextCursor, QTextDocument
+        from PyQt6.QtCore import Qt, QProcess, QProcessEnvironment
+        from PyQt6.QtGui import QFont, QPalette, QColor, QAction
     except ImportError:
         raise SystemExit(
             "PyQt6 is not installed. Install it with:\n"
@@ -501,74 +423,6 @@ def gui(args: argparse.Namespace) -> None:
         )
 
     import sys
-    import re
-
-    class LuaSyntaxHighlighter(QSyntaxHighlighter):
-        """Simple Lua syntax highlighter"""
-        def __init__(self, parent=None):
-            super().__init__(parent)
-
-            # Define colors
-            keyword_color = QColor("#569cd6")  # Blue
-            string_color = QColor("#ce9178")   # Orange
-            comment_color = QColor("#6a9955")  # Green
-            function_color = QColor("#dcdcaa")  # Yellow
-            number_color = QColor("#b5cea8")   # Light green
-
-            # Define formatting
-            self.keyword_format = QTextCharFormat()
-            self.keyword_format.setForeground(keyword_color)
-            self.keyword_format.setFontWeight(700)
-
-            self.string_format = QTextCharFormat()
-            self.string_format.setForeground(string_color)
-
-            self.comment_format = QTextCharFormat()
-            self.comment_format.setForeground(comment_color)
-            self.comment_format.setFontItalic(True)
-
-            self.function_format = QTextCharFormat()
-            self.function_format.setForeground(function_color)
-
-            self.number_format = QTextCharFormat()
-            self.number_format.setForeground(number_color)
-
-            # Lua keywords
-            keywords = [
-                'and', 'break', 'do', 'else', 'elseif', 'end', 'false', 'for',
-                'function', 'if', 'in', 'local', 'nil', 'not', 'or', 'repeat',
-                'return', 'then', 'true', 'until', 'while'
-            ]
-
-            # Build highlighting rules
-            self.rules = []
-
-            # Keywords
-            for word in keywords:
-                pattern = f'\\b{word}\\b'
-                self.rules.append((re.compile(pattern), self.keyword_format))
-
-            # Numbers
-            self.rules.append((re.compile(r'\b\d+\.?\d*\b'), self.number_format))
-
-            # Functions
-            self.rules.append((re.compile(r'\b[A-Za-z_][A-Za-z0-9_]*(?=\s*\()'), self.function_format))
-
-            # Strings (double quotes)
-            self.rules.append((re.compile(r'"[^"\\]*(\\.[^"\\]*)*"'), self.string_format))
-
-            # Strings (single quotes)
-            self.rules.append((re.compile(r"'[^'\\]*(\\.[^'\\]*)*'"), self.string_format))
-
-            # Comments
-            self.rules.append((re.compile(r'--[^\n]*'), self.comment_format))
-
-        def highlightBlock(self, text):
-            """Apply syntax highlighting to the given block of text"""
-            for pattern, fmt in self.rules:
-                for match in pattern.finditer(text):
-                    start, end = match.span()
-                    self.setFormat(start, end - start, fmt)
 
     class BuildSettingsDialog(QDialog):
         """Dialog for configuring build settings"""
@@ -580,7 +434,7 @@ def gui(args: argparse.Namespace) -> None:
             layout = QFormLayout(self)
 
             self.preset_combo = QComboBox()
-            self.preset_combo.addItems(["default", "vita-release"])
+            self.preset_combo.addItems(["default"])
             self.preset_combo.setCurrentText("default")
             layout.addRow("Preset:", self.preset_combo)
 
@@ -598,8 +452,7 @@ def gui(args: argparse.Namespace) -> None:
                 "sdl3_app",
                 "all",
                 "script_engine_tests",
-                "gxm_backend_tests",
-                "bgfx_gui_service_tests",
+                "gpu_gui_service_tests",
             ])
             layout.addRow("Target:", self.target_combo)
 
@@ -610,77 +463,13 @@ def gui(args: argparse.Namespace) -> None:
             buttons.rejected.connect(self.reject)
             layout.addRow(buttons)
 
-    class NewProjectDialog(QDialog):
-        """Dialog for creating a new project from templates"""
-        def __init__(self, parent=None):
-            super().__init__(parent)
-            self.setWindowTitle("New Project")
-            self.setMinimumWidth(500)
-            self.setMinimumHeight(300)
-
-            layout = QVBoxLayout(self)
-
-            # Project name input
-            name_layout = QHBoxLayout()
-            name_label = QLabel("Project Name:")
-            self.name_input = QLineEdit()
-            self.name_input.setPlaceholderText("Enter project name")
-            name_layout.addWidget(name_label)
-            name_layout.addWidget(self.name_input)
-            layout.addLayout(name_layout)
-
-            # Template selection
-            template_label = QLabel("Template:")
-            layout.addWidget(template_label)
-
-            self.template_combo = QComboBox()
-            self.template_combo.addItem("Cube Demo - 3D game with physics", "cube")
-            self.template_combo.addItem("GUI Demo - ImGui interface demo", "gui")
-            self.template_combo.addItem("Soundboard - Audio application", "soundboard")
-            layout.addWidget(self.template_combo)
-
-            # Description
-            self.description_label = QLabel()
-            self.description_label.setWordWrap(True)
-            self.description_label.setStyleSheet("color: #666; font-size: 10pt; margin-top: 10px;")
-            layout.addWidget(self.description_label)
-
-            # Update description when template changes
-            self.template_combo.currentIndexChanged.connect(self.update_description)
-            self.update_description()
-
-            layout.addStretch()
-
-            # Buttons
-            buttons = QDialogButtonBox(
-                QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
-            )
-            buttons.accepted.connect(self.accept)
-            buttons.rejected.connect(self.reject)
-            layout.addWidget(buttons)
-
-        def update_description(self):
-            """Update description based on selected template"""
-            template = self.template_combo.currentData()
-            descriptions = {
-                "cube": "A 3D cube room with first-person controls, lanterns, and physics interactions. Includes mouse look, movement controls, and audio.",
-                "gui": "An interactive GUI demonstration using ImGui widgets and controls. Showcases various UI elements and interactions.",
-                "soundboard": "An audio soundboard application for playing and mixing sound effects. Features multiple audio channels and controls."
-            }
-            self.description_label.setText(descriptions.get(template, ""))
-
-        def get_project_data(self):
-            """Return the project name and template type"""
-            return {
-                "name": self.name_input.text().strip(),
-                "template": self.template_combo.currentData()
-            }
-
     class BuildLauncherGUI(QMainWindow):
         def __init__(self):
             super().__init__()
             self.process = None
             self.current_game = None
+            self.current_bootloader = None
+            self.current_game_package = None
 
             # Build settings
             self.preset = "default"
@@ -688,59 +477,95 @@ def gui(args: argparse.Namespace) -> None:
             self.build_type = "Release"
             self.target = "sdl3_app"
 
-            # Load games from config files
-            self.games = self.load_games_from_config()
+            # Load bootloader packages
+            self.bootloaders = self.load_bootloader_packages()
+            # Load game packages
+            self.game_packages = self.load_game_packages()
 
             self.init_ui()
 
-        def load_games_from_config(self):
-            """Scan config directory for JSON files with launcher metadata"""
+        def load_bootloader_packages(self):
+            """Load bootloader packages from packages/ directory"""
+            import json
+            from pathlib import Path
+
+            bootloaders = []
+            packages_dir = Path("packages")
+
+            if not packages_dir.exists():
+                return []
+
+            # Look for bootstrap_* packages
+            for pkg_dir in sorted(packages_dir.glob("bootstrap_*")):
+                if not pkg_dir.is_dir():
+                    continue
+                package_json = pkg_dir / "package.json"
+                if not package_json.exists():
+                    continue
+                try:
+                    with open(package_json, 'r') as f:
+                        data = json.load(f)
+                    pkg_type = data.get("type", "bootloader")
+                    pkg_category = data.get("category", "")
+                    display_name = data.get("name", pkg_dir.name)
+                    if pkg_category:
+                        display_name = f"{display_name} ({pkg_category})"
+                    bootloaders.append({
+                        "id": pkg_dir.name,
+                        "name": display_name,
+                        "description": data.get("description", ""),
+                        "type": pkg_type,
+                        "category": pkg_category,
+                        "package_dir": str(pkg_dir),
+                    })
+                except (json.JSONDecodeError, IOError) as e:
+                    print(f"Warning: Could not load bootloader {package_json}: {e}")
+                    continue
+
+            return bootloaders
+
+        def load_game_packages(self):
+            """Load game packages from packages/ directory (exclude bootstraps and libraries)"""
             import json
             from pathlib import Path
 
             games = []
-            config_dir = Path("config")
+            packages_dir = Path("packages")
 
-            if not config_dir.exists():
-                # Fallback if config dir doesn't exist
-                return [{
-                    "id": "sdl3_app",
-                    "name": "SDL3 Demo Application",
-                    "description": "Main SDL3 demo application showcasing basic functionality",
-                    "config_file": "config/seed_runtime.json",
-                }]
+            if not packages_dir.exists():
+                return []
 
-            # Scan all JSON files in config directory
-            for config_file in sorted(config_dir.glob("*.json")):
-                try:
-                    with open(config_file, 'r') as f:
-                        data = json.load(f)
-
-                    # Check if file has launcher metadata
-                    if "launcher" in data:
-                        launcher = data["launcher"]
-
-                        # Only add if enabled (defaults to True if not specified)
-                        if launcher.get("enabled", True):
-                            games.append({
-                                "id": config_file.stem,
-                                "name": launcher.get("name", config_file.stem),
-                                "description": launcher.get("description", ""),
-                                "config_file": str(config_file),
-                            })
-                except (json.JSONDecodeError, IOError) as e:
-                    # Skip files that can't be parsed
-                    print(f"Warning: Could not load {config_file}: {e}")
+            # Load all packages except bootstrap_* packages and libraries
+            for pkg_dir in sorted(packages_dir.glob("*")):
+                if not pkg_dir.is_dir():
                     continue
-
-            # If no games found, add a default one
-            if not games:
-                games.append({
-                    "id": "sdl3_app",
-                    "name": "SDL3 Demo Application",
-                    "description": "Main SDL3 demo application showcasing basic functionality",
-                    "config_file": "config/seed_runtime.json",
-                })
+                if pkg_dir.name.startswith("bootstrap_"):
+                    continue
+                package_json = pkg_dir / "package.json"
+                if not package_json.exists():
+                    continue
+                try:
+                    with open(package_json, 'r') as f:
+                        data = json.load(f)
+                    pkg_type = data.get("type", "game")
+                    # Only show game packages, not libraries
+                    if pkg_type != "game":
+                        continue
+                    pkg_category = data.get("category", "")
+                    display_name = data.get("name", pkg_dir.name)
+                    if pkg_category:
+                        display_name = f"{display_name} ({pkg_category})"
+                    games.append({
+                        "id": pkg_dir.name,
+                        "name": display_name,
+                        "description": data.get("description", ""),
+                        "type": pkg_type,
+                        "category": pkg_category,
+                        "package_dir": str(pkg_dir),
+                    })
+                except (json.JSONDecodeError, IOError) as e:
+                    print(f"Warning: Could not load game package {package_json}: {e}")
+                    continue
 
             return games
 
@@ -799,9 +624,9 @@ def gui(args: argparse.Namespace) -> None:
             """)
             self.game_list.currentItemChanged.connect(self.on_game_selected)
 
-            for game in self.games:
-                item = QListWidgetItem(game["name"])
-                item.setData(Qt.ItemDataRole.UserRole, game)
+            for game_pkg in self.game_packages:
+                item = QListWidgetItem(game_pkg["name"])
+                item.setData(Qt.ItemDataRole.UserRole, game_pkg)
                 self.game_list.addItem(item)
 
             sidebar_layout.addWidget(self.game_list)
@@ -834,6 +659,74 @@ def gui(args: argparse.Namespace) -> None:
             self.game_description.setWordWrap(True)
             self.game_description.setStyleSheet("color: #8f98a0; font-size: 11pt;")
             detail_layout.addWidget(self.game_description)
+
+            # Package selection lists side by side
+            packages_row = QHBoxLayout()
+
+            # Bootloader list
+            bootloader_column = QVBoxLayout()
+            bootloader_label = QLabel("BOOTLOADER")
+            bootloader_label.setStyleSheet("color: #8f98a0; font-weight: bold; font-size: 9pt;")
+            bootloader_column.addWidget(bootloader_label)
+
+            list_style = """
+                QListWidget {
+                    background-color: #171a21;
+                    border: 1px solid #0e1216;
+                    border-radius: 3px;
+                    color: #c6d1db;
+                    font-size: 10pt;
+                    outline: none;
+                }
+                QListWidget::item {
+                    padding: 6px 8px;
+                    border-bottom: 1px solid #0e1216;
+                }
+                QListWidget::item:selected {
+                    background-color: #2a475e;
+                }
+                QListWidget::item:hover {
+                    background-color: #1b2838;
+                }
+            """
+
+            self.bootloader_list = QListWidget()
+            self.bootloader_list.setStyleSheet(list_style)
+            self.bootloader_list.setMaximumHeight(120)
+            for bootloader in self.bootloaders:
+                item = QListWidgetItem(bootloader["name"])
+                item.setData(Qt.ItemDataRole.UserRole, bootloader)
+                self.bootloader_list.addItem(item)
+            if self.bootloaders:
+                self.current_bootloader = self.bootloaders[0]
+                self.bootloader_list.setCurrentRow(0)
+            self.bootloader_list.currentItemChanged.connect(self.on_bootloader_selected)
+            bootloader_column.addWidget(self.bootloader_list)
+            packages_row.addLayout(bootloader_column)
+
+            packages_row.addSpacing(10)
+
+            # Game package list
+            game_pkg_column = QVBoxLayout()
+            game_pkg_label = QLabel("GAME PACKAGE")
+            game_pkg_label.setStyleSheet("color: #8f98a0; font-weight: bold; font-size: 9pt;")
+            game_pkg_column.addWidget(game_pkg_label)
+
+            self.game_package_list = QListWidget()
+            self.game_package_list.setStyleSheet(list_style)
+            self.game_package_list.setMaximumHeight(120)
+            for game_pkg in self.game_packages:
+                item = QListWidgetItem(game_pkg["name"])
+                item.setData(Qt.ItemDataRole.UserRole, game_pkg)
+                self.game_package_list.addItem(item)
+            if self.game_packages:
+                self.current_game_package = self.game_packages[0]
+                self.game_package_list.setCurrentRow(0)
+            self.game_package_list.currentItemChanged.connect(self.on_game_package_selected)
+            game_pkg_column.addWidget(self.game_package_list)
+            packages_row.addLayout(game_pkg_column)
+
+            detail_layout.addLayout(packages_row)
 
             # Play button container
             button_container = QHBoxLayout()
@@ -903,166 +796,9 @@ def gui(args: argparse.Namespace) -> None:
 
             right_layout.addWidget(detail_header)
 
-            # Tabbed interface for code editor and console
-            self.tab_widget = QTabWidget()
-            self.tab_widget.setStyleSheet("""
-                QTabWidget::pane {
-                    background-color: #1b2838;
-                    border: none;
-                }
-                QTabBar::tab {
-                    background-color: #1b2838;
-                    color: #8f98a0;
-                    padding: 8px 16px;
-                    border: none;
-                    margin-right: 2px;
-                }
-                QTabBar::tab:selected {
-                    background-color: #2a475e;
-                    color: #c6d1db;
-                }
-                QTabBar::tab:hover {
-                    background-color: #243447;
-                }
-            """)
-
-            # Lua Code Editor Tab
-            editor_container = QWidget()
-            editor_layout = QVBoxLayout(editor_container)
-            editor_layout.setContentsMargins(10, 10, 10, 10)
-
-            # Editor toolbar
-            editor_toolbar = QHBoxLayout()
-            self.lua_file_label = QLabel("No file loaded")
-            self.lua_file_label.setStyleSheet("color: #8f98a0; font-size: 9pt;")
-            editor_toolbar.addWidget(self.lua_file_label)
-
-            # Search box
-            self.search_edit = QLineEdit()
-            self.search_edit.setPlaceholderText("Search...")
-            self.search_edit.setMaximumWidth(150)
-            self.search_edit.setStyleSheet("""
-                QLineEdit {
-                    background-color: #2a475e;
-                    color: #c6d1db;
-                    border: 1px solid #0e1216;
-                    border-radius: 3px;
-                    padding: 3px;
-                }
-            """)
-            self.search_edit.returnPressed.connect(lambda: self.search_in_editor(forward=True))
-            editor_toolbar.addWidget(self.search_edit)
-
-            self.find_prev_btn = QPushButton("⬆ Prev")
-            self.find_prev_btn.setStyleSheet("""
-                QPushButton {
-                    background-color: #2a475e;
-                    color: #c6d1db;
-                    border: none;
-                    border-radius: 3px;
-                    padding: 5px;
-                }
-                QPushButton:hover {
-                    background-color: #3e5c78;
-                }
-            """)
-            self.find_prev_btn.clicked.connect(lambda: self.search_in_editor(forward=False))
-            editor_toolbar.addWidget(self.find_prev_btn)
-
-            self.find_next_btn = QPushButton("⬇ Next")
-            self.find_next_btn.setStyleSheet("""
-                QPushButton {
-                    background-color: #2a475e;
-                    color: #c6d1db;
-                    border: none;
-                    border-radius: 3px;
-                    padding: 5px;
-                }
-                QPushButton:hover {
-                    background-color: #3e5c78;
-                }
-            """)
-            self.find_next_btn.clicked.connect(lambda: self.search_in_editor(forward=True))
-            editor_toolbar.addWidget(self.find_next_btn)
-
-            # Status label for feedback
-            self.status_label = QLabel("")
-            self.status_label.setStyleSheet("color: #8f98a0; font-size: 9pt;")
-            editor_toolbar.addWidget(self.status_label)
-
-            editor_toolbar.addStretch()
-
-            self.save_lua_btn = QPushButton("💾 Save")
-            self.save_lua_btn.setEnabled(False)
-            self.save_lua_btn.setStyleSheet("""
-                QPushButton {
-                    background-color: #2a475e;
-                    color: #c6d1db;
-                    border: none;
-                    border-radius: 3px;
-                    padding: 5px 15px;
-                }
-                QPushButton:hover {
-                    background-color: #3e5c78;
-                }
-                QPushButton:disabled {
-                    background-color: #1b2838;
-                    color: #4e5a66;
-                }
-            """)
-            self.save_lua_btn.clicked.connect(self.save_lua_script)
-            editor_toolbar.addWidget(self.save_lua_btn)
-
-            self.reload_lua_btn = QPushButton("🔄 Reload")
-            self.reload_lua_btn.setEnabled(False)
-            self.reload_lua_btn.setStyleSheet("""
-                QPushButton {
-                    background-color: #2a475e;
-                    color: #c6d1db;
-                    border: none;
-                    border-radius: 3px;
-                    padding: 5px 15px;
-                }
-                QPushButton:hover {
-                    background-color: #3e5c78;
-                }
-                QPushButton:disabled {
-                    background-color: #1b2838;
-                    color: #4e5a66;
-                }
-            """)
-            self.reload_lua_btn.clicked.connect(self.reload_lua_script)
-            editor_toolbar.addWidget(self.reload_lua_btn)
-
-            editor_layout.addLayout(editor_toolbar)
-
-            # Code editor
-            self.lua_editor = QPlainTextEdit()
-            self.lua_editor.setPlaceholderText("Select a game to edit its Lua script...")
-            editor_font = QFont("Courier New")
-            editor_font.setPointSize(10)
-            self.lua_editor.setFont(editor_font)
-            self.lua_editor.setStyleSheet("""
-                QPlainTextEdit {
-                    background-color: #1e1e1e;
-                    color: #d4d4d4;
-                    border: 1px solid #0e1216;
-                    border-radius: 3px;
-                    padding: 5px;
-                }
-            """)
-            self.lua_editor.setLineWrapMode(QPlainTextEdit.LineWrapMode.NoWrap)
-            self.lua_editor.textChanged.connect(self.on_lua_text_changed)
-
-            # Apply syntax highlighting
-            self.lua_highlighter = LuaSyntaxHighlighter(self.lua_editor.document())
-
-            editor_layout.addWidget(self.lua_editor)
-
-            self.tab_widget.addTab(editor_container, "Lua Script Editor")
-
-            # Console Output Tab
+            # Console output panel
             console_container = QWidget()
+            console_container.setStyleSheet("background-color: #1b2838;")
             console_layout = QVBoxLayout(console_container)
             console_layout.setContentsMargins(10, 10, 10, 10)
 
@@ -1087,7 +823,7 @@ def gui(args: argparse.Namespace) -> None:
             # Console toolbar
             console_toolbar = QHBoxLayout()
 
-            self.copy_console_btn = QPushButton("📋 Copy")
+            self.copy_console_btn = QPushButton("Copy")
             self.copy_console_btn.setStyleSheet("""
                 QPushButton {
                     background-color: #2a475e;
@@ -1103,7 +839,7 @@ def gui(args: argparse.Namespace) -> None:
             self.copy_console_btn.clicked.connect(self.copy_console)
             console_toolbar.addWidget(self.copy_console_btn)
 
-            self.clear_console_btn = QPushButton("🗑 Clear")
+            self.clear_console_btn = QPushButton("Clear")
             self.clear_console_btn.setStyleSheet("""
                 QPushButton {
                     background-color: #2a475e;
@@ -1124,9 +860,7 @@ def gui(args: argparse.Namespace) -> None:
 
             console_layout.addWidget(self.console)
 
-            self.tab_widget.addTab(console_container, "Console Output")
-
-            right_layout.addWidget(self.tab_widget)
+            right_layout.addWidget(console_container)
 
             main_layout.addWidget(right_panel, 1)
 
@@ -1134,7 +868,7 @@ def gui(args: argparse.Namespace) -> None:
             self.create_menu_bar()
 
             # Select first game by default
-            if self.games:
+            if self.game_packages:
                 self.game_list.setCurrentRow(0)
 
         def create_menu_bar(self):
@@ -1161,12 +895,6 @@ def gui(args: argparse.Namespace) -> None:
 
             # File menu
             file_menu = menubar.addMenu("File")
-
-            new_action = QAction("New Project...", self)
-            new_action.triggered.connect(self.show_new_project_dialog)
-            file_menu.addAction(new_action)
-
-            file_menu.addSeparator()
 
             exit_action = QAction("Exit", self)
             exit_action.triggered.connect(self.close)
@@ -1223,274 +951,17 @@ def gui(args: argparse.Namespace) -> None:
                 self.target = dialog.target_combo.currentText()
                 self.log(f"Settings updated: Preset={self.preset}, Generator={self.generator}, Build Type={self.build_type}, Target={self.target}")
 
-        def show_new_project_dialog(self):
-            """Show new project creation dialog"""
-            dialog = NewProjectDialog(self)
-            if dialog.exec() == QDialog.DialogCode.Accepted:
-                project_data = dialog.get_project_data()
-                if project_data["name"]:
-                    self.create_new_project(project_data["name"], project_data["template"])
-                else:
-                    QMessageBox.warning(self, "Invalid Name", "Please enter a valid project name.")
+        def on_bootloader_selected(self, current, previous):
+            """Handle bootloader selection"""
+            if current:
+                self.current_bootloader = current.data(Qt.ItemDataRole.UserRole)
+                self.log(f"Selected bootloader: {self.current_bootloader['name']}")
 
-        def create_new_project(self, name, template):
-            """Create a new project based on template"""
-            import json
-            from pathlib import Path
-
-            # Create project ID from name
-            project_id = name.lower().replace(" ", "_").replace("-", "_")
-
-            # Template configurations
-            templates = {
-                "cube": {
-                    "config": {
-                        "launcher": {
-                            "name": name,
-                            "description": f"3D {name} project based on cube demo template",
-                            "enabled": True
-                        },
-                        "schema_version": 2,
-                        "window": {
-                            "title": name,
-                            "size": {
-                                "width": 1024,
-                                "height": 768
-                            },
-                            "mouse_grab": {
-                                "enabled": True,
-                                "grab_on_click": True,
-                                "release_on_escape": True,
-                                "start_grabbed": False,
-                                "hide_cursor": True,
-                                "relative_mode": True,
-                                "grab_mouse_button": "left",
-                                "release_key": "escape"
-                            }
-                        },
-                        "scripts": {
-                            "entry": f"scripts/{project_id}_logic.lua",
-                            "lua_debug": False
-                        },
-                        "paths": {
-                            "project_root": "../",
-                            "scripts": "scripts",
-                            "shaders": "shaders"
-                        },
-                        "input": {
-                            "bindings": {
-                                "move_forward": "W",
-                                "move_back": "S",
-                                "move_left": "A",
-                                "move_right": "D",
-                                "fly_up": "Q",
-                                "fly_down": "Z",
-                                "jump": "Space",
-                                "noclip_toggle": "N",
-                                "music_toggle": "M"
-                            }
-                        }
-                    },
-                    "lua_script": f"""-- {name} Logic Script
--- Generated from cube demo template
-
-local function init()
-    -- Initialize your game here
-    print("{name} initialized")
-end
-
-local function update(dt)
-    -- Update game logic here
-    -- dt is the time delta in seconds
-end
-
-local function render()
-    -- Render your game here
-end
-
-local function shutdown()
-    -- Cleanup resources here
-    print("{name} shutdown")
-end
-
--- Return the game interface
-return {{
-    init = init,
-    update = update,
-    render = render,
-    shutdown = shutdown
-}}
-"""
-                },
-                "gui": {
-                    "config": {
-                        "launcher": {
-                            "name": name,
-                            "description": f"GUI {name} project based on GUI demo template",
-                            "enabled": True
-                        },
-                        "window_width": 1024,
-                        "window_height": 768,
-                        "lua_script": f"scripts/{project_id}_gui.lua",
-                        "scripts_directory": "scripts",
-                        "project_root": "../",
-                        "shaders_directory": "shaders",
-                        "bgfx": {
-                            "renderer": "vulkan"
-                        },
-                        "mouse_grab": {
-                            "enabled": False
-                        }
-                    },
-                    "lua_script": f"""-- {name} GUI Script
--- Generated from GUI demo template
-
-local function init()
-    -- Initialize ImGui interface here
-    print("{name} GUI initialized")
-end
-
-local function update(dt)
-    -- Update GUI logic here
-end
-
-local function render()
-    -- Render ImGui interface here
-    if imgui_begin then
-        imgui_begin("{name}")
-
-        imgui_text("Welcome to {name}!")
-
-        if imgui_button then
-            if imgui_button("Click me!") then
-                print("Button clicked!")
-            end
-        end
-
-        imgui_end()
-    end
-end
-
-local function shutdown()
-    -- Cleanup GUI resources here
-    print("{name} GUI shutdown")
-end
-
--- Return the GUI interface
-return {{
-    init = init,
-    update = update,
-    render = render,
-    shutdown = shutdown
-}}
-"""
-                },
-                "soundboard": {
-                    "config": {
-                        "launcher": {
-                            "name": name,
-                            "description": f"Soundboard {name} project based on soundboard template",
-                            "enabled": True
-                        },
-                        "window_width": 1024,
-                        "window_height": 768,
-                        "lua_script": f"scripts/{project_id}_soundboard.lua",
-                        "scripts_directory": "scripts",
-                        "project_root": "../",
-                        "shaders_directory": "shaders",
-                        "bgfx": {
-                            "renderer": "vulkan"
-                        },
-                        "config_file": f"config/{project_id}_runtime.json",
-                        "mouse_grab": {
-                            "enabled": False
-                        }
-                    },
-                    "lua_script": f"""-- {name} Soundboard Script
--- Generated from soundboard template
-
-local sounds = {{
-    -- Add your sound files here
-    -- "sound1.ogg",
-    -- "sound2.ogg"
-}}
-
-local function init()
-    -- Initialize soundboard here
-    print("{name} soundboard initialized")
-end
-
-local function update(dt)
-    -- Update soundboard logic here
-end
-
-local function render()
-    -- Render soundboard interface here
-    if imgui_begin then
-        imgui_begin("{name} Soundboard")
-
-        imgui_text("Soundboard Controls")
-
-        for i, sound in ipairs(sounds) do
-            if imgui_button then
-                if imgui_button("Play " .. sound) then
-                    if audio_play_sound then
-                        audio_play_sound(sound)
-                    end
-                end
-            end
-        end
-
-        imgui_end()
-    end
-end
-
-local function shutdown()
-    -- Cleanup soundboard resources here
-    print("{name} soundboard shutdown")
-end
-
--- Return the soundboard interface
-return {{
-    init = init,
-    update = update,
-    render = render,
-    shutdown = shutdown
-}}
-"""
-                }
-            }
-
-            try:
-                # Create config file
-                config_path = Path("config") / f"{project_id}_runtime.json"
-                with open(config_path, 'w') as f:
-                    json.dump(templates[template]["config"], f, indent=2)
-
-                # Create Lua script file
-                script_path = Path("scripts") / f"{project_id}_{template}.lua"
-                with open(script_path, 'w') as f:
-                    f.write(templates[template]["lua_script"])
-
-                self.log(f"Created new project '{name}' based on {template} template")
-                self.log(f"Config: {config_path}")
-                self.log(f"Script: {script_path}")
-
-                # Refresh the games list
-                self.games = self.load_games_from_config()
-                self.game_list.clear()
-                for game in self.games:
-                    item = QListWidgetItem(game["name"])
-                    item.setData(Qt.ItemDataRole.UserRole, game)
-                    self.game_list.addItem(item)
-
-                QMessageBox.information(self, "Project Created",
-                    f"New project '{name}' has been created successfully!\n\n"
-                    f"Config: {config_path}\n"
-                    f"Script: {script_path}")
-
-            except Exception as e:
-                QMessageBox.critical(self, "Error", f"Failed to create project: {str(e)}")
+        def on_game_package_selected(self, current, previous):
+            """Handle game package selection"""
+            if current:
+                self.current_game_package = current.data(Qt.ItemDataRole.UserRole)
+                self.log(f"Selected game package: {self.current_game_package['name']}")
 
         def on_game_selected(self, current, previous):
             """Handle game selection from library"""
@@ -1500,134 +971,11 @@ return {{
                 self.game_title.setText(game["name"])
                 self.game_description.setText(game["description"])
                 self.play_btn.setEnabled(True)
-
-                # Load the Lua script for this game
-                self.load_lua_script()
             else:
                 self.current_game = None
                 self.game_title.setText("Select a game")
                 self.game_description.setText("")
                 self.play_btn.setEnabled(False)
-                self.lua_editor.clear()
-                self.lua_file_label.setText("No file loaded")
-                self.save_lua_btn.setEnabled(False)
-                self.reload_lua_btn.setEnabled(False)
-
-        def load_lua_script(self):
-            """Load the Lua script associated with the current game"""
-            if not self.current_game:
-                return
-
-            import json
-
-            try:
-                # Read the config file to get the lua_script path
-                config_file = self.current_game.get("config_file", "")
-                with open(config_file, 'r') as f:
-                    config_data = json.load(f)
-
-                lua_script_path = config_data.get("lua_script", "")
-                if not lua_script_path:
-                    scripts_config = config_data.get("scripts", {})
-                    if isinstance(scripts_config, dict):
-                        lua_script_path = scripts_config.get("entry", "")
-                if not lua_script_path:
-                    self.lua_editor.setPlainText("# No Lua script specified in config")
-                    self.lua_file_label.setText("No Lua script found")
-                    self.save_lua_btn.setEnabled(False)
-                    self.reload_lua_btn.setEnabled(False)
-                    return
-
-                # Load the Lua script
-                lua_file = Path(lua_script_path)
-                if lua_file.exists():
-                    with open(lua_file, 'r') as f:
-                        content = f.read()
-
-                    # Block signals to prevent marking as modified
-                    self.lua_editor.blockSignals(True)
-                    self.lua_editor.setPlainText(content)
-                    self.lua_editor.blockSignals(False)
-
-                    self.lua_file_label.setText(str(lua_file))
-                    self.current_lua_file = lua_file
-                    self.lua_modified = False
-                    self.save_lua_btn.setEnabled(False)
-                    self.reload_lua_btn.setEnabled(True)
-                else:
-                    self.lua_editor.setPlainText(f"# Lua script not found: {lua_script_path}")
-                    self.lua_file_label.setText(f"File not found: {lua_script_path}")
-                    self.save_lua_btn.setEnabled(False)
-                    self.reload_lua_btn.setEnabled(False)
-            except Exception as e:
-                self.lua_editor.setPlainText(f"# Error loading Lua script: {e}")
-                self.lua_file_label.setText("Error loading script")
-                self.save_lua_btn.setEnabled(False)
-                self.reload_lua_btn.setEnabled(False)
-
-        def on_lua_text_changed(self):
-            """Handle Lua editor text changes"""
-            if hasattr(self, 'current_lua_file'):
-                self.lua_modified = True
-                self.save_lua_btn.setEnabled(True)
-
-        def save_lua_script(self):
-            """Save the current Lua script"""
-            if not hasattr(self, 'current_lua_file'):
-                return
-
-            try:
-                with open(self.current_lua_file, 'w') as f:
-                    f.write(self.lua_editor.toPlainText())
-
-                self.lua_modified = False
-                self.save_lua_btn.setEnabled(False)
-                self.status_label.setText(f"✓ Saved {self.current_lua_file}")
-                self.status_label.setStyleSheet("color: #4caf50; font-size: 9pt;")
-                QTimer.singleShot(3000, lambda: self.status_label.setText(""))
-            except Exception as e:
-                self.status_label.setText(f"❌ Error saving {self.current_lua_file}: {e}")
-                self.status_label.setStyleSheet("color: #ff6b6b; font-size: 9pt;")
-                QTimer.singleShot(5000, lambda: self.status_label.setText(""))
-
-        def reload_lua_script(self):
-            """Reload the Lua script from disk"""
-            if self.lua_modified:
-                # Warn user about unsaved changes
-                from PyQt6.QtWidgets import QMessageBox
-                reply = QMessageBox.question(
-                    self, 'Unsaved Changes',
-                    'You have unsaved changes. Reload anyway?',
-                    QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
-                    QMessageBox.StandardButton.No
-                )
-                if reply == QMessageBox.StandardButton.No:
-                    return
-
-            self.load_lua_script()
-
-        def search_in_editor(self, forward=True):
-            """Search for text in the Lua editor"""
-            text = self.search_edit.text()
-            if text:
-                flags = QTextDocument.FindFlag(0)
-                if not forward:
-                    flags |= QTextDocument.FindFlag.FindBackward
-                
-                found = self.lua_editor.find(text, flags)
-                if not found:
-                    # Wrap around
-                    cursor = self.lua_editor.textCursor()
-                    if forward:
-                        cursor.movePosition(QTextCursor.MoveOperation.Start)
-                    else:
-                        cursor.movePosition(QTextCursor.MoveOperation.End)
-                    self.lua_editor.setTextCursor(cursor)
-                    found = self.lua_editor.find(text, flags)
-                    if not found:
-                        self.status_label.setText(f"No matches for '{text}'")
-                        self.status_label.setStyleSheet("color: #ff6b6b; font-size: 9pt;")
-                        QTimer.singleShot(3000, lambda: self.status_label.setText(""))
 
         def copy_console(self):
             """Copy console output to clipboard"""
@@ -1641,18 +989,32 @@ return {{
                 clipboard.setText(self.console.toPlainText())
 
         def play_game(self):
-            """Launch the selected game"""
+            """Launch the selected game with chosen bootloader and game package"""
             if not self.current_game:
                 return
 
-            build_dir = GENERATOR_DEFAULT_DIR.get(self.generator, DEFAULT_BUILD_DIR)
+            base_dir = GENERATOR_DEFAULT_DIR.get(self.generator, DEFAULT_BUILD_DIR)
+            # Check if using Conan nested layout
+            nested_dir = Path(base_dir) / "build" / self.build_type
+            if nested_dir.exists():
+                build_dir = str(nested_dir)
+            else:
+                build_dir = base_dir
 
-            # Build the command to run the demo with the specific config file
             exe_name = "sdl3_app.exe" if IS_WINDOWS else "sdl3_app"
             binary = str(Path(build_dir) / exe_name)
-            config_file = self.current_game.get("config_file", "config/seed_runtime.json")
 
-            cmd = [binary, "-j", config_file]
+            cmd = [binary]
+
+            # Add bootloader and game package parameters
+            if self.current_bootloader:
+                cmd.extend(["--bootstrap", self.current_bootloader["id"]])
+            if self.current_game:
+                cmd.extend(["--game", self.current_game["id"]])
+
+            self.log(f"Launching with bootloader: {self.current_bootloader.get('name', 'default') if self.current_bootloader else 'default'}")
+            self.log(f"Launching with game package: {self.current_game_package.get('name', 'default') if self.current_game_package else 'default'}")
+
             self.run_command(cmd)
 
         def stop_process(self):
@@ -1735,69 +1097,67 @@ return {{
         def run_dependencies(self):
             """Run conan dependencies installation"""
             cmd = [sys.executable, __file__, "dependencies"]
-            vita_env = None
-            if self.preset == "vita-release":
-                cmd.extend(["--conan-install-args", "--profile", "profiles/vita"])
-                vita_env = _vita_env_overrides(f"preset {self.preset}")
-            self.run_command(cmd, env_overrides=vita_env)
+            self.run_command(cmd)
 
         def run_configure(self):
             """Run CMake configuration"""
             cmd = [sys.executable, __file__, "configure"]
-            vita_env = None
             if self.preset != "default":
                 cmd.extend(["--preset", self.preset])
-                vita_env = _resolve_vita_env_for_configure(self.preset, None)
             else:
                 cmd.extend([
                     "--generator", self.generator,
                     "--build-type", self.build_type
                 ])
-            self.run_command(cmd, env_overrides=vita_env)
+            self.run_command(cmd)
 
         def run_build(self):
             """Run build command"""
-            if self.preset != "default":
-                build_dir = f"build-{self.preset.split('-')[0]}"  # e.g., build-vita
+            base_dir = GENERATOR_DEFAULT_DIR.get(self.generator, DEFAULT_BUILD_DIR)
+            # Check if using Conan nested layout (has build/<type>/ subdirectory)
+            nested_dir = Path(base_dir) / "build" / self.build_type
+            if nested_dir.exists() and (nested_dir / "CMakeCache.txt").exists():
+                build_dir = str(nested_dir)
+            elif (Path(base_dir) / "CMakeCache.txt").exists():
+                build_dir = base_dir
             else:
-                build_dir = GENERATOR_DEFAULT_DIR.get(self.generator, DEFAULT_BUILD_DIR)
+                # Default to nested layout (Conan 2.x standard)
+                build_dir = str(nested_dir)
             cmd = [
                 sys.executable, __file__, "build",
                 "--build-dir", build_dir,
                 "--target", self.target
             ]
-            vita_env = None
-            if self.preset in VITA_PRESETS:
-                vita_env = _vita_env_overrides(f"preset {self.preset}")
-            else:
-                vita_env = _resolve_vita_env_for_build(build_dir)
-            self.run_command(cmd, env_overrides=vita_env)
+            self.run_command(cmd)
 
         def run_tests(self):
             """Build (optional) and run tests"""
-            if self.preset != "default":
-                build_dir = f"build-{self.preset.split('-')[0]}"  # e.g., build-vita
+            base_dir = GENERATOR_DEFAULT_DIR.get(self.generator, DEFAULT_BUILD_DIR)
+            # Check if using Conan nested layout
+            nested_dir = Path(base_dir) / "build" / self.build_type
+            if nested_dir.exists() and (nested_dir / "CMakeCache.txt").exists():
+                build_dir = str(nested_dir)
+            elif (Path(base_dir) / "CMakeCache.txt").exists():
+                build_dir = base_dir
             else:
-                build_dir = GENERATOR_DEFAULT_DIR.get(self.generator, DEFAULT_BUILD_DIR)
+                build_dir = str(nested_dir)
             cmd = [
                 sys.executable, __file__, "tests",
                 "--build-dir", build_dir,
                 "--config", self.build_type,
                 "--target", "all"
             ]
-            vita_env = None
-            if self.preset in VITA_PRESETS:
-                vita_env = _vita_env_overrides(f"preset {self.preset}")
-            else:
-                vita_env = _resolve_vita_env_for_build(build_dir)
-            self.run_command(cmd, env_overrides=vita_env)
+            self.run_command(cmd)
 
         def sync_assets(self):
             """Sync assets into the active build directory"""
-            if self.preset != "default":
-                build_dir = f"build-{self.preset.split('-')[0]}"  # e.g., build-vita
+            base_dir = GENERATOR_DEFAULT_DIR.get(self.generator, DEFAULT_BUILD_DIR)
+            # Check if using Conan nested layout
+            nested_dir = Path(base_dir) / "build" / self.build_type
+            if nested_dir.exists():
+                build_dir = str(nested_dir)
             else:
-                build_dir = GENERATOR_DEFAULT_DIR.get(self.generator, DEFAULT_BUILD_DIR)
+                build_dir = base_dir
             self.console.clear()
             self.log("=== Syncing Assets ===\n")
             _sync_assets(build_dir, dry_run=False)

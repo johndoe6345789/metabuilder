@@ -143,6 +143,8 @@ export interface AttachmentHandlerResult {
   virusScanDetails?: string;
   /** Whether this is a deduplicated attachment (stored once, linked multiple times) */
   isDeduplicated: boolean;
+  /** Full attachment metadata record for database storage */
+  metadata?: AttachmentMetadata;
   /** Timestamp when attachment was processed */
   processedAt: number;
   /** Total processing time in milliseconds */
@@ -197,7 +199,7 @@ export class AttachmentHandlerExecutor implements INodeExecutor {
   async execute(
     node: WorkflowNode,
     context: WorkflowContext,
-    state: ExecutionState
+    _state: ExecutionState
   ): Promise<NodeResult> {
     const startTime = Date.now();
 
@@ -506,6 +508,7 @@ export class AttachmentHandlerExecutor implements INodeExecutor {
       presignedUrl,
       virusScanStatus,
       isDeduplicated,
+      metadata,
       processedAt: Date.now(),
       processingTime: duration
     };

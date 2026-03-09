@@ -1,0 +1,33 @@
+{
+  "id": "coolant-temp-sensor",
+  "name": "Coolant Temperature Sensor",
+  "partNumber": "FD-1860710",
+  "material": "brass",
+  "quantity": 1,
+  "weight": 35.0,
+  "weightUnit": "g",
+  "baseY": 590,
+  "description": "Engine coolant temperature sensor for ECU",
+  "installation": {
+    "tools": [
+      { "name": "Deep socket", "size": "19mm", "required": true }
+    ],
+    "hardware": [
+      { "name": "Copper washer", "spec": "M12", "qty": 1, "reusable": false }
+    ],
+    "torque": [
+      { "fastener": "Sensor", "value": 20, "unit": "Nm", "notes": "Do not overtighten - brass threads" }
+    ],
+    "notes": [
+      "Located in thermostat housing",
+      "Some coolant will escape on removal",
+      "Check connector for corrosion",
+      "Affects fuel mixture and fan operation"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 18, "height": 30, "rx": 2, "fill": "#b8860b" },
+    { "type": "rect", "width": 22, "height": 8, "offsetY": -15, "rx": 1, "fill": "#8b7355" },
+    { "type": "rect", "width": 12, "height": 10, "offsetY": 15, "fill": "#333" }
+  ]
+}

@@ -9,7 +9,7 @@ import { RootState } from '@metabuilder/redux-slices';
 import {
   selectGridSnap,
   selectSnapSize
-} from '@metabuilder/redux-slices'/canvasSlice';
+} from '@metabuilder/redux-slices/canvasSlice';
 
 export interface UseCanvasGridUtilsReturn {
   snapToGrid: (position: { x: number; y: number }) => { x: number; y: number };

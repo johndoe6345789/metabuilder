@@ -1,0 +1,147 @@
+// Stat Badge Atoms - Material Design 3 (CSS Module)
+// ==================================================
+// Flat selectors for small stat/count indicators using M3 tokens
+
+// Base stat badge
+.statBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  min-width: 20px;
+  height: 20px;
+  border-radius: var(--mat-sys-corner-full);
+  font-family: var(--mat-sys-label-small-font);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+// Status variants
+.statBadgePending {
+  background: var(--color-warning-container);
+  color: var(--color-on-warning-container);
+}
+
+.statBadgeSuccess {
+  background: var(--color-success-container);
+  color: var(--color-on-success-container);
+}
+
+.statBadgeError {
+  background: var(--color-error-container);
+  color: var(--color-on-error-container);
+}
+
+.statBadgeWarning {
+  background: var(--color-warning-container);
+  color: var(--color-on-warning-container);
+}
+
+.statBadgeInfo {
+  background: var(--color-info-container);
+  color: var(--color-on-info-container);
+}
+
+// M3 color variants
+.statBadgePrimary {
+  background: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
+}
+
+.statBadgeSecondary {
+  background: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
+}
+
+.statBadgeTertiary {
+  background: var(--mat-sys-tertiary-container);
+  color: var(--mat-sys-on-tertiary-container);
+}
+
+// Filled variants (stronger emphasis)
+.statBadgeFilledSuccess {
+  background: var(--color-success);
+  color: var(--color-on-success);
+}
+
+.statBadgeFilledError {
+  background: var(--mat-sys-error);
+  color: var(--mat-sys-on-error);
+}
+
+.statBadgeFilledWarning {
+  background: var(--color-warning);
+  color: var(--color-on-warning);
+}
+
+.statBadgeFilledInfo {
+  background: var(--color-info);
+  color: var(--color-on-info);
+}
+
+.statBadgeFilledPrimary {
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+}
+
+// Neutral/muted
+.statBadgeNeutral {
+  background: var(--mat-sys-surface-container-high);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+// Size variants
+.statBadgeSm {
+  padding: 0 6px;
+  min-width: 16px;
+  height: 16px;
+  font-size: 10px;
+}
+
+.statBadgeLg {
+  padding: 0 10px;
+  min-width: 24px;
+  height: 24px;
+  font-size: 12px;
+}
+
+// With icon
+.statBadgeWithIcon {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.statBadgeWithIcon .icon {
+  width: 12px;
+  height: 12px;
+}
+
+// Dot indicator (no text)
+.statBadgeDot {
+  width: 8px;
+  height: 8px;
+  min-width: 8px;
+  padding: 0;
+}
+
+// Pulsing animation (for live/active)
+.statBadgePulse {
+  animation: statBadgePulse 2s ease-in-out infinite;
+}
+
+@keyframes statBadgePulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+// Count overflow (99+)
+.statBadgeOverflow::after {
+  content: '+';
+}

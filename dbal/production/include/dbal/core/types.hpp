@@ -180,11 +180,51 @@ struct UpdatePackageBatchItem {
     UpdatePackageInput data;
 };
 
+// ===== Rich Query Types =====
+
+enum class FilterOp {
+    Eq, Ne, Lt, Lte, Gt, Gte,
+    Like, ILike,
+    In, NotIn,
+    IsNull, IsNotNull,
+    Between
+};
+
+struct FilterCondition {
+    std::string field;
+    FilterOp op = FilterOp::Eq;
+    std::string value;                       // single value (Eq, Ne, Lt, Lte, Gt, Gte, Like, ILike)
+    std::vector<std::string> values;         // multi-value (In, NotIn, Between)
+};
+
+struct FilterGroup {                         // conditions joined by OR
+    std::vector<FilterCondition> conditions;
+};
+
+enum class AggFunc { Count, Sum, Avg, Min, Max };
+
+struct AggregateSpec {
+    AggFunc func;
+    std::string field;
+    std::string alias;
+};
+
 struct ListOptions {
+    // Legacy equality filter (backward-compatible)
     std::map<std::string, std::string> filter;
     std::map<std::string, std::string> sort;
     int page = 1;
     int limit = 20;
+
+    // Rich query extensions
+    std::vector<FilterCondition> conditions;      // AND-joined typed filter conditions
+    std::vector<FilterGroup> filter_groups;       // OR groups, AND'd at root level
+    std::vector<std::string> include;             // relation names to LEFT JOIN
+    std::vector<AggregateSpec> aggregates;        // aggregation functions
+    std::vector<std::string> group_by;            // GROUP BY fields
+    std::vector<std::string> select_fields;       // projection (empty = all fields)
+    bool distinct = false;
+    int timeout_ms = 0;                           // 0 = use server default
 };
 
 template<typename T>

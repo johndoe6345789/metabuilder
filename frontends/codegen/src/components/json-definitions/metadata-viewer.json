@@ -1,0 +1,69 @@
+{
+  "id": "metadata-viewer-container",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": "className",
+      "transform": "data ? 'metadata-viewer ' + data : 'metadata-viewer'"
+    }
+  },
+  "children": [
+    {
+      "id": "metadata-viewer-title",
+      "type": "p",
+      "props": {
+        "className": "metadata-viewer__title"
+      },
+      "bindings": {
+        "children": {
+          "source": "title",
+          "transform": "data"
+        },
+        "_if": {
+          "source": "title",
+          "transform": "!!data"
+        }
+      }
+    },
+    {
+      "id": "metadata-viewer-rows",
+      "type": "forEach",
+      "bindings": {
+        "items": "entries"
+      },
+      "children": {
+        "id": "metadata-viewer-row",
+        "type": "div",
+        "props": {
+          "className": "metadata-viewer__row"
+        },
+        "children": [
+          {
+            "id": "metadata-viewer-key",
+            "type": "span",
+            "props": {
+              "className": "metadata-viewer__key"
+            },
+            "bindings": {
+              "children": {
+                "transform": "data.key"
+              }
+            }
+          },
+          {
+            "id": "metadata-viewer-value",
+            "type": "span",
+            "props": {
+              "className": "metadata-viewer__value"
+            },
+            "bindings": {
+              "children": {
+                "transform": "String(data.value)"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

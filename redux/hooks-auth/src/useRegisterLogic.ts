@@ -14,7 +14,7 @@ import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { useRouter } from 'next/navigation'
 import { useServices } from '@metabuilder/service-adapters'
-import { setAuthenticated, setLoading, setError } from '@metabuilder/redux-slices'
+import { setAuthenticated, setUILoading, setError } from '@metabuilder/redux-slices'
 import type { AppDispatch } from '@metabuilder/redux-slices'
 
 export interface RegistrationData {
@@ -86,7 +86,7 @@ export const useRegisterLogic = (): UseRegisterLogicReturn => {
   const handleRegister = useCallback(
     async (data: RegistrationData) => {
       dispatch(setError(null))
-      dispatch(setLoading(true))
+      dispatch(setUILoading(true))
 
       try {
         // Validate form
@@ -117,7 +117,7 @@ export const useRegisterLogic = (): UseRegisterLogicReturn => {
         dispatch(setError(message))
         throw error
       } finally {
-        dispatch(setLoading(false))
+        dispatch(setUILoading(false))
       }
     },
     [dispatch, router, authService]

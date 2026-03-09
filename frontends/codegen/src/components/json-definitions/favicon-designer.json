@@ -1,0 +1,11 @@
+{
+  "id": "favicon-designer",
+  "type": "div",
+  "className": "h-full flex flex-col bg-background",
+  "bindings": {
+    "children": {
+      "source": "designerContent",
+      "transform": "data"
+    }
+  }
+}

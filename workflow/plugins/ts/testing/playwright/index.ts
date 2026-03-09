@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 
-import { chromium, firefox, webkit, Browser, Page, test } from '@playwright/test'
+import { chromium, firefox, webkit, Browser, Page } from '@playwright/test'
 
 export interface PlaywrightTestInput {
   browser?: 'chromium' | 'firefox' | 'webkit'
@@ -125,7 +125,7 @@ export class PlaywrightTestNode {
 /**
  * Workflow node factory
  */
-export async function createPlaywrightNode(config: any) {
+export async function createPlaywrightNode(_config: any) {
   return new PlaywrightTestNode()
 }
 

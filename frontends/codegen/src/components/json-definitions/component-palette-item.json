@@ -1,0 +1,55 @@
+{
+  "id": "component-palette-item-root",
+  "type": "Card",
+  "props": {
+    "draggable": true
+  },
+  "bindings": {
+    "onDragStart": {
+      "transform": "(() => { return (e) => $props.onDragStart($props.component, e); })()"
+    },
+    "className": {
+      "source": "className",
+      "transform": "(() => { const userClass = data || ''; return 'p-3 cursor-move hover:bg-accent/50 hover:border-accent transition-all flex flex-col items-center gap-2 text-center hover:scale-105 active:scale-95 ' + userClass; })()"
+    }
+  },
+  "children": [
+    {
+      "id": "component-palette-item-icon",
+      "type": "Icon",
+      "bindings": {
+        "name": {
+          "transform": "(() => { const iconMap = {}; const componentIcon = $props.component?.icon || 'Cube'; return componentIcon; })()"
+        }
+      },
+      "props": {
+        "weight": "duotone",
+        "className": "w-6 h-6 text-primary"
+      }
+    },
+    {
+      "id": "component-palette-item-label",
+      "type": "span",
+      "props": {
+        "className": "text-xs font-medium text-foreground"
+      },
+      "bindings": {
+        "children": {
+          "transform": "$props.component?.label || 'Component'"
+        }
+      }
+    },
+    {
+      "id": "component-palette-item-type",
+      "type": "span",
+      "props": {
+        "className": "text-[10px] text-muted-foreground"
+      },
+      "bindings": {
+        "children": {
+          "transform": "$props.component?.type || 'unknown'"
+        }
+      }
+    }
+  ]
+}

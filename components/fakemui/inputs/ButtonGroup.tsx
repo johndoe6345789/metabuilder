@@ -4,6 +4,7 @@ import React, { forwardRef, Children, cloneElement, isValidElement } from 'react
  * Props for ButtonGroup component
  */
 export interface ButtonGroupProps extends React.HTMLAttributes<HTMLDivElement> {
+  testId?: string
   children?: React.ReactNode
   /** Button size to apply to all children */
   size?: 'sm' | 'md' | 'lg'
@@ -34,15 +35,16 @@ export interface ButtonGroupProps extends React.HTMLAttributes<HTMLDivElement> {
 export const ButtonGroup = forwardRef<HTMLDivElement, ButtonGroupProps>(
   (
     { 
-      children, 
-      size = 'md', 
-      variant = 'outlined', 
-      color = 'primary', 
-      vertical = false, 
+      children,
+      size = 'md',
+      variant = 'outlined',
+      color = 'primary',
+      vertical = false,
       disabled = false,
       fullWidth = false,
-      className = '', 
-      ...props 
+      testId,
+      className = '',
+      ...props
     }, 
     ref
   ) => {
@@ -69,6 +71,7 @@ export const ButtonGroup = forwardRef<HTMLDivElement, ButtonGroupProps>(
         ref={ref}
         className={`btn-group ${vertical ? 'btn-group--vertical' : ''} ${fullWidth ? 'btn-group--full-width' : ''} ${className}`}
         role="group"
+        data-testid={testId}
         {...props}
       >
         {enhancedChildren}

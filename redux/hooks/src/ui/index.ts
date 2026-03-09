@@ -2,7 +2,7 @@
 // Pure Redux-based UI state without service dependencies
 
 export { useUI } from './useUI'
-export type { UIContextReturn } from './useUI'
+export type { UseUIReturn } from './useUI'
 
 export { useUIModals } from './useUIModals'
 export type { UseUIModalsReturn } from './useUIModals'

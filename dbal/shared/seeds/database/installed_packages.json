@@ -1,0 +1,110 @@
+{
+  "entity": "InstalledPackage",
+  "version": "1.0",
+  "description": "Initial package installation records for bootstrapping the system",
+  "records": [
+    {
+      "packageId": "package_manager",
+      "tenantId": null,
+      "installedAt": 0,
+      "version": "1.0.0",
+      "enabled": true,
+      "config": "{\n  \"autoUpdate\": false,\n  \"systemPackage\": true,\n  \"uninstallProtection\": true\n}\n"
+    },
+    {
+      "packageId": "ui_header",
+      "tenantId": null,
+      "installedAt": 0,
+      "version": "1.0.0",
+      "enabled": true,
+      "config": "{\n  \"systemPackage\": true\n}\n"
+    },
+    {
+      "packageId": "ui_footer",
+      "tenantId": null,
+      "installedAt": 0,
+      "version": "1.0.0",
+      "enabled": true,
+      "config": "{\n  \"systemPackage\": true\n}\n"
+    },
+    {
+      "packageId": "ui_home",
+      "tenantId": null,
+      "installedAt": 0,
+      "version": "1.0.0",
+      "enabled": true,
+      "config": "{\n  \"systemPackage\": true,\n  \"defaultRoute\": \"/\",\n  \"publicAccess\": true\n}\n"
+    },
+    {
+      "packageId": "ui_auth",
+      "tenantId": null,
+      "installedAt": 0,
+      "version": "1.0.0",
+      "enabled": true,
+      "config": "{\n  \"systemPackage\": true\n}\n"
+    },
+    {
+      "packageId": "ui_login",
+      "tenantId": null,
+      "installedAt": 0,
+      "version": "1.0.0",
+      "enabled": true,
+      "config": "{\n  \"systemPackage\": true\n}\n"
+    },
+    {
+      "packageId": "dashboard",
+      "tenantId": null,
+      "installedAt": 0,
+      "version": "1.0.0",
+      "enabled": true,
+      "config": "{\n  \"systemPackage\": true,\n  \"defaultRoute\": \"/\"\n}\n"
+    },
+    {
+      "packageId": "user_manager",
+      "tenantId": null,
+      "installedAt": 0,
+      "version": "1.0.0",
+      "enabled": true,
+      "config": "{\n  \"systemPackage\": true,\n  \"minLevel\": 4\n}\n"
+    },
+    {
+      "packageId": "role_editor",
+      "tenantId": null,
+      "installedAt": 0,
+      "version": "1.0.0",
+      "enabled": true,
+      "config": "{\n  \"systemPackage\": false,\n  \"minLevel\": 4\n}\n"
+    },
+    {
+      "packageId": "admin_dialog",
+      "tenantId": null,
+      "installedAt": 0,
+      "version": "1.0.0",
+      "enabled": true,
+      "config": "{\n  \"systemPackage\": false,\n  \"minLevel\": 4\n}\n"
+    },
+    {
+      "packageId": "database_manager",
+      "tenantId": null,
+      "installedAt": 0,
+      "version": "1.0.0",
+      "enabled": true,
+      "config": "{\n  \"systemPackage\": false,\n  \"minLevel\": 5,\n  \"dangerousOperations\": true\n}\n"
+    },
+    {
+      "packageId": "schema_editor",
+      "tenantId": null,
+      "installedAt": 0,
+      "version": "1.0.0",
+      "enabled": true,
+      "config": "{\n  \"systemPackage\": false,\n  \"minLevel\": 5,\n  \"dangerousOperations\": true\n}\n"
+    }
+  ],
+  "metadata": {
+    "bootstrap": true,
+    "skipIfExists": true,
+    "timestampField": "installedAt",
+    "useCurrentTimestamp": true,
+    "validateReferences": true
+  }
+}

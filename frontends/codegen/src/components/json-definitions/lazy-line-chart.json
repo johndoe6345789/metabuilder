@@ -1,0 +1,29 @@
+{
+  "id": "lazy-line-chart",
+  "type": "div",
+  "props": {
+    "className": "chart-container chart-container--line"
+  },
+  "bindings": {
+    "style": {
+      "source": "height",
+      "transform": "data ? { height: typeof data === 'number' ? data + 'px' : data } : {}"
+    }
+  },
+  "children": [
+    {
+      "id": "lazy-line-chart-placeholder",
+      "type": "div",
+      "props": {
+        "className": "chart-container__placeholder"
+      },
+      "children": [
+        {
+          "id": "lazy-line-chart-text",
+          "type": "span",
+          "children": "Line Chart (D3 required)"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "id": "confirmation-dialog-root",
+  "type": "Dialog",
+  "bindings": {
+    "open": "data.open",
+    "onOpenChange": "handlers.handleOpenChange"
+  },
+  "children": [
+    {
+      "id": "confirmation-dialog-content",
+      "type": "DialogContent",
+      "props": {
+        "className": "dialog__content"
+      },
+      "children": [
+        {
+          "id": "confirmation-dialog-header",
+          "type": "div",
+          "props": {
+            "className": "dialog__header"
+          },
+          "children": [
+            {
+              "id": "confirmation-dialog-title",
+              "type": "DialogTitle",
+              "props": {
+                "className": "dialog__title"
+              },
+              "bindings": {
+                "children": "data.title"
+              }
+            },
+            {
+              "id": "confirmation-dialog-description",
+              "type": "DialogDescription",
+              "props": {
+                "className": "dialog__description"
+              },
+              "bindings": {
+                "children": "data.description"
+              }
+            }
+          ]
+        },
+        {
+          "id": "confirmation-dialog-footer",
+          "type": "div",
+          "props": {
+            "className": "dialog__footer"
+          },
+          "children": [
+            {
+              "id": "confirmation-cancel-button",
+              "type": "Button",
+              "bindings": {
+                "variant": "outline",
+                "children": "data.cancelLabel || 'Cancel'",
+                "onClick": "handlers.handleCancel"
+              }
+            },
+            {
+              "id": "confirmation-confirm-button",
+              "type": "Button",
+              "bindings": {
+                "variant": {
+                  "source": "data.destructive",
+                  "transform": "data ? 'destructive' : 'default'"
+                },
+                "children": "data.confirmLabel || 'Confirm'",
+                "onClick": "handlers.handleConfirm"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

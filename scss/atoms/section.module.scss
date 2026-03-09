@@ -1,0 +1,100 @@
+// Section Atoms - Material Design 3 (CSS Module)
+// ===============================================
+// Flat selectors for content sections using M3 tokens
+
+// Base section
+.section {
+  margin-bottom: 24px;
+}
+
+// Size variants
+.sectionSm {
+  margin-bottom: 16px;
+}
+
+.sectionLg {
+  margin-bottom: 32px;
+}
+
+.sectionXl {
+  margin-bottom: 48px;
+}
+
+// Section header
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.sectionHeaderSm {
+  margin-bottom: 12px;
+}
+
+// Section title
+.sectionTitle {
+  font-family: var(--mat-sys-title-small-font);
+  font-size: var(--mat-sys-title-small-size);
+  font-weight: var(--mat-sys-title-small-weight);
+  line-height: var(--mat-sys-title-small-line-height);
+  letter-spacing: var(--mat-sys-title-small-tracking);
+  color: var(--mat-sys-on-surface-variant);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+// Section subtitle
+.sectionSubtitle {
+  font-family: var(--mat-sys-body-medium-font);
+  font-size: var(--mat-sys-body-medium-size);
+  color: var(--mat-sys-on-surface-variant);
+  margin: 4px 0 0;
+}
+
+// Section content
+.sectionContent {
+  padding: 16px;
+  background: var(--mat-sys-surface);
+  border-radius: var(--mat-sys-corner-small);
+}
+
+.sectionContentElevated {
+  background: var(--mat-sys-surface-container-low);
+  box-shadow: var(--mat-sys-level1);
+}
+
+.sectionContentOutlined {
+  background: var(--mat-sys-surface);
+  border: 1px solid var(--mat-sys-outline-variant);
+}
+
+.sectionContentTransparent {
+  background: transparent;
+  padding: 0;
+}
+
+// Section actions
+.sectionActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+// Section divider
+.sectionDivider {
+  height: 1px;
+  background: var(--mat-sys-outline-variant);
+  margin: 24px 0;
+}
+
+// Nested sections
+.section .section {
+  margin-bottom: 16px;
+}
+
+.section .section .sectionTitle {
+  font-family: var(--mat-sys-label-large-font);
+  font-size: var(--mat-sys-label-large-size);
+  font-weight: var(--mat-sys-label-large-weight);
+}

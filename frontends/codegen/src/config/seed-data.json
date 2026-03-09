@@ -1,0 +1,553 @@
+{
+  "project-files": [
+    {
+      "id": "file-1",
+      "name": "page.tsx",
+      "path": "/src/app/page.tsx",
+      "content": "'use client'\n\nimport { ThemeProvider } from '@mui/material/styles'\nimport CssBaseline from '@mui/material/CssBaseline'\nimport { theme } from '@/theme'\nimport { Box, Typography, Button } from '@mui/material'\n\nexport default function Home() {\n  return (\n    <ThemeProvider theme={theme}>\n      <CssBaseline />\n      <Box sx={{ p: 4 }}>\n        <Typography variant=\"h3\" gutterBottom>\n          Welcome to Your App\n        </Typography>\n        <Button variant=\"contained\" color=\"primary\">\n          Get Started\n        </Button>\n      </Box>\n    </ThemeProvider>\n  )\n}",
+      "language": "typescript"
+    },
+    {
+      "id": "file-2",
+      "name": "layout.tsx",
+      "path": "/src/app/layout.tsx",
+      "content": "export const metadata = {\n  title: 'My Next.js App',\n  description: 'Generated with CodeForge',\n}\n\nexport default function RootLayout({\n  children,\n}: {\n  children: React.ReactNode\n}) {\n  return (\n    <html lang=\"en\">\n      <body>{children}</body>\n    </html>\n  )\n}",
+      "language": "typescript"
+    }
+  ],
+  "project-models": [
+    {
+      "id": "model-1",
+      "name": "User",
+      "fields": [
+        {
+          "id": "field-1",
+          "name": "id",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": true,
+          "isArray": false,
+          "defaultValue": "uuid()"
+        },
+        {
+          "id": "field-2",
+          "name": "email",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": true,
+          "isArray": false
+        },
+        {
+          "id": "field-3",
+          "name": "name",
+          "type": "String",
+          "isRequired": false,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-4",
+          "name": "createdAt",
+          "type": "DateTime",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false,
+          "defaultValue": "now()"
+        }
+      ]
+    },
+    {
+      "id": "model-2",
+      "name": "Post",
+      "fields": [
+        {
+          "id": "field-5",
+          "name": "id",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": true,
+          "isArray": false,
+          "defaultValue": "uuid()"
+        },
+        {
+          "id": "field-6",
+          "name": "title",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-7",
+          "name": "content",
+          "type": "String",
+          "isRequired": false,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-8",
+          "name": "published",
+          "type": "Boolean",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false,
+          "defaultValue": "false"
+        },
+        {
+          "id": "field-9",
+          "name": "authorId",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false,
+          "relation": "User"
+        }
+      ]
+    }
+  ],
+  "project-components": [
+    {
+      "id": "comp-1",
+      "type": "Button",
+      "name": "PrimaryButton",
+      "props": {
+        "variant": "contained",
+        "color": "primary"
+      },
+      "children": []
+    },
+    {
+      "id": "comp-2",
+      "type": "Card",
+      "name": "UserCard",
+      "props": {
+        "elevation": 2
+      },
+      "children": [
+        {
+          "id": "comp-3",
+          "type": "CardContent",
+          "name": "CardContent",
+          "props": {},
+          "children": []
+        }
+      ]
+    }
+  ],
+  "project-workflows": [
+    {
+      "id": "workflow-1",
+      "name": "User Registration Flow",
+      "description": "Complete user registration and onboarding workflow",
+      "nodes": [
+        {
+          "id": "node-1",
+          "type": "trigger",
+          "name": "Form Submit",
+          "position": { "x": 100, "y": 100 },
+          "data": {
+            "label": "Registration Form Submitted"
+          },
+          "config": {
+            "triggerType": "event"
+          }
+        },
+        {
+          "id": "node-2",
+          "type": "action",
+          "name": "Validate Input",
+          "position": { "x": 300, "y": 100 },
+          "data": {
+            "label": "Validate User Data"
+          }
+        },
+        {
+          "id": "node-3",
+          "type": "database",
+          "name": "Create User",
+          "position": { "x": 500, "y": 100 },
+          "data": {
+            "label": "Insert User Record"
+          },
+          "config": {
+            "databaseQuery": "INSERT INTO users"
+          }
+        }
+      ],
+      "connections": [
+        {
+          "id": "conn-1",
+          "source": "node-1",
+          "target": "node-2"
+        },
+        {
+          "id": "conn-2",
+          "source": "node-2",
+          "target": "node-3"
+        }
+      ],
+      "isActive": true,
+      "status": "success",
+      "lastRun": 1704153600000,
+      "createdAt": 1704067200000,
+      "updatedAt": 1704067200000
+    },
+    {
+      "id": "workflow-2",
+      "name": "Email Notification Pipeline",
+      "description": "Send automated email notifications to users",
+      "nodes": [
+        {
+          "id": "node-4",
+          "type": "trigger",
+          "name": "Schedule Trigger",
+          "position": { "x": 100, "y": 100 },
+          "data": {
+            "label": "Daily at 9 AM"
+          },
+          "config": {
+            "triggerType": "schedule",
+            "scheduleExpression": "0 9 * * *"
+          }
+        },
+        {
+          "id": "node-5",
+          "type": "database",
+          "name": "Fetch Users",
+          "position": { "x": 300, "y": 100 },
+          "data": {
+            "label": "Get Active Users"
+          },
+          "config": {
+            "databaseQuery": "SELECT * FROM users WHERE active = true"
+          }
+        },
+        {
+          "id": "node-6",
+          "type": "lambda",
+          "name": "Send Emails",
+          "position": { "x": 500, "y": 100 },
+          "data": {
+            "label": "Process Email Queue"
+          },
+          "config": {
+            "lambdaCode": "// Send email logic"
+          }
+        }
+      ],
+      "connections": [
+        {
+          "id": "conn-3",
+          "source": "node-4",
+          "target": "node-5"
+        },
+        {
+          "id": "conn-4",
+          "source": "node-5",
+          "target": "node-6"
+        }
+      ],
+      "isActive": true,
+      "status": "running",
+      "lastRun": 1704240000000,
+      "createdAt": 1704067200000,
+      "updatedAt": 1704240000000
+    },
+    {
+      "id": "workflow-3",
+      "name": "Payment Processing",
+      "description": "Handle payment transactions and update order status",
+      "nodes": [
+        {
+          "id": "node-7",
+          "type": "trigger",
+          "name": "Payment Event",
+          "position": { "x": 100, "y": 100 },
+          "data": {
+            "label": "Payment Received"
+          },
+          "config": {
+            "triggerType": "webhook"
+          }
+        },
+        {
+          "id": "node-8",
+          "type": "api",
+          "name": "Validate Payment",
+          "position": { "x": 300, "y": 100 },
+          "data": {
+            "label": "Check Payment Gateway"
+          },
+          "config": {
+            "httpMethod": "POST",
+            "apiEndpoint": "https://api.stripe.com/v1/charges"
+          }
+        },
+        {
+          "id": "node-9",
+          "type": "condition",
+          "name": "Payment Valid?",
+          "position": { "x": 500, "y": 100 },
+          "data": {
+            "label": "Check Status"
+          },
+          "config": {
+            "condition": "payment.status === 'succeeded'"
+          }
+        },
+        {
+          "id": "node-10",
+          "type": "database",
+          "name": "Update Order",
+          "position": { "x": 700, "y": 100 },
+          "data": {
+            "label": "Mark as Paid"
+          },
+          "config": {
+            "databaseQuery": "UPDATE orders SET status = 'paid'"
+          }
+        }
+      ],
+      "connections": [
+        {
+          "id": "conn-5",
+          "source": "node-7",
+          "target": "node-8"
+        },
+        {
+          "id": "conn-6",
+          "source": "node-8",
+          "target": "node-9"
+        },
+        {
+          "id": "conn-7",
+          "source": "node-9",
+          "target": "node-10"
+        }
+      ],
+      "isActive": true,
+      "status": "failed",
+      "lastRun": 1704226800000,
+      "createdAt": 1704067200000,
+      "updatedAt": 1704226800000
+    },
+    {
+      "id": "workflow-4",
+      "name": "Data Backup Task",
+      "description": "Automated database backup and archival",
+      "nodes": [
+        {
+          "id": "node-11",
+          "type": "trigger",
+          "name": "Nightly Backup",
+          "position": { "x": 100, "y": 100 },
+          "data": {
+            "label": "Every Night at 2 AM"
+          },
+          "config": {
+            "triggerType": "schedule",
+            "scheduleExpression": "0 2 * * *"
+          }
+        },
+        {
+          "id": "node-12",
+          "type": "database",
+          "name": "Export Data",
+          "position": { "x": 300, "y": 100 },
+          "data": {
+            "label": "Create Backup"
+          },
+          "config": {
+            "databaseQuery": "pg_dump database"
+          }
+        },
+        {
+          "id": "node-13",
+          "type": "lambda",
+          "name": "Upload to S3",
+          "position": { "x": 500, "y": 100 },
+          "data": {
+            "label": "Store Backup"
+          },
+          "config": {
+            "lambdaCode": "// S3 upload logic"
+          }
+        }
+      ],
+      "connections": [
+        {
+          "id": "conn-8",
+          "source": "node-11",
+          "target": "node-12"
+        },
+        {
+          "id": "conn-9",
+          "source": "node-12",
+          "target": "node-13"
+        }
+      ],
+      "isActive": false,
+      "status": "success",
+      "lastRun": 1704171600000,
+      "createdAt": 1704067200000,
+      "updatedAt": 1704171600000
+    }
+  ],
+  "project-lambdas": [
+    {
+      "id": "lambda-1",
+      "name": "processUserData",
+      "description": "Process and transform user data",
+      "code": "export async function handler(event) {\n  const { userId, data } = event;\n  // Process user data\n  return {\n    statusCode: 200,\n    body: JSON.stringify({ success: true })\n  };\n}",
+      "language": "typescript",
+      "runtime": "nodejs20.x",
+      "handler": "index.handler",
+      "timeout": 30,
+      "memory": 256,
+      "environment": {
+        "NODE_ENV": "production"
+      },
+      "triggers": [
+        {
+          "id": "trigger-1",
+          "type": "http",
+          "config": {
+            "method": "POST",
+            "path": "/api/process-user"
+          }
+        }
+      ],
+      "createdAt": 1704067200000,
+      "updatedAt": 1704067200000
+    }
+  ],
+  "project-playwright-tests": [
+    {
+      "id": "test-1",
+      "name": "User Login Flow",
+      "description": "Test user authentication flow",
+      "pageUrl": "/login",
+      "steps": [
+        {
+          "id": "step-1",
+          "action": "navigate",
+          "value": "/login"
+        },
+        {
+          "id": "step-2",
+          "action": "fill",
+          "selector": "#email",
+          "value": "test@example.com"
+        },
+        {
+          "id": "step-3",
+          "action": "fill",
+          "selector": "#password",
+          "value": "password123"
+        },
+        {
+          "id": "step-4",
+          "action": "click",
+          "selector": "button[type='submit']"
+        },
+        {
+          "id": "step-5",
+          "action": "expect",
+          "selector": ".dashboard",
+          "assertion": "toBeVisible"
+        }
+      ]
+    }
+  ],
+  "project-storybook-stories": [
+    {
+      "id": "story-1",
+      "componentName": "Button",
+      "storyName": "Primary",
+      "args": {
+        "variant": "primary",
+        "children": "Click me",
+        "disabled": false
+      },
+      "description": "Primary button variant",
+      "category": "Components"
+    },
+    {
+      "id": "story-2",
+      "componentName": "Card",
+      "storyName": "Default",
+      "args": {
+        "title": "Card Title",
+        "description": "Card description",
+        "elevation": 2
+      },
+      "description": "Default card component",
+      "category": "Layout"
+    }
+  ],
+  "project-unit-tests": [
+    {
+      "id": "test-1",
+      "name": "Button Component Tests",
+      "description": "Unit tests for Button component",
+      "testType": "component",
+      "targetFile": "/src/components/Button.tsx",
+      "testCases": [
+        {
+          "id": "case-1",
+          "description": "renders with correct text",
+          "assertions": [
+            "expect(screen.getByText('Click me')).toBeInTheDocument()"
+          ]
+        },
+        {
+          "id": "case-2",
+          "description": "calls onClick handler when clicked",
+          "assertions": [
+            "expect(handleClick).toHaveBeenCalledTimes(1)"
+          ]
+        }
+      ]
+    }
+  ],
+  "project-component-trees": [
+    {
+      "id": "tree-1",
+      "name": "Main App Layout",
+      "description": "Primary application layout tree",
+      "rootNodes": [
+        {
+          "id": "root-1",
+          "type": "Container",
+          "name": "AppContainer",
+          "props": {
+            "maxWidth": "xl"
+          },
+          "children": [
+            {
+              "id": "header-1",
+              "type": "AppBar",
+              "name": "Header",
+              "props": {
+                "position": "sticky"
+              },
+              "children": []
+            },
+            {
+              "id": "main-1",
+              "type": "Box",
+              "name": "MainContent",
+              "props": {
+                "sx": { "py": 4 }
+              },
+              "children": []
+            }
+          ]
+        }
+      ],
+      "createdAt": 1704067200000,
+      "updatedAt": 1704067200000
+    }
+  ]
+}

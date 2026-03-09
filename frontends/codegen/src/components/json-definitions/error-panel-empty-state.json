@@ -1,0 +1,33 @@
+{
+  "id": "error-panel-empty-state-container",
+  "type": "ConditionalRender",
+  "condition": "isScanning",
+  "then": {
+    "type": "EmptyState",
+    "icon": {
+      "type": "Icon",
+      "name": "Lightning",
+      "size": 48,
+      "weight": "duotone",
+      "className": "error-panel-empty-state__scanning-icon"
+    },
+    "bindings": {
+      "title": { "source": "scanningTitle" },
+      "description": { "source": "scanningDescription" }
+    }
+  },
+  "else": {
+    "type": "EmptyState",
+    "icon": {
+      "type": "Icon",
+      "name": "CheckCircle",
+      "size": 48,
+      "weight": "duotone",
+      "className": "error-panel-empty-state__success-icon"
+    },
+    "bindings": {
+      "title": { "source": "noIssuesTitle" },
+      "description": { "source": "noIssuesDescription" }
+    }
+  }
+}

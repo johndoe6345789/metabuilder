@@ -1,0 +1,92 @@
+{
+  "name": "translation",
+  "displayName": "Translation",
+  "description": "Internationalization translations. Each record is a single key-value pair\nfor a specific locale. Stored in DBAL, these override the static\n@metabuilder/translations package and are editable via the Settings UI.\n",
+  "tenantId": true,
+  "fields": {
+    "id": {
+      "type": "string",
+      "primary": true,
+      "description": "Composite key: {locale}:{translationKey}",
+      "example": "nl:common.save"
+    },
+    "locale": {
+      "type": "string",
+      "required": true,
+      "minLength": 2,
+      "maxLength": 5,
+      "description": "BCP 47 locale code",
+      "example": "nl"
+    },
+    "key": {
+      "type": "string",
+      "required": true,
+      "maxLength": 512,
+      "description": "Dot-notation translation key",
+      "example": "common.save"
+    },
+    "value": {
+      "type": "string",
+      "required": true,
+      "maxLength": 4096,
+      "description": "Translated string value",
+      "example": "Opslaan"
+    },
+    "updatedBy": {
+      "type": "string",
+      "nullable": true,
+      "maxLength": 255,
+      "description": "User who last modified this translation"
+    },
+    "createdAt": {
+      "type": "datetime",
+      "autoValue": "now"
+    },
+    "updatedAt": {
+      "type": "datetime",
+      "autoValue": "now",
+      "onUpdate": "now"
+    }
+  },
+  "indexes": [
+    {
+      "fields": [
+        "tenantId",
+        "locale"
+      ]
+    },
+    {
+      "fields": [
+        "tenantId",
+        "locale",
+        "key"
+      ],
+      "unique": true
+    }
+  ],
+  "acl": {
+    "default": {
+      "filter": "{ tenantId: context.tenantId }"
+    },
+    "permissions": {
+      "admin": [
+        "*"
+      ],
+      "editor": [
+        "create",
+        "read",
+        "update"
+      ],
+      "viewer": [
+        "read"
+      ]
+    }
+  },
+  "rateLimits": {
+    "list": 100,
+    "create": 50,
+    "update": 50,
+    "delete": 20
+  },
+  "softDelete": false
+}

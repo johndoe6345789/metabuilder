@@ -1,0 +1,85 @@
+// Blockquote Atoms - Material Design 3 (CSS Module)
+// ==================================================
+// Flat selectors for blockquote styling using M3 tokens
+
+// Base blockquote
+.blockquote {
+  border-left: 4px solid var(--mat-sys-primary);
+  margin: 16px 0;
+  padding: 12px 16px;
+  background: var(--mat-sys-surface-container-low);
+  border-radius: 0 var(--mat-sys-corner-small) var(--mat-sys-corner-small) 0;
+}
+
+.blockquote p {
+  margin: 0;
+  font-family: var(--mat-sys-body-large-font);
+  font-size: var(--mat-sys-body-large-size);
+  line-height: var(--mat-sys-body-large-line-height);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.blockquote p + p {
+  margin-top: 8px;
+}
+
+// Color variants
+.blockquoteSecondary {
+  border-left-color: var(--mat-sys-secondary);
+}
+
+.blockquoteTertiary {
+  border-left-color: var(--mat-sys-tertiary);
+}
+
+.blockquoteError {
+  border-left-color: var(--mat-sys-error);
+  background: color-mix(in srgb, var(--mat-sys-error-container) 30%, var(--mat-sys-surface));
+}
+
+.blockquoteSuccess {
+  border-left-color: var(--color-success);
+  background: var(--color-success-container);
+}
+
+.blockquoteWarning {
+  border-left-color: var(--color-warning);
+  background: var(--color-warning-container);
+}
+
+.blockquoteInfo {
+  border-left-color: var(--color-info);
+  background: var(--color-info-container);
+}
+
+// Outlined variant
+.blockquoteOutlined {
+  background: transparent;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-left: 4px solid var(--mat-sys-primary);
+}
+
+// Citation/source
+.blockquoteCite {
+  display: block;
+  margin-top: 8px;
+  font-family: var(--mat-sys-body-small-font);
+  font-size: var(--mat-sys-body-small-size);
+  color: var(--mat-sys-on-surface-variant);
+  font-style: italic;
+}
+
+.blockquoteCite::before {
+  content: '— ';
+}
+
+// Large quote variant
+.blockquoteLarge {
+  padding: 24px;
+}
+
+.blockquoteLarge p {
+  font-family: var(--mat-sys-headline-small-font);
+  font-size: var(--mat-sys-headline-small-size);
+  line-height: var(--mat-sys-headline-small-line-height);
+}

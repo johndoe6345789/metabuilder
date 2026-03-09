@@ -1,0 +1,413 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "codegen_studio",
+  "description": "Codegen Studio components for template generation and project scaffolding",
+  "components": [
+    {
+      "id": "codegen_studio",
+      "name": "CodegenStudio",
+      "description": "Main Codegen Studio interface with template selection and generation controls",
+      "props": [
+        {
+          "name": "projectName",
+          "type": "string",
+          "required": false,
+          "description": "Initial project name"
+        },
+        {
+          "name": "runtime",
+          "type": "string",
+          "required": false,
+          "default": "web",
+          "description": "Target runtime: web, cli, or desktop"
+        },
+        {
+          "name": "onGenerate",
+          "type": "function",
+          "required": false,
+          "description": "Callback when generation is triggered"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Stack",
+          "direction": "column",
+          "spacing": 3,
+          "className": "codegen-studio",
+          "children": [
+            {
+              "type": "Card",
+              "variant": "outlined",
+              "children": [
+                {
+                  "type": "CardContent",
+                  "children": [
+                    {
+                      "type": "Text",
+                      "variant": "h4",
+                      "fontWeight": "bold",
+                      "children": "Codegen Studio"
+                    },
+                    {
+                      "type": "Text",
+                      "variant": "body1",
+                      "color": "secondary",
+                      "children": "Ship a new app in minutes with curated templates and export-ready bundles."
+                    },
+                    {
+                      "type": "Flex",
+                      "gap": 1,
+                      "sx": { "mt": 2 },
+                      "children": [
+                        {
+                          "type": "Chip",
+                          "label": "Next.js",
+                          "variant": "outlined",
+                          "size": "small"
+                        },
+                        {
+                          "type": "Chip",
+                          "label": "React",
+                          "variant": "outlined",
+                          "size": "small"
+                        },
+                        {
+                          "type": "Chip",
+                          "label": "CLI",
+                          "variant": "outlined",
+                          "size": "small"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Grid",
+              "container": true,
+              "spacing": 2,
+              "children": [
+                {
+                  "type": "Grid",
+                  "item": true,
+                  "xs": 4,
+                  "children": [
+                    {
+                      "type": "Card",
+                      "variant": "outlined",
+                      "children": [
+                        {
+                          "type": "CardContent",
+                          "children": [
+                            {
+                              "type": "Text",
+                              "variant": "caption",
+                              "color": "secondary",
+                              "children": "Templates ready"
+                            },
+                            {
+                              "type": "Text",
+                              "variant": "h5",
+                              "fontWeight": "bold",
+                              "children": "12"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Grid",
+                  "item": true,
+                  "xs": 4,
+                  "children": [
+                    {
+                      "type": "Card",
+                      "variant": "outlined",
+                      "children": [
+                        {
+                          "type": "CardContent",
+                          "children": [
+                            {
+                              "type": "Text",
+                              "variant": "caption",
+                              "color": "secondary",
+                              "children": "Targets"
+                            },
+                            {
+                              "type": "Text",
+                              "variant": "h6",
+                              "fontWeight": "bold",
+                              "children": "Web · CLI · Desktop"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Grid",
+                  "item": true,
+                  "xs": 4,
+                  "children": [
+                    {
+                      "type": "Card",
+                      "variant": "outlined",
+                      "children": [
+                        {
+                          "type": "CardContent",
+                          "children": [
+                            {
+                              "type": "Text",
+                              "variant": "caption",
+                              "color": "secondary",
+                              "children": "Last export"
+                            },
+                            {
+                              "type": "Text",
+                              "variant": "h5",
+                              "fontWeight": "bold",
+                              "children": "2m ago"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "template_selector",
+      "name": "TemplateSelector",
+      "description": "Template selection and configuration form",
+      "props": [
+        {
+          "name": "templates",
+          "type": "array",
+          "required": false,
+          "description": "Available templates"
+        },
+        {
+          "name": "onSelect",
+          "type": "function",
+          "required": false,
+          "description": "Callback when template is selected"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "children": [
+            {
+              "type": "CardHeader",
+              "title": "Project setup"
+            },
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "Grid",
+                  "container": true,
+                  "spacing": 2,
+                  "children": [
+                    {
+                      "type": "Grid",
+                      "item": true,
+                      "xs": 6,
+                      "children": [
+                        {
+                          "type": "TextField",
+                          "label": "Project name",
+                          "placeholder": "nebula-launch",
+                          "fullWidth": true
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Grid",
+                      "item": true,
+                      "xs": 6,
+                      "children": [
+                        {
+                          "type": "TextField",
+                          "label": "Package id",
+                          "placeholder": "nebula_launch",
+                          "fullWidth": true
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Grid",
+                      "item": true,
+                      "xs": 6,
+                      "children": [
+                        {
+                          "type": "TextField",
+                          "label": "Target runtime",
+                          "placeholder": "web | cli | desktop",
+                          "fullWidth": true
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Grid",
+                      "item": true,
+                      "xs": 6,
+                      "children": [
+                        {
+                          "type": "TextField",
+                          "label": "Design tone",
+                          "placeholder": "newsroom · cozy · neon",
+                          "fullWidth": true
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Grid",
+                      "item": true,
+                      "xs": 12,
+                      "children": [
+                        {
+                          "type": "TextField",
+                          "label": "Creative brief",
+                          "placeholder": "Describe the product and target audience...",
+                          "multiline": true,
+                          "rows": 3,
+                          "fullWidth": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "package_generator",
+      "name": "PackageGenerator",
+      "description": "Generation controls and status display",
+      "props": [
+        {
+          "name": "progress",
+          "type": "number",
+          "required": false,
+          "default": 0,
+          "description": "Generation progress percentage"
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "required": false,
+          "default": "idle",
+          "description": "Current generation status"
+        },
+        {
+          "name": "onGenerate",
+          "type": "function",
+          "required": false,
+          "description": "Callback to trigger generation"
+        },
+        {
+          "name": "onPreview",
+          "type": "function",
+          "required": false,
+          "description": "Callback to preview manifest"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Stack",
+          "direction": "column",
+          "spacing": 2,
+          "children": [
+            {
+              "type": "Flex",
+              "gap": 1,
+              "flexWrap": "wrap",
+              "children": [
+                {
+                  "type": "Button",
+                  "variant": "contained",
+                  "children": "Generate zip"
+                },
+                {
+                  "type": "Button",
+                  "variant": "outlined",
+                  "children": "Preview manifest"
+                },
+                {
+                  "type": "Button",
+                  "variant": "text",
+                  "children": "Save preset"
+                }
+              ]
+            },
+            {
+              "type": "Card",
+              "variant": "outlined",
+              "children": [
+                {
+                  "type": "CardHeader",
+                  "title": "Generation plan"
+                },
+                {
+                  "type": "CardContent",
+                  "children": [
+                    {
+                      "type": "Text",
+                      "variant": "body2",
+                      "component": "pre",
+                      "sx": { "whiteSpace": "pre-wrap" },
+                      "children": "• Scaffold Next.js app shell\n• Add package metadata + automation hooks\n• Produce CLI bundle + desktop notes\n• Export a ready-to-ship zip"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Card",
+              "variant": "outlined",
+              "children": [
+                {
+                  "type": "CardContent",
+                  "children": [
+                    {
+                      "type": "Alert",
+                      "severity": "info",
+                      "children": "Queue ready. Waiting on an approved build request."
+                    },
+                    {
+                      "type": "LinearProgress",
+                      "variant": "determinate",
+                      "value": "{{progress}}",
+                      "sx": { "mt": 2 }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "exports": {
+    "components": ["CodegenStudio", "TemplateSelector", "PackageGenerator"]
+  }
+}

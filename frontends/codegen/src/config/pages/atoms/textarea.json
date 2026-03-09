@@ -1,0 +1,6 @@
+{
+  "type": "Textarea",
+  "props": {
+    "rows": 4
+  }
+}

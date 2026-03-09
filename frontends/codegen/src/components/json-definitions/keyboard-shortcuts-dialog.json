@@ -1,0 +1,8 @@
+{
+  "id": "keyboard-shortcuts-dialog",
+  "type": "div",
+  "props": {
+    "className": "keyboard-shortcuts-dialog"
+  },
+  "children": []
+}

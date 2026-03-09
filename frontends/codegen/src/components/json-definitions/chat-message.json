@@ -1,0 +1,119 @@
+{
+  "id": "chat-message-root",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": "isOwn",
+      "transform": "data ? 'chat-message chat-message--own' : 'chat-message'"
+    }
+  },
+  "children": [
+    {
+      "id": "chat-message-avatar",
+      "type": "div",
+      "bindings": {
+        "className": {
+          "source": null,
+          "transform": "'avatar avatar--sm'"
+        },
+        "_if": {
+          "source": "isOwn",
+          "transform": "!data"
+        }
+      },
+      "children": [
+        {
+          "id": "chat-message-avatar-img",
+          "type": "img",
+          "props": {
+            "className": "avatar__image"
+          },
+          "bindings": {
+            "src": "avatar",
+            "alt": "sender",
+            "_if": {
+              "source": "avatar",
+              "transform": "!!data"
+            }
+          }
+        },
+        {
+          "id": "chat-message-avatar-initials",
+          "type": "span",
+          "props": {
+            "className": "avatar__initials"
+          },
+          "bindings": {
+            "children": {
+              "source": "sender",
+              "transform": "data ? data.slice(0, 2).toUpperCase() : '?'",
+              "_if": {
+                "source": "avatar",
+                "transform": "!data"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "chat-message-body",
+      "type": "div",
+      "children": [
+        {
+          "id": "chat-message-meta",
+          "type": "div",
+          "props": {
+            "className": "chat-message__meta"
+          },
+          "bindings": {
+            "_if": {
+              "source": ["sender", "timestamp"],
+              "transform": "data[0] || data[1]"
+            }
+          },
+          "children": [
+            {
+              "id": "chat-message-sender",
+              "type": "span",
+              "props": {
+                "className": "chat-message__sender"
+              },
+              "bindings": {
+                "children": "sender",
+                "_if": {
+                  "source": "sender",
+                  "transform": "!!data"
+                }
+              }
+            },
+            {
+              "id": "chat-message-time",
+              "type": "span",
+              "props": {
+                "className": "chat-message__time"
+              },
+              "bindings": {
+                "children": "timestamp",
+                "_if": {
+                  "source": "timestamp",
+                  "transform": "!!data"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "chat-message-bubble",
+          "type": "div",
+          "props": {
+            "className": "chat-message__bubble"
+          },
+          "bindings": {
+            "children": "message"
+          }
+        }
+      ]
+    }
+  ]
+}

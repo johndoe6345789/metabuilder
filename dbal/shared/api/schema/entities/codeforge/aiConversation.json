@@ -1,0 +1,123 @@
+{
+  "entity": "AIConversation",
+  "version": "1.0",
+  "description": "AI conversation history for CodeForge AI features",
+  "tenantId": true,
+  "fields": {
+    "id": {
+      "type": "uuid",
+      "primary": true,
+      "generated": true,
+      "description": "Unique conversation identifier"
+    },
+    "projectId": {
+      "type": "string",
+      "optional": true,
+      "nullable": true,
+      "description": "Associated project ID"
+    },
+    "category": {
+      "type": "enum",
+      "required": true,
+      "values": [
+        "generate-component",
+        "generate-model",
+        "generate-code",
+        "improve-code",
+        "generate-theme",
+        "suggest-fields",
+        "explain-code",
+        "generate-app",
+        "repair-code",
+        "general"
+      ],
+      "default": "general",
+      "description": "AI operation category"
+    },
+    "prompt": {
+      "type": "text",
+      "required": true,
+      "description": "User prompt sent to Claude"
+    },
+    "response": {
+      "type": "text",
+      "optional": true,
+      "nullable": true,
+      "description": "Claude API response"
+    },
+    "model": {
+      "type": "string",
+      "required": true,
+      "default": "claude-sonnet-4-5-20250929",
+      "description": "Claude model used"
+    },
+    "success": {
+      "type": "boolean",
+      "required": true,
+      "default": true
+    },
+    "createdBy": {
+      "type": "string",
+      "required": true
+    },
+    "createdAt": {
+      "type": "bigint",
+      "generated": true
+    }
+  },
+  "indexes": [
+    {
+      "fields": [
+        "tenantId",
+        "projectId"
+      ]
+    },
+    {
+      "fields": [
+        "tenantId",
+        "category"
+      ]
+    },
+    {
+      "fields": [
+        "createdBy"
+      ]
+    },
+    {
+      "fields": [
+        "createdAt"
+      ]
+    }
+  ],
+  "relations": {
+    "project": {
+      "type": "belongs-to",
+      "entity": "Project",
+      "foreign_key": "projectId",
+      "on_delete": "set_null",
+      "nullable": true
+    },
+    "creator": {
+      "type": "belongs-to",
+      "entity": "User",
+      "foreign_key": "createdBy",
+      "on_delete": "restrict"
+    }
+  },
+  "acl": {
+    "create": {
+      "user": true
+    },
+    "read": {
+      "self": true,
+      "admin": true
+    },
+    "update": {
+      "self": true
+    },
+    "delete": {
+      "self": true,
+      "admin": true
+    }
+  }
+}

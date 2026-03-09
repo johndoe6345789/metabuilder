@@ -1,0 +1,29 @@
+// Panel container mixin - Material Design 3
+// Uses M3 surface containers and elevation
+
+@mixin panel($position: fixed, $padding: 16px) {
+  position: $position;
+  background: var(--mat-sys-surface-container);
+  border-radius: var(--mat-sys-corner-large);
+  box-shadow: var(--mat-sys-level2);
+  padding: $padding;
+  z-index: var(--z-dropdown);
+}
+
+@mixin panel-low($position: fixed, $padding: 16px) {
+  position: $position;
+  background: var(--mat-sys-surface-container-low);
+  border-radius: var(--mat-sys-corner-medium);
+  box-shadow: var(--mat-sys-level1);
+  padding: $padding;
+  z-index: var(--z-dropdown);
+}
+
+@mixin panel-high($position: fixed, $padding: 16px) {
+  position: $position;
+  background: var(--mat-sys-surface-container-high);
+  border-radius: var(--mat-sys-corner-extra-large);
+  box-shadow: var(--mat-sys-level3);
+  padding: $padding;
+  z-index: var(--z-dropdown);
+}

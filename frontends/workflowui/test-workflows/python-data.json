@@ -1,0 +1,110 @@
+{
+  "id": "test-python-data",
+  "name": "Python Data Processing Workflow",
+  "description": "Data processing: filter list, transform, return count",
+  "nodes": [
+    {
+      "id": "trigger_manual_1",
+      "type": "trigger.manual",
+      "name": "Start",
+      "position": { "x": 100, "y": 200 },
+      "config": {
+        "initialData": {
+          "items": [
+            { "id": 1, "value": 10, "active": true },
+            { "id": 2, "value": 20, "active": false },
+            { "id": 3, "value": 30, "active": true },
+            { "id": 4, "value": 40, "active": false },
+            { "id": 5, "value": 50, "active": true }
+          ]
+        }
+      },
+      "inputs": [],
+      "outputs": ["main"]
+    },
+    {
+      "id": "data_filter_1",
+      "type": "data.filter",
+      "name": "Filter Active Items",
+      "position": { "x": 350, "y": 200 },
+      "config": {
+        "items": "{{$input.main.items}}",
+        "condition": "item.active === true"
+      },
+      "inputs": ["main"],
+      "outputs": ["main"]
+    },
+    {
+      "id": "data_transform_1",
+      "type": "data.transform",
+      "name": "Transform Data",
+      "position": { "x": 600, "y": 200 },
+      "config": {
+        "items": "{{$input.main}}",
+        "mapping": {
+          "processed": true,
+          "doubledValue": "item.value * 2"
+        }
+      },
+      "inputs": ["main"],
+      "outputs": ["main"]
+    },
+    {
+      "id": "data_count_1",
+      "type": "data.count",
+      "name": "Count Items",
+      "position": { "x": 850, "y": 200 },
+      "config": {
+        "items": "{{$input.main}}"
+      },
+      "inputs": ["main"],
+      "outputs": ["main"]
+    }
+  ],
+  "connections": [
+    {
+      "id": "conn_1",
+      "sourceNodeId": "trigger_manual_1",
+      "sourceOutput": "main",
+      "targetNodeId": "data_filter_1",
+      "targetInput": "main"
+    },
+    {
+      "id": "conn_2",
+      "sourceNodeId": "data_filter_1",
+      "sourceOutput": "main",
+      "targetNodeId": "data_transform_1",
+      "targetInput": "main"
+    },
+    {
+      "id": "conn_3",
+      "sourceNodeId": "data_transform_1",
+      "sourceOutput": "main",
+      "targetNodeId": "data_count_1",
+      "targetInput": "main"
+    }
+  ],
+  "expectedOutput": 3,
+  "expectedNodeResults": {
+    "trigger_manual_1": {
+      "items": [
+        { "id": 1, "value": 10, "active": true },
+        { "id": 2, "value": 20, "active": false },
+        { "id": 3, "value": 30, "active": true },
+        { "id": 4, "value": 40, "active": false },
+        { "id": 5, "value": 50, "active": true }
+      ]
+    },
+    "data_filter_1": [
+      { "id": 1, "value": 10, "active": true },
+      { "id": 3, "value": 30, "active": true },
+      { "id": 5, "value": 50, "active": true }
+    ],
+    "data_transform_1": [
+      { "id": 1, "value": 10, "active": true, "processed": true },
+      { "id": 3, "value": 30, "active": true, "processed": true },
+      { "id": 5, "value": 50, "active": true, "processed": true }
+    ],
+    "data_count_1": 3
+  }
+}

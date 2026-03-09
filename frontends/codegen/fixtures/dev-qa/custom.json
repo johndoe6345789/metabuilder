@@ -1,0 +1,40 @@
+{
+  "id": "smoke-custom",
+  "name": "Smoke Custom",
+  "layout": {
+    "type": "single"
+  },
+  "dataSources": [],
+  "components": [
+    {
+      "id": "custom-section",
+      "type": "section",
+      "children": [
+        {
+          "id": "custom-heading",
+          "type": "Heading",
+          "props": {
+            "level": 3,
+            "children": "Custom Component Smoke Check"
+          }
+        },
+        {
+          "id": "custom-data-card",
+          "type": "DataCard",
+          "props": {
+            "title": "QA Metric",
+            "value": "99%",
+            "icon": "TrendUp"
+          }
+        },
+        {
+          "id": "custom-search",
+          "type": "SearchInput",
+          "props": {
+            "placeholder": "Search QA fixtures..."
+          }
+        }
+      ]
+    }
+  ]
+}

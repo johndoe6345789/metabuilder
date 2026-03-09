@@ -1,0 +1,68 @@
+{
+  "formTitle": "Form Components",
+  "email": {
+    "label": "Email",
+    "placeholder": "you@example.com",
+    "helperText": "Enter your email address"
+  },
+  "password": {
+    "label": "Password",
+    "helperText": "Must be at least 8 characters"
+  },
+  "search": {
+    "placeholder": "Search components..."
+  },
+  "textArea": {
+    "label": "Description",
+    "placeholder": "Enter a description...",
+    "helperText": "Optional field"
+  },
+  "select": {
+    "label": "Framework",
+    "placeholder": "Select a framework",
+    "options": [
+      { "value": "react", "label": "React" },
+      { "value": "vue", "label": "Vue" },
+      { "value": "angular", "label": "Angular" }
+    ]
+  },
+  "toggle": {
+    "label": "Enable notifications"
+  },
+  "checkbox": {
+    "label": "I agree to the terms and conditions"
+  },
+  "radio": {
+    "name": "size",
+    "options": [
+      { "value": "sm", "label": "Small" },
+      { "value": "md", "label": "Medium" },
+      { "value": "lg", "label": "Large" }
+    ]
+  },
+  "slider": {
+    "label": "Volume",
+    "min": 0,
+    "max": 100
+  },
+  "buttonTitle": "Button Components",
+  "buttons": [
+    { "label": "Default" },
+    { "label": "Primary", "variant": "default" },
+    { "label": "Outline", "variant": "outline" },
+    { "label": "Ghost", "variant": "ghost" },
+    { "label": "Destructive", "variant": "destructive" }
+  ],
+  "iconButtons": [
+    { "variant": "default" },
+    { "variant": "outline" },
+    { "variant": "destructive" }
+  ],
+  "iconActions": [
+    { "label": "Like", "variant": "default" },
+    { "label": "Share", "variant": "outline" }
+  ],
+  "copyButtonText": "Copy this text",
+  "fileUploadTitle": "File Upload",
+  "fileUploadAccept": "image/*"
+}

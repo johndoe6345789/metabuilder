@@ -1,0 +1,10 @@
+# SparkOS Network Configuration
+# Wired networking only for bootstrapping
+
+# Loopback interface
+auto lo
+iface lo inet loopback
+
+# Primary wired interface (DHCP)
+auto eth0
+iface eth0 inet dhcp

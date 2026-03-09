@@ -14,6 +14,8 @@ export interface TemplateContext {
     variables?: Record<string, any>;
     [key: string]: any;
   };
+  /** Allow additional context properties for plugin-specific variables */
+  [key: string]: any;
 }
 
 /**

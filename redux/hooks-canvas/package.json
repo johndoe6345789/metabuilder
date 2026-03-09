@@ -1,6 +1,7 @@
 {
   "name": "@metabuilder/hooks-canvas",
   "version": "0.1.0",
+  "type": "module",
   "description": "Canvas operation hooks with service adapter injection for MetaBuilder",
   "main": "src/index.ts",
   "types": "src/index.ts",

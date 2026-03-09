@@ -1,0 +1,58 @@
+.cardRoot {
+  background: var(--mat-sys-surface);
+}
+
+.cardContent {
+  padding-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.topRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.fieldsGrid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.labelXs {
+  font-size: 0.75rem;
+}
+
+.inputSm {
+  height: 32px;
+  font-size: 0.875rem;
+}
+
+.inputSmMono {
+  height: 32px;
+  font-size: 0.875rem;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.removeBtn {
+  height: 32px;
+  width: 32px;
+  padding: 0;
+  margin-top: 24px;
+  color: var(--mat-sys-error);
+  flex-shrink: 0;
+}
+
+.removeIcon {
+  width: 16px;
+  height: 16px;
+}

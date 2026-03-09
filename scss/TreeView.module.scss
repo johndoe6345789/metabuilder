@@ -1,0 +1,112 @@
+// TreeView Component - Material Design 3
+// Uses M3 surface, state layer, and typography tokens
+
+.treeView {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.treeItem {
+  list-style: none;
+}
+
+.treeItemContent {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: var(--mat-sys-corner-full);
+  transition: background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+  user-select: none;
+  min-height: 40px;
+
+  &:hover:not(.disabled) {
+    background-color: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary);
+    outline-offset: -2px;
+  }
+
+  &.selected {
+    background-color: var(--mat-sys-secondary-container);
+    color: var(--mat-sys-on-secondary-container);
+
+    &:hover {
+      background-color: color-mix(in srgb, var(--mat-sys-on-secondary-container) 8%, var(--mat-sys-secondary-container));
+    }
+  }
+
+  &.disabled {
+    opacity: var(--disabled-content-opacity);
+    cursor: not-allowed;
+  }
+
+  &.dense {
+    padding: 4px 8px;
+    min-height: 32px;
+  }
+}
+
+.treeItemIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  margin-right: 4px;
+  flex-shrink: 0;
+  color: var(--mat-sys-on-surface-variant);
+  cursor: pointer;
+  border-radius: var(--mat-sys-corner-full);
+  transition: background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
+  }
+
+  svg {
+    transition: transform var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+  }
+}
+
+.treeItemIconPlaceholder {
+  width: 24px;
+  height: 24px;
+  margin-right: 4px;
+  flex-shrink: 0;
+}
+
+.treeItemNodeIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  margin-right: 8px;
+  flex-shrink: 0;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.treeItemLabel {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--mat-sys-body-large-font);
+  font-size: var(--mat-sys-body-large-size);
+  line-height: var(--mat-sys-body-large-line-height);
+  color: var(--mat-sys-on-surface);
+
+  .selected & {
+    color: var(--mat-sys-on-secondary-container);
+  }
+}
+
+.treeItemChildren {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}

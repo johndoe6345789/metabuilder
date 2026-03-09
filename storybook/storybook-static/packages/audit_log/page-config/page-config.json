@@ -1,0 +1,14 @@
+[
+  {
+    "id": "page_audit_log_viewer",
+    "path": "/admin/audit-logs",
+    "title": "Audit Logs",
+    "packageId": "audit_log",
+    "component": "audit_log_viewer",
+    "level": 3,
+    "requiresAuth": true,
+    "isPublished": true,
+    "sortOrder": 10,
+    "description": "View and filter audit logs for tenant activity monitoring"
+  }
+]

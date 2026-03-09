@@ -1,0 +1,53 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "dropdown_manager",
+  "description": "Dropdown manager access permissions",
+  "permissions": [
+    {
+      "id": "dropdowns.view",
+      "name": "View Dropdowns",
+      "description": "View dropdown configurations",
+      "resource": "dropdowns",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 2
+    },
+    {
+      "id": "dropdowns.create",
+      "name": "Create Dropdowns",
+      "description": "Create new dropdown configurations",
+      "resource": "dropdowns",
+      "action": "create",
+      "scope": "global",
+      "minLevel": 4
+    },
+    {
+      "id": "dropdowns.update",
+      "name": "Update Dropdowns",
+      "description": "Update existing dropdowns",
+      "resource": "dropdowns",
+      "action": "update",
+      "scope": "global",
+      "minLevel": 4
+    },
+    {
+      "id": "dropdowns.delete",
+      "name": "Delete Dropdowns",
+      "description": "Delete dropdown configurations",
+      "resource": "dropdowns",
+      "action": "delete",
+      "scope": "global",
+      "minLevel": 4
+    }
+  ],
+  "resources": [
+    {
+      "id": "dropdowns",
+      "name": "Dropdowns",
+      "type": "data",
+      "description": "Dropdown configuration resources",
+      "actions": ["read", "create", "update", "delete"]
+    }
+  ]
+}

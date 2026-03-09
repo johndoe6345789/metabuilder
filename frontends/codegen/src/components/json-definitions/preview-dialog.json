@@ -1,0 +1,8 @@
+{
+  "id": "preview-dialog",
+  "type": "div",
+  "props": {
+    "className": "preview-dialog"
+  },
+  "children": []
+}

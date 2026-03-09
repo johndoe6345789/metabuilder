@@ -97,10 +97,9 @@ export class WebhookResponseExecutor implements INodeExecutor {
 
       return {
         status: 'success',
-        output: response,
+        output: { ...response, isTerminal: true },
         timestamp: Date.now(),
-        duration,
-        isTerminal: true // This node should terminate the workflow
+        duration
       };
     } catch (error) {
       return {

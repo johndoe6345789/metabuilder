@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Dropdown field -->
+  <rect x="10" y="14" width="44" height="12" rx="2" fill="none"/>
+  <path d="M44 20 L48 24 L52 20" stroke-width="2"/>
+  <!-- Dropdown options expanded -->
+  <rect x="10" y="28" width="44" height="28" rx="2" fill="none" stroke-dasharray="none"/>
+  <path d="M10 38 L54 38 M10 48 L54 48" stroke-width="1"/>
+  <!-- Option indicators -->
+  <circle cx="18" cy="33" r="2" fill="currentColor"/>
+  <path d="M24 33 L46 33" stroke-width="1.5"/>
+  <circle cx="18" cy="43" r="2" fill="none"/>
+  <path d="M24 43 L42 43" stroke-width="1.5"/>
+  <circle cx="18" cy="53" r="2" fill="none"/>
+  <path d="M24 53 L38 53" stroke-width="1.5"/>
+</svg>

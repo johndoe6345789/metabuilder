@@ -4,11 +4,13 @@ import { classNames } from '../utils/classNames'
 export interface TimelineProps extends React.HTMLAttributes<HTMLUListElement> {
   children?: React.ReactNode
   position?: 'left' | 'right' | 'alternate'
+  /** Test ID for automated testing */
+  testId?: string
 }
 
-export function Timeline({ children, position = 'right', className, ...props }: TimelineProps) {
+export function Timeline({ children, position = 'right', className, testId, ...props }: TimelineProps) {
   return (
-    <ul className={classNames('fakemui-timeline', `fakemui-timeline-position-${position}`, className)} {...props}>
+    <ul className={classNames('fakemui-timeline', `fakemui-timeline-position-${position}`, className)} data-testid={testId} {...props}>
       {children}
     </ul>
   )

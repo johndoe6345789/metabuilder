@@ -1,0 +1,87 @@
+// ButtonGroup Component - Material Design 3
+// ==========================================
+// Grouped button styling using M3 tokens
+
+.btn-group {
+  display: inline-flex;
+  border-radius: var(--mat-sys-corner-full);
+
+  &--vertical {
+    flex-direction: column;
+
+    .btn-group__btn {
+      &--first {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        border-bottom: none;
+      }
+
+      &--last {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+      }
+
+      &--middle {
+        border-radius: 0;
+        border-bottom: none;
+      }
+    }
+  }
+
+  &--full-width {
+    display: flex;
+    width: 100%;
+
+    .btn-group__btn {
+      flex: 1;
+    }
+  }
+
+  &__btn {
+    &--first {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    &--last {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+
+    &--middle {
+      border-radius: 0;
+    }
+
+    // Remove double borders between buttons
+    &:not(:first-child) {
+      margin-left: -1px;
+    }
+
+    // Ensure proper z-index for focus states
+    &:hover,
+    &:focus {
+      z-index: 1;
+    }
+  }
+
+  // Outlined variant
+  &--outlined {
+    .btn-group__btn {
+      border: 1px solid var(--mat-sys-outline);
+    }
+  }
+
+  // Contained variant
+  &--contained {
+    box-shadow: var(--mat-sys-level1);
+
+    .btn-group__btn {
+      border: none;
+
+      &:not(:first-child) {
+        margin-left: 0;
+        border-left: 1px solid color-mix(in srgb, var(--mat-sys-on-primary) 12%, transparent);
+      }
+    }
+  }
+}

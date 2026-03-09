@@ -251,7 +251,7 @@ export class SMTPRelayExecutor implements INodeExecutor {
     }
   }
 
-  private async _getTenantTransporter(tenantId: string): Promise<nodemailer.Transporter | null> {
+  private async _getTenantTransporter(_tenantId: string): Promise<nodemailer.Transporter | null> {
     // Try to use tenant-specific transporter if available
     // For now, use default. In production, would load from DBAL Credential entity
     // TODO: Integrate with DBAL to load tenant-specific SMTP config
@@ -424,7 +424,7 @@ export const smtpRelayExecutor = new SMTPRelayExecutor();
  * Email service setter for dependency injection
  * Allows tests or custom configurations
  */
-export function setSMTPService(executor: SMTPRelayExecutor): void {
+export function setSMTPService(_executor: SMTPRelayExecutor): void {
   // Can be used to inject custom executor
   console.log('[SMTP] Custom executor injected');
 }

@@ -1,0 +1,10 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]: App Header
+  - generic [ref=e4]:
+    - heading "MetaBuilder" [level=3] [ref=e5]
+    - paragraph [ref=e6]: Data-driven application platform. Configure routes via the admin panel or install a package with a default home page.
+    - generic [ref=e7]:
+      - button "Sign In" [ref=e8] [cursor=pointer]: Sign In
+      - button "DBAL Status" [ref=e9] [cursor=pointer]: DBAL Status
+  - contentinfo [ref=e10]: App Footer
+  - alert [ref=e11]

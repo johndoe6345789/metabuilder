@@ -1,0 +1,40 @@
+{
+  "id": "oil-pump",
+  "name": "Oil Pump",
+  "partNumber": "FD-CM5G-6600-AB",
+  "material": "aluminum",
+  "quantity": 1,
+  "weight": 1800.0,
+  "weightUnit": "g",
+  "baseY": 1130,
+  "description": "Gerotor oil pump with integrated balance shaft",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "10mm", "required": true },
+      { "name": "Torque wrench", "size": "10-25 Nm", "required": true },
+      { "name": "Feeler gauge", "size": "0.05-0.15mm", "required": true }
+    ],
+    "hardware": [
+      { "name": "Oil pump bolt", "spec": "M6x1.0x20", "qty": 6, "reusable": true },
+      { "name": "Oil pump gasket", "spec": "Paper", "qty": 1, "reusable": false },
+      { "name": "Crankshaft seal", "spec": "35x48x7", "qty": 1, "reusable": false }
+    ],
+    "torque": [
+      { "fastener": "Oil pump bolts", "value": 12, "unit": "Nm", "sequence": "Spiral from center", "notes": "" }
+    ],
+    "notes": [
+      "Contains balance shaft for 3-cylinder vibration",
+      "Check rotor clearances before assembly",
+      "Prime pump with oil before installation",
+      "Ensure pickup screen is clear"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 70, "height": 55, "rx": 5 },
+    { "type": "circle", "r": 18, "offsetX": -15, "fill": "#777" },
+    { "type": "circle", "r": 12, "offsetX": -15, "fill": "#555" },
+    { "type": "circle", "r": 15, "offsetX": 18, "fill": "#777" },
+    { "type": "circle", "r": 10, "offsetX": 18, "fill": "#555" },
+    { "type": "rect", "width": 15, "height": 30, "offsetX": -35, "offsetY": 10, "rx": 2, "fill": "#666" }
+  ]
+}

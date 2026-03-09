@@ -310,7 +310,7 @@ export function useCheckbox<T extends boolean | Record<string, boolean>>(
           [field]: !values[field as string],
         } as T
 
-        setValues(newValues)
+        setValues(newValues as Record<string, boolean>)
         options?.onChange?.(newValues)
       },
       [values, setValues, options]
@@ -329,7 +329,7 @@ export function useCheckbox<T extends boolean | Record<string, boolean>>(
           { ...values } as Record<string, boolean>
         ) as T
 
-        setValues(newValues)
+        setValues(newValues as Record<string, boolean>)
         options?.onChange?.(newValues)
       },
       [values, setValues, options]

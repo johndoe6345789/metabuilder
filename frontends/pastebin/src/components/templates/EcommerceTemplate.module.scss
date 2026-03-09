@@ -1,0 +1,34 @@
+.searchBar {
+  display: none;
+  position: relative;
+
+  @media (min-width: 768px) {
+    display: block;
+  }
+}
+
+.productGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 48px;
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.searchIcon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  color: var(--mat-sys-on-surface-variant);
+  pointer-events: none;
+}
+
+.searchInputWithIcon {
+  padding-left: 40px;
+  width: 320px;
+}

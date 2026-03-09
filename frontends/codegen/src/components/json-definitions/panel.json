@@ -1,0 +1,112 @@
+{
+  "id": "panel-card",
+  "type": "Card",
+  "bindings": {
+    "className": {
+      "source": "variant",
+      "transform": "const variantClasses = { default: 'border-border', bordered: 'border-2 border-primary/20', elevated: 'shadow-lg border-border' }; return variantClasses[data || 'default'] + (this.props.className ? ' ' + this.props.className : '')"
+    }
+  },
+  "children": [
+    {
+      "id": "panel-header",
+      "type": "div",
+      "bindings": {
+        "className": {
+          "source": ["title", "description", "actions"],
+          "transform": "const hasHeader = !!data[0] || !!data[1] || !!data[2]; return hasHeader ? 'flex items-start justify-between p-4 border-b' : ''"
+        },
+        "_if": {
+          "source": ["title", "description", "actions"],
+          "transform": "return !!data[0] || !!data[1] || !!data[2]"
+        }
+      },
+      "children": [
+        {
+          "id": "panel-header-content",
+          "type": "div",
+          "bindings": {
+            "className": {
+              "source": null,
+              "transform": "'space-y-1'"
+            }
+          },
+          "children": [
+            {
+              "id": "panel-title",
+              "type": "h3",
+              "bindings": {
+                "className": {
+                  "source": null,
+                  "transform": "'font-semibold text-lg'"
+                },
+                "children": {
+                  "source": "title",
+                  "transform": "data"
+                },
+                "_if": {
+                  "source": "title",
+                  "transform": "!!data"
+                }
+              }
+            },
+            {
+              "id": "panel-description",
+              "type": "p",
+              "bindings": {
+                "className": {
+                  "source": null,
+                  "transform": "'text-sm text-muted-foreground'"
+                },
+                "children": {
+                  "source": "description",
+                  "transform": "data"
+                },
+                "_if": {
+                  "source": "description",
+                  "transform": "!!data"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "panel-actions",
+          "type": "div",
+          "bindings": {
+            "children": {
+              "source": "actions",
+              "transform": "data"
+            },
+            "_if": {
+              "source": "actions",
+              "transform": "!!data"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "panel-content",
+      "type": "CardContent",
+      "bindings": {
+        "className": {
+          "source": null,
+          "transform": "'p-4'"
+        }
+      },
+      "children": [
+        {
+          "id": "panel-children",
+          "type": "div",
+          "bindings": {
+            "children": {
+              "source": "children",
+              "transform": "data"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

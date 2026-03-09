@@ -1,0 +1,10 @@
+{
+  "id": "placeholder-text-root",
+  "type": "p",
+  "props": {
+    "className": "placeholder-text"
+  },
+  "bindings": {
+    "children": "children"
+  }
+}

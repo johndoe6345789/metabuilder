@@ -1,0 +1,617 @@
+{
+  "project-files": [
+    {
+      "id": "file-dash-1",
+      "name": "page.tsx",
+      "path": "/src/app/page.tsx",
+      "content": "'use client'\n\nimport { DashboardStats } from '@/components/DashboardStats'\nimport { RecentActivity } from '@/components/RecentActivity'\nimport { AnalyticsCharts } from '@/components/AnalyticsCharts'\nimport { Grid, Container, Box } from '@mui/material'\n\nexport default function Dashboard() {\n  return (\n    <Container maxWidth=\"xl\" sx={{ py: 4 }}>\n      <Grid container spacing={3}>\n        <Grid item xs={12}>\n          <DashboardStats />\n        </Grid>\n        <Grid item xs={12} lg={8}>\n          <AnalyticsCharts />\n        </Grid>\n        <Grid item xs={12} lg={4}>\n          <RecentActivity />\n        </Grid>\n      </Grid>\n    </Container>\n  )\n}",
+      "language": "typescript"
+    },
+    {
+      "id": "file-dash-2",
+      "name": "analytics.tsx",
+      "path": "/src/app/analytics/page.tsx",
+      "content": "'use client'\n\nimport { AnalyticsDashboard } from '@/components/AnalyticsDashboard'\nimport { DateRangePicker } from '@/components/DateRangePicker'\nimport { Container, Box, Typography } from '@mui/material'\n\nexport default function AnalyticsPage() {\n  return (\n    <Container maxWidth=\"xl\" sx={{ py: 4 }}>\n      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 4 }}>\n        <Typography variant=\"h4\">Analytics</Typography>\n        <DateRangePicker />\n      </Box>\n      <AnalyticsDashboard />\n    </Container>\n  )\n}",
+      "language": "typescript"
+    },
+    {
+      "id": "file-dash-3",
+      "name": "users.tsx",
+      "path": "/src/app/users/page.tsx",
+      "content": "'use client'\n\nimport { UserTable } from '@/components/UserTable'\nimport { UserFilters } from '@/components/UserFilters'\nimport { Container, Box, Typography, Button } from '@mui/material'\nimport { Plus } from '@phosphor-icons/react'\n\nexport default function UsersPage() {\n  return (\n    <Container maxWidth=\"xl\" sx={{ py: 4 }}>\n      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 4 }}>\n        <Typography variant=\"h4\">Users</Typography>\n        <Button variant=\"contained\" startIcon={<Plus />}>\n          Add User\n        </Button>\n      </Box>\n      <UserFilters />\n      <UserTable />\n    </Container>\n  )\n}",
+      "language": "typescript"
+    }
+  ],
+  "project-models": [
+    {
+      "id": "model-dash-1",
+      "name": "Metric",
+      "fields": [
+        {
+          "id": "field-dash-1",
+          "name": "id",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": true,
+          "isArray": false,
+          "defaultValue": "uuid()"
+        },
+        {
+          "id": "field-dash-2",
+          "name": "name",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-dash-3",
+          "name": "value",
+          "type": "Float",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-dash-4",
+          "name": "previousValue",
+          "type": "Float",
+          "isRequired": false,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-dash-5",
+          "name": "unit",
+          "type": "String",
+          "isRequired": false,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-dash-6",
+          "name": "category",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-dash-7",
+          "name": "timestamp",
+          "type": "DateTime",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false,
+          "defaultValue": "now()"
+        }
+      ]
+    },
+    {
+      "id": "model-dash-2",
+      "name": "User",
+      "fields": [
+        {
+          "id": "field-dash-8",
+          "name": "id",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": true,
+          "isArray": false,
+          "defaultValue": "uuid()"
+        },
+        {
+          "id": "field-dash-9",
+          "name": "email",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": true,
+          "isArray": false
+        },
+        {
+          "id": "field-dash-10",
+          "name": "name",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-dash-11",
+          "name": "role",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false,
+          "defaultValue": "user"
+        },
+        {
+          "id": "field-dash-12",
+          "name": "status",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false,
+          "defaultValue": "active"
+        },
+        {
+          "id": "field-dash-13",
+          "name": "avatar",
+          "type": "String",
+          "isRequired": false,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-dash-14",
+          "name": "lastLogin",
+          "type": "DateTime",
+          "isRequired": false,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-dash-15",
+          "name": "createdAt",
+          "type": "DateTime",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false,
+          "defaultValue": "now()"
+        }
+      ]
+    },
+    {
+      "id": "model-dash-3",
+      "name": "Activity",
+      "fields": [
+        {
+          "id": "field-dash-16",
+          "name": "id",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": true,
+          "isArray": false,
+          "defaultValue": "uuid()"
+        },
+        {
+          "id": "field-dash-17",
+          "name": "userId",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false,
+          "relation": "User"
+        },
+        {
+          "id": "field-dash-18",
+          "name": "action",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-dash-19",
+          "name": "resource",
+          "type": "String",
+          "isRequired": false,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-dash-20",
+          "name": "resourceId",
+          "type": "String",
+          "isRequired": false,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-dash-21",
+          "name": "metadata",
+          "type": "Json",
+          "isRequired": false,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-dash-22",
+          "name": "timestamp",
+          "type": "DateTime",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false,
+          "defaultValue": "now()"
+        }
+      ]
+    },
+    {
+      "id": "model-dash-4",
+      "name": "Report",
+      "fields": [
+        {
+          "id": "field-dash-23",
+          "name": "id",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": true,
+          "isArray": false,
+          "defaultValue": "uuid()"
+        },
+        {
+          "id": "field-dash-24",
+          "name": "name",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-dash-25",
+          "name": "type",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-dash-26",
+          "name": "data",
+          "type": "Json",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-dash-27",
+          "name": "filters",
+          "type": "Json",
+          "isRequired": false,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-dash-28",
+          "name": "generatedBy",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false,
+          "relation": "User"
+        },
+        {
+          "id": "field-dash-29",
+          "name": "createdAt",
+          "type": "DateTime",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false,
+          "defaultValue": "now()"
+        }
+      ]
+    },
+    {
+      "id": "model-dash-5",
+      "name": "Alert",
+      "fields": [
+        {
+          "id": "field-dash-30",
+          "name": "id",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": true,
+          "isArray": false,
+          "defaultValue": "uuid()"
+        },
+        {
+          "id": "field-dash-31",
+          "name": "title",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-dash-32",
+          "name": "message",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-dash-33",
+          "name": "severity",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false,
+          "defaultValue": "info"
+        },
+        {
+          "id": "field-dash-34",
+          "name": "read",
+          "type": "Boolean",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false,
+          "defaultValue": "false"
+        },
+        {
+          "id": "field-dash-35",
+          "name": "userId",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false,
+          "relation": "User"
+        },
+        {
+          "id": "field-dash-36",
+          "name": "createdAt",
+          "type": "DateTime",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false,
+          "defaultValue": "now()"
+        }
+      ]
+    }
+  ],
+  "project-components": [
+    {
+      "id": "comp-dash-1",
+      "type": "StatCard",
+      "name": "StatCard",
+      "props": {
+        "showTrend": true,
+        "showSparkline": true,
+        "elevation": 2
+      },
+      "children": []
+    },
+    {
+      "id": "comp-dash-2",
+      "type": "DataTable",
+      "name": "DataTable",
+      "props": {
+        "sortable": true,
+        "filterable": true,
+        "paginated": true,
+        "exportable": true
+      },
+      "children": []
+    },
+    {
+      "id": "comp-dash-3",
+      "type": "ChartCard",
+      "name": "ChartCard",
+      "props": {
+        "chartType": "line",
+        "showLegend": true,
+        "interactive": true
+      },
+      "children": []
+    }
+  ],
+  "project-workflows": [
+    {
+      "id": "workflow-dash-1",
+      "name": "Alert Processing Workflow",
+      "description": "Process and route system alerts to users",
+      "nodes": [
+        {
+          "id": "node-dash-1",
+          "type": "trigger",
+          "name": "Metric Threshold",
+          "position": { "x": 100, "y": 100 },
+          "data": { "label": "Threshold Exceeded" },
+          "config": { "triggerType": "condition" }
+        },
+        {
+          "id": "node-dash-2",
+          "type": "action",
+          "name": "Create Alert",
+          "position": { "x": 300, "y": 100 },
+          "data": { "label": "Generate alert record" }
+        },
+        {
+          "id": "node-dash-3",
+          "type": "condition",
+          "name": "Check Severity",
+          "position": { "x": 500, "y": 100 },
+          "data": { "label": "Evaluate priority" }
+        },
+        {
+          "id": "node-dash-4",
+          "type": "notification",
+          "name": "Push Notification",
+          "position": { "x": 700, "y": 50 },
+          "data": { "label": "Send push" }
+        },
+        {
+          "id": "node-dash-5",
+          "type": "notification",
+          "name": "Email Notification",
+          "position": { "x": 700, "y": 100 },
+          "data": { "label": "Send email" }
+        },
+        {
+          "id": "node-dash-6",
+          "type": "database",
+          "name": "Log Activity",
+          "position": { "x": 900, "y": 100 },
+          "data": { "label": "Record activity" }
+        }
+      ],
+      "connections": [
+        { "id": "conn-dash-1", "source": "node-dash-1", "target": "node-dash-2" },
+        { "id": "conn-dash-2", "source": "node-dash-2", "target": "node-dash-3" },
+        { "id": "conn-dash-3", "source": "node-dash-3", "target": "node-dash-4", "condition": "critical" },
+        { "id": "conn-dash-4", "source": "node-dash-3", "target": "node-dash-5", "condition": "warning" },
+        { "id": "conn-dash-5", "source": "node-dash-4", "target": "node-dash-6" },
+        { "id": "conn-dash-6", "source": "node-dash-5", "target": "node-dash-6" }
+      ],
+      "isActive": true,
+      "createdAt": 1704067200000,
+      "updatedAt": 1704067200000
+    }
+  ],
+  "project-lambdas": [
+    {
+      "id": "lambda-dash-1",
+      "name": "aggregateMetrics",
+      "description": "Aggregate and calculate metrics from raw data",
+      "code": "export async function handler(event) {\n  const { timeRange, metricTypes } = event;\n  // Aggregate metrics from database\n  const metrics = {\n    totalUsers: 1234,\n    activeUsers: 987,\n    revenue: 45678.90,\n    conversions: 234\n  };\n  return {\n    statusCode: 200,\n    body: JSON.stringify({ metrics })\n  };\n}",
+      "language": "typescript",
+      "runtime": "nodejs20.x",
+      "handler": "index.handler",
+      "timeout": 30,
+      "memory": 512,
+      "environment": {},
+      "triggers": [
+        {
+          "id": "trigger-dash-1",
+          "type": "schedule",
+          "config": { "schedule": "0 * * * *" }
+        }
+      ],
+      "createdAt": 1704067200000,
+      "updatedAt": 1704067200000
+    },
+    {
+      "id": "lambda-dash-2",
+      "name": "generateReport",
+      "description": "Generate analytics reports in various formats",
+      "code": "export async function handler(event) {\n  const { reportType, filters, format } = event;\n  // Generate report data\n  return {\n    statusCode: 200,\n    body: JSON.stringify({ reportUrl: '/reports/123.pdf' })\n  };\n}",
+      "language": "typescript",
+      "runtime": "nodejs20.x",
+      "handler": "index.handler",
+      "timeout": 60,
+      "memory": 1024,
+      "environment": {},
+      "triggers": [
+        {
+          "id": "trigger-dash-2",
+          "type": "http",
+          "config": { "method": "POST", "path": "/api/reports" }
+        }
+      ],
+      "createdAt": 1704067200000,
+      "updatedAt": 1704067200000
+    }
+  ],
+  "project-playwright-tests": [
+    {
+      "id": "test-dash-1",
+      "name": "Dashboard Navigation",
+      "description": "Test navigating through dashboard sections",
+      "pageUrl": "/",
+      "steps": [
+        { "id": "step-dash-1", "action": "navigate", "value": "/" },
+        { "id": "step-dash-2", "action": "expect", "selector": ".stat-card", "assertion": "toBeVisible" },
+        { "id": "step-dash-3", "action": "click", "selector": "a[href='/analytics']" },
+        { "id": "step-dash-4", "action": "expect", "selector": ".analytics-chart", "assertion": "toBeVisible" },
+        { "id": "step-dash-5", "action": "click", "selector": "a[href='/users']" },
+        { "id": "step-dash-6", "action": "expect", "selector": ".user-table", "assertion": "toBeVisible" }
+      ]
+    }
+  ],
+  "project-storybook-stories": [
+    {
+      "id": "story-dash-1",
+      "componentName": "StatCard",
+      "storyName": "WithTrend",
+      "args": {
+        "title": "Total Revenue",
+        "value": "$45,678",
+        "trend": 12.5,
+        "trendDirection": "up"
+      },
+      "description": "Stat card with trend indicator",
+      "category": "Dashboard"
+    },
+    {
+      "id": "story-dash-2",
+      "componentName": "ChartCard",
+      "storyName": "LineChart",
+      "args": {
+        "title": "User Growth",
+        "data": [],
+        "chartType": "line"
+      },
+      "description": "Chart card with line visualization",
+      "category": "Dashboard"
+    }
+  ],
+  "project-unit-tests": [
+    {
+      "id": "test-dash-unit-1",
+      "name": "Metric Calculations",
+      "description": "Test dashboard metric calculation utilities",
+      "testType": "utility",
+      "targetFile": "/src/utils/metrics.ts",
+      "testCases": [
+        {
+          "id": "case-dash-1",
+          "description": "calculates percentage change",
+          "assertions": ["expect(calculateChange(100, 120)).toBe(20)"]
+        },
+        {
+          "id": "case-dash-2",
+          "description": "formats large numbers",
+          "assertions": ["expect(formatNumber(1234567)).toBe('1.23M')"]
+        }
+      ]
+    }
+  ],
+  "project-component-trees": [
+    {
+      "id": "tree-dash-1",
+      "name": "Dashboard Layout",
+      "description": "Main dashboard layout with sidebar navigation",
+      "rootNodes": [
+        {
+          "id": "root-dash-1",
+          "type": "Box",
+          "name": "DashboardWrapper",
+          "props": { "sx": { "display": "flex", "minHeight": "100vh" } },
+          "children": [
+            {
+              "id": "sidebar-dash-1",
+              "type": "Drawer",
+              "name": "Sidebar",
+              "props": { "variant": "permanent", "sx": { "width": 240 } },
+              "children": []
+            },
+            {
+              "id": "main-dash-1",
+              "type": "Box",
+              "name": "MainContent",
+              "props": { "sx": { "flexGrow": 1, "p": 3 } },
+              "children": [
+                {
+                  "id": "appbar-dash-1",
+                  "type": "AppBar",
+                  "name": "TopBar",
+                  "props": { "position": "sticky", "elevation": 0 },
+                  "children": []
+                },
+                {
+                  "id": "content-dash-1",
+                  "type": "Container",
+                  "name": "PageContent",
+                  "props": { "maxWidth": "xl", "sx": { "mt": 4 } },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "createdAt": 1704067200000,
+      "updatedAt": 1704067200000
+    }
+  ]
+}

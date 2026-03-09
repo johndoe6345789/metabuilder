@@ -1,0 +1,30 @@
+{
+  "name": "@metabuilder/redux-persist",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Unified Redux Persist integration with IndexedDB storage for MetaBuilder",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "^2.11.2",
+    "react": "^19.2.4",
+    "react-redux": "^9.2.0",
+    "redux-persist": "^6.0.0"
+  },
+  "peerDependencies": {
+    "@reduxjs/toolkit": "^1.9.0 || ^2.0.0",
+    "react": "^18.0.0 || ^19.0.0",
+    "react-redux": "^8.0.0 || ^9.0.0",
+    "redux-persist": "^6.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  },
+  "files": [
+    "src"
+  ]
+}

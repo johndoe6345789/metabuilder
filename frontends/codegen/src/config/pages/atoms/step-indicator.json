@@ -1,0 +1,6 @@
+{
+  "type": "MetabuilderWidgetStepIndicator",
+  "props": {
+    "onStepClick": "> void"
+  }
+}

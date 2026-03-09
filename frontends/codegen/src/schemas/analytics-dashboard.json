@@ -1,0 +1,323 @@
+{
+  "id": "analytics-dashboard",
+  "name": "Analytics Dashboard",
+  "layout": {
+    "type": "single"
+  },
+  "dataSources": [
+    {
+      "id": "users",
+      "type": "kv",
+      "key": "dashboard-users",
+      "defaultValue": [
+        { "id": 1, "name": "Alice Johnson", "email": "alice@example.com", "status": "active", "joined": "2024-01-15" },
+        { "id": 2, "name": "Bob Smith", "email": "bob@example.com", "status": "active", "joined": "2024-02-20" },
+        { "id": 3, "name": "Charlie Brown", "email": "charlie@example.com", "status": "inactive", "joined": "2023-12-10" }
+      ]
+    },
+    {
+      "id": "filterQuery",
+      "type": "static",
+      "defaultValue": ""
+    },
+    {
+      "id": "filteredUsers",
+      "type": "static",
+      "expression": "data.users",
+      "dependencies": ["users", "filterQuery"]
+    },
+    {
+      "id": "stats",
+      "type": "static",
+      "valueTemplate": {
+        "total": "data.users.length",
+        "active": "data.users.filter(status === 'active').length",
+        "inactive": "data.users.filter(status === 'inactive').length"
+      },
+      "dependencies": ["users"]
+    }
+  ],
+  "components": [
+    {
+      "id": "root",
+      "type": "div",
+      "props": {
+        "className": "h-full overflow-auto p-6 bg-gradient-to-br from-background via-background to-accent/5"
+      },
+      "children": [
+        {
+          "id": "header",
+          "type": "div",
+          "props": { "className": "mb-8" },
+          "children": [
+            {
+              "id": "title",
+              "type": "MetabuilderDisplayHeading",
+              "props": {
+                "className": "text-4xl font-bold mb-2 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent",
+                "children": "Analytics Dashboard"
+              }
+            },
+            {
+              "id": "subtitle",
+              "type": "MetabuilderDisplayText",
+              "props": {
+                "className": "text-muted-foreground text-lg",
+                "children": "Monitor your user activity and key metrics"
+              }
+            }
+          ]
+        },
+        {
+          "id": "metrics-row",
+          "type": "div",
+          "props": { "className": "grid grid-cols-1 md:grid-cols-3 gap-6 mb-8" },
+          "children": [
+            {
+              "id": "metric-total",
+              "type": "MetabuilderLayoutCard",
+              "props": { "className": "bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20" },
+              "children": [
+                {
+                  "id": "metric-total-content",
+                  "type": "MetabuilderDataCardContent",
+                  "props": { "className": "pt-6" },
+                  "children": [
+                    {
+                      "id": "metric-total-label",
+                      "type": "div",
+                      "props": { "className": "text-sm font-medium text-muted-foreground mb-2", "children": "Total Users" }
+                    },
+                    {
+                      "id": "metric-total-value",
+                      "type": "div",
+                      "props": { "className": "text-4xl font-bold text-primary" },
+                      "bindings": {
+                        "children": { "source": "stats", "path": "total" }
+                      }
+                    },
+                    {
+                      "id": "metric-total-description",
+                      "type": "div",
+                      "props": { "className": "text-xs text-muted-foreground mt-2", "children": "Registered accounts" }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "metric-active",
+              "type": "MetabuilderLayoutCard",
+              "props": { "className": "bg-gradient-to-br from-green-500/10 to-green-500/5 border-green-500/20" },
+              "children": [
+                {
+                  "id": "metric-active-content",
+                  "type": "MetabuilderDataCardContent",
+                  "props": { "className": "pt-6" },
+                  "children": [
+                    {
+                      "id": "metric-active-label",
+                      "type": "div",
+                      "props": { "className": "text-sm font-medium text-muted-foreground mb-2", "children": "Active Users" }
+                    },
+                    {
+                      "id": "metric-active-value",
+                      "type": "div",
+                      "props": { "className": "text-4xl font-bold text-green-600" },
+                      "bindings": {
+                        "children": { "source": "stats", "path": "active" }
+                      }
+                    },
+                    {
+                      "id": "metric-active-description",
+                      "type": "div",
+                      "props": { "className": "text-xs text-muted-foreground mt-2", "children": "Currently engaged" }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "metric-inactive",
+              "type": "MetabuilderLayoutCard",
+              "props": { "className": "bg-gradient-to-br from-orange-500/10 to-orange-500/5 border-orange-500/20" },
+              "children": [
+                {
+                  "id": "metric-inactive-content",
+                  "type": "MetabuilderDataCardContent",
+                  "props": { "className": "pt-6" },
+                  "children": [
+                    {
+                      "id": "metric-inactive-label",
+                      "type": "div",
+                      "props": { "className": "text-sm font-medium text-muted-foreground mb-2", "children": "Inactive Users" }
+                    },
+                    {
+                      "id": "metric-inactive-value",
+                      "type": "div",
+                      "props": { "className": "text-4xl font-bold text-orange-600" },
+                      "bindings": {
+                        "children": { "source": "stats", "path": "inactive" }
+                      }
+                    },
+                    {
+                      "id": "metric-inactive-description",
+                      "type": "div",
+                      "props": { "className": "text-xs text-muted-foreground mt-2", "children": "Need re-engagement" }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "users-section",
+          "type": "MetabuilderLayoutCard",
+          "props": { "className": "bg-card/50 backdrop-blur" },
+          "children": [
+            {
+              "id": "users-header",
+              "type": "MetabuilderLayoutCardHeader",
+              "children": [
+                {
+                  "id": "users-title-row",
+                  "type": "div",
+                  "props": { "className": "flex items-center justify-between" },
+                  "children": [
+                    {
+                      "id": "users-title",
+                      "type": "CardTitle",
+                      "props": { "children": "User Directory" }
+                    },
+                    {
+                      "id": "users-badge",
+                      "type": "MetabuilderDisplayBadge",
+                      "props": { "variant": "secondary" },
+                      "bindings": {
+                        "children": {
+                          "source": "filteredUsers",
+                          "path": "length"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "users-description",
+                  "type": "CardDescription",
+                  "props": { "children": "Manage and filter your user base" }
+                }
+              ]
+            },
+            {
+              "id": "users-content",
+              "type": "MetabuilderDataCardContent",
+              "children": [
+                {
+                  "id": "filter-row",
+                  "type": "div",
+                  "props": { "className": "mb-6" },
+                  "children": [
+                    {
+                      "id": "filter-input",
+                      "type": "MetabuilderFormInput",
+                      "props": { "placeholder": "Search users by name or email..." },
+                      "events": [
+                        {
+                          "event": "change",
+                          "actions": [
+                            {
+                              "id": "update-filter",
+                              "type": "set-value",
+                              "target": "filterQuery",
+                              "expression": "event.target.value"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "users-list",
+                  "type": "div",
+                  "props": { "className": "space-y-4" },
+                  "loop": {
+                    "source": "filteredUsers",
+                    "itemVar": "user",
+                    "indexVar": "userIndex"
+                  },
+                  "children": [
+                    {
+                      "id": "user-card",
+                      "type": "MetabuilderLayoutCard",
+                      "props": {
+                        "className": "bg-background/50 hover:bg-background/80 transition-colors border-l-4 border-l-primary"
+                      },
+                      "children": [
+                        {
+                          "id": "user-card-content",
+                          "type": "MetabuilderDataCardContent",
+                          "props": { "className": "pt-6" },
+                          "children": [
+                            {
+                              "id": "user-card-row",
+                              "type": "div",
+                              "props": { "className": "flex items-start justify-between" },
+                              "children": [
+                                {
+                                  "id": "user-card-info",
+                                  "type": "div",
+                                  "props": { "className": "flex-1" },
+                                  "children": [
+                                    {
+                                      "id": "user-card-name",
+                                      "type": "div",
+                                      "props": { "className": "font-semibold text-lg mb-1" },
+                                      "bindings": {
+                                        "children": { "source": "user", "path": "name" }
+                                      }
+                                    },
+                                    {
+                                      "id": "user-card-email",
+                                      "type": "div",
+                                      "props": { "className": "text-sm text-muted-foreground" },
+                                      "bindings": {
+                                        "children": { "source": "user", "path": "email" }
+                                      }
+                                    },
+                                    {
+                                      "id": "user-card-joined",
+                                      "type": "div",
+                                      "props": { "className": "text-xs text-muted-foreground mt-2" },
+                                      "bindings": {
+                                        "children": { "source": "user", "path": "joined" }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "id": "user-card-status",
+                                  "type": "MetabuilderDisplayBadge",
+                                  "props": { "variant": "secondary" },
+                                  "bindings": {
+                                    "children": { "source": "user", "path": "status" }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

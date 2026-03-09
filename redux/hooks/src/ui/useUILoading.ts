@@ -9,7 +9,7 @@ import { RootState } from '@metabuilder/redux-slices';
 import {
   setLoading,
   setLoadingMessage
-} from '@metabuilder/redux-slices'/uiSlice';
+} from '@metabuilder/redux-slices/uiSlice';
 
 export interface UseUILoadingReturn {
   loading: boolean;

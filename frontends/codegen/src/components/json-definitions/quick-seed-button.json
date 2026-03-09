@@ -1,0 +1,47 @@
+{
+  "id": "quick-seed-button",
+  "type": "button",
+  "bindings": {
+    "onClick": { "source": "hookData.handleSeed" },
+    "disabled": { "source": "hookData.loading" }
+  },
+  "props": {
+    "type": "button",
+    "title": "Seed Database",
+    "style": {
+      "display": "inline-flex",
+      "alignItems": "center",
+      "justifyContent": "center",
+      "gap": "6px",
+      "padding": "4px 8px",
+      "fontSize": "12px",
+      "borderRadius": "6px",
+      "border": "1px solid var(--mat-sys-outline-variant)",
+      "background": "transparent",
+      "color": "inherit",
+      "cursor": "pointer",
+      "transition": "opacity 0.15s"
+    }
+  },
+  "children": [
+    {
+      "id": "seed-icon-spinner",
+      "type": "ArrowsClockwise",
+      "condition": { "source": "hookData.loading" },
+      "props": { "size": 14, "style": { "animation": "spin 1s linear infinite" } }
+    },
+    {
+      "id": "seed-icon-static",
+      "type": "Lightning",
+      "condition": { "source": "hookData.notLoading" },
+      "props": { "size": 14 }
+    },
+    {
+      "id": "seed-label",
+      "type": "span",
+      "bindings": {
+        "children": { "source": "hookData.seedLabel" }
+      }
+    }
+  ]
+}

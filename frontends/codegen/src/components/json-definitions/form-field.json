@@ -1,0 +1,19 @@
+{
+  "id": "form-field-root",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": "className",
+      "transform": "data ? 'form-field ' + data : 'form-field'"
+    },
+    "control": "data.control",
+    "name": "data.name"
+  },
+  "children": [
+    {
+      "id": "form-field-content",
+      "type": "slot",
+      "slot": "children"
+    }
+  ]
+}

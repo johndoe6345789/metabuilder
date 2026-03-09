@@ -1,0 +1,83 @@
+{
+  "id": "lcd-mount",
+  "name": "LCD Display Mount",
+  "partNumber": "BL-A1-008",
+  "material": "plastic",
+  "quantity": 1,
+  "weight": 42.0,
+  "weightUnit": "g",
+  "baseY": 50,
+  "description": "Injection molded LCD display mounting bracket - positions the touchscreen display at optimal viewing angle, features snap-fit cable routing and integrated tilt adjustment mechanism",
+  "installation": {
+    "tools": [
+      { "name": "Hex key", "size": "2mm", "required": true },
+      { "name": "Phillips screwdriver", "size": "#1", "required": true },
+      { "name": "Plastic spudger", "size": "-", "required": false }
+    ],
+    "hardware": [
+      { "name": "Display screw", "spec": "M3x6", "grade": "8.8", "qty": 4, "reusable": true },
+      { "name": "Mount bracket screw", "spec": "M4x10", "grade": "8.8", "qty": 2, "reusable": true },
+      { "name": "T-slot nut", "spec": "M4", "qty": 2, "reusable": true },
+      { "name": "FFC ribbon cable", "spec": "24-pin 100mm", "qty": 1, "reusable": false }
+    ],
+    "torque": [
+      { "fastener": "Display screws", "value": 0.4, "unit": "Nm", "sequence": "Diagonal pattern", "notes": "Very light torque - LCD can crack" },
+      { "fastener": "Mount bracket screws", "value": 1.5, "unit": "Nm", "sequence": "Both evenly", "notes": "Allows angle adjustment" }
+    ],
+    "notes": [
+      "Handle LCD with care - static sensitive",
+      "Route ribbon cable before securing display",
+      "Tilt angle adjustable 15-45 degrees",
+      "Cable connector is delicate - align carefully"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 90, "height": 60, "rx": 4, "fill": "#303030" },
+    { "type": "rect", "width": 80, "height": 50, "rx": 2, "fill": "#1a1a1a" },
+    { "type": "rect", "width": 20, "height": 25, "offsetY": 35, "fill": "#353535" },
+    { "type": "circle", "r": 3, "offsetX": -38, "offsetY": -22, "fill": "#444" },
+    { "type": "circle", "r": 3, "offsetX": 38, "offsetY": -22, "fill": "#444" },
+    { "type": "circle", "r": 3, "offsetX": -38, "offsetY": 22, "fill": "#444" },
+    { "type": "circle", "r": 3, "offsetX": 38, "offsetY": 22, "fill": "#444" }
+  ],
+  "geometry3d": [
+    { "type": "box", "width": 90, "height": 60, "depth": 6, "fill": "#303030" },
+
+    { "type": "box", "width": 82, "height": 52, "depth": 3, "offsetZ": 2, "fill": "#1a1a1a" },
+
+    { "type": "box", "width": 95, "height": 8, "depth": 10, "offsetY": -28, "fill": "#353535" },
+    { "type": "box", "width": 95, "height": 8, "depth": 10, "offsetY": 28, "fill": "#353535" },
+
+    { "type": "cylinder", "r": 2, "height": 12, "offsetX": -40, "offsetY": -24, "rotateX": 90, "subtract": true },
+    { "type": "cylinder", "r": 2, "height": 12, "offsetX": 40, "offsetY": -24, "rotateX": 90, "subtract": true },
+    { "type": "cylinder", "r": 2, "height": 12, "offsetX": -40, "offsetY": 24, "rotateX": 90, "subtract": true },
+    { "type": "cylinder", "r": 2, "height": 12, "offsetX": 40, "offsetY": 24, "rotateX": 90, "subtract": true },
+
+    { "type": "cylinder", "r": 4, "height": 3, "offsetX": -40, "offsetY": -24, "offsetZ": 3, "fill": "#505050" },
+    { "type": "cylinder", "r": 4, "height": 3, "offsetX": 40, "offsetY": -24, "offsetZ": 3, "fill": "#505050" },
+    { "type": "cylinder", "r": 4, "height": 3, "offsetX": -40, "offsetY": 24, "offsetZ": 3, "fill": "#505050" },
+    { "type": "cylinder", "r": 4, "height": 3, "offsetX": 40, "offsetY": 24, "offsetZ": 3, "fill": "#505050" },
+
+    { "type": "box", "width": 20, "height": 40, "depth": 8, "offsetY": 45, "fill": "#353535" },
+
+    { "type": "box", "width": 8, "height": 12, "depth": 25, "offsetY": 60, "fill": "#404040" },
+
+    { "type": "cylinder", "r": 2.5, "height": 25, "offsetY": 60, "rotateZ": 90, "subtract": true },
+
+    { "type": "cylinder", "r": 5, "height": 10, "offsetY": 55, "offsetX": -6, "rotateZ": 90, "fill": "#505050" },
+    { "type": "cylinder", "r": 5, "height": 10, "offsetY": 55, "offsetX": 6, "rotateZ": 90, "fill": "#505050" },
+
+    { "type": "box", "width": 30, "height": 8, "depth": 4, "offsetY": 32, "offsetZ": -3, "fill": "#2a2a2a" },
+    { "type": "box", "width": 24, "height": 5, "depth": 6, "offsetY": 32, "offsetZ": -3, "subtract": true },
+
+    { "type": "box", "width": 4, "height": 55, "depth": 8, "offsetX": -43, "fill": "#383838" },
+    { "type": "box", "width": 4, "height": 55, "depth": 8, "offsetX": 43, "fill": "#383838" },
+
+    { "type": "box", "width": 50, "height": 3, "depth": 4, "offsetY": -35, "offsetZ": 1, "fill": "#454545" },
+    { "type": "box", "width": 35, "height": 2, "depth": 2, "offsetY": -35, "offsetZ": 1, "subtract": true },
+
+    { "type": "box", "width": 12, "height": 6, "depth": 3, "offsetX": 35, "offsetY": 0, "offsetZ": -4, "fill": "#404040" },
+    { "type": "cylinder", "r": 1.5, "height": 8, "offsetX": 35, "offsetY": 2, "offsetZ": -4, "rotateX": 90, "subtract": true },
+    { "type": "cylinder", "r": 1.5, "height": 8, "offsetX": 35, "offsetY": -2, "offsetZ": -4, "rotateX": 90, "subtract": true }
+  ]
+}

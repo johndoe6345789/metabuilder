@@ -1,0 +1,47 @@
+{
+  "$schema": "../../../schemas/plugin-nodes.schema.json",
+  "category": {
+    "id": "triggers",
+    "name": "Triggers",
+    "color": "#ff6b6b",
+    "icon": "zap"
+  },
+  "nodes": [
+    {
+      "id": "trigger.manual",
+      "name": "Manual Trigger",
+      "description": "Start workflow manually",
+      "icon": "play",
+      "inputs": [],
+      "outputs": ["main"],
+      "defaultConfig": {}
+    },
+    {
+      "id": "trigger.schedule",
+      "name": "Schedule",
+      "description": "Run on a schedule (cron)",
+      "icon": "clock",
+      "inputs": [],
+      "outputs": ["main"],
+      "defaultConfig": { "cron": "0 0 * * *", "timezone": "UTC" }
+    },
+    {
+      "id": "trigger.webhook",
+      "name": "Webhook",
+      "description": "Trigger via HTTP webhook",
+      "icon": "globe",
+      "inputs": [],
+      "outputs": ["main"],
+      "defaultConfig": { "path": "/webhook", "method": "POST", "authentication": "none" }
+    },
+    {
+      "id": "trigger.event",
+      "name": "Event Trigger",
+      "description": "Trigger on system event",
+      "icon": "bell",
+      "inputs": [],
+      "outputs": ["main"],
+      "defaultConfig": { "eventType": "", "filter": {} }
+    }
+  ]
+}

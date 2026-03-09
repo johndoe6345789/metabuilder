@@ -40,10 +40,9 @@ export type {
 export { MultiTenantError } from './types';
 
 export {
-  TenantSafetyEnforcer,
-  getTenantSafetyEnforcer,
-  resetTenantSafetyEnforcer,
-  type TenantAuditEntry
+  TenantSafetyManager,
+  type TenantContext as TenantSafetyContext,
+  type TenantValidationResult
 } from './multi-tenant/tenant-safety';
 
 // ============================================================================
@@ -94,7 +93,6 @@ export {
   httpRequestExecutor,
   conditionExecutor,
   emailSendExecutor,
-  setEmailService,
   webhookResponseExecutor,
   transformExecutor,
   waitExecutor,
@@ -109,7 +107,7 @@ export {
   listPlugins,
   dictPlugins,
   convertPlugins,
-  varPlugins
+  varPlugins,
 } from './plugins/index';
 
 // ============================================================================

@@ -1,0 +1,58 @@
+{
+  "id": "info-card-container",
+  "type": "div",
+  "props": {
+    "className": "info-card"
+  },
+  "children": [
+    {
+      "id": "info-card-header",
+      "type": "div",
+      "props": {
+        "className": "info-card__header"
+      },
+      "children": [
+        {
+          "id": "info-card-icon",
+          "type": "Icon",
+          "props": {
+            "className": "info-card__icon"
+          },
+          "bindings": {
+            "name": { "source": "iconName" },
+            "size": { "source": "iconSize" }
+          },
+          "conditional": {
+            "if": "iconName"
+          }
+        },
+        {
+          "id": "info-card-title",
+          "type": "div",
+          "props": {
+            "className": "info-card__title"
+          },
+          "bindings": {
+            "children": "title"
+          }
+        }
+      ]
+    },
+    {
+      "id": "info-card-body",
+      "type": "div",
+      "props": {
+        "className": "info-card__body"
+      },
+      "bindings": {
+        "children": {
+          "source": "rows",
+          "transform": "source.map((row, index) => ({ id: `info-row-${index}`, type: 'div', className: 'info-card__row', children: [{ type: 'div', className: 'info-card__label', children: [{ type: 'Text', value: row.label }] }, { type: 'div', className: 'info-card__value', children: [{ type: 'Text', value: row.value }] }] }))"
+        }
+      },
+      "conditional": {
+        "if": "rows"
+      }
+    }
+  ]
+}

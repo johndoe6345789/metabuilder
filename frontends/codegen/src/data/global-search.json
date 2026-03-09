@@ -1,0 +1,182 @@
+[
+  {
+    "id": "nav-dashboard",
+    "title": "Dashboard",
+    "subtitle": "View project overview and statistics",
+    "category": "Navigation",
+    "icon": "ChartBar",
+    "tab": "dashboard",
+    "tags": ["home", "overview", "stats", "metrics"]
+  },
+  {
+    "id": "nav-code",
+    "title": "Code Editor",
+    "subtitle": "Edit project files with Monaco",
+    "category": "Navigation",
+    "icon": "Code",
+    "tab": "code",
+    "tags": ["editor", "monaco", "typescript", "javascript"]
+  },
+  {
+    "id": "nav-models",
+    "title": "Models",
+    "subtitle": "Design Prisma database models",
+    "category": "Navigation",
+    "icon": "Database",
+    "tab": "models",
+    "tags": ["prisma", "database", "schema", "orm"]
+  },
+  {
+    "id": "nav-components",
+    "title": "Components",
+    "subtitle": "Build React components",
+    "category": "Navigation",
+    "icon": "Tree",
+    "tab": "components",
+    "tags": ["react", "mui", "ui", "design"]
+  },
+  {
+    "id": "nav-component-trees",
+    "title": "Component Trees",
+    "subtitle": "Manage component hierarchies",
+    "category": "Navigation",
+    "icon": "Tree",
+    "tab": "component-trees",
+    "tags": ["hierarchy", "structure", "layout"]
+  },
+  {
+    "id": "nav-workflows",
+    "title": "Workflows",
+    "subtitle": "Design n8n-style workflows",
+    "category": "Navigation",
+    "icon": "FlowArrow",
+    "tab": "workflows",
+    "tags": ["automation", "n8n", "flow", "pipeline"]
+  },
+  {
+    "id": "nav-lambdas",
+    "title": "Lambdas",
+    "subtitle": "Create serverless functions",
+    "category": "Navigation",
+    "icon": "Code",
+    "tab": "lambdas",
+    "tags": ["serverless", "functions", "api"]
+  },
+  {
+    "id": "nav-styling",
+    "title": "Styling",
+    "subtitle": "Design themes and colors",
+    "category": "Navigation",
+    "icon": "PaintBrush",
+    "tab": "styling",
+    "tags": ["theme", "colors", "css", "design"]
+  },
+  {
+    "id": "nav-flask",
+    "title": "Flask API",
+    "subtitle": "Configure Flask backend",
+    "category": "Navigation",
+    "icon": "Flask",
+    "tab": "flask",
+    "tags": ["python", "backend", "api", "rest"]
+  },
+  {
+    "id": "nav-playwright",
+    "title": "Playwright Tests",
+    "subtitle": "E2E testing configuration",
+    "category": "Navigation",
+    "icon": "Play",
+    "tab": "playwright",
+    "tags": ["testing", "e2e", "automation"]
+  },
+  {
+    "id": "nav-storybook",
+    "title": "Storybook",
+    "subtitle": "Component documentation",
+    "category": "Navigation",
+    "icon": "BookOpen",
+    "tab": "storybook",
+    "tags": ["documentation", "components", "stories"]
+  },
+  {
+    "id": "nav-unit-tests",
+    "title": "Unit Tests",
+    "subtitle": "Configure unit testing",
+    "category": "Navigation",
+    "icon": "Cube",
+    "tab": "unit-tests",
+    "tags": ["testing", "jest", "vitest"]
+  },
+  {
+    "id": "nav-errors",
+    "title": "Error Repair",
+    "subtitle": "Auto-detect and fix errors",
+    "category": "Navigation",
+    "icon": "Wrench",
+    "tab": "errors",
+    "tags": ["debugging", "errors", "fixes"]
+  },
+  {
+    "id": "nav-docs",
+    "title": "Documentation",
+    "subtitle": "View project documentation",
+    "category": "Navigation",
+    "icon": "FileText",
+    "tab": "docs",
+    "tags": ["readme", "guide", "help"]
+  },
+  {
+    "id": "nav-sass",
+    "title": "Sass Styles",
+    "subtitle": "Custom Sass styling",
+    "category": "Navigation",
+    "icon": "PaintBrush",
+    "tab": "sass",
+    "tags": ["sass", "scss", "styles", "css"]
+  },
+  {
+    "id": "nav-favicon",
+    "title": "Favicon Designer",
+    "subtitle": "Design app icons",
+    "category": "Navigation",
+    "icon": "Image",
+    "tab": "favicon",
+    "tags": ["icon", "logo", "design"]
+  },
+  {
+    "id": "nav-settings",
+    "title": "Settings",
+    "subtitle": "Configure Next.js and npm",
+    "category": "Navigation",
+    "icon": "Gear",
+    "tab": "settings",
+    "tags": ["config", "nextjs", "npm", "packages"]
+  },
+  {
+    "id": "nav-pwa",
+    "title": "PWA Settings",
+    "subtitle": "Progressive Web App config",
+    "category": "Navigation",
+    "icon": "DeviceMobile",
+    "tab": "pwa",
+    "tags": ["mobile", "install", "offline"]
+  },
+  {
+    "id": "nav-features",
+    "title": "Feature Toggles",
+    "subtitle": "Enable or disable features",
+    "category": "Navigation",
+    "icon": "Faders",
+    "tab": "features",
+    "tags": ["settings", "toggles", "enable"]
+  },
+  {
+    "id": "nav-ideas",
+    "title": "Feature Ideas",
+    "subtitle": "Brainstorm and organize ideas",
+    "category": "Navigation",
+    "icon": "Lightbulb",
+    "tab": "ideas",
+    "tags": ["brainstorm", "ideas", "planning"]
+  }
+]

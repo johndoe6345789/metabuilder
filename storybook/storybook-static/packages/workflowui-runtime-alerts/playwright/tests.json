@@ -1,0 +1,703 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "workflowui-runtime-alerts",
+  "version": "1.0.0",
+  "description": "Runtime initialization failure alerts and notification bell tests",
+  "tests": [
+    {
+      "name": "Python runtime initialization failure shows alert",
+      "tags": ["@alerts", "@runtime-failures", "@python"],
+      "timeout": 45000,
+      "steps": [
+        {
+          "description": "Mock Python runtime check failure",
+          "action": "mockApi",
+          "url": "**/api/runtimes/python/health",
+          "method": "GET",
+          "response": {
+            "success": false,
+            "runtime": "python",
+            "status": "failed",
+            "error": "Python interpreter not found",
+            "details": {
+              "expectedPath": "/usr/bin/python3",
+              "checkedPaths": ["/usr/bin/python3", "/usr/local/bin/python3"],
+              "systemPython": null,
+              "requiredVersion": "3.9+",
+              "actualVersion": null
+            }
+          },
+          "status": 503
+        },
+        {
+          "description": "Navigate to dashboard",
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "wait",
+          "timeout": 2000
+        },
+        {
+          "description": "Capture dashboard with alert",
+          "action": "debugScreenshot",
+          "filename": "alert-python-01-dashboard.png"
+        },
+        {
+          "description": "Verify notification bell shows count",
+          "action": "expect",
+          "selector": "[data-testid='button-notifications'], button:has-text('Notifications')",
+          "assertion": {"matcher": "toBeVisible"}
+        },
+        {
+          "description": "Check notification badge count increased",
+          "action": "retry",
+          "maxAttempts": 3,
+          "delay": 500,
+          "steps": [
+            {
+              "action": "expect",
+              "selector": ".badge, [class*='badge'], [data-testid*='notification-count']",
+              "assertion": {"matcher": "toBeVisible"}
+            }
+          ]
+        },
+        {
+          "description": "Inspect notification bell",
+          "action": "inspectElement",
+          "selector": "[data-testid='button-notifications'], button:has-text('Notifications')"
+        },
+        {
+          "description": "Click notification bell",
+          "action": "click",
+          "selector": "[data-testid='button-notifications'], button:has-text('Notifications')"
+        },
+        {
+          "action": "wait",
+          "timeout": 500
+        },
+        {
+          "description": "Capture notifications panel opened",
+          "action": "debugScreenshot",
+          "filename": "alert-python-02-notifications-open.png"
+        },
+        {
+          "description": "Verify Python runtime error in notifications",
+          "action": "expect",
+          "selector": "text=Python, text=runtime, text=failed, text=interpreter",
+          "assertion": {"matcher": "toBeVisible"}
+        },
+        {
+          "description": "Find error details",
+          "action": "findByText",
+          "text": "Python interpreter not found"
+        },
+        {
+          "description": "Get all notification text",
+          "action": "getAllText"
+        }
+      ]
+    },
+    {
+      "name": "C++ runtime initialization failure shows alert",
+      "tags": ["@alerts", "@runtime-failures", "@cpp"],
+      "timeout": 45000,
+      "steps": [
+        {
+          "description": "Mock C++ runtime check failure",
+          "action": "mockApi",
+          "url": "**/api/runtimes/cpp/health",
+          "method": "GET",
+          "response": {
+            "success": false,
+            "runtime": "cpp",
+            "status": "failed",
+            "error": "C++ compiler not found",
+            "details": {
+              "checkedCompilers": ["g++", "clang++", "msvc"],
+              "systemCompiler": null,
+              "requiredVersion": "C++17 or higher",
+              "cmakeAvailable": false
+            }
+          },
+          "status": 503
+        },
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "wait",
+          "timeout": 2000
+        },
+        {
+          "description": "Capture C++ runtime failure alert",
+          "action": "debugScreenshot",
+          "filename": "alert-cpp-01-dashboard.png"
+        },
+        {
+          "description": "Click notifications",
+          "action": "click",
+          "selector": "[data-testid='button-notifications'], button:has-text('Notifications')"
+        },
+        {
+          "action": "wait",
+          "timeout": 500
+        },
+        {
+          "description": "Capture notifications with C++ error",
+          "action": "debugScreenshot",
+          "filename": "alert-cpp-02-notifications.png"
+        },
+        {
+          "description": "Verify C++ runtime error shown",
+          "action": "expect",
+          "selector": "text=C++, text=compiler, text=not found",
+          "assertion": {"matcher": "toBeVisible"}
+        },
+        {
+          "description": "Find compiler details",
+          "action": "findByText",
+          "text": "compiler"
+        }
+      ]
+    },
+    {
+      "name": "TypeScript runtime working shows no alert",
+      "tags": ["@alerts", "@runtime-success", "@typescript"],
+      "timeout": 30000,
+      "steps": [
+        {
+          "description": "Mock TypeScript runtime healthy",
+          "action": "mockApi",
+          "url": "**/api/runtimes/typescript/health",
+          "method": "GET",
+          "response": {
+            "success": true,
+            "runtime": "typescript",
+            "status": "healthy",
+            "details": {
+              "nodeVersion": "v20.11.0",
+              "typescriptVersion": "5.3.3",
+              "availablePackages": ["axios", "lodash", "date-fns"]
+            }
+          },
+          "status": 200
+        },
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "wait",
+          "timeout": 1000
+        },
+        {
+          "description": "Capture dashboard with healthy runtime",
+          "action": "debugScreenshot",
+          "filename": "alert-ts-01-healthy.png"
+        },
+        {
+          "description": "Verify notification count is low or zero",
+          "action": "expect",
+          "selector": "[data-testid='button-notifications']",
+          "assertion": {"matcher": "toBeVisible"}
+        }
+      ]
+    },
+    {
+      "name": "multiple runtime failures stack in notifications",
+      "tags": ["@alerts", "@runtime-failures", "@multiple"],
+      "timeout": 45000,
+      "steps": [
+        {
+          "description": "Mock Python failure",
+          "action": "mockApi",
+          "url": "**/api/runtimes/python/health",
+          "method": "GET",
+          "response": {
+            "success": false,
+            "runtime": "python",
+            "status": "failed",
+            "error": "Python interpreter not found"
+          },
+          "status": 503
+        },
+        {
+          "description": "Mock C++ failure",
+          "action": "mockApi",
+          "url": "**/api/runtimes/cpp/health",
+          "method": "GET",
+          "response": {
+            "success": false,
+            "runtime": "cpp",
+            "status": "failed",
+            "error": "C++ compiler not found"
+          },
+          "status": 503
+        },
+        {
+          "description": "Mock TypeScript healthy",
+          "action": "mockApi",
+          "url": "**/api/runtimes/typescript/health",
+          "method": "GET",
+          "response": {
+            "success": true,
+            "runtime": "typescript",
+            "status": "healthy"
+          },
+          "status": 200
+        },
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "wait",
+          "timeout": 2000
+        },
+        {
+          "description": "Capture multiple runtime failures",
+          "action": "debugScreenshot",
+          "filename": "alert-multi-01-dashboard.png"
+        },
+        {
+          "description": "Verify notification count shows 2+",
+          "action": "expect",
+          "selector": "[data-testid='button-notifications']",
+          "assertion": {"matcher": "toBeVisible"}
+        },
+        {
+          "description": "Click notifications",
+          "action": "click",
+          "selector": "[data-testid='button-notifications']"
+        },
+        {
+          "action": "wait",
+          "timeout": 500
+        },
+        {
+          "description": "Capture notification list",
+          "action": "debugScreenshot",
+          "filename": "alert-multi-02-list.png"
+        },
+        {
+          "description": "Verify both Python and C++ errors shown",
+          "action": "findByText",
+          "text": "Python"
+        },
+        {
+          "description": "Find C++ error too",
+          "action": "findByText",
+          "text": "C++"
+        },
+        {
+          "description": "Inspect notification structure",
+          "action": "inspectPageStructure"
+        }
+      ]
+    },
+    {
+      "name": "runtime failure alert is dismissible",
+      "tags": ["@alerts", "@interaction", "@dismiss"],
+      "timeout": 30000,
+      "steps": [
+        {
+          "description": "Mock Python failure",
+          "action": "mockApi",
+          "url": "**/api/runtimes/python/health",
+          "method": "GET",
+          "response": {
+            "success": false,
+            "runtime": "python",
+            "status": "failed",
+            "error": "Python interpreter not found"
+          },
+          "status": 503
+        },
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "wait",
+          "timeout": 1000
+        },
+        {
+          "description": "Open notifications",
+          "action": "click",
+          "selector": "[data-testid='button-notifications']"
+        },
+        {
+          "action": "wait",
+          "timeout": 500
+        },
+        {
+          "description": "Capture notification before dismiss",
+          "action": "debugScreenshot",
+          "filename": "alert-dismiss-01-before.png"
+        },
+        {
+          "description": "Click dismiss/close button",
+          "action": "retry",
+          "maxAttempts": 2,
+          "delay": 500,
+          "steps": [
+            {
+              "action": "click",
+              "selector": "button[aria-label*='dismiss'], button[aria-label*='close'], button:has-text('✕'), .close-button"
+            }
+          ]
+        },
+        {
+          "action": "wait",
+          "timeout": 500
+        },
+        {
+          "description": "Capture after dismiss",
+          "action": "debugScreenshot",
+          "filename": "alert-dismiss-02-after.png"
+        },
+        {
+          "description": "Verify notification dismissed",
+          "action": "expectNotVisible",
+          "selector": "text=Python interpreter not found"
+        }
+      ]
+    },
+    {
+      "name": "runtime failure in workflow execution shows inline error",
+      "tags": ["@alerts", "@execution", "@inline-errors"],
+      "timeout": 45000,
+      "steps": [
+        {
+          "description": "Mock Python workflow",
+          "action": "mockApi",
+          "url": "**/api/dbal/default/core/Workflow/py-fail-workflow",
+          "method": "GET",
+          "response": {
+            "success": true,
+            "data": {
+              "id": "py-fail-workflow",
+              "name": "Python Workflow",
+              "language": "python"
+            }
+          },
+          "status": 200
+        },
+        {
+          "action": "navigate",
+          "url": "/editor/py-fail-workflow"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "wait",
+          "timeout": 2000
+        },
+        {
+          "description": "Mock execution failure due to runtime",
+          "action": "mockApi",
+          "url": "**/api/workflows/py-fail-workflow/execute",
+          "method": "POST",
+          "response": {
+            "success": false,
+            "error": {
+              "code": "RUNTIME_NOT_AVAILABLE",
+              "message": "Python runtime is not available",
+              "runtime": "python",
+              "details": "Python interpreter could not be initialized. Please check system configuration."
+            }
+          },
+          "status": 503
+        },
+        {
+          "description": "Capture editor before execution",
+          "action": "debugScreenshot",
+          "filename": "alert-exec-01-before.png"
+        },
+        {
+          "description": "Click Execute button",
+          "action": "click",
+          "role": "button",
+          "text": "Execute"
+        },
+        {
+          "action": "wait",
+          "timeout": 2000
+        },
+        {
+          "description": "Capture runtime error inline",
+          "action": "debugScreenshot",
+          "filename": "alert-exec-02-inline-error.png"
+        },
+        {
+          "description": "Verify inline error shown",
+          "action": "expect",
+          "selector": "text=runtime, text=not available, [role='alert']",
+          "assertion": {"matcher": "toBeVisible"}
+        },
+        {
+          "description": "Find error message",
+          "action": "findByText",
+          "text": "Python runtime is not available"
+        },
+        {
+          "description": "Verify notification bell also updated",
+          "action": "expect",
+          "selector": "[data-testid='button-notifications']",
+          "assertion": {"matcher": "toBeVisible"}
+        }
+      ]
+    },
+    {
+      "name": "runtime recovery notification shows success",
+      "tags": ["@alerts", "@recovery", "@success"],
+      "timeout": 45000,
+      "steps": [
+        {
+          "description": "Initially mock Python as failed",
+          "action": "mockApi",
+          "url": "**/api/runtimes/python/health",
+          "method": "GET",
+          "response": {
+            "success": false,
+            "runtime": "python",
+            "status": "failed",
+            "error": "Python interpreter not found"
+          },
+          "status": 503
+        },
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "wait",
+          "timeout": 1000
+        },
+        {
+          "description": "Capture initial failure state",
+          "action": "debugScreenshot",
+          "filename": "alert-recovery-01-failed.png"
+        },
+        {
+          "description": "Mock runtime health check retry as successful",
+          "action": "mockApi",
+          "url": "**/api/runtimes/python/health",
+          "method": "GET",
+          "response": {
+            "success": true,
+            "runtime": "python",
+            "status": "healthy",
+            "details": {
+              "pythonVersion": "3.11.0",
+              "recoveredAt": "2026-02-08T14:30:00Z"
+            }
+          },
+          "status": 200
+        },
+        {
+          "description": "Reload to trigger health check",
+          "action": "reload"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "wait",
+          "timeout": 2000
+        },
+        {
+          "description": "Capture recovery state",
+          "action": "debugScreenshot",
+          "filename": "alert-recovery-02-recovered.png"
+        },
+        {
+          "description": "Open notifications to see recovery message",
+          "action": "click",
+          "selector": "[data-testid='button-notifications']"
+        },
+        {
+          "action": "wait",
+          "timeout": 500
+        },
+        {
+          "description": "Capture recovery notification",
+          "action": "debugScreenshot",
+          "filename": "alert-recovery-03-notification.png"
+        },
+        {
+          "description": "Verify success message",
+          "action": "expect",
+          "selector": "text=Python, text=recovered, text=healthy, text=available",
+          "assertion": {"matcher": "toBeVisible"}
+        }
+      ]
+    },
+    {
+      "name": "notification bell badge shows correct count",
+      "tags": ["@alerts", "@badge", "@count"],
+      "timeout": 30000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Capture initial notification badge",
+          "action": "debugScreenshot",
+          "filename": "alert-badge-01-initial.png"
+        },
+        {
+          "description": "Inspect notification bell element",
+          "action": "inspectElement",
+          "selector": "[data-testid='button-notifications']"
+        },
+        {
+          "description": "Get badge computed styles",
+          "action": "getComputedStyle",
+          "selector": ".badge, [class*='badge']",
+          "property": "background-color"
+        },
+        {
+          "description": "Find badge text/count",
+          "action": "retry",
+          "maxAttempts": 2,
+          "delay": 500,
+          "steps": [
+            {
+              "action": "findByText",
+              "text": "2"
+            }
+          ]
+        },
+        {
+          "description": "Click notification bell",
+          "action": "click",
+          "selector": "[data-testid='button-notifications']"
+        },
+        {
+          "action": "wait",
+          "timeout": 500
+        },
+        {
+          "description": "Capture opened notifications",
+          "action": "debugScreenshot",
+          "filename": "alert-badge-02-opened.png"
+        },
+        {
+          "description": "Verify notification items count matches badge",
+          "action": "expectCount",
+          "selector": "[class*='notification-item'], [data-testid*='notification']",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "name": "notification panel shows timestamp and severity",
+      "tags": ["@alerts", "@ui", "@details"],
+      "timeout": 30000,
+      "steps": [
+        {
+          "description": "Mock runtime failure with timestamp",
+          "action": "mockApi",
+          "url": "**/api/runtimes/python/health",
+          "method": "GET",
+          "response": {
+            "success": false,
+            "runtime": "python",
+            "status": "failed",
+            "error": "Python interpreter not found",
+            "timestamp": "2026-02-08T14:25:00Z",
+            "severity": "error"
+          },
+          "status": 503
+        },
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "wait",
+          "timeout": 1000
+        },
+        {
+          "description": "Open notifications",
+          "action": "click",
+          "selector": "[data-testid='button-notifications']"
+        },
+        {
+          "action": "wait",
+          "timeout": 500
+        },
+        {
+          "description": "Capture notification details",
+          "action": "debugScreenshot",
+          "filename": "alert-details-01-panel.png"
+        },
+        {
+          "description": "Inspect notification item",
+          "action": "retry",
+          "maxAttempts": 2,
+          "delay": 500,
+          "steps": [
+            {
+              "action": "inspectElement",
+              "selector": "[class*='notification-item'], [data-testid*='notification']"
+            }
+          ]
+        },
+        {
+          "description": "Find timestamp",
+          "action": "findByText",
+          "text": "ago"
+        },
+        {
+          "description": "Find severity indicator",
+          "action": "findByText",
+          "text": "error"
+        },
+        {
+          "description": "Get all notification panel text",
+          "action": "getAllText"
+        }
+      ]
+    }
+  ]
+}

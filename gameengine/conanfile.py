@@ -12,7 +12,6 @@ class SDL3CppConan(ConanFile):
     generators = "CMakeDeps", "VirtualRunEnv"
     BASE_REQUIRES = (
         "sdl/3.2.20",
-        "shaderc/2025.3",
         "cpptrace/1.0.4",
         "ogg/1.3.5",
         "theora/1.1.1",
@@ -23,8 +22,8 @@ class SDL3CppConan(ConanFile):
         "glm/1.0.1",
         "vorbis/1.3.7",
         "rapidjson/cci.20230929",
+        "nlohmann_json/3.11.3",
         "lunasvg/3.0.1",
-        "libvips/8.16.0",
         "freetype/2.13.2",
         "ffmpeg/8.0.1",
         "cairo/1.18.0",
@@ -33,17 +32,15 @@ class SDL3CppConan(ConanFile):
         "gtest/1.17.0"
     )
     RENDER_STACK_REQUIRES = (
-        "bgfx/1.129.8930-495",
         "entt/3.16.0",
-        "materialx/1.39.1",
-        "spirv-cross/1.4.321.0",
-        "spirv-tools/1.4.313.0"
     )
 
     def configure(self):
-        self.requires("wayland/1.23.92", override=True)
-        self.requires("libalsa/1.2.14", override=True)
-        self.requires("pulseaudio/17.0", override=True)
+        # Only require Linux audio/display dependencies on Linux
+        if self.settings.os == "Linux":
+            self.requires("wayland/1.23.92", override=True)
+            self.requires("libalsa/1.2.10", override=True)
+            self.requires("pulseaudio/17.0", override=True)
         # Disable 3mf exporter which uses kuba-zip to avoid duplicate symbols with libzip
         self.options["assimp"].with_3mf_exporter = False
 

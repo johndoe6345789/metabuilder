@@ -1,0 +1,113 @@
+=================================================================
+JSON Config Writer Input Refactoring - Before/After Comparison
+=================================================================
+
+BEFORE: Free Functions in Anonymous Namespace
+----------------------------------------------
+namespace sdl3cpp::services::impl::json_config_writer {
+
+namespace {
+void addMappingObject(const char* name, ...) {
+    // implementation
+}
+}  // namespace
+
+void buildInputSection(rapidjson::Document& document, ...) {
+    // ...
+    addMappingObject("gamepad_button_actions", ...);
+    addMappingObject("gamepad_axis_actions", ...);
+}
+
+}  // namespace sdl3cpp::services::impl::json_config_writer
+
+AFTER: Class Methods
+--------------------
+namespace sdl3cpp::services::impl {
+
+void JsonConfigWriterService::addMappingObject(const char* name, ...) {
+    // implementation
+}
+
+void JsonConfigWriterService::buildInputSection(rapidjson::Document& document, ...) {
+    // ...
+    this->addMappingObject("gamepad_button_actions", ...);
+    this->addMappingObject("gamepad_axis_actions", ...);
+}
+
+}  // namespace sdl3cpp::services::impl
+
+=================================================================
+Header File Changes
+=================================================================
+
+BEFORE: Minimal Header
+----------------------
+class JsonConfigWriterService : public IConfigWriterService {
+public:
+    explicit JsonConfigWriterService(std::shared_ptr<ILogger> logger);
+    void WriteConfig(const RuntimeConfig& config, const std::filesystem::path& configPath) override;
+
+private:
+    std::shared_ptr<ILogger> logger_;
+};
+
+AFTER: With Private Methods
+----------------------------
+class JsonConfigWriterService : public IConfigWriterService {
+public:
+    explicit JsonConfigWriterService(std::shared_ptr<ILogger> logger);
+    void WriteConfig(const RuntimeConfig& config, const std::filesystem::path& configPath) override;
+
+private:
+    // Input section builders
+    void addMappingObject(const char* name,
+                          const std::unordered_map<std::string, std::string>& mappings,
+                          rapidjson::Value& target,
+                          rapidjson::Document::AllocatorType& allocator);
+
+    void buildInputSection(rapidjson::Document& document,
+                           const RuntimeConfig& config);
+
+    std::shared_ptr<ILogger> logger_;
+};
+
+=================================================================
+Call Site Changes
+=================================================================
+
+BEFORE: Free Function Calls
+----------------------------
+void JsonConfigWriterService::WriteConfig(...) {
+    json_config_writer::buildInputSection(document, config);
+}
+
+AFTER: Method Calls
+-------------------
+void JsonConfigWriterService::WriteConfig(...) {
+    this->buildInputSection(document, config);
+}
+
+=================================================================
+Summary of Changes
+=================================================================
+
+Files Modified:
+  1. json_config_writer_input.cpp       - Converted functions to methods
+  2. json_config_writer_service.hpp     - Added private method declarations
+  3. json_config_writer_service.cpp     - Updated call sites
+  4. json_config_writer_internal.hpp    - Removed old declarations
+
+Functions Converted:
+  1. addMappingObject()   - Anonymous namespace → private method
+  2. buildInputSection()  - Namespace scope → private method
+
+Namespaces:
+  OLD: sdl3cpp::services::impl::json_config_writer
+  NEW: sdl3cpp::services::impl
+
+Benefits:
+  ✓ Better encapsulation
+  ✓ Clearer ownership
+  ✓ Improved maintainability
+  ✓ Consistent with class-based design
+

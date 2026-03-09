@@ -1,0 +1,52 @@
+{
+  "id": "component-palette",
+  "type": "div",
+  "props": { "className": "panel-fill" },
+  "children": [
+    {
+      "id": "palette-header",
+      "type": "div",
+      "props": { "className": "side-panel__header" },
+      "children": [
+        {
+          "id": "palette-title",
+          "type": "h3",
+          "props": { "className": "side-panel__title" },
+          "children": "Components"
+        },
+        {
+          "id": "palette-subtitle",
+          "type": "p",
+          "props": { "className": "side-panel__subtitle" },
+          "children": "Drag to canvas"
+        }
+      ]
+    },
+    {
+      "id": "palette-list-container",
+      "type": "div",
+      "props": { "className": "side-panel__body" },
+      "children": [
+        {
+          "id": "palette-items",
+          "type": "div",
+          "props": { "keyPath": "id" },
+          "bindings": { "items": "categories" },
+          "itemTemplate": {
+            "id": "palette-category-group",
+            "type": "div",
+            "props": { "style": { "marginBottom": "12px" } },
+            "children": [
+              {
+                "id": "category-label",
+                "type": "p",
+                "props": { "className": "category-label" },
+                "bindings": { "children": "item.label" }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

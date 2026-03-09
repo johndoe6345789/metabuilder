@@ -39,12 +39,10 @@ export function hasMinLevel(role: string, minLevel: number): boolean {
 
 /**
  * Environment configuration defaults
+ * Note: DBAL adapter and DATABASE_URL are configured in the C++ daemon via env vars.
+ * The frontend only needs the DBAL API URL to make REST calls — adapter is backend-only.
  */
 export const ENV_DEFAULTS = {
-  /** Default DBAL adapter when not specified */
-  DBAL_ADAPTER: 'prisma',
-  /** Default database URL for development */
-  DATABASE_URL: 'file:./dev.db',
   /** Default page size for DBAL queries */
   DEV_PAGE_SIZE: 50,
 } as const

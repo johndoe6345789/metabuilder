@@ -1,0 +1,187 @@
+{
+  "id": "error-panel",
+  "type": "div",
+  "className": "error-panel",
+  "children": [
+    {
+      "id": "ep-header",
+      "type": "div",
+      "className": "error-panel__header",
+      "children": [
+        {
+          "id": "ep-header-row",
+          "type": "div",
+          "className": "error-panel__header-row",
+          "children": [
+            {
+              "id": "ep-title-group",
+              "type": "div",
+              "className": "error-panel__title-group",
+              "children": [
+                {
+                  "id": "ep-title",
+                  "type": "h2",
+                  "className": "error-panel__title",
+                  "children": "Error Repair"
+                },
+                {
+                  "id": "ep-error-badge",
+                  "type": "span",
+                  "className": "error-panel__badge error-panel__badge--error",
+                  "condition": "errorCount > 0",
+                  "bindings": {
+                    "children": { "source": "errorCount", "transform": "data + ' error(s)'" }
+                  }
+                },
+                {
+                  "id": "ep-warning-badge",
+                  "type": "span",
+                  "className": "error-panel__badge error-panel__badge--warning",
+                  "condition": "warningCount > 0",
+                  "bindings": {
+                    "children": { "source": "warningCount", "transform": "data + ' warning(s)'" }
+                  }
+                }
+              ]
+            },
+            {
+              "id": "ep-actions",
+              "type": "div",
+              "className": "error-panel__actions",
+              "children": [
+                {
+                  "id": "ep-scan-btn",
+                  "type": "Button",
+                  "props": { "variant": "outline" },
+                  "bindings": {
+                    "onClick": { "source": "scanForErrors" },
+                    "disabled": { "source": "isScanning" }
+                  },
+                  "children": [
+                    { "id": "ep-scan-icon", "type": "ArrowClockwise", "props": { "size": 16 } },
+                    { "id": "ep-scan-text", "type": "text", "children": " Scan" }
+                  ]
+                },
+                {
+                  "id": "ep-repair-btn",
+                  "type": "Button",
+                  "props": { "variant": "filled" },
+                  "condition": "errors.length > 0",
+                  "bindings": {
+                    "onClick": { "source": "repairAllErrors" },
+                    "disabled": { "source": "isRepairing" }
+                  },
+                  "children": [
+                    { "id": "ep-repair-icon", "type": "Wrench", "props": { "size": 16 } },
+                    { "id": "ep-repair-text", "type": "text", "children": " Repair All" }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ep-body",
+      "type": "ScrollArea",
+      "className": "error-panel__scroll-body",
+      "children": [
+        {
+          "id": "ep-inner",
+          "type": "div",
+          "className": "error-panel__inner",
+          "children": [
+            {
+              "id": "ep-scanning",
+              "type": "div",
+              "className": "error-panel__empty",
+              "condition": "isScanning",
+              "children": [
+                { "id": "ep-scanning-icon", "type": "ArrowClockwise", "props": { "size": 32 }, "className": "error-panel__spin-icon" },
+                { "id": "ep-scanning-label", "type": "p", "className": "error-panel__empty-text", "children": "Scanning for errors…" }
+              ]
+            },
+            {
+              "id": "ep-no-errors",
+              "type": "div",
+              "className": "error-panel__empty",
+              "condition": "errorCount === 0",
+              "children": [
+                { "id": "ep-ok-icon", "type": "CheckCircle", "props": { "size": 36 }, "className": "error-panel__ok-icon" },
+                { "id": "ep-ok-label", "type": "p", "className": "error-panel__empty-text", "children": "No errors found" }
+              ]
+            },
+            {
+              "id": "ep-errors-list",
+              "type": "div",
+              "className": "error-panel__list",
+              "loop": {
+                "source": "errors",
+                "itemVar": "err"
+              },
+              "children": [
+                {
+                  "id": "ep-error-item",
+                  "type": "div",
+                  "className": "error-panel__item",
+                  "children": [
+                    {
+                      "id": "ep-item-meta",
+                      "type": "div",
+                      "className": "error-panel__item-meta",
+                      "children": [
+                        {
+                          "id": "ep-severity",
+                          "type": "span",
+                          "bindings": {
+                            "children": { "source": "err.severity" },
+                            "className": { "source": "err.severity", "transform": "'error-panel__severity error-panel__severity--' + data" }
+                          }
+                        },
+                        {
+                          "id": "ep-filename",
+                          "type": "span",
+                          "className": "error-panel__filename",
+                          "bindings": {
+                            "children": { "source": "err.fileName" }
+                          }
+                        },
+                        {
+                          "id": "ep-lineno",
+                          "type": "span",
+                          "className": "error-panel__lineno",
+                          "condition": "err.line !== undefined",
+                          "bindings": {
+                            "children": { "source": "err.line", "transform": "':' + data" }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "id": "ep-message",
+                      "type": "p",
+                      "className": "error-panel__message",
+                      "bindings": {
+                        "children": { "source": "err.message" }
+                      }
+                    },
+                    {
+                      "id": "ep-suggestion",
+                      "type": "p",
+                      "className": "error-panel__suggestion",
+                      "condition": "err.suggestion",
+                      "bindings": {
+                        "children": { "source": "err.suggestion" }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

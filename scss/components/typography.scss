@@ -1,0 +1,241 @@
+// Typography components — BEM classes using MD3 tokens
+// Replaces Tailwind utilities for: heading, breadcrumb, timestamp, divider,
+// layout-divider, text-gradient, text-highlight, social-link, page-header,
+// page-header-content, placeholder-text
+
+// ─── Page header ────────────────────────────────────────────────────────────
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 24px;
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1;
+    color: var(--mat-sys-on-surface);
+  }
+
+  &__description {
+    margin: 0;
+    font-size: 14px;
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  &__actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+}
+
+// ─── Page header content (compact variant with icon) ────────────────────────
+
+.page-header-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--mat-sys-on-surface);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    @media (min-width: 640px) {
+      font-size: 20px;
+    }
+  }
+
+  &__description {
+    margin: 0;
+    font-size: 12px;
+    color: var(--mat-sys-on-surface-variant);
+    display: none;
+
+    @media (min-width: 640px) {
+      display: block;
+      font-size: 14px;
+    }
+  }
+}
+
+// ─── Section heading ────────────────────────────────────────────────────────
+
+.section-heading {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1;
+  color: var(--mat-sys-on-surface);
+}
+
+// ─── Caption / muted text ───────────────────────────────────────────────────
+
+.caption-text {
+  font-size: 14px;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+// ─── Placeholder text ───────────────────────────────────────────────────────
+
+.placeholder-text {
+  font-size: 14px;
+  color: var(--mat-sys-on-surface-variant);
+  font-style: italic;
+}
+
+// ─── Timestamp ──────────────────────────────────────────────────────────────
+
+.timestamp {
+  display: inline;
+  font-size: 14px;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+// ─── Breadcrumb ─────────────────────────────────────────────────────────────
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+  }
+
+  &__link {
+    font-size: 14px;
+    color: var(--mat-sys-on-surface-variant);
+    text-decoration: none;
+    transition: color 0.15s ease;
+
+    &:hover {
+      color: var(--mat-sys-on-surface);
+    }
+
+    &--current {
+      color: var(--mat-sys-on-surface);
+      font-weight: 500;
+    }
+  }
+
+  &__separator {
+    width: 16px;
+    height: 16px;
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+// ─── Divider ────────────────────────────────────────────────────────────────
+
+.divider {
+  background: var(--mat-sys-outline-variant);
+  border: none;
+  flex-shrink: 0;
+
+  &--horizontal {
+    height: 1px;
+    width: 100%;
+  }
+
+  &--vertical {
+    width: 1px;
+    height: 100%;
+  }
+}
+
+// ─── Layout divider (with optional label) ───────────────────────────────────
+
+.layout-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+
+  &__line {
+    flex: 1;
+    height: 1px;
+    background: var(--mat-sys-outline-variant);
+  }
+
+  &__label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--mat-sys-on-surface-variant);
+    white-space: nowrap;
+  }
+}
+
+// ─── Text gradient ──────────────────────────────────────────────────────────
+
+.text-gradient {
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  background-image: linear-gradient(
+    135deg,
+    var(--mat-sys-primary),
+    var(--mat-sys-tertiary, var(--mat-sys-primary))
+  );
+}
+
+// ─── Text highlight ─────────────────────────────────────────────────────────
+
+.text-highlight {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--mat-sys-outline-variant);
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--mat-sys-on-surface);
+  background: color-mix(in srgb, var(--mat-sys-primary) 8%, transparent);
+}
+
+// ─── Social link ────────────────────────────────────────────────────────────
+
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--mat-sys-on-surface-variant);
+  text-decoration: none;
+  transition: color 0.15s ease;
+
+  &:hover {
+    color: var(--mat-sys-primary);
+  }
+
+  &__icon {
+    width: 16px;
+    height: 16px;
+  }
+}

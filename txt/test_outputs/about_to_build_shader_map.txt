@@ -1,0 +1,2 @@
+About to call shaderRegistry_->BuildShaderMap()
+  shaderRegistry_: VALID

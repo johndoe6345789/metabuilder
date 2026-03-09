@@ -1,0 +1,11 @@
+// Datepicker - Official Angular Material M3 SCSS
+@use '../m3-scss/material/datepicker/datepicker-content.module';
+@use '../m3-scss/material/datepicker/datepicker-toggle.module';
+@use '../m3-scss/material/datepicker/datepicker-actions.module';
+@use '../m3-scss/material/datepicker/calendar.module';
+@use '../m3-scss/material/datepicker/calendar-body.module';
+@use '../m3-scss/material/datepicker/date-range-input.module';
+
+.matDatepicker {
+  // Local class for CSS modules purity
+}

@@ -1,0 +1,10 @@
+{
+  "id": "text-gradient-root",
+  "type": "span",
+  "props": {
+    "className": "text-gradient"
+  },
+  "bindings": {
+    "children": "children"
+  }
+}

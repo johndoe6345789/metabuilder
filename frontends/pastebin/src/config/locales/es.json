@@ -1,0 +1,367 @@
+{
+  "common": {
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "create": "Crear",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "default": "(Pred.)",
+    "close": "Cerrar diálogo"
+  },
+  "app": {
+    "title": "Fragmentos de Código",
+    "header": {
+      "title": "Fragmentos de Código",
+      "snippetCount": {
+        "singular": "fragmento",
+        "plural": "fragmentos"
+      },
+      "newSnippetButton": "Nuevo Fragmento"
+    },
+    "search": {
+      "placeholder": "Buscar por título, lenguaje o contenido..."
+    }
+  },
+  "emptyState": {
+    "title": "Sin fragmentos aún",
+    "description": "Empieza tu biblioteca de código. Guarda fragmentos reutilizables para acceso rápido.",
+    "buttonText": "Crear tu Primer Fragmento"
+  },
+  "noResults": {
+    "title": "No se encontraron fragmentos",
+    "description": "Intenta ajustar tu búsqueda"
+  },
+  "snippetToolbar": {
+    "select": "Seleccionar",
+    "cancelSelection": "Cancelar"
+  },
+  "selectionControls": {
+    "selectAll": "Seleccionar todo",
+    "deselectAll": "Deseleccionar todo",
+    "selected": "{count} seleccionados",
+    "moveTo": "Mover a...",
+    "selectAllAria": "Seleccionar todos los fragmentos",
+    "deselectAllAria": "Deseleccionar todos los fragmentos",
+    "moveToAria": "Mover fragmentos seleccionados a otro espacio"
+  },
+  "snippetCard": {
+    "viewButton": "Ver",
+    "copyButton": "Copiar",
+    "copiedButton": "¡Copiado!",
+    "viewFullCode": "Clic para ver el código completo...",
+    "errorMessage": "Error al cargar el fragmento",
+    "moveTo": "Mover a:",
+    "noOtherNamespaces": "Sin otros espacios",
+    "deleteDialog": {
+      "title": "¿Eliminar fragmento?",
+      "body": "\"{title}\" se eliminará permanentemente."
+    },
+    "ariaLabels": {
+      "copy": "Copiar código",
+      "edit": "Editar fragmento",
+      "delete": "Eliminar fragmento"
+    },
+    "alreadyInNamespace": "El fragmento ya está en este espacio",
+    "movedTo": "Movido a {name}",
+    "failedToMove": "Error al mover el fragmento"
+  },
+  "snippetDialog": {
+    "create": {
+      "title": "Crear Nuevo Fragmento",
+      "description": "Guarda un fragmento de código reutilizable para acceso rápido.",
+      "submitButton": "Crear Fragmento"
+    },
+    "edit": {
+      "title": "Editar Fragmento",
+      "description": "Actualiza los detalles de tu fragmento de código.",
+      "submitButton": "Actualizar Fragmento"
+    },
+    "fields": {
+      "title": {
+        "label": "Título",
+        "placeholder": "ej., Hook useState de React",
+        "required": true,
+        "errorMessage": "El título es obligatorio"
+      },
+      "language": {
+        "label": "Lenguaje"
+      },
+      "description": {
+        "label": "Descripción",
+        "placeholder": "Descripción u notas opcionales..."
+      },
+      "code": {
+        "label": "Código",
+        "required": true,
+        "errorMessage": "El código es obligatorio"
+      },
+      "preview": {
+        "label": "Activar vista previa dividida para este fragmento"
+      }
+    },
+    "tabs": {
+      "details": "Detalles",
+      "code": "Código",
+      "previewConfig": "Config. de Vista Previa"
+    },
+    "buttons": {
+      "cancel": "Cancelar",
+      "create": "Crear Fragmento",
+      "update": "Actualizar Fragmento",
+      "back": "Atrás",
+      "next": "Siguiente"
+    }
+  },
+  "snippetViewer": {
+    "lastUpdated": "Última actualización",
+    "buttons": {
+      "showPreview": "Mostrar Vista Previa",
+      "hidePreview": "Ocultar Vista Previa",
+      "copy": "Copiar",
+      "copied": "Copiado",
+      "edit": "Editar"
+    }
+  },
+  "namespace": {
+    "create": {
+      "title": "Crear Espacio",
+      "description": "Crea un nuevo espacio para organizar tus fragmentos",
+      "namePlaceholder": "Nombre del espacio",
+      "ariaLabel": "Crear nuevo espacio"
+    },
+    "delete": {
+      "title": "Eliminar Espacio",
+      "body": "¿Seguro que deseas eliminar \"{name}\"? Todos los fragmentos se moverán al espacio predeterminado.",
+      "ariaLabel": "Eliminar espacio"
+    },
+    "selector": {
+      "failedToLoad": "Error al cargar los espacios",
+      "enterName": "Por favor ingresa un nombre para el espacio",
+      "created": "Espacio creado",
+      "failedToCreate": "Error al crear el espacio",
+      "noDefault": "No se puede eliminar: no se encontró el espacio predeterminado",
+      "deleted": "Espacio eliminado",
+      "deletedWithMoved": "Espacio eliminado — {count} fragmento(s) movido(s) al predeterminado",
+      "failedToDelete": "Error al eliminar el espacio"
+    }
+  },
+  "pythonTerminal": {
+    "title": "Terminal Python",
+    "run": "Ejecutar",
+    "running": "Ejecutando...",
+    "loading": "Cargando...",
+    "runAria": "Ejecutar código Python",
+    "runningAria": "Ejecutando código",
+    "loadingAria": "Cargando terminal",
+    "inputPlaceholder": "Ingresa el valor...",
+    "inputAria": "Entrada del terminal",
+    "emptyState": "Haz clic en \"Ejecutar\" para correr el código Python"
+  },
+  "toast": {
+    "snippetCreated": "Fragmento creado con éxito",
+    "snippetUpdated": "Fragmento actualizado con éxito",
+    "snippetDeleted": "Fragmento eliminado",
+    "codeCopied": "Código copiado al portapapeles",
+    "failedToLoadData": "Error al cargar los datos",
+    "failedToSaveSnippet": "Error al guardar el fragmento",
+    "failedToDeleteSnippet": "Error al eliminar el fragmento",
+    "noSnippetsSelected": "No hay fragmentos seleccionados",
+    "failedToMoveSnippets": "Error al mover los fragmentos",
+    "movedSnippets": "Se movieron {count} fragmento(s) a {namespace}"
+  },
+  "statusAlerts": {
+    "title": "Estado de la app",
+    "workspaceReady": "Espacio de trabajo listo",
+    "localModeDesc": "Modo local: puedes trabajar sin conexión a un servidor.",
+    "connectedDesc": "Conectado a tu servidor configurado. Sincronización activa.",
+    "cloudUnavailable": "Servidor en la nube no disponible",
+    "cloudUnavailableDesc": "No se detectó un servidor Flask. Los datos se guardan en este dispositivo hasta que se configure una URL."
+  },
+  "language": {
+    "toggle": "Cambiar idioma",
+    "en": "EN",
+    "es": "ES"
+  },
+  "settings": {
+    "enterFlaskUrl": "Por favor ingresa una URL del servidor Flask",
+    "storage": {
+      "cannotConnect": "No se puede conectar al servidor Flask. Verifica la URL y que el servidor esté en ejecución.",
+      "backendUpdated": "Almacenamiento actualizado con éxito"
+    },
+    "migration": {
+      "cannotConnect": "No se puede conectar al servidor Flask",
+      "noSnippets": "No hay fragmentos para migrar",
+      "migratedToFlask": "Se migraron {count} fragmentos al servidor Flask con éxito",
+      "failedToFlask": "Error al migrar datos al servidor Flask",
+      "migratedToIndexedDB": "Se migraron {count} fragmentos a IndexedDB con éxito",
+      "failedFromFlask": "Error al migrar datos desde el servidor Flask"
+    },
+    "database": {
+      "failedToLoadStats": "Error al cargar las estadísticas de la base de datos",
+      "exported": "Base de datos exportada con éxito",
+      "failedToExport": "Error al exportar la base de datos",
+      "imported": "Base de datos importada con éxito",
+      "failedToImport": "Error al importar la base de datos",
+      "cleared": "Base de datos limpiada y esquema recreado con éxito",
+      "failedToClear": "Error al limpiar la base de datos",
+      "seeded": "Datos de muestra agregados con éxito",
+      "failedToSeed": "Error al agregar datos de muestra",
+      "clearConfirm": "¿Estás seguro de que deseas eliminar todos los datos? Esta acción no se puede deshacer."
+    }
+  },
+  "page": {
+    "heading": "Mis Fragmentos",
+    "subtitle": "Guarda, organiza y comparte tus fragmentos de código",
+    "footer": {
+      "tagline": "Guarda, organiza y comparte tus fragmentos de código con resaltado de sintaxis y ejecución en vivo",
+      "techNote": "Compatible con vista previa de React y ejecución Docker multi-lenguaje (Python, Java, Node.js, C++)"
+    }
+  },
+  "settingsPage": {
+    "heading": "Configuración",
+    "subtitle": "Administra tu base de datos y configuración de la aplicación",
+    "tabs": {
+      "profile": "Perfil",
+      "ai": "IA",
+      "storage": "Almacenamiento",
+      "database": "Base de datos"
+    }
+  },
+  "backendIndicator": {
+    "disconnected": "Sin conexión al servidor — Usando almacenamiento local",
+    "connectedAuto": "Conectado al servidor Flask (configuración automática)",
+    "connected": "Conectado al servidor Flask"
+  },
+  "langSelector": {
+    "ariaLabel": "Seleccionar idioma"
+  },
+  "errorFallback": {
+    "title": "Esta aplicación ha encontrado un error en tiempo de ejecución",
+    "copied": "Copiado",
+    "copy": "Copiar",
+    "hideStack": "Ocultar traza del error",
+    "showStack": "Mostrar traza del error",
+    "noStack": "No hay traza disponible",
+    "reload": "Intentar recargar"
+  },
+  "aiErrorHelper": {
+    "button": "Pedir ayuda a la IA",
+    "dialogTitle": "Análisis de error con IA",
+    "dialogSubtitle": "Te ayudo a entender y solucionar este error",
+    "analysisError": "No se pudo analizar el error. El servicio de IA puede estar temporalmente no disponible.",
+    "regionAriaLabel": "Herramienta de análisis de errores con IA",
+    "buttonAriaLabel": "Pedir ayuda a la IA con este error"
+  },
+  "loadingAnalysis": {
+    "text": "Analizando el error..."
+  },
+  "templatePicker": {
+    "blank": "Fragmento en blanco"
+  },
+  "settingsCards": {
+    "storage": {
+      "title": "Almacenamiento",
+      "description": "Elige dónde se guardan tus fragmentos",
+      "envVarAlertBefore": "El almacenamiento está configurado mediante",
+      "envVarAlertAfter": "variable de entorno y no se puede cambiar aquí.",
+      "indexedDBLabel": "IndexedDB (Almacenamiento local del navegador)",
+      "indexedDBDesc": "Guarda los fragmentos localmente en tu navegador. Los datos solo persisten en este dispositivo.",
+      "flaskLabel": "Servidor Flask (Servidor remoto)",
+      "flaskDesc": "Guarda los fragmentos en un servidor Flask. Los datos son accesibles desde cualquier dispositivo.",
+      "urlLabel": "URL del servidor Flask",
+      "urlPlaceholder": "http://localhost:5000",
+      "testing": "Probando...",
+      "test": "Probar",
+      "connectedStatus": "Conexión exitosa",
+      "failedStatus": "Conexión fallida",
+      "migrateToFlask": "Migrar datos de IndexedDB a Flask",
+      "migrateToIndexedDB": "Migrar datos de Flask a IndexedDB",
+      "save": "Guardar configuración"
+    },
+    "stats": {
+      "title": "Estadísticas de la base de datos",
+      "description": "Información sobre el almacenamiento local de tu base de datos",
+      "loading": "Cargando...",
+      "snippets": "Fragmentos",
+      "templates": "Plantillas",
+      "storageType": "Tipo de almacenamiento",
+      "databaseSize": "Tamaño de la base de datos",
+      "error": "Error al cargar las estadísticas"
+    },
+    "actions": {
+      "title": "Acciones de la base de datos",
+      "description": "Haz una copia de seguridad, restaura o restablece tu base de datos",
+      "exportTitle": "Exportar base de datos",
+      "exportDesc": "Descarga tu base de datos como archivo para copia de seguridad o transferencia",
+      "exportButton": "Exportar base de datos",
+      "importTitle": "Importar base de datos",
+      "importDesc": "Restaura un archivo de base de datos exportado anteriormente",
+      "importButton": "Importar base de datos",
+      "seedTitle": "Datos de muestra",
+      "seedDesc": "Agrega fragmentos de código de muestra para comenzar (solo si la base de datos está vacía)",
+      "seedButton": "Agregar datos de muestra",
+      "clearTitle": "Eliminar todos los datos",
+      "clearDesc": "Elimina permanentemente todos los fragmentos y plantillas. Esta acción no se puede deshacer.",
+      "clearButton": "Limpiar base de datos"
+    },
+    "schema": {
+      "corruptedTitle": "Corrupción de esquema detectada",
+      "corruptedDesc": "El esquema de tu base de datos está desactualizado o corrupto y necesita reparación",
+      "corruptedAlert": "Al esquema de la base de datos le faltan tablas o columnas requeridas (probablemente debido a la adición de la función de espacios de nombres). Esto puede causar errores al cargar o guardar fragmentos. Haz clic en el botón de abajo para borrar y recrear la base de datos con el esquema correcto.",
+      "repairButton": "Reparar base de datos (Borrar y recrear)",
+      "checking": "Verificando...",
+      "recheckButton": "Verificar esquema de nuevo",
+      "healthyTitle": "Esquema saludable",
+      "healthyDesc": "El esquema de tu base de datos está actualizado y funciona correctamente"
+    },
+    "backendAuto": {
+      "title": "Servidor configurado automáticamente",
+      "description": "El servidor Flask está configurado mediante variable de entorno",
+      "backendUrl": "URL del servidor",
+      "configSource": "Fuente de configuración",
+      "status": "Estado",
+      "connected": "Conectado",
+      "failed": "Conexión fallida",
+      "testing": "Probando...",
+      "testButton": "Probar conexión"
+    },
+    "storageInfo": {
+      "title": "Información de almacenamiento",
+      "description": "Cómo se guardan tus datos",
+      "indexedDBDesc": "se está utilizando para el almacenamiento. Proporciona mejor rendimiento y mayor capacidad en comparación con localStorage. Tus datos persisten localmente en tu navegador.",
+      "localStorageDesc": "se está utilizando para el almacenamiento. IndexedDB no está disponible en tu navegador. Ten en cuenta que localStorage tiene un límite menor (típicamente 5-10MB).",
+      "flaskDesc": "se está utilizando para el almacenamiento. Tus fragmentos se guardan en un servidor Flask y son accesibles desde cualquier dispositivo.",
+      "noneDesc": "No se detectó almacenamiento persistente. Tus datos se perderán cuando cierres el navegador."
+    },
+    "openAI": {
+      "title": "Configuración de Plataforma IA",
+      "description": "Configure su plataforma de IA para el análisis de errores. Su clave se almacena localmente en su navegador.",
+      "platformLabel": "Plataforma IA",
+      "keyLabel": "Clave API",
+      "keyPlaceholder": "Ingrese su clave API",
+      "keyHint": "Obtenga su clave API en",
+      "showKey": "Mostrar clave API",
+      "hideKey": "Ocultar clave API",
+      "saved": "¡Guardado!",
+      "saveButton": "Guardar configuración",
+      "clearButton": "Limpiar",
+      "configuredStatus": "✓ {platform} configurado. El análisis usará {model}."
+    }
+  },
+  "fileTree": {
+    "title": "Archivos",
+    "addFile": "Agregar archivo",
+    "deleteFile": "Eliminar archivo",
+    "uploadFile": "Subir archivo",
+    "newFileName": "nombre.ext",
+    "noFiles": "Sin archivos",
+    "rename": "Renombrar archivo"
+  },
+  "codeTerminal": {
+    "run": "Ejecutar",
+    "running": "Ejecutando...",
+    "building": "Compilando...",
+    "title": "Terminal {language}",
+    "unsupportedLanguage": "Idioma no compatible"
+  }
+}

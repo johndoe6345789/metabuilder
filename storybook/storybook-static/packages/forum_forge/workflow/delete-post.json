@@ -1,0 +1,237 @@
+{
+  "name": "Delete Forum Post",
+  "active": false,
+  "nodes": [
+    {
+      "id": "validate_context",
+      "name": "Validate Context",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $context.tenantId }}",
+        "operation": "validate",
+        "validator": "required"
+      }
+    },
+    {
+      "id": "fetch_post",
+      "name": "Fetch Post",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "filter": {
+          "id": "{{ $json.postId }}",
+          "tenantId": "{{ $context.tenantId }}"
+        },
+        "operation": "database_read",
+        "entity": "ForumPost"
+      }
+    },
+    {
+      "id": "check_authorization",
+      "name": "Check Authorization",
+      "type": "metabuilder.condition",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "condition": "{{ $steps.fetch_post.output.authorId === $context.user.id || $context.user.level >= 3 }}",
+        "operation": "condition"
+      }
+    },
+    {
+      "id": "soft_delete_post",
+      "name": "Soft Delete Post",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "filter": {
+          "id": "{{ $json.postId }}"
+        },
+        "data": {
+          "isDeleted": true,
+          "deletedAt": "{{ new Date().toISOString() }}"
+        },
+        "operation": "database_update",
+        "entity": "ForumPost"
+      }
+    },
+    {
+      "id": "decrement_thread_count",
+      "name": "Decrement Thread Count",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "filter": {
+          "id": "{{ $steps.fetch_post.output.threadId }}"
+        },
+        "operation": "database_read",
+        "entity": "ForumThread"
+      }
+    },
+    {
+      "id": "update_thread_count",
+      "name": "Update Thread Count",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "filter": {
+          "id": "{{ $steps.fetch_post.output.threadId }}"
+        },
+        "data": {
+          "postCount": "{{ Math.max($steps.decrement_thread_count.output.postCount - 1, 0) }}"
+        },
+        "operation": "database_update",
+        "entity": "ForumThread"
+      }
+    },
+    {
+      "id": "emit_deleted",
+      "name": "Emit Deleted",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        100,
+        500
+      ],
+      "parameters": {
+        "data": {
+          "postId": "{{ $json.postId }}"
+        },
+        "action": "emit_event",
+        "event": "post_deleted",
+        "channel": "{{ 'forum:thread:' + $steps.fetch_post.output.threadId }}"
+      }
+    },
+    {
+      "id": "return_success",
+      "name": "Return Success",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        400,
+        500
+      ],
+      "parameters": {
+        "action": "http_response",
+        "status": 200,
+        "body": {
+          "message": "Post deleted successfully"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "validate_context": {
+      "main": [
+        [
+          {
+            "node": "fetch_post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fetch_post": {
+      "main": [
+        [
+          {
+            "node": "check_authorization",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_authorization": {
+      "main": [
+        [
+          {
+            "node": "soft_delete_post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "soft_delete_post": {
+      "main": [
+        [
+          {
+            "node": "decrement_thread_count",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "decrement_thread_count": {
+      "main": [
+        [
+          {
+            "node": "update_thread_count",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update_thread_count": {
+      "main": [
+        [
+          {
+            "node": "emit_deleted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "emit_deleted": {
+      "main": [
+        [
+          {
+            "node": "return_success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "id": "workflow_delete_post",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
+}

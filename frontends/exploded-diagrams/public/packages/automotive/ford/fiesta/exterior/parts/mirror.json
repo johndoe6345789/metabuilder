@@ -1,0 +1,33 @@
+{
+  "id": "mirror",
+  "name": "Door Mirror",
+  "partNumber": "FD-1879810",
+  "material": "blackPlastic",
+  "quantity": 2,
+  "weight": 1200.0,
+  "weightUnit": "g",
+  "baseY": 800,
+  "description": "Electric heated door mirror with indicator",
+  "installation": {
+    "tools": [
+      { "name": "Torx socket", "size": "T20", "required": true },
+      { "name": "Trim removal tool", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Mirror bolt", "spec": "M6x1.0x15", "qty": 3, "reusable": true }
+    ],
+    "torque": [],
+    "notes": [
+      "Remove door card for access",
+      "Disconnect electric connector",
+      "Support mirror when removing bolts",
+      "Check indicator function after fitting"
+    ]
+  },
+  "geometry": [
+    { "type": "ellipse", "rx": 35, "ry": 25, "fill": "#333" },
+    { "type": "ellipse", "rx": 28, "ry": 20, "fill": "#add8e6" },
+    { "type": "rect", "width": 15, "height": 25, "offsetX": -30, "rx": 3, "fill": "#2a2a2a" },
+    { "type": "rect", "width": 20, "height": 5, "offsetY": 18, "rx": 2, "fill": "#ffeb3b" }
+  ]
+}

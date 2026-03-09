@@ -1,0 +1,14 @@
+{
+  "type": "MetabuilderWidgetSchemaEditorPropertiesPanel",
+  "props": {
+    "onSelect": "> void",
+    "onHover": "> void",
+    "onHoverEnd": "> void",
+    "onDragStart": "> void",
+    "onDragOver": "> void",
+    "onDragLeave": "> void",
+    "onDrop": "> void",
+    "onUpdate": "> void",
+    "onDelete": "> void"
+  }
+}

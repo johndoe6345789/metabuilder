@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  postgres-admin:
+    build: .
+    ports:
+      - '3000:3000'
+      - '5432:5432'
+    environment:
+      - DATABASE_URL=postgresql://docker:docker@localhost:5432/postgres
+      - JWT_SECRET=your-secret-key-change-in-production
+      - CREATE_ADMIN_USER=true
+      - ADMIN_USERNAME=admin
+      - ADMIN_PASSWORD=admin123
+    volumes:
+      - postgres_data:/var/lib/postgresql/15/main
+
+volumes:
+  postgres_data:

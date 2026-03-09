@@ -1,0 +1,384 @@
+{
+  "id": "toolhead-board",
+  "name": "Toolhead Control PCB",
+  "partNumber": "BL-A1-TB001",
+  "material": "FR4/Electronic Components",
+  "quantity": 1,
+  "weight": 15,
+  "weightUnit": "g",
+  "baseY": 0,
+  "description": "Integrated toolhead control board managing all printhead functions including stepper motor control, heater PWM, thermistor reading, fan control, and filament sensor input. Features CAN bus communication for high-speed data transfer with main controller.",
+  "installation": {
+    "tools": [
+      "2mm hex key",
+      "Phillips screwdriver",
+      "ESD wrist strap"
+    ],
+    "hardware": [
+      "M2x4 socket head cap screw x4",
+      "Ribbon cable",
+      "Connector clips"
+    ],
+    "torque": [
+      "PCB mounting screws: 0.15 Nm"
+    ],
+    "notes": [
+      "Handle with ESD precautions - sensitive electronics",
+      "Disconnect power before installation",
+      "Verify all connectors are fully seated",
+      "Check for shorts before powering on",
+      "Do not overtighten screws - can crack PCB"
+    ]
+  },
+  "geometry": [
+    {
+      "type": "rect",
+      "x": 5,
+      "y": 5,
+      "width": 50,
+      "height": 30,
+      "fill": "#1a4d1a",
+      "stroke": "#0d260d",
+      "strokeWidth": 1
+    },
+    {
+      "type": "rect",
+      "x": 10,
+      "y": 10,
+      "width": 8,
+      "height": 8,
+      "fill": "#303030"
+    },
+    {
+      "type": "rect",
+      "x": 22,
+      "y": 10,
+      "width": 12,
+      "height": 6,
+      "fill": "#f0f0f0"
+    },
+    {
+      "type": "rect",
+      "x": 38,
+      "y": 8,
+      "width": 14,
+      "height": 10,
+      "fill": "#202020"
+    },
+    {
+      "type": "circle",
+      "cx": 8,
+      "cy": 8,
+      "r": 2,
+      "fill": "#c0a060"
+    },
+    {
+      "type": "circle",
+      "cx": 52,
+      "cy": 8,
+      "r": 2,
+      "fill": "#c0a060"
+    },
+    {
+      "type": "circle",
+      "cx": 8,
+      "cy": 32,
+      "r": 2,
+      "fill": "#c0a060"
+    },
+    {
+      "type": "circle",
+      "cx": 52,
+      "cy": 32,
+      "r": 2,
+      "fill": "#c0a060"
+    }
+  ],
+  "geometry3d": [
+    {
+      "type": "box",
+      "offsetX": 0,
+      "offsetY": 0,
+      "offsetZ": 0,
+      "fill": "#1a4d1a",
+      "width": 55,
+      "height": 1.6,
+      "depth": 35
+    },
+    {
+      "type": "box",
+      "offsetX": 0,
+      "offsetY": 0.8,
+      "offsetZ": 0,
+      "fill": "#2a5d2a",
+      "width": 54,
+      "height": 0.1,
+      "depth": 34
+    },
+    {
+      "type": "box",
+      "offsetX": -18,
+      "offsetY": 2,
+      "offsetZ": -8,
+      "fill": "#303030",
+      "width": 8,
+      "height": 3,
+      "depth": 8
+    },
+    {
+      "type": "box",
+      "offsetX": -18,
+      "offsetY": 3.5,
+      "offsetZ": -8,
+      "fill": "#404040",
+      "width": 6,
+      "height": 0.5,
+      "depth": 6
+    },
+    {
+      "type": "box",
+      "offsetX": -5,
+      "offsetY": 2,
+      "offsetZ": -10,
+      "fill": "#252525",
+      "width": 6,
+      "height": 2,
+      "depth": 4
+    },
+    {
+      "type": "box",
+      "offsetX": 3,
+      "offsetY": 2,
+      "offsetZ": -10,
+      "fill": "#252525",
+      "width": 6,
+      "height": 2,
+      "depth": 4
+    },
+    {
+      "type": "box",
+      "offsetX": 15,
+      "offsetY": 2,
+      "offsetZ": -5,
+      "fill": "#202020",
+      "width": 16,
+      "height": 6,
+      "depth": 10
+    },
+    {
+      "type": "box",
+      "offsetX": 15,
+      "offsetY": 5,
+      "offsetZ": -5,
+      "fill": "#f0f0f0",
+      "width": 14,
+      "height": 4,
+      "depth": 8
+    },
+    {
+      "type": "box",
+      "offsetX": 11,
+      "offsetY": 6,
+      "offsetZ": -5,
+      "fill": "#c0a060",
+      "width": 1,
+      "height": 3,
+      "depth": 1
+    },
+    {
+      "type": "box",
+      "offsetX": 13,
+      "offsetY": 6,
+      "offsetZ": -5,
+      "fill": "#c0a060",
+      "width": 1,
+      "height": 3,
+      "depth": 1
+    },
+    {
+      "type": "box",
+      "offsetX": 15,
+      "offsetY": 6,
+      "offsetZ": -5,
+      "fill": "#c0a060",
+      "width": 1,
+      "height": 3,
+      "depth": 1
+    },
+    {
+      "type": "box",
+      "offsetX": 17,
+      "offsetY": 6,
+      "offsetZ": -5,
+      "fill": "#c0a060",
+      "width": 1,
+      "height": 3,
+      "depth": 1
+    },
+    {
+      "type": "box",
+      "offsetX": 19,
+      "offsetY": 6,
+      "offsetZ": -5,
+      "fill": "#c0a060",
+      "width": 1,
+      "height": 3,
+      "depth": 1
+    },
+    {
+      "type": "box",
+      "offsetX": -20,
+      "offsetY": 2,
+      "offsetZ": 8,
+      "fill": "#202020",
+      "width": 8,
+      "height": 4,
+      "depth": 6
+    },
+    {
+      "type": "box",
+      "offsetX": -8,
+      "offsetY": 2,
+      "offsetZ": 8,
+      "fill": "#202020",
+      "width": 6,
+      "height": 3,
+      "depth": 5
+    },
+    {
+      "type": "box",
+      "offsetX": 4,
+      "offsetY": 2,
+      "offsetZ": 8,
+      "fill": "#202020",
+      "width": 6,
+      "height": 3,
+      "depth": 5
+    },
+    {
+      "type": "box",
+      "offsetX": 16,
+      "offsetY": 2,
+      "offsetZ": 10,
+      "fill": "#202020",
+      "width": 6,
+      "height": 3,
+      "depth": 5
+    },
+    {
+      "type": "box",
+      "offsetX": -15,
+      "offsetY": 2,
+      "offsetZ": 0,
+      "fill": "#505050",
+      "width": 4,
+      "height": 2,
+      "depth": 4
+    },
+    {
+      "type": "cylinder",
+      "height": 3,
+      "r": 2,
+      "offsetX": -15,
+      "offsetY": 3,
+      "offsetZ": 0,
+      "fill": "#404040"
+    },
+    {
+      "type": "box",
+      "offsetX": -8,
+      "offsetY": 2,
+      "offsetZ": 0,
+      "fill": "#606060",
+      "width": 3,
+      "height": 1.5,
+      "depth": 3
+    },
+    {
+      "type": "box",
+      "offsetX": 0,
+      "offsetY": 2,
+      "offsetZ": 0,
+      "fill": "#303030",
+      "width": 2,
+      "height": 1,
+      "depth": 4
+    },
+    {
+      "type": "cylinder",
+      "height": 2,
+      "r": 1.6,
+      "offsetX": -24,
+      "offsetY": 0,
+      "offsetZ": -14,
+      "fill": "#c0a060"
+    },
+    {
+      "type": "cylinder",
+      "height": 2,
+      "r": 1.6,
+      "offsetX": 24,
+      "offsetY": 0,
+      "offsetZ": -14,
+      "fill": "#c0a060"
+    },
+    {
+      "type": "cylinder",
+      "height": 2,
+      "r": 1.6,
+      "offsetX": -24,
+      "offsetY": 0,
+      "offsetZ": 14,
+      "fill": "#c0a060"
+    },
+    {
+      "type": "cylinder",
+      "height": 2,
+      "r": 1.6,
+      "offsetX": 24,
+      "offsetY": 0,
+      "offsetZ": 14,
+      "fill": "#c0a060"
+    },
+    {
+      "type": "box",
+      "offsetX": 5,
+      "offsetY": 2,
+      "offsetZ": -12,
+      "fill": "#ff0000",
+      "width": 3,
+      "height": 1.5,
+      "depth": 2
+    },
+    {
+      "type": "box",
+      "offsetX": 10,
+      "offsetY": 2,
+      "offsetZ": -12,
+      "fill": "#00ff00",
+      "width": 3,
+      "height": 1.5,
+      "depth": 2
+    },
+    {
+      "type": "box",
+      "offsetX": -5,
+      "offsetY": 1.6,
+      "offsetZ": 4,
+      "fill": "#c0a060",
+      "width": 30,
+      "height": 0.1,
+      "depth": 0.5
+    },
+    {
+      "type": "box",
+      "offsetX": -10,
+      "offsetY": 1.6,
+      "offsetZ": -4,
+      "fill": "#c0a060",
+      "width": 20,
+      "height": 0.1,
+      "depth": 0.5
+    }
+  ]
+}

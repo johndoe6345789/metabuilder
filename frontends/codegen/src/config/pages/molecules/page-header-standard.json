@@ -1,0 +1,19 @@
+{
+  "type": "div",
+  "props": {
+    "className": "p-6 border-b"
+  },
+  "children": [
+    {
+      "id": "page-title",
+      "$ref": "../atoms/heading-1.json"
+    },
+    {
+      "id": "page-description",
+      "$ref": "../atoms/text-muted.json",
+      "props": {
+        "className": "text-muted-foreground mt-2"
+      }
+    }
+  ]
+}

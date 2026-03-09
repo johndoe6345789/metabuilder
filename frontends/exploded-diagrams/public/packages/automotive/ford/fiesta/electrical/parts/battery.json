@@ -1,0 +1,39 @@
+{
+  "id": "battery",
+  "name": "Battery",
+  "partNumber": "FD-1870110",
+  "material": "lead",
+  "quantity": 1,
+  "weight": 15000.0,
+  "weightUnit": "g",
+  "baseY": 0,
+  "description": "12V 60Ah Start-Stop AGM battery",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "10mm", "required": true },
+      { "name": "Socket", "size": "13mm", "required": true },
+      { "name": "Memory saver", "size": "-", "required": false }
+    ],
+    "hardware": [
+      { "name": "Hold-down bolt", "spec": "M8x120", "qty": 1, "reusable": true },
+      { "name": "Terminal bolt", "spec": "M6", "qty": 2, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Terminal bolts", "value": 6, "unit": "Nm" },
+      { "fastener": "Hold-down bolt", "value": 10, "unit": "Nm" }
+    ],
+    "notes": [
+      "Disconnect negative first, reconnect last",
+      "Reset windows and radio code after disconnect",
+      "AGM battery required for Start-Stop",
+      "Register new battery with diagnostic tool"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 80, "height": 55, "rx": 3, "fill": "#333" },
+    { "type": "rect", "width": 70, "height": 45, "rx": 2, "fill": "#444" },
+    { "type": "circle", "r": 8, "offsetX": -25, "offsetY": -20, "fill": "#c0392b" },
+    { "type": "circle", "r": 8, "offsetX": 25, "offsetY": -20, "fill": "#2c3e50" },
+    { "type": "rect", "width": 60, "height": 8, "offsetY": 15, "rx": 1, "fill": "#555" }
+  ]
+}

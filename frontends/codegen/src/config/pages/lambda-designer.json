@@ -1,0 +1,304 @@
+{
+  "id": "lambda-designer",
+  "name": "Lambda Designer",
+  "layout": {
+    "type": "single"
+  },
+  "dataSources": [
+    {
+      "id": "lambdas",
+      "key": "app-lambdas",
+      "type": "kv"
+    },
+    {
+      "id": "selectedLambdaId",
+      "type": "static",
+      "defaultValue": null
+    },
+    {
+      "id": "createDialogOpen",
+      "type": "static",
+      "defaultValue": false
+    },
+    {
+      "id": "editDialogOpen",
+      "type": "static",
+      "defaultValue": false
+    },
+    {
+      "id": "selectedLambda",
+      "type": "static",
+      "expression": "data.lambdas.find(id === data.selectedLambdaId)",
+      "dependencies": [
+        "lambdas",
+        "selectedLambdaId"
+      ]
+    },
+    {
+      "id": "lambdaCount",
+      "type": "static",
+      "expression": "data.lambdas.length",
+      "dependencies": [
+        "lambdas"
+      ]
+    }
+  ],
+  "components": [
+    {
+      "id": "root",
+      "type": "div",
+      "props": {
+        "className": "h-full flex bg-gradient-to-br from-background via-background to-accent/5"
+      },
+      "children": [
+        {
+          "id": "sidebar",
+          "type": "div",
+          "props": {
+            "className": "w-80 border-r border-border bg-card/50 backdrop-blur-sm flex flex-col"
+          },
+          "children": [
+            {
+              "id": "sidebar-header",
+              "type": "div",
+              "props": {
+                "className": "p-4 border-b border-border space-y-3"
+              },
+              "children": [
+                {
+                  "type": "div",
+                  "props": {
+                    "className": "flex items-center justify-between"
+                  },
+                  "children": [
+                    {
+                      "type": "h2",
+                      "props": {
+                        "className": "text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent"
+                      },
+                      "children": [
+                        "Lambdas"
+                      ]
+                    },
+                    {
+                      "type": "MetabuilderDisplayBadge",
+                      "props": {
+                        "className": "text-xs"
+                      },
+                      "bindings": {
+                        "children": {
+                          "source": "lambdaCount"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "MetabuilderFormButton",
+                  "props": {
+                    "className": "w-full"
+                  },
+                  "events": [
+                    {
+                      "event": "onClick",
+                      "actions": [
+                        {
+                          "type": "set-value",
+                          "target": "createDialogOpen",
+                          "value": true
+                        }
+                      ]
+                    }
+                  ],
+                  "children": [
+                    {
+                      "type": "icon",
+                      "props": {
+                        "name": "Plus",
+                        "className": "mr-2 h-4 w-4"
+                      }
+                    },
+                    "Create Lambda"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "div",
+              "props": {
+                "className": "flex-1 overflow-auto p-4"
+              },
+              "children": [
+                {
+                  "type": "div",
+                  "props": {
+                    "className": "space-y-2"
+                  },
+                  "conditional": {
+                    "if": "lambdaCount > 0"
+                  },
+                  "children": [
+                    {
+                      "type": "text",
+                      "children": [
+                        "Lambda list will be rendered here"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "div",
+                  "props": {
+                    "className": "flex flex-col items-center justify-center py-12 px-4 text-center"
+                  },
+                  "conditional": {
+                    "if": "lambdaCount === 0"
+                  },
+                  "children": [
+                    {
+                      "type": "icon",
+                      "props": {
+                        "name": "Lightning",
+                        "className": "h-16 w-16 text-muted-foreground/30 mb-4",
+                        "weight": "duotone"
+                      }
+                    },
+                    {
+                      "type": "h3",
+                      "props": {
+                        "className": "text-lg font-semibold mb-2"
+                      },
+                      "children": [
+                        "No Lambdas Yet"
+                      ]
+                    },
+                    {
+                      "type": "p",
+                      "props": {
+                        "className": "text-sm text-muted-foreground mb-4"
+                      },
+                      "children": [
+                        "Create your first serverless function"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "main-content",
+          "type": "div",
+          "props": {
+            "className": "flex-1 flex flex-col"
+          },
+          "children": [
+            {
+              "id": "lambda-selection-state",
+              "type": "div",
+              "conditional": {
+                "if": "selectedLambda != null",
+                "then": {
+                  "type": "div",
+                  "props": {
+                    "className": "flex-1 flex items-center justify-center p-8"
+                  },
+                  "children": [
+                    {
+                      "type": "div",
+                      "props": {
+                        "className": "max-w-6xl mx-auto w-full space-y-6"
+                      },
+                      "children": [
+                        {
+                          "type": "div",
+                          "props": {
+                            "className": "flex items-center justify-between"
+                          },
+                          "children": [
+                            {
+                              "type": "div",
+                              "children": [
+                                {
+                                  "type": "h1",
+                                  "props": {
+                                    "className": "text-3xl font-bold"
+                                  },
+                                  "bindings": {
+                                    "children": {
+                                      "source": "selectedLambda",
+                                      "path": "name"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "p",
+                                  "props": {
+                                    "className": "text-muted-foreground"
+                                  },
+                                  "bindings": {
+                                    "children": {
+                                      "source": "selectedLambda",
+                                      "path": "description"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "else": {
+                  "type": "div",
+                  "props": {
+                    "className": "flex-1 flex items-center justify-center p-8"
+                  },
+                  "children": [
+                    {
+                      "type": "div",
+                      "props": {
+                        "className": "text-center"
+                      },
+                      "children": [
+                        {
+                          "type": "icon",
+                          "props": {
+                            "name": "Code",
+                            "className": "h-20 w-20 text-muted-foreground/50 mx-auto mb-4",
+                            "weight": "duotone"
+                          }
+                        },
+                        {
+                          "type": "h3",
+                          "props": {
+                            "className": "text-xl font-semibold mb-2"
+                          },
+                          "children": [
+                            "No Lambda Selected"
+                          ]
+                        },
+                        {
+                          "type": "p",
+                          "props": {
+                            "className": "text-muted-foreground"
+                          },
+                          "children": [
+                            "Select a lambda from the sidebar or create a new one"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

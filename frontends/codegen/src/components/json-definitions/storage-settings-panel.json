@@ -1,0 +1,8 @@
+{
+  "id": "storage-settings-panel",
+  "type": "div",
+  "props": {
+    "className": "storage-settings-panel"
+  },
+  "children": []
+}

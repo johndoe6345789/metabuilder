@@ -1,0 +1,13 @@
+{
+  "name": "@metabuilder/scss",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Shared SCSS modules - Material Design 3 theme and layout styles",
+  "exports": {
+    "./atoms/layout.module.scss": "./atoms/layout.module.scss",
+    "./theme.scss": "./theme.scss",
+    "./globals.scss": "./globals.scss",
+    "./global": "./global/_index.scss",
+    "./index.scss": "./index.scss"
+  }
+}

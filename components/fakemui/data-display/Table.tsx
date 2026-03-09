@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from '../../styles/components/Table.module.scss'
+import styles from '../../../scss/components/Table.module.scss'
 
 export type TableSize = 'small' | 'medium' | 'large'
 export type TablePadding = 'checkbox' | 'none' | 'normal'
@@ -17,6 +17,8 @@ export interface TableProps extends React.TableHTMLAttributes<HTMLTableElement> 
   bordered?: boolean
   /** Compact mode */
   compact?: boolean
+  /** Test ID for automated testing */
+  testId?: string
 }
 
 export const Table: React.FC<TableProps> = ({
@@ -27,6 +29,7 @@ export const Table: React.FC<TableProps> = ({
   striped = false,
   bordered = false,
   compact = false,
+  testId,
   ...props
 }) => {
   const classes = [
@@ -42,7 +45,7 @@ export const Table: React.FC<TableProps> = ({
     .join(' ')
 
   return (
-    <table className={classes} {...props}>
+    <table className={classes} data-testid={testId} {...props}>
       {children}
     </table>
   )

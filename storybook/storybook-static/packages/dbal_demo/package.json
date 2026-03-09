@@ -1,0 +1,86 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "dbal_demo",
+  "name": "DBAL Demo",
+  "version": "1.0.0",
+  "description": "DBAL Integration Demo - Demonstrates TypeScript DBAL client with MetaBuilder",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "demo",
+  "icon": "static_content/icon.svg",
+  "minLevel": 3,
+  "primary": true,
+  "tags": [
+    "dbal",
+    "demo",
+    "kv-store",
+    "blob-storage",
+    "cache"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "testing": "*"
+  },
+  "exports": {
+    "components": [
+      "DBALDemo",
+      "KVStorePanel",
+      "BlobStoragePanel",
+      "CachedDataPanel"
+    ],
+    "scripts": [
+      "init",
+      "kv_operations",
+      "blob_operations",
+      "cache_operations",
+      "connection"
+    ]
+  },
+  "tests": {
+    "suites": [
+      "tests/metadata.test.json"
+    ]
+  },
+  "bindings": {
+    "dbal": true,
+    "browser": false
+  },
+  "requiredHooks": [
+    "dbal",
+    "kv_store",
+    "blob_storage",
+    "cached_data"
+  ],
+  "files": {
+    "directories": [
+      "components",
+      "permissions",
+      "static_content",
+      "storybook",
+      "styles",
+      "tests"
+    ],
+    "byType": {
+      "components": [
+        "components/ui.json"
+      ],
+      "tests": [
+        "tests/metadata.params.json",
+        "tests/metadata.test.json"
+      ],
+      "config": [
+        "package.json",
+        "storybook/stories.json"
+      ],
+      "permissions": [
+        "permissions/roles.json"
+      ],
+      "styles": [
+        "styles/tokens.json"
+      ],
+      "other": [
+        "static_content/icon.svg"
+      ]
+    }
+  }
+}

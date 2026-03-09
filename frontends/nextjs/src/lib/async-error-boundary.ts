@@ -14,7 +14,6 @@
  */
 
 import { errorReporting, type ErrorReportContext } from './error-reporting'
-import { retry, type RetryOptions } from './api/retry'
 
 export interface AsyncErrorBoundaryOptions {
   /** Maximum number of retries */
@@ -168,7 +167,7 @@ export async function tryAsyncOperation<T>(
   options: AsyncErrorBoundaryOptions = {}
 ): Promise<{ success: true; data: T } | { success: false; error: Error; attempt: number }> {
   const { maxRetries = 3, ...restOptions } = options
-  let lastAttempt = 0
+  const lastAttempt = 0
 
   try {
     const result = await withAsyncErrorBoundary(operation, {

@@ -1,0 +1,58 @@
+# Phase 8: Email Client Integration Test Suite Dependencies
+
+# Testing framework
+pytest==8.4.1
+pytest-asyncio==0.21.1
+pytest-cov==4.1.0
+pytest-mock==3.12.0
+pytest-timeout==2.4.0
+pytest-xdist==3.5.0
+
+# Async support
+aiohttp==3.13.3
+
+# Mocking and fixtures
+responses==0.24.1
+faker==21.0.0
+
+# Email handling
+email-validator==2.1.0
+python-dateutil==2.8.2
+
+# Database
+psycopg2-binary==2.9.9
+
+# Redis/Caching
+redis==5.0.1
+hiredis==2.2.3
+
+# Task queue
+celery==5.4.0
+
+# IMAP/SMTP
+aiosmtplib==3.0.1
+aioimaplib==1.0.1
+
+# HTTP client
+httpx==0.25.2
+
+# Utilities
+python-dotenv==1.0.0
+pydantic==2.5.2
+pydantic-settings==2.1.0
+
+# Benchmark & profiling
+pytest-benchmark==4.0.0
+memory-profiler==0.61.0
+
+# Docker
+docker==7.1.0
+
+# Code quality (optional)
+pytest-cov==4.1.0
+pytest-flake8==1.1.1
+pytest-black==0.3.12
+pytest-mypy==0.10.3
+
+# Documentation
+pytest-html==4.1.1

@@ -11,11 +11,7 @@
  */
 
 // Service layer
-export {
-  WorkflowExecutionEngine,
-  getWorkflowExecutionEngine,
-  initializeWorkflowEngine,
-} from './workflow-service'
+export { WorkflowService } from './workflow-service'
 
 // Validation and loading (WorkflowLoaderV2)
 export {
@@ -78,7 +74,6 @@ export type {
   RateLimitPolicy,
   ValidationResult,
   WorkflowValidationResult,
-  WorkflowDiagnostics,
   ValidationError,
 } from '@metabuilder/workflow'
 

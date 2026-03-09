@@ -1,0 +1,37 @@
+{
+  "id": "thermostat-housing",
+  "name": "Thermostat Housing",
+  "partNumber": "FD-1860310",
+  "material": "blackPlastic",
+  "quantity": 1,
+  "weight": 450.0,
+  "weightUnit": "g",
+  "baseY": 160,
+  "description": "Thermostat housing with integrated temp sensor port",
+  "installation": {
+    "tools": [
+      { "name": "Torx socket", "size": "T30", "required": true },
+      { "name": "Pliers", "size": "-", "required": true },
+      { "name": "Scraper", "size": "-", "required": false }
+    ],
+    "hardware": [
+      { "name": "Housing bolt", "spec": "M6x25 Torx", "qty": 3, "reusable": true },
+      { "name": "O-ring seal", "spec": "70mm OD", "qty": 1, "reusable": false }
+    ],
+    "torque": [
+      { "fastener": "Housing bolts", "value": 10, "unit": "Nm", "sequence": "Crosswise" }
+    ],
+    "notes": [
+      "Always replace O-ring seal",
+      "Clean mating surfaces",
+      "Contains coolant temp sensor",
+      "Thermostat opens at 82°C"
+    ]
+  },
+  "geometry": [
+    { "type": "ellipse", "rx": 35, "ry": 25, "fill": "#333" },
+    { "type": "ellipse", "rx": 28, "ry": 20, "fill": "#444" },
+    { "type": "rect", "width": 15, "height": 25, "offsetX": 30, "rx": 2, "fill": "#2a2a2a" },
+    { "type": "circle", "r": 6, "offsetX": -20, "fill": "#666" }
+  ]
+}

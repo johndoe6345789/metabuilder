@@ -1,11 +1,11 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { createPersistedStore } from '@metabuilder/redux-persist'
 import {
   coreReducers,
-  getMiddlewareConfig,
+  createLoggingMiddleware,
+  createPerformanceMiddleware,
+  createAnalyticsMiddleware,
+  createErrorMiddleware,
   getDevToolsConfig,
-  // Re-export core types
-  type RootState as CoreRootState,
-  type AppDispatch as CoreAppDispatch,
 } from '@metabuilder/redux-core'
 import {
   canvasSlice,
@@ -16,14 +16,17 @@ import {
   collaborationSlice,
   realtimeSlice,
   documentationSlice,
+  workflowsSlice,
 } from '@metabuilder/redux-slices'
 
-// Configure store with core + frontend-specific slices
-export const store = configureStore({
-  reducer: {
+const isDev = process.env.NODE_ENV === 'development'
+
+// Configure persisted store with core + frontend-specific slices
+const { store, persistor } = createPersistedStore({
+  reducers: {
     // Core slices (shared across all frontends)
     ...coreReducers,
-    
+
     // Frontend-specific slices for Next.js
     canvas: canvasSlice.reducer,
     canvasItems: canvasItemsSlice.reducer,
@@ -33,16 +36,28 @@ export const store = configureStore({
     collaboration: collaborationSlice.reducer,
     realtime: realtimeSlice.reducer,
     documentation: documentationSlice.reducer,
+    workflows: workflowsSlice.reducer,
   },
-  // Use Redux Core middleware configuration
-  middleware: getMiddlewareConfig({
-    enableLogging: process.env.NODE_ENV === 'development',
-    enablePerformance: process.env.NODE_ENV === 'development',
-    enableAnalytics: true,
-  }),
-  // Use Redux Core DevTools configuration
+  persist: {
+    key: 'nextjs-frontend',
+    whitelist: ['auth', 'ui', 'workspace', 'project', 'workflows'],
+  },
+  middleware: (base) => {
+    let middleware = base
+    if (isDev) {
+      middleware = middleware.concat(createLoggingMiddleware({ verbose: false }))
+      middleware = middleware.concat(createPerformanceMiddleware())
+    }
+    middleware = middleware.concat(createAnalyticsMiddleware())
+    middleware = middleware.concat(createErrorMiddleware())
+    return middleware
+  },
   devTools: getDevToolsConfig(),
+  ignoredActions: ['asyncData/fetchAsyncData/pending'],
+  ignoredPaths: ['asyncData.requests.*.promise'],
 })
+
+export { store, persistor }
 
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch

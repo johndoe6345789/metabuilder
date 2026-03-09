@@ -1,0 +1,13 @@
+{
+  "type": "MetabuilderWidgetSaveIndicator",
+  "jsonCompatible": false,
+  "wrapperRequired": true,
+  "load": {
+    "path": "@/components/molecules/SaveIndicator",
+    "export": "SaveIndicator"
+  },
+  "props": {},
+  "metadata": {
+    "notes": "Contains hooks - needs wrapper"
+  }
+}

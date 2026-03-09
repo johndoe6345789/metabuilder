@@ -6,13 +6,15 @@ import { classNames } from './classNames'
 export interface TextareaAutosizeProps extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, 'rows'> {
   minRows?: number
   maxRows?: number
+  /** Test ID for automated testing */
+  testId?: string
 }
 
 /**
  * TextareaAutosize - A textarea that automatically adjusts height based on content
  */
 export const TextareaAutosize = forwardRef<HTMLTextAreaElement, TextareaAutosizeProps>(
-  function TextareaAutosize({ minRows = 1, maxRows, onChange, value, defaultValue, className, style, ...props }, ref) {
+  function TextareaAutosize({ minRows = 1, maxRows, onChange, value, defaultValue, className, style, testId, ...props }, ref) {
     const textareaRef = useRef<HTMLTextAreaElement | null>(null)
     const shadowRef = useRef<HTMLTextAreaElement | null>(null)
 
@@ -81,6 +83,7 @@ export const TextareaAutosize = forwardRef<HTMLTextAreaElement, TextareaAutosize
           onChange={handleChange}
           value={value}
           defaultValue={defaultValue}
+          data-testid={testId}
           style={{
             resize: 'none',
             overflow: 'hidden',

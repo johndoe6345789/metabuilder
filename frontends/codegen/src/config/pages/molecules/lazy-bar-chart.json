@@ -1,0 +1,6 @@
+{
+  "type": "MetabuilderDisplaySkeleton",
+  "props": {
+    "library": "useRecharts()"
+  }
+}

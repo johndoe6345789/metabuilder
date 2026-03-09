@@ -15,9 +15,6 @@ import { INodeExecutor, WorkflowNode, WorkflowContext, ExecutionState, NodeResul
 import {
   PluginRegistry,
   PluginMetadata,
-  getPluginRegistry,
-  setPluginRegistry,
-  resetPluginRegistry
 } from './plugin-registry';
 
 export interface NodeExecutorPlugin {

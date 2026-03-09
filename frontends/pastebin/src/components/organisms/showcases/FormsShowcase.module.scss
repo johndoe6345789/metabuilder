@@ -1,0 +1,24 @@
+.twoColGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.inputIcon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  color: var(--mat-sys-on-surface-variant);
+  pointer-events: none;
+}
+
+.inputWithIcon {
+  padding-left: 40px;
+}

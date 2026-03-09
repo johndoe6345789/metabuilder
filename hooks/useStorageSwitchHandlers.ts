@@ -1,7 +1,23 @@
 import { useCallback, useState } from 'react'
-import { toast } from 'sonner'
 import { formatStorageError } from './storageSettingsUtils'
 import { storageSettingsCopy, type StorageBackendKey } from './storageSettingsConfig'
+import type { ToastNotifier } from './useStorageDataHandlers'
+
+/**
+ * Extended toast notifier with info method for informational messages
+ */
+export type ToastNotifierWithInfo = ToastNotifier & {
+  info: (message: string) => void
+}
+
+/**
+ * Default no-op toast implementation
+ */
+const noopToast: ToastNotifierWithInfo = {
+  success: () => {},
+  error: () => {},
+  info: () => {},
+}
 
 type SwitchHandlers = {
   backend: StorageBackendKey | null
@@ -9,6 +25,8 @@ type SwitchHandlers = {
   switchToFlask: (url: string) => Promise<void>
   switchToSQLite: () => Promise<void>
   switchToIndexedDB: () => Promise<void>
+  /** Optional toast notifier - if not provided, notifications are silently ignored */
+  toast?: ToastNotifierWithInfo
 }
 
 export const useStorageSwitchHandlers = ({
@@ -17,6 +35,7 @@ export const useStorageSwitchHandlers = ({
   switchToFlask,
   switchToSQLite,
   switchToIndexedDB,
+  toast = noopToast,
 }: SwitchHandlers) => {
   const [isSwitching, setIsSwitching] = useState(false)
 
@@ -40,7 +59,7 @@ export const useStorageSwitchHandlers = ({
     } finally {
       setIsSwitching(false)
     }
-  }, [backend, flaskUrl, switchToFlask])
+  }, [backend, flaskUrl, switchToFlask, toast])
 
   const handleSwitchToSQLite = useCallback(async () => {
     if (backend === 'sqlite') {
@@ -57,7 +76,7 @@ export const useStorageSwitchHandlers = ({
     } finally {
       setIsSwitching(false)
     }
-  }, [backend, switchToSQLite])
+  }, [backend, switchToSQLite, toast])
 
   const handleSwitchToIndexedDB = useCallback(async () => {
     if (backend === 'indexeddb') {
@@ -74,7 +93,7 @@ export const useStorageSwitchHandlers = ({
     } finally {
       setIsSwitching(false)
     }
-  }, [backend, switchToIndexedDB])
+  }, [backend, switchToIndexedDB, toast])
 
   return {
     isSwitching,

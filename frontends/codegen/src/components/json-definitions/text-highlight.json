@@ -1,0 +1,10 @@
+{
+  "id": "text-highlight-root",
+  "type": "span",
+  "props": {
+    "className": "text-highlight"
+  },
+  "bindings": {
+    "children": "children"
+  }
+}

@@ -1,0 +1,831 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/tests.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "test_example_comprehensive",
+  "description": "Comprehensive example package demonstrating all JSON test patterns and best practices",
+  "imports": [
+    {
+      "from": "@/lib/utils",
+      "import": ["validateEmail", "hashPassword", "generateToken", "parseJSON"]
+    },
+    {
+      "from": "@testing-library/react",
+      "import": ["render", "screen", "fireEvent", "userEvent"]
+    }
+  ],
+  "testSuites": [
+    {
+      "id": "suite_validation",
+      "name": "Email Validation",
+      "description": "Test email validation utility",
+      "tags": ["@utils", "@validation", "@smoke"],
+      "tests": [
+        {
+          "id": "test_valid_email",
+          "name": "should accept valid email addresses",
+          "tags": ["@smoke"],
+          "arrange": {
+            "fixtures": {
+              "validEmails": ["user@example.com", "test.user@domain.co.uk", "name+tag@example.org"]
+            }
+          },
+          "act": {
+            "type": "function_call",
+            "target": "validateEmail",
+            "input": "$arrange.fixtures.validEmails"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "truthy",
+                "actual": "result",
+                "message": "Should return true for valid email addresses"
+              }
+            ]
+          }
+        },
+        {
+          "id": "test_invalid_email",
+          "name": "should reject invalid email addresses",
+          "arrange": {
+            "fixtures": {
+              "invalidEmails": ["invalid", "user@", "@example.com", "user @example.com"]
+            }
+          },
+          "act": {
+            "type": "function_call",
+            "target": "validateEmail",
+            "input": "$arrange.fixtures.invalidEmails"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "falsy",
+                "actual": "result",
+                "message": "Should return false for invalid email addresses"
+              }
+            ]
+          }
+        },
+        {
+          "id": "test_empty_email",
+          "name": "should reject empty email",
+          "arrange": {
+            "fixtures": {
+              "email": ""
+            }
+          },
+          "act": {
+            "type": "function_call",
+            "target": "validateEmail",
+            "input": "$arrange.fixtures.email"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "falsy",
+                "actual": "result",
+                "message": "Should reject empty email string"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "suite_password_security",
+      "name": "Password Hashing and Security",
+      "description": "Test password hashing and security utilities",
+      "tags": ["@security", "@utils", "@critical"],
+      "timeout": 10000,
+      "setup": {
+        "beforeEach": [
+          {
+            "type": "initialize",
+            "description": "Clear any cached values"
+          }
+        ]
+      },
+      "tests": [
+        {
+          "id": "test_password_hash_success",
+          "name": "should hash password successfully",
+          "tags": ["@critical"],
+          "arrange": {
+            "fixtures": {
+              "password": "SecurePassword123!@#",
+              "saltRounds": 10
+            }
+          },
+          "act": {
+            "type": "function_call",
+            "target": "hashPassword",
+            "input": {
+              "password": "$arrange.fixtures.password",
+              "saltRounds": "$arrange.fixtures.saltRounds"
+            }
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "truthy",
+                "actual": "result",
+                "message": "Should return a hash value"
+              },
+              {
+                "type": "hasLength",
+                "actual": "result",
+                "expected": 60,
+                "message": "BCrypt hash should be 60 characters"
+              }
+            ]
+          }
+        },
+        {
+          "id": "test_password_hash_consistency",
+          "name": "should produce different hashes for same password",
+          "arrange": {
+            "fixtures": {
+              "password": "MyPassword123"
+            }
+          },
+          "act": {
+            "type": "function_call",
+            "target": "hashPassword",
+            "input": "$arrange.fixtures.password"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "notEquals",
+                "actual": "result",
+                "expected": "anotherHash",
+                "message": "Each hash should be unique due to salt"
+              }
+            ]
+          }
+        },
+        {
+          "id": "test_empty_password_rejected",
+          "name": "should reject empty password",
+          "arrange": {
+            "fixtures": {
+              "password": ""
+            }
+          },
+          "act": {
+            "type": "function_call",
+            "target": "hashPassword",
+            "input": "$arrange.fixtures.password"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "throws",
+                "actual": "result",
+                "message": "Should throw error for empty password"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "suite_token_generation",
+      "name": "Token Generation",
+      "description": "Test JWT and authentication token generation",
+      "tags": ["@auth", "@security"],
+      "tests": [
+        {
+          "id": "test_token_generation",
+          "name": "should generate valid auth token",
+          "arrange": {
+            "fixtures": {
+              "userId": "user_123",
+              "role": "admin",
+              "expiresIn": "1h"
+            },
+            "mocks": [
+              {
+                "target": "generateToken",
+                "behavior": {
+                  "returnValue": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyXzEyMyIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTUxNjIzOTAyMn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+                }
+              }
+            ]
+          },
+          "act": {
+            "type": "function_call",
+            "target": "generateToken",
+            "input": {
+              "userId": "$arrange.fixtures.userId",
+              "role": "$arrange.fixtures.role",
+              "expiresIn": "$arrange.fixtures.expiresIn"
+            }
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "truthy",
+                "actual": "result",
+                "message": "Should return a token"
+              },
+              {
+                "type": "contains",
+                "actual": "result",
+                "expected": ".",
+                "message": "JWT should contain periods as separators"
+              }
+            ]
+          }
+        },
+        {
+          "id": "test_token_format",
+          "name": "should generate token in JWT format",
+          "arrange": {
+            "fixtures": {
+              "userId": "user_456"
+            }
+          },
+          "act": {
+            "type": "function_call",
+            "target": "generateToken",
+            "input": "$arrange.fixtures.userId"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "matches",
+                "actual": "result",
+                "expected": "^[A-Za-z0-9-._~+/]+=*\\.[A-Za-z0-9-._~+/]+=*\\.[A-Za-z0-9-._~+/]+=*$",
+                "message": "Should match JWT format (three base64-encoded parts)"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "suite_json_parsing",
+      "name": "JSON Parsing and Validation",
+      "description": "Test JSON parsing with error handling",
+      "tags": ["@utils", "@parsing"],
+      "tests": [
+        {
+          "id": "test_valid_json_parse",
+          "name": "should parse valid JSON",
+          "arrange": {
+            "fixtures": {
+              "jsonString": "{\"user\": \"john\", \"age\": 30, \"roles\": [\"admin\", \"user\"]}"
+            }
+          },
+          "act": {
+            "type": "function_call",
+            "target": "parseJSON",
+            "input": "$arrange.fixtures.jsonString"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "deepEquals",
+                "actual": "result",
+                "expected": {
+                  "user": "john",
+                  "age": 30,
+                  "roles": ["admin", "user"]
+                },
+                "message": "Should parse JSON object correctly"
+              }
+            ]
+          }
+        },
+        {
+          "id": "test_json_array_parse",
+          "name": "should parse JSON array",
+          "arrange": {
+            "fixtures": {
+              "jsonArray": "[1, 2, 3, 4, 5]"
+            }
+          },
+          "act": {
+            "type": "function_call",
+            "target": "parseJSON",
+            "input": "$arrange.fixtures.jsonArray"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "deepEquals",
+                "actual": "result",
+                "expected": [1, 2, 3, 4, 5],
+                "message": "Should parse JSON array correctly"
+              },
+              {
+                "type": "hasLength",
+                "actual": "result",
+                "expected": 5,
+                "message": "Array should have 5 elements"
+              }
+            ]
+          }
+        },
+        {
+          "id": "test_invalid_json_throws",
+          "name": "should throw error for invalid JSON",
+          "arrange": {
+            "fixtures": {
+              "invalidJSON": "{invalid json}"
+            }
+          },
+          "act": {
+            "type": "function_call",
+            "target": "parseJSON",
+            "input": "$arrange.fixtures.invalidJSON"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "throws",
+                "actual": "result",
+                "message": "Should throw SyntaxError for invalid JSON"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "suite_numeric_operations",
+      "name": "Numeric Comparisons and Operations",
+      "description": "Test various numeric comparison assertions",
+      "tags": ["@numeric", "@math"],
+      "tests": [
+        {
+          "id": "test_greater_than",
+          "name": "should validate greater than comparison",
+          "arrange": {
+            "fixtures": {
+              "value": 100,
+              "threshold": 50
+            }
+          },
+          "act": {
+            "type": "function_call",
+            "target": "validateEmail",
+            "input": "$arrange.fixtures.value"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "greaterThan",
+                "actual": "$arrange.fixtures.value",
+                "expected": "$arrange.fixtures.threshold",
+                "message": "100 should be greater than 50"
+              }
+            ]
+          }
+        },
+        {
+          "id": "test_less_than_or_equal",
+          "name": "should validate less than or equal comparison",
+          "arrange": {
+            "fixtures": {
+              "value": 50,
+              "threshold": 100
+            }
+          },
+          "act": {
+            "type": "function_call",
+            "target": "validateEmail",
+            "input": "$arrange.fixtures.value"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "lessThanOrEqual",
+                "actual": "$arrange.fixtures.value",
+                "expected": "$arrange.fixtures.threshold",
+                "message": "50 should be less than or equal to 100"
+              }
+            ]
+          }
+        },
+        {
+          "id": "test_greate_than_or_equal",
+          "name": "should validate greater than or equal comparison",
+          "arrange": {
+            "fixtures": {
+              "value": 100
+            }
+          },
+          "act": {
+            "type": "function_call",
+            "target": "validateEmail",
+            "input": "$arrange.fixtures.value"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "greaterThanOrEqual",
+                "actual": "$arrange.fixtures.value",
+                "expected": 100,
+                "message": "100 should be >= 100"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "suite_null_undefined_checks",
+      "name": "Null and Undefined Checks",
+      "description": "Test null/undefined value assertions",
+      "tags": ["@types", "@validation"],
+      "tests": [
+        {
+          "id": "test_null_value",
+          "name": "should detect null values",
+          "arrange": {
+            "fixtures": {
+              "value": null
+            }
+          },
+          "act": {
+            "type": "function_call",
+            "target": "parseJSON",
+            "input": "$arrange.fixtures.value"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "null",
+                "actual": "$arrange.fixtures.value",
+                "message": "Should be null"
+              }
+            ]
+          }
+        },
+        {
+          "id": "test_undefined_value",
+          "name": "should detect undefined values",
+          "arrange": {
+            "fixtures": {
+              "value": {}
+            }
+          },
+          "act": {
+            "type": "function_call",
+            "target": "parseJSON",
+            "input": "$arrange.fixtures.value"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "undefined",
+                "actual": "$arrange.fixtures.value.missingProp",
+                "message": "Missing property should be undefined"
+              }
+            ]
+          }
+        },
+        {
+          "id": "test_not_null",
+          "name": "should detect non-null values",
+          "arrange": {
+            "fixtures": {
+              "value": "something"
+            }
+          },
+          "act": {
+            "type": "function_call",
+            "target": "parseJSON",
+            "input": "$arrange.fixtures.value"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "notNull",
+                "actual": "$arrange.fixtures.value",
+                "message": "Should not be null"
+              }
+            ]
+          }
+        },
+        {
+          "id": "test_defined",
+          "name": "should detect defined values",
+          "arrange": {
+            "fixtures": {
+              "value": 0
+            }
+          },
+          "act": {
+            "type": "function_call",
+            "target": "parseJSON",
+            "input": "$arrange.fixtures.value"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "notUndefined",
+                "actual": "$arrange.fixtures.value",
+                "message": "Should be defined (even if falsy)"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "suite_collection_checks",
+      "name": "Collection and Property Checks",
+      "description": "Test array and object assertions",
+      "tags": ["@collections", "@objects"],
+      "tests": [
+        {
+          "id": "test_has_property",
+          "name": "should check for object properties",
+          "arrange": {
+            "fixtures": {
+              "user": {
+                "name": "John",
+                "email": "john@example.com",
+                "role": "admin"
+              }
+            }
+          },
+          "act": {
+            "type": "function_call",
+            "target": "parseJSON",
+            "input": "$arrange.fixtures.user"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "hasProperty",
+                "actual": "$arrange.fixtures.user",
+                "expected": "email",
+                "message": "User object should have email property"
+              }
+            ]
+          }
+        },
+        {
+          "id": "test_array_length",
+          "name": "should check array length",
+          "arrange": {
+            "fixtures": {
+              "items": ["apple", "banana", "orange"]
+            }
+          },
+          "act": {
+            "type": "function_call",
+            "target": "parseJSON",
+            "input": "$arrange.fixtures.items"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "hasLength",
+                "actual": "$arrange.fixtures.items",
+                "expected": 3,
+                "message": "Array should have 3 items"
+              }
+            ]
+          }
+        },
+        {
+          "id": "test_contains_value",
+          "name": "should check if array contains value",
+          "arrange": {
+            "fixtures": {
+              "roles": ["admin", "user", "guest"]
+            }
+          },
+          "act": {
+            "type": "function_call",
+            "target": "parseJSON",
+            "input": "$arrange.fixtures.roles"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "contains",
+                "actual": "$arrange.fixtures.roles",
+                "expected": "admin",
+                "message": "Roles array should contain admin"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "suite_component_rendering",
+      "name": "Component Rendering and DOM",
+      "description": "Test React component rendering and DOM queries",
+      "tags": ["@component", "@react", "@dom"],
+      "tests": [
+        {
+          "id": "test_render_button",
+          "name": "should render button component",
+          "arrange": {
+            "fixtures": {
+              "label": "Click Me",
+              "variant": "primary"
+            }
+          },
+          "act": {
+            "type": "render",
+            "component": "Button",
+            "props": {
+              "label": "$arrange.fixtures.label",
+              "variant": "$arrange.fixtures.variant"
+            }
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "toBeInTheDocument",
+                "selector": "button",
+                "message": "Button should be rendered in document"
+              },
+              {
+                "type": "toHaveTextContent",
+                "selector": "button",
+                "expected": "Click Me",
+                "message": "Button should contain correct label"
+              }
+            ]
+          }
+        },
+        {
+          "id": "test_button_click",
+          "name": "should handle button click event",
+          "arrange": {
+            "fixtures": {
+              "label": "Submit",
+              "onClick": "mock_function"
+            }
+          },
+          "act": {
+            "type": "click",
+            "selector": "button",
+            "role": "button"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "toBeInTheDocument",
+                "selector": "button",
+                "message": "Button should still be in document after click"
+              }
+            ]
+          }
+        },
+        {
+          "id": "test_disabled_button",
+          "name": "should show disabled button state",
+          "arrange": {
+            "fixtures": {
+              "disabled": true
+            }
+          },
+          "act": {
+            "type": "render",
+            "component": "Button",
+            "props": {
+              "label": "Disabled",
+              "disabled": "$arrange.fixtures.disabled"
+            }
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "toBeDisabled",
+                "selector": "button",
+                "message": "Button should be disabled"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "suite_error_boundary",
+      "name": "Error Handling and Boundaries",
+      "description": "Test error handling and exception cases",
+      "tags": ["@error", "@boundary"],
+      "tests": [
+        {
+          "id": "test_throw_error",
+          "name": "should throw error for invalid input",
+          "arrange": {
+            "fixtures": {
+              "invalidInput": null
+            }
+          },
+          "act": {
+            "type": "function_call",
+            "target": "validateEmail",
+            "input": "$arrange.fixtures.invalidInput"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "throws",
+                "actual": "result",
+                "message": "Should throw error for null input"
+              }
+            ]
+          }
+        },
+        {
+          "id": "test_no_throw",
+          "name": "should not throw error for valid input",
+          "arrange": {
+            "fixtures": {
+              "validEmail": "test@example.com"
+            }
+          },
+          "act": {
+            "type": "function_call",
+            "target": "validateEmail",
+            "input": "$arrange.fixtures.validEmail"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "notThrows",
+                "actual": "result",
+                "message": "Should not throw error for valid email"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "suite_mixed_assertions",
+      "name": "Mixed Assertion Patterns",
+      "description": "Test combining multiple assertions in single test",
+      "tags": ["@mixed", "@comprehensive"],
+      "tests": [
+        {
+          "id": "test_multiple_assertions",
+          "name": "should verify multiple assertions",
+          "arrange": {
+            "fixtures": {
+              "user": {
+                "id": "user_123",
+                "name": "John Doe",
+                "email": "john@example.com",
+                "roles": ["admin", "user"],
+                "active": true,
+                "age": 30
+              }
+            }
+          },
+          "act": {
+            "type": "function_call",
+            "target": "parseJSON",
+            "input": "$arrange.fixtures.user"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "truthy",
+                "actual": "$arrange.fixtures.user",
+                "message": "User should be truthy"
+              },
+              {
+                "type": "hasProperty",
+                "actual": "$arrange.fixtures.user",
+                "expected": "email",
+                "message": "User should have email"
+              },
+              {
+                "type": "equals",
+                "actual": "$arrange.fixtures.user.name",
+                "expected": "John Doe",
+                "message": "Name should match"
+              },
+              {
+                "type": "hasLength",
+                "actual": "$arrange.fixtures.user.roles",
+                "expected": 2,
+                "message": "Roles array should have 2 items"
+              },
+              {
+                "type": "greaterThan",
+                "actual": "$arrange.fixtures.user.age",
+                "expected": 18,
+                "message": "Age should be > 18"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

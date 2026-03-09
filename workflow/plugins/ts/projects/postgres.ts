@@ -8,7 +8,7 @@
 import { execSync } from 'child_process';
 import * as path from 'path';
 
-const POSTGRES_PATH = path.resolve(__dirname, '../../../../postgres');
+export const POSTGRES_PATH = path.resolve(__dirname, '../../../../postgres');
 
 export interface PostgresConnectionConfig {
   host?: string;

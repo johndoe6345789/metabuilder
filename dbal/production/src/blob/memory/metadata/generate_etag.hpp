@@ -18,7 +18,7 @@ namespace blob {
  * @param data The blob data
  * @return ETag string
  */
-inline std::string generate_etag(const std::vector<char>& data) {
+[[nodiscard]] inline std::string generate_etag(const std::vector<char>& data) {
     size_t hash = std::hash<std::string>{}(std::string(data.begin(), data.end()));
     char buffer[32];
     snprintf(buffer, sizeof(buffer), "\"%016zx\"", hash);

@@ -25,7 +25,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${ibmPlexSans.variable} ${spaceGrotesk.variable}`}>
-      <body className="min-h-screen bg-background text-foreground antialiased">
+      <body>
         {children}
       </body>
     </html>

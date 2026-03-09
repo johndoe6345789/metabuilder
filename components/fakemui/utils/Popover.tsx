@@ -13,6 +13,8 @@ export interface PopoverProps extends React.HTMLAttributes<HTMLDivElement> {
   onClose?: () => void
   anchorOrigin?: AnchorOrigin
   transformOrigin?: AnchorOrigin
+  /** Test ID for automated testing */
+  testId?: string
 }
 
 export const Popover: React.FC<PopoverProps> = ({
@@ -23,12 +25,13 @@ export const Popover: React.FC<PopoverProps> = ({
   anchorOrigin,
   transformOrigin,
   className = '',
+  testId,
   ...props
 }) =>
   open ? (
     <>
       <Backdrop open onClick={onClose} className="backdrop--transparent" />
-      <div className={`popover ${className}`} {...props}>
+      <div className={`popover ${className}`} role="dialog" data-testid={testId} {...props}>
         {children}
       </div>
     </>

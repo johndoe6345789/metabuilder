@@ -1,0 +1,56 @@
+{
+  "$schema": "../../../../schemas/plugin-nodes.schema.json",
+  "category": {
+    "id": "test",
+    "name": "Testing",
+    "color": "#9b59b6",
+    "icon": "check-circle"
+  },
+  "nodes": [
+    {
+      "id": "test.run_suite",
+      "name": "Run Test Suite",
+      "description": "Run a complete test suite",
+      "icon": "play-circle",
+      "inputs": ["main"],
+      "outputs": ["pass", "fail"],
+      "defaultConfig": { "suitePath": "", "timeout": 60000 }
+    },
+    {
+      "id": "test.assert_true",
+      "name": "Assert True",
+      "description": "Assert condition is true",
+      "icon": "check",
+      "inputs": ["main"],
+      "outputs": ["pass", "fail"],
+      "defaultConfig": { "condition": "" }
+    },
+    {
+      "id": "test.assert_false",
+      "name": "Assert False",
+      "description": "Assert condition is false",
+      "icon": "x",
+      "inputs": ["main"],
+      "outputs": ["pass", "fail"],
+      "defaultConfig": { "condition": "" }
+    },
+    {
+      "id": "test.assert_equals",
+      "name": "Assert Equals",
+      "description": "Assert two values are equal",
+      "icon": "check-square",
+      "inputs": ["main"],
+      "outputs": ["pass", "fail"],
+      "defaultConfig": { "actual": "", "expected": "" }
+    },
+    {
+      "id": "test.assert_exists",
+      "name": "Assert Exists",
+      "description": "Assert value exists (not null/undefined)",
+      "icon": "check-circle",
+      "inputs": ["main"],
+      "outputs": ["pass", "fail"],
+      "defaultConfig": { "value": "" }
+    }
+  ]
+}

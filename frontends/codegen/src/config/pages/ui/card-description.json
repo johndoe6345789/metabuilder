@@ -1,0 +1,9 @@
+{
+  "type": "CardDescription",
+  "source": "ui",
+  "load": {
+    "path": "@/components/ui/card",
+    "export": "CardDescription"
+  },
+  "props": {}
+}

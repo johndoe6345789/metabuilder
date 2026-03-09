@@ -1,0 +1,5 @@
+[
+  { "id": "typography", "label": "Typography", "icon": "house" },
+  { "id": "forms", "label": "Forms", "icon": "pencil" },
+  { "id": "display", "label": "Display", "icon": "user" }
+]

@@ -1,0 +1,91 @@
+version: '3.8'
+
+services:
+  # WorkflowUI Application (Next.js + Flask)
+  workflowui:
+    build:
+      context: ..
+      dockerfile: workflowui/Dockerfile
+    container_name: metabuilder-workflowui
+    ports:
+      - "3000:3000"
+      - "5050:5000"
+    environment:
+      # Node.js
+      - NODE_ENV=production
+      - NEXTAUTH_URL=http://localhost:3000
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET:-change-me-in-production}
+
+      # Flask Backend
+      - FLASK_ENV=production
+      - FLASK_APP=backend/server_sqlalchemy.py
+      - DATABASE_URL=sqlite:////app/data/workflows.db
+      - PYTHONUNBUFFERED=1
+
+      # SMTP Relay (optional)
+      - SMTP_RELAY_HOST=${SMTP_RELAY_HOST:-smtp-relay}
+      - SMTP_RELAY_PORT=${SMTP_RELAY_PORT:-2525}
+      - SMTP_FROM_ADDRESS=${SMTP_FROM_ADDRESS:-noreply@metabuilder.local}
+
+    volumes:
+      - workflowui-data:/app/data
+      - workflowui-logs:/app/logs
+
+    restart: unless-stopped
+
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+
+    depends_on:
+      - smtp-relay
+
+    networks:
+      - metabuilder-network
+
+  # SMTP Relay Service (optional but recommended)
+  smtp-relay:
+    build:
+      context: ../smtprelay
+      dockerfile: Dockerfile
+    container_name: metabuilder-smtp-relay
+    ports:
+      - "2525:2525"
+      - "8080:8080"
+
+    environment:
+      - SMTP_LISTEN_HOST=0.0.0.0
+      - SMTP_LISTEN_PORT=2525
+      - HTTP_LISTEN_HOST=0.0.0.0
+      - HTTP_LISTEN_PORT=8080
+      - GMAIL_USERNAME=${GMAIL_USERNAME:-relay@localhost}
+      - GMAIL_APP_PASSWORD=${GMAIL_APP_PASSWORD:-placeholder}
+      - FORWARD_TO=${FORWARD_TO:-noreply@metabuilder.local}
+      - ALLOW_ANY_RCPT=true
+      - ADD_X_HEADERS=true
+      - MAX_STORE=500
+
+    restart: unless-stopped
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+    networks:
+      - metabuilder-network
+
+volumes:
+  workflowui-data:
+    driver: local
+  workflowui-logs:
+    driver: local
+
+networks:
+  metabuilder-network:
+    driver: bridge

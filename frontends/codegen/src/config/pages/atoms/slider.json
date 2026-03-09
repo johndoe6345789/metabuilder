@@ -1,0 +1,6 @@
+{
+  "type": "MetabuilderFormSlider",
+  "props": {
+    "onChange": "> void"
+  }
+}

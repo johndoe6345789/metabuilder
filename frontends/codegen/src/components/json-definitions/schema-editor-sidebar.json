@@ -1,0 +1,12 @@
+{
+  "id": "schema-editor-sidebar",
+  "type": "div",
+  "props": { "className": "side-panel" },
+  "children": [
+    {
+      "id": "component-palette-container",
+      "type": "ComponentPalette",
+      "bindings": { "onDragStart": { "source": "onDragStart" } }
+    }
+  ]
+}

@@ -1,0 +1,181 @@
+// Prose Atoms - Material Design 3 (CSS Module)
+// =============================================
+// Flat selectors for long-form typography using M3 tokens
+
+// Base prose container
+.prose {
+  // Prose is applied as a container class
+}
+
+// Headings
+.prose h1 {
+  font-family: var(--mat-sys-headline-large-font);
+  font-size: var(--mat-sys-headline-large-size);
+  font-weight: var(--mat-sys-headline-large-weight);
+  line-height: var(--mat-sys-headline-large-line-height);
+  letter-spacing: var(--mat-sys-headline-large-tracking);
+  color: var(--mat-sys-on-surface);
+  margin: 32px 0 16px;
+}
+
+.prose h2 {
+  font-family: var(--mat-sys-headline-medium-font);
+  font-size: var(--mat-sys-headline-medium-size);
+  font-weight: var(--mat-sys-headline-medium-weight);
+  line-height: var(--mat-sys-headline-medium-line-height);
+  letter-spacing: var(--mat-sys-headline-medium-tracking);
+  color: var(--mat-sys-on-surface);
+  margin: 24px 0 12px;
+}
+
+.prose h3 {
+  font-family: var(--mat-sys-headline-small-font);
+  font-size: var(--mat-sys-headline-small-size);
+  font-weight: var(--mat-sys-headline-small-weight);
+  line-height: var(--mat-sys-headline-small-line-height);
+  letter-spacing: var(--mat-sys-headline-small-tracking);
+  color: var(--mat-sys-on-surface);
+  margin: 20px 0 10px;
+}
+
+.prose h4,
+.prose h5,
+.prose h6 {
+  font-family: var(--mat-sys-title-medium-font);
+  font-size: var(--mat-sys-title-medium-size);
+  font-weight: var(--mat-sys-title-medium-weight);
+  line-height: var(--mat-sys-title-medium-line-height);
+  letter-spacing: var(--mat-sys-title-medium-tracking);
+  color: var(--mat-sys-on-surface);
+  margin: 16px 0 8px;
+}
+
+// Paragraphs
+.prose p {
+  font-family: var(--mat-sys-body-large-font);
+  font-size: var(--mat-sys-body-large-size);
+  line-height: var(--mat-sys-body-large-line-height);
+  color: var(--mat-sys-on-surface);
+  margin: 0 0 16px;
+}
+
+// Lead paragraph (intro text)
+.prose p.lead {
+  font-family: var(--mat-sys-title-large-font);
+  font-size: var(--mat-sys-title-large-size);
+  line-height: var(--mat-sys-title-large-line-height);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+// Lists
+.prose ul,
+.prose ol {
+  padding-left: 24px;
+  margin: 0 0 16px;
+}
+
+.prose li {
+  font-family: var(--mat-sys-body-large-font);
+  font-size: var(--mat-sys-body-large-size);
+  line-height: 1.7;
+  margin-bottom: 8px;
+}
+
+.prose li::marker {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+// Links
+.prose a {
+  color: var(--mat-sys-primary);
+  text-decoration: none;
+  transition: color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+}
+
+.prose a:hover {
+  text-decoration: underline;
+}
+
+// Horizontal rule
+.prose hr {
+  border: none;
+  height: 1px;
+  background: var(--mat-sys-outline-variant);
+  margin: 32px 0;
+}
+
+// Images
+.prose img {
+  max-width: 100%;
+  border-radius: var(--mat-sys-corner-medium);
+  margin: 16px 0;
+}
+
+// Figure with caption
+.prose figure {
+  margin: 24px 0;
+}
+
+.prose figcaption {
+  font-family: var(--mat-sys-body-small-font);
+  font-size: var(--mat-sys-body-small-size);
+  color: var(--mat-sys-on-surface-variant);
+  text-align: center;
+  margin-top: 8px;
+}
+
+// Task list checkbox
+.prose input[type="checkbox"] {
+  margin-right: 8px;
+  accent-color: var(--mat-sys-primary);
+}
+
+// Small text
+.prose small {
+  font-family: var(--mat-sys-body-small-font);
+  font-size: var(--mat-sys-body-small-size);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+// Superscript and subscript
+.prose sup,
+.prose sub {
+  font-size: 0.75em;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+.prose sup {
+  top: -0.5em;
+}
+
+.prose sub {
+  bottom: -0.25em;
+}
+
+// First paragraph styling (drop cap alternative)
+.proseDropCap > p:first-of-type::first-letter {
+  font-size: 3.5em;
+  font-weight: 600;
+  float: left;
+  line-height: 0.8;
+  margin-right: 8px;
+  color: var(--mat-sys-primary);
+}
+
+// Compact prose (tighter spacing)
+.proseCompact {
+  composes: prose;
+}
+
+.proseCompact p {
+  margin-bottom: 12px;
+}
+
+.proseCompact h1,
+.proseCompact h2,
+.proseCompact h3 {
+  margin-top: 16px;
+  margin-bottom: 8px;
+}

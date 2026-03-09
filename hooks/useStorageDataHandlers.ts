@@ -1,13 +1,30 @@
 import { useCallback, useState } from 'react'
-import { toast } from 'sonner'
 import { createJsonFileInput, downloadJson, formatStorageError } from './storageSettingsUtils'
 import { storageSettingsCopy } from './storageSettingsConfig'
+
+/**
+ * Toast notification interface - allows consumers to provide their own toast implementation
+ */
+export type ToastNotifier = {
+  success: (message: string) => void
+  error: (message: string) => void
+}
+
+/**
+ * Default no-op toast implementation for environments without toast library
+ */
+const noopToast: ToastNotifier = {
+  success: () => {},
+  error: () => {},
+}
 
 type DataHandlers = {
   exportData: () => Promise<unknown>
   importData: (data: unknown) => Promise<void>
   exportFilename: () => string
   importAccept: string
+  /** Optional toast notifier - if not provided, notifications are silently ignored */
+  toast?: ToastNotifier
 }
 
 export const useStorageDataHandlers = ({
@@ -15,6 +32,7 @@ export const useStorageDataHandlers = ({
   importData,
   exportFilename,
   importAccept,
+  toast = noopToast,
 }: DataHandlers) => {
   const [isExporting, setIsExporting] = useState(false)
   const [isImporting, setIsImporting] = useState(false)
@@ -30,7 +48,7 @@ export const useStorageDataHandlers = ({
     } finally {
       setIsExporting(false)
     }
-  }, [exportData, exportFilename])
+  }, [exportData, exportFilename, toast])
 
   const handleImport = useCallback(() => {
     createJsonFileInput(importAccept, async (file) => {
@@ -46,7 +64,7 @@ export const useStorageDataHandlers = ({
         setIsImporting(false)
       }
     })
-  }, [importAccept, importData])
+  }, [importAccept, importData, toast])
 
   return {
     isExporting,

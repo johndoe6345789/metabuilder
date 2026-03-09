@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import {
   mutateAsyncData,
   selectAsyncRequest,
-  type AsyncDataState,
+  type RootState,
 } from '@metabuilder/redux-slices'
 
 export interface UseMutationOptions<TData = unknown, TResponse = unknown> {
@@ -56,7 +56,7 @@ export function useReduxMutation<TData = unknown, TResponse = unknown>(
   }
 
   const mutationId = mutationIdRef.current
-  const asyncState = useSelector((state: { asyncData: AsyncDataState }) =>
+  const asyncState = useSelector((state: RootState) =>
     selectAsyncRequest(state, mutationId)
   )
 

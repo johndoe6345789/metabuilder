@@ -1,0 +1,209 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "workflowui-core",
+  "version": "1.0.0",
+  "description": "WorkflowUI core E2E tests - converted from workflowui-e2e.spec.ts",
+  "tests": [
+    {
+      "name": "login page displays correctly",
+      "tags": ["@auth", "@critical"],
+      "steps": [
+        {"action": "navigate", "url": "login"},
+        {"action": "waitForLoadState", "state": "domcontentloaded"},
+        {"action": "wait", "timeout": 1000},
+        {"action": "expect", "testId": "salesforce-login-page", "assertion": {"matcher": "toBeVisible"}},
+        {"action": "expect", "testId": "salesforce-email-input", "assertion": {"matcher": "toBeVisible"}},
+        {"action": "expect", "testId": "salesforce-password-input", "assertion": {"matcher": "toBeVisible"}},
+        {"action": "expect", "testId": "salesforce-login-button", "assertion": {"matcher": "toBeVisible"}}
+      ]
+    },
+    {
+      "name": "register page displays password strength indicator",
+      "tags": ["@auth", "@register"],
+      "steps": [
+        {"action": "navigate", "url": "register"},
+        {"action": "waitForLoadState", "state": "domcontentloaded"},
+        {"action": "wait", "timeout": 1000},
+        {"action": "fill", "testId": "password-input", "value": "Weak1"},
+        {"action": "wait", "timeout": 500},
+        {"action": "expect", "testId": "password-strength-indicator", "assertion": {"matcher": "toBeVisible"}},
+        {"action": "expect", "testId": "password-strength-message", "assertion": {"matcher": "toBeVisible"}}
+      ]
+    },
+    {
+      "name": "can fill login form",
+      "tags": ["@auth", "@login"],
+      "steps": [
+        {"action": "navigate", "url": "login"},
+        {"action": "waitForLoadState", "state": "domcontentloaded"},
+        {"action": "wait", "timeout": 1000},
+        {"action": "click", "testId": "switch-to-material"},
+        {"action": "wait", "timeout": 500},
+        {"action": "fill", "testId": "email-input", "value": "test@example.com"},
+        {"action": "fill", "testId": "password-input", "value": "password123"},
+        {"action": "expect", "testId": "login-button", "assertion": {"matcher": "toBeVisible"}}
+      ]
+    },
+    {
+      "name": "register page footer link navigates to login",
+      "tags": ["@auth", "@navigation"],
+      "steps": [
+        {"action": "navigate", "url": "register"},
+        {"action": "waitForLoadState", "state": "domcontentloaded"},
+        {"action": "wait", "timeout": 1000},
+        {"action": "click", "testId": "auth-footer-link"},
+        {"action": "waitForLoadState", "state": "domcontentloaded"},
+        {"action": "wait", "timeout": 1000},
+        {"action": "expect", "testId": "salesforce-login-page", "assertion": {"matcher": "toBeVisible"}}
+      ]
+    },
+    {
+      "name": "404 page displays not found state",
+      "tags": ["@error-handling"],
+      "steps": [
+        {"action": "navigate", "url": "nonexistent-page-12345"},
+        {"action": "waitForLoadState", "state": "domcontentloaded"},
+        {"action": "wait", "timeout": 1000},
+        {"action": "expect", "testId": "not-found-state", "assertion": {"matcher": "toBeVisible"}}
+      ]
+    },
+    {
+      "name": "header actions display correctly",
+      "tags": ["@ui", "@header"],
+      "steps": [
+        {"action": "navigate", "url": ""},
+        {"action": "waitForLoadState", "state": "domcontentloaded"},
+        {"action": "wait", "timeout": 1000},
+        {"action": "expect", "testId": "header-actions", "assertion": {"matcher": "toBeVisible"}},
+        {"action": "expect", "testId": "toggle-theme-button", "assertion": {"matcher": "toBeVisible"}}
+      ]
+    },
+    {
+      "name": "templates listing page displays",
+      "tags": ["@templates", "@critical"],
+      "steps": [
+        {"action": "navigate", "url": "templates"},
+        {"action": "waitForLoadState", "state": "domcontentloaded"},
+        {"action": "wait", "timeout": 1000},
+        {"action": "expect", "testId": "template-search", "assertion": {"matcher": "toBeVisible"}}
+      ]
+    },
+    {
+      "name": "home page loads without errors",
+      "tags": ["@smoke", "@critical"],
+      "steps": [
+        {"action": "navigate", "url": ""},
+        {"action": "waitForLoadState", "state": "domcontentloaded"},
+        {"action": "expect", "selector": "body", "assertion": {"matcher": "toBeVisible"}}
+      ]
+    },
+    {
+      "name": "settings page loads without errors",
+      "tags": ["@smoke"],
+      "steps": [
+        {"action": "navigate", "url": "settings"},
+        {"action": "waitForLoadState", "state": "domcontentloaded"},
+        {"action": "expect", "selector": "body", "assertion": {"matcher": "toBeVisible"}}
+      ]
+    },
+    {
+      "name": "help page loads without errors",
+      "tags": ["@smoke"],
+      "steps": [
+        {"action": "navigate", "url": "help"},
+        {"action": "waitForLoadState", "state": "domcontentloaded"},
+        {"action": "expect", "selector": "body", "assertion": {"matcher": "toBeVisible"}}
+      ]
+    },
+    {
+      "name": "docs page loads without errors",
+      "tags": ["@smoke"],
+      "steps": [
+        {"action": "navigate", "url": "docs"},
+        {"action": "waitForLoadState", "state": "domcontentloaded"},
+        {"action": "expect", "selector": "body", "assertion": {"matcher": "toBeVisible"}}
+      ]
+    },
+    {
+      "name": "plugins page loads without errors",
+      "tags": ["@smoke"],
+      "steps": [
+        {"action": "navigate", "url": "plugins"},
+        {"action": "waitForLoadState", "state": "domcontentloaded"},
+        {"action": "expect", "selector": "body", "assertion": {"matcher": "toBeVisible"}}
+      ]
+    },
+    {
+      "name": "achievements page loads without errors",
+      "tags": ["@smoke"],
+      "steps": [
+        {"action": "navigate", "url": "achievements"},
+        {"action": "waitForLoadState", "state": "domcontentloaded"},
+        {"action": "expect", "selector": "body", "assertion": {"matcher": "toBeVisible"}}
+      ]
+    },
+    {
+      "name": "workflows page loads without errors",
+      "tags": ["@smoke"],
+      "steps": [
+        {"action": "navigate", "url": "workflows"},
+        {"action": "waitForLoadState", "state": "domcontentloaded"},
+        {"action": "expect", "selector": "body", "assertion": {"matcher": "toBeVisible"}}
+      ]
+    },
+    {
+      "name": "workflows favorites page loads without errors",
+      "tags": ["@smoke"],
+      "steps": [
+        {"action": "navigate", "url": "workflows/favorites"},
+        {"action": "waitForLoadState", "state": "domcontentloaded"},
+        {"action": "expect", "selector": "body", "assertion": {"matcher": "toBeVisible"}}
+      ]
+    },
+    {
+      "name": "workflows recent page loads without errors",
+      "tags": ["@smoke"],
+      "steps": [
+        {"action": "navigate", "url": "workflows/recent"},
+        {"action": "waitForLoadState", "state": "domcontentloaded"},
+        {"action": "expect", "selector": "body", "assertion": {"matcher": "toBeVisible"}}
+      ]
+    },
+    {
+      "name": "notifications page loads without errors",
+      "tags": ["@smoke"],
+      "steps": [
+        {"action": "navigate", "url": "notifications"},
+        {"action": "waitForLoadState", "state": "domcontentloaded"},
+        {"action": "expect", "selector": "body", "assertion": {"matcher": "toBeVisible"}}
+      ]
+    },
+    {
+      "name": "editor dynamic route loads without errors",
+      "tags": ["@dynamic-routes"],
+      "steps": [
+        {"action": "navigate", "url": "editor/test-workflow-123"},
+        {"action": "waitForLoadState", "state": "domcontentloaded"},
+        {"action": "expect", "selector": "body", "assertion": {"matcher": "toBeVisible"}}
+      ]
+    },
+    {
+      "name": "project dynamic route loads without errors",
+      "tags": ["@dynamic-routes"],
+      "steps": [
+        {"action": "navigate", "url": "project/test-project-123"},
+        {"action": "waitForLoadState", "state": "domcontentloaded"},
+        {"action": "expect", "selector": "body", "assertion": {"matcher": "toBeVisible"}}
+      ]
+    },
+    {
+      "name": "workspace dynamic route loads without errors",
+      "tags": ["@dynamic-routes"],
+      "steps": [
+        {"action": "navigate", "url": "workspace/test-workspace-123"},
+        {"action": "waitForLoadState", "state": "domcontentloaded"},
+        {"action": "expect", "selector": "body", "assertion": {"matcher": "toBeVisible"}}
+      ]
+    }
+  ]
+}

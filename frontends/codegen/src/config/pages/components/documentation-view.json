@@ -1,0 +1,10 @@
+{
+  "type": "MetabuilderWidgetDocumentationView",
+  "jsonCompatible": false,
+  "wrapperRequired": true,
+  "load": {
+    "path": "@/components/DocumentationView",
+    "export": "DocumentationView"
+  },
+  "props": {}
+}

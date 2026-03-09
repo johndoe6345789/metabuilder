@@ -1,0 +1,333 @@
+@use 'sass:color';
+@use 'sass:map';
+
+$breakpoints: (
+  'xs': 480px,
+  'sm': 640px,
+  'md': 768px,
+  'lg': 1024px,
+  'xl': 1280px,
+  '2xl': 1536px,
+);
+
+@function breakpoint($size) {
+  @return map.get($breakpoints, $size);
+}
+
+@mixin respond-to($breakpoint) {
+  @if map.has-key($breakpoints, $breakpoint) {
+    @media (min-width: map.get($breakpoints, $breakpoint)) {
+      @content;
+    }
+  } @else {
+    @warn "Unknown breakpoint: #{$breakpoint}";
+  }
+}
+
+@mixin respond-below($breakpoint) {
+  @if map.has-key($breakpoints, $breakpoint) {
+    @media (max-width: map.get($breakpoints, $breakpoint) - 1px) {
+      @content;
+    }
+  } @else {
+    @warn "Unknown breakpoint: #{$breakpoint}";
+  }
+}
+
+@mixin respond-between($min, $max) {
+  @if map.has-key($breakpoints, $min) and map.has-key($breakpoints, $max) {
+    @media (min-width: map.get($breakpoints, $min)) and (max-width: map.get($breakpoints, $max) - 1px) {
+      @content;
+    }
+  }
+}
+
+$spacing-scale: (
+  '0': 0,
+  '1': 0.25rem,
+  '2': 0.5rem,
+  '3': 0.75rem,
+  '4': 1rem,
+  '5': 1.25rem,
+  '6': 1.5rem,
+  '8': 2rem,
+  '10': 2.5rem,
+  '12': 3rem,
+  '16': 4rem,
+  '20': 5rem,
+  '24': 6rem,
+);
+
+@function spacing($size) {
+  @return map.get($spacing-scale, $size);
+}
+
+$color-palette: (
+  'primary': (
+    50: #eef2ff,
+    100: #e0e7ff,
+    200: #c7d2fe,
+    300: #a5b4fc,
+    400: #818cf8,
+    500: #6366f1,
+    600: #4f46e5,
+    700: #4338ca,
+    800: #3730a3,
+    900: #312e81,
+  ),
+  'secondary': (
+    50: #faf5ff,
+    100: #f3e8ff,
+    200: #e9d5ff,
+    300: #d8b4fe,
+    400: #c084fc,
+    500: #a855f7,
+    600: #9333ea,
+    700: #7e22ce,
+    800: #6b21a8,
+    900: #581c87,
+  ),
+  'accent': (
+    50: #ecfeff,
+    100: #cffafe,
+    200: #a5f3fc,
+    300: #67e8f9,
+    400: #22d3ee,
+    500: #06b6d4,
+    600: #0891b2,
+    700: #0e7490,
+    800: #155e75,
+    900: #164e63,
+  ),
+  'success': (
+    50: #f0fdf4,
+    100: #dcfce7,
+    200: #bbf7d0,
+    300: #86efac,
+    400: #4ade80,
+    500: #22c55e,
+    600: #16a34a,
+    700: #15803d,
+    800: #166534,
+    900: #14532d,
+  ),
+  'error': (
+    50: #fef2f2,
+    100: #fee2e2,
+    200: #fecaca,
+    300: #fca5a5,
+    400: #f87171,
+    500: #ef4444,
+    600: #dc2626,
+    700: #b91c1c,
+    800: #991b1b,
+    900: #7f1d1d,
+  ),
+  'warning': (
+    50: #fffbeb,
+    100: #fef3c7,
+    200: #fde68a,
+    300: #fcd34d,
+    400: #fbbf24,
+    500: #f59e0b,
+    600: #d97706,
+    700: #b45309,
+    800: #92400e,
+    900: #78350f,
+  ),
+  'gray': (
+    50: #f9fafb,
+    100: #f3f4f6,
+    200: #e5e7eb,
+    300: #d1d5db,
+    400: #9ca3af,
+    500: #6b7280,
+    600: #4b5563,
+    700: #374151,
+    800: #1f2937,
+    900: #111827,
+  ),
+);
+
+@function get-color($palette, $shade: 500) {
+  @if map.has-key($color-palette, $palette) {
+    $palette-map: map.get($color-palette, $palette);
+    @return map.get($palette-map, $shade);
+  }
+  @warn "Unknown color palette: #{$palette}";
+  @return null;
+}
+
+@mixin theme-colors($theme-name) {
+  &[data-theme='#{$theme-name}'] {
+    @content;
+  }
+}
+
+@mixin transition($properties: all, $duration: 0.3s, $timing: ease) {
+  transition: $properties $duration $timing;
+}
+
+@mixin truncate($lines: 1) {
+  @if $lines == 1 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  } @else {
+    display: -webkit-box;
+    -webkit-line-clamp: $lines;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+@mixin center($direction: 'both') {
+  display: flex;
+  
+  @if $direction == 'both' {
+    justify-content: center;
+    align-items: center;
+  } @else if $direction == 'horizontal' {
+    justify-content: center;
+  } @else if $direction == 'vertical' {
+    align-items: center;
+  }
+}
+
+@mixin aspect-ratio($width, $height) {
+  aspect-ratio: #{$width} / #{$height};
+  
+  @supports not (aspect-ratio: 1 / 1) {
+    &::before {
+      content: '';
+      padding-top: percentage($height / $width);
+      float: left;
+    }
+    
+    &::after {
+      content: '';
+      display: block;
+      clear: both;
+    }
+  }
+}
+
+@mixin focus-ring($color: #06b6d4, $width: 3px, $offset: 2px) {
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 $width rgba($color, 0.3);
+  }
+  
+  &:focus-visible {
+    outline: $width solid rgba($color, 0.5);
+    outline-offset: $offset;
+  }
+}
+
+@mixin hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@mixin show-scrollbar($track-color: rgba(255, 255, 255, 0.1), $thumb-color: rgba(255, 255, 255, 0.3)) {
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: $track-color;
+    border-radius: 4px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: $thumb-color;
+    border-radius: 4px;
+    
+    &:hover {
+      background: color.adjust($thumb-color, $lightness: 10%);
+    }
+  }
+}
+
+@mixin visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+@mixin reset-button {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  
+  &:focus {
+    outline: none;
+  }
+}
+
+@mixin reset-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+$font-sizes: (
+  'xs': 0.75rem,
+  'sm': 0.875rem,
+  'base': 1rem,
+  'lg': 1.125rem,
+  'xl': 1.25rem,
+  '2xl': 1.5rem,
+  '3xl': 1.875rem,
+  '4xl': 2.25rem,
+  '5xl': 3rem,
+);
+
+@function font-size($size) {
+  @return map.get($font-sizes, $size);
+}
+
+$font-weights: (
+  'thin': 100,
+  'light': 300,
+  'normal': 400,
+  'medium': 500,
+  'semibold': 600,
+  'bold': 700,
+  'extrabold': 800,
+  'black': 900,
+);
+
+@function font-weight($weight) {
+  @return map.get($font-weights, $weight);
+}
+
+$z-index-layers: (
+  'base': 0,
+  'dropdown': 1000,
+  'sticky': 1020,
+  'fixed': 1030,
+  'modal-backdrop': 1040,
+  'modal': 1050,
+  'popover': 1060,
+  'tooltip': 1070,
+);
+
+@function z-index($layer) {
+  @return map.get($z-index-layers, $layer);
+}

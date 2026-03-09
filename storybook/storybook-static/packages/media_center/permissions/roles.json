@@ -1,0 +1,160 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "media_center",
+  "description": "Media center access permissions",
+  "permissions": [
+    {
+      "id": "media.jobs.submit",
+      "name": "Submit Media Jobs",
+      "description": "Submit media processing jobs",
+      "resource": "media_jobs",
+      "action": "create",
+      "scope": "tenant",
+      "minLevel": 1
+    },
+    {
+      "id": "media.jobs.view",
+      "name": "View Own Jobs",
+      "description": "View own media jobs",
+      "resource": "media_jobs",
+      "action": "read",
+      "scope": "own",
+      "minLevel": 1
+    },
+    {
+      "id": "media.jobs.view_all",
+      "name": "View All Jobs",
+      "description": "View all media jobs",
+      "resource": "media_jobs",
+      "action": "read",
+      "scope": "tenant",
+      "minLevel": 2
+    },
+    {
+      "id": "media.jobs.cancel",
+      "name": "Cancel Jobs",
+      "description": "Cancel media jobs",
+      "resource": "media_jobs",
+      "action": "delete",
+      "scope": "tenant",
+      "minLevel": 2
+    },
+    {
+      "id": "media.radio.view",
+      "name": "View Radio Channels",
+      "description": "View radio channels",
+      "resource": "radio",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 0
+    },
+    {
+      "id": "media.radio.manage",
+      "name": "Manage Radio Channels",
+      "description": "Create and edit radio channels",
+      "resource": "radio",
+      "action": "update",
+      "scope": "tenant",
+      "minLevel": 3
+    },
+    {
+      "id": "media.tv.view",
+      "name": "View TV Channels",
+      "description": "View TV channels",
+      "resource": "tv",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 0
+    },
+    {
+      "id": "media.tv.manage",
+      "name": "Manage TV Channels",
+      "description": "Create and edit TV channels",
+      "resource": "tv",
+      "action": "update",
+      "scope": "tenant",
+      "minLevel": 3
+    },
+    {
+      "id": "media.tv.schedule",
+      "name": "Manage TV Schedule",
+      "description": "Manage TV broadcast schedule",
+      "resource": "tv_schedule",
+      "action": "update",
+      "scope": "tenant",
+      "minLevel": 3
+    },
+    {
+      "id": "media.retro.play",
+      "name": "Play Retro Games",
+      "description": "Play retro games",
+      "resource": "retro",
+      "action": "execute",
+      "scope": "own",
+      "minLevel": 2
+    },
+    {
+      "id": "media.retro.stream",
+      "name": "Stream Retro Gameplay",
+      "description": "Stream retro gameplay to others",
+      "resource": "retro",
+      "action": "execute",
+      "scope": "tenant",
+      "minLevel": 3
+    },
+    {
+      "id": "media.retro.manage_cores",
+      "name": "Manage Emulator Cores",
+      "description": "Install and remove emulator cores",
+      "resource": "retro_cores",
+      "action": "admin",
+      "scope": "tenant",
+      "minLevel": 4
+    }
+  ],
+  "resources": [
+    {
+      "id": "media_jobs",
+      "name": "Media Jobs",
+      "type": "entity",
+      "description": "Media processing job queue",
+      "actions": ["create", "read", "delete"]
+    },
+    {
+      "id": "radio",
+      "name": "Radio",
+      "type": "custom",
+      "description": "Radio streaming resources",
+      "actions": ["read", "update"]
+    },
+    {
+      "id": "tv",
+      "name": "TV",
+      "type": "custom",
+      "description": "TV streaming resources",
+      "actions": ["read", "update"]
+    },
+    {
+      "id": "tv_schedule",
+      "name": "TV Schedule",
+      "type": "entity",
+      "description": "TV broadcast scheduling",
+      "actions": ["read", "update"]
+    },
+    {
+      "id": "retro",
+      "name": "Retro Gaming",
+      "type": "custom",
+      "description": "Retro gaming emulation",
+      "actions": ["execute"]
+    },
+    {
+      "id": "retro_cores",
+      "name": "Emulator Cores",
+      "type": "custom",
+      "description": "Emulator core management",
+      "actions": ["admin"]
+    }
+  ]
+}

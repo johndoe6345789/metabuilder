@@ -16,6 +16,7 @@ export interface AutocompleteRenderOptionState {
 }
 
 export interface AutocompleteProps<T = any> extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
+  testId?: string
   options?: T[]
   value?: T | T[] | null
   onChange?: (event: React.SyntheticEvent | null, value: T | T[] | null) => void
@@ -49,6 +50,7 @@ export function Autocomplete<T = any>({
   loadingText = 'Loading…',
   noOptionsText = 'No options',
   placeholder,
+  testId,
   className,
   ...props
 }: AutocompleteProps<T>) {
@@ -129,6 +131,11 @@ export function Autocomplete<T = any>({
         'fakemui-autocomplete-disabled': disabled,
       })}
       ref={inputRef}
+      role="combobox"
+      aria-expanded={open}
+      aria-haspopup="listbox"
+      aria-label={typeof placeholder === 'string' ? placeholder : undefined}
+      data-testid={testId}
       {...props}
     >
       <div className="fakemui-autocomplete-input-wrapper">

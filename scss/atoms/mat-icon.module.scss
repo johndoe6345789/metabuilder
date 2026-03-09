@@ -1,0 +1,148 @@
+// Icon Component - Material Design 3 SCSS (CSS Module)
+// =====================================================
+// Local classes using M3 design tokens
+
+// Base icon class
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Material Symbols Outlined', 'Material Icons', sans-serif;
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'liga';
+  user-select: none;
+}
+
+// Legacy wrapper class
+.matIcon {
+  composes: icon;
+}
+
+// Size variants
+.iconXs {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+.iconSm {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.iconMd {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+.iconLg {
+  font-size: 32px;
+  width: 32px;
+  height: 32px;
+}
+
+.iconXl {
+  font-size: 40px;
+  width: 40px;
+  height: 40px;
+}
+
+.iconXxl {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+}
+
+// Color variants using M3 design tokens
+.iconPrimary {
+  color: var(--mat-sys-primary, #6750a4);
+}
+
+.iconSecondary {
+  color: var(--mat-sys-secondary, #625b71);
+}
+
+.iconTertiary {
+  color: var(--mat-sys-tertiary, #7d5260);
+}
+
+.iconError {
+  color: var(--mat-sys-error, #b3261e);
+}
+
+.iconSuccess {
+  color: var(--color-success, #2e7d32);
+}
+
+.iconWarning {
+  color: var(--color-warning, #ed6c02);
+}
+
+.iconInfo {
+  color: var(--color-info, #0288d1);
+}
+
+.iconOnSurface {
+  color: var(--mat-sys-on-surface, #1c1b1f);
+}
+
+.iconOnSurfaceVariant {
+  color: var(--mat-sys-on-surface-variant, #49454f);
+}
+
+.iconInverse {
+  color: var(--mat-sys-inverse-on-surface, #f4eff4);
+}
+
+// Variant styles (background containers)
+.iconFilled {
+  background-color: var(--mat-sys-primary, #6750a4);
+  color: var(--mat-sys-on-primary, #ffffff);
+  border-radius: 50%;
+  padding: 8px;
+}
+
+.iconFilledTonal {
+  background-color: var(--mat-sys-secondary-container, #e8def8);
+  color: var(--mat-sys-on-secondary-container, #1d192b);
+  border-radius: 50%;
+  padding: 8px;
+}
+
+.iconOutlined {
+  border: 1px solid var(--mat-sys-outline, #79747e);
+  border-radius: 50%;
+  padding: 7px;
+}
+
+// State modifiers
+.iconDisabled {
+  opacity: 0.38;
+  pointer-events: none;
+}
+
+.iconButton {
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background-color 200ms ease;
+
+  &:hover {
+    background-color: var(--mat-sys-surface-variant, rgba(0, 0, 0, 0.04));
+  }
+
+  &:active {
+    background-color: var(--mat-sys-surface-container-high, rgba(0, 0, 0, 0.08));
+  }
+}

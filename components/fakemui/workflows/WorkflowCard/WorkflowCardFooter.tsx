@@ -8,14 +8,16 @@ import React from 'react';
 interface WorkflowCardFooterProps {
   nodeCount: number;
   connectionCount: number;
+  testId?: string;
 }
 
 export const WorkflowCardFooter: React.FC<WorkflowCardFooterProps> = ({
   nodeCount,
-  connectionCount
+  connectionCount,
+  testId,
 }) => {
   return (
-    <div >
+    <div data-testid={testId}>
       <span >
         {nodeCount} nodes • {connectionCount} connections
       </span>

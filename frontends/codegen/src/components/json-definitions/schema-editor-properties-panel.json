@@ -1,0 +1,66 @@
+{
+  "id": "schema-editor-properties-panel",
+  "type": "div",
+  "props": { "className": "side-panel side-panel--right" },
+  "children": [
+    {
+      "id": "panel-header",
+      "type": "div",
+      "props": { "className": "side-panel__header" },
+      "children": "Properties"
+    },
+    {
+      "id": "properties-content",
+      "type": "div",
+      "props": { "style": { "padding": "16px", "display": "flex", "flexDirection": "column", "gap": "16px" } },
+      "conditional": { "if": "selectedComponent" },
+      "children": [
+        {
+          "id": "component-id-display",
+          "type": "div",
+          "props": { "className": "field-group" },
+          "children": [
+            {
+              "id": "id-label",
+              "type": "span",
+              "props": { "className": "field-group__label" },
+              "children": "Component ID"
+            },
+            {
+              "id": "id-value",
+              "type": "div",
+              "props": { "className": "field-group__value" },
+              "bindings": { "children": "selectedComponent.id" }
+            }
+          ]
+        },
+        {
+          "id": "component-type-display",
+          "type": "div",
+          "props": { "className": "field-group" },
+          "children": [
+            {
+              "id": "type-label",
+              "type": "span",
+              "props": { "className": "field-group__label" },
+              "children": "Type"
+            },
+            {
+              "id": "type-value",
+              "type": "div",
+              "props": { "className": "field-group__value" },
+              "bindings": { "children": "selectedComponent.type" }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "no-selection-message",
+      "type": "div",
+      "props": { "className": "empty-state" },
+      "conditional": { "if": "!selectedComponent" },
+      "children": "Select a component to edit its properties"
+    }
+  ]
+}

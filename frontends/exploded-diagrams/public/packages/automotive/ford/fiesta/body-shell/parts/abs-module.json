@@ -1,0 +1,41 @@
+{
+  "id": "abs-module",
+  "name": "ABS Module",
+  "partNumber": "FD-1729580",
+  "material": "aluminum",
+  "quantity": 1,
+  "weight": 2200.0,
+  "weightUnit": "g",
+  "baseY": 610,
+  "description": "ABS hydraulic modulator and ECU",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "10mm", "required": true },
+      { "name": "Brake line wrench", "size": "11mm", "required": true },
+      { "name": "Torx socket", "size": "T30", "required": true },
+      { "name": "Diagnostic tool", "size": "FORScan/IDS", "required": true }
+    ],
+    "hardware": [
+      { "name": "ABS module bolt", "spec": "M6x1.0x20", "qty": 3, "reusable": true },
+      { "name": "Brake line union", "spec": "M10x1.0", "qty": 6, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "ABS module bolts", "value": 10, "unit": "Nm", "sequence": "", "notes": "Electronic module - low torque" },
+      { "fastener": "Brake line unions", "value": 14, "unit": "Nm", "sequence": "", "notes": "Refer to line routing diagram" }
+    ],
+    "notes": [
+      "Label all brake lines before removal",
+      "Module requires coding to VIN",
+      "Full ABS bleed procedure required",
+      "Clear DTCs after installation"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 70, "height": 55, "rx": 4 },
+    { "type": "rect", "width": 60, "height": 20, "offsetY": -25, "fill": "#333" },
+    { "type": "circle", "r": 4, "offsetX": -25, "offsetY": 15, "fill": "#555" },
+    { "type": "circle", "r": 4, "offsetX": -10, "offsetY": 15, "fill": "#555" },
+    { "type": "circle", "r": 4, "offsetX": 5, "offsetY": 15, "fill": "#555" },
+    { "type": "circle", "r": 4, "offsetX": 20, "offsetY": 15, "fill": "#555" }
+  ]
+}

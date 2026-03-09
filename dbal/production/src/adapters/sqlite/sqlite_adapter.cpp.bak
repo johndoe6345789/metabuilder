@@ -1,0 +1,369 @@
+#include "sqlite_adapter.hpp"
+#include "sqlite_connection_manager.hpp"
+#include "sqlite_query_builder.hpp"
+#include "sqlite_type_converter.hpp"
+#include "sqlite_prepared_statements.hpp"
+#include "sqlite_result_parser.hpp"
+#include "sqlite_transaction_manager.hpp"
+#include "../schema_loader.hpp"
+#include "../sql_template_generator.hpp"
+#include "../../config/env_config.hpp"
+#include <spdlog/spdlog.h>
+
+namespace dbal {
+namespace adapters {
+namespace sqlite {
+
+// ===== Constructor / Destructor =====
+
+SQLiteAdapter::SQLiteAdapter(const std::string& db_path)
+    : db_path_(db_path), db_(nullptr) {
+
+    // Initialize helper classes
+    conn_manager_ = std::make_unique<SQLiteConnectionManager>(db_path);
+    prepared_stmts_ = std::make_unique<SQLitePreparedStatements>(*conn_manager_);
+    result_parser_ = std::make_unique<SQLiteResultParser>(*conn_manager_);
+    tx_manager_ = std::make_unique<SQLiteTransactionManager>(*conn_manager_);
+
+    // Legacy compatibility (some code still accesses db_ directly)
+    db_ = conn_manager_->getHandle();
+
+    loadSchemas();
+    createTables();
+}
+
+SQLiteAdapter::~SQLiteAdapter() {
+    close();
+}
+
+void SQLiteAdapter::close() {
+    if (conn_manager_) {
+        conn_manager_->close();
+        db_ = nullptr;
+    }
+}
+
+// ===== Generic CRUD Operations =====
+
+Result<Json> SQLiteAdapter::create(const std::string& entityName, const Json& data) {
+    auto schemaResult = getEntitySchemaInternal(entityName);
+    if (!schemaResult) {
+        return Error::validationError("Unknown entity: " + entityName);
+    }
+    const auto& schema = *schemaResult;
+
+    const std::string sql = SQLiteQueryBuilder::buildInsertQuery(schema, data);
+    const auto values = SQLiteTypeConverter::jsonToValues(schema, data);
+
+    auto insertResult = prepared_stmts_->executeInsert(sql, values);
+    if (!insertResult.hasValue()) {
+        return Error(insertResult.error());
+    }
+
+    return result_parser_->readInsertedRecord(schema, insertResult.value());
+}
+
+Result<Json> SQLiteAdapter::read(const std::string& entityName, const std::string& id) {
+    auto schemaResult = getEntitySchemaInternal(entityName);
+    if (!schemaResult) {
+        return Error::validationError("Unknown entity: " + entityName);
+    }
+    const auto& schema = *schemaResult;
+
+    const std::string sql = SQLiteQueryBuilder::buildSelectQuery(schema, Json{{"id", id}});
+    const std::vector<std::string> values = {id};
+
+    auto stmtResult = prepared_stmts_->executeSelect(sql, values);
+    if (!stmtResult.hasValue()) {
+        return Error(stmtResult.error());
+    }
+
+    auto rowsResult = result_parser_->readAllRows(schema, stmtResult.value());
+    if (!rowsResult.hasValue()) {
+        return Error(rowsResult.error());
+    }
+
+    const auto& rows = rowsResult.value();
+    if (rows.empty()) {
+        return Error::notFound(entityName + " not found");
+    }
+
+    return Result<Json>(rows.front());
+}
+
+Result<Json> SQLiteAdapter::update(const std::string& entityName, const std::string& id, const Json& data) {
+    auto schemaResult = getEntitySchemaInternal(entityName);
+    if (!schemaResult) {
+        return Error::validationError("Unknown entity: " + entityName);
+    }
+    const auto& schema = *schemaResult;
+
+    const std::string sql = SQLiteQueryBuilder::buildUpdateQuery(schema, id, data);
+    const auto values = SQLiteTypeConverter::buildUpdateParams(schema, data, id);
+
+    auto updateResult = prepared_stmts_->executeUpdate(sql, values);
+    if (!updateResult.hasValue()) {
+        return Error(updateResult.error());
+    }
+
+    if (updateResult.value() == 0) {
+        return Error::notFound(entityName + " not found");
+    }
+
+    return read(entityName, id);
+}
+
+Result<bool> SQLiteAdapter::remove(const std::string& entityName, const std::string& id) {
+    auto schemaResult = getEntitySchemaInternal(entityName);
+    if (!schemaResult) {
+        return Error::validationError("Unknown entity: " + entityName);
+    }
+    const auto& schema = *schemaResult;
+
+    const std::string sql = SQLiteQueryBuilder::buildDeleteQuery(schema, id);
+    const std::vector<std::string> values = {id};
+
+    auto result = prepared_stmts_->executeDelete(sql, values);
+    if (!result.hasValue()) {
+        return Error(result.error());
+    }
+
+    if (result.value() == 0) {
+        return Error::notFound(entityName + " not found");
+    }
+
+    return Result<bool>(true);
+}
+
+Result<ListResult<Json>> SQLiteAdapter::list(const std::string& entityName, const ListOptions& options) {
+    auto schemaResult = getEntitySchemaInternal(entityName);
+    if (!schemaResult) {
+        return Error::validationError("Unknown entity: " + entityName);
+    }
+    const auto& schema = *schemaResult;
+
+    const std::string sql = SQLiteQueryBuilder::buildListQuery(schema, options);
+    const auto params = SQLiteTypeConverter::buildListParams(options);
+
+    auto stmtResult = prepared_stmts_->executeSelect(sql, params);
+    if (!stmtResult.hasValue()) {
+        return Error(stmtResult.error());
+    }
+
+    auto rowsResult = result_parser_->readAllRows(schema, stmtResult.value());
+    if (!rowsResult.hasValue()) {
+        return Error(rowsResult.error());
+    }
+
+    const auto& items = rowsResult.value();
+
+    ListResult<Json> listResult;
+    listResult.items = items;
+    listResult.total = static_cast<int>(items.size());
+    listResult.page = options.page;
+    listResult.limit = options.limit > 0 ? options.limit : 50;
+
+    return Result<ListResult<Json>>(listResult);
+}
+
+// ===== Bulk Operations =====
+
+Result<int> SQLiteAdapter::createMany(const std::string& entityName, const std::vector<Json>& records) {
+    if (records.empty()) {
+        return Result<int>(0);
+    }
+
+    auto schemaResult = getEntitySchemaInternal(entityName);
+    if (!schemaResult) {
+        return Error::validationError("Unknown entity: " + entityName);
+    }
+    const auto& schema = *schemaResult;
+
+    int inserted = 0;
+    for (const auto& record : records) {
+        const std::string sql = SQLiteQueryBuilder::buildInsertQuery(schema, record);
+        const auto values = SQLiteTypeConverter::jsonToValues(schema, record);
+        auto result = prepared_stmts_->executeInsert(sql, values);
+        if (result.hasValue()) {
+            inserted++;
+        }
+    }
+
+    return Result<int>(inserted);
+}
+
+Result<int> SQLiteAdapter::updateMany(const std::string& entityName, const Json& filter, const Json& data) {
+    auto schemaResult = getEntitySchemaInternal(entityName);
+    if (!schemaResult) {
+        return Error::validationError("Unknown entity: " + entityName);
+    }
+    const auto& schema = *schemaResult;
+
+    if (data.empty()) {
+        return Error::validationError("No update fields supplied");
+    }
+
+    const std::string sql = SQLiteQueryBuilder::buildUpdateManyQuery(schema, filter, data);
+    const auto params = SQLiteTypeConverter::buildUpdateManyParams(schema, filter, data);
+
+    return prepared_stmts_->executeUpdate(sql, params);
+}
+
+Result<int> SQLiteAdapter::deleteMany(const std::string& entityName, const Json& filter) {
+    auto schemaResult = getEntitySchemaInternal(entityName);
+    if (!schemaResult) {
+        return Error::validationError("Unknown entity: " + entityName);
+    }
+    const auto& schema = *schemaResult;
+
+    const std::string sql = SQLiteQueryBuilder::buildDeleteManyQuery(schema, filter);
+    const auto params = SQLiteTypeConverter::buildDeleteManyParams(filter);
+
+    return prepared_stmts_->executeDelete(sql, params);
+}
+
+// ===== Query Operations =====
+
+Result<Json> SQLiteAdapter::findFirst(const std::string& entityName, const Json& filter) {
+    auto schemaResult = getEntitySchemaInternal(entityName);
+    if (!schemaResult) {
+        return Error::validationError("Unknown entity: " + entityName);
+    }
+    const auto& schema = *schemaResult;
+
+    const std::string sql = SQLiteQueryBuilder::buildFindFirstQuery(schema, filter);
+    const auto params = SQLiteTypeConverter::buildFindParams(filter);
+
+    auto stmtResult = prepared_stmts_->executeSelect(sql, params);
+    if (!stmtResult.hasValue()) {
+        return Error(stmtResult.error());
+    }
+
+    auto rowsResult = result_parser_->readAllRows(schema, stmtResult.value());
+    if (!rowsResult.hasValue()) {
+        return Error(rowsResult.error());
+    }
+
+    const auto& rows = rowsResult.value();
+    if (rows.empty()) {
+        return Error::notFound(entityName + " not found");
+    }
+
+    return Result<Json>(rows.front());
+}
+
+Result<Json> SQLiteAdapter::findByField(const std::string& entityName, const std::string& field, const Json& value) {
+    Json filter;
+    filter[field] = value;
+    return findFirst(entityName, filter);
+}
+
+Result<Json> SQLiteAdapter::upsert(const std::string& entityName, const std::string& uniqueField,
+                                   const Json& uniqueValue, const Json& createData, const Json& updateData) {
+    auto existingResult = findByField(entityName, uniqueField, uniqueValue);
+
+    if (existingResult.hasValue()) {
+        const auto& existing = existingResult.value();
+        std::string id = existing.at("id");
+        return update(entityName, id, updateData);
+    } else {
+        return create(entityName, createData);
+    }
+}
+
+// ===== Metadata =====
+
+Result<std::vector<std::string>> SQLiteAdapter::getAvailableEntities() {
+    std::vector<std::string> entities;
+    entities.reserve(schemas_.size());
+    for (const auto& [name, _] : schemas_) {
+        entities.push_back(name);
+    }
+    return Result<std::vector<std::string>>(entities);
+}
+
+Result<EntitySchema> SQLiteAdapter::getEntitySchema(const std::string& entityName) {
+    auto schemaResult = getEntitySchemaInternal(entityName);
+    if (!schemaResult) {
+        return Error::validationError("Unknown entity: " + entityName);
+    }
+    return Result<EntitySchema>(*schemaResult);
+}
+
+// ===== Schema Loading =====
+
+void SQLiteAdapter::loadSchemas() {
+    EntitySchema userSchema;
+    userSchema.name = "User";
+    userSchema.displayName = "User";
+
+    userSchema.fields = {
+        {"id", "string", true, true, std::nullopt, std::nullopt},
+        {"username", "string", true, true, std::nullopt, std::nullopt},
+        {"email", "string", true, true, std::nullopt, std::nullopt},
+        {"role", "string", true, false, "user", std::nullopt},
+        {"profilePicture", "string", false, false, std::nullopt, std::nullopt},
+        {"bio", "string", false, false, std::nullopt, std::nullopt},
+        {"createdAt", "bigint", true, false, std::nullopt, std::nullopt},
+        {"tenantId", "string", false, false, std::nullopt, std::nullopt},
+        {"isInstanceOwner", "boolean", true, false, "false", std::nullopt},
+        {"passwordChangeTimestamp", "bigint", false, false, std::nullopt, std::nullopt},
+        {"firstLogin", "boolean", true, false, "false", std::nullopt}
+    };
+
+    schemas_["User"] = userSchema;
+    schemas_["user"] = userSchema;
+}
+
+void SQLiteAdapter::createTables() {
+    using namespace dbal::config;
+
+    std::string schema_dir = EnvConfig::getSchemaDir();
+    spdlog::info("Loading schemas from: {}", schema_dir);
+    auto entities = SchemaLoader::loadFromDirectory(schema_dir);
+    spdlog::info("Loaded {} entity definitions", entities.size());
+
+    std::string template_dir = EnvConfig::getTemplateDir();
+    spdlog::info("Using templates from: {}", template_dir);
+    SqlTemplateGenerator generator(template_dir);
+
+    for (const auto& entity : entities) {
+        std::string create_sql = generator.generateCreateTable(entity, SqlDialect::SQLite);
+
+        char* error_msg = nullptr;
+        int rc = sqlite3_exec(db_, create_sql.c_str(), nullptr, nullptr, &error_msg);
+        if (rc != SQLITE_OK) {
+            std::string error = "Failed to create table " + entity.name + ": ";
+            if (error_msg) {
+                error += error_msg;
+                sqlite3_free(error_msg);
+            }
+            throw std::runtime_error(error);
+        }
+
+        auto index_statements = generator.generateIndexes(entity, SqlDialect::SQLite);
+        for (const auto& index_sql : index_statements) {
+            rc = sqlite3_exec(db_, index_sql.c_str(), nullptr, nullptr, &error_msg);
+            if (rc != SQLITE_OK) {
+                std::string error = "Failed to create index for " + entity.name + ": ";
+                if (error_msg) {
+                    error += error_msg;
+                    sqlite3_free(error_msg);
+                }
+                throw std::runtime_error(error);
+            }
+        }
+    }
+}
+
+std::optional<EntitySchema> SQLiteAdapter::getEntitySchemaInternal(const std::string& entityName) const {
+    auto it = schemas_.find(entityName);
+    if (it != schemas_.end()) {
+        return it->second;
+    }
+    return std::nullopt;
+}
+
+} // namespace sqlite
+} // namespace adapters
+} // namespace dbal

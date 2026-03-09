@@ -1,0 +1,35 @@
+{
+  "id": "bonnet",
+  "name": "Bonnet/Hood",
+  "partNumber": "FD-1872210",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 12500.0,
+  "weightUnit": "g",
+  "baseY": 0,
+  "description": "Front bonnet panel with insulation",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "10mm", "required": true },
+      { "name": "Marker pen", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Bonnet hinge bolt", "spec": "M8x1.25x20", "qty": 4, "reusable": true },
+      { "name": "Bonnet striker bolt", "spec": "M8x1.25x25", "qty": 2, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Hinge bolts", "value": 22, "unit": "Nm", "sequence": "", "notes": "Mark position before removal" }
+    ],
+    "notes": [
+      "Two-person job",
+      "Mark hinge position for alignment",
+      "Support when disconnecting struts",
+      "Adjust striker for proper latch"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 150, "height": 80, "rx": 10, "fill": "#2a5a8a" },
+    { "type": "rect", "width": 130, "height": 60, "rx": 5, "fill": "#3a6a9a" },
+    { "type": "rect", "width": 60, "height": 8, "offsetY": 25, "rx": 2, "fill": "#1a4a7a" }
+  ]
+}

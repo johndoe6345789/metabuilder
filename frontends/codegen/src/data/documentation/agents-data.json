@@ -1,0 +1,236 @@
+{
+  "title": "Agents Files",
+  "subtitle": "AI agent configuration and service architecture",
+  "overviewTitle": "AI Service Architecture",
+  "coreServicesTitle": "Core AI Services",
+  "coreServicesDescription": "Primary modules handling AI operations",
+  "coreServicesFeaturesLabel": "Key Features:",
+  "integrationPointsTitle": "AI Integration Points",
+  "integrationPointsDescription": "Features enhanced by AI capabilities",
+  "promptEngineeringTitle": "Prompt Engineering",
+  "promptEngineeringDescription": "How we optimize AI interactions",
+  "futureEnhancementsTitle": "Future AI Enhancements",
+  "overview": "CodeForge uses a modular AI service architecture that integrates OpenAI's GPT models across all features. Each designer has specialized prompts and validation logic to ensure high-quality generated code.",
+  "coreServices": [
+    {
+      "filename": "ai-service.ts",
+      "path": "/src/lib/ai-service.ts",
+      "description": "Central AI service orchestrating OpenAI API calls",
+      "features": [
+        "Complete application generation from descriptions",
+        "Model generation with Prisma schema validation",
+        "Component generation with Material UI integration",
+        "Theme generation with color theory and accessibility",
+        "Code explanation and documentation",
+        "Code improvement and optimization",
+        "Test generation for Playwright, Storybook, and unit tests"
+      ]
+    },
+    {
+      "filename": "error-repair-service.ts",
+      "path": "/src/lib/error-repair-service.ts",
+      "description": "Error detection and automated repair system",
+      "features": [
+        "Syntax error detection and repair",
+        "Import statement validation and fixes",
+        "TypeScript type error resolution",
+        "ESLint violation detection and fixes",
+        "Context-aware repair using related files",
+        "Batch repair operations",
+        "Repair explanation generation"
+      ]
+    },
+    {
+      "filename": "generateNextJSProject.ts",
+      "path": "/src/lib/generators/generateNextJSProject.ts",
+      "description": "Generates Next.js project scaffolding",
+      "features": [
+        "Next.js project structure generation",
+        "Package.json defaults and scripts",
+        "Prisma schema wiring for data models",
+        "Material UI theme bootstrap",
+        "README and environment defaults"
+      ]
+    },
+    {
+      "filename": "generatePrismaSchema.ts",
+      "path": "/src/lib/generators/generatePrismaSchema.ts",
+      "description": "Creates Prisma schema files from models",
+      "features": [
+        "Model definition generation",
+        "Field-level attributes and defaults",
+        "Datasource and client config",
+        "Array and optional field handling"
+      ]
+    },
+    {
+      "filename": "generateMUITheme.ts",
+      "path": "/src/lib/generators/generateMUITheme.ts",
+      "description": "Builds Material UI theme configuration",
+      "features": [
+        "Light and dark palette generation",
+        "Typography and spacing configuration",
+        "Shape/border radius settings",
+        "Theme export defaults"
+      ]
+    },
+    {
+      "filename": "generatePlaywrightTests.ts",
+      "path": "/src/lib/generators/generatePlaywrightTests.ts",
+      "description": "Generates Playwright test suites",
+      "features": [
+        "Test suite scaffolding",
+        "Step-by-step action scripts",
+        "Assertion generation",
+        "Default test fallback"
+      ]
+    },
+    {
+      "filename": "generateStorybookStories.ts",
+      "path": "/src/lib/generators/generateStorybookStories.ts",
+      "description": "Creates Storybook story files",
+      "features": [
+        "Stories grouped by component",
+        "Meta configuration generation",
+        "Args mapping for variants",
+        "Story file structure"
+      ]
+    },
+    {
+      "filename": "generateUnitTests.ts",
+      "path": "/src/lib/generators/generateUnitTests.ts",
+      "description": "Generates unit test files",
+      "features": [
+        "Component, hook, and module tests",
+        "Test setup and teardown blocks",
+        "Assertion generation",
+        "Dynamic test naming"
+      ]
+    },
+    {
+      "filename": "generateFlaskApp.ts",
+      "path": "/src/lib/generators/generateFlaskApp.ts",
+      "description": "Creates Flask backend scaffolding",
+      "features": [
+        "App factory generation",
+        "Blueprint registration",
+        "Environment and requirements files",
+        "README and setup instructions"
+      ]
+    }
+  ],
+  "integrationPoints": [
+    {
+      "component": "ModelDesigner",
+      "capabilities": [
+        "Generate models from natural language",
+        "Suggest appropriate field types",
+        "Create relations between models",
+        "Generate realistic field names and structures"
+      ]
+    },
+    {
+      "component": "ComponentTreeBuilder",
+      "capabilities": [
+        "Generate component hierarchies",
+        "Suggest Material UI components",
+        "Create prop configurations",
+        "Build complex layouts from descriptions"
+      ]
+    },
+    {
+      "component": "StyleDesigner",
+      "capabilities": [
+        "Generate color palettes from descriptions",
+        "Ensure WCAG accessibility compliance",
+        "Create harmonious color relationships",
+        "Suggest typography pairings"
+      ]
+    },
+    {
+      "component": "CodeEditor",
+      "capabilities": [
+        "Explain code functionality",
+        "Improve code quality and performance",
+        "Suggest best practices",
+        "Generate inline documentation"
+      ]
+    },
+    {
+      "component": "PlaywrightDesigner",
+      "capabilities": [
+        "Generate E2E test scenarios",
+        "Create test steps from user flows",
+        "Suggest appropriate selectors",
+        "Generate assertions for validations"
+      ]
+    },
+    {
+      "component": "StorybookDesigner",
+      "capabilities": [
+        "Generate component stories",
+        "Create meaningful story variations",
+        "Configure args based on prop types",
+        "Organize stories by categories"
+      ]
+    },
+    {
+      "component": "UnitTestDesigner",
+      "capabilities": [
+        "Generate comprehensive test suites",
+        "Create test cases with assertions",
+        "Generate setup and teardown code",
+        "Cover edge cases and error scenarios"
+      ]
+    },
+    {
+      "component": "ErrorPanel",
+      "capabilities": [
+        "Analyze error patterns",
+        "Generate context-aware fixes",
+        "Explain error causes",
+        "Prevent similar errors in future"
+      ]
+    }
+  ],
+  "promptEngineering": [
+    {
+      "title": "Context Preservation",
+      "description": "All AI prompts include relevant project context such as existing models, components, and theme configurations to ensure generated code integrates seamlessly."
+    },
+    {
+      "title": "Format Specification",
+      "description": "Prompts specify exact output formats (JSON, TypeScript, Python) with strict schemas to ensure parseable and valid responses."
+    },
+    {
+      "title": "Best Practices Enforcement",
+      "description": "Generated code follows Next.js, React, and Flask best practices through detailed prompt instructions and post-processing validation."
+    },
+    {
+      "title": "Error Handling",
+      "description": "Fallback mechanisms and retry logic ensure graceful degradation when AI services are unavailable or responses are malformed."
+    }
+  ],
+  "futureEnhancements": [
+    {
+      "title": "Multi-Model Support",
+      "description": "Integration with Claude, Gemini, and other LLMs for specialized tasks"
+    },
+    {
+      "title": "Fine-Tuned Models",
+      "description": "Custom models trained on specific frameworks and design patterns"
+    },
+    {
+      "title": "Code Review Agent",
+      "description": "Automated code review with security and performance analysis"
+    },
+    {
+      "title": "Conversational Interface",
+      "description": "Chat-based project building with natural language commands"
+    },
+    {
+      "title": "Learning System",
+      "description": "AI that learns from user corrections and preferences over time"
+    }
+  ]
+}

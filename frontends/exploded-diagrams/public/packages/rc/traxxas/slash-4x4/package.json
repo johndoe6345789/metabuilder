@@ -1,0 +1,14 @@
+{
+  "product": "slash-4x4",
+  "name": "Traxxas Slash 4x4",
+  "description": "1/10 Scale 4WD Electric Short Course Truck",
+  "model": "68086-4",
+  "manufacturer": "Traxxas",
+  "category": "Short Course Truck",
+  "scale": "1:10",
+  "assemblies": [
+    "front-shock",
+    "rear-differential",
+    "steering-servo"
+  ]
+}

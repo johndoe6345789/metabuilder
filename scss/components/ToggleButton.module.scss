@@ -1,0 +1,178 @@
+// ToggleButton Component - Material Design 3
+// ===========================================
+// Toggle button and group styling using M3 tokens
+
+.toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mat-sys-label-large-font);
+  font-size: var(--mat-sys-label-large-size);
+  font-weight: var(--mat-sys-label-large-weight);
+  text-transform: none;
+  border: 1px solid var(--mat-sys-outline);
+  background-color: transparent;
+  color: var(--mat-sys-on-surface);
+  cursor: pointer;
+  transition: background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard),
+              border-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard),
+              color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+
+  &:hover:not(:disabled) {
+    background-color: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: var(--disabled-content-opacity);
+    cursor: not-allowed;
+  }
+
+  // Selected state
+  &--selected {
+    background-color: var(--mat-sys-secondary-container);
+    color: var(--mat-sys-on-secondary-container);
+    border-color: var(--mat-sys-secondary-container);
+
+    &:hover:not(:disabled) {
+      background-color: color-mix(in srgb, var(--mat-sys-on-secondary-container) 8%, var(--mat-sys-secondary-container));
+    }
+  }
+
+  // Size variants
+  &--small {
+    padding: 6px 12px;
+    font-size: var(--mat-sys-label-medium-size);
+    min-height: 32px;
+  }
+
+  &--medium {
+    padding: 10px 16px;
+    min-height: 40px;
+  }
+
+  &--large {
+    padding: 12px 20px;
+    font-size: var(--mat-sys-label-large-size);
+    min-height: 48px;
+  }
+
+  // Full width
+  &--full-width {
+    width: 100%;
+  }
+}
+
+// Toggle Button Group
+.toggle-btn-group {
+  display: inline-flex;
+  border-radius: var(--mat-sys-corner-full);
+
+  // Remove individual button borders and add group border
+  .toggle-btn {
+    border-radius: 0;
+
+    &:first-child {
+      border-top-left-radius: var(--mat-sys-corner-full);
+      border-bottom-left-radius: var(--mat-sys-corner-full);
+    }
+
+    &:last-child {
+      border-top-right-radius: var(--mat-sys-corner-full);
+      border-bottom-right-radius: var(--mat-sys-corner-full);
+    }
+
+    // Collapse borders between buttons
+    &:not(:first-child) {
+      margin-left: -1px;
+    }
+
+    // Ensure focused/selected buttons are above siblings
+    &:focus-visible,
+    &--selected {
+      z-index: 1;
+    }
+  }
+
+  // Vertical orientation
+  &--vertical {
+    flex-direction: column;
+
+    .toggle-btn {
+      &:first-child {
+        border-top-left-radius: var(--mat-sys-corner-full);
+        border-top-right-radius: var(--mat-sys-corner-full);
+        border-bottom-left-radius: 0;
+      }
+
+      &:last-child {
+        border-bottom-left-radius: var(--mat-sys-corner-full);
+        border-bottom-right-radius: var(--mat-sys-corner-full);
+        border-top-right-radius: 0;
+      }
+
+      &:not(:first-child) {
+        margin-left: 0;
+        margin-top: -1px;
+      }
+    }
+  }
+
+  // Full width
+  &--full-width {
+    display: flex;
+    width: 100%;
+
+    .toggle-btn {
+      flex: 1;
+    }
+  }
+
+  // Color variants
+  &--primary {
+    .toggle-btn--selected {
+      background-color: var(--mat-sys-primary);
+      color: var(--mat-sys-on-primary);
+      border-color: var(--mat-sys-primary);
+
+      &:hover:not(:disabled) {
+        background-color: color-mix(in srgb, var(--mat-sys-on-primary) 8%, var(--mat-sys-primary));
+      }
+    }
+  }
+
+  &--secondary {
+    .toggle-btn--selected {
+      background-color: var(--mat-sys-secondary);
+      color: var(--mat-sys-on-secondary);
+      border-color: var(--mat-sys-secondary);
+
+      &:hover:not(:disabled) {
+        background-color: color-mix(in srgb, var(--mat-sys-on-secondary) 8%, var(--mat-sys-secondary));
+      }
+    }
+  }
+
+  &--tertiary {
+    .toggle-btn--selected {
+      background-color: var(--mat-sys-tertiary);
+      color: var(--mat-sys-on-tertiary);
+      border-color: var(--mat-sys-tertiary);
+
+      &:hover:not(:disabled) {
+        background-color: color-mix(in srgb, var(--mat-sys-on-tertiary) 8%, var(--mat-sys-tertiary));
+      }
+    }
+  }
+
+  &--standard {
+    // Standard uses subtle tonal selection
+    .toggle-btn--selected {
+      background-color: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
+    }
+  }
+}

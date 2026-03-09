@@ -1,0 +1,80 @@
+{
+  "entity": "ProjectModel",
+  "version": "1.0",
+  "description": "Data model (Prisma-style) belonging to a CodeForge project",
+  "tenantId": true,
+  "fields": {
+    "id": {
+      "type": "uuid",
+      "primary": true,
+      "generated": true,
+      "description": "Unique model identifier"
+    },
+    "projectId": {
+      "type": "string",
+      "required": true,
+      "description": "Parent project ID"
+    },
+    "name": {
+      "type": "string",
+      "required": true,
+      "max_length": 255,
+      "description": "Model name (PascalCase, e.g. User)"
+    },
+    "fields": {
+      "type": "json",
+      "required": true,
+      "description": "Array of field definitions [{id, name, type, isRequired, isUnique, isArray, defaultValue, relation}]"
+    },
+    "createdAt": {
+      "type": "bigint",
+      "generated": true
+    },
+    "updatedAt": {
+      "type": "bigint",
+      "generated": true
+    }
+  },
+  "indexes": [
+    {
+      "fields": [
+        "projectId"
+      ]
+    },
+    {
+      "fields": [
+        "projectId",
+        "name"
+      ],
+      "unique": true
+    },
+    {
+      "fields": [
+        "tenantId"
+      ]
+    }
+  ],
+  "relations": {
+    "project": {
+      "type": "belongs-to",
+      "entity": "Project",
+      "foreign_key": "projectId",
+      "on_delete": "cascade"
+    }
+  },
+  "acl": {
+    "create": {
+      "user": true
+    },
+    "read": {
+      "self": true,
+      "admin": true
+    },
+    "update": {
+      "self": true
+    },
+    "delete": {
+      "self": true
+    }
+  }
+}

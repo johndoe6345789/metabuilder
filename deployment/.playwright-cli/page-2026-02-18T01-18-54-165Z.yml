@@ -1,0 +1,122 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - heading "MetaBuilder" [level=1] [ref=e3]
+    - paragraph [ref=e4]: Development Stack Portal
+  - generic [ref=e5]: Applications
+  - generic [ref=e6]:
+    - link "W WorkflowUI Visual workflow editor with n8n-style DAG canvas, step library, and JSON workflow execution. /workflowui" [ref=e7] [cursor=pointer]:
+      - /url: /workflowui
+      - generic [ref=e8]:
+        - generic [ref=e9]: W
+        - heading "WorkflowUI" [level=2] [ref=e10]
+      - paragraph [ref=e11]: Visual workflow editor with n8n-style DAG canvas, step library, and JSON workflow execution.
+      - generic [ref=e12]: /workflowui
+    - link "C CodeForge IDE Low-code application builder with Monaco editor, JSON-driven component architecture. /codegen" [ref=e13] [cursor=pointer]:
+      - /url: /codegen
+      - generic [ref=e14]:
+        - generic [ref=e15]: C
+        - heading "CodeForge IDE" [level=2] [ref=e16]
+      - paragraph [ref=e17]: Low-code application builder with Monaco editor, JSON-driven component architecture.
+      - generic [ref=e18]: /codegen
+    - link "P Pastebin Code snippet sharing with syntax highlighting, expiration, and privacy controls. /pastebin" [ref=e19] [cursor=pointer]:
+      - /url: /pastebin
+      - generic [ref=e20]:
+        - generic [ref=e21]: P
+        - heading "Pastebin" [level=2] [ref=e22]
+      - paragraph [ref=e23]: Code snippet sharing with syntax highlighting, expiration, and privacy controls.
+      - generic [ref=e24]: /pastebin
+    - link "E Email Client Full-featured email management with IMAP/SMTP, multi-account support, and search. /emailclient" [ref=e25] [cursor=pointer]:
+      - /url: /emailclient
+      - generic [ref=e26]:
+        - generic [ref=e27]: E
+        - heading "Email Client" [level=2] [ref=e28]
+      - paragraph [ref=e29]: Full-featured email management with IMAP/SMTP, multi-account support, and search.
+      - generic [ref=e30]: /emailclient
+    - link "D Postgres Dashboard PostgreSQL admin dashboard with query editor, table browser, and performance monitoring. /postgres" [ref=e31] [cursor=pointer]:
+      - /url: /postgres
+      - generic [ref=e32]:
+        - generic [ref=e33]: D
+        - heading "Postgres Dashboard" [level=2] [ref=e34]
+      - paragraph [ref=e35]: PostgreSQL admin dashboard with query editor, table browser, and performance monitoring.
+      - generic [ref=e36]: /postgres
+    - link "3D Exploded Diagrams Interactive 3D exploded diagram viewer with Three.js and JSCAD integration. /diagrams" [ref=e37] [cursor=pointer]:
+      - /url: /diagrams
+      - generic [ref=e38]:
+        - generic [ref=e39]: 3D
+        - heading "Exploded Diagrams" [level=2] [ref=e40]
+      - paragraph [ref=e41]: Interactive 3D exploded diagram viewer with Three.js and JSCAD integration.
+      - generic [ref=e42]: /diagrams
+    - link "S Storybook Component library preview with interactive props, documentation, and visual testing. /storybook" [ref=e43] [cursor=pointer]:
+      - /url: /storybook
+      - generic [ref=e44]:
+        - generic [ref=e45]: S
+        - heading "Storybook" [level=2] [ref=e46]
+      - paragraph [ref=e47]: Component library preview with interactive props, documentation, and visual testing.
+      - generic [ref=e48]: /storybook
+    - link "A Frontend App Main Next.js application with Drizzle ORM, i18n, Clerk auth, and DBAL integration. /app" [ref=e49] [cursor=pointer]:
+      - /url: /app
+      - generic [ref=e50]:
+        - generic [ref=e51]: A
+        - heading "Frontend App" [level=2] [ref=e52]
+      - paragraph [ref=e53]: Main Next.js application with Drizzle ORM, i18n, Clerk auth, and DBAL integration.
+      - generic [ref=e54]: /app
+  - generic [ref=e55]: Backend Services
+  - generic [ref=e56]:
+    - link "API DBAL API C++ database abstraction layer with RESTful CRUD, caching, and search. /api" [ref=e57] [cursor=pointer]:
+      - /url: /api/health
+      - generic [ref=e58]:
+        - generic [ref=e59]: API
+        - heading "DBAL API" [level=2] [ref=e60]
+      - paragraph [ref=e61]: C++ database abstraction layer with RESTful CRUD, caching, and search.
+      - generic [ref=e62]: /api
+    - link "EM Email Service Flask backend for IMAP/SMTP operations, email sync, and Celery task queue. /email-api" [ref=e63] [cursor=pointer]:
+      - /url: /email-api/health
+      - generic [ref=e64]:
+        - generic [ref=e65]: EM
+        - heading "Email Service" [level=2] [ref=e66]
+      - paragraph [ref=e67]: Flask backend for IMAP/SMTP operations, email sync, and Celery task queue.
+      - generic [ref=e68]: /email-api
+    - link "SM SMTP Relay Twisted SMTP relay dashboard for email testing and debugging. localhost:8025" [ref=e69] [cursor=pointer]:
+      - /url: http://localhost:8025
+      - generic [ref=e70]:
+        - generic [ref=e71]: SM
+        - heading "SMTP Relay" [level=2] [ref=e72]
+      - paragraph [ref=e73]: Twisted SMTP relay dashboard for email testing and debugging.
+      - generic [ref=e74]: localhost:8025
+  - generic [ref=e75]: Administration
+  - generic [ref=e76]:
+    - link "⚙ Database Settings Manage DBAL adapter configuration, switch backends, and test database connections. /portal/settings.html" [ref=e77] [cursor=pointer]:
+      - /url: /portal/settings.html
+      - generic [ref=e78]:
+        - generic [ref=e79]: ⚙
+        - heading "Database Settings" [level=2] [ref=e80]
+      - paragraph [ref=e81]: Manage DBAL adapter configuration, switch backends, and test database connections.
+      - generic [ref=e82]: /portal/settings.html
+    - link "PMA phpMyAdmin MySQL web administration with table browser, SQL editor, import/export, and user management. /phpmyadmin/" [ref=e83] [cursor=pointer]:
+      - /url: /phpmyadmin/
+      - generic [ref=e84]:
+        - generic [ref=e85]: PMA
+        - heading "phpMyAdmin" [level=2] [ref=e86]
+      - paragraph [ref=e87]: MySQL web administration with table browser, SQL editor, import/export, and user management.
+      - generic [ref=e88]: /phpmyadmin/
+    - link "ME Mongo Express MongoDB web administration with collection browser, document editor, and query interface. /mongo-express/" [ref=e89] [cursor=pointer]:
+      - /url: /mongo-express/
+      - generic [ref=e90]:
+        - generic [ref=e91]: ME
+        - heading "Mongo Express" [level=2] [ref=e92]
+      - paragraph [ref=e93]: MongoDB web administration with collection browser, document editor, and query interface.
+      - generic [ref=e94]: /mongo-express/
+    - link "RI RedisInsight Redis GUI with key browser, CLI console, memory analysis, and slow log inspection. /redis-insight/" [ref=e95] [cursor=pointer]:
+      - /url: /redis-insight/
+      - generic [ref=e96]:
+        - generic [ref=e97]: RI
+        - heading "RedisInsight" [level=2] [ref=e98]
+      - paragraph [ref=e99]: Redis GUI with key browser, CLI console, memory analysis, and slow log inspection.
+      - generic [ref=e100]: /redis-insight/
+    - link "KB Kibana Elasticsearch dashboard with Discover, index management, Dev Tools console, and visualizations. /kibana/" [ref=e101] [cursor=pointer]:
+      - /url: /kibana/
+      - generic [ref=e102]:
+        - generic [ref=e103]: KB
+        - heading "Kibana" [level=2] [ref=e104]
+      - paragraph [ref=e105]: Elasticsearch dashboard with Discover, index management, Dev Tools console, and visualizations.
+      - generic [ref=e106]: /kibana/

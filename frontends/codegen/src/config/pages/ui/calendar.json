@@ -1,0 +1,7 @@
+{
+  "type": "buttonVariants",
+  "props": {
+    "PreviousMonthButton": "> (",
+    "NextMonthButton": "> ("
+  }
+}

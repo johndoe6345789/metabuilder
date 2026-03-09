@@ -1,18 +1,14 @@
 [requires]
-fmt/12.0.0
-spdlog/1.16.0
-nlohmann_json/3.11.3
 drogon/1.9.7
-cpr/1.14.1
+nlohmann_json/3.11.3
+yaml-cpp/0.8.0
+spdlog/1.16.0
+fmt/12.0.0
 
 [generators]
-CMakeToolchain
 CMakeDeps
+CMakeToolchain
 
-[options]
-drogon/*:with_postgres=True
-drogon/*:with_mysql=True
-drogon/*:with_sqlite=True
-
-[layout]
-cmake_layout
+[tool_requires]
+cmake/3.30.0
+ninja/1.12.1

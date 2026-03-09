@@ -1,0 +1,119 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": false,
+  "title": "Intro Section Components",
+  "description": "Page intro sections with eyebrow, title, description, and CTA buttons",
+  "stories": [
+    {
+      "name": "IntroSection",
+      "render": "intro",
+      "description": "Centered intro section with full content",
+      "args": {
+        "eyebrow": "Welcome",
+        "title": "Build Amazing Applications",
+        "description": "Create powerful, data-driven applications with our comprehensive platform. Start building today.",
+        "primaryCtaText": "Get Started",
+        "primaryCtaHref": "/get-started",
+        "secondaryCtaText": "Learn More",
+        "secondaryCtaHref": "/docs"
+      }
+    },
+    {
+      "name": "IntroSectionLeft",
+      "render": "intro_left",
+      "description": "Left-aligned intro section with media",
+      "args": {
+        "eyebrow": "Features",
+        "title": "Powerful Features for Modern Apps",
+        "description": "Discover the tools and capabilities that make building applications faster and easier.",
+        "primaryCtaText": "Explore Features",
+        "primaryCtaHref": "/features",
+        "secondaryCtaText": "View Demo",
+        "secondaryCtaHref": "/demo",
+        "mediaUrl": "/images/features-preview.png",
+        "mediaAlt": "Features preview"
+      }
+    },
+    {
+      "name": "IntroSectionCompact",
+      "render": "intro_compact",
+      "description": "Compact intro section for page headers",
+      "args": {
+        "eyebrow": "Documentation",
+        "title": "Getting Started Guide",
+        "description": "Learn how to set up and configure your first project.",
+        "primaryCtaText": "View Docs",
+        "primaryCtaHref": "/docs/getting-started"
+      }
+    },
+    {
+      "name": "IntroMinimal",
+      "render": "intro",
+      "description": "Minimal intro with title only",
+      "args": {
+        "title": "Welcome to MetaBuilder"
+      }
+    }
+  ],
+  "renders": {
+    "intro": {
+      "description": "Centered intro section",
+      "featured": true
+    },
+    "intro_left": {
+      "description": "Left-aligned intro with media"
+    },
+    "intro_compact": {
+      "description": "Compact page header intro"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "demo-user",
+      "username": "demo_user",
+      "level": 1,
+      "email": "demo@example.com"
+    },
+    "tenant": {
+      "id": "demo-tenant",
+      "name": "Demo Organization"
+    }
+  },
+  "contextVariants": [
+    {
+      "name": "Public User",
+      "description": "Can view intro sections",
+      "context": {
+        "user": {
+          "username": "guest",
+          "level": 1
+        }
+      }
+    },
+    {
+      "name": "Authenticated User",
+      "description": "Can view and configure intro sections",
+      "context": {
+        "user": {
+          "username": "user",
+          "level": 2
+        }
+      }
+    }
+  ],
+  "scripts": {
+    "renderFunctions": ["intro", "intro_left", "intro_compact"],
+    "ignoredScripts": ["tests"]
+  },
+  "parameters": {
+    "layout": "fullscreen",
+    "backgrounds": {
+      "default": "light",
+      "values": [
+        { "name": "light", "value": "#ffffff" },
+        { "name": "dark", "value": "#1a1a1a" },
+        { "name": "grey", "value": "#f5f5f5" }
+      ]
+    }
+  }
+}

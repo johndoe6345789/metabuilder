@@ -8,18 +8,24 @@
 #ifndef DBAL_HTTP_SERVER_HPP
 #define DBAL_HTTP_SERVER_HPP
 
-#include "http_types.hpp"
+#include "../http_types.hpp"
 #include "security_limits.hpp"
-#include "request_parser.hpp"
-#include "request_handler.hpp"
+#include "../request/request_parser.hpp"
+#include "../request/request_handler.hpp"
 #include "socket_utils.hpp"
 #include <string>
 #include <thread>
 #include <atomic>
 #include <iostream>
+#include <cerrno>
+#include <cstring>
 
 namespace dbal {
 namespace daemon {
+
+namespace http {
+    constexpr int LISTEN_BACKLOG = 128;
+} // namespace http
 
 /**
  * @class HttpServer
@@ -93,8 +99,8 @@ public:
             return false;
         }
         
-        // Listen for connections (backlog of 128)
-        if (listen(server_fd_, 128) < 0) {
+        // Listen for connections
+        if (listen(server_fd_, http::LISTEN_BACKLOG) < 0) {
             std::cerr << "Failed to listen: " << socket_utils::getLastErrorString() << std::endl;
             CLOSE_SOCKET(server_fd_);
             server_fd_ = INVALID_SOCKET_VALUE;
@@ -162,10 +168,10 @@ private:
             }
             
             // Check connection limit to prevent thread exhaustion DoS
-            size_t prev_count = active_connections_.fetch_add(1);
+            size_t prev_count = active_connections_.fetch_add(1, std::memory_order_acquire);
             if (prev_count >= http::MAX_CONCURRENT_CONNECTIONS) {
                 std::cerr << "Connection limit reached, rejecting connection" << std::endl;
-                active_connections_--;
+                active_connections_.fetch_sub(1, std::memory_order_release);
                 CLOSE_SOCKET(client_fd);
                 continue;
             }
@@ -178,31 +184,37 @@ private:
     void handleConnection(socket_t client_fd) {
         // Set receive timeout
         socket_utils::setSocketTimeout(client_fd, 30);
-        
+
         http::HttpRequest request;
         http::HttpResponse response;
-        
+
         if (!http::parseRequest(client_fd, request, response)) {
             // Send error response if one was set
             if (response.status_code != 200) {
                 std::string response_str = response.serialize();
-                send(client_fd, response_str.c_str(), response_str.length(), 0);
+                ssize_t bytes_sent = send(client_fd, response_str.c_str(), response_str.length(), 0);
+                if (bytes_sent < 0) {
+                    std::cerr << "Failed to send error response: " << strerror(errno) << std::endl;
+                }
             }
             CLOSE_SOCKET(client_fd);
-            active_connections_--;
+            active_connections_.fetch_sub(1, std::memory_order_relaxed);
             return;
         }
-        
+
         // Process request and generate response
         response = http::processRequest(request, address());
-        
+
         // Send response
         std::string response_str = response.serialize();
-        send(client_fd, response_str.c_str(), response_str.length(), 0);
-        
+        ssize_t bytes_sent = send(client_fd, response_str.c_str(), response_str.length(), 0);
+        if (bytes_sent < 0) {
+            std::cerr << "Failed to send response: " << strerror(errno) << std::endl;
+        }
+
         // Close connection
         CLOSE_SOCKET(client_fd);
-        active_connections_--;
+        active_connections_.fetch_sub(1, std::memory_order_relaxed);
     }
     
     std::string bind_address_;

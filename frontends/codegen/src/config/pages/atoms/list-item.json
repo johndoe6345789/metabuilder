@@ -1,0 +1,6 @@
+{
+  "type": "MetabuilderDataListItem",
+  "props": {
+    "onClick": "> void"
+  }
+}

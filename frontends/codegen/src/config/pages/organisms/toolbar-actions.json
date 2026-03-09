@@ -1,0 +1,11 @@
+{
+  "type": "MetabuilderWidgetToolbarActions",
+  "props": {
+    "onSearch": "> void",
+    "onShowShortcuts": "> void",
+    "onGenerateAI": "> void",
+    "onExport": "> void",
+    "onPreview": "> void",
+    "onShowErrors": "> void"
+  }
+}

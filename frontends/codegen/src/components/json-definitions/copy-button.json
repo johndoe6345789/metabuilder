@@ -1,0 +1,52 @@
+{
+  "id": "copy-button",
+  "type": "button",
+  "bindings": {
+    "onClick": {
+      "source": "copyState.handleCopy",
+      "transform": "data"
+    },
+    "className": {
+      "source": ["copyState.copied", "size", "className"],
+      "transform": "const sizeStyles = { sm: 'p-1', md: 'p-2', lg: 'p-3' }; const size = data[1] || 'md'; const copied = data[0]; const className = data[2] || ''; const baseStyles = 'rounded-md transition-colors'; const stateStyles = copied ? 'bg-accent text-accent-foreground' : 'bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground'; return `${baseStyles} ${stateStyles} ${sizeStyles[size]} ${className}`.trim()"
+    },
+    "aria-label": {
+      "source": "copyState.copied",
+      "transform": "data ? 'Copied' : 'Copy to clipboard'"
+    }
+  },
+  "children": [
+    {
+      "id": "copy-icon",
+      "type": "Copy",
+      "bindings": {
+        "size": {
+          "source": "size",
+          "transform": "const iconSize = { sm: 12, md: 16, lg: 20 }; return iconSize[data || 'md']"
+        },
+        "_if": {
+          "source": "copyState.copied",
+          "transform": "!data"
+        }
+      }
+    },
+    {
+      "id": "check-icon",
+      "type": "Check",
+      "bindings": {
+        "size": {
+          "source": "size",
+          "transform": "const iconSize = { sm: 12, md: 16, lg: 20 }; return iconSize[data || 'md']"
+        },
+        "weight": {
+          "source": null,
+          "transform": "'bold'"
+        },
+        "_if": {
+          "source": "copyState.copied",
+          "transform": "data"
+        }
+      }
+    }
+  ]
+}

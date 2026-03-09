@@ -1,0 +1,137 @@
+{
+  "entity": "EmailFolder",
+  "version": "1.0",
+  "package": "email_client",
+  "description": "Email folder (Inbox, Sent, Drafts, custom)",
+  "fields": {
+    "id": {
+      "type": "cuid",
+      "primary": true,
+      "generated": true
+    },
+    "tenantId": {
+      "type": "string",
+      "required": true,
+      "index": true
+    },
+    "emailClientId": {
+      "type": "uuid",
+      "required": true,
+      "index": true,
+      "description": "FK to EmailClient"
+    },
+    "name": {
+      "type": "string",
+      "required": true,
+      "max_length": 255,
+      "description": "Folder name (e.g., 'Inbox', 'Sent', 'Drafts')"
+    },
+    "type": {
+      "type": "enum",
+      "values": [
+        "inbox",
+        "sent",
+        "drafts",
+        "trash",
+        "spam",
+        "archive",
+        "custom"
+      ],
+      "default": "custom",
+      "description": "System folder type"
+    },
+    "unreadCount": {
+      "type": "int",
+      "default": 0,
+      "description": "Count of unread messages"
+    },
+    "totalCount": {
+      "type": "int",
+      "default": 0,
+      "description": "Total message count"
+    },
+    "syncToken": {
+      "type": "string",
+      "nullable": true,
+      "description": "IMAP sync token for incremental sync"
+    },
+    "isSelectable": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether folder can contain messages"
+    },
+    "parentId": {
+      "type": "cuid",
+      "nullable": true,
+      "index": true,
+      "description": "Parent folder ID for nested folder structure (e.g., INBOX/Archive/2024)"
+    },
+    "createdAt": {
+      "type": "bigint",
+      "generated": true
+    },
+    "updatedAt": {
+      "type": "bigint",
+      "generated": true
+    }
+  },
+  "indexes": [
+    {
+      "fields": [
+        "emailClientId",
+        "name"
+      ],
+      "name": "client_folder_idx"
+    },
+    {
+      "fields": [
+        "tenantId",
+        "emailClientId",
+        "type"
+      ],
+      "name": "type_lookup_idx"
+    }
+  ],
+  "relations": {
+    "emailClient": {
+      "type": "belongs-to",
+      "entity": "EmailClient",
+      "foreign_key": "emailClientId",
+      "on_delete": "cascade",
+      "description": "Folder belongs to an email client"
+    },
+    "messages": {
+      "type": "has-many",
+      "entity": "EmailMessage",
+      "foreign_key": "folderId",
+      "cascade_delete": true,
+      "description": "Folder contains many email messages"
+    },
+    "parent": {
+      "type": "belongs-to",
+      "entity": "EmailFolder",
+      "foreign_key": "parentId",
+      "nullable": true,
+      "on_delete": "set_null",
+      "description": "Self-referential parent folder for nested folder structure (e.g., Archive/2024)"
+    },
+    "children": {
+      "type": "has-many",
+      "entity": "EmailFolder",
+      "foreign_key": "parentId",
+      "description": "Self-referential child folders for nested folder structure"
+    }
+  },
+  "acl": {
+    "read": {
+      "self": true,
+      "row_level": "emailClientId IN (SELECT id FROM EmailClient WHERE userId = $user.id AND tenantId = $context.tenantId)"
+    },
+    "create": false,
+    "update": {
+      "self": true,
+      "row_level": "emailClientId IN (SELECT id FROM EmailClient WHERE userId = $user.id)"
+    },
+    "delete": false
+  }
+}

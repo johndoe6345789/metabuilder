@@ -1,0 +1,265 @@
+{
+  "id": "data-source-manager",
+  "type": "div",
+  "props": { "className": "space-y-6" },
+  "children": [
+    {
+      "id": "data-sources-card",
+      "type": "Card",
+      "children": [
+        {
+          "id": "card-header",
+          "type": "CardHeader",
+          "children": [
+            {
+              "id": "header-container",
+              "type": "div",
+              "props": { "className": "flex items-center justify-between" },
+              "children": [
+                {
+                  "id": "header-content",
+                  "type": "Stack",
+                  "props": { "direction": "vertical", "spacing": "xs" },
+                  "children": [
+                    {
+                      "type": "Heading",
+                      "bindings": { "children": "headerCopy.title" },
+                      "props": { "level": 2 }
+                    },
+                    {
+                      "type": "Text",
+                      "bindings": { "children": "headerCopy.description" },
+                      "props": { "variant": "muted" }
+                    }
+                  ]
+                },
+                {
+                  "id": "add-button-group",
+                  "type": "div",
+                  "children": [
+                    {
+                      "type": "DropdownMenu",
+                      "children": [
+                        {
+                          "type": "DropdownMenuTrigger",
+                          "props": { "asChild": true },
+                          "children": [
+                            {
+                              "type": "div",
+                              "children": [
+                                {
+                                  "type": "ActionButton",
+                                  "bindings": {
+                                    "label": "headerCopy.addLabel",
+                                    "onClick": {
+                                      "source": "",
+                                      "transform": "() => {}"
+                                    }
+                                  },
+                                  "props": {
+                                    "variant": "default"
+                                  },
+                                  "children": [
+                                    {
+                                      "type": "PhosphorIcon",
+                                      "props": { "icon": "Plus", "className": "w-4 h-4" }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "DropdownMenuContent",
+                          "props": { "align": "end" },
+                          "children": [
+                            {
+                              "type": "DropdownMenuItem",
+                              "bindings": {
+                                "onClick": {
+                                  "source": "addDataSource",
+                                  "transform": "() => addDataSource('kv')"
+                                }
+                              },
+                              "children": [
+                                {
+                                  "type": "PhosphorIcon",
+                                  "props": { "icon": "Database", "className": "w-4 h-4 mr-2" }
+                                },
+                                {
+                                  "type": "text",
+                                  "bindings": { "children": "headerCopy.menu.kv" }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "DropdownMenuItem",
+                              "bindings": {
+                                "onClick": {
+                                  "source": "addDataSource",
+                                  "transform": "() => addDataSource('static')"
+                                }
+                              },
+                              "children": [
+                                {
+                                  "type": "PhosphorIcon",
+                                  "props": { "icon": "FileText", "className": "w-4 h-4 mr-2" }
+                                },
+                                {
+                                  "type": "text",
+                                  "bindings": { "children": "headerCopy.menu.static" }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "card-content",
+          "type": "CardContent",
+          "children": [
+            {
+              "id": "empty-or-content",
+              "type": "ConditionalRender",
+              "bindings": {
+                "condition": {
+                  "source": "localSources",
+                  "transform": "localSources.length === 0"
+                }
+              },
+              "children": [
+                {
+                  "id": "empty-state",
+                  "type": "EmptyState",
+                  "bindings": {
+                    "title": "emptyStateCopy.title",
+                    "description": "emptyStateCopy.description"
+                  },
+                  "props": {
+                    "icon": {
+                      "type": "PhosphorIcon",
+                      "props": { "icon": "Database", "className": "w-12 h-12" }
+                    }
+                  }
+                },
+                {
+                  "id": "sources-list",
+                  "type": "Stack",
+                  "props": { "direction": "vertical", "spacing": "xl" },
+                  "children": [
+                    {
+                      "id": "kv-section",
+                      "type": "Section",
+                      "bindings": {
+                        "hidden": {
+                          "source": "groupedSources",
+                          "transform": "groupedSources.kv.length === 0"
+                        }
+                      },
+                      "children": [
+                        {
+                          "type": "IconText",
+                          "props": { "className": "text-sm font-semibold mb-3" },
+                          "children": [
+                            {
+                              "type": "PhosphorIcon",
+                              "props": { "icon": "Database", "className": "w-4 h-4" }
+                            },
+                            {
+                              "type": "text",
+                              "bindings": {
+                                "children": {
+                                  "source": "groupedSources",
+                                  "transform": "`${headerCopy.groups.kv} (${groupedSources.kv.length})`"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Stack",
+                          "props": { "direction": "vertical", "spacing": "sm" },
+                          "bindings": {
+                            "children": {
+                              "source": "groupedSources",
+                              "transform": "groupedSources.kv.map((ds) => ({ id: ds.id, type: 'kv', item: ds }))"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "id": "static-section",
+                      "type": "Section",
+                      "bindings": {
+                        "hidden": {
+                          "source": "groupedSources",
+                          "transform": "groupedSources.static.length === 0"
+                        }
+                      },
+                      "children": [
+                        {
+                          "type": "IconText",
+                          "props": { "className": "text-sm font-semibold mb-3" },
+                          "children": [
+                            {
+                              "type": "PhosphorIcon",
+                              "props": { "icon": "FileText", "className": "w-4 h-4" }
+                            },
+                            {
+                              "type": "text",
+                              "bindings": {
+                                "children": {
+                                  "source": "groupedSources",
+                                  "transform": "`${headerCopy.groups.static} (${groupedSources.static.length})`"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Stack",
+                          "props": { "direction": "vertical", "spacing": "sm" },
+                          "bindings": {
+                            "children": {
+                              "source": "groupedSources",
+                              "transform": "groupedSources.static.map((ds) => ({ id: ds.id, type: 'static', item: ds }))"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "editor-dialog",
+      "type": "DataSourceEditorDialog",
+      "bindings": {
+        "open": "dialogOpen",
+        "dataSource": "editingSource",
+        "onOpenChange": {
+          "source": "setDialogOpen",
+          "transform": "setDialogOpen"
+        },
+        "onSave": {
+          "source": "updateDataSource",
+          "transform": "(source) => updateDataSource(source.id, source)"
+        }
+      }
+    }
+  ]
+}

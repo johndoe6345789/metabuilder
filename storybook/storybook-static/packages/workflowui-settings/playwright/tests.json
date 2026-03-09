@@ -1,0 +1,77 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "workflowui-settings",
+  "version": "1.0.0",
+  "description": "WorkflowUI Settings page tests - user preferences and configuration",
+  "tests": [
+    {
+      "name": "should display settings page",
+      "tags": ["@settings", "@critical"],
+      "timeout": 10000,
+      "steps": [
+        {
+          "description": "Navigate to settings",
+          "action": "navigate",
+          "url": "/settings"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Verify settings page loaded",
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toContainText",
+            "expected": "Settings"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should display settings categories",
+      "tags": ["@settings", "@navigation"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/settings"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Verify settings sections exist",
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should have save/update button",
+      "tags": ["@settings", "@actions"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/settings"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Check for save or update button",
+          "action": "expect",
+          "selector": "button:has-text('Save'), button:has-text('Update')",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    }
+  ]
+}

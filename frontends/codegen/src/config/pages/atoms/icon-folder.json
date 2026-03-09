@@ -1,0 +1,7 @@
+{
+  "id": "icon-folder",
+  "$ref": "./icon-base.json",
+  "props": {
+    "name": "Folder"
+  }
+}

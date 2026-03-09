@@ -1,0 +1,121 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "forum_forge",
+  "description": "Forum Forge access permissions for posting, viewing, and moderation",
+  "permissions": [
+    {
+      "id": "forum.view",
+      "name": "View Forum",
+      "description": "View forum categories and threads",
+      "resource": "forum",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 2
+    },
+    {
+      "id": "forum.thread.create",
+      "name": "Create Thread",
+      "description": "Create new forum threads",
+      "resource": "forum.thread",
+      "action": "create",
+      "scope": "global",
+      "minLevel": 2
+    },
+    {
+      "id": "forum.post.create",
+      "name": "Create Post",
+      "description": "Create posts/replies in forum threads",
+      "resource": "forum.post",
+      "action": "create",
+      "scope": "global",
+      "minLevel": 2
+    },
+    {
+      "id": "forum.moderate",
+      "name": "Moderate Forum",
+      "description": "Moderate forum content including flagging, editing, and removing posts",
+      "resource": "forum",
+      "action": "manage",
+      "scope": "global",
+      "minLevel": 3
+    },
+    {
+      "id": "forum.category.manage",
+      "name": "Manage Categories",
+      "description": "Create, edit, and delete forum categories",
+      "resource": "forum.category",
+      "action": "manage",
+      "scope": "global",
+      "minLevel": 4
+    }
+  ],
+  "resources": [
+    {
+      "id": "forum",
+      "name": "Forum",
+      "type": "custom",
+      "description": "Forum resources including categories, threads, and posts",
+      "actions": ["read", "manage"]
+    },
+    {
+      "id": "forum.thread",
+      "name": "Forum Thread",
+      "type": "custom",
+      "description": "Forum thread resources",
+      "actions": ["create", "read", "update", "delete"]
+    },
+    {
+      "id": "forum.post",
+      "name": "Forum Post",
+      "type": "custom",
+      "description": "Forum post/reply resources",
+      "actions": ["create", "read", "update", "delete"]
+    },
+    {
+      "id": "forum.category",
+      "name": "Forum Category",
+      "type": "custom",
+      "description": "Forum category configuration",
+      "actions": ["manage", "read"]
+    }
+  ],
+  "roles": [
+    {
+      "id": "forum.user",
+      "name": "Forum User",
+      "description": "Standard forum user who can view and post",
+      "minLevel": 2,
+      "permissions": [
+        "forum.view",
+        "forum.thread.create",
+        "forum.post.create"
+      ]
+    },
+    {
+      "id": "forum.moderator",
+      "name": "Forum Moderator",
+      "description": "Forum moderator who can manage content",
+      "minLevel": 3,
+      "permissions": [
+        "forum.view",
+        "forum.thread.create",
+        "forum.post.create",
+        "forum.moderate"
+      ]
+    },
+    {
+      "id": "forum.admin",
+      "name": "Forum Administrator",
+      "description": "Forum administrator with full access",
+      "minLevel": 4,
+      "permissions": [
+        "forum.view",
+        "forum.thread.create",
+        "forum.post.create",
+        "forum.moderate",
+        "forum.category.manage"
+      ]
+    }
+  ]
+}

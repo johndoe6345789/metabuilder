@@ -10,8 +10,8 @@ import {
   setNotification,
   removeNotification,
   clearNotifications
-} from '@metabuilder/redux-slices'/uiSlice';
-import { Notification } from '@metabuilder/redux-slices'/uiSlice';
+} from '@metabuilder/redux-slices/uiSlice';
+import { Notification } from '@metabuilder/redux-slices/uiSlice';
 
 export interface UseUINotificationsReturn {
   notifications: Notification[];
@@ -30,14 +30,21 @@ export function useUINotifications(): UseUINotificationsReturn {
 
   const notify = useCallback(
     (message: string, type: 'success' | 'error' | 'warning' | 'info' = 'info', duration: number = 5000) => {
+      const id = `notification-${Date.now()}-${Math.random()}`;
       dispatch(
         setNotification({
-          id: `notification-${Date.now()}-${Math.random()}`,
+          id,
           type,
           message,
           duration
         })
       );
+      // Auto-remove notification after duration (side effect belongs in hook, not reducer)
+      if (duration > 0) {
+        setTimeout(() => {
+          dispatch(removeNotification(id));
+        }, duration);
+      }
     },
     [dispatch]
   );

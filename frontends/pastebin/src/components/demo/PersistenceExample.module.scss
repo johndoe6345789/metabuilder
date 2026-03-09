@@ -1,0 +1,88 @@
+.headerRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.iconWrap {
+  height: 40px;
+  width: 40px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--mat-sys-secondary) 10%, transparent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.headerIcon {
+  height: 20px;
+  width: 20px;
+  color: var(--mat-sys-secondary);
+}
+
+.subtitle {
+  font-size: 0.875rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid var(--mat-sys-outline-variant);
+  background: var(--mat-sys-surface);
+  font-size: 0.875rem;
+  resize: vertical;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--mat-sys-on-surface);
+  box-sizing: border-box;
+}
+
+.fullWidthBtn {
+  width: 100%;
+}
+
+.howItWorks {
+  padding-top: 16px;
+  border-top: 1px solid var(--mat-sys-outline-variant);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.howTitle {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.stepList {
+  font-size: 0.875rem;
+  color: var(--mat-sys-on-surface-variant);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  list-style: disc;
+  padding-left: 20px;
+  margin: 0;
+}
+
+.inlineCode {
+  font-size: 0.75rem;
+  background: var(--mat-sys-surface-variant);
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-family: 'JetBrains Mono', monospace;
+}

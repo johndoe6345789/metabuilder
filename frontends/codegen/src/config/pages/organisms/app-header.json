@@ -1,0 +1,13 @@
+{
+  "type": "MetabuilderLayoutSidebarTrigger",
+  "props": {
+    "onTabChange": "> void",
+    "onProjectLoad": "> void",
+    "onSearch": "> void",
+    "onShowShortcuts": "> void",
+    "onGenerateAI": "> void",
+    "onExport": "> void",
+    "onPreview": "> void",
+    "onShowErrors": "> void"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "id": "card-container",
+  "type": "MetabuilderLayoutCard",
+  "children": [
+    {
+      "id": "card-header-slot",
+      "type": "MetabuilderLayoutCardHeader"
+    },
+    {
+      "id": "card-content-slot",
+      "type": "MetabuilderDataCardContent"
+    }
+  ]
+}

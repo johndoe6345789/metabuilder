@@ -1,0 +1,2 @@
+After shaderRegistry_->BuildShaderMap()
+  shaderMap.size(): 1

@@ -1,6 +1,7 @@
 {
   "name": "@metabuilder/hooks-utils",
   "version": "1.0.0",
+  "type": "module",
   "description": "Utility hooks for MetaBuilder - data table, async operations, and core utilities",
   "main": "src/index.ts",
   "types": "src/index.d.ts",

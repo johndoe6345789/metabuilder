@@ -10,7 +10,7 @@ import {
   openModal,
   closeModal,
   toggleModal
-} from '@metabuilder/redux-slices'/uiSlice';
+} from '@metabuilder/redux-slices/uiSlice';
 
 export interface UseUIModalsReturn {
   modals: Record<string, boolean>;

@@ -1,0 +1,19 @@
+{
+  "name": "snippet_stats",
+  "description": "Snippet count by language for a given user — useful for BI dashboards",
+  "entity": "Snippet",
+  "select": [
+    { "func": "count", "field": "id",       "alias": "count" },
+    "language"
+  ],
+  "groupBy": ["language"],
+  "orderBy": [{ "field": "count", "dir": "desc" }],
+  "limit": 50,
+  "params": [
+    { "name": "userId",   "type": "string",  "required": true },
+    { "name": "tenantId", "type": "string",  "required": false }
+  ],
+  "where": [
+    { "field": "userId", "op": "eq", "param": "userId" }
+  ]
+}

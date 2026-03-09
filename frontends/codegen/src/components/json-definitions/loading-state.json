@@ -1,0 +1,40 @@
+{
+  "id": "loading-state-container",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": "className",
+      "transform": "const customClass = data || ''; return `flex flex-col items-center justify-center gap-3 py-8 ${customClass}`.trim()"
+    }
+  },
+  "children": [
+    {
+      "id": "loading-state-spinner",
+      "type": "div",
+      "bindings": {
+        "className": {
+          "source": "size",
+          "transform": "const size = data || 'md'; const sizeClasses = { sm: 'w-4 h-4 border-2', md: 'w-8 h-8 border-3', lg: 'w-12 h-12 border-4' }; return `border-primary border-t-transparent rounded-full animate-spin ${sizeClasses[size]}`.trim()"
+        }
+      }
+    },
+    {
+      "id": "loading-state-message",
+      "type": "p",
+      "bindings": {
+        "className": {
+          "source": null,
+          "transform": "'text-sm text-muted-foreground'"
+        },
+        "children": {
+          "source": "message",
+          "transform": "data"
+        },
+        "_if": {
+          "source": "message",
+          "transform": "!!data"
+        }
+      }
+    }
+  ]
+}

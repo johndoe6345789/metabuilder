@@ -1,0 +1,70 @@
+{
+  "id": "test-typescript-math",
+  "name": "TypeScript Math Workflow",
+  "description": "Simple math workflow: add two numbers, multiply by 2, return result",
+  "nodes": [
+    {
+      "id": "trigger_manual_1",
+      "type": "trigger.manual",
+      "name": "Start",
+      "position": { "x": 100, "y": 200 },
+      "config": {
+        "initialData": {
+          "numberA": 5,
+          "numberB": 3
+        }
+      },
+      "inputs": [],
+      "outputs": ["main"]
+    },
+    {
+      "id": "math_add_1",
+      "type": "math.add",
+      "name": "Add Numbers",
+      "position": { "x": 350, "y": 200 },
+      "config": {
+        "a": 5,
+        "b": 3
+      },
+      "inputs": ["main"],
+      "outputs": ["main"]
+    },
+    {
+      "id": "math_multiply_1",
+      "type": "math.multiply",
+      "name": "Multiply by 2",
+      "position": { "x": 600, "y": 200 },
+      "config": {
+        "a": "{{$input.main}}",
+        "b": 2
+      },
+      "inputs": ["main"],
+      "outputs": ["main"]
+    }
+  ],
+  "connections": [
+    {
+      "id": "conn_1",
+      "sourceNodeId": "trigger_manual_1",
+      "sourceOutput": "main",
+      "targetNodeId": "math_add_1",
+      "targetInput": "main"
+    },
+    {
+      "id": "conn_2",
+      "sourceNodeId": "math_add_1",
+      "sourceOutput": "main",
+      "targetNodeId": "math_multiply_1",
+      "targetInput": "main"
+    }
+  ],
+  "expectedOutput": 16,
+  "expectedNodeResults": {
+    "trigger_manual_1": {
+      "numberA": 5,
+      "numberB": 3
+    },
+    "math_add_1": 8,
+    "math_multiply_1": 16
+  }
+}

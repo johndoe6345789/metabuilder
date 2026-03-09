@@ -126,6 +126,16 @@ export {
 //   import { Button } from '@metabuilder/components'
 export * from './fakemui'
 
+// Feedback components
+export { PasswordStrengthIndicator, type PasswordStrengthIndicatorProps } from './feedback'
+export { NotFoundState, type NotFoundStateProps } from './feedback'
+
+// Layout components
+export { AuthFormLayout, type AuthFormLayoutProps } from './layout'
+
+// Navigation components
+export { HeaderActions, type HeaderActionsProps } from './navigation'
+
 // =============================================================================
 // COMBINED STYLES
 // =============================================================================

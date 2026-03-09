@@ -1,6 +1,9 @@
 import React from 'react'
+import classNames from 'classnames'
+import styles from '../../../scss/atoms/form.module.scss'
 
 export interface FormFieldProps extends React.HTMLAttributes<HTMLDivElement> {
+  testId?: string
   children?: React.ReactNode
   label?: string
   helperText?: string
@@ -24,24 +27,32 @@ export const FormField: React.FC<FormFieldProps> = ({
   required,
   disabled,
   fullWidth,
+  testId,
   className = '',
   ...props
 }) => (
   <div
-    className={`form-field ${error ? 'form-field--error' : ''} ${disabled ? 'form-field--disabled' : ''} ${fullWidth ? 'form-field--full-width' : ''} ${className}`}
+    className={classNames(
+      styles.formField,
+      error && styles.formFieldError,
+      disabled && styles.formFieldDisabled,
+      fullWidth && styles.formFieldFullWidth,
+      className
+    )}
+    data-testid={testId}
     {...props}
   >
     {label && (
-      <label className="form-field__label">
+      <label className={styles.formFieldLabel}>
         {label}
-        {required && <span className="form-field__required">*</span>}
+        {required && <span className={styles.formFieldRequired}>*</span>}
       </label>
     )}
-    <div className="form-field__control">
+    <div className={styles.formFieldControl}>
       {children}
     </div>
     {(helperText || errorMessage) && (
-      <div className={`form-field__helper ${error ? 'form-field__helper--error' : ''}`}>
+      <div className={classNames(styles.formFieldHelper, error && styles.formFieldHelperError)}>
         {error ? errorMessage : helperText}
       </div>
     )}

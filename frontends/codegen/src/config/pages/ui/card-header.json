@@ -1,0 +1,9 @@
+{
+  "type": "MetabuilderLayoutCardHeader",
+  "source": "ui",
+  "load": {
+    "path": "@/components/ui/card",
+    "export": "CardHeader"
+  },
+  "props": {}
+}

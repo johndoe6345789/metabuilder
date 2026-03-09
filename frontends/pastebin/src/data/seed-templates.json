@@ -1,0 +1,48 @@
+[
+  {
+    "id": "template-1",
+    "title": "Basic React Component",
+    "description": "Simple functional component template",
+    "code": "function MyComponent() {\n  return (\n    <div className=\"p-4\">\n      <h2 className=\"text-xl font-bold\">Hello World</h2>\n      <p>This is a basic component.</p>\n    </div>\n  )\n}\n\nexport default MyComponent",
+    "language": "tsx",
+    "category": "Templates",
+    "hasPreview": true,
+    "functionName": "MyComponent",
+    "inputParameters": []
+  },
+  {
+    "id": "template-2",
+    "title": "Component with Props",
+    "description": "Component template with configurable props",
+    "code": "function Greeting({ name = 'World', message = 'Hello' }) {\n  return (\n    <div className=\"p-4\">\n      <h2 className=\"text-xl font-bold\">{message}, {name}!</h2>\n    </div>\n  )\n}\n\nexport default Greeting",
+    "language": "tsx",
+    "category": "Templates",
+    "hasPreview": true,
+    "functionName": "Greeting",
+    "inputParameters": [
+      {
+        "name": "name",
+        "type": "string",
+        "defaultValue": "World",
+        "description": "Name to greet"
+      },
+      {
+        "name": "message",
+        "type": "string",
+        "defaultValue": "Hello",
+        "description": "Greeting message"
+      }
+    ]
+  },
+  {
+    "id": "template-3",
+    "title": "useState Hook Template",
+    "description": "Component with state management",
+    "code": "import { useState } from 'react'\nimport { Button } from '@/components/ui/button'\n\nfunction StatefulComponent() {\n  const [value, setValue] = useState(0)\n\n  return (\n    <div className=\"p-4 space-y-4\">\n      <p className=\"text-lg\">Value: {value}</p>\n      <Button onClick={() => setValue(value + 1)}>\n        Increment\n      </Button>\n    </div>\n  )\n}\n\nexport default StatefulComponent",
+    "language": "tsx",
+    "category": "Templates",
+    "hasPreview": true,
+    "functionName": "StatefulComponent",
+    "inputParameters": []
+  }
+]

@@ -7,9 +7,7 @@
 @use './styles/core/base' as *;
 @use './styles/core/theme' as *;
 
-// FakeMUI component styles
-@use '../../../fakemui/styles/base';
-@use '../../../fakemui/styles/components';
+// FakeMUI component styles are loaded via transpilePackages + sassOptions
 
 // ========================================
 // UX Polish: Loading & Animation Styles

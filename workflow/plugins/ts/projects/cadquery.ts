@@ -26,7 +26,7 @@ export interface CadQueryOutput {
  * Execute a CadQuery script to generate 3D models
  */
 export async function cadqueryExecute(input: CadQueryInput): Promise<CadQueryOutput> {
-  const { script, outputFormat = 'step', outputPath } = input;
+  const { script, outputFormat: _outputFormat = 'step', outputPath } = input;
 
   return new Promise((resolve) => {
     const pythonProcess = spawn('python3', ['-c', script], {

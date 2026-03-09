@@ -1,0 +1,38 @@
+{
+  "id": "top-mount",
+  "name": "Strut Top Mount",
+  "partNumber": "FD-1751295",
+  "material": "steel",
+  "quantity": 2,
+  "weight": 680.0,
+  "weightUnit": "g",
+  "baseY": 140,
+  "description": "Upper strut mount with bearing",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "13mm", "required": true },
+      { "name": "Torque wrench", "size": "20-50 Nm", "required": true }
+    ],
+    "hardware": [
+      { "name": "Top mount nut", "spec": "M8", "qty": 3, "reusable": true },
+      { "name": "Bearing", "spec": "Integral", "qty": 1, "reusable": false }
+    ],
+    "torque": [
+      { "fastener": "Top mount nuts", "value": 25, "unit": "Nm", "sequence": "Star pattern", "notes": "Check torque after road test" }
+    ],
+    "notes": [
+      "Check bearing for roughness - common wear item",
+      "Squeaking on turn indicates worn bearing",
+      "Align mounting holes before lowering strut",
+      "Replace if rubber is cracked or perished"
+    ]
+  },
+  "geometry": [
+    { "type": "circle", "r": 45 },
+    { "type": "circle", "r": 35, "fill": "#4a4a4a" },
+    { "type": "circle", "r": 12, "fill": "#333" },
+    { "type": "circle", "r": 5, "offsetX": -30, "offsetY": 0, "fill": "#222" },
+    { "type": "circle", "r": 5, "offsetX": 15, "offsetY": -26, "fill": "#222" },
+    { "type": "circle", "r": 5, "offsetX": 15, "offsetY": 26, "fill": "#222" }
+  ]
+}

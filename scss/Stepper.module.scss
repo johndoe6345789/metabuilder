@@ -1,0 +1,161 @@
+// Stepper Component - Material Design 3
+// Uses M3 surface, primary, and typography tokens
+
+.stepper {
+  display: flex;
+  padding: 24px;
+
+  &.horizontal {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  &.vertical {
+    flex-direction: column;
+  }
+
+  &.alternativeLabel {
+    .step {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .stepLabels {
+      margin-left: 0;
+      margin-top: 8px;
+    }
+  }
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+
+  &.clickable {
+    cursor: pointer;
+
+    &:hover .stepIcon {
+      background-color: color-mix(in srgb, var(--mat-sys-on-primary) 8%, var(--mat-sys-primary));
+    }
+  }
+
+  &.error {
+    .stepLabel {
+      color: var(--mat-sys-error);
+    }
+  }
+}
+
+.stepContent {
+  display: flex;
+  align-items: center;
+}
+
+.stepIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--mat-sys-corner-full);
+  background-color: var(--mat-sys-surface-container-highest);
+  color: var(--mat-sys-on-surface-variant);
+  font-family: var(--mat-sys-label-large-font);
+  font-size: var(--mat-sys-label-large-size);
+  font-weight: var(--mat-sys-label-large-weight);
+  flex-shrink: 0;
+  transition: background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard),
+              color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+
+  &.active {
+    background-color: var(--mat-sys-primary);
+    color: var(--mat-sys-on-primary);
+  }
+
+  &.completed {
+    background-color: var(--mat-sys-primary);
+    color: var(--mat-sys-on-primary);
+  }
+
+  &.error {
+    background-color: var(--mat-sys-error);
+    color: var(--mat-sys-on-error);
+  }
+}
+
+.stepLabels {
+  margin-left: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.stepLabel {
+  font-family: var(--mat-sys-title-small-font);
+  font-size: var(--mat-sys-title-small-size);
+  font-weight: var(--mat-sys-title-small-weight);
+  line-height: var(--mat-sys-title-small-line-height);
+  color: var(--mat-sys-on-surface);
+
+  .step.completed & {
+    color: var(--mat-sys-on-surface);
+  }
+
+  .step:not(.active):not(.completed) & {
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+.optional {
+  display: block;
+  font-family: var(--mat-sys-body-small-font);
+  font-size: var(--mat-sys-body-small-size);
+  font-weight: var(--mat-sys-body-small-weight);
+  color: var(--mat-sys-on-surface-variant);
+  margin-top: 2px;
+}
+
+.stepDescription {
+  font-family: var(--mat-sys-body-small-font);
+  font-size: var(--mat-sys-body-small-size);
+  color: var(--mat-sys-on-surface-variant);
+  margin-top: 4px;
+}
+
+.connector {
+  display: flex;
+  align-items: center;
+  flex: 1;
+
+  &.horizontal {
+    min-width: 24px;
+    padding: 0 8px;
+
+    .connectorLine {
+      height: 1px;
+      width: 100%;
+    }
+  }
+
+  &.vertical {
+    min-height: 24px;
+    padding: 8px 0;
+    margin-left: 18px;
+
+    .connectorLine {
+      width: 1px;
+      height: 100%;
+      min-height: 24px;
+    }
+  }
+}
+
+.connectorLine {
+  background-color: var(--mat-sys-outline-variant);
+  transition: background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+
+  .connector.completed & {
+    background-color: var(--mat-sys-primary);
+  }
+}

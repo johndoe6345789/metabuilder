@@ -1,0 +1,75 @@
+{
+  "id": "gallery-card-container",
+  "type": "div",
+  "bindings": {
+    "onClick": {
+      "source": "onClick",
+      "transform": "data"
+    },
+    "className": {
+      "source": "className",
+      "transform": "['gallery-card', data].filter(Boolean).join(' ')"
+    }
+  },
+  "children": [
+    {
+      "id": "gallery-card-image",
+      "type": "img",
+      "props": {
+        "className": "gallery-card__image"
+      },
+      "bindings": {
+        "src": { "source": "imageSrc" },
+        "alt": { "source": "imageAlt" }
+      },
+      "conditional": {
+        "if": "imageSrc"
+      }
+    },
+    {
+      "id": "gallery-card-body",
+      "type": "div",
+      "props": {
+        "className": "gallery-card__body"
+      },
+      "children": [
+        {
+          "id": "gallery-card-title",
+          "type": "div",
+          "props": {
+            "className": "gallery-card__title"
+          },
+          "bindings": {
+            "children": "title"
+          }
+        },
+        {
+          "id": "gallery-card-description",
+          "type": "div",
+          "props": {
+            "className": "gallery-card__description"
+          },
+          "bindings": {
+            "children": "description"
+          },
+          "conditional": {
+            "if": "description"
+          }
+        }
+      ]
+    },
+    {
+      "id": "gallery-card-meta",
+      "type": "div",
+      "props": {
+        "className": "gallery-card__meta"
+      },
+      "bindings": {
+        "children": "meta"
+      },
+      "conditional": {
+        "if": "meta"
+      }
+    }
+  ]
+}

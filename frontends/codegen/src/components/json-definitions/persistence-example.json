@@ -1,0 +1,614 @@
+{
+  "id": "persistence-example-container",
+  "type": "div",
+  "props": { "className": "p-6 space-y-6" },
+  "children": [
+    {
+      "id": "header-section",
+      "type": "div",
+      "children": [
+        {
+          "id": "header-title",
+          "type": "h1",
+          "props": { "className": "text-3xl font-bold mb-2" },
+          "children": [
+            {
+              "type": "text",
+              "bindings": { "children": "pe.copy.title" }
+            }
+          ]
+        },
+        {
+          "id": "header-description",
+          "type": "p",
+          "props": { "className": "text-muted-foreground" },
+          "children": [
+            {
+              "type": "text",
+              "bindings": { "children": "pe.copy.description" }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "main-grid",
+      "type": "div",
+      "props": { "className": "grid grid-cols-1 lg:grid-cols-2 gap-6" },
+      "children": [
+        {
+          "id": "file-editor-card",
+          "type": "Card",
+          "props": { "className": "p-6 space-y-4 border-sidebar-border" },
+          "children": [
+            {
+              "id": "editor-header",
+              "type": "div",
+              "props": { "className": "flex items-center justify-between" },
+              "children": [
+                {
+                  "id": "editor-title",
+                  "type": "h2",
+                  "props": { "className": "text-xl font-semibold" },
+                  "children": [
+                    {
+                      "type": "text",
+                      "bindings": { "children": "pe.editorTitle" }
+                    }
+                  ]
+                },
+                {
+                  "id": "editing-badge",
+                  "type": "Badge",
+                  "conditional": { "if": "pe.editingId" },
+                  "props": { "variant": "outline", "className": "text-amber-500 border-amber-500" },
+                  "children": [
+                    {
+                      "type": "text",
+                      "bindings": { "children": "pe.copy.editor.editingBadge" }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "editor-separator",
+              "type": "Separator"
+            },
+            {
+              "id": "editor-form",
+              "type": "div",
+              "props": { "className": "space-y-4" },
+              "children": [
+                {
+                  "id": "filename-field",
+                  "type": "div",
+                  "props": { "className": "space-y-2" },
+                  "children": [
+                    {
+                      "id": "filename-label",
+                      "type": "Label",
+                      "props": { "htmlFor": "fileName" },
+                      "children": [
+                        {
+                          "type": "text",
+                          "bindings": { "children": "pe.copy.editor.fileNameLabel" }
+                        }
+                      ]
+                    },
+                    {
+                      "id": "filename-input",
+                      "type": "Input",
+                      "bindings": {
+                        "value": "pe.fileName",
+                        "onChange": {
+                          "source": "pe.handlers.handleFileNameChange",
+                          "transform": "(e) => pe.handlers.handleFileNameChange(e.target.value)"
+                        }
+                      },
+                      "props": {
+                        "id": "fileName",
+                        "placeholder": "example.js"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "content-field",
+                  "type": "div",
+                  "props": { "className": "space-y-2" },
+                  "children": [
+                    {
+                      "id": "content-label",
+                      "type": "Label",
+                      "props": { "htmlFor": "fileContent" },
+                      "children": [
+                        {
+                          "type": "text",
+                          "bindings": { "children": "pe.copy.editor.contentLabel" }
+                        }
+                      ]
+                    },
+                    {
+                      "id": "content-textarea",
+                      "type": "textarea",
+                      "bindings": {
+                        "value": "pe.fileContent",
+                        "onChange": {
+                          "source": "pe.handlers.handleFileContentChange",
+                          "transform": "(e) => pe.handlers.handleFileContentChange(e.target.value)"
+                        }
+                      },
+                      "props": {
+                        "id": "fileContent",
+                        "placeholder": "console.log('Hello, world!')",
+                        "className": "w-full h-32 px-3 py-2 border border-input rounded-md bg-background font-mono text-sm resize-none"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "editor-buttons",
+                  "type": "div",
+                  "props": { "className": "flex gap-2" },
+                  "children": [
+                    {
+                      "id": "save-button",
+                      "type": "Button",
+                      "bindings": {
+                        "onClick": "pe.handlers.handleSave"
+                      },
+                      "props": { "className": "flex items-center gap-2 flex-1" },
+                      "children": [
+                        {
+                          "type": "FloppyDisk"
+                        },
+                        {
+                          "type": "text",
+                          "bindings": { "children": "pe.saveButtonText" }
+                        }
+                      ]
+                    },
+                    {
+                      "id": "cancel-button",
+                      "type": "Button",
+                      "conditional": { "if": "pe.editingId" },
+                      "bindings": {
+                        "onClick": "pe.handlers.handleCancel"
+                      },
+                      "props": { "variant": "outline" },
+                      "children": [
+                        {
+                          "type": "text",
+                          "bindings": { "children": "pe.copy.editor.cancelButton" }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "info-section",
+                  "type": "div",
+                  "props": { "className": "p-4 bg-muted/50 rounded-lg space-y-2" },
+                  "children": [
+                    {
+                      "id": "info-automatic",
+                      "type": "div",
+                      "props": { "className": "flex items-start gap-2" },
+                      "children": [
+                        {
+                          "type": "CheckCircle",
+                          "props": { "className": "text-accent mt-1", "weight": "fill" }
+                        },
+                        {
+                          "id": "info-automatic-text",
+                          "type": "div",
+                          "props": { "className": "text-sm" },
+                          "children": [
+                            {
+                              "id": "info-automatic-title",
+                              "type": "p",
+                              "props": { "className": "font-semibold text-foreground" },
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "bindings": { "children": "pe.copy.info.automaticTitle" }
+                                }
+                              ]
+                            },
+                            {
+                              "id": "info-automatic-desc",
+                              "type": "p",
+                              "props": { "className": "text-muted-foreground" },
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "bindings": { "children": "pe.copy.info.automaticDescription" }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "id": "info-flask",
+                      "type": "div",
+                      "props": { "className": "flex items-start gap-2" },
+                      "children": [
+                        {
+                          "type": "Clock",
+                          "props": { "className": "text-primary mt-1", "weight": "fill" }
+                        },
+                        {
+                          "id": "info-flask-text",
+                          "type": "div",
+                          "props": { "className": "text-sm" },
+                          "children": [
+                            {
+                              "id": "info-flask-title",
+                              "type": "p",
+                              "props": { "className": "font-semibold text-foreground" },
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "bindings": { "children": "pe.copy.info.dbalTitle" }
+                                }
+                              ]
+                            },
+                            {
+                              "id": "info-dbal-desc",
+                              "type": "p",
+                              "props": { "className": "text-muted-foreground" },
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "bindings": { "children": "pe.copy.info.dbalDescription" }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "saved-files-card",
+          "type": "Card",
+          "props": { "className": "p-6 space-y-4 border-sidebar-border" },
+          "children": [
+            {
+              "id": "files-header",
+              "type": "div",
+              "props": { "className": "flex items-center justify-between" },
+              "children": [
+                {
+                  "id": "files-title",
+                  "type": "h2",
+                  "props": { "className": "text-xl font-semibold" },
+                  "children": [
+                    {
+                      "type": "text",
+                      "bindings": { "children": "pe.copy.files.title" }
+                    }
+                  ]
+                },
+                {
+                  "id": "files-count-badge",
+                  "type": "Badge",
+                  "props": { "variant": "secondary" },
+                  "children": [
+                    {
+                      "type": "text",
+                      "bindings": { "children": "pe.fileCount" }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "files-separator",
+              "type": "Separator"
+            },
+            {
+              "id": "files-list-container",
+              "type": "div",
+              "props": { "className": "space-y-3 max-h-[500px] overflow-y-auto" },
+              "children": [
+                {
+                  "id": "files-empty-state",
+                  "type": "div",
+                  "conditional": { "if": "pe.files.length === 0" },
+                  "props": { "className": "text-center py-12 text-muted-foreground" },
+                  "children": [
+                    {
+                      "id": "empty-title",
+                      "type": "p",
+                      "children": [
+                        {
+                          "type": "text",
+                          "bindings": { "children": "pe.copy.files.emptyTitle" }
+                        }
+                      ]
+                    },
+                    {
+                      "id": "empty-description",
+                      "type": "p",
+                      "props": { "className": "text-sm mt-1" },
+                      "children": [
+                        {
+                          "type": "text",
+                          "bindings": { "children": "pe.copy.files.emptyDescription" }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "files-list",
+                  "type": "list",
+                  "conditional": { "if": "pe.formattedFiles.length > 0" },
+                  "bindings": {
+                    "items": "pe.formattedFiles",
+                    "keyPath": "id"
+                  },
+                  "itemTemplate": {
+                    "type": "Card",
+                    "props": { "className": "p-4 space-y-2 hover:bg-muted/50 transition-colors border-sidebar-border" },
+                    "children": [
+                      {
+                        "id": "file-item-header",
+                        "type": "div",
+                        "props": { "className": "flex items-start justify-between" },
+                        "children": [
+                          {
+                            "id": "file-item-info",
+                            "type": "div",
+                            "props": { "className": "flex-1 min-w-0" },
+                            "children": [
+                              {
+                                "id": "file-item-name",
+                                "type": "h3",
+                                "props": { "className": "font-semibold truncate" },
+                                "children": [
+                                  {
+                                    "type": "text",
+                                    "bindings": { "children": "item.name" }
+                                  }
+                                ]
+                              },
+                              {
+                                "id": "file-item-path",
+                                "type": "p",
+                                "props": { "className": "text-sm text-muted-foreground truncate" },
+                                "children": [
+                                  {
+                                    "type": "text",
+                                    "bindings": { "children": "item.path" }
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "id": "file-item-language-badge",
+                            "type": "Badge",
+                            "props": { "variant": "outline", "className": "ml-2 shrink-0" },
+                            "children": [
+                              {
+                                "type": "text",
+                                "bindings": { "children": "item.language" }
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "id": "file-item-content-preview",
+                        "type": "div",
+                        "conditional": { "if": "item.contentPreview" },
+                        "props": { "className": "bg-muted/50 p-2 rounded text-xs font-mono text-muted-foreground max-h-20 overflow-hidden" },
+                        "children": [
+                          {
+                            "type": "text",
+                            "bindings": { "children": "item.contentPreview" }
+                          }
+                        ]
+                      },
+                      {
+                        "id": "file-item-footer",
+                        "type": "div",
+                        "props": { "className": "flex items-center justify-between text-xs text-muted-foreground" },
+                        "children": [
+                          {
+                            "id": "file-item-updated",
+                            "type": "span",
+                            "children": [
+                              {
+                                "type": "text",
+                                "bindings": {
+                                  "children": {
+                                    "source": "item.updatedAtFormatted",
+                                    "transform": "'Updated: ' + data"
+                                  }
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "id": "file-item-actions",
+                            "type": "div",
+                            "props": { "className": "flex gap-2" },
+                            "children": [
+                              {
+                                "id": "file-edit-button",
+                                "type": "Button",
+                                "bindings": {
+                                  "onClick": {
+                                    "source": "pe.handlers.handleEdit,item",
+                                    "transform": "() => pe.handlers.handleEdit(item)"
+                                  }
+                                },
+                                "props": { "size": "sm", "variant": "ghost", "className": "h-8 flex items-center gap-1" },
+                                "children": [
+                                  { "type": "PencilSimple" },
+                                  {
+                                    "type": "text",
+                                    "bindings": { "children": "pe.copy.files.editButton" }
+                                  }
+                                ]
+                              },
+                              {
+                                "id": "file-delete-button",
+                                "type": "Button",
+                                "bindings": {
+                                  "onClick": {
+                                    "source": "pe.handlers.handleDelete,item.id,item.name",
+                                    "transform": "() => pe.handlers.handleDelete(item.id, item.name)"
+                                  }
+                                },
+                                "props": { "size": "sm", "variant": "ghost", "className": "h-8 flex items-center gap-1 text-destructive hover:text-destructive" },
+                                "children": [
+                                  { "type": "Trash" },
+                                  {
+                                    "type": "text",
+                                    "bindings": { "children": "pe.copy.files.deleteButton" }
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "how-it-works-card",
+      "type": "Card",
+      "props": { "className": "p-6 space-y-4 border-primary/50 bg-primary/5" },
+      "children": [
+        {
+          "id": "how-title",
+          "type": "h3",
+          "props": { "className": "text-lg font-semibold" },
+          "children": [
+            {
+              "type": "text",
+              "bindings": { "children": "pe.copy.howItWorks.title" }
+            }
+          ]
+        },
+        {
+          "id": "how-separator",
+          "type": "Separator"
+        },
+        {
+          "id": "how-steps-grid",
+          "type": "div",
+          "props": { "className": "grid grid-cols-1 md:grid-cols-3 gap-4 text-sm" },
+          "children": [
+            {
+              "id": "how-step-0",
+              "type": "div",
+              "props": { "className": "space-y-2" },
+              "children": [
+                {
+                  "id": "how-step-0-title",
+                  "type": "div",
+                  "props": { "className": "font-semibold text-primary" },
+                  "children": [
+                    {
+                      "type": "text",
+                      "bindings": { "children": "pe.copy.howItWorks.steps[0].title" }
+                    }
+                  ]
+                },
+                {
+                  "id": "how-step-0-desc",
+                  "type": "p",
+                  "props": { "className": "text-muted-foreground" },
+                  "children": [
+                    {
+                      "type": "text",
+                      "bindings": { "children": "pe.copy.howItWorks.steps[0].description" }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "how-step-1",
+              "type": "div",
+              "props": { "className": "space-y-2" },
+              "children": [
+                {
+                  "id": "how-step-1-title",
+                  "type": "div",
+                  "props": { "className": "font-semibold text-primary" },
+                  "children": [
+                    {
+                      "type": "text",
+                      "bindings": { "children": "pe.copy.howItWorks.steps[1].title" }
+                    }
+                  ]
+                },
+                {
+                  "id": "how-step-1-desc",
+                  "type": "p",
+                  "props": { "className": "text-muted-foreground" },
+                  "children": [
+                    {
+                      "type": "text",
+                      "bindings": { "children": "pe.copy.howItWorks.steps[1].description" }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "how-step-2",
+              "type": "div",
+              "props": { "className": "space-y-2" },
+              "children": [
+                {
+                  "id": "how-step-2-title",
+                  "type": "div",
+                  "props": { "className": "font-semibold text-primary" },
+                  "children": [
+                    {
+                      "type": "text",
+                      "bindings": { "children": "pe.copy.howItWorks.steps[2].title" }
+                    }
+                  ]
+                },
+                {
+                  "id": "how-step-2-desc",
+                  "type": "p",
+                  "props": { "className": "text-muted-foreground" },
+                  "children": [
+                    {
+                      "type": "text",
+                      "bindings": { "children": "pe.copy.howItWorks.steps[2].description" }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

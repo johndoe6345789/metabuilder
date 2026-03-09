@@ -1,0 +1,18 @@
+{
+  "entityType": "playwright",
+  "package": "system_critical_flows",
+  "description": "System-wide critical user flow end-to-end tests",
+  "version": "1.0.0",
+  "testCoverage": [
+    "Public discovery & login flows",
+    "Authentication & session management",
+    "User dashboard functionality",
+    "Admin user management",
+    "Package management",
+    "Navigation & discovery",
+    "Error handling",
+    "User experience",
+    "System resilience",
+    "System stability"
+  ]
+}

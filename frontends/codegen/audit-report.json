@@ -1,0 +1,12 @@
+{
+  "timestamp": "2026-01-21T05:11:44.826Z",
+  "issues": [],
+  "stats": {
+    "totalJsonFiles": 337,
+    "totalTsxFiles": 356,
+    "registryEntries": 403,
+    "orphanedJson": 0,
+    "duplicates": 0,
+    "obsoleteWrapperRefs": 0
+  }
+}

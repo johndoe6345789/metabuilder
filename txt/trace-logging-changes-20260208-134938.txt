@@ -1,0 +1,116 @@
+COMPREHENSIVE TRACE LOGGING ADDITIONS - GAMEENGINE SERVICE FILES
+================================================================
+
+Date: February 8, 2026
+Task: Add trace logging to 15 service implementation files without logger_->Trace
+
+SUMMARY:
+--------
+- 18 files modified total (15 service files + 1 header + 2 call site updates)
+- 100% coverage of target directories (platform, render, input, diagnostics, soundboard)
+- All trace calls follow consistent pattern: logger_->Trace("ClassName", "MethodName", "Entry")
+- logger_service.cpp intentionally excluded (would cause recursion)
+
+MODIFIED FILES BY DIRECTORY:
+----------------------------
+
+Platform Service (7 files):
+  ✓ gameengine/src/services/impl/platform/platform_service_log_cpu.cpp
+  ✓ gameengine/src/services/impl/platform/platform_service_log_display.cpp
+  ✓ gameengine/src/services/impl/platform/platform_service_log_env.cpp
+  ✓ gameengine/src/services/impl/platform/sdl_window_service_events_input.cpp
+  ✓ gameengine/src/services/impl/platform/sdl_window_service_events_window.cpp
+  ✓ gameengine/src/services/impl/platform/sdl_window_service_mouse_config.cpp
+  ✓ gameengine/src/services/impl/platform/sdl_window_service_utilities.cpp
+
+Render Coordinator (4 files):
+  ✓ gameengine/src/services/impl/render/render_coordinator_render_entry.cpp
+  ✓ gameengine/src/services/impl/render/render_coordinator_render_finalize.cpp
+  ✓ gameengine/src/services/impl/render/render_coordinator_render_scene.cpp
+  ✓ gameengine/src/services/impl/render/render_coordinator_service.hpp (friend declarations)
+
+Input Service (2 files):
+  ✓ gameengine/src/services/impl/input/sdl_input_service_gamepad_snapshot.cpp
+  ✓ gameengine/src/services/impl/input/sdl_input_service_gamepad.cpp
+
+Diagnostics Service (1 file):
+  ✓ gameengine/src/services/impl/diagnostics/validation_tour_service_capture.cpp
+  ✗ gameengine/src/services/impl/diagnostics/logger_service.cpp (excluded - recursion)
+
+Soundboard Service (2 files):
+  ✓ gameengine/src/services/impl/soundboard/soundboard_path_resolver.hpp
+  ✓ gameengine/src/services/impl/soundboard/soundboard_path_resolver.cpp
+
+Workflow Call Sites (2 files):
+  ✓ gameengine/src/services/impl/workflow/workflow_soundboard_catalog_scan_step.cpp
+  ✓ gameengine/src/services/impl/workflow/workflow_soundboard_gui_helpers.cpp
+
+TECHNICAL DETAILS:
+------------------
+
+1. Platform Service Files:
+   - Added trace entry calls to helper functions
+   - GatherCpuInfo, GatherDisplayAndEmitTable, GatherEnvironmentAndDrivers
+   - PublishInputEvents, PublishWindowEvents, ConfigureMouseGrabBindings
+   - BuildSdlErrorMessage, ThrowSdlErrorIfFailed, ShowErrorDialog
+
+2. Render Coordinator Files:
+   - Added trace to public entry points and helper functions
+   - RenderFrame, RenderFrameWithViewState, RenderFrameWithOverrides
+   - FinalizeRenderFrame, RenderSceneContent
+   - Added friend declarations for helper functions to access private logger_
+
+3. Input Service Files:
+   - Added trace to gamepad-related methods
+   - UpdateGamepadSnapshot, ApplyKeyMapping, IsActionKeyPressed
+   - ShouldCaptureMouseDelta, EnsureGamepadSubsystem
+   - TryOpenGamepad, CloseGamepad
+
+4. Diagnostics Service Files:
+   - Added trace to validation tour capture methods
+   - ToArray, BuildViewState, AnalyzeCapture
+   - logger_service.cpp intentionally excluded (comments explain recursion issue)
+
+5. Soundboard Service Files:
+   - Updated function signatures to accept logger parameter
+   - ResolveSoundboardPackageRoot now takes optional logger (default nullptr)
+   - FindPackageRoot updated with logger parameter
+   - Both call sites updated to pass logger_
+
+ARCHITECTURAL IMPROVEMENTS:
+---------------------------
+
+1. Friend Declarations:
+   - Added to RenderCoordinatorService to allow helper functions access to private members
+   - Maintains encapsulation while enabling comprehensive logging
+
+2. Optional Logger Parameters:
+   - Soundboard path resolver functions now accept optional logger
+   - Backward compatible (defaults to nullptr)
+   - Enables trace logging without breaking existing code
+
+3. Consistent Pattern:
+   - All trace calls follow: logger_->Trace("ClassName", "MethodName", "Entry")
+   - Free functions use: if (logger) { logger->Trace(...); }
+   - Class methods use: logger_->Trace(...)
+
+VERIFICATION:
+-------------
+Command to verify all files have trace logging:
+  cd gameengine/src/services/impl && \
+  for dir in platform render input diagnostics soundboard; do \
+    for file in $dir/*.cpp; do \
+      if [ -f "$file" ] && ! grep -q "logger_->Trace\|logger->Trace" "$file" && \
+         ! grep -q "Cannot add trace logging" "$file"; then \
+        echo "Missing: $file"; \
+      fi; \
+    done; \
+  done
+
+Result: No missing files (100% coverage achieved)
+
+NEXT STEPS:
+-----------
+- Build and test to ensure compilation succeeds
+- Run game engine tests to verify trace logging doesn't introduce runtime issues
+- Consider adding similar trace logging to other service directories if needed

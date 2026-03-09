@@ -1,0 +1,13 @@
+{
+  "id": "json-ui-showcase-page",
+  "type": "div",
+  "props": {
+    "className": "json-ui-showcase-page"
+  },
+  "children": [
+    {
+      "id": "json-ui-showcase-component",
+      "type": "MetabuilderWidgetJSONUIShowcase"
+    }
+  ]
+}

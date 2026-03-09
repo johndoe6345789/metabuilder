@@ -1,0 +1,146 @@
+{
+  "$schema": "../../../schemas/plugin-nodes.schema.json",
+  "category": {
+    "id": "string",
+    "name": "String",
+    "color": "#9b59b6",
+    "icon": "type"
+  },
+  "nodes": [
+    {
+      "id": "string.concat",
+      "name": "Concat",
+      "description": "Concatenate strings",
+      "icon": "link",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "values": [], "separator": "" }
+    },
+    {
+      "id": "string.format",
+      "name": "Format",
+      "description": "Format string with template variables",
+      "icon": "file-text",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "template": "", "values": {} }
+    },
+    {
+      "id": "string.length",
+      "name": "Length",
+      "description": "Get string length",
+      "icon": "hash",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "value": "" }
+    },
+    {
+      "id": "string.lower",
+      "name": "Lowercase",
+      "description": "Convert to lowercase",
+      "icon": "type",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "value": "" }
+    },
+    {
+      "id": "string.upper",
+      "name": "Uppercase",
+      "description": "Convert to uppercase",
+      "icon": "type",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "value": "" }
+    },
+    {
+      "id": "string.trim",
+      "name": "Trim",
+      "description": "Remove whitespace from start and end",
+      "icon": "scissors",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "value": "" }
+    },
+    {
+      "id": "string.replace",
+      "name": "Replace",
+      "description": "Replace occurrences in string",
+      "icon": "refresh-cw",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "value": "", "search": "", "replace": "", "all": true }
+    },
+    {
+      "id": "string.split",
+      "name": "Split",
+      "description": "Split string into array",
+      "icon": "scissors",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "value": "", "separator": "," }
+    },
+    {
+      "id": "string.join",
+      "name": "Join",
+      "description": "Join array into string",
+      "icon": "link",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "values": [], "separator": "," }
+    },
+    {
+      "id": "string.substring",
+      "name": "Substring",
+      "description": "Extract portion of string",
+      "icon": "crop",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "value": "", "start": 0, "end": null }
+    },
+    {
+      "id": "string.includes",
+      "name": "Includes",
+      "description": "Check if string contains substring",
+      "icon": "search",
+      "inputs": ["main"],
+      "outputs": ["true", "false"],
+      "defaultConfig": { "value": "", "search": "" }
+    },
+    {
+      "id": "string.startsWith",
+      "name": "Starts With",
+      "description": "Check if string starts with substring",
+      "icon": "skip-back",
+      "inputs": ["main"],
+      "outputs": ["true", "false"],
+      "defaultConfig": { "value": "", "search": "" }
+    },
+    {
+      "id": "string.endsWith",
+      "name": "Ends With",
+      "description": "Check if string ends with substring",
+      "icon": "skip-forward",
+      "inputs": ["main"],
+      "outputs": ["true", "false"],
+      "defaultConfig": { "value": "", "search": "" }
+    },
+    {
+      "id": "string.padStart",
+      "name": "Pad Start",
+      "description": "Pad string at start to target length",
+      "icon": "align-left",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "value": "", "length": 0, "padChar": " " }
+    },
+    {
+      "id": "string.padEnd",
+      "name": "Pad End",
+      "description": "Pad string at end to target length",
+      "icon": "align-right",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "value": "", "length": 0, "padChar": " " }
+    }
+  ]
+}

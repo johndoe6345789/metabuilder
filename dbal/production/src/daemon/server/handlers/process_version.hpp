@@ -6,8 +6,8 @@
 #pragma once
 
 #include <string>
-#include "http_request.hpp"
-#include "http_response.hpp"
+#include "../request/http_request.hpp"
+#include "../response/http_response.hpp"
 
 namespace dbal {
 namespace daemon {
@@ -23,7 +23,7 @@ inline bool process_version(
     HttpResponse& response
 ) {
     if (request.path == "/api/version" || request.path == "/version") {
-        response.body = R"({"version":"1.0.0","service":"DBAL Daemon"})";
+        response.body = R"({"version":"1.2.1","service":"DBAL Daemon"})";
         return true;
     }
     return false;

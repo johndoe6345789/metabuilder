@@ -1,0 +1,54 @@
+.actionsRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 8px;
+}
+
+.actionsLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.actionsRight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btnGap {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.btnLabelInline {
+  display: none;
+
+  @media (min-width: 640px) {
+    display: inline;
+  }
+}
+
+.btnSquare {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.menuLabel {
+  opacity: 0.6;
+  font-size: 0.75rem;
+}
+
+.defaultBadge {
+  margin-left: 8px;
+  font-size: 0.75rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.deleteItem {
+  color: var(--mat-sys-error);
+}

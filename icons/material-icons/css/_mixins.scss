@@ -1,0 +1,16 @@
+@use 'sass:string';
+@use 'sass:map';
+
+@import '../iconfont/mixins';
+
+@function material-icons-content($codepoint) {
+  @return string.unquote('"\\#{$codepoint}"');
+}
+
+@mixin material-icon($name, $pseudo: 'before') {
+  $codepoint: map.get($material-icons-codepoints, $name);
+
+  &::#{$pseudo} {
+    content: material-icons-content($codepoint);
+  }
+}

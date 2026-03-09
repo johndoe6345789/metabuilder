@@ -1,0 +1,757 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "route_manager",
+  "description": "Route management components for configuring page URLs and access control",
+  "components": [
+    {
+      "id": "route_manager",
+      "name": "RouteManager",
+      "description": "Main route management interface with list and editor",
+      "props": [
+        {
+          "name": "tenantId",
+          "type": "string",
+          "required": true,
+          "description": "Current tenant ID"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "route-manager",
+          "children": [
+            {
+              "type": "Paper",
+              "elevation": 1,
+              "sx": { "p": 3 },
+              "children": [
+                {
+                  "type": "Stack",
+                  "direction": "row",
+                  "justifyContent": "space-between",
+                  "alignItems": "center",
+                  "mb": 3,
+                  "children": [
+                    {
+                      "type": "Typography",
+                      "variant": "h5",
+                      "children": "Route Manager"
+                    },
+                    {
+                      "type": "Button",
+                      "variant": "contained",
+                      "startIcon": {
+                        "type": "Icon",
+                        "name": "Add"
+                      },
+                      "onClick": "{{handleCreateRoute}}",
+                      "children": "New Route"
+                    }
+                  ]
+                },
+                {
+                  "type": "Stack",
+                  "direction": "row",
+                  "spacing": 2,
+                  "mb": 3,
+                  "children": [
+                    {
+                      "type": "TextField",
+                      "placeholder": "Search routes...",
+                      "value": "{{searchQuery}}",
+                      "onChange": "{{handleSearchChange}}",
+                      "size": "small",
+                      "sx": { "flexGrow": 1 },
+                      "InputProps": {
+                        "startAdornment": {
+                          "type": "InputAdornment",
+                          "position": "start",
+                          "children": [
+                            {
+                              "type": "Icon",
+                              "name": "Search"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "FormControl",
+                      "size": "small",
+                      "sx": { "minWidth": 150 },
+                      "children": [
+                        {
+                          "type": "InputLabel",
+                          "children": "Access Level"
+                        },
+                        {
+                          "type": "Select",
+                          "value": "{{filterLevel}}",
+                          "onChange": "{{handleLevelFilter}}",
+                          "label": "Access Level",
+                          "children": [
+                            {
+                              "type": "MenuItem",
+                              "value": "all",
+                              "children": "All Levels"
+                            },
+                            {
+                              "type": "MenuItem",
+                              "value": "0",
+                              "children": "Public"
+                            },
+                            {
+                              "type": "MenuItem",
+                              "value": "1",
+                              "children": "User"
+                            },
+                            {
+                              "type": "MenuItem",
+                              "value": "2",
+                              "children": "Moderator"
+                            },
+                            {
+                              "type": "MenuItem",
+                              "value": "3",
+                              "children": "Admin"
+                            },
+                            {
+                              "type": "MenuItem",
+                              "value": "4",
+                              "children": "God"
+                            },
+                            {
+                              "type": "MenuItem",
+                              "value": "5",
+                              "children": "SuperGod"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Divider",
+                  "sx": { "mb": 2 }
+                },
+                {
+                  "type": "ComponentRef",
+                  "ref": "route_list",
+                  "props": {
+                    "routes": "{{filteredRoutes}}",
+                    "onEdit": "{{handleEditRoute}}",
+                    "onDelete": "{{handleDeleteRoute}}",
+                    "onPreview": "{{handlePreviewRoute}}"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "condition": "{{editingRoute}}",
+              "then": {
+                "type": "ComponentRef",
+                "ref": "route_editor",
+                "props": {
+                  "route": "{{editingRoute}}",
+                  "isNew": "{{isNewRoute}}",
+                  "onSave": "{{handleSaveRoute}}",
+                  "onClose": "{{handleCloseEditor}}"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "route_list",
+      "name": "RouteList",
+      "description": "Table view of configured routes",
+      "props": [
+        {
+          "name": "routes",
+          "type": "array",
+          "required": true,
+          "description": "List of routes to display"
+        },
+        {
+          "name": "onEdit",
+          "type": "function",
+          "required": false
+        },
+        {
+          "name": "onDelete",
+          "type": "function",
+          "required": false
+        },
+        {
+          "name": "onPreview",
+          "type": "function",
+          "required": false
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "TableContainer",
+          "component": "Paper",
+          "variant": "outlined",
+          "children": [
+            {
+              "type": "Table",
+              "size": "small",
+              "children": [
+                {
+                  "type": "TableHead",
+                  "children": [
+                    {
+                      "type": "TableRow",
+                      "children": [
+                        {
+                          "type": "TableCell",
+                          "children": "Path"
+                        },
+                        {
+                          "type": "TableCell",
+                          "children": "Title"
+                        },
+                        {
+                          "type": "TableCell",
+                          "children": "Access Level"
+                        },
+                        {
+                          "type": "TableCell",
+                          "children": "Auth Required"
+                        },
+                        {
+                          "type": "TableCell",
+                          "children": "Status"
+                        },
+                        {
+                          "type": "TableCell",
+                          "align": "right",
+                          "children": "Actions"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "TableBody",
+                  "children": [
+                    {
+                      "type": "each",
+                      "items": "{{routes}}",
+                      "as": "route",
+                      "render": {
+                        "type": "TableRow",
+                        "hover": true,
+                        "children": [
+                          {
+                            "type": "TableCell",
+                            "children": [
+                              {
+                                "type": "Typography",
+                                "variant": "body2",
+                                "fontFamily": "monospace",
+                                "children": "{{route.path}}"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "TableCell",
+                            "children": "{{route.title}}"
+                          },
+                          {
+                            "type": "TableCell",
+                            "children": [
+                              {
+                                "type": "Chip",
+                                "label": "{{route.accessLevelName}}",
+                                "size": "small",
+                                "color": "{{route.accessLevel >= 4 ? 'error' : route.accessLevel >= 2 ? 'warning' : 'default'}}"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "TableCell",
+                            "children": [
+                              {
+                                "type": "conditional",
+                                "condition": "{{route.requireAuth}}",
+                                "then": {
+                                  "type": "Icon",
+                                  "name": "Lock",
+                                  "color": "action",
+                                  "fontSize": "small"
+                                },
+                                "else": {
+                                  "type": "Icon",
+                                  "name": "LockOpen",
+                                  "color": "disabled",
+                                  "fontSize": "small"
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "type": "TableCell",
+                            "children": [
+                              {
+                                "type": "Chip",
+                                "label": "{{route.enabled ? 'Active' : 'Inactive'}}",
+                                "size": "small",
+                                "color": "{{route.enabled ? 'success' : 'default'}}"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "TableCell",
+                            "align": "right",
+                            "children": [
+                              {
+                                "type": "Stack",
+                                "direction": "row",
+                                "spacing": 0.5,
+                                "justifyContent": "flex-end",
+                                "children": [
+                                  {
+                                    "type": "IconButton",
+                                    "size": "small",
+                                    "onClick": "{{() => onPreview(route)}}",
+                                    "children": [
+                                      {
+                                        "type": "Icon",
+                                        "name": "Visibility",
+                                        "fontSize": "small"
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "type": "IconButton",
+                                    "size": "small",
+                                    "onClick": "{{() => onEdit(route)}}",
+                                    "children": [
+                                      {
+                                        "type": "Icon",
+                                        "name": "Edit",
+                                        "fontSize": "small"
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "type": "IconButton",
+                                    "size": "small",
+                                    "color": "error",
+                                    "onClick": "{{() => onDelete(route)}}",
+                                    "children": [
+                                      {
+                                        "type": "Icon",
+                                        "name": "Delete",
+                                        "fontSize": "small"
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "route_editor",
+      "name": "RouteEditor",
+      "description": "Dialog for creating/editing routes",
+      "props": [
+        {
+          "name": "route",
+          "type": "object",
+          "required": false,
+          "description": "Route to edit (null for new)"
+        },
+        {
+          "name": "isNew",
+          "type": "boolean",
+          "required": false,
+          "default": false
+        },
+        {
+          "name": "onSave",
+          "type": "function",
+          "required": true
+        },
+        {
+          "name": "onClose",
+          "type": "function",
+          "required": true
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Dialog",
+          "open": true,
+          "onClose": "{{onClose}}",
+          "maxWidth": "sm",
+          "fullWidth": true,
+          "children": [
+            {
+              "type": "DialogTitle",
+              "children": "{{isNew ? 'Create New Route' : 'Edit Route'}}"
+            },
+            {
+              "type": "DialogContent",
+              "children": [
+                {
+                  "type": "Stack",
+                  "spacing": 3,
+                  "sx": { "mt": 1 },
+                  "children": [
+                    {
+                      "type": "TextField",
+                      "label": "Path",
+                      "value": "{{formData.path}}",
+                      "onChange": "{{handleFieldChange('path')}}",
+                      "fullWidth": true,
+                      "required": true,
+                      "placeholder": "/example/page",
+                      "helperText": "URL path for this route (e.g., /dashboard, /users/:id)"
+                    },
+                    {
+                      "type": "TextField",
+                      "label": "Title",
+                      "value": "{{formData.title}}",
+                      "onChange": "{{handleFieldChange('title')}}",
+                      "fullWidth": true,
+                      "required": true,
+                      "placeholder": "Page Title"
+                    },
+                    {
+                      "type": "TextField",
+                      "label": "Description",
+                      "value": "{{formData.description}}",
+                      "onChange": "{{handleFieldChange('description')}}",
+                      "fullWidth": true,
+                      "multiline": true,
+                      "rows": 2,
+                      "placeholder": "Brief description of this page"
+                    },
+                    {
+                      "type": "Divider"
+                    },
+                    {
+                      "type": "ComponentRef",
+                      "ref": "access_control_settings",
+                      "props": {
+                        "accessLevel": "{{formData.accessLevel}}",
+                        "requireAuth": "{{formData.requireAuth}}",
+                        "onChange": "{{handleAccessChange}}"
+                      }
+                    },
+                    {
+                      "type": "Divider"
+                    },
+                    {
+                      "type": "FormControlLabel",
+                      "control": {
+                        "type": "Switch",
+                        "checked": "{{formData.enabled}}",
+                        "onChange": "{{handleFieldChange('enabled')}}"
+                      },
+                      "label": "Route Enabled"
+                    },
+                    {
+                      "type": "TextField",
+                      "label": "Component",
+                      "value": "{{formData.component}}",
+                      "onChange": "{{handleFieldChange('component')}}",
+                      "fullWidth": true,
+                      "placeholder": "ComponentName",
+                      "helperText": "React component to render for this route"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "DialogActions",
+              "children": [
+                {
+                  "type": "Button",
+                  "onClick": "{{onClose}}",
+                  "children": "Cancel"
+                },
+                {
+                  "type": "Button",
+                  "variant": "contained",
+                  "onClick": "{{handleSave}}",
+                  "children": "{{isNew ? 'Create' : 'Save'}}"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "access_control_settings",
+      "name": "AccessControlSettings",
+      "description": "Access level and authentication settings",
+      "props": [
+        {
+          "name": "accessLevel",
+          "type": "number",
+          "required": false,
+          "default": 0
+        },
+        {
+          "name": "requireAuth",
+          "type": "boolean",
+          "required": false,
+          "default": false
+        },
+        {
+          "name": "onChange",
+          "type": "function",
+          "required": true
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "children": [
+            {
+              "type": "Typography",
+              "variant": "subtitle2",
+              "color": "textSecondary",
+              "mb": 2,
+              "children": "Access Control"
+            },
+            {
+              "type": "Stack",
+              "spacing": 2,
+              "children": [
+                {
+                  "type": "FormControl",
+                  "fullWidth": true,
+                  "children": [
+                    {
+                      "type": "InputLabel",
+                      "children": "Minimum Access Level"
+                    },
+                    {
+                      "type": "Select",
+                      "value": "{{accessLevel}}",
+                      "onChange": "{{(e) => onChange({ accessLevel: e.target.value })}}",
+                      "label": "Minimum Access Level",
+                      "children": [
+                        {
+                          "type": "MenuItem",
+                          "value": 0,
+                          "children": "Level 0 - Public"
+                        },
+                        {
+                          "type": "MenuItem",
+                          "value": 1,
+                          "children": "Level 1 - User"
+                        },
+                        {
+                          "type": "MenuItem",
+                          "value": 2,
+                          "children": "Level 2 - Moderator"
+                        },
+                        {
+                          "type": "MenuItem",
+                          "value": 3,
+                          "children": "Level 3 - Admin"
+                        },
+                        {
+                          "type": "MenuItem",
+                          "value": 4,
+                          "children": "Level 4 - God"
+                        },
+                        {
+                          "type": "MenuItem",
+                          "value": 5,
+                          "children": "Level 5 - SuperGod"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "FormControlLabel",
+                  "control": {
+                    "type": "Checkbox",
+                    "checked": "{{requireAuth}}",
+                    "onChange": "{{(e) => onChange({ requireAuth: e.target.checked })}}"
+                  },
+                  "label": "Require Authentication"
+                },
+                {
+                  "type": "Alert",
+                  "severity": "info",
+                  "sx": { "mt": 1 },
+                  "children": "{{accessLevel >= 1 ? 'Users must be logged in and have level ' + accessLevel + ' or higher to access this route.' : 'This route is publicly accessible.'}}"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "route_preview",
+      "name": "RoutePreview",
+      "description": "Preview of how a route will appear",
+      "props": [
+        {
+          "name": "route",
+          "type": "object",
+          "required": true
+        },
+        {
+          "name": "onClose",
+          "type": "function",
+          "required": true
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Dialog",
+          "open": true,
+          "onClose": "{{onClose}}",
+          "maxWidth": "sm",
+          "fullWidth": true,
+          "children": [
+            {
+              "type": "DialogTitle",
+              "children": "Route Preview"
+            },
+            {
+              "type": "DialogContent",
+              "children": [
+                {
+                  "type": "Card",
+                  "variant": "outlined",
+                  "children": [
+                    {
+                      "type": "CardContent",
+                      "children": [
+                        {
+                          "type": "Stack",
+                          "spacing": 2,
+                          "children": [
+                            {
+                              "type": "Box",
+                              "children": [
+                                {
+                                  "type": "Typography",
+                                  "variant": "caption",
+                                  "color": "textSecondary",
+                                  "children": "URL"
+                                },
+                                {
+                                  "type": "Typography",
+                                  "variant": "h6",
+                                  "fontFamily": "monospace",
+                                  "children": "{{route.path}}"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "Box",
+                              "children": [
+                                {
+                                  "type": "Typography",
+                                  "variant": "caption",
+                                  "color": "textSecondary",
+                                  "children": "Page Title"
+                                },
+                                {
+                                  "type": "Typography",
+                                  "variant": "body1",
+                                  "children": "{{route.title}}"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "Divider"
+                            },
+                            {
+                              "type": "Stack",
+                              "direction": "row",
+                              "spacing": 1,
+                              "children": [
+                                {
+                                  "type": "Chip",
+                                  "label": "Level {{route.accessLevel}}",
+                                  "size": "small"
+                                },
+                                {
+                                  "type": "conditional",
+                                  "condition": "{{route.requireAuth}}",
+                                  "then": {
+                                    "type": "Chip",
+                                    "label": "Auth Required",
+                                    "size": "small",
+                                    "icon": {
+                                      "type": "Icon",
+                                      "name": "Lock"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "Chip",
+                                  "label": "{{route.enabled ? 'Active' : 'Inactive'}}",
+                                  "size": "small",
+                                  "color": "{{route.enabled ? 'success' : 'default'}}"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "DialogActions",
+              "children": [
+                {
+                  "type": "Button",
+                  "onClick": "{{onClose}}",
+                  "children": "Close"
+                },
+                {
+                  "type": "Button",
+                  "variant": "contained",
+                  "href": "{{route.path}}",
+                  "target": "_blank",
+                  "children": "Open in New Tab"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

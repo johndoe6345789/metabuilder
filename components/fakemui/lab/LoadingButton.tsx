@@ -13,6 +13,8 @@ export interface LoadingButtonProps extends React.ButtonHTMLAttributes<HTMLButto
   color?: 'primary' | 'secondary' | 'success' | 'error' | 'info' | 'warning'
   size?: 'small' | 'medium' | 'large'
   fullWidth?: boolean
+  /** Test ID for automated testing */
+  testId?: string
 }
 
 /**
@@ -32,6 +34,7 @@ export const LoadingButton = forwardRef<HTMLButtonElement, LoadingButtonProps>(f
     size = 'medium',
     fullWidth = false,
     className,
+    testId,
     ...props
   },
   ref
@@ -98,6 +101,8 @@ export const LoadingButton = forwardRef<HTMLButtonElement, LoadingButtonProps>(f
         }
       )}
       disabled={isDisabled}
+      aria-busy={loading}
+      data-testid={testId}
       {...props}
     >
       {renderContent()}

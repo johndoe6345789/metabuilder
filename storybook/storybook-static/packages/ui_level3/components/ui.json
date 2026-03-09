@@ -1,0 +1,452 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "ui_level3",
+  "description": "Moderator panel components for content moderation and user management",
+  "components": [
+    {
+      "id": "level3_layout",
+      "name": "Level3Layout",
+      "description": "Main moderator panel layout with header, stats, and tabbed content",
+      "props": [
+        {
+          "name": "user",
+          "type": "object",
+          "required": true,
+          "description": "Current user context with username and level"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "min-h-screen bg-background",
+          "children": [
+            {
+              "type": "AppHeader",
+              "children": [
+                {
+                  "type": "Toolbar",
+                  "children": [
+                    {
+                      "type": "Typography",
+                      "variant": "h6",
+                      "children": "Level 3 - Moderator Panel"
+                    },
+                    {
+                      "type": "Badge",
+                      "children": "Mod"
+                    },
+                    {
+                      "type": "Box",
+                      "sx": { "flexGrow": 1 }
+                    },
+                    {
+                      "type": "Typography",
+                      "variant": "body2",
+                      "children": "{{user.username}}"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Container",
+              "maxWidth": "xl",
+              "sx": { "py": 4 },
+              "children": [
+                {
+                  "type": "Stack",
+                  "spacing": 4,
+                  "children": [
+                    {
+                      "type": "Stack",
+                      "spacing": 1,
+                      "children": [
+                        {
+                          "type": "Typography",
+                          "variant": "overline",
+                          "children": "Level 3"
+                        },
+                        {
+                          "type": "Typography",
+                          "variant": "h2",
+                          "children": "Data Management"
+                        },
+                        {
+                          "type": "Typography",
+                          "variant": "body1",
+                          "color": "text.secondary",
+                          "children": "Manage users and content."
+                        }
+                      ]
+                    },
+                    {
+                      "type": "component",
+                      "ref": "level3_stats"
+                    },
+                    {
+                      "type": "component",
+                      "ref": "level3_tabs"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "level3_stats",
+      "name": "Level3Stats",
+      "description": "Statistics grid showing users, comments, and flagged content counts",
+      "props": [],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Grid",
+          "container": true,
+          "spacing": 2,
+          "children": [
+            {
+              "type": "Grid",
+              "item": true,
+              "xs": 12,
+              "md": 4,
+              "children": [
+                {
+                  "type": "Card",
+                  "children": [
+                    {
+                      "type": "CardHeader",
+                      "title": "Users",
+                      "titleTypographyProps": { "variant": "caption" }
+                    },
+                    {
+                      "type": "CardContent",
+                      "children": [
+                        {
+                          "type": "Typography",
+                          "variant": "h4",
+                          "children": "128"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Grid",
+              "item": true,
+              "xs": 12,
+              "md": 4,
+              "children": [
+                {
+                  "type": "Card",
+                  "children": [
+                    {
+                      "type": "CardHeader",
+                      "title": "Comments",
+                      "titleTypographyProps": { "variant": "caption" }
+                    },
+                    {
+                      "type": "CardContent",
+                      "children": [
+                        {
+                          "type": "Typography",
+                          "variant": "h4",
+                          "children": "1,024"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Grid",
+              "item": true,
+              "xs": 12,
+              "md": 4,
+              "children": [
+                {
+                  "type": "Card",
+                  "children": [
+                    {
+                      "type": "CardHeader",
+                      "title": "Flagged",
+                      "titleTypographyProps": { "variant": "caption" }
+                    },
+                    {
+                      "type": "CardContent",
+                      "children": [
+                        {
+                          "type": "Typography",
+                          "variant": "h4",
+                          "color": "error",
+                          "children": "12"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "level3_tabs",
+      "name": "Level3Tabs",
+      "description": "Tabbed navigation for users, moderation queue, and reports",
+      "props": [],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "children": [
+            {
+              "type": "Tabs",
+              "value": 0,
+              "children": [
+                {
+                  "type": "Tab",
+                  "label": "Users"
+                },
+                {
+                  "type": "Tab",
+                  "label": "Moderation Queue"
+                },
+                {
+                  "type": "Tab",
+                  "label": "Reports"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "users_panel",
+      "name": "UsersPanel",
+      "description": "User management panel with table display and actions",
+      "props": [
+        {
+          "name": "users",
+          "type": "array",
+          "required": false,
+          "description": "Array of user objects to display",
+          "default": []
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "children": [
+            {
+              "type": "CardHeader",
+              "title": "User Management",
+              "subheader": "View and moderate user accounts."
+            },
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "Table",
+                  "children": [
+                    {
+                      "type": "TableHead",
+                      "children": [
+                        {
+                          "type": "TableRow",
+                          "children": [
+                            { "type": "TableCell", "children": "Username" },
+                            { "type": "TableCell", "children": "Email" },
+                            { "type": "TableCell", "children": "Level" },
+                            { "type": "TableCell", "children": "Status" }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "TableBody",
+                      "children": [
+                        {
+                          "type": "TableRow",
+                          "children": [
+                            { "type": "TableCell", "children": "john_doe" },
+                            { "type": "TableCell", "children": "john@example.com" },
+                            { "type": "TableCell", "children": "1" },
+                            { "type": "TableCell", "children": "Active" }
+                          ]
+                        },
+                        {
+                          "type": "TableRow",
+                          "children": [
+                            { "type": "TableCell", "children": "jane_smith" },
+                            { "type": "TableCell", "children": "jane@example.com" },
+                            { "type": "TableCell", "children": "2" },
+                            { "type": "TableCell", "children": "Active" }
+                          ]
+                        },
+                        {
+                          "type": "TableRow",
+                          "children": [
+                            { "type": "TableCell", "children": "spam_user" },
+                            { "type": "TableCell", "children": "spam@bad.com" },
+                            { "type": "TableCell", "children": "1" },
+                            {
+                              "type": "TableCell",
+                              "children": [
+                                {
+                                  "type": "Typography",
+                                  "color": "error",
+                                  "children": "Suspended"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "moderation_queue",
+      "name": "ModerationQueue",
+      "description": "Queue panel showing flagged content awaiting review",
+      "props": [
+        {
+          "name": "items",
+          "type": "array",
+          "required": false,
+          "description": "Array of flagged items for moderation"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "children": [
+            {
+              "type": "CardHeader",
+              "title": "Moderation Queue",
+              "subheader": "Review flagged content and take action."
+            },
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "List",
+                  "children": [
+                    {
+                      "type": "ListItem",
+                      "children": [
+                        {
+                          "type": "ListItemIcon",
+                          "children": [
+                            { "type": "Icon", "name": "Warning", "color": "warning" }
+                          ]
+                        },
+                        {
+                          "type": "ListItemText",
+                          "primary": "Inappropriate comment on post #1234",
+                          "secondary": "Reported 2 hours ago"
+                        },
+                        {
+                          "type": "Button",
+                          "variant": "outlined",
+                          "size": "small",
+                          "children": "Review"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ListItem",
+                      "children": [
+                        {
+                          "type": "ListItemIcon",
+                          "children": [
+                            { "type": "Icon", "name": "Warning", "color": "warning" }
+                          ]
+                        },
+                        {
+                          "type": "ListItemText",
+                          "primary": "Spam content detected",
+                          "secondary": "Reported 5 hours ago"
+                        },
+                        {
+                          "type": "Button",
+                          "variant": "outlined",
+                          "size": "small",
+                          "children": "Review"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "reports_panel",
+      "name": "ReportsPanel",
+      "description": "Panel displaying user-submitted reports",
+      "props": [
+        {
+          "name": "reports",
+          "type": "array",
+          "required": false,
+          "description": "Array of user reports"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "children": [
+            {
+              "type": "CardHeader",
+              "title": "Reports",
+              "subheader": "User-submitted reports for review."
+            },
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "Alert",
+                  "severity": "info",
+                  "children": "No pending reports. Great job keeping the community clean!"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "exports": {
+    "components": [
+      "Level3Layout",
+      "Level3Stats",
+      "Level3Tabs",
+      "UsersPanel",
+      "ModerationQueue",
+      "ReportsPanel"
+    ]
+  }
+}

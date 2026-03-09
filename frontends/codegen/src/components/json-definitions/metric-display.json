@@ -1,0 +1,96 @@
+{
+  "id": "metric-display-container",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": "className",
+      "transform": "const customClass = data || ''; return `flex flex-col gap-1 ${customClass}`.trim()"
+    }
+  },
+  "children": [
+    {
+      "id": "metric-display-label",
+      "type": "div",
+      "bindings": {
+        "className": {
+          "source": null,
+          "transform": "'flex items-center gap-2 text-sm text-muted-foreground'"
+        }
+      },
+      "children": [
+        {
+          "id": "metric-display-icon",
+          "type": "span",
+          "bindings": {
+            "className": {
+              "source": null,
+              "transform": "'text-muted-foreground'"
+            },
+            "children": {
+              "source": "icon",
+              "transform": "data"
+            },
+            "_if": {
+              "source": "icon",
+              "transform": "!!data"
+            }
+          }
+        },
+        {
+          "id": "metric-display-label-text",
+          "type": "span",
+          "bindings": {
+            "children": {
+              "source": "label",
+              "transform": "data"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "metric-display-value-container",
+      "type": "div",
+      "bindings": {
+        "className": {
+          "source": null,
+          "transform": "'flex items-baseline gap-2'"
+        }
+      },
+      "children": [
+        {
+          "id": "metric-display-value",
+          "type": "span",
+          "bindings": {
+            "className": {
+              "source": "variant",
+              "transform": "const variant = data || 'default'; const variantClasses = { default: 'text-foreground', primary: 'text-primary', accent: 'text-accent' }; return `text-2xl font-bold ${variantClasses[variant]}`.trim()"
+            },
+            "children": {
+              "source": "value",
+              "transform": "data"
+            }
+          }
+        },
+        {
+          "id": "metric-display-trend",
+          "type": "span",
+          "bindings": {
+            "className": {
+              "source": "trend",
+              "transform": "const trend = data; const direction = trend?.direction; const trendClass = direction === 'up' ? 'text-green-600 dark:text-green-400' : 'text-destructive'; return `flex items-center gap-0.5 text-xs font-medium ${trendClass}`.trim()"
+            },
+            "children": {
+              "source": "trend",
+              "transform": "const trend = data; const value = Math.abs(trend?.value || 0); const icon = trend?.direction === 'up' ? '↑' : '↓'; return `${icon} ${value}%`"
+            },
+            "_if": {
+              "source": "trend",
+              "transform": "!!data"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

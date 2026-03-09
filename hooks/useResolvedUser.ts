@@ -5,7 +5,7 @@
  * Use this hook when you need to check user permissions or identity.
  */
 
-import { useAuth } from '../useAuth'
+import { useAuth } from './use-auth'
 
 export interface ResolvedUserState {
   userId?: string

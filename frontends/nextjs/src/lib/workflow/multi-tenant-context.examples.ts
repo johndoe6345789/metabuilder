@@ -11,19 +11,56 @@
  * - Comprehensive error handling
  */
 
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 import { v4 as uuidv4 } from 'uuid'
 import {
   MultiTenantContextBuilder,
-  createContextFromRequest,
-  canUserAccessWorkflow,
   sanitizeContextForLogging,
   type RequestContext,
   type ExtendedWorkflowContext,
 } from './multi-tenant-context'
-import { getWorkflowExecutionEngine } from './workflow-service'
-import { db } from '@/lib/db-client'
+import WorkflowService from './workflow-service'
+import { db, type EntityOps } from '@/lib/db-client'
 import type { WorkflowDefinition } from '@metabuilder/workflow'
+
+/**
+ * User info extracted from JWT or session
+ */
+interface AuthenticatedUser {
+  id: string
+  email: string
+  tenantId: string
+  level: number
+  sessionId?: string
+}
+
+/**
+ * Returns the workflow execution engine (WorkflowService)
+ */
+function getWorkflowExecutionEngine() {
+  return WorkflowService
+}
+
+/**
+ * Helper to find one entity by filter criteria using DBAL list + filter
+ */
+async function findOneEntity(
+  ops: EntityOps,
+  filter: Record<string, unknown>
+): Promise<Record<string, unknown> | null> {
+  const result = await ops.list({ filter, limit: 1 })
+  return result.data[0] ?? null
+}
+
+/**
+ * Extract client IP from NextRequest headers
+ */
+function getClientIp(req: NextRequest): string | undefined {
+  return req.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
+    ?? req.headers.get('x-real-ip')
+    ?? undefined
+}
 
 /**
  * ============================================================================
@@ -58,10 +95,10 @@ export async function manualWorkflowExecution(req: NextRequest) {
     }
 
     // 3. Load workflow (DBAL ensures tenant filtering)
-    const workflow = await db.workflows.findOne({
+    const workflow = await findOneEntity(db.workflows, {
       id: workflowId,
       tenantId: user.tenantId,
-    })
+    }) as (Record<string, unknown> & WorkflowDefinition) | null
 
     if (!workflow) {
       return NextResponse.json(
@@ -78,7 +115,7 @@ export async function manualWorkflowExecution(req: NextRequest) {
       userId: user.id,
       userEmail: user.email,
       userLevel: user.level,
-      ipAddress: req.ip,
+      ipAddress: getClientIp(req),
       userAgent: req.headers.get('user-agent') || '',
       sessionId: user.sessionId,
     }
@@ -101,7 +138,9 @@ export async function manualWorkflowExecution(req: NextRequest) {
 
     // 5. Execute workflow
     const engine = getWorkflowExecutionEngine()
-    const record = await engine.executeWorkflow(workflow, context)
+    const record = await engine.executeWorkflow(
+      workflow.id, user.tenantId, context as unknown as Record<string, unknown>
+    )
 
     console.log(`[${executionId}] Execution completed: ${record.status}`)
 
@@ -168,7 +207,8 @@ export async function handleWebhookTrigger(req: NextRequest) {
     console.log(`[${executionId}] Valid webhook signature: ${webhookId}`)
 
     // 2. Load workflow from webhook metadata
-    const webhook = await db.webhooks.findOne({
+    const webhookOps = db.entity('Webhook')
+    const webhook = await findOneEntity(webhookOps, {
       id: webhookId,
       tenantId,
     })
@@ -180,10 +220,10 @@ export async function handleWebhookTrigger(req: NextRequest) {
       )
     }
 
-    const workflow = await db.workflows.findOne({
-      id: webhook.workflowId,
+    const workflow = await findOneEntity(db.workflows, {
+      id: webhook.workflowId as string,
       tenantId,
-    })
+    }) as (Record<string, unknown> & WorkflowDefinition) | null
 
     if (!workflow) {
       return NextResponse.json(
@@ -198,7 +238,7 @@ export async function handleWebhookTrigger(req: NextRequest) {
       userId: 'webhook-system',
       userEmail: 'webhook@metabuilder.local',
       userLevel: 3, // Treat webhooks as admin for security
-      ipAddress: req.ip,
+      ipAddress: getClientIp(req),
       userAgent: req.headers.get('user-agent') || 'webhook-client',
     }
 
@@ -239,8 +279,10 @@ export async function handleWebhookTrigger(req: NextRequest) {
 
     // 4. Execute asynchronously (don't wait for response)
     const engine = getWorkflowExecutionEngine()
-    engine.executeWorkflow(workflow, context).catch((error) => {
-      console.error(`[${executionId}] Webhook execution failed:`, error)
+    engine.executeWorkflow(
+      workflow.id, tenantId, context as unknown as Record<string, unknown>
+    ).catch((err: unknown) => {
+      console.error(`[${executionId}] Webhook execution failed:`, err)
     })
 
     // 5. Return immediately
@@ -289,6 +331,7 @@ export async function executeScheduledWorkflow(
 
     // 2. Get schedule configuration
     const trigger = workflow.triggers?.find((t) => t.kind === 'schedule')
+    const cronExpression = trigger?.schedule ?? '0 */6 * * *'
 
     const context = await builder.build(
       {
@@ -303,7 +346,7 @@ export async function executeScheduledWorkflow(
         kind: 'schedule',
         enabled: true,
         metadata: {
-          cronExpression: trigger?.schedule || '0 */6 * * *',
+          cronExpression,
         },
       }
     )
@@ -312,12 +355,15 @@ export async function executeScheduledWorkflow(
 
     // 3. Execute workflow
     const engine = getWorkflowExecutionEngine()
-    const record = await engine.executeWorkflow(workflow, context)
+    const record = await engine.executeWorkflow(
+      workflow.id, tenantId, context as unknown as Record<string, unknown>
+    )
 
     console.log(`[${executionId}] Scheduled execution completed: ${record.status}`)
 
     // 4. Log to database
-    await db.executionLogs.create({
+    const executionLogOps = db.entity('ExecutionLog')
+    await executionLogOps.create({
       executionId: record.id,
       tenantId,
       workflowId: workflow.id,
@@ -332,7 +378,8 @@ export async function executeScheduledWorkflow(
     console.error(`[${executionId}] Scheduled execution failed:`, error)
 
     // Log failure
-    await db.executionLogs.create({
+    const executionLogOps = db.entity('ExecutionLog')
+    await executionLogOps.create({
       executionId,
       tenantId,
       workflowId: workflow.id,
@@ -363,10 +410,10 @@ export async function validateWorkflowExecution(req: NextRequest) {
     }
 
     const { workflowId } = await req.json()
-    const workflow = await db.workflows.findOne({
+    const workflow = await findOneEntity(db.workflows, {
       id: workflowId,
       tenantId: user.tenantId,
-    })
+    }) as (Record<string, unknown> & WorkflowDefinition) | null
 
     if (!workflow) {
       return NextResponse.json({ error: 'Workflow not found' }, { status: 404 })
@@ -436,10 +483,10 @@ export async function adminExecuteWorkflow(req: NextRequest) {
     const { workflowId, targetTenantId } = await req.json()
 
     // Load workflow from target tenant
-    const workflow = await db.workflows.findOne({
+    const workflow = await findOneEntity(db.workflows, {
       id: workflowId,
       tenantId: targetTenantId,
-    })
+    }) as (Record<string, unknown> & WorkflowDefinition) | null
 
     if (!workflow) {
       return NextResponse.json({ error: 'Workflow not found' }, { status: 404 })
@@ -471,7 +518,9 @@ export async function adminExecuteWorkflow(req: NextRequest) {
     )
 
     const engine = getWorkflowExecutionEngine()
-    const record = await engine.executeWorkflow(workflow, context)
+    const record = await engine.executeWorkflow(
+      workflow.id, targetTenantId, context as unknown as Record<string, unknown>
+    )
 
     return NextResponse.json({
       success: true,
@@ -578,7 +627,9 @@ export async function retryFailedWorkflowExecution(
 
     // Execute with new context
     const engine = getWorkflowExecutionEngine()
-    const record = await engine.executeWorkflow(workflow, newContext)
+    const record = await engine.executeWorkflow(
+      workflow.id, originalContext.tenantId, newContext as unknown as Record<string, unknown>
+    )
 
     console.log(`[${retryId}] Retry execution completed: ${record.status}`)
 
@@ -598,7 +649,7 @@ export async function retryFailedWorkflowExecution(
 /**
  * Mock implementation - replace with actual auth service
  */
-async function verifyUserAuth(req: NextRequest) {
+async function verifyUserAuth(req: NextRequest): Promise<AuthenticatedUser | null> {
   // In production, parse JWT and get user details
   const authHeader = req.headers.get('authorization')
   if (!authHeader?.startsWith('Bearer ')) {
@@ -617,9 +668,9 @@ async function verifyUserAuth(req: NextRequest) {
  * Mock implementation - replace with actual webhook verification
  */
 async function verifyWebhookSignature(
-  webhookId: string,
-  signature: string,
-  body: string
+  _webhookId: string,
+  _signature: string,
+  _body: string
 ): Promise<boolean> {
   // In production, verify HMAC signature
   // const secret = await getWebhookSecret(webhookId)

@@ -1,0 +1,2124 @@
+
+> codesnippet@0.1.0 test
+> jest --testPathPattern=python-runner --coverage
+
+   Using tsconfig file: ./tsconfig.json
+PASS src/components/features/python-runner/TerminalHeader.test.tsx
+FAIL src/components/features/python-runner/TerminalInput.test.tsx
+  ● Test suite failed to run
+
+      [31mx[0m Unexpected token `TerminalInput`. Expected jsx identifier
+         ,-[[36;1;4m/Users/rmac/Documents/GitHub/snippet-pastebin/src/components/features/python-runner/TerminalInput.test.tsx[0m:376:1]
+     [2m373[0m |       const user = userEvent.setup()
+     [2m374[0m | 
+     [2m375[0m |       render(
+     [2m376[0m |         <TerminalInput
+         : [35;1m         ^^^^^^^^^^^^^[0m
+     [2m377[0m |           {...defaultProps}
+     [2m378[0m |           waitingForInput={true}
+     [2m379[0m |           onInputChange={onInputChange}
+         `----
+
+
+    Caused by:
+        Syntax Error
+
+      at Object.transformSync (node_modules/next/dist/build/swc/index.js:904:33)
+      at transformSync (node_modules/next/dist/build/swc/index.js:973:21)
+      at Object.process (node_modules/next/dist/build/swc/jest-transformer.js:65:45)
+      at ScriptTransformer.transformSource (node_modules/@jest/transform/build/ScriptTransformer.js:545:31)
+      at ScriptTransformer._transformAndBuildScript (node_modules/@jest/transform/build/ScriptTransformer.js:674:40)
+      at ScriptTransformer.transform (node_modules/@jest/transform/build/ScriptTransformer.js:726:19)
+
+FAIL src/components/features/python-runner/PythonTerminal.test.tsx
+  ● PythonTerminal › Rendering › should render the terminal container with correct test id
+
+    TypeError: terminalEndRef.current?.scrollIntoView is not a function
+
+      26 |
+      27 |   useEffect(() => {
+    > 28 |     terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+         |                             ^
+      29 |   }, [lines])
+      30 |
+      31 |   return (
+
+      at src/components/features/python-runner/PythonTerminal.tsx:28:29
+      at Object.react_stack_bottom_frame (node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at commitHookEffectListMount (node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+      at commitHookPassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+      at flushPassiveEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:17923:15
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at Object.<anonymous>.process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (src/components/features/python-runner/PythonTerminal.test.tsx:31:13)
+
+  ● PythonTerminal › Rendering › should render terminal header
+
+    TypeError: terminalEndRef.current?.scrollIntoView is not a function
+
+      26 |
+      27 |   useEffect(() => {
+    > 28 |     terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+         |                             ^
+      29 |   }, [lines])
+      30 |
+      31 |   return (
+
+      at src/components/features/python-runner/PythonTerminal.tsx:28:29
+      at Object.react_stack_bottom_frame (node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at commitHookEffectListMount (node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+      at commitHookPassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+      at flushPassiveEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:17923:15
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at Object.<anonymous>.process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (src/components/features/python-runner/PythonTerminal.test.tsx:36:13)
+
+  ● PythonTerminal › Rendering › should render terminal output area
+
+    TypeError: terminalEndRef.current?.scrollIntoView is not a function
+
+      26 |
+      27 |   useEffect(() => {
+    > 28 |     terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+         |                             ^
+      29 |   }, [lines])
+      30 |
+      31 |   return (
+
+      at src/components/features/python-runner/PythonTerminal.tsx:28:29
+      at Object.react_stack_bottom_frame (node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at commitHookEffectListMount (node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+      at commitHookPassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+      at flushPassiveEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:17923:15
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at Object.<anonymous>.process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (src/components/features/python-runner/PythonTerminal.test.tsx:41:13)
+
+  ● PythonTerminal › Rendering › should have correct aria-label on output area
+
+    TypeError: terminalEndRef.current?.scrollIntoView is not a function
+
+      26 |
+      27 |   useEffect(() => {
+    > 28 |     terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+         |                             ^
+      29 |   }, [lines])
+      30 |
+      31 |   return (
+
+      at src/components/features/python-runner/PythonTerminal.tsx:28:29
+      at Object.react_stack_bottom_frame (node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at commitHookEffectListMount (node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+      at commitHookPassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+      at flushPassiveEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:17923:15
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at Object.<anonymous>.process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (src/components/features/python-runner/PythonTerminal.test.tsx:46:13)
+
+  ● PythonTerminal › Rendering › should have region role on output area for accessibility
+
+    TypeError: terminalEndRef.current?.scrollIntoView is not a function
+
+      26 |
+      27 |   useEffect(() => {
+    > 28 |     terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+         |                             ^
+      29 |   }, [lines])
+      30 |
+      31 |   return (
+
+      at src/components/features/python-runner/PythonTerminal.tsx:28:29
+      at Object.react_stack_bottom_frame (node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at commitHookEffectListMount (node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+      at commitHookPassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+      at flushPassiveEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:17923:15
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at Object.<anonymous>.process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (src/components/features/python-runner/PythonTerminal.test.tsx:52:13)
+
+  ● PythonTerminal › Rendering › should display empty state when no lines
+
+    TypeError: terminalEndRef.current?.scrollIntoView is not a function
+
+      26 |
+      27 |   useEffect(() => {
+    > 28 |     terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+         |                             ^
+      29 |   }, [lines])
+      30 |
+      31 |   return (
+
+      at src/components/features/python-runner/PythonTerminal.tsx:28:29
+      at Object.react_stack_bottom_frame (node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at commitHookEffectListMount (node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+      at commitHookPassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+      at flushPassiveEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:17923:15
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at Object.<anonymous>.process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (src/components/features/python-runner/PythonTerminal.test.tsx:58:13)
+
+  ● PythonTerminal › Rendering › should display lines when they exist
+
+    TypeError: terminalEndRef.current?.scrollIntoView is not a function
+
+      26 |
+      27 |   useEffect(() => {
+    > 28 |     terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+         |                             ^
+      29 |   }, [lines])
+      30 |
+      31 |   return (
+
+      at src/components/features/python-runner/PythonTerminal.tsx:28:29
+      at Object.react_stack_bottom_frame (node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at commitHookEffectListMount (node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+      at commitHookPassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+      at flushPassiveEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:17923:15
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at Object.<anonymous>.process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (src/components/features/python-runner/PythonTerminal.test.tsx:71:13)
+
+  ● PythonTerminal › Header Integration › should pass isRunning to TerminalHeader
+
+    TypeError: terminalEndRef.current?.scrollIntoView is not a function
+
+      26 |
+      27 |   useEffect(() => {
+    > 28 |     terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+         |                             ^
+      29 |   }, [lines])
+      30 |
+      31 |   return (
+
+      at src/components/features/python-runner/PythonTerminal.tsx:28:29
+      at Object.react_stack_bottom_frame (node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at commitHookEffectListMount (node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+      at commitHookPassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+      at flushPassiveEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:17923:15
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at Object.<anonymous>.process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (src/components/features/python-runner/PythonTerminal.test.tsx:83:13)
+
+  ● PythonTerminal › Header Integration › should pass isInitializing to TerminalHeader
+
+    TypeError: terminalEndRef.current?.scrollIntoView is not a function
+
+      26 |
+      27 |   useEffect(() => {
+    > 28 |     terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+         |                             ^
+      29 |   }, [lines])
+      30 |
+      31 |   return (
+
+      at src/components/features/python-runner/PythonTerminal.tsx:28:29
+      at Object.react_stack_bottom_frame (node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at commitHookEffectListMount (node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+      at commitHookPassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+      at flushPassiveEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:17923:15
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at Object.<anonymous>.process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (src/components/features/python-runner/PythonTerminal.test.tsx:94:13)
+
+  ● PythonTerminal › Header Integration › should pass waitingForInput to TerminalHeader
+
+    TypeError: terminalEndRef.current?.scrollIntoView is not a function
+
+      26 |
+      27 |   useEffect(() => {
+    > 28 |     terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+         |                             ^
+      29 |   }, [lines])
+      30 |
+      31 |   return (
+
+      at src/components/features/python-runner/PythonTerminal.tsx:28:29
+      at Object.react_stack_bottom_frame (node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at commitHookEffectListMount (node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+      at commitHookPassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+      at flushPassiveEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:17923:15
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at Object.<anonymous>.process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (src/components/features/python-runner/PythonTerminal.test.tsx:105:13)
+
+  ● PythonTerminal › Header Integration › should call handleRun with code when run button is clicked
+
+    TypeError: terminalEndRef.current?.scrollIntoView is not a function
+
+      26 |
+      27 |   useEffect(() => {
+    > 28 |     terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+         |                             ^
+      29 |   }, [lines])
+      30 |
+      31 |   return (
+
+      at src/components/features/python-runner/PythonTerminal.tsx:28:29
+      at Object.react_stack_bottom_frame (node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at commitHookEffectListMount (node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+      at commitHookPassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+      at flushPassiveEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:17923:15
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at Object.<anonymous>.process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (src/components/features/python-runner/PythonTerminal.test.tsx:120:13)
+
+  ● PythonTerminal › Input Handling › should show input form when waitingForInput is true
+
+    TypeError: terminalEndRef.current?.scrollIntoView is not a function
+
+      26 |
+      27 |   useEffect(() => {
+    > 28 |     terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+         |                             ^
+      29 |   }, [lines])
+      30 |
+      31 |   return (
+
+      at src/components/features/python-runner/PythonTerminal.tsx:28:29
+      at Object.react_stack_bottom_frame (node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at commitHookEffectListMount (node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+      at commitHookPassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+      at flushPassiveEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:17923:15
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at Object.<anonymous>.process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (src/components/features/python-runner/PythonTerminal.test.tsx:134:13)
+
+  ● PythonTerminal › Input Handling › should hide input form when waitingForInput is false
+
+    TypeError: terminalEndRef.current?.scrollIntoView is not a function
+
+      26 |
+      27 |   useEffect(() => {
+    > 28 |     terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+         |                             ^
+      29 |   }, [lines])
+      30 |
+      31 |   return (
+
+      at src/components/features/python-runner/PythonTerminal.tsx:28:29
+      at Object.react_stack_bottom_frame (node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at commitHookEffectListMount (node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+      at commitHookPassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+      at flushPassiveEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:17923:15
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at Object.<anonymous>.process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (src/components/features/python-runner/PythonTerminal.test.tsx:144:13)
+
+  ● PythonTerminal › Input Handling › should pass inputValue to TerminalInput
+
+    TypeError: terminalEndRef.current?.scrollIntoView is not a function
+
+      26 |
+      27 |   useEffect(() => {
+    > 28 |     terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+         |                             ^
+      29 |   }, [lines])
+      30 |
+      31 |   return (
+
+      at src/components/features/python-runner/PythonTerminal.tsx:28:29
+      at Object.react_stack_bottom_frame (node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at commitHookEffectListMount (node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+      at commitHookPassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+      at flushPassiveEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:17923:15
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at Object.<anonymous>.process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (src/components/features/python-runner/PythonTerminal.test.tsx:155:13)
+
+  ● PythonTerminal › Input Handling › should call setInputValue when input changes
+
+    TypeError: terminalEndRef.current?.scrollIntoView is not a function
+
+      26 |
+      27 |   useEffect(() => {
+    > 28 |     terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+         |                             ^
+      29 |   }, [lines])
+      30 |
+      31 |   return (
+
+      at src/components/features/python-runner/PythonTerminal.tsx:28:29
+      at Object.react_stack_bottom_frame (node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at commitHookEffectListMount (node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+      at commitHookPassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+      at flushPassiveEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:17923:15
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at Object.<anonymous>.process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (src/components/features/python-runner/PythonTerminal.test.tsx:169:13)
+
+  ● PythonTerminal › Input Handling › should call handleInputSubmit when form is submitted
+
+    TypeError: terminalEndRef.current?.scrollIntoView is not a function
+
+      26 |
+      27 |   useEffect(() => {
+    > 28 |     terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+         |                             ^
+      29 |   }, [lines])
+      30 |
+      31 |   return (
+
+      at src/components/features/python-runner/PythonTerminal.tsx:28:29
+      at Object.react_stack_bottom_frame (node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at commitHookEffectListMount (node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+      at commitHookPassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+      at flushPassiveEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:17923:15
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at Object.<anonymous>.process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (src/components/features/python-runner/PythonTerminal.test.tsx:186:13)
+
+  ● PythonTerminal › Terminal Output › should render multiple lines
+
+    TypeError: terminalEndRef.current?.scrollIntoView is not a function
+
+      26 |
+      27 |   useEffect(() => {
+    > 28 |     terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+         |                             ^
+      29 |   }, [lines])
+      30 |
+      31 |   return (
+
+      at src/components/features/python-runner/PythonTerminal.tsx:28:29
+      at Object.react_stack_bottom_frame (node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at commitHookEffectListMount (node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+      at commitHookPassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+      at flushPassiveEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:17923:15
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at Object.<anonymous>.process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (src/components/features/python-runner/PythonTerminal.test.tsx:208:13)
+
+  ● PythonTerminal › Terminal Output › should pass isRunning to TerminalOutput
+
+    TypeError: terminalEndRef.current?.scrollIntoView is not a function
+
+      26 |
+      27 |   useEffect(() => {
+    > 28 |     terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+         |                             ^
+      29 |   }, [lines])
+      30 |
+      31 |   return (
+
+      at src/components/features/python-runner/PythonTerminal.tsx:28:29
+      at Object.react_stack_bottom_frame (node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at commitHookEffectListMount (node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+      at commitHookPassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+      at flushPassiveEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:17923:15
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at Object.<anonymous>.process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (src/components/features/python-runner/PythonTerminal.test.tsx:220:13)
+
+  ● PythonTerminal › Styling and Layout › should have correct flex layout classes
+
+    TypeError: terminalEndRef.current?.scrollIntoView is not a function
+
+      26 |
+      27 |   useEffect(() => {
+    > 28 |     terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+         |                             ^
+      29 |   }, [lines])
+      30 |
+      31 |   return (
+
+      at src/components/features/python-runner/PythonTerminal.tsx:28:29
+      at Object.react_stack_bottom_frame (node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at commitHookEffectListMount (node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+      at commitHookPassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+      at flushPassiveEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:17923:15
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at Object.<anonymous>.process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (src/components/features/python-runner/PythonTerminal.test.tsx:228:13)
+
+  ● PythonTerminal › Styling and Layout › should have correct output area styling
+
+    TypeError: terminalEndRef.current?.scrollIntoView is not a function
+
+      26 |
+      27 |   useEffect(() => {
+    > 28 |     terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+         |                             ^
+      29 |   }, [lines])
+      30 |
+      31 |   return (
+
+      at src/components/features/python-runner/PythonTerminal.tsx:28:29
+      at Object.react_stack_bottom_frame (node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at commitHookEffectListMount (node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+      at commitHookPassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+      at flushPassiveEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:17923:15
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at Object.<anonymous>.process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (src/components/features/python-runner/PythonTerminal.test.tsx:234:13)
+
+  ● PythonTerminal › Edge Cases › should handle undefined code gracefully
+
+    TypeError: terminalEndRef.current?.scrollIntoView is not a function
+
+      26 |
+      27 |   useEffect(() => {
+    > 28 |     terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+         |                             ^
+      29 |   }, [lines])
+      30 |
+      31 |   return (
+
+      at src/components/features/python-runner/PythonTerminal.tsx:28:29
+      at Object.react_stack_bottom_frame (node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at commitHookEffectListMount (node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+      at commitHookPassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+      at flushPassiveEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:17923:15
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at Object.<anonymous>.process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (src/components/features/python-runner/PythonTerminal.test.tsx:242:13)
+
+  ● PythonTerminal › Edge Cases › should handle very long code strings
+
+    TypeError: terminalEndRef.current?.scrollIntoView is not a function
+
+      26 |
+      27 |   useEffect(() => {
+    > 28 |     terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+         |                             ^
+      29 |   }, [lines])
+      30 |
+      31 |   return (
+
+      at src/components/features/python-runner/PythonTerminal.tsx:28:29
+      at Object.react_stack_bottom_frame (node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at commitHookEffectListMount (node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+      at commitHookPassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+      at flushPassiveEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:17923:15
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at Object.<anonymous>.process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (src/components/features/python-runner/PythonTerminal.test.tsx:255:13)
+
+  ● PythonTerminal › Edge Cases › should handle special characters in code
+
+    TypeError: terminalEndRef.current?.scrollIntoView is not a function
+
+      26 |
+      27 |   useEffect(() => {
+    > 28 |     terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+         |                             ^
+      29 |   }, [lines])
+      30 |
+      31 |   return (
+
+      at src/components/features/python-runner/PythonTerminal.tsx:28:29
+      at Object.react_stack_bottom_frame (node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at commitHookEffectListMount (node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+      at commitHookPassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+      at flushPassiveEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:17923:15
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at Object.<anonymous>.process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (src/components/features/python-runner/PythonTerminal.test.tsx:268:13)
+
+  ● PythonTerminal › Edge Cases › should render large number of lines
+
+    TypeError: terminalEndRef.current?.scrollIntoView is not a function
+
+      26 |
+      27 |   useEffect(() => {
+    > 28 |     terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+         |                             ^
+      29 |   }, [lines])
+      30 |
+      31 |   return (
+
+      at src/components/features/python-runner/PythonTerminal.tsx:28:29
+      at Object.react_stack_bottom_frame (node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at commitHookEffectListMount (node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+      at commitHookPassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+      at flushPassiveEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:17923:15
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at Object.<anonymous>.process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (src/components/features/python-runner/PythonTerminal.test.tsx:284:13)
+
+  ● PythonTerminal › State Management › should maintain state through multiple renders
+
+    TypeError: terminalEndRef.current?.scrollIntoView is not a function
+
+      26 |
+      27 |   useEffect(() => {
+    > 28 |     terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+         |                             ^
+      29 |   }, [lines])
+      30 |
+      31 |   return (
+
+      at src/components/features/python-runner/PythonTerminal.tsx:28:29
+      at Object.react_stack_bottom_frame (node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at commitHookEffectListMount (node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+      at commitHookPassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+      at flushPassiveEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:17923:15
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at Object.<anonymous>.process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (src/components/features/python-runner/PythonTerminal.test.tsx:292:34)
+
+  ● PythonTerminal › State Management › should not call hooks multiple times unnecessarily
+
+    TypeError: terminalEndRef.current?.scrollIntoView is not a function
+
+      26 |
+      27 |   useEffect(() => {
+    > 28 |     terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+         |                             ^
+      29 |   }, [lines])
+      30 |
+      31 |   return (
+
+      at src/components/features/python-runner/PythonTerminal.tsx:28:29
+      at Object.react_stack_bottom_frame (node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at commitHookEffectListMount (node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+      at commitHookPassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+      at flushPassiveEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:17923:15
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at Object.<anonymous>.process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (src/components/features/python-runner/PythonTerminal.test.tsx:300:34)
+
+  ● PythonTerminal › Accessibility › should have semantic HTML structure
+
+    TypeError: terminalEndRef.current?.scrollIntoView is not a function
+
+      26 |
+      27 |   useEffect(() => {
+    > 28 |     terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+         |                             ^
+      29 |   }, [lines])
+      30 |
+      31 |   return (
+
+      at src/components/features/python-runner/PythonTerminal.tsx:28:29
+      at Object.react_stack_bottom_frame (node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at commitHookEffectListMount (node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+      at commitHookPassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+      at flushPassiveEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:17923:15
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at Object.<anonymous>.process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (src/components/features/python-runner/PythonTerminal.test.tsx:311:13)
+
+  ● PythonTerminal › Accessibility › should pass accessibility attributes to child components
+
+    TypeError: terminalEndRef.current?.scrollIntoView is not a function
+
+      26 |
+      27 |   useEffect(() => {
+    > 28 |     terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+         |                             ^
+      29 |   }, [lines])
+      30 |
+      31 |   return (
+
+      at src/components/features/python-runner/PythonTerminal.tsx:28:29
+      at Object.react_stack_bottom_frame (node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at commitHookEffectListMount (node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+      at commitHookPassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+      at flushPassiveEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:17923:15
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at Object.<anonymous>.process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (src/components/features/python-runner/PythonTerminal.test.tsx:317:13)
+
+  ● PythonTerminal › Accessibility › should have proper heading hierarchy through TerminalHeader
+
+    TypeError: terminalEndRef.current?.scrollIntoView is not a function
+
+      26 |
+      27 |   useEffect(() => {
+    > 28 |     terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+         |                             ^
+      29 |   }, [lines])
+      30 |
+      31 |   return (
+
+      at src/components/features/python-runner/PythonTerminal.tsx:28:29
+      at Object.react_stack_bottom_frame (node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at commitHookEffectListMount (node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+      at commitHookPassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+      at flushPassiveEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:17923:15
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at Object.<anonymous>.process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (src/components/features/python-runner/PythonTerminal.test.tsx:324:13)
+
+FAIL src/components/features/python-runner/PythonOutput.test.tsx
+  ● Console
+
+    console.error
+      Error: Network error
+          at Object.<anonymous> (/Users/rmac/Documents/GitHub/snippet-pastebin/src/components/features/python-runner/PythonOutput.test.tsx:598:48)
+          at Promise.then.completed (/Users/rmac/Documents/GitHub/snippet-pastebin/node_modules/jest-circus/build/utils.js:298:28)
+          at new Promise (<anonymous>)
+          at callAsyncCircusFn (/Users/rmac/Documents/GitHub/snippet-pastebin/node_modules/jest-circus/build/utils.js:231:10)
+          at _callCircusTest (/Users/rmac/Documents/GitHub/snippet-pastebin/node_modules/jest-circus/build/run.js:316:40)
+          at async _runTest (/Users/rmac/Documents/GitHub/snippet-pastebin/node_modules/jest-circus/build/run.js:252:3)
+          at async _runTestsForDescribeBlock (/Users/rmac/Documents/GitHub/snippet-pastebin/node_modules/jest-circus/build/run.js:126:9)
+          at async _runTestsForDescribeBlock (/Users/rmac/Documents/GitHub/snippet-pastebin/node_modules/jest-circus/build/run.js:121:9)
+          at async _runTestsForDescribeBlock (/Users/rmac/Documents/GitHub/snippet-pastebin/node_modules/jest-circus/build/run.js:121:9)
+          at async run (/Users/rmac/Documents/GitHub/snippet-pastebin/node_modules/jest-circus/build/run.js:71:3)
+          at async runAndTransformResultsToJestFormat (/Users/rmac/Documents/GitHub/snippet-pastebin/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+          at async jestAdapter (/Users/rmac/Documents/GitHub/snippet-pastebin/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+          at async runTestInternal (/Users/rmac/Documents/GitHub/snippet-pastebin/node_modules/jest-runner/build/runTest.js:367:16)
+          at async runTest (/Users/rmac/Documents/GitHub/snippet-pastebin/node_modules/jest-runner/build/runTest.js:444:34)
+
+      65 |         args[0].includes('Not implemented: HTMLFormElement.prototype.submit'))
+      66 |     ) {
+    > 67 |       return
+         |             ^
+      68 |     }
+      69 |     originalError.call(console, ...args)
+      70 |   }
+
+      at console.error (jest.setup.ts:67:23)
+      at src/components/features/python-runner/PythonOutput.tsx:40:21
+
+  ● PythonOutput › Rendering › should have correct container classes
+
+    expect(element).toHaveClass("flex flex-col h-full bg-card")
+
+    Expected the element to have class:
+      flex flex-col h-full bg-card
+    Received:
+      flex items-center justify-between p-4 border-b border-border bg-muted/30
+
+      48 |       render(<PythonOutput code="print('hello')" />)
+      49 |       const container = screen.getByText('Python Output').closest('div').parentElement
+    > 50 |       expect(container).toHaveClass('flex', 'flex-col', 'h-full', 'bg-card')
+         |                         ^
+      51 |     })
+      52 |   })
+      53 |
+
+      at Object.<anonymous> (src/components/features/python-runner/PythonOutput.test.tsx:50:25)
+
+  ● PythonOutput › Run Button › should disable run button when initializing
+
+    TestingLibraryElementError: Unable to find an accessible element with the role "button" and name `/run/i`
+
+    Here are the accessible roles:
+
+      heading:
+
+      Name "Python Output":
+      [36m<h3[39m
+        [33mclass[39m=[32m"text-sm font-semibold text-foreground"[39m
+      [36m/>[39m
+
+      --------------------------------------------------
+      button:
+
+      Name "Loading...":
+      [36m<button[39m
+        [33mclass[39m=[32m"mat-mdc-unelevated-button gap-2"[39m
+        [33mdisabled[39m=[32m""[39m
+      [36m/>[39m
+
+      --------------------------------------------------
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"flex flex-col h-full bg-card"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center justify-between p-4 border-b border-border bg-muted/30"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex items-center gap-2"[39m
+            [36m>[39m
+              [36m<h3[39m
+                [33mclass[39m=[32m"text-sm font-semibold text-foreground"[39m
+              [36m>[39m
+                [0mPython Output[0m
+              [36m</h3>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"flex items-center gap-2 rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-wide border-border bg-primary/5 text-primary"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"size-2.5 rounded-full bg-primary"[39m
+                [36m/>[39m
+                [0mLoading[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex items-center gap-2"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"mat-mdc-unelevated-button gap-2"[39m
+                [33mdisabled[39m=[32m""[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33mclass[39m=[32m"animate-spin"[39m
+                  [33mfill[39m=[32m"currentColor"[39m
+                  [33mheight[39m=[32m"16"[39m
+                  [33mviewBox[39m=[32m"0 0 256 256"[39m
+                  [33mwidth[39m=[32m"16"[39m
+                  [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                [36m>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"M232,128a104,104,0,0,1-208,0c0-41,23.81-78.36,60.66-95.27a8,8,0,0,1,6.68,14.54C60.15,61.59,40,93.27,40,128a88,88,0,0,0,176,0c0-34.73-20.15-66.41-51.34-80.73a8,8,0,0,1,6.68-14.54C208.19,49.64,232,87,232,128Z"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mLoading...[0m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex-1 overflow-auto p-4 space-y-4"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"mat-mdc-card mat-mdc-card-outlined p-4 border border-border/60"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"flex items-start gap-3 text-sm text-foreground"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"mt-1 rounded-full bg-primary/10 p-2 text-primary"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33mclass[39m=[32m"animate-spin"[39m
+                    [33mfill[39m=[32m"currentColor"[39m
+                    [33mheight[39m=[32m"18"[39m
+                    [33mviewBox[39m=[32m"0 0 256 256"[39m
+                    [33mwidth[39m=[32m"18"[39m
+                    [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                  [36m>[39m
+                    [36m<path[39m
+                      [33md[39m=[32m"M232,128a104,104,0,0,1-208,0c0-41,23.81-78.36,60.66-95.27a8,8,0,0,1,6.68,14.54C60.15,61.59,40,93.27,40,128a88,88,0,0,0,176,0c0-34.73-20.15-66.41-51.34-80.73a8,8,0,0,1,6.68-14.54C208.19,49.64,232,87,232,128Z"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"space-y-1"[39m
+                [36m>[39m
+                  [36m<p[39m
+                    [33mclass[39m=[32m"font-semibold"[39m
+                  [36m>[39m
+                    [0mPreparing Python environment[0m
+                  [36m</p>[39m
+                  [36m<p[39m
+                    [33mclass[39m=[32m"text-muted-foreground"[39m
+                  [36m>[39m
+                    [0mThis takes a few seconds the first time while Pyodide downloads.[0m
+                  [36m</p>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      131 |       render(<PythonOutput code="print('hello')" />)
+      132 |
+    > 133 |       const runButton = screen.getByRole('button', { name: /run/i })
+          |                                ^
+      134 |       expect(runButton).toBeDisabled()
+      135 |     })
+      136 |
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at getByRole (node_modules/@testing-library/dom/dist/query-helpers.js:95:19)
+      at Object.<anonymous> (src/components/features/python-runner/PythonOutput.test.tsx:133:32)
+
+  ● PythonOutput › Error Handling › should handle runPythonCode throwing error
+
+    expect(received).toBeInTheDocument()
+
+    received value must be an HTMLElement or an SVGElement.
+    Received has value: null
+
+    Ignored nodes: comments, script, style
+    [36m<html>[39m
+      [36m<head />[39m
+      [36m<body>[39m
+        [36m<div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex flex-col h-full bg-card"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex items-center justify-between p-4 border-b border-border bg-muted/30"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"flex items-center gap-2"[39m
+              [36m>[39m
+                [36m<h3[39m
+                  [33mclass[39m=[32m"text-sm font-semibold text-foreground"[39m
+                [36m>[39m
+                  [0mPython Output[0m
+                [36m</h3>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"flex items-center gap-2 rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-wide border-primary/30 bg-primary/10 text-primary"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"size-2.5 rounded-full bg-primary"[39m
+                  [36m/>[39m
+                  [0mReady[0m
+                [36m</span>[39m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"flex items-center gap-2"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"mat-mdc-unelevated-button gap-2"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33mfill[39m=[32m"currentColor"[39m
+                    [33mheight[39m=[32m"16"[39m
+                    [33mviewBox[39m=[32m"0 0 256 256"[39m
+                    [33mwidth[39m=[32m"16"[39m
+                    [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                  [36m>[39m
+                    [36m<path[39m
+                      [33md[39m=[32m"M240,128a15.74,15.74,0,0,1-7.6,13.51L88.32,229.65a16,16,0,0,1-16.2.3A15.86,15.86,0,0,1,64,216.13V39.87a15.86,15.86,0,0,1,8.12-13.82,16,16,0,0,1,16.2.3L232.4,114.49A15.74,15.74,0,0,1,240,128Z"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [0mRun[0m
+                [36m</button>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex-1 overflow-auto p-4 space-y-4"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"mt-4"[39m
+                [33mstyle[39m=[32m"opacity: 1; transform: none;"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"mat-mdc-card mat-mdc-card-outlined p-4 bg-destructive/10 border-destructive/20"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"flex items-start gap-2"[39m
+                  [36m>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"text-destructive font-semibold text-sm"[39m
+                    [36m>[39m
+                      [0mError:[0m
+                    [36m</div>[39m
+                    [36m<pre[39m
+                      [33mclass[39m=[32m"text-sm font-mono whitespace-pre-wrap text-destructive flex-1"[39m
+                    [36m>[39m
+                      [0mRuntime error[0m
+                    [36m</pre>[39m
+                  [36m</div>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</body>[39m
+    [36m</html>[39m
+
+      334 |
+      335 |       await waitFor(() => {
+    > 336 |         expect(screen.queryByText('Click "Run" to execute the Python code')).toBeInTheDocument()
+          |                                                                              ^
+      337 |       })
+      338 |     })
+      339 |   })
+
+      at __EXTERNAL_MATCHER_TRAP__ (node_modules/expect/build/index.js:325:30)
+      at Object.toBeInTheDocument (node_modules/expect/build/index.js:326:15)
+      at src/components/features/python-runner/PythonOutput.test.tsx:336:78
+      at runWithExpensiveErrorDiagnosticsDisabled (node_modules/@testing-library/dom/dist/config.js:47:12)
+      at checkCallback (node_modules/@testing-library/dom/dist/wait-for.js:124:77)
+      at checkRealTimersCallback (node_modules/@testing-library/dom/dist/wait-for.js:118:16)
+      at Timeout.task [as _onTimeout] (node_modules/jsdom/lib/jsdom/browser/Window.js:520:19)
+
+  ● PythonOutput › Output Display › should display output in pre-formatted block
+
+    Unable to find an element with the text: Line 1 Line 2 Line 3 (normalized from 'Line 1
+    Line 2
+    Line 3'). This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"flex flex-col h-full bg-card"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center justify-between p-4 border-b border-border bg-muted/30"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex items-center gap-2"[39m
+            [36m>[39m
+              [36m<h3[39m
+                [33mclass[39m=[32m"text-sm font-semibold text-foreground"[39m
+              [36m>[39m
+                [0mPython Output[0m
+              [36m</h3>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"flex items-center gap-2 rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-wide border-primary/30 bg-primary/10 text-primary"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"size-2.5 rounded-full bg-primary"[39m
+                [36m/>[39m
+                [0mReady[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex items-center gap-2"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"mat-mdc-unelevated-button gap-2"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33mfill[39m=[32m"currentColor"[39m
+                  [33mheight[39m=[32m"16"[39m
+                  [33mviewBox[39m=[32m"0 0 256 256"[39m
+                  [33mwidth[39m=[32m"16"[39m
+                  [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                [36m>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"M240,128a15.74,15.74,0,0,1-7.6,13.51L88.32,229.65a16,16,0,0,1-16.2.3A15.86,15.86,0,0,1,64,216.13V39.87a15.86,15.86,0,0,1,8.12-13.82,16,16,0,0,1,16.2.3L232.4,114.49A15.74,15.74,0,0,1,240,128Z"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mRun[0m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex-1 overflow-auto p-4 space-y-4"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mstyle[39m=[32m"opacity: 1; transform: none;"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"mat-mdc-card mat-mdc-card-outlined p-4 bg-background"[39m
+              [36m>[39m
+                [36m<pre[39m
+                  [33mclass[39m=[32m"text-sm font-mono whitespace-pre-wrap text-foreground"[39m
+                [36m>[39m
+                  [0mLine 1
+    Line 2
+    Line 3[0m
+                [36m</pre>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      407 |       await user.click(screen.getByRole('button', { name: /run/i }))
+      408 |
+    > 409 |       await waitFor(() => {
+          |                    ^
+      410 |         expect(screen.getByText('Line 1\nLine 2\nLine 3')).toBeInTheDocument()
+      411 |       })
+      412 |     })
+
+      at waitForWrapper (node_modules/@testing-library/dom/dist/wait-for.js:163:27)
+      at Object.<anonymous> (src/components/features/python-runner/PythonOutput.test.tsx:409:20)
+
+  ● PythonOutput › Toast Notifications › should show error toast when trying to run with init error
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    Expected: "Python environment failed to start. Retry to load it again."
+
+    Number of calls: 0
+
+      614 |       await user.click(screen.getByRole('button', { name: /run/i }))
+      615 |
+    > 616 |       expect(mockToast.error).toHaveBeenCalledWith(
+          |                               ^
+      617 |         'Python environment failed to start. Retry to load it again.'
+      618 |       )
+      619 |     })
+
+      at Object.<anonymous> (src/components/features/python-runner/PythonOutput.test.tsx:616:31)
+
+  ● PythonOutput › Toast Notifications › should show info toast when trying to run during initialization
+
+    TestingLibraryElementError: Unable to find an accessible element with the role "button" and name `/run/i`
+
+    Here are the accessible roles:
+
+      heading:
+
+      Name "Python Output":
+      [36m<h3[39m
+        [33mclass[39m=[32m"text-sm font-semibold text-foreground"[39m
+      [36m/>[39m
+
+      --------------------------------------------------
+      button:
+
+      Name "Loading...":
+      [36m<button[39m
+        [33mclass[39m=[32m"mat-mdc-unelevated-button gap-2"[39m
+        [33mdisabled[39m=[32m""[39m
+      [36m/>[39m
+
+      --------------------------------------------------
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"flex flex-col h-full bg-card"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center justify-between p-4 border-b border-border bg-muted/30"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex items-center gap-2"[39m
+            [36m>[39m
+              [36m<h3[39m
+                [33mclass[39m=[32m"text-sm font-semibold text-foreground"[39m
+              [36m>[39m
+                [0mPython Output[0m
+              [36m</h3>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"flex items-center gap-2 rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-wide border-border bg-primary/5 text-primary"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"size-2.5 rounded-full bg-primary"[39m
+                [36m/>[39m
+                [0mLoading[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex items-center gap-2"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"mat-mdc-unelevated-button gap-2"[39m
+                [33mdisabled[39m=[32m""[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33mclass[39m=[32m"animate-spin"[39m
+                  [33mfill[39m=[32m"currentColor"[39m
+                  [33mheight[39m=[32m"16"[39m
+                  [33mviewBox[39m=[32m"0 0 256 256"[39m
+                  [33mwidth[39m=[32m"16"[39m
+                  [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                [36m>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"M232,128a104,104,0,0,1-208,0c0-41,23.81-78.36,60.66-95.27a8,8,0,0,1,6.68,14.54C60.15,61.59,40,93.27,40,128a88,88,0,0,0,176,0c0-34.73-20.15-66.41-51.34-80.73a8,8,0,0,1,6.68-14.54C208.19,49.64,232,87,232,128Z"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mLoading...[0m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex-1 overflow-auto p-4 space-y-4"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"mat-mdc-card mat-mdc-card-outlined p-4 border border-border/60"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"flex items-start gap-3 text-sm text-foreground"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"mt-1 rounded-full bg-primary/10 p-2 text-primary"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33mclass[39m=[32m"animate-spin"[39m
+                    [33mfill[39m=[32m"currentColor"[39m
+                    [33mheight[39m=[32m"18"[39m
+                    [33mviewBox[39m=[32m"0 0 256 256"[39m
+                    [33mwidth[39m=[32m"18"[39m
+                    [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                  [36m>[39m
+                    [36m<path[39m
+                      [33md[39m=[32m"M232,128a104,104,0,0,1-208,0c0-41,23.81-78.36,60.66-95.27a8,8,0,0,1,6.68,14.54C60.15,61.59,40,93.27,40,128a88,88,0,0,0,176,0c0-34.73-20.15-66.41-51.34-80.73a8,8,0,0,1,6.68-14.54C208.19,49.64,232,87,232,128Z"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"space-y-1"[39m
+                [36m>[39m
+                  [36m<p[39m
+                    [33mclass[39m=[32m"font-semibold"[39m
+                  [36m>[39m
+                    [0mPreparing Python environment[0m
+                  [36m</p>[39m
+                  [36m<p[39m
+                    [33mclass[39m=[32m"text-muted-foreground"[39m
+                  [36m>[39m
+                    [0mThis takes a few seconds the first time while Pyodide downloads.[0m
+                  [36m</p>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      626 |       render(<PythonOutput code="print('hello')" />)
+      627 |
+    > 628 |       await user.click(screen.getByRole('button', { name: /run/i }))
+          |                               ^
+      629 |
+      630 |       expect(mockToast.info).toHaveBeenCalledWith('Python environment is still loading...')
+      631 |     })
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at getByRole (node_modules/@testing-library/dom/dist/query-helpers.js:95:19)
+      at Object.<anonymous> (src/components/features/python-runner/PythonOutput.test.tsx:628:31)
+
+FAIL src/components/features/python-runner/TerminalOutput.test.tsx
+  ● TerminalOutput › Output Rendering › should preserve whitespace in output
+
+    TestingLibraryElementError: Unable to find an element with the text: Line 1 Spaced (normalized from 'Line 1    Spaced'). This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"space-y-1"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"leading-relaxed"[39m
+            [33mstyle[39m=[32m"opacity: 0; transform: translateY(5px);"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"text-foreground whitespace-pre-wrap"[39m
+            [36m>[39m
+              [0mLine 1    Spaced[0m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      72 |       const lines = [{ type: 'output' as const, content: 'Line 1    Spaced', id: '1' }]
+      73 |       render(<TerminalOutput {...defaultProps} lines={lines} />)
+    > 74 |       const output = screen.getByText('Line 1    Spaced')
+         |                             ^
+      75 |       expect(output).toHaveClass('whitespace-pre-wrap')
+      76 |     })
+      77 |   })
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at getByText (node_modules/@testing-library/dom/dist/query-helpers.js:95:19)
+      at Object.<anonymous> (src/components/features/python-runner/TerminalOutput.test.tsx:74:29)
+
+  ● TerminalOutput › Error Rendering › should preserve whitespace in errors
+
+    TestingLibraryElementError: Unable to find an element with the text: Error: Details (normalized from 'Error:    Details'). This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"space-y-1"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"leading-relaxed"[39m
+            [33mstyle[39m=[32m"opacity: 0; transform: translateY(5px);"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"text-destructive whitespace-pre-wrap"[39m
+            [36m>[39m
+              [0mError:    Details[0m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      104 |       const lines = [{ type: 'error' as const, content: 'Error:    Details', id: '1' }]
+      105 |       render(<TerminalOutput {...defaultProps} lines={lines} />)
+    > 106 |       const error = screen.getByText('Error:    Details')
+          |                            ^
+      107 |       expect(error).toHaveClass('whitespace-pre-wrap')
+      108 |     })
+      109 |   })
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at getByText (node_modules/@testing-library/dom/dist/query-helpers.js:95:19)
+      at Object.<anonymous> (src/components/features/python-runner/TerminalOutput.test.tsx:106:28)
+
+  ● TerminalOutput › Input Prompt Rendering › should render input prompt line
+
+    TestingLibraryElementError: Unable to find an element with the text: Enter your name: (normalized from 'Enter your name: '). This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"space-y-1"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"leading-relaxed"[39m
+            [33mstyle[39m=[32m"opacity: 0; transform: translateY(5px);"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"text-accent font-medium whitespace-pre-wrap"[39m
+            [36m>[39m
+              [0mEnter your name: [0m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      113 |       const lines = [{ type: 'input-prompt' as const, content: 'Enter your name: ', id: '1' }]
+      114 |       render(<TerminalOutput {...defaultProps} lines={lines} />)
+    > 115 |       expect(screen.getByText('Enter your name: ')).toBeInTheDocument()
+          |                     ^
+      116 |     })
+      117 |
+      118 |     it('should render input prompt with correct styling', () => {
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at getByText (node_modules/@testing-library/dom/dist/query-helpers.js:95:19)
+      at Object.<anonymous> (src/components/features/python-runner/TerminalOutput.test.tsx:115:21)
+
+  ● TerminalOutput › Input Prompt Rendering › should render input prompt with correct styling
+
+    TestingLibraryElementError: Unable to find an element with the text: Prompt: (normalized from 'Prompt: '). This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"space-y-1"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"leading-relaxed"[39m
+            [33mstyle[39m=[32m"opacity: 0; transform: translateY(5px);"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"text-accent font-medium whitespace-pre-wrap"[39m
+            [36m>[39m
+              [0mPrompt: [0m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      119 |       const lines = [{ type: 'input-prompt' as const, content: 'Prompt: ', id: '1' }]
+      120 |       render(<TerminalOutput {...defaultProps} lines={lines} />)
+    > 121 |       const prompt = screen.getByText('Prompt: ')
+          |                             ^
+      122 |       expect(prompt).toHaveClass('text-accent', 'font-medium')
+      123 |     })
+      124 |
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at getByText (node_modules/@testing-library/dom/dist/query-helpers.js:95:19)
+      at Object.<anonymous> (src/components/features/python-runner/TerminalOutput.test.tsx:121:29)
+
+  ● TerminalOutput › Input Prompt Rendering › should preserve whitespace in input prompts
+
+    TestingLibraryElementError: Unable to find an element with the text: Name: (normalized from 'Name:     '). This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"space-y-1"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"leading-relaxed"[39m
+            [33mstyle[39m=[32m"opacity: 0; transform: translateY(5px);"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"text-accent font-medium whitespace-pre-wrap"[39m
+            [36m>[39m
+              [0mName:     [0m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      126 |       const lines = [{ type: 'input-prompt' as const, content: 'Name:     ', id: '1' }]
+      127 |       render(<TerminalOutput {...defaultProps} lines={lines} />)
+    > 128 |       const prompt = screen.getByText('Name:     ')
+          |                             ^
+      129 |       expect(prompt).toHaveClass('whitespace-pre-wrap')
+      130 |     })
+      131 |   })
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at getByText (node_modules/@testing-library/dom/dist/query-helpers.js:95:19)
+      at Object.<anonymous> (src/components/features/python-runner/TerminalOutput.test.tsx:128:29)
+
+  ● TerminalOutput › Input Value Rendering › should preserve whitespace in input values
+
+    TestingLibraryElementError: Unable to find an element with the text: > text with spaces (normalized from '> text    with    spaces'). This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"space-y-1"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"leading-relaxed"[39m
+            [33mstyle[39m=[32m"opacity: 0; transform: translateY(5px);"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"text-primary whitespace-pre-wrap"[39m
+            [36m>[39m
+              [0m&gt; text    with    spaces[0m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      155 |       const lines = [{ type: 'input-value' as const, content: 'text    with    spaces', id: '1' }]
+      156 |       render(<TerminalOutput {...defaultProps} lines={lines} />)
+    > 157 |       const value = screen.getByText('> text    with    spaces')
+          |                            ^
+      158 |       expect(value).toHaveClass('whitespace-pre-wrap')
+      159 |     })
+      160 |   })
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at getByText (node_modules/@testing-library/dom/dist/query-helpers.js:95:19)
+      at Object.<anonymous> (src/components/features/python-runner/TerminalOutput.test.tsx:157:28)
+
+  ● TerminalOutput › Mixed Output Types › should render all line types together
+
+    TestingLibraryElementError: Unable to find an element with the text: Name: (normalized from 'Name: '). This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"space-y-1"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"leading-relaxed"[39m
+            [33mstyle[39m=[32m"opacity: 0; transform: translateY(5px);"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"text-accent font-medium whitespace-pre-wrap"[39m
+            [36m>[39m
+              [0mName: [0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"leading-relaxed"[39m
+            [33mstyle[39m=[32m"opacity: 0; transform: translateY(5px);"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"text-primary whitespace-pre-wrap"[39m
+            [36m>[39m
+              [0m&gt; John[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"leading-relaxed"[39m
+            [33mstyle[39m=[32m"opacity: 0; transform: translateY(5px);"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"text-foreground whitespace-pre-wrap"[39m
+            [36m>[39m
+              [0mHello John[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"leading-relaxed"[39m
+            [33mstyle[39m=[32m"opacity: 0; transform: translateY(5px);"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"text-destructive whitespace-pre-wrap"[39m
+            [36m>[39m
+              [0mNote: something[0m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      181 |       ]
+      182 |       render(<TerminalOutput {...defaultProps} lines={lines} />)
+    > 183 |       expect(screen.getByText('Name: ')).toBeInTheDocument()
+          |                     ^
+      184 |       expect(screen.getByText('> John')).toBeInTheDocument()
+      185 |       expect(screen.getByText('Hello John')).toBeInTheDocument()
+      186 |       expect(screen.getByText('Note: something')).toBeInTheDocument()
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at getByText (node_modules/@testing-library/dom/dist/query-helpers.js:95:19)
+      at Object.<anonymous> (src/components/features/python-runner/TerminalOutput.test.tsx:183:21)
+
+  ● TerminalOutput › Multiline Content › should handle multiline output content
+
+    TestingLibraryElementError: Unable to find an element with the text: Line 1 Line 2 Line 3 (normalized from 'Line 1
+    Line 2
+    Line 3'). This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"space-y-1"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"leading-relaxed"[39m
+            [33mstyle[39m=[32m"opacity: 0; transform: translateY(5px);"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"text-foreground whitespace-pre-wrap"[39m
+            [36m>[39m
+              [0mLine 1
+    Line 2
+    Line 3[0m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      194 |       ]
+      195 |       render(<TerminalOutput {...defaultProps} lines={lines} />)
+    > 196 |       const output = screen.getByText('Line 1\nLine 2\nLine 3')
+          |                             ^
+      197 |       expect(output).toBeInTheDocument()
+      198 |     })
+      199 |
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at getByText (node_modules/@testing-library/dom/dist/query-helpers.js:95:19)
+      at Object.<anonymous> (src/components/features/python-runner/TerminalOutput.test.tsx:196:29)
+
+  ● TerminalOutput › Multiline Content › should preserve newlines with whitespace-pre-wrap
+
+    TestingLibraryElementError: Unable to find an element with the text: First Indented Third (normalized from 'First
+      Indented
+    Third'). This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"space-y-1"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"leading-relaxed"[39m
+            [33mstyle[39m=[32m"opacity: 0; transform: translateY(5px);"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"text-foreground whitespace-pre-wrap"[39m
+            [36m>[39m
+              [0mFirst
+      Indented
+    Third[0m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      203 |       ]
+      204 |       render(<TerminalOutput {...defaultProps} lines={lines} />)
+    > 205 |       const output = screen.getByText('First\n  Indented\nThird')
+          |                             ^
+      206 |       expect(output).toHaveClass('whitespace-pre-wrap')
+      207 |     })
+      208 |   })
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at getByText (node_modules/@testing-library/dom/dist/query-helpers.js:95:19)
+      at Object.<anonymous> (src/components/features/python-runner/TerminalOutput.test.tsx:205:29)
+
+  ● TerminalOutput › Empty Content › should handle empty string content
+
+    TestingLibraryElementError: Unable to find an element by: [data-testid="terminal-output-area"]
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"space-y-1"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"leading-relaxed"[39m
+            [33mstyle[39m=[32m"opacity: 0; transform: translateY(5px);"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"text-foreground whitespace-pre-wrap"[39m
+            [36m/>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      212 |       const lines = [{ type: 'output' as const, content: '', id: '1' }]
+      213 |       render(<TerminalOutput {...defaultProps} lines={lines} />)
+    > 214 |       expect(screen.getByTestId('terminal-output-area') || true).toBeTruthy()
+          |                     ^
+      215 |     })
+      216 |
+      217 |     it('should handle line with only whitespace', () => {
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at getByTestId (node_modules/@testing-library/dom/dist/query-helpers.js:95:19)
+      at Object.<anonymous> (src/components/features/python-runner/TerminalOutput.test.tsx:214:21)
+
+  ● TerminalOutput › Empty Content › should handle line with only whitespace
+
+    TestingLibraryElementError: Unable to find an element with the text:  (normalized from '   '). This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"space-y-1"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"leading-relaxed"[39m
+            [33mstyle[39m=[32m"opacity: 0; transform: translateY(5px);"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"text-foreground whitespace-pre-wrap"[39m
+            [36m>[39m
+              [0m   [0m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      218 |       const lines = [{ type: 'output' as const, content: '   ', id: '1' }]
+      219 |       render(<TerminalOutput {...defaultProps} lines={lines} />)
+    > 220 |       const space = screen.getByText('   ')
+          |                            ^
+      221 |       expect(space).toBeInTheDocument()
+      222 |     })
+      223 |   })
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at getByText (node_modules/@testing-library/dom/dist/query-helpers.js:95:19)
+      at Object.<anonymous> (src/components/features/python-runner/TerminalOutput.test.tsx:220:28)
+
+  ● TerminalOutput › Special Characters › should handle escape sequences
+
+    TestingLibraryElementError: Unable to find an element with the text: Tab here (normalized from 'Tab	here'). This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"space-y-1"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"leading-relaxed"[39m
+            [33mstyle[39m=[32m"opacity: 0; transform: translateY(5px);"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"text-foreground whitespace-pre-wrap"[39m
+            [36m>[39m
+              [0mTab	here[0m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      307 |       const lines = [{ type: 'output' as const, content: 'Tab\there', id: '1' }]
+      308 |       render(<TerminalOutput {...defaultProps} lines={lines} />)
+    > 309 |       expect(screen.getByText('Tab\there')).toBeInTheDocument()
+          |                     ^
+      310 |     })
+      311 |   })
+      312 |
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at getByText (node_modules/@testing-library/dom/dist/query-helpers.js:95:19)
+      at Object.<anonymous> (src/components/features/python-runner/TerminalOutput.test.tsx:309:21)
+
+-------------------------------------------|---------|----------|---------|---------|--------------------------------------------
+File                                       | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s                          
+-------------------------------------------|---------|----------|---------|---------|--------------------------------------------
+All files                                  |     4.1 |    27.27 |    3.66 |     4.1 |                                            
+ src                                       |       0 |        0 |       0 |       0 |                                            
+  test-utils.tsx                           |       0 |        0 |       0 |       0 | 1-26                                       
+ src/app                                   |       0 |        0 |       0 |       0 |                                            
+  PageLayout.tsx                           |       0 |        0 |       0 |       0 | 1-94                                       
+  layout.tsx                               |       0 |        0 |       0 |       0 | 1-43                                       
+  page.tsx                                 |       0 |        0 |       0 |       0 | 1-29                                       
+  providers.tsx                            |       0 |        0 |       0 |       0 | 1-41                                       
+ src/app/atoms                             |       0 |        0 |       0 |       0 |                                            
+  page.tsx                                 |       0 |        0 |       0 |       0 | 1-43                                       
+ src/app/demo                              |       0 |        0 |       0 |       0 |                                            
+  page.tsx                                 |       0 |        0 |       0 |       0 | 1-68                                       
+ src/app/molecules                         |       0 |        0 |       0 |       0 |                                            
+  page.tsx                                 |       0 |        0 |       0 |       0 | 1-43                                       
+ src/app/organisms                         |       0 |        0 |       0 |       0 |                                            
+  page.tsx                                 |       0 |        0 |       0 |       0 | 1-43                                       
+ src/app/settings                          |       0 |        0 |       0 |       0 |                                            
+  page.tsx                                 |       0 |        0 |       0 |       0 | 1-110                                      
+ src/app/templates                         |       0 |        0 |       0 |       0 |                                            
+  page.tsx                                 |       0 |        0 |       0 |       0 | 1-43                                       
+ src/components                            |       0 |        0 |       0 |       0 |                                            
+  SnippetManager.tsx                       |       0 |        0 |       0 |       0 | 1                                          
+  SnippetManagerRedux.tsx                  |       0 |        0 |       0 |       0 | 1-139                                      
+ src/components/atoms                      |       0 |        0 |       0 |       0 |                                            
+  AtomsSection.tsx                         |       0 |        0 |       0 |       0 | 1-24                                       
+  BadgesSection.tsx                        |       0 |        0 |       0 |       0 | 1-70                                       
+  ButtonsSection.tsx                       |       0 |        0 |       0 |       0 | 1-107                                      
+  ColorsSection.tsx                        |       0 |        0 |       0 |       0 | 1-73                                       
+  IconsSection.tsx                         |       0 |        0 |       0 |       0 | 1-61                                       
+  InputsSection.tsx                        |       0 |        0 |       0 |       0 | 1-64                                       
+  TypographySection.tsx                    |       0 |        0 |       0 |       0 | 1-71                                       
+ src/components/demo                       |       0 |        0 |       0 |       0 |                                            
+  ComponentShowcase.tsx                    |       0 |        0 |       0 |       0 | 1-88                                       
+  DemoFeatureCards.tsx                     |       0 |        0 |       0 |       0 | 1-41                                       
+  PersistenceExample.tsx                   |       0 |        0 |       0 |       0 | 1-89                                       
+  PersistenceSettings.tsx                  |       0 |        0 |       0 |       0 | 1-121                                      
+  demo-constants.ts                        |       0 |        0 |       0 |       0 | 1-112                                      
+ src/components/error                      |       0 |        0 |       0 |       0 |                                            
+  AIErrorHelper.tsx                        |       0 |        0 |       0 |       0 | 1-108                                      
+  ErrorFallback.tsx                        |       0 |        0 |       0 |       0 | 1-101                                      
+  LoadingAnalysis.tsx                      |       0 |        0 |       0 |       0 | 1-29                                       
+  MarkdownRenderer.tsx                     |       0 |        0 |       0 |       0 | 1-57                                       
+  analyzeError.ts                          |       0 |        0 |       0 |       0 | 1-91                                       
+ src/components/features/namespace-manager |       0 |        0 |       0 |       0 |                                            
+  CreateNamespaceDialog.tsx                |       0 |        0 |       0 |       0 | 1-78                                       
+  DeleteNamespaceDialog.tsx                |       0 |        0 |       0 |       0 | 1-72                                       
+  NamespaceSelector.tsx                    |       0 |        0 |       0 |       0 | 1-170                                      
+ src/components/features/python-runner     |   98.68 |    94.11 |   66.66 |   98.68 |                                            
+  PythonOutput.tsx                         |   97.61 |    90.69 |   66.66 |   97.61 | 82-84,87-89                                
+  PythonTerminal.tsx                       |     100 |      100 |      50 |     100 |                                            
+  TerminalHeader.tsx                       |     100 |      100 |     100 |     100 |                                            
+  TerminalInput.tsx                        |     100 |      100 |      50 |     100 |                                            
+  TerminalOutput.tsx                       |     100 |      100 |     100 |     100 |                                            
+ src/components/features/snippet-display   |       0 |        0 |       0 |       0 |                                            
+  EmptyState.tsx                           |       0 |        0 |       0 |       0 | 1-157                                      
+  SnippetCard.tsx                          |       0 |        0 |       0 |       0 | 1-169                                      
+  SnippetCardActions.tsx                   |       0 |        0 |       0 |       0 | 1-130                                      
+  SnippetCardHeader.tsx                    |       0 |        0 |       0 |       0 | 1-60                                       
+  SnippetCodePreview.tsx                   |       0 |        0 |       0 |       0 | 1-21                                       
+ src/components/features/snippet-editor    |       0 |        0 |       0 |       0 |                                            
+  CodeEditorSection.tsx                    |       0 |        0 |       0 |       0 | 1-88                                       
+  InputParameterItem.tsx                   |       0 |        0 |       0 |       0 | 1-127                                      
+  InputParameterList.tsx                   |       0 |        0 |       0 |       0 | 1-81                                       
+  MonacoEditor.tsx                         |       0 |        0 |       0 |       0 | 1-70                                       
+  ReactPreview.tsx                         |       0 |        0 |       0 |       0 | 1-94                                       
+  SnippetDialog.tsx                        |       0 |        0 |       0 |       0 | 1-131                                      
+  SnippetFormFields.tsx                    |       0 |        0 |       0 |       0 | 1-87                                       
+  SplitScreenEditor.tsx                    |       0 |        0 |       0 |       0 | 1-137                                      
+ src/components/features/snippet-viewer    |       0 |        0 |       0 |       0 |                                            
+  SnippetViewer.tsx                        |       0 |        0 |       0 |       0 | 1-77                                       
+  SnippetViewerContent.tsx                 |       0 |        0 |       0 |       0 | 1-58                                       
+  SnippetViewerHeader.tsx                  |       0 |        0 |       0 |       0 | 1-105                                      
+ src/components/layout                     |       0 |        0 |       0 |       0 |                                            
+  AppStatusAlerts.tsx                      |       0 |        0 |       0 |       0 | 1-46                                       
+  BackendIndicator.tsx                     |       0 |        0 |       0 |       0 | 1-46                                       
+ src/components/layout/navigation          |       0 |        0 |       0 |       0 |                                            
+  Navigation.tsx                           |       0 |        0 |       0 |       0 | 1-20                                       
+  NavigationProvider.tsx                   |       0 |        0 |       0 |       0 | 1-12                                       
+  NavigationSidebar.tsx                    |       0 |        0 |       0 |       0 | 1-159                                      
+  navigation-context.tsx                   |       0 |        0 |       0 |       0 | 1-10                                       
+  navigation-items.ts                      |       0 |        0 |       0 |       0 | 1-18                                       
+  useNavigation.ts                         |       0 |        0 |       0 |       0 | 1-10                                       
+ src/components/molecules                  |       0 |        0 |       0 |       0 |                                            
+  ContentPreviewCardsSection.tsx           |       0 |        0 |       0 |       0 | 1-72                                       
+  FormFieldsSection.tsx                    |       0 |        0 |       0 |       0 | 1-60                                       
+  MoleculesSection.tsx                     |       0 |        0 |       0 |       0 | 1-24                                       
+  SearchBarsSection.tsx                    |       0 |        0 |       0 |       0 | 1-59                                       
+  SocialActionsSection.tsx                 |       0 |        0 |       0 |       0 | 1-59                                       
+  StatusIndicatorsSection.tsx              |       0 |        0 |       0 |       0 | 1-48                                       
+  UserCardsSection.tsx                     |       0 |        0 |       0 |       0 | 1-55                                       
+ src/components/organisms                  |       0 |        0 |       0 |       0 |                                            
+  OrganismsSection.tsx                     |       0 |        0 |       0 |       0 | 1-24                                       
+ src/components/organisms/showcases        |       0 |        0 |       0 |       0 |                                            
+  ContentGridsShowcase.tsx                 |       0 |        0 |       0 |       0 | 1-89                                       
+  DataTablesShowcase.tsx                   |       0 |        0 |       0 |       0 | 1-79                                       
+  FormsShowcase.tsx                        |       0 |        0 |       0 |       0 | 1-78                                       
+  NavigationBarsShowcase.tsx               |       0 |        0 |       0 |       0 | 1-119                                      
+  SidebarNavigationShowcase.tsx            |       0 |        0 |       0 |       0 | 1-75                                       
+  TaskListsShowcase.tsx                    |       0 |        0 |       0 |       0 | 1-84                                       
+ src/components/settings                   |       0 |        0 |       0 |       0 |                                            
+  BackendAutoConfigCard.tsx                |       0 |        0 |       0 |       0 | 1-74                                       
+  DatabaseActionsCard.tsx                  |       0 |        0 |       0 |       0 | 1-86                                       
+  DatabaseStatsCard.tsx                    |       0 |        0 |       0 |       0 | 1-57                                       
+  OpenAISettingsCard.tsx                   |       0 |        0 |       0 |       0 | 1-112                                      
+  SchemaHealthCard.tsx                     |       0 |        0 |       0 |       0 | 1-69                                       
+  StorageBackendCard.tsx                   |       0 |        0 |       0 |       0 | 1-158                                      
+  StorageInfoCard.tsx                      |       0 |        0 |       0 |       0 | 1-42                                       
+ src/components/snippet-manager            |       0 |        0 |       0 |       0 |                                            
+  SelectionControls.tsx                    |       0 |        0 |       0 |       0 | 1-74                                       
+  SnippetGrid.tsx                          |       0 |        0 |       0 |       0 | 1-50                                       
+  SnippetToolbar.tsx                       |       0 |        0 |       0 |       0 | 1-144                                      
+ src/components/templates                  |       0 |        0 |       0 |       0 |                                            
+  BlogTemplate.tsx                         |       0 |        0 |       0 |       0 | 1-102                                      
+  DashboardTemplate.tsx                    |       0 |        0 |       0 |       0 | 1-164                                      
+  EcommerceTemplate.tsx                    |       0 |        0 |       0 |       0 | 1-97                                       
+  LandingPageTemplate.tsx                  |       0 |        0 |       0 |       0 | 1-108                                      
+  TemplatesSection.tsx                     |       0 |        0 |       0 |       0 | 1-93                                       
+ src/components/ui                         |    2.27 |     2.32 |       0 |    2.27 |                                            
+  accordion.tsx                            |       0 |        0 |       0 |       0 | 1-134                                      
+  alert-dialog.tsx                         |       0 |        0 |       0 |       0 | 1-233                                      
+  alert.tsx                                |       0 |        0 |       0 |       0 | 1-56                                       
+  aspect-ratio.tsx                         |       0 |        0 |       0 |       0 | 1-27                                       
+  avatar.tsx                               |       0 |        0 |       0 |       0 | 1-65                                       
+  badge.tsx                                |       0 |        0 |       0 |       0 | 1-26                                       
+  bottom-navigation.tsx                    |       0 |        0 |       0 |       0 | 1-149                                      
+  button.tsx                               |   73.68 |    33.33 |       0 |   73.68 | 5-19                                       
+  card.tsx                                 |     100 |      100 |     100 |     100 |                                            
+  carousel.tsx                             |       0 |        0 |       0 |       0 | 1-241                                      
+  chart.tsx                                |       0 |        0 |       0 |       0 | 1-346                                      
+  checkbox.tsx                             |       0 |        0 |       0 |       0 | 1-32                                       
+  chip.tsx                                 |       0 |        0 |       0 |       0 | 1-43                                       
+  collapsible.tsx                          |       0 |        0 |       0 |       0 | 1-90                                       
+  dialog.tsx                               |       0 |        0 |       0 |       0 | 1-173                                      
+  dropdown-menu.tsx                        |       0 |        0 |       0 |       0 | 1-279                                      
+  fab.tsx                                  |       0 |        0 |       0 |       0 | 1-172                                      
+  form.tsx                                 |       0 |        0 |       0 |       0 | 1-151                                      
+  input.tsx                                |     100 |      100 |     100 |     100 |                                            
+  label.tsx                                |       0 |        0 |       0 |       0 | 1-14                                       
+  pagination.tsx                           |       0 |        0 |       0 |       0 | 1-125                                      
+  popover.tsx                              |       0 |        0 |       0 |       0 | 1-124                                      
+  progress.tsx                             |       0 |        0 |       0 |       0 | 1-35                                       
+  radio-group.tsx                          |       0 |        0 |       0 |       0 | 1-51                                       
+  resizable.tsx                            |       0 |        0 |       0 |       0 | 1-54                                       
+  select.tsx                               |       0 |        0 |       0 |       0 | 1-129                                      
+  separator.tsx                            |       0 |        0 |       0 |       0 | 1-24                                       
+  sheet.tsx                                |       0 |        0 |       0 |       0 | 1-241                                      
+  sidebar-context.tsx                      |       0 |        0 |       0 |       0 | 1-132                                      
+  sidebar-core.tsx                         |       0 |        0 |       0 |       0 | 1-181                                      
+  sidebar-parts.tsx                        |       0 |        0 |       0 |       0 | 1-81                                       
+  sidebar.tsx                              |       0 |        0 |       0 |       0 | 1-23                                       
+  skeleton.tsx                             |       0 |        0 |       0 |       0 | 1-14                                       
+  slider.tsx                               |       0 |        0 |       0 |       0 | 1-49                                       
+  sonner.tsx                               |       0 |        0 |       0 |       0 | 1-23                                       
+  switch.tsx                               |       0 |        0 |       0 |       0 | 1-35                                       
+  table.tsx                                |       0 |        0 |       0 |       0 | 1-114                                      
+  tabs.tsx                                 |       0 |        0 |       0 |       0 | 1-95                                       
+  textarea.tsx                             |       0 |        0 |       0 |       0 | 1-24                                       
+  toggle-group.tsx                         |       0 |        0 |       0 |       0 | 1-142                                      
+  toggle.tsx                               |       0 |        0 |       0 |       0 | 1-78                                       
+  tooltip.tsx                              |       0 |        0 |       0 |       0 | 1-99                                       
+  top-app-bar.tsx                          |       0 |        0 |       0 |       0 | 1-184                                      
+ src/components/ui/sidebar-menu            |       0 |        0 |       0 |       0 |                                            
+  SidebarGroupAction.tsx                   |       0 |        0 |       0 |       0 | 1-33                                       
+  SidebarGroupContent.tsx                  |       0 |        0 |       0 |       0 | 1-18                                       
+  SidebarGroupLabel.tsx                    |       0 |        0 |       0 |       0 | 1-30                                       
+  SidebarMenu.tsx                          |       0 |        0 |       0 |       0 | 1-15                                       
+  SidebarMenuAction.tsx                    |       0 |        0 |       0 |       0 | 1-42                                       
+  SidebarMenuBadge.tsx                     |       0 |        0 |       0 |       0 | 1-26                                       
+  SidebarMenuButton.tsx                    |       0 |        0 |       0 |       0 | 1-89                                       
+  SidebarMenuItem.tsx                      |       0 |        0 |       0 |       0 | 1-15                                       
+  SidebarMenuSkeleton.tsx                  |       0 |        0 |       0 |       0 | 1-41                                       
+  SidebarMenuSub.tsx                       |       0 |        0 |       0 |       0 | 1-19                                       
+  SidebarMenuSubButton.tsx                 |       0 |        0 |       0 |       0 | 1-45                                       
+  SidebarMenuSubItem.tsx                   |       0 |        0 |       0 |       0 | 1-18                                       
+ src/hooks                                 |    1.26 |        0 |       0 |    1.26 |                                            
+  use-mobile.ts                            |       0 |        0 |       0 |       0 | 1-21                                       
+  useDatabaseOperations.ts                 |       0 |        0 |       0 |       0 | 1-133                                      
+  usePythonTerminal.ts                     |   10.67 |      100 |       0 |   10.67 | 12-103                                     
+  useSettingsState.ts                      |       0 |        0 |       0 |       0 | 1-82                                       
+  useSnippetForm.ts                        |       0 |        0 |       0 |       0 | 1-115                                      
+  useSnippetManager.ts                     |       0 |        0 |       0 |       0 | 1-246                                      
+  useStorageConfig.ts                      |       0 |        0 |       0 |       0 | 1-86                                       
+  useStorageMigration.ts                   |       0 |        0 |       0 |       0 | 1-84                                       
+ src/lib                                   |    3.33 |       10 |    5.26 |    3.33 |                                            
+  component-code-snippets.ts               |       0 |        0 |       0 |       0 | 1-9                                        
+  config.ts                                |       0 |        0 |       0 |       0 | 1-24                                       
+  db.ts                                    |       0 |        0 |       0 |       0 | 1-223                                      
+  indexeddb-storage.ts                     |       0 |        0 |       0 |       0 | 1-241                                      
+  monaco-config.ts                         |       0 |        0 |       0 |       0 | 1-44                                       
+  parse-parameters.ts                      |       0 |        0 |       0 |       0 | 1-28                                       
+  pyodide-runner.ts                        |     9.7 |      100 |       0 |     9.7 | 8-42,45-93,102-223,226-227,230-231,234-237 
+  react-transform.ts                       |       0 |        0 |       0 |       0 | 1-155                                      
+  storage.ts                               |       0 |        0 |       0 |       0 | 1-297                                      
+  types.ts                                 |       0 |        0 |       0 |       0 | 1-43                                       
+  utils.ts                                 |    46.8 |      100 |      25 |    46.8 | 13-18,24-40,46-47                          
+ src/lib/snippets                          |       0 |        0 |       0 |       0 |                                            
+  atoms.ts                                 |       0 |        0 |       0 |       0 | 1-8                                        
+  index.ts                                 |       0 |        0 |       0 |       0 | 1-8                                        
+  molecules.ts                             |       0 |        0 |       0 |       0 | 1-8                                        
+  organisms.ts                             |       0 |        0 |       0 |       0 | 1-8                                        
+  templates.ts                             |       0 |        0 |       0 |       0 | 1-8                                        
+ src/store                                 |       0 |        0 |       0 |       0 |                                            
+  exports.ts                               |       0 |        0 |       0 |       0 | 1-8                                        
+  hooks.ts                                 |       0 |        0 |       0 |       0 | 1-7                                        
+  index.ts                                 |       0 |        0 |       0 |       0 | 1-23                                       
+  selectors.ts                             |       0 |        0 |       0 |       0 | 1-43                                       
+ src/store/hooks                           |       0 |        0 |       0 |       0 |                                            
+  usePersistenceConfig.ts                  |       0 |        0 |       0 |       0 | 1-56                                       
+ src/store/middleware                      |       0 |        0 |       0 |       0 |                                            
+  index.ts                                 |       0 |        0 |       0 |       0 | 1-15                                       
+  persistenceConfig.ts                     |       0 |        0 |       0 |       0 | 1-75                                       
+  persistenceMiddleware.ts                 |       0 |        0 |       0 |       0 | 1-79                                       
+ src/store/slices                          |       0 |        0 |       0 |       0 |                                            
+  namespacesSlice.ts                       |       0 |        0 |       0 |       0 | 1-95                                       
+  snippetsSlice.ts                         |       0 |        0 |       0 |       0 | 1-176                                      
+  uiSlice.ts                               |       0 |        0 |       0 |       0 | 1-54                                       
+-------------------------------------------|---------|----------|---------|---------|--------------------------------------------
+Snapshot Summary
+ › 4 snapshot files obsolete from 4 test suites. To remove them all, run `npm test -- -u`.
+   ↳   • src/components/ui/__snapshots__/aspect-ratio.test.tsx.snap
+       • src/components/ui/__snapshots__/badge.test.tsx.snap
+       • src/components/ui/__snapshots__/separator.test.tsx.snap
+       • src/components/ui/__snapshots__/sonner.test.tsx.snap
+
+Test Suites: 4 failed, 1 passed, 5 total
+Tests:       47 failed, 116 passed, 163 total
+Snapshots:   4 files obsolete, 0 total
+Time:        5.694 s
+Ran all test suites matching /python-runner/i.

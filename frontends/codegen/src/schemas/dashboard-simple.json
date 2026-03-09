@@ -1,0 +1,23 @@
+{
+  "id": "dashboard",
+  "name": "Dashboard",
+  "layout": {
+    "type": "grid",
+    "columns": 2,
+    "gap": 4
+  },
+  "dataSources": [
+    {
+      "id": "stats",
+      "type": "static",
+      "defaultValue": {
+        "users": 1247,
+        "revenue": 45230,
+        "orders": 892,
+        "conversion": 3.2
+      }
+    }
+  ],
+  "components": [],
+  "globalActions": []
+}

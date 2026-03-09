@@ -1,0 +1,79 @@
+/**
+ * Not Found State Styles
+ * 404 error page with fail whale - Material Design 3
+ */
+
+.notFoundContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 70vh;
+  padding: var(--spacing-8) var(--spacing-3) var(--spacing-5);
+  text-align: center;
+}
+
+.illustration {
+  margin-top: var(--spacing-2-5);
+  margin-bottom: var(--spacing-2);
+}
+
+.failWhale {
+  width: 200px;
+  height: 180px;
+
+  @media (max-width: 600px) {
+    width: 160px;
+    height: 144px;
+  }
+}
+
+.errorCode {
+  font-size: 5rem;
+  font-weight: 700;
+  color: var(--mat-sys-primary);
+  margin: var(--spacing-4) 0 0;
+  letter-spacing: -3px;
+  line-height: 1;
+
+  @media (max-width: 600px) {
+    font-size: 4rem;
+  }
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 500;
+  color: var(--mat-sys-on-surface);
+  margin: var(--spacing-2) 0 0;
+
+  @media (max-width: 600px) {
+    font-size: 1.5rem;
+  }
+}
+
+.description {
+  font-size: 1rem;
+  color: var(--mat-sys-on-surface-variant);
+  max-width: 400px;
+  margin: var(--spacing-2) 0 0;
+  line-height: 1.6;
+
+  @media (max-width: 600px) {
+    font-size: 0.9rem;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: var(--spacing-2);
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: var(--spacing-4);
+}
+
+.errorMeta {
+  font-size: 0.8rem;
+  color: var(--mat-sys-outline);
+  margin-top: var(--spacing-8);
+}

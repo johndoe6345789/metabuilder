@@ -19,8 +19,8 @@ import {
   updateWorkspace,
   removeWorkspace,
   setCurrentWorkspace,
-  setLoading,
-  setError,
+  setWorkspaceLoading,
+  setWorkspaceError,
   selectWorkspaces,
   selectCurrentWorkspace,
   selectCurrentWorkspaceId,
@@ -70,7 +70,7 @@ export function useWorkspace() {
    * Load workspaces from service adapter
    */
   const loadWorkspaces = useCallback(async () => {
-    dispatch(setLoading(true))
+    dispatch(setWorkspaceLoading(true))
     try {
       const tenantId = getTenantId()
       const workspaceList = await workspaceService.listWorkspaces(tenantId)
@@ -82,13 +82,13 @@ export function useWorkspace() {
         localStorage.setItem('currentWorkspaceId', workspaceList[0].id)
       }
 
-      dispatch(setError(null))
+      dispatch(setWorkspaceError(null))
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Failed to load workspaces'
-      dispatch(setError(errorMsg))
+      dispatch(setWorkspaceError(errorMsg))
       throw err
     } finally {
-      dispatch(setLoading(false))
+      dispatch(setWorkspaceLoading(false))
     }
   }, [dispatch, getTenantId, currentWorkspaceId, workspaceService])
 
@@ -97,7 +97,7 @@ export function useWorkspace() {
    */
   const createWorkspace = useCallback(
     async (data: CreateWorkspaceRequest) => {
-      dispatch(setLoading(true))
+      dispatch(setWorkspaceLoading(true))
       try {
         const tenantId = getTenantId()
         const workspace = await workspaceService.createWorkspace({
@@ -108,10 +108,10 @@ export function useWorkspace() {
         return workspace
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : 'Failed to create workspace'
-        dispatch(setError(errorMsg))
+        dispatch(setWorkspaceError(errorMsg))
         throw err
       } finally {
-        dispatch(setLoading(false))
+        dispatch(setWorkspaceLoading(false))
       }
     },
     [dispatch, getTenantId, workspaceService]
@@ -122,17 +122,17 @@ export function useWorkspace() {
    */
   const updateWorkspaceData = useCallback(
     async (id: string, data: UpdateWorkspaceRequest) => {
-      dispatch(setLoading(true))
+      dispatch(setWorkspaceLoading(true))
       try {
         const updated = await workspaceService.updateWorkspace(id, data)
         dispatch(updateWorkspace(updated))
         return updated
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : 'Failed to update workspace'
-        dispatch(setError(errorMsg))
+        dispatch(setWorkspaceError(errorMsg))
         throw err
       } finally {
-        dispatch(setLoading(false))
+        dispatch(setWorkspaceLoading(false))
       }
     },
     [dispatch, workspaceService]
@@ -143,16 +143,16 @@ export function useWorkspace() {
    */
   const deleteWorkspace = useCallback(
     async (id: string) => {
-      dispatch(setLoading(true))
+      dispatch(setWorkspaceLoading(true))
       try {
         await workspaceService.deleteWorkspace(id)
         dispatch(removeWorkspace(id))
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : 'Failed to delete workspace'
-        dispatch(setError(errorMsg))
+        dispatch(setWorkspaceError(errorMsg))
         throw err
       } finally {
-        dispatch(setLoading(false))
+        dispatch(setWorkspaceLoading(false))
       }
     },
     [dispatch, workspaceService]

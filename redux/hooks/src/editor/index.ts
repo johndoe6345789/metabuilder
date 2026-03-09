@@ -2,7 +2,7 @@
 // Pure Redux-based editor state and local state without service dependencies
 
 export { useEditor } from './useEditor'
-export type { EditorContextReturn } from './useEditor'
+export type { UseEditorReturn } from './useEditor'
 
 export { useEditorZoom } from './useEditorZoom'
 export type { UseEditorZoomReturn } from './useEditorZoom'

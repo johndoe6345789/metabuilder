@@ -30,7 +30,7 @@ export function AuthProviderComponent({ children }: AuthProviderProps) {
     if (authState.user === null) {
       return minLevel <= 0
     }
-    const userLevel = getRoleLevel(authState.user.role)
+    const userLevel = getRoleLevel(authState.user.role ?? 'user')
     return userLevel >= minLevel
   }
   

@@ -1,0 +1,72 @@
+{
+  "name": "Fetch Packages",
+  "description": "Workflow to fetch and filter packages from the API",
+  "version": "3.0.0",
+  "nodes": [
+    {
+      "id": "fetch_packages",
+      "name": "Fetch Packages",
+      "type": "api.get",
+      "parameters": {
+        "endpoint": "/v1/packages",
+        "out": "packages"
+      }
+    },
+    {
+      "id": "filter_packages",
+      "name": "Filter by Search",
+      "type": "list.filter",
+      "parameters": {
+        "input": "$packages",
+        "condition": "item.name.includes($search) || item.namespace.includes($search)",
+        "out": "filtered"
+      }
+    },
+    {
+      "id": "respond",
+      "name": "Return Filtered",
+      "type": "output.set",
+      "parameters": {
+        "key": "packages",
+        "value": "$filtered"
+      }
+    }
+  ],
+  "connections": {
+    "fetch_packages": {
+      "main": [
+        [
+          {
+            "node": "filter_packages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "filter_packages": {
+      "main": [
+        [
+          {
+            "node": "respond",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "inputs": {
+    "search": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "outputs": {
+    "packages": {
+      "type": "array"
+    }
+  },
+  "id": "workflow_fetch_packages",
+  "tenantId": "${TENANT_ID}"
+}

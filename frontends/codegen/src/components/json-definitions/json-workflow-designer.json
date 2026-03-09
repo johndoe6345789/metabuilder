@@ -1,0 +1,7 @@
+{
+  "id": "json-workflow-designer",
+  "type": "PageRenderer",
+  "props": {
+    "schema": "workflowDesignerSchema"
+  }
+}

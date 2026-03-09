@@ -11,6 +11,7 @@ interface WorkflowCardHeaderProps {
   onOpen: (workflowId: string) => void;
   onDelete: (id: string) => void;
   itemId: string;
+  testId?: string;
 }
 
 export const WorkflowCardHeader: React.FC<WorkflowCardHeaderProps> = ({
@@ -18,10 +19,11 @@ export const WorkflowCardHeader: React.FC<WorkflowCardHeaderProps> = ({
   workflowId,
   onOpen,
   onDelete,
-  itemId
+  itemId,
+  testId,
 }) => {
   return (
-    <div  data-no-drag>
+    <div data-testid={testId} data-no-drag>
       <div >{workflowName || 'Untitled Workflow'}</div>
       <div >
         <button

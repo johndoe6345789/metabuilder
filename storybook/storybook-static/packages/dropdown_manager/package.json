@@ -1,0 +1,75 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "dropdown_manager",
+  "name": "Dropdown Manager",
+  "version": "1.0.0",
+  "description": "Dynamic dropdown configuration with reusable option sets, value/label pairs, and live preview",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "managers",
+  "icon": "static_content/icon.svg",
+  "minLevel": 4,
+  "primary": false,
+  "keywords": [
+    "dropdown",
+    "select",
+    "options",
+    "configuration",
+    "forms"
+  ],
+  "dependencies": {
+    "data_table": "*",
+    "ui_permissions": "*"
+  },
+  "devDependencies": {
+    "testing": "*"
+  },
+  "exports": {
+    "components": [
+      "DropdownManager",
+      "DropdownEditor",
+      "DropdownPreview",
+      "OptionsList"
+    ],
+    "scripts": [
+      "dropdowns"
+    ]
+  },
+  "tests": {
+    "suites": [
+      "tests/metadata.test.json"
+    ]
+  },
+  "files": {
+    "directories": [
+      "components",
+      "permissions",
+      "static_content",
+      "storybook",
+      "styles",
+      "tests"
+    ],
+    "byType": {
+      "components": [
+        "components/ui.json"
+      ],
+      "tests": [
+        "tests/metadata.params.json",
+        "tests/metadata.test.json"
+      ],
+      "config": [
+        "package.json",
+        "storybook/config.json"
+      ],
+      "permissions": [
+        "permissions/roles.json"
+      ],
+      "styles": [
+        "styles/tokens.json"
+      ],
+      "other": [
+        "static_content/icon.svg"
+      ]
+    }
+  }
+}

@@ -16,7 +16,7 @@ import {
   fetchAsyncData,
   refetchAsyncData,
   selectAsyncRequest,
-  type AsyncDataState,
+  type RootState,
 } from '@metabuilder/redux-slices'
 
 export interface UseAsyncDataOptions {
@@ -61,7 +61,7 @@ export function useReduxAsyncData<T = unknown>(
 ): UseAsyncDataResult<T> {
   const dispatch = useDispatch()
   const requestIdRef = useRef<string>('')
-  const refetchIntervalRef = useRef<NodeJS.Timeout>()
+  const refetchIntervalRef = useRef<NodeJS.Timeout | undefined>(undefined)
   const visibilityListenerRef = useRef<(() => void) | null>(null)
 
   // Generate stable request ID based on fetch function
@@ -70,7 +70,7 @@ export function useReduxAsyncData<T = unknown>(
   }
 
   const requestId = requestIdRef.current
-  const asyncState = useSelector((state: { asyncData: AsyncDataState }) =>
+  const asyncState = useSelector((state: RootState) =>
     selectAsyncRequest(state, requestId)
   )
 

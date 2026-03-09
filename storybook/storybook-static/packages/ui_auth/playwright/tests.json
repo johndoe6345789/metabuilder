@@ -1,0 +1,504 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "auth",
+  "version": "1.0.0",
+  "description": "Authentication and login tests - converted from e2e/login.spec.ts, e2e/auth/authentication.spec.ts, and e2e/auth/complete-flow.spec.ts",
+  "tests": [
+    {
+      "name": "should display login form after navigating from landing page",
+      "tags": ["@auth", "@login"],
+      "timeout": 10000,
+      "steps": [
+        {
+          "description": "Navigate to home page",
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "description": "Click Sign In button",
+          "action": "click",
+          "role": "button",
+          "text": "Sign In"
+        },
+        {
+          "description": "Wait for navigation",
+          "action": "waitForLoadState",
+          "state": "networkidle"
+        },
+        {
+          "description": "Verify username field is visible",
+          "action": "expect",
+          "label": "Username",
+          "assertion": {
+            "matcher": "toBeVisible",
+            "timeout": 5000
+          }
+        },
+        {
+          "description": "Verify password field is visible",
+          "action": "expect",
+          "label": "Password",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        },
+        {
+          "description": "Verify login button is visible",
+          "action": "expect",
+          "role": "button",
+          "text": "Login",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should show error on invalid credentials",
+      "tags": ["@auth", "@login", "@validation"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "click",
+          "role": "button",
+          "text": "Sign In"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "networkidle"
+        },
+        {
+          "description": "Fill username",
+          "action": "fill",
+          "label": "Username",
+          "value": "invaliduser"
+        },
+        {
+          "description": "Fill password",
+          "action": "fill",
+          "label": "Password",
+          "value": "wrongpassword"
+        },
+        {
+          "description": "Click login button",
+          "action": "click",
+          "role": "button",
+          "text": "Login"
+        },
+        {
+          "description": "Verify error message appears",
+          "action": "expect",
+          "text": "invalid",
+          "assertion": {
+            "matcher": "toBeVisible",
+            "timeout": 5000
+          }
+        }
+      ]
+    },
+    {
+      "name": "should have register/sign up option",
+      "tags": ["@auth", "@registration"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "click",
+          "role": "button",
+          "text": "Sign In"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "networkidle"
+        },
+        {
+          "description": "Verify register option exists",
+          "action": "expect",
+          "text": "register",
+          "assertion": {
+            "matcher": "toBeVisible",
+            "timeout": 5000
+          }
+        }
+      ]
+    },
+    {
+      "name": "should have back button to return to landing",
+      "tags": ["@auth", "@navigation"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "click",
+          "role": "button",
+          "text": "Sign In"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "networkidle"
+        },
+        {
+          "description": "Verify back button exists",
+          "action": "expect",
+          "role": "button",
+          "text": "back",
+          "assertion": {
+            "matcher": "toBeVisible",
+            "timeout": 5000
+          }
+        }
+      ]
+    },
+    {
+      "name": "should display login form elements with POM pattern",
+      "tags": ["@auth", "@tdd", "@pom"],
+      "timeout": 10000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/login"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "networkidle"
+        },
+        {
+          "description": "Verify email input is visible",
+          "action": "expect",
+          "selector": "input[name=\"email\"], input[type=\"email\"]",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        },
+        {
+          "description": "Verify password input is visible",
+          "action": "expect",
+          "selector": "input[name=\"password\"], input[type=\"password\"]",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        },
+        {
+          "description": "Verify submit button is visible",
+          "action": "expect",
+          "selector": "button[type=\"submit\"]",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should show error with invalid credentials",
+      "tags": ["@auth", "@validation", "@tdd"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/login"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "networkidle"
+        },
+        {
+          "description": "Fill email field",
+          "action": "fill",
+          "selector": "input[name=\"email\"], input[type=\"email\"]",
+          "value": "invalid@example.com"
+        },
+        {
+          "description": "Fill password field",
+          "action": "fill",
+          "selector": "input[name=\"password\"], input[type=\"password\"]",
+          "value": "wrongpassword"
+        },
+        {
+          "description": "Submit form",
+          "action": "click",
+          "selector": "button[type=\"submit\"]"
+        },
+        {
+          "description": "Verify error message appears",
+          "action": "expect",
+          "selector": "[role=\"alert\"], .error-message",
+          "assertion": {
+            "matcher": "toBeVisible",
+            "timeout": 5000
+          }
+        }
+      ]
+    },
+    {
+      "name": "should display landing page for unauthenticated users",
+      "tags": ["@auth", "@landing"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Should see sign in or get started button",
+          "action": "expect",
+          "role": "button",
+          "text": "sign in",
+          "assertion": {
+            "matcher": "toBeVisible",
+            "timeout": 5000
+          }
+        }
+      ]
+    },
+    {
+      "name": "should have navigation to login from landing page",
+      "tags": ["@auth", "@navigation"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "description": "Click sign in button",
+          "action": "click",
+          "role": "button",
+          "text": "sign in"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "networkidle"
+        },
+        {
+          "description": "Should navigate to login page",
+          "action": "expect",
+          "label": "username",
+          "assertion": {
+            "matcher": "toBeVisible",
+            "timeout": 5000
+          }
+        }
+      ]
+    },
+    {
+      "name": "should show login form on direct access",
+      "tags": ["@auth", "@login"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/ui/login"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "networkidle"
+        },
+        {
+          "description": "Should have username/email field",
+          "action": "expect",
+          "label": "username",
+          "assertion": {
+            "matcher": "toBeVisible",
+            "timeout": 5000
+          }
+        },
+        {
+          "description": "Should have password field",
+          "action": "expect",
+          "label": "password",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        },
+        {
+          "description": "Should have login button",
+          "action": "expect",
+          "role": "button",
+          "text": "login",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should validate required fields on login",
+      "tags": ["@auth", "@validation"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/ui/login"
+        },
+        {
+          "description": "Try to submit without filling fields",
+          "action": "click",
+          "role": "button",
+          "text": "login"
+        },
+        {
+          "action": "wait",
+          "timeout": 1000
+        },
+        {
+          "description": "Should still be on login page",
+          "action": "expect",
+          "selector": "input[type=\"password\"], input[name=\"password\"]",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should show error for invalid login credentials",
+      "tags": ["@auth", "@validation"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/ui/login"
+        },
+        {
+          "description": "Fill with invalid credentials",
+          "action": "fill",
+          "label": "username",
+          "value": "invalid@example.com"
+        },
+        {
+          "action": "fill",
+          "label": "password",
+          "value": "wrongpassword"
+        },
+        {
+          "action": "click",
+          "role": "button",
+          "text": "login"
+        },
+        {
+          "description": "Should show error message",
+          "action": "expect",
+          "text": "invalid",
+          "assertion": {
+            "matcher": "toBeVisible",
+            "timeout": 5000
+          }
+        }
+      ]
+    },
+    {
+      "name": "should have register/signup link on login page",
+      "tags": ["@auth", "@registration"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/ui/login"
+        },
+        {
+          "description": "Should have link to registration",
+          "action": "expect",
+          "text": "register",
+          "assertion": {
+            "matcher": "toBeVisible",
+            "timeout": 5000
+          }
+        }
+      ]
+    },
+    {
+      "name": "should redirect to login for protected pages",
+      "tags": ["@auth", "@permissions"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/dashboard"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "networkidle"
+        },
+        {
+          "description": "Should see login form or access denied",
+          "action": "expect",
+          "selector": "input[type=\"password\"], [role=\"alert\"]",
+          "assertion": {
+            "matcher": "toBeVisible",
+            "timeout": 5000
+          }
+        }
+      ]
+    },
+    {
+      "name": "should allow access to public pages without authentication",
+      "tags": ["@auth", "@permissions"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "networkidle"
+        },
+        {
+          "description": "Should load successfully",
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should show user-friendly access denied message",
+      "tags": ["@auth", "@permissions", "@ui"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/supergod"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Should show access denied message",
+          "action": "expect",
+          "text": "access denied",
+          "assertion": {
+            "matcher": "toBeVisible",
+            "timeout": 5000
+          }
+        }
+      ]
+    },
+    {
+      "name": "should show registration form",
+      "tags": ["@auth", "@registration"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/ui/register"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "networkidle"
+        },
+        {
+          "description": "Should have email or username field",
+          "action": "expect",
+          "label": "email",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    }
+  ]
+}

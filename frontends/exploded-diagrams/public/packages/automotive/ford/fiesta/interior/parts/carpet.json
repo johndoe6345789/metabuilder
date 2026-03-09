@@ -1,0 +1,32 @@
+{
+  "id": "carpet",
+  "name": "Floor Carpet",
+  "partNumber": "FD-1856310",
+  "material": "blackPlastic",
+  "quantity": 1,
+  "weight": 8500.0,
+  "weightUnit": "g",
+  "baseY": 720,
+  "description": "Full floor carpet with sound deadening",
+  "installation": {
+    "tools": [
+      { "name": "Trim removal tool", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Carpet clip", "spec": "Push fit", "qty": 15, "reusable": true }
+    ],
+    "torque": [],
+    "notes": [
+      "Remove all seats first",
+      "Remove center console and sill trims",
+      "One piece - work from rear forward",
+      "Check for rust underneath"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 130, "height": 110, "rx": 5, "fill": "#2a2a2a" },
+    { "type": "rect", "width": 40, "height": 25, "offsetX": -30, "offsetY": -30, "rx": 2, "fill": "#333" },
+    { "type": "rect", "width": 40, "height": 25, "offsetX": 30, "offsetY": -30, "rx": 2, "fill": "#333" },
+    { "type": "rect", "width": 80, "height": 35, "offsetY": 30, "rx": 3, "fill": "#252525" }
+  ]
+}

@@ -1,0 +1,217 @@
+// Feedback components — alerts, skeletons, empty states, progress, banners
+// Uses MD3 CSS custom properties from var(--mat-sys-*)
+
+// ─── Alert ──────────────────────────────────────────────────────────────────
+
+.alert {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid;
+
+  &--info {
+    background: color-mix(in srgb, var(--mat-sys-primary) 8%, transparent);
+    border-color: color-mix(in srgb, var(--mat-sys-primary) 30%, transparent);
+    color: var(--mat-sys-on-surface);
+  }
+
+  &--warning {
+    background: color-mix(in srgb, #f59e0b 8%, transparent);
+    border-color: color-mix(in srgb, #f59e0b 30%, transparent);
+    color: #92400e;
+  }
+
+  &--success {
+    background: color-mix(in srgb, #16a34a 8%, transparent);
+    border-color: color-mix(in srgb, #16a34a 30%, transparent);
+    color: #14532d;
+  }
+
+  &--error {
+    background: color-mix(in srgb, var(--mat-sys-error) 8%, transparent);
+    border-color: color-mix(in srgb, var(--mat-sys-error) 30%, transparent);
+    color: var(--mat-sys-error);
+  }
+
+  &__icon {
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  &__content {
+    flex: 1;
+  }
+
+  &__title {
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  &__message {
+    font-size: 14px;
+  }
+}
+
+// ─── Skeleton ───────────────────────────────────────────────────────────────
+
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.skeleton {
+  background: var(--mat-sys-surface-variant, color-mix(in srgb, var(--mat-sys-on-surface) 12%, transparent));
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+
+  &--text {
+    border-radius: 4px;
+    height: 16px;
+  }
+
+  &--rectangular {
+    border-radius: 0;
+  }
+
+  &--rounded {
+    border-radius: 8px;
+  }
+
+  &--avatar {
+    border-radius: 50%;
+  }
+}
+
+// ─── Loading fallback ────────────────────────────────────────────────────────
+
+.loading-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &__message {
+    font-size: 14px;
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+// ─── Empty state (feedback variant) ─────────────────────────────────────────
+
+.empty-state-feedback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  height: 100%;
+  text-align: center;
+  gap: 0;
+
+  &__icon {
+    color: var(--mat-sys-on-surface-variant);
+    margin-bottom: 16px;
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    margin-top: 16px;
+  }
+}
+
+// ─── Search empty state ──────────────────────────────────────────────────────
+
+.search-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 24px 0;
+
+  &__icon {
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  &__message {
+    font-size: 14px;
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+// ─── Offline banner ──────────────────────────────────────────────────────────
+
+.offline-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: color-mix(in srgb, var(--mat-sys-error) 8%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--mat-sys-error) 30%, transparent);
+  color: var(--mat-sys-error);
+  font-size: 14px;
+  font-weight: 500;
+
+  &__icon {
+    flex-shrink: 0;
+  }
+
+  &__message {
+    flex: 1;
+  }
+}
+
+// ─── Circular progress ───────────────────────────────────────────────────────
+
+.circular-progress {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  &__track {
+    color: var(--mat-sys-on-surface-variant);
+    opacity: 0.2;
+  }
+
+  &__fill {
+    color: var(--mat-sys-primary);
+    transition: stroke-dashoffset 300ms ease;
+  }
+
+  &__svg {
+    transform: rotate(-90deg);
+  }
+
+  &__label {
+    position: absolute;
+    font-weight: 600;
+    color: var(--mat-sys-on-surface);
+
+    &--sm { font-size: 12px; }
+    &--md { font-size: 14px; }
+    &--lg { font-size: 16px; }
+    &--xl { font-size: 18px; }
+  }
+}
+
+// ─── Error panel empty state ─────────────────────────────────────────────────
+
+.error-panel-empty-state {
+  &__scanning-icon {
+    animation: skeleton-pulse 1.5s ease-in-out infinite;
+  }
+
+  &__success-icon {
+    color: #16a34a;
+  }
+}

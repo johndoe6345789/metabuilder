@@ -1,0 +1,64 @@
+{
+  "entity": "ProfileComment",
+  "version": "1.0",
+  "description": "Markdown comment posted on a user's profile wall (ModDB-style guestbook)",
+  "fields": {
+    "id": {
+      "type": "uuid",
+      "primary": true,
+      "required": true,
+      "description": "Unique comment identifier (client-generated UUID)"
+    },
+    "profileUserId": {
+      "type": "string",
+      "required": true,
+      "description": "User ID of the profile being commented on"
+    },
+    "authorId": {
+      "type": "string",
+      "required": true,
+      "description": "Comment author user ID"
+    },
+    "authorUsername": {
+      "type": "string",
+      "required": true,
+      "max_length": 50,
+      "description": "Author username at time of posting (denormalized)"
+    },
+    "content": {
+      "type": "text",
+      "required": true,
+      "description": "Markdown comment body"
+    },
+    "createdAt": {
+      "type": "bigint",
+      "required": true,
+      "description": "Creation timestamp (Unix milliseconds)"
+    },
+    "tenantId": {
+      "type": "string",
+      "optional": true,
+      "nullable": true
+    }
+  },
+  "indexes": [
+    { "fields": ["profileUserId"] },
+    { "fields": ["authorId"] },
+    { "fields": ["tenantId", "profileUserId"] },
+    { "fields": ["createdAt"] }
+  ],
+  "relations": {
+    "profile": {
+      "type": "belongs-to",
+      "entity": "User",
+      "foreign_key": "profileUserId",
+      "on_delete": "cascade"
+    }
+  },
+  "acl": {
+    "create": { "user": true },
+    "read":   { "public": true },
+    "update": { "self": true, "admin": true },
+    "delete": { "self": true, "admin": true }
+  }
+}

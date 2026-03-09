@@ -1,0 +1,86 @@
+{
+  "id": "drawer-root",
+  "type": "Drawer",
+  "bindings": {
+    "open": "data.open",
+    "onOpenChange": "handlers.handleOpenChange",
+    "direction": "data.direction || 'right'"
+  },
+  "children": [
+    {
+      "id": "drawer-trigger",
+      "type": "DrawerTrigger",
+      "bindings": {
+        "asChild": true
+      },
+      "children": [
+        {
+          "id": "drawer-trigger-content",
+          "type": "slot",
+          "slot": "trigger",
+          "defaultContent": {
+            "id": "trigger-button",
+            "type": "Button",
+            "bindings": {
+              "children": "data.triggerLabel || 'Open'"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "drawer-content",
+      "type": "DrawerContent",
+      "children": [
+        {
+          "id": "drawer-header",
+          "type": "DrawerHeader",
+          "children": [
+            {
+              "id": "drawer-title",
+              "type": "DrawerTitle",
+              "bindings": {
+                "children": "data.title"
+              }
+            },
+            {
+              "id": "drawer-description",
+              "type": "DrawerDescription",
+              "bindings": {
+                "children": "data.description"
+              }
+            }
+          ]
+        },
+        {
+          "id": "drawer-body",
+          "type": "slot",
+          "slot": "children"
+        },
+        {
+          "id": "drawer-footer",
+          "type": "DrawerFooter",
+          "children": [
+            {
+              "id": "drawer-close-button",
+              "type": "Button",
+              "bindings": {
+                "variant": "outline",
+                "children": "data.cancelLabel || 'Cancel'",
+                "onClick": "handlers.handleCancel"
+              }
+            },
+            {
+              "id": "drawer-submit-button",
+              "type": "Button",
+              "bindings": {
+                "children": "data.submitLabel || 'Submit'",
+                "onClick": "handlers.handleSubmit"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

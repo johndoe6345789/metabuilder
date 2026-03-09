@@ -14,7 +14,7 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@metabuilder/workflow": "workspace:*"
+    "@metabuilder/workflow": "*"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",

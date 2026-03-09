@@ -28,7 +28,7 @@ import {
   selectWorkflowIsDirty,
   selectWorkflowIsSaving,
 } from '@metabuilder/redux-slices'
-import type { Workflow, WorkflowNode, WorkflowConnection } from '@metabuilder/service-adapters'
+import type { Workflow, WorkflowNode, WorkflowConnection } from '@metabuilder/types'
 import type { AppDispatch, RootState } from '@metabuilder/redux-slices'
 
 /**
@@ -43,7 +43,7 @@ import type { AppDispatch, RootState } from '@metabuilder/redux-slices'
 export function useWorkflow() {
   const dispatch = useDispatch<AppDispatch>()
   const { workflowService } = useServices()
-  const saveTimeoutRef = useRef<NodeJS.Timeout>()
+  const saveTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined)
 
   // Selectors
   const workflow = useSelector((state: RootState) => selectCurrentWorkflow(state))

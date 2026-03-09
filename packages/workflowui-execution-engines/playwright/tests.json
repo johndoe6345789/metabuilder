@@ -1,0 +1,188 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "workflowui-execution-engines",
+  "version": "1.0.0",
+  "description": "Multi-language workflow execution tests - TypeScript, Python, and C++",
+  "tests": [
+    {
+      "name": "execute TypeScript workflow end-to-end",
+      "tags": [
+        "@execution",
+        "@typescript",
+        "@e2e"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "editor/ts-http-workflow"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "wait",
+          "timeout": 1000
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ],
+      "timeout": 60000
+    },
+    {
+      "name": "execute Python workflow with data transformation",
+      "tags": [
+        "@execution",
+        "@python",
+        "@e2e"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "editor/py-data-workflow"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "wait",
+          "timeout": 1000
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ],
+      "timeout": 60000
+    },
+    {
+      "name": "execute C++ workflow (future support)",
+      "tags": [
+        "@execution",
+        "@cpp",
+        "@future"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "editor/cpp-perf-workflow"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "wait",
+          "timeout": 1000
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ],
+      "timeout": 15000
+    },
+    {
+      "name": "runtime selection and comparison",
+      "tags": [
+        "@execution",
+        "@multi-language",
+        "@comparison"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "workflows"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "wait",
+          "timeout": 1000
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ],
+      "timeout": 60000
+    },
+    {
+      "name": "execution history with runtime details",
+      "tags": [
+        "@execution",
+        "@history",
+        "@monitoring"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "workflows/executions"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "wait",
+          "timeout": 1000
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ],
+      "timeout": 45000
+    },
+    {
+      "name": "workflow runtime error handling",
+      "tags": [
+        "@execution",
+        "@errors",
+        "@debugging"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "editor/wf-ts-error"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "wait",
+          "timeout": 1000
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ],
+      "timeout": 45000
+    }
+  ]
+}

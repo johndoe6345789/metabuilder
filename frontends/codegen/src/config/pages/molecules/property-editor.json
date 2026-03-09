@@ -1,0 +1,8 @@
+{
+  "type": "MetabuilderWidgetScrollArea",
+  "props": {
+    "onUpdate": "> void",
+    "onDelete": "> void",
+    "key": "> {"
+  }
+}

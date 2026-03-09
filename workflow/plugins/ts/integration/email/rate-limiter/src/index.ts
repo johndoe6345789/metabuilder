@@ -125,15 +125,15 @@ export class RateLimiterExecutor implements INodeExecutor {
     'Rate limit email operations (sync: 100/hr, send: 50/hr, search: 500/hr) with distributed Redis backend';
 
   /** Redis client instance (lazy loaded) */
-  private redisClient: any = null;
+  private _redisClient: any = null;
 
   /**
    * Execute rate limit check
    */
   async execute(
     node: WorkflowNode,
-    context: WorkflowContext,
-    state: ExecutionState
+    _context: WorkflowContext,
+    _state: ExecutionState
   ): Promise<NodeResult> {
     const startTime = Date.now();
 
@@ -363,8 +363,11 @@ export class RateLimiterExecutor implements INodeExecutor {
    */
   private async _getBucketState(key: string): Promise<TokenBucketState | null> {
     try {
-      // In production, this would fetch from Redis
+      // In production, this would use this._redisClient to fetch from Redis
       // For now, use in-memory storage with TTL simulation
+      if (this._redisClient) {
+        // TODO: Use Redis GET command when Redis client is initialized
+      }
       const stored = (global as any).__rateLimiterBuckets?.[key];
 
       if (!stored) {

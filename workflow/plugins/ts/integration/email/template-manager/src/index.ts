@@ -233,7 +233,7 @@ export class TemplateManagerExecutor implements INodeExecutor {
   async execute(
     node: WorkflowNode,
     context: WorkflowContext,
-    state: ExecutionState
+    _state: ExecutionState
   ): Promise<NodeResult> {
     const startTime = Date.now();
 
@@ -435,8 +435,8 @@ export class TemplateManagerExecutor implements INodeExecutor {
 
     // Parse variables from template content
     const variables = this._extractVariables(
-      templateData.subject,
-      templateData.bodyText,
+      templateData.subject!,
+      templateData.bodyText || '',
       templateData.bodyHtml
     );
 

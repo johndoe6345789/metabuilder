@@ -1,0 +1,94 @@
+{
+  "$schema": "https://packagerepo.dev/schemas/components.schema.json",
+  "package": "repo_auth",
+  "root": "login_page",
+  "components": [
+    {
+      "id": "login_page",
+      "name": "LoginPage",
+      "props": [
+        { "name": "error", "type": "string" },
+        { "name": "loading", "type": "boolean" },
+        { "name": "onSubmit", "type": "function" }
+      ],
+      "render": {
+        "template": {
+          "type": "Container",
+          "sx": { "maxWidth": "400px", "mt": 10 },
+          "children": [
+            {
+              "type": "Card",
+              "children": [
+                {
+                  "type": "Box",
+                  "className": "card__header",
+                  "children": [{ "type": "Text", "variant": "h2", "children": "Login" }]
+                },
+                {
+                  "type": "Box",
+                  "className": "card__body",
+                  "children": [
+                    { "$ref": "error_alert" },
+                    { "$ref": "login_form" },
+                    {
+                      "type": "Text",
+                      "variant": "body2",
+                      "sx": { "mt": 2, "textAlign": "center", "color": "var(--mat-sys-on-surface-variant)" },
+                      "children": "Default: admin / admin"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "error_alert",
+      "name": "ErrorAlert",
+      "render": {
+        "template": {
+          "type": "Alert",
+          "variant": "error",
+          "sx": { "display": "{{error ? 'block' : 'none'}}" },
+          "children": "{{error}}"
+        }
+      }
+    },
+    {
+      "id": "login_form",
+      "name": "LoginForm",
+      "render": {
+        "template": {
+          "type": "Form",
+          "children": [
+            {
+              "type": "Box",
+              "className": "form-group",
+              "children": [
+                { "type": "Label", "className": "form-label", "children": "Username" },
+                { "type": "Input", "name": "username", "required": true }
+              ]
+            },
+            {
+              "type": "Box",
+              "className": "form-group",
+              "children": [
+                { "type": "Label", "className": "form-label", "children": "Password" },
+                { "type": "Input", "name": "password", "type": "password", "required": true }
+              ]
+            },
+            {
+              "type": "Button",
+              "variant": "primary",
+              "fullWidth": true,
+              "type": "submit",
+              "children": "{{loading ? 'Signing in...' : 'Sign In'}}"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

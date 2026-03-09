@@ -1,7 +1,15 @@
 /**
- * Workflow Type Definitions
- * Core types for workflow editor and execution
+ * Re-export workflow types from shared types package
  */
+export type {
+  Workflow,
+  WorkflowNode,
+  WorkflowConnection,
+  NodeExecutionResult,
+  ExecutionResult,
+  ExecutionStatus,
+  ExecutionStats
+} from '@metabuilder/types';
 
 /**
  * Node parameter definition
@@ -37,90 +45,6 @@ export interface NodeType {
   tags?: string[];
   experimental?: boolean;
   author?: string;
-}
-
-/**
- * Workflow node instance
- */
-export interface WorkflowNode {
-  id: string;
-  type: string;
-  name: string;
-  position: { x: number; y: number };
-  parameters: Record<string, any>;
-  description?: string;
-  disabled?: boolean;
-}
-
-/**
- * Connection between nodes
- */
-export interface WorkflowConnection {
-  source: string;
-  target: string;
-  sourceHandle?: string;
-  targetHandle?: string;
-}
-
-/**
- * Complete workflow definition
- */
-export interface Workflow {
-  id: string;
-  name: string;
-  description?: string;
-  version: string;
-  tenantId: string;
-  nodes: WorkflowNode[];
-  connections: WorkflowConnection[];
-  tags?: string[];
-  createdAt: number;
-  updatedAt: number;
-  createdBy?: string;
-  lastModifiedBy?: string;
-  isPublished?: boolean;
-  metadata?: Record<string, any>;
-}
-
-/**
- * Execution result for node
- */
-export interface NodeExecutionResult {
-  nodeId: string;
-  nodeName: string;
-  status: 'pending' | 'running' | 'success' | 'error' | 'skipped';
-  startTime: number;
-  endTime?: number;
-  duration?: number;
-  data?: any;
-  error?: {
-    code: string;
-    message: string;
-    stack?: string;
-  };
-}
-
-/**
- * Complete execution result
- */
-export interface ExecutionResult {
-  id: string;
-  workflowId: string;
-  workflowName: string;
-  tenantId: string;
-  status: 'pending' | 'running' | 'success' | 'error' | 'stopped';
-  startTime: number;
-  endTime?: number;
-  duration?: number;
-  nodes: NodeExecutionResult[];
-  error?: {
-    code: string;
-    message: string;
-    nodeId?: string;
-  };
-  input?: Record<string, any>;
-  output?: Record<string, any>;
-  triggeredBy?: string;
 }
 
 /**

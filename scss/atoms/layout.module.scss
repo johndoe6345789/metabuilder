@@ -1,0 +1,225 @@
+/**
+ * Layout Module - Material Design 3
+ * Scoped styles for app layout structure
+ */
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--mat-sys-surface);
+}
+
+.content {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.main {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+  background: var(--mat-sys-surface-container-lowest);
+
+  // Full-height workspace pages (unit-tests, playwright, etc.) — strip padding
+  // so the workspace component can manage its own layout
+  &:has(:global(.workspace__body)) {
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+// Sidebar
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 240px;
+  align-self: stretch;
+  background: var(--mat-sys-surface-container-low);
+  border-right: 1px solid var(--mat-sys-outline-variant);
+  flex-shrink: 0;
+  overflow-y: auto;
+}
+
+.sidebarHidden {
+  width: 0;
+  overflow: hidden;
+}
+
+.sidebarHeader {
+  padding: 16px;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+
+.sidebarTitle {
+  font: var(--mat-sys-title-medium-font);
+  color: var(--mat-sys-on-surface);
+  margin: 0;
+}
+
+.sidebarContent {
+  flex: 1;
+  padding: 8px 0;
+}
+
+.sidebarFooter {
+  padding: 16px;
+  border-top: 1px solid var(--mat-sys-outline-variant);
+  margin-top: auto;
+}
+
+// Mobile drawer
+.drawerMobile {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 280px;
+  z-index: 1200;
+  box-shadow: var(--mat-sys-level4);
+  transform: translateX(-100%);
+  transition: transform var(--mat-sys-motion-duration-medium2) var(--mat-sys-motion-easing-emphasized);
+}
+
+.drawerMobileOpen {
+  transform: translateX(0);
+}
+
+.drawerBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1100;
+}
+
+// App bar / Header
+.appBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  padding: 0 16px;
+  background: var(--mat-sys-surface-container);
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  flex-shrink: 0;
+}
+
+.appBarTitle {
+  font: var(--mat-sys-title-large-font);
+  color: var(--mat-sys-on-surface);
+  margin: 0;
+}
+
+.appBarActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.appBarLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.appBarBrand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+// Navigation sections
+.navSection {
+  padding: 8px 0;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--mat-sys-outline-variant);
+  }
+}
+
+.navSectionTitle {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--mat-sys-on-surface-variant);
+  padding: 8px 16px 4px;
+  margin: 0;
+}
+
+// Navigation list
+.navList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navItem {
+  display: block;
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  color: var(--mat-sys-on-surface-variant);
+  text-decoration: none;
+  font-size: 0.875rem;
+  border-radius: 0 24px 24px 0;
+  margin-right: 12px;
+  transition: all var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+
+  &:hover {
+    background: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
+    color: var(--mat-sys-on-surface);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary);
+    outline-offset: -2px;
+  }
+}
+
+.navLinkActive {
+  background: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
+
+  .navIcon {
+    color: var(--mat-sys-on-secondary-container);
+  }
+}
+
+.navIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.navLabel {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.navBadge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 10px;
+  background: var(--mat-sys-error);
+  color: var(--mat-sys-on-error);
+  font-size: 0.7rem;
+  font-weight: 600;
+}

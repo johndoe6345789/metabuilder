@@ -1,0 +1,573 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "name": "Material Design 3 Component Schema",
+  "version": "1.0.0",
+  "components": {
+    "button": {
+      "selectors": [
+        "[data-md3='button']",
+        ".md3-button",
+        ".mdc-button",
+        "button[class*='Button']"
+      ],
+      "role": "button",
+      "variants": ["filled", "outlined", "text", "elevated", "tonal"],
+      "states": {
+        "disabled": "[disabled], [aria-disabled='true']",
+        "loading": "[data-loading='true'], [aria-busy='true']"
+      },
+      "interactions": ["click", "focus", "hover"],
+      "ripple": true,
+      "a11y": {
+        "requiresAccessibleName": true
+      }
+    },
+    "fab": {
+      "selectors": [
+        "[data-md3='fab']",
+        ".md3-fab",
+        ".mdc-fab",
+        "[class*='Fab']"
+      ],
+      "role": "button",
+      "variants": ["small", "regular", "large", "extended"],
+      "states": {
+        "disabled": "[disabled]"
+      },
+      "interactions": ["click", "focus"],
+      "ripple": true,
+      "a11y": {
+        "requiresAriaLabel": true
+      }
+    },
+    "iconButton": {
+      "selectors": [
+        "[data-md3='icon-button']",
+        ".md3-icon-button",
+        ".mdc-icon-button",
+        "button[class*='IconButton']"
+      ],
+      "role": "button",
+      "variants": ["standard", "filled", "tonal", "outlined"],
+      "states": {
+        "disabled": "[disabled]",
+        "selected": "[aria-pressed='true']"
+      },
+      "interactions": ["click", "focus"],
+      "ripple": true,
+      "a11y": {
+        "requiresAriaLabel": true
+      }
+    },
+    "textField": {
+      "selectors": [
+        "[data-md3='text-field']",
+        ".md3-text-field",
+        ".mdc-text-field",
+        "[class*='TextField']"
+      ],
+      "role": "textbox",
+      "variants": ["filled", "outlined"],
+      "states": {
+        "error": "[aria-invalid='true'], [data-error='true']",
+        "disabled": "[disabled]",
+        "focused": ":focus-within"
+      },
+      "parts": {
+        "input": "input, textarea",
+        "label": "label, [class*='label']",
+        "helper": "[class*='helper'], [class*='supporting']",
+        "error": "[class*='error-text']",
+        "leadingIcon": "[class*='leading']",
+        "trailingIcon": "[class*='trailing']"
+      },
+      "interactions": ["type", "focus", "clear"],
+      "a11y": {
+        "requiresLabel": true
+      }
+    },
+    "checkbox": {
+      "selectors": [
+        "[data-md3='checkbox']",
+        ".md3-checkbox",
+        ".mdc-checkbox",
+        "input[type='checkbox']"
+      ],
+      "role": "checkbox",
+      "states": {
+        "checked": "[checked], [aria-checked='true']",
+        "indeterminate": "[aria-checked='mixed']",
+        "disabled": "[disabled]"
+      },
+      "interactions": ["click", "focus"],
+      "ripple": true
+    },
+    "radio": {
+      "selectors": [
+        "[data-md3='radio']",
+        ".md3-radio",
+        ".mdc-radio",
+        "input[type='radio']"
+      ],
+      "role": "radio",
+      "states": {
+        "checked": "[checked], [aria-checked='true']",
+        "disabled": "[disabled]"
+      },
+      "interactions": ["click", "focus"],
+      "ripple": true
+    },
+    "switch": {
+      "selectors": [
+        "[data-md3='switch']",
+        ".md3-switch",
+        ".mdc-switch",
+        "[role='switch']"
+      ],
+      "role": "switch",
+      "states": {
+        "checked": "[aria-checked='true']",
+        "disabled": "[disabled]"
+      },
+      "interactions": ["click", "focus"],
+      "a11y": {
+        "requiresAriaLabel": true
+      }
+    },
+    "chip": {
+      "selectors": [
+        "[data-md3='chip']",
+        ".md3-chip",
+        ".mdc-chip",
+        "[class*='Chip']"
+      ],
+      "role": "button",
+      "variants": ["assist", "filter", "input", "suggestion"],
+      "states": {
+        "selected": "[aria-selected='true'], [aria-pressed='true']",
+        "disabled": "[disabled]"
+      },
+      "parts": {
+        "label": "[class*='label']",
+        "icon": "[class*='icon']",
+        "deleteButton": "[class*='delete'], [class*='remove']"
+      },
+      "interactions": ["click", "focus"],
+      "ripple": true
+    },
+    "dialog": {
+      "selectors": [
+        "[data-md3='dialog']",
+        ".md3-dialog",
+        ".mdc-dialog",
+        "[role='dialog']"
+      ],
+      "role": "dialog",
+      "parts": {
+        "headline": "[class*='headline'], [class*='title']",
+        "content": "[class*='content'], [class*='body']",
+        "actions": "[class*='actions'], [class*='buttons']"
+      },
+      "states": {
+        "open": "[open], [data-open='true']"
+      },
+      "interactions": ["close"],
+      "a11y": {
+        "requiresAriaLabel": true,
+        "trapsFocus": true,
+        "closesOnEscape": true
+      }
+    },
+    "snackbar": {
+      "selectors": [
+        "[data-md3='snackbar']",
+        ".md3-snackbar",
+        ".mdc-snackbar",
+        "[role='status']"
+      ],
+      "role": "status",
+      "parts": {
+        "message": "[class*='label'], [class*='message']",
+        "action": "[class*='action'] button"
+      },
+      "states": {
+        "visible": "[data-visible='true'], :not([hidden])"
+      },
+      "a11y": {
+        "ariaLive": "polite"
+      }
+    },
+    "menu": {
+      "selectors": [
+        "[data-md3='menu']",
+        ".md3-menu",
+        ".mdc-menu",
+        "[role='menu']"
+      ],
+      "role": "menu",
+      "parts": {
+        "item": "[role='menuitem']",
+        "divider": "[role='separator']"
+      },
+      "states": {
+        "open": "[data-open='true'], :not([hidden])"
+      },
+      "interactions": ["navigate", "select", "close"],
+      "a11y": {
+        "keyboardNavigation": ["ArrowUp", "ArrowDown", "Enter", "Escape"]
+      }
+    },
+    "navigationRail": {
+      "selectors": [
+        "[data-md3='navigation-rail']",
+        ".md3-navigation-rail",
+        ".mdc-navigation-rail",
+        "[class*='NavigationRail']"
+      ],
+      "role": "navigation",
+      "parts": {
+        "item": "[class*='item'], a",
+        "icon": "[class*='icon']",
+        "label": "[class*='label']",
+        "fab": "[class*='fab']"
+      },
+      "states": {
+        "collapsed": "[data-collapsed='true']"
+      }
+    },
+    "navigationDrawer": {
+      "selectors": [
+        "[data-md3='navigation-drawer']",
+        ".md3-navigation-drawer",
+        ".mdc-drawer",
+        "[class*='Drawer']"
+      ],
+      "role": "navigation",
+      "variants": ["standard", "modal"],
+      "parts": {
+        "header": "[class*='header']",
+        "content": "[class*='content']",
+        "item": "[class*='item'], a"
+      },
+      "states": {
+        "open": "[data-open='true'], :not([hidden])"
+      },
+      "a11y": {
+        "trapsFocusWhenModal": true
+      }
+    },
+    "tabs": {
+      "selectors": [
+        "[data-md3='tabs']",
+        ".md3-tabs",
+        ".mdc-tab-bar",
+        "[role='tablist']"
+      ],
+      "role": "tablist",
+      "variants": ["primary", "secondary"],
+      "parts": {
+        "tab": "[role='tab']",
+        "indicator": "[class*='indicator']",
+        "panel": "[role='tabpanel']"
+      },
+      "states": {
+        "selected": "[aria-selected='true']"
+      },
+      "interactions": ["select"],
+      "a11y": {
+        "keyboardNavigation": ["ArrowLeft", "ArrowRight"]
+      }
+    },
+    "card": {
+      "selectors": [
+        "[data-md3='card']",
+        ".md3-card",
+        ".mdc-card",
+        "[class*='Card']"
+      ],
+      "variants": ["elevated", "filled", "outlined"],
+      "parts": {
+        "media": "[class*='media']",
+        "content": "[class*='content']",
+        "actions": "[class*='actions']"
+      },
+      "interactions": ["click"],
+      "ripple": true
+    },
+    "list": {
+      "selectors": [
+        "[data-md3='list']",
+        ".md3-list",
+        ".mdc-list",
+        "[role='list']"
+      ],
+      "role": "list",
+      "parts": {
+        "item": "[role='listitem'], li",
+        "headline": "[class*='headline']",
+        "supporting": "[class*='supporting']",
+        "leading": "[class*='leading']",
+        "trailing": "[class*='trailing']"
+      }
+    },
+    "divider": {
+      "selectors": [
+        "[data-md3='divider']",
+        ".md3-divider",
+        ".mdc-list-divider",
+        "[role='separator']",
+        "hr"
+      ],
+      "role": "separator",
+      "variants": ["full-width", "inset", "middle-inset"]
+    },
+    "progressIndicator": {
+      "selectors": [
+        "[data-md3='progress']",
+        ".md3-progress",
+        ".mdc-linear-progress",
+        "[role='progressbar']"
+      ],
+      "role": "progressbar",
+      "variants": ["linear", "circular"],
+      "states": {
+        "indeterminate": "[data-indeterminate='true']"
+      },
+      "a11y": {
+        "requiresAriaValueNow": true,
+        "requiresAriaValueMin": true,
+        "requiresAriaValueMax": true
+      }
+    },
+    "select": {
+      "selectors": [
+        "[data-md3='select']",
+        ".md3-select",
+        ".mdc-select",
+        "[class*='Select']"
+      ],
+      "role": "combobox",
+      "variants": ["filled", "outlined"],
+      "parts": {
+        "trigger": "[class*='trigger'], button",
+        "menu": "[role='listbox']",
+        "option": "[role='option']"
+      },
+      "states": {
+        "open": "[aria-expanded='true']",
+        "disabled": "[disabled]",
+        "error": "[aria-invalid='true']"
+      },
+      "a11y": {
+        "keyboardNavigation": ["ArrowUp", "ArrowDown", "Enter", "Escape"]
+      }
+    },
+    "slider": {
+      "selectors": [
+        "[data-md3='slider']",
+        ".md3-slider",
+        ".mdc-slider",
+        "[role='slider']"
+      ],
+      "role": "slider",
+      "variants": ["continuous", "discrete"],
+      "parts": {
+        "track": "[class*='track']",
+        "thumb": "[class*='thumb']",
+        "valueLabel": "[class*='value']"
+      },
+      "states": {
+        "disabled": "[disabled]"
+      },
+      "a11y": {
+        "requiresAriaValueNow": true,
+        "keyboardNavigation": ["ArrowLeft", "ArrowRight"]
+      }
+    },
+    "tooltip": {
+      "selectors": [
+        "[data-md3='tooltip']",
+        ".md3-tooltip",
+        ".mdc-tooltip",
+        "[role='tooltip']"
+      ],
+      "role": "tooltip",
+      "variants": ["plain", "rich"],
+      "states": {
+        "visible": "[data-visible='true'], :not([hidden])"
+      }
+    },
+    "badge": {
+      "selectors": [
+        "[data-md3='badge']",
+        ".md3-badge",
+        ".mdc-badge",
+        "[class*='Badge']"
+      ],
+      "variants": ["small", "large"],
+      "states": {
+        "hidden": "[data-hidden='true'], [hidden]"
+      }
+    },
+    "topAppBar": {
+      "selectors": [
+        "[data-md3='top-app-bar']",
+        ".md3-top-app-bar",
+        ".mdc-top-app-bar",
+        "header[class*='AppBar']"
+      ],
+      "role": "banner",
+      "variants": ["small", "medium", "large"],
+      "parts": {
+        "title": "[class*='title']",
+        "navigationIcon": "[class*='navigation']",
+        "actions": "[class*='actions']"
+      }
+    },
+    "bottomAppBar": {
+      "selectors": [
+        "[data-md3='bottom-app-bar']",
+        ".md3-bottom-app-bar",
+        "[class*='BottomAppBar']"
+      ],
+      "parts": {
+        "icons": "[class*='icons']",
+        "fab": "[class*='fab']"
+      }
+    },
+    "bottomNavigation": {
+      "selectors": [
+        "[data-md3='bottom-navigation']",
+        ".md3-bottom-navigation",
+        ".mdc-bottom-navigation",
+        "[class*='BottomNavigation']"
+      ],
+      "role": "navigation",
+      "parts": {
+        "item": "[class*='item'], button",
+        "icon": "[class*='icon']",
+        "label": "[class*='label']"
+      },
+      "states": {
+        "selected": "[aria-selected='true'], [aria-current='page']"
+      }
+    },
+    "segmentedButton": {
+      "selectors": [
+        "[data-md3='segmented-button']",
+        ".md3-segmented-button",
+        "[role='group']"
+      ],
+      "role": "group",
+      "parts": {
+        "segment": "button, [role='radio']"
+      },
+      "states": {
+        "selected": "[aria-pressed='true'], [aria-checked='true']"
+      },
+      "interactions": ["select"],
+      "ripple": true
+    },
+    "datePicker": {
+      "selectors": [
+        "[data-md3='date-picker']",
+        ".md3-date-picker",
+        "[class*='DatePicker']"
+      ],
+      "role": "dialog",
+      "parts": {
+        "input": "input",
+        "calendar": "[class*='calendar']",
+        "header": "[class*='header']",
+        "days": "[class*='day']"
+      },
+      "states": {
+        "open": "[data-open='true']"
+      },
+      "a11y": {
+        "keyboardNavigation": ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"]
+      }
+    },
+    "timePicker": {
+      "selectors": [
+        "[data-md3='time-picker']",
+        ".md3-time-picker",
+        "[class*='TimePicker']"
+      ],
+      "role": "dialog",
+      "parts": {
+        "input": "input",
+        "clock": "[class*='clock']",
+        "hours": "[class*='hour']",
+        "minutes": "[class*='minute']"
+      },
+      "states": {
+        "open": "[data-open='true']"
+      }
+    }
+  },
+  "tokens": {
+    "colors": {
+      "primary": "--md-sys-color-primary",
+      "onPrimary": "--md-sys-color-on-primary",
+      "primaryContainer": "--md-sys-color-primary-container",
+      "secondary": "--md-sys-color-secondary",
+      "tertiary": "--md-sys-color-tertiary",
+      "error": "--md-sys-color-error",
+      "surface": "--md-sys-color-surface",
+      "background": "--md-sys-color-background",
+      "outline": "--md-sys-color-outline"
+    },
+    "elevation": {
+      "level0": "0dp",
+      "level1": "1dp",
+      "level2": "3dp",
+      "level3": "6dp",
+      "level4": "8dp",
+      "level5": "12dp"
+    },
+    "shape": {
+      "none": "0px",
+      "extraSmall": "4px",
+      "small": "8px",
+      "medium": "12px",
+      "large": "16px",
+      "extraLarge": "28px",
+      "full": "9999px"
+    },
+    "motion": {
+      "duration": {
+        "short1": "50ms",
+        "short2": "100ms",
+        "short3": "150ms",
+        "short4": "200ms",
+        "medium1": "250ms",
+        "medium2": "300ms",
+        "medium3": "350ms",
+        "medium4": "400ms",
+        "long1": "450ms",
+        "long2": "500ms"
+      },
+      "easing": {
+        "standard": "cubic-bezier(0.2, 0, 0, 1)",
+        "standardDecelerate": "cubic-bezier(0, 0, 0, 1)",
+        "standardAccelerate": "cubic-bezier(0.3, 0, 1, 1)",
+        "emphasized": "cubic-bezier(0.2, 0, 0, 1)",
+        "emphasizedDecelerate": "cubic-bezier(0.05, 0.7, 0.1, 1)",
+        "emphasizedAccelerate": "cubic-bezier(0.3, 0, 0.8, 0.15)"
+      }
+    }
+  },
+  "breakpoints": {
+    "compact": { "max": 599 },
+    "medium": { "min": 600, "max": 839 },
+    "expanded": { "min": 840, "max": 1199 },
+    "large": { "min": 1200, "max": 1599 },
+    "extraLarge": { "min": 1600 }
+  },
+  "a11y": {
+    "minTouchTarget": 48,
+    "minContrastRatio": 4.5,
+    "focusIndicatorWidth": 3
+  }
+}

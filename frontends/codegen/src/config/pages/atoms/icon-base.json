@@ -1,0 +1,7 @@
+{
+  "id": "icon-base",
+  "type": "MetabuilderDisplayIcon",
+  "props": {
+    "size": 20
+  }
+}

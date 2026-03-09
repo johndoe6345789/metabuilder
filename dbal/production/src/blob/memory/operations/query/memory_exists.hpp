@@ -8,7 +8,7 @@
 #include <map>
 #include <mutex>
 #include "dbal/errors.hpp"
-#include "blob_data.hpp"
+#include "../../blob_data.hpp"
 
 namespace dbal {
 namespace blob {

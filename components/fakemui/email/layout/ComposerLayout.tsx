@@ -1,5 +1,5 @@
 // fakemui/react/components/email/layout/ComposerLayout.tsx
-import React, { forwardRef } from 'react'
+import React from 'react'
 import { Box, BoxProps } from '../..'
 import { useAccessible } from '../../../../hooks/useAccessible'
 
@@ -9,26 +9,26 @@ export interface ComposerLayoutProps extends BoxProps {
   testId?: string
 }
 
-export const ComposerLayout = forwardRef<HTMLDivElement, ComposerLayoutProps>(
-  ({ form, preview, testId: customTestId, ...props }, ref) => {
-    const accessible = useAccessible({
-      feature: 'email',
-      component: 'composer-layout',
-      identifier: customTestId || 'composer'
-    })
+export const ComposerLayout = ({
+  form,
+  preview,
+  testId: customTestId,
+  ...props
+}: ComposerLayoutProps) => {
+  const accessible = useAccessible({
+    feature: 'email',
+    component: 'composer-layout',
+    identifier: customTestId || 'composer'
+  })
 
-    return (
-      <Box
-        ref={ref}
-        className="composer-layout"
-        {...accessible}
-        {...props}
-      >
-        <Box className="composer-form">{form}</Box>
-        {preview && <Box className="composer-preview">{preview}</Box>}
-      </Box>
-    )
-  }
-)
-
-ComposerLayout.displayName = 'ComposerLayout'
+  return (
+    <Box
+      className="composer-layout"
+      {...accessible}
+      {...props}
+    >
+      <Box className="composer-form">{form}</Box>
+      {preview && <Box className="composer-preview">{preview}</Box>}
+    </Box>
+  )
+}

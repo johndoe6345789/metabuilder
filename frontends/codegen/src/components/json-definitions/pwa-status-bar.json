@@ -1,0 +1,8 @@
+{
+  "id": "pwa-status-bar",
+  "type": "div",
+  "props": {
+    "className": "pwa-status-bar"
+  },
+  "children": []
+}

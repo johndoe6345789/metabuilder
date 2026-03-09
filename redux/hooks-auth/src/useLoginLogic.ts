@@ -14,7 +14,7 @@ import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { useRouter } from 'next/navigation'
 import { useServices } from '@metabuilder/service-adapters'
-import { setAuthenticated, setLoading, setError } from '@metabuilder/redux-slices'
+import { setAuthenticated, setUILoading, setError } from '@metabuilder/redux-slices'
 import type { AppDispatch } from '@metabuilder/redux-slices'
 
 export interface LoginData {
@@ -58,7 +58,7 @@ export const useLoginLogic = (): UseLoginLogicReturn => {
   const handleLogin = useCallback(
     async (data: LoginData) => {
       dispatch(setError(null))
-      dispatch(setLoading(true))
+      dispatch(setUILoading(true))
 
       try {
         // Validate form
@@ -89,7 +89,7 @@ export const useLoginLogic = (): UseLoginLogicReturn => {
         dispatch(setError(message))
         throw error
       } finally {
-        dispatch(setLoading(false))
+        dispatch(setUILoading(false))
       }
     },
     [dispatch, router, authService]

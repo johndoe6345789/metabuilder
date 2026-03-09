@@ -9,7 +9,7 @@ import { RootState } from '@metabuilder/redux-slices';
 import {
   setSidebarOpen,
   toggleSidebar
-} from '@metabuilder/redux-slices'/uiSlice';
+} from '@metabuilder/redux-slices/uiSlice';
 
 export interface UseUISidebarReturn {
   sidebarOpen: boolean;

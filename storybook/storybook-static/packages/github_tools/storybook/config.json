@@ -1,0 +1,172 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": true,
+  "title": "GitHub Tools",
+  "description": "GitHub Actions viewer, run analysis, and workflow management components",
+  "stories": [
+    {
+      "name": "GitHubViewer",
+      "render": "fetch_runs",
+      "description": "Main GitHub Actions viewer with runs list and filters",
+      "args": {
+        "owner": "metabuilder-dev",
+        "repo": "metabuilder",
+        "workflow": "",
+        "token": ""
+      }
+    },
+    {
+      "name": "RunListWithData",
+      "render": "fetch_runs",
+      "description": "Run list populated with sample workflow runs",
+      "args": {
+        "runs": [
+          {
+            "id": 1,
+            "name": "CI Pipeline",
+            "status": "completed",
+            "conclusion": "success",
+            "head_branch": "main",
+            "created_at": "2026-01-02T10:00:00Z"
+          },
+          {
+            "id": 2,
+            "name": "CI Pipeline",
+            "status": "completed",
+            "conclusion": "failure",
+            "head_branch": "feature/new-ui",
+            "created_at": "2026-01-02T09:30:00Z"
+          },
+          {
+            "id": 3,
+            "name": "Deploy Preview",
+            "status": "in_progress",
+            "conclusion": null,
+            "head_branch": "main",
+            "created_at": "2026-01-02T10:15:00Z"
+          }
+        ],
+        "loading": false
+      }
+    },
+    {
+      "name": "AnalysisPanel",
+      "render": "analyze",
+      "description": "Statistics and analysis dashboard",
+      "args": {
+        "stats": {
+          "total": 150,
+          "success": 120,
+          "failure": 25,
+          "pending": 5,
+          "success_rate": 80.0,
+          "avg_duration": 245
+        },
+        "timeRange": "7d"
+      }
+    },
+    {
+      "name": "RunDetails",
+      "render": "status",
+      "description": "Detailed view of a single workflow run",
+      "args": {
+        "run": {
+          "id": 1,
+          "name": "CI Pipeline",
+          "status": "completed",
+          "conclusion": "success",
+          "head_branch": "main"
+        },
+        "jobs": [
+          { "id": 1, "name": "Build", "status": "completed", "conclusion": "success" },
+          { "id": 2, "name": "Test", "status": "completed", "conclusion": "success" },
+          { "id": 3, "name": "Deploy", "status": "completed", "conclusion": "success" }
+        ],
+        "logs": "Running build...\nBuild completed successfully.\nRunning tests...\nAll tests passed."
+      }
+    },
+    {
+      "name": "StatusBadges",
+      "render": "status",
+      "description": "All status badge variants",
+      "type": "function"
+    }
+  ],
+  "renders": {
+    "fetch_runs": {
+      "description": "Main viewer with run fetching functionality",
+      "featured": true
+    },
+    "analyze": {
+      "description": "Analysis panel with statistics"
+    },
+    "filter": {
+      "description": "Filter controls for runs"
+    },
+    "status": {
+      "description": "Status badge and formatting utilities"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "demo-user",
+      "username": "demo_user",
+      "level": 2,
+      "email": "demo@example.com"
+    },
+    "tenant": {
+      "id": "demo-tenant",
+      "name": "Demo Organization"
+    },
+    "config": {
+      "owner": "metabuilder-dev",
+      "repo": "metabuilder"
+    }
+  },
+  "contextVariants": [
+    {
+      "name": "Standard User",
+      "description": "Can view runs and analyze statistics",
+      "context": {
+        "user": {
+          "username": "user",
+          "level": 2
+        }
+      }
+    },
+    {
+      "name": "Admin",
+      "description": "Can view, analyze, and trigger workflows",
+      "context": {
+        "user": {
+          "username": "admin",
+          "level": 3
+        }
+      }
+    },
+    {
+      "name": "Read Only",
+      "description": "Public read-only access",
+      "context": {
+        "user": {
+          "username": "guest",
+          "level": 1
+        }
+      }
+    }
+  ],
+  "scripts": {
+    "renderFunctions": ["fetch_runs", "analyze", "filter", "status"],
+    "ignoredScripts": ["tests", "init", "types", "db"]
+  },
+  "parameters": {
+    "layout": "padded",
+    "backgrounds": {
+      "default": "light",
+      "values": [
+        { "name": "light", "value": "#f5f5f5" },
+        { "name": "dark", "value": "#1a1a1a" }
+      ]
+    }
+  }
+}

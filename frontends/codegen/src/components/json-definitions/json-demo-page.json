@@ -1,0 +1,8 @@
+{
+  "id": "json-demo-page",
+  "type": "div",
+  "props": {
+    "className": "json-demo-page"
+  },
+  "children": []
+}

@@ -1,0 +1,40 @@
+{
+  "id": "hub-carrier",
+  "name": "Hub Carrier / Knuckle",
+  "partNumber": "FD-1751450",
+  "material": "castAluminum",
+  "quantity": 2,
+  "weight": 5100.0,
+  "weightUnit": "g",
+  "baseY": 560,
+  "description": "Front steering knuckle with wheel bearing housing",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "32mm", "required": true },
+      { "name": "Socket", "size": "21mm", "required": true },
+      { "name": "Torque wrench", "size": "100-250 Nm", "required": true },
+      { "name": "Breaker bar", "size": "1/2\"", "required": true }
+    ],
+    "hardware": [
+      { "name": "Hub nut", "spec": "M24x1.5", "qty": 1, "reusable": false },
+      { "name": "Strut pinch bolt", "spec": "M12x1.5x60", "grade": "10.9", "qty": 1, "reusable": false }
+    ],
+    "torque": [
+      { "fastener": "Hub nut", "value": 235, "unit": "Nm", "sequence": "", "notes": "Stake nut after torquing" },
+      { "fastener": "Strut pinch bolt", "value": 95, "unit": "Nm", "sequence": "", "notes": "Critical for alignment" }
+    ],
+    "notes": [
+      "Support weight when disconnecting strut",
+      "Do not allow driveshaft to hang unsupported",
+      "Mark strut position for alignment reference",
+      "ABS sensor location - handle carefully"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 70, "height": 100, "rx": 8 },
+    { "type": "circle", "r": 30, "offsetY": -15, "fill": "#888" },
+    { "type": "circle", "r": 20, "offsetY": -15, "fill": "#666" },
+    { "type": "rect", "width": 25, "height": 40, "offsetX": 35, "offsetY": 0, "rx": 4 },
+    { "type": "rect", "width": 20, "height": 15, "offsetY": 35, "rx": 2, "fill": "#555" }
+  ]
+}

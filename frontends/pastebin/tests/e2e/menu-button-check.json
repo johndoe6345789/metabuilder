@@ -1,0 +1,43 @@
+{
+  "$schema": "../../../schemas/package-schemas/playwright.schema.json",
+  "package": "pastebin",
+  "version": "1.0.0",
+  "description": "Menu and button interaction checks including create flow and accessibility",
+  "suite": "Menu & Button Checks",
+  "tests": [
+    {
+      "name": "version badge text is present",
+      "steps": [
+        { "action": "navigate", "url": "" },
+        { "action": "waitForLoadState", "state": "domcontentloaded" },
+        { "action": "evalExpect", "name": "getElementText", "args": { "testId": "version-badge" }, "assertion": { "matcher": "toBeTruthy" }, "skipIf": { "selector": "[data-testid='version-badge']", "state": "hidden" } }
+      ]
+    },
+    {
+      "name": "create snippet menu opens",
+      "steps": [
+        { "action": "navigate", "url": "" },
+        { "action": "waitForSelector", "selector": "[data-testid='namespace-selector'],[data-testid='snippet-manager-loading']", "timeout": 15000 },
+        { "action": "click", "selector": "[data-testid='snippet-create-menu-trigger'],[data-testid='empty-state-create-menu']", "skipIf": { "selector": "[data-testid='snippet-create-menu-trigger'],[data-testid='empty-state-create-menu']", "state": "hidden" } },
+        { "action": "waitForSelector", "selector": "[data-testid='snippet-dialog'],[data-testid='create-menu-content'],[data-testid='create-blank-snippet-item']", "timeout": 5000 }
+      ]
+    },
+    {
+      "name": "buttons have accessible roles",
+      "steps": [
+        { "action": "navigate", "url": "" },
+        { "action": "waitForLoadState", "state": "domcontentloaded" },
+        { "action": "expect", "role": "button", "nth": 0, "assertion": { "matcher": "toBeVisible" } }
+      ]
+    },
+    {
+      "name": "first button is interactive",
+      "steps": [
+        { "action": "navigate", "url": "" },
+        { "action": "waitForLoadState", "state": "domcontentloaded" },
+        { "action": "expect", "selector": "button,[role='button']", "nth": 0, "assertion": { "matcher": "toBeVisible" } },
+        { "action": "click", "role": "button", "nth": 0 }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MetaBuilder</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: #0a0a0a;
+      color: #e0e0e0;
+      min-height: 100vh;
+    }
+    header {
+      text-align: center;
+      padding: 3rem 1rem 2rem;
+    }
+    header h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #60a5fa, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    header p {
+      margin-top: 0.5rem;
+      color: #888;
+      font-size: 1rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem 2rem 3rem;
+    }
+    .card {
+      background: #161616;
+      border: 1px solid #262626;
+      border-radius: 10px;
+      padding: 1.5rem;
+      text-decoration: none;
+      color: inherit;
+      transition: border-color 0.2s, transform 0.15s;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .card:hover {
+      border-color: #404040;
+      transform: translateY(-2px);
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .card-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .card h2 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #f0f0f0;
+    }
+    .card p {
+      font-size: 0.875rem;
+      color: #888;
+      line-height: 1.4;
+    }
+    .card .path {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.75rem;
+      color: #555;
+      margin-top: auto;
+      padding-top: 0.5rem;
+    }
+    .section-label {
+      max-width: 1200px;
+      margin: 1.5rem auto 0.25rem;
+      padding: 0 2rem;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #555;
+      font-weight: 600;
+    }
+    .bg-blue    { background: #1e3a5f; }
+    .bg-purple  { background: #3b2667; }
+    .bg-green   { background: #1a3a2a; }
+    .bg-orange  { background: #4a2c1a; }
+    .bg-red     { background: #3a1a1a; }
+    .bg-cyan    { background: #1a3a3a; }
+    .bg-pink    { background: #3a1a2e; }
+    .bg-yellow  { background: #3a3a1a; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>MetaBuilder</h1>
+    <p>Development Stack Portal</p>
+  </header>
+
+  <div class="section-label">Applications</div>
+  <div class="grid">
+    <a href="/workflowui" class="card">
+      <div class="card-header">
+        <div class="card-icon bg-blue">W</div>
+        <h2>WorkflowUI</h2>
+      </div>
+      <p>Visual workflow editor with n8n-style DAG canvas, step library, and JSON workflow execution.</p>
+      <div class="path">/workflowui</div>
+    </a>
+
+    <a href="/codegen" class="card">
+      <div class="card-header">
+        <div class="card-icon bg-purple">C</div>
+        <h2>CodeForge IDE</h2>
+      </div>
+      <p>Low-code application builder with Monaco editor, JSON-driven component architecture.</p>
+      <div class="path">/codegen</div>
+    </a>
+
+    <a href="/pastebin" class="card">
+      <div class="card-header">
+        <div class="card-icon bg-green">P</div>
+        <h2>Pastebin</h2>
+      </div>
+      <p>Code snippet sharing with syntax highlighting, expiration, and privacy controls.</p>
+      <div class="path">/pastebin</div>
+    </a>
+
+    <a href="/emailclient" class="card">
+      <div class="card-header">
+        <div class="card-icon bg-orange">E</div>
+        <h2>Email Client</h2>
+      </div>
+      <p>Full-featured email management with IMAP/SMTP, multi-account support, and search.</p>
+      <div class="path">/emailclient</div>
+    </a>
+
+    <a href="/postgres" class="card">
+      <div class="card-header">
+        <div class="card-icon bg-cyan">D</div>
+        <h2>Postgres Dashboard</h2>
+      </div>
+      <p>PostgreSQL admin dashboard with query editor, table browser, and performance monitoring.</p>
+      <div class="path">/postgres</div>
+    </a>
+
+    <a href="/diagrams" class="card">
+      <div class="card-header">
+        <div class="card-icon bg-pink">3D</div>
+        <h2>Exploded Diagrams</h2>
+      </div>
+      <p>Interactive 3D exploded diagram viewer with Three.js and JSCAD integration.</p>
+      <div class="path">/diagrams</div>
+    </a>
+
+    <a href="/storybook" class="card">
+      <div class="card-header">
+        <div class="card-icon bg-red">S</div>
+        <h2>Storybook</h2>
+      </div>
+      <p>Component library preview with interactive props, documentation, and visual testing.</p>
+      <div class="path">/storybook</div>
+    </a>
+
+    <a href="/app" class="card">
+      <div class="card-header">
+        <div class="card-icon bg-yellow">A</div>
+        <h2>Frontend App</h2>
+      </div>
+      <p>Main Next.js application with Drizzle ORM, i18n, Clerk auth, and DBAL integration.</p>
+      <div class="path">/app</div>
+    </a>
+  </div>
+
+  <div class="section-label">Backend Services</div>
+  <div class="grid">
+    <a href="/api/health" class="card">
+      <div class="card-header">
+        <div class="card-icon bg-blue">API</div>
+        <h2>DBAL API</h2>
+      </div>
+      <p>C++ database abstraction layer with RESTful CRUD, caching, and search.</p>
+      <div class="path">/api</div>
+    </a>
+
+    <a href="/email-api/health" class="card">
+      <div class="card-header">
+        <div class="card-icon bg-orange">EM</div>
+        <h2>Email Service</h2>
+      </div>
+      <p>Flask backend for IMAP/SMTP operations, email sync, and Celery task queue.</p>
+      <div class="path">/email-api</div>
+    </a>
+
+    <a href="http://localhost:8025" class="card">
+      <div class="card-header">
+        <div class="card-icon bg-green">SM</div>
+        <h2>SMTP Relay</h2>
+      </div>
+      <p>Twisted SMTP relay dashboard for email testing and debugging.</p>
+      <div class="path">localhost:8025</div>
+    </a>
+  </div>
+
+  <div class="section-label">Administration</div>
+  <div class="grid">
+    <a href="/portal/settings.html" class="card">
+      <div class="card-header">
+        <div class="card-icon bg-purple">&#x2699;</div>
+        <h2>Database Settings</h2>
+      </div>
+      <p>Manage DBAL adapter configuration, switch backends, and test database connections.</p>
+      <div class="path">/portal/settings.html</div>
+    </a>
+
+    <a href="/phpmyadmin/" class="card">
+      <div class="card-header">
+        <div class="card-icon bg-orange">PMA</div>
+        <h2>phpMyAdmin</h2>
+      </div>
+      <p>MySQL web administration with table browser, SQL editor, import/export, and user management.</p>
+      <div class="path">/phpmyadmin/</div>
+    </a>
+
+    <a href="/mongo-express/" class="card">
+      <div class="card-header">
+        <div class="card-icon bg-green">ME</div>
+        <h2>Mongo Express</h2>
+      </div>
+      <p>MongoDB web administration with collection browser, document editor, and query interface.</p>
+      <div class="path">/mongo-express/</div>
+    </a>
+
+    <a href="/redis-insight/" class="card">
+      <div class="card-header">
+        <div class="card-icon bg-red">RI</div>
+        <h2>RedisInsight</h2>
+      </div>
+      <p>Redis GUI with key browser, CLI console, memory analysis, and slow log inspection.</p>
+      <div class="path">/redis-insight/</div>
+    </a>
+
+    <a href="/kibana/" class="card">
+      <div class="card-header">
+        <div class="card-icon bg-yellow">KB</div>
+        <h2>Kibana</h2>
+      </div>
+      <p>Elasticsearch dashboard with Discover, index management, Dev Tools console, and visualizations.</p>
+      <div class="path">/kibana/</div>
+    </a>
+  </div>
+</body>
+</html>

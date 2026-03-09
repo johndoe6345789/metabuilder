@@ -1,0 +1,112 @@
+# Development Environment Overlay
+# Usage: kustomize build overlays/dev/ | kubectl apply -f -
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: emailclient-dev
+
+bases:
+  - ../../
+
+commonLabels:
+  environment: development
+  stage: dev
+
+commonAnnotations:
+  environment: development
+
+# Development configuration
+configMapGenerator:
+  - name: email-service-config
+    behavior: merge
+    literals:
+      - FLASK_ENV=development
+      - LOG_LEVEL=DEBUG
+      - ENABLE_DEBUG=true
+
+# Reduce replicas for dev
+replicas:
+  - name: email-service
+    count: 1
+  - name: celery-worker
+    count: 1
+  - name: postfix
+    count: 1
+  - name: dovecot
+    count: 1
+  - name: postgres
+    count: 1
+  - name: redis
+    count: 1
+
+# Use dev images (with -dev tag)
+images:
+  - name: emailclient/email-service
+    newTag: dev
+  - name: emailclient/postfix
+    newTag: dev
+  - name: emailclient/dovecot
+    newTag: dev
+
+# Use minimal resource requests for dev
+patchesStrategicMerge:
+  - kind: Deployment
+    apiVersion: apps/v1
+    metadata:
+      name: email-service
+    spec:
+      template:
+        spec:
+          containers:
+            - name: email-service
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 128Mi
+                limits:
+                  cpu: 500m
+                  memory: 512Mi
+  - kind: Deployment
+    apiVersion: apps/v1
+    metadata:
+      name: celery-worker
+    spec:
+      template:
+        spec:
+          containers:
+            - name: celery-worker
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 128Mi
+                limits:
+                  cpu: 500m
+                  memory: 512Mi
+
+# Disable HPAs in dev (fixed replicas)
+patchesJson6902:
+  - target:
+      group: autoscaling
+      version: v2
+      kind: HorizontalPodAutoscaler
+      name: email-service-hpa
+    patch: |-
+      - op: replace
+        path: /spec/minReplicas
+        value: 1
+      - op: replace
+        path: /spec/maxReplicas
+        value: 2
+  - target:
+      group: autoscaling
+      version: v2
+      kind: HorizontalPodAutoscaler
+      name: celery-worker-hpa
+    patch: |-
+      - op: replace
+        path: /spec/minReplicas
+        value: 1
+      - op: replace
+        path: /spec/maxReplicas
+        value: 2

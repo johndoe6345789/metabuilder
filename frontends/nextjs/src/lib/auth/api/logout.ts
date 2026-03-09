@@ -2,10 +2,12 @@
  * Logout API - Clear session and redirect to login
  */
 
+import { BASE_PATH } from '@/lib/app-config'
+
 export async function logout(): Promise<void> {
   try {
     // Call logout API endpoint to clear session on server
-    const response = await fetch('/api/auth/logout', {
+    const response = await fetch(`${BASE_PATH}/api/auth/logout`, {
       method: 'POST',
       credentials: 'include', // Include cookies
     })

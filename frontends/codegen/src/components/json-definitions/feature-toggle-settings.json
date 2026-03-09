@@ -1,0 +1,99 @@
+{
+  "id": "feature-toggle-settings",
+  "type": "div",
+  "className": "feature-toggle",
+  "children": [
+    {
+      "id": "feature-toggle-header",
+      "type": "div",
+      "className": "feature-toggle__header",
+      "children": [
+        {
+          "id": "feature-toggle-title",
+          "type": "h2",
+          "className": "feature-toggle__title",
+          "children": "Feature Toggles"
+        },
+        {
+          "id": "feature-toggle-description",
+          "type": "p",
+          "className": "feature-toggle__description",
+          "children": [
+            "Enable or disable features to customize your workspace. ",
+            {
+              "id": "enabled-count",
+              "type": "span",
+              "bindings": {
+                "children": { "source": "enabledCount" }
+              }
+            },
+            " of ",
+            {
+              "id": "total-count",
+              "type": "span",
+              "bindings": {
+                "children": { "source": "totalCount" }
+              }
+            },
+            " features enabled."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "feature-toggle-scroll-area",
+      "type": "ScrollArea",
+      "children": [
+        {
+          "id": "feature-toggle-grid",
+          "type": "div",
+          "className": "feature-toggle__grid",
+          "loop": {
+            "source": "items",
+            "itemVar": "feature"
+          },
+          "children": [
+            {
+              "id": "feature-item",
+              "type": "div",
+              "className": "feature-toggle__item",
+              "children": [
+                {
+                  "id": "feature-info",
+                  "type": "div",
+                  "className": "feature-toggle__item-info",
+                  "children": [
+                    {
+                      "id": "feature-name",
+                      "type": "p",
+                      "className": "feature-toggle__item-name",
+                      "bindings": {
+                        "children": { "source": "feature.label" }
+                      }
+                    },
+                    {
+                      "id": "feature-desc",
+                      "type": "p",
+                      "className": "feature-toggle__item-desc",
+                      "bindings": {
+                        "children": { "source": "feature.description" }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "feature-switch",
+                  "type": "Switch",
+                  "bindings": {
+                    "checked": { "source": "feature.enabled" },
+                    "onChange": { "source": "feature.onToggle" }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

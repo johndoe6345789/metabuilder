@@ -1,0 +1,48 @@
+{
+  "id": "repeat-wrapper-container",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": ["gap", "className"],
+      "transform": "const gap = data[0] || 'md'; const className = data[1] || ''; const gapClasses = { none: 'gap-0', xs: 'gap-1', sm: 'gap-2', md: 'gap-4', lg: 'gap-6', xl: 'gap-8' }; return `flex flex-col ${gapClasses[gap]} ${className}`.trim()"
+    }
+  },
+  "children": [
+    {
+      "id": "repeat-wrapper-empty",
+      "type": "div",
+      "bindings": {
+        "className": {
+          "source": null,
+          "transform": "'text-center text-muted-foreground text-sm p-4'"
+        },
+        "children": {
+          "source": "emptyMessage",
+          "transform": "data"
+        },
+        "_if": {
+          "source": ["items", "emptyMessage"],
+          "transform": "(!data[0] || data[0].length === 0) && data[1]"
+        }
+      }
+    },
+    {
+      "id": "repeat-wrapper-items",
+      "type": "RepeatLoop",
+      "bindings": {
+        "items": {
+          "source": "items",
+          "transform": "data"
+        },
+        "render": {
+          "source": "render",
+          "transform": "data"
+        }
+      },
+      "_if": {
+        "source": "items",
+        "transform": "data && data.length > 0"
+      }
+    }
+  ]
+}

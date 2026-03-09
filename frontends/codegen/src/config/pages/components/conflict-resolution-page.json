@@ -1,0 +1,10 @@
+{
+  "type": "MetabuilderWidgetConflictResolutionPage",
+  "jsonCompatible": false,
+  "wrapperRequired": true,
+  "load": {
+    "path": "@/components/ConflictResolutionPage",
+    "export": "ConflictResolutionPage"
+  },
+  "props": {}
+}

@@ -1,0 +1,10 @@
+{
+  "id": "switch-root",
+  "type": "Switch",
+  "bindings": {
+    "className": {
+      "source": ["disabled", "className"],
+      "transform": "const disabled = data[0]; const extra = data[1] || ''; const classes = ['form-switch']; if (disabled) classes.push('form-switch--disabled'); if (extra) classes.push(extra); return classes.join(' ')"
+    }
+  }
+}

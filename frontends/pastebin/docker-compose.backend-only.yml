@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    volumes:
+      - snippet-data:/data
+    environment:
+      - DB_PATH=/data/snippets.db
+    restart: unless-stopped
+
+volumes:
+  snippet-data:

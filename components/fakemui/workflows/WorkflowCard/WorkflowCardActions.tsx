@@ -9,13 +9,15 @@ const RESIZE_DIRECTIONS = ['n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw'] as const;
 
 interface WorkflowCardActionsProps {
   onResizeStart: (e: React.MouseEvent, direction: string) => void;
+  testId?: string;
 }
 
 export const WorkflowCardActions: React.FC<WorkflowCardActionsProps> = ({
-  onResizeStart
+  onResizeStart,
+  testId,
 }) => {
   return (
-    <>
+    <div data-testid={testId} role="group" aria-label="Resize handles">
       {RESIZE_DIRECTIONS.map((direction) => (
         <div
           key={direction}
@@ -29,6 +31,6 @@ export const WorkflowCardActions: React.FC<WorkflowCardActionsProps> = ({
           }}
         />
       ))}
-    </>
+    </div>
   );
 };

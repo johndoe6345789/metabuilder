@@ -1,0 +1,31 @@
+.dialogTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sparkleIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--mat-sys-primary);
+}
+
+.dialogContent {
+  max-height: 80vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.scrollArea {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.errorMessageCode {
+  font-size: 0.875rem;
+  font-family: monospace;
+}

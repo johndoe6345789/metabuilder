@@ -17,19 +17,21 @@ long long timestamp_to_epoch_ms(const Timestamp& timestamp) {
     value["username"] = user.username;
     value["email"] = user.email;
     value["role"] = user.role;
-    value["createdAt"] = static_cast<::Json::Int64>(timestamp_to_epoch_ms(user.createdAt));
+    if (user.createdAt.has_value()) {
+        value["createdAt"] = static_cast<::Json::Int64>(timestamp_to_epoch_ms(user.createdAt.value()));
+    }
     if (user.profilePicture.has_value()) {
         value["profilePicture"] = user.profilePicture.value();
     }
     if (user.bio.has_value()) {
         value["bio"] = user.bio.value();
     }
-    value["isInstanceOwner"] = user.isInstanceOwner;
+    value["isInstanceOwner"] = user.isInstanceOwner.value_or(false);
     if (user.passwordChangeTimestamp.has_value()) {
         value["passwordChangeTimestamp"] =
             static_cast<::Json::Int64>(timestamp_to_epoch_ms(user.passwordChangeTimestamp.value()));
     }
-    value["firstLogin"] = user.firstLogin;
+    value["firstLogin"] = user.firstLogin.value_or(false);
     return value;
 }
 

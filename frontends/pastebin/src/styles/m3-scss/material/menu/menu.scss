@@ -1,0 +1,236 @@
+@use '@angular/cdk';
+@use './m3-menu';
+@use '../core/tokens/token-utils';
+@use '../core/style/menu-common';
+@use '../core/style/button-common';
+@use '../core/style/vendor-prefixes';
+
+$fallbacks: m3-menu.get-tokens();
+
+// Prevent rendering mat-menu as it can affect the flex layout.
+mat-menu {
+  display: none;
+}
+
+.mat-mdc-menu-content {
+  margin: 0;
+  padding: 8px 0;
+  outline: 0;
+
+  &,
+  .mat-mdc-menu-item .mat-mdc-menu-item-text {
+    @include vendor-prefixes.smooth-font();
+    flex: 1;
+    white-space: normal;
+
+    font-family: token-utils.slot(menu-item-label-text-font, $fallbacks);
+    line-height: token-utils.slot(menu-item-label-text-line-height, $fallbacks);
+    font-size: token-utils.slot(menu-item-label-text-size, $fallbacks);
+    letter-spacing: token-utils.slot(menu-item-label-text-tracking, $fallbacks);
+    font-weight: token-utils.slot(menu-item-label-text-weight, $fallbacks);
+  }
+}
+
+@keyframes _mat-menu-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes _mat-menu-exit {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+.mat-mdc-menu-panel {
+  @include menu-common.base;
+  box-sizing: border-box;
+  outline: 0;
+  animation: _mat-menu-enter 120ms cubic-bezier(0, 0, 0.2, 1);
+  border-radius: token-utils.slot(menu-container-shape, $fallbacks);
+  background-color: token-utils.slot(menu-container-color, $fallbacks);
+  box-shadow: token-utils.slot(menu-container-elevation-shadow, $fallbacks);
+
+  // TODO(crisbeto): we don't need this for anything, but it was there when
+  // we used MDC's structural styles and removing it leads to sub-pixels
+  // differences in text rendering which break a lot of screenshots internally.
+  // We should clean it up eventually and re-approve all the screenshots.
+  will-change: transform, opacity;
+
+  &.mat-menu-panel-exit-animation {
+    animation: _mat-menu-exit 100ms 25ms linear forwards;
+  }
+
+  &.mat-menu-panel-animations-disabled {
+    animation: none;
+  }
+
+  // Prevent users from interacting with the panel while it's animating. Note that
+  // people won't be able to click through it, because the overlay pane will catch the click.
+  // This fixes the following issues:
+  //  * Users accidentally opening sub-menus when the `overlapTrigger` option is enabled.
+  //  * Users accidentally tapping on content inside the sub-menu on touch devices, if the
+  //    sub-menu overlaps the trigger. The issue is due to touch devices emulating the
+  //    `mouseenter` event by dispatching it on tap.
+  &.mat-menu-panel-animating {
+    pointer-events: none;
+
+    // If the same menu is assigned to multiple triggers and the user moves quickly between them
+    // (e.g. in a nested menu), the panel for the old menu may show up as empty while it's
+    // animating away. Hide such cases since they can look off to users.
+    &:has(.mat-mdc-menu-content:empty) {
+      display: none;
+    }
+  }
+
+  @include cdk.high-contrast {
+    outline: solid 1px;
+  }
+
+  .mat-divider {
+    // Use margin instead of padding since divider uses border-top to render out the line.
+    border-top-color: token-utils.slot(menu-divider-color, $fallbacks);
+    margin-bottom: token-utils.slot(menu-divider-bottom-spacing, $fallbacks);
+    margin-top: token-utils.slot(menu-divider-top-spacing, $fallbacks);
+  }
+}
+
+.mat-mdc-menu-item {
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: flex-start;
+  overflow: hidden;
+  padding: 0;
+
+  // MDC's menu items are `<li>` nodes which don't need resets, however ours
+  // can be anything, including buttons, so we need to do the reset ourselves.
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  box-sizing: border-box;
+  color: inherit;
+  font-size: inherit;
+  background: none;
+  text-decoration: none;
+  margin: 0; // Resolves an issue where buttons have an extra 2px margin on Safari.
+  min-height: 48px;
+
+  padding-left: token-utils.slot(menu-item-leading-spacing, $fallbacks);
+  padding-right: token-utils.slot(menu-item-trailing-spacing, $fallbacks);
+
+  @include button-common.reset;
+
+  $icons-selector: '.material-icons, mat-icon, [matButtonIcon]';
+
+  [dir='rtl'] & {
+    padding-left: token-utils.slot(menu-item-trailing-spacing, $fallbacks);
+    padding-right: token-utils.slot(menu-item-leading-spacing, $fallbacks);
+  }
+
+  &:has(#{$icons-selector}) {
+    padding-left: token-utils.slot(menu-item-with-icon-leading-spacing, $fallbacks);
+    padding-right: token-utils.slot(menu-item-with-icon-trailing-spacing, $fallbacks);
+  }
+
+  [dir='rtl'] &:has(#{$icons-selector}) {
+    padding-left: token-utils.slot(menu-item-with-icon-trailing-spacing, $fallbacks);
+    padding-right: token-utils.slot(menu-item-with-icon-leading-spacing, $fallbacks);
+  }
+
+  // The class selector isn't specific enough to overide the link pseudo selectors so we need
+  // to target them specifically, otherwise the item color might be overwritten by the user
+  // agent resets of the app.
+  &, &:visited, &:link {
+    color: token-utils.slot(menu-item-label-text-color, $fallbacks);
+  }
+
+  .mat-icon-no-color,
+  .mat-mdc-menu-submenu-icon {
+    color: token-utils.slot(menu-item-icon-color, $fallbacks);
+  }
+
+  &[disabled] {
+    cursor: default;
+    opacity: 0.38;
+
+    // The browser prevents clicks on disabled buttons from propagating which prevents the menu
+    // from closing, but clicks on child nodes still propagate which is inconsistent (see #16694).
+    // In order to keep the behavior consistent and prevent the menu from closing, we add an overlay
+    // on top of the content that will catch all the clicks while disabled.
+    &::after {
+      display: block;
+      position: absolute;
+      content: '';
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+    }
+  }
+
+  // Inherited from MDC and necessary for some internal tests.
+  &:focus {
+    outline: 0;
+  }
+
+  .mat-icon {
+    flex-shrink: 0;
+    margin-right: token-utils.slot(menu-item-spacing, $fallbacks);
+    height: token-utils.slot(menu-item-icon-size, $fallbacks);
+    width: token-utils.slot(menu-item-icon-size, $fallbacks);
+  }
+
+  [dir='rtl'] & {
+    text-align: right;
+
+    .mat-icon {
+      margin-right: 0;
+      margin-left: token-utils.slot(menu-item-spacing, $fallbacks);
+    }
+  }
+
+  &:not([disabled]) {
+    &:hover {
+      background-color: token-utils.slot(menu-item-hover-state-layer-color, $fallbacks);
+    }
+
+    &.cdk-program-focused,
+    &.cdk-keyboard-focused,
+    &.mat-mdc-menu-item-highlighted {
+      background-color: token-utils.slot(menu-item-focus-state-layer-color, $fallbacks);
+    }
+  }
+
+  @include cdk.high-contrast {
+    $outline-width: 1px;
+
+    // We need to move the item 1px down, because Firefox seems to have
+    // an issue rendering the top part of the outline (see #21524).
+    margin-top: $outline-width;
+  }
+}
+
+.mat-mdc-menu-submenu-icon {
+  @include menu-common.item-submenu-icon(
+    token-utils.slot(menu-item-spacing, $fallbacks),
+    token-utils.slot(menu-item-icon-size, $fallbacks)
+  );
+}
+
+// Increase specificity because ripple styles are part of the `mat-core` mixin and can
+// potentially overwrite the absolute position of the container.
+.mat-mdc-menu-item .mat-mdc-menu-ripple {
+  @include menu-common.item-ripple;
+}

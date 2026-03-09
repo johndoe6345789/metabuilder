@@ -1,0 +1,54 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/test-parameters.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "dropdown_manager",
+  "description": "Parameterized test data for dropdown manager tests",
+
+  "parameters": {
+    "sampleDropdowns": [
+      {
+        "id": "1",
+        "name": "countries",
+        "description": "List of countries",
+        "options": [
+          { "value": "us", "label": "United States" },
+          { "value": "uk", "label": "United Kingdom" },
+          { "value": "ca", "label": "Canada" },
+          { "value": "au", "label": "Australia" }
+        ]
+      },
+      {
+        "id": "2",
+        "name": "priority",
+        "description": "Priority levels",
+        "options": [
+          { "value": "low", "label": "Low" },
+          { "value": "medium", "label": "Medium" },
+          { "value": "high", "label": "High" }
+        ]
+      },
+      {
+        "id": "3",
+        "name": "status",
+        "description": "Task status options",
+        "options": [
+          { "value": "pending", "label": "Pending" },
+          { "value": "active", "label": "Active" },
+          { "value": "completed", "label": "Completed" },
+          { "value": "cancelled", "label": "Cancelled" }
+        ]
+      }
+    ],
+    "validOptions": [
+      { "value": "test", "label": "Test Label", "valid": true },
+      { "value": "", "label": "Empty Value", "valid": false },
+      { "value": "valid", "label": "", "valid": false },
+      { "value": "123", "label": "Numeric Value", "valid": true }
+    ],
+    "searchScenarios": [
+      { "query": "country", "expectedMatches": 1 },
+      { "query": "status", "expectedMatches": 1 },
+      { "query": "nonexistent", "expectedMatches": 0 }
+    ]
+  }
+}

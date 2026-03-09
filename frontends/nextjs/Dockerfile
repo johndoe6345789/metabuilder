@@ -1,89 +1,80 @@
-# Multi-stage Dockerfile for MetaBuilder Next.js App
-# Optimized for production deployment with GHCR
+# Multi-stage build: node_modules from base image, source built fresh
+# Context: monorepo root (..)
+# Requires: docker build -f deployment/base-images/Dockerfile.node-deps \
+#           -t metabuilder/base-node-deps:latest .
 
-# Stage 1: Dependencies
-FROM node:20-alpine AS deps
+# --- Build stage ---
+ARG BASE_REGISTRY=metabuilder
+FROM ${BASE_REGISTRY}/base-node-deps:latest AS builder
+
+# ── Shared packages (resolved by transpilePackages + webpack aliases) ────────
+# Each COPY targets only the source tree that nextjs actually imports.
+#
+# hooks (shared React hooks)
+COPY hooks/ ./hooks/
+
+# icons (React icon components — imported by components/fakemui)
+COPY icons/ ./icons/
+
+# scss (Material 3 SCSS, theme, atoms — loaded by sassOptions)
+COPY scss/ ./scss/
+
+# components + FakeMUI (UI component library)
+COPY components/ ./components/
+
+# workflow (DAG engine — type imports + components package)
+COPY workflow/ ./workflow/
+
+# DBAL shared UI (imported via @dbal-ui alias in next.config.ts)
+COPY dbal/shared/ui/ ./dbal/shared/ui/
+
+# ── Redux packages (all — small TS source, avoids transitive dep breakage) ───
+COPY redux/core/ ./redux/core/
+COPY redux/slices/ ./redux/slices/
+COPY redux/hooks/ ./redux/hooks/
+COPY redux/adapters/ ./redux/adapters/
+COPY redux/api-clients/ ./redux/api-clients/
+COPY redux/core-hooks/ ./redux/core-hooks/
+COPY redux/email/ ./redux/email/
+COPY redux/hooks-async/ ./redux/hooks-async/
+COPY redux/hooks-auth/ ./redux/hooks-auth/
+COPY redux/hooks-canvas/ ./redux/hooks-canvas/
+COPY redux/hooks-data/ ./redux/hooks-data/
+COPY redux/hooks-forms/ ./redux/hooks-forms/
+COPY redux/hooks-utils/ ./redux/hooks-utils/
+COPY redux/middleware/ ./redux/middleware/
+COPY redux/persist/ ./redux/persist/
+COPY redux/services/ ./redux/services/
+COPY redux/timing-utils/ ./redux/timing-utils/
+
+# ── Frontend App (the app itself) ────────────────────────────────────────────
+COPY frontends/nextjs/ ./frontends/nextjs/
+
+# Build workspace library packages
+RUN for ws in redux/core redux/slices redux/hooks redux/adapters \
+    redux/hooks-async redux/api-clients redux/persist \
+    components workflow; do \
+    npm run build -w "$ws" --if-present 2>&1 || echo "WARN: $ws build failed (non-critical)"; \
+done
+
+# Build the app
+RUN cd frontends/nextjs && npx next build --webpack
+
+# --- Runtime stage ---
+FROM node:20-alpine
 WORKDIR /app
 
-# Install system dependencies
-RUN apk add --no-cache libc6-compat
-
-# Copy package files for all workspaces
-COPY package.json package-lock.json ./
-COPY frontends/nextjs/package*.json ./frontends/nextjs/
-COPY dbal/development/package*.json ./dbal/development/
-COPY config/package*.json ./config/
-
-# Install dependencies
-RUN npm ci
-
-# Stage 2: Builder
-FROM node:20-alpine AS builder
-WORKDIR /app
-
-# Copy dependencies from deps stage
-COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/frontends/nextjs/node_modules ./frontends/nextjs/node_modules
-COPY --from=deps /app/dbal/development/node_modules ./dbal/development/node_modules
-
-# Copy source code
-COPY . .
-
-# Generate DBAL types from YAML schemas
-WORKDIR /app/dbal/development
-RUN npx tsx ../shared/tools/codegen/generate-types.ts
-
-# Generate Prisma Client
-WORKDIR /app/frontends/nextjs
-RUN npm run db:generate
-
-# Build Next.js app
-ENV NEXT_TELEMETRY_DISABLED=1
-ENV NODE_ENV=production
-RUN npm run build
-
-# Stage 3: Production runner
-FROM node:20-alpine AS runner
-WORKDIR /app
-
-ENV NODE_ENV=production
-ENV NEXT_TELEMETRY_DISABLED=1
-
-# Install runtime dependencies
-RUN apk add --no-cache \
-    tini \
-    curl \
-    dumb-init
-
-# Create non-root user
-RUN addgroup --system --gid 1001 nodejs && \
-    adduser --system --uid 1001 nextjs
-
-# Copy necessary files from builder
-COPY --from=builder /app/frontends/nextjs/public ./public
 COPY --from=builder /app/frontends/nextjs/.next/standalone ./
-COPY --from=builder /app/frontends/nextjs/.next/static ./.next/static
+COPY --from=builder /app/frontends/nextjs/.next/static ./frontends/nextjs/.next/static
 
-# Copy Prisma schema and generated client from workspace root
-COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
-
-# Set proper permissions
-RUN chown -R nextjs:nodejs /app
-
-USER nextjs
-
-EXPOSE 3000
-
+ENV NODE_ENV=production
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=5s --start-period=40s --retries=3 \
-  CMD curl -f http://localhost:3000/api/health || exit 1
+EXPOSE 3000
 
-# Use dumb-init to handle signals
-ENTRYPOINT ["/usr/bin/dumb-init", "--"]
+HEALTHCHECK --interval=15s --timeout=5s --start-period=40s --retries=3 \
+    CMD wget --quiet --tries=1 -O /dev/null http://127.0.0.1:3000/app/api/health || exit 1
 
+WORKDIR /app/frontends/nextjs
 CMD ["node", "server.js"]

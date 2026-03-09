@@ -1,0 +1,143 @@
+[
+  {
+    "entity": "SnippetComment",
+    "version": "1.0",
+    "description": "Comments on demo's snippets",
+    "records": [
+      {
+        "id": "c0000000-0001-0000-0000-000000000001",
+        "snippetId": "d0100000-0000-0000-0000-000000000001",
+        "authorId": "22222222-2222-2222-2222-222222222222",
+        "authorUsername": "alice",
+        "content": "Nice use of `lru_cache`! You could also try `@cache` from Python 3.9+ which is shorthand for `lru_cache(maxsize=None)`.",
+        "tenantId": "pastebin",
+        "createdAt": 0
+      },
+      {
+        "id": "c0000000-0001-0000-0000-000000000002",
+        "snippetId": "d0100000-0000-0000-0000-000000000001",
+        "authorId": "33333333-3333-3333-3333-333333333333",
+        "authorUsername": "bob",
+        "content": "For really large `n` values, consider the iterative approach to avoid stack depth issues — even with memoization the first call builds up the stack.",
+        "tenantId": "pastebin",
+        "createdAt": 0
+      },
+      {
+        "id": "c0000000-0001-0000-0000-000000000003",
+        "snippetId": "d0100000-0000-0000-0000-000000000004",
+        "authorId": "22222222-2222-2222-2222-222222222222",
+        "authorUsername": "alice",
+        "content": "Might want to add jitter to the back-off delay to avoid thundering herd when multiple clients retry simultaneously.",
+        "tenantId": "pastebin",
+        "createdAt": 0
+      },
+      {
+        "id": "c0000000-0001-0000-0000-000000000004",
+        "snippetId": "d0200000-0000-0000-0000-000000000001",
+        "authorId": "33333333-3333-3333-3333-333333333333",
+        "authorUsername": "bob",
+        "content": "Keyset pagination is so underrated. We switched from OFFSET to this pattern and queries went from 800ms to 2ms on a 50M row table.",
+        "tenantId": "pastebin",
+        "createdAt": 0
+      },
+      {
+        "id": "c0000000-0001-0000-0000-000000000005",
+        "snippetId": "d0200000-0000-0000-0000-000000000003",
+        "authorId": "22222222-2222-2222-2222-222222222222",
+        "authorUsername": "alice",
+        "content": "Worth noting that MySQL uses `INSERT ... ON DUPLICATE KEY UPDATE` instead of `ON CONFLICT`. The syntax differs between engines.",
+        "tenantId": "pastebin",
+        "createdAt": 0
+      }
+    ],
+    "metadata": { "useCurrentTimestamp": true, "timestampField": "createdAt" }
+  },
+  {
+    "entity": "SnippetComment",
+    "version": "1.0",
+    "description": "Comments on alice's snippets",
+    "records": [
+      {
+        "id": "c0000000-0002-0000-0000-000000000001",
+        "snippetId": "a0100000-0000-0000-0000-000000000001",
+        "authorId": "11111111-1111-1111-1111-111111111111",
+        "authorUsername": "demo",
+        "content": "This is exactly the hook I needed. The cross-tab sync via `StorageEvent` is a great touch.",
+        "tenantId": "pastebin",
+        "createdAt": 0
+      },
+      {
+        "id": "c0000000-0002-0000-0000-000000000002",
+        "snippetId": "a0100000-0000-0000-0000-000000000002",
+        "authorId": "33333333-3333-3333-3333-333333333333",
+        "authorUsername": "bob",
+        "content": "Clean implementation. In Go we'd just use channels for this — but the `useEffect` cleanup pattern here is really elegant.",
+        "tenantId": "pastebin",
+        "createdAt": 0
+      },
+      {
+        "id": "c0000000-0002-0000-0000-000000000003",
+        "snippetId": "a0200000-0000-0000-0000-000000000003",
+        "authorId": "11111111-1111-1111-1111-111111111111",
+        "authorUsername": "demo",
+        "content": "Using `Intl.RelativeTimeFormat` instead of a library — brilliant. The browser support is solid now too.",
+        "tenantId": "pastebin",
+        "createdAt": 0
+      },
+      {
+        "id": "c0000000-0002-0000-0000-000000000004",
+        "snippetId": "a0300000-0000-0000-0000-000000000001",
+        "authorId": "33333333-3333-3333-3333-333333333333",
+        "authorUsername": "bob",
+        "content": "I'd add `--spacing-*` tokens too for consistent margins/padding. Great starter set though.",
+        "tenantId": "pastebin",
+        "createdAt": 0
+      }
+    ],
+    "metadata": { "useCurrentTimestamp": true, "timestampField": "createdAt" }
+  },
+  {
+    "entity": "SnippetComment",
+    "version": "1.0",
+    "description": "Comments on bob's snippets",
+    "records": [
+      {
+        "id": "c0000000-0003-0000-0000-000000000001",
+        "snippetId": "b0200000-0000-0000-0000-000000000001",
+        "authorId": "22222222-2222-2222-2222-222222222222",
+        "authorUsername": "alice",
+        "content": "The `errgroup` pattern is so much cleaner than managing goroutines manually. We use this everywhere at work.",
+        "tenantId": "pastebin",
+        "createdAt": 0
+      },
+      {
+        "id": "c0000000-0003-0000-0000-000000000002",
+        "snippetId": "b0200000-0000-0000-0000-000000000002",
+        "authorId": "11111111-1111-1111-1111-111111111111",
+        "authorUsername": "demo",
+        "content": "Nice — I wrote a similar Python version above. The Go generics version is much more type-safe though. No need for `Any` return types.",
+        "tenantId": "pastebin",
+        "createdAt": 0
+      },
+      {
+        "id": "c0000000-0003-0000-0000-000000000003",
+        "snippetId": "b0300000-0000-0000-0000-000000000001",
+        "authorId": "22222222-2222-2222-2222-222222222222",
+        "authorUsername": "alice",
+        "content": "For production use, consider using a distributed rate limiter (Redis + Lua script) so it works across multiple instances.",
+        "tenantId": "pastebin",
+        "createdAt": 0
+      },
+      {
+        "id": "c0000000-0003-0000-0000-000000000004",
+        "snippetId": "b0100000-0000-0000-0000-000000000003",
+        "authorId": "11111111-1111-1111-1111-111111111111",
+        "authorUsername": "demo",
+        "content": "**Warning**: `docker volume prune -f` will delete ALL unused volumes, not just dangling ones. Maybe add a confirmation prompt or filter by label.",
+        "tenantId": "pastebin",
+        "createdAt": 0
+      }
+    ],
+    "metadata": { "useCurrentTimestamp": true, "timestampField": "createdAt" }
+  }
+]

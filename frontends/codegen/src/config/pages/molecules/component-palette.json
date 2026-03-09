@@ -1,0 +1,6 @@
+{
+  "type": "Tabs, TabsContent, TabsList, TabsTrigger",
+  "props": {
+    "onDragStart": "> void"
+  }
+}

@@ -1,0 +1,174 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": false,
+  "title": "Auth UI Components",
+  "description": "Authentication UI components including access denied, auth gate, and page loader",
+  "stories": [
+    {
+      "name": "AccessDenied",
+      "render": "denied",
+      "description": "Access denied page with customizable message",
+      "args": {
+        "title": "Access Denied",
+        "message": "You don't have permission to access this page.",
+        "requiredLevel": 3,
+        "currentLevel": 2,
+        "showLevelInfo": true
+      }
+    },
+    {
+      "name": "AccessDenied_NoLevelInfo",
+      "render": "denied",
+      "description": "Access denied page without level information",
+      "args": {
+        "title": "Restricted Area",
+        "message": "This content is restricted to authorized users only.",
+        "showLevelInfo": false
+      }
+    },
+    {
+      "name": "AuthGate_Loading",
+      "render": "gate",
+      "description": "Auth gate in loading state",
+      "type": "function",
+      "args": {
+        "isLoading": true,
+        "requiredLevel": 2
+      }
+    },
+    {
+      "name": "AuthGate_Challenge",
+      "render": "gate",
+      "description": "Auth gate showing login challenge",
+      "type": "function",
+      "args": {
+        "isLoading": false,
+        "isAuthenticated": false,
+        "showChallenge": true
+      }
+    },
+    {
+      "name": "AuthGate_Denied",
+      "render": "gate",
+      "description": "Auth gate showing access denied",
+      "type": "function",
+      "args": {
+        "isLoading": false,
+        "isAuthenticated": true,
+        "hasPermission": false,
+        "requiredLevel": 4,
+        "currentLevel": 2
+      }
+    },
+    {
+      "name": "AuthGate_Allowed",
+      "render": "gate",
+      "description": "Auth gate with access granted",
+      "type": "function",
+      "args": {
+        "isLoading": false,
+        "isAuthenticated": true,
+        "hasPermission": true
+      }
+    },
+    {
+      "name": "PageLoader",
+      "render": "loader",
+      "description": "Full-page loader with skeleton",
+      "args": {
+        "message": "Loading your content...",
+        "showSkeleton": true,
+        "spinnerSize": 56
+      }
+    },
+    {
+      "name": "PageLoader_NoSkeleton",
+      "render": "loader",
+      "description": "Minimal page loader without skeleton",
+      "args": {
+        "message": "Please wait...",
+        "showSkeleton": false,
+        "spinnerSize": 40
+      }
+    }
+  ],
+  "renders": {
+    "denied": {
+      "description": "Access denied page rendering",
+      "featured": true
+    },
+    "gate": {
+      "description": "Auth gate wrapper rendering"
+    },
+    "loader": {
+      "description": "Page loader with skeleton"
+    }
+  },
+  "defaultContext": {
+    "user": null,
+    "tenant": {
+      "id": "demo-tenant",
+      "name": "Demo Organization"
+    }
+  },
+  "contextVariants": [
+    {
+      "name": "Unauthenticated",
+      "description": "No user logged in",
+      "context": {
+        "user": null
+      }
+    },
+    {
+      "name": "Standard User",
+      "description": "Regular user with level 2",
+      "context": {
+        "user": {
+          "id": "user-1",
+          "username": "standard_user",
+          "level": 2,
+          "email": "user@example.com"
+        }
+      }
+    },
+    {
+      "name": "Moderator",
+      "description": "Moderator with level 3",
+      "context": {
+        "user": {
+          "id": "mod-1",
+          "username": "moderator",
+          "level": 3,
+          "email": "mod@example.com"
+        }
+      }
+    },
+    {
+      "name": "Admin",
+      "description": "Admin with level 4",
+      "context": {
+        "user": {
+          "id": "admin-1",
+          "username": "admin",
+          "level": 4,
+          "email": "admin@example.com"
+        }
+      }
+    }
+  ],
+  "scripts": {
+    "renderFunctions": ["denied", "gate", "loader"],
+    "ignoredScripts": ["tests", "init", "types"]
+  },
+  "parameters": {
+    "layout": "centered",
+    "backgrounds": {
+      "default": "light",
+      "values": [
+        { "name": "light", "value": "#ffffff" },
+        { "name": "dark", "value": "#1a1a1a" },
+        { "name": "gray", "value": "#f5f5f5" }
+      ]
+    }
+  }
+}

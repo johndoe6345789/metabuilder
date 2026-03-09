@@ -1,0 +1,90 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": false,
+  "title": "Dropdown Manager Components",
+  "description": "Dynamic dropdown configuration management",
+  "stories": [
+    {
+      "name": "DropdownManager",
+      "render": "manager",
+      "description": "Main dropdown management view",
+      "args": {
+        "dropdowns": [
+          {
+            "id": "1",
+            "name": "countries",
+            "description": "List of countries",
+            "options": [
+              { "value": "us", "label": "United States" },
+              { "value": "uk", "label": "United Kingdom" },
+              { "value": "ca", "label": "Canada" }
+            ]
+          },
+          {
+            "id": "2",
+            "name": "status",
+            "description": "Status options for tasks",
+            "options": [
+              { "value": "pending", "label": "Pending" },
+              { "value": "active", "label": "Active" },
+              { "value": "completed", "label": "Completed" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "OptionsList",
+      "render": "options",
+      "description": "Editable options list",
+      "args": {
+        "options": [
+          { "value": "option1", "label": "Option 1" },
+          { "value": "option2", "label": "Option 2" },
+          { "value": "option3", "label": "Option 3" }
+        ]
+      }
+    },
+    {
+      "name": "DropdownPreview",
+      "render": "preview",
+      "description": "Live dropdown preview",
+      "args": {
+        "dropdown": {
+          "name": "priority",
+          "description": "Task priority levels",
+          "options": [
+            { "value": "low", "label": "Low" },
+            { "value": "medium", "label": "Medium" },
+            { "value": "high", "label": "High" },
+            { "value": "critical", "label": "Critical" }
+          ]
+        }
+      }
+    }
+  ],
+  "renders": {
+    "manager": {
+      "description": "Dropdown manager grid",
+      "featured": true
+    },
+    "options": {
+      "description": "Options list editor"
+    },
+    "preview": {
+      "description": "Live preview"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "admin-user",
+      "username": "admin",
+      "level": 4,
+      "email": "admin@example.com"
+    },
+    "tenant": {
+      "id": "demo-tenant",
+      "name": "Demo Organization"
+    }
+  }
+}

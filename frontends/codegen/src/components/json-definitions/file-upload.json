@@ -1,0 +1,190 @@
+{
+  "id": "file-upload-container",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": "className",
+      "transform": "const base = 'w-full'; return data ? `${base} ${data}` : base"
+    }
+  },
+  "children": [
+    {
+      "id": "file-upload-label",
+      "type": "label",
+      "bindings": {
+        "onDrop": {
+          "source": "uploadState.handleDrop",
+          "transform": "data"
+        },
+        "onDragOver": {
+          "source": "uploadState.handleDragOver",
+          "transform": "data"
+        },
+        "onDragLeave": {
+          "source": "uploadState.handleDragLeave",
+          "transform": "data"
+        },
+        "className": {
+          "source": ["uploadState.isDragging", "disabled"],
+          "transform": "const isDragging = data[0]; const disabled = data[1]; const base = 'flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer transition-colors'; const dragStyle = isDragging ? 'border-primary bg-primary/5' : 'border-border bg-muted/30 hover:bg-muted/50'; const disabledStyle = disabled ? 'opacity-50 cursor-not-allowed' : ''; return `${base} ${dragStyle} ${disabledStyle}`.trim()"
+        }
+      },
+      "children": [
+        {
+          "id": "file-upload-content",
+          "type": "div",
+          "bindings": {
+            "className": {
+              "source": null,
+              "transform": "'flex flex-col items-center justify-center gap-2'"
+            }
+          },
+          "children": [
+            {
+              "id": "upload-icon",
+              "type": "UploadSimple",
+              "bindings": {
+                "className": {
+                  "source": null,
+                  "transform": "'w-8 h-8 text-muted-foreground'"
+                }
+              }
+            },
+            {
+              "id": "upload-text",
+              "type": "p",
+              "bindings": {
+                "className": {
+                  "source": null,
+                  "transform": "'text-sm text-muted-foreground'"
+                }
+              },
+              "children": [
+                {
+                  "id": "upload-text-bold",
+                  "type": "span",
+                  "bindings": {
+                    "className": {
+                      "source": null,
+                      "transform": "'font-medium'"
+                    },
+                    "children": {
+                      "source": null,
+                      "transform": "'Click to upload'"
+                    }
+                  }
+                },
+                {
+                  "id": "upload-text-or",
+                  "type": "_text",
+                  "bindings": {
+                    "children": {
+                      "source": null,
+                      "transform": "' or drag and drop'"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "id": "accept-text",
+              "type": "p",
+              "bindings": {
+                "className": {
+                  "source": null,
+                  "transform": "'text-xs text-muted-foreground'"
+                },
+                "children": {
+                  "source": "accept",
+                  "transform": "data ? data.split(',').join(', ') : ''"
+                },
+                "_if": {
+                  "source": "accept",
+                  "transform": "!!data"
+                }
+              }
+            },
+            {
+              "id": "maxsize-text",
+              "type": "p",
+              "bindings": {
+                "className": {
+                  "source": null,
+                  "transform": "'text-xs text-muted-foreground'"
+                },
+                "children": {
+                  "source": "maxSize",
+                  "transform": "`Max size: ${(data / 1024 / 1024).toFixed(1)}MB`"
+                },
+                "_if": {
+                  "source": "maxSize",
+                  "transform": "!!data"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "file-input",
+          "type": "input",
+          "bindings": {
+            "type": {
+              "source": null,
+              "transform": "'file'"
+            },
+            "accept": {
+              "source": "accept",
+              "transform": "data"
+            },
+            "multiple": {
+              "source": "multiple",
+              "transform": "data"
+            },
+            "onChange": {
+              "source": "uploadState.handleFiles",
+              "transform": "(e) => data(e.target.files)"
+            },
+            "disabled": {
+              "source": "disabled",
+              "transform": "data"
+            },
+            "className": {
+              "source": null,
+              "transform": "'hidden'"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "file-list-container",
+      "type": "div",
+      "bindings": {
+        "className": {
+          "source": null,
+          "transform": "'mt-4 space-y-2'"
+        },
+        "_if": {
+          "source": "uploadState.selectedFiles",
+          "transform": "data && data.length > 0"
+        }
+      },
+      "children": [
+        {
+          "id": "file-list-repeat",
+          "type": "_repeat",
+          "bindings": {
+            "_items": {
+              "source": "uploadState.selectedFiles",
+              "transform": "data || []"
+            },
+            "_renderItem": {
+              "source": "uploadState.removeFile",
+              "transform": "(file, index) => ({ _element: 'div', _key: index, _props: { className: 'flex items-center justify-between p-3 bg-muted rounded-lg' }, _children: [{ _element: 'div', _props: { className: 'flex-1 min-w-0' }, _children: [{ _element: 'p', _props: { className: 'text-sm font-medium truncate' }, _children: [file.name] }, { _element: 'p', _props: { className: 'text-xs text-muted-foreground' }, _children: [`${(file.size / 1024).toFixed(1)} KB`] }] }, { _element: 'button', _props: { type: 'button', onClick: () => data(index), className: 'ml-2 p-1 hover:bg-background rounded transition-colors', 'aria-label': 'Remove file' }, _children: [{ _element: 'X', _props: { className: 'w-4 h-4' } }] }] })"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

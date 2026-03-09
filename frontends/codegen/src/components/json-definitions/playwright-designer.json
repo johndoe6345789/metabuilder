@@ -1,0 +1,128 @@
+{
+  "id": "playwright-designer",
+  "type": "div",
+  "props": { "className": "workspace__body" },
+  "children": [
+    {
+      "id": "test-list-panel",
+      "type": "TestList",
+      "bindings": {
+        "tests": "tests",
+        "selectedTestId": "selectedTestId",
+        "onSelect": {
+          "source": "setSelectedTestId",
+          "transform": "setSelectedTestId"
+        },
+        "onAddTest": {
+          "source": "handleAddTest",
+          "transform": "handleAddTest"
+        },
+        "onDeleteTest": {
+          "source": "handleDeleteTest",
+          "transform": "handleDeleteTest"
+        },
+        "onGenerateWithAI": {
+          "source": "handleGenerateWithAI",
+          "transform": "handleGenerateWithAI"
+        }
+      }
+    },
+    {
+      "id": "editor-panel",
+      "type": "div",
+      "props": { "className": "playwright-designer__editor" },
+      "children": [
+        {
+          "id": "test-editor-section",
+          "type": "div",
+          "conditional": {
+            "if": "selectedTest != null",
+            "then": {
+              "id": "test-editor",
+              "type": "TestEditor",
+              "bindings": {
+                "test": "selectedTest",
+                "onAddStep": {
+                  "source": "handleAddStep",
+                  "transform": "handleAddStep"
+                },
+                "onUpdateTest": {
+                  "source": "handleUpdateTestPartial",
+                  "transform": "handleUpdateTestPartial"
+                },
+                "onUpdateStep": {
+                  "source": "handleUpdateStep",
+                  "transform": "handleUpdateStep"
+                },
+                "onDeleteStep": {
+                  "source": "handleDeleteStep",
+                  "transform": "handleDeleteStep"
+                }
+              }
+            },
+            "else": {
+              "id": "empty-state",
+              "type": "div",
+              "props": { "className": "empty-state-feedback" },
+              "children": [
+                {
+                  "id": "empty-icon",
+                  "type": "Play",
+                  "props": { "size": 48, "className": "empty-state-feedback__icon" }
+                },
+                {
+                  "id": "empty-title",
+                  "type": "p",
+                  "props": { "className": "empty-state__title" },
+                  "bindings": { "children": "copy.emptyStates.noTestSelectedTitle" }
+                },
+                {
+                  "id": "empty-body",
+                  "type": "p",
+                  "props": { "className": "empty-state__subtitle" },
+                  "bindings": { "children": "copy.emptyStates.noTestSelectedBody" }
+                },
+                {
+                  "id": "create-test-button-wrap",
+                  "type": "div",
+                  "props": { "className": "empty-state-feedback__actions" },
+                  "children": [
+                    {
+                      "id": "create-test-button",
+                      "type": "Button",
+                      "bindings": {
+                        "onClick": {
+                          "source": "handleAddTest",
+                          "transform": "() => handleAddTest()"
+                        }
+                      },
+                      "children": [
+                        {
+                          "id": "btn-label",
+                          "type": "span",
+                          "props": { "className": "playwright-designer__btn-label" },
+                          "children": [
+                            {
+                              "id": "plus-icon",
+                              "type": "Plus",
+                              "props": { "size": 16 }
+                            },
+                            {
+                              "id": "create-text",
+                              "type": "span",
+                              "bindings": { "children": "copy.buttons.createTest" }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

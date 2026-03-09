@@ -5,11 +5,11 @@
  */
 
 #include "builder_state.hpp"
-#include "builder_select.hpp"
-#include "builder_from.hpp"
-#include "builder_where.hpp"
-#include "builder_order_by.hpp"
-#include "builder_limit.hpp"
+#include "clauses/builder_select.hpp"
+#include "clauses/builder_from.hpp"
+#include "clauses/builder_where.hpp"
+#include "clauses/builder_order_by.hpp"
+#include "clauses/builder_limit.hpp"
 #include "builder_build.hpp"
 
 namespace dbal::query {

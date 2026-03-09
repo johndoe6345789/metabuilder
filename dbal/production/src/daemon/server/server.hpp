@@ -11,39 +11,39 @@
 #include <iostream>
 
 // Socket functions
-#include "socket_types.hpp"
-#include "socket_create.hpp"
-#include "socket_set_reuse_addr.hpp"
-#include "socket_bind.hpp"
-#include "socket_listen.hpp"
-#include "socket_accept.hpp"
-#include "socket_set_timeout.hpp"
-#include "socket_send.hpp"
-#include "socket_close.hpp"
-#include "socket_get_last_error.hpp"
-#include "winsock_init.hpp"
+#include "socket/socket_types.hpp"
+#include "socket/operations/lifecycle/socket_create.hpp"
+#include "socket/config/socket_set_reuse_addr.hpp"
+#include "socket/operations/socket_bind.hpp"
+#include "socket/operations/socket_listen.hpp"
+#include "socket/operations/socket_accept.hpp"
+#include "socket/config/socket_set_timeout.hpp"
+#include "socket/operations/socket_send.hpp"
+#include "socket/operations/lifecycle/socket_close.hpp"
+#include "socket/config/socket_get_last_error.hpp"
+#include "socket/config/winsock_init.hpp"
 
 // HTTP types
-#include "http_request.hpp"
-#include "http_response.hpp"
+#include "request/http_request.hpp"
+#include "response/http_response.hpp"
 
 // Response functions
-#include "response_serialize.hpp"
+#include "response/response_serialize.hpp"
 
 // Request parsing
-#include "parse_request_line.hpp"
-#include "validate_request_path.hpp"
-#include "validate_header.hpp"
-#include "validate_content_length.hpp"
-#include "validate_transfer_encoding.hpp"
-#include "trim_string.hpp"
-#include "to_lowercase.hpp"
+#include "parsing/parse_request_line.hpp"
+#include "validation_internal/validate_request_path.hpp"
+#include "validation_internal/validate_header.hpp"
+#include "validation_internal/validate_content_length.hpp"
+#include "validation_internal/validate_transfer_encoding.hpp"
+#include "parsing/trim_string.hpp"
+#include "parsing/to_lowercase.hpp"
 
 // Request processing
-#include "process_health_check.hpp"
-#include "process_version.hpp"
-#include "process_status.hpp"
-#include "process_not_found.hpp"
+#include "handlers/process_health_check.hpp"
+#include "handlers/process_version.hpp"
+#include "handlers/process_status.hpp"
+#include "handlers/process_not_found.hpp"
 
 namespace dbal {
 namespace daemon {

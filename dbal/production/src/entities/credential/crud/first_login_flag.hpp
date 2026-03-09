@@ -29,7 +29,7 @@ inline Result<bool> getFirstLogin(InMemoryStore& store, const std::string& usern
 
     for (const auto& [id, user] : store.users) {
         if (user.username == username) {
-            return Result<bool>(user.firstLogin);
+            return Result<bool>(user.firstLogin.value_or(false));
         }
     }
     return Error::notFound("User not found: " + username);

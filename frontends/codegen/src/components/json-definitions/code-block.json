@@ -1,0 +1,78 @@
+{
+  "id": "code-block-root",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": "inline",
+      "transform": "data ? 'code-block code-block--inline' : 'code-block'"
+    }
+  },
+  "children": [
+    {
+      "id": "code-block-header",
+      "type": "div",
+      "props": {
+        "className": "code-block__header"
+      },
+      "bindings": {
+        "_if": {
+          "source": ["language", "onCopy"],
+          "transform": "data[0] || data[1]"
+        }
+      },
+      "children": [
+        {
+          "id": "code-block-lang",
+          "type": "span",
+          "props": {
+            "className": "code-block__lang"
+          },
+          "bindings": {
+            "children": "language",
+            "_if": {
+              "source": "language",
+              "transform": "!!data"
+            }
+          }
+        },
+        {
+          "id": "code-block-copy",
+          "type": "button",
+          "props": {
+            "className": "icon-button icon-button--sm",
+            "aria-label": "Copy code"
+          },
+          "bindings": {
+            "onClick": "onCopy",
+            "_if": {
+              "source": "onCopy",
+              "transform": "!!data"
+            }
+          },
+          "children": [
+            {
+              "id": "code-block-copy-label",
+              "type": "span",
+              "props": {
+                "children": "Copy"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "code-block-pre",
+      "type": "pre",
+      "children": [
+        {
+          "id": "code-block-code",
+          "type": "code",
+          "bindings": {
+            "children": "children"
+          }
+        }
+      ]
+    }
+  ]
+}

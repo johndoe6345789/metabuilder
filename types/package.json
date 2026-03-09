@@ -1,0 +1,38 @@
+{
+  "name": "@metabuilder/types",
+  "version": "1.0.0",
+  "description": "Shared TypeScript type definitions for MetaBuilder",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js",
+      "require": "./index.js"
+    },
+    "./workflow": {
+      "types": "./workflow.d.ts",
+      "import": "./workflow.js",
+      "require": "./workflow.js"
+    },
+    "./project": {
+      "types": "./project.d.ts",
+      "import": "./project.js",
+      "require": "./project.js"
+    }
+  },
+  "files": [
+    "*.ts",
+    "*.js",
+    "*.d.ts",
+    "*.d.ts.map",
+    "*.js.map"
+  ],
+  "keywords": [
+    "types",
+    "typescript",
+    "metabuilder"
+  ],
+  "author": "MetaBuilder",
+  "license": "MIT"
+}

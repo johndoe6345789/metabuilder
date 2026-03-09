@@ -1,0 +1,63 @@
+{
+  "entity": "Workspace",
+  "version": "1.0",
+  "description": "Default workspaces for organization and project management",
+  "records": [
+    {
+      "id": "ws_engineering",
+      "name": "Engineering",
+      "description": "Software engineering projects, services, and infrastructure",
+      "color": "#2563EB",
+      "icon": "code",
+      "tenantId": "default",
+      "createdAt": 0,
+      "updatedAt": 0
+    },
+    {
+      "id": "ws_design",
+      "name": "Design",
+      "description": "UI/UX design, prototyping, and design system management",
+      "color": "#7C3AED",
+      "icon": "palette",
+      "tenantId": "default",
+      "createdAt": 0,
+      "updatedAt": 0
+    },
+    {
+      "id": "ws_devops",
+      "name": "DevOps",
+      "description": "CI/CD pipelines, infrastructure automation, and monitoring",
+      "color": "#059669",
+      "icon": "cloud",
+      "tenantId": "default",
+      "createdAt": 0,
+      "updatedAt": 0
+    },
+    {
+      "id": "ws_data",
+      "name": "Data & Analytics",
+      "description": "Data pipelines, analytics dashboards, and ML experiments",
+      "color": "#D97706",
+      "icon": "analytics",
+      "tenantId": "default",
+      "createdAt": 0,
+      "updatedAt": 0
+    },
+    {
+      "id": "ws_qa",
+      "name": "Quality Assurance",
+      "description": "Test suites, regression testing, and performance benchmarks",
+      "color": "#DC2626",
+      "icon": "bug_report",
+      "tenantId": "default",
+      "createdAt": 0,
+      "updatedAt": 0
+    }
+  ],
+  "metadata": {
+    "bootstrap": false,
+    "skipIfExists": true,
+    "timestampField": "createdAt",
+    "useCurrentTimestamp": true
+  }
+}

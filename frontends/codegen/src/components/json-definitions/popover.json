@@ -1,0 +1,52 @@
+{
+  "id": "popover-container",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": null,
+      "transform": "'relative inline-block'"
+    }
+  },
+  "children": [
+    {
+      "id": "popover-trigger",
+      "type": "div",
+      "bindings": {
+        "ref": {
+          "source": "state.triggerRef",
+          "transform": "data"
+        },
+        "onClick": {
+          "source": "state.toggle",
+          "transform": "data"
+        },
+        "children": {
+          "source": "trigger",
+          "transform": "data"
+        }
+      }
+    },
+    {
+      "id": "popover-content",
+      "type": "div",
+      "bindings": {
+        "ref": {
+          "source": "state.popoverRef",
+          "transform": "data"
+        },
+        "className": {
+          "source": ["placement", "className"],
+          "transform": "const placement = data[0] || 'bottom'; const className = data[1] || ''; const placementStyles = { top: 'bottom-full mb-2 left-1/2 -translate-x-1/2', bottom: 'top-full mt-2 left-1/2 -translate-x-1/2', left: 'right-full mr-2 top-1/2 -translate-y-1/2', right: 'left-full ml-2 top-1/2 -translate-y-1/2' }; const base = 'absolute z-50 w-64 p-4 bg-popover text-popover-foreground border border-border rounded-lg shadow-lg animate-in fade-in-0 zoom-in-95'; return `${base} ${placementStyles[placement]} ${className}`.trim()"
+        },
+        "children": {
+          "source": "content",
+          "transform": "data"
+        },
+        "_if": {
+          "source": "state.isOpen",
+          "transform": "data"
+        }
+      }
+    }
+  ]
+}

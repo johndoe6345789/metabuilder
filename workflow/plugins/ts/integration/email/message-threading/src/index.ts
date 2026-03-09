@@ -198,8 +198,8 @@ export class MessageThreadingExecutor implements INodeExecutor {
    */
   async execute(
     node: WorkflowNode,
-    context: WorkflowContext,
-    state: ExecutionState
+    _context: WorkflowContext,
+    _state: ExecutionState
   ): Promise<NodeResult> {
     const startTime = Date.now();
 
@@ -256,21 +256,24 @@ export class MessageThreadingExecutor implements INodeExecutor {
     if (!config.messages || !Array.isArray(config.messages)) {
       return {
         valid: false,
-        errors: ['messages parameter must be an array of EmailMessage objects']
+        errors: ['messages parameter must be an array of EmailMessage objects'],
+        warnings: []
       };
     }
 
     if (config.messages.length === 0) {
       return {
         valid: false,
-        errors: ['messages array cannot be empty']
+        errors: ['messages array cannot be empty'],
+        warnings: []
       };
     }
 
     if (!config.tenantId || typeof config.tenantId !== 'string') {
       return {
         valid: false,
-        errors: ['tenantId is required']
+        errors: ['tenantId is required'],
+        warnings: []
       };
     }
 
@@ -280,12 +283,13 @@ export class MessageThreadingExecutor implements INodeExecutor {
       if (!msg.messageId || !msg.uid) {
         return {
           valid: false,
-          errors: [`Message at index ${i} missing messageId or uid`]
+          errors: [`Message at index ${i} missing messageId or uid`],
+          warnings: []
         };
       }
     }
 
-    return { valid: true };
+    return { valid: true, errors: [], warnings: [] };
   }
 
   /**
@@ -383,6 +387,7 @@ export class MessageThreadingExecutor implements INodeExecutor {
           this._findParentId(msg) === null
         ) {
           threadOrphans.push(msg);
+          orphanedMessages.push(msg);
           totalOrphans++;
         }
       }

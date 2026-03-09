@@ -95,12 +95,11 @@ export interface UseFormBuilderReturn<T> {
   reset: () => void
   isValid: boolean
   isValidating: boolean
-  setValues: (values: Partial<T>) => void
 
   // Field array helpers
   getFieldArray: <K extends keyof T>(
     field: K
-  ) => T[K] extends any[] ? FormFieldArray<T[K][number]> : never
+  ) => FormFieldArray<any>
 }
 
 export function useFormBuilder<T extends Record<string, any>>(
@@ -231,7 +230,7 @@ export function useFormBuilder<T extends Record<string, any>>(
         remove: (index) => {
           handleSetFieldValue(
             field,
-            fieldValue.filter((_, i) => i !== index) as T[K]
+            fieldValue.filter((_item: unknown, i: number) => i !== index) as T[K]
           )
         },
         insert: (index, value) => {

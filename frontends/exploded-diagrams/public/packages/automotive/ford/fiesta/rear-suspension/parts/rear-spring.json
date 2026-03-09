@@ -1,0 +1,31 @@
+{
+  "id": "rear-spring",
+  "name": "Rear Coil Spring",
+  "partNumber": "FD-1762520",
+  "material": "spring",
+  "quantity": 2,
+  "weight": 2800.0,
+  "weightUnit": "g",
+  "baseY": 150,
+  "description": "Rear suspension coil spring",
+  "installation": {
+    "tools": [
+      { "name": "Spring compressor", "size": "Coil type", "required": false },
+      { "name": "Pry bar", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Spring isolator (upper)", "spec": "Rubber", "qty": 1, "reusable": false },
+      { "name": "Spring isolator (lower)", "spec": "Rubber", "qty": 1, "reusable": false }
+    ],
+    "torque": [],
+    "notes": [
+      "Lower axle to remove - no compressor needed",
+      "Check spring for cracks or corrosion",
+      "Match color code to vehicle spec",
+      "Spring end must seat in locator"
+    ]
+  },
+  "geometry": [
+    { "type": "coilSpring", "rx": 30, "ry": 30, "coils": 6, "pitch": 12, "strokeWidth": 7, "stroke": "#d94a4a", "fill": "none" }
+  ]
+}

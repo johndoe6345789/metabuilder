@@ -122,8 +122,8 @@ export class IMAPSearchExecutor implements INodeExecutor {
    */
   async execute(
     node: WorkflowNode,
-    context: WorkflowContext,
-    state: ExecutionState
+    _context: WorkflowContext,
+    _state: ExecutionState
   ): Promise<NodeResult> {
     const startTime = Date.now();
 
@@ -611,7 +611,7 @@ export class IMAPSearchExecutor implements INodeExecutor {
     switch (sortBy) {
       case 'date':
         // Simulate date sorting by generating mock dates
-        sorted.sort((a, b) => {
+        sorted.sort((_a, _b) => {
           const aDate = Math.floor(Math.random() * Date.now());
           const bDate = Math.floor(Math.random() * Date.now());
           return (aDate - bDate) * reverse;
@@ -622,7 +622,7 @@ export class IMAPSearchExecutor implements INodeExecutor {
       case 'from':
       case 'size':
         // Simulate string/size sorting
-        sorted.sort((a, b) => {
+        sorted.sort((_a, _b) => {
           const aVal = Math.floor(Math.random() * 1000);
           const bVal = Math.floor(Math.random() * 1000);
           return (aVal - bVal) * reverse;

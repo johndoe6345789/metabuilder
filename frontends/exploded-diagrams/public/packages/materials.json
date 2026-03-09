@@ -1,0 +1,110 @@
+{
+  "aluminum": {
+    "name": "Aluminum",
+    "gradient": {
+      "angle": 135,
+      "stops": [
+        { "offset": 0, "color": "#e8e8e8" },
+        { "offset": 25, "color": "#d0d0d0" },
+        { "offset": 50, "color": "#f5f5f5" },
+        { "offset": 75, "color": "#c8c8c8" },
+        { "offset": 100, "color": "#a8a8a8" }
+      ]
+    }
+  },
+  "castAluminum": {
+    "name": "Cast Aluminum",
+    "gradient": {
+      "angle": 135,
+      "stops": [
+        { "offset": 0, "color": "#a8a8a8" },
+        { "offset": 20, "color": "#c0c0c0" },
+        { "offset": 50, "color": "#909090" },
+        { "offset": 80, "color": "#b0b0b0" },
+        { "offset": 100, "color": "#808080" }
+      ]
+    }
+  },
+  "steel": {
+    "name": "Hardened Steel",
+    "gradient": {
+      "angle": 135,
+      "stops": [
+        { "offset": 0, "color": "#6a6a6a" },
+        { "offset": 30, "color": "#9a9a9a" },
+        { "offset": 50, "color": "#5a5a5a" },
+        { "offset": 100, "color": "#4a4a4a" }
+      ]
+    }
+  },
+  "blueAnodized": {
+    "name": "Anodized Aluminum (Blue)",
+    "gradient": {
+      "angle": 135,
+      "stops": [
+        { "offset": 0, "color": "#4a90d9" },
+        { "offset": 30, "color": "#6ab0f9" },
+        { "offset": 60, "color": "#3a70b9" },
+        { "offset": 100, "color": "#2a5090" }
+      ]
+    }
+  },
+  "redAnodized": {
+    "name": "Anodized Aluminum (Red)",
+    "gradient": {
+      "angle": 135,
+      "stops": [
+        { "offset": 0, "color": "#d94a4a" },
+        { "offset": 30, "color": "#f96a6a" },
+        { "offset": 60, "color": "#b93a3a" },
+        { "offset": 100, "color": "#902a2a" }
+      ]
+    }
+  },
+  "blackPlastic": {
+    "name": "Composite/Nylon",
+    "gradient": {
+      "angle": 135,
+      "stops": [
+        { "offset": 0, "color": "#3a3a3a" },
+        { "offset": 40, "color": "#2a2a2a" },
+        { "offset": 100, "color": "#1a1a1a" }
+      ]
+    }
+  },
+  "copper": {
+    "name": "Copper",
+    "gradient": {
+      "angle": 135,
+      "stops": [
+        { "offset": 0, "color": "#b87333" },
+        { "offset": 30, "color": "#da9a62" },
+        { "offset": 60, "color": "#a05a23" },
+        { "offset": 100, "color": "#804a13" }
+      ]
+    }
+  },
+  "brass": {
+    "name": "Brass",
+    "gradient": {
+      "angle": 135,
+      "stops": [
+        { "offset": 0, "color": "#d4a84a" },
+        { "offset": 30, "color": "#e8c878" },
+        { "offset": 60, "color": "#b8923a" },
+        { "offset": 100, "color": "#987020" }
+      ]
+    }
+  },
+  "spring": {
+    "name": "Spring Steel (Red)",
+    "gradient": {
+      "angle": 0,
+      "stops": [
+        { "offset": 0, "color": "#d94a4a" },
+        { "offset": 50, "color": "#ff6a6a" },
+        { "offset": 100, "color": "#b93a3a" }
+      ]
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "id": "search-results-container",
+  "type": "Box",
+  "bindings": {
+    "children": {
+      "source": "groupedResults",
+      "transform": "Object.entries(source).map(([category, results], index) => ({ id: `category-${index}`, type: 'Box', children: [{ ...(index > 0 ? { type: 'CommandSeparator' } : {}), id: `separator-${index}` }, { id: `group-${index}`, type: 'CommandGroup', heading: category, children: results.map((result, rIdx) => ({ id: `result-${index}-${rIdx}`, type: 'CommandItem', value: result.id, onClick: `() => onSelect(${JSON.stringify(result)})`, className: 'flex items-center gap-3 px-4 py-3 cursor-pointer', children: [{ type: 'Box', className: 'flex-shrink-0 text-muted-foreground', children: [{ type: 'Icon', ...result.icon }] }, { type: 'Box', className: 'flex-1 min-w-0', children: [{ type: 'Box', className: 'font-medium truncate', children: [{ type: 'Text', value: result.title }] }, ...(result.subtitle ? [{ type: 'Box', className: 'text-xs text-muted-foreground truncate', children: [{ type: 'Text', value: result.subtitle }] }] : []) ] }, { type: 'Badge', variant: 'outline', className: 'flex-shrink-0 text-xs', children: [{ type: 'Text', value: category }] } ] })) }] }))"
+    }
+  }
+}

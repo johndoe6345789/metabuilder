@@ -1,0 +1,1153 @@
+[
+  {
+    "type": "div",
+    "label": "Container",
+    "category": "layout",
+    "icon": "Square",
+    "canHaveChildren": true,
+    "defaultProps": { "className": "p-4 space-y-2" }
+  },
+  {
+    "type": "section",
+    "label": "Section",
+    "category": "layout",
+    "icon": "SquaresFour",
+    "canHaveChildren": true,
+    "defaultProps": { "className": "space-y-4" }
+  },
+  {
+    "type": "MetabuilderLayoutGrid",
+    "label": "Grid",
+    "category": "layout",
+    "icon": "GridFour",
+    "canHaveChildren": true,
+    "defaultProps": { "columns": 2, "gap": 4 }
+  },
+  {
+    "type": "MetabuilderLayoutStack",
+    "label": "MetabuilderLayoutStack",
+    "category": "layout",
+    "icon": "MetabuilderLayoutStack",
+    "canHaveChildren": true,
+    "defaultProps": { "direction": "vertical", "gap": 2 }
+  },
+  {
+    "type": "Flex",
+    "label": "Flex",
+    "category": "layout",
+    "icon": "ArrowsOutLineHorizontal",
+    "canHaveChildren": true,
+    "defaultProps": { "direction": "row", "gap": 2 }
+  },
+  {
+    "type": "MetabuilderLayoutContainer",
+    "label": "Container",
+    "category": "layout",
+    "icon": "Rectangle",
+    "canHaveChildren": true,
+    "defaultProps": { "maxWidth": "lg" }
+  },
+  {
+    "type": "MetabuilderLayoutCard",
+    "label": "Card",
+    "category": "layout",
+    "icon": "Rectangle",
+    "canHaveChildren": true,
+    "defaultProps": { "className": "p-4" }
+  },
+  {
+    "type": "MetabuilderFormButton",
+    "label": "Button",
+    "category": "input",
+    "icon": "Circle",
+    "canHaveChildren": true,
+    "defaultProps": { "children": "Click me", "variant": "default" }
+  },
+  {
+    "type": "MetabuilderFormInput",
+    "label": "Input",
+    "category": "input",
+    "icon": "TextT",
+    "defaultProps": { "placeholder": "Enter text..." }
+  },
+  {
+    "type": "MetabuilderFormTextArea",
+    "label": "TextArea",
+    "category": "input",
+    "icon": "TextAlignLeft",
+    "defaultProps": { "placeholder": "Enter text...", "rows": 4 }
+  },
+  {
+    "type": "MetabuilderFormSelect",
+    "label": "Select",
+    "category": "input",
+    "icon": "CaretDown",
+    "defaultProps": { "placeholder": "Choose option..." }
+  },
+  {
+    "type": "MetabuilderFormCheckbox",
+    "label": "Checkbox",
+    "category": "input",
+    "icon": "CheckSquare",
+    "defaultProps": {}
+  },
+  {
+    "type": "MetabuilderFormRadio",
+    "label": "Radio",
+    "category": "input",
+    "icon": "Circle",
+    "defaultProps": {}
+  },
+  {
+    "type": "MetabuilderFormSwitch",
+    "label": "Switch",
+    "category": "input",
+    "icon": "ToggleLeft",
+    "defaultProps": {}
+  },
+  {
+    "type": "MetabuilderFormSlider",
+    "label": "Slider",
+    "category": "input",
+    "icon": "SlidersHorizontal",
+    "defaultProps": { "min": 0, "max": 100, "value": 50 }
+  },
+  {
+    "type": "MetabuilderFormNumberInput",
+    "label": "Number Input",
+    "category": "input",
+    "icon": "NumberCircleOne",
+    "defaultProps": { "placeholder": "0", "min": 0 }
+  },
+  {
+    "type": "MetabuilderFormDatePicker",
+    "label": "Date Picker",
+    "category": "input",
+    "icon": "Calendar",
+    "defaultProps": { "placeholder": "Pick a date" }
+  },
+  {
+    "type": "MetabuilderFormFileUpload",
+    "label": "File Upload",
+    "category": "input",
+    "icon": "Upload",
+    "defaultProps": { "multiple": false }
+  },
+  {
+    "type": "MetabuilderDisplayHeading",
+    "label": "Heading",
+    "category": "display",
+    "icon": "TextHOne",
+    "canHaveChildren": true,
+    "defaultProps": { "level": 1, "children": "Heading" }
+  },
+  {
+    "type": "MetabuilderDisplayText",
+    "label": "Text",
+    "category": "display",
+    "icon": "Paragraph",
+    "canHaveChildren": true,
+    "defaultProps": { "children": "Text content" }
+  },
+  {
+    "type": "MetabuilderDisplayBadge",
+    "label": "Badge",
+    "category": "display",
+    "icon": "Tag",
+    "canHaveChildren": true,
+    "defaultProps": { "children": "Badge", "variant": "default" }
+  },
+  {
+    "type": "MetabuilderDisplayTag",
+    "label": "Tag",
+    "category": "display",
+    "icon": "Tag",
+    "canHaveChildren": true,
+    "defaultProps": { "children": "Tag" }
+  },
+  {
+    "type": "MetabuilderDisplayCode",
+    "label": "Code",
+    "category": "display",
+    "icon": "Code",
+    "canHaveChildren": true,
+    "defaultProps": { "children": "code" }
+  },
+  {
+    "type": "MetabuilderDisplayImage",
+    "label": "Image",
+    "category": "display",
+    "icon": "Image",
+    "defaultProps": { "src": "", "alt": "Image" }
+  },
+  {
+    "type": "MetabuilderDisplayAvatar",
+    "label": "Avatar",
+    "category": "display",
+    "icon": "UserCircle",
+    "defaultProps": { "src": "", "alt": "Avatar" }
+  },
+  {
+    "type": "Progress",
+    "label": "Progress",
+    "category": "display",
+    "icon": "CircleNotch",
+    "defaultProps": { "value": 50 }
+  },
+  {
+    "type": "MetabuilderDisplayProgressBar",
+    "label": "Progress Bar",
+    "category": "display",
+    "icon": "ChartBar",
+    "defaultProps": {
+      "value": 65,
+      "max": 100,
+      "size": "md",
+      "variant": "default",
+      "showLabel": false
+    }
+  },
+  {
+    "type": "MetabuilderDisplayCircularProgress",
+    "label": "Circular Progress",
+    "category": "display",
+    "icon": "CircleNotch",
+    "defaultProps": { "value": 65, "max": 100, "size": "md", "showLabel": true }
+  },
+  {
+    "type": "MetabuilderDisplaySpinner",
+    "label": "Spinner",
+    "category": "display",
+    "icon": "CircleNotch",
+    "defaultProps": { "size": "md" }
+  },
+  {
+    "type": "MetabuilderDisplaySkeleton",
+    "label": "Skeleton",
+    "category": "display",
+    "icon": "Rectangle",
+    "defaultProps": { "className": "h-4 w-full" }
+  },
+  {
+    "type": "MetabuilderDisplaySeparator",
+    "label": "Separator",
+    "category": "display",
+    "icon": "Minus",
+    "defaultProps": {}
+  },
+  {
+    "type": "MetabuilderDisplayDivider",
+    "label": "Divider",
+    "category": "display",
+    "icon": "Minus",
+    "defaultProps": { "orientation": "horizontal", "decorative": true, "className": "" }
+  },
+  {
+    "type": "MetabuilderNavLink",
+    "label": "Link",
+    "category": "navigation",
+    "icon": "Link",
+    "canHaveChildren": true,
+    "defaultProps": { "href": "#", "children": "Link" }
+  },
+  {
+    "type": "MetabuilderNavBreadcrumb",
+    "label": "Breadcrumb",
+    "category": "navigation",
+    "icon": "CaretRight",
+    "canHaveChildren": false,
+    "defaultProps": {
+      "items": [
+        { "label": "Home", "href": "/" },
+        { "label": "Current" }
+      ]
+    }
+  },
+  {
+    "type": "MetabuilderFeedbackAlert",
+    "label": "Alert",
+    "category": "feedback",
+    "icon": "Info",
+    "canHaveChildren": true,
+    "defaultProps": { "variant": "info", "children": "Alert message" }
+  },
+  {
+    "type": "MetabuilderFeedbackInfoBox",
+    "label": "Info Box",
+    "category": "feedback",
+    "icon": "Info",
+    "canHaveChildren": true,
+    "defaultProps": { "type": "info", "children": "Information" }
+  },
+  {
+    "type": "MetabuilderFeedbackEmptyState",
+    "label": "Empty State",
+    "category": "feedback",
+    "icon": "FolderOpen",
+    "canHaveChildren": true,
+    "defaultProps": { "message": "No items found" }
+  },
+  {
+    "type": "MetabuilderFeedbackStatusBadge",
+    "label": "Status Badge",
+    "category": "feedback",
+    "icon": "Circle",
+    "defaultProps": { "status": "active", "children": "Active" }
+  },
+  {
+    "type": "MetabuilderFeedbackLabelWithBadge",
+    "label": "Label With Badge",
+    "category": "feedback",
+    "icon": "Tag",
+    "defaultProps": {
+      "label": "Total Items",
+      "badge": 24,
+      "badgeVariant": "secondary"
+    }
+  },
+  {
+    "type": "MetabuilderFeedbackErrorBadge",
+    "label": "Error Badge",
+    "category": "feedback",
+    "icon": "WarningCircle",
+    "defaultProps": { "count": 3, "variant": "destructive", "size": "md" },
+    "props": [
+      {
+        "name": "count",
+        "type": "number",
+        "description": "Number of errors to display. Hidden when set to 0.",
+        "required": true,
+        "supportsBinding": true
+      },
+      {
+        "name": "variant",
+        "type": "string",
+        "description": "Visual variant for the badge.",
+        "defaultValue": "destructive",
+        "options": ["default", "destructive"]
+      },
+      {
+        "name": "size",
+        "type": "string",
+        "description": "Badge size.",
+        "defaultValue": "md",
+        "options": ["sm", "md"]
+      }
+    ]
+  },
+  {
+    "type": "MetabuilderFeedbackNotification",
+    "label": "Notification",
+    "category": "feedback",
+    "icon": "Info",
+    "defaultProps": { "type": "info", "title": "Notification", "message": "Details go here." },
+    "props": [
+      {
+        "name": "type",
+        "type": "string",
+        "description": "Notification style variant.",
+        "required": true,
+        "options": ["info", "success", "warning", "error"]
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "description": "Primary notification title.",
+        "required": true,
+        "supportsBinding": true
+      },
+      {
+        "name": "message",
+        "type": "string",
+        "description": "Optional supporting message text.",
+        "supportsBinding": true
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Optional custom classes for spacing or layout tweaks."
+      }
+    ],
+    "events": [
+      {
+        "name": "onClose",
+        "description": "Fires when the close button is clicked. Bind to dismiss or trigger an action."
+      }
+    ]
+  },
+  {
+    "type": "MetabuilderFeedbackStatusIcon",
+    "label": "Status Icon",
+    "category": "feedback",
+    "icon": "CheckCircle",
+    "defaultProps": { "type": "saved", "size": 14, "animate": false },
+    "props": [
+      {
+        "name": "type",
+        "type": "string",
+        "description": "Status icon style.",
+        "required": true,
+        "supportsBinding": true,
+        "options": ["saved", "synced"]
+      },
+      {
+        "name": "size",
+        "type": "number",
+        "description": "Icon size in pixels.",
+        "defaultValue": "14",
+        "supportsBinding": true
+      },
+      {
+        "name": "animate",
+        "type": "boolean",
+        "description": "Applies entry animation when true.",
+        "defaultValue": "false",
+        "supportsBinding": true
+      }
+    ]
+  },
+  {
+    "type": "MetabuilderWidgetSaveIndicator",
+    "label": "Save Indicator",
+    "category": "feedback",
+    "icon": "FloppyDisk",
+    "defaultProps": { "status": "saved", "label": "Saved", "showLabel": true, "animate": true }
+  },
+  {
+    "type": "MetabuilderDataList",
+    "label": "List",
+    "category": "data",
+    "icon": "List",
+    "defaultProps": { "items": [], "emptyMessage": "No items" }
+  },
+  {
+    "type": "MetabuilderDataListItem",
+    "label": "List Item",
+    "category": "data",
+    "icon": "List",
+    "canHaveChildren": true,
+    "defaultProps": { "children": "List item" }
+  },
+  {
+    "type": "MetabuilderDataDataList",
+    "label": "Data List",
+    "category": "data",
+    "icon": "List",
+    "defaultProps": {
+      "items": ["Daily summary", "New signups", "Pending approvals"],
+      "emptyMessage": "No updates",
+      "itemClassName": "rounded-md border border-border bg-card/50 px-4 py-2"
+    }
+  },
+  {
+    "type": "Table",
+    "label": "Table",
+    "category": "data",
+    "icon": "Table",
+    "defaultProps": { "data": [], "columns": [] }
+  },
+  {
+    "type": "TableHeader",
+    "label": "Table Header",
+    "category": "data",
+    "icon": "Table",
+    "canHaveChildren": true,
+    "defaultProps": {}
+  },
+  {
+    "type": "TableBody",
+    "label": "Table Body",
+    "category": "data",
+    "icon": "Table",
+    "canHaveChildren": true,
+    "defaultProps": {}
+  },
+  {
+    "type": "TableRow",
+    "label": "Table Row",
+    "category": "data",
+    "icon": "Table",
+    "canHaveChildren": true,
+    "defaultProps": {}
+  },
+  {
+    "type": "TableCell",
+    "label": "Table Cell",
+    "category": "data",
+    "icon": "Table",
+    "canHaveChildren": true,
+    "defaultProps": { "children": "Cell" }
+  },
+  {
+    "type": "TableHead",
+    "label": "Table Head",
+    "category": "data",
+    "icon": "Table",
+    "canHaveChildren": true,
+    "defaultProps": { "children": "Header" }
+  },
+  {
+    "type": "MetabuilderDataDataTable",
+    "label": "Data Table",
+    "category": "data",
+    "icon": "Table",
+    "defaultProps": {
+      "columns": [
+        { "key": "name", "header": "Name" },
+        { "key": "status", "header": "Status" },
+        { "key": "owner", "header": "Owner" }
+      ],
+      "data": [
+        { "name": "Launch Plan", "status": "In Progress", "owner": "Avery" },
+        { "name": "Design Review", "status": "Scheduled", "owner": "Jordan" },
+        { "name": "QA Checklist", "status": "Done", "owner": "Riley" }
+      ],
+      "emptyMessage": "No records available"
+    }
+  },
+  {
+    "type": "MetabuilderDataKeyValue",
+    "label": "Key Value",
+    "category": "data",
+    "icon": "Equals",
+    "defaultProps": { "label": "Key", "value": "Value" }
+  },
+  {
+    "type": "MetabuilderDataStatCard",
+    "label": "Stat Card",
+    "category": "data",
+    "icon": "ChartBar",
+    "defaultProps": { "title": "Metric", "value": "0" }
+  },
+  {
+    "type": "MetabuilderDataMetricCard",
+    "label": "Metric Card",
+    "category": "data",
+    "icon": "ChartBar",
+    "defaultProps": {
+      "label": "Active Users",
+      "value": "1,248",
+      "trend": { "value": 12.4, "direction": "up" }
+    }
+  },
+  {
+    "type": "MetabuilderDataTimeline",
+    "label": "Timeline",
+    "category": "data",
+    "icon": "Clock",
+    "defaultProps": {
+      "items": [
+        {
+          "title": "Planning",
+          "description": "Finalize milestones",
+          "timestamp": "Mon 9:00 AM",
+          "status": "completed"
+        },
+        {
+          "title": "Execution",
+          "description": "Kick off delivery",
+          "timestamp": "Tue 11:00 AM",
+          "status": "current"
+        },
+        {
+          "title": "Review",
+          "description": "Collect feedback",
+          "timestamp": "Wed 3:00 PM",
+          "status": "pending"
+        }
+      ]
+    }
+  },
+  {
+    "type": "MetabuilderDataLazyBarChart",
+    "label": "Bar Chart",
+    "category": "data",
+    "icon": "ChartBar",
+    "defaultProps": {
+      "data": [
+        { "name": "Q1", "value": 400 },
+        { "name": "Q2", "value": 300 },
+        { "name": "Q3", "value": 500 },
+        { "name": "Q4", "value": 280 }
+      ],
+      "xKey": "name",
+      "yKey": "value",
+      "height": 300,
+      "color": "#8884d8"
+    }
+  },
+  {
+    "type": "MetabuilderDataLazyLineChart",
+    "label": "Line Chart",
+    "category": "data",
+    "icon": "ChartLine",
+    "defaultProps": {
+      "data": [
+        { "name": "Jan", "value": 120 },
+        { "name": "Feb", "value": 260 },
+        { "name": "Mar", "value": 180 },
+        { "name": "Apr", "value": 320 }
+      ],
+      "xKey": "name",
+      "yKey": "value",
+      "height": 300,
+      "color": "#38bdf8"
+    }
+  },
+  {
+    "type": "MetabuilderDataLazyD3BarChart",
+    "label": "Simple Bar Chart",
+    "category": "data",
+    "icon": "ChartBar",
+    "defaultProps": {
+      "data": [
+        { "label": "Mon", "value": 12 },
+        { "label": "Tue", "value": 18 },
+        { "label": "Wed", "value": 9 },
+        { "label": "Thu", "value": 22 }
+      ],
+      "width": 600,
+      "height": 300,
+      "color": "#22c55e"
+    }
+  },
+  {
+    "type": "MetabuilderDataSeedDataManager",
+    "label": "Seed Data Manager",
+    "category": "data",
+    "icon": "Database",
+    "defaultProps": { "isLoaded": false, "isLoading": false }
+  },
+  {
+    "type": "MetabuilderLayoutDataCard",
+    "label": "Data Card",
+    "category": "custom",
+    "icon": "ChartBar",
+    "defaultProps": { "title": "Metric", "value": "100", "icon": "TrendUp" }
+  },
+  {
+    "type": "MetabuilderWidgetSearchInput",
+    "label": "Search Input",
+    "category": "custom",
+    "icon": "MagnifyingGlass",
+    "defaultProps": { "placeholder": "Search..." }
+  },
+  {
+    "type": "MetabuilderWidgetActionBar",
+    "label": "Action Bar",
+    "category": "custom",
+    "icon": "Toolbox",
+    "canHaveChildren": true,
+    "defaultProps": { "actions": [] }
+  },
+  {
+    "type": "MetabuilderWidgetStorageSettings",
+    "label": "Storage Settings",
+    "category": "custom",
+    "icon": "Database",
+    "defaultProps": {
+      "backend": "indexeddb",
+      "flaskUrl": "http://localhost:5000",
+      "isLoading": false,
+      "isSwitching": false,
+      "isExporting": false,
+      "isImporting": false
+    }
+  },
+  {
+    "type": "MetabuilderLayoutCodeExplanationDialog",
+    "label": "Code Explanation Dialog",
+    "category": "layout",
+    "icon": "Info",
+    "defaultProps": {
+      "open": false,
+      "fileName": "example.ts",
+      "explanation": "Explain this code...",
+      "isLoading": false
+    }
+  },
+  {
+    "type": "MetabuilderLayoutComponentBindingDialog",
+    "label": "Component Binding Dialog",
+    "category": "layout",
+    "icon": "Link",
+    "defaultProps": {
+      "open": false,
+      "component": null,
+      "dataSources": []
+    }
+  },
+  {
+    "type": "MetabuilderLayoutDataSourceCard",
+    "label": "Data Source Card",
+    "category": "layout",
+    "icon": "Database",
+    "defaultProps": {
+      "dataSource": {
+        "id": "source",
+        "type": "static",
+        "defaultValue": ""
+      },
+      "dependents": []
+    }
+  },
+  {
+    "type": "MetabuilderLayoutDataSourceEditorDialog",
+    "label": "Data Source Editor Dialog",
+    "category": "layout",
+    "icon": "Database",
+    "defaultProps": {
+      "open": false,
+      "dataSource": null,
+      "allDataSources": []
+    }
+  },
+  {
+    "type": "MetabuilderLayoutTreeCard",
+    "label": "Tree Card",
+    "category": "layout",
+    "icon": "Tree",
+    "defaultProps": {
+      "tree": {
+        "id": "tree-1",
+        "name": "Main Tree",
+        "description": "Primary UI tree",
+        "rootNodes": [],
+        "createdAt": 0,
+        "updatedAt": 0
+      },
+      "isSelected": false,
+      "disableDelete": false
+    }
+  },
+  {
+    "type": "MetabuilderLayoutTreeFormDialog",
+    "label": "Tree Form Dialog",
+    "category": "layout",
+    "icon": "Tree",
+    "defaultProps": {
+      "open": false,
+      "title": "Create Tree",
+      "description": "Add a new component tree.",
+      "name": "",
+      "treeDescription": "",
+      "submitLabel": "Save"
+    }
+  },
+  {
+    "type": "MetabuilderFormToolbarButton",
+    "label": "Toolbar Button",
+    "category": "input",
+    "icon": "Button",
+    "defaultProps": {
+      "label": "Action",
+      "variant": "outline",
+      "disabled": false
+    }
+  },
+  {
+    "type": "MetabuilderDisplaySchemaCodeViewer",
+    "label": "Schema Code Viewer",
+    "category": "display",
+    "icon": "Code",
+    "defaultProps": {
+      "components": [],
+      "schema": {}
+    }
+  },
+  {
+    "type": "MetabuilderNavFileTabs",
+    "label": "File Tabs",
+    "category": "navigation",
+    "icon": "Tabs",
+    "defaultProps": {
+      "files": [],
+      "activeFileId": null
+    }
+  },
+  {
+    "type": "MetabuilderNavNavigationItem",
+    "label": "Navigation Item",
+    "category": "navigation",
+    "icon": "List",
+    "defaultProps": {
+      "label": "Overview",
+      "isActive": false,
+      "badge": 0
+    }
+  },
+  {
+    "type": "MetabuilderNavNavigationMenu",
+    "label": "Navigation Menu",
+    "category": "navigation",
+    "icon": "Sidebar",
+    "defaultProps": {
+      "activeTab": "overview",
+      "featureToggles": {
+        "codeEditor": false,
+        "models": false,
+        "components": false,
+        "componentTrees": false,
+        "workflows": false,
+        "lambdas": false,
+        "styling": false,
+        "flaskApi": false,
+        "playwright": false,
+        "storybook": false,
+        "unitTests": false,
+        "errorRepair": false,
+        "documentation": false,
+        "sassStyles": false,
+        "faviconDesigner": false,
+        "ideaCloud": false,
+        "schemaEditor": false,
+        "dataBinding": false
+      },
+      "errorCount": 0
+    }
+  },
+  {
+    "type": "MetabuilderNavNavigationGroupHeader",
+    "label": "Navigation Group Header",
+    "category": "navigation",
+    "icon": "CaretDown",
+    "defaultProps": {
+      "label": "Components",
+      "count": 12,
+      "isExpanded": true
+    }
+  },
+  {
+    "type": "MetabuilderFeedbackEmptyCanvasState",
+    "label": "Empty Canvas State",
+    "category": "feedback",
+    "icon": "FolderOpen",
+    "defaultProps": {}
+  },
+  {
+    "type": "MetabuilderFeedbackSchemaEditorStatusBar",
+    "label": "Schema Editor Status Bar",
+    "category": "feedback",
+    "icon": "Info",
+    "defaultProps": {
+      "componentCount": 0,
+      "selectedComponentType": "",
+      "hasUnsavedChanges": false
+    }
+  },
+  {
+    "type": "MetabuilderDataDataSourceManager",
+    "label": "Data Source Manager",
+    "category": "data",
+    "icon": "Database",
+    "defaultProps": {
+      "dataSources": []
+    }
+  },
+  {
+    "type": "MetabuilderDataTreeListHeader",
+    "label": "Tree List Header",
+    "category": "data",
+    "icon": "Tree",
+    "defaultProps": {
+      "hasSelectedTree": false
+    }
+  },
+  {
+    "type": "MetabuilderDataTreeListPanel",
+    "label": "Tree List Panel",
+    "category": "data",
+    "icon": "Tree",
+    "defaultProps": {
+      "trees": [],
+      "selectedTreeId": null
+    }
+  },
+  {
+    "type": "MetabuilderWidgetAppBranding",
+    "label": "App Branding",
+    "category": "custom",
+    "icon": "Layout",
+    "defaultProps": {
+      "title": "CodeForge",
+      "subtitle": "Low-Code Next.js App Builder"
+    }
+  },
+  {
+    "type": "MetabuilderWidgetAppHeader",
+    "label": "App Header",
+    "category": "custom",
+    "icon": "Layout",
+    "defaultProps": {
+      "activeTab": "overview",
+      "featureToggles": {
+        "codeEditor": false,
+        "models": false,
+        "components": false,
+        "componentTrees": false,
+        "workflows": false,
+        "lambdas": false,
+        "styling": false,
+        "flaskApi": false,
+        "playwright": false,
+        "storybook": false,
+        "unitTests": false,
+        "errorRepair": false,
+        "documentation": false,
+        "sassStyles": false,
+        "faviconDesigner": false,
+        "ideaCloud": false,
+        "schemaEditor": false,
+        "dataBinding": false
+      },
+      "errorCount": 0,
+      "lastSaved": null,
+      "currentProject": {
+        "name": "Demo Project",
+        "files": [],
+        "models": [],
+        "components": [],
+        "componentTrees": [],
+        "workflows": [],
+        "lambdas": [],
+        "theme": {
+          "variants": [
+            {
+              "id": "default",
+              "name": "Default",
+              "colors": {
+                "primary": "#4f46e5",
+                "secondary": "#64748b",
+                "accent": "#0ea5e9",
+                "muted": "#f1f5f9",
+                "background": "#ffffff",
+                "surface": "#ffffff",
+                "text": "#0f172a",
+                "textSecondary": "#475569",
+                "border": "#e2e8f0",
+                "customColors": {}
+              }
+            }
+          ],
+          "activeVariantId": "default",
+          "fontFamily": "Inter",
+          "fontSize": {
+            "small": 12,
+            "medium": 14,
+            "large": 18
+          },
+          "spacing": 4,
+          "borderRadius": 8
+        }
+      }
+    }
+  },
+  {
+    "type": "MetabuilderWidgetBindingEditor",
+    "label": "Binding Editor",
+    "category": "custom",
+    "icon": "Link",
+    "defaultProps": {
+      "bindings": {},
+      "dataSources": [],
+      "availableProps": ["children", "value"]
+    }
+  },
+  {
+    "type": "MetabuilderWidgetCanvasRenderer",
+    "label": "Canvas Renderer",
+    "category": "custom",
+    "icon": "Layout",
+    "defaultProps": {
+      "components": [],
+      "selectedId": null,
+      "hoveredId": null,
+      "draggedOverId": null,
+      "dropPosition": null
+    }
+  },
+  {
+    "type": "MetabuilderWidgetComponentPalette",
+    "label": "Component Palette",
+    "category": "custom",
+    "icon": "GridFour",
+    "defaultProps": {}
+  },
+  {
+    "type": "MetabuilderWidgetComponentTree",
+    "label": "Component Tree",
+    "category": "custom",
+    "icon": "Tree",
+    "defaultProps": {
+      "components": [],
+      "selectedId": null,
+      "hoveredId": null,
+      "draggedOverId": null,
+      "dropPosition": null
+    }
+  },
+  {
+    "type": "MetabuilderWidgetEditorActions",
+    "label": "Editor Actions",
+    "category": "custom",
+    "icon": "Sparkle",
+    "defaultProps": {}
+  },
+  {
+    "type": "MetabuilderWidgetEditorToolbar",
+    "label": "Editor Toolbar",
+    "category": "custom",
+    "icon": "Toolbox",
+    "defaultProps": {
+      "openFiles": [],
+      "activeFileId": null,
+      "activeFile": null
+    }
+  },
+  {
+    "type": "MetabuilderWidgetJSONUIShowcase",
+    "label": "JSON UI Showcase",
+    "category": "custom",
+    "icon": "Code",
+    "defaultProps": {
+      "files": [],
+      "models": [],
+      "components": []
+    }
+  },
+  {
+    "type": "MetabuilderWidgetLazyInlineMonacoEditor",
+    "label": "Inline Monaco Editor",
+    "category": "custom",
+    "icon": "Code",
+    "defaultProps": {
+      "height": "300px",
+      "language": "typescript",
+      "value": "// Start typing..."
+    }
+  },
+  {
+    "type": "MetabuilderWidgetLazyMonacoEditor",
+    "label": "Monaco Editor",
+    "category": "custom",
+    "icon": "Code",
+    "defaultProps": {
+      "file": {
+        "id": "file-1",
+        "name": "App.tsx",
+        "path": "/App.tsx",
+        "content": "// Start typing...",
+        "language": "typescript"
+      }
+    }
+  },
+  {
+    "type": "MetabuilderWidgetMonacoEditorPanel",
+    "label": "Monaco Editor Panel",
+    "category": "custom",
+    "icon": "Code",
+    "defaultProps": {
+      "file": {
+        "id": "file-1",
+        "name": "App.tsx",
+        "path": "/App.tsx",
+        "content": "// Start typing...",
+        "language": "typescript"
+      }
+    }
+  },
+  {
+    "type": "MetabuilderWidgetPageHeaderContent",
+    "label": "Page Header Content",
+    "category": "custom",
+    "icon": "Heading",
+    "defaultProps": {
+      "title": "Page Title",
+      "description": "Page description"
+    }
+  },
+  {
+    "type": "MetabuilderWidgetPropertyEditor",
+    "label": "Property Editor",
+    "category": "custom",
+    "icon": "SlidersHorizontal",
+    "defaultProps": {
+      "component": null
+    }
+  },
+  {
+    "type": "MetabuilderWidgetSchemaEditorCanvas",
+    "label": "Schema Editor Canvas",
+    "category": "custom",
+    "icon": "Layout",
+    "defaultProps": {
+      "components": [],
+      "selectedId": null,
+      "hoveredId": null,
+      "draggedOverId": null,
+      "dropPosition": null
+    }
+  },
+  {
+    "type": "MetabuilderWidgetSchemaEditorLayout",
+    "label": "Schema Editor Layout",
+    "category": "custom",
+    "icon": "Layout",
+    "defaultProps": {
+      "components": [],
+      "selectedId": null,
+      "hoveredId": null,
+      "draggedOverId": null,
+      "dropPosition": null,
+      "selectedComponent": null
+    }
+  },
+  {
+    "type": "MetabuilderWidgetSchemaEditorPropertiesPanel",
+    "label": "Schema Editor Properties Panel",
+    "category": "custom",
+    "icon": "SlidersHorizontal",
+    "defaultProps": {
+      "components": [],
+      "selectedId": null,
+      "hoveredId": null,
+      "draggedOverId": null,
+      "dropPosition": null,
+      "selectedComponent": null
+    }
+  },
+  {
+    "type": "MetabuilderWidgetSchemaEditorSidebar",
+    "label": "Schema Editor Sidebar",
+    "category": "custom",
+    "icon": "Sidebar",
+    "defaultProps": {}
+  },
+  {
+    "type": "MetabuilderWidgetSchemaEditorToolbar",
+    "label": "Schema Editor Toolbar",
+    "category": "custom",
+    "icon": "Toolbox",
+    "defaultProps": {}
+  },
+  {
+    "type": "MetabuilderWidgetSearchBar",
+    "label": "Search Bar",
+    "category": "custom",
+    "icon": "MagnifyingGlass",
+    "defaultProps": {
+      "value": "",
+      "placeholder": "Search..."
+    }
+  },
+  {
+    "type": "MetabuilderWidgetToolbarActions",
+    "label": "Toolbar Actions",
+    "category": "custom",
+    "icon": "Toolbox",
+    "defaultProps": {
+      "errorCount": 0,
+      "showErrorButton": false
+    }
+  }
+]

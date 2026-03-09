@@ -1,35 +1,58 @@
 /**
  * useDragResize Hook
- * Encapsulates drag and resize logic for WorkflowCard
+ * Encapsulates drag and resize logic for draggable/resizable components
  */
 
 import { useRef, useState, useCallback, useEffect } from 'react';
-import { ProjectCanvasItem } from '../../../types/project';
-import { useProjectCanvas } from '../../../hooks/canvas';
 
 const MIN_WIDTH = 200;
 const MIN_HEIGHT = 150;
 
-interface UseDragResizeParams {
-  item: ProjectCanvasItem;
-  zoom: number;
-  snap_to_grid: (pos: { x: number; y: number }) => { x: number; y: number };
-  onUpdatePosition: (id: string, x: number, y: number) => void;
-  onUpdateSize: (id: string, width: number, height: number) => void;
+export interface DragResizeItem {
+  id: string;
+  position: { x: number; y: number };
+  size: { width: number; height: number };
+}
+
+export interface UseDragResizeParams {
+  item: DragResizeItem;
+  zoom?: number;
+  snapToGrid?: (pos: { x: number; y: number }) => { x: number; y: number };
+  onUpdatePosition?: (id: string, x: number, y: number) => void;
+  onUpdateSize?: (id: string, width: number, height: number) => void;
+  onDragStart?: () => void;
+  onDragEnd?: () => void;
+  onResizeStart?: () => void;
+  onResizeEnd?: () => void;
+  minWidth?: number;
+  minHeight?: number;
+}
+
+export interface UseDragResizeReturn {
+  cardRef: React.RefObject<HTMLDivElement | null>;
+  isDragging: boolean;
+  isResizing: boolean;
+  handleDragStart: (e: React.MouseEvent) => void;
+  handleResizeStart: (e: React.MouseEvent, direction: string) => void;
 }
 
 export const useDragResize = ({
   item,
-  zoom,
-  snap_to_grid,
+  zoom = 1,
+  snapToGrid = (pos) => pos,
   onUpdatePosition,
-  onUpdateSize
-}: UseDragResizeParams) => {
+  onUpdateSize,
+  onDragStart,
+  onDragEnd,
+  onResizeStart,
+  onResizeEnd,
+  minWidth = MIN_WIDTH,
+  minHeight = MIN_HEIGHT,
+}: UseDragResizeParams): UseDragResizeReturn => {
   const [isDragging, setIsDragging] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
   const [resizeDirection, setResizeDirection] = useState<string | null>(null);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
-  const { set_dragging, set_resizing } = useProjectCanvas();
   const cardRef = useRef<HTMLDivElement>(null);
 
   const handleDragMove = useCallback(
@@ -41,17 +64,17 @@ export const useDragResize = ({
         x: item.position.x + scaledDelta.x,
         y: item.position.y + scaledDelta.y
       };
-      const snappedPos = snap_to_grid(newPos);
-      onUpdatePosition(item.id, snappedPos.x, snappedPos.y);
+      const snappedPos = snapToGrid(newPos);
+      onUpdatePosition?.(item.id, snappedPos.x, snappedPos.y);
       setDragStart({ x: e.clientX, y: e.clientY });
     },
-    [isDragging, dragStart, item, zoom, snap_to_grid, onUpdatePosition]
+    [isDragging, dragStart, item, zoom, snapToGrid, onUpdatePosition]
   );
 
-  const handleDragEnd = useCallback(() => {
+  const handleDragEndInternal = useCallback(() => {
     setIsDragging(false);
-    set_dragging(false);
-  }, [set_dragging]);
+    onDragEnd?.();
+  }, [onDragEnd]);
 
   const handleResizeMove = useCallback(
     (e: MouseEvent) => {
@@ -65,86 +88,89 @@ export const useDragResize = ({
       let newY = item.position.y;
 
       if (resizeDirection.includes('e')) {
-        newWidth = Math.max(MIN_WIDTH, item.size.width + scaledDelta.x);
+        newWidth = Math.max(minWidth, item.size.width + scaledDelta.x);
       }
       if (resizeDirection.includes('s')) {
-        newHeight = Math.max(MIN_HEIGHT, item.size.height + scaledDelta.y);
+        newHeight = Math.max(minHeight, item.size.height + scaledDelta.y);
       }
       if (resizeDirection.includes('w')) {
         const deltaWidth = -scaledDelta.x;
-        newWidth = Math.max(MIN_WIDTH, item.size.width + deltaWidth);
-        if (newWidth > MIN_WIDTH) newX = item.position.x - deltaWidth;
+        newWidth = Math.max(minWidth, item.size.width + deltaWidth);
+        if (newWidth > minWidth) newX = item.position.x - deltaWidth;
       }
       if (resizeDirection.includes('n')) {
         const deltaHeight = -scaledDelta.y;
-        newHeight = Math.max(MIN_HEIGHT, item.size.height + deltaHeight);
-        if (newHeight > MIN_HEIGHT) newY = item.position.y - deltaHeight;
+        newHeight = Math.max(minHeight, item.size.height + deltaHeight);
+        if (newHeight > minHeight) newY = item.position.y - deltaHeight;
       }
 
-      onUpdateSize(item.id, newWidth, newHeight);
+      onUpdateSize?.(item.id, newWidth, newHeight);
       if (newX !== item.position.x || newY !== item.position.y) {
-        onUpdatePosition(item.id, newX, newY);
+        onUpdatePosition?.(item.id, newX, newY);
       }
       setDragStart({ x: e.clientX, y: e.clientY });
     },
-    [isResizing, resizeDirection, dragStart, item, zoom, onUpdateSize, onUpdatePosition]
+    [isResizing, resizeDirection, dragStart, item, zoom, minWidth, minHeight, onUpdateSize, onUpdatePosition]
   );
 
-  const handleResizeEnd = useCallback(() => {
+  const handleResizeEndInternal = useCallback(() => {
     setIsResizing(false);
     setResizeDirection(null);
-    set_resizing(false);
-  }, [set_resizing]);
+    onResizeEnd?.();
+  }, [onResizeEnd]);
 
   useEffect(() => {
     if (isDragging) {
       document.addEventListener('mousemove', handleDragMove);
-      document.addEventListener('mouseup', handleDragEnd);
+      document.addEventListener('mouseup', handleDragEndInternal);
       return () => {
         document.removeEventListener('mousemove', handleDragMove);
-        document.removeEventListener('mouseup', handleDragEnd);
+        document.removeEventListener('mouseup', handleDragEndInternal);
       };
     }
-  }, [isDragging, handleDragMove, handleDragEnd]);
+  }, [isDragging, handleDragMove, handleDragEndInternal]);
 
   useEffect(() => {
     if (isResizing) {
       document.addEventListener('mousemove', handleResizeMove);
-      document.addEventListener('mouseup', handleResizeEnd);
+      document.addEventListener('mouseup', handleResizeEndInternal);
       return () => {
         document.removeEventListener('mousemove', handleResizeMove);
-        document.removeEventListener('mouseup', handleResizeEnd);
+        document.removeEventListener('mouseup', handleResizeEndInternal);
       };
     }
-  }, [isResizing, handleResizeMove, handleResizeEnd]);
+  }, [isResizing, handleResizeMove, handleResizeEndInternal]);
 
-  const handleDragStart = useCallback(
+  const handleDragStartInternal = useCallback(
     (e: React.MouseEvent) => {
       if (e.button !== 0) return;
       if ((e.target as HTMLElement).closest('[data-no-drag]')) return;
       e.stopPropagation();
       setIsDragging(true);
       setDragStart({ x: e.clientX, y: e.clientY });
-      set_dragging(true);
+      onDragStart?.();
     },
-    [set_dragging]
+    [onDragStart]
   );
 
-  const handleResizeStart = useCallback(
+  const handleResizeStartInternal = useCallback(
     (e: React.MouseEvent, direction: string) => {
       e.stopPropagation();
       setIsResizing(true);
       setResizeDirection(direction);
       setDragStart({ x: e.clientX, y: e.clientY });
-      set_resizing(true);
+      onResizeStart?.();
     },
-    [set_resizing]
+    [onResizeStart]
   );
 
   return {
     cardRef,
     isDragging,
-    handleDragStart,
-    handleResizeStart
+    isResizing,
+    handleDragStart: handleDragStartInternal,
+    handleResizeStart: handleResizeStartInternal
   };
 };
+
+export default useDragResize;

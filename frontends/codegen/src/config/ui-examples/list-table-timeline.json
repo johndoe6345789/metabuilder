@@ -1,0 +1,232 @@
+{
+  "id": "list-table-timeline-bindings",
+  "title": "List, Table, Timeline Bindings",
+  "description": "Schema patterns for binding list, table, and timeline data sources.",
+  "layout": {
+    "type": "flex",
+    "direction": "column",
+    "gap": "6",
+    "padding": "6",
+    "className": "h-full bg-background",
+    "children": [
+      {
+        "id": "bindings-header",
+        "type": "div",
+        "className": "space-y-2",
+        "children": [
+          {
+            "id": "bindings-title",
+            "type": "h1",
+            "className": "text-3xl font-bold",
+            "children": "Data Binding Patterns"
+          },
+          {
+            "id": "bindings-subtitle",
+            "type": "p",
+            "className": "text-muted-foreground",
+            "children": "List loops, table datasets, and timeline entries driven by JSON data sources."
+          }
+        ]
+      },
+      {
+        "id": "bindings-grid",
+        "type": "Grid",
+        "props": {
+          "columns": 2,
+          "gap": 6
+        },
+        "children": [
+          {
+            "id": "list-binding-card",
+            "type": "Card",
+            "children": [
+              {
+                "id": "list-binding-header",
+                "type": "CardHeader",
+                "children": [
+                  {
+                    "id": "list-binding-title",
+                    "type": "CardTitle",
+                    "children": "List bindings"
+                  },
+                  {
+                    "id": "list-binding-description",
+                    "type": "CardDescription",
+                    "children": "Loop over task data and bind fields into ListItem content."
+                  }
+                ]
+              },
+              {
+                "id": "list-binding-content",
+                "type": "CardContent",
+                "children": [
+                  {
+                    "id": "task-loop",
+                    "type": "div",
+                    "className": "space-y-2",
+                    "loop": {
+                      "source": "tasks",
+                      "itemVar": "task",
+                      "indexVar": "idx"
+                    },
+                    "children": [
+                      {
+                        "id": "task-item",
+                        "type": "ListItem",
+                        "bindings": {
+                          "active": "task.active"
+                        },
+                        "children": [
+                          {
+                            "id": "task-item-content",
+                            "type": "div",
+                            "className": "flex w-full items-center justify-between",
+                            "children": [
+                              {
+                                "id": "task-title",
+                                "type": "span",
+                                "className": "font-medium",
+                                "dataBinding": "task.title"
+                              },
+                              {
+                                "id": "task-owner",
+                                "type": "span",
+                                "className": "text-xs text-muted-foreground",
+                                "dataBinding": "task.owner"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "timeline-binding-card",
+            "type": "Card",
+            "children": [
+              {
+                "id": "timeline-binding-header",
+                "type": "CardHeader",
+                "children": [
+                  {
+                    "id": "timeline-binding-title",
+                    "type": "CardTitle",
+                    "children": "Timeline bindings"
+                  },
+                  {
+                    "id": "timeline-binding-description",
+                    "type": "CardDescription",
+                    "children": "Bind timeline items from a structured data source."
+                  }
+                ]
+              },
+              {
+                "id": "timeline-binding-content",
+                "type": "CardContent",
+                "children": [
+                  {
+                    "id": "timeline",
+                    "type": "Timeline",
+                    "bindings": {
+                      "items": "timelineEvents"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "table-binding-card",
+            "type": "Card",
+            "className": "col-span-2",
+            "children": [
+              {
+                "id": "table-binding-header",
+                "type": "CardHeader",
+                "children": [
+                  {
+                    "id": "table-binding-title",
+                    "type": "CardTitle",
+                    "children": "Table bindings"
+                  },
+                  {
+                    "id": "table-binding-description",
+                    "type": "CardDescription",
+                    "children": "Columns and rows come from data sources to keep tables reusable."
+                  }
+                ]
+              },
+              {
+                "id": "table-binding-content",
+                "type": "CardContent",
+                "children": [
+                  {
+                    "id": "data-table",
+                    "type": "DataTable",
+                    "bindings": {
+                      "columns": "tableColumns",
+                      "data": "tableRows"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "dataSources": {
+    "tasks": {
+      "type": "static",
+      "config": [
+        { "title": "Review PR", "owner": "Avery", "active": true },
+        { "title": "Sync with design", "owner": "Jordan", "active": false },
+        { "title": "Publish release notes", "owner": "Riley", "active": false }
+      ]
+    },
+    "timelineEvents": {
+      "type": "static",
+      "config": [
+        {
+          "title": "Planning",
+          "description": "Finalize milestones and goals",
+          "timestamp": "Mon 9:00 AM",
+          "status": "completed"
+        },
+        {
+          "title": "Execution",
+          "description": "Kick off delivery work",
+          "timestamp": "Tue 11:00 AM",
+          "status": "current"
+        },
+        {
+          "title": "Review",
+          "description": "Collect stakeholder feedback",
+          "timestamp": "Wed 3:00 PM",
+          "status": "pending"
+        }
+      ]
+    },
+    "tableColumns": {
+      "type": "static",
+      "config": [
+        { "key": "name", "header": "Workstream" },
+        { "key": "owner", "header": "Owner" },
+        { "key": "status", "header": "Status" }
+      ]
+    },
+    "tableRows": {
+      "type": "static",
+      "config": [
+        { "name": "Discovery", "owner": "Morgan", "status": "Complete" },
+        { "name": "Implementation", "owner": "Taylor", "status": "In Progress" },
+        { "name": "QA Review", "owner": "Casey", "status": "Pending" }
+      ]
+    }
+  }
+}

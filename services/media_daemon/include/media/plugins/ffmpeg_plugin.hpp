@@ -160,6 +160,15 @@ private:
     struct ProcessInfo {
         int pid = 0;
         std::atomic<bool> cancelled{false};
+
+        ProcessInfo() = default;
+        // std::atomic is not movable — provide explicit move ops that reset the value
+        ProcessInfo(ProcessInfo&& o) noexcept : pid(o.pid), cancelled(o.cancelled.load()) {}
+        ProcessInfo& operator=(ProcessInfo&& o) noexcept {
+            pid = o.pid;
+            cancelled.store(o.cancelled.load());
+            return *this;
+        }
     };
     
     mutable std::mutex processes_mutex_;

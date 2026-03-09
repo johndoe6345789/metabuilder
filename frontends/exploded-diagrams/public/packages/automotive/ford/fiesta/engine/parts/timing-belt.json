@@ -1,0 +1,43 @@
+{
+  "id": "timing-belt",
+  "name": "Timing Belt Kit",
+  "partNumber": "FD-CM5G-6268-AA",
+  "material": "blackPlastic",
+  "quantity": 1,
+  "weight": 450.0,
+  "weightUnit": "g",
+  "baseY": 510,
+  "description": "Timing belt with tensioner and idler pulleys",
+  "installation": {
+    "tools": [
+      { "name": "Camshaft locking tool", "size": "303-1097", "required": true },
+      { "name": "Crankshaft locking tool", "size": "303-1098", "required": true },
+      { "name": "Tensioner tool", "size": "303-1099", "required": true },
+      { "name": "Socket", "size": "15mm", "required": true },
+      { "name": "Torque wrench", "size": "20-50 Nm", "required": true }
+    ],
+    "hardware": [
+      { "name": "Timing belt", "spec": "120T x 25mm", "qty": 1, "reusable": false },
+      { "name": "Tensioner pulley", "spec": "Hydraulic", "qty": 1, "reusable": false },
+      { "name": "Idler pulley", "spec": "Smooth", "qty": 1, "reusable": false },
+      { "name": "Tensioner bolt", "spec": "M10x1.5x30", "qty": 1, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Tensioner bolt", "value": 25, "unit": "Nm", "sequence": "", "notes": "Set tension first" },
+      { "fastener": "Idler pulley bolt", "value": 35, "unit": "Nm", "sequence": "", "notes": "" }
+    ],
+    "notes": [
+      "Replace belt at 150,000km or 10 years",
+      "Always replace tensioner and idler with belt",
+      "Verify timing marks before removal",
+      "Do not rotate engine backwards",
+      "Belt slip = bent valves = engine rebuild"
+    ]
+  },
+  "geometry": [
+    { "type": "ellipse", "rx": 50, "ry": 65, "fill": "none", "stroke": "#2a2a2a", "strokeWidth": 8 },
+    { "type": "circle", "r": 15, "offsetY": -45, "fill": "#555" },
+    { "type": "circle", "r": 12, "offsetY": 45, "fill": "#555" },
+    { "type": "circle", "r": 10, "offsetX": 30, "offsetY": 15, "fill": "#666" }
+  ]
+}

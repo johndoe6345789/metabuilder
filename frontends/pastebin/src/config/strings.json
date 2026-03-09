@@ -1,0 +1,93 @@
+{
+  "app": {
+    "title": "Code Snippets",
+    "header": {
+      "title": "Code Snippets",
+      "snippetCount": {
+        "singular": "snippet",
+        "plural": "snippets"
+      },
+      "newSnippetButton": "New Snippet"
+    },
+    "search": {
+      "placeholder": "Search snippets by title, language, or content..."
+    }
+  },
+  "emptyState": {
+    "title": "No snippets yet",
+    "description": "Start building your code snippet library. Save reusable code for quick access anytime.",
+    "buttonText": "Create Your First Snippet"
+  },
+  "noResults": {
+    "title": "No snippets found",
+    "description": "Try adjusting your search query"
+  },
+  "snippetCard": {
+    "viewButton": "View",
+    "copyButton": "Copy",
+    "copiedButton": "Copied!",
+    "viewFullCode": "Click to view full code...",
+    "errorMessage": "Error loading snippet",
+    "ariaLabels": {
+      "copy": "Copy code",
+      "edit": "Edit snippet",
+      "delete": "Delete snippet"
+    }
+  },
+  "snippetDialog": {
+    "create": {
+      "title": "Create New Snippet",
+      "description": "Save a reusable code snippet for quick access later.",
+      "submitButton": "Create Snippet"
+    },
+    "edit": {
+      "title": "Edit Snippet",
+      "description": "Update your code snippet details below.",
+      "submitButton": "Update Snippet"
+    },
+    "fields": {
+      "title": {
+        "label": "Title",
+        "placeholder": "e.g., React useState Hook",
+        "required": true,
+        "errorMessage": "Title is required"
+      },
+      "language": {
+        "label": "Language"
+      },
+      "description": {
+        "label": "Description",
+        "placeholder": "Optional description or notes..."
+      },
+      "code": {
+        "label": "Code",
+        "required": true,
+        "errorMessage": "Code is required"
+      },
+      "preview": {
+        "label": "Enable split-screen preview for this snippet"
+      }
+    },
+    "buttons": {
+      "cancel": "Cancel",
+      "create": "Create",
+      "update": "Update"
+    }
+  },
+  "snippetViewer": {
+    "lastUpdated": "Last updated",
+    "buttons": {
+      "showPreview": "Show Preview",
+      "hidePreview": "Hide Preview",
+      "copy": "Copy",
+      "copied": "Copied",
+      "edit": "Edit"
+    }
+  },
+  "toast": {
+    "snippetCreated": "Snippet created successfully",
+    "snippetUpdated": "Snippet updated successfully",
+    "snippetDeleted": "Snippet deleted",
+    "codeCopied": "Code copied to clipboard"
+  }
+}

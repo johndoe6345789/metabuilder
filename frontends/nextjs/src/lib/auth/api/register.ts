@@ -5,6 +5,7 @@
  */
 
 import type { User } from '@/lib/types/level-types'
+import type { DbalUserRecord } from '@/lib/auth/types'
 import { db } from '@/lib/db-client'
 import crypto from 'crypto'
 
@@ -80,12 +81,10 @@ export async function register(username: string, email: string, password: string
       tenantId: null,
       profilePicture: null,
       bio: null,
-    })
+    }) as unknown as DbalUserRecord
 
     // Create credentials
-    const { getAdapter } = await import('@/lib/db/dbal-client')
-    const adapter = getAdapter()
-    await adapter.create('Credential', {
+    await db.credentials.create({
       id: `cred_${userId}`,
       username,
       passwordHash,

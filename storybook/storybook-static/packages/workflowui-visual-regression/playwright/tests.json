@@ -1,0 +1,526 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "workflowui-visual-regression",
+  "version": "1.0.0",
+  "description": "Visual regression testing with component state verification",
+  "tests": [
+    {
+      "name": "button states visual inspection",
+      "tags": ["@visual", "@components", "@buttons"],
+      "timeout": 30000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Capture New Workspace button default state",
+          "action": "debugScreenshot",
+          "filename": "visual-button-01-default.png"
+        },
+        {
+          "description": "Inspect button default styles",
+          "action": "inspectElement",
+          "selector": "button:has-text('New Workspace')"
+        },
+        {
+          "description": "Get button background color",
+          "action": "getComputedStyle",
+          "selector": "button:has-text('New Workspace')",
+          "property": "background-color"
+        },
+        {
+          "description": "Hover over button",
+          "action": "hover",
+          "role": "button",
+          "text": "New Workspace"
+        },
+        {
+          "action": "wait",
+          "timeout": 300
+        },
+        {
+          "description": "Capture hover state",
+          "action": "debugScreenshot",
+          "filename": "visual-button-02-hover.png"
+        },
+        {
+          "description": "Get hover background color",
+          "action": "getComputedStyle",
+          "selector": "button:has-text('New Workspace')",
+          "property": "background-color"
+        },
+        {
+          "description": "Focus button",
+          "action": "focus",
+          "role": "button",
+          "text": "New Workspace"
+        },
+        {
+          "action": "wait",
+          "timeout": 300
+        },
+        {
+          "description": "Capture focus state",
+          "action": "debugScreenshot",
+          "filename": "visual-button-03-focus.png"
+        },
+        {
+          "description": "Check sidebar buttons",
+          "action": "debugScreenshot",
+          "filename": "visual-button-04-sidebar-buttons.png"
+        }
+      ]
+    },
+    {
+      "name": "dialog animations and transitions",
+      "tags": ["@visual", "@animations", "@dialogs"],
+      "timeout": 30000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Capture before dialog",
+          "action": "debugScreenshot",
+          "filename": "visual-dialog-01-closed.png"
+        },
+        {
+          "description": "Click to open dialog",
+          "action": "click",
+          "role": "button",
+          "text": "New Workspace"
+        },
+        {
+          "action": "wait",
+          "timeout": 100
+        },
+        {
+          "description": "Capture dialog opening (frame 1)",
+          "action": "debugScreenshot",
+          "filename": "visual-dialog-02-opening-f1.png"
+        },
+        {
+          "action": "wait",
+          "timeout": 200
+        },
+        {
+          "description": "Capture dialog opening (frame 2)",
+          "action": "debugScreenshot",
+          "filename": "visual-dialog-03-opening-f2.png"
+        },
+        {
+          "action": "wait",
+          "timeout": 200
+        },
+        {
+          "description": "Capture dialog fully open",
+          "action": "debugScreenshot",
+          "filename": "visual-dialog-04-open.png"
+        },
+        {
+          "description": "Inspect dialog opacity",
+          "action": "getComputedStyle",
+          "selector": "[role='dialog'], .dialog, [class*='dialog']",
+          "property": "opacity"
+        },
+        {
+          "description": "Press Escape to close",
+          "action": "keyboard",
+          "keys": "Escape"
+        },
+        {
+          "action": "wait",
+          "timeout": 100
+        },
+        {
+          "description": "Capture dialog closing (frame 1)",
+          "action": "debugScreenshot",
+          "filename": "visual-dialog-05-closing-f1.png"
+        },
+        {
+          "action": "wait",
+          "timeout": 300
+        },
+        {
+          "description": "Capture dialog closed",
+          "action": "debugScreenshot",
+          "filename": "visual-dialog-06-closed.png"
+        }
+      ]
+    },
+    {
+      "name": "loading states and spinners",
+      "tags": ["@visual", "@loading", "@spinners"],
+      "timeout": 30000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "wait",
+          "timeout": 500
+        },
+        {
+          "description": "Capture dashboard with loading state",
+          "action": "debugScreenshot",
+          "filename": "visual-loading-01-workspace-loading.png"
+        },
+        {
+          "description": "Find loading spinner",
+          "action": "findByText",
+          "text": "Loading"
+        },
+        {
+          "description": "Inspect spinner element",
+          "action": "retry",
+          "maxAttempts": 2,
+          "delay": 500,
+          "steps": [
+            {
+              "action": "inspectElement",
+              "selector": "[role='progressbar'], .spinner, [class*='loading'], svg[class*='spin']"
+            }
+          ]
+        },
+        {
+          "action": "wait",
+          "timeout": 2000
+        },
+        {
+          "description": "Capture after loading completes",
+          "action": "debugScreenshot",
+          "filename": "visual-loading-02-loaded.png"
+        },
+        {
+          "description": "Verify spinner disappeared",
+          "action": "expectNotVisible",
+          "selector": "[role='progressbar']:has-text('Loading workspaces')"
+        }
+      ]
+    },
+    {
+      "name": "form field states and validation UI",
+      "tags": ["@visual", "@forms", "@validation"],
+      "timeout": 30000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Open workspace dialog",
+          "action": "click",
+          "role": "button",
+          "text": "New Workspace"
+        },
+        {
+          "action": "wait",
+          "timeout": 500
+        },
+        {
+          "description": "Capture empty form",
+          "action": "debugScreenshot",
+          "filename": "visual-form-01-empty.png"
+        },
+        {
+          "description": "Focus on name input",
+          "action": "focus",
+          "placeholder": "Workspace name"
+        },
+        {
+          "action": "wait",
+          "timeout": 300
+        },
+        {
+          "description": "Capture focused input",
+          "action": "debugScreenshot",
+          "filename": "visual-form-02-focused.png"
+        },
+        {
+          "description": "Get focus border color",
+          "action": "getComputedStyle",
+          "selector": "input[placeholder='Workspace name']",
+          "property": "border-color"
+        },
+        {
+          "description": "Type in input",
+          "action": "type",
+          "placeholder": "Workspace name",
+          "text": "My Workspace",
+          "delay": 50
+        },
+        {
+          "action": "wait",
+          "timeout": 300
+        },
+        {
+          "description": "Capture filled input",
+          "action": "debugScreenshot",
+          "filename": "visual-form-03-filled.png"
+        },
+        {
+          "description": "Blur input",
+          "action": "blur",
+          "placeholder": "Workspace name"
+        },
+        {
+          "action": "wait",
+          "timeout": 300
+        },
+        {
+          "description": "Capture blurred state",
+          "action": "debugScreenshot",
+          "filename": "visual-form-04-blurred.png"
+        },
+        {
+          "description": "Clear input to trigger validation",
+          "action": "fill",
+          "placeholder": "Workspace name",
+          "value": ""
+        },
+        {
+          "description": "Blur to show error",
+          "action": "blur",
+          "placeholder": "Workspace name"
+        },
+        {
+          "action": "wait",
+          "timeout": 500
+        },
+        {
+          "description": "Capture validation error state",
+          "action": "debugScreenshot",
+          "filename": "visual-form-05-error.png"
+        },
+        {
+          "description": "Check for error message",
+          "action": "findByText",
+          "text": "required"
+        }
+      ]
+    },
+    {
+      "name": "sidebar collapse and expand animations",
+      "tags": ["@visual", "@sidebar", "@animations"],
+      "timeout": 30000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Capture sidebar expanded",
+          "action": "debugScreenshot",
+          "filename": "visual-sidebar-01-expanded.png"
+        },
+        {
+          "description": "Get sidebar width",
+          "action": "getComputedStyle",
+          "selector": "aside",
+          "property": "width"
+        },
+        {
+          "description": "Click menu toggle",
+          "action": "click",
+          "selector": "[data-testid='button-main-layout'], button[aria-label*='menu'], .menu-toggle"
+        },
+        {
+          "action": "wait",
+          "timeout": 100
+        },
+        {
+          "description": "Capture collapsing (frame 1)",
+          "action": "debugScreenshot",
+          "filename": "visual-sidebar-02-collapsing-f1.png"
+        },
+        {
+          "action": "wait",
+          "timeout": 200
+        },
+        {
+          "description": "Capture collapsing (frame 2)",
+          "action": "debugScreenshot",
+          "filename": "visual-sidebar-03-collapsing-f2.png"
+        },
+        {
+          "action": "wait",
+          "timeout": 200
+        },
+        {
+          "description": "Capture collapsed",
+          "action": "debugScreenshot",
+          "filename": "visual-sidebar-04-collapsed.png"
+        },
+        {
+          "description": "Get collapsed width",
+          "action": "getComputedStyle",
+          "selector": "aside",
+          "property": "width"
+        }
+      ]
+    },
+    {
+      "name": "notification toast appearances",
+      "tags": ["@visual", "@notifications", "@toasts"],
+      "timeout": 30000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Trigger action that shows toast",
+          "action": "click",
+          "role": "button",
+          "text": "New Workspace"
+        },
+        {
+          "action": "wait",
+          "timeout": 500
+        },
+        {
+          "description": "Fill and submit form",
+          "action": "fill",
+          "placeholder": "Workspace name",
+          "value": "Toast Test"
+        },
+        {
+          "action": "fill",
+          "placeholder": "Description",
+          "value": "Testing notifications"
+        },
+        {
+          "action": "click",
+          "role": "button",
+          "text": "Create Your First Workspace"
+        },
+        {
+          "action": "wait",
+          "timeout": 500
+        },
+        {
+          "description": "Capture toast appearing",
+          "action": "debugScreenshot",
+          "filename": "visual-toast-01-appearing.png"
+        },
+        {
+          "description": "Look for toast/alert",
+          "action": "retry",
+          "maxAttempts": 3,
+          "delay": 500,
+          "steps": [
+            {
+              "action": "findByText",
+              "text": "success"
+            }
+          ]
+        },
+        {
+          "action": "wait",
+          "timeout": 1000
+        },
+        {
+          "description": "Capture toast visible",
+          "action": "debugScreenshot",
+          "filename": "visual-toast-02-visible.png"
+        },
+        {
+          "action": "wait",
+          "timeout": 3000
+        },
+        {
+          "description": "Capture toast fading",
+          "action": "debugScreenshot",
+          "filename": "visual-toast-03-fading.png"
+        }
+      ]
+    },
+    {
+      "name": "dark mode toggle visual comparison",
+      "tags": ["@visual", "@theme", "@darkmode"],
+      "timeout": 30000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Capture light mode",
+          "action": "debugScreenshot",
+          "filename": "visual-theme-01-light.png"
+        },
+        {
+          "description": "Get body background color",
+          "action": "getComputedStyle",
+          "selector": "body",
+          "property": "background-color"
+        },
+        {
+          "description": "Click theme toggle",
+          "action": "click",
+          "selector": "[data-testid='button-theme-toggle'], button[aria-label*='theme'], .theme-toggle"
+        },
+        {
+          "action": "wait",
+          "timeout": 500
+        },
+        {
+          "description": "Capture dark mode",
+          "action": "debugScreenshot",
+          "filename": "visual-theme-02-dark.png"
+        },
+        {
+          "description": "Get dark mode background",
+          "action": "getComputedStyle",
+          "selector": "body",
+          "property": "background-color"
+        },
+        {
+          "description": "Navigate to workflows in dark mode",
+          "action": "click",
+          "selector": "text=All Workflows"
+        },
+        {
+          "action": "waitForURL",
+          "urlPattern": "/workflows"
+        },
+        {
+          "description": "Capture workflows dark mode",
+          "action": "debugScreenshot",
+          "filename": "visual-theme-03-workflows-dark.png"
+        }
+      ]
+    }
+  ]
+}

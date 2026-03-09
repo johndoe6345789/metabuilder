@@ -1,0 +1,30 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "smoke_tests",
+  "name": "Smoke Tests",
+  "version": "1.0.0",
+  "description": "Core smoke tests for MetaBuilder application",
+  "category": "testing",
+  "minLevel": 0,
+  "keywords": [
+    "smoke",
+    "tests",
+    "core",
+    "critical"
+  ],
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "files": {
+    "directories": [
+      "playwright"
+    ],
+    "byType": {
+      "tests": [
+        "playwright/tests.json"
+      ],
+      "config": [
+        "package.json"
+      ]
+    }
+  }
+}

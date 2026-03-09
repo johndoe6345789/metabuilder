@@ -58,14 +58,9 @@
  * }
  */
 
-import type { NextRequest, NextResponse } from 'next/server'
-import { NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 import { authenticate } from '@/lib/middleware/auth-middleware'
 import { applyRateLimit } from '@/lib/middleware/rate-limit'
-import { db } from '@/lib/db-client'
-import { getWorkflowLoader } from '@/lib/workflow/workflow-loader-v2'
-import { handleWorkflowError } from '@/lib/workflow/workflow-error-handler'
-import { buildMultiTenantContext } from '@/lib/workflow/multi-tenant-context'
 import { v4 as uuidv4 } from 'uuid'
 
 interface RouteParams {
@@ -80,7 +75,7 @@ interface RouteParams {
 export async function GET(
   request: NextRequest,
   { params }: RouteParams
-): Promise<NextResponse> {
+): Promise<Response> {
   try {
     // 1. Apply rate limiting for list endpoints
     const limitResponse = applyRateLimit(request, 'list')
@@ -179,7 +174,7 @@ export async function GET(
 export async function POST(
   request: NextRequest,
   { params }: RouteParams
-): Promise<NextResponse> {
+): Promise<Response> {
   try {
     // 1. Apply rate limiting for mutations
     const limitResponse = applyRateLimit(request, 'mutation')
@@ -210,7 +205,7 @@ export async function POST(
     let body: any
     try {
       body = await request.json()
-    } catch (error) {
+    } catch (_error) {
       return NextResponse.json(
         { error: 'Bad Request', message: 'Invalid JSON in request body' },
         { status: 400 }

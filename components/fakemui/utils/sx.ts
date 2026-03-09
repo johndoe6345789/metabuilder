@@ -90,14 +90,29 @@ const sxToCssMap: Record<string, string | string[]> = {
   transition: 'transition',
 }
 
-// Properties that use spacing units
+// Properties that use spacing units (MUI 8px multiplier)
 const spacingProperties = new Set([
   'm', 'mt', 'mb', 'ml', 'mr', 'mx', 'my',
   'p', 'pt', 'pb', 'pl', 'pr', 'px', 'py',
   'gap', 'rowGap', 'columnGap',
-  'top', 'right', 'bottom', 'left',
-  'width', 'height', 'minWidth', 'maxWidth', 'minHeight', 'maxHeight',
 ])
+
+// Properties that need px suffix when given a number (but NOT spacing multiplied)
+const pixelProperties = new Set([
+  'width', 'height', 'minWidth', 'maxWidth', 'minHeight', 'maxHeight',
+  'top', 'right', 'bottom', 'left',
+  'fontSize', 'borderRadius',
+])
+
+/**
+ * Convert pixel values - just appends px to numbers
+ */
+const convertPixel = (value: unknown): string | number => {
+  if (typeof value === 'number') {
+    return `${value}px`
+  }
+  return value as string | number
+}
 
 /**
  * Convert MUI color shortcuts to actual values
@@ -139,23 +154,27 @@ export const sxToStyle = (sx?: Record<string, unknown>): React.CSSProperties | u
 
     const cssProperty = sxToCssMap[key] || key
 
+    // Convert value based on property type
+    const convertValue = (val: unknown, propKey: string): string | number => {
+      if (spacingProperties.has(propKey)) {
+        return convertSpacing(val) as string
+      }
+      if (pixelProperties.has(propKey)) {
+        return convertPixel(val) as string | number
+      }
+      if (typeof val === 'string' && (propKey === 'color' || propKey === 'bgcolor' || propKey === 'backgroundColor')) {
+        return convertColor(val)
+      }
+      return val as string | number
+    }
+
     // Handle array properties (mx, my, px, py)
     if (Array.isArray(cssProperty)) {
       for (const prop of cssProperty) {
-        const convertedValue = spacingProperties.has(key)
-          ? convertSpacing(value)
-          : typeof value === 'string' && (key === 'color' || key === 'bgcolor')
-            ? convertColor(value as string)
-            : value
-        style[prop] = convertedValue as string | number
+        style[prop] = convertValue(value, key)
       }
     } else {
-      const convertedValue = spacingProperties.has(key)
-        ? convertSpacing(value)
-        : typeof value === 'string' && (key === 'color' || key === 'bgcolor')
-          ? convertColor(value as string)
-          : value
-      style[cssProperty] = convertedValue as string | number
+      style[cssProperty] = convertValue(value, key)
     }
   }
 

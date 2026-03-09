@@ -1,0 +1,74 @@
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Linker files
+*.ilk
+
+# Debugger Files
+*.pdb
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# debug information files
+*.dwo
+
+# Build artifacts
+build/
+init
+*.img
+*.iso
+*.zip
+release/
+
+# Temporary files
+/tmp/
+*.tmp
+*.bak
+
+# Root filesystem (generated)
+rootfs/bin/*
+rootfs/sbin/*
+rootfs/usr/bin/*
+rootfs/usr/sbin/*
+rootfs/usr/lib/*
+rootfs/usr/lib64/*
+rootfs/lib/*
+rootfs/lib64/*
+rootfs/boot/*
+
+# Keep structure but ignore contents
+!rootfs/README.txt
+!rootfs/etc/
+!rootfs/root/
+!rootfs/home/
+
+# CodeQL
+_codeql_detected_source_root

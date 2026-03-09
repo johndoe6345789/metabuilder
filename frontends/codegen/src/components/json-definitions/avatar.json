@@ -1,0 +1,37 @@
+{
+  "id": "avatar-root",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": "size",
+      "transform": "(() => { const sizeMap = { xs: 'avatar--xs', sm: 'avatar--sm', md: '', lg: 'avatar--lg', xl: 'avatar--xl' }; const mod = sizeMap[data] || ''; return mod ? `avatar ${mod}` : 'avatar'; })()"
+    }
+  },
+  "conditional": {
+    "if": "src",
+    "then": {
+      "id": "avatar-image",
+      "type": "img",
+      "bindings": {
+        "src": "src",
+        "alt": "alt"
+      },
+      "props": {
+        "className": "avatar__image"
+      }
+    },
+    "else": {
+      "id": "avatar-fallback",
+      "type": "span",
+      "props": {
+        "className": "avatar__initials"
+      },
+      "bindings": {
+        "children": {
+          "source": "fallback",
+          "transform": "data || (props.alt?.slice(0, 2).toUpperCase()) || '?'"
+        }
+      }
+    }
+  }
+}

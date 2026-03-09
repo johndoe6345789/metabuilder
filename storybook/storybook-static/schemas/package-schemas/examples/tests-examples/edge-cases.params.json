@@ -1,0 +1,212 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/test-parameters.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "test-examples",
+  "description": "Edge case parameter sets for comprehensive testing",
+
+  "parameters": [
+    {
+      "id": "null-undefined-params",
+      "name": "Null and Undefined Test Cases",
+      "description": "Test handling of null and undefined values",
+      "tags": ["edge-cases", "null-safety"],
+      "params": {
+        "input": {
+          "type": "any",
+          "nullable": true,
+          "description": "Input value that may be null or undefined"
+        },
+        "expectedResult": {
+          "type": "string",
+          "enum": ["null", "undefined", "throw", "default"],
+          "description": "Expected handling behavior"
+        },
+        "defaultValue": {
+          "type": "any",
+          "description": "Default value if applicable",
+          "nullable": true
+        }
+      }
+    },
+    {
+      "id": "boundary-value-params",
+      "name": "Boundary Value Test Cases",
+      "description": "Test minimum, maximum, and boundary values",
+      "tags": ["edge-cases", "boundaries"],
+      "params": {
+        "value": {
+          "type": "number",
+          "description": "Value to test"
+        },
+        "min": {
+          "type": "number",
+          "description": "Minimum allowed value"
+        },
+        "max": {
+          "type": "number",
+          "description": "Maximum allowed value"
+        },
+        "shouldBeValid": {
+          "type": "boolean",
+          "description": "Whether value should be considered valid"
+        },
+        "boundaryType": {
+          "type": "string",
+          "enum": ["below-min", "at-min", "normal", "at-max", "above-max"],
+          "description": "Type of boundary being tested"
+        }
+      }
+    },
+    {
+      "id": "empty-collection-params",
+      "name": "Empty Collection Test Cases",
+      "description": "Test handling of empty strings, arrays, and objects",
+      "tags": ["edge-cases", "empty"],
+      "params": {
+        "value": {
+          "type": "any",
+          "description": "Collection to test (string, array, or object)"
+        },
+        "collectionType": {
+          "type": "string",
+          "enum": ["string", "array", "object"],
+          "description": "Type of collection"
+        },
+        "expectedBehavior": {
+          "type": "string",
+          "enum": ["accept", "reject", "default", "throw"],
+          "description": "Expected handling of empty collection"
+        }
+      }
+    },
+    {
+      "id": "special-character-params",
+      "name": "Special Character Test Cases",
+      "description": "Test handling of special characters and Unicode",
+      "tags": ["edge-cases", "unicode", "security"],
+      "params": {
+        "input": {
+          "type": "string",
+          "description": "String with special characters"
+        },
+        "characterType": {
+          "type": "string",
+          "enum": [
+            "whitespace",
+            "unicode",
+            "emoji",
+            "control-chars",
+            "html-entities",
+            "sql-injection",
+            "xss-attempt",
+            "rtl-text",
+            "zero-width"
+          ],
+          "description": "Type of special characters"
+        },
+        "shouldSanitize": {
+          "type": "boolean",
+          "description": "Whether input should be sanitized",
+          "default": true
+        },
+        "expectedOutput": {
+          "type": "string",
+          "description": "Expected output after processing"
+        }
+      }
+    },
+    {
+      "id": "overflow-params",
+      "name": "Overflow and Underflow Test Cases",
+      "description": "Test integer overflow, underflow, and large numbers",
+      "tags": ["edge-cases", "numeric", "overflow"],
+      "params": {
+        "value": {
+          "type": "number",
+          "description": "Numeric value to test"
+        },
+        "testType": {
+          "type": "string",
+          "enum": [
+            "max-safe-integer",
+            "min-safe-integer",
+            "max-int32",
+            "min-int32",
+            "infinity",
+            "negative-infinity",
+            "nan",
+            "very-large",
+            "very-small"
+          ],
+          "description": "Type of overflow test"
+        },
+        "expectedResult": {
+          "type": "any",
+          "description": "Expected result"
+        }
+      }
+    },
+    {
+      "id": "concurrent-access-params",
+      "name": "Concurrent Access Test Cases",
+      "description": "Test race conditions and concurrent operations",
+      "tags": ["edge-cases", "concurrency", "async"],
+      "params": {
+        "operationCount": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "description": "Number of concurrent operations"
+        },
+        "operationType": {
+          "type": "string",
+          "enum": ["read", "write", "read-write", "delete"],
+          "description": "Type of concurrent operation"
+        },
+        "expectedConsistency": {
+          "type": "boolean",
+          "description": "Whether data should remain consistent"
+        },
+        "lockingStrategy": {
+          "type": "string",
+          "enum": ["none", "optimistic", "pessimistic"],
+          "description": "Locking strategy to test"
+        }
+      }
+    },
+    {
+      "id": "malformed-data-params",
+      "name": "Malformed Data Test Cases",
+      "description": "Test handling of malformed and invalid data structures",
+      "tags": ["edge-cases", "validation", "error-handling"],
+      "params": {
+        "data": {
+          "type": "any",
+          "description": "Malformed data to test"
+        },
+        "malformationType": {
+          "type": "string",
+          "enum": [
+            "missing-required-field",
+            "extra-fields",
+            "wrong-type",
+            "circular-reference",
+            "deep-nesting",
+            "malformed-json",
+            "invalid-encoding"
+          ],
+          "description": "Type of malformation"
+        },
+        "shouldThrow": {
+          "type": "boolean",
+          "description": "Whether an error should be thrown",
+          "default": true
+        },
+        "expectedError": {
+          "type": "string",
+          "description": "Expected error message pattern"
+        }
+      }
+    }
+  ]
+}

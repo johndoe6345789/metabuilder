@@ -499,7 +499,7 @@ export class WorkflowErrorHandler {
    */
   handleRateLimitError(
     retryAfter: number = 60,
-    context: ErrorContext = {}
+    _context: ErrorContext = {}
   ): NextResponse<FormattedError> {
     const response: FormattedError = {
       success: false,

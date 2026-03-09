@@ -1,0 +1,172 @@
+/**
+ * Icon Button Component - Material Design 3 SCSS Module
+ * ==================================================================
+ * M3-compliant icon button with proper states and sizing
+ */
+
+// =============================================================================
+// CSS Variables for M3 Icon Button Tokens
+// =============================================================================
+$icon-button-size: 40px;
+$icon-button-size-sm: 32px;
+$icon-button-size-lg: 48px;
+$icon-button-icon-size: 24px;
+$icon-button-icon-size-sm: 20px;
+$icon-button-icon-size-lg: 28px;
+
+// =============================================================================
+// Base Icon Button
+// =============================================================================
+.iconButton {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: $icon-button-size;
+  height: $icon-button-size;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--mat-sys-on-surface-variant);
+  cursor: pointer;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+  transition:
+    background-color 100ms ease,
+    color 100ms ease;
+
+  // Icon sizing
+  svg {
+    width: $icon-button-icon-size;
+    height: $icon-button-icon-size;
+    flex-shrink: 0;
+  }
+
+  // State layer (for hover/focus/active)
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: currentColor;
+    opacity: 0;
+    transition: opacity 100ms ease;
+    pointer-events: none;
+  }
+
+  // Hover state
+  &:hover:not(:disabled)::before {
+    opacity: 0.08;
+  }
+
+  // Focus state
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary);
+    outline-offset: 2px;
+  }
+
+  &:focus-visible::before {
+    opacity: 0.12;
+  }
+
+  // Active/pressed state
+  &:active:not(:disabled)::before {
+    opacity: 0.12;
+  }
+
+  // Disabled state
+  &:disabled {
+    color: color-mix(in srgb, var(--mat-sys-on-surface) 38%, transparent);
+    cursor: not-allowed;
+  }
+}
+
+// =============================================================================
+// Size Variants
+// =============================================================================
+.iconButtonSm {
+  width: $icon-button-size-sm;
+  height: $icon-button-size-sm;
+
+  svg {
+    width: $icon-button-icon-size-sm;
+    height: $icon-button-icon-size-sm;
+  }
+}
+
+.iconButtonLg {
+  width: $icon-button-size-lg;
+  height: $icon-button-size-lg;
+
+  svg {
+    width: $icon-button-icon-size-lg;
+    height: $icon-button-icon-size-lg;
+  }
+}
+
+// =============================================================================
+// Color Variants
+// =============================================================================
+.iconButtonPrimary {
+  color: var(--mat-sys-primary);
+}
+
+.iconButtonSecondary {
+  color: var(--mat-sys-secondary);
+}
+
+.iconButtonError {
+  color: var(--mat-sys-error);
+}
+
+.iconButtonSuccess {
+  color: var(--mat-sys-tertiary);
+}
+
+.iconButtonInherit {
+  color: inherit;
+}
+
+// =============================================================================
+// Filled Variant (tonal background)
+// =============================================================================
+.iconButtonFilled {
+  background: var(--mat-sys-surface-container-highest);
+
+  &:hover:not(:disabled) {
+    background: var(--mat-sys-surface-container-high);
+  }
+}
+
+.iconButtonFilledPrimary {
+  background: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
+
+  &:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--mat-sys-primary-container) 92%, var(--mat-sys-on-primary-container));
+  }
+}
+
+// =============================================================================
+// Outlined Variant
+// =============================================================================
+.iconButtonOutlined {
+  border: 1px solid var(--mat-sys-outline);
+
+  &:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--mat-sys-on-surface-variant) 8%, transparent);
+  }
+}
+
+// =============================================================================
+// Edge Alignment (for toolbar positioning)
+// =============================================================================
+.iconButtonEdgeStart {
+  margin-left: -8px;
+}
+
+.iconButtonEdgeEnd {
+  margin-right: -8px;
+}

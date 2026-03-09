@@ -1,0 +1,22 @@
+{
+  "type": "ComponentTreeNode",
+  "jsonCompatible": false,
+  "wrapperRequired": true,
+  "load": {
+    "path": "@/components/atoms/ComponentTreeNode",
+    "export": "ComponentTreeNode"
+  },
+  "props": {
+    "onSelect": "> void",
+    "onHover": "> void",
+    "onHoverEnd": "> void",
+    "onDragStart": "> void",
+    "onDragOver": "> void",
+    "onDragLeave": "> void",
+    "onDrop": "> void",
+    "onToggleExpand": "> void"
+  },
+  "metadata": {
+    "notes": "Complex logic - needs wrapper"
+  }
+}

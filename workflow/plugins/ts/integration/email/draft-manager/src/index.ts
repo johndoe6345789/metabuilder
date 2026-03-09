@@ -201,7 +201,7 @@ export class DraftManagerExecutor implements INodeExecutor {
   async execute(
     node: WorkflowNode,
     context: WorkflowContext,
-    state: ExecutionState
+    _state: ExecutionState
   ): Promise<NodeResult> {
     const startTime = Date.now();
 
@@ -494,7 +494,7 @@ export class DraftManagerExecutor implements INodeExecutor {
    */
   private async _handleRecover(
     config: DraftManagerConfig,
-    context: WorkflowContext
+    _context: WorkflowContext
   ): Promise<DraftOperationResult> {
     const draftId = config.draftId!;
     const draft = this._draftCache.get(draftId);
@@ -516,13 +516,14 @@ export class DraftManagerExecutor implements INodeExecutor {
     // Get save history for recovery options
     const saveHistory = this._saveHistory.get(draftId) || [];
     const hasConflicts = this._conflictLog.has(draftId);
+    const hasSaveHistory = saveHistory.length > 0;
 
     const recovery: DraftRecovery = {
       draftId,
       recoveredAt: Date.now(),
       recoveryReason: config.recoveryOptions?.preferLocal ? 'reconnection' : 'browser-crash',
       lastKnownState: draft,
-      autoRecovered: !hasConflicts,
+      autoRecovered: !hasConflicts && !hasSaveHistory,
       userConfirmationRequired: hasConflicts
     };
 

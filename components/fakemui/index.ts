@@ -11,7 +11,7 @@
 // =============================================================================
 // ICONS
 // =============================================================================
-export * from './icons'
+export * from '../../icons/react/fakemui'
 
 // =============================================================================
 // INPUT COMPONENTS
@@ -53,6 +53,9 @@ export {
   ColorPicker,
   FileUpload,
 } from './inputs'
+
+export type { RadioProps, RadioColor, RadioSize } from './inputs'
+export type { SelectChangeEvent } from './inputs/Select'
 
 // =============================================================================
 // SURFACE COMPONENTS
@@ -139,14 +142,29 @@ export {
 export {
   Alert,
   AlertTitle,
+  AlertDescription,
   Backdrop,
   CircularProgress,
+  Dialog,
   LinearProgress,
   Progress,
   Skeleton,
   Snackbar,
   SnackbarContent,
   Spinner,
+  MarkdownDisplay,
+  ErrorDisplay,
+  LoadingContent,
+  NotificationContainer,
+  toast,
+  Toaster,
+} from './feedback'
+export type { ToasterProps } from './feedback'
+export type {
+  NotificationData,
+  NotificationPosition,
+  NotificationType,
+  NotificationContainerProps,
 } from './feedback'
 
 // =============================================================================
@@ -155,6 +173,7 @@ export {
 export {
   Breadcrumbs,
   type BreadcrumbsProps,
+  type BreadcrumbItem,
   Link,
   type LinkProps,
   Menu,
@@ -175,13 +194,19 @@ export {
   StepIcon,
   Tabs,
   Tab,
+  TabPanel,
   type TabsProps,
   type TabProps,
+  type TabPanelProps,
   BottomNavigation,
   BottomNavigationAction,
   SpeedDial,
   SpeedDialAction,
   SpeedDialIcon,
+  ProjectSidebar,
+  type ProjectSidebarProps,
+  type ProjectSidebarItem,
+  type ProjectSidebarWorkspace,
 } from './navigation'
 
 // =============================================================================
@@ -189,7 +214,6 @@ export {
 // =============================================================================
 export {
   Modal,
-  Dialog,
   DialogOverlay,
   DialogPanel,
   DialogHeader,
@@ -197,6 +221,8 @@ export {
   DialogContent,
   DialogContentText,
   DialogActions,
+  DialogClose,
+  DialogIcon,
   Popover,
   Popper,
   Portal,
@@ -283,3 +309,76 @@ export * from './email'
 // WORKFLOW COMPONENTS
 // =============================================================================
 export * from './workflows'
+
+// =============================================================================
+// DATABASE ADMIN COMPONENTS (10 components)
+// =============================================================================
+export {
+  // Grids
+  DataGrid as DatabaseDataGrid,
+  type DataGridProps as DatabaseDataGridProps,
+  type DataGridColumn,
+  // Dialogs
+  ConfirmDialog,
+  type ConfirmDialogProps,
+  FormDialog,
+  type FormDialogProps,
+  type FormDialogField,
+  CreateTableDialog,
+  type CreateTableDialogProps,
+  type TableColumn,
+  DropTableDialog,
+  type DropTableDialogProps,
+  ColumnDialog,
+  type ColumnDialogProps,
+  type ColumnDialogMode,
+  type ColumnInfo,
+  ConstraintDialog,
+  type ConstraintDialogProps,
+  type ConstraintDialogMode,
+  type ConstraintType,
+  type ConstraintInfo,
+  // Tables
+  TablesTab,
+  type TablesTabProps,
+  type TableInfo,
+  // Queries
+  SQLQueryTab,
+  type SQLQueryTabProps,
+  QueryBuilderTab,
+  type QueryBuilderTabProps,
+  type QueryBuilderParams,
+  type QueryResult,
+  type QueryOperator,
+  type WhereCondition,
+} from './database'
+
+// =============================================================================
+// CODE EDITOR COMPONENTS
+// =============================================================================
+export {
+  MonacoEditor,
+  type MonacoEditorProps,
+  getMonacoLanguage,
+  configureMonacoTypeScript,
+  CodePreview,
+  type CodePreviewProps,
+  SplitView,
+  type SplitViewProps,
+  type ViewMode,
+} from './code'
+
+// =============================================================================
+// TERMINAL COMPONENTS
+// =============================================================================
+export {
+  Terminal,
+  type TerminalProps,
+  type TerminalLine,
+  TerminalHeader,
+  type TerminalHeaderProps,
+  TerminalOutput,
+  type TerminalOutputProps,
+  TerminalInput,
+  type TerminalInputProps,
+} from './terminal'

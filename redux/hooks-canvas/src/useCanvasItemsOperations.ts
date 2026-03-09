@@ -14,8 +14,8 @@ import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useServices } from '@metabuilder/service-adapters'
 import {
-  setLoading,
-  setError,
+  setProjectLoading,
+  setProjectError,
   selectCurrentProjectId,
 } from '@metabuilder/redux-slices'
 import {
@@ -56,17 +56,17 @@ export function useCanvasItemsOperations(): UseCanvasItemsOperationsReturn {
     async (data: CreateCanvasItemRequest) => {
       if (!projectId) return null
 
-      dispatch(setLoading(true))
+      dispatch(setProjectLoading(true))
       try {
         const item = await projectService.createCanvasItem(projectId, data)
         dispatch(addCanvasItem(item))
         return item
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : 'Failed to create canvas item'
-        dispatch(setError(errorMsg))
+        dispatch(setProjectError(errorMsg))
         throw err
       } finally {
-        dispatch(setLoading(false))
+        dispatch(setProjectLoading(false))
       }
     },
     [projectId, dispatch, projectService]
@@ -85,7 +85,7 @@ export function useCanvasItemsOperations(): UseCanvasItemsOperationsReturn {
         return updated
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : 'Failed to update canvas item'
-        dispatch(setError(errorMsg))
+        dispatch(setProjectError(errorMsg))
         throw err
       }
     },
@@ -104,7 +104,7 @@ export function useCanvasItemsOperations(): UseCanvasItemsOperationsReturn {
         dispatch(bulkUpdateCanvasItems(items))
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : 'Failed to bulk update canvas items'
-        dispatch(setError(errorMsg))
+        dispatch(setProjectError(errorMsg))
         throw err
       }
     },

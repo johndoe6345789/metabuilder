@@ -5,8 +5,8 @@
 
 import { useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useRouter } from 'next/navigation';
-import { setError, setLoading, selectError, selectIsLoading } from '../store/slices/authSlice';
+// useRouter import removed — was unused (dead import)
+import { setError, setAuthLoading, selectAuthError, selectAuthLoading } from '@metabuilder/redux-slices';
 
 export interface AuthFormState {
   email: string;
@@ -29,8 +29,8 @@ export interface UseAuthFormReturn extends AuthFormState {
  */
 export const useAuthForm = (): UseAuthFormReturn => {
   const dispatch = useDispatch();
-  const isLoading = useSelector(selectIsLoading);
-  const errorMessage = useSelector(selectError);
+  const isLoading = useSelector(selectAuthLoading);
+  const errorMessage = useSelector(selectAuthError);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

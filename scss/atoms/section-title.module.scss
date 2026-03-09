@@ -1,0 +1,132 @@
+// Section Title Atoms - Material Design 3 (CSS Module)
+// =====================================================
+// Flat selectors for section title styling using M3 tokens
+
+// Base section title
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mat-sys-title-small-font);
+  font-size: var(--mat-sys-title-small-size);
+  font-weight: var(--mat-sys-title-small-weight);
+  line-height: var(--mat-sys-title-small-line-height);
+  letter-spacing: var(--mat-sys-title-small-tracking);
+  color: var(--mat-sys-on-surface-variant);
+  margin-bottom: 12px;
+}
+
+// Icon within section title
+.sectionTitle svg,
+.sectionTitle .icon {
+  width: 20px;
+  height: 20px;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+// Size variants
+.sectionTitleSm {
+  composes: sectionTitle;
+  font-family: var(--mat-sys-label-large-font);
+  font-size: var(--mat-sys-label-large-size);
+  font-weight: var(--mat-sys-label-large-weight);
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.sectionTitleSm svg,
+.sectionTitleSm .icon {
+  width: 16px;
+  height: 16px;
+}
+
+.sectionTitleLg {
+  composes: sectionTitle;
+  font-family: var(--mat-sys-title-medium-font);
+  font-size: var(--mat-sys-title-medium-size);
+  font-weight: var(--mat-sys-title-medium-weight);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.sectionTitleLg svg,
+.sectionTitleLg .icon {
+  width: 24px;
+  height: 24px;
+}
+
+// Color variants
+.sectionTitlePrimary {
+  composes: sectionTitle;
+  color: var(--mat-sys-primary);
+}
+
+.sectionTitlePrimary svg,
+.sectionTitlePrimary .icon {
+  color: var(--mat-sys-primary);
+}
+
+.sectionTitleSecondary {
+  composes: sectionTitle;
+  color: var(--mat-sys-secondary);
+}
+
+.sectionTitleOnSurface {
+  composes: sectionTitle;
+  color: var(--mat-sys-on-surface);
+}
+
+// With underline
+.sectionTitleUnderline {
+  composes: sectionTitle;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+
+// With divider line extending
+.sectionTitleDivider {
+  composes: sectionTitle;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.sectionTitleDivider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--mat-sys-outline-variant);
+}
+
+// Uppercase variant
+.sectionTitleUppercase {
+  composes: sectionTitle;
+  text-transform: uppercase;
+  letter-spacing: var(--mat-sys-label-small-tracking);
+}
+
+// With action link
+.sectionTitleWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.sectionTitleWrapper .sectionTitle {
+  margin-bottom: 0;
+}
+
+.sectionTitleAction {
+  font-family: var(--mat-sys-label-large-font);
+  font-size: var(--mat-sys-label-large-size);
+  font-weight: var(--mat-sys-label-large-weight);
+  color: var(--mat-sys-primary);
+  text-decoration: none;
+  cursor: pointer;
+  transition: color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+}
+
+.sectionTitleAction:hover {
+  text-decoration: underline;
+}

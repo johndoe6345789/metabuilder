@@ -1,0 +1,134 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - button "Toggle sidebar" [ref=e5] [cursor=pointer]:
+          - img [ref=e6]
+        - generic [ref=e7]:
+          - img [ref=e8]
+          - heading "WorkflowUI" [level=1] [ref=e17]
+      - generic [ref=e18]:
+        - button "Notifications" [ref=e20] [cursor=pointer]:
+          - img [ref=e21]
+          - generic [ref=e23]: "2"
+        - button "Switch to dark mode" [ref=e24] [cursor=pointer]:
+          - img [ref=e25]
+    - generic [ref=e27]:
+      - complementary "Workflows sidebar" [ref=e28]:
+        - navigation [ref=e29]:
+          - generic [ref=e30]:
+            - heading "Main" [level=3] [ref=e31]
+            - list "Main navigation" [ref=e32]:
+              - listitem [ref=e33]:
+                - link "Dashboard" [ref=e34] [cursor=pointer]:
+                  - /url: /
+                  - img [ref=e36]
+                  - generic [ref=e38]: Dashboard
+              - listitem [ref=e39]:
+                - link "Notifications 2" [ref=e40] [cursor=pointer]:
+                  - /url: /notifications
+                  - img [ref=e42]
+                  - generic [ref=e44]: Notifications
+                  - generic [ref=e45]: "2"
+          - generic [ref=e46]:
+            - heading "Workflows" [level=3] [ref=e47]
+            - list "Workflows navigation" [ref=e48]:
+              - listitem [ref=e49]:
+                - link "All Workflows" [ref=e50] [cursor=pointer]:
+                  - /url: /workflows
+                  - img [ref=e52]
+                  - generic [ref=e54]: All Workflows
+              - listitem [ref=e55]:
+                - link "Recent" [ref=e56] [cursor=pointer]:
+                  - /url: /workflows/recent
+                  - img [ref=e58]
+                  - generic [ref=e60]: Recent
+              - listitem [ref=e61]:
+                - link "Favorites" [ref=e62] [cursor=pointer]:
+                  - /url: /workflows/favorites
+                  - img [ref=e64]
+                  - generic [ref=e66]: Favorites
+              - listitem [ref=e67]:
+                - link "Templates" [ref=e68] [cursor=pointer]:
+                  - /url: /templates
+                  - img [ref=e70]
+                  - generic [ref=e72]: Templates
+          - generic [ref=e73]:
+            - heading "System" [level=3] [ref=e74]
+            - list "System navigation" [ref=e75]:
+              - listitem [ref=e76]:
+                - link "Plugins" [ref=e77] [cursor=pointer]:
+                  - /url: /plugins
+                  - img [ref=e79]
+                  - generic [ref=e81]: Plugins
+              - listitem [ref=e82]:
+                - link "Settings" [ref=e83] [cursor=pointer]:
+                  - /url: /settings
+                  - img [ref=e85]
+                  - generic [ref=e87]: Settings
+          - generic [ref=e88]:
+            - heading "Help" [level=3] [ref=e89]
+            - list "Help navigation" [ref=e90]:
+              - listitem [ref=e91]:
+                - link "Documentation" [ref=e92] [cursor=pointer]:
+                  - /url: /docs
+                  - img [ref=e94]
+                  - generic [ref=e96]: Documentation
+              - listitem [ref=e97]:
+                - link "Help & Support" [ref=e98] [cursor=pointer]:
+                  - /url: /help
+                  - img [ref=e100]
+                  - generic [ref=e102]: Help & Support
+        - button "+ New Workflow" [ref=e104] [cursor=pointer]:
+          - generic [ref=e106]: + New Workflow
+      - main [ref=e107]:
+        - generic [ref=e108]:
+          - generic [ref=e110]:
+            - heading "WorkflowUI" [level=1] [ref=e111]
+            - paragraph [ref=e112]: Build powerful workflows with visual no-code tools. Connect, automate, and transform your business processes.
+          - generic [ref=e114]:
+            - generic [ref=e115]:
+              - heading "Log In" [level=2] [ref=e116]
+              - paragraph [ref=e117]: Welcome back to WorkflowUI
+            - generic [ref=e118]:
+              - generic [ref=e119]:
+                - generic [ref=e120]: ⚠
+                - generic [ref=e121]: Login failed
+              - generic [ref=e122]:
+                - generic [ref=e123]: Email
+                - textbox "Email" [ref=e124]:
+                  - /placeholder: your@email.com
+                  - text: test@workflowui.dev
+              - generic [ref=e125]:
+                - generic [ref=e126]: Password
+                - textbox "Password" [ref=e127]:
+                  - /placeholder: Enter your password
+                  - text: Test123!@#
+              - generic [ref=e128]:
+                - checkbox "Remember me" [ref=e129] [cursor=pointer]
+                - generic [ref=e130] [cursor=pointer]: Remember me
+              - link "Forgot your password?" [ref=e132] [cursor=pointer]:
+                - /url: /forgot-password
+              - button "Log In" [ref=e133] [cursor=pointer]
+              - generic [ref=e135]: or
+              - generic [ref=e136]:
+                - button "Continue with Google" [ref=e137] [cursor=pointer]:
+                  - img [ref=e138]
+                  - text: Continue with Google
+                - button "Continue with Microsoft" [ref=e143] [cursor=pointer]:
+                  - img [ref=e144]
+                  - text: Continue with Microsoft
+            - generic [ref=e149]:
+              - paragraph [ref=e150]:
+                - text: New to WorkflowUI?
+                - link "Create an account" [ref=e151] [cursor=pointer]:
+                  - /url: /register
+              - paragraph [ref=e152]:
+                - button "Switch to Material Design" [ref=e153] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=e159] [cursor=pointer]:
+    - img [ref=e160]
+  - alert [ref=e163]
+```

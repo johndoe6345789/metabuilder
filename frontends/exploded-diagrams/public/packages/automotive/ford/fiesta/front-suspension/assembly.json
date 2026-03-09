@@ -1,0 +1,19 @@
+{
+  "name": "Front Suspension",
+  "description": "MacPherson strut front suspension - per side",
+  "category": "automotive",
+  "parts": [
+    "strut-assembly",
+    "top-mount",
+    "coil-spring",
+    "lower-arm",
+    "ball-joint",
+    "anti-roll-bar",
+    "arb-link",
+    "hub-carrier",
+    "wheel-bearing",
+    "brake-disc",
+    "brake-caliper",
+    "driveshaft"
+  ]
+}

@@ -1,0 +1,113 @@
+{
+  "name": "Update Viewer Count",
+  "active": false,
+  "nodes": [
+    {
+      "id": "fetch_active_streams",
+      "name": "Fetch Active Streams",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "filter": {
+          "isLive": true
+        },
+        "operation": "database_read",
+        "entity": "StreamChannel"
+      }
+    },
+    {
+      "id": "update_viewer_counts",
+      "name": "Update Viewer Counts",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "operation": "parallel",
+        "tasks": [
+          {
+            "id": "count_viewers",
+            "op": "database_count",
+            "entity": "StreamSubscription",
+            "params": {
+              "filter": {
+                "channelId": "{{ $steps.fetch_active_streams.output.id }}"
+              }
+            }
+          },
+          {
+            "id": "fetch_channel_stats",
+            "op": "database_read",
+            "entity": "StreamChannel",
+            "params": {
+              "filter": {
+                "id": "{{ $steps.fetch_active_streams.output.id }}"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "broadcast_counts",
+      "name": "Broadcast Counts",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "data": {
+          "viewerCount": "{{ $steps.update_viewer_counts.tasks.count_viewers.output }}",
+          "liveTime": "{{ new Date() - new Date($steps.update_viewer_counts.tasks.fetch_channel_stats.output.startedAt) }}"
+        },
+        "action": "emit_event",
+        "event": "viewer_count_updated",
+        "channel": "{{ 'stream:' + $steps.fetch_active_streams.output.id }}"
+      }
+    }
+  ],
+  "connections": {
+    "fetch_active_streams": {
+      "main": [
+        [
+          {
+            "node": "update_viewer_counts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update_viewer_counts": {
+      "main": [
+        [
+          {
+            "node": "broadcast_counts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "id": "workflow_viewer_count_update",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
+}

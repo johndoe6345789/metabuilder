@@ -1,0 +1,161 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": false,
+  "title": "UI Dialogs",
+  "description": "Confirmation, alert, and form dialogs for user interactions",
+  "stories": [
+    {
+      "name": "ConfirmDialog - Primary",
+      "component": "ConfirmDialog",
+      "description": "Standard confirmation dialog",
+      "args": {
+        "open": true,
+        "title": "Confirm Action",
+        "message": "Are you sure you want to proceed with this action?",
+        "severity": "primary",
+        "confirmLabel": "Confirm",
+        "cancelLabel": "Cancel"
+      }
+    },
+    {
+      "name": "ConfirmDialog - Error",
+      "component": "ConfirmDialog",
+      "description": "Delete confirmation with error severity",
+      "args": {
+        "open": true,
+        "title": "Delete Item",
+        "message": "This action cannot be undone. Are you sure you want to delete this item?",
+        "severity": "error",
+        "confirmLabel": "Delete",
+        "cancelLabel": "Cancel"
+      }
+    },
+    {
+      "name": "ConfirmDialog - Warning",
+      "component": "ConfirmDialog",
+      "description": "Warning confirmation dialog",
+      "args": {
+        "open": true,
+        "title": "Unsaved Changes",
+        "message": "You have unsaved changes. Do you want to discard them?",
+        "severity": "warning",
+        "confirmLabel": "Discard",
+        "cancelLabel": "Keep Editing"
+      }
+    },
+    {
+      "name": "AlertDialog - Info",
+      "component": "AlertDialog",
+      "description": "Informational alert dialog",
+      "args": {
+        "open": true,
+        "title": "Information",
+        "message": "Your changes have been saved successfully.",
+        "severity": "info",
+        "confirmLabel": "OK"
+      }
+    },
+    {
+      "name": "AlertDialog - Success",
+      "component": "AlertDialog",
+      "description": "Success alert dialog",
+      "args": {
+        "open": true,
+        "title": "Success",
+        "message": "Operation completed successfully!",
+        "severity": "success",
+        "confirmLabel": "OK"
+      }
+    },
+    {
+      "name": "AlertDialog - Error",
+      "component": "AlertDialog",
+      "description": "Error alert dialog",
+      "args": {
+        "open": true,
+        "title": "Error",
+        "message": "An error occurred while processing your request. Please try again.",
+        "severity": "error",
+        "confirmLabel": "OK"
+      }
+    },
+    {
+      "name": "AlertDialog - Warning",
+      "component": "AlertDialog",
+      "description": "Warning alert dialog",
+      "args": {
+        "open": true,
+        "title": "Warning",
+        "message": "This feature is currently in beta. Use with caution.",
+        "severity": "warning",
+        "confirmLabel": "Understood"
+      }
+    },
+    {
+      "name": "FormDialog - Simple",
+      "component": "FormDialog",
+      "description": "Form dialog with text inputs",
+      "args": {
+        "open": true,
+        "title": "Create New Item",
+        "formFields": [
+          {
+            "type": "TextField",
+            "name": "name",
+            "label": "Name",
+            "required": true,
+            "fullWidth": true
+          },
+          {
+            "type": "TextField",
+            "name": "description",
+            "label": "Description",
+            "multiline": true,
+            "rows": 3,
+            "fullWidth": true
+          }
+        ],
+        "submitLabel": "Create",
+        "cancelLabel": "Cancel"
+      }
+    },
+    {
+      "name": "FormDialog - With Close Button",
+      "component": "FormDialog",
+      "description": "Form dialog with visible close button",
+      "args": {
+        "open": true,
+        "title": "Edit Profile",
+        "hideCloseButton": false,
+        "formFields": [
+          {
+            "type": "TextField",
+            "name": "email",
+            "label": "Email",
+            "type": "email",
+            "required": true,
+            "fullWidth": true
+          },
+          {
+            "type": "TextField",
+            "name": "phone",
+            "label": "Phone Number",
+            "fullWidth": true
+          }
+        ],
+        "submitLabel": "Save",
+        "cancelLabel": "Cancel"
+      }
+    }
+  ],
+  "defaultContext": {
+    "user": {
+      "id": "test-user",
+      "username": "testuser",
+      "level": 1
+    }
+  },
+  "parameters": {
+    "layout": "centered"
+  }
+}

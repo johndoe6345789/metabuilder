@@ -1,0 +1,13 @@
+[
+  {
+    "id": "page_user_manager_list",
+    "path": "/admin/users",
+    "title": "User Management",
+    "packageId": "user_manager",
+    "component": "user_list_admin",
+    "level": 3,
+    "requiresAuth": true,
+    "isPublished": true,
+    "sortOrder": 0
+  }
+]

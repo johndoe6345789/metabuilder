@@ -1,0 +1,65 @@
+{
+  "id": "component-tree-container",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": "className",
+      "transform": "className ? `space-y-2 ${className}` : 'space-y-2'"
+    }
+  },
+  "children": [
+    {
+      "id": "empty-message",
+      "type": "p",
+      "props": { "className": "text-sm text-muted-foreground" },
+      "bindings": { "children": "emptyMessage" },
+      "conditional": { "if": "components.length === 0" }
+    },
+    {
+      "id": "tree-nodes",
+      "type": "div",
+      "props": { "className": "space-y-1" },
+      "conditional": { "if": "components.length > 0" },
+      "children": [
+        {
+          "id": "tree-node-list",
+          "type": "list",
+          "bindings": {
+            "items": "treeData",
+            "keyPath": "component.id"
+          },
+          "itemTemplate": {
+            "type": "button",
+            "props": { "type": "button" },
+            "bindings": {
+              "onClick": {
+                "source": "onSelect,item.component.id",
+                "transform": "() => onSelect?.(item.component.id)"
+              },
+              "className": {
+                "source": "item.isSelected",
+                "transform": "item.isSelected ? 'flex w-full items-center gap-2 rounded-md px-2 py-1 text-left text-sm transition-colors bg-accent/40 text-foreground' : 'flex w-full items-center gap-2 rounded-md px-2 py-1 text-left text-sm transition-colors hover:bg-muted'"
+              },
+              "style": {
+                "source": "item.paddingLeft",
+                "transform": "{ paddingLeft: item.paddingLeft }"
+              }
+            },
+            "children": [
+              {
+                "type": "span",
+                "props": { "className": "font-medium" },
+                "bindings": { "children": "item.component.type" }
+              },
+              {
+                "type": "span",
+                "props": { "className": "text-xs text-muted-foreground" },
+                "bindings": { "children": "item.component.id" }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+# Dockerfile for building UEFI-bootable SparkOS image
+# Creates a .img file with GPT partition table, ESP, and GRUB
+
+FROM ubuntu:22.04 AS image-builder
+
+# Install required tools (includes Qt6 and CMake)
+COPY scripts/docker-image-install-tools.sh /tmp/
+RUN /tmp/docker-image-install-tools.sh
+
+WORKDIR /build
+
+# Copy source files
+COPY src/ ./src/
+COPY Makefile .
+COPY scripts/ ./scripts/
+COPY config/ ./config/
+COPY rootfs/ ./rootfs/
+
+# Build the init binary and Qt6 GUI application
+RUN make init
+RUN make gui
+
+# Install to rootfs
+RUN make install
+
+# Download a minimal Linux kernel (using Ubuntu's kernel for now)
+COPY scripts/docker-image-download-kernel.sh /tmp/
+RUN /tmp/docker-image-download-kernel.sh
+
+# Create UEFI-bootable image with GPT partition table
+COPY scripts/docker-image-create-uefi.sh /tmp/
+RUN /tmp/docker-image-create-uefi.sh
+
+# Final stage - export the image
+FROM scratch AS export
+COPY --from=image-builder /output/sparkos.img.gz /sparkos.img.gz

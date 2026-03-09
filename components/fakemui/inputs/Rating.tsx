@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { classNames } from '../utils/classNames'
 
 export interface RatingProps extends Omit<React.HTMLAttributes<HTMLSpanElement>, 'onChange'> {
+  testId?: string
   value?: number
   onChange?: (event: React.SyntheticEvent | null, value: number) => void
   max?: number
@@ -29,6 +30,7 @@ export function Rating({
   emptyIcon = '☆',
   icon = '★',
   highlightSelectedOnly = false,
+  testId,
   className,
   ...props
 }: RatingProps) {
@@ -96,6 +98,7 @@ export function Rating({
       aria-valuenow={value}
       aria-valuemin={0}
       aria-valuemax={max}
+      data-testid={testId}
       {...props}
     >
       {name && <input type="hidden" name={name} value={value} />}

@@ -1,0 +1,44 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "ui_dialogs",
+  "description": "UI dialogs component access permissions",
+  "permissions": [
+    {
+      "id": "ui_dialogs.confirm",
+      "name": "Use Confirm Dialogs",
+      "description": "Access confirmation dialogs",
+      "resource": "ui_dialogs",
+      "action": "execute",
+      "scope": "global",
+      "minLevel": 1
+    },
+    {
+      "id": "ui_dialogs.alert",
+      "name": "Use Alert Dialogs",
+      "description": "Access alert dialogs",
+      "resource": "ui_dialogs",
+      "action": "execute",
+      "scope": "global",
+      "minLevel": 1
+    },
+    {
+      "id": "ui_dialogs.form",
+      "name": "Use Form Dialogs",
+      "description": "Access form dialogs",
+      "resource": "ui_dialogs",
+      "action": "execute",
+      "scope": "global",
+      "minLevel": 1
+    }
+  ],
+  "resources": [
+    {
+      "id": "ui_dialogs",
+      "name": "UI Dialogs",
+      "type": "component",
+      "description": "Dialog UI components",
+      "actions": ["execute"]
+    }
+  ]
+}

@@ -1,8 +1,6 @@
 /**
  * DBAL Read Node Executor Plugin
- * Handles database query operations with filtering, sorting, pagination
- *
- * @packageDocumentation
+ * Fetches data from the C++ DBAL REST API via fetch().
  */
 
 import {
@@ -15,6 +13,8 @@ import {
 } from '@metabuilder/workflow';
 import { interpolateTemplate } from '@metabuilder/workflow';
 
+const DBAL_API_URL = process.env.DBAL_API_URL ?? 'http://localhost:8080';
+
 export class DBALReadExecutor implements INodeExecutor {
   nodeType = 'dbal-read';
 
@@ -26,61 +26,93 @@ export class DBALReadExecutor implements INodeExecutor {
     const startTime = Date.now();
 
     try {
-      const { entity, operation, filter, sort, limit, offset } = node.parameters;
+      const { entity, operation, filter, sort, limit, offset, packageId } = node.parameters;
 
       if (!entity) {
         throw new Error('DBAL read node requires "entity" parameter');
       }
 
-      // Interpolate template variables in filter
       const resolvedFilter = filter
         ? interpolateTemplate(filter, { context, state, json: context.triggerData })
         : {};
 
-      // Enforce multi-tenant filtering
       if (context.tenantId && !resolvedFilter.tenantId) {
         resolvedFilter.tenantId = context.tenantId;
       }
 
+      const pkg = packageId ?? 'default';
+      const tenant = context.tenantId ?? 'default';
       let result: any;
 
       switch (operation || 'read') {
-        case 'read':
-          result = {
-            entity,
-            filter: resolvedFilter,
-            sort: sort || undefined,
-            limit: limit || 100,
-            offset: offset || 0,
-            items: [],
-            total: 0
-          };
-          break;
+        case 'read': {
+          const params = new URLSearchParams();
+          if (Object.keys(resolvedFilter).length > 0) {
+            params.set('filter', JSON.stringify(resolvedFilter));
+          }
+          if (sort) params.set('sort', JSON.stringify(sort));
+          params.set('limit', String(limit ?? 100));
+          params.set('offset', String(offset ?? 0));
 
-        case 'validate':
-          result = this._validateData(context.triggerData, node.parameters.rules || {});
-          break;
+          const url = `${DBAL_API_URL}/api/v1/${tenant}/${pkg}/${entity}?${params}`;
+          const response = await fetch(url, {
+            headers: { 'Content-Type': 'application/json' },
+          });
 
-        case 'aggregate':
-          result = {
-            entity,
-            groupBy: node.parameters.groupBy,
-            aggregates: node.parameters.aggregates,
-            results: []
-          };
+          if (!response.ok) {
+            throw new Error(`DBAL read failed: ${response.status} ${response.statusText}`);
+          }
+
+          result = await response.json();
           break;
+        }
+
+        case 'count': {
+          const params = new URLSearchParams();
+          if (Object.keys(resolvedFilter).length > 0) {
+            params.set('filter', JSON.stringify(resolvedFilter));
+          }
+          params.set('count', 'true');
+
+          const url = `${DBAL_API_URL}/api/v1/${tenant}/${pkg}/${entity}?${params}`;
+          const response = await fetch(url, {
+            headers: { 'Content-Type': 'application/json' },
+          });
+
+          if (!response.ok) {
+            throw new Error(`DBAL count failed: ${response.status} ${response.statusText}`);
+          }
+
+          result = await response.json();
+          break;
+        }
+
+        case 'get': {
+          const id = node.parameters.id;
+          if (!id) throw new Error('Get operation requires "id" parameter');
+
+          const url = `${DBAL_API_URL}/api/v1/${tenant}/${pkg}/${entity}/${id}`;
+          const response = await fetch(url, {
+            headers: { 'Content-Type': 'application/json' },
+          });
+
+          if (!response.ok) {
+            throw new Error(`DBAL get failed: ${response.status} ${response.statusText}`);
+          }
+
+          result = await response.json();
+          break;
+        }
 
         default:
           throw new Error(`Unknown operation: ${operation}`);
       }
 
-      const duration = Date.now() - startTime;
-
       return {
         status: 'success',
         output: result,
         timestamp: Date.now(),
-        duration
+        duration: Date.now() - startTime
       };
     } catch (error) {
       return {
@@ -101,6 +133,10 @@ export class DBALReadExecutor implements INodeExecutor {
       errors.push('Entity is required');
     }
 
+    if (node.parameters.operation === 'get' && !node.parameters.id) {
+      errors.push('Get operation requires id parameter');
+    }
+
     if (node.parameters.limit && node.parameters.limit > 10000) {
       warnings.push('Limit exceeds 10000 - may cause performance issues');
     }
@@ -109,68 +145,6 @@ export class DBALReadExecutor implements INodeExecutor {
       valid: errors.length === 0,
       errors,
       warnings
-    };
-  }
-
-  private _validateData(
-    data: any,
-    rules: Record<string, string>
-  ): { valid: boolean; errors: Record<string, string> } {
-    const errors: Record<string, string> = {};
-
-    for (const [field, ruleStr] of Object.entries(rules)) {
-      const value = data[field];
-      const ruleSet = ruleStr.split('|');
-
-      for (const rule of ruleSet) {
-        const [ruleName, ...ruleParams] = rule.split(':');
-
-        switch (ruleName) {
-          case 'required':
-            if (value === undefined || value === null || value === '') {
-              errors[field] = `${field} is required`;
-            }
-            break;
-
-          case 'email':
-            if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-              errors[field] = `${field} must be a valid email`;
-            }
-            break;
-
-          case 'uuid':
-            if (
-              value &&
-              !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value)
-            ) {
-              errors[field] = `${field} must be a valid UUID`;
-            }
-            break;
-
-          case 'number':
-            if (value !== undefined && typeof value !== 'number') {
-              errors[field] = `${field} must be a number`;
-            }
-            break;
-
-          case 'min':
-            if (value !== undefined && value < parseFloat(ruleParams[0])) {
-              errors[field] = `${field} must be at least ${ruleParams[0]}`;
-            }
-            break;
-
-          case 'max':
-            if (value !== undefined && value > parseFloat(ruleParams[0])) {
-              errors[field] = `${field} must be at most ${ruleParams[0]}`;
-            }
-            break;
-        }
-      }
-    }
-
-    return {
-      valid: Object.keys(errors).length === 0,
-      errors
     };
   }
 }

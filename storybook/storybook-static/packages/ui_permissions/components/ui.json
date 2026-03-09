@@ -1,0 +1,226 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "ui_permissions",
+  "description": "Permission-related UI components for access control display",
+  "components": [
+    {
+      "id": "permission_badge",
+      "name": "PermissionBadge",
+      "description": "Badge displaying user permission level with color coding",
+      "props": [
+        {
+          "name": "level",
+          "type": "number",
+          "required": true,
+          "description": "Permission level (1-6)"
+        },
+        {
+          "name": "showLabel",
+          "type": "boolean",
+          "required": false,
+          "default": true,
+          "description": "Whether to show level name label"
+        },
+        {
+          "name": "size",
+          "type": "string",
+          "required": false,
+          "default": "medium",
+          "description": "Badge size: small, medium, large"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Chip",
+          "className": "permission-badge",
+          "size": "{{size}}",
+          "color": "{{level >= 5 ? 'error' : level >= 4 ? 'warning' : level >= 3 ? 'info' : 'default'}}",
+          "variant": "filled",
+          "label": "{{showLabel ? (level === 6 ? 'Supergod' : level === 5 ? 'God' : level === 4 ? 'Admin' : level === 3 ? 'Moderator' : level === 2 ? 'User' : 'Public') : level}}"
+        }
+      }
+    },
+    {
+      "id": "permission_gate",
+      "name": "PermissionGate",
+      "description": "Conditional wrapper that shows children only if user has required permission level",
+      "props": [
+        {
+          "name": "requiredLevel",
+          "type": "number",
+          "required": true,
+          "description": "Minimum permission level required (1-6)"
+        },
+        {
+          "name": "userLevel",
+          "type": "number",
+          "required": true,
+          "description": "Current user's permission level"
+        },
+        {
+          "name": "children",
+          "type": "any",
+          "required": true,
+          "description": "Content to render if authorized"
+        },
+        {
+          "name": "fallback",
+          "type": "any",
+          "required": false,
+          "description": "Content to render if not authorized"
+        }
+      ],
+      "render": {
+        "type": "conditional",
+        "condition": "{{userLevel >= requiredLevel}}",
+        "then": {
+          "type": "Fragment",
+          "children": "{{children}}"
+        },
+        "else": {
+          "type": "conditional",
+          "condition": "{{fallback}}",
+          "then": "{{fallback}}",
+          "else": null
+        }
+      }
+    },
+    {
+      "id": "permission_level_selector",
+      "name": "PermissionLevelSelector",
+      "description": "Dropdown selector for choosing permission levels",
+      "props": [
+        {
+          "name": "value",
+          "type": "number",
+          "required": true,
+          "description": "Currently selected level"
+        },
+        {
+          "name": "onChange",
+          "type": "function",
+          "required": true,
+          "description": "Callback when level changes"
+        },
+        {
+          "name": "minLevel",
+          "type": "number",
+          "required": false,
+          "default": 1,
+          "description": "Minimum selectable level"
+        },
+        {
+          "name": "maxLevel",
+          "type": "number",
+          "required": false,
+          "default": 6,
+          "description": "Maximum selectable level"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "default": false
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Select",
+          "className": "permission-level-selector",
+          "value": "{{value}}",
+          "onChange": "{{onChange}}",
+          "disabled": "{{disabled}}",
+          "fullWidth": true,
+          "children": [
+            {
+              "type": "MenuItem",
+              "value": 1,
+              "disabled": "{{minLevel > 1}}",
+              "children": "Public (Level 1)"
+            },
+            {
+              "type": "MenuItem",
+              "value": 2,
+              "disabled": "{{minLevel > 2 || maxLevel < 2}}",
+              "children": "User (Level 2)"
+            },
+            {
+              "type": "MenuItem",
+              "value": 3,
+              "disabled": "{{minLevel > 3 || maxLevel < 3}}",
+              "children": "Moderator (Level 3)"
+            },
+            {
+              "type": "MenuItem",
+              "value": 4,
+              "disabled": "{{minLevel > 4 || maxLevel < 4}}",
+              "children": "Admin (Level 4)"
+            },
+            {
+              "type": "MenuItem",
+              "value": 5,
+              "disabled": "{{minLevel > 5 || maxLevel < 5}}",
+              "children": "God (Level 5)"
+            },
+            {
+              "type": "MenuItem",
+              "value": 6,
+              "disabled": "{{maxLevel < 6}}",
+              "children": "Supergod (Level 6)"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "access_denied",
+      "name": "AccessDenied",
+      "description": "Access denied message component",
+      "props": [
+        {
+          "name": "requiredLevel",
+          "type": "number",
+          "required": false,
+          "description": "The level required for access"
+        },
+        {
+          "name": "message",
+          "type": "string",
+          "required": false,
+          "default": "You do not have permission to access this resource."
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Alert",
+          "severity": "error",
+          "className": "access-denied",
+          "children": [
+            {
+              "type": "AlertTitle",
+              "children": "Access Denied"
+            },
+            {
+              "type": "Text",
+              "children": "{{message}}"
+            },
+            {
+              "type": "conditional",
+              "condition": "{{requiredLevel}}",
+              "then": {
+                "type": "Text",
+                "variant": "caption",
+                "sx": { "mt": 1, "display": "block" },
+                "children": "Required level: {{requiredLevel === 6 ? 'Supergod' : requiredLevel === 5 ? 'God' : requiredLevel === 4 ? 'Admin' : requiredLevel === 3 ? 'Moderator' : requiredLevel === 2 ? 'User' : 'Public'}}"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "id": "dropdown-menu-root",
+  "type": "DropdownMenu",
+  "children": [
+    {
+      "id": "dropdown-menu-trigger",
+      "type": "DropdownMenuTrigger",
+      "bindings": {
+        "asChild": true
+      },
+      "children": [
+        {
+          "id": "dropdown-trigger-content",
+          "type": "slot",
+          "slot": "trigger",
+          "defaultContent": {
+            "id": "trigger-button",
+            "type": "Button",
+            "bindings": {
+              "variant": "ghost",
+              "size": "sm",
+              "children": "data.triggerLabel || 'Menu'"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "dropdown-menu-content",
+      "type": "DropdownMenuContent",
+      "bindings": {
+        "align": "data.align || 'end'",
+        "side": "data.side || 'bottom'"
+      },
+      "children": [
+        {
+          "id": "dropdown-menu-items",
+          "type": "slot",
+          "slot": "children"
+        }
+      ]
+    }
+  ]
+}

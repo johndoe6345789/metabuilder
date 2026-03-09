@@ -4,9 +4,6 @@ import { useEffect, useState } from 'react'
  * Displays a formatted "time ago" string for when data was last saved.
  * Includes an indicator for "recent" saves (within a configurable threshold).
  *
- * Requires date-fns for formatting. If you don't have date-fns installed,
- * you can install it with: npm install date-fns
- *
  * @example
  * function SaveStatus() {
  *   const [lastSaved, setLastSaved] = useState<number | null>(null)
@@ -41,25 +38,18 @@ export function useSaveIndicator(
     }
 
     const updateIndicator = () => {
-      // Try to use date-fns if available
-      try {
-        const { formatDistanceToNow } = require('date-fns')
-        setTimeAgo(formatDistanceToNow(lastSaved, { addSuffix: true }))
-      } catch {
-        // Fallback to simple time calculation if date-fns is not available
-        const seconds = Math.floor((Date.now() - lastSaved) / 1000)
-        if (seconds < 60) {
-          setTimeAgo('Just now')
-        } else if (seconds < 3600) {
-          const minutes = Math.floor(seconds / 60)
-          setTimeAgo(`${minutes} minute${minutes > 1 ? 's' : ''} ago`)
-        } else if (seconds < 86400) {
-          const hours = Math.floor(seconds / 3600)
-          setTimeAgo(`${hours} hour${hours > 1 ? 's' : ''} ago`)
-        } else {
-          const days = Math.floor(seconds / 86400)
-          setTimeAgo(`${days} day${days > 1 ? 's' : ''} ago`)
-        }
+      const seconds = Math.floor((Date.now() - lastSaved) / 1000)
+      if (seconds < 60) {
+        setTimeAgo('Just now')
+      } else if (seconds < 3600) {
+        const minutes = Math.floor(seconds / 60)
+        setTimeAgo(`${minutes} minute${minutes > 1 ? 's' : ''} ago`)
+      } else if (seconds < 86400) {
+        const hours = Math.floor(seconds / 3600)
+        setTimeAgo(`${hours} hour${hours > 1 ? 's' : ''} ago`)
+      } else {
+        const days = Math.floor(seconds / 86400)
+        setTimeAgo(`${days} day${days > 1 ? 's' : ''} ago`)
       }
 
       setIsRecent(Date.now() - lastSaved < recentThresholdMs)

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../../schemas/package-schemas/playwright.schema.json",
+  "package": "pastebin",
+  "version": "1.0.0",
+  "description": "Snippet and profile comment system tests",
+  "suite": "Comments",
+  "tests": [
+    {
+      "name": "comments section visible on snippet page",
+      "steps": [
+        { "action": "hook", "name": "createAndViewSnippet" },
+        { "action": "expect", "selector": "section h2", "assertion": { "matcher": "toContainText", "text": "Comments" } }
+      ]
+    },
+    {
+      "name": "comment form visible when authenticated",
+      "steps": [
+        { "action": "hook", "name": "createAndViewSnippet" },
+        { "action": "expect", "label": "Comment text", "assertion": { "matcher": "toBeVisible" } },
+        { "action": "expect", "role": "button", "text": "Post Comment", "assertion": { "matcher": "toBeVisible" } }
+      ]
+    },
+    {
+      "name": "post a comment on a snippet",
+      "timeout": 90000,
+      "steps": [
+        { "action": "hook", "name": "createAndViewSnippet" },
+        { "action": "fill", "label": "Comment text", "value": "Playwright JSON test comment" },
+        { "action": "keyboard", "keys": ["Escape"] },
+        { "action": "wait", "timeout": 300 },
+        { "action": "evaluate", "script": "document.querySelector('button')&&Array.from(document.querySelectorAll('button')).find(b=>b.textContent.includes('Post Comment'))?.scrollIntoView({block:'center'})" },
+        { "action": "click", "role": "button", "text": "Post Comment" },
+        { "action": "expect", "label": "Comment text", "assertion": { "matcher": "toHaveValue", "value": "" }, "timeout": 10000 },
+        { "action": "expect", "role": "button", "text": "Post Comment", "assertion": { "matcher": "toBeDisabled" } }
+      ]
+    },
+    {
+      "name": "write and preview tabs toggle",
+      "steps": [
+        { "action": "hook", "name": "createAndViewSnippet" },
+        { "action": "fill", "label": "Comment text", "value": "**bold test**" },
+        { "action": "click", "role": "button", "text": "Preview" },
+        { "action": "expect", "label": "Comment text", "assertion": { "matcher": "toBeHidden" } },
+        { "action": "click", "role": "button", "text": "Write" },
+        { "action": "expect", "label": "Comment text", "assertion": { "matcher": "toBeVisible" } }
+      ]
+    }
+  ]
+}

@@ -1,11 +1,6 @@
 /**
- * useDragResize - Re-exported from root hooks folder
- *
- * Direct import from root hooks folder bypasses the barrel export
- * to avoid pulling in hooks with project-specific dependencies.
- *
- * Import directly from the hooks folder for new code:
- * import { useDragResize } from '@metabuilder/hooks/useDragResize'
+ * useDragResize - Re-exported from @metabuilder/hooks
  */
 
-export { useDragResize } from '../../../../hooks/useDragResize'
+export { useDragResize } from '@metabuilder/hooks';
+export type { DragResizeItem, UseDragResizeParams, UseDragResizeReturn } from '@metabuilder/hooks';

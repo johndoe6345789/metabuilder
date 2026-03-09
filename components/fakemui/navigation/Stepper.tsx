@@ -1,4 +1,6 @@
 import React from 'react'
+import classNames from 'classnames'
+import styles from '../../../scss/Stepper.module.scss'
 
 export interface StepperProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode
@@ -7,6 +9,8 @@ export interface StepperProps extends React.HTMLAttributes<HTMLDivElement> {
   alternativeLabel?: boolean
   nonLinear?: boolean
   connector?: React.ReactNode
+  /** Test ID for automated testing */
+  testId?: string
 }
 
 export const Stepper: React.FC<StepperProps> = ({
@@ -16,17 +20,30 @@ export const Stepper: React.FC<StepperProps> = ({
   alternativeLabel = false,
   nonLinear = false,
   connector,
-  className = '',
+  className,
+  testId,
   ...props
 }) => (
   <div
-    className={`stepper stepper--${orientation} ${alternativeLabel ? 'stepper--alternative-label' : ''} ${nonLinear ? 'stepper--non-linear' : ''} ${className}`}
+    role="navigation"
+    aria-label="progress"
+    data-testid={testId}
+    className={classNames(
+      styles.stepper,
+      {
+        [styles.horizontal]: orientation === 'horizontal',
+        [styles.vertical]: orientation === 'vertical',
+        [styles.alternativeLabel]: alternativeLabel,
+      },
+      className
+    )}
     {...props}
   >
     {React.Children.map(children, (child, index) => (
       <>
         {child}
-        {index < React.Children.count(children) - 1 && (connector || <StepConnector />)}
+        {index < React.Children.count(children) - 1 &&
+          (connector || <StepConnector orientation={orientation} />)}
       </>
     ))}
   </div>
@@ -50,11 +67,19 @@ export const Step: React.FC<StepProps> = ({
   expanded,
   index,
   last,
-  className = '',
+  className,
   ...props
 }) => (
   <div
-    className={`step ${active ? 'step--active' : ''} ${completed ? 'step--completed' : ''} ${disabled ? 'step--disabled' : ''} ${expanded ? 'step--expanded' : ''} ${className}`}
+    className={classNames(
+      styles.step,
+      {
+        [styles.active]: active,
+        [styles.completed]: completed,
+        [styles.clickable]: !disabled && props.onClick,
+      },
+      className
+    )}
     data-index={index}
     {...props}
   >
@@ -78,16 +103,27 @@ export const StepLabel: React.FC<StepLabelProps> = ({
   error,
   StepIconComponent,
   StepIconProps,
-  className = '',
+  className,
   ...props
 }) => (
-  <span className={`step-label ${error ? 'step-label--error' : ''} ${className}`} {...props}>
-    {icon !== false && (
-      <span className="step-icon">{StepIconComponent ? <StepIconComponent {...StepIconProps} /> : icon}</span>
+  <span
+    className={classNames(
+      styles.stepContent,
+      {
+        [styles.error]: error,
+      },
+      className
     )}
-    <span className="step-label-container">
-      <span className="step-label-text">{children}</span>
-      {optional && <span className="step-label-optional">{optional}</span>}
+    {...props}
+  >
+    {icon !== false && (
+      <span className={styles.stepIcon}>
+        {StepIconComponent ? <StepIconComponent {...StepIconProps} /> : icon}
+      </span>
+    )}
+    <span className={styles.stepLabels}>
+      <span className={styles.stepLabel}>{children}</span>
+      {optional && <span className={styles.optional}>{optional}</span>}
     </span>
   </span>
 )
@@ -106,11 +142,11 @@ export const StepButton: React.FC<StepButtonProps> = ({
   optional,
   onClick,
   disabled,
-  className = '',
+  className,
   ...props
 }) => (
   <button
-    className={`step-button ${disabled ? 'step-button--disabled' : ''} ${className}`}
+    className={classNames(styles.clickable, className)}
     onClick={onClick}
     disabled={disabled}
     type="button"
@@ -134,19 +170,38 @@ export const StepContent: React.FC<StepContentProps> = ({
   TransitionComponent,
   TransitionProps,
   transitionDuration,
-  className = '',
+  className,
   ...props
 }) => (
-  <div className={`step-content ${className}`} {...props}>
+  <div className={classNames(styles.stepContent, className)} {...props}>
     {children}
   </div>
 )
 
-export interface StepConnectorProps extends React.HTMLAttributes<HTMLDivElement> {}
+export interface StepConnectorProps extends React.HTMLAttributes<HTMLDivElement> {
+  orientation?: 'horizontal' | 'vertical'
+  completed?: boolean
+}
 
-export const StepConnector: React.FC<StepConnectorProps> = ({ className = '', ...props }) => (
-  <div className={`step-connector ${className}`} {...props}>
-    <span className="step-connector-line" />
+export const StepConnector: React.FC<StepConnectorProps> = ({
+  orientation = 'horizontal',
+  completed,
+  className,
+  ...props
+}) => (
+  <div
+    className={classNames(
+      styles.connector,
+      {
+        [styles.horizontal]: orientation === 'horizontal',
+        [styles.vertical]: orientation === 'vertical',
+        [styles.completed]: completed,
+      },
+      className
+    )}
+    {...props}
+  >
+    <span className={styles.connectorLine} />
   </div>
 )
 
@@ -157,9 +212,24 @@ export interface StepIconProps extends React.HTMLAttributes<HTMLDivElement> {
   icon?: React.ReactNode
 }
 
-export const StepIcon: React.FC<StepIconProps> = ({ active, completed, error, icon, className = '', ...props }) => (
+export const StepIcon: React.FC<StepIconProps> = ({
+  active,
+  completed,
+  error,
+  icon,
+  className,
+  ...props
+}) => (
   <div
-    className={`step-icon ${active ? 'step-icon--active' : ''} ${completed ? 'step-icon--completed' : ''} ${error ? 'step-icon--error' : ''} ${className}`}
+    className={classNames(
+      styles.stepIcon,
+      {
+        [styles.active]: active,
+        [styles.completed]: completed,
+        [styles.error]: error,
+      },
+      className
+    )}
     {...props}
   >
     {completed ? '✓' : error ? '!' : icon}

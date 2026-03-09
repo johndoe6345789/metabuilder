@@ -1,0 +1,19 @@
+{
+  "id": "fiesta",
+  "name": "Fiesta",
+  "description": "Ford Fiesta Mk7 (2008-2017) - Complete Build",
+  "assemblies": [
+    "body-shell",
+    "front-suspension",
+    "rear-suspension",
+    "brake-system",
+    "fuel-system",
+    "engine",
+    "gearbox",
+    "exhaust",
+    "cooling-system",
+    "electrical",
+    "interior",
+    "exterior"
+  ]
+}

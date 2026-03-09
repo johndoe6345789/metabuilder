@@ -44,13 +44,13 @@ const initialState: ComposeDraftState = {
  */
 export const saveDraftAsync = createAsyncThunk<
   EmailDraft,
-  EmailDraft,
+  { draft: EmailDraft; baseUrl?: string },
   { rejectValue: string }
 >(
   'emailCompose/saveDraftAsync',
-  async (draft, { rejectWithValue }) => {
+  async ({ draft, baseUrl = '' }, { rejectWithValue }) => {
     try {
-      const response = await fetch('/api/v1/email/drafts', {
+      const response = await fetch(`${baseUrl}/api/v1/email/drafts`, {
         method: draft.id ? 'PUT' : 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(draft)
@@ -74,13 +74,13 @@ export const saveDraftAsync = createAsyncThunk<
  */
 export const sendEmailAsync = createAsyncThunk<
   { success: boolean; messageId: string },
-  EmailDraft,
+  { draft: EmailDraft; baseUrl?: string },
   { rejectValue: string }
 >(
   'emailCompose/sendEmailAsync',
-  async (draft, { rejectWithValue }) => {
+  async ({ draft, baseUrl = '' }, { rejectWithValue }) => {
     try {
-      const response = await fetch('/api/v1/email/send', {
+      const response = await fetch(`${baseUrl}/api/v1/email/send`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -108,13 +108,14 @@ export const sendEmailAsync = createAsyncThunk<
  */
 export const fetchDrafts = createAsyncThunk<
   EmailDraft[],
-  void,
+  { baseUrl?: string } | void,
   { rejectValue: string }
 >(
   'emailCompose/fetchDrafts',
-  async (_, { rejectWithValue }) => {
+  async (arg, { rejectWithValue }) => {
+    const baseUrl = (arg && 'baseUrl' in arg) ? arg.baseUrl ?? '' : ''
     try {
-      const response = await fetch('/api/v1/email/drafts')
+      const response = await fetch(`${baseUrl}/api/v1/email/drafts`)
       if (!response.ok) {
         throw new Error('Failed to fetch drafts')
       }

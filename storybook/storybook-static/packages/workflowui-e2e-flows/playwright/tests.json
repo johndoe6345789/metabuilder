@@ -1,0 +1,698 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "workflowui-e2e-flows",
+  "version": "1.0.0",
+  "description": "Intricate end-to-end user flows with debugging and visual verification",
+  "tests": [
+    {
+      "name": "complete workflow creation journey with screenshots",
+      "tags": ["@e2e", "@critical", "@workflow-creation"],
+      "timeout": 60000,
+      "steps": [
+        {
+          "description": "Start on dashboard",
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Capture initial state",
+          "action": "debugScreenshot",
+          "filename": "e2e-01-dashboard-start.png"
+        },
+        {
+          "description": "Inspect dashboard structure",
+          "action": "inspectPageStructure"
+        },
+        {
+          "description": "Verify stats are visible",
+          "action": "expect",
+          "selector": "text=nodes today",
+          "assertion": {"matcher": "toBeVisible"}
+        },
+        {
+          "description": "Navigate to workflows",
+          "action": "click",
+          "selector": "text=All Workflows"
+        },
+        {
+          "action": "waitForURL",
+          "urlPattern": "/workflows",
+          "timeout": 5000
+        },
+        {
+          "description": "Capture workflows page",
+          "action": "debugScreenshot",
+          "filename": "e2e-02-workflows-list.png"
+        },
+        {
+          "description": "Verify empty state",
+          "action": "expect",
+          "selector": "text=No workflows yet",
+          "assertion": {"matcher": "toBeVisible"}
+        },
+        {
+          "description": "Click create workflow button",
+          "action": "click",
+          "role": "button",
+          "text": "Create Your First Workflow"
+        },
+        {
+          "action": "wait",
+          "timeout": 2000
+        },
+        {
+          "description": "Capture after create click",
+          "action": "debugScreenshot",
+          "filename": "e2e-03-create-clicked.png"
+        },
+        {
+          "description": "Check if navigated or dialog opened",
+          "action": "getAllText"
+        },
+        {
+          "description": "Find workflow text on page",
+          "action": "findByText",
+          "text": "workflow"
+        }
+      ]
+    },
+    {
+      "name": "workspace management flow with retry and validation",
+      "tags": ["@e2e", "@workspace", "@crud"],
+      "timeout": 60000,
+      "steps": [
+        {
+          "description": "Navigate to dashboard",
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Wait for workspace section to load",
+          "action": "retry",
+          "maxAttempts": 3,
+          "delay": 1000,
+          "steps": [
+            {
+              "action": "expect",
+              "role": "heading",
+              "text": "Workspaces",
+              "assertion": {"matcher": "toBeVisible"}
+            }
+          ]
+        },
+        {
+          "description": "Capture workspace section",
+          "action": "debugScreenshot",
+          "filename": "e2e-workspace-01-before-create.png"
+        },
+        {
+          "description": "Click New Workspace button",
+          "action": "click",
+          "role": "button",
+          "text": "New Workspace"
+        },
+        {
+          "action": "wait",
+          "timeout": 500
+        },
+        {
+          "description": "Capture dialog opened",
+          "action": "debugScreenshot",
+          "filename": "e2e-workspace-02-dialog-open.png"
+        },
+        {
+          "description": "Inspect dialog structure",
+          "action": "inspectPageStructure"
+        },
+        {
+          "description": "Find all form inputs",
+          "action": "findByText",
+          "text": "Workspace name"
+        },
+        {
+          "description": "Fill workspace name",
+          "action": "fill",
+          "placeholder": "Workspace name",
+          "value": "E2E Test Workspace"
+        },
+        {
+          "description": "Fill description",
+          "action": "fill",
+          "placeholder": "Description",
+          "value": "Created by intricate E2E test suite"
+        },
+        {
+          "description": "Capture filled form",
+          "action": "debugScreenshot",
+          "filename": "e2e-workspace-03-form-filled.png"
+        },
+        {
+          "description": "Submit form with retry",
+          "action": "retry",
+          "maxAttempts": 3,
+          "delay": 1000,
+          "steps": [
+            {
+              "action": "click",
+              "role": "button",
+              "text": "Create Your First Workspace"
+            },
+            {
+              "action": "wait",
+              "timeout": 2000
+            }
+          ]
+        },
+        {
+          "description": "Capture after submission",
+          "action": "debugScreenshot",
+          "filename": "e2e-workspace-04-after-submit.png"
+        },
+        {
+          "description": "Verify workspace created (toast or card)",
+          "action": "waitForElement",
+          "selector": "text=E2E Test Workspace, [role='alert'], .workspace-card",
+          "timeout": 5000,
+          "state": "visible"
+        },
+        {
+          "description": "Get all page text to verify",
+          "action": "getAllText"
+        }
+      ]
+    },
+    {
+      "name": "search and filter workflow with element inspection",
+      "tags": ["@e2e", "@search", "@filters"],
+      "timeout": 45000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/workflows"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Capture initial workflows page",
+          "action": "debugScreenshot",
+          "filename": "e2e-search-01-initial.png"
+        },
+        {
+          "description": "Inspect search input",
+          "action": "inspectElement",
+          "selector": "input[placeholder*='Search']"
+        },
+        {
+          "description": "Get search input computed style",
+          "action": "getComputedStyle",
+          "selector": "input[placeholder*='Search']",
+          "property": "border-color"
+        },
+        {
+          "description": "Type in search box",
+          "action": "fill",
+          "placeholder": "Search workflows...",
+          "value": "automation"
+        },
+        {
+          "action": "wait",
+          "timeout": 500
+        },
+        {
+          "description": "Capture search results",
+          "action": "debugScreenshot",
+          "filename": "e2e-search-02-after-search.png"
+        },
+        {
+          "description": "Verify search updated page",
+          "action": "getAllText"
+        },
+        {
+          "description": "Clear search",
+          "action": "fill",
+          "placeholder": "Search workflows...",
+          "value": ""
+        },
+        {
+          "action": "wait",
+          "timeout": 500
+        },
+        {
+          "description": "Look for filter labels",
+          "action": "findByText",
+          "text": "Status"
+        },
+        {
+          "description": "Capture filters section",
+          "action": "debugScreenshot",
+          "filename": "e2e-search-03-filters.png"
+        }
+      ]
+    },
+    {
+      "name": "navigation flow across all pages with screenshots",
+      "tags": ["@e2e", "@navigation", "@comprehensive"],
+      "timeout": 90000,
+      "steps": [
+        {
+          "description": "Start at dashboard",
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "debugScreenshot",
+          "filename": "e2e-nav-01-dashboard.png"
+        },
+        {
+          "description": "Navigate to Workflows",
+          "action": "click",
+          "selector": "text=All Workflows"
+        },
+        {
+          "action": "waitForURL",
+          "urlPattern": "/workflows"
+        },
+        {
+          "action": "debugScreenshot",
+          "filename": "e2e-nav-02-workflows.png"
+        },
+        {
+          "description": "Navigate to Favorites",
+          "action": "click",
+          "selector": "text=Favorites"
+        },
+        {
+          "action": "waitForURL",
+          "urlPattern": "/workflows/favorites"
+        },
+        {
+          "action": "debugScreenshot",
+          "filename": "e2e-nav-03-favorites.png"
+        },
+        {
+          "description": "Navigate to Recent",
+          "action": "click",
+          "selector": "text=Recent"
+        },
+        {
+          "action": "waitForURL",
+          "urlPattern": "/workflows/recent"
+        },
+        {
+          "action": "debugScreenshot",
+          "filename": "e2e-nav-04-recent.png"
+        },
+        {
+          "description": "Navigate to Templates",
+          "action": "click",
+          "selector": "text=Templates"
+        },
+        {
+          "action": "waitForURL",
+          "urlPattern": "/templates"
+        },
+        {
+          "action": "debugScreenshot",
+          "filename": "e2e-nav-05-templates.png"
+        },
+        {
+          "description": "Navigate to Plugins",
+          "action": "click",
+          "selector": "text=Plugins"
+        },
+        {
+          "action": "waitForURL",
+          "urlPattern": "/plugins"
+        },
+        {
+          "action": "debugScreenshot",
+          "filename": "e2e-nav-06-plugins.png"
+        },
+        {
+          "description": "Navigate to Settings",
+          "action": "click",
+          "selector": "text=Settings"
+        },
+        {
+          "action": "waitForURL",
+          "urlPattern": "/settings"
+        },
+        {
+          "action": "debugScreenshot",
+          "filename": "e2e-nav-07-settings.png"
+        },
+        {
+          "description": "Navigate to Notifications",
+          "action": "click",
+          "selector": "[data-testid='button-notifications'], button:has-text('Notifications')"
+        },
+        {
+          "action": "waitForURL",
+          "urlPattern": "/notifications"
+        },
+        {
+          "action": "debugScreenshot",
+          "filename": "e2e-nav-08-notifications.png"
+        },
+        {
+          "description": "Navigate to Help",
+          "action": "click",
+          "selector": "text=Help & Support"
+        },
+        {
+          "action": "waitForURL",
+          "urlPattern": "/help"
+        },
+        {
+          "action": "debugScreenshot",
+          "filename": "e2e-nav-09-help.png"
+        },
+        {
+          "description": "Navigate to Documentation",
+          "action": "click",
+          "selector": "text=Documentation"
+        },
+        {
+          "action": "waitForURL",
+          "urlPattern": "/docs"
+        },
+        {
+          "action": "debugScreenshot",
+          "filename": "e2e-nav-10-docs.png"
+        },
+        {
+          "description": "Return to Dashboard",
+          "action": "click",
+          "selector": "text=Dashboard"
+        },
+        {
+          "action": "waitForURL",
+          "urlPattern": "/"
+        },
+        {
+          "action": "debugScreenshot",
+          "filename": "e2e-nav-11-back-to-dashboard.png"
+        }
+      ]
+    },
+    {
+      "name": "complex form validation with error handling",
+      "tags": ["@e2e", "@forms", "@validation"],
+      "timeout": 45000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Open workspace dialog",
+          "action": "click",
+          "role": "button",
+          "text": "New Workspace"
+        },
+        {
+          "action": "wait",
+          "timeout": 500
+        },
+        {
+          "description": "Capture empty form",
+          "action": "debugScreenshot",
+          "filename": "e2e-validation-01-empty-form.png"
+        },
+        {
+          "description": "Try submitting empty form",
+          "action": "click",
+          "role": "button",
+          "text": "Create Your First Workspace"
+        },
+        {
+          "action": "wait",
+          "timeout": 1000
+        },
+        {
+          "description": "Capture validation errors",
+          "action": "debugScreenshot",
+          "filename": "e2e-validation-02-errors.png"
+        },
+        {
+          "description": "Check for error messages",
+          "action": "findByText",
+          "text": "required"
+        },
+        {
+          "description": "Fill invalid data (empty name)",
+          "action": "fill",
+          "placeholder": "Workspace name",
+          "value": ""
+        },
+        {
+          "description": "Fill valid description",
+          "action": "fill",
+          "placeholder": "Description",
+          "value": "Test description"
+        },
+        {
+          "action": "wait",
+          "timeout": 300
+        },
+        {
+          "description": "Capture partial fill",
+          "action": "debugScreenshot",
+          "filename": "e2e-validation-03-partial.png"
+        },
+        {
+          "description": "Now fill valid name",
+          "action": "fill",
+          "placeholder": "Workspace name",
+          "value": "Valid Workspace Name"
+        },
+        {
+          "action": "wait",
+          "timeout": 300
+        },
+        {
+          "description": "Capture valid form",
+          "action": "debugScreenshot",
+          "filename": "e2e-validation-04-valid.png"
+        },
+        {
+          "description": "Submit valid form",
+          "action": "retry",
+          "maxAttempts": 2,
+          "delay": 1000,
+          "steps": [
+            {
+              "action": "click",
+              "role": "button",
+              "text": "Create Your First Workspace"
+            }
+          ]
+        },
+        {
+          "action": "wait",
+          "timeout": 2000
+        },
+        {
+          "description": "Capture success state",
+          "action": "debugScreenshot",
+          "filename": "e2e-validation-05-success.png"
+        }
+      ]
+    },
+    {
+      "name": "responsive design test with viewport changes",
+      "tags": ["@e2e", "@responsive", "@visual"],
+      "timeout": 60000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Capture desktop view",
+          "action": "debugScreenshot",
+          "filename": "e2e-responsive-01-desktop.png"
+        },
+        {
+          "description": "Check sidebar visibility",
+          "action": "expect",
+          "selector": "aside",
+          "assertion": {"matcher": "toBeVisible"}
+        },
+        {
+          "description": "Inspect layout structure",
+          "action": "inspectPageStructure"
+        },
+        {
+          "description": "Get layout computed styles",
+          "action": "getComputedStyle",
+          "selector": ".layout_layout__tCaYe, [class*='layout']",
+          "property": "display"
+        },
+        {
+          "description": "Navigate to workflows",
+          "action": "click",
+          "selector": "text=All Workflows"
+        },
+        {
+          "action": "waitForURL",
+          "urlPattern": "/workflows"
+        },
+        {
+          "description": "Capture workflows desktop",
+          "action": "debugScreenshot",
+          "filename": "e2e-responsive-02-workflows-desktop.png"
+        },
+        {
+          "description": "Check search bar on desktop",
+          "action": "expect",
+          "placeholder": "Search workflows...",
+          "assertion": {"matcher": "toBeVisible"}
+        }
+      ]
+    },
+    {
+      "name": "error recovery and resilience test",
+      "tags": ["@e2e", "@errors", "@resilience"],
+      "timeout": 60000,
+      "steps": [
+        {
+          "description": "Navigate to non-existent workflow",
+          "action": "navigate",
+          "url": "/workflows/non-existent-workflow-id"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "wait",
+          "timeout": 2000
+        },
+        {
+          "description": "Capture 404 or error page",
+          "action": "debugScreenshot",
+          "filename": "e2e-errors-01-not-found.png"
+        },
+        {
+          "description": "Get all text to check error message",
+          "action": "getAllText"
+        },
+        {
+          "description": "Navigate back to workflows",
+          "action": "navigate",
+          "url": "/workflows"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Capture recovery",
+          "action": "debugScreenshot",
+          "filename": "e2e-errors-02-recovered.png"
+        },
+        {
+          "description": "Verify page loaded correctly",
+          "action": "expect",
+          "selector": "text=Workflows",
+          "assertion": {"matcher": "toBeVisible"}
+        }
+      ]
+    },
+    {
+      "name": "keyboard navigation and accessibility test",
+      "tags": ["@e2e", "@a11y", "@keyboard"],
+      "timeout": 45000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Capture initial state",
+          "action": "debugScreenshot",
+          "filename": "e2e-a11y-01-start.png"
+        },
+        {
+          "description": "Tab to first focusable element",
+          "action": "keyboard",
+          "keys": "Tab"
+        },
+        {
+          "action": "wait",
+          "timeout": 300
+        },
+        {
+          "description": "Capture first tab stop",
+          "action": "debugScreenshot",
+          "filename": "e2e-a11y-02-tab-1.png"
+        },
+        {
+          "description": "Tab again",
+          "action": "keyboard",
+          "keys": "Tab"
+        },
+        {
+          "action": "wait",
+          "timeout": 300
+        },
+        {
+          "description": "Capture second tab stop",
+          "action": "debugScreenshot",
+          "filename": "e2e-a11y-03-tab-2.png"
+        },
+        {
+          "description": "Press Enter on focused element",
+          "action": "keyboard",
+          "keys": "Enter"
+        },
+        {
+          "action": "wait",
+          "timeout": 1000
+        },
+        {
+          "description": "Capture after Enter",
+          "action": "debugScreenshot",
+          "filename": "e2e-a11y-04-after-enter.png"
+        },
+        {
+          "description": "Press Escape to close dialog",
+          "action": "keyboard",
+          "keys": "Escape"
+        },
+        {
+          "action": "wait",
+          "timeout": 500
+        },
+        {
+          "description": "Capture after Escape",
+          "action": "debugScreenshot",
+          "filename": "e2e-a11y-05-after-escape.png"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+// App-level CSS variables (M3-based theming)
+/* stylelint-disable selector-max-id */
+#spark-app {
+  --size-scale: 1;
+  --radius-factor: 1;
+  
+  // Neutral colors (muted charcoal scale)
+  --color-neutral-1: hsl(215deg 8% 8%);
+  --color-neutral-2: hsl(215deg 8% 10%);
+  --color-neutral-3: hsl(215deg 8% 14%);
+  --color-neutral-11: hsl(215deg 8% 78%);
+  --color-neutral-12: hsl(215deg 8% 90%);
+  
+  // Accent colors (calmer teal and sand pairing)
+  --color-accent-9: hsl(195deg 80% 66%);
+  --color-accent-11: hsl(195deg 74% 42%);
+  --color-accent-contrast: hsl(40deg 36% 70%);
+  
+  // Foreground colors
+  --color-fg: var(--color-neutral-12);
+  --color-fg-secondary: var(--color-neutral-11);
+  
+  // Background colors
+  --color-bg: hsl(215deg 8% 9%);
+  --color-bg-inset: hsl(215deg 8% 12%);
+  --color-bg-overlay: hsl(215deg 8% 14%);
+  
+  // Focus ring
+  --color-focus-ring: var(--color-accent-9);
+  
+  // Fonts
+  --font-sans-serif: ui-sans-serif, system-ui, sans-serif;
+  --font-serif: ui-serif, georgia, serif;
+  --font-monospace: ui-monospace, 'SF Mono', monaco, consolas, monospace;
+  --font-family: var(--font-sans-serif);
+}
+
+#spark-app.dark-theme {
+  --color-bg: hsl(215deg 8% 6%);
+  --color-bg-inset: hsl(215deg 8% 9%);
+  --color-bg-overlay: hsl(215deg 8% 12%);
+}
+/* stylelint-enable selector-max-id */

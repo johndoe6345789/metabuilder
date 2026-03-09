@@ -1,0 +1,275 @@
+@import '../styles/m3-base.css';
+
+/* Material Design 3 CSS Custom Properties */
+/* Light theme (default) */
+:root {
+  /* Primary colors */
+  --mat-sys-primary: #6750a4;
+  --mat-sys-on-primary: #ffffff;
+  --mat-sys-primary-container: #eaddff;
+  --mat-sys-on-primary-container: #21005d;
+
+  /* Secondary colors */
+  --mat-sys-secondary: #625b71;
+  --mat-sys-on-secondary: #ffffff;
+  --mat-sys-secondary-container: #e8def8;
+  --mat-sys-on-secondary-container: #1d192b;
+
+  /* Tertiary colors */
+  --mat-sys-tertiary: #7d5260;
+  --mat-sys-on-tertiary: #ffffff;
+  --mat-sys-tertiary-container: #ffd8e4;
+  --mat-sys-on-tertiary-container: #31111d;
+
+  /* Background colors */
+  --mat-sys-background: #fffbfe;
+  --mat-sys-on-background: #1c1b1f;
+  --mat-sys-surface: #fffbfe;
+  --mat-sys-on-surface: #1c1b1f;
+  --mat-sys-surface-variant: #e7e0ec;
+  --mat-sys-on-surface-variant: #49454e;
+
+  /* Error colors */
+  --mat-sys-error: #b3261e;
+  --mat-sys-on-error: #ffffff;
+  --mat-sys-error-container: #f9dedc;
+  --mat-sys-on-error-container: #410e0b;
+
+  /* Outline colors */
+  --mat-sys-outline: #79747e;
+  --mat-sys-outline-variant: #cac7d0;
+
+  /* Accent color */
+  --mat-sys-accent: #6750a4;
+  --mat-sys-on-accent: #ffffff;
+
+  /* Corner radius */
+  --mat-sys-corner-extra-small: 4px;
+  --mat-sys-corner-small: 8px;
+  --mat-sys-corner-medium: 12px;
+  --mat-sys-corner-large: 16px;
+  --mat-sys-corner-extra-large: 28px;
+
+  /* Typography fonts */
+  --mat-sys-body-large-font: 'Inter', sans-serif;
+  --mat-sys-body-medium-font: 'Inter', sans-serif;
+  --mat-sys-body-small-font: 'Inter', sans-serif;
+  --mat-sys-label-large-font: 'Inter', sans-serif;
+  --mat-sys-label-medium-font: 'Inter', sans-serif;
+  --mat-sys-label-small-font: 'Inter', sans-serif;
+  --mat-sys-headline-large-font: 'Bricolage Grotesque', sans-serif;
+  --mat-sys-headline-medium-font: 'Bricolage Grotesque', sans-serif;
+  --mat-sys-headline-small-font: 'Bricolage Grotesque', sans-serif;
+  --mat-sys-title-large-font: 'Bricolage Grotesque', sans-serif;
+  --mat-sys-title-medium-font: 'Bricolage Grotesque', sans-serif;
+  --mat-sys-title-small-font: 'Bricolage Grotesque', sans-serif;
+  --mat-sys-display-large-font: 'Bricolage Grotesque', sans-serif;
+  --mat-sys-display-medium-font: 'Bricolage Grotesque', sans-serif;
+  --mat-sys-display-small-font: 'Bricolage Grotesque', sans-serif;
+
+  /* Surface containers */
+  --mat-sys-surface-container-lowest:  #fffbfe;
+  --mat-sys-surface-container-low:     #f7f2fa;
+  --mat-sys-surface-container:         #f3edf7;
+  --mat-sys-surface-container-high:    #ece6f0;
+  --mat-sys-surface-container-highest: #e6e0e9;
+
+  /* State layer opacities — referenced by M3 button tokens */
+  --mat-sys-hover-state-layer-opacity: 0.08;
+  --mat-sys-focus-state-layer-opacity: 0.12;
+  --mat-sys-pressed-state-layer-opacity: 0.12;
+}
+
+/* Dark theme */
+.dark {
+  /* Primary colors */
+  --mat-sys-primary: #d0bcff;
+  --mat-sys-on-primary: #371e55;
+  --mat-sys-primary-container: #4f378b;
+  --mat-sys-on-primary-container: #eaddff;
+
+  /* Secondary colors */
+  --mat-sys-secondary: #cbc7db;
+  --mat-sys-on-secondary: #322f37;
+  --mat-sys-secondary-container: #4a4458;
+  --mat-sys-on-secondary-container: #e8def8;
+
+  /* Tertiary colors */
+  --mat-sys-tertiary: #f8b500;
+  --mat-sys-on-tertiary: #4a2c42;
+  --mat-sys-tertiary-container: #633b48;
+  --mat-sys-on-tertiary-container: #ffd8e4;
+
+  /* Background colors */
+  --mat-sys-background: #1c1b1f;
+  --mat-sys-on-background: #e6e1e6;
+  --mat-sys-surface: #1c1b1f;
+  --mat-sys-on-surface: #e6e1e6;
+  --mat-sys-surface-variant: #49454e;
+  --mat-sys-on-surface-variant: #cac7d0;
+
+  /* Error colors */
+  --mat-sys-error: #f2b8b5;
+  --mat-sys-on-error: #601410;
+  --mat-sys-error-container: #8c1d18;
+  --mat-sys-on-error-container: #f9dedc;
+
+  /* Outline colors */
+  --mat-sys-outline: #938f99;
+  --mat-sys-outline-variant: #49454e;
+
+  /* Accent color */
+  --mat-sys-accent: #d0bcff;
+  --mat-sys-on-accent: #371e55;
+
+  --mat-sys-surface-container-lowest:  #0f0d13;
+  --mat-sys-surface-container-low:     #1d1b20;
+  --mat-sys-surface-container:         #211f26;
+  --mat-sys-surface-container-high:    #2b2930;
+  --mat-sys-surface-container-highest: #36343b;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  font-family: var(--mat-sys-body-large-font);
+  background-color: var(--mat-sys-background);
+  color: var(--mat-sys-on-background);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: var(--mat-sys-primary);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+code {
+  font-family: 'JetBrains Mono', monospace;
+  background-color: var(--mat-sys-surface-variant);
+  padding: 0.125rem 0.25rem;
+  border-radius: var(--mat-sys-corner-extra-small);
+  font-size: 0.875em;
+}
+
+pre {
+  font-family: 'JetBrains Mono', monospace;
+  background-color: var(--mat-sys-surface-variant);
+  padding: 1rem;
+  border-radius: var(--mat-sys-corner-small);
+  overflow-x: auto;
+}
+
+pre code {
+  background-color: transparent;
+  padding: 0;
+}
+
+button {
+  font-family: inherit;
+}
+
+input,
+textarea,
+select {
+  font-family: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--mat-sys-primary);
+  outline-offset: 2px;
+}
+
+/* ── Navigation components ──────────────────────────────── */
+.nav-burger-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: transparent;
+  color: var(--mat-sys-on-surface-variant);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 200ms ease;
+  flex-shrink: 0;
+}
+.nav-burger-btn:hover {
+  background-color: rgba(103, 80, 164, 0.08);
+}
+.nav-burger-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* ── Logo ───────────────────────────────────────────────── */
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+.logo-icon-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background-color: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
+  border-radius: var(--mat-sys-corner-small);
+  flex-shrink: 0;
+}
+.logo-icon-box svg {
+  width: 20px;
+  height: 20px;
+}
+.logo-text {
+  font-family: var(--mat-sys-title-large-font, 'Bricolage Grotesque', sans-serif);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--mat-sys-on-surface);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+/* ── Subtle grid background ─────────────────────────────── */
+.grid-pattern {
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(103, 80, 164, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(103, 80, 164, 0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── M3 Alert / Banner overrides ────────────────────────── */
+.alert-m3-success {
+  background-color: #ecfdf5;
+  border-color: #6ee7b7;
+  color: #064e3b;
+}
+.alert-m3-success svg {
+  color: #10b981;
+}
+.alert-m3-error {
+  background-color: var(--mat-sys-error-container, #f9dedc);
+  border-color: var(--mat-sys-error, #b3261e);
+  color: var(--mat-sys-on-error-container, #410e0b);
+}
+.alert-m3-error svg {
+  color: var(--mat-sys-error, #b3261e);
+}

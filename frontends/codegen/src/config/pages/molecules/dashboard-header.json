@@ -1,0 +1,24 @@
+{
+  "id": "dashboard-header",
+  "type": "div",
+  "props": {
+    "className": "p-6"
+  },
+  "children": [
+    {
+      "id": "dashboard-title",
+      "$ref": "../atoms/heading-1.json",
+      "props": {
+        "children": "Project Dashboard"
+      }
+    },
+    {
+      "id": "dashboard-description",
+      "$ref": "../atoms/text-muted.json",
+      "props": {
+        "children": "Overview of your CodeForge project",
+        "className": "text-muted-foreground mt-2"
+      }
+    }
+  ]
+}

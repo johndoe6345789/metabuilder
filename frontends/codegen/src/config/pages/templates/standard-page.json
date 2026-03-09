@@ -1,0 +1,19 @@
+{
+  "layout": {
+    "$ref": "../layouts/single-column.json"
+  },
+  "dataSources": [],
+  "components": [
+    {
+      "id": "page-header",
+      "$ref": "../molecules/page-header-standard.json"
+    },
+    {
+      "id": "page-content",
+      "$ref": "../atoms/div-flex-col.json",
+      "props": {
+        "className": "p-6 space-y-6"
+      }
+    }
+  ]
+}

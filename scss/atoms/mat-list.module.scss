@@ -1,0 +1,109 @@
+// List Component - Official Angular Material M3 SCSS (CSS Module)
+// ================================================================
+// All M3 class names must be declared here so CSS Modules exports them
+// as hashed keys. The s() resolver in List.tsx maps component references
+// to the hashed versions at runtime.
+
+// ---------------------------------------------------------------------------
+// Local classes (React-specific)
+// ---------------------------------------------------------------------------
+
+// Local class for CSS modules purity - apply to list container
+.matList {
+  // Inherits Angular Material styles via global theme
+}
+
+// Alias classes
+.matActionList {
+  // For mat-action-list element
+}
+
+.matNavList {
+  // For mat-nav-list element
+}
+
+.matSelectionList {
+  // For mat-selection-list element
+}
+
+// ---------------------------------------------------------------------------
+// MDC / Angular Material M3 class declarations
+// ---------------------------------------------------------------------------
+// These must be declared directly (not via :global) so CSS Modules hashes
+// them and the s() resolver in the TSX can look them up.
+
+// List root
+.mdc-list {}
+.mat-mdc-list-base {}
+
+// List item
+.mdc-list-item {}
+.mat-mdc-list-item {}
+.mdc-list-item--with-one-line {}
+.mat-mdc-list-item-interactive {}
+
+// List item state modifiers
+.mdc-list-item--selected {}
+.mdc-list-item--activated {}
+.mdc-list-item--disabled {}
+
+// Focus indicator
+.mat-focus-indicator {}
+
+// List item structural parts
+.mdc-list-item__start {}
+.mdc-list-item__content {}
+.mdc-list-item__primary-text {}
+.mdc-list-item__secondary-text {}
+
+// List item visual roles
+.mat-mdc-list-item-icon {}
+.mat-mdc-list-item-avatar {}
+.mat-mdc-list-item-line {}
+
+// List group
+.mdc-list-group__subheader {}
+
+// ---------------------------------------------------------------------------
+// React-specific variant styles
+// ---------------------------------------------------------------------------
+
+// Dense variant modifier
+.dense {
+  .mdc-list-item {
+    height: 40px;
+  }
+}
+
+// Spaced variant - adds gap between items
+.spaced {
+  .mdc-list-item {
+    margin-bottom: 4px;
+    border-radius: 8px;
+  }
+}
+
+// No padding variant
+.noPadding {
+  padding: 0;
+
+  .mdc-list-item {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+// No gutters variant (horizontal padding only)
+.noGutters {
+  .mdc-list-item {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+// Borderless variant
+.borderless {
+  .mdc-list-item {
+    border: none;
+  }
+}

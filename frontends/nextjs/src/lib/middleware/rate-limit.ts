@@ -294,7 +294,7 @@ export function getRateLimitStatus(
     bootstrap: rateLimiters.bootstrap as any,
   }
 
-  const limiter = config[endpointType]
+  const _limiter = config[endpointType]
   const key = getClientIp(request)
   const store = getGlobalStore()
   const current = store.get(key)

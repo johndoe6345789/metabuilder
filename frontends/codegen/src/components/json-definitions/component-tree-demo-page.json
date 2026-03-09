@@ -1,0 +1,16 @@
+{
+  "id": "component-tree-demo-page",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": null,
+      "transform": "'h-full'"
+    }
+  },
+  "children": [
+    {
+      "id": "component-tree-viewer",
+      "type": "ComponentTreeViewer"
+    }
+  ]
+}

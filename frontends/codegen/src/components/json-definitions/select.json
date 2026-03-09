@@ -1,0 +1,83 @@
+{
+  "id": "select-root",
+  "type": "Container",
+  "bindings": {
+    "className": {
+      "source": "className",
+      "transform": "data ? data + ' form-wrapper' : 'form-wrapper'"
+    }
+  },
+  "children": [
+    {
+      "id": "select-label",
+      "type": "label",
+      "props": {
+        "className": "form-wrapper__label"
+      },
+      "bindings": {
+        "children": "label"
+      },
+      "conditional": {
+        "if": "label"
+      }
+    },
+    {
+      "id": "select-input",
+      "type": "select",
+      "bindings": {
+        "value": "value",
+        "onChange": {
+          "source": "onChange",
+          "transform": "(handler) => (e) => handler(e.target.value)"
+        },
+        "disabled": "disabled",
+        "className": {
+          "source": "error",
+          "transform": "error ? 'form-select form-select--error' : 'form-select'"
+        }
+      },
+      "children": [
+        {
+          "id": "select-placeholder",
+          "type": "option",
+          "props": {
+            "value": "",
+            "disabled": true
+          },
+          "bindings": {
+            "children": "placeholder"
+          },
+          "conditional": {
+            "if": "placeholder"
+          }
+        },
+        {
+          "id": "select-options",
+          "type": "option",
+          "bindings": {
+            "value": "options",
+            "disabled": "options"
+          },
+          "repeat": {
+            "items": "options",
+            "as": "option"
+          }
+        }
+      ]
+    },
+    {
+      "id": "select-helper",
+      "type": "p",
+      "bindings": {
+        "className": {
+          "source": "error",
+          "transform": "error ? 'form-wrapper__helper form-wrapper__helper--error' : 'form-wrapper__helper'"
+        },
+        "children": "helperText"
+      },
+      "conditional": {
+        "if": "helperText"
+      }
+    }
+  ]
+}

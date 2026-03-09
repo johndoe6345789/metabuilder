@@ -1,0 +1,424 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "json_script_example",
+  "description": "UI component examples demonstrating JSON script patterns",
+  "components": [
+    {
+      "id": "expression_demo",
+      "name": "ExpressionDemo",
+      "description": "Interactive expression calculator component that renders a form with two number inputs and displays results of all expression operations",
+      "props": [
+        {
+          "name": "initialA",
+          "type": "number",
+          "required": false,
+          "default": 10,
+          "description": "Initial value for first number"
+        },
+        {
+          "name": "initialB",
+          "type": "number",
+          "required": false,
+          "default": 5,
+          "description": "Initial value for second number"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "expression-demo",
+          "children": [
+            {
+              "type": "Text",
+              "variant": "h5",
+              "fontWeight": "bold",
+              "children": "Expression Calculator"
+            },
+            {
+              "type": "Stack",
+              "direction": "row",
+              "gap": 2,
+              "mt": 2,
+              "children": [
+                {
+                  "type": "TextField",
+                  "label": "First Number",
+                  "inputType": "number",
+                  "value": "{{state.a}}",
+                  "onChange": "{{handlers.setA}}"
+                },
+                {
+                  "type": "TextField",
+                  "label": "Second Number",
+                  "inputType": "number",
+                  "value": "{{state.b}}",
+                  "onChange": "{{handlers.setB}}"
+                }
+              ]
+            },
+            {
+              "type": "Box",
+              "mt": 2,
+              "children": [
+                {
+                  "type": "component",
+                  "name": "ResultDisplay",
+                  "props": {
+                    "result": "{{computed.result}}"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "state": {
+        "a": "{{props.initialA}}",
+        "b": "{{props.initialB}}"
+      },
+      "handlers": {
+        "setA": {
+          "params": ["value"],
+          "body": [
+            {
+              "type": "setState",
+              "updates": {
+                "a": "{{params.value}}"
+              }
+            }
+          ]
+        },
+        "setB": {
+          "params": ["value"],
+          "body": [
+            {
+              "type": "setState",
+              "updates": {
+                "b": "{{params.value}}"
+              }
+            }
+          ]
+        }
+      },
+      "computed": {
+        "result": {
+          "body": [
+            {
+              "type": "return",
+              "value": {
+                "type": "call_expression",
+                "callee": "{{imports.script.all_expressions}}",
+                "args": ["{{state.a}}", "{{state.b}}"]
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "operator_demo",
+      "name": "OperatorDemo",
+      "description": "Interactive operator demonstration component showing all operator results in a categorized table format",
+      "props": [
+        {
+          "name": "x",
+          "type": "number",
+          "required": false,
+          "default": 10,
+          "description": "First operand"
+        },
+        {
+          "name": "y",
+          "type": "number",
+          "required": false,
+          "default": 5,
+          "description": "Second operand"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "operator-demo",
+          "children": [
+            {
+              "type": "Text",
+              "variant": "h5",
+              "fontWeight": "bold",
+              "children": "Operator Demonstration"
+            },
+            {
+              "type": "Text",
+              "variant": "body1",
+              "color": "secondary",
+              "mt": 1,
+              "children": "x = {{props.x}}, y = {{props.y}}"
+            },
+            {
+              "type": "Grid",
+              "container": true,
+              "spacing": 3,
+              "mt": 2,
+              "children": [
+                {
+                  "type": "Grid",
+                  "item": true,
+                  "xs": 12,
+                  "md": 6,
+                  "children": [
+                    {
+                      "type": "Text",
+                      "variant": "h6",
+                      "children": "Arithmetic"
+                    },
+                    {
+                      "type": "List",
+                      "dense": true,
+                      "children": [
+                        {
+                          "type": "ListItem",
+                          "children": "x + y = {{computed.operators.arithmetic.add}}"
+                        },
+                        {
+                          "type": "ListItem",
+                          "children": "x - y = {{computed.operators.arithmetic.subtract}}"
+                        },
+                        {
+                          "type": "ListItem",
+                          "children": "x * y = {{computed.operators.arithmetic.multiply}}"
+                        },
+                        {
+                          "type": "ListItem",
+                          "children": "x / y = {{computed.operators.arithmetic.divide}}"
+                        },
+                        {
+                          "type": "ListItem",
+                          "children": "x % y = {{computed.operators.arithmetic.modulo}}"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Grid",
+                  "item": true,
+                  "xs": 12,
+                  "md": 6,
+                  "children": [
+                    {
+                      "type": "Text",
+                      "variant": "h6",
+                      "children": "Comparison"
+                    },
+                    {
+                      "type": "List",
+                      "dense": true,
+                      "children": [
+                        {
+                          "type": "ListItem",
+                          "children": "x == y: {{computed.operators.comparison.equal}}"
+                        },
+                        {
+                          "type": "ListItem",
+                          "children": "x != y: {{computed.operators.comparison.notEqual}}"
+                        },
+                        {
+                          "type": "ListItem",
+                          "children": "x > y: {{computed.operators.comparison.greaterThan}}"
+                        },
+                        {
+                          "type": "ListItem",
+                          "children": "x < y: {{computed.operators.comparison.lessThan}}"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "computed": {
+        "operators": {
+          "body": [
+            {
+              "type": "return",
+              "value": {
+                "type": "call_expression",
+                "callee": "{{imports.script.all_operators}}",
+                "args": ["{{props.x}}", "{{props.y}}"]
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "result_display",
+      "name": "ResultDisplay",
+      "description": "Displays expression results in a formatted card layout",
+      "props": [
+        {
+          "name": "result",
+          "type": "object",
+          "required": true,
+          "description": "Result object from all_expressions function"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "result-display",
+          "sx": {
+            "p": 2
+          },
+          "children": [
+            {
+              "type": "Text",
+              "variant": "h6",
+              "fontWeight": "bold",
+              "children": "Results"
+            },
+            {
+              "type": "Grid",
+              "container": true,
+              "spacing": 2,
+              "mt": 1,
+              "children": [
+                {
+                  "type": "Grid",
+                  "item": true,
+                  "xs": 6,
+                  "children": [
+                    {
+                      "type": "Text",
+                      "variant": "caption",
+                      "color": "secondary",
+                      "children": "Sum"
+                    },
+                    {
+                      "type": "Text",
+                      "variant": "body1",
+                      "fontWeight": "medium",
+                      "children": "{{props.result.sum}}"
+                    }
+                  ]
+                },
+                {
+                  "type": "Grid",
+                  "item": true,
+                  "xs": 6,
+                  "children": [
+                    {
+                      "type": "Text",
+                      "variant": "caption",
+                      "color": "secondary",
+                      "children": "Difference"
+                    },
+                    {
+                      "type": "Text",
+                      "variant": "body1",
+                      "fontWeight": "medium",
+                      "children": "{{props.result.diff}}"
+                    }
+                  ]
+                },
+                {
+                  "type": "Grid",
+                  "item": true,
+                  "xs": 6,
+                  "children": [
+                    {
+                      "type": "Text",
+                      "variant": "caption",
+                      "color": "secondary",
+                      "children": "Product"
+                    },
+                    {
+                      "type": "Text",
+                      "variant": "body1",
+                      "fontWeight": "medium",
+                      "children": "{{props.result.product}}"
+                    }
+                  ]
+                },
+                {
+                  "type": "Grid",
+                  "item": true,
+                  "xs": 6,
+                  "children": [
+                    {
+                      "type": "Text",
+                      "variant": "caption",
+                      "color": "secondary",
+                      "children": "Maximum"
+                    },
+                    {
+                      "type": "Text",
+                      "variant": "body1",
+                      "fontWeight": "medium",
+                      "children": "{{props.result.max}}"
+                    }
+                  ]
+                },
+                {
+                  "type": "Grid",
+                  "item": true,
+                  "xs": 12,
+                  "children": [
+                    {
+                      "type": "Text",
+                      "variant": "caption",
+                      "color": "secondary",
+                      "children": "Both Positive?"
+                    },
+                    {
+                      "type": "Chip",
+                      "label": "{{props.result.bothPositive ? 'Yes' : 'No'}}",
+                      "color": "{{props.result.bothPositive ? 'success' : 'error'}}",
+                      "size": "small"
+                    }
+                  ]
+                },
+                {
+                  "type": "Grid",
+                  "item": true,
+                  "xs": 12,
+                  "children": [
+                    {
+                      "type": "Text",
+                      "variant": "caption",
+                      "color": "secondary",
+                      "children": "Message"
+                    },
+                    {
+                      "type": "Text",
+                      "variant": "body2",
+                      "sx": {
+                        "fontFamily": "monospace"
+                      },
+                      "children": "{{props.result.message}}"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "imports": [
+    {
+      "from": "script",
+      "import": ["all_expressions", "all_operators"]
+    }
+  ]
+}

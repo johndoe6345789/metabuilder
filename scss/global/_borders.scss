@@ -1,0 +1,44 @@
+// Border and border-radius utility classes
+
+.border { border: 1px solid var(--border) }
+.border-0 { border-width: 0 }
+.border-2 { border-width: 2px }
+.border-4 { border-width: 4px }
+.border-t { border-top: 1px solid var(--border) }
+.border-b { border-bottom: 1px solid var(--border) }
+.border-l { border-left: 1px solid var(--border) }
+.border-r { border-right: 1px solid var(--border) }
+.border-t-0 { border-top-width: 0 }
+.border-b-0 { border-bottom-width: 0 }
+.border-l-0 { border-left-width: 0 }
+.border-r-0 { border-right-width: 0 }
+
+.border-solid { border-style: solid }
+.border-dashed { border-style: dashed }
+.border-dotted { border-style: dotted }
+.border-none { border-style: none }
+
+.divide-y > :not(:first-child) { border-top: 1px solid var(--border) }
+.divide-x > :not(:first-child) { border-left: 1px solid var(--border) }
+
+// Border radius
+.rounded { border-radius: var(--radius) }
+.rounded-sm { border-radius: var(--radius-sm) }
+.rounded-md { border-radius: var(--radius-md) }
+.rounded-lg { border-radius: var(--radius-lg) }
+.rounded-xl { border-radius: var(--radius-xl) }
+.rounded-2xl { border-radius: var(--radius-2xl) }
+.rounded-3xl { border-radius: 1.5rem }
+.rounded-full { border-radius: var(--radius-full) }
+.rounded-none { border-radius: 0 }
+
+.rounded-t-sm { border-top-left-radius: var(--radius-sm); border-top-right-radius: var(--radius-sm) }
+.rounded-t-md { border-top-left-radius: var(--radius-md); border-top-right-radius: var(--radius-md) }
+.rounded-t-lg { border-top-left-radius: var(--radius-lg); border-top-right-radius: var(--radius-lg) }
+.rounded-t-xl { border-top-left-radius: var(--radius-xl); border-top-right-radius: var(--radius-xl) }
+.rounded-b-sm { border-bottom-left-radius: var(--radius-sm); border-bottom-right-radius: var(--radius-sm) }
+.rounded-b-md { border-bottom-left-radius: var(--radius-md); border-bottom-right-radius: var(--radius-md) }
+.rounded-b-lg { border-bottom-left-radius: var(--radius-lg); border-bottom-right-radius: var(--radius-lg) }
+.rounded-b-xl { border-bottom-left-radius: var(--radius-xl); border-bottom-right-radius: var(--radius-xl) }
+.rounded-l-lg { border-top-left-radius: var(--radius-lg); border-bottom-left-radius: var(--radius-lg) }
+.rounded-r-lg { border-top-right-radius: var(--radius-lg); border-bottom-right-radius: var(--radius-lg) }

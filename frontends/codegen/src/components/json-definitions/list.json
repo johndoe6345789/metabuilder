@@ -1,0 +1,18 @@
+{
+  "id": "list-container",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": ["items", "className"],
+      "transform": "const items = data[0] || []; const customClass = data[1] || ''; if (items.length === 0) return 'text-center text-muted-foreground py-8'; return customClass"
+    },
+    "_if": {
+      "source": "items",
+      "transform": "data && data.length > 0"
+    }
+  },
+  "children": {
+    "source": "items",
+    "transform": "(items) => items && items.map((item, index) => ({ id: `list-item-${index}`, type: 'div', bindings: { className: { source: 'itemClassName', transform: 'data || \"\"' } }, children: [{ id: `list-item-content-${index}`, type: 'div', bindings: { children: { source: 'renderItem', transform: `(fn) => fn && fn(item, ${index})` } } }] }))"
+  }
+}

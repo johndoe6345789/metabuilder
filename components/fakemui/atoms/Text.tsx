@@ -11,6 +11,8 @@ export interface TextProps extends React.HTMLAttributes<HTMLElement> {
   center?: boolean
   truncate?: boolean
   as?: React.ElementType
+  /** Test ID for automated testing */
+  testId?: string
 }
 
 export const Text: React.FC<TextProps> = ({
@@ -23,12 +25,14 @@ export const Text: React.FC<TextProps> = ({
   mono,
   center,
   truncate,
+  testId,
   className = '',
   as: Tag = 'span',
   ...props
 }) => (
   <Tag
     className={`${secondary ? 'text-secondary' : ''} ${disabled ? 'text-disabled' : ''} ${sm ? 'text-sm' : ''} ${xs ? 'text-xs' : ''} ${lg ? 'text-lg' : ''} ${mono ? 'font-mono' : ''} ${center ? 'text-center' : ''} ${truncate ? 'truncate' : ''} ${className}`}
+    data-testid={testId}
     {...props}
   >
     {children}

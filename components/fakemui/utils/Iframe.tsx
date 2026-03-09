@@ -7,6 +7,8 @@ export interface IframeProps extends React.IframeHTMLAttributes<HTMLIFrameElemen
   height?: string | number
   allowFullScreen?: boolean
   sandbox?: string
+  /** Test ID for automated testing */
+  testId?: string
 }
 
 /**
@@ -21,11 +23,13 @@ export const Iframe: React.FC<IframeProps> = ({
   allowFullScreen = true,
   sandbox,
   className = '',
+  testId,
   ...props
 }) => (
   <iframe
     src={src}
     title={title}
+    data-testid={testId}
     width={width}
     height={height}
     allowFullScreen={allowFullScreen}

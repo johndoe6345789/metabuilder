@@ -1,0 +1,7 @@
+{
+  "type": "MetabuilderFeedbackNotification",
+  "props": {
+    "onClose": "> void",
+    "icon": "config[type]"
+  }
+}

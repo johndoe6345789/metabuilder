@@ -7,6 +7,7 @@ import { useFormControl } from './FormControl'
  * Props for InputLabel component (MUI-compatible)
  */
 export interface InputLabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {
+  testId?: string
   children?: React.ReactNode
   /** Whether the label should be shrunk (positioned above the input) */
   shrink?: boolean
@@ -47,6 +48,7 @@ export const InputLabel = forwardRef<HTMLLabelElement, InputLabelProps>(
       error: errorProp,
       variant = 'outlined',
       size = 'medium',
+      testId,
       className = '',
       sx,
       ...props
@@ -75,6 +77,7 @@ export const InputLabel = forwardRef<HTMLLabelElement, InputLabelProps>(
           ${error ? 'input-label--error' : ''}
           ${className}
         `.trim().replace(/\s+/g, ' ')}
+        data-testid={testId}
         {...props}
       >
         {children}

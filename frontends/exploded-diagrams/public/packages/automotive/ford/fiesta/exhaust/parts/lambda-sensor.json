@@ -1,0 +1,33 @@
+{
+  "id": "lambda-sensor",
+  "name": "Lambda Sensor",
+  "partNumber": "FD-CM5G-9F472-BA",
+  "material": "steel",
+  "quantity": 2,
+  "weight": 120.0,
+  "weightUnit": "g",
+  "baseY": 460,
+  "description": "Wideband oxygen sensor - pre and post cat",
+  "installation": {
+    "tools": [
+      { "name": "Lambda sensor socket", "size": "22mm", "required": true },
+      { "name": "Anti-seize compound", "size": "-", "required": true }
+    ],
+    "hardware": [],
+    "torque": [
+      { "fastener": "Lambda sensor", "value": 45, "unit": "Nm", "sequence": "", "notes": "Apply anti-seize to threads" }
+    ],
+    "notes": [
+      "Do not contaminate sensor tip",
+      "Pre-cat sensor controls fueling",
+      "Post-cat sensor monitors cat efficiency",
+      "Replace if P0420/P0430 codes"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 25, "height": 45, "rx": 3 },
+    { "type": "rect", "width": 35, "height": 15, "offsetY": -25, "rx": 2, "fill": "#555" },
+    { "type": "rect", "width": 8, "height": 20, "offsetY": 25, "fill": "#d4a84a" },
+    { "type": "rect", "width": 60, "height": 4, "offsetY": -35, "rx": 2, "fill": "#333" }
+  ]
+}

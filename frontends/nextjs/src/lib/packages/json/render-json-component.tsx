@@ -92,7 +92,7 @@ function renderTemplate(
   // Handle $ref to other components in the same package
   if (typeof nodeObj.$ref === 'string' && componentRegistry !== undefined) {
     const referencedComponent = componentRegistry.get(nodeObj.$ref)
-    if (referencedComponent !== undefined && referencedComponent.render?.template !== undefined) {
+    if (referencedComponent?.render?.template !== undefined) {
       return renderTemplate(referencedComponent.render.template, context, ComponentRegistry, componentRegistry)
     } else {
       return (

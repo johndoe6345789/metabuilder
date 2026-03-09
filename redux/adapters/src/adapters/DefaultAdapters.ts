@@ -6,7 +6,7 @@
  * alternative implementations (e.g., GraphQL client, gRPC, etc.)
  */
 
-import {
+import type {
   IProjectServiceAdapter,
   IWorkspaceServiceAdapter,
   IWorkflowServiceAdapter,
@@ -22,6 +22,8 @@ import {
   CreateCanvasItemRequest,
   UpdateCanvasItemRequest,
   Workflow,
+  WorkflowNode,
+  WorkflowConnection,
   ExecutionResult,
   ExecutionStats,
   AuthResponse,
@@ -265,7 +267,7 @@ export class DefaultWorkflowServiceAdapter implements IWorkflowServiceAdapter {
   private calculateDepth(workflow: Workflow): number {
     // Simple depth calculation based on node connections
     // A more sophisticated implementation would do proper graph traversal
-    const nodeIds = new Set(workflow.nodes.map(n => n.id))
+    const nodeIds = new Set(workflow.nodes.map((n: WorkflowNode) => n.id))
     let maxDepth = 0
 
     for (const connection of workflow.connections) {
@@ -277,7 +279,6 @@ export class DefaultWorkflowServiceAdapter implements IWorkflowServiceAdapter {
   }
 
   private getNodeDepth(nodeId: string, workflow: Workflow): number {
-    let depth = 1
     const visited = new Set<string>()
 
     const traverse = (id: string): number => {
@@ -285,8 +286,8 @@ export class DefaultWorkflowServiceAdapter implements IWorkflowServiceAdapter {
       visited.add(id)
 
       const sources = workflow.connections
-        .filter(c => c.target === id)
-        .map(c => c.source)
+        .filter((c: WorkflowConnection) => c.target === id)
+        .map((c: WorkflowConnection) => c.source)
 
       if (sources.length === 0) return 1
       return 1 + Math.max(...sources.map(traverse))

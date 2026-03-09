@@ -11,9 +11,6 @@
  * - Authentication support
  */
 
-import { readFileSync } from 'fs'
-import path from 'path'
-
 /**
  * Generate Swagger UI HTML
  */
@@ -90,26 +87,6 @@ function generateSwaggerHTML(specUrl: string): string {
 `
 }
 
-/**
- * Load OpenAPI specification
- */
-function loadOpenAPISpec(): Record<string, unknown> {
-  try {
-    const specPath = path.join(process.cwd(), 'frontends/nextjs/src/app/api/docs/openapi.json')
-    const specContent = readFileSync(specPath, 'utf-8')
-    return JSON.parse(specContent) as Record<string, unknown>
-  } catch (error) {
-    console.error('Failed to load OpenAPI spec:', error)
-    return {
-      openapi: '3.0.0',
-      info: {
-        title: 'MetaBuilder API',
-        version: '1.0.0'
-      },
-      paths: {}
-    }
-  }
-}
 
 /**
  * GET /api/docs - Swagger UI

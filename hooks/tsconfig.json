@@ -15,12 +15,24 @@
     "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@/lib/routing": ["./_types/lib/routing"],
+      "@/lib/level-types": ["./_types/lib/level-types"],
+      "@/lib/types/package-admin-types": ["./_types/lib/types/package-admin-types"],
+      "@/lib/validation/user-validation": ["./_types/lib/validation/user-validation"],
+      "@/app/[tenant]/[package]/tenant-context": ["./_types/app/tenant-context"],
+      "@/data/github-build-status.json": ["./_types/data/github-build-status.json"],
+      "@/data/favicon-designer.json": ["./_types/data/favicon-designer.json"],
+      "@/hooks/use-kv": ["./_types/hooks/use-kv"]
+    }
   },
   "include": [
     "use*.ts",
     "use*.tsx",
-    "index.ts"
+    "index.ts",
+    "_types/**/*.ts"
   ],
   "exclude": [
     "node_modules",

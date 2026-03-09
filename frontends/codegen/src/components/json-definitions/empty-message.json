@@ -1,0 +1,84 @@
+{
+  "id": "empty-message-container",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": ["className"],
+      "transform": "const className = data[0] || ''; const baseClasses = 'flex flex-col items-center justify-center text-center p-8 rounded-lg border border-dashed bg-muted/20'; return `${baseClasses} ${className}`.trim()"
+    }
+  },
+  "children": [
+    {
+      "id": "empty-message-icon",
+      "type": "div",
+      "bindings": {
+        "className": {
+          "source": null,
+          "transform": "'mb-4 text-muted-foreground/50'"
+        },
+        "children": {
+          "source": "icon",
+          "transform": "data"
+        },
+        "_if": {
+          "source": "icon",
+          "transform": "!!data"
+        }
+      }
+    },
+    {
+      "id": "empty-message-title",
+      "type": "h3",
+      "bindings": {
+        "className": {
+          "source": null,
+          "transform": "'text-lg font-semibold mb-2'"
+        },
+        "children": {
+          "source": "title",
+          "transform": "data"
+        }
+      }
+    },
+    {
+      "id": "empty-message-description",
+      "type": "p",
+      "bindings": {
+        "className": {
+          "source": null,
+          "transform": "'text-sm text-muted-foreground mb-4 max-w-sm'"
+        },
+        "children": {
+          "source": "description",
+          "transform": "data"
+        },
+        "_if": {
+          "source": "description",
+          "transform": "!!data"
+        }
+      }
+    },
+    {
+      "id": "empty-message-button",
+      "type": "Button",
+      "bindings": {
+        "size": {
+          "source": null,
+          "transform": "'sm'"
+        },
+        "onClick": {
+          "source": "action",
+          "transform": "data ? data.onClick : null"
+        },
+        "children": {
+          "source": "action",
+          "transform": "data ? data.label : null"
+        },
+        "_if": {
+          "source": "action",
+          "transform": "!!data"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,174 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "workflowui-templates",
+  "version": "1.0.0",
+  "description": "E2E tests for templates pages after FakeMUI migration",
+  "tests": [
+    {
+      "name": "should display templates listing page",
+      "tags": ["@migration", "@templates"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/templates"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "networkidle"
+        },
+        {
+          "description": "Verify page header visible",
+          "action": "expect",
+          "selector": "text=Project Templates",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        },
+        {
+          "description": "Verify search box visible",
+          "action": "expect",
+          "selector": "[data-testid='template-search']",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        },
+        {
+          "description": "Verify template cards rendered",
+          "action": "expect",
+          "selector": "[data-testid^='template-card-']",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should filter templates by category",
+      "tags": ["@migration", "@templates", "@filters"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/templates"
+        },
+        {
+          "action": "click",
+          "selector": "[data-testid='template-category-automation']"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "networkidle"
+        },
+        {
+          "description": "Verify filtered results",
+          "action": "expect",
+          "selector": "text=Showing",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should switch between grid and list view",
+      "tags": ["@migration", "@templates", "@view-modes"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/templates"
+        },
+        {
+          "action": "click",
+          "selector": "[data-testid='template-list-view']"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Verify list items visible",
+          "action": "expect",
+          "selector": "[data-testid^='template-list-item-']",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        },
+        {
+          "action": "click",
+          "selector": "[data-testid='template-grid-view']"
+        },
+        {
+          "description": "Verify grid cards visible",
+          "action": "expect",
+          "selector": "[data-testid^='template-card-']",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should navigate to template detail page",
+      "tags": ["@migration", "@templates", "@navigation"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/templates"
+        },
+        {
+          "action": "click",
+          "selector": "[data-testid='template-card-1'] >> text=View Template"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "networkidle"
+        },
+        {
+          "description": "Verify on detail page",
+          "action": "expect",
+          "selector": "text=Overview",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        },
+        {
+          "description": "Verify template header visible",
+          "action": "expect",
+          "selector": "text=Included Workflows",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should open create project dialog",
+      "tags": ["@migration", "@templates", "@dialogs"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/templates/1"
+        },
+        {
+          "action": "click",
+          "selector": "text=Create Project from Template"
+        },
+        {
+          "description": "Verify dialog opens",
+          "action": "expect",
+          "selector": "text=Project Name",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        },
+        {
+          "description": "Verify workspace dropdown visible",
+          "action": "expect",
+          "selector": "text=Workspace",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    }
+  ]
+}

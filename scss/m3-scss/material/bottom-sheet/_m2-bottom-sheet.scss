@@ -1,0 +1,12 @@
+@use 'sass:map';
+
+/// Generates M2 tokens for the mat-bottom-sheet (legacy Material 2 compatibility).
+/// Returns empty maps since M2 tokens are deprecated - M3 tokens are used instead.
+@function get-tokens($theme) {
+  @return (
+    base: (),
+    color: (),
+    typography: (),
+    density: (),
+  );
+};

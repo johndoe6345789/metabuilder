@@ -1,0 +1,1013 @@
+{
+  "id": "pwa-settings-container",
+  "type": "div",
+  "props": {
+    "className": "h-full overflow-auto p-6 space-y-6"
+  },
+  "children": [
+    {
+      "id": "pwa-settings-header",
+      "type": "div",
+      "children": [
+        {
+          "id": "pwa-settings-title",
+          "type": "h2",
+          "props": {
+            "className": "text-2xl font-bold mb-2"
+          },
+          "bindings": {
+            "children": "pwaState.copy.header.title"
+          }
+        },
+        {
+          "id": "pwa-settings-description",
+          "type": "p",
+          "props": {
+            "className": "text-sm text-muted-foreground"
+          },
+          "bindings": {
+            "children": "pwaState.copy.header.description"
+          }
+        }
+      ]
+    },
+    {
+      "id": "pwa-settings-grid",
+      "type": "div",
+      "props": {
+        "className": "grid gap-6"
+      },
+      "children": [
+        {
+          "id": "install-section",
+          "type": "Card",
+          "props": {
+            "className": "p-6"
+          },
+          "children": [
+            {
+              "id": "install-section-inner",
+              "type": "div",
+              "props": {
+                "className": "space-y-4"
+              },
+              "children": [
+                {
+                  "id": "install-header",
+                  "type": "div",
+                  "children": [
+                    {
+                      "id": "install-title",
+                      "type": "h3",
+                      "props": {
+                        "className": "text-lg font-semibold mb-1"
+                      },
+                      "bindings": {
+                        "children": "pwaState.copy.install.title"
+                      }
+                    },
+                    {
+                      "id": "install-description",
+                      "type": "p",
+                      "props": {
+                        "className": "text-sm text-muted-foreground"
+                      },
+                      "bindings": {
+                        "children": "pwaState.copy.install.description"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "install-content",
+                  "type": "div",
+                  "props": {
+                    "className": "flex items-center justify-between"
+                  },
+                  "children": [
+                    {
+                      "id": "install-info",
+                      "type": "div",
+                      "props": {
+                        "className": "flex items-center gap-3"
+                      },
+                      "children": [
+                        {
+                          "id": "install-icon",
+                          "type": "Download",
+                          "props": {
+                            "size": 20,
+                            "className": "text-muted-foreground"
+                          }
+                        },
+                        {
+                          "id": "install-labels",
+                          "type": "div",
+                          "children": [
+                            {
+                              "id": "install-label",
+                              "type": "Label",
+                              "props": {
+                                "className": "text-base"
+                              },
+                              "bindings": {
+                                "children": "pwaState.copy.install.label"
+                              }
+                            },
+                            {
+                              "id": "install-status-text",
+                              "type": "p",
+                              "props": {
+                                "className": "text-xs text-muted-foreground"
+                              },
+                              "bindings": {
+                                "children": {
+                                  "source": "pwaState.isInstalled,pwaState.isInstallable",
+                                  "transform": "pwaState.isInstalled ? pwaState.copy.install.status.installed : pwaState.isInstallable ? pwaState.copy.install.status.available : pwaState.copy.install.status.notAvailable"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "id": "install-actions",
+                      "type": "div",
+                      "props": {
+                        "className": "flex items-center gap-2"
+                      },
+                      "children": [
+                        {
+                          "id": "install-badge-installed",
+                          "type": "Badge",
+                          "conditional": {
+                            "if": "pwaState.isInstalled"
+                          },
+                          "props": {
+                            "variant": "default"
+                          },
+                          "bindings": {
+                            "children": "pwaState.copy.install.badge.installed"
+                          }
+                        },
+                        {
+                          "id": "install-button",
+                          "type": "Button",
+                          "conditional": {
+                            "if": "pwaState.isInstallable && !pwaState.isInstalled"
+                          },
+                          "props": {
+                            "size": "sm"
+                          },
+                          "bindings": {
+                            "onClick": "pwaState.handleInstall",
+                            "children": "pwaState.copy.install.action.install"
+                          }
+                        },
+                        {
+                          "id": "install-badge-unavailable",
+                          "type": "Badge",
+                          "conditional": {
+                            "if": "!pwaState.isInstallable && !pwaState.isInstalled"
+                          },
+                          "props": {
+                            "variant": "secondary"
+                          },
+                          "bindings": {
+                            "children": "pwaState.copy.install.badge.notAvailable"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "connection-section",
+          "type": "Card",
+          "props": {
+            "className": "p-6"
+          },
+          "children": [
+            {
+              "id": "connection-inner",
+              "type": "div",
+              "props": {
+                "className": "space-y-4"
+              },
+              "children": [
+                {
+                  "id": "connection-header",
+                  "type": "div",
+                  "children": [
+                    {
+                      "id": "connection-title",
+                      "type": "h3",
+                      "props": {
+                        "className": "text-lg font-semibold mb-1"
+                      },
+                      "bindings": {
+                        "children": "pwaState.copy.connection.title"
+                      }
+                    },
+                    {
+                      "id": "connection-description",
+                      "type": "p",
+                      "props": {
+                        "className": "text-sm text-muted-foreground"
+                      },
+                      "bindings": {
+                        "children": "pwaState.copy.connection.description"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "connection-content",
+                  "type": "div",
+                  "props": {
+                    "className": "flex items-center justify-between"
+                  },
+                  "children": [
+                    {
+                      "id": "connection-info",
+                      "type": "div",
+                      "props": {
+                        "className": "flex items-center gap-3"
+                      },
+                      "children": [
+                        {
+                          "id": "connection-icon-online",
+                          "type": "WifiHigh",
+                          "conditional": {
+                            "if": "pwaState.isOnline"
+                          },
+                          "props": {
+                            "size": 20,
+                            "className": "text-accent"
+                          }
+                        },
+                        {
+                          "id": "connection-icon-offline",
+                          "type": "WifiSlash",
+                          "conditional": {
+                            "if": "!pwaState.isOnline"
+                          },
+                          "props": {
+                            "size": 20,
+                            "className": "text-destructive"
+                          }
+                        },
+                        {
+                          "id": "connection-labels",
+                          "type": "div",
+                          "children": [
+                            {
+                              "id": "connection-label",
+                              "type": "Label",
+                              "props": {
+                                "className": "text-base"
+                              },
+                              "bindings": {
+                                "children": "pwaState.copy.connection.label"
+                              }
+                            },
+                            {
+                              "id": "connection-status-text",
+                              "type": "p",
+                              "props": {
+                                "className": "text-xs text-muted-foreground"
+                              },
+                              "bindings": {
+                                "children": {
+                                  "source": "pwaState.isOnline",
+                                  "transform": "data ? pwaState.copy.connection.status.online : pwaState.copy.connection.status.offline"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "id": "connection-badge",
+                      "type": "Badge",
+                      "bindings": {
+                        "variant": {
+                          "source": "pwaState.isOnline",
+                          "transform": "data ? 'default' : 'destructive'"
+                        },
+                        "children": {
+                          "source": "pwaState.isOnline",
+                          "transform": "data ? pwaState.copy.connection.badge.online : pwaState.copy.connection.badge.offline"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "update-section",
+          "type": "div",
+          "conditional": {
+            "if": "pwaState.isUpdateAvailable"
+          },
+          "children": [
+            {
+              "id": "update-card",
+              "type": "Card",
+              "props": {
+                "className": "p-6 border-accent"
+              },
+              "children": [
+                {
+                  "id": "update-inner",
+                  "type": "div",
+                  "props": {
+                    "className": "space-y-4"
+                  },
+                  "children": [
+                    {
+                      "id": "update-header",
+                      "type": "div",
+                      "children": [
+                        {
+                          "id": "update-title",
+                          "type": "h3",
+                          "props": {
+                            "className": "text-lg font-semibold mb-1"
+                          },
+                          "bindings": {
+                            "children": "pwaState.copy.update.title"
+                          }
+                        },
+                        {
+                          "id": "update-description",
+                          "type": "p",
+                          "props": {
+                            "className": "text-sm text-muted-foreground"
+                          },
+                          "bindings": {
+                            "children": "pwaState.copy.update.description"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "id": "update-content",
+                      "type": "div",
+                      "props": {
+                        "className": "flex items-center justify-between"
+                      },
+                      "children": [
+                        {
+                          "id": "update-info",
+                          "type": "div",
+                          "props": {
+                            "className": "flex items-center gap-3"
+                          },
+                          "children": [
+                            {
+                              "id": "update-icon",
+                              "type": "CloudArrowDown",
+                              "props": {
+                                "size": 20,
+                                "className": "text-accent"
+                              }
+                            },
+                            {
+                              "id": "update-labels",
+                              "type": "div",
+                              "children": [
+                                {
+                                  "id": "update-label",
+                                  "type": "Label",
+                                  "props": {
+                                    "className": "text-base"
+                                  },
+                                  "bindings": {
+                                    "children": "pwaState.copy.update.label"
+                                  }
+                                },
+                                {
+                                  "id": "update-status-text",
+                                  "type": "p",
+                                  "props": {
+                                    "className": "text-xs text-muted-foreground"
+                                  },
+                                  "bindings": {
+                                    "children": "pwaState.copy.update.status"
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "id": "update-button",
+                          "type": "Button",
+                          "bindings": {
+                            "onClick": "pwaState.handleUpdate",
+                            "children": "pwaState.copy.update.action"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "notifications-section",
+          "type": "Card",
+          "props": {
+            "className": "p-6"
+          },
+          "children": [
+            {
+              "id": "notifications-inner",
+              "type": "div",
+              "props": {
+                "className": "space-y-4"
+              },
+              "children": [
+                {
+                  "id": "notifications-header",
+                  "type": "div",
+                  "children": [
+                    {
+                      "id": "notifications-title",
+                      "type": "h3",
+                      "props": {
+                        "className": "text-lg font-semibold mb-1"
+                      },
+                      "bindings": {
+                        "children": "pwaState.copy.notifications.title"
+                      }
+                    },
+                    {
+                      "id": "notifications-description",
+                      "type": "p",
+                      "props": {
+                        "className": "text-sm text-muted-foreground"
+                      },
+                      "bindings": {
+                        "children": "pwaState.copy.notifications.description"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "notifications-content",
+                  "type": "div",
+                  "props": {
+                    "className": "flex items-center justify-between"
+                  },
+                  "children": [
+                    {
+                      "id": "notifications-info",
+                      "type": "div",
+                      "props": {
+                        "className": "flex items-center gap-3"
+                      },
+                      "children": [
+                        {
+                          "id": "notifications-icon",
+                          "type": "Bell",
+                          "props": {
+                            "size": 20,
+                            "className": "text-muted-foreground"
+                          }
+                        },
+                        {
+                          "id": "notifications-labels",
+                          "type": "div",
+                          "children": [
+                            {
+                              "id": "notifications-label",
+                              "type": "Label",
+                              "props": {
+                                "className": "text-base"
+                              },
+                              "bindings": {
+                                "children": "pwaState.copy.notifications.label"
+                              }
+                            },
+                            {
+                              "id": "notifications-permission-row",
+                              "type": "div",
+                              "props": {
+                                "className": "flex items-center gap-2"
+                              },
+                              "children": [
+                                {
+                                  "id": "notifications-permission-text",
+                                  "type": "p",
+                                  "props": {
+                                    "className": "text-xs text-muted-foreground"
+                                  },
+                                  "bindings": {
+                                    "children": {
+                                      "source": "pwaState.notificationPermission",
+                                      "transform": "pwaState.copy.notifications.permissionLabel + ' ' + data"
+                                    }
+                                  }
+                                },
+                                {
+                                  "id": "permission-icon-granted",
+                                  "type": "CheckCircle",
+                                  "conditional": {
+                                    "if": "pwaState.notificationPermission === 'granted'"
+                                  },
+                                  "props": {
+                                    "size": 16,
+                                    "className": "text-accent",
+                                    "weight": "fill"
+                                  }
+                                },
+                                {
+                                  "id": "permission-icon-denied",
+                                  "type": "XCircle",
+                                  "conditional": {
+                                    "if": "pwaState.notificationPermission === 'denied'"
+                                  },
+                                  "props": {
+                                    "size": 16,
+                                    "className": "text-destructive",
+                                    "weight": "fill"
+                                  }
+                                },
+                                {
+                                  "id": "permission-icon-unsupported",
+                                  "type": "XCircle",
+                                  "conditional": {
+                                    "if": "pwaState.notificationPermission === 'unsupported'"
+                                  },
+                                  "props": {
+                                    "size": 16,
+                                    "className": "text-muted-foreground",
+                                    "weight": "fill"
+                                  }
+                                },
+                                {
+                                  "id": "permission-icon-default",
+                                  "type": "Question",
+                                  "conditional": {
+                                    "if": "pwaState.notificationPermission === 'default'"
+                                  },
+                                  "props": {
+                                    "size": 16,
+                                    "className": "text-muted-foreground",
+                                    "weight": "fill"
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "id": "notifications-switch",
+                      "type": "Switch",
+                      "bindings": {
+                        "checked": {
+                          "source": "pwaState.notificationPermission",
+                          "transform": "data === 'granted'"
+                        },
+                        "onChange": "pwaState.handleNotificationToggle",
+                        "disabled": {
+                          "source": "pwaState.notificationPermission",
+                          "transform": "data === 'denied' || data === 'unsupported'"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "notifications-blocked-warning",
+                  "type": "div",
+                  "conditional": {
+                    "if": "pwaState.notificationPermission === 'denied'"
+                  },
+                  "props": {
+                    "className": "text-xs text-destructive bg-destructive/10 p-3 rounded-md"
+                  },
+                  "bindings": {
+                    "children": "pwaState.copy.notifications.blocked"
+                  }
+                },
+                {
+                  "id": "notifications-unsupported-warning",
+                  "type": "div",
+                  "conditional": {
+                    "if": "pwaState.notificationPermission === 'unsupported'"
+                  },
+                  "props": {
+                    "className": "text-xs text-muted-foreground bg-muted/50 p-3 rounded-md"
+                  },
+                  "bindings": {
+                    "children": "pwaState.copy.notifications.unsupported"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "cache-section",
+          "type": "Card",
+          "props": {
+            "className": "p-6"
+          },
+          "children": [
+            {
+              "id": "cache-inner",
+              "type": "div",
+              "props": {
+                "className": "space-y-4"
+              },
+              "children": [
+                {
+                  "id": "cache-header",
+                  "type": "div",
+                  "children": [
+                    {
+                      "id": "cache-title",
+                      "type": "h3",
+                      "props": {
+                        "className": "text-lg font-semibold mb-1"
+                      },
+                      "bindings": {
+                        "children": "pwaState.copy.cache.title"
+                      }
+                    },
+                    {
+                      "id": "cache-description",
+                      "type": "p",
+                      "props": {
+                        "className": "text-sm text-muted-foreground"
+                      },
+                      "bindings": {
+                        "children": "pwaState.copy.cache.description"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "cache-separator-top",
+                  "type": "Separator"
+                },
+                {
+                  "id": "cache-details",
+                  "type": "div",
+                  "props": {
+                    "className": "space-y-3"
+                  },
+                  "children": [
+                    {
+                      "id": "cache-size-row",
+                      "type": "div",
+                      "props": {
+                        "className": "flex items-center justify-between"
+                      },
+                      "children": [
+                        {
+                          "id": "cache-size-label",
+                          "type": "Label",
+                          "props": {
+                            "className": "text-sm"
+                          },
+                          "bindings": {
+                            "children": "pwaState.copy.cache.labels.size"
+                          }
+                        },
+                        {
+                          "id": "cache-size-value",
+                          "type": "span",
+                          "props": {
+                            "className": "text-sm font-mono text-muted-foreground"
+                          },
+                          "bindings": {
+                            "children": "pwaState.cacheSize"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "id": "cache-sw-row",
+                      "type": "div",
+                      "props": {
+                        "className": "flex items-center justify-between"
+                      },
+                      "children": [
+                        {
+                          "id": "cache-sw-label",
+                          "type": "Label",
+                          "props": {
+                            "className": "text-sm"
+                          },
+                          "bindings": {
+                            "children": "pwaState.copy.cache.labels.serviceWorker"
+                          }
+                        },
+                        {
+                          "id": "cache-sw-badge",
+                          "type": "Badge",
+                          "bindings": {
+                            "variant": {
+                              "source": "pwaState.hasRegistration",
+                              "transform": "data ? 'default' : 'secondary'"
+                            },
+                            "children": {
+                              "source": "pwaState.hasRegistration",
+                              "transform": "data ? pwaState.copy.cache.status.active : pwaState.copy.cache.status.inactive"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "cache-separator-bottom",
+                  "type": "Separator"
+                },
+                {
+                  "id": "cache-clear-button",
+                  "type": "Button",
+                  "props": {
+                    "variant": "destructive",
+                    "className": "w-full"
+                  },
+                  "bindings": {
+                    "onClick": "pwaState.handleClearCache"
+                  },
+                  "children": [
+                    {
+                      "id": "cache-clear-icon",
+                      "type": "Trash",
+                      "props": {
+                        "size": 16,
+                        "className": "mr-2"
+                      }
+                    },
+                    {
+                      "id": "cache-clear-text",
+                      "type": "span",
+                      "bindings": {
+                        "children": "pwaState.copy.cache.action.clear"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "cache-helper-text",
+                  "type": "p",
+                  "props": {
+                    "className": "text-xs text-muted-foreground text-center"
+                  },
+                  "bindings": {
+                    "children": "pwaState.copy.cache.helper"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "features-section",
+          "type": "Card",
+          "props": {
+            "className": "p-6"
+          },
+          "children": [
+            {
+              "id": "features-inner",
+              "type": "div",
+              "props": {
+                "className": "space-y-4"
+              },
+              "children": [
+                {
+                  "id": "features-header",
+                  "type": "div",
+                  "children": [
+                    {
+                      "id": "features-title",
+                      "type": "h3",
+                      "props": {
+                        "className": "text-lg font-semibold mb-1"
+                      },
+                      "bindings": {
+                        "children": "pwaState.copy.features.title"
+                      }
+                    },
+                    {
+                      "id": "features-description",
+                      "type": "p",
+                      "props": {
+                        "className": "text-sm text-muted-foreground"
+                      },
+                      "bindings": {
+                        "children": "pwaState.copy.features.description"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "features-list",
+                  "type": "div",
+                  "props": {
+                    "className": "grid gap-3 text-sm"
+                  },
+                  "children": [
+                    {
+                      "id": "feature-offline",
+                      "type": "div",
+                      "props": {
+                        "className": "flex items-center justify-between"
+                      },
+                      "children": [
+                        {
+                          "id": "feature-offline-label",
+                          "type": "span",
+                          "props": {
+                            "className": "text-muted-foreground"
+                          },
+                          "bindings": {
+                            "children": "pwaState.copy.features.items.offline"
+                          }
+                        },
+                        {
+                          "id": "feature-offline-icon",
+                          "type": "CheckCircle",
+                          "props": {
+                            "size": 16,
+                            "className": "text-accent",
+                            "weight": "fill"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "id": "feature-installable",
+                      "type": "div",
+                      "props": {
+                        "className": "flex items-center justify-between"
+                      },
+                      "children": [
+                        {
+                          "id": "feature-installable-label",
+                          "type": "span",
+                          "props": {
+                            "className": "text-muted-foreground"
+                          },
+                          "bindings": {
+                            "children": "pwaState.copy.features.items.installable"
+                          }
+                        },
+                        {
+                          "id": "feature-installable-check",
+                          "type": "CheckCircle",
+                          "conditional": {
+                            "if": "pwaState.isInstallable || pwaState.isInstalled"
+                          },
+                          "props": {
+                            "size": 16,
+                            "className": "text-accent",
+                            "weight": "fill"
+                          }
+                        },
+                        {
+                          "id": "feature-installable-x",
+                          "type": "XCircle",
+                          "conditional": {
+                            "if": "!pwaState.isInstallable && !pwaState.isInstalled"
+                          },
+                          "props": {
+                            "size": 16,
+                            "className": "text-muted-foreground",
+                            "weight": "fill"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "id": "feature-background-sync",
+                      "type": "div",
+                      "props": {
+                        "className": "flex items-center justify-between"
+                      },
+                      "children": [
+                        {
+                          "id": "feature-background-sync-label",
+                          "type": "span",
+                          "props": {
+                            "className": "text-muted-foreground"
+                          },
+                          "bindings": {
+                            "children": "pwaState.copy.features.items.backgroundSync"
+                          }
+                        },
+                        {
+                          "id": "feature-background-sync-icon",
+                          "type": "CheckCircle",
+                          "props": {
+                            "size": 16,
+                            "className": "text-accent",
+                            "weight": "fill"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "id": "feature-push-notifications",
+                      "type": "div",
+                      "props": {
+                        "className": "flex items-center justify-between"
+                      },
+                      "children": [
+                        {
+                          "id": "feature-push-notifications-label",
+                          "type": "span",
+                          "props": {
+                            "className": "text-muted-foreground"
+                          },
+                          "bindings": {
+                            "children": "pwaState.copy.features.items.pushNotifications"
+                          }
+                        },
+                        {
+                          "id": "feature-push-notifications-check",
+                          "type": "CheckCircle",
+                          "conditional": {
+                            "if": "pwaState.isNotificationSupported"
+                          },
+                          "props": {
+                            "size": 16,
+                            "className": "text-accent",
+                            "weight": "fill"
+                          }
+                        },
+                        {
+                          "id": "feature-push-notifications-x",
+                          "type": "XCircle",
+                          "conditional": {
+                            "if": "!pwaState.isNotificationSupported"
+                          },
+                          "props": {
+                            "size": 16,
+                            "className": "text-muted-foreground",
+                            "weight": "fill"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "id": "feature-shortcuts",
+                      "type": "div",
+                      "props": {
+                        "className": "flex items-center justify-between"
+                      },
+                      "children": [
+                        {
+                          "id": "feature-shortcuts-label",
+                          "type": "span",
+                          "props": {
+                            "className": "text-muted-foreground"
+                          },
+                          "bindings": {
+                            "children": "pwaState.copy.features.items.shortcuts"
+                          }
+                        },
+                        {
+                          "id": "feature-shortcuts-icon",
+                          "type": "CheckCircle",
+                          "props": {
+                            "size": 16,
+                            "className": "text-accent",
+                            "weight": "fill"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

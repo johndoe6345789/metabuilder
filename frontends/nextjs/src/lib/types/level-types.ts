@@ -1,6 +1,6 @@
 /**
  * Type definitions for core database entities
- * These types match the Prisma schema models
+ * These types match the DBAL schema models
  */
 
 export type UserRole = 'public' | 'user' | 'moderator' | 'admin' | 'god' | 'supergod'

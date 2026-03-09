@@ -1,0 +1,508 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "ui_auth",
+  "description": "Authentication UI components including access denied, auth gate, and page loader",
+  "components": [
+    {
+      "id": "access_denied",
+      "name": "AccessDenied",
+      "description": "A page showing Access Denied with message and login button",
+      "props": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": false,
+          "default": "Access Denied",
+          "description": "Title text displayed"
+        },
+        {
+          "name": "message",
+          "type": "string",
+          "required": false,
+          "default": "You don't have permission to access this page.",
+          "description": "Description message"
+        },
+        {
+          "name": "requiredLevel",
+          "type": "number",
+          "required": false,
+          "description": "Required permission level"
+        },
+        {
+          "name": "currentLevel",
+          "type": "number",
+          "required": false,
+          "description": "User's current permission level"
+        },
+        {
+          "name": "showLevelInfo",
+          "type": "boolean",
+          "required": false,
+          "default": true,
+          "description": "Show required/current level information"
+        },
+        {
+          "name": "onBack",
+          "type": "function",
+          "required": false,
+          "description": "Callback when back button clicked"
+        },
+        {
+          "name": "onLogin",
+          "type": "function",
+          "required": false,
+          "description": "Callback when login button clicked"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "access-denied-page",
+          "sx": {
+            "display": "flex",
+            "flexDirection": "column",
+            "alignItems": "center",
+            "justifyContent": "center",
+            "minHeight": "100vh",
+            "p": 3
+          },
+          "children": [
+            {
+              "type": "Card",
+              "variant": "outlined",
+              "sx": {
+                "maxWidth": 480,
+                "width": "100%",
+                "textAlign": "center"
+              },
+              "children": [
+                {
+                  "type": "Box",
+                  "sx": { "p": 4 },
+                  "children": [
+                    {
+                      "type": "Box",
+                      "sx": { "mb": 3, "color": "error.main" },
+                      "children": [
+                        {
+                          "type": "Icon",
+                          "name": "Lock",
+                          "size": 64
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Text",
+                      "variant": "h4",
+                      "fontWeight": "bold",
+                      "color": "error",
+                      "sx": { "mb": 2 },
+                      "children": "{{title}}"
+                    },
+                    {
+                      "type": "Text",
+                      "variant": "body1",
+                      "color": "secondary",
+                      "sx": { "mb": 3 },
+                      "children": "{{message}}"
+                    },
+                    {
+                      "type": "conditional",
+                      "condition": "{{showLevelInfo && requiredLevel}}",
+                      "then": {
+                        "type": "Box",
+                        "sx": {
+                          "mb": 3,
+                          "p": 2,
+                          "borderRadius": 1,
+                          "bgcolor": "action.hover"
+                        },
+                        "children": [
+                          {
+                            "type": "Text",
+                            "variant": "body2",
+                            "color": "secondary",
+                            "children": "Required level: {{requiredLevel}}"
+                          },
+                          {
+                            "type": "conditional",
+                            "condition": "{{currentLevel !== undefined}}",
+                            "then": {
+                              "type": "Text",
+                              "variant": "body2",
+                              "color": "secondary",
+                              "children": "Your level: {{currentLevel}}"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Stack",
+                      "direction": "row",
+                      "spacing": 2,
+                      "justifyContent": "center",
+                      "children": [
+                        {
+                          "type": "Button",
+                          "variant": "outlined",
+                          "color": "secondary",
+                          "startIcon": "ArrowBack",
+                          "onClick": "{{onBack}}",
+                          "children": "Go Back"
+                        },
+                        {
+                          "type": "Button",
+                          "variant": "contained",
+                          "color": "primary",
+                          "startIcon": "Login",
+                          "onClick": "{{onLogin}}",
+                          "children": "Login"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "scripts": {
+        "init": "denied.initialize",
+        "login": "denied.redirectToLogin",
+        "back": "denied.goBack"
+      }
+    },
+    {
+      "id": "auth_gate",
+      "name": "AuthGate",
+      "description": "A wrapper that shows content or redirects based on auth state",
+      "props": [
+        {
+          "name": "requiredLevel",
+          "type": "number",
+          "required": false,
+          "default": 1,
+          "description": "Minimum permission level required"
+        },
+        {
+          "name": "children",
+          "type": "any",
+          "required": true,
+          "description": "Protected content to render when authenticated"
+        },
+        {
+          "name": "fallback",
+          "type": "any",
+          "required": false,
+          "description": "Content to show while checking auth"
+        },
+        {
+          "name": "redirectTo",
+          "type": "string",
+          "required": false,
+          "default": "/login",
+          "description": "URL to redirect unauthenticated users"
+        },
+        {
+          "name": "showChallenge",
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Show login challenge instead of redirect"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "auth-gate",
+          "sx": { "width": "100%", "height": "100%" },
+          "children": [
+            {
+              "type": "conditional",
+              "condition": "{{isLoading}}",
+              "then": {
+                "type": "Box",
+                "className": "auth-gate-loading",
+                "sx": {
+                  "display": "flex",
+                  "alignItems": "center",
+                  "justifyContent": "center",
+                  "minHeight": "200px"
+                },
+                "children": [
+                  {
+                    "type": "CircularProgress",
+                    "size": 40
+                  }
+                ]
+              }
+            },
+            {
+              "type": "conditional",
+              "condition": "{{!isLoading && !isAuthenticated}}",
+              "then": {
+                "type": "conditional",
+                "condition": "{{showChallenge}}",
+                "then": {
+                  "type": "Card",
+                  "className": "auth-gate-challenge",
+                  "variant": "outlined",
+                  "sx": {
+                    "maxWidth": 400,
+                    "mx": "auto",
+                    "mt": 4,
+                    "p": 3
+                  },
+                  "children": [
+                    {
+                      "type": "Box",
+                      "sx": { "textAlign": "center", "mb": 2 },
+                      "children": [
+                        {
+                          "type": "Icon",
+                          "name": "VerifiedUser",
+                          "size": 48,
+                          "color": "primary"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Text",
+                      "variant": "h6",
+                      "textAlign": "center",
+                      "sx": { "mb": 2 },
+                      "children": "Authentication Required"
+                    },
+                    {
+                      "type": "Text",
+                      "variant": "body2",
+                      "color": "secondary",
+                      "textAlign": "center",
+                      "sx": { "mb": 3 },
+                      "children": "Please sign in to access this content."
+                    },
+                    {
+                      "type": "Stack",
+                      "spacing": 2,
+                      "children": [
+                        {
+                          "type": "Button",
+                          "variant": "contained",
+                          "color": "primary",
+                          "fullWidth": true,
+                          "startIcon": "Login",
+                          "children": "Sign In"
+                        },
+                        {
+                          "type": "Button",
+                          "variant": "text",
+                          "color": "secondary",
+                          "fullWidth": true,
+                          "children": "Cancel"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "else": {
+                  "type": "ComponentRef",
+                  "ref": "access_denied"
+                }
+              }
+            },
+            {
+              "type": "conditional",
+              "condition": "{{!isLoading && isAuthenticated && hasPermission}}",
+              "then": {
+                "type": "Box",
+                "className": "auth-gate-content",
+                "children": "{{children}}"
+              }
+            },
+            {
+              "type": "conditional",
+              "condition": "{{!isLoading && isAuthenticated && !hasPermission}}",
+              "then": {
+                "type": "ComponentRef",
+                "ref": "access_denied",
+                "props": {
+                  "title": "Insufficient Permissions",
+                  "message": "Your account does not have the required permission level."
+                }
+              }
+            }
+          ]
+        }
+      },
+      "scripts": {
+        "init": "gate.initialize",
+        "check": "gate.checkAccess",
+        "redirect": "gate.redirectToLogin",
+        "allow": "gate.allowAccess",
+        "deny": "gate.denyAccess"
+      }
+    },
+    {
+      "id": "page_loader",
+      "name": "PageLoader",
+      "description": "A full-page loading spinner with skeleton placeholders",
+      "props": [
+        {
+          "name": "message",
+          "type": "string",
+          "required": false,
+          "default": "Loading...",
+          "description": "Loading message to display"
+        },
+        {
+          "name": "showSkeleton",
+          "type": "boolean",
+          "required": false,
+          "default": true,
+          "description": "Show skeleton placeholder"
+        },
+        {
+          "name": "spinnerSize",
+          "type": "number",
+          "required": false,
+          "default": 56,
+          "description": "Size of the loading spinner"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "page-loader",
+          "sx": {
+            "display": "flex",
+            "flexDirection": "column",
+            "alignItems": "center",
+            "justifyContent": "center",
+            "minHeight": "100vh",
+            "p": 3
+          },
+          "children": [
+            {
+              "type": "Box",
+              "className": "page-loader-spinner",
+              "sx": { "textAlign": "center", "mb": 4 },
+              "children": [
+                {
+                  "type": "CircularProgress",
+                  "size": "{{spinnerSize}}",
+                  "thickness": 4
+                },
+                {
+                  "type": "Text",
+                  "variant": "body1",
+                  "color": "secondary",
+                  "sx": { "mt": 2 },
+                  "children": "{{message}}"
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "condition": "{{showSkeleton}}",
+              "then": {
+                "type": "Card",
+                "className": "page-loader-skeleton",
+                "variant": "outlined",
+                "sx": {
+                  "maxWidth": 600,
+                  "width": "100%",
+                  "p": 3
+                },
+                "children": [
+                  {
+                    "type": "Box",
+                    "sx": { "mb": 3 },
+                    "children": [
+                      {
+                        "type": "Skeleton",
+                        "variant": "text",
+                        "width": "60%",
+                        "height": 32
+                      },
+                      {
+                        "type": "Skeleton",
+                        "variant": "text",
+                        "width": "40%",
+                        "height": 20
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Stack",
+                    "spacing": 2,
+                    "children": [
+                      {
+                        "type": "Skeleton",
+                        "variant": "text",
+                        "width": "100%",
+                        "height": 20
+                      },
+                      {
+                        "type": "Skeleton",
+                        "variant": "text",
+                        "width": "90%",
+                        "height": 20
+                      },
+                      {
+                        "type": "Skeleton",
+                        "variant": "text",
+                        "width": "95%",
+                        "height": 20
+                      },
+                      {
+                        "type": "Skeleton",
+                        "variant": "text",
+                        "width": "70%",
+                        "height": 20
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Stack",
+                    "direction": "row",
+                    "spacing": 2,
+                    "sx": { "mt": 3 },
+                    "children": [
+                      {
+                        "type": "Skeleton",
+                        "variant": "rectangular",
+                        "width": 100,
+                        "height": 36
+                      },
+                      {
+                        "type": "Skeleton",
+                        "variant": "rectangular",
+                        "width": 100,
+                        "height": 36
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "scripts": {
+        "init": "loader.initialize",
+        "show": "loader.show",
+        "hide": "loader.hide",
+        "updateText": "loader.updateText"
+      }
+    }
+  ],
+  "exports": {
+    "components": ["AccessDenied", "AuthGate", "PageLoader"]
+  }
+}

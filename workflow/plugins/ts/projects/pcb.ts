@@ -43,7 +43,7 @@ export interface PCBTraceInput {
  * Execute a PCB generation script
  */
 export async function pcbGenerate(input: PCBGenerateInput): Promise<PCBGenerateOutput> {
-  const { script, outputPath, outputFormat = 'kicad' } = input;
+  const { script, outputPath, outputFormat: _outputFormat = 'kicad' } = input;
 
   return new Promise((resolve) => {
     const pythonProcess = spawn('python3', ['-c', script], {

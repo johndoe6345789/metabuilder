@@ -1,0 +1,76 @@
+@use 'cdk';
+@use './m3-autocomplete';
+@use '../core/tokens/token-utils';
+
+$fallbacks: m3-autocomplete.get-tokens();
+
+// Even though we don't use the MDC styles, we need to keep the classes in the
+// DOM for the Gmat versions to work. We need to bump up the specificity here
+// so that it's higher than MDC's styles.
+div.mat-mdc-autocomplete-panel {
+  width: 100%; // Ensures that the panel matches the overlay width.
+  max-height: 256px; // Prevents lists with a lot of option from growing too high.
+  visibility: hidden;
+  transform-origin: center top;
+  overflow: auto;
+  padding: 8px 0;
+  box-sizing: border-box;
+
+  // Necessary so the `offsetParent` of the nested `mat-option` is the
+  // panel which is required for scroll calculations (see #30974).
+  position: relative;
+
+  border-radius: token-utils.slot(autocomplete-container-shape, $fallbacks);
+  box-shadow: token-utils.slot(autocomplete-container-elevation-shadow, $fallbacks);
+  background-color: token-utils.slot(autocomplete-background-color, $fallbacks);
+
+  @include cdk.high-contrast {
+    outline: solid 1px;
+  }
+
+  .cdk-overlay-pane:not(.mat-mdc-autocomplete-panel-above) & {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+
+  .mat-mdc-autocomplete-panel-above & {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    transform-origin: center bottom;
+  }
+
+  // These classes are used to toggle the panel visibility depending on whether it has any options.
+  &.mat-mdc-autocomplete-visible {
+    visibility: visible;
+  }
+}
+
+div.mat-mdc-autocomplete-panel.mat-mdc-autocomplete-hidden,
+.cdk-overlay-pane:has(> .mat-mdc-autocomplete-hidden) {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+@keyframes _mat-autocomplete-enter {
+  from {
+    opacity: 0;
+    transform: scaleY(0.8);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+// Note: the autocomplete intentionally only implements an enter animation.
+// The exit animation can look glitchy, because usually selecting an option
+// causes the list to change and jump around while it's animating.
+.mat-autocomplete-panel-animations-enabled {
+  animation: _mat-autocomplete-enter 120ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+// Prevent the overlay host node from affecting its surrounding layout.
+mat-autocomplete {
+  display: none;
+}

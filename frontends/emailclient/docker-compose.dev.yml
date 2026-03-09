@@ -1,0 +1,62 @@
+# Docker Compose Development Override
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+
+version: '3.8'
+
+services:
+  # Development Redis with debug settings
+  redis:
+    environment:
+      REDIS_PASSWORD: redis_development_password
+      REDIS_MAXMEMORY: 512mb
+      REDIS_MAXMEMORY_POLICY: allkeys-lru
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Development Email Service with debug logging
+  email-service:
+    environment:
+      FLASK_ENV: development
+      FLASK_DEBUG: '1'
+      LOG_LEVEL: DEBUG
+      # Disable eager task execution for debugging
+      CELERY_TASK_ALWAYS_EAGER: 'false'
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Development Postfix with debug
+  postfix:
+    environment:
+      # Additional development settings
+      POSTFIX_message_size_limit: 52428800  # 50MB
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Development Dovecot
+  dovecot:
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Development PostgreSQL
+  postgres:
+    environment:
+      POSTGRES_USER: emailclient
+      POSTGRES_PASSWORD: emailclient
+      POSTGRES_DB: emailclient
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"

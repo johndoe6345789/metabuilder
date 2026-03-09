@@ -1,0 +1,35 @@
+{
+  "id": "fuel-pump-module",
+  "name": "Fuel Pump Module",
+  "partNumber": "FD-1880210",
+  "material": "blackPlastic",
+  "quantity": 1,
+  "weight": 1200.0,
+  "weightUnit": "g",
+  "baseY": 80,
+  "description": "In-tank fuel pump with level sender and filter",
+  "installation": {
+    "tools": [
+      { "name": "Locking ring tool", "size": "-", "required": true },
+      { "name": "Trim tool", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Locking ring", "spec": "-", "qty": 1, "reusable": true },
+      { "name": "O-ring seal", "spec": "150mm OD", "qty": 1, "reusable": false }
+    ],
+    "torque": [],
+    "notes": [
+      "Access through rear seat or floor panel",
+      "Clean area thoroughly before opening",
+      "Note orientation of pump arm",
+      "Handle fuel sender float carefully"
+    ]
+  },
+  "geometry": [
+    { "type": "circle", "r": 35, "fill": "#333" },
+    { "type": "circle", "r": 28, "fill": "#444" },
+    { "type": "rect", "width": 15, "height": 50, "offsetX": 0, "offsetY": 40, "rx": 3, "fill": "#3a3a3a" },
+    { "type": "circle", "r": 8, "offsetY": 65, "fill": "#555" },
+    { "type": "rect", "width": 40, "height": 5, "offsetX": 0, "offsetY": 30, "fill": "#666" }
+  ]
+}

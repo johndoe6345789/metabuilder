@@ -1,0 +1,11 @@
+{
+  "id": "icon-root",
+  "type": "Icon",
+  "bindings": {
+    "name": "data.name",
+    "size": "data.size || 'md'",
+    "className": "data.className",
+    "color": "data.color",
+    "strokeWidth": "data.strokeWidth"
+  }
+}

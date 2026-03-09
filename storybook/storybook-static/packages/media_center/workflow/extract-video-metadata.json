@@ -1,0 +1,255 @@
+{
+  "name": "Extract Video Metadata",
+  "active": false,
+  "nodes": [
+    {
+      "id": "validate_context",
+      "name": "Validate Context",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $context.tenantId }}",
+        "operation": "validate",
+        "validator": "required"
+      }
+    },
+    {
+      "id": "validate_input",
+      "name": "Validate Input",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $json }}",
+        "operation": "validate",
+        "rules": {
+          "assetId": "required|string",
+          "filePath": "required|string"
+        }
+      }
+    },
+    {
+      "id": "fetch_asset",
+      "name": "Fetch Asset",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "filter": {
+          "id": "{{ $json.assetId }}",
+          "tenantId": "{{ $context.tenantId }}"
+        },
+        "operation": "database_read",
+        "entity": "MediaAsset"
+      }
+    },
+    {
+      "id": "extract_video_info",
+      "name": "Extract Video Info",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "output": {
+          "duration": true,
+          "bitrate": true,
+          "codec": true,
+          "videoCodec": true,
+          "audioCodec": true,
+          "width": true,
+          "height": true,
+          "fps": true
+        },
+        "operation": "analyze_video",
+        "filePath": "{{ $json.filePath }}"
+      }
+    },
+    {
+      "id": "format_duration",
+      "name": "Format Duration",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "output": {
+          "seconds": "{{ $steps.extract_video_info.output.duration }}",
+          "formatted": "{{ Math.floor($steps.extract_video_info.output.duration / 3600) }}:{{ Math.floor(($steps.extract_video_info.output.duration % 3600) / 60).toString().padStart(2, '0') }}:{{ ($steps.extract_video_info.output.duration % 60).toString().padStart(2, '0') }}"
+        },
+        "operation": "transform_data"
+      }
+    },
+    {
+      "id": "update_asset_metadata",
+      "name": "Update Asset Metadata",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "filter": {
+          "id": "{{ $json.assetId }}"
+        },
+        "data": {
+          "metadata": {
+            "duration": "{{ $steps.format_duration.output }}",
+            "bitrate": "{{ $steps.extract_video_info.output.bitrate }}",
+            "codec": "{{ $steps.extract_video_info.output.codec }}",
+            "videoCodec": "{{ $steps.extract_video_info.output.videoCodec }}",
+            "audioCodec": "{{ $steps.extract_video_info.output.audioCodec }}",
+            "resolution": {
+              "width": "{{ $steps.extract_video_info.output.width }}",
+              "height": "{{ $steps.extract_video_info.output.height }}"
+            },
+            "fps": "{{ $steps.extract_video_info.output.fps }}"
+          },
+          "extractedAt": "{{ new Date().toISOString() }}"
+        },
+        "operation": "database_update",
+        "entity": "MediaAsset"
+      }
+    },
+    {
+      "id": "emit_complete",
+      "name": "Emit Complete",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        100,
+        500
+      ],
+      "parameters": {
+        "data": {
+          "assetId": "{{ $json.assetId }}",
+          "duration": "{{ $steps.format_duration.output.formatted }}"
+        },
+        "action": "emit_event",
+        "event": "video_metadata_extracted",
+        "channel": "{{ 'media:' + $context.tenantId }}"
+      }
+    },
+    {
+      "id": "return_success",
+      "name": "Return Success",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        400,
+        500
+      ],
+      "parameters": {
+        "action": "http_response",
+        "status": 200,
+        "body": "{{ $steps.update_asset_metadata.output }}"
+      }
+    }
+  ],
+  "connections": {
+    "validate_context": {
+      "main": [
+        [
+          {
+            "node": "validate_input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "validate_input": {
+      "main": [
+        [
+          {
+            "node": "fetch_asset",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fetch_asset": {
+      "main": [
+        [
+          {
+            "node": "extract_video_info",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "extract_video_info": {
+      "main": [
+        [
+          {
+            "node": "format_duration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "format_duration": {
+      "main": [
+        [
+          {
+            "node": "update_asset_metadata",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update_asset_metadata": {
+      "main": [
+        [
+          {
+            "node": "emit_complete",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "emit_complete": {
+      "main": [
+        [
+          {
+            "node": "return_success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "id": "workflow_extract_video_metadata",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
+}

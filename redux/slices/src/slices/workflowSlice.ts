@@ -189,3 +189,14 @@ export const {
 } = workflowSlice.actions;
 
 export default workflowSlice.reducer;
+
+// Selectors
+export const selectCurrentWorkflow = (state: { workflow: WorkflowState }) => state.workflow.current;
+export const selectWorkflowNodes = (state: { workflow: WorkflowState }) => state.workflow.nodes;
+export const selectWorkflowConnections = (state: { workflow: WorkflowState }) => state.workflow.connections;
+export const selectWorkflowIsDirty = (state: { workflow: WorkflowState }) => state.workflow.isDirty;
+export const selectWorkflowIsSaving = (state: { workflow: WorkflowState }) => state.workflow.isSaving;
+export const selectCurrentExecution = (state: { workflow: WorkflowState }) => state.workflow.currentExecution;
+export const selectExecutionHistory = (state: { workflow: WorkflowState }) => state.workflow.executionHistory;
+export const selectLastSaved = (state: { workflow: WorkflowState }) => state.workflow.lastSaved;
+export const selectSaveError = (state: { workflow: WorkflowState }) => state.workflow.saveError;

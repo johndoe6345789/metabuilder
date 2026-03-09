@@ -1,0 +1,26 @@
+{
+  "id": "models-stat",
+  "$ref": "./stat-card-base.json",
+  "children": [
+    {
+      "id": "models-value",
+      "type": "div",
+      "props": {
+        "className": "text-2xl font-bold",
+        "children": "0"
+      },
+      "dataBinding": {
+        "source": "projectStats",
+        "path": "models"
+      }
+    },
+    {
+      "id": "models-label",
+      "type": "div",
+      "props": {
+        "className": "text-sm text-muted-foreground mt-2",
+        "children": "Database Models"
+      }
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "id": "bed-thermistor",
+  "name": "Bed Temperature Sensor",
+  "partNumber": "BL-A1-NTC-001",
+  "material": "ceramic",
+  "quantity": 1,
+  "weight": 5.0,
+  "weightUnit": "g",
+  "baseY": -10,
+  "description": "100K NTC thermistor with glass bead encapsulation and PTFE-insulated leads for accurate bed temperature sensing",
+  "installation": {
+    "tools": [
+      { "name": "Hex key", "size": "1.5mm", "required": true },
+      { "name": "Thermal paste", "size": "-", "required": true },
+      { "name": "Multimeter", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Thermistor mount screw", "spec": "M2x4 SHCS", "qty": 1, "reusable": true },
+      { "name": "Thermistor clip", "spec": "spring steel", "qty": 1, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Thermistor mount screw", "value": 0.2, "unit": "Nm", "sequence": "", "notes": "Light torque - do not crush thermistor" }
+    ],
+    "notes": [
+      "Test resistance before installation: ~100K at 25C",
+      "Apply thin layer of thermal paste for good thermal contact",
+      "Route wires away from heater traces",
+      "Do not kink or sharply bend leads",
+      "Verify reading matches ambient temp before heating"
+    ]
+  },
+  "geometry": [
+    { "type": "circle", "r": 4, "fill": "#a08060" },
+    { "type": "circle", "r": 2.5, "fill": "#806040" },
+    { "type": "line", "x1": 0, "y1": 4, "x2": 0, "y2": 25, "stroke": "#555", "strokeWidth": 1 },
+    { "type": "line", "x1": 2, "y1": 4, "x2": 2, "y2": 25, "stroke": "#555", "strokeWidth": 1 }
+  ],
+  "geometry3d": [
+    { "type": "cylinder", "r": 2.5, "height": 4, "fill": "#a08060" },
+    { "type": "cylinder", "r": 2, "height": 3, "offsetY": 0.5, "fill": "#806040" },
+    { "type": "cylinder", "r": 1.8, "height": 2.5, "offsetY": 1, "fill": "#c0a080" },
+
+    { "type": "cylinder", "r": 0.5, "height": 30, "offsetX": -0.8, "offsetY": -17, "fill": "#555555" },
+    { "type": "cylinder", "r": 0.5, "height": 30, "offsetX": 0.8, "offsetY": -17, "fill": "#555555" },
+
+    { "type": "cylinder", "r": 1, "height": 6, "offsetX": -0.8, "offsetY": -34, "fill": "#666666" },
+    { "type": "cylinder", "r": 1, "height": 6, "offsetX": 0.8, "offsetY": -34, "fill": "#666666" },
+
+    { "type": "box", "width": 8, "height": 2, "depth": 5, "offsetX": 0, "offsetY": -38, "fill": "#333333" },
+    { "type": "cylinder", "r": 2, "height": 15, "offsetX": 0, "offsetY": -48, "fill": "#444444" },
+
+    { "type": "box", "width": 6, "height": 1, "depth": 4, "offsetX": 0, "offsetY": 2.5, "fill": "#707070" },
+    { "type": "cylinder", "r": 1, "height": 2, "offsetX": 0, "offsetY": 2.5, "subtract": true }
+  ]
+}

@@ -1,0 +1,255 @@
+{
+  "entity": "Workflow",
+  "name": "workflow",
+  "displayName": "Workflow",
+  "description": "Directed Acyclic Graph (DAG) workflow definitions with n8n schema support.\nSupports multi-tenant isolation, versioning, and execution tracking.\n",
+  "tenantId": true,
+  "fields": {
+    "id": {
+      "type": "string",
+      "description": "Unique workflow identifier",
+      "required": true,
+      "unique": true
+    },
+    "tenantId": {
+      "type": "string",
+      "description": "Tenant isolation ID",
+      "optional": true,
+      "nullable": true
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable workflow name",
+      "required": true
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed workflow description",
+      "optional": true,
+      "nullable": true
+    },
+    "nodes": {
+      "type": "text",
+      "description": "Serialized JSON array of workflow nodes (n8n node format)",
+      "required": true
+    },
+    "edges": {
+      "type": "text",
+      "description": "Serialized JSON adjacency map of node connections",
+      "required": true
+    },
+    "enabled": {
+      "type": "boolean",
+      "description": "Whether workflow is active",
+      "required": true,
+      "default": false
+    },
+    "version": {
+      "type": "integer",
+      "description": "Workflow version number",
+      "required": true,
+      "default": 1
+    },
+    "createdAt": {
+      "type": "bigint",
+      "description": "Workflow creation timestamp",
+      "optional": true,
+      "nullable": true
+    },
+    "updatedAt": {
+      "type": "bigint",
+      "description": "Last modification timestamp",
+      "optional": true,
+      "nullable": true
+    },
+    "createdBy": {
+      "type": "string",
+      "description": "User ID of creator",
+      "optional": true,
+      "nullable": true
+    }
+  },
+  "indexes": [
+    {
+      "fields": [
+        "tenantId",
+        "name"
+      ],
+      "unique": true
+    },
+    {
+      "fields": [
+        "tenantId",
+        "status"
+      ]
+    },
+    {
+      "fields": [
+        "tenantId",
+        "category"
+      ]
+    },
+    {
+      "fields": [
+        "tenantId",
+        "isPublished"
+      ]
+    },
+    {
+      "fields": [
+        "tenantId",
+        "createdAt"
+      ]
+    },
+    {
+      "fields": [
+        "tenantId",
+        "updatedAt"
+      ]
+    }
+  ],
+  "relations": {
+    "creator": {
+      "type": "belongs-to",
+      "entity": "User",
+      "foreign_key": "createdBy",
+      "on_delete": "restrict",
+      "description": "User who created this workflow"
+    },
+    "updater": {
+      "type": "belongs-to",
+      "entity": "User",
+      "foreign_key": "updatedBy",
+      "nullable": true,
+      "on_delete": "set_null",
+      "description": "User who last updated this workflow"
+    }
+  },
+  "validations": [
+    {
+      "name": "nodes_not_empty",
+      "condition": "nodes.length > 0",
+      "message": "Workflow must have at least one node"
+    },
+    {
+      "name": "connections_valid",
+      "condition": "validateConnections(nodes, connections)",
+      "message": "Connection references must exist in nodes"
+    },
+    {
+      "name": "no_circular_references",
+      "condition": "!hasCircularReferences(connections)",
+      "message": "Workflow connections must be acyclic (DAG)"
+    },
+    {
+      "name": "version_format",
+      "condition": "/^\\d+\\.\\d+\\.\\d+$/.test(version)",
+      "message": "Version must follow semantic versioning (X.Y.Z)"
+    }
+  ],
+  "acl": {
+    "default": {
+      "filter": "{ tenantId: context.tenantId }"
+    },
+    "permissions": {
+      "owner": [
+        "create",
+        "read",
+        "update",
+        "delete",
+        "publish"
+      ],
+      "editor": [
+        "read",
+        "update"
+      ],
+      "viewer": [
+        "read"
+      ],
+      "admin": [
+        "*"
+      ]
+    }
+  },
+  "rateLimits": {
+    "list": 100,
+    "create": 20,
+    "update": 50,
+    "delete": 10,
+    "execute": 200
+  },
+  "softDelete": true,
+  "softDeleteField": "isArchived",
+  "events": [
+    {
+      "name": "workflow.created",
+      "description": "Workflow created",
+      "payload": [
+        "id",
+        "name",
+        "tenantId",
+        "createdBy"
+      ]
+    },
+    {
+      "name": "workflow.updated",
+      "description": "Workflow updated",
+      "payload": [
+        "id",
+        "version",
+        "updatedBy",
+        "changes"
+      ]
+    },
+    {
+      "name": "workflow.published",
+      "description": "Workflow published",
+      "payload": [
+        "id",
+        "version",
+        "tenantId"
+      ]
+    },
+    {
+      "name": "workflow.executed",
+      "description": "Workflow execution started",
+      "payload": [
+        "id",
+        "executionId",
+        "tenantId"
+      ]
+    },
+    {
+      "name": "workflow.validated",
+      "description": "Workflow validation completed",
+      "payload": [
+        "id",
+        "valid",
+        "errors",
+        "warnings"
+      ]
+    }
+  ],
+  "caching": {
+    "ttl": 3600,
+    "patterns": [
+      {
+        "key": "workflow:{id}",
+        "ttl": 3600
+      },
+      {
+        "key": "workflows:{tenantId}",
+        "ttl": 1800
+      },
+      {
+        "key": "workflows:{tenantId}:{status}",
+        "ttl": 1800
+      }
+    ],
+    "invalidateOn": [
+      "update",
+      "publish",
+      "delete"
+    ]
+  }
+}

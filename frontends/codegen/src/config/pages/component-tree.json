@@ -1,0 +1,273 @@
+{
+  "id": "component-tree",
+  "name": "Component Tree Manager",
+  "layout": {
+    "type": "single"
+  },
+  "dataSources": [
+    {
+      "id": "trees",
+      "type": "kv",
+      "key": "app-component-trees",
+      "defaultValue": []
+    },
+    {
+      "id": "selectedTreeId",
+      "type": "static",
+      "defaultValue": null
+    },
+    {
+      "id": "createDialogOpen",
+      "type": "static",
+      "defaultValue": false
+    },
+    {
+      "id": "newTreeName",
+      "type": "static",
+      "defaultValue": ""
+    },
+    {
+      "id": "newTreeDescription",
+      "type": "static",
+      "defaultValue": ""
+    }
+  ],
+  "components": [
+    {
+      "id": "root",
+      "type": "div",
+      "props": {
+        "style": { "display": "flex", "height": "100%", "background": "var(--mat-sys-surface)" }
+      },
+      "children": [
+        {
+          "id": "sidebar",
+          "type": "div",
+          "props": {
+            "style": {
+              "width": "320px",
+              "borderRight": "1px solid var(--mat-sys-outline-variant)",
+              "background": "var(--mat-sys-surface-container-low)",
+              "display": "flex",
+              "flexDirection": "column"
+            }
+          },
+          "children": [
+            {
+              "id": "sidebar-header",
+              "type": "div",
+              "props": {
+                "style": { "padding": "16px", "borderBottom": "1px solid var(--mat-sys-outline-variant)" }
+              },
+              "children": [
+                {
+                  "id": "header-row",
+                  "type": "Flex",
+                  "props": {
+                    "align": "center",
+                    "justify": "space-between",
+                    "className": "mb-3"
+                  },
+                  "children": [
+                    {
+                      "id": "header-title",
+                      "type": "Heading",
+                      "props": {
+                        "level": 2,
+                        "className": "text-lg font-bold m-0",
+                        "children": "Component Trees"
+                      }
+                    },
+                    {
+                      "id": "tree-count-badge",
+                      "type": "Badge",
+                      "props": {
+                        "variant": "secondary"
+                      },
+                      "dataBinding": {
+                        "source": "trees",
+                        "transform": "length"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "create-button",
+                  "type": "Button",
+                  "props": {
+                    "variant": "default",
+                    "className": "w-full",
+                    "children": "Create Tree"
+                  },
+                  "events": {
+                    "onClick": {
+                      "actions": [
+                        {
+                          "id": "open-create-dialog",
+                          "type": "set-value",
+                          "target": "createDialogOpen",
+                          "value": true
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "id": "tree-list",
+              "type": "div",
+              "props": {
+                "style": { "flex": 1, "overflowY": "auto", "padding": "8px" }
+              },
+              "loop": {
+                "source": "trees",
+                "itemVar": "tree",
+                "indexVar": "treeIndex"
+              },
+              "children": [
+                {
+                  "id": "tree-item",
+                  "type": "div",
+                  "props": {
+                    "style": {
+                      "padding": "10px 12px",
+                      "marginBottom": "4px",
+                      "borderRadius": "6px",
+                      "cursor": "pointer",
+                      "border": "1px solid transparent",
+                      "transition": "all 0.15s"
+                    }
+                  },
+                  "events": {
+                    "onClick": {
+                      "actions": [
+                        {
+                          "id": "select-tree",
+                          "type": "set-value",
+                          "target": "selectedTreeId",
+                          "expression": "tree.id"
+                        }
+                      ]
+                    }
+                  },
+                  "children": [
+                    {
+                      "id": "tree-item-name",
+                      "type": "Text",
+                      "props": {
+                        "className": "text-[13px] font-medium m-0"
+                      },
+                      "bindings": {
+                        "children": { "source": "tree", "path": "name" }
+                      }
+                    },
+                    {
+                      "id": "tree-item-desc",
+                      "type": "Text",
+                      "props": {
+                        "className": "text-[11px] mt-1 m-0",
+                        "style": { "color": "var(--mat-sys-on-surface-variant)" }
+                      },
+                      "bindings": {
+                        "children": { "source": "tree", "path": "description" }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "empty-list",
+              "type": "Text",
+              "condition": "trees.length === 0",
+              "props": {
+                "className": "text-xs text-center",
+                "style": {
+                  "padding": "24px 16px",
+                  "color": "var(--mat-sys-on-surface-variant)"
+                },
+                "children": "No component trees yet. Create one to get started."
+              }
+            }
+          ]
+        },
+        {
+          "id": "main-content",
+          "type": "div",
+          "props": {
+            "style": { "flex": 1, "display": "flex", "flexDirection": "column" }
+          },
+          "children": [
+            {
+              "id": "empty-state",
+              "type": "div",
+              "props": {
+                "style": {
+                  "flex": 1,
+                  "display": "flex",
+                  "alignItems": "center",
+                  "justifyContent": "center"
+                }
+              },
+              "children": [
+                {
+                  "id": "empty-state-content",
+                  "type": "div",
+                  "props": { "style": { "textAlign": "center" } },
+                  "children": [
+                    {
+                      "id": "empty-icon",
+                      "type": "TreeStructure",
+                      "props": { "size": 48, "weight": "duotone", "style": { "color": "var(--mat-sys-on-surface-variant)", "marginBottom": "16px" } }
+                    },
+                    {
+                      "id": "empty-title",
+                      "type": "Heading",
+                      "props": {
+                        "level": 2,
+                        "className": "text-xl font-bold m-0 mb-2",
+                        "style": { "color": "var(--mat-sys-on-surface-variant)" },
+                        "children": "No Tree Selected"
+                      }
+                    },
+                    {
+                      "id": "empty-description",
+                      "type": "Text",
+                      "props": {
+                        "className": "text-[13px] m-0 mb-4",
+                        "style": { "color": "var(--mat-sys-on-surface-variant)" },
+                        "children": "Select a component tree from the sidebar or create a new one"
+                      }
+                    },
+                    {
+                      "id": "empty-create-btn",
+                      "type": "Button",
+                      "props": {
+                        "variant": "default",
+                        "children": "Create Your First Tree"
+                      },
+                      "events": {
+                        "onClick": {
+                          "actions": [
+                            {
+                              "id": "open-create-from-empty",
+                              "type": "set-value",
+                              "target": "createDialogOpen",
+                              "value": true
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "globalActions": []
+}

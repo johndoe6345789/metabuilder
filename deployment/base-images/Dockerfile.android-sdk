@@ -1,0 +1,114 @@
+# metabuilder/base-android-sdk
+#
+# Android SDK 34 + Gradle 8.12 + all Gradle dependencies pre-downloaded
+# for repoforge and caproverforge Android apps.
+#
+# Build:  docker build -f Dockerfile.android-sdk -t metabuilder/base-android-sdk:latest ../../
+
+ARG BASE_REGISTRY=metabuilder
+FROM ${BASE_REGISTRY}/base-apt:latest
+
+ENV ANDROID_HOME=/opt/android-sdk \
+    ANDROID_SDK_ROOT=/opt/android-sdk \
+    GRADLE_VERSION=8.12 \
+    GRADLE_HOME=/opt/gradle/gradle-8.12 \
+    PATH=/opt/android-sdk/cmdline-tools/latest/bin:/opt/android-sdk/platform-tools:/opt/gradle/gradle-8.12/bin:$PATH
+
+# JAVA_HOME — detect dynamically, no hardcoded arch
+RUN ln -sf "$(dirname "$(dirname "$(readlink -f "$(which java)")")")" /usr/lib/jvm/default-java
+ENV JAVA_HOME=/usr/lib/jvm/default-java
+
+# Android command-line tools (with retry — Google CDN is reliable but large)
+RUN for i in 1 2 3 4 5; do \
+      mkdir -p $ANDROID_HOME/cmdline-tools && \
+      wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip \
+           -O /tmp/cmdtools.zip && \
+      unzip -q /tmp/cmdtools.zip -d $ANDROID_HOME/cmdline-tools && \
+      mv $ANDROID_HOME/cmdline-tools/cmdline-tools $ANDROID_HOME/cmdline-tools/latest && \
+      rm /tmp/cmdtools.zip \
+      && break \
+      || (echo "Android cmdtools download failed (attempt $i/5), retrying in $((i*10))s..." \
+          && rm -f /tmp/cmdtools.zip && sleep $((i*10))); \
+    done
+
+# Accept licenses + install SDK platform 34, build-tools, platform-tools
+RUN yes | sdkmanager --licenses > /dev/null 2>&1 && \
+    for i in 1 2 3 4 5; do \
+      sdkmanager \
+        "platforms;android-34" \
+        "build-tools;34.0.0" \
+        "platform-tools" \
+      && break \
+      || (echo "sdkmanager failed (attempt $i/5), retrying in $((i*10))s..." && sleep $((i*10))); \
+    done
+
+# Gradle (used by gradlew wrappers — each project pins its own version).
+# Install Gradle ${GRADLE_VERSION} to /opt/gradle for system availability.
+# Hard-fail if install fails — devcontainer COPY depends on /opt/gradle existing.
+RUN GRADLE_OK=false && \
+    for i in 1 2 3 4 5; do \
+      wget -q https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip \
+           -O /tmp/gradle.zip && \
+      mkdir -p /opt/gradle && \
+      unzip -q /tmp/gradle.zip -d /opt/gradle && \
+      rm /tmp/gradle.zip && \
+      GRADLE_OK=true && break \
+      || (echo "Gradle download failed (attempt $i/5), retrying in $((i*10))s..." \
+          && rm -f /tmp/gradle.zip && sleep $((i*10))); \
+    done && \
+    if [ "$GRADLE_OK" = "true" ] && [ -f /opt/gradle/gradle-${GRADLE_VERSION}/bin/gradle ]; then \
+      echo "Gradle ${GRADLE_VERSION} installed successfully"; \
+    else \
+      echo "ERROR: Gradle ${GRADLE_VERSION} install failed after 5 attempts" && exit 1; \
+    fi
+
+# ── Pre-download Gradle dependencies for both Android apps ────────────────────
+# Copy only build files (not source) to maximise layer cache hits.
+
+# repoforge
+COPY frontends/repoforge/build.gradle.kts         /tmp/repoforge/build.gradle.kts
+COPY frontends/repoforge/settings.gradle.kts      /tmp/repoforge/settings.gradle.kts
+COPY frontends/repoforge/gradle.properties         /tmp/repoforge/gradle.properties
+COPY frontends/repoforge/gradlew                   /tmp/repoforge/gradlew
+COPY frontends/repoforge/gradle/                   /tmp/repoforge/gradle/
+COPY frontends/repoforge/app/build.gradle.kts     /tmp/repoforge/app/build.gradle.kts
+# Stub sources so gradle resolves deps without compiling real code
+RUN mkdir -p /tmp/repoforge/app/src/main/java && \
+    echo 'package com.stub; public class Stub {}' \
+      > /tmp/repoforge/app/src/main/java/Stub.java && \
+    printf '<?xml version="1.0" encoding="utf-8"?>\n<manifest package="com.stub"/>' \
+      > /tmp/repoforge/app/src/main/AndroidManifest.xml
+
+WORKDIR /tmp/repoforge
+RUN chmod +x gradlew && \
+    for i in 1 2 3 4 5; do \
+      ./gradlew dependencies --no-daemon --quiet \
+      && break \
+      || (echo "Gradle (repoforge) failed attempt $i/5, retrying in $((i*10))s..." && sleep $((i*10))); \
+    done
+
+# caproverforge
+COPY frontends/caproverforge/build.gradle         /tmp/caproverforge/build.gradle
+COPY frontends/caproverforge/settings.gradle      /tmp/caproverforge/settings.gradle
+COPY frontends/caproverforge/gradle.properties    /tmp/caproverforge/gradle.properties
+COPY frontends/caproverforge/gradlew              /tmp/caproverforge/gradlew
+COPY frontends/caproverforge/gradle/              /tmp/caproverforge/gradle/
+COPY frontends/caproverforge/app/build.gradle     /tmp/caproverforge/app/build.gradle
+RUN mkdir -p /tmp/caproverforge/app/src/main/java && \
+    echo 'package com.stub; public class Stub {}' \
+      > /tmp/caproverforge/app/src/main/java/Stub.java && \
+    printf '<?xml version="1.0" encoding="utf-8"?>\n<manifest package="com.stub"/>' \
+      > /tmp/caproverforge/app/src/main/AndroidManifest.xml
+
+WORKDIR /tmp/caproverforge
+RUN chmod +x gradlew && \
+    for i in 1 2 3 4 5; do \
+      ./gradlew dependencies --no-daemon --quiet \
+      && break \
+      || (echo "Gradle (caproverforge) failed attempt $i/5, retrying in $((i*10))s..." && sleep $((i*10))); \
+    done
+
+WORKDIR /
+
+LABEL org.metabuilder.image="base-android-sdk" \
+      org.metabuilder.description="Android SDK 34 + Gradle 8.12 + pre-downloaded deps"

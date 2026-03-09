@@ -9,7 +9,7 @@ import { RootState } from '@metabuilder/redux-slices';
 import {
   setTheme,
   toggleTheme
-} from '@metabuilder/redux-slices'/uiSlice';
+} from '@metabuilder/redux-slices/uiSlice';
 
 export interface UseUIThemeReturn {
   theme: 'light' | 'dark';

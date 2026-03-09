@@ -1,0 +1,74 @@
+{
+  "id": "registry-validation",
+  "name": "Registry Validation",
+  "layout": {
+    "type": "single"
+  },
+  "dataSources": [],
+  "components": [
+    {
+      "id": "root",
+      "type": "div",
+      "props": {
+        "className": "p-6 space-y-6"
+      },
+      "children": [
+        {
+          "id": "branding",
+          "type": "MetabuilderWidgetAppBranding",
+          "props": {
+            "title": "Registry Validation",
+            "subtitle": "Atoms, molecules, and primitives"
+          }
+        },
+        {
+          "id": "stack",
+          "type": "MetabuilderLayoutStack",
+          "props": {
+            "direction": "horizontal",
+            "spacing": "lg",
+            "className": "items-stretch"
+          },
+          "children": [
+            {
+              "id": "stat-card",
+              "type": "MetabuilderDataStatCard",
+              "props": {
+                "title": "Active Users",
+                "value": "128",
+                "description": "Past 24 hours"
+              }
+            },
+            {
+              "id": "flex",
+              "type": "Flex",
+              "props": {
+                "direction": "col",
+                "gap": "sm",
+                "className": "rounded-md border p-4"
+              },
+              "children": [
+                {
+                  "id": "flex-title",
+                  "type": "MetabuilderDisplayHeading",
+                  "props": {
+                    "level": 4,
+                    "children": "Flex Container"
+                  }
+                },
+                {
+                  "id": "flex-text",
+                  "type": "MetabuilderDisplayText",
+                  "props": {
+                    "children": "Ensures primitives and atom components resolve."
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "globalActions": []
+}

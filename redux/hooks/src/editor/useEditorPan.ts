@@ -10,7 +10,7 @@ import {
   setPan,
   panBy,
   resetPan
-} from '@metabuilder/redux-slices'/editorSlice';
+} from '@metabuilder/redux-slices/editorSlice';
 
 export interface UseEditorPanReturn {
   pan: { x: number; y: number };

@@ -1,0 +1,299 @@
+# OpenTelemetry Collector Configuration - Phase 8 Email Client
+# Distributed tracing, metrics, and logs collection
+# Last Updated: 2026-01-24
+
+receivers:
+  # ============================================================================
+  # Prometheus Receiver - Scrape metrics from applications
+  # ============================================================================
+  prometheus:
+    config:
+      scrape_configs:
+        - job_name: 'otel-collector'
+          scrape_interval: 15s
+          static_configs:
+            - targets: ['localhost:8888']
+
+  # ============================================================================
+  # OTLP Receiver - OpenTelemetry Protocol (gRPC + HTTP)
+  # ============================================================================
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+    cors:
+      allowed_origins:
+        - '*'
+
+  # ============================================================================
+  # Jaeger Receiver - Accept Jaeger format spans
+  # ============================================================================
+  jaeger:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:14250
+      thrift_http:
+        endpoint: 0.0.0.0:14268
+      thrift_compact:
+        endpoint: 0.0.0.0:6831
+
+  # ============================================================================
+  # Zipkin Receiver - Accept Zipkin format spans
+  # ============================================================================
+  zipkin:
+    endpoint: 0.0.0.0:9411
+
+  # ============================================================================
+  # Syslog Receiver - System and application logs
+  # ============================================================================
+  syslog:
+    tcp:
+      listen_address: 0.0.0.0:514
+    protocol_config:
+      protocol: rfc5424
+
+  # ============================================================================
+  # Logging Receiver - Receive raw log lines
+  # ============================================================================
+  files:
+    include_paths:
+      - /var/log/emailclient/**/*.log
+    include_file_name: true
+    include_file_path: true
+    poll_interval: 200ms
+    fingerprint_size: 2kb
+    encoding: utf-8
+
+processors:
+  # ============================================================================
+  # Batch Processor - Batch spans/metrics for efficiency
+  # ============================================================================
+  batch:
+    send_batch_size: 1024
+    timeout: 5s
+    send_batch_max_size: 2048
+
+  # ============================================================================
+  # Memory Limiter - Prevent OTEL collector memory explosion
+  # ============================================================================
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 512
+    spike_limit_mib: 128
+
+  # ============================================================================
+  # Attributes Processor - Add/modify span attributes
+  # ============================================================================
+  attributes:
+    actions:
+      - key: cluster
+        value: emailclient-phase8
+        action: upsert
+      - key: environment
+        value: production
+        action: upsert
+      - key: tenant_id
+        value: default
+        action: upsert
+      - key: service.version
+        from_attribute: service.version
+        action: insert
+
+  # ============================================================================
+  # Resource Processor - Add resource attributes
+  # ============================================================================
+  resource:
+    attributes:
+      - key: service.namespace
+        value: emailclient
+        action: upsert
+      - key: deployment.environment
+        value: production
+        action: upsert
+
+  # ============================================================================
+  # Span Processor - Modify/filter spans
+  # ============================================================================
+  span:
+    name:
+      to_attributes:
+        rules:
+          - ^/health.*
+          - ^/metrics.*
+      regexp: ^.*$
+    status:
+      code: Ok
+    events:
+      - name: exception
+        include:
+          match_type: regexp
+          regexp: .*
+
+  # ============================================================================
+  # Filter Processor - Drop noisy metrics/logs
+  # ============================================================================
+  filter:
+    metrics:
+      exclude:
+        match_type: regexp
+        record_attributes:
+          - key: http_path
+            value: ^/health.*
+          - key: http_path
+            value: ^/metrics.*
+    logs:
+      exclude:
+        match_type: regexp
+        record_attributes:
+          - key: severity_text
+            value: DEBUG
+
+  # ============================================================================
+  # Tail Sampling Processor - Dynamic sampling of traces
+  # ============================================================================
+  tail_sampling:
+    policies:
+      # Sample all error traces
+      - name: error-traces
+        type: status_code
+        status_code:
+          status_codes: [ERROR]
+      # Sample traces with slow latency
+      - name: slow-traces
+        type: latency
+        latency:
+          threshold_ms: 1000
+      # Sample 10% of successful traces
+      - name: probabilistic
+        type: probabilistic
+        probabilistic:
+          sampling_percentage: 10
+      # Always sample traces from sensitive endpoints
+      - name: sensitive-endpoints
+        type: string_attribute
+        string_attribute:
+          key: http_path
+          values:
+            - /api/v1/*/accounts/*
+            - /api/v1/*/credentials/*
+
+exporters:
+  # ============================================================================
+  # Prometheus Exporter - Expose metrics to Prometheus
+  # ============================================================================
+  prometheus:
+    endpoint: "0.0.0.0:8888"
+    namespace: emailclient
+    const_labels:
+      cluster: emailclient-phase8
+      environment: production
+
+  # ============================================================================
+  # Jaeger Exporter - Export traces to Jaeger
+  # ============================================================================
+  jaeger:
+    endpoint: jaeger:14250
+    tls:
+      insecure: true
+
+  # ============================================================================
+  # OTLP Exporter - Export to another OTEL collector
+  # ============================================================================
+  otlp:
+    endpoint: localhost:4317
+    tls:
+      insecure: true
+
+  # ============================================================================
+  # Elasticsearch Exporter - Export logs to Elasticsearch
+  # ============================================================================
+  logging:
+    loglevel: debug
+
+  # ============================================================================
+  # File Exporter - For debugging and archival
+  # ============================================================================
+  file:
+    format: json
+    path: /var/log/otel-collector/traces-export-${now:unix}.json
+
+service:
+  pipelines:
+    # ============================================================================
+    # Traces Pipeline
+    # ============================================================================
+    traces:
+      receivers:
+        - otlp
+        - jaeger
+        - zipkin
+      processors:
+        - memory_limiter
+        - batch
+        - attributes
+        - resource
+        - span
+        - tail_sampling
+      exporters:
+        - jaeger
+        - logging
+
+    # ============================================================================
+    # Metrics Pipeline
+    # ============================================================================
+    metrics:
+      receivers:
+        - prometheus
+        - otlp
+      processors:
+        - memory_limiter
+        - batch
+        - attributes
+        - resource
+        - filter
+      exporters:
+        - prometheus
+        - logging
+
+    # ============================================================================
+    # Logs Pipeline
+    # ============================================================================
+    logs:
+      receivers:
+        - otlp
+        - syslog
+        - files
+      processors:
+        - memory_limiter
+        - batch
+        - attributes
+        - resource
+        - filter
+      exporters:
+        - logging
+
+  extensions:
+    - health_check
+    - pprof
+    - zpages
+
+extensions:
+  # ============================================================================
+  # Health Check Extension
+  # ============================================================================
+  health_check:
+    endpoint: 0.0.0.0:13133
+
+  # ============================================================================
+  # Performance Profiling
+  # ============================================================================
+  pprof:
+    endpoint: 0.0.0.0:1777
+
+  # ============================================================================
+  # zPages - Runtime diagnostics
+  # ============================================================================
+  zpages:
+    endpoint: 0.0.0.0:55679

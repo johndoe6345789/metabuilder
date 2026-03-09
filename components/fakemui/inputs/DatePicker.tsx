@@ -6,6 +6,7 @@ import { FormHelperText } from './FormHelperText'
 import { Input } from './Input'
 
 export interface DatePickerProps {
+  testId?: string
   label?: React.ReactNode
   helperText?: React.ReactNode
   error?: boolean
@@ -23,6 +24,7 @@ export interface DatePickerProps {
 export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(
   (
     {
+      testId,
       label,
       helperText,
       error,
@@ -44,7 +46,7 @@ export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(
     }
 
     return (
-      <div className={`date-picker ${error ? 'date-picker--error' : ''} ${className}`}>
+      <div className={`date-picker ${error ? 'date-picker--error' : ''} ${className}`} data-testid={testId} aria-label={typeof label === 'string' ? label : undefined}>
         {label && <FormLabel required={required}>{label}</FormLabel>}
         <Input
           ref={ref}

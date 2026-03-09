@@ -1,0 +1,97 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "ui_permissions",
+  "description": "Permission definitions for the 6-level access control system",
+  "permissions": [
+    {
+      "id": "permissions.check",
+      "name": "Check Permissions",
+      "description": "Check user permissions against required levels",
+      "resource": "permissions",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 1
+    },
+    {
+      "id": "permissions.level.read",
+      "name": "Read Permission Levels",
+      "description": "Read permission level information",
+      "resource": "permissions",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 1
+    },
+    {
+      "id": "permissions.level.assign",
+      "name": "Assign Permission Levels",
+      "description": "Assign permission levels to users",
+      "resource": "permissions",
+      "action": "update",
+      "scope": "tenant",
+      "minLevel": 4
+    },
+    {
+      "id": "permissions.admin.manage",
+      "name": "Manage Permissions",
+      "description": "Full management of permission configurations",
+      "resource": "permissions",
+      "action": "admin",
+      "scope": "global",
+      "minLevel": 5
+    }
+  ],
+  "resources": [
+    {
+      "id": "permissions",
+      "name": "Permissions",
+      "type": "custom",
+      "description": "Permission system resources",
+      "actions": ["read", "update", "admin"]
+    }
+  ],
+  "levels": [
+    {
+      "level": 1,
+      "name": "Public",
+      "description": "Anonymous visitors with no authentication",
+      "color": "#6c757d",
+      "icon": "PublicOutlined"
+    },
+    {
+      "level": 2,
+      "name": "User",
+      "description": "Authenticated users with basic access",
+      "color": "#28a745",
+      "icon": "PersonOutlined"
+    },
+    {
+      "level": 3,
+      "name": "Moderator",
+      "description": "Content moderators with elevated privileges",
+      "color": "#17a2b8",
+      "icon": "ShieldOutlined"
+    },
+    {
+      "level": 4,
+      "name": "Admin",
+      "description": "Administrators with full tenant access",
+      "color": "#ffc107",
+      "icon": "AdminPanelSettingsOutlined"
+    },
+    {
+      "level": 5,
+      "name": "God",
+      "description": "System operators with cross-tenant access",
+      "color": "#dc3545",
+      "icon": "SecurityOutlined"
+    },
+    {
+      "level": 6,
+      "name": "Supergod",
+      "description": "Platform owners with unrestricted access",
+      "color": "#6f42c1",
+      "icon": "VerifiedUserOutlined"
+    }
+  ]
+}

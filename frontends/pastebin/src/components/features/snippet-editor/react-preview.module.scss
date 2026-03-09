@@ -1,0 +1,74 @@
+.unsupportedPane {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: color-mix(in srgb, var(--mat-sys-surface-variant) 30%, transparent);
+}
+
+.unsupportedCenter {
+  text-align: center;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.unsupportedIcon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 12px;
+  opacity: 0.5;
+}
+
+.unsupportedText {
+  font-size: 0.875rem;
+}
+
+.unsupportedSub {
+  font-size: 0.75rem;
+  margin-top: 4px;
+}
+
+.errorPane {
+  height: 100%;
+  overflow: auto;
+  padding: 24px;
+  background: color-mix(in srgb, var(--mat-sys-error) 5%, transparent);
+}
+
+.errorAlert {
+  margin-bottom: 16px;
+}
+
+.errorDescription {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  white-space: pre-wrap;
+}
+
+.loadingPane {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: color-mix(in srgb, var(--mat-sys-surface-variant) 30%, transparent);
+}
+
+.loadingCenter {
+  text-align: center;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.loadingText {
+  font-size: 0.875rem;
+}
+
+.previewRoot {
+  height: 100%;
+  overflow: auto;
+  background: var(--mat-sys-surface);
+}
+
+.previewContent {
+  padding: 24px;
+}

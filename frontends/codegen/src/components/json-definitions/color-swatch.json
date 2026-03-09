@@ -1,0 +1,6 @@
+{
+  "type": "ColorSwatch",
+  "props": {
+    "onClick": "> void"
+  }
+}

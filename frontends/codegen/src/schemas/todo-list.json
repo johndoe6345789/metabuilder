@@ -1,0 +1,263 @@
+{
+  "id": "todo-list",
+  "name": "Todo List",
+  "layout": {
+    "type": "single"
+  },
+  "dataSources": [
+    {
+      "id": "todos",
+      "type": "kv",
+      "key": "app-todos",
+      "defaultValue": [
+        { "id": 1, "text": "Learn JSON-driven UI", "completed": true },
+        { "id": 2, "text": "Build atomic components", "completed": false },
+        { "id": 3, "text": "Create custom hooks", "completed": false }
+      ]
+    },
+    {
+      "id": "newTodo",
+      "type": "static",
+      "defaultValue": ""
+    },
+    {
+      "id": "stats",
+      "type": "static",
+      "valueTemplate": {
+        "total": "data.todos.length",
+        "completed": "data.todos.filter(completed === true).length",
+        "remaining": "data.todos.filter(completed === false).length"
+      },
+      "dependencies": ["todos"]
+    }
+  ],
+  "components": [
+    {
+      "id": "root",
+      "type": "div",
+      "props": {
+        "className": "h-full overflow-auto p-6 bg-gradient-to-br from-background via-background to-primary/5"
+      },
+      "children": [
+        {
+          "id": "header",
+          "type": "div",
+          "props": { "className": "mb-6" },
+          "children": [
+            {
+              "id": "title",
+              "type": "MetabuilderDisplayHeading",
+              "props": {
+                "className": "text-4xl font-bold mb-2 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent",
+                "children": "Task Manager"
+              }
+            },
+            {
+              "id": "subtitle",
+              "type": "MetabuilderDisplayText",
+              "props": {
+                "className": "text-muted-foreground",
+                "children": "Built entirely from JSON schema"
+              }
+            }
+          ]
+        },
+        {
+          "id": "stats-row",
+          "type": "div",
+          "props": { "className": "grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 max-w-3xl" },
+          "children": [
+            {
+              "id": "stat-total",
+              "type": "MetabuilderLayoutCard",
+              "props": { "className": "bg-card/50 backdrop-blur" },
+              "children": [
+                {
+                  "id": "stat-total-content",
+                  "type": "MetabuilderDataCardContent",
+                  "props": { "className": "pt-6" },
+                  "children": [
+                    {
+                      "id": "stat-total-label",
+                      "type": "div",
+                      "props": { "className": "text-sm text-muted-foreground mb-1", "children": "Total Tasks" }
+                    },
+                    {
+                      "id": "stat-total-value",
+                      "type": "div",
+                      "props": { "className": "text-3xl font-bold" },
+                      "bindings": {
+                        "children": { "source": "stats", "path": "total" }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "stat-completed",
+              "type": "MetabuilderLayoutCard",
+              "props": { "className": "bg-accent/10 backdrop-blur border-accent/20" },
+              "children": [
+                {
+                  "id": "stat-completed-content",
+                  "type": "MetabuilderDataCardContent",
+                  "props": { "className": "pt-6" },
+                  "children": [
+                    {
+                      "id": "stat-completed-label",
+                      "type": "div",
+                      "props": { "className": "text-sm text-muted-foreground mb-1", "children": "Completed" }
+                    },
+                    {
+                      "id": "stat-completed-value",
+                      "type": "div",
+                      "props": { "className": "text-3xl font-bold text-accent" },
+                      "bindings": {
+                        "children": { "source": "stats", "path": "completed" }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "stat-remaining",
+              "type": "MetabuilderLayoutCard",
+              "props": { "className": "bg-primary/5 backdrop-blur border-primary/20" },
+              "children": [
+                {
+                  "id": "stat-remaining-content",
+                  "type": "MetabuilderDataCardContent",
+                  "props": { "className": "pt-6" },
+                  "children": [
+                    {
+                      "id": "stat-remaining-label",
+                      "type": "div",
+                      "props": { "className": "text-sm text-muted-foreground mb-1", "children": "Remaining" }
+                    },
+                    {
+                      "id": "stat-remaining-value",
+                      "type": "div",
+                      "props": { "className": "text-3xl font-bold text-primary" },
+                      "bindings": {
+                        "children": { "source": "stats", "path": "remaining" }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "main-card",
+          "type": "MetabuilderLayoutCard",
+          "props": { "className": "max-w-3xl" },
+          "children": [
+            {
+              "id": "card-header",
+              "type": "MetabuilderLayoutCardHeader",
+              "children": [
+                {
+                  "id": "card-title",
+                  "type": "CardTitle",
+                  "props": { "children": "Your Tasks" }
+                },
+                {
+                  "id": "card-description",
+                  "type": "CardDescription",
+                  "props": { "children": "Manage your daily tasks efficiently" }
+                }
+              ]
+            },
+            {
+              "id": "card-content",
+              "type": "MetabuilderDataCardContent",
+              "props": { "className": "space-y-4" },
+              "children": [
+                {
+                  "id": "input-group",
+                  "type": "div",
+                  "props": { "className": "flex gap-2" },
+                  "children": [
+                    {
+                      "id": "todo-input",
+                      "type": "MetabuilderFormInput",
+                      "props": {
+                        "placeholder": "What needs to be done?"
+                      },
+                      "bindings": {
+                        "value": { "source": "newTodo" }
+                      },
+                      "events": [
+                        {
+                          "event": "change",
+                          "actions": [
+                            {
+                              "id": "update-input",
+                              "type": "set-value",
+                              "target": "newTodo",
+                              "expression": "event.target.value"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "id": "add-button",
+                      "type": "MetabuilderFormButton",
+                      "props": { "children": "Add Task" },
+                      "events": [
+                        {
+                          "event": "click",
+                          "actions": [
+                            {
+                              "id": "add-todo",
+                              "type": "create",
+                              "target": "todos",
+                              "valueTemplate": {
+                                "id": "Date.now()",
+                                "text": "data.newTodo",
+                                "completed": false
+                              }
+                            },
+                            {
+                              "id": "clear-input",
+                              "type": "set-value",
+                              "target": "newTodo",
+                              "value": ""
+                            },
+                            {
+                              "id": "show-success",
+                              "type": "show-toast",
+                              "message": "Task added successfully!",
+                              "variant": "success"
+                            }
+                          ],
+                          "condition": "data.newTodo.length > 0"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "separator",
+                  "type": "MetabuilderDisplaySeparator",
+                  "props": { "className": "my-4" }
+                },
+                {
+                  "id": "todo-list",
+                  "type": "div",
+                  "props": { "className": "space-y-2" },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "globalActions": []
+}

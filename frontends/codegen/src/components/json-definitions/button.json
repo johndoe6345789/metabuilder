@@ -1,0 +1,126 @@
+{
+  "id": "button",
+  "type": "button",
+  "bindings": {
+    "type": {
+      "source": "type",
+      "transform": "data || 'button'"
+    },
+    "disabled": {
+      "source": ["disabled", "loading"],
+      "transform": "data[0] || data[1]"
+    },
+    "className": {
+      "source": ["fullWidth", "className"],
+      "transform": "const cn = (classes) => classes.filter(Boolean).join(' '); const fullWidth = data[0]; const className = data[1] || ''; const widthClass = fullWidth ? 'btn btn--full-width' : 'btn'; return cn([widthClass, className])"
+    },
+    "onClick": {
+      "source": "onClick",
+      "transform": "data"
+    }
+  },
+  "children": [
+    {
+      "id": "button-loading-content",
+      "type": "div",
+      "bindings": {
+        "_if": {
+          "source": "loading",
+          "transform": "data"
+        },
+        "className": {
+          "source": null,
+          "transform": "'btn__content'"
+        }
+      },
+      "children": [
+        {
+          "id": "spinner",
+          "type": "div",
+          "bindings": {
+            "className": {
+              "source": null,
+              "transform": "'btn__spinner'"
+            }
+          }
+        },
+        {
+          "id": "loading-text",
+          "type": "span",
+          "bindings": {
+            "className": {
+              "source": null,
+              "transform": "'btn__text'"
+            }
+          },
+          "children": [
+            {"type": "text", "content": {"source": "children"}}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "button-normal-content",
+      "type": "div",
+      "bindings": {
+        "_if": {
+          "source": "loading",
+          "transform": "!data"
+        },
+        "className": {
+          "source": null,
+          "transform": "'btn__content'"
+        }
+      },
+      "children": [
+        {
+          "id": "left-icon",
+          "type": "span",
+          "bindings": {
+            "_if": {
+              "source": "leftIcon",
+              "transform": "data"
+            },
+            "className": {
+              "source": null,
+              "transform": "'btn__icon btn__icon--leading'"
+            }
+          },
+          "children": [
+            {"type": "slot", "source": "leftIcon"}
+          ]
+        },
+        {
+          "id": "button-text",
+          "type": "span",
+          "bindings": {
+            "className": {
+              "source": null,
+              "transform": "'btn__text'"
+            }
+          },
+          "children": [
+            {"type": "text", "content": {"source": "children"}}
+          ]
+        },
+        {
+          "id": "right-icon",
+          "type": "span",
+          "bindings": {
+            "_if": {
+              "source": "rightIcon",
+              "transform": "data"
+            },
+            "className": {
+              "source": null,
+              "transform": "'btn__icon btn__icon--trailing'"
+            }
+          },
+          "children": [
+            {"type": "slot", "source": "rightIcon"}
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -151,8 +151,8 @@ export function getPendingMigrations(registry: SchemaRegistry): PendingMigration
     }))
 }
 
-export function generatePrismaFragment(registry: SchemaRegistry, _path?: string): string {
-  // Generate Prisma schema fragments from registered schemas
+export function generateSchemaFragment(registry: SchemaRegistry, _path?: string): string {
+  // Generate schema fragments from registered schemas
   const schemas = registry.getAll()
   const fragments: string[] = []
 
@@ -174,7 +174,7 @@ export function generatePrismaFragment(registry: SchemaRegistry, _path?: string)
     }
 
     for (const field of fields) {
-      const line = renderPrismaField(field)
+      const line = renderSchemaField(field)
       if (line !== null) fragments.push(`  ${line}`)
     }
 
@@ -364,8 +364,8 @@ function toFieldSpec(name: string, value: unknown): FieldSpec | null {
   return { name, type: typeof value === 'string' ? value : undefined }
 }
 
-function renderPrismaField(field: FieldSpec): string | null {
-  if (!isValidPrismaIdentifier(field.name)) return null
+function renderSchemaField(field: FieldSpec): string | null {
+  if (!isValidIdentifier(field.name)) return null
 
   const { baseType, isList } = normalizeFieldType(field.type)
   const isOptional = field.nullable === true || field.required === false || field.optional === true
@@ -458,10 +458,10 @@ function resolveDefaultAttribute(value: unknown): string | null {
 
   if (typeof value === 'string') {
     const trimmed = value.trim()
-    if (isPrismaFunctionDefault(trimmed)) {
+    if (isFunctionDefault(trimmed)) {
       return `@default(${trimmed})`
     }
-    return `@default("${escapePrismaString(trimmed)}")`
+    return `@default("${escapeString(trimmed)}")`
   }
 
   if (typeof value === 'number' || typeof value === 'boolean') {
@@ -471,7 +471,7 @@ function resolveDefaultAttribute(value: unknown): string | null {
   return null
 }
 
-function isPrismaFunctionDefault(value: string): boolean {
+function isFunctionDefault(value: string): boolean {
   const lower = value.toLowerCase()
   return (
     lower === 'now()' ||
@@ -482,11 +482,11 @@ function isPrismaFunctionDefault(value: string): boolean {
   )
 }
 
-function escapePrismaString(value: string): string {
+function escapeString(value: string): string {
   return value.replace(/\\/g, '\\\\').replace(/"/g, '\\"')
 }
 
-function isValidPrismaIdentifier(value: string): boolean {
+function isValidIdentifier(value: string): boolean {
   return /^[A-Za-z_][A-Za-z0-9_]*$/.test(value)
 }
 

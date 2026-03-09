@@ -14,8 +14,7 @@ import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { useRouter } from 'next/navigation'
 import { useServices } from '@metabuilder/service-adapters'
-import { setAuthenticated, setLoading, setError } from '@metabuilder/redux-slices'
-import type { AppDispatch } from '@metabuilder/redux-slices'
+import { setAuthenticated, setAuthLoading, setError } from '@metabuilder/redux-slices'
 
 export interface LoginData {
   email: string
@@ -51,14 +50,14 @@ const validateLogin = (data: LoginData): string | null => {
  * await handleLogin({ email: 'user@example.com', password: 'password' });
  */
 export const useLoginLogic = (): UseLoginLogicReturn => {
-  const dispatch = useDispatch<AppDispatch>()
+  const dispatch = useDispatch()
   const router = useRouter()
   const { authService } = useServices()
 
   const handleLogin = useCallback(
     async (data: LoginData) => {
       dispatch(setError(null))
-      dispatch(setLoading(true))
+      dispatch(setAuthLoading(true))
 
       try {
         // Validate form
@@ -89,7 +88,7 @@ export const useLoginLogic = (): UseLoginLogicReturn => {
         dispatch(setError(message))
         throw error
       } finally {
-        dispatch(setLoading(false))
+        dispatch(setAuthLoading(false))
       }
     },
     [dispatch, router, authService]

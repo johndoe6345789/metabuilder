@@ -1,0 +1,276 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "config_summary",
+  "description": "Configuration summary UI components for displaying system stats and metadata",
+  "components": [
+    {
+      "id": "config_summary",
+      "name": "ConfigSummary",
+      "description": "Card container for configuration summary with header, content table, and optional footer",
+      "props": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "description": "Summary card title"
+        },
+        {
+          "name": "rows",
+          "type": "array",
+          "required": true,
+          "description": "Array of summary row data objects"
+        },
+        {
+          "name": "showFooter",
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Whether to show the footer section"
+        },
+        {
+          "name": "variant",
+          "type": "string",
+          "required": false,
+          "default": "outlined"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "{{variant}}",
+          "className": "config-summary",
+          "children": [
+            {
+              "type": "Box",
+              "className": "config-summary-header",
+              "sx": {
+                "p": 2,
+                "borderBottom": 1,
+                "borderColor": "divider"
+              },
+              "children": [
+                {
+                  "type": "Text",
+                  "variant": "h6",
+                  "fontWeight": "bold",
+                  "className": "config-summary-title",
+                  "children": "{{title}}"
+                }
+              ]
+            },
+            {
+              "type": "Box",
+              "className": "config-summary-content",
+              "sx": {
+                "p": 2
+              },
+              "children": [
+                {
+                  "type": "Table",
+                  "size": "small",
+                  "className": "config-summary-table",
+                  "children": [
+                    {
+                      "type": "TableBody",
+                      "children": "{{rows}}"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "condition": "{{showFooter}}",
+              "then": {
+                "type": "Box",
+                "className": "config-summary-footer",
+                "sx": {
+                  "p": 1,
+                  "borderTop": 1,
+                  "borderColor": "divider"
+                },
+                "children": []
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "summary_row",
+      "name": "SummaryRow",
+      "description": "Table row displaying a label-value pair in the config summary",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": true,
+          "description": "Row label text"
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": true,
+          "description": "Row value text"
+        },
+        {
+          "name": "visible",
+          "type": "boolean",
+          "required": false,
+          "default": true,
+          "description": "Whether the row is visible"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "conditional",
+          "condition": "{{visible}}",
+          "then": {
+            "type": "TableRow",
+            "className": "summary-row",
+            "children": [
+              {
+                "type": "TableCell",
+                "className": "summary-row-label-cell",
+                "sx": {
+                  "fontWeight": "medium",
+                  "color": "text.secondary",
+                  "width": "40%",
+                  "py": 1
+                },
+                "children": [
+                  {
+                    "type": "Text",
+                    "variant": "body2",
+                    "className": "summary-row-label",
+                    "children": "{{label}}"
+                  }
+                ]
+              },
+              {
+                "type": "TableCell",
+                "className": "summary-row-value-cell",
+                "sx": {
+                  "py": 1
+                },
+                "children": [
+                  {
+                    "type": "Text",
+                    "variant": "body2",
+                    "fontWeight": "medium",
+                    "className": "summary-row-value",
+                    "children": "{{value}}"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "summary_row_inline",
+      "name": "SummaryRowInline",
+      "description": "Inline flex row displaying a label-value pair (non-table variant)",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": true,
+          "description": "Row label text"
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": true,
+          "description": "Row value text"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "summary-row-inline",
+          "sx": {
+            "display": "flex",
+            "justifyContent": "space-between",
+            "alignItems": "center",
+            "py": 1
+          },
+          "children": [
+            {
+              "type": "Text",
+              "variant": "body2",
+              "color": "text.secondary",
+              "className": "summary-row-inline-label",
+              "children": "{{label}}"
+            },
+            {
+              "type": "Text",
+              "variant": "body2",
+              "fontWeight": "medium",
+              "className": "summary-row-inline-value",
+              "children": "{{value}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "summary_divider",
+      "name": "SummaryDivider",
+      "description": "Divider component for separating summary sections",
+      "props": [
+        {
+          "name": "spacing",
+          "type": "number",
+          "required": false,
+          "default": 1,
+          "description": "Vertical margin in theme spacing units"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Divider",
+          "className": "summary-divider",
+          "sx": {
+            "my": "{{spacing}}"
+          }
+        }
+      }
+    },
+    {
+      "id": "config_summary_stack",
+      "name": "ConfigSummaryStack",
+      "description": "Vertical stack container for multiple config summary cards",
+      "props": [
+        {
+          "name": "children",
+          "type": "any",
+          "required": true
+        },
+        {
+          "name": "spacing",
+          "type": "number",
+          "default": 2
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Stack",
+          "spacing": "{{spacing}}",
+          "className": "config-summary-stack",
+          "children": "{{children}}"
+        }
+      }
+    }
+  ],
+  "exports": {
+    "components": ["ConfigSummary", "SummaryRow", "SummaryRowInline", "SummaryDivider", "ConfigSummaryStack"]
+  }
+}

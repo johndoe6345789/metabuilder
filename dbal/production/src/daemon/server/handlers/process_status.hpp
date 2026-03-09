@@ -7,10 +7,10 @@
 
 #include <string>
 #include <sstream>
-#include "http_request.hpp"
-#include "http_response.hpp"
-#include "request_real_ip.hpp"
-#include "request_forwarded_proto.hpp"
+#include "../request/http_request.hpp"
+#include "../response/http_response.hpp"
+#include "../request/request_real_ip.hpp"
+#include "../request/request_forwarded_proto.hpp"
 
 namespace dbal {
 namespace daemon {

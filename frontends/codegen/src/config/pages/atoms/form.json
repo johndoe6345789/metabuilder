@@ -1,0 +1,6 @@
+{
+  "type": "MetabuilderFormForm",
+  "props": {
+    "onSubmit": "> void | Promise<void>"
+  }
+}

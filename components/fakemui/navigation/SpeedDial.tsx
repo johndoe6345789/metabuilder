@@ -14,6 +14,8 @@ export interface SpeedDialProps extends Omit<React.HTMLAttributes<HTMLDivElement
   open?: boolean
   openIcon?: React.ReactNode
   FabProps?: React.ButtonHTMLAttributes<HTMLButtonElement>
+  /** Test ID for automated testing */
+  testId?: string
 }
 
 export function SpeedDial({
@@ -28,6 +30,7 @@ export function SpeedDial({
   openIcon,
   className,
   FabProps = {},
+  testId,
   ...props
 }: SpeedDialProps) {
   const [internalOpen, setInternalOpen] = useState(false)
@@ -67,6 +70,7 @@ export function SpeedDial({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       aria-label={ariaLabel}
+      data-testid={testId}
       {...props}
     >
       <button

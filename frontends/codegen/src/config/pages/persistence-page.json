@@ -1,0 +1,23 @@
+{
+  "id": "persistence-page",
+  "name": "Persistence",
+  "description": "Data persistence config",
+  "icon": "Database",
+  "layout": {
+    "$ref": "./layouts/single-column.json"
+  },
+  "dataSources": [],
+  "components": [
+    {
+      "$ref": "./molecules/page-header-standard.json",
+      "children": [
+        {
+          "$ref": "./atoms/heading-1.json",
+          "props": {
+            "children": "Data Persistence"
+          }
+        }
+      ]
+    }
+  ]
+}

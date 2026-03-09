@@ -1,0 +1,30 @@
+{
+  "$schema": "./schema/page-schema.json",
+  "id": "dashboard-simple",
+  "name": "Project Dashboard",
+  "description": "Overview of your project",
+  "icon": "ChartBar",
+  "layout": {
+    "$ref": "./layouts/single-column.json"
+  },
+  "dataSources": [
+    {
+      "id": "projectStats",
+      "$ref": "./data-sources/kv-storage.json",
+      "key": "project-stats",
+      "defaultValue": {
+        "files": 0,
+        "models": 0,
+        "components": 0
+      }
+    }
+  ],
+  "components": [
+    {
+      "$ref": "./molecules/dashboard-header.json"
+    },
+    {
+      "$ref": "./molecules/stats-grid.json"
+    }
+  ]
+}

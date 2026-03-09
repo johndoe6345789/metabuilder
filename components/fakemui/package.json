@@ -1,0 +1,38 @@
+{
+  "name": "@metabuilder/fakemui",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Material Design 3 React Component Library for MetaBuilder",
+  "main": "index.ts",
+  "types": "index.ts",
+  "exports": {
+    ".": "./index.ts",
+    "./icons": "./icons.ts",
+    "./inputs": "./inputs/index.ts",
+    "./surfaces": "./surfaces/index.ts",
+    "./layout": "./layout/index.ts",
+    "./data-display": "./data-display/index.ts",
+    "./feedback": "./feedback/index.ts",
+    "./navigation": "./navigation/index.ts",
+    "./utils": "./utils/index.js",
+    "./atoms": "./atoms/index.js",
+    "./lab": "./lab/index.js",
+    "./x": "./x/index.js",
+    "./email": "./email/index.ts",
+    "./workflows": "./workflows/index.ts",
+    "./database": "./database/index.ts",
+    "./code": "./code/index.ts",
+    "./terminal": "./terminal/index.ts",
+    "./settings": "./settings/index.ts",
+    "./canvas": "./canvas/index.ts",
+    "./help": "./help/index.ts"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
+  },
+  "dependencies": {
+    "classnames": "^2.5.1",
+    "clsx": "^2.1.1"
+  }
+}

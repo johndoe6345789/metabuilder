@@ -883,8 +883,6 @@ export const Pagination: React.FC<ComponentProps & { count?: number; page?: numb
 )
 
 /**
- * Helper to push a JS object/array as a package table
- */
  * Component Registry - maps JSON type names to React components
  */
 export const componentRegistry: Record<string, AnyComponent> = {

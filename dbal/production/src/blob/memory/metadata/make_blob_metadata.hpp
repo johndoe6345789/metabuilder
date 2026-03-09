@@ -7,7 +7,7 @@
 
 #include "dbal/blob_storage.hpp"
 #include "dbal/errors.hpp"
-#include "blob_data.hpp"
+#include "../blob_data.hpp"
 
 namespace dbal {
 namespace blob {

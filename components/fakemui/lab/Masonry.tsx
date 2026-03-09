@@ -10,6 +10,8 @@ export interface MasonryProps extends Omit<React.HTMLAttributes<HTMLElement>, 's
   defaultSpacing?: number
   component?: React.ElementType
   style?: React.CSSProperties
+  /** Test ID for automated testing */
+  testId?: string
 }
 
 /**
@@ -25,6 +27,7 @@ export function Masonry({
   className,
   style,
   component: Component = 'div',
+  testId,
   ...props
 }: MasonryProps) {
   const gap = typeof spacing === 'number' ? spacing * 8 : spacing
@@ -32,6 +35,7 @@ export function Masonry({
   return (
     <Component
       className={classNames('fakemui-masonry', className)}
+      data-testid={testId}
       style={{
         display: 'grid',
         gridTemplateColumns: `repeat(${columns}, 1fr)`,

@@ -1,0 +1,269 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "workflowui-dashboard",
+  "version": "1.0.0",
+  "description": "WorkflowUI Dashboard page tests - main landing page with workspaces and stats",
+  "tests": [
+    {
+      "name": "should display dashboard with Workspaces heading",
+      "tags": ["@dashboard", "@critical"],
+      "timeout": 10000,
+      "steps": [
+        {
+          "description": "Navigate to dashboard",
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Verify Workspaces heading",
+          "action": "expect",
+          "role": "heading",
+          "text": "Workspaces",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should display today stats with actual numbers",
+      "tags": ["@dashboard", "@stats"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Check nodes today stat exists",
+          "action": "expect",
+          "selector": "text=nodes today",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        },
+        {
+          "description": "Check runs today stat exists",
+          "action": "expect",
+          "selector": "text=runs today",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        },
+        {
+          "description": "Check failed stat exists",
+          "action": "expect",
+          "selector": "text=failed",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        },
+        {
+          "description": "Check time saved stat exists",
+          "action": "expect",
+          "selector": "text=saved today",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should open New Workspace dialog on button click",
+      "tags": ["@dashboard", "@dialog", "@critical"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Click New Workspace button",
+          "action": "click",
+          "role": "button",
+          "text": "New Workspace"
+        },
+        {
+          "action": "wait",
+          "timeout": 500
+        },
+        {
+          "description": "Verify dialog submit button appears",
+          "action": "expect",
+          "role": "button",
+          "text": "Create Your First Workspace",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should create workspace with form inputs",
+      "tags": ["@dashboard", "@crud"],
+      "timeout": 15000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "description": "Open New Workspace dialog",
+          "action": "click",
+          "role": "button",
+          "text": "New Workspace"
+        },
+        {
+          "action": "wait",
+          "timeout": 500
+        },
+        {
+          "description": "Fill workspace name",
+          "action": "fill",
+          "placeholder": "Workspace name",
+          "value": "Test Workspace"
+        },
+        {
+          "description": "Fill workspace description",
+          "action": "fill",
+          "placeholder": "Description",
+          "value": "Test workspace description"
+        },
+        {
+          "description": "Submit form",
+          "action": "click",
+          "role": "button",
+          "text": "Create Your First Workspace"
+        },
+        {
+          "action": "wait",
+          "timeout": 2000
+        },
+        {
+          "description": "Check for success toast or workspace card",
+          "action": "expect",
+          "selector": "text=Test Workspace, [role='alert']:has-text('success'), [role='alert']:has-text('created')",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should display empty state when no workspaces exist",
+      "tags": ["@dashboard", "@empty-state"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "wait",
+          "timeout": 1000
+        },
+        {
+          "description": "Check for workspace section (empty or populated)",
+          "action": "expect",
+          "selector": "text=No workspaces yet, text=Create your first workspace, div[class*='workspace']",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should have sidebar with navigation links",
+      "tags": ["@dashboard", "@navigation"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "description": "Verify Dashboard link in sidebar",
+          "action": "expect",
+          "selector": "a[href='/'], nav a:has-text('Dashboard')",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        },
+        {
+          "description": "Verify Workflows link in sidebar",
+          "action": "expect",
+          "selector": "a[href='/workflows'], nav a:has-text('Workflows')",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        },
+        {
+          "description": "Verify Templates link in sidebar",
+          "action": "expect",
+          "selector": "a[href='/templates'], nav a:has-text('Templates')",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should navigate to workflows page from sidebar",
+      "tags": ["@dashboard", "@navigation"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "description": "Click Workflows in sidebar",
+          "action": "click",
+          "selector": "a[href='/workflows']"
+        },
+        {
+          "action": "waitForURL",
+          "urlPattern": "/workflows",
+          "timeout": 5000
+        },
+        {
+          "description": "Verify navigated to workflows page",
+          "action": "expect",
+          "assertion": {
+            "matcher": "toHaveURL",
+            "url": "/workflows"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should display New Workflow button in sidebar",
+      "tags": ["@dashboard", "@actions"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "description": "Check for New Workflow button",
+          "action": "expect",
+          "selector": "button:has-text('New Workflow'), a:has-text('New Workflow')",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    }
+  ]
+}

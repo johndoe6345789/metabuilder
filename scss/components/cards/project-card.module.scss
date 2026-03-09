@@ -1,0 +1,56 @@
+/**
+ * ProjectCard Component Styles
+ */
+
+.projectCard {
+  display: block;
+  text-decoration: none;
+}
+
+.cardInner {
+  display: flex;
+  flex-direction: column;
+  background: var(--mat-sys-surface-container-low);
+  border-radius: var(--mat-sys-corner-medium);
+  box-shadow: var(--mat-sys-level1);
+  overflow: hidden;
+  transition: box-shadow var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+
+  &:hover {
+    box-shadow: var(--mat-sys-level2);
+  }
+}
+
+.media {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.content {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.title {
+  font: var(--mat-sys-title-medium-font);
+  color: var(--mat-sys-on-surface);
+  margin: 0;
+}
+
+.description {
+  font: var(--mat-sys-body-medium-font);
+  color: var(--mat-sys-on-surface-variant);
+  margin: 0;
+}
+
+.meta {
+  display: flex;
+  gap: 16px;
+  font: var(--mat-sys-body-small-font);
+  color: var(--mat-sys-on-surface-variant);
+  margin-top: 4px;
+}

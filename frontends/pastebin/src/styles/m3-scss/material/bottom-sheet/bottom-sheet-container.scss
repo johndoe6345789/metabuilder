@@ -1,0 +1,97 @@
+@use '@angular/cdk';
+@use '../core/style/elevation';
+@use './m3-bottom-sheet';
+@use '../core/tokens/token-utils';
+
+// The bottom sheet minimum width on larger screen sizes is based
+// on increments of the toolbar, according to the spec. See:
+// https://material.io/guidelines/components/bottom-sheets.html#bottom-sheets-specs
+$_width-increment: 64px;
+$container-vertical-padding: 8px !default;
+$container-horizontal-padding: 16px !default;
+
+$fallbacks: m3-bottom-sheet.get-tokens();
+
+@keyframes _mat-bottom-sheet-enter {
+  from {
+    transform: translateY(100%);
+  }
+
+  to {
+    transform: none;
+  }
+}
+
+@keyframes _mat-bottom-sheet-exit {
+  from {
+    transform: none;
+  }
+
+  to {
+    transform: translateY(100%);
+  }
+}
+
+.mat-bottom-sheet-container {
+  @include elevation.elevation(16);
+  padding: $container-vertical-padding
+           $container-horizontal-padding;
+  min-width: 100vw;
+  box-sizing: border-box;
+  display: block;
+  outline: 0;
+  max-height: 80vh;
+  overflow: auto;
+
+  // We don't use this, but it's useful for consumers to position
+  // elements (e.g. close buttons) inside the bottom sheet.
+  position: relative;
+
+  background: token-utils.slot(bottom-sheet-container-background-color, $fallbacks);
+  color: token-utils.slot(bottom-sheet-container-text-color, $fallbacks);
+  font-family: token-utils.slot(bottom-sheet-container-text-font, $fallbacks);
+  font-size: token-utils.slot(bottom-sheet-container-text-size, $fallbacks);
+  line-height: token-utils.slot(bottom-sheet-container-text-line-height, $fallbacks);
+  font-weight: token-utils.slot(bottom-sheet-container-text-weight, $fallbacks);
+  letter-spacing: token-utils.slot(bottom-sheet-container-text-tracking, $fallbacks);
+
+  @include cdk.high-contrast {
+    outline: 1px solid;
+  }
+}
+
+.mat-bottom-sheet-container-animations-enabled {
+  transform: translateY(100%);
+
+  &.mat-bottom-sheet-container-enter {
+    animation: _mat-bottom-sheet-enter 195ms cubic-bezier(0, 0, 0.2, 1) forwards;
+  }
+
+  &.mat-bottom-sheet-container-exit {
+    animation: _mat-bottom-sheet-exit 375ms cubic-bezier(0.4, 0, 1, 1) backwards;
+  }
+}
+
+// Applies a border radius to the bottom sheet. Should only be applied when it's not full-screen.
+%_mat-bottom-sheet-container-border-radius {
+  border-top-left-radius: token-utils.slot(bottom-sheet-container-shape, $fallbacks);
+  border-top-right-radius: token-utils.slot(bottom-sheet-container-shape, $fallbacks);
+}
+
+.mat-bottom-sheet-container-medium {
+  @extend %_mat-bottom-sheet-container-border-radius;
+  min-width: $_width-increment * 6;
+  max-width: calc(100vw - #{$_width-increment * 2});
+}
+
+.mat-bottom-sheet-container-large {
+  @extend %_mat-bottom-sheet-container-border-radius;
+  min-width: $_width-increment * 8;
+  max-width: calc(100vw - #{$_width-increment * 4});
+}
+
+.mat-bottom-sheet-container-xlarge {
+  @extend %_mat-bottom-sheet-container-border-radius;
+  min-width: $_width-increment * 9;
+  max-width: calc(100vw - #{$_width-increment * 6});
+}

@@ -1,0 +1,545 @@
+{
+  "id": "conflict-card-motion",
+  "type": "motion.div",
+  "props": {
+    "layout": true,
+    "initial": { "opacity": 0, "y": 20 },
+    "animate": { "opacity": 1, "y": 0 },
+    "exit": { "opacity": 0, "x": -100 },
+    "transition": { "duration": 0.2 }
+  },
+  "children": [
+    {
+      "id": "conflict-card-container",
+      "type": "Card",
+      "props": {
+        "className": "conflict-card"
+      },
+      "children": [
+        {
+          "id": "conflict-card-header",
+          "type": "CardHeader",
+          "props": {
+            "className": "conflict-card__header"
+          },
+          "children": [
+            {
+              "id": "conflict-card-header-flex",
+              "type": "div",
+              "props": {
+                "className": "conflict-card__header-content"
+              },
+              "children": [
+                {
+                  "id": "conflict-card-header-content",
+                  "type": "div",
+                  "props": {
+                    "className": "conflict-card__header-content"
+                  },
+                  "children": [
+                    {
+                      "id": "conflict-card-entity-icon",
+                      "type": "div",
+                      "props": {
+                        "className": "conflict-card__entity-icon"
+                      },
+                      "children": [
+                        {
+                          "id": "conflict-icon-code",
+                          "type": "Code",
+                          "conditional": {
+                            "if": "conflict.entityType === 'files'"
+                          },
+                          "props": {
+                            "size": 20,
+                            "weight": "duotone",
+                            "className": "conflict-card__entity-icon"
+                          }
+                        },
+                        {
+                          "id": "conflict-icon-database",
+                          "type": "Database",
+                          "conditional": {
+                            "if": "conflict.entityType !== 'files'"
+                          },
+                          "props": {
+                            "size": 20,
+                            "weight": "duotone",
+                            "className": "conflict-card__entity-icon--remote"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "id": "conflict-card-info",
+                      "type": "div",
+                      "props": {
+                        "className": "conflict-card__info"
+                      },
+                      "children": [
+                        {
+                          "id": "conflict-card-title",
+                          "type": "CardTitle",
+                          "bindings": {
+                            "children": "conflict.id"
+                          },
+                          "props": {
+                            "className": "conflict-card__title"
+                          }
+                        },
+                        {
+                          "id": "conflict-card-description",
+                          "type": "CardDescription",
+                          "props": {
+                            "className": "conflict-card__meta"
+                          },
+                          "children": [
+                            {
+                              "id": "conflict-entity-badge",
+                              "type": "Badge",
+                              "bindings": {
+                                "children": "conflict.entityType"
+                              },
+                              "props": {
+                                "variant": "outline",
+                                "className": "badge"
+                              }
+                            },
+                            {
+                              "id": "conflict-time-diff",
+                              "type": "span",
+                              "bindings": {
+                                "children": {
+                                  "source": "cardState.timeDiffMinutes",
+                                  "transform": "`${data} minutes ago`"
+                                }
+                              },
+                              "props": {
+                                "className": "conflict-card__time"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "conflict-card-toggle",
+                  "type": "Button",
+                  "bindings": {
+                    "onClick": {
+                      "source": "cardState.setExpanded",
+                      "transform": "(prev) => data(!prev)"
+                    }
+                  },
+                  "props": {
+                    "size": "sm",
+                    "variant": "ghost"
+                  },
+                  "children": [
+                    {
+                      "id": "conflict-card-toggle-icon",
+                      "type": "CaretDown",
+                      "conditional": {
+                        "if": "cardState.expanded"
+                      },
+                      "props": {
+                        "size": 16
+                      }
+                    },
+                    {
+                      "id": "conflict-card-toggle-icon-collapsed",
+                      "type": "CaretRight",
+                      "conditional": {
+                        "if": "!cardState.expanded"
+                      },
+                      "props": {
+                        "size": 16
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "conflict-card-content-animation",
+          "type": "AnimatePresence",
+          "children": [
+            {
+              "id": "conflict-card-content-motion",
+              "type": "motion.div",
+              "conditional": {
+                "if": "cardState.expanded"
+              },
+              "props": {
+                "initial": { "height": 0, "opacity": 0 },
+                "animate": { "height": "auto", "opacity": 1 },
+                "exit": { "height": 0, "opacity": 0 },
+                "transition": { "duration": 0.2 }
+              },
+              "children": [
+                {
+                  "id": "conflict-card-content",
+                  "type": "CardContent",
+                  "props": {
+                    "className": "conflict-card__body"
+                  },
+                  "children": [
+                    {
+                      "id": "conflict-separator-1",
+                      "type": "Separator"
+                    },
+                    {
+                      "id": "conflict-versions-grid",
+                      "type": "div",
+                      "props": {
+                        "className": "conflict-card__versions-grid"
+                      },
+                      "children": [
+                        {
+                          "id": "conflict-local-version",
+                          "type": "div",
+                          "props": {
+                            "className": "conflict-card__version"
+                          },
+                          "children": [
+                            {
+                              "id": "conflict-local-header",
+                              "type": "div",
+                              "props": {
+                                "className": "conflict-card__version-header"
+                              },
+                              "children": [
+                                {
+                                  "id": "conflict-local-icon",
+                                  "type": "Database",
+                                  "props": {
+                                    "size": 16,
+                                    "className": "conflict-card__entity-icon"
+                                  }
+                                },
+                                {
+                                  "id": "conflict-local-label",
+                                  "type": "h4",
+                                  "bindings": {
+                                    "children": "conflict.localVersion ? 'Local Version' : 'Local'"
+                                  },
+                                  "props": {
+                                    "className": "conflict-card__version-label"
+                                  }
+                                },
+                                {
+                                  "id": "conflict-local-newer-badge",
+                                  "type": "Badge",
+                                  "conditional": {
+                                    "if": "cardState.isLocalNewer"
+                                  },
+                                  "props": {
+                                    "variant": "secondary",
+                                    "className": "badge",
+                                    "children": "Newer"
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "id": "conflict-local-content",
+                              "type": "div",
+                              "props": {
+                                "className": "conflict-card__version-content"
+                              },
+                              "children": [
+                                {
+                                  "id": "conflict-local-time",
+                                  "type": "div",
+                                  "props": {
+                                    "className": "conflict-card__version-time"
+                                  },
+                                  "children": [
+                                    {
+                                      "id": "conflict-local-clock",
+                                      "type": "Clock",
+                                      "props": {
+                                        "size": 12
+                                      }
+                                    },
+                                    {
+                                      "id": "conflict-local-timestamp",
+                                      "type": "span",
+                                      "bindings": {
+                                        "children": {
+                                          "source": "conflict.localTimestamp",
+                                          "transform": "new Date(data).toLocaleString()"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "id": "conflict-local-json",
+                                  "type": "pre",
+                                  "bindings": {
+                                    "children": {
+                                      "source": "conflict.localVersion",
+                                      "transform": "JSON.stringify(data, null, 2).slice(0, 200) + '...'"
+                                    }
+                                  },
+                                  "props": {
+                                    "className": "conflict-card__version-json"
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "id": "conflict-remote-version",
+                          "type": "div",
+                          "props": {
+                            "className": "conflict-card__version"
+                          },
+                          "children": [
+                            {
+                              "id": "conflict-remote-header",
+                              "type": "div",
+                              "props": {
+                                "className": "conflict-card__version-header"
+                              },
+                              "children": [
+                                {
+                                  "id": "conflict-remote-icon",
+                                  "type": "Cloud",
+                                  "props": {
+                                    "size": 16,
+                                    "className": "conflict-card__entity-icon--remote"
+                                  }
+                                },
+                                {
+                                  "id": "conflict-remote-label",
+                                  "type": "h4",
+                                  "bindings": {
+                                    "children": "conflict.remoteVersion ? 'Remote Version' : 'Remote'"
+                                  },
+                                  "props": {
+                                    "className": "conflict-card__version-label"
+                                  }
+                                },
+                                {
+                                  "id": "conflict-remote-newer-badge",
+                                  "type": "Badge",
+                                  "conditional": {
+                                    "if": "!cardState.isLocalNewer"
+                                  },
+                                  "props": {
+                                    "variant": "secondary",
+                                    "className": "badge",
+                                    "children": "Newer"
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "id": "conflict-remote-content",
+                              "type": "div",
+                              "props": {
+                                "className": "conflict-card__version-content"
+                              },
+                              "children": [
+                                {
+                                  "id": "conflict-remote-time",
+                                  "type": "div",
+                                  "props": {
+                                    "className": "conflict-card__version-time"
+                                  },
+                                  "children": [
+                                    {
+                                      "id": "conflict-remote-clock",
+                                      "type": "Clock",
+                                      "props": {
+                                        "size": 12
+                                      }
+                                    },
+                                    {
+                                      "id": "conflict-remote-timestamp",
+                                      "type": "span",
+                                      "bindings": {
+                                        "children": {
+                                          "source": "conflict.remoteTimestamp",
+                                          "transform": "new Date(data).toLocaleString()"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "id": "conflict-remote-json",
+                                  "type": "pre",
+                                  "bindings": {
+                                    "children": {
+                                      "source": "conflict.remoteVersion",
+                                      "transform": "JSON.stringify(data, null, 2).slice(0, 200) + '...'"
+                                    }
+                                  },
+                                  "props": {
+                                    "className": "conflict-card__version-json conflict-card__version-json--remote"
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "id": "conflict-separator-2",
+                      "type": "Separator"
+                    },
+                    {
+                      "id": "conflict-actions",
+                      "type": "div",
+                      "props": {
+                        "className": "conflict-card__actions"
+                      },
+                      "children": [
+                        {
+                          "id": "conflict-resolve-local",
+                          "type": "Button",
+                          "bindings": {
+                            "onClick": {
+                              "source": "onResolve",
+                              "transform": "() => data(conflict.id, 'local')"
+                            },
+                            "disabled": "isResolving"
+                          },
+                          "props": {
+                            "size": "sm",
+                            "variant": "outline",
+                            "className": "conflict-card__action-btn"
+                          },
+                          "children": [
+                            {
+                              "id": "conflict-resolve-local-icon",
+                              "type": "Database",
+                              "props": {
+                                "size": 16
+                              }
+                            },
+                            {
+                              "id": "conflict-resolve-local-text",
+                              "type": "span",
+                              "props": {
+                                "children": "Keep Local"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "id": "conflict-resolve-remote",
+                          "type": "Button",
+                          "bindings": {
+                            "onClick": {
+                              "source": "onResolve",
+                              "transform": "() => data(conflict.id, 'remote')"
+                            },
+                            "disabled": "isResolving"
+                          },
+                          "props": {
+                            "size": "sm",
+                            "variant": "outline",
+                            "className": "conflict-card__action-btn"
+                          },
+                          "children": [
+                            {
+                              "id": "conflict-resolve-remote-icon",
+                              "type": "Cloud",
+                              "props": {
+                                "size": 16
+                              }
+                            },
+                            {
+                              "id": "conflict-resolve-remote-text",
+                              "type": "span",
+                              "props": {
+                                "children": "Keep Remote"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "id": "conflict-resolve-merge",
+                          "type": "Button",
+                          "bindings": {
+                            "onClick": {
+                              "source": "onResolve",
+                              "transform": "() => data(conflict.id, 'merge')"
+                            },
+                            "disabled": "isResolving"
+                          },
+                          "props": {
+                            "size": "sm",
+                            "variant": "outline",
+                            "className": "conflict-card__action-btn"
+                          },
+                          "children": [
+                            {
+                              "id": "conflict-resolve-merge-icon",
+                              "type": "ArrowsLeftRight",
+                              "props": {
+                                "size": 16
+                              }
+                            },
+                            {
+                              "id": "conflict-resolve-merge-text",
+                              "type": "span",
+                              "props": {
+                                "children": "Merge Both"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "id": "conflict-resolve-details",
+                          "type": "Button",
+                          "bindings": {
+                            "onClick": {
+                              "source": "onViewDetails",
+                              "transform": "() => data(conflict)"
+                            },
+                            "disabled": "isResolving"
+                          },
+                          "props": {
+                            "size": "sm",
+                            "variant": "secondary"
+                          },
+                          "children": [
+                            {
+                              "id": "conflict-resolve-details-icon",
+                              "type": "MagnifyingGlass",
+                              "props": {
+                                "size": 16
+                              }
+                            },
+                            {
+                              "id": "conflict-resolve-details-text",
+                              "type": "span",
+                              "props": {
+                                "children": "Details"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

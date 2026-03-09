@@ -3,7 +3,7 @@
  * Manages responsive sidebar behavior and mobile detection
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 export interface UseResponsiveSidebarReturn {
   isMobile: boolean;
@@ -14,7 +14,7 @@ export interface UseResponsiveSidebarReturn {
 
 /**
  * Custom hook for responsive sidebar logic
- * Detects mobile screen size and auto-closes sidebar on mobile
+ * Detects mobile screen size and auto-closes sidebar on resize transition to mobile
  */
 export const useResponsiveSidebar = (
   sidebarOpen: boolean,
@@ -22,20 +22,25 @@ export const useResponsiveSidebar = (
 ): UseResponsiveSidebarReturn => {
   const [isMobile, setIsMobile] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const wasMobileRef = useRef(false);
+  const onSidebarChangeRef = useRef(onSidebarChange);
+  onSidebarChangeRef.current = onSidebarChange;
 
   const toggleCollapsed = useCallback(() => {
     setIsCollapsed((prev) => !prev);
   }, []);
 
-  // Handle window resize
+  // Handle window resize — only auto-close when transitioning to mobile
   useEffect(() => {
     const handleResize = () => {
       const mobile = window.innerWidth < 768;
+      const wasDesktop = !wasMobileRef.current;
+      wasMobileRef.current = mobile;
       setIsMobile(mobile);
 
-      // Auto-close sidebar on mobile if it's open
-      if (mobile && sidebarOpen) {
-        onSidebarChange(false);
+      // Auto-close sidebar only when crossing the desktop → mobile boundary
+      if (mobile && wasDesktop) {
+        onSidebarChangeRef.current(false);
       }
     };
 
@@ -43,7 +48,7 @@ export const useResponsiveSidebar = (
     handleResize(); // Call on mount
 
     return () => window.removeEventListener('resize', handleResize);
-  }, [sidebarOpen, onSidebarChange]);
+  }, []);
 
   return {
     isMobile,

@@ -1,0 +1,32 @@
+{
+  "id": "schema-editor-status-bar",
+  "type": "div",
+  "props": { "className": "status-bar" },
+  "children": [
+    {
+      "id": "status-info",
+      "type": "div",
+      "props": { "className": "status-bar__info" },
+      "children": [
+        {
+          "id": "component-count",
+          "type": "span",
+          "bindings": { "children": "componentCount" }
+        },
+        {
+          "id": "selected-type",
+          "type": "span",
+          "conditional": { "if": "selectedComponentType" },
+          "bindings": { "children": "selectedComponentType" }
+        },
+        {
+          "id": "unsaved-indicator",
+          "type": "span",
+          "props": { "className": "status-bar__warning" },
+          "conditional": { "if": "hasUnsavedChanges" },
+          "children": "Unsaved changes"
+        }
+      ]
+    }
+  ]
+}

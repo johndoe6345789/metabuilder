@@ -1,0 +1,17 @@
+{
+  "id": "shock-cap",
+  "name": "Shock Cap",
+  "partNumber": "TRA-5466",
+  "material": "blueAnodized",
+  "quantity": 1,
+  "weight": 8.2,
+  "weightUnit": "g",
+  "baseY": 0,
+  "description": "Aluminum shock cap with hex adjustment and bleed hole",
+  "geometry": [
+    {"type": "cylinder", "rx": 28, "ry": 10, "height": 30},
+    {"type": "polygon", "points": [0, -12, 12, -6, 12, 6, 0, 12, -12, 6, -12, -6], "offsetY": 8, "stroke": "#2a5090", "strokeWidth": 1.5, "fill": "none"},
+    {"type": "circle", "r": 5, "fill": "#1a3a5a"},
+    {"type": "ellipse", "rx": 6, "ry": 3, "offsetX": 8, "offsetY": -10, "fill": "#7ac0f9", "opacity": 0.4}
+  ]
+}

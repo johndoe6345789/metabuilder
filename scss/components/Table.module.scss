@@ -1,0 +1,329 @@
+// Table Component - Material Design 3
+// ====================================
+// Data table styling using M3 tokens
+
+// Table Container
+.tableContainer {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: var(--mat-sys-corner-medium);
+
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--mat-sys-surface-container-low);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--mat-sys-outline-variant);
+    border-radius: var(--mat-sys-corner-full);
+  }
+}
+
+// Base Table
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  font-family: var(--mat-sys-body-medium-font);
+  font-size: var(--mat-sys-body-medium-size);
+  background-color: var(--mat-sys-surface);
+
+  // Size variants
+  &.small {
+    .cell {
+      padding: 8px 16px;
+      font-size: var(--mat-sys-body-small-size);
+    }
+  }
+
+  &.medium {
+    .cell {
+      padding: 16px;
+    }
+  }
+
+  &.large {
+    .cell {
+      padding: 20px 24px;
+      font-size: var(--mat-sys-body-large-size);
+    }
+  }
+
+  // Sticky header
+  &.stickyHeader {
+    .head {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background-color: var(--mat-sys-surface);
+    }
+  }
+}
+
+// Table Head
+.head {
+  background-color: var(--mat-sys-surface-container);
+
+  .cell {
+    font-family: var(--mat-sys-title-small-font);
+    font-size: var(--mat-sys-title-small-size);
+    font-weight: var(--mat-sys-title-small-weight);
+    color: var(--mat-sys-on-surface);
+    border-bottom: 1px solid var(--mat-sys-outline-variant);
+  }
+}
+
+// Table Body
+.body {
+  .row:last-child .cell {
+    border-bottom: none;
+  }
+}
+
+// Table Footer
+.footer {
+  background-color: var(--mat-sys-surface-container);
+
+  .cell {
+    font-weight: var(--mat-sys-label-large-weight);
+    border-top: 1px solid var(--mat-sys-outline-variant);
+    border-bottom: none;
+  }
+}
+
+// Table Row
+.row {
+  transition: background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+
+  &.hover:hover {
+    background-color: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
+  }
+
+  &.selected {
+    background-color: color-mix(in srgb, var(--mat-sys-primary) 8%, transparent);
+
+    &:hover {
+      background-color: color-mix(in srgb, var(--mat-sys-primary) 12%, transparent);
+    }
+  }
+
+  &.clickable {
+    cursor: pointer;
+  }
+}
+
+// Striped rows
+.striped .body .row:nth-child(odd) {
+  background-color: var(--mat-sys-surface-container-low);
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--mat-sys-on-surface) 8%, var(--mat-sys-surface-container-low));
+  }
+}
+
+// Table Cell
+.cell {
+  padding: 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  vertical-align: middle;
+  color: var(--mat-sys-on-surface);
+
+  // Alignment
+  &.alignLeft {
+    text-align: left;
+  }
+
+  &.alignCenter {
+    text-align: center;
+  }
+
+  &.alignRight {
+    text-align: right;
+  }
+
+  &.alignJustify {
+    text-align: justify;
+  }
+
+  // Padding variants
+  &.paddingCheckbox {
+    width: 48px;
+    padding: 0 4px;
+  }
+
+  &.paddingNone {
+    padding: 0;
+  }
+}
+
+// Sort Label
+.sortLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  user-select: none;
+  font-weight: inherit;
+  color: inherit;
+  transition: color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+
+  &:hover {
+    color: var(--mat-sys-on-surface);
+  }
+
+  &:focus {
+    outline: none;
+    color: var(--mat-sys-primary);
+  }
+
+  &.active {
+    color: var(--mat-sys-on-surface);
+  }
+
+  &:not(.active) {
+    color: var(--mat-sys-on-surface-variant);
+
+    .sortIcon {
+      opacity: 0;
+      transition: opacity var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+    }
+
+    &:hover .sortIcon {
+      opacity: 0.5;
+    }
+  }
+}
+
+.sortIcon {
+  display: inline-flex;
+  align-items: center;
+  font-size: 16px;
+  opacity: 1;
+  transition: transform var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard),
+              opacity var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+
+  &.asc {
+    transform: rotate(0deg);
+  }
+
+  &.desc {
+    transform: rotate(180deg);
+  }
+}
+
+// Pagination
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 12px 16px;
+  gap: 16px;
+  font-family: var(--mat-sys-body-small-font);
+  font-size: var(--mat-sys-body-small-size);
+  color: var(--mat-sys-on-surface-variant);
+  border-top: 1px solid var(--mat-sys-outline-variant);
+
+  &.toolbar {
+    min-height: 52px;
+    padding: 8px 2px;
+  }
+}
+
+.paginationLabel {
+  flex-shrink: 0;
+}
+
+.paginationSelect {
+  appearance: none;
+  padding: 8px 32px 8px 12px;
+  border: 1px solid var(--mat-sys-outline);
+  border-radius: var(--mat-sys-corner-small);
+  font-size: inherit;
+  font-family: inherit;
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  cursor: pointer;
+  transition: border-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 16px;
+
+  &:hover {
+    border-color: var(--mat-sys-on-surface);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--mat-sys-primary);
+  }
+}
+
+.paginationSpacer {
+  flex: 1 1 100%;
+}
+
+.paginationDisplayed {
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+.paginationActions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.paginationBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  border-radius: var(--mat-sys-corner-full);
+  background-color: transparent;
+  color: var(--mat-sys-on-surface-variant);
+  cursor: pointer;
+  transition: background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard),
+              color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+
+  &:hover:not(:disabled) {
+    background-color: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
+    color: var(--mat-sys-on-surface);
+  }
+
+  &:disabled {
+    opacity: var(--disabled-content-opacity);
+    cursor: not-allowed;
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+// Bordered variant
+.bordered {
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--mat-sys-corner-medium);
+
+  .cell {
+    border: 1px solid var(--mat-sys-outline-variant);
+  }
+}
+
+// Compact variant
+.compact {
+  .cell {
+    padding: 4px 8px;
+    font-size: var(--mat-sys-body-small-size);
+  }
+}

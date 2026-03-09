@@ -9,17 +9,23 @@
     "extract:auto": "cd frontends/nextjs && npm run extract:auto",
     "extract:all": "cd frontends/nextjs && npm run extract:all",
     "extract:help": "cd frontends/nextjs && npm run extract:help",
-    "db:generate": "npx prisma generate --schema=../dbal/shared/prisma/schema.prisma",
-    "db:migrate": "npx prisma migrate dev --schema=../dbal/shared/prisma/schema.prisma"
+    "db:generate": "echo 'DBAL handles schema generation — see dbal/shared/api/schema/entities/'",
+    "db:migrate": "echo 'DBAL handles migrations — see dbal/production/'"
   },
   "devDependencies": {
-    "@prisma/client": "^7.2.0",
-    "prisma": "^7.3.0",
-    "yaml": "^2.8.2"
+    "yaml": "^2.8.2",
+    "eslint": "^10.0.1",
+    "eslint-config-next": "^16.1.6",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
+    "@chromatic-com/playwright": "^0.12.8",
+    "checkly": "^7.1.0",
+    "npm-run-all2": "8.0.4",
+    "@sentry/nextjs": "^10.39.0",
+    "@spotlightjs/spotlight": "^4.10.0"
   },
   "dependencies": {
-    "@prisma/adapter-better-sqlite3": "^7.2.0",
-    "better-sqlite3": "^12.5.0",
+    "better-sqlite3": "^12.6.2",
     "clsx": "^2.1.1",
     "jszip": "^3.10.1"
   }

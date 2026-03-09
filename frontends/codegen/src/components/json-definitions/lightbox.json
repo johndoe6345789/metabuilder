@@ -1,0 +1,117 @@
+{
+  "id": "lightbox-root",
+  "type": "div",
+  "props": {
+    "className": "lightbox"
+  },
+  "bindings": {
+    "_if": {
+      "source": "open",
+      "transform": "data"
+    }
+  },
+  "children": [
+    {
+      "id": "lightbox-close",
+      "type": "button",
+      "props": {
+        "className": "lightbox__close",
+        "aria-label": "Close"
+      },
+      "bindings": {
+        "onClick": "onClose"
+      },
+      "children": [
+        {
+          "id": "lightbox-close-icon",
+          "type": "span",
+          "props": {
+            "children": "×"
+          }
+        }
+      ]
+    },
+    {
+      "id": "lightbox-prev",
+      "type": "button",
+      "props": {
+        "className": "lightbox__prev",
+        "aria-label": "Previous"
+      },
+      "bindings": {
+        "onClick": "onPrev",
+        "_if": {
+          "source": "onPrev",
+          "transform": "!!data"
+        }
+      },
+      "children": [
+        {
+          "id": "lightbox-prev-icon",
+          "type": "span",
+          "props": {
+            "children": "‹"
+          }
+        }
+      ]
+    },
+    {
+      "id": "lightbox-content",
+      "type": "div",
+      "props": {
+        "className": "lightbox__content"
+      },
+      "children": [
+        {
+          "id": "lightbox-image",
+          "type": "img",
+          "props": {
+            "className": "lightbox__image"
+          },
+          "bindings": {
+            "src": "src",
+            "alt": "alt"
+          }
+        }
+      ]
+    },
+    {
+      "id": "lightbox-next",
+      "type": "button",
+      "props": {
+        "className": "lightbox__next",
+        "aria-label": "Next"
+      },
+      "bindings": {
+        "onClick": "onNext",
+        "_if": {
+          "source": "onNext",
+          "transform": "!!data"
+        }
+      },
+      "children": [
+        {
+          "id": "lightbox-next-icon",
+          "type": "span",
+          "props": {
+            "children": "›"
+          }
+        }
+      ]
+    },
+    {
+      "id": "lightbox-caption",
+      "type": "p",
+      "props": {
+        "className": "lightbox__caption"
+      },
+      "bindings": {
+        "children": "caption",
+        "_if": {
+          "source": "caption",
+          "transform": "!!data"
+        }
+      }
+    }
+  ]
+}

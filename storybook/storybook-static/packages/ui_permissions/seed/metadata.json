@@ -1,0 +1,12 @@
+{
+  "packageId": "ui_permissions",
+  "name": "Ui Permissions",
+  "version": "0.1.0",
+  "description": "Package ui_permissions",
+  "author": "MetaBuilder Team",
+  "category": "ui",
+  "exports": {
+    "components": []
+  },
+  "dependencies": []
+}

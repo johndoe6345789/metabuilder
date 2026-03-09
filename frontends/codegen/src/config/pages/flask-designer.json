@@ -1,0 +1,900 @@
+{
+  "id": "flask-designer",
+  "name": "Flask API Designer",
+  "layout": {
+    "type": "single"
+  },
+  "dataSources": [
+    {
+      "id": "flaskConfig",
+      "type": "kv",
+      "key": "app-flask-config",
+      "defaultValue": {
+        "appName": "Flask API",
+        "version": "1.0.0",
+        "port": 5000,
+        "debug": true,
+        "cors": true,
+        "blueprints": []
+      }
+    },
+    {
+      "id": "selectedBlueprintId",
+      "type": "static",
+      "defaultValue": null
+    },
+    {
+      "id": "createBlueprintDialogOpen",
+      "type": "static",
+      "defaultValue": false
+    },
+    {
+      "id": "createEndpointDialogOpen",
+      "type": "static",
+      "defaultValue": false
+    },
+    {
+      "id": "selectedBlueprint",
+      "type": "static",
+      "expression": "data.flaskConfig.blueprints.find(id === data.selectedBlueprintId)",
+      "dependencies": [
+        "flaskConfig",
+        "selectedBlueprintId"
+      ]
+    },
+    {
+      "id": "blueprintCount",
+      "type": "static",
+      "expression": "data.flaskConfig.blueprints.length",
+      "dependencies": [
+        "flaskConfig"
+      ]
+    },
+    {
+      "id": "endpointCount",
+      "type": "static",
+      "expression": "data.selectedBlueprint.endpoints.length",
+      "dependencies": [
+        "selectedBlueprint"
+      ]
+    }
+  ],
+  "components": [
+    {
+      "id": "root",
+      "type": "div",
+      "props": {
+        "className": "h-full flex bg-gradient-to-br from-background via-background to-primary/5"
+      },
+      "children": [
+        {
+          "id": "sidebar",
+          "type": "div",
+          "props": {
+            "className": "w-80 border-r border-border bg-card/50 backdrop-blur-sm flex flex-col"
+          },
+          "children": [
+            {
+              "id": "sidebar-header",
+              "type": "div",
+              "props": {
+                "className": "p-6 border-b border-border bg-gradient-to-br from-primary/10 to-accent/5"
+              },
+              "children": [
+                {
+                  "type": "div",
+                  "props": {
+                    "className": "flex items-center justify-between mb-4"
+                  },
+                  "children": [
+                    {
+                      "type": "h2",
+                      "props": {
+                        "className": "text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent"
+                      },
+                      "children": "Blueprints"
+                    },
+                    {
+                      "type": "MetabuilderDisplayBadge",
+                      "props": {
+                        "variant": "secondary",
+                        "className": "px-2.5 py-0.5"
+                      },
+                      "bindings": {
+                        "children": {
+                          "source": "blueprintCount"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "MetabuilderFormButton",
+                  "props": {
+                    "className": "w-full bg-gradient-to-r from-primary to-accent hover:opacity-90 transition-opacity"
+                  },
+                  "events": [
+                    {
+                      "event": "onClick",
+                      "actions": [
+                        {
+                          "type": "set-value",
+                          "target": "createBlueprintDialogOpen",
+                          "value": true
+                        }
+                      ]
+                    }
+                  ],
+                  "children": [
+                    {
+                      "type": "icon",
+                      "props": {
+                        "name": "Plus",
+                        "className": "mr-2 h-4 w-4"
+                      }
+                    },
+                    "New Blueprint"
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "blueprint-list",
+              "type": "MetabuilderWidgetScrollArea",
+              "props": {
+                "className": "flex-1"
+              },
+              "children": [
+                {
+                  "type": "div",
+                  "props": {
+                    "className": "p-4 space-y-2"
+                  },
+                  "conditional": {
+                    "if": "blueprintCount > 0"
+                  },
+                  "children": [
+                    {
+                      "type": "list",
+                      "dataSource": "flaskConfig.blueprints",
+                      "itemKey": "id",
+                      "itemComponent": {
+                        "type": "MetabuilderLayoutCard",
+                        "props": {
+                          "className": "group cursor-pointer hover:bg-accent/10 transition-all duration-200 hover:shadow-lg hover:shadow-accent/20 border-2 hover:border-accent/50"
+                        },
+                        "conditionalClass": {
+                          "condition": "selectedBlueprintId === item.id",
+                          "trueClass": "bg-accent/20 border-accent shadow-md shadow-accent/30",
+                          "falseClass": "border-transparent"
+                        },
+                        "events": [
+                          {
+                            "event": "onClick",
+                            "actions": [
+                              {
+                                "type": "set-value",
+                                "target": "selectedBlueprintId",
+                                "expression": "event.item.id"
+                              }
+                            ]
+                          }
+                        ],
+                        "children": [
+                          {
+                            "type": "MetabuilderLayoutCardHeader",
+                            "props": {
+                              "className": "p-4"
+                            },
+                            "children": [
+                              {
+                                "type": "div",
+                                "props": {
+                                  "className": "flex items-start justify-between"
+                                },
+                                "children": [
+                                  {
+                                    "type": "div",
+                                    "props": {
+                                      "className": "flex-1"
+                                    },
+                                    "children": [
+                                      {
+                                        "type": "div",
+                                        "props": {
+                                          "className": "flex items-center gap-2 mb-1"
+                                        },
+                                        "children": [
+                                          {
+                                            "type": "icon",
+                                            "props": {
+                                              "name": "Flask",
+                                              "className": "h-4 w-4 text-accent",
+                                              "weight": "duotone"
+                                            }
+                                          },
+                                          {
+                                            "type": "CardTitle",
+                                            "props": {
+                                              "className": "text-sm font-semibold"
+                                            },
+                                            "bindings": {
+                                              "children": {
+                                                "valueFrom": "item.name"
+                                              }
+                                            }
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "type": "CardDescription",
+                                        "props": {
+                                          "className": "text-xs line-clamp-2"
+                                        },
+                                        "bindings": {
+                                          "children": {
+                                            "valueFrom": "item.description",
+                                            "default": "No description"
+                                          }
+                                        }
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "type": "MetabuilderFormButton",
+                                    "props": {
+                                      "variant": "ghost",
+                                      "size": "icon",
+                                      "className": "h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity hover:text-destructive"
+                                    },
+                                    "events": [
+                                      {
+                                        "event": "onClick",
+                                        "stopPropagation": true,
+                                        "actions": [
+                                          {
+                                            "type": "custom",
+                                            "handler": "handleDeleteBlueprint",
+                                            "params": {
+                                              "blueprintId": "item.id"
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    ],
+                                    "children": [
+                                      {
+                                        "type": "icon",
+                                        "props": {
+                                          "name": "Trash",
+                                          "className": "h-4 w-4"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "div",
+                                "props": {
+                                  "className": "flex gap-2 mt-2"
+                                },
+                                "children": [
+                                  {
+                                    "type": "MetabuilderDisplayBadge",
+                                    "props": {
+                                      "variant": "outline",
+                                      "className": "text-xs"
+                                    },
+                                    "bindings": {
+                                      "children": {
+                                        "valueFrom": "item.urlPrefix"
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "type": "MetabuilderDisplayBadge",
+                                    "props": {
+                                      "variant": "outline",
+                                      "className": "text-xs"
+                                    },
+                                    "children": [
+                                      {
+                                        "type": "text",
+                                        "bindings": {
+                                          "value": {
+                                            "valueFrom": "item.endpoints.length",
+                                            "transform": "count => count + ' endpoints'"
+                                          }
+                                        }
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "div",
+                  "props": {
+                    "className": "flex flex-col items-center justify-center h-full p-8 text-center"
+                  },
+                  "conditional": {
+                    "if": "blueprintCount === 0"
+                  },
+                  "children": [
+                    {
+                      "type": "icon",
+                      "props": {
+                        "name": "Flask",
+                        "className": "h-16 w-16 text-muted-foreground/50 mb-4",
+                        "weight": "duotone"
+                      }
+                    },
+                    {
+                      "type": "h3",
+                      "props": {
+                        "className": "text-lg font-semibold mb-2"
+                      },
+                      "children": "No Blueprints Yet"
+                    },
+                    {
+                      "type": "p",
+                      "props": {
+                        "className": "text-sm text-muted-foreground mb-4"
+                      },
+                      "children": "Create your first Flask blueprint to organize your API"
+                    },
+                    {
+                      "type": "MetabuilderFormButton",
+                      "props": {
+                        "className": "bg-gradient-to-r from-primary to-accent"
+                      },
+                      "events": [
+                        {
+                          "event": "onClick",
+                          "actions": [
+                            {
+                              "type": "set-value",
+                              "target": "createBlueprintDialogOpen",
+                              "value": true
+                            }
+                          ]
+                        }
+                      ],
+                      "children": [
+                        {
+                          "type": "icon",
+                          "props": {
+                            "name": "Plus",
+                            "className": "mr-2 h-4 w-4"
+                          }
+                        },
+                        "Create Blueprint"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "main-content",
+          "type": "div",
+          "props": {
+            "className": "flex-1 flex flex-col"
+          },
+          "children": [
+            {
+              "type": "div",
+              "props": {
+                "className": "flex-1 overflow-auto p-8"
+              },
+              "conditional": {
+                "if": "selectedBlueprint"
+              },
+              "children": [
+                {
+                  "type": "div",
+                  "props": {
+                    "className": "max-w-6xl mx-auto space-y-6"
+                  },
+                  "children": [
+                    {
+                      "type": "div",
+                      "props": {
+                        "className": "flex items-center justify-between"
+                      },
+                      "children": [
+                        {
+                          "type": "div",
+                          "children": [
+                            {
+                              "type": "h1",
+                              "props": {
+                                "className": "text-3xl font-bold mb-2 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent"
+                              },
+                              "bindings": {
+                                "children": {
+                                  "source": "selectedBlueprint",
+                                  "path": "name"
+                                }
+                              }
+                            },
+                            {
+                              "type": "p",
+                              "props": {
+                                "className": "text-muted-foreground"
+                              },
+                              "bindings": {
+                                "children": {
+                                  "source": "selectedBlueprint",
+                                  "path": "description",
+                                  "default": "No description provided"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "div",
+                          "props": {
+                            "className": "flex gap-2"
+                          },
+                          "children": [
+                            {
+                              "type": "MetabuilderFormButton",
+                              "props": {
+                                "variant": "outline",
+                                "size": "sm"
+                              },
+                              "events": [
+                                {
+                                  "event": "onClick",
+                                  "actions": [
+                                    {
+                                      "type": "show-toast",
+                                      "message": "Edit blueprint coming soon",
+                                      "variant": "info"
+                                    }
+                                  ]
+                                }
+                              ],
+                              "children": [
+                                {
+                                  "type": "icon",
+                                  "props": {
+                                    "name": "Pencil",
+                                    "className": "mr-2 h-4 w-4"
+                                  }
+                                },
+                                "Edit Details"
+                              ]
+                            },
+                            {
+                              "type": "MetabuilderFormButton",
+                              "props": {
+                                "size": "sm",
+                                "className": "bg-gradient-to-r from-primary to-accent"
+                              },
+                              "events": [
+                                {
+                                  "event": "onClick",
+                                  "actions": [
+                                    {
+                                      "type": "set-value",
+                                      "target": "createEndpointDialogOpen",
+                                      "value": true
+                                    }
+                                  ]
+                                }
+                              ],
+                              "children": [
+                                {
+                                  "type": "icon",
+                                  "props": {
+                                    "name": "Plus",
+                                    "className": "mr-2 h-4 w-4"
+                                  }
+                                },
+                                "Add Endpoint"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "MetabuilderLayoutCard",
+                      "props": {
+                        "className": "border-2"
+                      },
+                      "children": [
+                        {
+                          "type": "MetabuilderLayoutCardHeader",
+                          "children": [
+                            {
+                              "type": "CardTitle",
+                              "children": "Blueprint Configuration"
+                            },
+                            {
+                              "type": "CardDescription",
+                              "children": "URL prefix and settings"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "MetabuilderDataCardContent",
+                          "props": {
+                            "className": "grid grid-cols-2 gap-4"
+                          },
+                          "children": [
+                            {
+                              "type": "div",
+                              "children": [
+                                {
+                                  "type": "MetabuilderDisplayLabel",
+                                  "props": {
+                                    "className": "text-sm font-medium mb-2 block"
+                                  },
+                                  "children": "URL Prefix"
+                                },
+                                {
+                                  "type": "p",
+                                  "props": {
+                                    "className": "text-sm font-mono bg-muted px-3 py-2 rounded"
+                                  },
+                                  "bindings": {
+                                    "children": {
+                                      "source": "selectedBlueprint",
+                                      "path": "urlPrefix"
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "div",
+                              "children": [
+                                {
+                                  "type": "MetabuilderDisplayLabel",
+                                  "props": {
+                                    "className": "text-sm font-medium mb-2 block"
+                                  },
+                                  "children": "Endpoints"
+                                },
+                                {
+                                  "type": "div",
+                                  "props": {
+                                    "className": "flex items-center gap-2"
+                                  },
+                                  "children": [
+                                    {
+                                      "type": "MetabuilderDisplayBadge",
+                                      "props": {
+                                        "variant": "secondary",
+                                        "className": "text-sm"
+                                      },
+                                      "bindings": {
+                                        "children": {
+                                          "source": "endpointCount"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "span",
+                                      "props": {
+                                        "className": "text-sm text-muted-foreground"
+                                      },
+                                      "children": "defined"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "MetabuilderLayoutCard",
+                      "props": {
+                        "className": "border-2"
+                      },
+                      "children": [
+                        {
+                          "type": "MetabuilderLayoutCardHeader",
+                          "children": [
+                            {
+                              "type": "div",
+                              "props": {
+                                "className": "flex items-center justify-between"
+                              },
+                              "children": [
+                                {
+                                  "type": "div",
+                                  "children": [
+                                    {
+                                      "type": "CardTitle",
+                                      "children": "Endpoints"
+                                    },
+                                    {
+                                      "type": "CardDescription",
+                                      "children": "API routes and handlers"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "MetabuilderDisplayBadge",
+                                  "props": {
+                                    "variant": "secondary"
+                                  },
+                                  "bindings": {
+                                    "children": {
+                                      "source": "endpointCount"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "MetabuilderDataCardContent",
+                          "children": [
+                            {
+                              "type": "div",
+                              "props": {
+                                "className": "space-y-3"
+                              },
+                              "conditional": {
+                                "if": "endpointCount > 0"
+                              },
+                              "children": [
+                                {
+                                  "type": "list",
+                                  "dataSource": "selectedBlueprint.endpoints",
+                                  "itemKey": "id",
+                                  "itemComponent": {
+                                    "type": "div",
+                                    "props": {
+                                      "className": "flex items-center justify-between p-4 border-2 rounded-lg hover:bg-accent/5 transition-colors"
+                                    },
+                                    "children": [
+                                      {
+                                        "type": "div",
+                                        "props": {
+                                          "className": "flex items-center gap-3"
+                                        },
+                                        "children": [
+                                          {
+                                            "type": "MetabuilderDisplayBadge",
+                                            "props": {
+                                              "variant": "outline",
+                                              "className": "font-mono font-semibold w-16 justify-center"
+                                            },
+                                            "bindings": {
+                                              "children": {
+                                                "valueFrom": "item.method"
+                                              }
+                                            }
+                                          },
+                                          {
+                                            "type": "div",
+                                            "children": [
+                                              {
+                                                "type": "p",
+                                                "props": {
+                                                  "className": "font-mono text-sm font-semibold"
+                                                },
+                                                "bindings": {
+                                                  "children": {
+                                                    "valueFrom": "item.path"
+                                                  }
+                                                }
+                                              },
+                                              {
+                                                "type": "p",
+                                                "props": {
+                                                  "className": "text-xs text-muted-foreground"
+                                                },
+                                                "bindings": {
+                                                  "children": {
+                                                    "valueFrom": "item.description",
+                                                    "default": "No description"
+                                                  }
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "type": "div",
+                                        "props": {
+                                          "className": "flex gap-2"
+                                        },
+                                        "children": [
+                                          {
+                                            "type": "MetabuilderFormButton",
+                                            "props": {
+                                              "variant": "ghost",
+                                              "size": "icon",
+                                              "className": "h-8 w-8"
+                                            },
+                                            "events": [
+                                              {
+                                                "event": "onClick",
+                                                "actions": [
+                                                  {
+                                                    "type": "show-toast",
+                                                    "message": "Edit endpoint coming soon",
+                                                    "variant": "info"
+                                                  }
+                                                ]
+                                              }
+                                            ],
+                                            "children": [
+                                              {
+                                                "type": "icon",
+                                                "props": {
+                                                  "name": "Pencil",
+                                                  "className": "h-4 w-4"
+                                                }
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "type": "MetabuilderFormButton",
+                                            "props": {
+                                              "variant": "ghost",
+                                              "size": "icon",
+                                              "className": "h-8 w-8 hover:text-destructive"
+                                            },
+                                            "events": [
+                                              {
+                                                "event": "onClick",
+                                                "actions": [
+                                                  {
+                                                    "type": "custom",
+                                                    "handler": "handleDeleteEndpoint",
+                                                    "params": {
+                                                      "endpointId": "item.id"
+                                                    }
+                                                  }
+                                                ]
+                                              }
+                                            ],
+                                            "children": [
+                                              {
+                                                "type": "icon",
+                                                "props": {
+                                                  "name": "Trash",
+                                                  "className": "h-4 w-4"
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "div",
+                              "props": {
+                                "className": "text-center py-12"
+                              },
+                              "conditional": {
+                                "if": "endpointCount === 0"
+                              },
+                              "children": [
+                                {
+                                  "type": "icon",
+                                  "props": {
+                                    "name": "Code",
+                                    "className": "h-12 w-12 text-muted-foreground/50 mx-auto mb-3",
+                                    "weight": "duotone"
+                                  }
+                                },
+                                {
+                                  "type": "p",
+                                  "props": {
+                                    "className": "text-sm text-muted-foreground mb-4"
+                                  },
+                                  "children": "No endpoints defined yet"
+                                },
+                                {
+                                  "type": "MetabuilderFormButton",
+                                  "props": {
+                                    "size": "sm",
+                                    "className": "bg-gradient-to-r from-primary to-accent"
+                                  },
+                                  "events": [
+                                    {
+                                      "event": "onClick",
+                                      "actions": [
+                                        {
+                                          "type": "set-value",
+                                          "target": "createEndpointDialogOpen",
+                                          "value": true
+                                        }
+                                      ]
+                                    }
+                                  ],
+                                  "children": [
+                                    {
+                                      "type": "icon",
+                                      "props": {
+                                        "name": "Plus",
+                                        "className": "mr-2 h-4 w-4"
+                                      }
+                                    },
+                                    "Add First Endpoint"
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "div",
+              "props": {
+                "className": "flex-1 flex items-center justify-center p-8"
+              },
+              "conditional": {
+                "if": "!selectedBlueprint"
+              },
+              "children": [
+                {
+                  "type": "div",
+                  "props": {
+                    "className": "text-center"
+                  },
+                  "children": [
+                    {
+                      "type": "icon",
+                      "props": {
+                        "name": "Flask",
+                        "className": "h-20 w-20 text-muted-foreground/50 mx-auto mb-4",
+                        "weight": "duotone"
+                      }
+                    },
+                    {
+                      "type": "h3",
+                      "props": {
+                        "className": "text-xl font-semibold mb-2"
+                      },
+                      "children": "No Blueprint Selected"
+                    },
+                    {
+                      "type": "p",
+                      "props": {
+                        "className": "text-muted-foreground"
+                      },
+                      "children": "Select a blueprint from the sidebar or create a new one"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

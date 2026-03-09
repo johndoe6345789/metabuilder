@@ -1,0 +1,18 @@
+.desktopNav {
+  display: none;
+  align-items: center;
+  gap: 4px;
+
+  @media (min-width: 768px) {
+    display: flex;
+  }
+}
+
+.scrollableNav {
+  padding-inline: 16px;
+  padding-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  overflow-x: auto;
+}

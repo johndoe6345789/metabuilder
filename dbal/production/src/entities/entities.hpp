@@ -7,10 +7,10 @@
 #ifndef DBAL_ENTITIES_HPP
 #define DBAL_ENTITIES_HPP
 
-#include "user_operations.hpp"
-#include "page_operations.hpp"
-#include "workflow_operations.hpp"
-#include "session_operations.hpp"
-#include "package_operations.hpp"
+#include "user/index.hpp"
+#include "page/index.hpp"
+#include "workflow/index.hpp"
+#include "session/index.hpp"
+#include "package/index.hpp"
 
 #endif

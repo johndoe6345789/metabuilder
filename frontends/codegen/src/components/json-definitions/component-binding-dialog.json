@@ -1,0 +1,200 @@
+{
+  "id": "component-binding-dialog",
+  "type": "Dialog",
+  "bindings": {
+    "open": "open",
+    "onOpenChange": "onOpenChange"
+  },
+  "children": [
+    {
+      "id": "component-binding-dialog-content",
+      "type": "DialogContent",
+      "bindings": {
+        "className": "contentClassName"
+      },
+      "children": [
+        {
+          "id": "component-binding-dialog-header",
+          "type": "DialogHeader",
+          "children": [
+            {
+              "id": "component-binding-dialog-title",
+              "type": "DialogTitle",
+              "bindings": {
+                "children": "title"
+              }
+            },
+            {
+              "id": "component-binding-dialog-description",
+              "type": "DialogDescription",
+              "bindings": {
+                "children": "description"
+              }
+            }
+          ]
+        },
+        {
+          "id": "component-binding-dialog-info",
+          "type": "div",
+          "props": {
+            "className": "rounded-md border border-border bg-muted/30 p-3 text-sm"
+          },
+          "conditional": {
+            "if": "componentType || componentId"
+          },
+          "children": [
+            {
+              "id": "component-binding-dialog-type",
+              "type": "div",
+              "props": {
+                "className": "flex items-center gap-2"
+              },
+              "conditional": {
+                "if": "componentType"
+              },
+              "children": [
+                {
+                  "id": "component-binding-dialog-type-label",
+                  "type": "span",
+                  "props": {
+                    "className": "text-muted-foreground"
+                  },
+                  "children": "Component:"
+                },
+                {
+                  "id": "component-binding-dialog-type-value",
+                  "type": "span",
+                  "props": {
+                    "className": "font-mono font-medium"
+                  },
+                  "bindings": {
+                    "children": "componentType"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "component-binding-dialog-id",
+              "type": "div",
+              "props": {
+                "className": "flex items-center gap-2"
+              },
+              "conditional": {
+                "if": "componentId"
+              },
+              "children": [
+                {
+                  "id": "component-binding-dialog-id-label",
+                  "type": "span",
+                  "props": {
+                    "className": "text-muted-foreground"
+                  },
+                  "children": "ID:"
+                },
+                {
+                  "id": "component-binding-dialog-id-value",
+                  "type": "span",
+                  "props": {
+                    "className": "font-mono text-xs"
+                  },
+                  "bindings": {
+                    "children": "componentId"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "component-binding-dialog-body",
+          "type": "div",
+          "props": {
+            "className": "space-y-4"
+          },
+          "children": [
+            {
+              "id": "component-binding-dialog-empty",
+              "type": "p",
+              "props": {
+                "className": "text-sm text-muted-foreground"
+              },
+              "bindings": {
+                "children": "emptyMessage"
+              },
+              "conditional": {
+                "if": "!bindingFields || bindingFields.length === 0"
+              }
+            },
+            {
+              "id": "component-binding-dialog-fields",
+              "type": "div",
+              "props": {
+                "className": "space-y-4"
+              },
+              "conditional": {
+                "if": "bindingFields && bindingFields.length > 0"
+              },
+              "loop": {
+                "source": "bindingFields",
+                "itemVar": "field"
+              },
+              "children": [
+                {
+                  "id": "component-binding-dialog-field",
+                  "type": "div",
+                  "props": {
+                    "className": "space-y-2"
+                  },
+                  "children": [
+                    {
+                      "id": "component-binding-dialog-field-label",
+                      "type": "Label",
+                      "bindings": {
+                        "children": "field.label"
+                      }
+                    },
+                    {
+                      "id": "component-binding-dialog-field-input",
+                      "type": "Input",
+                      "bindings": {
+                        "value": "field.value",
+                        "placeholder": "field.placeholder",
+                        "onChange": "onBindingFieldChange",
+                        "data-field-id": "field.id"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "component-binding-dialog-footer",
+          "type": "DialogFooter",
+          "children": [
+            {
+              "id": "component-binding-dialog-cancel",
+              "type": "Button",
+              "props": {
+                "variant": "outline"
+              },
+              "bindings": {
+                "onClick": "onCancel",
+                "children": "cancelLabel"
+              }
+            },
+            {
+              "id": "component-binding-dialog-save",
+              "type": "Button",
+              "bindings": {
+                "onClick": "onSave",
+                "children": "saveLabel"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

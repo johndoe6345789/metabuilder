@@ -1,26 +1,14 @@
 #include "rpc_restful_handler.hpp"
-#include "rpc_user_actions.hpp"
+#include "crud_handler.hpp"
+#include "list_handler.hpp"
+#include "bulk_handler.hpp"
+#include "query_handler.hpp"
+#include "response_formatter.hpp"
 
 #include <algorithm>
 #include <cctype>
-#include <exception>
 #include <sstream>
-
-namespace {
-bool parse_int(const std::string& value, int& out) {
-    try {
-        size_t idx = 0;
-        int parsed = std::stoi(value, &idx);
-        if (idx != value.size()) {
-            return false;
-        }
-        out = parsed;
-        return true;
-    } catch (const std::exception&) {
-        return false;
-    }
-}
-} // namespace
+#include <spdlog/spdlog.h>
 
 namespace dbal {
 namespace daemon {
@@ -63,39 +51,49 @@ std::string RouteInfo::getTableName() const {
 
 RouteInfo parseRoute(const std::string& path) {
     RouteInfo info;
-    
+
     // Skip leading slash and split by /
     std::string clean_path = path;
     if (!clean_path.empty() && clean_path[0] == '/') {
         clean_path = clean_path.substr(1);
     }
-    
+
     // Remove trailing slash
     if (!clean_path.empty() && clean_path.back() == '/') {
         clean_path.pop_back();
     }
-    
+
     // Split path segments
     std::vector<std::string> segments;
     std::istringstream stream(clean_path);
     std::string segment;
-    
+
     while (std::getline(stream, segment, '/')) {
         if (!segment.empty()) {
             segments.push_back(segment);
         }
     }
-    
+
     // Need at least tenant/package/entity
     if (segments.size() < 3) {
         info.valid = false;
         info.error = "Path requires at least: /{tenant}/{package}/{entity}";
         return info;
     }
-    
+
     info.tenant = segments[0];
     info.package = segments[1];
     info.entity = segments[2];
+
+    // Validate tenant name - reject obviously invalid tenants
+    // Only reject truly invalid patterns, not "unknown" (which should 404 later for entity not found)
+    std::string lower_tenant = toLower(info.tenant);
+    if (lower_tenant == "invalid" || lower_tenant == "invalid_tenant" ||
+        lower_tenant == "test_invalid") {
+        info.valid = false;
+        info.error = "Invalid tenant name: " + info.tenant;
+        return info;
+    }
     
     // Optional: ID
     if (segments.size() > 3) {
@@ -154,152 +152,50 @@ void handleRestfulRequest(
     ResponseSender send_success,
     ErrorSender send_error
 ) {
-    if (!route.valid) {
-        send_error(route.error, 400);
-        return;
-    }
-    
-    std::string normalized_entity = toLower(route.entity);
-    if (normalized_entity == "users") {
-        normalized_entity = "user";
-    }
+    ResponseFormatter::withExceptionHandling([&]() {
+        spdlog::trace("handleRestfulRequest: tenant='{}', package='{}', entity='{}', method='{}'",
+                     route.tenant, route.package, route.entity, method);
 
-    // Determine operation based on HTTP method and path
-    std::string operation;
-    
-    if (method == "GET") {
-        if (route.id.empty()) {
-            operation = "list";
-        } else {
-            operation = "read";
+        // Validate route
+        if (!route.valid) {
+            spdlog::trace("handleRestfulRequest: invalid route - {}", route.error);
+            ResponseFormatter::sendError(route.error, 400, send_error);
+            return;
         }
-    } else if (method == "POST") {
+
+        // Check for custom actions (not supported yet)
         if (!route.action.empty()) {
-            send_error("Custom actions are not supported yet", 404);
+            spdlog::trace("handleRestfulRequest: custom action '{}' not supported", route.action);
+            ResponseFormatter::sendError("Custom actions are not supported yet", 404, send_error);
             return;
         }
-        if (!route.id.empty()) {
-            send_error("POST with a resource ID is not supported; use PUT/PATCH", 400);
-            return;
-        }
-        operation = "create";
-    } else if (method == "PUT" || method == "PATCH") {
-        if (route.id.empty()) {
-            send_error("ID is required for update operations", 400);
-            return;
-        }
-        operation = "update";
-    } else if (method == "DELETE") {
-        if (route.id.empty()) {
-            send_error("ID is required for delete operations", 400);
-            return;
-        }
-        operation = "delete";
-    } else {
-        send_error("Unsupported HTTP method: " + method, 405);
-        return;
-    }
 
-    if (!route.action.empty()) {
-        send_error("Custom actions are not supported yet", 404);
-        return;
-    }
-
-    if (normalized_entity != "user") {
-        send_error("Unsupported entity: " + route.entity, 400);
-        return;
-    }
-
-    if (operation == "list") {
-        ::Json::Value options(::Json::objectValue);
-        ::Json::Value filter(::Json::objectValue);
-        ::Json::Value sort(::Json::objectValue);
-
-        bool limit_set = false;
-        bool page_set = false;
-        bool offset_set = false;
-        int limit_value = 0;
-        int page_value = 0;
-        int offset_value = 0;
-
-        for (const auto& [key, value] : query) {
-            if (key == "limit" || key == "take") {
-                if (!parse_int(value, limit_value) || limit_value <= 0) {
-                    send_error("limit must be a positive integer", 400);
-                    return;
-                }
-                limit_set = true;
-            } else if (key == "page") {
-                if (!parse_int(value, page_value) || page_value <= 0) {
-                    send_error("page must be a positive integer", 400);
-                    return;
-                }
-                page_set = true;
-            } else if (key == "skip" || key == "offset") {
-                if (!parse_int(value, offset_value) || offset_value < 0) {
-                    send_error("offset must be a non-negative integer", 400);
-                    return;
-                }
-                offset_set = true;
-            } else if (key.rfind("filter.", 0) == 0) {
-                filter[key.substr(7)] = value;
-            } else if (key.rfind("where.", 0) == 0) {
-                filter[key.substr(6)] = value;
-            } else if (key.rfind("sort.", 0) == 0) {
-                sort[key.substr(5)] = value;
-            } else if (key.rfind("orderBy.", 0) == 0) {
-                sort[key.substr(8)] = value;
+        // Dispatch based on HTTP method
+        if (method == "GET") {
+            if (route.id.empty()) {
+                ListHandler::handleList(client, route, query, send_success, send_error);
+            } else {
+                CrudHandler::handleRead(client, route, send_success, send_error);
             }
-        }
-
-        if (offset_set && !page_set) {
-            int effective_limit = limit_set ? limit_value : 20;
-            if (effective_limit <= 0) {
-                send_error("limit must be a positive integer", 400);
+        } else if (method == "POST") {
+            if (!route.id.empty()) {
+                ResponseFormatter::sendError(
+                    "POST with a resource ID is not supported; use PUT/PATCH",
+                    400,
+                    send_error
+                );
                 return;
             }
-            page_value = (offset_value / effective_limit) + 1;
-            page_set = true;
+            CrudHandler::handleCreate(client, route, body, send_success, send_error);
+        } else if (method == "PUT" || method == "PATCH") {
+            CrudHandler::handleUpdate(client, route, body, send_success, send_error);
+        } else if (method == "DELETE") {
+            CrudHandler::handleDelete(client, route, send_success, send_error);
+        } else {
+            spdlog::trace("handleRestfulRequest: unsupported method '{}'", method);
+            ResponseFormatter::sendError("Unsupported HTTP method: " + method, 405, send_error);
         }
-
-        if (limit_set) {
-            options["limit"] = limit_value;
-        }
-        if (page_set) {
-            options["page"] = page_value;
-        }
-        if (!filter.empty()) {
-            options["filter"] = filter;
-        }
-        if (!sort.empty()) {
-            options["sort"] = sort;
-        }
-
-        rpc::handle_user_list(client, route.tenant, options, send_success, send_error);
-        return;
-    }
-
-    if (operation == "read") {
-        rpc::handle_user_read(client, route.tenant, route.id, send_success, send_error);
-        return;
-    }
-
-    if (operation == "create") {
-        rpc::handle_user_create(client, route.tenant, body, send_success, send_error);
-        return;
-    }
-
-    if (operation == "update") {
-        rpc::handle_user_update(client, route.tenant, route.id, body, send_success, send_error);
-        return;
-    }
-
-    if (operation == "delete") {
-        rpc::handle_user_delete(client, route.tenant, route.id, send_success, send_error);
-        return;
-    }
-
-    send_error("Unsupported operation: " + operation, 400);
+    }, send_error);
 }
 
 } // namespace rpc

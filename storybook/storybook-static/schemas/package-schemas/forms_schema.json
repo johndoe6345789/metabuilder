@@ -1,0 +1,497 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://metabuilder.dev/schemas/forms.schema.json",
+  "title": "Forms Schema",
+  "description": "Dynamic form definitions with validation and conditional logic for MetaBuilder packages",
+  "type": "object",
+  "required": ["schemaVersion", "package"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "JSON Schema reference"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "description": "Schema version",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "default": "2.0.0"
+    },
+    "package": {
+      "type": "string",
+      "description": "Package identifier"
+    },
+    "description": {
+      "type": "string",
+      "description": "Forms module description"
+    },
+    "forms": {
+      "type": "array",
+      "description": "Form definitions",
+      "items": {
+        "$ref": "#/definitions/form"
+      }
+    }
+  },
+  "definitions": {
+    "form": {
+      "type": "object",
+      "required": ["id", "name", "fields"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique form identifier"
+        },
+        "name": {
+          "type": "string",
+          "description": "Form name"
+        },
+        "title": {
+          "type": "string",
+          "description": "Form display title"
+        },
+        "description": {
+          "type": "string",
+          "description": "Form description"
+        },
+        "fields": {
+          "type": "array",
+          "description": "Form field definitions",
+          "items": {
+            "$ref": "#/definitions/field"
+          }
+        },
+        "sections": {
+          "type": "array",
+          "description": "Form sections for grouping fields",
+          "items": {
+            "$ref": "#/definitions/section"
+          }
+        },
+        "layout": {
+          "type": "string",
+          "description": "Form layout",
+          "enum": ["vertical", "horizontal", "grid", "custom"],
+          "default": "vertical"
+        },
+        "columns": {
+          "type": "integer",
+          "description": "Number of columns for grid layout",
+          "minimum": 1,
+          "maximum": 12,
+          "default": 1
+        },
+        "validation": {
+          "$ref": "#/definitions/formValidation"
+        },
+        "submitButton": {
+          "type": "object",
+          "properties": {
+            "text": { "type": "string", "default": "Submit" },
+            "position": {
+              "type": "string",
+              "enum": ["left", "center", "right"],
+              "default": "right"
+            },
+            "disabled": { "type": "boolean", "default": false }
+          }
+        },
+        "onSubmit": {
+          "type": "string",
+          "description": "Submit handler function reference"
+        },
+        "onValidate": {
+          "type": "string",
+          "description": "Custom validation function reference"
+        },
+        "onChange": {
+          "type": "string",
+          "description": "Change handler function reference"
+        },
+        "initialValues": {
+          "type": "object",
+          "description": "Initial form values",
+          "additionalProperties": true
+        },
+        "disabled": {
+          "type": "boolean",
+          "description": "Disable entire form",
+          "default": false
+        },
+        "readonly": {
+          "type": "boolean",
+          "description": "Make entire form readonly",
+          "default": false
+        }
+      }
+    },
+    "field": {
+      "type": "object",
+      "required": ["name", "type"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Field name (used as key in form data)"
+        },
+        "type": {
+          "type": "string",
+          "description": "Field input type",
+          "enum": [
+            "text", "email", "password", "number", "tel", "url",
+            "textarea", "select", "multiselect", "radio", "checkbox",
+            "date", "datetime", "time", "file", "image",
+            "color", "range", "rating", "switch", "hidden",
+            "autocomplete", "tags", "rich-text", "code", "custom"
+          ]
+        },
+        "label": {
+          "type": "string",
+          "description": "Field label"
+        },
+        "placeholder": {
+          "type": "string",
+          "description": "Placeholder text"
+        },
+        "helpText": {
+          "type": "string",
+          "description": "Help text displayed below field"
+        },
+        "tooltip": {
+          "type": "string",
+          "description": "Tooltip text"
+        },
+        "required": {
+          "type": "boolean",
+          "description": "Whether field is required",
+          "default": false
+        },
+        "disabled": {
+          "type": "boolean",
+          "description": "Disable field",
+          "default": false
+        },
+        "readonly": {
+          "type": "boolean",
+          "description": "Make field readonly",
+          "default": false
+        },
+        "hidden": {
+          "oneOf": [
+            { "type": "boolean" },
+            { "type": "string", "description": "Conditional expression" }
+          ],
+          "description": "Hide field conditionally"
+        },
+        "defaultValue": {
+          "description": "Default field value"
+        },
+        "options": {
+          "type": "array",
+          "description": "Options for select/radio/checkbox fields",
+          "items": {
+            "oneOf": [
+              { "type": "string" },
+              {
+                "type": "object",
+                "properties": {
+                  "value": { "description": "Option value" },
+                  "label": { "type": "string" },
+                  "disabled": { "type": "boolean" },
+                  "group": { "type": "string" }
+                }
+              }
+            ]
+          }
+        },
+        "validation": {
+          "$ref": "#/definitions/fieldValidation"
+        },
+        "conditional": {
+          "$ref": "#/definitions/conditional"
+        },
+        "grid": {
+          "type": "object",
+          "description": "Grid layout options",
+          "properties": {
+            "column": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 12,
+              "description": "Column span"
+            },
+            "row": {
+              "type": "integer",
+              "description": "Row position"
+            }
+          }
+        },
+        "attributes": {
+          "type": "object",
+          "description": "Additional HTML attributes",
+          "additionalProperties": true
+        },
+        "customComponent": {
+          "type": "string",
+          "description": "Custom component reference"
+        },
+        "dependencies": {
+          "type": "array",
+          "description": "Fields this field depends on",
+          "items": { "type": "string" }
+        },
+        "aria": {
+          "type": "object",
+          "description": "ARIA accessibility attributes",
+          "properties": {
+            "label": {
+              "type": "string",
+              "description": "ARIA label (overrides visible label for screen readers)"
+            },
+            "describedBy": {
+              "type": "string",
+              "description": "ID of element describing this field"
+            },
+            "labelledBy": {
+              "type": "string",
+              "description": "ID of element labeling this field"
+            },
+            "required": {
+              "type": "boolean",
+              "description": "Mark as required for screen readers"
+            },
+            "invalid": {
+              "type": "boolean",
+              "description": "Mark as invalid for screen readers"
+            },
+            "live": {
+              "type": "string",
+              "enum": ["off", "polite", "assertive"],
+              "description": "ARIA live region setting"
+            },
+            "role": {
+              "type": "string",
+              "description": "ARIA role override"
+            }
+          }
+        },
+        "tabIndex": {
+          "type": "integer",
+          "description": "Tab order index for keyboard navigation",
+          "default": 0
+        },
+        "autoFocus": {
+          "type": "boolean",
+          "description": "Auto-focus this field on form load",
+          "default": false
+        }
+      }
+    },
+    "section": {
+      "type": "object",
+      "required": ["title", "fields"],
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Section title"
+        },
+        "description": {
+          "type": "string",
+          "description": "Section description"
+        },
+        "fields": {
+          "type": "array",
+          "description": "Field names in this section",
+          "items": { "type": "string" }
+        },
+        "collapsible": {
+          "type": "boolean",
+          "description": "Whether section can be collapsed",
+          "default": false
+        },
+        "collapsed": {
+          "type": "boolean",
+          "description": "Initial collapsed state",
+          "default": false
+        },
+        "conditional": {
+          "$ref": "#/definitions/conditional"
+        }
+      }
+    },
+    "fieldValidation": {
+      "type": "object",
+      "properties": {
+        "required": {
+          "oneOf": [
+            { "type": "boolean" },
+            { "type": "string", "description": "Custom error message" }
+          ]
+        },
+        "minLength": {
+          "type": "integer",
+          "description": "Minimum string length"
+        },
+        "maxLength": {
+          "type": "integer",
+          "description": "Maximum string length"
+        },
+        "min": {
+          "type": "number",
+          "description": "Minimum value (for numbers)"
+        },
+        "max": {
+          "type": "number",
+          "description": "Maximum value (for numbers)"
+        },
+        "pattern": {
+          "type": "string",
+          "description": "Regex pattern"
+        },
+        "email": {
+          "type": "boolean",
+          "description": "Validate as email"
+        },
+        "url": {
+          "type": "boolean",
+          "description": "Validate as URL"
+        },
+        "custom": {
+          "type": "string",
+          "description": "Custom validator function reference"
+        },
+        "async": {
+          "type": "string",
+          "description": "Async validator (e.g., API check)"
+        },
+        "messages": {
+          "type": "object",
+          "description": "Custom validation messages",
+          "properties": {
+            "required": { "type": "string" },
+            "minLength": { "type": "string" },
+            "maxLength": { "type": "string" },
+            "min": { "type": "string" },
+            "max": { "type": "string" },
+            "pattern": { "type": "string" },
+            "email": { "type": "string" },
+            "url": { "type": "string" }
+          }
+        }
+      }
+    },
+    "formValidation": {
+      "type": "object",
+      "properties": {
+        "validateOnChange": {
+          "type": "boolean",
+          "description": "Validate on field change",
+          "default": true
+        },
+        "validateOnBlur": {
+          "type": "boolean",
+          "description": "Validate on field blur",
+          "default": true
+        },
+        "validateOnSubmit": {
+          "type": "boolean",
+          "description": "Validate on form submit",
+          "default": true
+        },
+        "stopOnFirstError": {
+          "type": "boolean",
+          "description": "Stop validation on first error",
+          "default": false
+        },
+        "crossFieldValidation": {
+          "type": "array",
+          "description": "Cross-field validation rules",
+          "items": {
+            "type": "object",
+            "properties": {
+              "fields": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "validator": {
+                "type": "string",
+                "description": "Validator function reference"
+              },
+              "message": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "conditional": {
+      "type": "object",
+      "description": "Conditional logic for showing/hiding fields",
+      "properties": {
+        "when": {
+          "type": "string",
+          "description": "Field name to watch"
+        },
+        "operator": {
+          "type": "string",
+          "enum": ["equals", "notEquals", "in", "notIn", "contains", "greaterThan", "lessThan", "empty", "notEmpty"],
+          "default": "equals"
+        },
+        "value": {
+          "description": "Value to compare"
+        },
+        "then": {
+          "type": "object",
+          "description": "Actions when condition is true",
+          "properties": {
+            "show": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "hide": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "enable": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "disable": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "require": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "setValue": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        },
+        "else": {
+          "type": "object",
+          "description": "Actions when condition is false",
+          "properties": {
+            "show": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "hide": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "enable": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "disable": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "$schema": "../../../schemas/package-schemas/playwright.schema.json",
+  "package": "pastebin",
+  "version": "1.0.0",
+  "description": "Visual regression tests across viewports and key UI states",
+  "suite": "Visual Regression",
+  "tests": [
+    {
+      "name": "home page header is visible",
+      "steps": [
+        { "action": "navigate", "url": "" },
+        { "action": "waitForSelector", "selector": "[data-testid='namespace-selector'],[data-testid='snippet-manager-loading']", "timeout": 15000 },
+        { "action": "expect", "role": "banner", "assertion": { "matcher": "toBeVisible" } }
+      ]
+    },
+    {
+      "name": "home page main content area renders",
+      "steps": [
+        { "action": "navigate", "url": "" },
+        { "action": "waitForLoadState", "state": "domcontentloaded" },
+        { "action": "expect", "role": "main", "assertion": { "matcher": "toBeVisible" } }
+      ]
+    },
+    {
+      "name": "settings page layout renders",
+      "steps": [
+        { "action": "navigate", "url": "settings" },
+        { "action": "waitForLoadState", "state": "domcontentloaded" },
+        { "action": "expect", "selector": "main,body", "assertion": { "matcher": "toBeVisible" } }
+      ]
+    },
+    {
+      "name": "navigation is visible on home",
+      "steps": [
+        { "action": "navigate", "url": "" },
+        { "action": "waitForLoadState", "state": "domcontentloaded" },
+        { "action": "expect", "selector": "nav,header,[role='navigation']", "assertion": { "matcher": "toBeVisible" } }
+      ]
+    },
+    {
+      "name": "page renders on 375px viewport",
+      "steps": [
+        { "action": "setViewport", "width": 375, "height": 812 },
+        { "action": "navigate", "url": "" },
+        { "action": "waitForLoadState", "state": "domcontentloaded" },
+        { "action": "expect", "role": "main", "assertion": { "matcher": "toBeVisible" } }
+      ]
+    },
+    {
+      "name": "page renders on 768px viewport",
+      "steps": [
+        { "action": "setViewport", "width": 768, "height": 1024 },
+        { "action": "navigate", "url": "" },
+        { "action": "waitForLoadState", "state": "domcontentloaded" },
+        { "action": "expect", "role": "main", "assertion": { "matcher": "toBeVisible" } }
+      ]
+    },
+    {
+      "name": "page renders on 1280px viewport",
+      "steps": [
+        { "action": "setViewport", "width": 1280, "height": 800 },
+        { "action": "navigate", "url": "" },
+        { "action": "waitForLoadState", "state": "domcontentloaded" },
+        { "action": "expect", "role": "main", "assertion": { "matcher": "toBeVisible" } }
+      ]
+    },
+    {
+      "name": "page renders on 1920px viewport",
+      "steps": [
+        { "action": "setViewport", "width": 1920, "height": 1080 },
+        { "action": "navigate", "url": "" },
+        { "action": "waitForLoadState", "state": "domcontentloaded" },
+        { "action": "expect", "role": "main", "assertion": { "matcher": "toBeVisible" } }
+      ]
+    },
+    {
+      "name": "snippet dialog visual check",
+      "steps": [
+        { "action": "navigate", "url": "" },
+        { "action": "waitForSelector", "selector": "[data-testid='namespace-selector'],[data-testid='snippet-manager-loading']", "timeout": 15000 },
+        { "action": "click", "selector": "[data-testid='empty-state-create-menu'],[data-testid='snippet-create-menu-trigger']", "skipIf": { "selector": "[data-testid='empty-state-create-menu'],[data-testid='snippet-create-menu-trigger']", "state": "hidden" } },
+        { "action": "waitForSelector", "selector": "[data-testid='snippet-dialog']", "timeout": 5000, "skipIf": { "selector": "[data-testid='snippet-dialog']", "state": "hidden" } },
+        { "action": "store", "name": "getBoundingBox", "args": { "testId": "snippet-dialog" }, "as": "dialogBox", "skipIf": { "selector": "[data-testid='snippet-dialog']", "state": "hidden" } },
+        { "action": "screenshot", "filename": "screenshots/dialog.png", "clipFrom": "dialogBox" }
+      ]
+    },
+    {
+      "name": "settings cards render",
+      "steps": [
+        { "action": "navigate", "url": "settings" },
+        { "action": "waitForLoadState", "state": "domcontentloaded" },
+        { "action": "expect", "selector": "[data-testid$='-card'],[class*='card']", "nth": 0, "assertion": { "matcher": "toBeVisible" } }
+      ]
+    },
+    {
+      "name": "no visual regressions on mobile home",
+      "steps": [
+        { "action": "setViewport", "width": 390, "height": 844 },
+        { "action": "navigate", "url": "" },
+        { "action": "waitForSelector", "selector": "[data-testid='namespace-selector'],[data-testid='snippet-manager-loading']", "timeout": 15000 },
+        { "action": "screenshot", "filename": "screenshots/mobile-home.png", "fullPage": true }
+      ]
+    }
+  ]
+}

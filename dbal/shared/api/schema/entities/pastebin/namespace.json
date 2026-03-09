@@ -1,0 +1,89 @@
+{
+  "entity": "Namespace",
+  "version": "1.0",
+  "description": "Code snippet namespace for organisation within a user's workspace",
+  "fields": {
+    "id": {
+      "type": "uuid",
+      "primary": true,
+      "required": true,
+      "description": "Unique namespace identifier (client-generated UUID)"
+    },
+    "name": {
+      "type": "string",
+      "required": true,
+      "min_length": 1,
+      "max_length": 100,
+      "description": "Display name of the namespace"
+    },
+    "isDefault": {
+      "type": "boolean",
+      "optional": true,
+      "nullable": true,
+      "default": false,
+      "description": "Whether this is the user's default namespace"
+    },
+    "createdAt": {
+      "type": "bigint",
+      "generated": true,
+      "description": "Creation timestamp (Unix milliseconds)"
+    },
+    "userId": {
+      "type": "string",
+      "required": true,
+      "description": "Owner user ID"
+    },
+    "tenantId": {
+      "type": "string",
+      "optional": true,
+      "nullable": true
+    }
+  },
+  "indexes": [
+    {
+      "fields": ["userId"]
+    },
+    {
+      "fields": ["tenantId", "userId"]
+    },
+    {
+      "fields": ["userId", "name"],
+      "unique": true,
+      "description": "A user cannot have two namespaces with the same name"
+    }
+  ],
+  "relations": {
+    "snippets": {
+      "type": "has-many",
+      "entity": "Snippet",
+      "foreign_key": "namespaceId",
+      "cascade_delete": true,
+      "description": "Snippets belonging to this namespace"
+    }
+  },
+  "query": {
+    "allowed_operators": ["eq", "like", "in", "isnull", "isnotnull"],
+    "allowed_group_by": ["userId", "isDefault"],
+    "allowed_includes": [],
+    "max_results": 200,
+    "timeout_ms": 3000
+  },
+  "acl": {
+    "create": {
+      "user": true,
+      "admin": true
+    },
+    "read": {
+      "self": true,
+      "admin": true
+    },
+    "update": {
+      "self": true,
+      "admin": true
+    },
+    "delete": {
+      "self": true,
+      "admin": true
+    }
+  }
+}

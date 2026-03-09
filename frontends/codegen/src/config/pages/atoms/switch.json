@@ -1,0 +1,6 @@
+{
+  "type": "MetabuilderFormSwitch",
+  "props": {
+    "onChange": "> void"
+  }
+}

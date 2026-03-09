@@ -1,0 +1,437 @@
+{
+  "id": "dashboard-ui",
+  "title": "Dashboard",
+  "description": "Application dashboard with stats and recent activity",
+  "layout": {
+    "type": "flex",
+    "direction": "column",
+    "gap": "6",
+    "padding": "6",
+    "className": "h-full bg-background",
+    "children": [
+      {
+        "id": "header-section",
+        "type": "div",
+        "className": "flex justify-between items-center",
+        "children": [
+          {
+            "id": "page-title",
+            "type": "h1",
+            "className": "text-3xl font-bold",
+            "children": "Dashboard"
+          },
+          {
+            "id": "refresh-button",
+            "type": "Button",
+            "props": {
+              "variant": "outline",
+              "size": "sm"
+            },
+            "events": {
+              "onClick": "refresh-data"
+            },
+            "children": [
+              {
+                "id": "refresh-icon",
+                "type": "RefreshCw",
+                "props": {
+                  "size": 16
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "stats-grid",
+        "type": "div",
+        "className": "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4",
+        "children": [
+          {
+            "id": "stat-card-1",
+            "type": "Card",
+            "children": [
+              {
+                "id": "stat-header-1",
+                "type": "CardHeader",
+                "children": [
+                  {
+                    "id": "stat-title-1",
+                    "type": "CardTitle",
+                    "className": "text-sm font-medium text-muted-foreground",
+                    "children": "Total Users"
+                  }
+                ]
+              },
+              {
+                "id": "stat-content-1",
+                "type": "CardContent",
+                "children": [
+                  {
+                    "id": "stat-value-1",
+                    "type": "p",
+                    "className": "text-3xl font-bold",
+                    "dataBinding": "stats.users",
+                    "children": "0"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "stat-card-2",
+            "type": "Card",
+            "children": [
+              {
+                "id": "stat-header-2",
+                "type": "CardHeader",
+                "children": [
+                  {
+                    "id": "stat-title-2",
+                    "type": "CardTitle",
+                    "className": "text-sm font-medium text-muted-foreground",
+                    "children": "Active Projects"
+                  }
+                ]
+              },
+              {
+                "id": "stat-content-2",
+                "type": "CardContent",
+                "children": [
+                  {
+                    "id": "stat-value-2",
+                    "type": "p",
+                    "className": "text-3xl font-bold",
+                    "dataBinding": "stats.projects",
+                    "children": "0"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "stat-card-3",
+            "type": "Card",
+            "children": [
+              {
+                "id": "stat-header-3",
+                "type": "CardHeader",
+                "children": [
+                  {
+                    "id": "stat-title-3",
+                    "type": "CardTitle",
+                    "className": "text-sm font-medium text-muted-foreground",
+                    "children": "Deployments"
+                  }
+                ]
+              },
+              {
+                "id": "stat-content-3",
+                "type": "CardContent",
+                "children": [
+                  {
+                    "id": "stat-value-3",
+                    "type": "p",
+                    "className": "text-3xl font-bold",
+                    "dataBinding": "stats.deployments",
+                    "children": "0"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "stat-card-4",
+            "type": "Card",
+            "children": [
+              {
+                "id": "stat-header-4",
+                "type": "CardHeader",
+                "children": [
+                  {
+                    "id": "stat-title-4",
+                    "type": "CardTitle",
+                    "className": "text-sm font-medium text-muted-foreground",
+                    "children": "Success Rate"
+                  }
+                ]
+              },
+              {
+                "id": "stat-content-4",
+                "type": "CardContent",
+                "children": [
+                  {
+                    "id": "stat-value-4",
+                    "type": "p",
+                    "className": "text-3xl font-bold",
+                    "dataBinding": "stats.successRate",
+                    "children": "0%"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "content-section",
+        "type": "div",
+        "className": "grid grid-cols-1 lg:grid-cols-2 gap-6",
+        "children": [
+          {
+            "id": "recent-activity-card",
+            "type": "Card",
+            "children": [
+              {
+                "id": "activity-header",
+                "type": "CardHeader",
+                "children": [
+                  {
+                    "id": "activity-title",
+                    "type": "CardTitle",
+                    "children": "Recent Activity"
+                  },
+                  {
+                    "id": "activity-description",
+                    "type": "CardDescription",
+                    "children": "Latest updates from your projects"
+                  }
+                ]
+              },
+              {
+                "id": "activity-content",
+                "type": "CardContent",
+                "children": [
+                  {
+                    "id": "activity-list",
+                    "type": "div",
+                    "className": "space-y-4",
+                    "loop": {
+                      "source": "activities",
+                      "itemVar": "activity",
+                      "indexVar": "index"
+                    },
+                    "children": [
+                      {
+                        "id": "activity-item",
+                        "type": "div",
+                        "className": "flex items-start gap-3 pb-4 border-b last:border-0 last:pb-0",
+                        "children": [
+                          {
+                            "id": "activity-icon",
+                            "type": "div",
+                            "className": "p-2 rounded-lg bg-primary/10",
+                            "children": [
+                              {
+                                "id": "activity-icon-glyph",
+                                "type": "Info",
+                                "props": {
+                                  "size": 16
+                                },
+                                "className": "text-primary"
+                              }
+                            ]
+                          },
+                          {
+                            "id": "activity-details",
+                            "type": "div",
+                            "className": "flex-1",
+                            "children": [
+                              {
+                                "id": "activity-text",
+                                "type": "p",
+                                "className": "text-sm font-medium",
+                                "dataBinding": "activity.text"
+                              },
+                              {
+                                "id": "activity-time",
+                                "type": "p",
+                                "className": "text-xs text-muted-foreground",
+                                "dataBinding": "activity.time"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "quick-actions-card",
+            "type": "Card",
+            "children": [
+              {
+                "id": "actions-header",
+                "type": "CardHeader",
+                "children": [
+                  {
+                    "id": "actions-title",
+                    "type": "CardTitle",
+                    "children": "Quick Actions"
+                  },
+                  {
+                    "id": "actions-description",
+                    "type": "CardDescription",
+                    "children": "Common tasks and operations"
+                  }
+                ]
+              },
+              {
+                "id": "actions-content",
+                "type": "CardContent",
+                "children": [
+                  {
+                    "id": "actions-grid",
+                    "type": "div",
+                    "className": "grid grid-cols-2 gap-3",
+                    "children": [
+                      {
+                        "id": "action-button-1",
+                        "type": "Button",
+                        "props": {
+                          "variant": "outline"
+                        },
+                        "className": "h-24 flex-col gap-2",
+                        "events": {
+                          "onClick": "create-project"
+                        },
+                        "children": [
+                          {
+                            "id": "action-icon-1",
+                            "type": "Plus",
+                            "props": {
+                              "size": 24
+                            }
+                          },
+                          {
+                            "id": "action-label-1",
+                            "type": "span",
+                            "className": "text-sm",
+                            "children": "New Project"
+                          }
+                        ]
+                      },
+                      {
+                        "id": "action-button-2",
+                        "type": "Button",
+                        "props": {
+                          "variant": "outline"
+                        },
+                        "className": "h-24 flex-col gap-2",
+                        "events": {
+                          "onClick": "deploy"
+                        },
+                        "children": [
+                          {
+                            "id": "action-icon-2",
+                            "type": "Upload",
+                            "props": {
+                              "size": 24
+                            }
+                          },
+                          {
+                            "id": "action-label-2",
+                            "type": "span",
+                            "className": "text-sm",
+                            "children": "Deploy"
+                          }
+                        ]
+                      },
+                      {
+                        "id": "action-button-3",
+                        "type": "Button",
+                        "props": {
+                          "variant": "outline"
+                        },
+                        "className": "h-24 flex-col gap-2",
+                        "events": {
+                          "onClick": "view-logs"
+                        },
+                        "children": [
+                          {
+                            "id": "action-icon-3",
+                            "type": "Eye",
+                            "props": {
+                              "size": 24
+                            }
+                          },
+                          {
+                            "id": "action-label-3",
+                            "type": "span",
+                            "className": "text-sm",
+                            "children": "View Logs"
+                          }
+                        ]
+                      },
+                      {
+                        "id": "action-button-4",
+                        "type": "Button",
+                        "props": {
+                          "variant": "outline"
+                        },
+                        "className": "h-24 flex-col gap-2",
+                        "events": {
+                          "onClick": "settings"
+                        },
+                        "children": [
+                          {
+                            "id": "action-icon-4",
+                            "type": "Settings",
+                            "props": {
+                              "size": 24
+                            }
+                          },
+                          {
+                            "id": "action-label-4",
+                            "type": "span",
+                            "className": "text-sm",
+                            "children": "Settings"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "dataSources": {
+    "stats": {
+      "type": "static",
+      "config": {
+        "users": 1234,
+        "projects": 45,
+        "deployments": 789,
+        "successRate": "98.5%"
+      }
+    },
+    "activities": {
+      "type": "static",
+      "config": [
+        {
+          "text": "Deployed project to production",
+          "time": "2 minutes ago"
+        },
+        {
+          "text": "Created new component tree",
+          "time": "15 minutes ago"
+        },
+        {
+          "text": "Updated model schema",
+          "time": "1 hour ago"
+        },
+        {
+          "text": "Ran unit tests successfully",
+          "time": "2 hours ago"
+        }
+      ]
+    }
+  }
+}

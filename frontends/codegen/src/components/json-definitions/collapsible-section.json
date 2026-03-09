@@ -1,0 +1,58 @@
+{
+  "id": "collapsible-section-root",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": "className",
+      "transform": "const base = 'collapsible'; return data ? `${base} ${data}` : base"
+    }
+  },
+  "children": [
+    {
+      "id": "collapsible-trigger",
+      "type": "button",
+      "props": {
+        "className": "collapsible__trigger"
+      },
+      "bindings": {
+        "onClick": "handlers.handleToggle"
+      },
+      "children": [
+        {
+          "id": "collapsible-title",
+          "type": "span",
+          "bindings": {
+            "children": "data.title"
+          }
+        },
+        {
+          "id": "collapsible-icon",
+          "type": "CaretDown",
+          "bindings": {
+            "className": {
+              "source": "data.open",
+              "transform": "data ? 'accordion__trigger-icon accordion__trigger-icon--open' : 'accordion__trigger-icon'"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "collapsible-content",
+      "type": "div",
+      "conditional": {
+        "if": "data.open"
+      },
+      "props": {
+        "className": "collapsible__content"
+      },
+      "children": [
+        {
+          "id": "collapsible-body",
+          "type": "slot",
+          "slot": "children"
+        }
+      ]
+    }
+  ]
+}

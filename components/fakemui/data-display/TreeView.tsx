@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback, useMemo } from 'react'
 import clsx from 'clsx'
-import styles from '../../styles/TreeView.module.scss'
+import styles from '../../../scss/TreeView.module.scss'
 
 export interface TreeNode {
   id: string
@@ -41,6 +41,8 @@ export interface TreeViewProps {
   className?: string
   /** Dense layout */
   dense?: boolean
+  /** Test ID for automated testing */
+  testId?: string
 }
 
 interface TreeItemProps {
@@ -196,6 +198,7 @@ export function TreeView({
   endIcon,
   className,
   dense = false,
+  testId,
 }: TreeViewProps) {
   const [internalExpanded, setInternalExpanded] = useState<Set<string>>(
     new Set(defaultExpanded)
@@ -260,7 +263,7 @@ export function TreeView({
   )
 
   return (
-    <ul className={clsx(styles.treeView, className)} role="tree" aria-multiselectable={multiSelect}>
+    <ul className={clsx(styles.treeView, className)} role="tree" aria-multiselectable={multiSelect} data-testid={testId}>
       {data.map((node) => (
         <TreeItem
           key={node.id}

@@ -1,0 +1,36 @@
+// Toolbar mixin - Material Design 3
+
+@mixin toolbar($gap: 16px, $padding: 16px) {
+  display: flex;
+  align-items: center;
+  gap: $gap;
+  padding: $padding;
+  flex-wrap: wrap;
+}
+
+@mixin toolbar-dense($gap: 8px, $padding: 8px 16px) {
+  display: flex;
+  align-items: center;
+  gap: $gap;
+  padding: $padding;
+  flex-wrap: wrap;
+}
+
+@mixin app-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 16px;
+  height: 64px;
+  background: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+}
+
+@mixin app-bar-prominent {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  min-height: 128px;
+  background: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+}

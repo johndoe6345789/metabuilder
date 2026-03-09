@@ -1,19 +1,27 @@
 {
   "name": "@metabuilder/api-clients",
   "version": "0.1.0",
+  "type": "module",
   "description": "API client hooks for MetaBuilder - DBAL, async data fetching, GitHub integration",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "import": "./dist/index.js",
+      "types": "./src/index.ts"
+    }
+  },
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
     "test": "jest"
   },
   "dependencies": {
-    "@metabuilder/hooks-async": "file:../hooks-async",
-    "react": "^19.2.3",
+    "@metabuilder/hooks-async": "*",
+    "react": "^19.2.4",
     "react-redux": "^9.2.0",
-    "redux": "^4.2.1"
+    "redux": "^5.0.1"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",

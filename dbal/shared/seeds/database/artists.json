@@ -1,0 +1,110 @@
+{
+  "entity": "Artist",
+  "version": "1.0",
+  "package": "spotify_clone",
+  "description": "Sample music artists for the Spotify clone platform",
+  "records": [
+    {
+      "id": "artist_aurora_synth",
+      "tenantId": "default",
+      "name": "Aurora Synth",
+      "bio": "Berlin-based electronic producer blending analog synthesizers with orchestral arrangements. Known for immersive live shows featuring modular synth walls and real-time generative visuals. Three albums deep into a career that bridges Kraftwerk's precision with Boards of Canada's warmth.",
+      "imageUrl": "/images/artists/aurora-synth.webp",
+      "genre": "Electronic",
+      "verified": true,
+      "followers": 284500,
+      "createdAt": 0,
+      "updatedAt": 0
+    },
+    {
+      "id": "artist_midnight_crescendo",
+      "tenantId": "default",
+      "name": "Midnight Crescendo",
+      "bio": "Jazz quartet from New Orleans pushing the boundaries of modern jazz with hip-hop sampling and Afrobeat polyrhythms. Their sophomore album earned critical acclaim for its seamless fusion of live improvisation and studio production.",
+      "imageUrl": "/images/artists/midnight-crescendo.webp",
+      "genre": "Jazz",
+      "verified": true,
+      "followers": 127300,
+      "createdAt": 0,
+      "updatedAt": 0
+    },
+    {
+      "id": "artist_iron_cathedral",
+      "tenantId": "default",
+      "name": "Iron Cathedral",
+      "bio": "Progressive metal band from Stockholm known for complex time signatures, dual-guitar harmonies, and concept albums exploring Norse mythology. Their live performances feature theatrical stage design and synchronized lighting.",
+      "imageUrl": "/images/artists/iron-cathedral.webp",
+      "genre": "Metal",
+      "verified": true,
+      "followers": 531200,
+      "createdAt": 0,
+      "updatedAt": 0
+    },
+    {
+      "id": "artist_velvet_roots",
+      "tenantId": "default",
+      "name": "Velvet Roots",
+      "bio": "Neo-soul collective from Atlanta combining lush vocal harmonies with bass-heavy grooves. Seven members strong, each bringing influences from gospel, funk, and R&B to create a sound that fills stadiums while keeping the intimacy of a living room jam session.",
+      "imageUrl": "/images/artists/velvet-roots.webp",
+      "genre": "R&B/Soul",
+      "verified": true,
+      "followers": 892100,
+      "createdAt": 0,
+      "updatedAt": 0
+    },
+    {
+      "id": "artist_cactus_radio",
+      "tenantId": "default",
+      "name": "Cactus Radio",
+      "bio": "Indie folk duo from Austin, Texas weaving storytelling lyrics with fingerpicked acoustic guitar and pedal steel. Their lo-fi recordings capture the dusty warmth of Texan backroads and late-night diners.",
+      "imageUrl": "/images/artists/cactus-radio.webp",
+      "genre": "Folk",
+      "verified": false,
+      "followers": 45800,
+      "createdAt": 0,
+      "updatedAt": 0
+    },
+    {
+      "id": "artist_bass_doctrine",
+      "tenantId": "default",
+      "name": "Bass Doctrine",
+      "bio": "UK drum and bass producer crafting dark, rolling basslines with intricate breakbeat patterns. Regular presence on Hospital Records and RAM, known for high-energy DJ sets that seamlessly blend liquid funk with neurofunk.",
+      "imageUrl": "/images/artists/bass-doctrine.webp",
+      "genre": "Drum & Bass",
+      "verified": true,
+      "followers": 203700,
+      "createdAt": 0,
+      "updatedAt": 0
+    },
+    {
+      "id": "artist_sakura_dreams",
+      "tenantId": "default",
+      "name": "Sakura Dreams",
+      "bio": "Tokyo-based ambient artist creating soundscapes inspired by Japanese garden design and wabi-sabi aesthetics. Compositions use field recordings from Kyoto temples blended with granular synthesis and koto samples.",
+      "imageUrl": "/images/artists/sakura-dreams.webp",
+      "genre": "Ambient",
+      "verified": false,
+      "followers": 78400,
+      "createdAt": 0,
+      "updatedAt": 0
+    },
+    {
+      "id": "artist_concrete_poets",
+      "tenantId": "default",
+      "name": "The Concrete Poets",
+      "bio": "Post-punk revival band from Manchester channeling the angular guitar work of Wire and Gang of Four through modern production. Their politically charged lyrics and raw energy have earned them a devoted following across Europe's festival circuit.",
+      "imageUrl": "/images/artists/concrete-poets.webp",
+      "genre": "Post-Punk",
+      "verified": true,
+      "followers": 156900,
+      "createdAt": 0,
+      "updatedAt": 0
+    }
+  ],
+  "metadata": {
+    "bootstrap": false,
+    "skipIfExists": true,
+    "timestampField": "createdAt",
+    "useCurrentTimestamp": true
+  }
+}

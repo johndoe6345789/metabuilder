@@ -1,0 +1,158 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": false,
+  "title": "UI Permissions",
+  "description": "Permission level utilities and access control components",
+  "stories": [
+    {
+      "name": "PermissionBadge",
+      "render": "badge",
+      "description": "Badge showing user permission level with color coding",
+      "args": {
+        "level": 4,
+        "showLabel": true,
+        "size": "medium"
+      }
+    },
+    {
+      "name": "PermissionBadge_AllLevels",
+      "render": "badge_all_levels",
+      "description": "Display all 6 permission level badges",
+      "type": "function"
+    },
+    {
+      "name": "PermissionGate",
+      "render": "gate",
+      "description": "Conditional content wrapper based on permission level",
+      "args": {
+        "requiredLevel": 3,
+        "userLevel": 4
+      }
+    },
+    {
+      "name": "PermissionLevelSelector",
+      "render": "selector",
+      "description": "Dropdown for selecting permission levels",
+      "args": {
+        "value": 2,
+        "minLevel": 1,
+        "maxLevel": 6
+      }
+    },
+    {
+      "name": "AccessDenied",
+      "render": "access_denied",
+      "description": "Access denied alert component",
+      "args": {
+        "requiredLevel": 4,
+        "message": "Administrator access is required for this feature."
+      }
+    }
+  ],
+  "renders": {
+    "badge": {
+      "description": "Single permission badge",
+      "featured": true
+    },
+    "badge_all_levels": {
+      "description": "All permission level badges displayed together"
+    },
+    "gate": {
+      "description": "Permission gate with conditional rendering"
+    },
+    "selector": {
+      "description": "Permission level dropdown selector"
+    },
+    "access_denied": {
+      "description": "Access denied error message"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "demo-user",
+      "username": "demo_user",
+      "level": 2,
+      "email": "demo@example.com"
+    },
+    "tenant": {
+      "id": "demo-tenant",
+      "name": "Demo Organization"
+    }
+  },
+  "contextVariants": [
+    {
+      "name": "Public User",
+      "description": "Anonymous visitor (Level 1)",
+      "context": {
+        "user": {
+          "username": "anonymous",
+          "level": 1
+        }
+      }
+    },
+    {
+      "name": "Standard User",
+      "description": "Authenticated user (Level 2)",
+      "context": {
+        "user": {
+          "username": "user",
+          "level": 2
+        }
+      }
+    },
+    {
+      "name": "Moderator",
+      "description": "Content moderator (Level 3)",
+      "context": {
+        "user": {
+          "username": "moderator",
+          "level": 3
+        }
+      }
+    },
+    {
+      "name": "Admin",
+      "description": "Administrator (Level 4)",
+      "context": {
+        "user": {
+          "username": "admin",
+          "level": 4
+        }
+      }
+    },
+    {
+      "name": "God",
+      "description": "System operator (Level 5)",
+      "context": {
+        "user": {
+          "username": "god",
+          "level": 5
+        }
+      }
+    },
+    {
+      "name": "Supergod",
+      "description": "Platform owner (Level 6)",
+      "context": {
+        "user": {
+          "username": "supergod",
+          "level": 6
+        }
+      }
+    }
+  ],
+  "scripts": {
+    "renderFunctions": ["badge", "badge_all_levels", "gate", "selector", "access_denied"],
+    "ignoredScripts": ["tests"]
+  },
+  "parameters": {
+    "layout": "padded",
+    "backgrounds": {
+      "default": "light",
+      "values": [
+        { "name": "light", "value": "#f5f5f5" },
+        { "name": "dark", "value": "#1a1a1a" }
+      ]
+    }
+  }
+}

@@ -1,0 +1,14 @@
+[workspace]
+name = "mojo-snake"
+version = "0.1.0"
+description = "Snake game in Mojo with SDL3 FFI bindings"
+authors = ["MetaBuilder"]
+channels = ["conda-forge", "https://conda.modular.com/max-nightly/"]
+platforms = ["osx-arm64", "linux-64", "linux-aarch64"]
+
+[dependencies]
+mojo = "<1.0.0"
+
+[tasks]
+run = "mojo run snake.mojo"
+build = "mojo build snake.mojo -o snake"

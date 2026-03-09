@@ -1,0 +1,30 @@
+{
+  "id": "components-page",
+  "name": "Components",
+  "description": "Component tree builder",
+  "icon": "Cube",
+  "layout": {
+    "$ref": "./layouts/single-column.json"
+  },
+  "dataSources": [
+    {
+      "id": "components",
+      "$ref": "./data-sources/kv-storage.json",
+      "key": "components",
+      "defaultValue": []
+    }
+  ],
+  "components": [
+    {
+      "$ref": "./molecules/page-header-standard.json",
+      "children": [
+        {
+          "$ref": "./atoms/heading-1.json",
+          "props": {
+            "children": "Components"
+          }
+        }
+      ]
+    }
+  ]
+}

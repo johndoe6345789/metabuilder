@@ -77,7 +77,7 @@ export class WorkflowHooksExecutor implements INodeExecutor {
 
   async execute(
     node: WorkflowNode,
-    context: WorkflowContext,
+    _context: WorkflowContext,
     state: ExecutionState
   ): Promise<NodeResult> {
     const { hookType, operation, ...params } = node.parameters
@@ -364,8 +364,8 @@ export class WorkflowHooksExecutor implements INodeExecutor {
    * Operations: validate, addRule, clearErrors
    */
   private useValidation(operation: string, params: any, state: any) {
-    const { key = 'validation', values = {}, rules = {} } = params
-    const validationState = state[key] ?? { rules: {} }
+    const { key = 'validation', values = {}, rules: initialRules = {} } = params
+    const validationState = state[key] ?? { rules: initialRules }
 
     switch (operation) {
       case 'validate': {

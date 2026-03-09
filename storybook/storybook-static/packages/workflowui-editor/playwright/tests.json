@@ -1,0 +1,188 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "workflowui-editor",
+  "version": "1.0.0",
+  "description": "WorkflowUI Editor tests - visual workflow editor with node graph",
+  "tests": [
+    {
+      "name": "should load editor and display ReactFlow canvas",
+      "tags": ["@editor", "@critical"],
+      "timeout": 15000,
+      "steps": [
+        {
+          "description": "Navigate to editor with workflow ID",
+          "action": "navigate",
+          "url": "/editor/test-workflow-001"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Verify ReactFlow viewport exists",
+          "action": "expect",
+          "selector": ".react-flow__viewport, [class*='reactflow']",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should display node palette with categories",
+      "tags": ["@editor", "@nodes"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/editor/test-workflow-001"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Check for Core category in palette",
+          "action": "expect",
+          "selector": "text=Core, button:has-text('Core'), div:has-text('Core')",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should have Save and Run buttons in toolbar",
+      "tags": ["@editor", "@toolbar"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/editor/test-workflow-001"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Verify Save button exists",
+          "action": "expect",
+          "selector": "button:has-text('Save')",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        },
+        {
+          "description": "Verify Run button exists",
+          "action": "expect",
+          "selector": "button:has-text('Run')",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should display workflow name in title bar",
+      "tags": ["@editor", "@ui"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/editor/test-workflow-001"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Check workflow ID appears in page",
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toContainText",
+            "expected": "test-workflow-001"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should allow dragging node from palette to canvas",
+      "tags": ["@editor", "@interaction"],
+      "timeout": 20000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/editor/new-workflow"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "wait",
+          "timeout": 2000
+        },
+        {
+          "description": "Find a draggable node in palette",
+          "action": "expect",
+          "selector": "[draggable='true'], .node-palette-item, [class*='draggable']",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should display zoom controls",
+      "tags": ["@editor", "@controls"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/editor/test-workflow-001"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Check for zoom controls (ReactFlow default controls)",
+          "action": "expect",
+          "selector": ".react-flow__controls, button[aria-label*='zoom'], button[title*='zoom']",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should persist workflow on save",
+      "tags": ["@editor", "@persistence"],
+      "timeout": 20000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/editor/test-save-workflow"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Click Save button",
+          "action": "click",
+          "selector": "button:has-text('Save')"
+        },
+        {
+          "action": "wait",
+          "timeout": 1000
+        },
+        {
+          "description": "Check for success notification or toast",
+          "action": "expect",
+          "selector": "text=saved, text=success, [role='alert']",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    }
+  ]
+}

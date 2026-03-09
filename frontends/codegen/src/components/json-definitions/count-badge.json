@@ -1,0 +1,22 @@
+{
+  "id": "count-badge-root",
+  "type": "Badge",
+  "bindings": {
+    "variant": {
+      "source": "variant",
+      "transform": "data || 'destructive'"
+    },
+    "className": {
+      "source": ["count", "size", "variant"],
+      "transform": "(() => { const size = data[1] || 'md'; const variant = data[2] || 'destructive'; const sizeClass = size === 'sm' ? 'count-badge--sm' : 'count-badge--md'; const variantClass = variant === 'primary' ? 'count-badge--primary' : 'count-badge--destructive'; return ('count-badge ' + sizeClass + ' ' + variantClass).trim(); })()"
+    },
+    "children": {
+      "source": "count",
+      "transform": "data"
+    },
+    "_if": {
+      "source": "count",
+      "transform": "data !== 0"
+    }
+  }
+}

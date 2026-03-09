@@ -1,0 +1,10 @@
+{
+  "type": "MetabuilderWidgetProjectDashboard",
+  "jsonCompatible": false,
+  "wrapperRequired": true,
+  "load": {
+    "path": "@/components/ProjectDashboard",
+    "export": "ProjectDashboard"
+  },
+  "props": {}
+}

@@ -1,0 +1,91 @@
+{
+  "$schema": "https://packagerepo.dev/schemas/components.schema.json",
+  "package": "repo_browse",
+  "root": "browse_page",
+  "components": [
+    {
+      "id": "browse_page",
+      "name": "BrowsePage",
+      "props": [
+        { "name": "packages", "type": "array", "default": [] },
+        { "name": "search", "type": "string", "default": "" },
+        { "name": "onSearch", "type": "function" }
+      ],
+      "render": {
+        "template": {
+          "type": "Container",
+          "children": [
+            {
+              "type": "Box",
+              "className": "page-header",
+              "children": [{ "type": "Text", "variant": "h1", "children": "Browse Packages" }]
+            },
+            {
+              "type": "Input",
+              "placeholder": "Search packages...",
+              "name": "search",
+              "sx": { "mb": 3 },
+              "fullWidth": true
+            },
+            { "$ref": "package_list" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "package_list",
+      "name": "PackageList",
+      "render": {
+        "template": {
+          "type": "Box",
+          "className": "list",
+          "children": "{{packages}}"
+        }
+      }
+    },
+    {
+      "id": "package_item",
+      "name": "PackageItem",
+      "props": [
+        { "name": "namespace", "type": "string" },
+        { "name": "name", "type": "string" },
+        { "name": "version", "type": "string" }
+      ],
+      "render": {
+        "template": {
+          "type": "Box",
+          "className": "list-item",
+          "children": [
+            {
+              "type": "Box",
+              "className": "list-item__content",
+              "children": [
+                { "type": "Chip", "size": "sm", "children": "{{namespace}}" },
+                { "type": "Text", "sx": { "fontWeight": 600, "ml": 1 }, "children": "{{name}}" },
+                { "type": "Chip", "size": "sm", "variant": "outline", "sx": { "ml": 1 }, "children": "v{{version}}" }
+              ]
+            },
+            {
+              "type": "Box",
+              "className": "list-item__trailing",
+              "children": [
+                { "type": "Button", "size": "sm", "variant": "primary", "children": "Download" }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "empty_state",
+      "name": "EmptyState",
+      "render": {
+        "template": {
+          "type": "Box",
+          "className": "empty-state",
+          "children": [{ "type": "Text", "children": "No packages found" }]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "id": "step-indicator-root",
+  "type": "div",
+  "props": {
+    "className": "step-indicator"
+  }
+}

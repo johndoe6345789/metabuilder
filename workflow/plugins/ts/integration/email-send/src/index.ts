@@ -61,7 +61,10 @@ export class EmailSendExecutor implements INodeExecutor {
         output: {
           messageId: mockMessageId,
           to: resolvedTo,
+          cc: resolvedCc,
+          bcc: resolvedBcc,
           subject: resolvedSubject,
+          bodyLength: emailBody.length,
           timestamp: new Date().toISOString()
         },
         timestamp: Date.now(),

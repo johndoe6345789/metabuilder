@@ -1,0 +1,27 @@
+{
+  "$schema": "../../../schemas/package-schemas/playwright.schema.json",
+  "package": "pastebin",
+  "version": "1.0.0",
+  "description": "Home page load and layout tests",
+  "suite": "Home Page",
+  "tests": [
+    {
+      "name": "no hydration errors on home page",
+      "steps": [
+        { "action": "navigate", "url": "" },
+        { "action": "hook", "name": "trackConsoleErrors" },
+        { "action": "waitForSelector", "selector": "[data-testid='namespace-selector'],[data-testid='snippet-manager-loading']", "timeout": 10000 },
+        { "action": "hook", "name": "assertNoConsoleErrors" }
+      ]
+    },
+    {
+      "name": "no horizontal overflow on mobile",
+      "steps": [
+        { "action": "setViewport", "width": 375, "height": 812 },
+        { "action": "navigate", "url": "" },
+        { "action": "waitForLoadState", "state": "networkidle" },
+        { "action": "evalExpect", "name": "hasHorizontalScroll", "args": { "selector": "body" }, "assertion": { "matcher": "toBeFalsy" } }
+      ]
+    }
+  ]
+}

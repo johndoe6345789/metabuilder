@@ -13,7 +13,7 @@ import {
   selectGridSnap,
   selectShowGrid,
   selectSnapSize
-} from '@metabuilder/redux-slices'/canvasSlice';
+} from '@metabuilder/redux-slices/canvasSlice';
 
 export interface UseCanvasSettingsReturn {
   gridSnap: boolean;

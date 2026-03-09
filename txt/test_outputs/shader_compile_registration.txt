@@ -1,0 +1,4 @@
+shader.compile registration check:
+  shaderRegistry_: VALID
+  graphicsService_: VALID
+  Result: REGISTERING

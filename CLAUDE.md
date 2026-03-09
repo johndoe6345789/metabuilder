@@ -1,1010 +1,389 @@
 # MetaBuilder - AI Assistant Guide
 
-**Last Updated**: 2026-01-24
-**Status**: Phase 2 Complete, Universal Platform in Progress
-**Scale**: 27,826+ files across 34 directories (excludes generated)
-**Philosophy**: 95% JSON/YAML configuration, 5% TypeScript/C++ infrastructure
-
-**Recent Updates** (Feb 1, 2026):
-- **CodeQL Code Search** (✅ Feb 1, 2026):
-  - **Purpose**: Semantic code search for story planning across 2-3M LOC codebase
-  - **Languages**: TypeScript/JavaScript (HIGH), Python (MEDIUM), C++ (MEDIUM), Go (LOW)
-  - **Usage**: Manual trigger via Actions → "CodeQL Analysis" → "Run workflow"
-  - **Config**: `.github/codeql/codeql-config.yml`, `.github/workflows/codeql-analysis.yml`
-  - **NOT for security gates** - separate from gated-pipeline.yml
-  - See: `.github/workflows/README.md` for full documentation
-- **FakeMUI Organization Complete** (✅ Feb 1, 2026):
-  - **Phase 2 Email Components COMPLETE**: Fixed all import paths, promoted from email-wip/ → email/
-  - **Cleanup**: Removed wip/ directory (duplicate code in src/utils/)
-  - **Exports**: Email components now fully exported from @metabuilder/fakemui
-  - **Status**: All 22 email components production-ready (atoms, inputs, surfaces, data-display, feedback, layout, navigation)
-  - **Python/PyQt6**: 15 Python implementation files preserved (base classes, components for Qt desktop)
-  - **No WIP policy**: All directories now production-ready, no -wip naming
-
-**Earlier Updates** (Jan 24, 2026):
-- **HIGH Priority Dependency Fixes** (✅ ALL COMPLETED - Jan 24, 2026):
-  - Testing library standardization (4 packages):
-    * pastebin: @testing-library/react v14 → v16, jest-dom 6.1 → 6.6
-    * redux/hooks-async: @testing-library/react v14 → v16 (added), jest-dom 6.6 (added)
-    * workflow: jest 29.0.0 → 29.7.0
-    * codegen/spark-tools: vitest 3.0.9 → 4.0.16
-  - Storybook configuration fixes (2 packages):
-    * storybook: Standardized all addon versions to 8.6.15 (matching core framework)
-    * workflowui & storybook: Fixed React type mismatches (@types/react 19 → 18)
-  - Verification: npm install succeeds (1197 packages, 0 vulnerabilities) ✅
-  - Status: **PRODUCTION-READY** - All HIGH priority standardization complete
-
-**Earlier Updates** (Jan 23, 2026):
-- **Email Client Implementation** (✅ PHASES 1-5 COMPLETE - Feb 1, 2026):
-  - Comprehensive implementation plan: `docs/plans/2026-01-23-email-client-implementation.md`
-  - **Phase 1** (✅ DBAL Schemas): EmailClient, EmailFolder, EmailMessage, EmailAttachment entities with multi-tenant ACL
-  - **Phase 2** (✅ COMPLETE - Feb 1, 2026): 22 email components production-ready in fakemui/react/components/email/
-  - **Phase 3** (✅ Redux): Email state slices for list, detail, compose, filters
-  - **Phase 4** (✅ Custom Hooks): 6 hooks for email operations (sync, store, mailboxes, accounts, compose, messages)
-  - **Phase 5** (✅ API Endpoints): Package metadata and page-config endpoints live - enables declarative UI loading
-  - **Production Build**: `npm run build` ✅ succeeds - `.next/` ready for Docker deployment
-  - **Next.js 16 Turbopack**: Fully configured, Server/Client components properly split
-  - **Architecture**: Minimal Next.js bootloader loads declarative package config from API
-  - **Phases 6-8 TODO**: Workflow plugins (IMAP/SMTP), Backend service (Flask), Docker deployment
-  - Status: **FRONTEND COMPLETE (Phases 1-5)** - All UI components, Redux, hooks, and API endpoints ready
-- **Mojo Compiler Integration** (✅ COMPLETE & VERIFIED - All 5 Phases Executed):
-  - Integrated full Mojo compiler from modular repo (21 source files, 260 KB)
-  - Architecture: 5 phases (frontend, semantic, IR, codegen, runtime) - ALL EXECUTED ✅
-  - Test suite: 15 comprehensive test files + 5 snake game phase tests (12 tests total, 100% pass rate)
-  - Examples: 9 compiler usage examples + 37 language sample programs
-  - Reorganized: `examples/` → `samples/`, added `compiler/` subproject
-  - Documentation: mojo/CLAUDE.md, compiler/CLAUDE.md, README files created
-  - **Snake game verification COMPLETE**: All 5 phases tested with full metrics ✅
-    * Phase 1 (Frontend): 2,500+ tokens, 28 AST nodes - PASS ✅
-    * Phase 2 (Semantic): 0 type errors, 30+ symbols - PASS ✅
-    * Phase 3 (IR): 19.65 KB MLIR, 28 functions lowered - PASS ✅
-    * Phase 4 (Codegen): 2.2 KB LLVM IR, 1.03 KB x86_64 binary, 5.7% optimization - PASS ✅
-    * Phase 5 (Runtime): SDL3 FFI, 1MB heap, successful execution - PASS ✅
-  - Test results: 12/12 tests PASSED (100%) ✅
-  - Comprehensive execution report: `txt/MOJO_COMPILER_OWN_IMPLEMENTATION_EXECUTION_2026-01-23.md` ✅
-  - Status: **PRODUCTION-READY** - Full internal compiler with verified execution pipeline
-- **FakeMUI Directory Restructuring** (✅ COMPLETE & VERIFIED - Feb 1, 2026):
-  - **Feb 1, 2026**: Removed wip/ directory (duplicate of src/utils/), deleted 16 orphaned Python stubs
-  - **Feb 1, 2026**: Email components promoted to production (email-wip/ → email/), all imports fixed
-  - **Jan 23, 2026**: Promoted directories to first-class naming: `qml/hybrid/` (was components-legacy), `utilities/` (was legacy/utilities)
-  - Flattened QML nesting: `qml/components/` (was qml-components/qml-components/)
-  - Removed empty `legacy/` and `python/fakemui/` directories
-  - Updated qmldir with 135 component registrations to use new paths
-  - **No WIP policy enforced**: All directories production-ready, no -wip/-temp/-todo naming
-  - Verification complete: All imports resolved, component library production-ready
-- All library versions updated: React 19.2.3, TypeScript 5.9.3, Next.js normalized, @reduxjs/toolkit 2.5.2
-- Multi-version peer dependencies enabled for gradual upgrades
-- **Dependency Management Upgrade**: Conan libraries updated (14 changes), npm security patches applied (9 packages), Python/Go workflow plugin management established
-- **Project Root Cleanup**: Removed one-off scripts, organized reports in /txt/
-- **FakeMUI Accessibility**: Complete data-testid & ARIA integration (Button, TextField updated; 105 components ready for systematic update)
-- **Critical NPM Dependency Fix** (Jan 23, 2026 - ✅ ROOT LEVEL COMPLETE):
-  - **Root fix**: eslint 9.41.0 → 9.39.2 (4 files), @eslint/js 9.41.0 → 9.39.2, 9.21.0 → 9.28.0
-  - **Root fix**: @tanstack/react-query 5.91.2 → 5.90.20, framer-motion 13.0.3 → 12.29.0, react-hook-form 7.73.0 → 7.71.1, vite 7.4.0 → 7.3.1
-  - **Methodology**: ✅ Full Planning (Explore agent), ✅ Full Implementation (9 versions fixed), ✅ Full Verification (npm install/ls/audit), ✅ Full Documentation (/txt/), ✅ Full Commits
-  - **Result**: Root npm install succeeds (924 packages), npm audit clean (7 moderate dev-only)
-  - **Deliverables**: ESLINT_VITE_COMPREHENSIVE_FIX_PLAN_2026-01-23.txt, DEPENDENCY_FIX_COMPLETION_SUMMARY_2026-01-23.txt
-- **FakeMUI Import Paths Fixed** (Jan 23, 2026 - ✅ COMPLETE):
-  - Updated index.ts from broken `./fakemui/inputs` paths to canonical `./react/components/inputs` paths (10 imports fixed)
-  - Removed symlinks (no longer needed with direct paths)
-  - WorkflowUI package.json: classnames ^2.5.2 → ^2.3.2 (non-existent version fixed)
-  - Impact: WorkflowUI Docker build can now proceed
-
-- **Project-Wide Dependency Remediation** (Jan 23, 2026 - ✅ PHASE 1 COMPLETE):
-  - **Scope**: Comprehensive audit of 89 package.json files across entire codebase
-  - **Findings**: 1 CRITICAL issue (fixed), 2 MEDIUM issues (Phase 2), 15 LOW standardizations (Phase 3), 60 high-conflict packages mapped
-  - **Phase 1 Fixed**: zod@^3.25.76 → ^4.3.5 in old/package.json (invalid version eliminated)
-  - **Methodology**: ✅ Full Planning (explored 231 packages), ✅ Full Implementation (Phase 1), ✅ Full Verification (npm install succeeds), ✅ Full Documentation (/txt/), ✅ Full Commits
-  - **Phase 2 Ready**: Evaluate @arcjet/next@^1.0.0-beta.15, update eslint-plugin-tailwindcss to stable (next sprint)
-  - **Phase 3 Ready**: Standardize 15 LOW packages across 89 files for consistency (next release)
-  - **Deliverable**: PROJECT_WIDE_DEPENDENCY_REMEDIATION_PLAN_2026-01-23.txt (comprehensive 4-phase plan)
+**Last Updated**: 2026-03-04 | **Status**: Phase 2 & 3 Complete, Universal Platform in Progress
+**Scale**: 27,826+ files across 34 directories | **Philosophy**: 95% JSON config, 5% TS/C++ infrastructure
+**Documentation**: Code = Doc (self-documenting Python scripts with argparse)
 
 ---
 
-## Quick Navigation
+## Code = Doc Principle
 
-| Document | Location | Purpose |
-|----------|----------|---------|
-| **Core Development Guide** | [docs/CLAUDE.md](./docs/CLAUDE.md) | Full development principles, patterns, workflows |
-| **Email Client Plan** | [docs/plans/2026-01-23-email-client-implementation.md](./docs/plans/2026-01-23-email-client-implementation.md) | Email client implementation phases 1-8 |
-| **WorkflowUI Frontend** | [workflowui/](./workflowui/) | Frontend app using FakeMUI + Redux |
-| **CodeForge IDE Guide** | [codegen/CLAUDE.md](./codegen/CLAUDE.md) | JSON-to-React migration, component system |
-| **Pastebin Conventions** | [pastebin/CLAUDE.md](./pastebin/CLAUDE.md) | Documentation file organization |
-| **Domain-Specific Rules** | [docs/AGENTS.md](./docs/AGENTS.md) | Task-specific guidance |
-| **FakeMUI Guide** | [fakemui/STRUCTURE.md](./fakemui/STRUCTURE.md) | Component library organization and usage |
+All documentation is executable code. No separate markdown docs.
+
+```bash
+# Entry points (each with --help)
+./metabuilder.py --help              # Root project manager
+./codegen/codegen.py --help          # CodeForge IDE
+./pastebin/pastebin.py --help        # Pastebin
+./gameengine/gameengine.py --help    # Game engine
+./postgres/postgres.py --help        # PostgreSQL dashboard
+./mojo/mojo.py --help               # Mojo compiler
+./deployment/build-base-images.sh --list # Docker base images
+
+# Documentation (SQLite3 + FTS5 full-text search)
+cd txt && python3 reports.py search "query"     # 212 reports
+cd docs && python3 docs.py search "query"       # 217 docs, 13 categories
+python3 docs.py list --category guides
+```
 
 ---
 
-## Complete Directory Index
+## Completed Milestones (All ✅)
 
-| Directory | Files | Category | Description |
-|-----------|-------|----------|-------------|
-| `dbal/` | 642 | Core | Database Abstraction Layer (TS dev / C++ prod) |
-| `workflow/` | 765 | Core | DAG workflow engine with multi-language plugins |
-| `frontends/` | 495 | Core | CLI, Qt6, Next.js frontends |
-| `packages/` | 550 | Core | 62 modular feature packages |
-| `schemas/` | 105 | Core | JSON Schema validation |
-| `services/` | 29 | Core | Media daemon (FFmpeg/ImageMagick) |
-| `services/email_service/` | TBD | Core | Email service (IMAP/SMTP/POP3, Python Flask) |
-| `prisma/` | 1 | Core | Prisma schema configuration |
-| `emailclient/` | TBD | App Dev | Email client bootloader (minimal Next.js harness) |
-| `exploded-diagrams/` | 17,565 | Standalone | Interactive 3D exploded diagrams (Next.js + JSCAD) |
-| `gameengine/` | 2,737 | Standalone | SDL3/bgfx 2D/3D game engine |
-| `codegen/` | 1,926 | Standalone | CodeForge IDE (React+Monaco) |
-| `pastebin/` | 1,114 | Standalone | Code snippet sharing (Next.js) |
-| `fakemui/` | 758 | Standalone | Material UI clone (145 React components + 421 icons, organized by implementation type) |
-| `postgres/` | 212 | Standalone | PostgreSQL admin dashboard |
-| `pcbgenerator/` | 87 | Standalone | PCB design library (Python) |
-| `mojo/` | 82 | Standalone | Mojo compiler implementation + language examples |
-| `packagerepo/` | 72 | Standalone | Package repository service |
-| `cadquerywrapper/` | 48 | Standalone | Parametric 3D CAD (Python) |
-| `sparkos/` | 48 | Standalone | Minimal Linux distro + Qt6 |
-| `storybook/` | 40 | Standalone | Component documentation |
-| `dockerterminal/` | 37 | Standalone | Container management dashboard |
-| `smtprelay/` | 22 | Standalone | SMTP relay (Python/Twisted) |
-| `caproverforge/` | 19 | Standalone | CapRover mobile client |
-| `repoforge/` | 17 | Standalone | GitHub Android client |
-| `docs/` | 151 | Docs | Project documentation |
-| `old/` | 149 | Archive | Legacy Spark implementation |
-| `txt/` | 3 | Docs | Text files |
-| `.github/` | 52 | CI/CD | GitHub Actions, templates, prompts |
-| `deployment/` | 25 | Infra | Docker, deployment configs |
-| `spec/` | 15 | Docs | TLA+ formal specifications |
-| `scripts/` | 13 | Tooling | Build and migration scripts |
-| `config/` | 12 | Config | Lint, test configuration |
-| `e2e/` | 6 | Testing | Playwright E2E infrastructure |
-| `.claude/` | 2 | Config | Claude AI settings |
-| `.openhands/` | 1 | Config | OpenHands AI agent config |
+- **Mar 4**: DBAL C++ event-driven workflow engine (`pastebin.User.created` → 15-node JSON workflow → seeded namespaces + snippets), full YAML→JSON migration (63 files, yaml-cpp removed), JWT auth + JSON ACL, declarative seed data (`dbal/shared/seeds/database/`), i18n (EN/ES) across all pastebin components, dark/light theme switcher
+- **Feb 7**: Game engine CLI args (`--bootstrap`, `--game`), 27/27 tests passing (100%)
+- **Feb 6**: 6 new DB backends (total 14), SQLite3 doc migration, Docker dev container, WorkflowUI E2E (92.6%)
+- **Feb 5**: WorkflowUI mock DBAL testing, Settings/Help pages, DBAL env var config
+- **Feb 4**: SQLiteAdapter generic refactoring, YAML Schema Spec 2.0, Dynamic entity loading (TS+C++), DBAL hooks integration, FakeMUI migration
+- **Feb 3**: Visual workflow editor (n8n-style), Dynamic plugin registry (152 nodes)
+- **Feb 2**: WorkflowUI migration to root packages (77% file reduction)
+- **Feb 1**: CodeQL search, FakeMUI organization, Email components (22)
+- **Jan 24**: Dependency fixes, testing library standardization
+- **Jan 23**: Email client (Phases 1-5), Mojo compiler, FakeMUI restructuring, dependency remediation
 
-*Note: Generated directories excluded: `node_modules/`, `playwright-report/`, `test-results/`, `.git/`, `.idea/`, `.vscode/`*
+**Details**: Search `cd txt && python3 reports.py search "topic"` for full completion reports.
+
+---
+
+## Directory Index
+
+| Directory | Files | Description |
+|-----------|-------|-------------|
+| `dbal/` | 495 | Database Abstraction Layer (C++ daemon + shared schemas) |
+| `workflow/` | 765 | DAG workflow engine, multi-language plugins |
+| `frontends/` | 495 | CLI (C++), Qt6 (QML), Next.js (React) |
+| `packages/` | 550 | 62 modular feature packages |
+| `fakemui/` | 758 | Material UI clone (145 React + 421 icons) |
+| `gameengine/` | 2,737 | SDL3/bgfx 2D/3D game engine |
+| `codegen/` | 1,926 | CodeForge IDE (React+Monaco) |
+| `pastebin/` | 1,114 | Code snippet sharing (Next.js) |
+| `exploded-diagrams/` | 17,565 | Interactive 3D exploded diagrams |
+| `schemas/` | 105 | JSON Schema validation |
+| `services/` | 29 | Media daemon (FFmpeg/ImageMagick) |
+| `postgres/` | 212 | PostgreSQL admin dashboard |
+| `mojo/` | 82 | Mojo compiler + language examples |
+| `docs/` | 1 DB | SQLite3 (217 docs, 13 categories, FTS5) |
+| `txt/` | 1 DB | SQLite3 (212 reports, FTS5, archives) |
+| `old/` | 149 | Legacy Spark implementation |
+| `.github/` | 52 | GitHub Actions, templates |
+
+*Other standalone: pcbgenerator, packagerepo, cadquerywrapper, sparkos, storybook, dockerterminal, smtprelay, caproverforge, repoforge, emailclient, prisma, deployment, spec, scripts, config, e2e*
 
 ---
 
 ## Core Principles
 
 ### 1. 95% Data, 5% Code
-- UI components, workflows, pages, business logic = **JSON**
-- TypeScript/C++ only handles rendering and persistence
+- UI, workflows, pages, business logic = **JSON**
+- Entities NEVER hardcoded - loaded from JSON schemas
+- Adapters NEVER hardcoded - discovered dynamically
 
 ### 2. Schema-First Development
 ```
-dbal/shared/api/schema/entities/    # YAML entities (SOURCE OF TRUTH)
-schemas/package-schemas/            # JSON validation schemas
+dbal/shared/api/schema/entities/    # JSON entities (SOURCE OF TRUTH)
+schemas/package-schemas/            # JSON validation schemas (27 total)
+dbal/shared/seeds/database/         # Declarative JSON seed data
 ```
 
 ### 3. Multi-Tenant by Default
-```typescript
-// EVERY query must filter by tenantId - no exceptions
-const records = await db.users.list({ filter: { tenantId } })
-```
+Every query MUST filter by `tenantId` - no exceptions.
 
-### 4. DBAL > Prisma > Raw SQL
-```typescript
-const db = getDBALClient()       // Highest - handles ACL, caching
-const prisma = getPrismaClient() // Middle - only if DBAL doesn't support
-// Raw SQL - never do this
+### 4. Data Access Hierarchy
+```
+1. Redux + redux-persist     - Client-side state (IndexedDB)
+2. DBAL hooks (fetch)        - Server data via C++ DBAL REST API
+3. Raw SQL                   - NEVER
 ```
 
 ### 5. One Lambda Per File
-```
-src/lib/users/createUser.ts   // One function per file
-src/lib/users/listUsers.ts    // One function per file
-```
+`src/lib/users/createUser.ts` - one function per file.
 
 ### 6. JSON Script for Business Logic
-```json
-{
-  "version": "2.2.0",
-  "nodes": [
-    { "id": "filter", "type": "operation", "op": "filter",
-      "condition": "{{ $json.status === 'active' }}" }
-  ]
-}
-```
+Workflows defined in JSON with version 2.2.0 format.
 
 ---
 
 ## Key Subsystems
 
-### DBAL - Database Abstraction Layer (`dbal/`)
+### DBAL (`dbal/`)
 
-**Structure**:
+C++ REST API daemon. Client-side persistence handled by `@metabuilder/redux-persist` (IndexedDB).
+
 ```
 dbal/
-├── development/          # TypeScript implementation (Phase 2 - CURRENT)
-│   └── src/
-│       ├── adapters/     # Prisma, Memory, ACL adapters
-│       ├── blob/         # S3, filesystem, memory storage
-│       ├── core/         # Client, types, errors
-│       └── workflow/     # DAG executor, node executors
-├── production/           # C++ implementation (Phase 3 - FUTURE)
-└── shared/
-    └── api/schema/       # YAML entity definitions (SOURCE OF TRUTH)
-        ├── entities/     # 18 entity definitions
-        └── operations/   # Operation specifications
+├── production/      # C++ daemon - SQLite, PostgreSQL, MySQL, Drogon HTTP
+│   ├── src/config/  # EnvConfig (env vars, NO hardcoded paths)
+│   ├── src/workflow/ # Event-driven workflow engine (WfEngine, WfExecutor, 7 step types)
+│   ├── src/auth/     # JWT validation + JSON ACL config
+│   ├── build-config/# Dockerfile, CMakeLists, conanfile (no yaml-cpp — JSON only)
+│   ├── templates/sql/# Jinja2 SQL templates (Inja library)
+│   └── .env.example # ~30 config options documented
+├── shared/api/schema/
+│   ├── entities/    # JSON entity definitions (39 entities, SOURCE OF TRUTH)
+│   ├── events/      # event_config.json → workflow mappings
+│   ├── workflows/   # on_user_created.json etc.
+│   └── auth/        # auth.json (JWT + ACL rules)
+└── shared/seeds/database/ # Declarative JSON seed data (auto-loaded at startup)
 ```
 
-**Entity Categories**:
-| Category | Entities |
-|----------|----------|
-| Core | `user`, `session`, `workflow`, `package`, `ui_page` |
-| Access | `credential`, `component_node`, `page_config` |
-| Packages | `forum`, `notification`, `audit_log`, `media`, `irc`, `streaming` |
-| Domain | `product`, `game`, `artist`, `video` |
+**Workflow Engine**: `pastebin.User.created` → detached thread → `on_user_created.json` → Default + Examples namespaces + 5 snippet templates. Event dispatch wraps `send_success` callback in entity route handler.
+
+**Auto-Seed**: `DBAL_SEED_ON_STARTUP=true` → `SeedLoaderAction::loadSeeds()` in `registerRoutes()`. Seed files are idempotent (skip if records exist). Must call `ensureClient()` before seeding — `dbal_client_` is null during route registration.
+
+**JWT Auth**: `DBAL_AUTH_CONFIG=/app/schemas/auth/auth.json` — defines which endpoints require auth and what roles can access them.
+
+**Entity Categories**: Core (user, session, workflow, package, ui_page), Access (credential, component_node, page_config), Packages (forum, notification, audit_log, media, irc, streaming), Domain (product, game, artist, video)
+
+**14 Database Backends**:
+| Adapter | Backend | Notes |
+|---------|---------|-------|
+| memory | In-memory | Testing/development |
+| sqlite | SQLite | Embedded, generic CRUD via templates |
+| postgres | PostgreSQL | Direct connection, no ORM |
+| mysql | MySQL | Direct connection |
+| mariadb | MariaDB | Reuses mysql adapter |
+| cockroachdb | CockroachDB | Reuses postgres adapter |
+| mongodb | MongoDB | mongo-cxx-driver, JSON↔BSON |
+| redis | Redis | Cache layer (L1/L2 with primary DB) |
+| elasticsearch | Elasticsearch | Search layer (full-text, analytics) |
+| cassandra | Cassandra | Wide-column store |
+| surrealdb | SurrealDB | Multi-model (docs/graphs/KV) |
+| supabase | Supabase REST/Direct | PostgreSQL + REST + Realtime + RLS |
+| prisma | Prisma | ORM, HTTP bridge |
+
+**Config**: `DBAL_SCHEMA_DIR`, `DBAL_TEMPLATE_DIR`, `DATABASE_URL` (adapter options as query strings)
+**Endpoints**: `/health`, `/version`, `/status`, `/{tenant}/{package}/{entity}` (RESTful CRUD)
+
+**Multi-Adapter Patterns**:
+- **Redis caching**: `DBAL_CACHE_URL=redis://localhost:6379/0?ttl=300&pattern=read-through`
+- **Elasticsearch search**: `DBAL_SEARCH_URL=http://localhost:9200?index=dbal_search&refresh=true`
+- Patterns: read-through, write-through, cache-aside, dual-write, CDC, search-first
 
 ### Workflow Engine (`workflow/`)
 
-**Structure**:
-```
-workflow/
-├── executor/             # Multi-language executors
-│   ├── ts/               # TypeScript (primary)
-│   ├── python/           # Python executor
-│   └── cpp/              # C++ (planned)
-├── plugins/              # Multi-language plugins
-│   ├── cpp/              # 16 plugin categories
-│   ├── python/           # Python plugins
-│   ├── ts/               # TypeScript plugins
-│   ├── go/               # Go plugins
-│   ├── rust/             # Rust plugins
-│   └── mojo/             # Mojo plugins
-└── examples/             # 19 example workflows
-```
-
-**C++ Plugin Categories**: control, convert, core, dict, list, logic, math, string, notifications, test, tools, utils, var, web
-
-### Frontends (`frontends/`)
-
-| Frontend | Tech | Purpose |
-|----------|------|---------|
-| `cli/` | C++ | Command-line interface |
-| `nextjs/` | React/Next.js | **Primary** web application |
-| `qt6/` | C++/QML | Desktop application (22 packages) |
+Multi-language: executors (TS, Python, C++), plugins (C++/16 categories, Python, TS, Go, Rust, Mojo), 19 example workflows. Dynamic plugin registry at `/api/plugins` (152 nodes).
 
 ### Game Engine (`gameengine/`)
 
-**Tech Stack**:
-- **Graphics**: SDL 3.2.20, bgfx 1.129, MaterialX 1.39.1
-- **3D/Physics**: Assimp, Bullet3, Box2D, GLM
-- **Media**: FFmpeg 8.0.1, libvips, OGG/Vorbis/Theora
-- **ECS**: EnTT 3.16.0
-
-**Services** (36 interfaces): application_loop, lifecycle, audio, config, crash_recovery, graphics_backend, gui, input, materialx, render_graph, scene, shader_compiler, soundboard, workflow
+SDL 3.2.20, bgfx 1.129, MaterialX 1.39.1, Assimp, Bullet3, Box2D, EnTT 3.16.0, FFmpeg 8.0.1. 36 service interfaces. CLI: `--bootstrap bootstrap_mac --game seed`.
 
 ### CodeForge IDE (`codegen/`)
 
-Browser-based low-code IDE migrating to JSON-driven architecture:
+~420 TSX files (legacy) → 338 JSON definitions (target). See `codegen/CLAUDE.md`.
 
-- **~420 TSX files** (legacy) → **338 JSON definitions** (target)
-- **Pattern**: JSON components + custom hooks
-- **Framework layer** (173 TSX): Radix/Shadcn primitives - must stay TSX
-- **Application layer** (256+ files): Business logic - converting to JSON
+### FakeMUI (`fakemui/`)
 
-See [codegen/CLAUDE.md](./codegen/CLAUDE.md) for migration details.
-
-### FakeMUI Component Library (`fakemui/`)
-
-Material Design 3 component library with multi-implementation support:
-
-**Current Organization** (Jan 23, 2026):
-```
-fakemui/
-├── react/components/    # 145 production-ready React/TypeScript components
-│   ├── atoms/          # Basic building blocks (9)
-│   ├── inputs/         # Form controls (30)
-│   ├── surfaces/       # Containers & cards (15)
-│   ├── layout/         # Grid, Flex, Box, Stack (8)
-│   ├── data-display/   # Tables, Lists, Trees (26)
-│   ├── feedback/       # Alerts, Progress, Snackbars (6)
-│   ├── navigation/     # Tabs, Drawers, Breadcrumbs (22)
-│   ├── utils/          # Portals, Popovers, Tooltips (15)
-│   ├── lab/            # Experimental features (11)
-│   ├── x/              # Advanced components (11)
-│   ├── theming/        # Material Design 3 theme
-│   └── workflows/      # Workflow-specific components
-├── qml/                # Desktop QML components (104+)
-├── python/             # Python bindings (15 modules)
-├── icons/              # 421 SVG icons
-├── styles/             # 78 SCSS modules
-├── theming/            # Theme configuration
-└── legacy/             # Legacy utilities and migrations
-```
-
-**Component Coverage**: 167 total components across 11 categories (145 core + 22 email)
-**Usage**: Import from `@metabuilder/fakemui` - all components exported from `index.ts`
-**Status**: ✅ Production-ready, actively used in workflowui
-**Email Components** (Jan 23, 2026 - 22 new components):
-- **Atoms** (3): AttachmentIcon, StarButton, MarkAsReadCheckbox
-- **Inputs** (3): EmailAddressInput, RecipientInput, BodyEditor
-- **Surfaces** (4): EmailCard, MessageThread, ComposeWindow, SignatureCard
-- **Data-Display** (4): AttachmentList, EmailHeader, FolderTree, ThreadList
-- **Feedback** (2): SyncStatusBadge, SyncProgress
-- **Layout** (3): MailboxLayout, ComposerLayout, SettingsLayout
-- **Navigation** (2): AccountTabs, FolderNavigation
-**See**: [fakemui/STRUCTURE.md](./fakemui/STRUCTURE.md) for detailed layout and component mapping
+167 components (145 core + 22 email) across 11 categories. Import from `@metabuilder/fakemui`. React/TS, QML (104+), Python (15), 421 icons, 78 SCSS modules.
 
 ### React Hooks (`hooks/`)
 
-**Status**: ✅ Centralized hooks package (Jan 23, 2026)
+`@metabuilder/hooks` (30 hooks), `@metabuilder/hooks-utils` (useTableState, useAsyncOperation, useDebounced, useThrottled), `@metabuilder/hooks-forms` (useFormBuilder). Multi-version peer deps (React 18/19, Redux 8/9).
 
-**Package**: `@metabuilder/hooks@1.0.0` - 30 custom React hooks consolidated from across codebase
+### Redux
 
-**Hook Categories** (by functionality):
-- **Authentication** (4 hooks): useLoginLogic, useRegisterLogic, usePasswordValidation, useAuthForm
-- **Dashboard & UI** (4 hooks): useDashboardLogic, useResponsiveSidebar, useHeaderLogic, useProjectSidebarLogic
-- **Storage & Data** (3 hooks): useStorageDataHandlers, useStorageSettingsHandlers, useStorageSwitchHandlers
-- **Design Tools** (2 hooks): useFaviconDesigner, useDragResize
-- **Development** (1 hook): useGithubBuildStatus
-- **Utilities**: Redux hooks (useAppDispatch, useAppSelector), Context utilities (ToastContext, I18nNavigation)
+12 packages: hooks, hooks-utils, hooks-forms, core-hooks, api-clients, hooks-*, redux-slices, service-adapters, timing-utils. Active in: workflowui, frontends/nextjs, codegen, pastebin.
 
-**Usage**:
-```typescript
-// Default import - all hooks
-import { useDashboardLogic } from '@metabuilder/hooks'
+### Email Client
 
-// Conditional exports - tree-shaking
-import { useLoginLogic } from '@metabuilder/hooks/useLoginLogic'
-```
-
-**Workspace Setup** (Jan 23, 2026):
-- Added to root `package.json` workspaces array
-- Properly configured `exports` in hooks/package.json for named imports
-- Supports multi-version peer dependencies (React 18/19, Redux 8/9)
-- Location: `/hooks/` at project root
-
-### Utility Hooks (`redux/hooks-utils/`, `redux/hooks-forms/`)
-
-**Status**: ✅ New high-priority utilities (Jan 23, 2026)
-
-**Packages Created**:
-- `@metabuilder/hooks-utils@1.0.0` - Data table, async operations, and timing utilities
-  - `useTableState` - Unified data grid: pagination + sorting + filtering + search
-  - `useAsyncOperation` - Non-Redux async with retry and caching
-  - `useDebounced` - Value debouncing with leading/trailing options
-  - `useThrottled` - Value throttling for continuous updates
-
-- `@metabuilder/hooks-forms@1.0.0` - Form management with validation
-  - `useFormBuilder` - Complete form state with field arrays and validation
-  - Field-level and form-level error tracking
-  - Touched/dirty state management
-  - Submit state and error handling
-
-**Impact**: Eliminates ~1,500 lines of duplicate code across codegen, workflowui, pastebin
-
-**Usage**:
-```typescript
-import { useTableState, useAsyncOperation } from '@metabuilder/hooks-utils'
-import { useFormBuilder } from '@metabuilder/hooks-forms'
-
-// Data grid with all operations
-const table = useTableState(items, { pageSize: 10, searchFields: ['name'] })
-table.setSearch('filter')
-table.sort('name')
-table.addFilter({ field: 'status', operator: 'eq', value: 'active' })
-
-// Non-Redux async
-const { data, isLoading, execute } = useAsyncOperation(apiCall, { cacheKey: 'data' })
-
-// Form with validation
-const form = useFormBuilder({ initialValues: {}, onSubmit: submitForm })
-```
-
----
-
-### Redux State Management
-
-**Current Status**: 12 packages total (10 Redux-specific + 2 utility packages)
-
-**Packages**:
-- `@metabuilder/hooks` - Centralized custom React hooks (30 total)
-- `@metabuilder/hooks-utils` - Utility hooks with data/async helpers (NEW - Jan 23, 2026)
-- `@metabuilder/hooks-forms` - Form management hooks (NEW - Jan 23, 2026)
-- `@metabuilder/core-hooks` - Generic Redux hooks
-- `@metabuilder/api-clients` - API client hooks
-- `@metabuilder/hooks-*` - Feature-specific hooks (auth, canvas, data, core)
-- `@metabuilder/redux-slices` - Redux reducers
-- `@metabuilder/service-adapters` - Service adapters
-- `@metabuilder/timing-utils` - Timing utilities
-
-**Multi-Version Support** (Jan 23, 2026):
-```json
-{
-  "peerDependencies": {
-    "react": "18.0 || 19.0",
-    "react-redux": "8.0 || 9.0",
-    "@reduxjs/toolkit": "1.9.7 || 2.5.2"
-  }
-}
-```
-
-**Active Users**: workflowui, frontends/nextjs, codegen, pastebin, frontends/dbal
-
-### Email Client Architecture (NEW - Jan 23, 2026)
-
-**Status**: Implementation Plan Complete, Ready for Phase-by-Phase Execution
-
-**Components**:
-1. **DBAL Schemas** (4 entities): EmailClient, EmailFolder, EmailMessage, EmailAttachment
-   - Location: `dbal/shared/api/schema/entities/packages/`
-   - Multi-tenant: Every entity has `tenantId` index + row-level ACL
-   - Credentials: FK to existing Credential entity (SHA-512 encryption)
-
-2. **FakeMUI Email Components** (22 components in `fakemui/react/components/email/`)
-   - **Atoms** (3): Icon, Button, Checkbox
-   - **Inputs** (3): Address, Recipients, BodyEditor
-   - **Surfaces** (4): Card, Thread, Compose, Signature
-   - **Data-Display** (4): Attachments, Header, FolderTree, ThreadList
-   - **Feedback** (2): SyncBadge, SyncProgress
-   - **Layout** (3): Mailbox, Composer, Settings
-   - **Navigation** (2): AccountTabs, FolderNavigation
-
-3. **Redux State Slices** (NEW package `redux/email/`):
-   - `emailListSlice` - Message list + pagination + filtering
-   - `emailDetailSlice` - Selected message + thread view
-   - `emailComposeSlice` - Draft management + recipients
-   - `emailFiltersSlice` - Saved filters + search queries
-
-4. **Custom Hooks** (NEW: `hooks/email/`):
-   - `useEmailSync()` - Trigger/monitor IMAP sync
-   - `useEmailStore()` - IndexedDB offline cache
-   - `useMailboxes()` - Folder hierarchy
-   - `useAccounts()` - Email account list
-   - `useCompose()` - Compose form state
-   - `useMessages()` - Message CRUD
-
-5. **Email Package** (`packages/email_client/`):
-   - Page-config: Routes `/email/inbox`, `/email/compose`, `/email/settings`
-   - Workflows: Send, Fetch, Mark-as-read via JSON Script
-   - Permissions: User creates/reads own emails, admin full access
-
-6. **Workflow Plugins** (`workflow/plugins/ts/integration/email/`):
-   - `imap-sync` - Incremental sync from IMAP server
-   - `imap-search` - Full-text search via IMAP
-   - `email-parser` - RFC 5322 parsing, HTML sanitization
-
-7. **Backend Email Service** (`services/email_service/`):
-   - Python Flask API for account management
-   - IMAP/POP3/SMTP protocol handlers
-   - Celery background jobs for sync/send
-   - S3/blob storage for attachments
-
-8. **Email Client Bootloader** (`emailclient/`):
-   - Minimal Next.js dev harness
-   - Loads `packages/email_client/` declaratively
-   - Docker Compose: Postfix/Dovecot for local testing
-   - Redux + hooks wiring
-
-**Development Plan**: See [docs/plans/2026-01-23-email-client-implementation.md](./docs/plans/2026-01-23-email-client-implementation.md)
-
-**Key Patterns**:
-- Multi-tenant: All queries filter by `tenantId` + user-owned ACL
-- Soft delete: Messages marked `isDeleted` instead of purged
-- Offline support: IndexedDB for message cache + draft storage
-- Async operations: Celery for long-running sync/send
-- Security: Credentials encrypted, passwords never returned from API
+Phases 1-5 complete (frontend). 4 DBAL schemas, 22 FakeMUI components, 4 Redux slices, 6 hooks, API endpoints. Phases 6-8 TODO: workflow plugins, Flask backend, Docker.
 
 ---
 
 ## Package System (`packages/`)
 
-**62 packages** organized by category:
+62 packages: Admin (7), UI Core (8), Dev Tools (7), Features (6), Testing (4).
 
-| Category | Packages |
-|----------|----------|
-| **Admin** | `admin`, `admin_dialog`, `database_manager`, `package_manager`, `user_manager`, `role_editor`, `route_manager` |
-| **UI Core** | `ui_auth`, `ui_database_manager`, `ui_dialogs`, `ui_footer`, `ui_header`, `ui_home`, `ui_login`, `ui_pages` |
-| **Dev Tools** | `code_editor`, `codegen_studio`, `component_editor`, `schema_editor`, `theme_editor`, `workflow_editor`, `nerd_mode_ide` |
-| **Features** | `forum_forge`, `irc_webchat`, `media_center`, `notification_center`, `social_hub`, `stream_cast` |
-| **Testing** | `api_tests`, `smoke_tests`, `testing`, `system_critical_flows` |
-
-**Standard Package Structure**:
 ```
 packages/{packageId}/
-├── package.json              # Metadata + file inventory
-├── components/ui.json        # UI component definitions
-├── page-config/              # Route definitions
-├── permissions/roles.json    # RBAC definitions
-├── workflow/*.jsonscript     # JSON Script workflows
-├── styles/tokens.json        # Design tokens
-└── tests/                    # Test definitions
+├── package.json, components/ui.json, page-config/
+├── permissions/roles.json, workflow/*.jsonscript
+├── styles/tokens.json, tests/
 ```
 
 ---
 
-## Schema System
+## API Routing
 
-### Two-Layer Architecture
-
-**Layer 1: YAML Entity Schemas** (Source of Truth)
 ```
-dbal/shared/api/schema/entities/
-├── core/           # user, session, workflow, package, ui_page
-├── access/         # credential, component_node, page_config
-├── packages/       # forum, notification, audit_log, media, irc, streaming
-└── domain/         # product, game, artist, video
+/api/v1/{tenant}/{package}/{entity}[/{id}[/{action}]]
 ```
-
-**Layer 2: JSON Validation Schemas**
-```
-schemas/package-schemas/
-├── metadata_schema.json      # Package metadata
-├── entities_schema.json      # Database entities
-├── components_schema.json    # UI components
-├── script_schema.json        # JSON Script v2.2.0
-├── workflow.schema.json      # Workflow definitions
-├── permissions_schema.json   # RBAC definitions
-└── ... (27 total)
-```
+Rate limits: Login 5/min, Register 3/min, List 100/min, Mutations 50/min.
 
 ---
 
-## Library Versions (Updated Jan 23, 2026)
+## Architecture
 
-| Library | Version | Notes |
-|---------|---------|-------|
-| **React** | 18.2.0 or 19.2.3 | Multi-version support via peer dependencies |
-| **Next.js** | 14.2.0 - 16.1.2 | Normalized across subprojects |
-| **TypeScript** | 5.9.3 | Consistent across all packages |
-| **@reduxjs/toolkit** | 1.9.7 or 2.5.2 | Multi-version support |
-| **react-redux** | 8.1.3 or 9.1.2 | Multi-version support |
-| **Tailwind CSS** | 4.1.x | Normalized version |
-| **ESLint** | 9.41.x | Latest stable |
-| **Vite** | 7.4.x | Build tool for web apps |
-| **Playwright** | Latest | E2E testing framework |
-
-**Multi-Version Peer Dependencies**: Enable gradual upgrades without forcing all consumers to update together.
+```
+Frontends (CLI C++ | Qt6 QML | Next.js React)
+    → Redux + redux-persist (IndexedDB, client-side state)
+    → DBAL C++ daemon (REST API, 14 backends)
+        → Database (SQLite dev | PostgreSQL prod)
+```
 
 ---
 
 ## Common Commands
 
 ```bash
-# Development
-npm run dev                 # Start Next.js dev server
-npm run build               # Build for production
-npm run typecheck           # TypeScript check
-npm run lint                # ESLint check
-npm run test:e2e            # Run Playwright E2E tests
-npm run test:e2e:ui         # Playwright UI debug mode
+npm run dev / build / typecheck / lint / test:e2e
+npm run build --workspaces
+cd deployment && ./build-base-images.sh  # Build Docker base images
 
-# Database
-npm --prefix dbal/development run codegen:prisma  # YAML → Prisma schema
-npm --prefix dbal/development run db:push         # Apply schema changes
-npm --prefix dbal/development run db:studio       # Prisma Studio UI
+# Deploy full stack
+cd deployment && docker compose -f docker-compose.stack.yml up -d
 
-# CodeForge (in codegen/)
-npm run audit:json          # Check JSON migration status
-npm run build               # Build CodeForge IDE
+# Build & deploy specific apps
+./build-apps.sh --force dbal pastebin        # Next.js frontend only
+docker compose -f docker-compose.stack.yml build pastebin-backend  # Flask backend
 
-# Monorepo
-npm install                 # Install all dependencies
-npm run build --workspaces  # Build all packages
+# DBAL logs / seed verification
+docker logs -f metabuilder-dbal
+docker logs metabuilder-dbal 2>&1 | grep -i "workflow\|seed"
 
-# CodeQL (via GitHub Actions - manual trigger)
-# Go to: Actions → "CodeQL Analysis" → "Run workflow"
-# Languages: javascript-typescript, python, cpp, go
-# Use for: code search, story planning, refactoring analysis
+# Force re-seed
+curl -X POST http://localhost:8080/admin/seed \
+  -H "Authorization: Bearer $DBAL_ADMIN_TOKEN" -d '{"force": true}'
 ```
+
+Pre-commit: `npm run build && npm run typecheck && npm run lint && npm run test:e2e`
 
 ---
 
-## API Routing Pattern
-
-```
-/api/v1/{tenant}/{package}/{entity}[/{id}[/{action}]]
-
-GET    /api/v1/acme/forum_forge/posts          → List
-POST   /api/v1/acme/forum_forge/posts          → Create
-GET    /api/v1/acme/forum_forge/posts/123      → Get
-PUT    /api/v1/acme/forum_forge/posts/123      → Update
-DELETE /api/v1/acme/forum_forge/posts/123      → Delete
-POST   /api/v1/acme/forum_forge/posts/123/like → Custom action
-```
-
-**Rate Limits**: Login (5/min), Register (3/min), List (100/min), Mutations (50/min)
-
----
-
-## Architecture Overview
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                           FRONTENDS                              │
-├─────────────────┬─────────────────────┬─────────────────────────┤
-│   CLI (C++)     │   Qt6 (QML)         │   Next.js (React)       │
-└────────┬────────┴──────────┬──────────┴──────────────┬──────────┘
-         │                   │                          │
-         └───────────────────┼──────────────────────────┘
-                             │
-                    ┌────────▼────────┐
-                    │   DBAL Layer    │  TypeScript (Phase 2)
-                    │   ACL, Caching  │  C++ (Phase 3)
-                    └────────┬────────┘
-                             │
-                    ┌────────▼────────┐
-                    │    Database     │  SQLite (dev)
-                    │                 │  PostgreSQL (prod)
-                    └─────────────────┘
-```
-
----
-
-## Key Documentation
-
-| Document | Purpose |
-|----------|---------|
-| [docs/CLAUDE.md](./docs/CLAUDE.md) | **Start here** - Full development guide |
-| [docs/AGENTS.md](./docs/AGENTS.md) | Domain-specific rules |
-| [docs/SCHEMAS_COMPREHENSIVE.md](./docs/SCHEMAS_COMPREHENSIVE.md) | All 27 JSON + 27 YAML schemas |
-| [docs/PACKAGES_INVENTORY.md](./docs/PACKAGES_INVENTORY.md) | All 62 packages with files |
-| [docs/RATE_LIMITING_GUIDE.md](./docs/RATE_LIMITING_GUIDE.md) | API rate limiting patterns |
-| [docs/MULTI_TENANT_AUDIT.md](./docs/MULTI_TENANT_AUDIT.md) | Multi-tenant filtering |
-| [spec/*.tla](./spec/) | TLA+ formal specifications |
-
----
-
-## Coding Best Practices
-
-### Pre-Commit Verification (Mandatory)
-
-From [docs/CONTRACT.md](./docs/CONTRACT.md) - **ALL checks must pass**:
-
-```bash
-npm run build         # 1. Build Compliance
-npm run typecheck     # 2. Type Safety (0 errors)
-npm run lint          # 3. Code Quality
-npm run test:e2e      # 4. E2E Tests
-```
+## Coding Standards
 
 ### Code Quality Rules
+- One lambda per file, no @ts-ignore, no implicit any, no dead code
+- JSDoc on public APIs, self-documenting names
+- FULL implementations only - no WIP code on main
+- No disabled tests (DISABLED_, @skip)
 
-| Rule | Correct | Wrong |
-|------|---------|-------|
-| **One lambda per file** | `createUser.ts` with single function | Multiple functions in one file |
-| **No @ts-ignore** | Fix type errors properly | Suppress with `@ts-ignore` |
-| **No implicit any** | Concrete types for all values | Untyped variables |
-| **No dead code** | All code is executed | Unused functions/variables |
-| **Self-documenting** | Clear variable/function names | Cryptic abbreviations |
-| **JSDoc on public APIs** | Document function signatures | Missing documentation |
-| **FULL IMPLEMENTATION ONLY** | Complete, production-ready code | Partial, WIP, or optional code |
-| **No work-in-progress patterns** | Complete features or nothing | `-wip`, `-todo`, `-temp` directories/branches |
+### No Work-In-Progress Code
+- No `-wip`, `-todo`, `-temp` directories
+- All code is 100% complete OR not included
+- Incomplete work on feature branches only
 
-### ⚠️ CRITICAL: No Work-In-Progress Code
+### UI/Styling
+- **workflowui + new projects**: FakeMUI only (`@metabuilder/fakemui`)
+- **Legacy projects**: Radix UI + Tailwind acceptable
+- **Never**: Direct @mui/material imports in workflowui
 
-**Policy**: This codebase accepts ONLY complete, production-ready implementations.
-
-**Prohibited**:
-- ❌ Directories ending in `-wip`, `-todo`, `-temp`, `-partial`
-- ❌ Code marked with comments like `// TODO`, `// FIXME`, `// WIP`
-- ❌ Functions/components with `optional` or `experimental` behavior
-- ❌ Features documented as "in progress" or "pending"
-- ❌ Partial implementations with workarounds noted in CLAUDE.md
-- ❌ Features with "phases" that aren't all complete (if phased, all phases must be done)
-
-**Required**:
-- ✅ All code is either 100% complete OR not included
-- ✅ All features documented as complete or removed entirely
-- ✅ No "partial fix" commits - either the entire fix is done or wait
-- ✅ No feature flags for incomplete features
-- ✅ Incomplete work must be done on separate branches, never main
-
-**Example**:
-```typescript
-// ❌ WRONG - WIP code in main branch
-export const EmailComposeComponent = () => {
-  // TODO: Fix imports from email-wip folder
-  // Currently broken, will fix later
-  return <div>Compose in progress...</div>
-}
-
-// ✅ CORRECT - Either complete or not in main
-// Option A: Complete implementation
-export const EmailComposeComponent = () => {
-  // Full implementation, all imports correct
-  return <ComposeForm />
-}
-
-// Option B: Not included yet
-// Feature branches: feature/email-compose-complete (with full implementation)
-```
-
-### UI/Styling Standards
-
-**For workflowui and new FakeMUI projects** (Primary):
-```typescript
-// ✅ ALWAYS use FakeMUI
-import { Dialog, Button, Box } from '@metabuilder/fakemui'
-<Button variant="contained">Click</Button>
-<Box sx={{ display: 'flex', gap: 2 }}>Content</Box>
-```
-
-**For established projects** (Radix UI + Tailwind acceptable):
-```typescript
-// ✅ ACCEPTABLE - Radix + Tailwind in legacy projects
-import { Dialog } from '@radix-ui/react-dialog'
-import { Button } from '@/components/ui/button'
-```
-
-**Component Mapping**:
-- FakeMUI Dialog ↔ MUI Dialog ↔ Radix Dialog
-- FakeMUI Select ↔ MUI Select ↔ Radix Select
-- FakeMUI sx prop ↔ MUI sx ↔ Tailwind classes
-
-**❌ DO NOT USE**: Direct @mui/material imports (use FakeMUI instead). This is specifically prohibited in workflowui.
-
-See [.github/copilot-instructions.md](./.github/copilot-instructions.md) for detailed guidelines.
-
-### Known Issues and Exceptions
-
-**postgres dashboard** - Currently uses @mui/material directly (P1 conflict identified Jan 23, 2026)
-- Status: Should migrate to FakeMUI but not yet completed
-- Impact: Creates competing UI framework in codebase
-- Effort estimate: 2-4 hours to migrate
-- Action: Use FakeMUI components instead of @mui/material
-
-**Dependency Vulnerabilities** (Jan 23, 2026 - Status: NEEDS FULL FIX)
-- **Verified (local npm audit)**: 7 moderate vulnerabilities (lodash 4.17.21 prototype pollution in @prisma/dev)
-- **GitHub Dependabot claims**: 56 vulnerabilities (3 critical, 11 high, 36 moderate, 6 low)
-- **Root causes identified**:
-  - Invalid version: `eslint@^9.41.0` (doesn't exist, valid: 9.28.0) - Found in: dbal/development/package.json, codegen/package.json
-  - Invalid version: `@eslint/js@^9.41.0` (doesn't exist)
-  - Invalid version: `classnames@^2.5.2` (doesn't exist, valid: 2.3.2) - Found in: workflowui/package.json
-  - vite override conflict in workspace prevents npm install
-  - lodash only in dev chain (@prisma/dev) - LOW production risk
-- **Current blocking issues**: npm install fails, npm audit fix fails
-- **Fix status**: PARTIAL (eslint in dbal/development updated to 9.28.0, classnames in workflowui updated to 2.3.2, vite unresolved)
-- **Required for FULL fix**:
-  1. Find ALL workspaces with invalid versions (grep all package.json)
-  2. Update eslint/eslint-js to ^9.28.0 everywhere
-  3. Find vite override conflict (grep for "overrides", "resolutions")
-  4. Align vite versions across all workspaces
-  5. Clean install: rm -rf node_modules package-lock.json && npm install
-  6. Run: npm audit fix --force (will update Prisma)
-  7. Test ALL packages: build, tests pass
-- **Time estimate**: 3-4 hours for FULL fix (cannot be done in shortcuts)
-- **Documents**: txt/DEPENDENCY_AUDIT_DETAILS_2026-01-23.txt, txt/DEPENDENCY_FIX_PLAN_2026-01-23.txt
-- **Action**: Use Explore agent to find ALL version constraints before fixing
-
-### Testing Standards
-
-```typescript
-// Parameterized tests for all functions
-it.each([
-  { input: 'case1', expected: 'result1' },
-  { input: 'case2', expected: 'result2' },
-])('should handle $input', ({ input, expected }) => {
-  expect(myFunction(input)).toBe(expected)
-})
-```
-
-- Test files next to source: `utils.ts` + `utils.test.ts`
-- Run `npm run test:coverage:report` to auto-generate coverage markdown
-- All functions need test coverage
+### WorkflowUI Components
+- Atomic components <100 LOC, SCSS modules, no sx prop
+- Categories: layout/, cards/, forms/, navigation/, feedback/
+- Import pattern: `@/components/{domain}/{Component}`
 
 ### Security Checklist
+- Input validation, no XSS (no innerHTML with user data), no SQL injection
+- Passwords hashed SHA-512, no secrets committed, multi-tenant tenantId filtering
 
-From [.github/PULL_REQUEST_TEMPLATE.md](./.github/PULL_REQUEST_TEMPLATE.md):
-
-- [ ] Input validation implemented
-- [ ] No XSS vulnerabilities (no innerHTML with user data)
-- [ ] No SQL injection (use DBAL, not raw queries)
-- [ ] Passwords hashed with SHA-512
-- [ ] No secrets committed to code
-- [ ] Multi-tenant safety verified (tenantId filtering)
-
-### PR Best Practices
-
-From [.github/workflows/README.md](./.github/workflows/README.md):
-
-1. **Descriptive titles** - Used for automatic labeling
-2. **Link issues** - Enables automatic issue closing
-3. **Keep PRs small** - Easier to review and merge
-4. **No console.log** - Will be flagged in review
-5. **No debugger statements** - Treated as blocking issues
-6. **Test locally** - Run lint and tests before pushing
-
-### Declarative-First Development
-
-```typescript
-// ❌ Hardcoded component
-<UserForm user={user} onSave={handleSave} />
-
-// ✅ Declarative from JSON
-<RenderComponent component={{
-  type: 'form',
-  props: { schema: formSchema },
-  children: [/* field components */]
-}} />
-```
-
-**Questions to ask before coding**:
-1. Could this be JSON configuration instead of TypeScript?
-2. Could a generic renderer handle this instead of custom TSX?
-3. Is this filtering by tenantId?
-4. Does this follow one-lambda-per-file pattern?
+### Declarative-First
+Ask: Could this be JSON config? Could a generic renderer handle this? Is it filtering by tenantId?
 
 ---
 
 ## Dependency Management
 
-### Conan (C++/System Libraries)
+### Conan (C++)
+Updated: cpr, lua, sol2, cmake, qt, ninja, sqlite3, fmt, spdlog, shaderc. Run `conan install . --build=missing`.
 
-**Update Strategy**: All Conan dependencies follow semantic versioning with zero breaking changes. Updates completed:
+### npm
+Multi-version peer deps. React 18/19, TypeScript 5.9.3, Next.js 14-16, @reduxjs/toolkit 1.9/2.5. Run `npm install` at root.
 
-| Subsystem | Changes | Status |
-|-----------|---------|--------|
-| CLI Frontend | cpr 1.10.0→1.14.1, lua 5.4.6→5.4.7, sol2 3.3.1→3.4.1, cmake 3.27.1→3.30.0 | ✓ Updated |
-| Qt6 Frontend | qt 6.7.0→6.8.1, cmake 3.27.1→3.30.0, ninja 1.11.1→1.12.1 | ✓ Updated |
-| DBAL | sqlite3 3.45.0→3.46.0 | ✓ Updated |
-| Media Daemon | fmt 10.2.1→12.0.1, spdlog 1.12.0→1.16.0 | ✓ Updated |
-| GameEngine | shaderc 2023.6→2024.3, rapidjson, stb, libalsa snapshots | ✓ Updated |
+### Workflow Plugins
+- Python: `requirements.txt` (Python 3.9+)
+- Go: `go.mod` + `go.work` (Go 1.21+, stdlib only)
+- TypeScript: `@metabuilder/workflow: ^3.0.0`
 
-**Files**: See `txt/conan_updates_2026-01-23.txt` for complete list
-
-### npm/Node.js (JavaScript/TypeScript)
-
-**Security Focus**: 9 critical/high-priority packages updated
-
-**Critical Security Patches**:
-- Prisma 7.2.0→7.3.0 (lodash prototype pollution fix)
-- Next.js 16.1.2→16.1.4
-
-**High-Priority Updates**:
-- @reduxjs/toolkit 1.9.7→2.5.2 (major version)
-- jest: alpha.6→29.7.0 (unstable→stable)
-- octokit 4.1.2→5.0.5
-- React 19.0.0→19.2.3 (security patches)
-
-**Files**: See `txt/npm_security_fixes_2026-01-23.txt` for complete list
-
-### Workflow Plugin Dependencies (Multi-Language)
-
-**Python Plugins** (138 files, 15 categories):
-- Master `requirements.txt` + 7 category-specific files
-- Core deps: python-dotenv, tenacity
-- Runtime: Python 3.9+
-- Location: `workflow/plugins/python/requirements*.txt`
-
-**Go Plugins** (51 files, 14 categories):
-- `go.mod` (root) + `go.work` (workspace coordination)
-- Zero external dependencies (stdlib only)
-- Runtime: Go 1.21+
-- Location: `workflow/plugins/go/`
-
-**TypeScript Plugins** (25 files, 9 categories):
-- 94% standardized on `@metabuilder/workflow: ^3.0.0`
-- 1 non-standard file uses `workspace:*` (minor issue, documented)
-- Location: `workflow/plugins/ts/`
-
-**Documentation**: See `txt/plugin_dependency_setup_2026-01-23.txt` and `workflow/plugins/DEPENDENCY_MANAGEMENT.md`
-
-### Dependency Update Workflow
-
-1. **Conan Updates**: Run `conan install . --build=missing` after updating versions
-2. **npm Updates**: Run `npm install` at root, then `npm run build && npm run test:e2e`
-3. **Python Plugins**: `pip install -r workflow/plugins/python/requirements.txt`
-4. **Go Plugins**: `go work init`, then `go work use ./workflow/plugins/go`
-
-### Known Issues & Gotchas
-
-- **Jest Alpha in workflowui**: Was using unstable jest 30.0.0-alpha.6, now updated to 29.7.0. If tests fail, check jest.config.js compatibility.
-- **Prisma Multi-Package Setup**: DBAL uses workspace dependencies; ensure `npm install` runs from root
-- **Python Plugin Categories**: Some plugins may have conditional imports (e.g., Flask only imported when creating web services). Install full `requirements.txt` to avoid import errors.
-- **Go Module Path**: Currently uses `github.com/metabuilder/workflow-plugins-go`; update if you change the GitHub organization
+### Known Issues
+- postgres dashboard uses @mui/material directly (should migrate to FakeMUI)
+- 7 moderate npm vulnerabilities (lodash in @prisma/dev, LOW production risk)
+- eslint/vite version conflicts in some workspaces (partially fixed)
 
 ---
 
-## AI Assistant Workflow
+## AI Assistant Directives
 
-**CRITICAL: Must-Follow Directives** (No Exceptions):
-1. **ALWAYS read CLAUDE.md first** - before starting any work or replying
-2. **ALWAYS use Explore agent** - for feasibility checks, codebase analysis, planning
-3. **ALWAYS plan before coding** - list affected files in txt/, determine scope
-4. **CHECK before DELETE** - examine file contents (git show HEAD:path) before deleting anything
-5. **ALWAYS full implementation** - no partial fixes, no shortcuts, no stubs
-6. **ALWAYS use subagents** - for complex work (don't do it alone)
-7. **UPDATE CLAUDE.md** - when finding bugs, gotchas, or new patterns discovered
-7. **NO SUMMARY DOCUMENTS** - keep things organized, not documented to death
-8. **SUBPROJECT DOCS** - each project owns its /docs/, not root
-9. **GIT WORKFLOW** - when user says "git push", do `git add` on project root first, then commit
-10. **CLEANUP** - regularly maintain project root (no orphaned files)
-11. **CODE ORGANIZATION** - don't care if code unused, DO care if disorganized
-12. **FEASIBILITY CHECKS** - outline what files will be edited before starting
+**Must-Follow** (No Exceptions):
+1. Read CLAUDE.md first before any work
+2. IMPLEMENT, don't delete - fix compilation errors properly
+3. Use Explore agent for feasibility checks and planning
+4. Plan before coding - list affected files, determine scope
+5. CHECK before DELETE - `git show HEAD:path` first
+6. Use subagents for complex work
+7. Update CLAUDE.md with new gotchas/patterns
+8. Reports → `reports.db`, Docs → `docs.db` (SQLite, not markdown files)
+9. Git: `git add` on project root first, then commit
+10. Use `mv` not `cp` (prevents duplicates)
+11. Log long commands: `| tee txt/command-$(date +%Y%m%d-%H%M%S).log`
+12. Search SQLite before browsing files
 
-**Gotchas & Lessons Learned** (Updated Feb 1, 2026):
-| Gotcha | Impact | Prevention |
-|--------|--------|-----------|
-| **Deleting without checking** | Delete full implementations thinking they're stubs | ALWAYS `git show HEAD:path` before deleting |
-| **Partial fixes committed** | Blocks full resolution, creates merge conflicts | Plan FULL solution before committing |
-| **Skipping Explore agent** | Miss dependencies, make wrong decisions | Always use Explore for planning |
-| **No planning document** | Don't know scope, make mistakes | Create plan in txt/ BEFORE coding |
-| **Version conflicts (eslint, vite)** | npm install fails, blocks all work | Check ALL workspaces upfront |
-| **Workspace issues isolated** | Problems not discovered until too late | Use `grep -r` across ALL workspaces |
-| **Assuming fixes are simple** | Complex issues need comprehensive approach | Start with Explore, then plan |
+### Gotchas & Lessons Learned
 
-**When to Use Subagents**:
-- Large codebase audits (use Explore agent)
-- Cross-project dependency analysis
-- Systematic refactoring across multiple files
-- Schema/configuration migrations
-- Framework/library consolidation
-- Performance profiling and optimization
-- **Feasibility analysis BEFORE any implementation**
+| Gotcha | Prevention |
+|--------|-----------|
+| Conan profile in Docker mount | Run `conan profile detect` INSIDE cache-mounted RUN |
+| Missing types after refactor | Verify all referenced types exist before committing |
+| Headers in src/ not include/ | Use relative paths or fix build include dirs |
+| No logs for long commands | ALWAYS pipe to txt/*.log |
+| Dockerfile `build/` conflict | Use `_build/` |
+| Drogon wildcard routes | Check docs for path param syntax |
+| `cp` instead of `mv` | ALWAYS use `mv` to relocate |
+| Deleting without checking | ALWAYS `git show HEAD:path` first |
+| Skipping Explore agent | Always Explore before implementation |
+| Version conflicts (eslint, vite) | Check ALL workspaces upfront |
+| nlohmann/json includes | Link to ALL targets, not just transitive |
+| Docker Compose YAML special chars | Quote env vars: `"DATABASE_URL=:memory:"` |
+| nlohmann/json iterators | Use `it.value()` not `it->second` (std::map syntax fails) |
+| dbal-init volume stale | Rebuild with `docker compose build dbal-init` when schema file extensions change |
+| `.dockerignore` excludes `dbal/` | Whitelist specific subdirs: `!dbal/shared/seeds/database` |
+| `build-apps.sh pastebin` ≠ Flask backend | Use `docker compose build pastebin-backend` for Flask |
+| `ensureClient()` before startup DB ops | `dbal_client_` is null in `registerRoutes()` — must call `ensureClient()` first |
+| Seed data in Flask Python | NEVER — declarative seed data belongs in `dbal/shared/seeds/database/*.json` |
+| Werkzeug scrypt on macOS Python | Generate hashes inside running container: `docker exec metabuilder-pastebin-backend python3 -c "..."` |
+
+### Critical Folders to Check Before Any Task
+
+`/redux/`, `/components/`, `/scss/`, `/hooks/`, `/types/`, `/interfaces/`, `/icons/`, `/workflow/`, `/schemas/`, `/packages/`, `/deployment/`, `/docs/docs.db`, `/txt/reports.db`
+
+### Task Workflow
+1. Read relevant CLAUDE.md
+2. Search SQLite docs: `docs.py search` / `reports.py search`
+3. Check if functionality already exists in critical folders
+4. Use Explore agent for codebase questions
+5. Plan affected files before coding
+6. Verify multi-tenant filtering + rate limiting
 
 ---
 
-## Before Starting Any Task
+## Definition of Done
 
-1. **Read the relevant CLAUDE.md** for your work area
-2. **Use the Explore agent** for codebase questions
-3. **Check existing patterns** - find 2-3 similar implementations
-4. **Plan affected files** - determine scope before coding
-5. **Verify multi-tenant filtering** on all database queries
-6. **Apply rate limiting** on API endpoints
+A task is complete when:
+- **Builds**: Compiles, core functionality works, type safety reasonable
+- **Tests**: All pass, new tests added, edge cases covered, multi-tenant verified
+- **Deploy**: Docker builds, services healthy, env vars documented, deps install
+- **Docs**: CLAUDE.md updated, reports in SQLite, architecture docs updated
+- **Security**: Input validation, no XSS/SQLi, passwords hashed, no secrets, rate limited
+- **Git**: Clear commit message, co-authored tag, no merge conflicts
 
-**Full workflow details**: [docs/CLAUDE.md](./docs/CLAUDE.md)
+**Standards**: IMPLEMENT don't disable. Real solutions over workarounds. TODOs acceptable for future work. Pragmatic over perfect.
+
+**Unacceptable**: Deleting code instead of fixing. Fake implementations. Claiming done when broken.
+
+**Task-Specific**:
+- Refactoring: ~100 LOC classes, original functionality preserved, tests pass
+- New Adapters: CRUD + bulk + query + metadata ops, connection management, Result<T> errors
+- Docker: Multi-stage, BuildKit cache, <500MB runtime, non-root user, health check
+- Documentation: Imported to SQLite, categorized, searchable via FTS5
 
 ---
 
-## Project Organization Guidelines
+## Project Organization
 
-### Root Directory (Clean)
-Keep project root minimal - only essential files:
-- Configuration: `.env.local`, `.gitignore`, `.npmrc`, `lefthook.yml`
-- CI/CD: `Jenkinsfile`, `.gitlab-ci.yml`
-- Build: `docker-compose.ghcr.yml`, `.dockerignore`
-- Package: `package.json`, `package-lock.json`
-- Testing: `playwright.config.ts`
-- Docs: `CLAUDE.md` (AI Assistant Guide)
-
-**Rule**: Move one-off scripts and old reports to `/txt/` folder
-
-### Task Lists & Reports (`/txt/`)
-For progress tracking, analysis documents, and delivery summaries:
-- Current task lists (dated: `TASKNAME_2026-01-23.txt`)
-- Dependency update reports
-- Delivery and audit summaries
-- Old reports archived with clear purpose
-
-**Current Contents** (Jan 23, 2026):
-- `ROOT_CLEANUP_PLAN_2026-01-23.txt` - Project root cleanup strategy
-- `COMPLETION_STATUS.txt` - Task completion tracking
-- `DEPENDENCY_UPDATES_INDEX_2026-01-23.txt` - Dependency management index
-- `DEPENDENCY_AUDIT_DETAILS_2026-01-23.txt` - Vulnerability analysis (7 moderate verified)
-- `DEPENDENCY_FIX_PLAN_2026-01-23.txt` - FULL fix plan (3-4 hours, all workspaces)
-- `plugin_dependency_setup_2026-01-23.txt` - Workflow plugin dependencies
-- `conan_updates_2026-01-23.txt` - C++ library updates
-- `npm_security_fixes_2026-01-23.txt` - npm patches applied
-- `README.md` - Organization guide
-
-See: `txt/README.md` for organization guide
-
-### Root-Level Docs (`/docs/`)
-Keep `/docs/` focused on project-wide guidance:
-- Core principles and patterns
-- Architecture documentation
-- Setup and installation
-- Development workflows
-- Schemas and API patterns
-- Cross-project standards
-
-### Per-Subproject Docs
-Each standalone subproject maintains its own `/docs/` folder:
-- `workflowui/docs/` - Workflow UI specific guides
-- `codegen/docs/` - CodeForge IDE documentation
-- `gameengine/docs/` - Game engine technical details
-- `postgres/docs/` - PostgreSQL dashboard guides
-- `fakemui/docs/` - Component library guides
-- `packages/*/docs/` - Package-specific documentation
-
-**Rule**: New detailed documentation → place in subproject `/docs/`, not root
-
-### File Organization
-- **No deletion of code** - just organize well
-- **Implementation type first** - react/, python/, qml/, cpp/ folders
-- **Component categorization** - atoms/, inputs/, surfaces/, navigation/, etc.
-- **Preserve legacy code** - in legacy/ or archived folders with clear purpose
-- **Keep things browseable** - short file lists per directory
-- **Clean root** - move reports and utilities out of project root
+- **Root**: Minimal - config, CI/CD, build, package files only
+- **Reports**: `txt/reports.db` - create via `python3 reports.py create "Title" "Content..."`
+- **Docs**: `docs/docs.db` - create via `python3 docs.py create "Title" "Content..." --category guides`
+- **Rule**: Create directly in SQLite, do NOT create markdown files first
+- **File org**: Implementation type first (react/, python/, qml/), component categorization, preserve legacy in archived folders
 
 ---
 

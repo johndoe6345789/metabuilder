@@ -1,0 +1,90 @@
+// Skeleton Component - Material Design 3
+// ======================================
+// Loading placeholder with shimmer animation using M3 tokens
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.fakemui-skeleton {
+  display: inline-block;
+  background-color: var(--mat-sys-surface-container-highest);
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent) 50%,
+    transparent 100%
+  );
+  background-size: 200px 100%;
+  background-repeat: no-repeat;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+
+  // Variants
+  &--text {
+    height: 1em;
+    border-radius: var(--mat-sys-corner-extra-small);
+    transform: scale(1, 0.6);
+    transform-origin: 0 60%;
+
+    &:empty::before {
+      content: '\00a0'; // Non-breaking space for height
+    }
+  }
+
+  &--rectangular {
+    border-radius: var(--mat-sys-corner-extra-small);
+  }
+
+  &--circular {
+    border-radius: var(--mat-sys-corner-full);
+  }
+
+  &--rounded {
+    border-radius: var(--mat-sys-corner-medium);
+  }
+
+  // Wave animation variant
+  &--wave {
+    animation: none;
+    overflow: hidden;
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent),
+        transparent
+      );
+      animation: skeleton-shimmer 1.6s linear 0.5s infinite;
+    }
+  }
+
+  // Pulse animation variant
+  &--pulse {
+    animation: skeleton-pulse 1.5s ease-in-out 0.5s infinite;
+  }
+}
+
+@keyframes skeleton-pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 1;
+  }
+}

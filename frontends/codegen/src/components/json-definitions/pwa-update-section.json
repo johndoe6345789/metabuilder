@@ -1,0 +1,79 @@
+{
+  "id": "pwa-update-section-container",
+  "type": "Box",
+  "bindings": {
+    "className": {
+      "source": "isUpdateAvailable",
+      "transform": "data ? 'block' : 'hidden'"
+    }
+  },
+  "children": [
+    {
+      "type": "Card",
+      "className": "p-6 border-accent",
+      "children": [
+        {
+          "type": "Box",
+          "className": "space-y-4",
+          "children": [
+            {
+              "type": "Box",
+              "children": [
+                {
+                  "type": "Heading",
+                  "level": 3,
+                  "className": "text-lg font-semibold mb-1",
+                  "children": [{ "type": "Text", "value": "{title}" }]
+                },
+                {
+                  "type": "Paragraph",
+                  "className": "text-sm text-muted-foreground",
+                  "children": [{ "type": "Text", "value": "{description}" }]
+                }
+              ]
+            },
+            {
+              "type": "Box",
+              "className": "flex items-center justify-between",
+              "children": [
+                {
+                  "type": "Flex",
+                  "align": "center",
+                  "gap": "3",
+                  "children": [
+                    {
+                      "type": "Icon",
+                      "name": "CloudArrowDown",
+                      "size": 20,
+                      "className": "text-accent"
+                    },
+                    {
+                      "type": "Box",
+                      "children": [
+                        {
+                          "type": "Label",
+                          "className": "text-base",
+                          "children": [{ "type": "Text", "value": "{label}" }]
+                        },
+                        {
+                          "type": "Paragraph",
+                          "className": "text-xs text-muted-foreground",
+                          "children": [{ "type": "Text", "value": "{status}" }]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Button",
+                  "children": [{ "type": "Text", "value": "{action}" }],
+                  "onClick": "onUpdate"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

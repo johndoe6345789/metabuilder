@@ -1,0 +1,672 @@
+{
+  "project-files": [
+    {
+      "id": "file-blog-1",
+      "name": "page.tsx",
+      "path": "/src/app/page.tsx",
+      "content": "'use client'\n\nimport { BlogGrid } from '@/components/BlogGrid'\nimport { FeaturedPost } from '@/components/FeaturedPost'\nimport { Container, Box } from '@mui/material'\n\nexport default function Home() {\n  return (\n    <Box>\n      <Container maxWidth=\"lg\" sx={{ py: 6 }}>\n        <FeaturedPost />\n        <BlogGrid />\n      </Container>\n    </Box>\n  )\n}",
+      "language": "typescript"
+    },
+    {
+      "id": "file-blog-2",
+      "name": "post.tsx",
+      "path": "/src/app/post/[slug]/page.tsx",
+      "content": "'use client'\n\nimport { PostContent } from '@/components/PostContent'\nimport { PostMeta } from '@/components/PostMeta'\nimport { RelatedPosts } from '@/components/RelatedPosts'\nimport { Container, Box } from '@mui/material'\n\nexport default function PostPage({ params }: { params: { slug: string } }) {\n  return (\n    <Container maxWidth=\"md\" sx={{ py: 6 }}>\n      <PostMeta />\n      <PostContent />\n      <Box sx={{ mt: 8 }}>\n        <RelatedPosts />\n      </Box>\n    </Container>\n  )\n}",
+      "language": "typescript"
+    },
+    {
+      "id": "file-blog-3",
+      "name": "author.tsx",
+      "path": "/src/app/author/[id]/page.tsx",
+      "content": "'use client'\n\nimport { AuthorProfile } from '@/components/AuthorProfile'\nimport { AuthorPosts } from '@/components/AuthorPosts'\nimport { Container } from '@mui/material'\n\nexport default function AuthorPage({ params }: { params: { id: string } }) {\n  return (\n    <Container maxWidth=\"lg\" sx={{ py: 6 }}>\n      <AuthorProfile authorId={params.id} />\n      <AuthorPosts authorId={params.id} />\n    </Container>\n  )\n}",
+      "language": "typescript"
+    }
+  ],
+  "project-models": [
+    {
+      "id": "model-blog-1",
+      "name": "Post",
+      "fields": [
+        {
+          "id": "field-blog-1",
+          "name": "id",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": true,
+          "isArray": false,
+          "defaultValue": "uuid()"
+        },
+        {
+          "id": "field-blog-2",
+          "name": "title",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-blog-3",
+          "name": "slug",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": true,
+          "isArray": false
+        },
+        {
+          "id": "field-blog-4",
+          "name": "excerpt",
+          "type": "String",
+          "isRequired": false,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-blog-5",
+          "name": "content",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-blog-6",
+          "name": "featuredImage",
+          "type": "String",
+          "isRequired": false,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-blog-7",
+          "name": "published",
+          "type": "Boolean",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false,
+          "defaultValue": "false"
+        },
+        {
+          "id": "field-blog-8",
+          "name": "authorId",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false,
+          "relation": "Author"
+        },
+        {
+          "id": "field-blog-9",
+          "name": "categoryId",
+          "type": "String",
+          "isRequired": false,
+          "isUnique": false,
+          "isArray": false,
+          "relation": "Category"
+        },
+        {
+          "id": "field-blog-10",
+          "name": "tags",
+          "type": "String",
+          "isRequired": false,
+          "isUnique": false,
+          "isArray": true
+        },
+        {
+          "id": "field-blog-11",
+          "name": "viewCount",
+          "type": "Int",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false,
+          "defaultValue": "0"
+        },
+        {
+          "id": "field-blog-12",
+          "name": "readTime",
+          "type": "Int",
+          "isRequired": false,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-blog-13",
+          "name": "publishedAt",
+          "type": "DateTime",
+          "isRequired": false,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-blog-14",
+          "name": "createdAt",
+          "type": "DateTime",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false,
+          "defaultValue": "now()"
+        },
+        {
+          "id": "field-blog-15",
+          "name": "updatedAt",
+          "type": "DateTime",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false,
+          "defaultValue": "now()"
+        }
+      ]
+    },
+    {
+      "id": "model-blog-2",
+      "name": "Author",
+      "fields": [
+        {
+          "id": "field-blog-16",
+          "name": "id",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": true,
+          "isArray": false,
+          "defaultValue": "uuid()"
+        },
+        {
+          "id": "field-blog-17",
+          "name": "name",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-blog-18",
+          "name": "email",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": true,
+          "isArray": false
+        },
+        {
+          "id": "field-blog-19",
+          "name": "bio",
+          "type": "String",
+          "isRequired": false,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-blog-20",
+          "name": "avatar",
+          "type": "String",
+          "isRequired": false,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-blog-21",
+          "name": "website",
+          "type": "String",
+          "isRequired": false,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-blog-22",
+          "name": "social",
+          "type": "Json",
+          "isRequired": false,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-blog-23",
+          "name": "createdAt",
+          "type": "DateTime",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false,
+          "defaultValue": "now()"
+        }
+      ]
+    },
+    {
+      "id": "model-blog-3",
+      "name": "Category",
+      "fields": [
+        {
+          "id": "field-blog-24",
+          "name": "id",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": true,
+          "isArray": false,
+          "defaultValue": "uuid()"
+        },
+        {
+          "id": "field-blog-25",
+          "name": "name",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": true,
+          "isArray": false
+        },
+        {
+          "id": "field-blog-26",
+          "name": "slug",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": true,
+          "isArray": false
+        },
+        {
+          "id": "field-blog-27",
+          "name": "description",
+          "type": "String",
+          "isRequired": false,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-blog-28",
+          "name": "color",
+          "type": "String",
+          "isRequired": false,
+          "isUnique": false,
+          "isArray": false
+        }
+      ]
+    },
+    {
+      "id": "model-blog-4",
+      "name": "Comment",
+      "fields": [
+        {
+          "id": "field-blog-29",
+          "name": "id",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": true,
+          "isArray": false,
+          "defaultValue": "uuid()"
+        },
+        {
+          "id": "field-blog-30",
+          "name": "postId",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false,
+          "relation": "Post"
+        },
+        {
+          "id": "field-blog-31",
+          "name": "authorName",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-blog-32",
+          "name": "authorEmail",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-blog-33",
+          "name": "content",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-blog-34",
+          "name": "approved",
+          "type": "Boolean",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false,
+          "defaultValue": "false"
+        },
+        {
+          "id": "field-blog-35",
+          "name": "parentId",
+          "type": "String",
+          "isRequired": false,
+          "isUnique": false,
+          "isArray": false,
+          "relation": "Comment"
+        },
+        {
+          "id": "field-blog-36",
+          "name": "createdAt",
+          "type": "DateTime",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false,
+          "defaultValue": "now()"
+        }
+      ]
+    },
+    {
+      "id": "model-blog-5",
+      "name": "Newsletter",
+      "fields": [
+        {
+          "id": "field-blog-37",
+          "name": "id",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": true,
+          "isArray": false,
+          "defaultValue": "uuid()"
+        },
+        {
+          "id": "field-blog-38",
+          "name": "email",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": true,
+          "isArray": false
+        },
+        {
+          "id": "field-blog-39",
+          "name": "name",
+          "type": "String",
+          "isRequired": false,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-blog-40",
+          "name": "subscribed",
+          "type": "Boolean",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false,
+          "defaultValue": "true"
+        },
+        {
+          "id": "field-blog-41",
+          "name": "subscribedAt",
+          "type": "DateTime",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false,
+          "defaultValue": "now()"
+        }
+      ]
+    }
+  ],
+  "project-components": [
+    {
+      "id": "comp-blog-1",
+      "type": "PostCard",
+      "name": "PostCard",
+      "props": {
+        "showExcerpt": true,
+        "showAuthor": true,
+        "showDate": true,
+        "showReadTime": true
+      },
+      "children": []
+    },
+    {
+      "id": "comp-blog-2",
+      "type": "AuthorCard",
+      "name": "AuthorCard",
+      "props": {
+        "showBio": true,
+        "showSocialLinks": true
+      },
+      "children": []
+    },
+    {
+      "id": "comp-blog-3",
+      "type": "CommentSection",
+      "name": "CommentSection",
+      "props": {
+        "allowReplies": true,
+        "requireModeration": true
+      },
+      "children": []
+    }
+  ],
+  "project-workflows": [
+    {
+      "id": "workflow-blog-1",
+      "name": "Post Publishing Workflow",
+      "description": "Content review and publishing workflow",
+      "nodes": [
+        {
+          "id": "node-blog-1",
+          "type": "trigger",
+          "name": "Draft Created",
+          "position": { "x": 100, "y": 100 },
+          "data": { "label": "Author Creates Draft" },
+          "config": { "triggerType": "event" }
+        },
+        {
+          "id": "node-blog-2",
+          "type": "action",
+          "name": "Generate SEO",
+          "position": { "x": 300, "y": 100 },
+          "data": { "label": "Auto-generate meta tags" }
+        },
+        {
+          "id": "node-blog-3",
+          "type": "action",
+          "name": "Calculate Read Time",
+          "position": { "x": 500, "y": 100 },
+          "data": { "label": "Estimate reading time" }
+        },
+        {
+          "id": "node-blog-4",
+          "type": "notification",
+          "name": "Notify Editor",
+          "position": { "x": 700, "y": 100 },
+          "data": { "label": "Send review request" }
+        },
+        {
+          "id": "node-blog-5",
+          "type": "condition",
+          "name": "Approved?",
+          "position": { "x": 900, "y": 100 },
+          "data": { "label": "Editor review" }
+        },
+        {
+          "id": "node-blog-6",
+          "type": "action",
+          "name": "Publish",
+          "position": { "x": 1100, "y": 50 },
+          "data": { "label": "Make post live" }
+        },
+        {
+          "id": "node-blog-7",
+          "type": "notification",
+          "name": "Send to Subscribers",
+          "position": { "x": 1300, "y": 50 },
+          "data": { "label": "Email newsletter" }
+        }
+      ],
+      "connections": [
+        { "id": "conn-blog-1", "source": "node-blog-1", "target": "node-blog-2" },
+        { "id": "conn-blog-2", "source": "node-blog-2", "target": "node-blog-3" },
+        { "id": "conn-blog-3", "source": "node-blog-3", "target": "node-blog-4" },
+        { "id": "conn-blog-4", "source": "node-blog-4", "target": "node-blog-5" },
+        { "id": "conn-blog-5", "source": "node-blog-5", "target": "node-blog-6", "condition": "approved" },
+        { "id": "conn-blog-6", "source": "node-blog-6", "target": "node-blog-7" }
+      ],
+      "isActive": true,
+      "createdAt": 1704067200000,
+      "updatedAt": 1704067200000
+    }
+  ],
+  "project-lambdas": [
+    {
+      "id": "lambda-blog-1",
+      "name": "generateSEO",
+      "description": "Auto-generate SEO metadata for blog posts",
+      "code": "export async function handler(event) {\n  const { title, content, excerpt } = event;\n  const keywords = extractKeywords(content);\n  const description = excerpt || content.substring(0, 160);\n  return {\n    statusCode: 200,\n    body: JSON.stringify({\n      meta: {\n        title: `${title} | My Blog`,\n        description,\n        keywords\n      }\n    })\n  };\n}",
+      "language": "typescript",
+      "runtime": "nodejs20.x",
+      "handler": "index.handler",
+      "timeout": 10,
+      "memory": 256,
+      "environment": {},
+      "triggers": [
+        {
+          "id": "trigger-blog-1",
+          "type": "http",
+          "config": { "method": "POST", "path": "/api/seo" }
+        }
+      ],
+      "createdAt": 1704067200000,
+      "updatedAt": 1704067200000
+    },
+    {
+      "id": "lambda-blog-2",
+      "name": "sendNewsletter",
+      "description": "Send email to newsletter subscribers",
+      "code": "export async function handler(event) {\n  const { postId, title, excerpt } = event;\n  // Send newsletter emails\n  return {\n    statusCode: 200,\n    body: JSON.stringify({ sent: true })\n  };\n}",
+      "language": "typescript",
+      "runtime": "nodejs20.x",
+      "handler": "index.handler",
+      "timeout": 60,
+      "memory": 512,
+      "environment": {},
+      "triggers": [
+        {
+          "id": "trigger-blog-2",
+          "type": "event",
+          "config": { "event": "post.published" }
+        }
+      ],
+      "createdAt": 1704067200000,
+      "updatedAt": 1704067200000
+    }
+  ],
+  "project-playwright-tests": [
+    {
+      "id": "test-blog-1",
+      "name": "Read and Comment Flow",
+      "description": "Test reading a post and leaving a comment",
+      "pageUrl": "/",
+      "steps": [
+        { "id": "step-blog-1", "action": "navigate", "value": "/" },
+        { "id": "step-blog-2", "action": "click", "selector": ".post-card:first-child" },
+        { "id": "step-blog-3", "action": "expect", "selector": ".post-content", "assertion": "toBeVisible" },
+        { "id": "step-blog-4", "action": "scroll", "selector": ".comment-section" },
+        { "id": "step-blog-5", "action": "fill", "selector": "#comment-name", "value": "John Doe" },
+        { "id": "step-blog-6", "action": "fill", "selector": "#comment-email", "value": "john@example.com" },
+        { "id": "step-blog-7", "action": "fill", "selector": "#comment-text", "value": "Great article!" },
+        { "id": "step-blog-8", "action": "click", "selector": "button[data-testid='submit-comment']" },
+        { "id": "step-blog-9", "action": "expect", "selector": ".comment-success", "assertion": "toBeVisible" }
+      ]
+    }
+  ],
+  "project-storybook-stories": [
+    {
+      "id": "story-blog-1",
+      "componentName": "PostCard",
+      "storyName": "Default",
+      "args": {
+        "title": "Getting Started with React",
+        "excerpt": "Learn the basics of React development",
+        "author": "Jane Smith",
+        "date": "2024-01-15",
+        "readTime": 5,
+        "image": "/images/post.jpg"
+      },
+      "description": "Blog post card component",
+      "category": "Blog"
+    },
+    {
+      "id": "story-blog-2",
+      "componentName": "AuthorCard",
+      "storyName": "WithSocial",
+      "args": {
+        "name": "Jane Smith",
+        "bio": "Tech writer and developer",
+        "avatar": "/images/author.jpg",
+        "social": {
+          "twitter": "@janesmith",
+          "github": "janesmith"
+        }
+      },
+      "description": "Author profile card",
+      "category": "Blog"
+    }
+  ],
+  "project-unit-tests": [
+    {
+      "id": "test-blog-unit-1",
+      "name": "Post Utilities",
+      "description": "Test post formatting and utilities",
+      "testType": "utility",
+      "targetFile": "/src/utils/post.ts",
+      "testCases": [
+        {
+          "id": "case-blog-1",
+          "description": "calculates read time correctly",
+          "assertions": ["expect(calculateReadTime(content)).toBe(5)"]
+        },
+        {
+          "id": "case-blog-2",
+          "description": "generates slug from title",
+          "assertions": ["expect(slugify('Hello World')).toBe('hello-world')"]
+        }
+      ]
+    }
+  ],
+  "project-component-trees": [
+    {
+      "id": "tree-blog-1",
+      "name": "Blog Layout",
+      "description": "Main blog layout with sidebar",
+      "rootNodes": [
+        {
+          "id": "root-blog-1",
+          "type": "Container",
+          "name": "BlogContainer",
+          "props": { "maxWidth": "lg" },
+          "children": [
+            {
+              "id": "header-blog-1",
+              "type": "Box",
+              "name": "BlogHeader",
+              "props": { "sx": { "py": 4, "borderBottom": 1 } },
+              "children": []
+            },
+            {
+              "id": "main-blog-1",
+              "type": "Grid",
+              "name": "MainGrid",
+              "props": { "container": true, "spacing": 4 },
+              "children": [
+                {
+                  "id": "content-blog-1",
+                  "type": "Grid",
+                  "name": "ContentColumn",
+                  "props": { "item": true, "xs": 12, "md": 8 },
+                  "children": []
+                },
+                {
+                  "id": "sidebar-blog-1",
+                  "type": "Grid",
+                  "name": "Sidebar",
+                  "props": { "item": true, "xs": 12, "md": 4 },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "createdAt": 1704067200000,
+      "updatedAt": 1704067200000
+    }
+  ]
+}

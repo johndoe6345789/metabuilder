@@ -1,0 +1,49 @@
+{
+  "entity": "User",
+  "version": "1.0",
+  "description": "Pastebin demo/test users — passwords managed by Flask auth layer",
+  "records": [
+    {
+      "id": "11111111-1111-1111-1111-111111111111",
+      "username": "demo",
+      "email": "demo@codesnippet.local",
+      "role": "user",
+      "tenantId": "pastebin",
+      "passwordHash": "scrypt:32768:8:1$nxKRjRw1sWfQMeLj$870487477ad83b6498f002646479a67d6b79b0fbea1230e67c32d7eaf610ba0400f7178416e0ed65834e099abf741eff0b970f08d8de50604a98ee69353588f3",
+      "createdAt": 0
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222222",
+      "username": "alice",
+      "email": "alice@codesnippet.local",
+      "role": "user",
+      "tenantId": "pastebin",
+      "passwordHash": "scrypt:32768:8:1$E0YjLQMcnNyhvss6$ec1afdef88235094e50026044aee56fe6fa0fe7ef24124b3b4f48bfa996f572f33dd7b43361b8387b212acfadd4828109b7d0863a4403af7807c42a4f79bcb7b",
+      "createdAt": 0
+    },
+    {
+      "id": "33333333-3333-3333-3333-333333333333",
+      "username": "bob",
+      "email": "bob@codesnippet.local",
+      "role": "user",
+      "tenantId": "pastebin",
+      "passwordHash": "scrypt:32768:8:1$JCIhCrzjBLv5iUMY$0174ca94e566e9b9d60dc6f58d969af63721001494584c84ba9219e84563d120f8f18c01ef3270276cfbb822d3a77b0a5929ab65e5f72768a7d2f4e276aaffa2",
+      "createdAt": 0
+    },
+    {
+      "id": "44444444-4444-4444-4444-444444444444",
+      "username": "playwright",
+      "email": "playwright@codesnippet.local",
+      "role": "user",
+      "tenantId": "pastebin",
+      "passwordHash": "scrypt:32768:8:1$wFy2KXr4ZHWOYAFy$dffe5e5bd1548fea0ad9531acb09294eb8cd8d98e45aa05c6ea5f70f92a224d14928057aad7644181a0233bfba30c70df0775e1ca55ebd0644deb1be2d8e2b54",
+      "createdAt": 0
+    }
+  ],
+  "metadata": {
+    "bootstrap": true,
+    "useCurrentTimestamp": true,
+    "timestampField": "createdAt",
+    "note": "passwordHash is Flask-only — DBAL ignores it. demo=demo1234, alice=alice1234, bob=bob12345, playwright=pw-test-2024"
+  }
+}

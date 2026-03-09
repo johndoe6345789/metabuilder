@@ -1,0 +1,16 @@
+{
+  "id": "app-logo-root",
+  "type": "div",
+  "props": {
+    "className": "app-logo"
+  },
+  "children": [
+    {
+      "id": "app-logo-icon",
+      "type": "Code",
+      "props": {
+        "size": 24
+      }
+    }
+  ]
+}

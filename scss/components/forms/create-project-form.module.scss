@@ -1,0 +1,24 @@
+/**
+ * CreateProjectForm Component Styles
+ */
+
+.form {
+  background: var(--mat-sys-surface-container);
+  border-radius: var(--mat-sys-corner-large);
+  padding: 24px;
+  margin-bottom: 24px;
+  border: 1px solid var(--mat-sys-outline-variant);
+}
+
+.title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--mat-sys-on-surface);
+  margin: 0 0 16px;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}

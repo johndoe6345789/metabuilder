@@ -1,0 +1,48 @@
+{
+  "entity": "KVEntry",
+  "version": "1.0",
+  "description": "Key-value store entry for CodeForge app data persistence",
+  "tenantId": true,
+  "fields": {
+    "id": {
+      "type": "string",
+      "primary": true,
+      "description": "The KV key (e.g. 'project-files', 'project-models')"
+    },
+    "value": {
+      "type": "json",
+      "required": true,
+      "description": "Stored value (any JSON-serializable data)"
+    },
+    "createdAt": {
+      "type": "bigint",
+      "generated": true
+    },
+    "updatedAt": {
+      "type": "bigint",
+      "generated": true
+    }
+  },
+  "indexes": [
+    {
+      "fields": [
+        "tenantId"
+      ]
+    }
+  ],
+  "acl": {
+    "create": {
+      "user": true
+    },
+    "read": {
+      "self": true,
+      "admin": true
+    },
+    "update": {
+      "self": true
+    },
+    "delete": {
+      "self": true
+    }
+  }
+}

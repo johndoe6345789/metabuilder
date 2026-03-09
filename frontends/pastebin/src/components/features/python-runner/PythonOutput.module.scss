@@ -1,0 +1,86 @@
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.spinIcon {
+  animation: spin 1s linear infinite;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--mat-sys-surface);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  background: color-mix(in srgb, var(--mat-sys-surface-variant) 30%, transparent);
+}
+
+.headerTitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--mat-sys-on-surface);
+}
+
+.body {
+  flex: 1;
+  overflow: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.emptyState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 0.875rem;
+}
+
+.outputCard {
+  padding: 16px;
+}
+
+.outputPre {
+  font-size: 0.875rem;
+  font-family: 'JetBrains Mono', monospace;
+  white-space: pre-wrap;
+  color: var(--mat-sys-on-surface);
+  margin: 0;
+}
+
+.errorCard {
+  padding: 16px;
+  margin-top: 16px;
+}
+
+.errorRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.errorIcon {
+  color: var(--mat-sys-error);
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.errorPre {
+  font-size: 0.875rem;
+  font-family: 'JetBrains Mono', monospace;
+  white-space: pre-wrap;
+  color: var(--mat-sys-error);
+  flex: 1;
+  margin: 0;
+}

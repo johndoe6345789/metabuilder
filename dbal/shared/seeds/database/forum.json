@@ -1,0 +1,261 @@
+[
+  {
+    "entity": "ForumCategory",
+    "version": "1.0",
+    "package": "forum_forge",
+    "description": "Forum categories for organizing community discussions",
+    "records": [
+      {
+        "id": "clx1cat001general00",
+        "tenantId": "default",
+        "name": "General Discussion",
+        "description": "Open conversations about anything related to MetaBuilder, development tips, and community announcements",
+        "icon": "forum",
+        "slug": "general-discussion",
+        "sortOrder": 0,
+        "parentId": null,
+        "createdAt": 0
+      },
+      {
+        "id": "clx1cat002techhelp0",
+        "tenantId": "default",
+        "name": "Technical Help",
+        "description": "Get help with installation, configuration, build errors, and debugging across all MetaBuilder subsystems",
+        "icon": "help_outline",
+        "slug": "technical-help",
+        "sortOrder": 1,
+        "parentId": null,
+        "createdAt": 0
+      },
+      {
+        "id": "clx1cat003showcase0",
+        "tenantId": "default",
+        "name": "Project Showcase",
+        "description": "Share what you have built with MetaBuilder - packages, workflows, games, and custom integrations",
+        "icon": "rocket_launch",
+        "slug": "project-showcase",
+        "sortOrder": 2,
+        "parentId": null,
+        "createdAt": 0
+      },
+      {
+        "id": "clx1cat004feedback0",
+        "tenantId": "default",
+        "name": "Feature Requests & Feedback",
+        "description": "Suggest new features, vote on proposals, and provide feedback on existing functionality",
+        "icon": "lightbulb",
+        "slug": "feature-requests-feedback",
+        "sortOrder": 3,
+        "parentId": null,
+        "createdAt": 0
+      }
+    ],
+    "metadata": {
+      "bootstrap": false,
+      "skipIfExists": true,
+      "timestampField": "createdAt",
+      "useCurrentTimestamp": true
+    }
+  },
+  {
+    "entity": "ForumThread",
+    "version": "1.0",
+    "package": "forum_forge",
+    "description": "Forum discussion threads across categories",
+    "records": [
+      {
+        "id": "clx1thr001dbalmulti",
+        "tenantId": "default",
+        "categoryId": "clx1cat002techhelp0",
+        "authorId": "user_testuser",
+        "title": "How to configure DBAL with multiple database backends simultaneously",
+        "content": "I want to use PostgreSQL as my primary database with Redis as a caching layer and Elasticsearch for full-text search. The documentation mentions multi-adapter patterns but I am not sure how to configure the environment variables for all three. Has anyone set up a read-through cache with Redis in front of PostgreSQL? What does the DBAL_CACHE_URL format look like in practice?",
+        "slug": "dbal-multiple-database-backends",
+        "isPinned": true,
+        "isLocked": false,
+        "viewCount": 342,
+        "replyCount": 3,
+        "lastReplyAt": 0,
+        "lastReplyBy": "user_admin_system",
+        "createdAt": 0,
+        "updatedAt": 0
+      },
+      {
+        "id": "clx1thr002workflowd",
+        "tenantId": "default",
+        "categoryId": "clx1cat001general00",
+        "authorId": "user_testuser",
+        "title": "Workflow engine plugin development guide - share your experience",
+        "content": "I have been writing custom workflow plugins in TypeScript and Go for the past few weeks. The plugin registry at /api/plugins makes discovery straightforward, but I found some undocumented quirks with the Go executor. Would love to hear from others building plugins - what language are you using and what patterns have worked well for error handling across the execution boundary?",
+        "slug": "workflow-plugin-development-guide",
+        "isPinned": false,
+        "isLocked": false,
+        "viewCount": 187,
+        "replyCount": 2,
+        "lastReplyAt": 0,
+        "lastReplyBy": "user_testuser",
+        "createdAt": 0,
+        "updatedAt": 0
+      },
+      {
+        "id": "clx1thr003gameengin",
+        "tenantId": "default",
+        "categoryId": "clx1cat003showcase0",
+        "authorId": "user_testuser",
+        "title": "Built a multiplayer Pong game using the game engine",
+        "content": "Just finished building a multiplayer Pong game using the SDL3/bgfx game engine. Used EnTT for the ECS architecture and added WebSocket support for real-time multiplayer. The --bootstrap flag made initial setup painless. Screenshots and source code in the thread. The physics feel surprisingly good with Box2D handling collision detection.",
+        "slug": "multiplayer-pong-game-engine",
+        "isPinned": false,
+        "isLocked": false,
+        "viewCount": 523,
+        "replyCount": 2,
+        "lastReplyAt": 0,
+        "lastReplyBy": "user_admin_system",
+        "createdAt": 0,
+        "updatedAt": 0
+      },
+      {
+        "id": "clx1thr004jsonuimig",
+        "tenantId": "default",
+        "categoryId": "clx1cat002techhelp0",
+        "authorId": "user_testuser",
+        "title": "TSX to JSON migration strategy for CodeForge components",
+        "content": "Our team is migrating CodeForge components from TSX to JSON definitions. We have about 120 components left out of the original 420. The json-ui renderer handles most cases but we are hitting issues with components that have complex conditional rendering logic. Has anyone found a good pattern for expressing if/else trees in the JSON component definitions? The hook injection system works well for state but control flow is tricky.",
+        "slug": "tsx-json-migration-codeforge",
+        "isPinned": false,
+        "isLocked": false,
+        "viewCount": 298,
+        "replyCount": 1,
+        "lastReplyAt": 0,
+        "lastReplyBy": "user_admin_system",
+        "createdAt": 0,
+        "updatedAt": 0
+      },
+      {
+        "id": "clx1thr005dockeropt",
+        "tenantId": "default",
+        "categoryId": "clx1cat004feedback0",
+        "authorId": "user_testuser",
+        "title": "Request: Docker image size optimization for DBAL daemon",
+        "content": "The current DBAL Docker image is around 480MB which is within the 500MB target but still feels heavy for a REST API daemon. Could we explore Alpine-based images or static linking to get it under 200MB? The Conan dependencies seem to be the biggest contributor. Also the build stage uses a lot of intermediate layers that could potentially be squashed. Happy to submit a PR if there is interest.",
+        "slug": "docker-image-size-optimization-dbal",
+        "isPinned": false,
+        "isLocked": false,
+        "viewCount": 156,
+        "replyCount": 0,
+        "lastReplyAt": null,
+        "lastReplyBy": null,
+        "createdAt": 0,
+        "updatedAt": 0
+      }
+    ],
+    "metadata": {
+      "bootstrap": false,
+      "skipIfExists": true,
+      "timestampField": "createdAt",
+      "useCurrentTimestamp": true
+    }
+  },
+  {
+    "entity": "ForumPost",
+    "version": "1.0",
+    "package": "forum_forge",
+    "description": "Forum replies and posts within threads",
+    "records": [
+      {
+        "id": "clx1post01dbalreply",
+        "tenantId": "default",
+        "threadId": "clx1thr001dbalmulti",
+        "authorId": "user_admin_system",
+        "content": "Great question. The multi-adapter setup uses separate environment variables for each layer. Set DATABASE_URL for your primary PostgreSQL connection, DBAL_CACHE_URL=redis://localhost:6379/0?ttl=300&pattern=read-through for the Redis cache, and DBAL_SEARCH_URL=http://localhost:9200?index=dbal_search&refresh=true for Elasticsearch. The DBAL daemon handles the coordination between layers automatically based on the configured pattern.",
+        "likes": 12,
+        "isEdited": false,
+        "createdAt": 0,
+        "updatedAt": null
+      },
+      {
+        "id": "clx1post02dbalfolup",
+        "tenantId": "default",
+        "threadId": "clx1thr001dbalmulti",
+        "authorId": "user_testuser",
+        "content": "Thanks, that worked perfectly. One follow-up - does the cache invalidation happen automatically on writes or do I need to configure a write-through pattern explicitly? I noticed the TTL on the Redis config but was not sure if the DBAL handles cache busting on mutations.",
+        "likes": 3,
+        "isEdited": false,
+        "createdAt": 0,
+        "updatedAt": null
+      },
+      {
+        "id": "clx1post03dbalanswer",
+        "tenantId": "default",
+        "threadId": "clx1thr001dbalmulti",
+        "authorId": "user_admin_system",
+        "content": "By default the read-through pattern only caches reads and lets the TTL handle expiry. If you want immediate invalidation on writes, change the pattern to write-through: DBAL_CACHE_URL=redis://localhost:6379/0?ttl=300&pattern=write-through. This adds a small latency overhead on mutations but guarantees cache consistency. For high-write workloads, cache-aside with explicit invalidation is usually better.",
+        "likes": 18,
+        "isEdited": true,
+        "createdAt": 0,
+        "updatedAt": 0
+      },
+      {
+        "id": "clx1post04wfplugin1",
+        "tenantId": "default",
+        "threadId": "clx1thr002workflowd",
+        "authorId": "user_admin_system",
+        "content": "The Go executor has a known quirk with error propagation - you need to return errors as JSON on stdout rather than writing to stderr. The executor reads stdout for the result payload and stderr is only captured for logging. We should probably document this better. For TypeScript plugins, the @metabuilder/workflow package handles serialization automatically.",
+        "likes": 7,
+        "isEdited": false,
+        "createdAt": 0,
+        "updatedAt": null
+      },
+      {
+        "id": "clx1post05wfplugin2",
+        "tenantId": "default",
+        "threadId": "clx1thr002workflowd",
+        "authorId": "user_testuser",
+        "content": "That explains the silent failures I was seeing. Switched to JSON stdout errors and everything works now. For anyone else building Go plugins - keep the go.mod minimal with stdlib only, the executor sandbox does not allow network access to fetch external modules at runtime.",
+        "likes": 5,
+        "isEdited": false,
+        "createdAt": 0,
+        "updatedAt": null
+      },
+      {
+        "id": "clx1post06gameshow1",
+        "tenantId": "default",
+        "threadId": "clx1thr003gameengin",
+        "authorId": "user_admin_system",
+        "content": "This looks fantastic. The ECS approach with EnTT is exactly what we recommend for game logic separation. How did you handle the WebSocket integration with SDL3's event loop? We have been considering adding a networking layer to the engine bootstrap.",
+        "likes": 9,
+        "isEdited": false,
+        "createdAt": 0,
+        "updatedAt": null
+      },
+      {
+        "id": "clx1post07gameshow2",
+        "tenantId": "default",
+        "threadId": "clx1thr003gameengin",
+        "authorId": "user_testuser",
+        "content": "I run the WebSocket client on a separate thread and push received messages into a thread-safe queue that the main SDL event loop polls each frame. Essentially treating network events the same as input events. The latency is acceptable for Pong at around 16ms on a local network. For a proper networking layer I would suggest looking at ENet or GameNetworkingSockets from Valve.",
+        "likes": 14,
+        "isEdited": true,
+        "createdAt": 0,
+        "updatedAt": 0
+      },
+      {
+        "id": "clx1post08jsonuirep",
+        "tenantId": "default",
+        "threadId": "clx1thr004jsonuimig",
+        "authorId": "user_admin_system",
+        "content": "For conditional rendering in JSON definitions, we use a 'conditions' array on each component node that maps to the hook state. The json-ui renderer evaluates conditions before rendering children. For complex if/else trees, extract the logic into a custom hook and expose boolean flags that the JSON definition can reference. The hook injection system was specifically designed for this - keep the JSON declarative and push imperative logic into hooks.",
+        "likes": 11,
+        "isEdited": false,
+        "createdAt": 0,
+        "updatedAt": null
+      }
+    ],
+    "metadata": {
+      "bootstrap": false,
+      "skipIfExists": true,
+      "timestampField": "createdAt",
+      "useCurrentTimestamp": true
+    }
+  }
+]

@@ -1,0 +1,11 @@
+{
+  "type": "MetabuilderWidgetSchemaEditorCanvas",
+  "props": {
+    "onSelect": "> void",
+    "onHover": "> void",
+    "onHoverEnd": "> void",
+    "onDragOver": "> void",
+    "onDragLeave": "> void",
+    "onDrop": "> void"
+  }
+}

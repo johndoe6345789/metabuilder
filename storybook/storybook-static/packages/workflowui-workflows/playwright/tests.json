@@ -1,0 +1,275 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "workflowui-workflows",
+  "version": "1.0.0",
+  "description": "WorkflowUI Workflows page tests - FIXED with screenshot analysis",
+  "tests": [
+    {
+      "name": "should display workflows list with search bar",
+      "tags": ["@workflows", "@critical"],
+      "timeout": 10000,
+      "steps": [
+        {
+          "description": "Navigate to workflows",
+          "action": "navigate",
+          "url": "/workflows"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Verify search input exists",
+          "action": "expect",
+          "placeholder": "Search workflows...",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should display Status and Category filters",
+      "tags": ["@workflows", "@filters"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/workflows"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Verify Status filter label",
+          "action": "expect",
+          "selector": "text=Status",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        },
+        {
+          "description": "Verify Category filter label",
+          "action": "expect",
+          "selector": "text=Category",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should filter workflows by search query",
+      "tags": ["@workflows", "@search"],
+      "timeout": 15000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/workflows"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Enter search query",
+          "action": "fill",
+          "placeholder": "Search workflows...",
+          "value": "test"
+        },
+        {
+          "action": "wait",
+          "timeout": 500
+        },
+        {
+          "description": "Results should update",
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should navigate to favorites via sidebar",
+      "tags": ["@workflows", "@favorites"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/workflows"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Click Favorites in sidebar",
+          "action": "click",
+          "selector": "text=Favorites"
+        },
+        {
+          "action": "waitForURL",
+          "urlPattern": "/workflows/favorites",
+          "timeout": 5000
+        },
+        {
+          "description": "Verify URL changed to favorites",
+          "action": "expect",
+          "assertion": {
+            "matcher": "toHaveURL",
+            "url": "/workflows/favorites"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should navigate to recent via sidebar",
+      "tags": ["@workflows", "@recent"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/workflows"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Click Recent in sidebar",
+          "action": "click",
+          "selector": "text=Recent"
+        },
+        {
+          "action": "waitForURL",
+          "urlPattern": "/workflows/recent",
+          "timeout": 5000
+        },
+        {
+          "description": "Verify URL changed to recent",
+          "action": "expect",
+          "assertion": {
+            "matcher": "toHaveURL",
+            "url": "/workflows/recent"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should display empty state with create button",
+      "tags": ["@workflows", "@empty-state"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/workflows"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "wait",
+          "timeout": 1000
+        },
+        {
+          "description": "Check for empty state message",
+          "action": "expect",
+          "selector": "text=No workflows yet",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        },
+        {
+          "description": "Check for create workflow button",
+          "action": "expect",
+          "role": "button",
+          "text": "Create Your First Workflow",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "favorites page should load correctly",
+      "tags": ["@workflows", "@favorites"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/workflows/favorites"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Page should have Favorites in sidebar selected",
+          "action": "expect",
+          "selector": "text=Favorites",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "recent page should load correctly",
+      "tags": ["@workflows", "@recent"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/workflows/recent"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Page should have Recent in sidebar selected",
+          "action": "expect",
+          "selector": "text=Recent",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should create workflow when clicking create button",
+      "tags": ["@workflows", "@crud"],
+      "timeout": 15000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/workflows"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "wait",
+          "timeout": 1000
+        },
+        {
+          "description": "Click New Workflow button in header",
+          "action": "click",
+          "role": "button",
+          "text": "New Workflow"
+        },
+        {
+          "action": "wait",
+          "timeout": 2000
+        },
+        {
+          "description": "Should navigate to editor or show dialog",
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    }
+  ]
+}

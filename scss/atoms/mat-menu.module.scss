@@ -1,0 +1,190 @@
+// Menu Component - Official Angular Material M3 SCSS (CSS Module)
+// ================================================================
+// Angular menu SCSS has element selectors (mat-menu) that CSS modules
+// doesn't allow. The Angular styles are loaded globally via theme.scss, and this
+// module provides React-specific local classes.
+//
+// M3 class names are declared here so the CSS Module exports them as hashed keys.
+// The s() resolver in Menu.tsx maps these names to their hashed equivalents.
+
+// M3 panel container
+.mat-mdc-menu-panel {
+  display: flex;
+  flex-direction: column;
+  min-width: 112px;
+  max-width: 280px;
+  background: var(--md-sys-color-surface-container, var(--mat-menu-container-color, #fff));
+  border-radius: var(--mat-menu-container-shape, 4px);
+  box-shadow: var(--mat-menu-container-elevation-shadow, 0 2px 4px -1px rgba(0 0 0 / 0.2), 0 4px 5px rgba(0 0 0 / 0.14), 0 1px 10px rgba(0 0 0 / 0.12));
+  overflow: auto;
+  z-index: 1300;
+}
+
+// M3 menu content wrapper
+.mat-mdc-menu-content {
+  padding: 8px 0;
+  list-style-type: none;
+}
+
+// M3 menu item
+.mat-mdc-menu-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 48px;
+  padding: 0 16px;
+  gap: 12px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.875rem;
+  text-align: start;
+  color: var(--md-sys-color-on-surface, var(--mat-menu-item-label-text-color, rgba(0 0 0 / 0.87)));
+
+  &:hover {
+    background: var(--mat-menu-item-hover-state-layer-color, rgba(0 0 0 / 0.04));
+  }
+
+  &:disabled {
+    opacity: 0.38;
+    cursor: default;
+  }
+}
+
+// M3 menu item highlighted / selected state
+.mat-mdc-menu-item-highlighted {
+  background: var(--mat-menu-item-focus-state-layer-color, rgba(0 0 0 / 0.08));
+}
+
+// M3 menu item text
+.mat-mdc-menu-item-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// M3 icon class
+.mat-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+// M3 divider
+.mat-divider {
+  height: 0;
+  border: none;
+  border-top: 1px solid var(--md-sys-color-outline-variant, var(--mat-divider-color, rgba(0 0 0 / 0.12)));
+  margin: 8px 0;
+}
+
+// Local class for CSS modules purity - apply to menu container
+.matMenu {
+  // Inherits Angular Material styles via global theme
+}
+
+// React-specific positioning classes
+.menuRight {
+  transform-origin: top right;
+}
+
+.menuBottom {
+  transform-origin: bottom left;
+}
+
+// Multi-column layout: layout handled via inline styles; this fixes item sizing
+.menuMultiColumn {
+  .mat-mdc-menu-item {
+    width: max-content;
+    min-width: 160px;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+}
+
+// React-specific dense variant adjustments
+.menuDense {
+  .mat-mdc-menu-content {
+    padding: 4px 0;
+  }
+
+  .mat-mdc-menu-item {
+    min-height: 36px;
+  }
+}
+
+// React-specific menu item content layout
+.menuItemIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+}
+
+.menuItemText {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.menuItemShortcut {
+  flex-shrink: 0;
+  margin-left: auto;
+  padding-left: 24px;
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+.menuItemTrailing {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+// React-specific divider
+.menuDivider {
+  height: 1px;
+  margin: 8px 0;
+}
+
+// React-specific subheader
+.menuSubheader {
+  padding: 12px 12px 8px;
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+// Context menu positioning
+.contextMenu {
+  position: fixed;
+}
+
+// Submenu indicator and positioning
+.menuItemSubmenu {
+  position: relative;
+}
+
+.submenu {
+  position: absolute;
+  left: 100%;
+  top: 0;
+  margin-left: 2px;
+}
+
+.menuCascading {
+  position: absolute;
+  left: 100%;
+  top: -8px;
+}

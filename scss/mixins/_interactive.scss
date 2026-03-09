@@ -1,0 +1,89 @@
+// Interactive state mixins - Material Design 3
+// Uses M3 state layer pattern with proper opacity values
+
+@mixin hover-lift {
+  transition: transform var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard),
+              box-shadow var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--mat-sys-level2);
+  }
+}
+
+@mixin clickable {
+  cursor: pointer;
+  position: relative;
+  transition: background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
+  }
+
+  &:active {
+    background-color: color-mix(in srgb, var(--mat-sys-on-surface) 12%, transparent);
+  }
+}
+
+// M3 state layer mixin for interactive elements
+@mixin state-layer($color: var(--mat-sys-on-surface)) {
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background-color: transparent;
+    pointer-events: none;
+    transition: background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+  }
+
+  &:hover::before {
+    background-color: color-mix(in srgb, #{$color} 8%, transparent);
+  }
+
+  &:focus-visible::before,
+  &:active::before {
+    background-color: color-mix(in srgb, #{$color} 12%, transparent);
+  }
+}
+
+@mixin focus-ring {
+  &:focus {
+    outline: none;
+  }
+
+  &:focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary);
+    outline-offset: 2px;
+  }
+}
+
+// M3 ripple effect placeholder (typically handled by JS)
+@mixin ripple-base {
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle, var(--mat-sys-on-surface) 10%, transparent 10.01%);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    transform: scale(10, 10);
+    opacity: 0;
+    transition: transform var(--mat-sys-motion-duration-long2), opacity var(--mat-sys-motion-duration-long4);
+  }
+
+  &:active::after {
+    transform: scale(0, 0);
+    opacity: var(--state-pressed-opacity);
+    transition: 0s;
+  }
+}

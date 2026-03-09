@@ -1,0 +1,19 @@
+{
+  "id": "outdrives",
+  "name": "Outdrives",
+  "partNumber": "TRA-5380",
+  "material": "steel",
+  "quantity": 2,
+  "weight": 18.0,
+  "weightUnit": "g",
+  "baseY": 270,
+  "description": "Hardened steel differential outdrives",
+  "geometry": [
+    { "type": "rect", "width": 35, "height": 12, "offsetX": -32 },
+    { "type": "ellipse", "rx": 6, "ry": 11, "offsetX": -15 },
+    { "type": "rect", "width": 15, "height": 8, "offsetX": -57 },
+    { "type": "rect", "width": 35, "height": 12, "offsetX": 32 },
+    { "type": "ellipse", "rx": 6, "ry": 11, "offsetX": 15 },
+    { "type": "rect", "width": 15, "height": 8, "offsetX": 57 }
+  ]
+}

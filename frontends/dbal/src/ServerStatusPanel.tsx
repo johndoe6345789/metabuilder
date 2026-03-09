@@ -2,12 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import type { ServerHealth, StatusResponse } from './status'
-
-const statusPalette: Record<ServerHealth['status'], string> = {
-  online: 'bg-emerald-500/90',
-  degraded: 'bg-amber-500/80',
-  offline: 'bg-rose-500/80',
-}
+import styles from './ServerStatusPanel.module.scss'
 
 export function ServerStatusPanel() {
   const [health, setHealth] = useState<ServerHealth[]>([])
@@ -62,38 +57,33 @@ export function ServerStatusPanel() {
   }, [health, error])
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col gap-1">
-        <p className="text-sm text-muted-foreground">Server status</p>
-        <h2 className="text-2xl font-bold">Observability Feed</h2>
-        <p className="text-sm text-muted-foreground">{summary}</p>
+    <div className={styles.panel}>
+      <div className={styles.header}>
+        <p className={styles.caption}>Server status</p>
+        <h2 className={styles.heading}>Observability Feed</h2>
+        <p className={styles.caption}>{summary}</p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className={styles.grid}>
         {loading && health.length === 0 ? (
-          <div className="col-span-full rounded-2xl bg-card/50 p-6 shadow">Loading status...</div>
+          <div className={styles.placeholder}>Loading status...</div>
         ) : error ? (
-          <div className="col-span-full rounded-2xl bg-card/50 p-6 shadow">
-            <p className="text-sm text-rose-500">{error}</p>
-            <p className="text-sm text-muted-foreground">Try refreshing the page in a few moments.</p>
+          <div className={styles.placeholder}>
+            <p className={styles.errorText}>{error}</p>
+            <p className={styles.caption}>Try refreshing the page in a few moments.</p>
           </div>
         ) : (
           health.map(item => (
-            <article
-              key={item.name}
-              className="rounded-2xl border border-border/40 bg-card/80 p-5 shadow-sm space-y-3"
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className={`h-3 w-3 rounded-full ${statusPalette[item.status]}`} />
-                  <h3 className="text-lg font-semibold">{item.name}</h3>
+            <article key={item.name} className={styles.card}>
+              <div className={styles.cardRow}>
+                <div className={styles.cardTitleGroup}>
+                  <span className={`${styles.statusDot} ${styles[item.status]}`} />
+                  <h3 className={styles.cardTitle}>{item.name}</h3>
                 </div>
-                <span className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                  {item.status}
-                </span>
+                <span className={styles.statusLabel}>{item.status}</span>
               </div>
-              <p className="text-sm text-muted-foreground">{item.message}</p>
-              <div className="flex justify-between text-xs text-muted-foreground">
+              <p className={styles.cardMessage}>{item.message}</p>
+              <div className={styles.cardMeta}>
                 <span>{item.latencyMs != null ? `${item.latencyMs.toFixed(0)} ms` : 'Latency unknown'}</span>
                 <span>Updated {lastUpdated ? new Date(lastUpdated).toLocaleTimeString() : '—'}</span>
               </div>

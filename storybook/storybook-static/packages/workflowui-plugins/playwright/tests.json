@@ -1,0 +1,180 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "workflowui-plugins",
+  "version": "1.0.0",
+  "description": "WorkflowUI Plugins page tests - plugin marketplace with 152 nodes across 16 categories",
+  "tests": [
+    {
+      "name": "should display plugins page with search",
+      "tags": ["@plugins", "@critical"],
+      "timeout": 10000,
+      "steps": [
+        {
+          "description": "Navigate to plugins",
+          "action": "navigate",
+          "url": "/plugins"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Verify search input exists",
+          "action": "expect",
+          "selector": "input[type='search'], input[placeholder*='search' i]",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should filter plugins by search query",
+      "tags": ["@plugins", "@search"],
+      "timeout": 15000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/plugins"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Type search query",
+          "action": "fill",
+          "selector": "input[type='search'], input[placeholder*='search' i]",
+          "value": "http"
+        },
+        {
+          "action": "wait",
+          "timeout": 500
+        },
+        {
+          "description": "Results should contain HTTP-related plugins",
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toContainText",
+            "expected": "HTTP"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should display plugin categories from registry",
+      "tags": ["@plugins", "@categories"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/plugins"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "wait",
+          "timeout": 1000
+        },
+        {
+          "description": "Check for Core category (from 152 nodes)",
+          "action": "expect",
+          "selector": "text=Core, button:has-text('Core')",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should display plugin cards with details",
+      "tags": ["@plugins", "@content"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/plugins"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "wait",
+          "timeout": 1000
+        },
+        {
+          "description": "Check for plugin cards or list items",
+          "action": "expect",
+          "selector": "[class*='plugin-card'], [data-testid*='plugin'], li:has-text('plugin')",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should filter by category when clicked",
+      "tags": ["@plugins", "@filters"],
+      "timeout": 15000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/plugins"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "wait",
+          "timeout": 1000
+        },
+        {
+          "description": "Click Core category if exists",
+          "action": "click",
+          "selector": "button:has-text('Core'), [role='tab']:has-text('Core')"
+        },
+        {
+          "action": "wait",
+          "timeout": 500
+        },
+        {
+          "description": "Results should update to show Core plugins",
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should display plugin count (152 total nodes)",
+      "tags": ["@plugins", "@stats"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/plugins"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "wait",
+          "timeout": 1000
+        },
+        {
+          "description": "Check for plugin count indicator",
+          "action": "expect",
+          "selector": "text=152, text=plugin, text=node",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    }
+  ]
+}

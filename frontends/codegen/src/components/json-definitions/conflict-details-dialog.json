@@ -1,0 +1,669 @@
+{
+  "id": "conflict-details-dialog",
+  "type": "Dialog",
+  "bindings": {
+    "open": "open",
+    "onOpenChange": "onOpenChange"
+  },
+  "children": [
+    {
+      "id": "conflict-details-content",
+      "type": "DialogContent",
+      "props": {
+        "className": "max-w-4xl max-h-[90vh] flex flex-col"
+      },
+      "children": [
+        {
+          "id": "conflict-details-header",
+          "type": "DialogHeader",
+          "children": [
+            {
+              "id": "conflict-details-title",
+              "type": "DialogTitle",
+              "bindings": {
+                "children": "conflict.id"
+              },
+              "props": {
+                "className": "font-mono text-lg"
+              }
+            },
+            {
+              "id": "conflict-details-description",
+              "type": "DialogDescription",
+              "props": {
+                "className": "flex items-center gap-2"
+              },
+              "children": [
+                {
+                  "id": "conflict-details-entity-badge",
+                  "type": "Badge",
+                  "bindings": {
+                    "children": "conflict.entityType"
+                  },
+                  "props": {
+                    "variant": "outline"
+                  }
+                },
+                {
+                  "id": "conflict-details-id",
+                  "type": "span",
+                  "bindings": {
+                    "children": "conflict.id"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "conflict-version-summary",
+          "type": "div",
+          "props": {
+            "className": "grid grid-cols-2 gap-4 py-2"
+          },
+          "children": [
+            {
+              "id": "conflict-local-summary",
+              "type": "div",
+              "props": {
+                "className": "flex items-center gap-2"
+              },
+              "children": [
+                {
+                  "id": "conflict-summary-local-icon",
+                  "type": "Database",
+                  "props": {
+                    "size": 20,
+                    "className": "text-primary"
+                  }
+                },
+                {
+                  "id": "conflict-summary-local-content",
+                  "type": "div",
+                  "props": {
+                    "className": "flex-1"
+                  },
+                  "children": [
+                    {
+                      "id": "conflict-summary-local-label",
+                      "type": "div",
+                      "props": {
+                        "className": "text-sm font-medium",
+                        "children": "Local Version"
+                      }
+                    },
+                    {
+                      "id": "conflict-summary-local-time",
+                      "type": "div",
+                      "props": {
+                        "className": "flex items-center gap-1.5 text-xs text-muted-foreground"
+                      },
+                      "children": [
+                        {
+                          "id": "conflict-summary-local-clock",
+                          "type": "Clock",
+                          "props": {
+                            "size": 12
+                          }
+                        },
+                        {
+                          "id": "conflict-summary-local-timestamp",
+                          "type": "span",
+                          "bindings": {
+                            "children": {
+                              "source": "conflict.localTimestamp",
+                              "transform": "new Date(data).toLocaleString()"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "conflict-summary-local-newer",
+                  "type": "Badge",
+                  "conditional": {
+                    "if": "dialogState.isLocalNewer"
+                  },
+                  "props": {
+                    "variant": "secondary",
+                    "className": "text-xs",
+                    "children": "Newer"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "conflict-remote-summary",
+              "type": "div",
+              "props": {
+                "className": "flex items-center gap-2"
+              },
+              "children": [
+                {
+                  "id": "conflict-summary-remote-icon",
+                  "type": "Cloud",
+                  "props": {
+                    "size": 20,
+                    "className": "text-accent"
+                  }
+                },
+                {
+                  "id": "conflict-summary-remote-content",
+                  "type": "div",
+                  "props": {
+                    "className": "flex-1"
+                  },
+                  "children": [
+                    {
+                      "id": "conflict-summary-remote-label",
+                      "type": "div",
+                      "props": {
+                        "className": "text-sm font-medium",
+                        "children": "Remote Version"
+                      }
+                    },
+                    {
+                      "id": "conflict-summary-remote-time",
+                      "type": "div",
+                      "props": {
+                        "className": "flex items-center gap-1.5 text-xs text-muted-foreground"
+                      },
+                      "children": [
+                        {
+                          "id": "conflict-summary-remote-clock",
+                          "type": "Clock",
+                          "props": {
+                            "size": 12
+                          }
+                        },
+                        {
+                          "id": "conflict-summary-remote-timestamp",
+                          "type": "span",
+                          "bindings": {
+                            "children": {
+                              "source": "conflict.remoteTimestamp",
+                              "transform": "new Date(data).toLocaleString()"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "conflict-summary-remote-newer",
+                  "type": "Badge",
+                  "conditional": {
+                    "if": "!dialogState.isLocalNewer"
+                  },
+                  "props": {
+                    "variant": "secondary",
+                    "className": "text-xs",
+                    "children": "Newer"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "conflict-separator-1",
+          "type": "Separator"
+        },
+        {
+          "id": "conflict-tabs-container",
+          "type": "Tabs",
+          "bindings": {
+            "value": "dialogState.activeTab",
+            "onValueChange": {
+              "source": "dialogState.setActiveTab",
+              "transform": "(val) => data(val)"
+            }
+          },
+          "props": {
+            "className": "flex-1 flex flex-col min-h-0"
+          },
+          "children": [
+            {
+              "id": "conflict-tabs-list",
+              "type": "TabsList",
+              "props": {
+                "className": "grid grid-cols-3 w-full"
+              },
+              "children": [
+                {
+                  "id": "conflict-tab-diff",
+                  "type": "TabsTrigger",
+                  "bindings": {
+                    "children": {
+                      "source": "dialogState.conflictingKeys.length",
+                      "transform": "`Differences (${data})`"
+                    }
+                  },
+                  "props": {
+                    "value": "diff",
+                    "className": "gap-2"
+                  }
+                },
+                {
+                  "id": "conflict-tab-local",
+                  "type": "TabsTrigger",
+                  "props": {
+                    "value": "local",
+                    "className": "gap-2",
+                    "children": "Local"
+                  }
+                },
+                {
+                  "id": "conflict-tab-remote",
+                  "type": "TabsTrigger",
+                  "props": {
+                    "value": "remote",
+                    "className": "gap-2",
+                    "children": "Remote"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "conflict-tab-diff-content",
+              "type": "TabsContent",
+              "props": {
+                "value": "diff",
+                "className": "flex-1 min-h-0"
+              },
+              "children": [
+                {
+                  "id": "conflict-diff-scroll",
+                  "type": "ScrollArea",
+                  "props": {
+                    "className": "h-[400px] rounded-md border"
+                  },
+                  "children": [
+                    {
+                      "id": "conflict-diff-container",
+                      "type": "div",
+                      "props": {
+                        "className": "p-4 space-y-2"
+                      },
+                      "children": [
+                        {
+                          "id": "conflict-diff-items",
+                          "type": "map",
+                          "bindings": {
+                            "data": "dialogState.diff",
+                            "item": "diffItem"
+                          },
+                          "children": [
+                            {
+                              "id": "conflict-diff-item",
+                              "type": "div",
+                              "bindings": {
+                                "className": {
+                                  "source": "diffItem.isDifferent",
+                                  "transform": "data ? 'p-3 rounded-md border border-destructive/30 bg-destructive/5' : 'p-3 rounded-md border bg-muted/30'"
+                                }
+                              },
+                              "children": [
+                                {
+                                  "id": "conflict-diff-item-header",
+                                  "type": "div",
+                                  "props": {
+                                    "className": "flex items-center justify-between mb-2"
+                                  },
+                                  "children": [
+                                    {
+                                      "id": "conflict-diff-item-key",
+                                      "type": "span",
+                                      "bindings": {
+                                        "children": "diffItem.key"
+                                      },
+                                      "props": {
+                                        "className": "font-mono text-sm font-medium"
+                                      }
+                                    },
+                                    {
+                                      "id": "conflict-diff-item-conflict-badge",
+                                      "type": "Badge",
+                                      "conditional": {
+                                        "if": "diffItem.isDifferent"
+                                      },
+                                      "props": {
+                                        "variant": "destructive",
+                                        "className": "text-xs",
+                                        "children": "Conflict"
+                                      }
+                                    },
+                                    {
+                                      "id": "conflict-diff-item-match-badge",
+                                      "type": "Badge",
+                                      "conditional": {
+                                        "if": "!diffItem.isDifferent"
+                                      },
+                                      "props": {
+                                        "variant": "secondary",
+                                        "className": "text-xs"
+                                      },
+                                      "children": [
+                                        {
+                                          "id": "conflict-diff-item-match-icon",
+                                          "type": "CheckCircle",
+                                          "props": {
+                                            "size": 12
+                                          }
+                                        },
+                                        {
+                                          "id": "conflict-diff-item-match-text",
+                                          "type": "span",
+                                          "props": {
+                                            "children": "Match"
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "id": "conflict-diff-item-content",
+                                  "type": "div",
+                                  "props": {
+                                    "className": "grid grid-cols-2 gap-3 text-xs font-mono"
+                                  },
+                                  "children": [
+                                    {
+                                      "id": "conflict-diff-local",
+                                      "type": "div",
+                                      "children": [
+                                        {
+                                          "id": "conflict-diff-local-label",
+                                          "type": "div",
+                                          "props": {
+                                            "className": "text-muted-foreground mb-1",
+                                            "children": "Local"
+                                          }
+                                        },
+                                        {
+                                          "id": "conflict-diff-local-value",
+                                          "type": "div",
+                                          "conditional": {
+                                            "if": "diffItem.onlyInLocal"
+                                          },
+                                          "children": [
+                                            {
+                                              "id": "conflict-diff-local-only-badge",
+                                              "type": "Badge",
+                                              "props": {
+                                                "variant": "outline",
+                                                "className": "text-xs",
+                                                "children": "Only in Local"
+                                              }
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "id": "conflict-diff-local-json",
+                                          "type": "pre",
+                                          "conditional": {
+                                            "if": "!diffItem.onlyInLocal"
+                                          },
+                                          "bindings": {
+                                            "children": {
+                                              "source": "diffItem.localValue",
+                                              "transform": "JSON.stringify(data, null, 2)"
+                                            }
+                                          },
+                                          "props": {
+                                            "className": "whitespace-pre-wrap break-words"
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "id": "conflict-diff-remote",
+                                      "type": "div",
+                                      "children": [
+                                        {
+                                          "id": "conflict-diff-remote-label",
+                                          "type": "div",
+                                          "props": {
+                                            "className": "text-muted-foreground mb-1",
+                                            "children": "Remote"
+                                          }
+                                        },
+                                        {
+                                          "id": "conflict-diff-remote-value",
+                                          "type": "div",
+                                          "conditional": {
+                                            "if": "diffItem.onlyInRemote"
+                                          },
+                                          "children": [
+                                            {
+                                              "id": "conflict-diff-remote-only-badge",
+                                              "type": "Badge",
+                                              "props": {
+                                                "variant": "outline",
+                                                "className": "text-xs",
+                                                "children": "Only in Remote"
+                                              }
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "id": "conflict-diff-remote-json",
+                                          "type": "pre",
+                                          "conditional": {
+                                            "if": "!diffItem.onlyInRemote"
+                                          },
+                                          "bindings": {
+                                            "children": {
+                                              "source": "diffItem.remoteValue",
+                                              "transform": "JSON.stringify(data, null, 2)"
+                                            }
+                                          },
+                                          "props": {
+                                            "className": "whitespace-pre-wrap break-words"
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "conflict-tab-local-content",
+              "type": "TabsContent",
+              "props": {
+                "value": "local",
+                "className": "flex-1 min-h-0"
+              },
+              "children": [
+                {
+                  "id": "conflict-local-scroll",
+                  "type": "ScrollArea",
+                  "props": {
+                    "className": "h-[400px] rounded-md border"
+                  },
+                  "children": [
+                    {
+                      "id": "conflict-local-json",
+                      "type": "pre",
+                      "bindings": {
+                        "children": "dialogState.localJson"
+                      },
+                      "props": {
+                        "className": "p-4 text-xs font-mono"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "conflict-tab-remote-content",
+              "type": "TabsContent",
+              "props": {
+                "value": "remote",
+                "className": "flex-1 min-h-0"
+              },
+              "children": [
+                {
+                  "id": "conflict-remote-scroll",
+                  "type": "ScrollArea",
+                  "props": {
+                    "className": "h-[400px] rounded-md border"
+                  },
+                  "children": [
+                    {
+                      "id": "conflict-remote-json",
+                      "type": "pre",
+                      "bindings": {
+                        "children": "dialogState.remoteJson"
+                      },
+                      "props": {
+                        "className": "p-4 text-xs font-mono"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "conflict-separator-2",
+          "type": "Separator"
+        },
+        {
+          "id": "conflict-resolution-footer",
+          "type": "div",
+          "props": {
+            "className": "flex justify-between gap-2"
+          },
+          "children": [
+            {
+              "id": "conflict-cancel-button",
+              "type": "Button",
+              "bindings": {
+                "onClick": {
+                  "source": "onOpenChange",
+                  "transform": "() => data(false)"
+                }
+              },
+              "props": {
+                "variant": "outline",
+                "children": "Cancel"
+              }
+            },
+            {
+              "id": "conflict-resolution-buttons",
+              "type": "div",
+              "props": {
+                "className": "flex gap-2"
+              },
+              "children": [
+                {
+                  "id": "conflict-resolution-local",
+                  "type": "Button",
+                  "bindings": {
+                    "onClick": {
+                      "source": "onResolve",
+                      "transform": "() => { data(conflict.id, 'local'); onOpenChange(false); }"
+                    },
+                    "disabled": "isResolving"
+                  },
+                  "props": {
+                    "variant": "outline"
+                  },
+                  "children": [
+                    {
+                      "id": "conflict-resolution-local-icon",
+                      "type": "Database",
+                      "props": {
+                        "size": 16
+                      }
+                    },
+                    {
+                      "id": "conflict-resolution-local-text",
+                      "type": "span",
+                      "props": {
+                        "children": "Keep Local"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "conflict-resolution-remote",
+                  "type": "Button",
+                  "bindings": {
+                    "onClick": {
+                      "source": "onResolve",
+                      "transform": "() => { data(conflict.id, 'remote'); onOpenChange(false); }"
+                    },
+                    "disabled": "isResolving"
+                  },
+                  "props": {
+                    "variant": "outline"
+                  },
+                  "children": [
+                    {
+                      "id": "conflict-resolution-remote-icon",
+                      "type": "Cloud",
+                      "props": {
+                        "size": 16
+                      }
+                    },
+                    {
+                      "id": "conflict-resolution-remote-text",
+                      "type": "span",
+                      "props": {
+                        "children": "Keep Remote"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "conflict-resolution-merge",
+                  "type": "Button",
+                  "bindings": {
+                    "onClick": {
+                      "source": "onResolve",
+                      "transform": "() => { data(conflict.id, 'merge'); onOpenChange(false); }"
+                    },
+                    "disabled": "isResolving"
+                  },
+                  "children": [
+                    {
+                      "id": "conflict-resolution-merge-icon",
+                      "type": "ArrowsLeftRight",
+                      "props": {
+                        "size": 16
+                      }
+                    },
+                    {
+                      "id": "conflict-resolution-merge-text",
+                      "type": "span",
+                      "props": {
+                        "children": "Merge Both"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

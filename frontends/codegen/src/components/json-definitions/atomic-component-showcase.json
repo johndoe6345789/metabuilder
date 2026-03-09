@@ -1,0 +1,8 @@
+{
+  "id": "atomic-component-showcase",
+  "type": "div",
+  "props": {
+    "className": "atomic-component-showcase"
+  },
+  "children": []
+}

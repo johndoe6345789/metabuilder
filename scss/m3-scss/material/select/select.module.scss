@@ -1,0 +1,267 @@
+@use 'sass:math';
+@use 'cdk';
+@use '../core/style/vendor-prefixes';
+@use '../core/style/variables';
+@use '../core/tokens/token-utils';
+@use './m3-select';
+
+$mat-select-arrow-size: 5px !default;
+$mat-select-arrow-margin: 4px !default;
+$mat-select-panel-max-height: 275px !default;
+$mat-select-placeholder-arrow-space: 2 *
+  ($mat-select-arrow-size + $mat-select-arrow-margin);
+$leading-width: 12px !default;
+$scale: 0.75 !default;
+
+$fallbacks: m3-select.get-tokens();
+
+@keyframes _mat-select-enter {
+  from {
+    opacity: 0;
+    transform: scaleY(0.8);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes _mat-select-exit {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+.mat-mdc-select {
+  display: inline-block;
+  width: 100%;
+  outline: none;
+
+  @include vendor-prefixes.smooth-font();
+  color: token-utils.slot(select-enabled-trigger-text-color, $fallbacks);
+  font-family: token-utils.slot(select-trigger-text-font, $fallbacks);
+  line-height: token-utils.slot(select-trigger-text-line-height, $fallbacks);
+  font-size: token-utils.slot(select-trigger-text-size, $fallbacks);
+  font-weight: token-utils.slot(select-trigger-text-weight, $fallbacks);
+  letter-spacing: token-utils.slot(select-trigger-text-tracking, $fallbacks);
+}
+div.mat-mdc-select-panel {
+  box-shadow: token-utils.slot(select-container-elevation-shadow, $fallbacks);
+}
+
+.mat-mdc-select-disabled {
+  color: token-utils.slot(select-disabled-trigger-text-color, $fallbacks);
+
+  .mat-mdc-select-placeholder {
+    color: token-utils.slot(select-disabled-trigger-text-color, $fallbacks);
+  }
+}
+
+.mat-mdc-select-trigger {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+
+  .mat-mdc-select-disabled & {
+    @include vendor-prefixes.user-select(none);
+    cursor: default;
+  }
+}
+
+.mat-mdc-select-value {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mat-mdc-select-value-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mat-mdc-select-arrow-wrapper {
+  height: 24px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+
+  .mat-form-field-appearance-fill .mdc-text-field--no-label & {
+    transform: none;
+  }
+}
+
+.mat-mdc-form-field .mat-mdc-select.mat-mdc-select-invalid .mat-mdc-select-arrow,
+.mat-form-field-invalid:not(.mat-form-field-disabled) .mat-mdc-form-field-infix::after {
+  color: token-utils.slot(select-invalid-arrow-color, $fallbacks);
+}
+
+.mat-mdc-select-arrow {
+  width: $mat-select-arrow-size * 2;
+  height: $mat-select-arrow-size;
+  position: relative;
+
+  color: token-utils.slot(select-enabled-arrow-color, $fallbacks);
+
+  .mat-mdc-form-field.mat-focused & {
+    color: token-utils.slot(select-focused-arrow-color, $fallbacks);
+  }
+
+  .mat-mdc-form-field .mat-mdc-select.mat-mdc-select-disabled & {
+    color: token-utils.slot(select-disabled-arrow-color, $fallbacks);
+  }
+
+  .mat-select-open & {
+    transform: rotate(180deg);
+  }
+
+  .mat-form-field-animations-enabled & {
+    transition: transform variables.$swift-linear-duration variables.$swift-linear-timing-function;
+  }
+
+  svg {
+    fill: currentColor;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    @include cdk.high-contrast {
+      // On Chromium browsers the `currentColor` blends in with the
+      // background for SVGs so we have to fall back to `CanvasText`.
+      fill: CanvasText;
+
+      .mat-mdc-select-disabled & {
+        fill: GrayText;
+      }
+    }
+  }
+}
+
+// Even though we don't use the MDC styles, we need to keep the classes in the
+// DOM for the Gmat versions to work. We need to bump up the specificity here
+// so that it's higher than MDC's styles.
+div.mat-mdc-select-panel {
+  width: 100%; // Ensures that the panel matches the overlay width.
+  max-height: $mat-select-panel-max-height;
+  outline: 0;
+  overflow: auto;
+  padding: 8px 0;
+  border-radius: 4px;
+  box-sizing: border-box;
+
+  // Necessary so the `offsetParent` of the nested `mat-option` is the
+  // panel which is required for scroll calculations (see #30974).
+  position: relative;
+
+  background-color: token-utils.slot(select-panel-background-color, $fallbacks);
+
+  @include cdk.high-contrast {
+    outline: solid 1px;
+  }
+
+  .cdk-overlay-pane:not(.mat-mdc-select-panel-above) & {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    transform-origin: top center;
+  }
+
+  .mat-mdc-select-panel-above & {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    transform-origin: bottom center;
+  }
+}
+
+.mat-select-panel-animations-enabled {
+  animation: _mat-select-enter 120ms cubic-bezier(0, 0, 0.2, 1);
+
+  &.mat-select-panel-exit {
+    animation: _mat-select-exit 100ms linear;
+  }
+}
+
+.mat-mdc-select-placeholder {
+  // Delay the transition until the label has animated about a third of the way through, in
+  // order to prevent the placeholder from overlapping for a split second.
+  transition: color variables.$swift-ease-out-duration
+      math.div(variables.$swift-ease-out-duration, 3)
+      variables.$swift-ease-out-timing-function;
+
+  color: token-utils.slot(select-placeholder-text-color, $fallbacks);
+
+  .mat-mdc-form-field:not(.mat-form-field-animations-enabled) &,
+  ._mat-animation-noopable & {
+    transition: none;
+  }
+
+  .mat-form-field-hide-placeholder & {
+    color: transparent;
+
+    // Overwrite browser specific CSS properties that can overwrite the `color` property.
+    // Some developers seem to use this approach to easily overwrite the placeholder / label color.
+    -webkit-text-fill-color: transparent;
+
+    // Remove the transition to prevent the placeholder
+    // from overlapping when the label comes back down.
+    transition: none;
+    // Prevents the '...' from showing on the parent element.
+    display: block;
+  }
+}
+
+// Our MDC form field implementation is based on the MDC text field which doesn't include styles
+// for select. The select specific styles are not present as they don't use their text field as a
+// container. Below are the styles to account for the select arrow icon at the end.
+.mat-mdc-form-field-type-mat-select {
+  &:not(.mat-form-field-disabled) .mat-mdc-text-field-wrapper {
+    cursor: pointer;
+  }
+
+  &.mat-form-field-appearance-fill {
+    .mat-mdc-floating-label {
+      max-width: calc(100% - #{$mat-select-placeholder-arrow-space});
+    }
+
+    .mdc-floating-label--float-above {
+      $arrow-scale: math.div($mat-select-placeholder-arrow-space, $scale);
+      max-width: calc(100% / #{$scale} - #{$arrow-scale});
+    }
+  }
+  &.mat-form-field-appearance-outline {
+    .mdc-notched-outline__notch {
+      max-width: calc(100% - #{2 * ($mat-select-placeholder-arrow-space + $leading-width)});
+    }
+
+    .mdc-text-field--label-floating .mdc-notched-outline__notch {
+      max-width: calc(100% - #{$leading-width * 2});
+    }
+  }
+}
+
+// Used to prevent inline elements from collapsing if their text bindings
+// become empty. This is preferrable to inserting a blank space, because the
+// space can be read out by screen readers (see #21725).
+.mat-mdc-select-min-line:empty::before {
+  content: ' ';
+  white-space: pre;
+  width: 1px;
+  display: inline-block;
+
+  // Prevents some browsers from rendering the element in high contrast mode. Use `visibility`
+  // instead of `opacity` since VoiceOver + Chrome still reads out the space with the latter.
+  visibility: hidden;
+}
+
+.mat-form-field-appearance-fill .mat-mdc-select-arrow-wrapper {
+  transform: token-utils.slot(select-arrow-transform, $fallbacks);
+}

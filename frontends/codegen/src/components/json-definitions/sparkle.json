@@ -1,0 +1,18 @@
+{
+  "id": "sparkle-icon",
+  "type": "Sparkle",
+  "bindings": {
+    "size": {
+      "source": "size",
+      "transform": "data || 16"
+    },
+    "weight": {
+      "source": null,
+      "transform": "'fill'"
+    },
+    "className": {
+      "source": ["variant", "animate", "className"],
+      "transform": "const variant = data[0] || 'default'; const animate = data[1]; const className = data[2] || ''; const variantClasses = { default: 'text-foreground', primary: 'text-primary', accent: 'text-accent', gold: 'text-yellow-500' }; const animateClass = animate ? 'animate-pulse' : ''; return `${variantClasses[variant]} ${animateClass} ${className}`.trim()"
+    }
+  }
+}

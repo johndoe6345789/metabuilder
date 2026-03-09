@@ -1,0 +1,179 @@
+// FakeMUI Theme - Material Design 3 System CSS Variables
+// =====================================================
+// This file generates all --mat-sys-* CSS custom properties from the official
+// Google Material Design 3 token system (from scss/m3-scss/).
+//
+// Usage: Import this file once at the root of your application
+// @use 'fakemui/scss/theme';
+
+@use 'sass:map';
+@use 'm3-scss/material/core/tokens/m3/md-sys-color' as color;
+@use 'm3-scss/material/core/tokens/m3/md-sys-shape' as shape;
+@use 'm3-scss/material/core/tokens/m3/md-sys-state' as state;
+@use 'm3-scss/material/core/tokens/m3/md-sys-elevation' as elevation;
+@use 'm3-scss/material/core/tokens/m3/md-sys-typescale' as typescale;
+@use 'm3-scss/material/core/theming/palettes' as palettes;
+@use 'm3-scss/material/core/style/elevation' as elevation-utils;
+
+// Angular Material M3 Component Styles (Global)
+// Some Angular Material SCSS has element selectors that CSS modules doesn't allow.
+// These must be loaded globally so React components inherit the styles.
+@use 'm3-scss/material/list/list.module';
+@use 'm3-scss/material/menu/menu.module';
+
+// ============================================
+// Configuration (customizable via @use with())
+// ============================================
+
+// Primary palette - defaults to Violet
+$primary-palette: palettes.$violet-palette !default;
+// Tertiary palette - defaults to Cyan for contrast
+$tertiary-palette: palettes.$cyan-palette !default;
+
+// Typography configuration
+$typography-config: (
+  plain: ('Inter', sans-serif),
+  brand: ('Bricolage Grotesque', sans-serif),
+  bold: 700,
+  medium: 500,
+  regular: 400,
+) !default;
+
+// ============================================
+// Build Color Palettes
+// ============================================
+
+$palettes: (
+  primary: map.remove($primary-palette, neutral, neutral-variant, secondary),
+  secondary: map.get($primary-palette, secondary),
+  tertiary: map.remove($tertiary-palette, neutral, neutral-variant, secondary, error),
+  neutral: map.get($primary-palette, neutral),
+  neutral-variant: map.get($primary-palette, neutral-variant),
+  error: map.get($primary-palette, error),
+);
+
+// Generate light and dark color tokens from official M3 color system
+$light-colors: color.md-sys-color-values-light($palettes);
+$dark-colors: color.md-sys-color-values-dark($palettes);
+
+// Get official M3 system tokens
+$shape-values: shape.md-sys-shape-values();
+$state-values: state.md-sys-state-values();
+$elevation-values: elevation.md-sys-elevation-values();
+$typography-values: typescale.md-sys-typescale-values($typography-config);
+
+// ============================================
+// CSS Custom Properties Generation
+// ============================================
+
+:root {
+  // Enable color-scheme for native dark mode support
+  color-scheme: light dark;
+
+  // ============================================
+  // Shape Tokens (M3 Shape System)
+  // ============================================
+  @each $name, $value in $shape-values {
+    --mat-sys-#{$name}: #{$value};
+  }
+
+  // ============================================
+  // State Layer Tokens (M3 State System)
+  // ============================================
+  @each $name, $value in $state-values {
+    --mat-sys-#{$name}: #{$value};
+  }
+
+  // ============================================
+  // Elevation Tokens (M3 Elevation System)
+  // Generates proper box-shadow values from elevation levels
+  // ============================================
+  $shadow-color: map.get($palettes, neutral, 0);
+  @each $name, $level in $elevation-values {
+    --mat-sys-#{$name}: #{elevation-utils.get-box-shadow($level, $shadow-color)};
+  }
+
+  // ============================================
+  // Typography Tokens (M3 Typography System)
+  // ============================================
+  @each $name, $value in $typography-values {
+    --mat-sys-#{$name}: #{$value};
+  }
+
+  // ============================================
+  // Motion Tokens (M3 Motion System)
+  // ============================================
+  // Duration tokens
+  --mat-sys-motion-duration-short1: 50ms;
+  --mat-sys-motion-duration-short2: 100ms;
+  --mat-sys-motion-duration-short3: 150ms;
+  --mat-sys-motion-duration-short4: 200ms;
+  --mat-sys-motion-duration-medium1: 250ms;
+  --mat-sys-motion-duration-medium2: 300ms;
+  --mat-sys-motion-duration-medium3: 350ms;
+  --mat-sys-motion-duration-medium4: 400ms;
+  --mat-sys-motion-duration-long1: 450ms;
+  --mat-sys-motion-duration-long2: 500ms;
+  --mat-sys-motion-duration-long3: 550ms;
+  --mat-sys-motion-duration-long4: 600ms;
+  --mat-sys-motion-duration-extra-long1: 700ms;
+  --mat-sys-motion-duration-extra-long2: 800ms;
+  --mat-sys-motion-duration-extra-long3: 900ms;
+  --mat-sys-motion-duration-extra-long4: 1000ms;
+
+  // Easing tokens
+  --mat-sys-motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --mat-sys-motion-easing-standard-decelerate: cubic-bezier(0, 0, 0, 1);
+  --mat-sys-motion-easing-standard-accelerate: cubic-bezier(0.3, 0, 1, 1);
+  --mat-sys-motion-easing-emphasized: cubic-bezier(0.2, 0, 0, 1);
+  --mat-sys-motion-easing-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --mat-sys-motion-easing-emphasized-accelerate: cubic-bezier(0.3, 0, 0.8, 0.15);
+  --mat-sys-motion-easing-legacy: cubic-bezier(0.4, 0, 0.2, 1);
+  --mat-sys-motion-easing-legacy-decelerate: cubic-bezier(0, 0, 0.2, 1);
+  --mat-sys-motion-easing-legacy-accelerate: cubic-bezier(0.4, 0, 1, 1);
+  --mat-sys-motion-easing-linear: cubic-bezier(0, 0, 1, 1);
+
+  // ============================================
+  // Color Tokens (M3 Color System) - Light Theme Default
+  // ============================================
+  @each $name, $value in $light-colors {
+    --mat-sys-#{$name}: #{$value};
+  }
+
+  // Legacy compatibility tokens (mapped from M3 system)
+  --mat-sys-accent: var(--mat-sys-primary);
+  --mat-sys-on-accent: var(--mat-sys-on-primary);
+}
+
+// ============================================
+// Dark Theme - Auto (prefers-color-scheme)
+// ============================================
+@media (prefers-color-scheme: dark) {
+  :root {
+    @each $name, $value in $dark-colors {
+      --mat-sys-#{$name}: #{$value};
+    }
+  }
+}
+
+// ============================================
+// Dark Theme - Manual Override Classes
+// ============================================
+[data-theme="dark"],
+.dark-theme,
+.dark {
+  @each $name, $value in $dark-colors {
+    --mat-sys-#{$name}: #{$value};
+  }
+}
+
+// ============================================
+// Light Theme - Manual Override Classes
+// ============================================
+[data-theme="light"],
+.light-theme,
+.light {
+  @each $name, $value in $light-colors {
+    --mat-sys-#{$name}: #{$value};
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "displayTitle": "Display Components",
+  "avatarTitle": "Avatar",
+  "avatarFallback": "JD",
+  "ratingTitle": "Rating",
+  "colorSwatchesTitle": "Color Swatches",
+  "colorSwatches": [
+    { "color": "#8b5cf6", "label": "Primary" },
+    { "color": "#06b6d4", "label": "Accent" },
+    { "color": "#ef4444", "label": "Error" }
+  ],
+  "timestampTitle": "Timestamp",
+  "stepperTitle": "Stepper",
+  "stepperSteps": [
+    { "label": "Account", "description": "Create your account" },
+    { "label": "Profile", "description": "Add personal details" },
+    { "label": "Complete", "description": "Finish setup" }
+  ],
+  "timelineTitle": "Timeline",
+  "timelineItems": [
+    {
+      "title": "Project Created",
+      "description": "Initial setup completed",
+      "timestamp": "2 hours ago",
+      "status": "completed"
+    },
+    {
+      "title": "Development",
+      "description": "Currently building features",
+      "timestamp": "now",
+      "status": "current"
+    },
+    {
+      "title": "Testing",
+      "description": "QA phase",
+      "status": "pending"
+    }
+  ],
+  "tableTitle": "Table",
+  "tableColumns": [
+    { "key": "name", "header": "Name" },
+    { "key": "email", "header": "Email" },
+    { "key": "status", "header": "Status" }
+  ],
+  "tableData": [
+    { "id": 1, "name": "John Doe", "email": "john@example.com", "status": "active" },
+    { "id": 2, "name": "Jane Smith", "email": "jane@example.com", "status": "inactive" },
+    { "id": 3, "name": "Bob Johnson", "email": "bob@example.com", "status": "active" }
+  ],
+  "accordionTitle": "Accordion",
+  "accordionItems": [
+    {
+      "id": "1",
+      "title": "What is an atomic component?",
+      "content": "Atomic components are the smallest building blocks in a design system, representing basic UI elements that cannot be broken down further."
+    },
+    {
+      "id": "2",
+      "title": "How do I use these components?",
+      "content": "Import the components from the atoms folder and use them in your React components with full TypeScript support."
+    }
+  ],
+  "navigationTitle": "Navigation",
+  "breadcrumbs": [
+    { "label": "Home" },
+    { "label": "Components" },
+    { "label": "Showcase" }
+  ]
+}

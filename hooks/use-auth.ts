@@ -11,6 +11,7 @@ export interface AuthUser {
   email: string
   role: string
   level: number
+  tenantId?: string
 }
 
 export interface AuthState {

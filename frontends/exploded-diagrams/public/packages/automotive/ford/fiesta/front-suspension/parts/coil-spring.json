@@ -1,0 +1,32 @@
+{
+  "id": "coil-spring",
+  "name": "Front Coil Spring",
+  "partNumber": "FD-1751310",
+  "material": "spring",
+  "quantity": 2,
+  "weight": 3200.0,
+  "weightUnit": "g",
+  "baseY": 210,
+  "description": "Front suspension coil spring - standard rate",
+  "installation": {
+    "tools": [
+      { "name": "Spring compressor", "size": "MacPherson", "required": true },
+      { "name": "Spring compressor safety clips", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Spring isolator (upper)", "spec": "Rubber", "qty": 1, "reusable": false },
+      { "name": "Spring isolator (lower)", "spec": "Rubber", "qty": 1, "reusable": false }
+    ],
+    "torque": [],
+    "notes": [
+      "DANGER: Stored energy can cause death",
+      "Never work under compressed spring",
+      "Match spring color code to vehicle spec",
+      "Check for cracks or corrosion before reuse",
+      "Spring end must seat in strut locator"
+    ]
+  },
+  "geometry": [
+    { "type": "coilSpring", "rx": 35, "ry": 35, "coils": 7, "pitch": 15, "strokeWidth": 8, "stroke": "#d94a4a", "fill": "none" }
+  ]
+}

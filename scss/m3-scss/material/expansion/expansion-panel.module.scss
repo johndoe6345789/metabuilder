@@ -1,0 +1,160 @@
+@use 'cdk';
+@use './m3-expansion';
+@use '../core/tokens/token-utils';
+@use '../core/style/variables';
+@use '../core/style/elevation';
+
+$fallbacks: m3-expansion.get-tokens();
+
+.mat-expansion-panel {
+  box-sizing: content-box;
+  display: block;
+  margin: 0;
+  overflow: hidden;
+
+  &.mat-expansion-panel-animations-enabled {
+    transition:
+      margin 225ms variables.$fast-out-slow-in-timing-function,
+      elevation.private-transition-property-value();
+  }
+
+  // Required so that the `box-shadow` works after the
+  // focus indicator relatively positions the header.
+  position: relative;
+
+  background: token-utils.slot(expansion-container-background-color, $fallbacks);
+  color: token-utils.slot(expansion-container-text-color, $fallbacks);
+  border-radius: token-utils.slot(expansion-container-shape, $fallbacks);
+
+  &:not([class*='#{elevation.$prefix}']) {
+    box-shadow: token-utils.slot(expansion-container-elevation-shadow, $fallbacks);
+  }
+
+  .mat-accordion & {
+    &:not(.mat-expanded),
+    &:not(.mat-expansion-panel-spacing) {
+      border-radius: 0;
+    }
+
+    &:first-of-type {
+      border-top-right-radius: token-utils.slot(expansion-container-shape, $fallbacks);
+      border-top-left-radius: token-utils.slot(expansion-container-shape, $fallbacks);
+    }
+
+    &:last-of-type {
+      border-bottom-right-radius: token-utils.slot(expansion-container-shape, $fallbacks);
+      border-bottom-left-radius: token-utils.slot(expansion-container-shape, $fallbacks);
+    }
+  }
+
+  @include cdk.high-contrast {
+    outline: solid 1px;
+  }
+}
+
+// Styles to use if grid isn't supported for some reason.
+@mixin _fallback-styles {
+  height: 0;
+
+  .mat-expansion-panel.mat-expanded > & {
+    height: auto;
+  }
+}
+
+.mat-expansion-panel-content-wrapper {
+  // Note: we can't use `overflow: hidden` here, because it can clip content with
+  // ripples or box shadows. Instead we transition the `visibility` below.
+  // Based on https://css-tricks.com/css-grid-can-do-auto-height-transitions.
+  display: grid;
+  grid-template-rows: 0fr;
+  grid-template-columns: 100%;
+
+  .mat-expansion-panel-animations-enabled & {
+    transition: grid-template-rows 225ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .mat-expansion-panel.mat-expanded > & {
+    grid-template-rows: 1fr;
+  }
+
+  // All the browsers we support have support for `grid` as well, but
+  // given that these styles are load-bearing for the expansion panel,
+  // we have a fallback to `height` which doesn't animate, just in case.
+  // stylelint-disable material/no-prefixes
+  @supports not (grid-template-rows: 0fr) {
+    @include _fallback-styles;
+  }
+  // stylelint-enable material/no-prefixes
+
+  // Use the fallback styles when printing, otherwise closed panel appear open (see #32327).
+  @media print {
+    @include _fallback-styles;
+  }
+}
+
+.mat-expansion-panel-content {
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+  min-height: 0;
+
+  // The visibility here serves two purposes:
+  // 1. Hiding content from assistive technology.
+  // 2. Hiding any content that might be overflowing.
+  visibility: hidden;
+
+  .mat-expansion-panel-animations-enabled & {
+    // The duration here is slightly lower so the content
+    // goes away quicker than the collapse transition.
+    transition: visibility 190ms linear;
+  }
+
+  .mat-expansion-panel.mat-expanded > .mat-expansion-panel-content-wrapper > & {
+    visibility: visible;
+  }
+
+  font-family: token-utils.slot(expansion-container-text-font, $fallbacks);
+  font-size: token-utils.slot(expansion-container-text-size, $fallbacks);
+  font-weight: token-utils.slot(expansion-container-text-weight, $fallbacks);
+  line-height: token-utils.slot(expansion-container-text-line-height, $fallbacks);
+  letter-spacing: token-utils.slot(expansion-container-text-tracking, $fallbacks);
+}
+
+.mat-expansion-panel-body {
+  padding: 0 24px 16px;
+}
+
+.mat-expansion-panel-spacing {
+  margin: 16px 0;
+
+  .mat-accordion > &:first-child,
+  .mat-accordion > *:first-child:not(.mat-expansion-panel) & {
+    margin-top: 0;
+  }
+
+  .mat-accordion > &:last-child,
+  .mat-accordion > *:last-child:not(.mat-expansion-panel) & {
+    margin-bottom: 0;
+  }
+}
+
+.mat-action-row {
+  border-top-style: solid;
+  border-top-width: 1px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  padding: 16px 8px 16px 24px;
+
+  border-top-color: token-utils.slot(expansion-actions-divider-color, $fallbacks);
+
+  .mat-button-base,
+  .mat-mdc-button-base {
+    margin-left: 8px;
+
+    [dir='rtl'] & {
+      margin-left: 0;
+      margin-right: 8px;
+    }
+  }
+}

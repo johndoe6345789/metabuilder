@@ -1,0 +1,74 @@
+{
+  "id": "filter-input-container",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": "className",
+      "transform": "data ? `form-filter-input ${data}` : 'form-filter-input'"
+    }
+  },
+  "children": [
+    {
+      "id": "filter-input-icon",
+      "type": "MagnifyingGlass",
+      "bindings": {
+        "className": {
+          "source": "focusState.isFocused",
+          "transform": "data ? 'form-filter-input__icon form-filter-input__icon--focused' : 'form-filter-input__icon'"
+        }
+      },
+      "props": {
+        "size": 16
+      }
+    },
+    {
+      "id": "filter-input-field",
+      "type": "Input",
+      "bindings": {
+        "value": "value",
+        "placeholder": "placeholder",
+        "onFocus": {
+          "source": "focusState.setFocused",
+          "transform": "() => data(true)"
+        },
+        "onBlur": {
+          "source": "focusState.setFocused",
+          "transform": "() => data(false)"
+        },
+        "onChange": {
+          "source": "onChange",
+          "transform": "(e) => data(e.target.value)"
+        }
+      },
+      "props": {
+        "className": "form-filter-input__field"
+      }
+    },
+    {
+      "id": "filter-input-clear",
+      "type": "button",
+      "conditional": {
+        "if": "value"
+      },
+      "bindings": {
+        "onClick": {
+          "source": "onChange",
+          "transform": "() => data('')"
+        }
+      },
+      "props": {
+        "className": "form-filter-input__clear",
+        "type": "button"
+      },
+      "children": [
+        {
+          "id": "filter-input-clear-icon",
+          "type": "X",
+          "props": {
+            "size": 16
+          }
+        }
+      ]
+    }
+  ]
+}

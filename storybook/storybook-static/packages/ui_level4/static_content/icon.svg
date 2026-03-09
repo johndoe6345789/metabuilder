@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Level 4 badge - Admin level -->
+  <circle cx="32" cy="32" r="18" fill="none" stroke-width="2.5"/>
+  <text x="32" y="40" font-size="24" font-weight="bold" fill="currentColor" text-anchor="middle" font-family="Arial, sans-serif">4</text>
+  <circle cx="32" cy="18" r="4" fill="none"/>
+  <path d="M28 18 L28 16 M36 18 L36 16 M36 22 L36 24 M28 22 L28 24 M32 18 L32 16 M32 22 L32 24" stroke-width="1" opacity="0.6"/>
+</svg>

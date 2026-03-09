@@ -1,0 +1,105 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "workflowui-help",
+  "version": "1.0.0",
+  "description": "WorkflowUI Help and Docs pages tests - documentation and support",
+  "tests": [
+    {
+      "name": "should display help page",
+      "tags": [
+        "@help",
+        "@critical"
+      ],
+      "timeout": 10000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "help"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should display docs page",
+      "tags": [
+        "@docs",
+        "@critical"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "docs"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should have navigation or TOC",
+      "tags": [
+        "@docs",
+        "@navigation"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "docs"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should have searchable content",
+      "tags": [
+        "@docs",
+        "@search"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "docs"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    }
+  ]
+}

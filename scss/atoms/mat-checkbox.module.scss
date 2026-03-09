@@ -1,0 +1,266 @@
+// Checkbox Component - Official Angular Material M3 SCSS (CSS Module)
+// ====================================================================
+// Uses official Angular Material checkbox styles
+
+@use '../m3-scss/material/checkbox/checkbox.module';
+
+// ---------------------------------------------------------------------------
+// M3 structural classes – declared here so CSS Modules exports them as hashed
+// keys that the React component can look up via the `s()` resolver.
+// The actual visual rules come from the @use'd Angular Material module above;
+// these declarations just ensure the class names appear in the module export.
+// ---------------------------------------------------------------------------
+
+.mat-mdc-checkbox {
+  display: inline-flex;
+  align-items: center;
+}
+
+.mat-mdc-checkbox-disabled {
+  opacity: 0.38;
+  pointer-events: none;
+}
+
+.mat-internal-form-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mdc-checkbox {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+}
+
+.mdc-checkbox--disabled {
+  opacity: 0.38;
+  pointer-events: none;
+}
+
+.mdc-checkbox__native-control {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.mdc-checkbox__ripple {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.mdc-checkbox__background {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--mat-sys-on-surface-variant, currentColor);
+  border-radius: 2px;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  transition: background-color 90ms cubic-bezier(0.4, 0, 0.6, 1),
+              border-color 90ms cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+.mdc-checkbox__checkmark {
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: var(--mat-sys-on-primary, #fff);
+  stroke-width: 2;
+  stroke-dasharray: 29.7833385;
+  stroke-dashoffset: 29.7833385;
+  transition: stroke-dashoffset 180ms cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+.mdc-checkbox__checkmark-path {
+  stroke: inherit;
+  stroke-width: inherit;
+}
+
+.mdc-checkbox__mixedmark {
+  width: 12px;
+  height: 2px;
+  background-color: var(--mat-sys-on-primary, #fff);
+  opacity: 0;
+  transition: opacity 90ms cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+.mat-mdc-checkbox-touch-target {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 48px;
+  height: 48px;
+}
+
+.mat-mdc-checkbox-ripple {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+// Checked / indeterminate state transitions
+.mdc-checkbox__native-control:checked ~ .mdc-checkbox__background,
+.mdc-checkbox__native-control:indeterminate ~ .mdc-checkbox__background {
+  border-color: var(--mat-sys-primary);
+  background-color: var(--mat-sys-primary);
+}
+
+.mdc-checkbox__native-control:checked ~ .mdc-checkbox__background .mdc-checkbox__checkmark {
+  stroke-dashoffset: 0;
+}
+
+.mdc-checkbox__native-control:indeterminate ~ .mdc-checkbox__background .mdc-checkbox__mixedmark {
+  opacity: 1;
+}
+
+// Local class to satisfy CSS modules purity requirement
+// Apply this to wrap Angular Material checkbox elements
+.matCheckbox {
+  // This class can be empty - it just needs to exist for CSS modules
+  // The actual styling comes from the Angular Material classes below
+}
+
+// React-specific additions for backward compatibility
+// These extend the Angular Material styles with size and color variants
+
+// Size variants (not in Angular Material)
+.sizeSm {
+  // Applied to .mat-mdc-checkbox
+  .mdc-checkbox {
+    transform: scale(0.8);
+    transform-origin: center left;
+  }
+
+  .mat-internal-form-field {
+    font-size: var(--mat-sys-body-small-size, 12px);
+  }
+}
+
+.sizeLg {
+  // Applied to .mat-mdc-checkbox
+  .mdc-checkbox {
+    transform: scale(1.3);
+    transform-origin: center left;
+  }
+
+  .mat-internal-form-field {
+    font-size: var(--mat-sys-body-large-size, 16px);
+  }
+}
+
+// Color variant: secondary
+.colorSecondary {
+  .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background,
+  .mdc-checkbox__native-control:enabled:indeterminate ~ .mdc-checkbox__background {
+    border-color: var(--mat-sys-secondary);
+    background-color: var(--mat-sys-secondary);
+  }
+
+  .mdc-checkbox:hover > .mdc-checkbox__native-control:checked ~ .mdc-checkbox__background,
+  .mdc-checkbox:hover > .mdc-checkbox__native-control:indeterminate ~ .mdc-checkbox__background {
+    border-color: var(--mat-sys-secondary);
+    background-color: var(--mat-sys-secondary);
+  }
+
+  .mdc-checkbox__native-control:focus:focus:checked ~ .mdc-checkbox__background,
+  .mdc-checkbox__native-control:focus:focus:indeterminate ~ .mdc-checkbox__background {
+    border-color: var(--mat-sys-secondary);
+    background-color: var(--mat-sys-secondary);
+  }
+}
+
+// Color variant: error
+.colorError {
+  .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background,
+  .mdc-checkbox__native-control:enabled:indeterminate ~ .mdc-checkbox__background {
+    border-color: var(--mat-sys-error);
+    background-color: var(--mat-sys-error);
+  }
+
+  .mdc-checkbox:hover > .mdc-checkbox__native-control:checked ~ .mdc-checkbox__background,
+  .mdc-checkbox:hover > .mdc-checkbox__native-control:indeterminate ~ .mdc-checkbox__background {
+    border-color: var(--mat-sys-error);
+    background-color: var(--mat-sys-error);
+  }
+
+  .mdc-checkbox__native-control:focus:focus:checked ~ .mdc-checkbox__background,
+  .mdc-checkbox__native-control:focus:focus:indeterminate ~ .mdc-checkbox__background {
+    border-color: var(--mat-sys-error);
+    background-color: var(--mat-sys-error);
+  }
+
+  // Unchecked border should also show error
+  .mdc-checkbox__background {
+    border-color: var(--mat-sys-error);
+  }
+}
+
+// Color variant: success (tertiary in M3)
+.colorSuccess {
+  .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background,
+  .mdc-checkbox__native-control:enabled:indeterminate ~ .mdc-checkbox__background {
+    border-color: var(--mat-sys-tertiary);
+    background-color: var(--mat-sys-tertiary);
+  }
+
+  .mdc-checkbox:hover > .mdc-checkbox__native-control:checked ~ .mdc-checkbox__background,
+  .mdc-checkbox:hover > .mdc-checkbox__native-control:indeterminate ~ .mdc-checkbox__background {
+    border-color: var(--mat-sys-tertiary);
+    background-color: var(--mat-sys-tertiary);
+  }
+
+  .mdc-checkbox__native-control:focus:focus:checked ~ .mdc-checkbox__background,
+  .mdc-checkbox__native-control:focus:focus:indeterminate ~ .mdc-checkbox__background {
+    border-color: var(--mat-sys-tertiary);
+    background-color: var(--mat-sys-tertiary);
+  }
+}
+
+// Color variant: warning
+.colorWarning {
+  .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background,
+  .mdc-checkbox__native-control:enabled:indeterminate ~ .mdc-checkbox__background {
+    border-color: var(--mat-sys-warning, #fb8c00);
+    background-color: var(--mat-sys-warning, #fb8c00);
+  }
+
+  .mdc-checkbox:hover > .mdc-checkbox__native-control:checked ~ .mdc-checkbox__background,
+  .mdc-checkbox:hover > .mdc-checkbox__native-control:indeterminate ~ .mdc-checkbox__background {
+    border-color: var(--mat-sys-warning, #fb8c00);
+    background-color: var(--mat-sys-warning, #fb8c00);
+  }
+
+  .mdc-checkbox__native-control:focus:focus:checked ~ .mdc-checkbox__background,
+  .mdc-checkbox__native-control:focus:focus:indeterminate ~ .mdc-checkbox__background {
+    border-color: var(--mat-sys-warning, #fb8c00);
+    background-color: var(--mat-sys-warning, #fb8c00);
+  }
+}

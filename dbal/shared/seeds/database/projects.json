@@ -1,0 +1,58 @@
+{
+  "entity": "Project",
+  "version": "1.0",
+  "package": "codeforge",
+  "description": "Sample CodeForge projects for development and demonstration",
+  "records": [
+    {
+      "id": "proj_ecommerce_dash",
+      "tenantId": "default",
+      "name": "E-Commerce Dashboard",
+      "description": "Full-featured admin dashboard for the e-commerce package with product management, order tracking, inventory alerts, and sales analytics. Built with JSON-defined components and FakeMUI.",
+      "version": "2.1.0",
+      "status": "active",
+      "createdBy": "user_testuser",
+      "createdAt": 0,
+      "updatedAt": 0
+    },
+    {
+      "id": "proj_workflow_monitor",
+      "tenantId": "default",
+      "name": "Workflow Monitor",
+      "description": "Real-time monitoring dashboard for the DAG workflow engine. Displays execution status, node timing, error rates, and allows re-running failed workflows. Integrates with the plugin registry API.",
+      "version": "1.3.0",
+      "status": "active",
+      "createdBy": "user_testuser",
+      "createdAt": 0,
+      "updatedAt": 0
+    },
+    {
+      "id": "proj_forum_frontend",
+      "tenantId": "default",
+      "name": "Forum Frontend",
+      "description": "Community forum interface with category browsing, thread creation, rich text replies, and moderator tools. Consumes the forum_forge package API with optimistic updates and infinite scroll.",
+      "version": "1.0.0",
+      "status": "draft",
+      "createdBy": "user_testuser",
+      "createdAt": 0,
+      "updatedAt": 0
+    },
+    {
+      "id": "proj_legacy_migration",
+      "tenantId": "default",
+      "name": "Legacy Spark Migration",
+      "description": "Migration project for converting the legacy Spark implementation to the current MetaBuilder architecture. Includes schema mapping, data transformation scripts, and validation test suites.",
+      "version": "0.9.0",
+      "status": "archived",
+      "createdBy": "user_testuser",
+      "createdAt": 0,
+      "updatedAt": 0
+    }
+  ],
+  "metadata": {
+    "bootstrap": false,
+    "skipIfExists": true,
+    "timestampField": "createdAt",
+    "useCurrentTimestamp": true
+  }
+}

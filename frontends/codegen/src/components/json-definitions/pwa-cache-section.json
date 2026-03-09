@@ -1,0 +1,106 @@
+{
+  "id": "pwa-cache-section-container",
+  "type": "Card",
+  "className": "p-6",
+  "children": [
+    {
+      "type": "Box",
+      "className": "space-y-4",
+      "children": [
+        {
+          "type": "Box",
+          "children": [
+            {
+              "type": "Heading",
+              "level": 3,
+              "className": "text-lg font-semibold mb-1",
+              "children": [{ "type": "Text", "value": "{title}" }]
+            },
+            {
+              "type": "Paragraph",
+              "className": "text-sm text-muted-foreground",
+              "children": [{ "type": "Text", "value": "{description}" }]
+            }
+          ]
+        },
+        { "type": "Separator" },
+        {
+          "type": "Box",
+          "className": "space-y-3",
+          "children": [
+            {
+              "type": "Flex",
+              "align": "center",
+              "justify": "between",
+              "children": [
+                {
+                  "type": "Label",
+                  "className": "text-sm",
+                  "children": [{ "type": "Text", "value": "{sizeLabel}" }]
+                },
+                {
+                  "type": "Box",
+                  "className": "text-sm font-mono text-muted-foreground",
+                  "children": [{ "type": "Text", "value": "{cacheSize}" }]
+                }
+              ]
+            },
+            {
+              "type": "Flex",
+              "align": "center",
+              "justify": "between",
+              "children": [
+                {
+                  "type": "Label",
+                  "className": "text-sm",
+                  "children": [{ "type": "Text", "value": "{serviceWorkerLabel}" }]
+                },
+                {
+                  "type": "Badge",
+                  "bindings": {
+                    "variant": {
+                      "source": "hasRegistration",
+                      "transform": "data ? 'default' : 'secondary'"
+                    }
+                  },
+                  "children": [
+                    {
+                      "type": "Text",
+                      "bindings": {
+                        "value": {
+                          "source": "hasRegistration",
+                          "transform": "data ? 'activeStatus' : 'inactiveStatus'"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        { "type": "Separator" },
+        {
+          "type": "Button",
+          "className": "w-full",
+          "variant": "destructive",
+          "onClick": "onClearCache",
+          "children": [
+            {
+              "type": "Icon",
+              "name": "Trash",
+              "size": 16,
+              "className": "mr-2"
+            },
+            { "type": "Text", "value": "{clearAction}" }
+          ]
+        },
+        {
+          "type": "Paragraph",
+          "className": "text-xs text-muted-foreground text-center",
+          "children": [{ "type": "Text", "value": "{helper}" }]
+        }
+      ]
+    }
+  ]
+}

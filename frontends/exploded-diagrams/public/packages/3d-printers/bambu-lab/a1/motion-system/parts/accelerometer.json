@@ -1,0 +1,68 @@
+{
+  "id": "accelerometer",
+  "name": "Input Shaper Accelerometer",
+  "partNumber": "BL-A1-MR009",
+  "material": "plastic",
+  "quantity": 1,
+  "weight": 2.5,
+  "weightUnit": "g",
+  "baseY": 560,
+  "description": "ADXL345 3-axis accelerometer for resonance compensation and input shaping calibration",
+  "installation": {
+    "tools": [
+      { "name": "Hex key", "size": "2mm", "required": true },
+      { "name": "Precision screwdriver", "size": "PH0", "required": true }
+    ],
+    "hardware": [
+      { "name": "M2x4 socket head cap screw", "spec": "M2x0.4x4", "grade": "8.8", "qty": 2, "reusable": true },
+      { "name": "FFC cable", "spec": "6-pin 0.5mm pitch", "qty": 1, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Mounting screws", "value": 0.15, "unit": "Nm", "sequence": "", "notes": "Sensor must be rigidly mounted" }
+    ],
+    "notes": [
+      "Mount rigidly to printhead - no flex allowed",
+      "Ensure correct orientation (X/Y/Z axes)",
+      "Run calibration after any mechanical changes",
+      "Check cable connection if readings are noisy"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 18, "height": 18, "rx": 2, "fill": "#2040A0" },
+    { "type": "rect", "width": 8, "height": 8, "fill": "#303030" },
+    { "type": "circle", "r": 1, "offsetX": -6, "offsetY": -6, "fill": "#FFD700" },
+    { "type": "circle", "r": 1, "offsetX": 6, "offsetY": -6, "fill": "#FFD700" },
+    { "type": "circle", "r": 1, "offsetX": -6, "offsetY": 6, "fill": "#FFD700" },
+    { "type": "circle", "r": 1, "offsetX": 6, "offsetY": 6, "fill": "#FFD700" }
+  ],
+  "geometry3d": [
+    { "type": "box", "width": 18, "height": 1.5, "depth": 18, "fill": "#2040A0" },
+
+    { "type": "box", "width": 5, "height": 2, "depth": 5, "offsetY": 1.5, "fill": "#303030" },
+
+    { "type": "cylinder", "r": 0.8, "height": 0.5, "offsetX": -6, "offsetZ": -6, "offsetY": 1, "fill": "#FFD700" },
+    { "type": "cylinder", "r": 0.8, "height": 0.5, "offsetX": 6, "offsetZ": -6, "offsetY": 1, "fill": "#FFD700" },
+    { "type": "cylinder", "r": 0.8, "height": 0.5, "offsetX": -6, "offsetZ": 6, "offsetY": 1, "fill": "#FFD700" },
+    { "type": "cylinder", "r": 0.8, "height": 0.5, "offsetX": 6, "offsetZ": 6, "offsetY": 1, "fill": "#FFD700" },
+
+    { "type": "cylinder", "r": 0.5, "height": 0.3, "offsetX": -7, "offsetZ": 0, "offsetY": 1, "fill": "#C0C0C0" },
+    { "type": "cylinder", "r": 0.5, "height": 0.3, "offsetX": -5, "offsetZ": 0, "offsetY": 1, "fill": "#C0C0C0" },
+    { "type": "cylinder", "r": 0.5, "height": 0.3, "offsetX": -3, "offsetZ": 0, "offsetY": 1, "fill": "#C0C0C0" },
+    { "type": "cylinder", "r": 0.5, "height": 0.3, "offsetX": 7, "offsetZ": 0, "offsetY": 1, "fill": "#C0C0C0" },
+    { "type": "cylinder", "r": 0.5, "height": 0.3, "offsetX": 5, "offsetZ": 0, "offsetY": 1, "fill": "#C0C0C0" },
+    { "type": "cylinder", "r": 0.5, "height": 0.3, "offsetX": 3, "offsetZ": 0, "offsetY": 1, "fill": "#C0C0C0" },
+
+    { "type": "cylinder", "r": 1, "height": 2, "offsetX": -7, "offsetZ": -7, "subtract": true },
+    { "type": "cylinder", "r": 1, "height": 2, "offsetX": 7, "offsetZ": -7, "subtract": true },
+
+    { "type": "box", "width": 2, "height": 1, "depth": 3, "offsetX": 3, "offsetZ": 3, "offsetY": 1.5, "fill": "#404040" },
+    { "type": "box", "width": 1.5, "height": 0.8, "depth": 2, "offsetX": -3, "offsetZ": 3, "offsetY": 1.5, "fill": "#505050" },
+
+    { "type": "box", "width": 10, "height": 2, "depth": 4, "offsetZ": -11, "fill": "#404040" },
+    { "type": "box", "width": 8, "height": 1, "depth": 2, "offsetZ": -12, "offsetY": 1, "fill": "#F5F5DC" },
+
+    { "type": "box", "width": 3, "height": 1.2, "depth": 2, "offsetX": -5, "offsetZ": 5, "offsetY": 1.5, "fill": "#606060" },
+
+    { "type": "cylinder", "r": 0.3, "height": 0.4, "offsetX": 0, "offsetZ": 0, "offsetY": 2.5, "fill": "#00FF00" }
+  ]
+}

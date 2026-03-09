@@ -1,0 +1,158 @@
+{
+  "name": "Filter Audit Logs",
+  "active": false,
+  "nodes": [
+    {
+      "id": "validate_tenant",
+      "name": "Validate Tenant",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $context.tenantId }}",
+        "operation": "validate",
+        "validator": "required",
+        "errorMessage": "tenantId is required"
+      }
+    },
+    {
+      "id": "build_filter",
+      "name": "Build Filter",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $json }}",
+        "output": {
+          "tenantId": "{{ $context.tenantId }}",
+          "action": "{{ $json.action }}",
+          "entity": "{{ $json.entity }}",
+          "userId": "{{ $json.userId }}",
+          "timestamp": {
+            "$gte": "{{ $json.startDate || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString() }}",
+            "$lte": "{{ $json.endDate || new Date().toISOString() }}"
+          }
+        },
+        "operation": "transform_data"
+      }
+    },
+    {
+      "id": "clean_filter",
+      "name": "Clean Filter",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $steps.build_filter.output }}",
+        "output": "{{ Object.entries($steps.build_filter.output).reduce((acc, [key, value]) => { if (value !== undefined && value !== null && (typeof value !== 'string' || value.length > 0)) acc[key] = value; return acc; }, {}) }}",
+        "operation": "transform_data"
+      }
+    },
+    {
+      "id": "fetch_filtered",
+      "name": "Fetch Filtered",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "filter": "{{ $steps.clean_filter.output }}",
+        "sort": {
+          "timestamp": -1
+        },
+        "limit": "{{ Math.min($json.limit || 100, 500) }}",
+        "output": "results",
+        "operation": "database_read",
+        "entity": "AuditLog"
+      }
+    },
+    {
+      "id": "return_success",
+      "name": "Return Success",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "action": "http_response",
+        "status": 200,
+        "body": {
+          "filters": "{{ $json }}",
+          "count": "{{ $steps.fetch_filtered.output.length }}",
+          "results": "{{ $steps.fetch_filtered.output }}"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "validate_tenant": {
+      "main": [
+        [
+          {
+            "node": "build_filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "build_filter": {
+      "main": [
+        [
+          {
+            "node": "clean_filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "clean_filter": {
+      "main": [
+        [
+          {
+            "node": "fetch_filtered",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fetch_filtered": {
+      "main": [
+        [
+          {
+            "node": "return_success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "id": "workflow_filters",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
+}

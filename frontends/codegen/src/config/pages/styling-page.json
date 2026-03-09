@@ -1,0 +1,30 @@
+{
+  "id": "styling-page",
+  "name": "Styling",
+  "description": "Theme designer",
+  "icon": "Palette",
+  "layout": {
+    "$ref": "./layouts/single-column.json"
+  },
+  "dataSources": [
+    {
+      "id": "theme",
+      "$ref": "./data-sources/kv-storage.json",
+      "key": "theme",
+      "defaultValue": {}
+    }
+  ],
+  "components": [
+    {
+      "$ref": "./molecules/page-header-standard.json",
+      "children": [
+        {
+          "$ref": "./atoms/heading-1.json",
+          "props": {
+            "children": "Styling & Theme"
+          }
+        }
+      ]
+    }
+  ]
+}

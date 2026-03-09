@@ -1,38 +1,98 @@
 {
   "name": "metabuilder-root",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
+  "type": "module",
   "description": "MetaBuilder - Universal Platform",
+  "scripts": {
+    "postinstall": "bash scripts/patch-bundled-deps.sh"
+  },
   "workspaces": [
+    "types",
+    "interfaces",
+    "translations",
+    "workflow",
     "hooks",
-    "redux/core",
-    "redux/slices",
-    "redux/hooks",
-    "redux/adapters",
-    "redux/hooks-data",
-    "redux/hooks-auth",
-    "redux/hooks-canvas",
-    "redux/hooks-async",
-    "redux/hooks-utils",
-    "redux/hooks-forms",
-    "redux/core-hooks",
-    "redux/api-clients",
-    "redux/timing-utils",
-    "dbal/development",
-    "fakemui",
-    "frontends/nextjs",
-    "frontends/dbal",
+    "components",
+    "redux/*",
+    "components/fakemui",
+    "scss",
+    "frontends/*",
     "config",
     "storybook"
   ],
   "devDependencies": {
-    "@playwright/test": "^1.49.1",
-    "jsdom": "^27.4.0"
+    "@chromatic-com/playwright": "^0.12.8",
+    "@playwright/test": "^1.58.2",
+    "@sentry/nextjs": "^10.39.0",
+    "@spotlightjs/spotlight": "^4.10.0",
+    "@storybook/react": "^10.2.10",
+    "@storybook/react-vite": "^10.2.13",
+    "@tailwindcss/vite": "^4.2.0",
+    "checkly": "^7.1.0",
+    "eslint": "^10.0.1",
+    "eslint-config-next": "^16.1.6",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-refresh": "^0.5.0",
+    "jest": "^30.2.0",
+    "jsdom": "^28.1.0",
+    "npm-run-all2": "8.0.4",
+    "storybook": "^10.2.10"
   },
   "dependencies": {
-    "@reduxjs/toolkit": "^2.5.2"
+    "@hookform/resolvers": "^5.2.2",
+    "@phosphor-icons/react": "^2.1.10",
+    "@reduxjs/toolkit": "^2.11.2",
+    "@tailwindcss/container-queries": "^0.1.1",
+    "@tailwindcss/postcss": "^4.2.0",
+    "classnames": "^2.5.1",
+    "framer-motion": "^12.34.3",
+    "lucide-react": "^0.575.0",
+    "react": "^19.2.4",
+    "react-hook-form": "^7.71.1",
+    "reactflow": "^11.11.4",
+    "redux-persist": "^6.0.0",
+    "sonner": "^2.0.7",
+    "terser": "^5.46.0",
+    "three": "^0.183.1"
   },
   "overrides": {
-    "lodash": "^4.17.22"
+    "lodash": "^4.17.22",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "eslint-plugin-react-hooks": {
+      ".": "^7.0.1",
+      "eslint": "$eslint"
+    },
+    "hono": "^4.12.0",
+    "@storybook/react-vite": {
+      "vite": "^7.3.1"
+    },
+    "@storybook/builder-vite": {
+      "vite": "^7.3.1"
+    },
+    "@joshwooding/vite-plugin-react-docgen-typescript": {
+      "vite": "^7.3.1"
+    },
+    "minimatch": "10.2.4",
+    "tar": "7.5.11",
+    "monaco-editor": "0.53.0",
+    "esbuild": ">=0.25.0",
+    "immutable": ">=5.1.5",
+    "@chromatic-com/playwright": {
+      "storybook": "8.6.18"
+    },
+    "eslint-plugin-jsx-a11y": {
+      "eslint": "$eslint"
+    },
+    "eslint-plugin-react": {
+      "eslint": "$eslint"
+    },
+    "eslint-plugin-format": {
+      "eslint": "$eslint"
+    }
   }
 }

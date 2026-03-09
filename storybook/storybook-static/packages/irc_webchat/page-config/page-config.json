@@ -1,0 +1,5 @@
+[
+  {"id":"page_irc_home","path":"/irc","title":"IRC Chat","packageId":"irc_webchat","component":"irc_home","level":1,"requiresAuth":true,"isPublished":true,"sortOrder":80},
+  {"id":"page_irc_channel","path":"/irc/channel/:channelId","title":"Channel","packageId":"irc_webchat","component":"irc_channel","level":1,"requiresAuth":true,"isPublished":true,"sortOrder":81},
+  {"id":"page_irc_admin","path":"/admin/irc","title":"IRC Management","packageId":"irc_webchat","component":"irc_admin","level":3,"requiresAuth":true,"isPublished":true,"sortOrder":82}
+]

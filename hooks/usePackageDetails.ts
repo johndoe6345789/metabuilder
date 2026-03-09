@@ -42,6 +42,11 @@ import { PackageErrorCode } from '@/lib/types/package-admin-types'
 
 interface UsePackageDetailsOptions {
   /**
+   * Base URL prefix for API calls (e.g. '/workflowui')
+   */
+  baseUrl?: string
+
+  /**
    * Callback when details load successfully
    */
   onSuccess?: (pkg: PackageInfo) => void
@@ -93,7 +98,7 @@ async function parseApiError(response: Response): Promise<PackageError> {
 export function usePackageDetails(
   options: UsePackageDetailsOptions = {}
 ): UsePackageDetailsReturn {
-  const { onSuccess, onError } = options
+  const { baseUrl = '', onSuccess, onError } = options
 
   // State
   const [state, setState] = useState<PackageDetailsState>({
@@ -126,7 +131,7 @@ export function usePackageDetails(
           error: null,
         }))
 
-        const response = await fetch(`/api/admin/packages/${packageId}`, {
+        const response = await fetch(`${baseUrl}/api/admin/packages/${packageId}`, {
           signal: abortControllerRef.current.signal,
         })
 

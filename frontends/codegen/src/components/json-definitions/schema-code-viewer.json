@@ -1,0 +1,113 @@
+{
+  "id": "schema-code-viewer",
+  "type": "div",
+  "props": {
+    "className": "schema-viewer"
+  },
+  "children": [
+    {
+      "id": "panel-header",
+      "type": "PanelHeader",
+      "props": {
+        "title": "Schema Output",
+        "icon": {
+          "type": "Icon",
+          "props": {
+            "name": "Code",
+            "size": 20,
+            "weight": "duotone"
+          }
+        }
+      }
+    },
+    {
+      "id": "tabs",
+      "type": "Tabs",
+      "props": {
+        "defaultValue": "json",
+        "className": "schema-viewer__tabs"
+      },
+      "children": [
+        {
+          "id": "tabs-list",
+          "type": "TabsList",
+          "props": {
+            "className": "w-full justify-start px-4 pt-2"
+          },
+          "children": [
+            {
+              "id": "json-trigger",
+              "type": "TabsTrigger",
+              "props": {
+                "value": "json",
+                "children": "JSON"
+              }
+            },
+            {
+              "id": "preview-trigger",
+              "type": "TabsTrigger",
+              "props": {
+                "value": "preview",
+                "children": "Preview"
+              }
+            }
+          ]
+        },
+        {
+          "id": "json-content",
+          "type": "TabsContent",
+          "props": {
+            "value": "json"
+          },
+          "children": [
+            {
+              "id": "scroll-area",
+              "type": "ScrollArea",
+              "props": {
+                "className": "h-full"
+              },
+              "children": [
+                {
+                  "id": "code-block",
+                  "type": "Code",
+                  "bindings": {
+                    "children": {
+                      "source": "schema",
+                      "transform": "data ? JSON.stringify(data, null, 2) : ''"
+                    },
+                    "className": { "value": "schema-viewer__code" }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "preview-content",
+          "type": "TabsContent",
+          "props": {
+            "value": "preview"
+          },
+          "children": [
+            {
+              "id": "preview-text",
+              "type": "div",
+              "props": {
+                "className": "schema-viewer__preview"
+              },
+              "children": [
+                {
+                  "id": "preview-message",
+                  "type": "p",
+                  "props": {
+                    "children": "Live preview coming soon"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

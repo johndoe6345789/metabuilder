@@ -1,0 +1,35 @@
+{
+  "id": "engine-earth-strap",
+  "name": "Engine Earth Strap",
+  "partNumber": "FD-1870520",
+  "material": "copper",
+  "quantity": 1,
+  "weight": 180.0,
+  "weightUnit": "g",
+  "baseY": 420,
+  "description": "Braided copper earth strap - engine block to body",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "13mm", "required": true },
+      { "name": "Wire brush", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Earth bolt", "spec": "M10x25", "qty": 2, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Engine end bolt", "value": 25, "unit": "Nm" },
+      { "fastener": "Body end bolt", "value": 15, "unit": "Nm" }
+    ],
+    "notes": [
+      "Critical for starter motor function",
+      "Engine end often corrodes first",
+      "Flexible to allow engine movement",
+      "Poor connection causes slow cranking"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 80, "height": 10, "rx": 2, "fill": "#b87333" },
+    { "type": "circle", "r": 10, "offsetX": -45, "fill": "#8b4513" },
+    { "type": "circle", "r": 10, "offsetX": 45, "fill": "#8b4513" }
+  ]
+}

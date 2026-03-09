@@ -8,12 +8,16 @@ export interface AppBarProps extends React.HTMLAttributes<HTMLElement> {
   position?: AppBarPosition
   color?: string
   sx?: Record<string, unknown>
+  /** Test ID for automated testing */
+  testId?: string
 }
 
-export const AppBar: React.FC<AppBarProps> = ({ children, position = 'fixed', color, className = '', sx, style, ...props }) => (
+export const AppBar: React.FC<AppBarProps> = ({ children, position = 'fixed', color, className = '', sx, style, testId, ...props }) => (
   <header
     className={`app-bar app-bar--${position} ${color ? `app-bar--${color}` : ''} ${className}`}
     style={{ ...sxToStyle(sx), ...style }}
+    role="banner"
+    data-testid={testId}
     {...props}
   >
     {children}

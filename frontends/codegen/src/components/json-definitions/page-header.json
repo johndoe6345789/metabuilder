@@ -1,0 +1,50 @@
+{
+  "id": "page-header-wrapper",
+  "type": "div",
+  "props": {
+    "className": "page-header"
+  },
+  "children": [
+    {
+      "id": "page-header-content",
+      "type": "div",
+      "props": {
+        "className": "page-header__content"
+      },
+      "children": [
+        {
+          "id": "page-header-title",
+          "type": "h1",
+          "props": {
+            "className": "page-header__title"
+          },
+          "bindings": {
+            "children": "title"
+          }
+        },
+        {
+          "id": "page-header-description",
+          "type": "p",
+          "props": {
+            "className": "page-header__description"
+          },
+          "bindings": {
+            "children": "description"
+          },
+          "condition": "description"
+        }
+      ]
+    },
+    {
+      "id": "page-header-actions",
+      "type": "div",
+      "props": {
+        "className": "page-header__actions"
+      },
+      "bindings": {
+        "children": "actions"
+      },
+      "condition": "actions"
+    }
+  ]
+}

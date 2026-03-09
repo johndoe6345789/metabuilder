@@ -4,10 +4,11 @@ export interface ImageListProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode
   cols?: number
   gap?: string | number
+  testId?: string
 }
 
-export const ImageList: React.FC<ImageListProps> = ({ children, cols = 2, gap, className = '', ...props }) => (
-  <div className={`image-list image-list--cols-${cols} ${gap ? `gap-${gap}` : ''} ${className}`} {...props}>
+export const ImageList: React.FC<ImageListProps> = ({ children, cols = 2, gap, className = '', testId, ...props }) => (
+  <div className={`image-list image-list--cols-${cols} ${gap ? `gap-${gap}` : ''} ${className}`} data-testid={testId} role="list" {...props}>
     {children}
   </div>
 )

@@ -7,8 +7,8 @@
 
 #include <string>
 #include <limits>
-#include "http_response.hpp"
-#include "socket_types.hpp"
+#include "../response/http_response.hpp"
+#include "../socket/socket_types.hpp"
 
 namespace dbal {
 namespace daemon {

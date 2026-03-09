@@ -1,4 +1,18 @@
 # DBAL Daemon Configuration (Production)
+#
+# Primary adapter is configured here. Additional backends (cache, search,
+# secondary databases) are configured via environment variables in
+# docker-compose.stack.yml:
+#
+#   DBAL_ADAPTER       Primary adapter type (postgres, mysql, sqlite, etc.)
+#   DATABASE_URL       Primary database connection string
+#   DBAL_CACHE_URL     Redis cache layer (read-through, write-through)
+#   DBAL_SEARCH_URL    Elasticsearch search layer (full-text, analytics)
+#   DBAL_MYSQL_URL     MySQL secondary backend
+#   DBAL_MONGODB_URL   MongoDB secondary backend
+#
+# See .env.example for all available environment variables.
+
 server:
   bind_address: "0.0.0.0"
   port: 8080
@@ -11,6 +25,7 @@ logging:
   format: json
   output: stdout
 
+# Primary database — overridden by DATABASE_URL env var
 database:
   type: postgres
   host: postgres
@@ -19,10 +34,57 @@ database:
   user: metabuilder
   # Password should be set via environment variable
 
+# Connection pool settings — overridden by DBAL_POOL_* env vars
+pool:
+  min_size: 2
+  max_size: 10
+  idle_timeout_seconds: 300
+
+# Cache layer (Redis) — overridden by DBAL_CACHE_URL env var
+cache:
+  enabled: true
+  type: redis
+  host: redis
+  port: 6379
+  db_index: 0
+  ttl: 300
+  pattern: read-through
+
+# Search layer (Elasticsearch) — overridden by DBAL_SEARCH_URL env var
+search:
+  enabled: true
+  type: elasticsearch
+  host: elasticsearch
+  port: 9200
+  index: metabuilder
+  refresh: true
+
+# Secondary backends — available for runtime switching via admin API
+secondary_backends:
+  mysql:
+    type: mysql
+    host: mysql
+    port: 3306
+    database: metabuilder
+    # Credentials via DBAL_MYSQL_URL env var
+  mongodb:
+    type: mongodb
+    host: mongodb
+    port: 27017
+    database: metabuilder
+    # Credentials via DBAL_MONGODB_URL env var
+
 security:
   enable_cors: true
   allowed_origins:
+    - "http://localhost"
+    - "http://localhost:80"
     - "https://yourdomain.com"
+  # Admin API bearer token — overridden by DBAL_ADMIN_TOKEN env var
+  # Admin endpoints are disabled when no token is configured
+  admin_token: "069e6487a710300381cd52120eab95d56d7f53beee21479cbeba9128217cbea9"
+  # CORS allowed origin — overridden by DBAL_CORS_ORIGIN env var
+  cors_origin: "http://localhost:3000"
   rate_limit:
     enabled: true
     requests_per_minute: 100
@@ -34,3 +96,11 @@ multi_tenant:
     max_blob_storage_bytes: 1073741824  # 1GB
     max_blob_count: 10000
     max_records: 100000
+
+# Feature flags
+features:
+  auto_create_tables: true
+  enable_metrics: true
+  enable_health_check: true
+  log_sql_queries: true
+  log_performance: true

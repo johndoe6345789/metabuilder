@@ -41,6 +41,11 @@ import { PackageErrorCode } from '@/lib/types/package-admin-types'
 
 interface UsePackageActionsOptions {
   /**
+   * Base URL prefix for API calls (e.g. '/workflowui')
+   */
+  baseUrl?: string
+
+  /**
    * Callback when operation completes successfully
    */
   onSuccess?: (
@@ -95,7 +100,7 @@ async function parseApiError(response: Response): Promise<PackageError> {
 export function usePackageActions(
   options: UsePackageActionsOptions = {}
 ): UsePackageActionsReturn {
-  const { onSuccess, onError } = options
+  const { baseUrl = '', onSuccess, onError } = options
 
   // State
   const [state, setState] = useState<PackageActionsState>({
@@ -169,7 +174,7 @@ export function usePackageActions(
         }))
 
         onSuccessFn?.(data)
-        onSuccess?.(data as PackageInfo, operationName as any)
+        onSuccess?.(data as unknown as PackageInfo, operationName as 'install' | 'uninstall' | 'enable' | 'disable')
 
         return data
       } catch (err) {
@@ -180,8 +185,8 @@ export function usePackageActions(
 
         const error = err instanceof Error ? (err as PackageError) : new Error(String(err))
         if (!(error as PackageError).code) {
-          (error as PackageError).code = PackageErrorCode.NETWORK_ERROR
-          (error as PackageError).name = 'PackageError'
+          ;(error as PackageError).code = PackageErrorCode.NETWORK_ERROR
+          ;(error as PackageError).name = 'PackageError'
         }
 
         setState((prev) => ({
@@ -210,7 +215,7 @@ export function usePackageActions(
         'install',
         packageId,
         async (signal) => {
-          return fetch(`/api/admin/packages/${packageId}/install`, {
+          return fetch(`${baseUrl}/api/admin/packages/${packageId}/install`, {
             method: 'POST',
             signal,
             headers: {
@@ -232,7 +237,7 @@ export function usePackageActions(
         'uninstall',
         packageId,
         async (signal) => {
-          return fetch(`/api/admin/packages/${packageId}/uninstall`, {
+          return fetch(`${baseUrl}/api/admin/packages/${packageId}/uninstall`, {
             method: 'POST',
             signal,
             headers: {
@@ -254,7 +259,7 @@ export function usePackageActions(
         'enable',
         packageId,
         async (signal) => {
-          return fetch(`/api/admin/packages/${packageId}/enable`, {
+          return fetch(`${baseUrl}/api/admin/packages/${packageId}/enable`, {
             method: 'POST',
             signal,
             headers: {
@@ -276,7 +281,7 @@ export function usePackageActions(
         'disable',
         packageId,
         async (signal) => {
-          return fetch(`/api/admin/packages/${packageId}/disable`, {
+          return fetch(`${baseUrl}/api/admin/packages/${packageId}/disable`, {
             method: 'POST',
             signal,
             headers: {

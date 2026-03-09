@@ -1,0 +1,332 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "pagination",
+  "version": "1.0.0",
+  "description": "Pagination components E2E tests - converted from e2e/pagination.spec.ts",
+  "tests": [
+    {
+      "name": "should render pagination controls with page numbers",
+      "tags": ["@pagination", "@ui"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/test-pagination"
+        },
+        {
+          "description": "Check that pagination controls are visible",
+          "action": "expect",
+          "selector": "[aria-label=\"pagination navigation\"]",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        },
+        {
+          "description": "Check for first page button",
+          "action": "expect",
+          "selector": "button[aria-label=\"Go to first page\"]",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        },
+        {
+          "description": "Check for previous page button",
+          "action": "expect",
+          "selector": "button[aria-label=\"Go to previous page\"]",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        },
+        {
+          "description": "Check for next page button",
+          "action": "expect",
+          "selector": "button[aria-label=\"Go to next page\"]",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        },
+        {
+          "description": "Check for last page button",
+          "action": "expect",
+          "selector": "button[aria-label=\"Go to last page\"]",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should navigate between pages when clicking page numbers",
+      "tags": ["@pagination", "@interaction"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/test-pagination"
+        },
+        {
+          "description": "Click on page 2",
+          "action": "click",
+          "selector": "button[aria-label=\"Go to page 2\"]"
+        },
+        {
+          "description": "Verify page 2 is now selected",
+          "action": "expect",
+          "selector": "button[aria-label=\"Go to page 2\"]",
+          "assertion": {
+            "matcher": "toHaveAttribute",
+            "expected": ["aria-current", "page"]
+          }
+        }
+      ]
+    },
+    {
+      "name": "should disable previous/first buttons on first page",
+      "tags": ["@pagination", "@state"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/test-pagination"
+        },
+        {
+          "description": "First button should be disabled",
+          "action": "expect",
+          "selector": "button[aria-label=\"Go to first page\"]",
+          "assertion": {
+            "matcher": "toBeDisabled"
+          }
+        },
+        {
+          "description": "Previous button should be disabled",
+          "action": "expect",
+          "selector": "button[aria-label=\"Go to previous page\"]",
+          "assertion": {
+            "matcher": "toBeDisabled"
+          }
+        },
+        {
+          "description": "Next button should not be disabled",
+          "action": "expect",
+          "selector": "button[aria-label=\"Go to next page\"]",
+          "assertion": {
+            "matcher": "toBeDisabled",
+            "not": true
+          }
+        },
+        {
+          "description": "Last button should not be disabled",
+          "action": "expect",
+          "selector": "button[aria-label=\"Go to last page\"]",
+          "assertion": {
+            "matcher": "toBeDisabled",
+            "not": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "should disable next/last buttons on last page",
+      "tags": ["@pagination", "@state"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/test-pagination"
+        },
+        {
+          "description": "Navigate to last page",
+          "action": "click",
+          "selector": "button[aria-label=\"Go to last page\"]"
+        },
+        {
+          "description": "Next button should be disabled",
+          "action": "expect",
+          "selector": "button[aria-label=\"Go to next page\"]",
+          "assertion": {
+            "matcher": "toBeDisabled"
+          }
+        },
+        {
+          "description": "Last button should be disabled",
+          "action": "expect",
+          "selector": "button[aria-label=\"Go to last page\"]",
+          "assertion": {
+            "matcher": "toBeDisabled"
+          }
+        },
+        {
+          "description": "Previous button should not be disabled",
+          "action": "expect",
+          "selector": "button[aria-label=\"Go to previous page\"]",
+          "assertion": {
+            "matcher": "toBeDisabled",
+            "not": true
+          }
+        },
+        {
+          "description": "First button should not be disabled",
+          "action": "expect",
+          "selector": "button[aria-label=\"Go to first page\"]",
+          "assertion": {
+            "matcher": "toBeDisabled",
+            "not": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "should display items per page selector",
+      "tags": ["@pagination", "@selector"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/test-pagination"
+        },
+        {
+          "description": "Check that selector is visible",
+          "action": "expect",
+          "selector": "#items-per-page-select",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should change page size when selecting different value",
+      "tags": ["@pagination", "@selector"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/test-pagination"
+        },
+        {
+          "description": "Select 50 items per page",
+          "action": "select",
+          "selector": "#items-per-page-select",
+          "value": "50"
+        },
+        {
+          "description": "Verify the selection changed",
+          "action": "expect",
+          "selector": "#items-per-page-select",
+          "assertion": {
+            "matcher": "toHaveValue",
+            "expected": "50"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should display current page information",
+      "tags": ["@pagination", "@info"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/test-pagination"
+        },
+        {
+          "description": "Check that info text is displayed",
+          "action": "expect",
+          "text": "Showing",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should display no items found when no data",
+      "tags": ["@pagination", "@empty-state"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/test-pagination-empty"
+        },
+        {
+          "description": "Check for no items found message",
+          "action": "expect",
+          "text": "No items found",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should handle complete pagination workflow",
+      "tags": ["@pagination", "@flow"],
+      "timeout": 15000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/test-pagination"
+        },
+        {
+          "description": "Verify initial state - page 1",
+          "action": "expect",
+          "selector": "button[aria-label=\"Go to page 1\"]",
+          "assertion": {
+            "matcher": "toHaveAttribute",
+            "expected": ["aria-current", "page"]
+          }
+        },
+        {
+          "description": "Change items per page",
+          "action": "select",
+          "selector": "#items-per-page-select",
+          "value": "50"
+        },
+        {
+          "description": "Navigate to page 2",
+          "action": "click",
+          "selector": "button[aria-label=\"Go to page 2\"]"
+        },
+        {
+          "description": "Verify page 2 is selected",
+          "action": "expect",
+          "selector": "button[aria-label=\"Go to page 2\"]",
+          "assertion": {
+            "matcher": "toHaveAttribute",
+            "expected": ["aria-current", "page"]
+          }
+        },
+        {
+          "description": "Use next button",
+          "action": "click",
+          "selector": "button[aria-label=\"Go to next page\"]"
+        },
+        {
+          "description": "Verify page 3 is selected",
+          "action": "expect",
+          "selector": "button[aria-label=\"Go to page 3\"]",
+          "assertion": {
+            "matcher": "toHaveAttribute",
+            "expected": ["aria-current", "page"]
+          }
+        },
+        {
+          "description": "Go to last page",
+          "action": "click",
+          "selector": "button[aria-label=\"Go to last page\"]"
+        },
+        {
+          "description": "Use previous button",
+          "action": "click",
+          "selector": "button[aria-label=\"Go to previous page\"]"
+        },
+        {
+          "description": "Go back to first page",
+          "action": "click",
+          "selector": "button[aria-label=\"Go to first page\"]"
+        },
+        {
+          "description": "Verify back at page 1",
+          "action": "expect",
+          "selector": "button[aria-label=\"Go to page 1\"]",
+          "assertion": {
+            "matcher": "toHaveAttribute",
+            "expected": ["aria-current", "page"]
+          }
+        }
+      ]
+    }
+  ]
+}

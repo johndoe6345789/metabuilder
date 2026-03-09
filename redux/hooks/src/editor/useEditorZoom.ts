@@ -11,7 +11,7 @@ import {
   zoomIn,
   zoomOut,
   resetZoom
-} from '@metabuilder/redux-slices'/editorSlice';
+} from '@metabuilder/redux-slices/editorSlice';
 
 export interface UseEditorZoomReturn {
   zoom: number;

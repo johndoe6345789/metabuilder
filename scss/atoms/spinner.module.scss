@@ -1,0 +1,130 @@
+// Spinner Atoms - Material Design 3
+// ==================================
+// Flat selectors for loading spinner using M3 tokens
+// https://m3.material.io/components/progress-indicators/specs
+
+// Circular spinner (indeterminate)
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--mat-sys-surface-container-highest);
+  border-top-color: var(--mat-sys-primary);
+  border-radius: var(--mat-sys-corner-full);
+  animation: spinnerRotate 0.8s linear infinite;
+}
+
+// Size variants
+.spinnerXs {
+  width: 16px;
+  height: 16px;
+  border-width: 2px;
+}
+
+.spinnerSm {
+  width: 24px;
+  height: 24px;
+  border-width: 2px;
+}
+
+.spinnerMd {
+  width: 40px;
+  height: 40px;
+  border-width: 3px;
+}
+
+.spinnerLg {
+  width: 56px;
+  height: 56px;
+  border-width: 4px;
+}
+
+.spinnerXl {
+  width: 72px;
+  height: 72px;
+  border-width: 4px;
+}
+
+// Color variants
+.spinnerSecondary {
+  border-top-color: var(--mat-sys-secondary);
+}
+
+.spinnerTertiary {
+  border-top-color: var(--mat-sys-tertiary);
+}
+
+.spinnerError {
+  border-top-color: var(--mat-sys-error);
+}
+
+.spinnerOnPrimary {
+  border-color: color-mix(in srgb, var(--mat-sys-on-primary) 20%, transparent);
+  border-top-color: var(--mat-sys-on-primary);
+}
+
+.spinnerOnSurface {
+  border-color: color-mix(in srgb, var(--mat-sys-on-surface) 20%, transparent);
+  border-top-color: var(--mat-sys-on-surface);
+}
+
+@keyframes spinnerRotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// M3-style circular progress (SVG-based)
+.circularProgress {
+  width: 40px;
+  height: 40px;
+  animation: circularRotate 1.4s linear infinite;
+}
+
+.circularProgressCircle {
+  stroke: var(--mat-sys-primary);
+  stroke-linecap: round;
+  animation: circularDash 1.4s ease-in-out infinite;
+}
+
+@keyframes circularRotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes circularDash {
+  0% {
+    stroke-dasharray: 1, 150;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -124;
+  }
+}
+
+// Loading overlay
+.spinnerOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--mat-sys-surface) 80%, transparent);
+  z-index: 10;
+}
+
+// Loading text
+.spinnerText {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--mat-sys-body-medium-font);
+  font-size: var(--mat-sys-body-medium-size);
+  color: var(--mat-sys-on-surface-variant);
+}

@@ -65,7 +65,8 @@ let searchTimeout: NodeJS.Timeout | null = null
 /**
  * Hook for managing user list state, pagination, and filtering
  */
-export function useUsers(): UseUsersReturn {
+export function useUsers(options?: { baseUrl?: string }): UseUsersReturn {
+  const baseUrl = options?.baseUrl ?? ''
   const [state, setState] = useState<UseUsersState>({
     users: [],
     loading: false,
@@ -130,7 +131,7 @@ export function useUsers(): UseUsersReturn {
         const queryString = buildQueryString(page, limit, search, role)
 
         // Make API request
-        const response = await fetch(`/api/v1/default/user_manager/users${queryString}`)
+        const response = await fetch(`${baseUrl}/api/v1/default/user_manager/users${queryString}`)
 
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}))

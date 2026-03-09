@@ -1,0 +1,26 @@
+# Dovecot Virtual User Database
+# Format: username:password:uid:gid:home:shell:extra_fields
+#
+# Password must be hashed using doveadm tool:
+# doveadm pw -s SHA512-CRYPT -p "password"
+#
+# NOTE: This file is used for local testing. In production:
+# - Use LDAP with Active Directory or OpenLDAP
+# - Use SQL database with Dovecot SQL authentication
+# - Use PAM/system users with proper security controls
+#
+# Example user formats:
+# demo@example.com:{SHA512-CRYPT}$6$eO8l8.../path:1000:1000:/var/mail/demo@example.com:/sbin/nologin::
+# test@localhost:{SHA512-CRYPT}$6$abc123.../path:1000:1000:/var/mail/test@localhost:/sbin/nologin::
+#
+# To add users, use:
+# doveadm pw -s SHA512-CRYPT -p "password" -u demo@example.com
+#
+# Initial test users (passwords: test123):
+demo@localhost:{SHA512-CRYPT}$6$iS1n.VaRKULYmKXp$iKDLZAKHiJC5r.9zJMXwNQOCN3Xx8CLBkVNxV3PvG8gDaXcqnKpXmCqJQLXW4zq9qlLhGpOuPXsQrN0nGjqeH0:1000:1000:/var/mail/demo@localhost:/sbin/nologin::
+test@localhost:{SHA512-CRYPT}$6$iS1n.VaRKULYmKXp$iKDLZAKHiJC5r.9zJMXwNQOCN3Xx8CLBkVNxV3PvG8gDaXcqnKpXmCqJQLXW4zq9qlLhGpOuPXsQrN0nGjqeH0:1000:1000:/var/mail/test@localhost:/sbin/nologin::
+#
+# Note: For Docker testing, these credentials should be updated via:
+# 1. Mount this file as volume with custom users
+# 2. Or use environment variable to pass user list
+# 3. Or implement LDAP/SQL backend for production use

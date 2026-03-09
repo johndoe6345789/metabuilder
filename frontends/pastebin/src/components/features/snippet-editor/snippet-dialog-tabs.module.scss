@@ -1,0 +1,25 @@
+.tabBar {
+  display: flex;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  margin-bottom: 28px;
+}
+
+.tabBtn {
+  flex: 1;
+  padding: 10px 16px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--mat-sys-on-surface-variant);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color 150ms, border-color 150ms;
+  letter-spacing: 0.01em;
+}
+
+.tabBtnActive {
+  color: var(--mat-sys-primary);
+  border-bottom-color: var(--mat-sys-primary);
+}

@@ -1,0 +1,106 @@
+{
+  "entity": "ComponentTree",
+  "version": "1.0",
+  "description": "Component tree definition for CodeForge visual builder",
+  "tenantId": true,
+  "fields": {
+    "id": {
+      "type": "uuid",
+      "primary": true,
+      "generated": true,
+      "description": "Unique component tree identifier"
+    },
+    "projectId": {
+      "type": "string",
+      "optional": true,
+      "nullable": true,
+      "description": "Parent project ID (null for shared/template trees)"
+    },
+    "name": {
+      "type": "string",
+      "required": true,
+      "max_length": 255,
+      "description": "Component tree display name"
+    },
+    "category": {
+      "type": "enum",
+      "required": true,
+      "values": [
+        "atom",
+        "molecule",
+        "organism",
+        "template",
+        "page"
+      ],
+      "default": "molecule",
+      "description": "Atomic design category"
+    },
+    "rootNode": {
+      "type": "json",
+      "required": true,
+      "description": "Root component node {id, type, name, props, children[]}"
+    },
+    "description": {
+      "type": "text",
+      "optional": true,
+      "nullable": true
+    },
+    "tags": {
+      "type": "json",
+      "optional": true,
+      "nullable": true,
+      "description": "Array of string tags for search/filter"
+    },
+    "createdAt": {
+      "type": "bigint",
+      "generated": true
+    },
+    "updatedAt": {
+      "type": "bigint",
+      "generated": true
+    }
+  },
+  "indexes": [
+    {
+      "fields": [
+        "projectId"
+      ]
+    },
+    {
+      "fields": [
+        "tenantId",
+        "category"
+      ]
+    },
+    {
+      "fields": [
+        "tenantId",
+        "name"
+      ]
+    }
+  ],
+  "relations": {
+    "project": {
+      "type": "belongs-to",
+      "entity": "Project",
+      "foreign_key": "projectId",
+      "on_delete": "cascade",
+      "nullable": true
+    }
+  },
+  "acl": {
+    "create": {
+      "user": true
+    },
+    "read": {
+      "self": true,
+      "admin": true
+    },
+    "update": {
+      "self": true
+    },
+    "delete": {
+      "self": true
+    }
+  }
+}

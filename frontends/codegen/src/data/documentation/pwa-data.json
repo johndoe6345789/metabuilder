@@ -1,0 +1,141 @@
+{
+  "title": "Progressive Web App",
+  "subtitle": "Offline-first experience with native-like capabilities",
+  "overviewTitle": "Overview",
+  "featuresTitle": "PWA Features",
+  "featuresDescription": "Native app capabilities in your browser",
+  "installationTitle": "Installation",
+  "installationDesktopTitle": "Desktop Installation",
+  "installationMobileTitle": "Mobile Installation",
+  "settingsTitle": "PWA Settings",
+  "settingsDescription": "Navigate to the PWA tab to manage all Progressive Web App features:",
+  "settingsCardTitle": "Available Controls",
+  "offlineTitle": "Offline Capabilities",
+  "offlineWorksTitle": "Works Offline",
+  "offlineRequiresTitle": "Requires Internet",
+  "proTipsTitle": "Pro Tips",
+  "overview": "CodeForge is a fully-featured Progressive Web App that can be installed on any device and works offline. With intelligent caching, automatic updates, and native app-like features, you can build applications anywhere, anytime.",
+  "features": [
+    {
+      "title": "Installable",
+      "description": "Install on desktop or mobile for quick access from your home screen or applications menu"
+    },
+    {
+      "title": "Offline Support",
+      "description": "Work without internet connection; changes sync automatically when you reconnect"
+    },
+    {
+      "title": "Automatic Updates",
+      "description": "Get notified when new versions are available with one-click updates"
+    },
+    {
+      "title": "Push Notifications",
+      "description": "Opt-in to receive updates about builds, errors, and new features"
+    },
+    {
+      "title": "App Shortcuts",
+      "description": "Quick access to Dashboard, Code Editor, and Models from your OS"
+    },
+    {
+      "title": "Share Target",
+      "description": "Share code files directly to CodeForge from other apps"
+    }
+  ],
+  "installation": {
+    "desktop": [
+      {
+        "title": "Chrome/Edge/Brave:",
+        "steps": [
+          "Look for install icon (⊕) in address bar",
+          "Click \"Install\" or use prompt in app",
+          "App added to applications menu"
+        ]
+      },
+      {
+        "title": "Safari (macOS):",
+        "steps": [
+          "Click File → Add to Dock",
+          "App appears in Dock"
+        ]
+      }
+    ],
+    "mobile": [
+      {
+        "title": "iOS (Safari):",
+        "steps": [
+          "Tap Share button",
+          "Select \"Add to Home Screen\"",
+          "Tap \"Add\""
+        ]
+      },
+      {
+        "title": "Android (Chrome):",
+        "steps": [
+          "Tap menu (three dots)",
+          "Select \"Install app\"",
+          "Confirm installation"
+        ]
+      }
+    ]
+  },
+  "settings": [
+    {
+      "title": "Installation Status",
+      "description": "Check if app is installed and trigger installation if available"
+    },
+    {
+      "title": "Network Status",
+      "description": "Real-time online/offline indicator with connectivity information"
+    },
+    {
+      "title": "Push Notifications",
+      "description": "Toggle notifications and manage permissions"
+    },
+    {
+      "title": "Cache Management",
+      "description": "View cache size, service worker status, and clear cached data"
+    },
+    {
+      "title": "Update Management",
+      "description": "Install pending updates when new versions are available"
+    }
+  ],
+  "offline": {
+    "worksOffline": [
+      "View and edit existing projects",
+      "Browse files and code",
+      "Use Monaco editor",
+      "Navigate all tabs",
+      "View documentation",
+      "Make changes locally"
+    ],
+    "requiresInternet": [
+      "AI-powered generation",
+      "External font loading",
+      "Database sync",
+      "External resources"
+    ]
+  },
+  "proTips": [
+    {
+      "title": "Install for best performance",
+      "description": "Installed apps load faster and work more reliably offline"
+    },
+    {
+      "title": "Save before going offline",
+      "description": "Ensure projects are saved to local storage before losing connection"
+    },
+    {
+      "title": "Clear cache if issues arise",
+      "description": "Use PWA settings to clear cache and reload with fresh data"
+    },
+    {
+      "title": "Enable notifications",
+      "description": "Stay informed about updates and build completions"
+    },
+    {
+      "title": "Update regularly",
+      "description": "New versions bring performance improvements and features"
+    }
+  ]
+}

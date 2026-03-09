@@ -1,0 +1,75 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "github_tools",
+  "name": "GitHub Tools",
+  "version": "1.0.0",
+  "description": "GitHub integration tools including Actions viewer, run analysis, and workflow management",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "development",
+  "icon": "static_content/icon.svg",
+  "minLevel": 2,
+  "primary": true,
+  "tags": [
+    "github",
+    "ci-cd",
+    "workflow",
+    "actions"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "testing": "*"
+  },
+  "exports": {
+    "components": [
+      "GitHubViewer",
+      "RunList",
+      "RunDetails",
+      "AnalysisPanel",
+      "RunFilters"
+    ],
+    "scripts": [
+      "fetch_runs",
+      "analyze",
+      "filter",
+      "status"
+    ]
+  },
+  "tests": {
+    "suites": [
+      "tests/metadata.test.json"
+    ]
+  },
+  "files": {
+    "directories": [
+      "components",
+      "permissions",
+      "static_content",
+      "storybook",
+      "styles",
+      "tests"
+    ],
+    "byType": {
+      "components": [
+        "components/ui.json"
+      ],
+      "tests": [
+        "tests/metadata.params.json",
+        "tests/metadata.test.json"
+      ],
+      "config": [
+        "package.json",
+        "storybook/config.json"
+      ],
+      "permissions": [
+        "permissions/roles.json"
+      ],
+      "styles": [
+        "styles/tokens.json"
+      ],
+      "other": [
+        "static_content/icon.svg"
+      ]
+    }
+  }
+}

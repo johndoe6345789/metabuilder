@@ -1,0 +1,48 @@
+.codeHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.previewLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.editorWrapper {
+  overflow: hidden;
+  border-radius: 6px;
+  border: 1px solid var(--mat-sys-outline-variant);
+}
+
+.editorWrapperError {
+  border-color: var(--mat-sys-error);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--mat-sys-error) 20%, transparent);
+}
+
+.editorInner {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+
+.monacoWrapper {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.sectionRoot {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.errorText {
+  font-size: 0.875rem;
+  color: var(--mat-sys-error);
+}

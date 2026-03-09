@@ -1,0 +1,6 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/components.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "minimal-example",
+  "components": []
+}

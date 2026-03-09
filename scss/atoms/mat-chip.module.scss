@@ -1,0 +1,156 @@
+// Chip Component - Material Design 3 SCSS (CSS Module)
+// =====================================================
+// Local classes using M3 design tokens
+// https://m3.material.io/components/chips/specs
+
+// Base chip class
+.chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--mat-chip-container-height, 32px);
+  padding: 0 16px;
+  border-radius: 8px;
+  background-color: var(--mat-sys-surface-container-low, #f7f2fa);
+  color: var(--mat-sys-on-surface, #1c1b1f);
+  font-family: var(--mat-sys-label-large-font, Roboto, sans-serif);
+  font-size: var(--mat-sys-label-large-size, 14px);
+  font-weight: var(--mat-sys-label-large-weight, 500);
+  line-height: var(--mat-sys-label-large-line-height, 20px);
+  letter-spacing: var(--mat-sys-label-large-tracking, 0.1px);
+  white-space: nowrap;
+  cursor: default;
+  user-select: none;
+  transition: background-color 200ms ease, box-shadow 200ms ease;
+}
+
+// Legacy wrapper class
+.matChip {
+  composes: chip;
+}
+
+// Chip set container
+.matChipSet {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+// Clickable chip
+.chipClickable {
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--mat-sys-surface-container, #f3edf7);
+  }
+
+  &:active {
+    background-color: var(--mat-sys-surface-container-high, #ece6f0);
+  }
+}
+
+// Outlined variant
+.chipOutlined {
+  background-color: transparent;
+  border: 1px solid var(--mat-sys-outline, #79747e);
+
+  &:hover {
+    background-color: var(--mat-sys-surface-container-lowest, rgba(0, 0, 0, 0.04));
+  }
+}
+
+// Size variants
+.chipSmall {
+  --mat-chip-container-height: 24px;
+  padding: 0 12px;
+  font-size: 12px;
+}
+
+.chipMedium {
+  --mat-chip-container-height: 32px;
+}
+
+// Color variants using M3 semantic colors
+.chipPrimary {
+  background-color: var(--mat-sys-primary-container, #eaddff);
+  color: var(--mat-sys-on-primary-container, #21005d);
+}
+
+.chipSecondary {
+  background-color: var(--mat-sys-secondary-container, #e8def8);
+  color: var(--mat-sys-on-secondary-container, #1d192b);
+}
+
+.chipError {
+  background-color: var(--mat-sys-error-container, #f9dedc);
+  color: var(--mat-sys-on-error-container, #410e0b);
+}
+
+.chipSuccess {
+  background-color: var(--color-success-container, #c8e6c9);
+  color: var(--color-on-success-container, #1b5e20);
+}
+
+.chipWarning {
+  background-color: var(--color-warning-container, #ffecb3);
+  color: var(--color-on-warning-container, #e65100);
+}
+
+.chipInfo {
+  background-color: var(--color-info-container, #b3e5fc);
+  color: var(--color-on-info-container, #01579b);
+}
+
+// Deletable chip styling
+.chipDeletable {
+  padding-right: 8px;
+}
+
+// Icon styling
+.chipIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.chipIconLeading {
+  margin-right: 8px;
+  margin-left: -4px;
+}
+
+// Delete button
+.chipDelete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  margin-left: 8px;
+  padding: 0;
+  border: none;
+  background: none;
+  border-radius: 50%;
+  color: inherit;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 200ms ease, background-color 200ms ease;
+
+  &:hover {
+    opacity: 1;
+    background-color: rgba(0, 0, 0, 0.08);
+  }
+}
+
+// Disabled state
+.chipDisabled {
+  opacity: 0.38;
+  pointer-events: none;
+}
+
+// Utility class for full-width chips in stacked layouts
+.chipFullWidth {
+  width: 100%;
+}

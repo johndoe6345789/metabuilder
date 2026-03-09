@@ -3,7 +3,7 @@
  */
 
 import { NodeExecutor, ExecuteInputs, ExecuteResult, createTemplateContext } from '../../base';
-import { interpolateTemplate } from '../../../executor/ts/utils/template-engine';
+import { interpolateTemplate } from '../../../../executor/ts/utils/template-engine';
 
 const resolve = (value: any, ctx: any): any => {
   if (typeof value === 'string' && value.startsWith('{{')) {
@@ -20,7 +20,7 @@ export class LogicAnd implements NodeExecutor {
   execute(inputs: ExecuteInputs): ExecuteResult {
     const ctx = createTemplateContext(inputs);
     const values = (inputs.node.parameters.values || []).map((v: any) => Boolean(resolve(v, ctx)));
-    return { result: values.every(v => v) };
+    return { result: values.every((v: boolean) => v) };
   }
 }
 
@@ -32,7 +32,7 @@ export class LogicOr implements NodeExecutor {
   execute(inputs: ExecuteInputs): ExecuteResult {
     const ctx = createTemplateContext(inputs);
     const values = (inputs.node.parameters.values || []).map((v: any) => Boolean(resolve(v, ctx)));
-    return { result: values.some(v => v) };
+    return { result: values.some((v: boolean) => v) };
   }
 }
 
@@ -239,7 +239,7 @@ export class LogicCoalesce implements NodeExecutor {
   execute(inputs: ExecuteInputs): ExecuteResult {
     const ctx = createTemplateContext(inputs);
     const values = (inputs.node.parameters.values || []).map((v: any) => resolve(v, ctx));
-    const result = values.find(v => v !== null && v !== undefined) ?? null;
+    const result = values.find((v: any) => v !== null && v !== undefined) ?? null;
     return { result };
   }
 }

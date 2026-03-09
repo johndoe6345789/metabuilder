@@ -1,0 +1,118 @@
+{
+  "id": "completion-card-root",
+  "type": "Card",
+  "props": {
+    "className": "bg-gradient-to-br from-primary/10 to-accent/10 border-primary/20"
+  },
+  "children": [
+    {
+      "id": "completion-card-header",
+      "type": "CardHeader",
+      "children": [
+        {
+          "id": "completion-card-title",
+          "type": "CardTitle",
+          "props": {
+            "className": "flex items-center gap-2"
+          },
+          "children": [
+            {
+              "id": "completion-card-icon",
+              "type": "Icon",
+              "props": {
+                "name": "CheckCircle",
+                "weight": "duotone",
+                "className": "text-primary w-6 h-6"
+              }
+            },
+            {
+              "id": "completion-card-title-text",
+              "type": "span",
+              "props": {},
+              "children": [
+                "Project Completeness"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "completion-card-description",
+          "type": "CardDescription",
+          "children": [
+            "Overall progress of your application"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "completion-card-content",
+      "type": "CardContent",
+      "props": {
+        "className": "space-y-4"
+      },
+      "children": [
+        {
+          "id": "completion-card-score-row",
+          "type": "div",
+          "props": {
+            "className": "flex items-center justify-between"
+          },
+          "children": [
+            {
+              "id": "completion-card-score",
+              "type": "span",
+              "props": {
+                "className": "text-4xl font-bold"
+              },
+              "bindings": {
+                "children": "completionScore"
+              }
+            },
+            {
+              "id": "completion-card-badge",
+              "type": "Badge",
+              "bindings": {
+                "variant": {
+                  "source": "isReadyToExport",
+                  "transform": "data ? 'default' : 'secondary'"
+                },
+                "className": "text-sm"
+              },
+              "children": [
+                {
+                  "id": "completion-card-badge-text",
+                  "bindings": {
+                    "children": {
+                      "source": "isReadyToExport",
+                      "transform": "data ? 'Ready to Export' : 'In Progress'"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "completion-card-progress",
+          "type": "Progress",
+          "bindings": {
+            "value": "completionScore"
+          },
+          "props": {
+            "className": "h-3"
+          }
+        },
+        {
+          "id": "completion-card-message",
+          "type": "p",
+          "props": {
+            "className": "text-sm text-muted-foreground"
+          },
+          "bindings": {
+            "children": "completionMessage"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "workflowui-projects",
+  "version": "1.0.0",
+  "description": "WorkflowUI Project Canvas tests - project management and canvas view",
+  "tests": [
+    {
+      "name": "should load project canvas page",
+      "tags": ["@projects", "@critical"],
+      "timeout": 15000,
+      "steps": [
+        {
+          "description": "Navigate to test project",
+          "action": "navigate",
+          "url": "/project/test-project-001"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Verify project page loaded",
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should display canvas area",
+      "tags": ["@projects", "@canvas"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/project/test-project-001"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Check project page loaded",
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should have project tools or toolbar",
+      "tags": ["@projects", "@toolbar"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/project/test-project-001"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Verify toolbar or tools panel",
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "icon": "sliders",
+  "title": "Properties",
+  "emptyState": {
+    "title": "No component selected",
+    "description": "Select a component to edit its properties"
+  },
+  "sections": {
+    "componentProps": "Component Properties",
+    "commonProps": "Common Properties"
+  },
+  "commonProps": [
+    {
+      "name": "className",
+      "label": "CSS Classes",
+      "type": "text"
+    }
+  ],
+  "typeSpecificProps": {
+    "Button": [
+      {
+        "name": "variant",
+        "label": "Variant",
+        "type": "select",
+        "options": [
+          { "label": "Default", "value": "default" },
+          { "label": "Destructive", "value": "destructive" },
+          { "label": "Outline", "value": "outline" },
+          { "label": "Secondary", "value": "secondary" },
+          { "label": "Ghost", "value": "ghost" },
+          { "label": "Link", "value": "link" }
+        ]
+      },
+      { "name": "children", "label": "Text", "type": "text" },
+      { "name": "disabled", "label": "Disabled", "type": "boolean" }
+    ],
+    "Input": [
+      { "name": "placeholder", "label": "Placeholder", "type": "text" },
+      {
+        "name": "type",
+        "label": "Type",
+        "type": "select",
+        "options": [
+          { "label": "Text", "value": "text" },
+          { "label": "Password", "value": "password" },
+          { "label": "Email", "value": "email" },
+          { "label": "Number", "value": "number" }
+        ]
+      },
+      { "name": "disabled", "label": "Disabled", "type": "boolean" }
+    ],
+    "Heading": [
+      {
+        "name": "level",
+        "label": "Level",
+        "type": "select",
+        "options": [
+          { "label": "H1", "value": "1" },
+          { "label": "H2", "value": "2" },
+          { "label": "H3", "value": "3" },
+          { "label": "H4", "value": "4" }
+        ]
+      },
+      { "name": "children", "label": "Text", "type": "text" }
+    ],
+    "Text": [
+      { "name": "children", "label": "Content", "type": "textarea" }
+    ],
+    "Badge": [
+      {
+        "name": "variant",
+        "label": "Variant",
+        "type": "select",
+        "options": [
+          { "label": "Default", "value": "default" },
+          { "label": "Secondary", "value": "secondary" },
+          { "label": "Destructive", "value": "destructive" },
+          { "label": "Outline", "value": "outline" }
+        ]
+      },
+      { "name": "children", "label": "Text", "type": "text" }
+    ],
+    "Progress": [
+      { "name": "value", "label": "Value", "type": "number" }
+    ],
+    "Grid": [
+      { "name": "columns", "label": "Columns", "type": "number" },
+      { "name": "gap", "label": "Gap", "type": "number" }
+    ]
+  }
+}

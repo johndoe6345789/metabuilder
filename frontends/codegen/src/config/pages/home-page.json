@@ -1,0 +1,5 @@
+{
+  "$ref": "./dashboard-simple.json",
+  "id": "home-page",
+  "name": "Home"
+}

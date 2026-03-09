@@ -285,7 +285,7 @@ class ErrorReportingService {
   /**
    * Send error to monitoring service (placeholder)
    */
-  private sendToMonitoring(report: ErrorReport): void {
+  private sendToMonitoring(_report: ErrorReport): void {
     // TODO: Implement actual monitoring integration (e.g., Sentry, DataDog)
     // Example:
     // fetch('/api/monitoring/errors', {

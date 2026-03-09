@@ -1,0 +1,10 @@
+{
+  "type": "MetabuilderWidgetSassStylesShowcase",
+  "jsonCompatible": false,
+  "wrapperRequired": true,
+  "load": {
+    "path": "@/components/SassStylesShowcase",
+    "export": "SassStylesShowcase"
+  },
+  "props": {}
+}

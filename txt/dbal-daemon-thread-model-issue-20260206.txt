@@ -1,0 +1,99 @@
+# DBAL Daemon Thread Model Issue - Feb 6, 2026
+
+## Problem Summary
+The DBAL C++ daemon crashes when handling RESTful entity requests due to a **fundamental threading violation** in Drogon framework.
+
+## Root Cause
+**Drogon fatal error**: "It is forbidden to run loop on threads other than event-loop thread"
+
+Current architecture:
+```cpp
+// main.cpp
+server_instance->start();  // Spawns thread
+
+// server.cpp::start()
+server_thread_ = std::thread(&Server::runServer, this);
+
+// server.cpp::runServer()
+drogon::app().run();  // ❌ WRONG: Called from spawned thread
+```
+
+Drogon requires `app().run()` to be called from the **main thread**, not a spawned worker thread.
+
+## Test Results
+**Baseline**: 6/17 tests passing
+**Current**: 6/17 tests passing
+- ✅ Health endpoints work (3 tests)
+- ✅ Version endpoint works (1 test)
+- ✅ Status endpoint works (2 tests)
+- ❌ Entity routes crash daemon (11 tests)
+- ❌ Concurrency tests fail (daemon crashes)
+- ❌ Error handling tests fail (daemon crashes)
+
+## Crash Behavior
+1. Daemon starts successfully in daemon mode (`DBAL_DAEMON=true`)
+2. Health/version/status endpoints respond correctly
+3. First RESTful entity request (`/acme/admin/User`) crashes daemon silently
+4. No exception logs, no core dump - just abort
+
+## Exception Handling Status
+✅ Added comprehensive try-catch to `handleRestfulRequest()`
+- Catches std::exception
+- Catches unknown exceptions  
+- Returns HTTP 500 with error message
+
+**However**: Exception handling doesn't help because crash happens in Drogon's event loop thread validation, **before** our handler code runs.
+
+## Architectural Fix Needed
+The server must be redesigned to:
+
+1. **Option A**: Call `app().run()` directly from main thread
+   - Remove `server_thread_` spawning
+   - Handle signals/shutdown differently
+   - Compatible with daemon mode but not interactive mode
+
+2. **Option B**: Use Drogon's built-in async IO loop
+   - Don't spawn threads manually
+   - Use `app().getLoop()` for async operations
+   - Let Drogon manage threading
+
+3. **Option C**: Remove interactive mode entirely
+   - Daemon mode only (standard for production servers)
+   - Use systemd/supervisord for process management
+   - Simpler architecture
+
+## Recommended Solution
+**Option C** - Remove interactive mode:
+- Production servers don't need interactive prompts
+- Use `systemctl status dbal-daemon` instead of custom prompt
+- Call `app().run()` from main thread (blocking)
+- Handle SIGINT/SIGTERM via Drogon's built-in signal handlers
+
+## Files to Modify
+1. `src/daemon/main.cpp` - Remove interactive mode, call app().run() directly
+2. `src/daemon/server.cpp` - Remove thread spawning, make start() call app().run()
+3. `src/daemon/server.hpp` - Remove server_thread_ member
+
+## Estimated Effort
+2-3 hours to:
+- Refactor server threading model
+- Test daemon mode thoroughly
+- Update documentation
+- Verify all 17 integration tests
+
+## Impact on Tests
+After fix:
+- All 17 tests should pass (no more crashes)
+- Entity endpoints will work
+- Concurrency tests will pass
+- Error handling tests will pass
+
+## Current Workaround
+None - daemon must be fixed before it can handle entity routes in production.
+
+## Next Steps
+1. Refactor server.cpp to remove thread spawning
+2. Update main.cpp to call app().run() from main thread
+3. Remove interactive mode code
+4. Re-run full integration test suite
+5. Document new architecture in CLAUDE.md

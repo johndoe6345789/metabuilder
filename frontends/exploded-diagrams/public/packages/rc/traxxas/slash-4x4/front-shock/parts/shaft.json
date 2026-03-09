@@ -1,0 +1,15 @@
+{
+  "id": "shaft",
+  "name": "Shock Shaft",
+  "partNumber": "TRA-5464",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 12.5,
+  "weightUnit": "g",
+  "baseY": 55,
+  "description": "Hardened steel shock shaft - TiN coated",
+  "geometry": [
+    {"type": "rect", "width": 10, "height": 120, "rx": 2},
+    {"type": "rect", "width": 3, "height": 120, "offsetX": -3, "fill": "#aaa", "opacity": 0.3}
+  ]
+}

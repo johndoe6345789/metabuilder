@@ -1,0 +1,23 @@
+{
+  "id": "schema-editor-page",
+  "name": "Schema Editor",
+  "description": "JSON schema editor",
+  "icon": "PencilRuler",
+  "layout": {
+    "$ref": "./layouts/single-column.json"
+  },
+  "dataSources": [],
+  "components": [
+    {
+      "$ref": "./molecules/page-header-standard.json",
+      "children": [
+        {
+          "$ref": "./atoms/heading-1.json",
+          "props": {
+            "children": "Schema Editor"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+.configTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0;
+}
+
+.addParamBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.addParamIcon {
+  width: 12px;
+  height: 12px;
+}
+
+.cardRoot {
+  background: color-mix(in srgb, var(--mat-sys-surface-variant) 30%, transparent);
+}
+
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.functionNameField {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.helpText {
+  font-size: 0.75rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.parametersList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.parametersLabel {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

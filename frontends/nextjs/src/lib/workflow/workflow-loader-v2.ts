@@ -26,9 +26,29 @@
 import type {
   WorkflowDefinition,
   WorkflowValidationResult,
-  WorkflowDiagnostics,
   ValidationError,
 } from '@metabuilder/workflow'
+
+/** Local diagnostics type for getDiagnostics() return */
+interface WorkflowDiagnostics {
+  workflowId: string
+  tenantId: string
+  nodeCount: number
+  connectionCount: number
+  triggerCount: number
+  variableCount: number
+  validation: {
+    valid: boolean
+    errorCount: number
+    warningCount: number
+    topErrors: ValidationError[]
+    topWarnings: ValidationError[]
+  }
+  metrics: {
+    validationTimeMs: number
+    cacheHit: boolean
+  }
+}
 
 /**
  * Extended validation result with cache and timing metadata
@@ -223,7 +243,7 @@ export class ValidationCache {
    * const stats = cache.getStats()
    * console.log(`Cache hit rate: ${stats.hitRate.toFixed(2)}%`)
    */
-  getStats(): CacheStatistics & { entries: number; memoryUsedMb: number } {
+  getStats(): CacheStatistics & { hitRate: number; entries: number; memoryUsedMb: number } {
     const total = this.stats.hits + this.stats.misses
     const hitRate = total > 0 ? (this.stats.hits / total) * 100 : 0
 
@@ -468,7 +488,7 @@ export class WorkflowLoaderV2 {
         return result.value
       } else {
         // Create error result for failed validation
-        const workflow = workflows[index]
+        const _workflow = workflows[index]
         return {
           valid: false,
           errors: [

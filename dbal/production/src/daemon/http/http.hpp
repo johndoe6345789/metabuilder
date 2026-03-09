@@ -8,10 +8,10 @@
 #define DBAL_HTTP_HPP
 
 #include "http_types.hpp"
-#include "security_limits.hpp"
-#include "socket_utils.hpp"
-#include "request_parser.hpp"
-#include "request_handler.hpp"
-#include "http_server.hpp"
+#include "server/security_limits.hpp"
+#include "server/socket_utils.hpp"
+#include "request/request_parser.hpp"
+#include "request/request_handler.hpp"
+#include "server/http_server.hpp"
 
 #endif

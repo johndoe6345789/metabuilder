@@ -1,0 +1,126 @@
+// Code Block Atoms - Material Design 3 (CSS Module)
+// ==================================================
+// Flat selectors for code block styling using M3 tokens
+
+// Base code block
+.codeBlock {
+  background: var(--mat-sys-surface-container-highest);
+  padding: 16px;
+  border-radius: var(--mat-sys-corner-medium);
+  overflow-x: auto;
+  margin-bottom: 16px;
+  font-family: var(--font-mono);
+  font-size: var(--mat-sys-body-small-size);
+  line-height: 1.6;
+  color: var(--mat-sys-on-surface);
+}
+
+.codeBlock code {
+  background: transparent;
+  padding: 0;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+// With header (filename, language badge)
+.codeBlockWithHeader {
+  composes: codeBlock;
+  padding-top: 0;
+}
+
+.codeBlockHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+
+.codeBlockFilename {
+  font-family: var(--mat-sys-label-small-font);
+  font-size: var(--mat-sys-label-small-size);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.codeBlockLanguage {
+  font-family: var(--mat-sys-label-small-font);
+  font-size: var(--mat-sys-label-small-size);
+  font-weight: var(--mat-sys-label-small-weight);
+  color: var(--mat-sys-primary);
+  text-transform: uppercase;
+}
+
+// Outlined variant
+.codeBlockOutlined {
+  composes: codeBlock;
+  background: var(--mat-sys-surface);
+  border: 1px solid var(--mat-sys-outline-variant);
+}
+
+// Elevated variant
+.codeBlockElevated {
+  composes: codeBlock;
+  box-shadow: var(--mat-sys-level1);
+}
+
+// Line numbers
+.codeBlockLineNumbers {
+  composes: codeBlock;
+  padding-left: 0;
+}
+
+.codeBlockLines {
+  display: grid;
+  grid-template-columns: auto 1fr;
+}
+
+.codeBlockLineNumber {
+  padding: 0 16px;
+  color: var(--mat-sys-on-surface-variant);
+  opacity: 0.5;
+  font-size: var(--mat-sys-label-small-size);
+  text-align: right;
+  user-select: none;
+  border-right: 1px solid var(--mat-sys-outline-variant);
+  margin-right: 16px;
+}
+
+.codeBlockLineContent {
+  white-space: pre;
+}
+
+// Highlighted line
+.codeBlockLineHighlighted {
+  background: color-mix(in srgb, var(--mat-sys-primary) 12%, transparent);
+  margin: 0 -16px;
+  padding: 0 16px;
+}
+
+// Copy button
+.codeBlockCopy {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 8px;
+  background: var(--mat-sys-surface-container);
+  border: none;
+  border-radius: var(--mat-sys-corner-small);
+  color: var(--mat-sys-on-surface-variant);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+}
+
+.codeBlock:hover .codeBlockCopy {
+  opacity: 1;
+}
+
+.codeBlockCopy:hover {
+  background: var(--mat-sys-surface-container-high);
+}
+
+// Wrapper for positioning
+.codeBlockWrapper {
+  position: relative;
+}

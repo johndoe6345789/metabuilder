@@ -1,0 +1,44 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "form_builder",
+  "description": "Form builder component access permissions",
+  "permissions": [
+    {
+      "id": "form_builder.view",
+      "name": "View Forms",
+      "description": "View form components",
+      "resource": "form_builder",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 1
+    },
+    {
+      "id": "form_builder.submit",
+      "name": "Submit Forms",
+      "description": "Submit form data",
+      "resource": "form_builder",
+      "action": "execute",
+      "scope": "global",
+      "minLevel": 1
+    },
+    {
+      "id": "form_builder.validate",
+      "name": "Validate Forms",
+      "description": "Trigger form validation",
+      "resource": "form_builder",
+      "action": "execute",
+      "scope": "global",
+      "minLevel": 1
+    }
+  ],
+  "resources": [
+    {
+      "id": "form_builder",
+      "name": "Form Builder",
+      "type": "component",
+      "description": "Form builder UI components",
+      "actions": ["read", "execute"]
+    }
+  ]
+}

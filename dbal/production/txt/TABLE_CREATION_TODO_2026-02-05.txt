@@ -1,0 +1,62 @@
+# DBAL Table Creation Implementation Status
+Date: 2026-02-05
+
+## Completed
+- ✅ SQLiteAdapter: Added createTables() method
+  - Creates User table with proper schema
+  - Creates indexes (username, email, tenantId, role)
+  - Called during adapter construction
+
+- ✅ PostgreSQL Adapter: Added createTables() to SqlAdapter base class
+  - Dialect-specific SQL (quoted identifiers, BOOLEAN type)
+  - Creates User table with all schema fields
+  - Creates indexes (username, email, tenantId, role)
+  - Gracefully handles existing indexes
+
+- ✅ MySQL Adapter: Added createTables() to SqlAdapter base class
+  - Dialect-specific SQL (VARCHAR, TINYINT for BOOLEAN)
+  - InnoDB engine, utf8mb4 charset/collation
+  - Creates User table with all schema fields
+  - Creates indexes (username, email, tenantId, role)
+  - Gracefully handles existing indexes
+
+## TODO: Other Adapters
+
+### PostgreSQL Adapter (COMPLETED)
+- ✅ Uses SqlAdapter base class createTables()
+- ✅ PostgreSQL-specific syntax handled via dialect check
+
+### MySQL Adapter (COMPLETED)
+- ✅ Uses SqlAdapter base class createTables()
+- ✅ MySQL-specific syntax handled via dialect check
+
+### MongoDB Adapter (if exists)
+- MongoDB doesn't need CREATE TABLE
+- But may need:
+  - Create indexes
+  - Set up collections
+  - Initialize validators
+
+## Current Issue
+Entity endpoints (`/acme/admin/User`) are timing out even though:
+- Server starts successfully
+- Health/version/status endpoints work
+- Routes are registered
+- No logs from handler (handler not being called)
+
+Possible causes:
+1. Drogon route pattern matching issue
+2. Path parameter extraction hanging
+3. Need full Docker image rebuild (in progress)
+
+## Testing
+- Smoke tests: 5/5 passing (health, version, status, concurrent, content-type)
+- Entity tests: 0/4 passing (all timeout - need client init to work)
+- Comprehensive tests: 6/17 passing (only non-entity endpoints work)
+
+## Next Steps
+1. Wait for Docker build to complete
+2. Test if entity endpoints work with table creation
+3. Add createTables() to PostgreSQL adapter
+4. Add createTables() to MySQL adapter
+5. Verify all 17/17 tests pass

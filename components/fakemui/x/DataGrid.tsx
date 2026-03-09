@@ -77,6 +77,7 @@ export interface DataGridProps {
   getRowId?: (row: any) => string | number
   className?: string
   sx?: React.CSSProperties
+  testId?: string
 }
 
 /**
@@ -101,6 +102,7 @@ export function DataGrid({
   getRowId = (row) => row.id,
   className,
   sx,
+  testId,
 }: DataGridProps) {
   const [page, setPage] = useState(0)
   const [selectedIds, setSelectedIds] = useState<Set<string | number>>(new Set())
@@ -189,6 +191,8 @@ export function DataGrid({
     <div
       className={classNames('fakemui-datagrid', densityClass, className)}
       style={{ ...sx, height: autoHeight ? 'auto' : '400px' }}
+      data-testid={testId}
+      role="grid"
     >
       {loading && (
         <div className="fakemui-datagrid-loading">

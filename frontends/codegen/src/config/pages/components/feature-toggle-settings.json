@@ -1,0 +1,10 @@
+{
+  "type": "MetabuilderWidgetFeatureToggleSettings",
+  "jsonCompatible": false,
+  "wrapperRequired": true,
+  "load": {
+    "path": "@/components/FeatureToggleSettings",
+    "export": "FeatureToggleSettings"
+  },
+  "props": {}
+}

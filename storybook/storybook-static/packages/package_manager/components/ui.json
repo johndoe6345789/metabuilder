@@ -1,0 +1,1558 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "package_manager",
+  "description": "Package management components for browsing, installing, and managing packages",
+  "components": [
+    {
+      "id": "package_manager",
+      "name": "PackageManager",
+      "description": "Main package management interface with browser and details view",
+      "props": [
+        {
+          "name": "tenantId",
+          "type": "string",
+          "required": true,
+          "description": "Current tenant ID"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "package-manager",
+          "children": [
+            {
+              "type": "Paper",
+              "elevation": 1,
+              "sx": { "p": 3 },
+              "children": [
+                {
+                  "type": "Stack",
+                  "direction": "row",
+                  "justifyContent": "space-between",
+                  "alignItems": "center",
+                  "mb": 3,
+                  "children": [
+                    {
+                      "type": "Typography",
+                      "variant": "h5",
+                      "children": "Package Manager"
+                    },
+                    {
+                      "type": "Stack",
+                      "direction": "row",
+                      "spacing": 1,
+                      "children": [
+                        {
+                          "type": "Chip",
+                          "label": "{{installedCount}} Installed",
+                          "color": "success",
+                          "size": "small"
+                        },
+                        {
+                          "type": "Chip",
+                          "label": "{{availableCount}} Available",
+                          "color": "primary",
+                          "size": "small"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Stack",
+                  "direction": "row",
+                  "spacing": 2,
+                  "mb": 3,
+                  "children": [
+                    {
+                      "type": "TextField",
+                      "placeholder": "Search packages...",
+                      "value": "{{searchQuery}}",
+                      "onChange": "{{handleSearchChange}}",
+                      "size": "small",
+                      "sx": { "flexGrow": 1 },
+                      "InputProps": {
+                        "startAdornment": {
+                          "type": "InputAdornment",
+                          "position": "start",
+                          "children": [
+                            {
+                              "type": "Icon",
+                              "name": "Search"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "FormControl",
+                      "size": "small",
+                      "sx": { "minWidth": 150 },
+                      "children": [
+                        {
+                          "type": "InputLabel",
+                          "children": "Category"
+                        },
+                        {
+                          "type": "Select",
+                          "value": "{{selectedCategory}}",
+                          "onChange": "{{handleCategoryChange}}",
+                          "label": "Category",
+                          "children": [
+                            {
+                              "type": "MenuItem",
+                              "value": "all",
+                              "children": "All Categories"
+                            },
+                            {
+                              "type": "MenuItem",
+                              "value": "ui",
+                              "children": "UI Components"
+                            },
+                            {
+                              "type": "MenuItem",
+                              "value": "tools",
+                              "children": "Tools"
+                            },
+                            {
+                              "type": "MenuItem",
+                              "value": "managers",
+                              "children": "Managers"
+                            },
+                            {
+                              "type": "MenuItem",
+                              "value": "social",
+                              "children": "Social"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ToggleButtonGroup",
+                      "value": "{{viewMode}}",
+                      "exclusive": true,
+                      "onChange": "{{handleViewModeChange}}",
+                      "size": "small",
+                      "children": [
+                        {
+                          "type": "ToggleButton",
+                          "value": "grid",
+                          "children": [
+                            {
+                              "type": "Icon",
+                              "name": "GridView"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ToggleButton",
+                          "value": "list",
+                          "children": [
+                            {
+                              "type": "Icon",
+                              "name": "ViewList"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Divider",
+                  "sx": { "mb": 2 }
+                },
+                {
+                  "type": "ComponentRef",
+                  "ref": "package_browser",
+                  "props": {
+                    "packages": "{{filteredPackages}}",
+                    "viewMode": "{{viewMode}}",
+                    "onPackageSelect": "{{handlePackageSelect}}"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "condition": "{{selectedPackage}}",
+              "then": {
+                "type": "ComponentRef",
+                "ref": "package_details",
+                "props": {
+                  "package": "{{selectedPackage}}",
+                  "onClose": "{{handleCloseDetails}}",
+                  "onInstall": "{{handleInstall}}",
+                  "onUninstall": "{{handleUninstall}}",
+                  "onToggle": "{{handleToggle}}"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "package_browser",
+      "name": "PackageBrowser",
+      "description": "Grid or list view of available packages",
+      "props": [
+        {
+          "name": "packages",
+          "type": "array",
+          "required": true,
+          "description": "List of packages to display"
+        },
+        {
+          "name": "viewMode",
+          "type": "string",
+          "required": false,
+          "default": "grid",
+          "description": "View mode: grid or list"
+        },
+        {
+          "name": "onPackageSelect",
+          "type": "function",
+          "required": false,
+          "description": "Callback when package is selected"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "conditional",
+          "condition": "{{viewMode === 'grid'}}",
+          "then": {
+            "type": "Grid",
+            "container": true,
+            "spacing": 2,
+            "children": [
+              {
+                "type": "each",
+                "items": "{{packages}}",
+                "as": "pkg",
+                "render": {
+                  "type": "Grid",
+                  "item": true,
+                  "xs": 12,
+                  "sm": 6,
+                  "md": 4,
+                  "lg": 3,
+                  "children": [
+                    {
+                      "type": "ComponentRef",
+                      "ref": "package_card",
+                      "props": {
+                        "package": "{{pkg}}",
+                        "onClick": "{{onPackageSelect}}"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "else": {
+            "type": "List",
+            "children": [
+              {
+                "type": "each",
+                "items": "{{packages}}",
+                "as": "pkg",
+                "render": {
+                  "type": "ListItemButton",
+                  "onClick": "{{() => onPackageSelect(pkg)}}",
+                  "children": [
+                    {
+                      "type": "ListItemIcon",
+                      "children": [
+                        {
+                          "type": "Avatar",
+                          "src": "{{pkg.icon}}",
+                          "children": [
+                            {
+                              "type": "Icon",
+                              "name": "Extension"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ListItemText",
+                      "primary": "{{pkg.name}}",
+                      "secondary": "{{pkg.description}}"
+                    },
+                    {
+                      "type": "Stack",
+                      "direction": "row",
+                      "spacing": 1,
+                      "children": [
+                        {
+                          "type": "Chip",
+                          "label": "{{pkg.version}}",
+                          "size": "small",
+                          "variant": "outlined"
+                        },
+                        {
+                          "type": "conditional",
+                          "condition": "{{pkg.installed}}",
+                          "then": {
+                            "type": "Chip",
+                            "label": "Installed",
+                            "size": "small",
+                            "color": "success"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "package_card",
+      "name": "PackageCard",
+      "description": "Card display for a single package",
+      "props": [
+        {
+          "name": "package",
+          "type": "object",
+          "required": true,
+          "description": "Package data"
+        },
+        {
+          "name": "onClick",
+          "type": "function",
+          "required": false,
+          "description": "Click handler"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "sx": { "height": "100%", "cursor": "pointer" },
+          "onClick": "{{() => onClick(package)}}",
+          "children": [
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "Stack",
+                  "spacing": 1,
+                  "children": [
+                    {
+                      "type": "Stack",
+                      "direction": "row",
+                      "spacing": 2,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "Avatar",
+                          "src": "{{package.icon}}",
+                          "variant": "rounded",
+                          "sx": { "width": 48, "height": 48 },
+                          "children": [
+                            {
+                              "type": "Icon",
+                              "name": "Extension"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Box",
+                          "children": [
+                            {
+                              "type": "Typography",
+                              "variant": "subtitle1",
+                              "fontWeight": "bold",
+                              "children": "{{package.name}}"
+                            },
+                            {
+                              "type": "Typography",
+                              "variant": "caption",
+                              "color": "textSecondary",
+                              "children": "v{{package.version}}"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Typography",
+                      "variant": "body2",
+                      "color": "textSecondary",
+                      "sx": { "minHeight": 40 },
+                      "children": "{{package.description}}"
+                    },
+                    {
+                      "type": "Stack",
+                      "direction": "row",
+                      "spacing": 0.5,
+                      "flexWrap": "wrap",
+                      "children": [
+                        {
+                          "type": "Chip",
+                          "label": "{{package.category}}",
+                          "size": "small",
+                          "variant": "outlined"
+                        },
+                        {
+                          "type": "conditional",
+                          "condition": "{{package.installed}}",
+                          "then": {
+                            "type": "Chip",
+                            "label": "Installed",
+                            "size": "small",
+                            "color": "success"
+                          }
+                        },
+                        {
+                          "type": "conditional",
+                          "condition": "{{package.enabled === false}}",
+                          "then": {
+                            "type": "Chip",
+                            "label": "Disabled",
+                            "size": "small",
+                            "color": "warning"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "package_details",
+      "name": "PackageDetails",
+      "description": "Detailed view of a package with install/uninstall actions",
+      "props": [
+        {
+          "name": "package",
+          "type": "object",
+          "required": true,
+          "description": "Package data"
+        },
+        {
+          "name": "onClose",
+          "type": "function",
+          "required": false
+        },
+        {
+          "name": "onInstall",
+          "type": "function",
+          "required": false
+        },
+        {
+          "name": "onUninstall",
+          "type": "function",
+          "required": false
+        },
+        {
+          "name": "onToggle",
+          "type": "function",
+          "required": false
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Dialog",
+          "open": true,
+          "onClose": "{{onClose}}",
+          "maxWidth": "md",
+          "fullWidth": true,
+          "children": [
+            {
+              "type": "DialogTitle",
+              "children": [
+                {
+                  "type": "Stack",
+                  "direction": "row",
+                  "justifyContent": "space-between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "Stack",
+                      "direction": "row",
+                      "spacing": 2,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "Avatar",
+                          "src": "{{package.icon}}",
+                          "variant": "rounded",
+                          "children": [
+                            {
+                              "type": "Icon",
+                              "name": "Extension"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Box",
+                          "children": [
+                            {
+                              "type": "Typography",
+                              "variant": "h6",
+                              "children": "{{package.name}}"
+                            },
+                            {
+                              "type": "Typography",
+                              "variant": "caption",
+                              "color": "textSecondary",
+                              "children": "v{{package.version}} by {{package.author}}"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "IconButton",
+                      "onClick": "{{onClose}}",
+                      "children": [
+                        {
+                          "type": "Icon",
+                          "name": "Close"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "DialogContent",
+              "dividers": true,
+              "children": [
+                {
+                  "type": "Stack",
+                  "spacing": 3,
+                  "children": [
+                    {
+                      "type": "Typography",
+                      "variant": "body1",
+                      "children": "{{package.description}}"
+                    },
+                    {
+                      "type": "Divider"
+                    },
+                    {
+                      "type": "Grid",
+                      "container": true,
+                      "spacing": 2,
+                      "children": [
+                        {
+                          "type": "Grid",
+                          "item": true,
+                          "xs": 6,
+                          "children": [
+                            {
+                              "type": "Typography",
+                              "variant": "subtitle2",
+                              "color": "textSecondary",
+                              "children": "Category"
+                            },
+                            {
+                              "type": "Typography",
+                              "children": "{{package.category}}"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Grid",
+                          "item": true,
+                          "xs": 6,
+                          "children": [
+                            {
+                              "type": "Typography",
+                              "variant": "subtitle2",
+                              "color": "textSecondary",
+                              "children": "License"
+                            },
+                            {
+                              "type": "Typography",
+                              "children": "{{package.license}}"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Grid",
+                          "item": true,
+                          "xs": 6,
+                          "children": [
+                            {
+                              "type": "Typography",
+                              "variant": "subtitle2",
+                              "color": "textSecondary",
+                              "children": "Min Level"
+                            },
+                            {
+                              "type": "Typography",
+                              "children": "Level {{package.minLevel}}"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Grid",
+                          "item": true,
+                          "xs": 6,
+                          "children": [
+                            {
+                              "type": "Typography",
+                              "variant": "subtitle2",
+                              "color": "textSecondary",
+                              "children": "Status"
+                            },
+                            {
+                              "type": "Chip",
+                              "label": "{{package.installed ? (package.enabled ? 'Enabled' : 'Disabled') : 'Not Installed'}}",
+                              "color": "{{package.installed ? (package.enabled ? 'success' : 'warning') : 'default'}}",
+                              "size": "small"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "conditional",
+                      "condition": "{{package.dependencies && Object.keys(package.dependencies).length > 0}}",
+                      "then": {
+                        "type": "Box",
+                        "children": [
+                          {
+                            "type": "Typography",
+                            "variant": "subtitle2",
+                            "color": "textSecondary",
+                            "mb": 1,
+                            "children": "Dependencies"
+                          },
+                          {
+                            "type": "ComponentRef",
+                            "ref": "dependency_viewer",
+                            "props": {
+                              "dependencies": "{{package.dependencies}}"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "conditional",
+                      "condition": "{{package.exports}}",
+                      "then": {
+                        "type": "Box",
+                        "children": [
+                          {
+                            "type": "Typography",
+                            "variant": "subtitle2",
+                            "color": "textSecondary",
+                            "mb": 1,
+                            "children": "Exports"
+                          },
+                          {
+                            "type": "Stack",
+                            "direction": "row",
+                            "spacing": 0.5,
+                            "flexWrap": "wrap",
+                            "children": [
+                              {
+                                "type": "each",
+                                "items": "{{package.exports.components || []}}",
+                                "as": "comp",
+                                "render": {
+                                  "type": "Chip",
+                                  "label": "{{comp}}",
+                                  "size": "small",
+                                  "variant": "outlined"
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "DialogActions",
+              "children": [
+                {
+                  "type": "conditional",
+                  "condition": "{{package.installed}}",
+                  "then": {
+                    "type": "Stack",
+                    "direction": "row",
+                    "spacing": 1,
+                    "children": [
+                      {
+                        "type": "Button",
+                        "variant": "outlined",
+                        "onClick": "{{() => onToggle(package)}}",
+                        "children": "{{package.enabled ? 'Disable' : 'Enable'}}"
+                      },
+                      {
+                        "type": "Button",
+                        "variant": "outlined",
+                        "color": "error",
+                        "onClick": "{{() => onUninstall(package)}}",
+                        "children": "Uninstall"
+                      }
+                    ]
+                  },
+                  "else": {
+                    "type": "Button",
+                    "variant": "contained",
+                    "color": "primary",
+                    "onClick": "{{() => onInstall(package)}}",
+                    "children": "Install"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "dependency_viewer",
+      "name": "DependencyViewer",
+      "description": "Visual representation of package dependencies",
+      "props": [
+        {
+          "name": "dependencies",
+          "type": "object",
+          "required": true,
+          "description": "Dependencies object from package"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Stack",
+          "direction": "row",
+          "spacing": 0.5,
+          "flexWrap": "wrap",
+          "children": [
+            {
+              "type": "each",
+              "items": "{{Object.entries(dependencies)}}",
+              "as": "dep",
+              "render": {
+                "type": "Chip",
+                "label": "{{dep[0]}} {{dep[1]}}",
+                "size": "small",
+                "icon": {
+                  "type": "Icon",
+                  "name": "Link"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "package_list_admin",
+      "name": "PackageListAdmin",
+      "description": "Admin table of all packages (installed + available) with search, filter, pagination, and management actions",
+      "category": "admin",
+      "props": [
+        {
+          "name": "packages",
+          "type": "array",
+          "required": true,
+          "description": "Array of all packages (merged installed + available)"
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "required": false,
+          "default": 0,
+          "description": "Current page number for pagination"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "required": false,
+          "default": 25,
+          "description": "Number of packages per page"
+        },
+        {
+          "name": "searchQuery",
+          "type": "string",
+          "required": false,
+          "default": "",
+          "description": "Search query for filtering packages by name/description"
+        },
+        {
+          "name": "filterStatus",
+          "type": "string",
+          "required": false,
+          "default": "all",
+          "description": "Filter by status: 'installed', 'available', 'all'"
+        },
+        {
+          "name": "onInstall",
+          "type": "function",
+          "required": false,
+          "description": "Callback when install button is clicked (packageId)"
+        },
+        {
+          "name": "onUninstall",
+          "type": "function",
+          "required": false,
+          "description": "Callback when uninstall button is clicked (packageId)"
+        },
+        {
+          "name": "onEnable",
+          "type": "function",
+          "required": false,
+          "description": "Callback when enable button is clicked (packageId)"
+        },
+        {
+          "name": "onDisable",
+          "type": "function",
+          "required": false,
+          "description": "Callback when disable button is clicked (packageId)"
+        },
+        {
+          "name": "onViewDetails",
+          "type": "function",
+          "required": false,
+          "description": "Callback when package row is clicked (packageId)"
+        },
+        {
+          "name": "onSearchChange",
+          "type": "function",
+          "required": false,
+          "description": "Callback when search query changes"
+        },
+        {
+          "name": "onFilterChange",
+          "type": "function",
+          "required": false,
+          "description": "Callback when filter changes"
+        },
+        {
+          "name": "onPageChange",
+          "type": "function",
+          "required": false,
+          "description": "Callback when page changes"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "elevation",
+          "className": "package-list-admin",
+          "children": [
+            {
+              "type": "CardHeader",
+              "title": "Package Management",
+              "subheader": "{{packages.length}} total packages ({{packages.filter(p => p.installed).length}} installed, {{packages.filter(p => !p.installed).length}} available)"
+            },
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "Stack",
+                  "gap": 3,
+                  "children": [
+                    {
+                      "type": "Stack",
+                      "direction": "row",
+                      "spacing": 2,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "TextField",
+                          "placeholder": "Search packages by name or description...",
+                          "variant": "outlined",
+                          "size": "small",
+                          "fullWidth": true,
+                          "value": "{{searchQuery}}",
+                          "onChange": "{{onSearchChange}}"
+                        },
+                        {
+                          "type": "FormControl",
+                          "size": "small",
+                          "sx": { "minWidth": 150 },
+                          "children": [
+                            {
+                              "type": "InputLabel",
+                              "children": "Status"
+                            },
+                            {
+                              "type": "Select",
+                              "value": "{{filterStatus}}",
+                              "onChange": "{{onFilterChange}}",
+                              "label": "Status",
+                              "children": [
+                                {
+                                  "type": "MenuItem",
+                                  "value": "all",
+                                  "children": "All Packages"
+                                },
+                                {
+                                  "type": "MenuItem",
+                                  "value": "installed",
+                                  "children": "Installed Only"
+                                },
+                                {
+                                  "type": "MenuItem",
+                                  "value": "available",
+                                  "children": "Available Only"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "TableContainer",
+                      "component": "Paper",
+                      "variant": "outlined",
+                      "children": [
+                        {
+                          "type": "Table",
+                          "stickyHeader": true,
+                          "children": [
+                            {
+                              "type": "TableHead",
+                              "children": [
+                                {
+                                  "type": "TableRow",
+                                  "children": [
+                                    {
+                                      "type": "TableCell",
+                                      "width": 60,
+                                      "children": ""
+                                    },
+                                    {
+                                      "type": "TableCell",
+                                      "children": "Package Name"
+                                    },
+                                    {
+                                      "type": "TableCell",
+                                      "children": "Version"
+                                    },
+                                    {
+                                      "type": "TableCell",
+                                      "children": "Description"
+                                    },
+                                    {
+                                      "type": "TableCell",
+                                      "align": "center",
+                                      "children": "Status"
+                                    },
+                                    {
+                                      "type": "TableCell",
+                                      "align": "center",
+                                      "children": "Installed"
+                                    },
+                                    {
+                                      "type": "TableCell",
+                                      "align": "right",
+                                      "children": "Actions"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "TableBody",
+                              "children": {
+                                "type": "conditional",
+                                "condition": "{{packages && packages.length > 0}}",
+                                "then": {
+                                  "type": "each",
+                                  "items": "{{packages.slice(page * pageSize, (page + 1) * pageSize)}}",
+                                  "as": "pkg",
+                                  "render": {
+                                    "type": "TableRow",
+                                    "hover": true,
+                                    "onClick": "{{() => onViewDetails(pkg.packageId || pkg.id)}}",
+                                    "sx": { "cursor": "pointer" },
+                                    "children": [
+                                      {
+                                        "type": "TableCell",
+                                        "children": [
+                                          {
+                                            "type": "Avatar",
+                                            "src": "{{pkg.icon}}",
+                                            "variant": "rounded",
+                                            "sx": { "width": 40, "height": 40 },
+                                            "children": [
+                                              {
+                                                "type": "Icon",
+                                                "name": "Extension"
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "type": "TableCell",
+                                        "children": [
+                                          {
+                                            "type": "Typography",
+                                            "variant": "body1",
+                                            "fontWeight": "medium",
+                                            "children": "{{pkg.name || pkg.packageId}}"
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "type": "TableCell",
+                                        "children": [
+                                          {
+                                            "type": "Chip",
+                                            "label": "v{{pkg.version}}",
+                                            "size": "small",
+                                            "variant": "outlined"
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "type": "TableCell",
+                                        "children": [
+                                          {
+                                            "type": "Typography",
+                                            "variant": "body2",
+                                            "color": "textSecondary",
+                                            "noWrap": true,
+                                            "sx": { "maxWidth": 300 },
+                                            "children": "{{pkg.description}}"
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "type": "TableCell",
+                                        "align": "center",
+                                        "children": [
+                                          {
+                                            "type": "Stack",
+                                            "direction": "row",
+                                            "spacing": 0.5,
+                                            "justifyContent": "center",
+                                            "children": [
+                                              {
+                                                "type": "conditional",
+                                                "condition": "{{pkg.installed}}",
+                                                "then": {
+                                                  "type": "Chip",
+                                                  "label": "Installed",
+                                                  "size": "small",
+                                                  "color": "success"
+                                                },
+                                                "else": {
+                                                  "type": "Chip",
+                                                  "label": "Available",
+                                                  "size": "small",
+                                                  "color": "default"
+                                                }
+                                              },
+                                              {
+                                                "type": "conditional",
+                                                "condition": "{{pkg.installed && pkg.enabled === false}}",
+                                                "then": {
+                                                  "type": "Chip",
+                                                  "label": "Disabled",
+                                                  "size": "small",
+                                                  "color": "warning"
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "type": "TableCell",
+                                        "align": "center",
+                                        "children": [
+                                          {
+                                            "type": "Typography",
+                                            "variant": "body2",
+                                            "color": "textSecondary",
+                                            "children": "{{pkg.installedAt ? new Date(Number(pkg.installedAt)).toLocaleDateString() : '-'}}"
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "type": "TableCell",
+                                        "align": "right",
+                                        "onClick": "{{(e) => e.stopPropagation()}}",
+                                        "children": [
+                                          {
+                                            "type": "Stack",
+                                            "direction": "row",
+                                            "spacing": 0.5,
+                                            "justifyContent": "flex-end",
+                                            "children": [
+                                              {
+                                                "type": "conditional",
+                                                "condition": "{{pkg.installed}}",
+                                                "then": {
+                                                  "type": "Stack",
+                                                  "direction": "row",
+                                                  "spacing": 0.5,
+                                                  "children": [
+                                                    {
+                                                      "type": "IconButton",
+                                                      "size": "small",
+                                                      "color": "{{pkg.enabled ? 'warning' : 'success'}}",
+                                                      "title": "{{pkg.enabled ? 'Disable package' : 'Enable package'}}",
+                                                      "onClick": "{{() => pkg.enabled ? onDisable(pkg.packageId) : onEnable(pkg.packageId)}}",
+                                                      "children": [
+                                                        {
+                                                          "type": "Icon",
+                                                          "name": "{{pkg.enabled ? 'ToggleOff' : 'ToggleOn'}}",
+                                                          "size": 18
+                                                        }
+                                                      ]
+                                                    },
+                                                    {
+                                                      "type": "IconButton",
+                                                      "size": "small",
+                                                      "color": "error",
+                                                      "title": "Uninstall package",
+                                                      "onClick": "{{() => onUninstall(pkg.packageId)}}",
+                                                      "children": [
+                                                        {
+                                                          "type": "Icon",
+                                                          "name": "Delete",
+                                                          "size": 18
+                                                        }
+                                                      ]
+                                                    }
+                                                  ]
+                                                },
+                                                "else": {
+                                                  "type": "IconButton",
+                                                  "size": "small",
+                                                  "color": "primary",
+                                                  "title": "Install package",
+                                                  "onClick": "{{() => onInstall(pkg.packageId || pkg.id)}}",
+                                                  "children": [
+                                                    {
+                                                      "type": "Icon",
+                                                      "name": "Download",
+                                                      "size": 18
+                                                    }
+                                                  ]
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                },
+                                "else": {
+                                  "type": "TableRow",
+                                  "children": [
+                                    {
+                                      "type": "TableCell",
+                                      "colSpan": 7,
+                                      "align": "center",
+                                      "children": [
+                                        {
+                                          "type": "Box",
+                                          "sx": { "padding": 4 },
+                                          "children": [
+                                            {
+                                              "type": "Typography",
+                                              "variant": "body2",
+                                              "color": "textSecondary",
+                                              "children": "No packages found"
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Box",
+                      "className": "pagination-controls",
+                      "sx": { "display": "flex", "justifyContent": "center" },
+                      "children": [
+                        {
+                          "type": "TablePagination",
+                          "component": "div",
+                          "count": "{{packages ? packages.length : 0}}",
+                          "page": "{{page}}",
+                          "rowsPerPage": "{{pageSize}}",
+                          "onPageChange": "{{onPageChange}}",
+                          "rowsPerPageOptions": [10, 25, 50, 100]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "package_detail_modal",
+      "name": "PackageDetailModal",
+      "description": "Modal dialog showing full package details with installation controls",
+      "category": "admin",
+      "props": [
+        {
+          "name": "packageId",
+          "type": "string",
+          "required": true,
+          "description": "ID of the package to display"
+        },
+        {
+          "name": "package",
+          "type": "object",
+          "required": true,
+          "description": "Full package object with metadata"
+        },
+        {
+          "name": "installedPackage",
+          "type": "object",
+          "required": false,
+          "default": null,
+          "description": "InstalledPackage record if installed, null otherwise"
+        },
+        {
+          "name": "isOpen",
+          "type": "boolean",
+          "required": true,
+          "description": "Whether modal is open"
+        },
+        {
+          "name": "onClose",
+          "type": "function",
+          "required": true,
+          "description": "Callback when modal is closed"
+        },
+        {
+          "name": "onInstall",
+          "type": "function",
+          "required": false,
+          "description": "Callback when install button is clicked"
+        },
+        {
+          "name": "onUninstall",
+          "type": "function",
+          "required": false,
+          "description": "Callback when uninstall button is clicked"
+        },
+        {
+          "name": "onEnable",
+          "type": "function",
+          "required": false,
+          "description": "Callback when enable button is clicked"
+        },
+        {
+          "name": "onDisable",
+          "type": "function",
+          "required": false,
+          "description": "Callback when disable button is clicked"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Dialog",
+          "open": "{{isOpen}}",
+          "onClose": "{{onClose}}",
+          "maxWidth": "md",
+          "fullWidth": true,
+          "children": [
+            {
+              "type": "DialogTitle",
+              "children": [
+                {
+                  "type": "Stack",
+                  "direction": "row",
+                  "justifyContent": "space-between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "Stack",
+                      "direction": "row",
+                      "spacing": 2,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "Avatar",
+                          "src": "{{package.icon}}",
+                          "variant": "rounded",
+                          "sx": { "width": 56, "height": 56 },
+                          "children": [
+                            {
+                              "type": "Icon",
+                              "name": "Extension"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Box",
+                          "children": [
+                            {
+                              "type": "Typography",
+                              "variant": "h6",
+                              "children": "{{package.name || package.packageId}}"
+                            },
+                            {
+                              "type": "Typography",
+                              "variant": "caption",
+                              "color": "textSecondary",
+                              "children": "v{{package.version}} by {{package.author || 'Unknown'}}"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "IconButton",
+                      "onClick": "{{onClose}}",
+                      "children": [
+                        {
+                          "type": "Icon",
+                          "name": "Close"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "DialogContent",
+              "dividers": true,
+              "children": [
+                {
+                  "type": "Stack",
+                  "spacing": 3,
+                  "children": [
+                    {
+                      "type": "Typography",
+                      "variant": "body1",
+                      "children": "{{package.description || 'No description available'}}"
+                    },
+                    {
+                      "type": "Divider"
+                    },
+                    {
+                      "type": "Grid",
+                      "container": true,
+                      "spacing": 3,
+                      "children": [
+                        {
+                          "type": "Grid",
+                          "item": true,
+                          "xs": 6,
+                          "children": [
+                            {
+                              "type": "Typography",
+                              "variant": "subtitle2",
+                              "color": "textSecondary",
+                              "children": "Package ID"
+                            },
+                            {
+                              "type": "Typography",
+                              "variant": "body2",
+                              "sx": { "fontFamily": "monospace" },
+                              "children": "{{package.packageId || packageId}}"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Grid",
+                          "item": true,
+                          "xs": 6,
+                          "children": [
+                            {
+                              "type": "Typography",
+                              "variant": "subtitle2",
+                              "color": "textSecondary",
+                              "children": "Category"
+                            },
+                            {
+                              "type": "Chip",
+                              "label": "{{package.category || 'Uncategorized'}}",
+                              "size": "small",
+                              "variant": "outlined"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Grid",
+                          "item": true,
+                          "xs": 6,
+                          "children": [
+                            {
+                              "type": "Typography",
+                              "variant": "subtitle2",
+                              "color": "textSecondary",
+                              "children": "License"
+                            },
+                            {
+                              "type": "Typography",
+                              "variant": "body2",
+                              "children": "{{package.license || 'MIT'}}"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Grid",
+                          "item": true,
+                          "xs": 6,
+                          "children": [
+                            {
+                              "type": "Typography",
+                              "variant": "subtitle2",
+                              "color": "textSecondary",
+                              "children": "Installation Status"
+                            },
+                            {
+                              "type": "Stack",
+                              "direction": "row",
+                              "spacing": 0.5,
+                              "children": [
+                                {
+                                  "type": "conditional",
+                                  "condition": "{{installedPackage}}",
+                                  "then": {
+                                    "type": "Chip",
+                                    "label": "Installed",
+                                    "size": "small",
+                                    "color": "success"
+                                  },
+                                  "else": {
+                                    "type": "Chip",
+                                    "label": "Not Installed",
+                                    "size": "small",
+                                    "color": "default"
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Grid",
+                          "item": true,
+                          "xs": 6,
+                          "children": [
+                            {
+                              "type": "Typography",
+                              "variant": "subtitle2",
+                              "color": "textSecondary",
+                              "children": "Installed Date"
+                            },
+                            {
+                              "type": "Typography",
+                              "variant": "body2",
+                              "children": "{{installedPackage ? new Date(Number(installedPackage.installedAt)).toLocaleString() : 'Not installed'}}"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "DialogActions",
+              "sx": { "padding": 2 },
+              "children": [
+                {
+                  "type": "Stack",
+                  "direction": "row",
+                  "spacing": 1,
+                  "justifyContent": "flex-end",
+                  "width": "100%",
+                  "children": [
+                    {
+                      "type": "Button",
+                      "variant": "text",
+                      "onClick": "{{onClose}}",
+                      "children": "Close"
+                    },
+                    {
+                      "type": "conditional",
+                      "condition": "{{installedPackage}}",
+                      "then": {
+                        "type": "Stack",
+                        "direction": "row",
+                        "spacing": 1,
+                        "children": [
+                          {
+                            "type": "Button",
+                            "variant": "outlined",
+                            "color": "error",
+                            "onClick": "{{() => onUninstall(packageId)}}",
+                            "children": "Uninstall"
+                          }
+                        ]
+                      },
+                      "else": {
+                        "type": "Button",
+                        "variant": "contained",
+                        "color": "primary",
+                        "onClick": "{{() => onInstall(packageId)}}",
+                        "startIcon": {
+                          "type": "Icon",
+                          "name": "Download"
+                        },
+                        "children": "Install Package"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "exports": {
+    "components": [
+      "PackageManager",
+      "PackageBrowser",
+      "PackageCard",
+      "PackageDetails",
+      "DependencyViewer",
+      "PackageListAdmin",
+      "PackageDetailModal"
+    ]
+  }
+}

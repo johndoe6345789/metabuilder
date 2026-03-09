@@ -1,0 +1,53 @@
+# docker-compose.test.yml — Lightweight DB containers for DBAL integration tests.
+#
+# DEPRECATED: testcontainers-sidecar now starts/stops containers automatically.
+# Keep as fallback for environments without Docker daemon access (e.g. some CI configs).
+# Preferred: build with BUILD_INTEGRATION_TESTS=ON and let testcontainers manage lifecycle.
+#
+# Uses non-conflicting ports (5433, 3307) so it can run alongside the dev stack.
+# tmpfs mounts make containers fast and ephemeral (data discarded on stop).
+#
+# Usage:
+#   docker compose -f deployment/docker-compose.test.yml up -d
+#   export DBAL_TEST_POSTGRES_URL=postgresql://testuser:testpass@localhost:5433/dbal_test
+#   export DBAL_TEST_MYSQL_URL=mysql://root:testpass@localhost:3307/dbal_test
+#   cd dbal/production/_build && ctest -R dbal_integration_tests --output-on-failure
+#   docker compose -f deployment/docker-compose.test.yml down
+
+services:
+
+  postgres-test:
+    image: postgres:16-alpine
+    container_name: dbal-test-postgres
+    environment:
+      POSTGRES_PASSWORD: testpass
+      POSTGRES_USER: testuser
+      POSTGRES_DB: dbal_test
+    ports:
+      - "5433:5432"   # 5433 avoids conflict with dev stack on 5432
+    tmpfs:
+      - /var/lib/postgresql/data   # in-memory storage, instant teardown
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U testuser -d dbal_test"]
+      interval: 2s
+      timeout: 5s
+      retries: 10
+
+  mysql-test:
+    image: mysql:8-oracle
+    container_name: dbal-test-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: testpass
+      MYSQL_DATABASE: dbal_test
+      MYSQL_USER: testuser
+      MYSQL_PASSWORD: testpass
+    ports:
+      - "3307:3306"   # 3307 avoids conflict with dev stack on 3306
+    tmpfs:
+      - /var/lib/mysql   # in-memory storage, instant teardown
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-ptestpass"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+      start_period: 20s

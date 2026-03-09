@@ -8,8 +8,8 @@
 #include <string>
 #include <sstream>
 #include <unordered_set>
-#include "http_request.hpp"
-#include "http_response.hpp"
+#include "../request/http_request.hpp"
+#include "../response/http_response.hpp"
 
 namespace dbal {
 namespace daemon {

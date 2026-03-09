@@ -1,0 +1,73 @@
+{
+  "sectionTitle": "Typography Components",
+  "headingsTitle": "Headings",
+  "headingSamples": [
+    { "level": 1, "text": "Heading Level 1" },
+    { "level": 2, "text": "Heading Level 2" },
+    { "level": 3, "text": "Heading Level 3" }
+  ],
+  "textVariantsTitle": "Text Variants",
+  "textVariants": [
+    { "variant": "body", "text": "Body text with default styling" },
+    { "variant": "muted", "text": "Muted text for less emphasis" },
+    { "variant": "caption", "text": "Caption text for descriptions" },
+    { "variant": "small", "text": "Small text for fine print" }
+  ],
+  "linksCodeTitle": "Links & Code",
+  "links": [
+    { "variant": "default", "label": "Default Link" },
+    { "variant": "accent", "label": "Accent Link" }
+  ],
+  "codeSample": "npm install react",
+  "kbd": {
+    "prefix": "Press",
+    "keys": ["Ctrl", "K"],
+    "suffix": "to search"
+  },
+  "badgesTitle": "Badges & Indicators",
+  "statusBadgesTitle": "Status Badges",
+  "statusBadges": ["active", "inactive", "pending", "error", "success", "warning"],
+  "tagsTitle": "Tags",
+  "tags": [
+    { "variant": "default", "label": "Default" },
+    { "variant": "primary", "label": "Primary" },
+    { "variant": "secondary", "label": "Secondary" },
+    { "variant": "accent", "label": "Accent" },
+    { "variant": "destructive", "label": "Destructive" }
+  ],
+  "dotsTitle": "Dots",
+  "dots": [
+    { "variant": "default" },
+    { "variant": "primary" },
+    { "variant": "accent", "pulse": true },
+    { "variant": "success" },
+    { "variant": "warning", "pulse": true },
+    { "variant": "error" }
+  ],
+  "chipsTitle": "Chips",
+  "chips": [
+    { "variant": "default", "label": "React" },
+    { "variant": "primary", "label": "TypeScript" },
+    { "variant": "accent", "label": "Tailwind" }
+  ],
+  "feedbackTitle": "Feedback Components",
+  "alerts": [
+    { "variant": "info", "title": "Information", "message": "This is an informational message" },
+    { "variant": "success", "title": "Success", "message": "Operation completed successfully" },
+    { "variant": "warning", "title": "Warning", "message": "Please review this warning" },
+    { "variant": "error", "title": "Error", "message": "Something went wrong" }
+  ],
+  "notification": {
+    "type": "success",
+    "title": "Notification",
+    "message": "This is a notification with a close button"
+  },
+  "loadingTitle": "Loading States",
+  "progressTitle": "Progress Bar",
+  "progressBars": [
+    { "value": 35, "showLabel": true },
+    { "value": 65, "variant": "accent" },
+    { "value": 85, "variant": "destructive" }
+  ],
+  "skeletonTitle": "Skeleton Loaders"
+}

@@ -1,0 +1,420 @@
+{
+  "entity": "Workflow",
+  "version": "1.0",
+  "description": "Example workflows demonstrating DAG pipeline capabilities",
+  "records": [
+    {
+      "id": "wf_user_onboarding",
+      "name": "User Onboarding Pipeline",
+      "description": "Multi-step user onboarding with email verification, profile setup, and welcome notification",
+      "version": "3.0.0",
+      "category": "automation",
+      "status": "published",
+      "isPublished": true,
+      "isArchived": false,
+      "createdBy": "user_admin_system",
+      "updatedBy": "user_admin_system",
+      "createdAt": 0,
+      "updatedAt": 0,
+      "nodes": [
+        {
+          "id": "node_trigger",
+          "name": "Registration Trigger",
+          "type": "frame.begin",
+          "typeVersion": 1,
+          "position": [
+            0,
+            0
+          ],
+          "parameters": {
+            "event": "user.registered"
+          }
+        },
+        {
+          "id": "node_verify_email",
+          "name": "Send Verification Email",
+          "type": "email.send",
+          "typeVersion": 1,
+          "position": [
+            250,
+            0
+          ],
+          "parameters": {
+            "template": "verify-email"
+          }
+        },
+        {
+          "id": "node_wait",
+          "name": "Wait for Verification",
+          "type": "flow.wait",
+          "typeVersion": 1,
+          "position": [
+            500,
+            0
+          ],
+          "parameters": {
+            "timeout": 86400000
+          }
+        },
+        {
+          "id": "node_setup_profile",
+          "name": "Create Default Profile",
+          "type": "database.create",
+          "typeVersion": 1,
+          "position": [
+            750,
+            0
+          ],
+          "parameters": {
+            "entity": "user_profile"
+          }
+        },
+        {
+          "id": "node_notify",
+          "name": "Send Welcome Notification",
+          "type": "notification.send",
+          "typeVersion": 1,
+          "position": [
+            1000,
+            0
+          ],
+          "parameters": {
+            "type": "success",
+            "title": "Welcome!"
+          }
+        }
+      ],
+      "connections": {
+        "node_trigger": {
+          "main": {
+            "0": [
+              {
+                "node": "node_verify_email",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          }
+        },
+        "node_verify_email": {
+          "main": {
+            "0": [
+              {
+                "node": "node_wait",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          }
+        },
+        "node_wait": {
+          "main": {
+            "0": [
+              {
+                "node": "node_setup_profile",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          }
+        },
+        "node_setup_profile": {
+          "main": {
+            "0": [
+              {
+                "node": "node_notify",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          }
+        }
+      },
+      "metadata": {
+        "author": "admin",
+        "tags": [
+          "onboarding",
+          "email",
+          "automation"
+        ]
+      },
+      "executionConfig": {
+        "timeout": 120000,
+        "retryStrategy": "retry",
+        "maxRetries": 3,
+        "parallelNodes": false
+      },
+      "tenantId": "default"
+    },
+    {
+      "id": "wf_data_backup",
+      "name": "Nightly Data Backup",
+      "description": "Automated database backup with compression and S3 upload",
+      "version": "3.0.0",
+      "category": "utilities",
+      "status": "active",
+      "isPublished": true,
+      "isArchived": false,
+      "createdBy": "user_admin_system",
+      "updatedBy": "user_admin_system",
+      "createdAt": 0,
+      "updatedAt": 0,
+      "nodes": [
+        {
+          "id": "node_schedule",
+          "name": "Nightly Schedule",
+          "type": "trigger.cron",
+          "typeVersion": 1,
+          "position": [
+            0,
+            0
+          ],
+          "parameters": {
+            "expression": "0 2 * * *"
+          }
+        },
+        {
+          "id": "node_export",
+          "name": "Export Database",
+          "type": "database.export",
+          "typeVersion": 1,
+          "position": [
+            250,
+            0
+          ],
+          "parameters": {
+            "format": "sql"
+          }
+        },
+        {
+          "id": "node_compress",
+          "name": "Compress Archive",
+          "type": "file.compress",
+          "typeVersion": 1,
+          "position": [
+            500,
+            0
+          ],
+          "parameters": {
+            "algorithm": "gzip"
+          }
+        },
+        {
+          "id": "node_upload",
+          "name": "Upload to S3",
+          "type": "s3.upload",
+          "typeVersion": 1,
+          "position": [
+            750,
+            0
+          ],
+          "parameters": {
+            "bucket": "metabuilder-backups"
+          }
+        }
+      ],
+      "connections": {
+        "node_schedule": {
+          "main": {
+            "0": [
+              {
+                "node": "node_export",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          }
+        },
+        "node_export": {
+          "main": {
+            "0": [
+              {
+                "node": "node_compress",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          }
+        },
+        "node_compress": {
+          "main": {
+            "0": [
+              {
+                "node": "node_upload",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          }
+        }
+      },
+      "metadata": {
+        "author": "admin",
+        "tags": [
+          "backup",
+          "s3",
+          "cron"
+        ]
+      },
+      "executionConfig": {
+        "timeout": 300000,
+        "retryStrategy": "retry",
+        "maxRetries": 2,
+        "parallelNodes": false
+      },
+      "tenantId": "default"
+    },
+    {
+      "id": "wf_content_moderation",
+      "name": "Content Moderation Pipeline",
+      "description": "Automated content review with AI classification and moderator escalation",
+      "version": "3.0.0",
+      "category": "automation",
+      "status": "published",
+      "isPublished": true,
+      "isArchived": false,
+      "createdBy": "user_admin_system",
+      "updatedBy": "user_admin_system",
+      "createdAt": 0,
+      "updatedAt": 0,
+      "nodes": [
+        {
+          "id": "node_content_in",
+          "name": "Content Submitted",
+          "type": "frame.begin",
+          "typeVersion": 1,
+          "position": [
+            0,
+            0
+          ],
+          "parameters": {
+            "event": "content.created"
+          }
+        },
+        {
+          "id": "node_classify",
+          "name": "AI Classification",
+          "type": "ai.classify",
+          "typeVersion": 1,
+          "position": [
+            250,
+            0
+          ],
+          "parameters": {
+            "model": "content-safety"
+          }
+        },
+        {
+          "id": "node_branch",
+          "name": "Safe?",
+          "type": "flow.switch",
+          "typeVersion": 1,
+          "position": [
+            500,
+            0
+          ],
+          "parameters": {
+            "conditions": [
+              {
+                "field": "classification",
+                "operator": "eq",
+                "value": "safe"
+              }
+            ]
+          }
+        },
+        {
+          "id": "node_publish",
+          "name": "Auto-Publish",
+          "type": "database.update",
+          "typeVersion": 1,
+          "position": [
+            750,
+            -100
+          ],
+          "parameters": {
+            "entity": "content",
+            "status": "published"
+          }
+        },
+        {
+          "id": "node_escalate",
+          "name": "Escalate to Moderator",
+          "type": "notification.send",
+          "typeVersion": 1,
+          "position": [
+            750,
+            100
+          ],
+          "parameters": {
+            "type": "warning",
+            "channel": "moderators"
+          }
+        }
+      ],
+      "connections": {
+        "node_content_in": {
+          "main": {
+            "0": [
+              {
+                "node": "node_classify",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          }
+        },
+        "node_classify": {
+          "main": {
+            "0": [
+              {
+                "node": "node_branch",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          }
+        },
+        "node_branch": {
+          "main": {
+            "0": [
+              {
+                "node": "node_publish",
+                "type": "main",
+                "index": 0
+              }
+            ],
+            "1": [
+              {
+                "node": "node_escalate",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          }
+        }
+      },
+      "metadata": {
+        "author": "admin",
+        "tags": [
+          "moderation",
+          "ai",
+          "content"
+        ]
+      },
+      "executionConfig": {
+        "timeout": 60000,
+        "retryStrategy": "fail",
+        "maxRetries": 0,
+        "parallelNodes": false
+      },
+      "tenantId": "default"
+    }
+  ],
+  "metadata": {
+    "bootstrap": false,
+    "skipIfExists": true,
+    "timestampField": "createdAt",
+    "useCurrentTimestamp": true
+  }
+}

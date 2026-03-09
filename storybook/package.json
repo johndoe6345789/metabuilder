@@ -10,23 +10,21 @@
     "preview": "npx serve storybook-static"
   },
   "dependencies": {
-    "react": "^18.3.1",
-    "react-dom": "^19.2.4",
-    "fengari-web": "^0.1.4",
-    "fengari-interop": "^0.1.4",
-    "clsx": "^2.1.1"
+    "clsx": "^2.1.1",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
   },
   "devDependencies": {
-    "@storybook/addon-essentials": "^8.6.15",
-    "@storybook/addon-interactions": "^8.6.15",
-    "@storybook/react": "^10.2.0",
-    "@storybook/react-vite": "^10.2.3",
-    "@storybook/test": "^8.6.15",
-    "@types/react": "^18.3.0",
-    "@types/react-dom": "^18.3.5",
-    "@vitejs/plugin-react": "^5.1.2",
-    "sass": "^1.83.5",
-    "storybook": "^10.2.3",
+    "@storybook/addon-docs": "^10.2.10",
+    "@storybook/addon-a11y": "^10.2.10",
+    "@storybook/react": "^10.2.10",
+    "@storybook/react-vite": "^10.2.13",
+    "@storybook/addon-vitest": "^10.2.10",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.4",
+    "sass": "^1.97.3",
+    "storybook": "^10.2.10",
     "typescript": "^5.9.3",
     "vite": "^7.3.1"
   }

@@ -1,0 +1,22 @@
+{
+  "id": "input-otp-wrapper",
+  "type": "div",
+  "bindings": {
+    "data-slot": {
+      "source": null,
+      "transform": "'input-otp'"
+    },
+    "className": {
+      "source": ["containerClassName"],
+      "transform": "const baseClass = 'flex items-center gap-2 has-disabled:opacity-50'; const containerClass = data[0] || ''; return containerClass ? `${baseClass} ${containerClass}`.trim() : baseClass"
+    },
+    "children": {
+      "source": "children",
+      "transform": "data"
+    },
+    "_spreadProps": {
+      "source": "_spreadProps",
+      "transform": "data"
+    }
+  }
+}

@@ -1,0 +1,119 @@
+{
+  "id": "breadcrumb",
+  "type": "nav",
+  "bindings": {
+    "aria-label": {
+      "source": null,
+      "transform": "'Breadcrumb'"
+    },
+    "className": {
+      "source": "className",
+      "transform": "('breadcrumb' + (data ? ' ' + data : '')).trim()"
+    }
+  },
+  "children": [
+    {
+      "id": "breadcrumb-items",
+      "type": "Fragment",
+      "_map": {
+        "source": "items",
+        "itemVar": "item",
+        "indexVar": "index"
+      },
+      "children": [
+        {
+          "id": "breadcrumb-item",
+          "type": "div",
+          "props": {
+            "className": "breadcrumb__item"
+          },
+          "children": [
+            {
+              "id": "breadcrumb-link",
+              "type": "a",
+              "bindings": {
+                "_if": {
+                  "source": "item.href",
+                  "transform": "data"
+                },
+                "href": {
+                  "source": "item.href",
+                  "transform": "data || '#'"
+                },
+                "onClick": {
+                  "source": "item.onClick",
+                  "transform": "data"
+                },
+                "className": {
+                  "source": ["item", "items"],
+                  "transform": "const item = data[0]; const items = data[1] || []; const isLast = items.indexOf(item) === items.length - 1; return isLast ? 'breadcrumb__link breadcrumb__link--current' : 'breadcrumb__link'"
+                }
+              },
+              "children": [
+                {
+                  "id": "link-text",
+                  "type": "span",
+                  "children": [{"type": "text", "content": {"source": "item.label"}}]
+                }
+              ]
+            },
+            {
+              "id": "breadcrumb-button",
+              "type": "button",
+              "bindings": {
+                "_if": {
+                  "source": ["item.href", "item.onClick"],
+                  "transform": "!data[0] && data[1]"
+                },
+                "onClick": {
+                  "source": "item.onClick",
+                  "transform": "data"
+                },
+                "className": {
+                  "source": ["item", "items"],
+                  "transform": "const item = data[0]; const items = data[1] || []; const isLast = items.indexOf(item) === items.length - 1; return isLast ? 'breadcrumb__link breadcrumb__link--current' : 'breadcrumb__link'"
+                }
+              },
+              "children": [
+                {
+                  "id": "button-text",
+                  "type": "span",
+                  "children": [{"type": "text", "content": {"source": "item.label"}}]
+                }
+              ]
+            },
+            {
+              "id": "breadcrumb-span",
+              "type": "span",
+              "bindings": {
+                "_if": {
+                  "source": ["item.href", "item.onClick"],
+                  "transform": "!data[0] && !data[1]"
+                },
+                "className": {
+                  "source": ["item", "items"],
+                  "transform": "const item = data[0]; const items = data[1] || []; const isLast = items.indexOf(item) === items.length - 1; return isLast ? 'breadcrumb__link breadcrumb__link--current' : 'breadcrumb__link'"
+                }
+              },
+              "children": [{"type": "text", "content": {"source": "item.label"}}]
+            },
+            {
+              "id": "separator",
+              "type": "CaretRight",
+              "bindings": {
+                "_if": {
+                  "source": ["item", "items"],
+                  "transform": "const item = data[0]; const items = data[1] || []; return items.indexOf(item) < items.length - 1"
+                },
+                "className": {
+                  "source": null,
+                  "transform": "'breadcrumb__separator'"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

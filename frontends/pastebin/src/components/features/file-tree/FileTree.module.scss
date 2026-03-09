@@ -1,0 +1,148 @@
+.fileTree {
+  display: flex;
+  flex-direction: column;
+  width: 180px;
+  min-width: 140px;
+  max-width: 220px;
+  border-right: 1px solid var(--border);
+  background: var(--muted);
+  height: 100%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--border);
+  background: var(--muted);
+}
+
+.toolbarTitle {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted-foreground);
+}
+
+.toolbarActions {
+  display: flex;
+  gap: 2px;
+}
+
+.fileList {
+  list-style: none;
+  margin: 0;
+  padding: 4px 0;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.fileItem {
+  display: flex;
+  align-items: center;
+  position: relative;
+
+  &:hover .deleteBtn {
+    opacity: 1;
+  }
+
+  &.active .fileButton {
+    background: var(--accent);
+    color: var(--accent-foreground);
+  }
+}
+
+.fileButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 8px;
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-size: 12px;
+  color: var(--foreground);
+  border-radius: 0;
+  flex: 1;
+  min-width: 0;
+
+  &:hover {
+    background: color-mix(in srgb, var(--accent) 30%, transparent);
+  }
+}
+
+.fileIcon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  color: var(--muted-foreground);
+}
+
+.fileName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.iconBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--muted-foreground);
+  border-radius: 3px;
+  flex-shrink: 0;
+
+  &:hover {
+    color: var(--foreground);
+    background: var(--accent);
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+}
+
+.deleteBtn {
+  opacity: 0;
+  margin-right: 4px;
+  transition: opacity 0.15s;
+}
+
+.renameRow,
+.addingRow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 6px;
+}
+
+.renameInput,
+.addInput {
+  flex: 1;
+  font-size: 12px;
+  height: 24px;
+  min-width: 0;
+}
+
+.emptyState {
+  padding: 12px 8px;
+  font-size: 12px;
+  color: var(--muted-foreground);
+  text-align: center;
+}
+
+.hiddenInput {
+  display: none;
+}

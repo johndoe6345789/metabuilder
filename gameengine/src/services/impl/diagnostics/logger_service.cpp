@@ -1,4 +1,4 @@
-#include "logger_service.hpp"
+#include "services/interfaces/diagnostics/logger_service.hpp"
 
 #include <iostream>
 #include <chrono>
@@ -10,6 +10,7 @@ namespace sdl3cpp::services::impl {
 LoggerService::LoggerService() : impl_(std::make_unique<LoggerImpl>()) {}
 
 void LoggerService::SetLevel(LogLevel level) {
+    // Note: Cannot add trace logging here as it would create recursion
     impl_->level_.store(level, std::memory_order_relaxed);
 }
 
@@ -18,16 +19,19 @@ LogLevel LoggerService::GetLevel() const {
 }
 
 void LoggerService::SetOutputFile(const std::string& filename) {
+    // Note: Cannot add trace logging here as impl_->SetOutputFile may close the log file
     std::lock_guard<std::mutex> lock(impl_->mutex_);
     impl_->SetOutputFile(filename);
 }
 
 void LoggerService::SetMaxLinesPerFile(size_t maxLines) {
+    // Note: Cannot add trace logging here as it could trigger file rotation during logging
     std::lock_guard<std::mutex> lock(impl_->mutex_);
     impl_->SetMaxLinesPerFile(maxLines);
 }
 
 void LoggerService::EnableConsoleOutput(bool enable) {
+    // Note: Cannot add trace logging here as it could recursively affect console output settings
     impl_->consoleEnabled_ = enable;
 }
 

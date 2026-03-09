@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS `{{ table_name }}` (
+{% for field in fields %}    `{{ field.name }}` {{ field.type }}{% if field.primary %} PRIMARY KEY{% endif %}{% if field.required and not field.primary %} NOT NULL{% endif %}{% if field.unique and not field.primary %} UNIQUE{% endif %}{% if existsIn(field, "default") %} DEFAULT {{ field.default }}{% endif %}{% if not loop.is_last %},
+{% endif %}{% endfor %}
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci

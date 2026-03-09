@@ -1,0 +1,13 @@
+.taskItem {
+  padding: 16px;
+  transition: background-color 0.2s ease;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background-color: var(--mat-sys-surface-variant);
+  }
+}

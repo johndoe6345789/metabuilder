@@ -1,0 +1,26 @@
+{
+  "id": "components-stat",
+  "$ref": "./stat-card-base.json",
+  "children": [
+    {
+      "id": "components-value",
+      "type": "div",
+      "props": {
+        "className": "text-2xl font-bold",
+        "children": "0"
+      },
+      "dataBinding": {
+        "source": "projectStats",
+        "path": "components"
+      }
+    },
+    {
+      "id": "components-label",
+      "type": "div",
+      "props": {
+        "className": "text-sm text-muted-foreground mt-2",
+        "children": "React Components"
+      }
+    }
+  ]
+}

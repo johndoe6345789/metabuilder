@@ -1,0 +1,121 @@
+{
+  "name": "Subscribe to Stream",
+  "active": false,
+  "nodes": [
+    {
+      "id": "validate_context",
+      "name": "Validate Context",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $context.user.id }}",
+        "operation": "validate",
+        "validator": "required"
+      }
+    },
+    {
+      "id": "fetch_channel",
+      "name": "Fetch Channel",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "filter": {
+          "id": "{{ $json.channelId }}",
+          "tenantId": "{{ $context.tenantId }}"
+        },
+        "operation": "database_read",
+        "entity": "StreamChannel"
+      }
+    },
+    {
+      "id": "create_subscription",
+      "name": "Create Subscription",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "data": {
+          "channelId": "{{ $json.channelId }}",
+          "userId": "{{ $context.user.id }}",
+          "tenantId": "{{ $context.tenantId }}",
+          "subscribedAt": "{{ new Date().toISOString() }}"
+        },
+        "operation": "database_create",
+        "entity": "StreamSubscription"
+      }
+    },
+    {
+      "id": "setup_sse",
+      "name": "Setup Sse",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "action": "sse_stream",
+        "channel": "{{ 'stream:' + $json.channelId }}",
+        "onConnect": "{{ { subscriptionId: $steps.create_subscription.output.id } }}"
+      }
+    }
+  ],
+  "connections": {
+    "validate_context": {
+      "main": [
+        [
+          {
+            "node": "fetch_channel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fetch_channel": {
+      "main": [
+        [
+          {
+            "node": "create_subscription",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create_subscription": {
+      "main": [
+        [
+          {
+            "node": "setup_sse",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "id": "workflow_stream_subscribe",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
+}

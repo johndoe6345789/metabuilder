@@ -46,9 +46,12 @@ export class SetVariableExecutor implements INodeExecutor {
         env: process.env
       };
 
+      // Use state as a generic store for variables (cast to any for dynamic access)
+      const stateStore = state as Record<string, any>;
+
       // Ensure context.variables exists
-      if (!state.variables) {
-        state.variables = {};
+      if (!stateStore.variables) {
+        stateStore.variables = {};
       }
 
       // Process variables based on mode
@@ -56,7 +59,7 @@ export class SetVariableExecutor implements INodeExecutor {
 
       if (processMode === 'replace') {
         // Clear existing variables and start fresh
-        state.variables = {};
+        stateStore.variables = {};
       }
 
       // Set each variable with template interpolation
@@ -78,13 +81,13 @@ export class SetVariableExecutor implements INodeExecutor {
         }
 
         // Store in execution state variables
-        state.variables[key] = resolvedValue;
+        stateStore.variables[key] = resolvedValue;
         variablesSet[key] = String(resolvedValue);
       }
 
       // Also update context variables if the context supports it
       if (context.variables) {
-        Object.assign(context.variables, state.variables);
+        Object.assign(context.variables, stateStore.variables);
       }
 
       const duration = Date.now() - startTime;

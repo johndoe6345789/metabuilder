@@ -1,0 +1,23 @@
+{
+  "id": "ideas-page",
+  "name": "Feature Ideas",
+  "description": "Brainstorm features",
+  "icon": "Lightbulb",
+  "layout": {
+    "$ref": "./layouts/single-column.json"
+  },
+  "dataSources": [],
+  "components": [
+    {
+      "$ref": "./molecules/page-header-standard.json",
+      "children": [
+        {
+          "$ref": "./atoms/heading-1.json",
+          "props": {
+            "children": "Feature Ideas"
+          }
+        }
+      ]
+    }
+  ]
+}

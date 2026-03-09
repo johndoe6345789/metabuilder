@@ -1,0 +1,57 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "testing",
+  "description": "JSON test framework access permissions",
+  "permissions": [
+    {
+      "id": "testing.run",
+      "name": "Run Tests",
+      "description": "Execute JSON-based test suites",
+      "resource": "testing",
+      "action": "execute",
+      "scope": "global",
+      "minLevel": 3
+    },
+    {
+      "id": "testing.view",
+      "name": "View Test Results",
+      "description": "View execution results and reports",
+      "resource": "testing",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 3
+    },
+    {
+      "id": "testing.configure",
+      "name": "Configure Test Runner",
+      "description": "Adjust test runner settings and filters",
+      "resource": "testing",
+      "action": "manage",
+      "scope": "global",
+      "minLevel": 4
+    },
+    {
+      "id": "testing.debug",
+      "name": "Debug Tests",
+      "description": "Access detailed execution traces",
+      "resource": "testing",
+      "action": "execute",
+      "scope": "global",
+      "minLevel": 4
+    }
+  ],
+  "resources": [
+    {
+      "id": "testing",
+      "name": "JSON Test Framework",
+      "type": "function",
+      "description": "Resources for JSON test execution",
+      "actions": [
+        "read",
+        "execute",
+        "manage"
+      ]
+    }
+  ]
+}

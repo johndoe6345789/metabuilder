@@ -1,0 +1,336 @@
+================================================================================
+WORKFLOW STEP REFACTORING ANALYSIS - EXECUTIVE SUMMARY
+================================================================================
+Date: February 9, 2026
+Task: Analyze non-generic workflow steps and determine refactoring strategy
+Status: COMPLETE - All 6 steps analyzed, strategy defined, implementation guide provided
+
+================================================================================
+FINDINGS
+================================================================================
+
+6 Non-Generic Workflow Steps Identified:
+────────────────────────────────────────────────────────────────────────────
+
+1. game.geometry.create_cube → geometry.create_box (GENERIC)
+   - Hardcoded: Unit cube dimensions (±1.0f), vertex colors {0,1,0}
+   - Extract: width, height, depth, color_r, color_g, color_b, output keys
+   - Reusability: Create ANY box geometry with any dimensions and colors
+   - LOC: 52 → 70 (+18)
+
+2. game.physics.spawn_cube → physics.create_rigidbody (GENERIC)
+   - Hardcoded: Body name "cube", box shape 1x1x1, mass 1.0, position (0,0,0)
+   - Extract: body_name, shape_type, dimensions, mass, position, friction, restitution
+   - Reusability: Create ANY rigid body (box/sphere/capsule) with any name, mass, position
+   - LOC: 45 → 120 (+75)
+
+3. game.scene.spawn_cube → scene.create_object (GENERIC)
+   - Hardcoded: objectType "game_cube", shader_keys ["default"]
+   - Extract: object_type, shader_keys, layer, visibility, name
+   - Reusability: Render ANY geometry with ANY shaders and properties
+   - LOC: 54 → 90 (+36)
+
+4. game.cube.animate → animation.rotate_object (GENERIC)
+   - Hardcoded: Object name "cube", rotation factors 0.5/0.8, position (0,0,0)
+   - Extract: object_name, rotation_x/y/z_factors, position_x/y/z
+   - Reusability: Animate ANY object with ANY rotation speeds
+   - LOC: 60 → 100 (+40)
+
+5. soundboard.catalog.scan → file.catalog.scan (GENERIC)
+   - Hardcoded: Soundboard package path, audio_catalog.json path, .ogg/.wav extensions
+   - Extract: package_id, catalog_file, file_extensions, cache option
+   - Reusability: Scan ANY package for ANY file types (audio, images, models, etc.)
+   - LOC: 150 → 180 (+30)
+
+6. soundboard.audio → soundboard.audio (WRAPPER + REUSE GENERIC)
+   - Specialized: Uses SoundboardSelection type, soundboard state service, debouncing
+   - Strategy: Keep as UI wrapper, delegate to generic audio.play internally
+   - Reusability: Maintains soundboard-specific features while reusing generic audio.play
+   - LOC: 78 → 50 (−28)
+
+================================================================================
+KEY METRICS
+================================================================================
+
+Total Workflow Steps Analyzed:        6
+Steps Fully Generic:                  5
+Steps Refactored as Wrappers:         1
+
+Total Code Lines (current):           439
+Total Code Lines (refactored):        610
+Net LOC Addition:                     +171 (mostly parameter handling)
+
+Parameters Extracted:
+  - Total new parameters:             ~60 across all steps
+  - Average per step:                 10.3
+  - Parameters with defaults:         ~45 (optional)
+  - Required parameters:              ~15
+
+Backward Compatibility:               100% (existing workflows unchanged)
+Non-Breaking Changes:                 Yes (old step names can be aliases)
+
+================================================================================
+IMPLEMENTATION PRIORITY
+================================================================================
+
+Phase 1: geometry.create_box
+  - Simplest (no service dispatch logic)
+  - Foundational (all scenes need geometry)
+  - LOC: 52 → 70
+
+Phase 2: physics.create_rigidbody
+  - Most reusable across packages
+  - Enables dynamic object creation
+  - LOC: 45 → 120 (includes shape dispatch)
+
+Phase 3: animation.rotate_object
+  - Needed for many demos
+  - Parametric rotation speeds
+  - LOC: 60 → 100
+
+Phase 4: scene.create_object
+  - Completes generic object pipeline
+  - Flexible rendering
+  - LOC: 54 → 90
+
+Phase 5: file.catalog.scan
+  - Enables asset management for all packages
+  - Supports any file type
+  - LOC: 150 → 180
+
+Phase 6: soundboard.audio refactor
+  - Lowest priority (specialized use case)
+  - Reuses generic audio.play
+  - LOC: 78 → 50 (code reduction!)
+
+Estimated Total Implementation Time: 1-2 days
+Estimated Testing Time: 2-4 hours
+
+================================================================================
+GENERIC STEP PATTERN (ESTABLISHED)
+================================================================================
+
+All steps follow this structure:
+
+1. Constructor: Accept services + logger
+2. GetPluginId(): Return unique identifier
+3. Execute():
+   a. Validate service dependencies
+   b. Create WorkflowStepIoResolver + WorkflowStepParameterResolver
+   c. Resolve inputs from context (via I/O resolver)
+   d. Resolve parameters from JSON (via parameter resolver)
+   e. Perform operation
+   f. Set outputs in context
+   g. Log completion
+
+Key patterns found in existing generic steps:
+  - workflow_audio_play_step.cpp (110 LOC)
+  - workflow_model_set_transform_step.cpp (102 LOC)
+  - workflow_spawn_object_grid_step.cpp (90 LOC)
+
+All follow parameter → input precedence (inputs override parameters).
+All use type checking before casting.
+All validate services before use.
+All log with `if (logger_)` check.
+
+================================================================================
+PARALLEL WORKFLOWS ENABLED
+================================================================================
+
+Current (Non-Generic):
+  - Seed package: 1 hardcoded cube
+  - Soundboard: 1 hardcoded audio flow
+  - Standalone_cubes: Uses generic grid spawning (already good!)
+
+After Refactoring:
+  - Any package can spawn ANY geometry with ANY properties
+  - Grid spawning works for ANY objects with ANY dimensions
+  - Audio plays ANY file with ANY mode (background/effect)
+  - Catalog scanning works for ANY file types
+  - Animations work on ANY objects with ANY speeds
+  - Full N8n-style composition across all packages
+
+Example new workflows enabled:
+  - "Color Matrix": 10x10 grid of colored boxes (green/red/blue)
+  - "Mixed Scene": Cubes + spheres + cylinders in same scene
+  - "Model Catalog": Scan and display 3D models
+  - "Multi-Audio": Different audio by selection type
+  - "Wave Animation": Grid with per-position animation offsets (already working!)
+
+================================================================================
+DOCUMENTS GENERATED
+================================================================================
+
+1. REFACTORING_ANALYSIS.md (comprehensive analysis)
+   - Executive summary
+   - Detailed breakdown for each of 6 steps
+   - Current implementation analysis
+   - Refactoring strategy per step
+   - JSON migration examples
+   - Implementation roadmap (5 phases)
+   - Metrics and outcomes
+
+2. GENERIC_STEPS_IMPLEMENTATION_GUIDE.md (developer guide)
+   - What makes a step generic
+   - Full implementation checklist
+   - Code structure patterns (header, implementation, integr.)
+   - Parameter resolution patterns
+   - Real-world example walkthrough (geometry.create_box)
+   - Common mistakes and corrections
+   - Validation checklist
+   - Testing strategies
+
+3. ANALYSIS_SUMMARY.txt (this file)
+   - Executive summary
+   - Key findings and metrics
+   - Priority roadmap
+   - Enabled capabilities
+
+================================================================================
+RECOMMENDATIONS
+================================================================================
+
+1. START with geometry.create_box
+   - Smallest scope (52→70 LOC)
+   - Foundational (geometry needed for all visual objects)
+   - No complex dispatch logic
+   - Establishes pattern for other steps
+
+2. THEN physics.create_rigidbody
+   - Most impactful (enables cross-package object creation)
+   - Requires shape dispatch (box/sphere/capsule)
+   - High reusability
+
+3. CONSIDER doing animation.rotate_object and scene.create_object together
+   - Both relatively straightforward
+   - Complete the "spawn + render + animate" pipeline
+   - 2 commits total
+
+4. REFACTOR file.catalog.scan
+   - Enables all packages to manage their own assets
+   - Slightly complex (BuildCatalog function extraction)
+   - But high value (supports any file types)
+
+5. WRAP soundboard.audio last
+   - Code reduction (not addition)
+   - Reuses generic audio.play
+   - Maintains soundboard-specific features
+
+================================================================================
+BACKWARD COMPATIBILITY
+================================================================================
+
+✓ All existing workflows continue to work
+✓ Old step names can be registered as aliases
+✓ Parameters match context key defaults (game.cube_vertices still works)
+✓ No breaking changes to service APIs
+✓ Existing seed, standalone_cubes, soundboard packages unaffected
+
+Migration strategy:
+  1. Implement new generic steps (new plugin IDs)
+  2. Register old IDs as aliases pointing to generic implementations
+  3. Update workflows at your own pace (no deadline)
+  4. Remove aliases in 2-3 releases when fully migrated
+
+================================================================================
+ALIGNMENT WITH PROJECT GOALS
+================================================================================
+
+From CLAUDE.md - "95% JSON/YAML config, 5% TS/C++ infrastructure":
+
+BEFORE:
+  - geometry.create_cube: C++ class with hardcoded cube
+  - physics.spawn_cube: C++ class with hardcoded cube
+  - animation.animate_cube: C++ class with hardcoded cube
+  → 3 specialized C++ classes (15% code)
+  → Limited to 1 specific use case each
+
+AFTER:
+  - geometry.create_box: C++ class with parameters
+  - physics.create_rigidbody: C++ class with parameters
+  - animation.rotate_object: C++ class with parameters
+  → 3 reusable C++ classes (5% code)
+  → JSON workflows define all variations (95% data)
+  → Enables "95% JSON config" goal
+
+Result: Aligns perfectly with "95% JSON/YAML, 5% infrastructure" philosophy
+
+================================================================================
+TESTING RECOMMENDATIONS
+================================================================================
+
+For each implemented step:
+
+1. Unit Test: Parameter resolution
+   - Missing required parameter → error
+   - Wrong parameter type → error
+   - Missing optional parameter → use default
+   - Parameter type mismatch → error with helpful message
+
+2. Integration Test: Input vs Parameter precedence
+   - Input wired from context → uses input
+   - No input wired → falls back to parameter
+   - No parameter specified → uses default
+
+3. Workflow Composition Test
+   - Same step used twice with different parameters
+   - Step output wired to another step's input
+   - Chain of 3+ steps
+
+4. Backward Compatibility Test
+   - Old workflows still load and execute
+   - Results unchanged from original implementation
+
+5. Error Handling Test
+   - Missing service → clear error
+   - Invalid parameter → clear error
+   - Context lookup failure → clear error
+
+================================================================================
+NEXT STEPS
+================================================================================
+
+IMMEDIATE (Session 4):
+  [ ] Review this analysis
+  [ ] Approve implementation approach
+  [ ] Prioritize the 6 steps
+  [ ] Set timeline
+
+SHORT TERM (1-2 days):
+  [ ] Implement Phase 1 (geometry.create_box)
+  [ ] Update step registrar
+  [ ] Add example workflow
+  [ ] Run tests
+
+MEDIUM TERM (1 week):
+  [ ] Implement remaining phases 2-5
+  [ ] Update all example workflows
+  [ ] Document in CLAUDE.md
+
+LONG TERM (optional):
+  [ ] Remove backward compatibility aliases
+  [ ] Audit all internal packages for generic step usage
+  [ ] Create package templates using generic steps
+
+================================================================================
+CONCLUSION
+================================================================================
+
+Analysis complete. All 6 non-generic workflow steps can be refactored into
+fully generic, composable steps by extracting hardcoded values into parameters.
+The refactoring:
+
+  ✓ Maintains 100% backward compatibility
+  ✓ Adds only +171 LOC total (parameter handling)
+  ✓ Enables unlimited workflow composition patterns
+  ✓ Aligns with "95% JSON/YAML" project goal
+  ✓ Follows established generic step patterns
+  ✓ Provides clear implementation roadmap
+
+Two detailed implementation guides provided:
+  - REFACTORING_ANALYSIS.md (what & why)
+  - GENERIC_STEPS_IMPLEMENTATION_GUIDE.md (how & patterns)
+
+Ready to proceed with implementation when approved.
+
+================================================================================

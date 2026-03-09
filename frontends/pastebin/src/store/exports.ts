@@ -1,0 +1,7 @@
+export { store, persistor } from './index'
+export type { RootState, AppDispatch } from './index'
+export { useAppDispatch, useAppSelector } from './hooks'
+export * from './selectors'
+export * from './slices/snippetsSlice'
+export * from './slices/namespacesSlice'
+export * from './slices/uiSlice'

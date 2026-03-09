@@ -1,0 +1,101 @@
+/**
+ * Auth Page Styles - Material Design 3
+ * Shared between login and register pages
+ */
+
+.authPage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+  background: var(--mat-sys-surface);
+}
+
+.authCard {
+  max-width: 420px;
+  width: 100%;
+  padding: 40px 32px;
+  background: var(--mat-sys-surface-container-low);
+  border-radius: var(--mat-sys-corner-extra-large);
+  box-shadow: var(--mat-sys-level2);
+
+  @media (max-width: 480px) {
+    padding: 32px 20px;
+    box-shadow: none;
+    background: transparent;
+  }
+}
+
+.authHeader {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.authTitle {
+  font-size: 1.75rem;
+  font-weight: 500;
+  color: var(--mat-sys-on-surface);
+  margin: 0 0 8px;
+  letter-spacing: -0.5px;
+}
+
+.authSubtitle {
+  font-size: 0.95rem;
+  color: var(--mat-sys-on-surface-variant);
+  margin: 0;
+}
+
+.authForm {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.authFooter {
+  text-align: center;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--mat-sys-outline-variant);
+  font-size: 0.875rem;
+  color: var(--mat-sys-on-surface-variant);
+
+  p {
+    margin: 0;
+  }
+}
+
+.authLink {
+  color: var(--mat-sys-primary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+}
+
+.strengthBar {
+  margin-top: 8px;
+}
+
+.strengthLabel {
+  font-size: 0.75rem;
+  color: var(--mat-sys-on-surface-variant);
+  margin-top: 4px;
+  display: block;
+}
+
+.strengthHint {
+  font-size: 0.75rem;
+  color: var(--mat-sys-outline);
+  margin-top: 4px;
+  display: block;
+}

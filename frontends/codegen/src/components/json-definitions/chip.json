@@ -1,0 +1,49 @@
+{
+  "id": "chip-root",
+  "type": "span",
+  "bindings": {
+    "className": {
+      "source": "variant",
+      "transform": "(() => { const variant = data || 'primary'; const variantMap = { default: 'chip--muted', primary: 'chip--primary', accent: 'chip--tertiary', muted: 'chip--muted', secondary: 'chip--secondary' }; const variantClass = variantMap[variant] || variantMap.primary; const size = $props.size || 'md'; const sizeMap = { sm: 'chip--sm', md: '', lg: 'chip--lg' }; const sizeClass = sizeMap[size] || ''; const userClass = $props.className || ''; return ('chip ' + variantClass + ' ' + sizeClass + ' ' + userClass).trim(); })()"
+    }
+  },
+  "children": [
+    {
+      "id": "chip-content",
+      "bindings": {
+        "children": "children"
+      }
+    },
+    {
+      "id": "chip-remove-button",
+      "type": "button",
+      "props": {
+        "type": "button",
+        "className": "chip__remove",
+        "aria-label": "Remove"
+      },
+      "bindings": {
+        "onClick": "onRemove"
+      },
+      "conditional": {
+        "if": "onRemove"
+      },
+      "children": [
+        {
+          "id": "chip-remove-icon",
+          "type": "Icon",
+          "bindings": {
+            "name": "X",
+            "props": {
+              "weight": "bold",
+              "className": {
+                "source": "size",
+                "transform": "data === 'sm' ? 'chip__remove-icon--sm' : 'chip__remove-icon--md'"
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

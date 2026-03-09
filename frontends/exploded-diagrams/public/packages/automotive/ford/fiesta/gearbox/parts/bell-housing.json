@@ -1,0 +1,53 @@
+{
+  "id": "bell-housing",
+  "name": "Bell Housing",
+  "partNumber": "FD-1848291",
+  "material": "castAluminum",
+  "quantity": 1,
+  "weight": 4200.0,
+  "weightUnit": "g",
+  "baseY": 0,
+  "description": "Clutch bell housing - mates to engine block",
+  "installation": {
+    "tools": [
+      { "name": "Socket", "size": "15mm", "required": true },
+      { "name": "Socket", "size": "13mm", "required": true },
+      { "name": "Torque wrench", "size": "40-80 Nm", "required": true },
+      { "name": "Transmission jack", "size": "-", "required": true },
+      { "name": "Extension bar", "size": "150mm", "required": true }
+    ],
+    "hardware": [
+      { "name": "Bell housing bolt (upper)", "spec": "M10x1.5x45", "grade": "10.9", "qty": 2, "reusable": true },
+      { "name": "Bell housing bolt (lower)", "spec": "M10x1.5x65", "grade": "10.9", "qty": 2, "reusable": true },
+      { "name": "Dowel pin", "spec": "10x14mm", "qty": 2, "reusable": true }
+    ],
+    "torque": [
+      { "fastener": "Bell housing bolts", "value": 48, "unit": "Nm", "sequence": "Alternating pattern", "notes": "Ensure dowels are aligned before torquing" }
+    ],
+    "notes": [
+      "Support gearbox weight during installation",
+      "Align dowel pins before pushing home",
+      "Do not force - if resistance felt, check alignment",
+      "Reconnect reverse light switch after installation"
+    ]
+  },
+  "geometry": [
+    { "type": "ellipse", "rx": 85, "ry": 45 },
+    { "type": "rect", "width": 150, "height": 60, "rx": 8, "offsetY": 25 },
+    { "type": "circle", "r": 35, "fill": "#1a1a1a", "offsetY": -5 },
+    { "type": "circle", "r": 6, "offsetX": -60, "offsetY": -20, "fill": "#666" },
+    { "type": "circle", "r": 6, "offsetX": 60, "offsetY": -20, "fill": "#666" },
+    { "type": "circle", "r": 6, "offsetX": -60, "offsetY": 35, "fill": "#666" },
+    { "type": "circle", "r": 6, "offsetX": 60, "offsetY": 35, "fill": "#666" }
+  ],
+  "geometry3d": [
+    { "type": "cylinder", "r": 70, "height": 8, "fill": "#555" },
+    { "type": "cone", "r1": 70, "r2": 45, "height": 60, "offsetZ": 34, "fill": "#666" },
+    { "type": "cylinder", "r": 45, "height": 20, "offsetZ": 74, "fill": "#666" },
+    { "type": "cylinder", "r": 25, "height": 88, "subtract": true },
+    { "type": "cylinder", "r": 5, "height": 10, "offsetX": 55, "subtract": true },
+    { "type": "cylinder", "r": 5, "height": 10, "offsetX": -55, "subtract": true },
+    { "type": "cylinder", "r": 5, "height": 10, "offsetY": 55, "subtract": true },
+    { "type": "cylinder", "r": 5, "height": 10, "offsetY": -55, "subtract": true }
+  ]
+}

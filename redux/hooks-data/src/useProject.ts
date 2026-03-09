@@ -19,15 +19,15 @@ import {
   updateProject,
   removeProject,
   setCurrentProject,
-  setLoading,
-  setError,
+  setProjectLoading,
+  setProjectError,
   selectProjects,
   selectCurrentProject,
   selectCurrentProjectId,
   selectProjectIsLoading,
   selectProjectError,
 } from '@metabuilder/redux-slices'
-import type { Project, CreateProjectRequest, UpdateProjectRequest } from '@metabuilder/service-adapters'
+import type { Project, CreateProjectRequest, UpdateProjectRequest } from '@metabuilder/types'
 import type { AppDispatch, RootState } from '@metabuilder/redux-slices'
 
 /**
@@ -61,18 +61,18 @@ export function useProject() {
    */
   const loadProjects = useCallback(
     async (workspaceId: string) => {
-      dispatch(setLoading(true))
+      dispatch(setProjectLoading(true))
       try {
         const tenantId = getTenantId()
         const projectList = await projectService.listProjects(tenantId, workspaceId)
         dispatch(setProjects(projectList))
-        dispatch(setError(null))
+        dispatch(setProjectError(null))
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : 'Failed to load projects'
-        dispatch(setError(errorMsg))
+        dispatch(setProjectError(errorMsg))
         throw err
       } finally {
-        dispatch(setLoading(false))
+        dispatch(setProjectLoading(false))
       }
     },
     [dispatch, getTenantId, projectService]
@@ -83,7 +83,7 @@ export function useProject() {
    */
   const createProject = useCallback(
     async (data: CreateProjectRequest) => {
-      dispatch(setLoading(true))
+      dispatch(setProjectLoading(true))
       try {
         const tenantId = getTenantId()
         const project = await projectService.createProject({
@@ -94,10 +94,10 @@ export function useProject() {
         return project
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : 'Failed to create project'
-        dispatch(setError(errorMsg))
+        dispatch(setProjectError(errorMsg))
         throw err
       } finally {
-        dispatch(setLoading(false))
+        dispatch(setProjectLoading(false))
       }
     },
     [dispatch, getTenantId, projectService]
@@ -108,17 +108,17 @@ export function useProject() {
    */
   const updateProjectData = useCallback(
     async (id: string, data: UpdateProjectRequest) => {
-      dispatch(setLoading(true))
+      dispatch(setProjectLoading(true))
       try {
         const updated = await projectService.updateProject(id, data)
         dispatch(updateProject(updated))
         return updated
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : 'Failed to update project'
-        dispatch(setError(errorMsg))
+        dispatch(setProjectError(errorMsg))
         throw err
       } finally {
-        dispatch(setLoading(false))
+        dispatch(setProjectLoading(false))
       }
     },
     [dispatch, projectService]
@@ -129,16 +129,16 @@ export function useProject() {
    */
   const deleteProject = useCallback(
     async (id: string) => {
-      dispatch(setLoading(true))
+      dispatch(setProjectLoading(true))
       try {
         await projectService.deleteProject(id)
         dispatch(removeProject(id))
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : 'Failed to delete project'
-        dispatch(setError(errorMsg))
+        dispatch(setProjectError(errorMsg))
         throw err
       } finally {
-        dispatch(setLoading(false))
+        dispatch(setProjectLoading(false))
       }
     },
     [dispatch, projectService]

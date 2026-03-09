@@ -6,6 +6,7 @@ import React, { forwardRef, cloneElement, isValidElement } from 'react'
  * Props for FormControlLabel component (MUI-compatible)
  */
 export interface FormControlLabelProps extends Omit<React.LabelHTMLAttributes<HTMLLabelElement>, 'onChange'> {
+  testId?: string
   /** The control element (Checkbox, Radio, Switch) */
   control: React.ReactElement
   /** The label text or element */
@@ -38,6 +39,7 @@ export const FormControlLabel = forwardRef<HTMLLabelElement, FormControlLabelPro
       label,
       disabled = false,
       labelPlacement = 'end',
+      testId,
       className = '',
       sx,
       ...props
@@ -47,9 +49,9 @@ export const FormControlLabel = forwardRef<HTMLLabelElement, FormControlLabelPro
     // Clone the control element to inject disabled prop if needed
     const controlElement = isValidElement(control)
       ? cloneElement(control, {
-          ...control.props,
-          disabled: disabled || control.props.disabled,
-        })
+          ...(control.props as Record<string, unknown>),
+          disabled: disabled || (control.props as Record<string, unknown>).disabled,
+        } as Partial<typeof control.props>)
       : control
 
     const renderLabel = () => (
@@ -67,6 +69,7 @@ export const FormControlLabel = forwardRef<HTMLLabelElement, FormControlLabelPro
           ${disabled ? 'form-control-label--disabled' : ''}
           ${className}
         `.trim().replace(/\s+/g, ' ')}
+        data-testid={testId}
         {...props}
       >
         {labelPlacement === 'start' || labelPlacement === 'top' ? (

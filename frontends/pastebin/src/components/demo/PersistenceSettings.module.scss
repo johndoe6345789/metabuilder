@@ -1,0 +1,77 @@
+.iconWrap {
+  height: 40px;
+  width: 40px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--mat-sys-primary) 10%, transparent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.headerIcon {
+  height: 20px;
+  width: 20px;
+  color: var(--mat-sys-primary);
+}
+
+.headerRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.configGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  font-size: 0.875rem;
+}
+
+.label {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.value {
+  font-weight: 500;
+}
+
+.valueMono {
+  font-weight: 500;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.slicesSection {
+  border-top: 1px solid var(--mat-sys-outline-variant);
+  padding-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.slicesHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.875rem;
+}
+
+.slicesHeaderLabel {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.chipList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.chipMono {
+  font-size: 0.75rem;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}

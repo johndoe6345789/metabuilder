@@ -1,0 +1,31 @@
+{
+  "id": "fuel-return-line",
+  "name": "Fuel Return Line",
+  "partNumber": "FD-1880620",
+  "material": "nylon",
+  "quantity": 1,
+  "weight": 250.0,
+  "weightUnit": "g",
+  "baseY": 460,
+  "description": "Fuel return line from rail to tank (non-returnless systems)",
+  "installation": {
+    "tools": [
+      { "name": "Quick-connect tool", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Line clip", "spec": "P-clip", "qty": 4, "reusable": true }
+    ],
+    "torque": [],
+    "notes": [
+      "Some models are returnless - check first",
+      "Lower pressure than supply line",
+      "Returns warm fuel to tank",
+      "Check for kinks after routing"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 140, "height": 6, "rx": 3, "fill": "#444" },
+    { "type": "ellipse", "rx": 6, "ry": 5, "offsetX": -75, "fill": "#555" },
+    { "type": "ellipse", "rx": 6, "ry": 5, "offsetX": 75, "fill": "#555" }
+  ]
+}

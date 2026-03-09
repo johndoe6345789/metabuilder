@@ -1,0 +1,51 @@
+{
+  "id": "status-card-container",
+  "type": "div",
+  "props": {
+    "className": "status-card"
+  },
+  "children": [
+    {
+      "id": "status-card-content",
+      "type": "div",
+      "props": {
+        "className": "status-card__content"
+      },
+      "children": [
+        {
+          "id": "status-card-info",
+          "type": "div",
+          "children": [
+            {
+              "id": "status-card-count",
+              "type": "div",
+              "props": {
+                "className": "status-card__count"
+              },
+              "children": [{ "type": "Text", "value": "{count}" }]
+            },
+            {
+              "id": "status-card-label",
+              "type": "div",
+              "props": {
+                "className": "status-card__label"
+              },
+              "children": [{ "type": "Text", "value": "{label}" }]
+            }
+          ]
+        },
+        {
+          "id": "status-card-icon",
+          "type": "Icon",
+          "props": {
+            "className": "status-card__icon"
+          },
+          "bindings": {
+            "name": { "source": "iconName" },
+            "size": { "source": "iconSize" }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "type": "MetabuilderFormButton",
+  "props": {
+    "onTabChange": "> void",
+    "onExpandAll": "> void",
+    "onCollapseAll": "> void",
+    "onToggleGroup": "> void",
+    "onItemClick": "> void",
+    "onItemHover": "> void",
+    "onItemLeave": "> void",
+    "item": "> {",
+    "groupId": "> {",
+    "value": "> {"
+  }
+}

@@ -230,7 +230,7 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
         <div className={styles.section}>
           <button
             className={styles.executeButton}
-            onClick={handleExecute}
+            onClick={() => { void handleExecute() }}
             disabled={loading || readOnly}
           >
             {loading ? 'Executing...' : 'Execute Workflow'}
@@ -346,7 +346,7 @@ function renderConnections(workflow: WorkflowDefinition) {
     const fromNode = workflow.nodes.find((n) => n.id === fromNodeId)
     if (!fromNode) return
 
-    Object.entries(portMap).forEach(([portName, indexMap]) => {
+    Object.entries(portMap).forEach(([_portName, indexMap]) => {
       Object.entries(indexMap).forEach(([_, targets]) => {
         (targets as any[]).forEach((target) => {
           const toNode = workflow.nodes.find((n) => n.id === target.node)
@@ -355,7 +355,7 @@ function renderConnections(workflow: WorkflowDefinition) {
           const [x1, y1] = fromNode.position
           const [x2, y2] = toNode.position
           const [w1, h1] = fromNode.size || [120, 60]
-          const [w2, h2] = toNode.size || [120, 60]
+          const [_w2, h2] = toNode.size || [120, 60]
 
           const startX = x1 + w1
           const startY = y1 + h1 / 2

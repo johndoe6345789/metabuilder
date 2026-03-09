@@ -2,6 +2,10 @@
 
 import React, { useEffect, useCallback, useState } from 'react'
 import { classNames } from '../utils/classNames'
+import styles from '../../../scss/atoms/mat-snackbar.module.scss'
+
+/** Resolve CSS module class names with fallback to raw string */
+const s = (key: string): string => styles[key] || key
 
 export interface SnackbarAnchorOrigin {
   vertical?: 'top' | 'bottom'
@@ -27,6 +31,27 @@ export interface SnackbarProps extends React.HTMLAttributes<HTMLDivElement> {
   resumeHideDuration?: number
   /** Transition duration in ms */
   transitionDuration?: number
+  /** Test ID for testing */
+  testId?: string
+}
+
+/**
+ * Get position class based on anchor origin
+ * Maps to React-specific position classes that work with Angular Material snackbar styles
+ */
+function getPositionClass(anchorOrigin: SnackbarAnchorOrigin): string | undefined {
+  const { vertical = 'bottom', horizontal = 'left' } = anchorOrigin
+
+  if (vertical === 'top') {
+    if (horizontal === 'left') return styles.snackbarTopLeft
+    if (horizontal === 'right') return styles.snackbarTopRight
+    return styles.snackbarTop // center
+  }
+
+  // bottom
+  if (horizontal === 'left') return styles.snackbarBottomLeft
+  if (horizontal === 'right') return styles.snackbarBottomRight
+  return styles.snackbarBottom // center
 }
 
 export const Snackbar: React.FC<SnackbarProps> = ({
@@ -38,11 +63,13 @@ export const Snackbar: React.FC<SnackbarProps> = ({
   message,
   action,
   resumeHideDuration,
-  transitionDuration = 225,
+  transitionDuration = 150,
   className = '',
+  testId,
   ...props
 }) => {
   const [exiting, setExiting] = useState(false)
+  const [visible, setVisible] = useState(false)
 
   const handleClose = useCallback(
     (reason: 'timeout' | 'clickaway' | 'escapeKeyDown') => {
@@ -50,6 +77,14 @@ export const Snackbar: React.FC<SnackbarProps> = ({
     },
     [onClose]
   )
+
+  // Handle visibility and animation states
+  useEffect(() => {
+    if (open) {
+      setVisible(true)
+      setExiting(false)
+    }
+  }, [open])
 
   // Auto-hide timer
   useEffect(() => {
@@ -78,24 +113,27 @@ export const Snackbar: React.FC<SnackbarProps> = ({
 
   // Exit animation
   useEffect(() => {
-    if (!open && !exiting) return undefined
-    if (!open) {
+    if (!open && visible) {
       setExiting(true)
-      const timer = setTimeout(() => setExiting(false), transitionDuration)
+      const timer = setTimeout(() => {
+        setVisible(false)
+        setExiting(false)
+      }, 75) // Match Angular Material exit duration
       return () => clearTimeout(timer)
     }
     return undefined
-  }, [open, exiting, transitionDuration])
+  }, [open, visible])
 
-  if (!open && !exiting) return null
+  if (!visible) return null
 
-  const rootClass = classNames(
-    'fakemui-snackbar',
-    `fakemui-snackbar--${anchorOrigin.vertical}`,
-    `fakemui-snackbar--${anchorOrigin.horizontal}`,
+  // Wrapper classes for positioning (React-specific)
+  const wrapperClass = classNames(
+    styles.snackbarWrapper,
+    getPositionClass(anchorOrigin),
+    styles.snackbarAnimationsEnabled,
     {
-      'fakemui-snackbar--open': open,
-      'fakemui-snackbar--exiting': exiting && !open,
+      [styles.snackbarEnter]: open && !exiting,
+      [styles.snackbarExit]: exiting,
     },
     className
   )
@@ -106,13 +144,18 @@ export const Snackbar: React.FC<SnackbarProps> = ({
 
   return (
     <div
-      className={rootClass}
-      role="alert"
+      className={wrapperClass}
+      data-testid={testId}
+      role="status"
       aria-live="polite"
-      style={{ '--transition-duration': `${transitionDuration}ms` } as React.CSSProperties}
       {...props}
     >
-      {content}
+      {/* Angular Material container structure */}
+      <div className={s('mat-mdc-snack-bar-container')}>
+        <div className={s('mat-mdc-snackbar-surface')}>
+          {content}
+        </div>
+      </div>
     </div>
   )
 }
@@ -126,6 +169,20 @@ export interface SnackbarContentProps extends React.HTMLAttributes<HTMLDivElemen
   severity?: 'success' | 'error' | 'warning' | 'info'
 }
 
+/**
+ * Get severity class for color variants
+ */
+function getSeverityClass(severity?: 'success' | 'error' | 'warning' | 'info'): string | undefined {
+  if (!severity) return undefined
+  switch (severity) {
+    case 'success': return styles.snackbarSuccess
+    case 'error': return styles.snackbarError
+    case 'warning': return styles.snackbarWarning
+    case 'info': return styles.snackbarInfo
+    default: return undefined
+  }
+}
+
 export const SnackbarContent: React.FC<SnackbarContentProps> = ({
   message,
   action,
@@ -134,15 +191,23 @@ export const SnackbarContent: React.FC<SnackbarContentProps> = ({
   ...props
 }) => {
   const rootClass = classNames(
-    'fakemui-snackbar-content',
-    severity && `fakemui-snackbar-content--${severity}`,
+    s('mat-mdc-simple-snack-bar'),
+    getSeverityClass(severity),
     className
   )
 
   return (
     <div className={rootClass} role="alert" {...props}>
-      {message && <div className="fakemui-snackbar-message">{message}</div>}
-      {action && <div className="fakemui-snackbar-action">{action}</div>}
+      {message && (
+        <div className={classNames(s('mdc-snackbar__label'), s('mat-mdc-snack-bar-label'))}>
+          {message}
+        </div>
+      )}
+      {action && (
+        <div className={s('mat-mdc-snack-bar-actions')}>
+          {action}
+        </div>
+      )}
     </div>
   )
 }

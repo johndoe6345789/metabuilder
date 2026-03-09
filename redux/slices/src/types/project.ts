@@ -1,66 +1,20 @@
 /**
- * Project System Type Definitions
- * Types for workspaces, projects, and canvas items
+ * Re-export project types from shared types package
  */
+export type {
+  Workspace,
+  Project,
+  CanvasPosition,
+  CanvasSize,
+  ProjectCanvasItem,
+  ProjectCanvasState,
+  CreateProjectRequest,
+  UpdateProjectRequest,
+  CreateWorkspaceRequest,
+  UpdateWorkspaceRequest
+} from '@metabuilder/types';
 
-/**
- * Workspace - Top-level container for organizing projects
- */
-export interface Workspace {
-  id: string;
-  name: string;
-  description?: string;
-  icon?: string;
-  color?: string;
-  tenantId: string;
-  createdAt: number;
-  updatedAt: number;
-}
-
-/**
- * Project - Container within a workspace for organizing workflows
- */
-export interface Project {
-  id: string;
-  name: string;
-  description?: string;
-  workspaceId: string;
-  tenantId: string;
-  color?: string;
-  starred?: boolean;
-  createdAt: number;
-  updatedAt: number;
-}
-
-/**
- * ProjectCanvasItem - Workflow card positioned on the project canvas
- */
-export interface ProjectCanvasItem {
-  id: string;
-  projectId: string;
-  workflowId: string;
-  position: { x: number; y: number };
-  size: { width: number; height: number };
-  zIndex: number;
-  color?: string;
-  minimized?: boolean;
-  createdAt: number;
-  updatedAt: number;
-}
-
-/**
- * Canvas state for zoom, pan, and selection
- */
-export interface ProjectCanvasState {
-  zoom: number;
-  pan: { x: number; y: number };
-  selectedItemIds: Set<string>;
-  isDragging: boolean;
-  isResizing: boolean;
-  gridSnap: boolean;
-  showGrid: boolean;
-  snapSize: number;
-}
+import type { CanvasPosition, CanvasSize, ProjectCanvasItem } from '@metabuilder/types';
 
 /**
  * Collaborative presence for real-time sync
@@ -71,19 +25,6 @@ export interface CollaborativeUser {
   color: string;
   cursorPosition?: { x: number; y: number };
   lastSeen: number;
-}
-
-/**
- * Canvas position and size data
- */
-export interface CanvasPosition {
-  x: number;
-  y: number;
-}
-
-export interface CanvasSize {
-  width: number;
-  height: number;
 }
 
 /**
@@ -144,36 +85,6 @@ export interface ConflictItem {
  * API request/response types
  */
 
-export interface CreateWorkspaceRequest {
-  name: string;
-  description?: string;
-  icon?: string;
-  color?: string;
-  tenantId?: string;
-}
-
-export interface UpdateWorkspaceRequest {
-  name?: string;
-  description?: string;
-  icon?: string;
-  color?: string;
-}
-
-export interface CreateProjectRequest {
-  name: string;
-  description?: string;
-  workspaceId: string;
-  color?: string;
-  tenantId?: string;
-}
-
-export interface UpdateProjectRequest {
-  name?: string;
-  description?: string;
-  color?: string;
-  starred?: boolean;
-}
-
 export interface CreateCanvasItemRequest {
   workflowId: string;
   position?: CanvasPosition;
@@ -205,13 +116,13 @@ export interface BulkUpdateCanvasItemsRequest {
  */
 
 export interface WorkspaceListResponse {
-  workspaces: Workspace[];
+  workspaces: import('@metabuilder/types').Workspace[];
   count: number;
   total: number;
 }
 
 export interface ProjectListResponse {
-  projects: Project[];
+  projects: import('@metabuilder/types').Project[];
   count: number;
   total: number;
 }

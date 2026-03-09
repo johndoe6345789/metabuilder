@@ -1,0 +1,26 @@
+/**
+ * Header Actions Styles
+ * Action buttons for app header - Material Design 3
+ */
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1);
+}
+
+.userInfo {
+  padding: var(--spacing-1) var(--spacing-2);
+}
+
+.userName {
+  font-weight: 500;
+  color: var(--mat-sys-on-surface);
+  font-size: 0.875rem;
+}
+
+.userEmail {
+  font-size: 0.75rem;
+  color: var(--mat-sys-on-surface-variant);
+  margin-top: var(--spacing-0-5);
+}

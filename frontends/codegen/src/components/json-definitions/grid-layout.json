@@ -1,0 +1,14 @@
+{
+  "id": "grid-layout",
+  "type": "div",
+  "bindings": {
+    "className": {
+      "source": ["cols", "gap", "className"],
+      "transform": "const [cols, gap, customClass] = data; const gapClasses = { none: 'gap-0', xs: 'gap-1', sm: 'gap-2', md: 'gap-4', lg: 'gap-6', xl: 'gap-8' }; const gridCols = []; const colsObj = cols || { base: 1 }; if (colsObj.base) gridCols.push(`grid-cols-${colsObj.base}`); if (colsObj.sm) gridCols.push(`sm:grid-cols-${colsObj.sm}`); if (colsObj.md) gridCols.push(`md:grid-cols-${colsObj.md}`); if (colsObj.lg) gridCols.push(`lg:grid-cols-${colsObj.lg}`); if (colsObj.xl) gridCols.push(`xl:grid-cols-${colsObj.xl}`); const baseClasses = `grid ${gapClasses[gap || 'md']} ${gridCols.join(' ')} ${customClass || ''}`.trim(); return baseClasses.replace(/\\s+/g, ' ')"
+    },
+    "children": {
+      "source": "children",
+      "transform": "data"
+    }
+  }
+}

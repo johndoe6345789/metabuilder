@@ -1,0 +1,179 @@
+{
+  "id": "conflict-resolution-stats-container",
+  "type": "Box",
+  "className": "conflict-stats",
+  "children": [
+    {
+      "id": "stats-total",
+      "type": "Card",
+      "className": "conflict-stats__card conflict-stats__card--error",
+      "children": [
+        {
+          "type": "CardContent",
+          "className": "conflict-stats__card-inner",
+          "children": [
+            {
+              "type": "Flex",
+              "align": "center",
+              "justify": "between",
+              "children": [
+                {
+                  "type": "Box",
+                  "className": "conflict-stats__card-body",
+                  "children": [
+                    {
+                      "type": "Box",
+                      "className": "conflict-stats__value conflict-stats__value--error",
+                      "children": [{ "type": "Text", "value": "{totalConflicts}" }]
+                    },
+                    {
+                      "type": "Box",
+                      "className": "conflict-stats__label",
+                      "children": [{ "type": "Text", "value": "{totalLabel}" }]
+                    }
+                  ]
+                },
+                {
+                  "type": "Icon",
+                  "name": "Warning",
+                  "size": 24,
+                  "weight": "duotone",
+                  "className": "conflict-stats__icon conflict-stats__icon--error"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "stats-files",
+      "type": "Card",
+      "className": "conflict-stats__card conflict-stats__card--info",
+      "children": [
+        {
+          "type": "CardContent",
+          "className": "conflict-stats__card-inner",
+          "children": [
+            {
+              "type": "Flex",
+              "align": "center",
+              "justify": "between",
+              "children": [
+                {
+                  "type": "Box",
+                  "className": "conflict-stats__card-body",
+                  "children": [
+                    {
+                      "type": "Box",
+                      "className": "conflict-stats__value conflict-stats__value--info",
+                      "children": [{ "type": "Text", "value": "{fileConflicts}" }]
+                    },
+                    {
+                      "type": "Box",
+                      "className": "conflict-stats__label",
+                      "children": [{ "type": "Text", "value": "{fileLabel}" }]
+                    }
+                  ]
+                },
+                {
+                  "type": "Icon",
+                  "name": "Database",
+                  "size": 24,
+                  "weight": "duotone",
+                  "className": "conflict-stats__icon conflict-stats__icon--info"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "stats-models",
+      "type": "Card",
+      "className": "conflict-stats__card",
+      "children": [
+        {
+          "type": "CardContent",
+          "className": "conflict-stats__card-inner",
+          "children": [
+            {
+              "type": "Flex",
+              "align": "center",
+              "justify": "between",
+              "children": [
+                {
+                  "type": "Box",
+                  "className": "conflict-stats__card-body",
+                  "children": [
+                    {
+                      "type": "Box",
+                      "className": "conflict-stats__value",
+                      "children": [{ "type": "Text", "value": "{modelConflicts}" }]
+                    },
+                    {
+                      "type": "Box",
+                      "className": "conflict-stats__label",
+                      "children": [{ "type": "Text", "value": "{modelLabel}" }]
+                    }
+                  ]
+                },
+                {
+                  "type": "Icon",
+                  "name": "Database",
+                  "size": 24,
+                  "weight": "duotone",
+                  "className": "conflict-stats__icon"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "stats-other",
+      "type": "Card",
+      "className": "conflict-stats__card",
+      "children": [
+        {
+          "type": "CardContent",
+          "className": "conflict-stats__card-inner",
+          "children": [
+            {
+              "type": "Flex",
+              "align": "center",
+              "justify": "between",
+              "children": [
+                {
+                  "type": "Box",
+                  "className": "conflict-stats__card-body",
+                  "children": [
+                    {
+                      "type": "Box",
+                      "className": "conflict-stats__value",
+                      "children": [{ "type": "Text", "value": "{otherConflicts}" }]
+                    },
+                    {
+                      "type": "Box",
+                      "className": "conflict-stats__label",
+                      "children": [{ "type": "Text", "value": "{otherLabel}" }]
+                    }
+                  ]
+                },
+                {
+                  "type": "Icon",
+                  "name": "Cloud",
+                  "size": 24,
+                  "weight": "duotone",
+                  "className": "conflict-stats__icon"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

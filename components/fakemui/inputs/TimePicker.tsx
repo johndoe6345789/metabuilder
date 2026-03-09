@@ -4,6 +4,7 @@ import { FormHelperText } from './FormHelperText'
 import { Input } from './Input'
 
 export interface TimePickerProps {
+  testId?: string
   label?: React.ReactNode
   helperText?: React.ReactNode
   error?: boolean
@@ -21,6 +22,7 @@ export interface TimePickerProps {
 export const TimePicker = forwardRef<HTMLInputElement, TimePickerProps>(
   (
     {
+      testId,
       label,
       helperText,
       error,
@@ -42,7 +44,7 @@ export const TimePicker = forwardRef<HTMLInputElement, TimePickerProps>(
     }
 
     return (
-      <div className={`time-picker ${error ? 'time-picker--error' : ''} ${className}`}>
+      <div className={`time-picker ${error ? 'time-picker--error' : ''} ${className}`} data-testid={testId} aria-label={typeof label === 'string' ? label : undefined}>
         {label && <FormLabel required={required}>{label}</FormLabel>}
         <Input
           ref={ref}

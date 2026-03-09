@@ -1,0 +1,187 @@
+{
+  "id": "data-source-card",
+  "type": "Card",
+  "props": {
+    "className": "bg-card/50 backdrop-blur hover:bg-card/70 transition-colors"
+  },
+  "children": [
+    {
+      "id": "data-source-card-content",
+      "type": "Div",
+      "props": {
+        "className": "p-4"
+      },
+      "children": [
+        {
+          "id": "data-source-card-flex",
+          "type": "Flex",
+          "props": {
+            "justify": "between",
+            "align": "start",
+            "gap": "md"
+          },
+          "children": [
+            {
+              "id": "data-source-card-info",
+              "type": "Stack",
+              "props": {
+                "className": "flex-1 min-w-0"
+              },
+              "children": [
+                {
+                  "id": "data-source-badge-row",
+                  "type": "Flex",
+                  "props": {
+                    "align": "center",
+                    "gap": "sm"
+                  },
+                  "children": [
+                    {
+                      "id": "data-source-badge",
+                      "type": "DataSourceBadge",
+                      "props": {
+                        "type": {
+                          "source": "dataSource.type"
+                        }
+                      }
+                    },
+                    {
+                      "id": "data-source-id",
+                      "type": "Text",
+                      "props": {
+                        "variant": "small",
+                        "className": "font-mono font-medium truncate"
+                      },
+                      "bindings": {
+                        "children": {
+                          "source": "dataSource.id"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "data-source-type-info",
+                  "type": "ConditionalRender",
+                  "props": {
+                    "condition": {
+                      "source": "dataSource.type",
+                      "transform": "data === 'kv'"
+                    }
+                  },
+                  "children": [
+                    {
+                      "id": "kv-info-text",
+                      "type": "Text",
+                      "props": {
+                        "variant": "caption",
+                        "className": "font-mono bg-muted/30 px-2 py-1 rounded"
+                      },
+                      "bindings": {
+                        "children": {
+                          "source": "dataSource.key",
+                          "transform": "data ? `Key: ${data}` : 'Key: Not set'"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "data-source-dependents",
+                  "type": "ConditionalRender",
+                  "props": {
+                    "condition": {
+                      "source": "dependents",
+                      "transform": "data && data.length > 0"
+                    }
+                  },
+                  "children": [
+                    {
+                      "id": "dependents-border",
+                      "type": "Div",
+                      "props": {
+                        "className": "pt-2 border-t border-border/50"
+                      },
+                      "children": [
+                        {
+                          "id": "dependents-text",
+                          "type": "Text",
+                          "props": {
+                            "variant": "caption"
+                          },
+                          "bindings": {
+                            "children": {
+                              "source": "dependents",
+                              "transform": "data && data.length > 0 ? `Used by ${data.length} dependent ${data.length === 1 ? 'source' : 'sources'}` : ''"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "data-source-actions",
+              "type": "Flex",
+              "props": {
+                "align": "center",
+                "gap": "xs"
+              },
+              "children": [
+                {
+                  "id": "data-source-edit-btn",
+                  "type": "IconButton",
+                  "props": {
+                    "variant": "ghost",
+                    "size": "sm",
+                    "icon": "Pencil"
+                  },
+                  "events": {
+                    "onClick": {
+                      "action": "call",
+                      "target": "onEdit",
+                      "args": [
+                        {
+                          "source": "dataSource.id"
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "id": "data-source-delete-btn",
+                  "type": "IconButton",
+                  "props": {
+                    "variant": "ghost",
+                    "size": "sm",
+                    "icon": "Trash",
+                    "className": "text-destructive hover:text-destructive"
+                  },
+                  "bindings": {
+                    "disabled": {
+                      "source": "dependents",
+                      "transform": "data && data.length > 0"
+                    }
+                  },
+                  "events": {
+                    "onClick": {
+                      "action": "call",
+                      "target": "onDelete",
+                      "args": [
+                        {
+                          "source": "dataSource.id"
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

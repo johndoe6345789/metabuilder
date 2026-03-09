@@ -30,18 +30,15 @@ export {
 export {
   PluginDiscoverySystem,
   PluginMetadata as DiscoveredPluginMetadata,
-  DiscoveredPlugin
+  type DiscoveryConfig
 } from './plugin-discovery';
 
 // Plugin Initialization Framework
 export {
   PluginInitializationFramework,
-  PluginInitConfig,
-  InitializationResult,
-  DiscoveredPlugin,
-  getPluginInitializationFramework,
-  setPluginInitializationFramework,
-  resetPluginInitializationFramework
+  type InitializationConfig as PluginInitConfig,
+  type InitializationResult,
+  type PluginInitializer
 } from './plugin-initialization';
 
 // Built-In Plugin Executors

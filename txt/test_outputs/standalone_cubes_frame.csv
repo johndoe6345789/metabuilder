@@ -1,0 +1,24 @@
+# PNG to CSV Conversion
+# Original PNG: standalone_cubes_frame.png
+# Dimensions: 1024x768
+# Color Type: RGBA
+# Bit Depth: 8
+# Total Pixels: 786432
+# File Size: 3150399 bytes
+#
+# To generate full pixel data, run:
+# python3 << 'PYTHON_EOF'
+# from PIL import Image
+# import csv
+# img = Image.open('test_outputs/standalone_cubes_frame.png')
+# if img.mode != 'RGB': img = img.convert('RGB')
+# with open('test_outputs/standalone_cubes_frame.csv', 'w') as f:
+#     w = csv.writer(f)
+#     w.writerow(['x', 'y', 'r', 'g', 'b', 'hex'])
+#     for y in range(img.height):
+#         for x in range(img.width):
+#             r, g, b = img.getpixel((x, y))[:3]
+#             w.writerow([x, y, r, g, b, f'#{r:02x}{g:02x}{b:02x}'])
+# PYTHON_EOF
+#
+x,y,r,g,b,hex

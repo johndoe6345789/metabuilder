@@ -1,0 +1,32 @@
+{
+  "id": "heater-hose-return",
+  "name": "Heater Return Hose",
+  "partNumber": "FD-1860520",
+  "material": "rubber",
+  "quantity": 1,
+  "weight": 180.0,
+  "weightUnit": "g",
+  "baseY": 450,
+  "description": "Cooled coolant return from heater matrix",
+  "installation": {
+    "tools": [
+      { "name": "Pliers", "size": "-", "required": true },
+      { "name": "Trim tool", "size": "-", "required": false }
+    ],
+    "hardware": [
+      { "name": "Spring clamp", "spec": "20mm", "qty": 2, "reusable": true }
+    ],
+    "torque": [],
+    "notes": [
+      "Runs parallel to feed hose",
+      "Returns to water pump inlet",
+      "Check for air locks after refilling",
+      "Squeeze hose to bleed air"
+    ]
+  },
+  "geometry": [
+    { "type": "rect", "width": 70, "height": 12, "rx": 6, "fill": "#333" },
+    { "type": "ellipse", "rx": 8, "ry": 7, "offsetX": -38, "fill": "#444" },
+    { "type": "ellipse", "rx": 8, "ry": 7, "offsetX": 38, "fill": "#444" }
+  ]
+}

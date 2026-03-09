@@ -1,0 +1,338 @@
+// Card Component - Official Angular Material M3 SCSS (CSS Module)
+// ================================================================
+// Re-exports Angular Material card classes as CSS Module locals
+// so Card.tsx can reference them via styles['className'] or s('className').
+
+@use '../m3-scss/material/core/tokens/token-utils';
+@use '../m3-scss/material/card/m3-card';
+
+// Size of the `mat-card-header` region custom to Angular Material.
+$mat-card-header-size: 40px !default;
+
+// Default padding for text content within a card.
+$mat-card-default-padding: 16px !default;
+
+$fallbacks: m3-card.get-tokens();
+
+// ─── Base card ─────────────────────────────────────────────────
+
+.mat-mdc-card {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  position: relative;
+  border-style: solid;
+  border-width: 0;
+  background-color: token-utils.slot(card-elevated-container-color, $fallbacks);
+  border-color: token-utils.slot(card-elevated-container-color, $fallbacks);
+  border-radius: token-utils.slot(card-elevated-container-shape, $fallbacks);
+  box-shadow: token-utils.slot(card-elevated-container-elevation, $fallbacks);
+
+  &::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: solid 1px transparent;
+    content: '';
+    display: block;
+    pointer-events: none;
+    box-sizing: border-box;
+    border-radius: token-utils.slot(card-elevated-container-shape, $fallbacks);
+  }
+}
+
+// ─── Variant: outlined ────────────────────────────────────────
+
+.mat-mdc-card-outlined {
+  background-color: token-utils.slot(card-outlined-container-color, $fallbacks);
+  border-radius: token-utils.slot(card-outlined-container-shape, $fallbacks);
+  border-width: token-utils.slot(card-outlined-outline-width, $fallbacks);
+  border-color: token-utils.slot(card-outlined-outline-color, $fallbacks);
+  box-shadow: token-utils.slot(card-outlined-container-elevation, $fallbacks);
+
+  &::after {
+    border: none;
+  }
+}
+
+// ─── Variant: filled ──────────────────────────────────────────
+
+.mat-mdc-card-filled {
+  background-color: token-utils.slot(card-filled-container-color, $fallbacks);
+  border-radius: token-utils.slot(card-filled-container-shape, $fallbacks);
+  box-shadow: token-utils.slot(card-filled-container-elevation, $fallbacks);
+}
+
+// ─── Card media ───────────────────────────────────────────────
+
+.mdc-card__media {
+  position: relative;
+  box-sizing: border-box;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+
+  &::before {
+    display: block;
+    content: '';
+  }
+
+  &:first-child {
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
+  }
+
+  &:last-child {
+    border-bottom-left-radius: inherit;
+    border-bottom-right-radius: inherit;
+  }
+}
+
+// ─── Card actions ─────────────────────────────────────────────
+
+.mat-mdc-card-actions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  box-sizing: border-box;
+  min-height: 52px;
+  padding: 8px;
+}
+
+// ─── Card title ───────────────────────────────────────────────
+
+.mat-mdc-card-title {
+  font-family: token-utils.slot(card-title-text-font, $fallbacks);
+  line-height: token-utils.slot(card-title-text-line-height, $fallbacks);
+  font-size: token-utils.slot(card-title-text-size, $fallbacks);
+  letter-spacing: token-utils.slot(card-title-text-tracking, $fallbacks);
+  font-weight: token-utils.slot(card-title-text-weight, $fallbacks);
+}
+
+// ─── Card subtitle ────────────────────────────────────────────
+
+.mat-mdc-card-subtitle {
+  color: token-utils.slot(card-subtitle-text-color, $fallbacks);
+  font-family: token-utils.slot(card-subtitle-text-font, $fallbacks);
+  line-height: token-utils.slot(card-subtitle-text-line-height, $fallbacks);
+  font-size: token-utils.slot(card-subtitle-text-size, $fallbacks);
+  letter-spacing: token-utils.slot(card-subtitle-text-tracking, $fallbacks);
+  font-weight: token-utils.slot(card-subtitle-text-weight, $fallbacks);
+}
+
+// ─── Title & subtitle shared ──────────────────────────────────
+
+.mat-mdc-card-title,
+.mat-mdc-card-subtitle {
+  display: block;
+  margin: 0;
+
+  .mat-mdc-card-avatar ~ .mat-mdc-card-header-text & {
+    padding: $mat-card-default-padding $mat-card-default-padding 0;
+  }
+}
+
+// ─── Card header ──────────────────────────────────────────────
+
+.mat-mdc-card-header {
+  display: flex;
+  padding: $mat-card-default-padding $mat-card-default-padding 0;
+}
+
+// ─── Card header text ─────────────────────────────────────────
+
+.mat-mdc-card-header-text {
+  // Exists as a structural wrapper - styled via .cardHeaderText below
+}
+
+// ─── Card content ─────────────────────────────────────────────
+
+.mat-mdc-card-content {
+  display: block;
+  padding: 0 $mat-card-default-padding;
+
+  &:first-child {
+    padding-top: $mat-card-default-padding;
+  }
+
+  &:last-child {
+    padding-bottom: $mat-card-default-padding;
+  }
+}
+
+// ─── Card title group ─────────────────────────────────────────
+
+.mat-mdc-card-title-group {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+// ─── Card avatar ──────────────────────────────────────────────
+
+.mat-mdc-card-avatar {
+  height: $mat-card-header-size;
+  width: $mat-card-header-size;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-bottom: $mat-card-default-padding;
+  object-fit: cover;
+
+  & ~ .mat-mdc-card-header-text {
+    .mat-mdc-card-subtitle,
+    .mat-mdc-card-title {
+      line-height: normal;
+    }
+  }
+}
+
+// ─── Title ordering resets ────────────────────────────────────
+
+.mat-mdc-card-subtitle ~ .mat-mdc-card-title,
+.mat-mdc-card-title ~ .mat-mdc-card-subtitle,
+.mat-mdc-card-header .mat-mdc-card-header-text .mat-mdc-card-title,
+.mat-mdc-card-header .mat-mdc-card-header-text .mat-mdc-card-subtitle,
+.mat-mdc-card-title-group .mat-mdc-card-title,
+.mat-mdc-card-title-group .mat-mdc-card-subtitle {
+  padding-top: 0;
+}
+
+// ─── Content last-child margin reset ──────────────────────────
+
+.mat-mdc-card-content > :last-child:not(.mat-mdc-card-footer) {
+  margin-bottom: 0;
+}
+
+// ─── Actions alignment ───────────────────────────────────────
+
+.mat-mdc-card-actions-align-end {
+  justify-content: flex-end;
+}
+
+// Additional React-specific styles as local classes
+
+// Clickable card state layer
+.clickable {
+  cursor: pointer;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background-color: transparent;
+    transition: background-color 200ms ease;
+  }
+
+  &:hover::before {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary, #6750a4);
+    outline-offset: 2px;
+  }
+
+  &:active::before {
+    background-color: rgba(0, 0, 0, 0.08);
+  }
+}
+
+// Raised card (elevated shadow)
+.raised {
+  box-shadow: var(--mat-sys-level2, 0 3px 5px -1px rgba(0, 0, 0, 0.2), 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12)) !important;
+
+  &:hover {
+    box-shadow: var(--mat-sys-level3, 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12)) !important;
+  }
+}
+
+// Card header wrapper for React layout
+.cardHeaderWrapper {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+}
+
+// Card header text container (wraps title and subtitle)
+.cardHeaderText {
+  flex: 1;
+  min-width: 0;
+}
+
+// Card header action slot
+.cardHeaderAction {
+  flex-shrink: 0;
+  margin-left: auto;
+  // Adjust alignment to match header padding
+  margin-top: -4px;
+  margin-right: -8px;
+}
+
+// Card action area (button-like behavior)
+.cardActionArea {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  text-align: inherit;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background-color: transparent;
+    transition: background-color 200ms ease;
+  }
+
+  &:hover::before {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary, #6750a4);
+    outline-offset: -2px;
+  }
+
+  &:active::before {
+    background-color: rgba(0, 0, 0, 0.08);
+  }
+}
+
+// Card footer (React-specific, not in Angular Material)
+.cardFooter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-top: 1px solid var(--mat-sys-outline-variant, rgba(0, 0, 0, 0.12));
+}
+
+// Actions spacing modifier
+.actionsNoSpacing {
+  gap: 0;
+}
+
+// Media aspect ratios
+.media16x9 {
+  aspect-ratio: 16 / 9;
+}
+
+.media4x3 {
+  aspect-ratio: 4 / 3;
+}
+
+.mediaSquare {
+  aspect-ratio: 1;
+}

@@ -1,0 +1,144 @@
+{
+  "name": "CodeForge - Low-Code App Builder",
+  "short_name": "CodeForge",
+  "description": "Build Next.js, Material UI, and Flask applications with visual designers and AI assistance",
+  "start_url": "/codegen",
+  "display": "standalone",
+  "background_color": "#0f0f14",
+  "theme_color": "#7c3aed",
+  "orientation": "any",
+  "scope": "/codegen",
+  "categories": ["development", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "/codegen/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/codegen/icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/codegen/icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/codegen/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/codegen/icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/codegen/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/codegen/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/codegen/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/codegen/icons/icon-maskable-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/codegen/icons/icon-maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/codegen/screenshots/desktop-1.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "/codegen/screenshots/mobile-1.png",
+      "sizes": "540x720",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "description": "View project dashboard",
+      "url": "/codegen?shortcut=dashboard",
+      "icons": [
+        {
+          "src": "/codegen/icons/shortcut-dashboard.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Code Editor",
+      "short_name": "Code",
+      "description": "Open code editor",
+      "url": "/codegen?shortcut=code",
+      "icons": [
+        {
+          "src": "/codegen/icons/shortcut-code.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Models",
+      "short_name": "Models",
+      "description": "Design data models",
+      "url": "/codegen?shortcut=models",
+      "icons": [
+        {
+          "src": "/codegen/icons/shortcut-models.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "share_target": {
+    "action": "/codegen/share",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url",
+      "files": [
+        {
+          "name": "code_files",
+          "accept": ["text/*", "application/json", ".ts", ".tsx", ".js", ".jsx"]
+        }
+      ]
+    }
+  }
+}

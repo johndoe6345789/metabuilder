@@ -1,0 +1,81 @@
+
+> spark-template@0.0.0 audit:json
+> tsx scripts/audit-json-components.ts
+
+🔍 Starting JSON component audit...
+
+📊 Found 338 JSON files in config/pages
+📊 Found 475 TSX files in src/components
+📊 Found 134 JSON definitions
+📊 Found 360 registry entries
+
+🔍 Checking for TSX files that could be replaced with JSON...
+🔍 Checking for orphaned JSON files...
+🔍 Checking for obsolete wrapper references...
+🔍 Checking for broken load paths...
+🔍 Checking molecules without JSON definitions...
+
+================================================================================
+📋 AUDIT REPORT
+================================================================================
+
+📅 Generated: 2026-01-21T03:27:51.224Z
+
+📈 Statistics:
+   • Total JSON files: 338
+   • Total TSX files: 475
+   • Registry entries: 360
+   • Orphaned JSON: 0
+   • Obsolete wrapper refs: 0
+   • Duplicate implementations: 62
+
+
+⚠️ WARNING (62)
+--------------------------------------------------------------------------------
+
+  DUPLICATE IMPLEMENTATION (62):
+    • /Users/rmac/Documents/GitHub/low-code-react-app-b/src/components/molecules/Breadcrumb.tsx
+      TSX file has JSON equivalent at src/config/pages/molecules/breadcrumb.json
+      💡 Consider removing TSX and routing through JSON renderer
+    • /Users/rmac/Documents/GitHub/low-code-react-app-b/src/components/molecules/CanvasRenderer.tsx
+      TSX file has JSON equivalent at src/config/pages/molecules/canvas-renderer.json
+      💡 Consider removing TSX and routing through JSON renderer
+    • /Users/rmac/Documents/GitHub/low-code-react-app-b/src/components/molecules/ComponentPalette.tsx
+      TSX file has JSON equivalent at src/config/pages/molecules/component-palette.json
+      💡 Consider removing TSX and routing through JSON renderer
+    • /Users/rmac/Documents/GitHub/low-code-react-app-b/src/components/molecules/ComponentTree.tsx
+      TSX file has JSON equivalent at src/config/pages/molecules/component-tree.json
+      💡 Consider removing TSX and routing through JSON renderer
+    • /Users/rmac/Documents/GitHub/low-code-react-app-b/src/components/molecules/EditorActions.tsx
+      TSX file has JSON equivalent at src/config/pages/molecules/editor-actions.json
+      💡 Consider removing TSX and routing through JSON renderer
+    ... and 57 more
+
+ℹ️ INFO (11)
+--------------------------------------------------------------------------------
+
+  POTENTIAL CONVERSION (11):
+    • /Users/rmac/Documents/GitHub/low-code-react-app-b/src/components/molecules/EditorActions.tsx
+      Molecule "EditorActions" could potentially be converted to JSON
+      💡 Evaluate if EditorActions can be expressed as pure JSON
+    • /Users/rmac/Documents/GitHub/low-code-react-app-b/src/components/molecules/EditorToolbar.tsx
+      Molecule "EditorToolbar" could potentially be converted to JSON
+      💡 Evaluate if EditorToolbar can be expressed as pure JSON
+    • /Users/rmac/Documents/GitHub/low-code-react-app-b/src/components/molecules/EmptyEditorState.tsx
+      Molecule "EmptyEditorState" could potentially be converted to JSON
+      💡 Evaluate if EmptyEditorState can be expressed as pure JSON
+    • /Users/rmac/Documents/GitHub/low-code-react-app-b/src/components/molecules/FileTabs.tsx
+      Molecule "FileTabs" could potentially be converted to JSON
+      💡 Evaluate if FileTabs can be expressed as pure JSON
+    • /Users/rmac/Documents/GitHub/low-code-react-app-b/src/components/molecules/LazyInlineMonacoEditor.tsx
+      Molecule "LazyInlineMonacoEditor" could potentially be converted to JSON
+      💡 Evaluate if LazyInlineMonacoEditor can be expressed as pure JSON
+    ... and 6 more
+
+================================================================================
+Total issues found: 73
+================================================================================
+
+📄 Full report written to: /Users/rmac/Documents/GitHub/low-code-react-app-b/audit-report.json
+
+✅ Audit completed successfully

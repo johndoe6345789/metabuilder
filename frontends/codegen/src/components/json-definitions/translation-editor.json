@@ -1,0 +1,308 @@
+{
+  "id": "translation-editor",
+  "type": "div",
+  "bindings": {
+    "style": {
+      "value": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gap": "16px"
+      }
+    }
+  },
+  "children": [
+    {
+      "id": "editor-header",
+      "type": "div",
+      "bindings": {
+        "style": {
+          "value": {
+            "display": "flex",
+            "alignItems": "center",
+            "justifyContent": "space-between",
+            "gap": "16px",
+            "flexWrap": "wrap"
+          }
+        }
+      },
+      "children": [
+        {
+          "id": "header-left",
+          "type": "div",
+          "bindings": {
+            "style": {
+              "value": {
+                "display": "flex",
+                "alignItems": "center",
+                "gap": "12px"
+              }
+            }
+          },
+          "children": [
+            {
+              "id": "globe-icon",
+              "type": "span",
+              "props": {
+                "className": "material-symbols-outlined"
+              },
+              "bindings": {
+                "children": { "value": "language" },
+                "style": {
+                  "value": {
+                    "fontSize": "28px",
+                    "color": "var(--mat-sys-primary)"
+                  }
+                }
+              }
+            },
+            {
+              "id": "header-text",
+              "type": "div",
+              "children": [
+                {
+                  "id": "title",
+                  "type": "h3",
+                  "bindings": {
+                    "children": { "value": "Language & Translations" },
+                    "style": {
+                      "value": {
+                        "margin": "0",
+                        "fontSize": "16px",
+                        "fontWeight": "600",
+                        "color": "var(--mat-sys-on-surface)"
+                      }
+                    }
+                  }
+                },
+                {
+                  "id": "subtitle",
+                  "type": "p",
+                  "bindings": {
+                    "children": { "value": "Manage UI translations and locale preferences" },
+                    "style": {
+                      "value": {
+                        "margin": "2px 0 0 0",
+                        "fontSize": "13px",
+                        "color": "var(--mat-sys-on-surface-variant)"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "stats-badges",
+          "type": "div",
+          "bindings": {
+            "style": {
+              "value": {
+                "display": "flex",
+                "gap": "8px",
+                "alignItems": "center"
+              }
+            }
+          },
+          "children": [
+            {
+              "id": "total-badge",
+              "type": "span",
+              "bindings": {
+                "children": { "source": "totalKeys,localeName", "transform": "data.totalKeys + ' keys (' + data.localeName + ')'" },
+                "style": {
+                  "value": {
+                    "fontSize": "12px",
+                    "padding": "2px 8px",
+                    "borderRadius": "12px",
+                    "backgroundColor": "var(--mat-sys-surface-container)",
+                    "color": "var(--mat-sys-on-surface-variant)"
+                  }
+                }
+              }
+            },
+            {
+              "id": "override-badge",
+              "type": "span",
+              "bindings": {
+                "children": { "source": "overrideCount", "transform": "data.overrideCount + ' custom'" },
+                "style": {
+                  "value": {
+                    "fontSize": "12px",
+                    "padding": "2px 8px",
+                    "borderRadius": "12px",
+                    "backgroundColor": "var(--mat-sys-tertiary-container)",
+                    "color": "var(--mat-sys-on-tertiary-container)"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "controls-row",
+      "type": "div",
+      "bindings": {
+        "style": {
+          "value": {
+            "display": "flex",
+            "gap": "12px",
+            "alignItems": "center",
+            "flexWrap": "wrap"
+          }
+        }
+      },
+      "children": [
+        {
+          "id": "locale-select",
+          "type": "select",
+          "bindings": {
+            "value": { "source": "locale" },
+            "onChange": { "source": "handleLocaleChange" },
+            "style": {
+              "value": {
+                "padding": "8px 12px",
+                "borderRadius": "8px",
+                "border": "1px solid var(--mat-sys-outline-variant)",
+                "backgroundColor": "var(--mat-sys-surface-container-low)",
+                "color": "var(--mat-sys-on-surface)",
+                "fontSize": "14px",
+                "cursor": "pointer",
+                "minWidth": "180px"
+              }
+            }
+          },
+          "children": [
+            {
+              "id": "locale-opt-en",
+              "type": "option",
+              "props": { "value": "en" },
+              "bindings": { "children": { "value": "English (en)" } }
+            },
+            {
+              "id": "locale-opt-es",
+              "type": "option",
+              "props": { "value": "es" },
+              "bindings": { "children": { "value": "Español (es)" } }
+            },
+            {
+              "id": "locale-opt-fr",
+              "type": "option",
+              "props": { "value": "fr" },
+              "bindings": { "children": { "value": "Français (fr)" } }
+            },
+            {
+              "id": "locale-opt-nl",
+              "type": "option",
+              "props": { "value": "nl" },
+              "bindings": { "children": { "value": "Nederlands (nl)" } }
+            }
+          ]
+        },
+        {
+          "id": "filter-input",
+          "type": "input",
+          "bindings": {
+            "value": { "source": "filterQuery" },
+            "onChange": { "source": "handleFilterChange" },
+            "placeholder": { "value": "Filter translations..." },
+            "style": {
+              "value": {
+                "flex": "1",
+                "minWidth": "200px",
+                "padding": "8px 12px",
+                "borderRadius": "8px",
+                "border": "1px solid var(--mat-sys-outline-variant)",
+                "backgroundColor": "var(--mat-sys-surface-container-low)",
+                "color": "var(--mat-sys-on-surface)",
+                "fontSize": "14px"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "translations-list",
+      "type": "div",
+      "bindings": {
+        "style": {
+          "value": {
+            "border": "1px solid var(--mat-sys-outline-variant)",
+            "borderRadius": "12px",
+            "overflow": "hidden",
+            "maxHeight": "500px",
+            "overflowY": "auto"
+          }
+        }
+      },
+      "children": [
+        {
+          "id": "list-header",
+          "type": "div",
+          "bindings": {
+            "style": {
+              "value": {
+                "display": "grid",
+                "gridTemplateColumns": "1fr 1fr auto",
+                "gap": "8px",
+                "padding": "10px 16px",
+                "backgroundColor": "var(--mat-sys-surface-container)",
+                "fontWeight": "600",
+                "fontSize": "12px",
+                "textTransform": "uppercase",
+                "letterSpacing": "0.5px",
+                "color": "var(--mat-sys-on-surface-variant)",
+                "position": "sticky",
+                "top": "0",
+                "zIndex": "1"
+              }
+            }
+          },
+          "children": [
+            {
+              "type": "span",
+              "bindings": { "children": { "value": "Key" } }
+            },
+            {
+              "type": "span",
+              "bindings": { "children": { "value": "Value" } }
+            },
+            {
+              "type": "span",
+              "bindings": {
+                "children": { "value": "Actions" },
+                "style": { "value": { "textAlign": "right" } }
+              }
+            }
+          ]
+        },
+        {
+          "id": "rows-container",
+          "type": "div",
+          "bindings": {
+            "children": { "source": "translationListContent" }
+          }
+        },
+        {
+          "id": "empty-state",
+          "type": "div",
+          "bindings": {
+            "hidden": { "source": "showEmpty", "transform": "!data.showEmpty" },
+            "style": {
+              "value": {
+                "padding": "32px",
+                "textAlign": "center",
+                "color": "var(--mat-sys-on-surface-variant)",
+                "fontSize": "14px"
+              }
+            },
+            "children": { "value": "No translations match your filter" }
+          }
+        }
+      ]
+    }
+  ]
+}

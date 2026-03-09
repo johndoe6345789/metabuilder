@@ -180,7 +180,7 @@ export interface CalendarError {
 /**
  * iCalendar property structure
  */
-interface ICalProperty {
+export interface ICalProperty {
   name: string;
   value: string;
   params: Record<string, string>;
@@ -203,8 +203,8 @@ export class CalendarSyncExecutor implements INodeExecutor {
    */
   async execute(
     node: WorkflowNode,
-    context: WorkflowContext,
-    state: ExecutionState
+    _context: WorkflowContext,
+    _state: ExecutionState
   ): Promise<NodeResult> {
     const startTime = Date.now();
 
@@ -648,6 +648,7 @@ export class CalendarSyncExecutor implements INodeExecutor {
   ): TimeSlot[] {
     const slots: TimeSlot[] = [];
     const eventDuration = new Date(event.endTime).getTime() - new Date(event.startTime).getTime();
+    const effectiveSlotDuration = slotDurationMinutes > 0 ? slotDurationMinutes * 60000 : eventDuration;
     const now = new Date();
     const searchEnd = new Date(now.getTime() + hoursAhead * 3600000);
 
@@ -655,7 +656,7 @@ export class CalendarSyncExecutor implements INodeExecutor {
     slotStart.setHours(9, 0, 0, 0); // Start at 9 AM
 
     while (slotStart < searchEnd) {
-      const slotEnd = new Date(slotStart.getTime() + slotDurationMinutes * 60000);
+      const slotEnd = new Date(slotStart.getTime() + effectiveSlotDuration);
 
       // Check availability
       const conflicts = this._getConflictingEvents(

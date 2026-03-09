@@ -1,0 +1,121 @@
+// NativeSelect Component - Material Design 3
+// ===========================================
+// Native select dropdown styling using M3 tokens
+
+.native-select {
+  position: relative;
+  display: inline-flex;
+  min-width: 120px;
+
+  &--full-width {
+    display: flex;
+    width: 100%;
+  }
+
+  &--disabled {
+    opacity: var(--disabled-content-opacity);
+    pointer-events: none;
+  }
+
+  &--error {
+    .native-select__input {
+      border-color: var(--mat-sys-error);
+
+      &:focus {
+        border-color: var(--mat-sys-error);
+        box-shadow: 0 0 0 1px var(--mat-sys-error);
+      }
+    }
+  }
+
+  &__input {
+    appearance: none;
+    width: 100%;
+    padding: 12px 32px 12px 16px;
+    font-family: var(--mat-sys-body-large-font);
+    font-size: var(--mat-sys-body-large-size);
+    line-height: var(--mat-sys-body-large-line-height);
+    color: var(--mat-sys-on-surface);
+    background-color: transparent;
+    border: 1px solid var(--mat-sys-outline);
+    border-radius: var(--mat-sys-corner-small);
+    cursor: pointer;
+    transition: border-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard),
+                box-shadow var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+
+    &:hover:not(:disabled) {
+      border-color: var(--mat-sys-on-surface);
+    }
+
+    &:focus {
+      outline: none;
+      border-color: var(--mat-sys-primary);
+      box-shadow: 0 0 0 1px var(--mat-sys-primary);
+    }
+
+    &:disabled {
+      color: color-mix(in srgb, var(--mat-sys-on-surface) 38%, transparent);
+      cursor: not-allowed;
+    }
+
+    // Remove default dropdown arrow in IE
+    &::-ms-expand {
+      display: none;
+    }
+  }
+
+  &__icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: var(--mat-sys-on-surface-variant);
+    width: 20px;
+    height: 20px;
+  }
+
+  // Variant: outlined (default)
+  &--outlined {
+    .native-select__input {
+      border: 1px solid var(--mat-sys-outline);
+    }
+  }
+
+  // Variant: filled
+  &--filled {
+    .native-select__input {
+      background-color: var(--mat-sys-surface-container-highest);
+      border: none;
+      border-bottom: 1px solid var(--mat-sys-on-surface-variant);
+      border-radius: var(--mat-sys-corner-extra-small) var(--mat-sys-corner-extra-small) 0 0;
+      padding: 24px 32px 8px 16px;
+
+      &:hover:not(:disabled) {
+        background-color: var(--mat-sys-surface-container-high);
+      }
+
+      &:focus {
+        box-shadow: none;
+        border-bottom-width: 2px;
+        border-bottom-color: var(--mat-sys-primary);
+      }
+    }
+  }
+
+  // Variant: standard
+  &--standard {
+    .native-select__input {
+      border: none;
+      border-bottom: 1px solid var(--mat-sys-on-surface-variant);
+      border-radius: 0;
+      padding: 4px 24px 5px 0;
+
+      &:focus {
+        box-shadow: none;
+        border-bottom-width: 2px;
+        border-bottom-color: var(--mat-sys-primary);
+      }
+    }
+  }
+}

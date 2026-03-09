@@ -19,6 +19,7 @@ export interface DatePickerProps {
   renderInput?: (props: any) => React.ReactNode
   disableFuture?: boolean
   disablePast?: boolean
+  testId?: string
 }
 
 export interface TimePickerProps {
@@ -83,6 +84,7 @@ export function DatePicker({
   renderInput,
   disableFuture = false,
   disablePast = false,
+  testId,
 }: DatePickerProps) {
   const [internalValue, setInternalValue] = useState(value)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -133,7 +135,7 @@ export function DatePicker({
   }
 
   return (
-    <div className={classNames('fakemui-datepicker', className)} style={sx}>
+    <div className={classNames('fakemui-datepicker', className)} style={sx} data-testid={testId} aria-label={label}>
       {label && <label className="fakemui-datepicker-label">{label}</label>}
       <input {...inputProps} />
     </div>

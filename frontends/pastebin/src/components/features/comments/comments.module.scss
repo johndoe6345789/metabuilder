@@ -1,0 +1,168 @@
+.section {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.sectionTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--mat-sys-on-surface);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.empty {
+  font-size: 0.875rem;
+  color: var(--mat-sys-on-surface-variant);
+  padding: 1rem 0;
+  text-align: center;
+}
+
+/* CommentItem */
+.item {
+  display: flex;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.itemMeta {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.itemAuthor {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--mat-sys-on-surface);
+}
+
+.itemTime {
+  font-size: 0.75rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.itemBody {
+  flex: 1;
+  min-width: 0;
+
+  // Flatten MarkdownRenderer card styles inside a comment
+  :global(.markdown-renderer-card),
+  > div > div {
+    background: none;
+    border: none;
+    padding: 0;
+    gap: 0.25rem;
+  }
+}
+
+/* CommentForm */
+.form {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.formTabs {
+  display: flex;
+  gap: 4px;
+}
+
+.tabBtn {
+  background: none;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 6px;
+  padding: 4px 12px;
+  font-size: 0.8125rem;
+  cursor: pointer;
+  color: var(--mat-sys-on-surface-variant);
+  transition: background-color 120ms ease, color 120ms ease;
+
+  &:hover {
+    background: var(--mat-sys-surface-container);
+  }
+
+  &.tabActive {
+    background: var(--mat-sys-primary-container);
+    color: var(--mat-sys-on-primary-container);
+    border-color: var(--mat-sys-primary);
+  }
+}
+
+.textarea {
+  width: 100%;
+  min-height: 80px;
+  resize: vertical;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 0.875rem;
+  font-family: inherit;
+  background: var(--mat-sys-surface-container-low);
+  color: var(--mat-sys-on-surface);
+  outline: none;
+  transition: border-color 150ms ease;
+  box-sizing: border-box;
+
+  &:focus {
+    border-color: var(--mat-sys-primary);
+  }
+
+  &::placeholder {
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+.preview {
+  min-height: 80px;
+  padding: 10px 12px;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 8px;
+  background: var(--mat-sys-surface-container-low);
+
+  // Remove card wrapper from MarkdownRenderer preview
+  > div > div {
+    background: none;
+    border: none;
+    padding: 0;
+  }
+}
+
+.formRow {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.submitBtn {
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+  border: none;
+  border-radius: 8px;
+  padding: 8px 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 150ms ease;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}

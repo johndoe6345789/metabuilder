@@ -1,9 +1,12 @@
 import React from 'react'
+import styles from '../../../scss/atoms/markdown.module.scss'
 
 export interface MarkdownProps extends React.HTMLAttributes<HTMLDivElement> {
   content?: string
   children?: string
   className?: string
+  /** Test ID for automated testing */
+  testId?: string
 }
 
 /**
@@ -14,11 +17,12 @@ export interface MarkdownProps extends React.HTMLAttributes<HTMLDivElement> {
 export const Markdown: React.FC<MarkdownProps> = ({
   content,
   children,
+  testId,
   className = '',
   ...props
 }) => {
   const markdownContent = content || children || ''
-  
+
   // Simple markdown to HTML conversion for basic cases
   // In production, use 'marked' library
   const renderMarkdown = (md: string): string => {
@@ -40,10 +44,11 @@ export const Markdown: React.FC<MarkdownProps> = ({
       // Line breaks
       .replace(/\n/gim, '<br />')
   }
-  
+
   return (
     <div
-      className={`markdown ${className}`}
+      className={`${styles.markdown} ${className}`.trim()}
+      data-testid={testId}
       dangerouslySetInnerHTML={{ __html: renderMarkdown(markdownContent) }}
       {...props}
     />

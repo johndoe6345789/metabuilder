@@ -1,4 +1,6 @@
 import React, { forwardRef, useId } from 'react'
+import classNames from 'classnames'
+import styles from '../../../scss/atoms/form.module.scss'
 import { FormLabel } from './FormLabel'
 import { FormHelperText } from './FormHelperText'
 import { Input, InputProps } from './Input'
@@ -22,7 +24,7 @@ export interface TextFieldProps extends Omit<InputProps, 'size' | 'label' | 'hel
   sx?: Record<string, unknown>
 }
 
-export const TextField = forwardRef<HTMLInputElement | HTMLSelectElement, TextFieldProps>(
+export const TextField = forwardRef<HTMLInputElement | HTMLDivElement, TextFieldProps>(
   ({ label, helperText, error, className = '', id: providedId, select, children, size, testId: customTestId, sx, style, ...props }, ref) => {
     const generatedId = useId()
     const id = providedId ?? generatedId
@@ -38,19 +40,30 @@ export const TextField = forwardRef<HTMLInputElement | HTMLSelectElement, TextFi
       ariaDescribedBy: helperText ? helperTextId : undefined,
     })
 
+    const wrapperClasses = classNames(
+      styles.formGroup,
+      className
+    )
+
+    const selectClasses = classNames(styles.inputFullWidth)
+
     return (
-      <div className={`text-field ${error ? 'text-field--error' : ''} ${className}`} style={{ ...sxToStyle(sx), ...style }}>
+      <div className={wrapperClasses} style={{ ...sxToStyle(sx), ...style }}>
         {label && <FormLabel htmlFor={id}>{label}</FormLabel>}
         {select ? (
           <Select
-            ref={ref as React.Ref<HTMLSelectElement>}
+            ref={ref as React.Ref<HTMLDivElement>}
             id={id}
             error={error}
-            className="select--full-width"
+            className={selectClasses}
             data-testid={accessible['data-testid']}
             aria-invalid={error}
             aria-describedby={helperText ? helperTextId : undefined}
-            {...(props as unknown as React.SelectHTMLAttributes<HTMLSelectElement>)}
+            value={props.value as string | string[] | undefined}
+            onChange={props.onChange as unknown as ((event: { target: { value: string | string[]; name?: string } }) => void) | undefined}
+            name={props.name}
+            disabled={props.disabled}
+            required={props.required}
           >
             {children}
           </Select>

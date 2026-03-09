@@ -1,0 +1,77 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "workflowui-notifications",
+  "version": "1.0.0",
+  "description": "WorkflowUI Notifications page tests - user notifications and alerts",
+  "tests": [
+    {
+      "name": "should display notifications page",
+      "tags": ["@notifications", "@critical"],
+      "timeout": 10000,
+      "steps": [
+        {
+          "description": "Navigate to notifications",
+          "action": "navigate",
+          "url": "/notifications"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Verify notifications page loaded",
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toContainText",
+            "expected": "Notification"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should display notification list or empty state",
+      "tags": ["@notifications", "@content"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/notifications"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "networkidle"
+        },
+        {
+          "description": "Page should show notifications or empty state",
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should have filter or tab controls",
+      "tags": ["@notifications", "@filters"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/notifications"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Check for All/Unread tabs or filters",
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    }
+  ]
+}

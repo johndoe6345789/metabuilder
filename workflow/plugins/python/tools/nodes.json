@@ -1,0 +1,74 @@
+{
+  "$schema": "../../../../schemas/plugin-nodes.schema.json",
+  "category": {
+    "id": "tools",
+    "name": "Dev Tools",
+    "color": "#3498db",
+    "icon": "terminal"
+  },
+  "nodes": [
+    {
+      "id": "tools.create_branch",
+      "name": "Create Branch",
+      "description": "Create a Git branch from base",
+      "icon": "git-branch",
+      "inputs": ["main"],
+      "outputs": ["main", "error"],
+      "defaultConfig": { "baseBranch": "main", "branchName": "" }
+    },
+    {
+      "id": "tools.create_pull_request",
+      "name": "Create PR",
+      "description": "Create a pull request with title and body",
+      "icon": "git-pull-request",
+      "inputs": ["main"],
+      "outputs": ["main", "error"],
+      "defaultConfig": { "title": "", "body": "", "base": "main" }
+    },
+    {
+      "id": "tools.list_files",
+      "name": "List Files",
+      "description": "List files in a directory",
+      "icon": "folder",
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "defaultConfig": { "path": ".", "recursive": false }
+    },
+    {
+      "id": "tools.read_file",
+      "name": "Read File",
+      "description": "Read contents of a file",
+      "icon": "file",
+      "inputs": ["main"],
+      "outputs": ["main", "error"],
+      "defaultConfig": { "path": "" }
+    },
+    {
+      "id": "tools.run_docker",
+      "name": "Run Docker",
+      "description": "Run command in Docker container",
+      "icon": "box",
+      "inputs": ["main"],
+      "outputs": ["main", "error"],
+      "defaultConfig": { "image": "", "command": "", "volumes": [] }
+    },
+    {
+      "id": "tools.run_lint",
+      "name": "Run Lint",
+      "description": "Run linter on codebase",
+      "icon": "check-square",
+      "inputs": ["main"],
+      "outputs": ["main", "error"],
+      "defaultConfig": { "path": ".", "fix": false }
+    },
+    {
+      "id": "tools.run_tests",
+      "name": "Run Tests",
+      "description": "Run tests in a directory",
+      "icon": "play",
+      "inputs": ["main"],
+      "outputs": ["pass", "fail"],
+      "defaultConfig": { "path": ".", "pattern": "**/*.test.*" }
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "id": "scroll-area-thumb-root",
+  "type": "ScrollAreaThumb",
+  "bindings": {
+    "className": "className"
+  }
+}

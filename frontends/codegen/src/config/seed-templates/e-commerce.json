@@ -1,0 +1,635 @@
+{
+  "project-files": [
+    {
+      "id": "file-ecom-1",
+      "name": "page.tsx",
+      "path": "/src/app/page.tsx",
+      "content": "'use client'\n\nimport { ProductGrid } from '@/components/ProductGrid'\nimport { Hero } from '@/components/Hero'\nimport { Box, Container } from '@mui/material'\n\nexport default function Home() {\n  return (\n    <Box>\n      <Hero \n        title=\"Summer Collection 2024\"\n        subtitle=\"Discover our latest arrivals\"\n        ctaText=\"Shop Now\"\n      />\n      <Container maxWidth=\"xl\" sx={{ py: 6 }}>\n        <ProductGrid />\n      </Container>\n    </Box>\n  )\n}",
+      "language": "typescript"
+    },
+    {
+      "id": "file-ecom-2",
+      "name": "cart.tsx",
+      "path": "/src/app/cart/page.tsx",
+      "content": "'use client'\n\nimport { Cart } from '@/components/Cart'\nimport { Container, Typography, Box } from '@mui/material'\n\nexport default function CartPage() {\n  return (\n    <Container maxWidth=\"lg\" sx={{ py: 6 }}>\n      <Typography variant=\"h3\" gutterBottom>\n        Shopping Cart\n      </Typography>\n      <Cart />\n    </Container>\n  )\n}",
+      "language": "typescript"
+    },
+    {
+      "id": "file-ecom-3",
+      "name": "checkout.tsx",
+      "path": "/src/app/checkout/page.tsx",
+      "content": "'use client'\n\nimport { CheckoutForm } from '@/components/CheckoutForm'\nimport { Container, Typography } from '@mui/material'\n\nexport default function CheckoutPage() {\n  return (\n    <Container maxWidth=\"md\" sx={{ py: 6 }}>\n      <Typography variant=\"h3\" gutterBottom>\n        Checkout\n      </Typography>\n      <CheckoutForm />\n    </Container>\n  )\n}",
+      "language": "typescript"
+    }
+  ],
+  "project-models": [
+    {
+      "id": "model-ecom-1",
+      "name": "Product",
+      "fields": [
+        {
+          "id": "field-ecom-1",
+          "name": "id",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": true,
+          "isArray": false,
+          "defaultValue": "uuid()"
+        },
+        {
+          "id": "field-ecom-2",
+          "name": "name",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-ecom-3",
+          "name": "description",
+          "type": "String",
+          "isRequired": false,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-ecom-4",
+          "name": "price",
+          "type": "Float",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-ecom-5",
+          "name": "salePrice",
+          "type": "Float",
+          "isRequired": false,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-ecom-6",
+          "name": "stock",
+          "type": "Int",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false,
+          "defaultValue": "0"
+        },
+        {
+          "id": "field-ecom-7",
+          "name": "sku",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": true,
+          "isArray": false
+        },
+        {
+          "id": "field-ecom-8",
+          "name": "images",
+          "type": "String",
+          "isRequired": false,
+          "isUnique": false,
+          "isArray": true
+        },
+        {
+          "id": "field-ecom-9",
+          "name": "categoryId",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false,
+          "relation": "Category"
+        },
+        {
+          "id": "field-ecom-10",
+          "name": "createdAt",
+          "type": "DateTime",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false,
+          "defaultValue": "now()"
+        },
+        {
+          "id": "field-ecom-11",
+          "name": "updatedAt",
+          "type": "DateTime",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false,
+          "defaultValue": "now()"
+        }
+      ]
+    },
+    {
+      "id": "model-ecom-2",
+      "name": "Category",
+      "fields": [
+        {
+          "id": "field-ecom-12",
+          "name": "id",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": true,
+          "isArray": false,
+          "defaultValue": "uuid()"
+        },
+        {
+          "id": "field-ecom-13",
+          "name": "name",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": true,
+          "isArray": false
+        },
+        {
+          "id": "field-ecom-14",
+          "name": "slug",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": true,
+          "isArray": false
+        },
+        {
+          "id": "field-ecom-15",
+          "name": "description",
+          "type": "String",
+          "isRequired": false,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-ecom-16",
+          "name": "parentId",
+          "type": "String",
+          "isRequired": false,
+          "isUnique": false,
+          "isArray": false,
+          "relation": "Category"
+        }
+      ]
+    },
+    {
+      "id": "model-ecom-3",
+      "name": "Order",
+      "fields": [
+        {
+          "id": "field-ecom-17",
+          "name": "id",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": true,
+          "isArray": false,
+          "defaultValue": "uuid()"
+        },
+        {
+          "id": "field-ecom-18",
+          "name": "orderNumber",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": true,
+          "isArray": false
+        },
+        {
+          "id": "field-ecom-19",
+          "name": "customerId",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false,
+          "relation": "Customer"
+        },
+        {
+          "id": "field-ecom-20",
+          "name": "status",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false,
+          "defaultValue": "pending"
+        },
+        {
+          "id": "field-ecom-21",
+          "name": "subtotal",
+          "type": "Float",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-ecom-22",
+          "name": "tax",
+          "type": "Float",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-ecom-23",
+          "name": "shipping",
+          "type": "Float",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-ecom-24",
+          "name": "total",
+          "type": "Float",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-ecom-25",
+          "name": "createdAt",
+          "type": "DateTime",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false,
+          "defaultValue": "now()"
+        }
+      ]
+    },
+    {
+      "id": "model-ecom-4",
+      "name": "OrderItem",
+      "fields": [
+        {
+          "id": "field-ecom-26",
+          "name": "id",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": true,
+          "isArray": false,
+          "defaultValue": "uuid()"
+        },
+        {
+          "id": "field-ecom-27",
+          "name": "orderId",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false,
+          "relation": "Order"
+        },
+        {
+          "id": "field-ecom-28",
+          "name": "productId",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false,
+          "relation": "Product"
+        },
+        {
+          "id": "field-ecom-29",
+          "name": "quantity",
+          "type": "Int",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-ecom-30",
+          "name": "price",
+          "type": "Float",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-ecom-31",
+          "name": "total",
+          "type": "Float",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false
+        }
+      ]
+    },
+    {
+      "id": "model-ecom-5",
+      "name": "Customer",
+      "fields": [
+        {
+          "id": "field-ecom-32",
+          "name": "id",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": true,
+          "isArray": false,
+          "defaultValue": "uuid()"
+        },
+        {
+          "id": "field-ecom-33",
+          "name": "email",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": true,
+          "isArray": false
+        },
+        {
+          "id": "field-ecom-34",
+          "name": "firstName",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-ecom-35",
+          "name": "lastName",
+          "type": "String",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-ecom-36",
+          "name": "phone",
+          "type": "String",
+          "isRequired": false,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-ecom-37",
+          "name": "addresses",
+          "type": "Json",
+          "isRequired": false,
+          "isUnique": false,
+          "isArray": false
+        },
+        {
+          "id": "field-ecom-38",
+          "name": "createdAt",
+          "type": "DateTime",
+          "isRequired": true,
+          "isUnique": false,
+          "isArray": false,
+          "defaultValue": "now()"
+        }
+      ]
+    }
+  ],
+  "project-components": [
+    {
+      "id": "comp-ecom-1",
+      "type": "ProductCard",
+      "name": "ProductCard",
+      "props": {
+        "elevation": 1,
+        "showRating": true,
+        "showQuickView": true
+      },
+      "children": []
+    },
+    {
+      "id": "comp-ecom-2",
+      "type": "CartItem",
+      "name": "CartItem",
+      "props": {
+        "showImage": true,
+        "allowQuantityEdit": true
+      },
+      "children": []
+    },
+    {
+      "id": "comp-ecom-3",
+      "type": "CheckoutSummary",
+      "name": "CheckoutSummary",
+      "props": {
+        "showTax": true,
+        "showShipping": true,
+        "showPromoCode": true
+      },
+      "children": []
+    }
+  ],
+  "project-workflows": [
+    {
+      "id": "workflow-ecom-1",
+      "name": "Order Processing Workflow",
+      "description": "Complete order fulfillment from payment to shipping",
+      "nodes": [
+        {
+          "id": "node-ecom-1",
+          "type": "trigger",
+          "name": "Order Placed",
+          "position": { "x": 100, "y": 100 },
+          "data": { "label": "Order Created" },
+          "config": { "triggerType": "event" }
+        },
+        {
+          "id": "node-ecom-2",
+          "type": "action",
+          "name": "Process Payment",
+          "position": { "x": 300, "y": 100 },
+          "data": { "label": "Charge Customer" }
+        },
+        {
+          "id": "node-ecom-3",
+          "type": "condition",
+          "name": "Payment Success?",
+          "position": { "x": 500, "y": 100 },
+          "data": { "label": "Check Payment" }
+        },
+        {
+          "id": "node-ecom-4",
+          "type": "action",
+          "name": "Update Inventory",
+          "position": { "x": 700, "y": 50 },
+          "data": { "label": "Reduce Stock" }
+        },
+        {
+          "id": "node-ecom-5",
+          "type": "notification",
+          "name": "Send Confirmation",
+          "position": { "x": 900, "y": 50 },
+          "data": { "label": "Email Customer" }
+        },
+        {
+          "id": "node-ecom-6",
+          "type": "notification",
+          "name": "Payment Failed",
+          "position": { "x": 700, "y": 150 },
+          "data": { "label": "Notify Failure" }
+        }
+      ],
+      "connections": [
+        { "id": "conn-ecom-1", "source": "node-ecom-1", "target": "node-ecom-2" },
+        { "id": "conn-ecom-2", "source": "node-ecom-2", "target": "node-ecom-3" },
+        { "id": "conn-ecom-3", "source": "node-ecom-3", "target": "node-ecom-4", "condition": "success" },
+        { "id": "conn-ecom-4", "source": "node-ecom-4", "target": "node-ecom-5" },
+        { "id": "conn-ecom-5", "source": "node-ecom-3", "target": "node-ecom-6", "condition": "failure" }
+      ],
+      "isActive": true,
+      "createdAt": 1704067200000,
+      "updatedAt": 1704067200000
+    }
+  ],
+  "project-lambdas": [
+    {
+      "id": "lambda-ecom-1",
+      "name": "calculateShipping",
+      "description": "Calculate shipping costs based on order details",
+      "code": "export async function handler(event) {\n  const { items, destination } = event;\n  const weight = items.reduce((sum, item) => sum + item.weight * item.quantity, 0);\n  const baseRate = 5.99;\n  const weightRate = weight * 0.50;\n  const total = baseRate + weightRate;\n  return {\n    statusCode: 200,\n    body: JSON.stringify({ shipping: total })\n  };\n}",
+      "language": "typescript",
+      "runtime": "nodejs20.x",
+      "handler": "index.handler",
+      "timeout": 10,
+      "memory": 128,
+      "environment": {},
+      "triggers": [
+        {
+          "id": "trigger-ecom-1",
+          "type": "http",
+          "config": { "method": "POST", "path": "/api/shipping" }
+        }
+      ],
+      "createdAt": 1704067200000,
+      "updatedAt": 1704067200000
+    },
+    {
+      "id": "lambda-ecom-2",
+      "name": "processRefund",
+      "description": "Handle order refunds and inventory restoration",
+      "code": "export async function handler(event) {\n  const { orderId, reason } = event;\n  // Process refund logic\n  return {\n    statusCode: 200,\n    body: JSON.stringify({ refunded: true, orderId })\n  };\n}",
+      "language": "typescript",
+      "runtime": "nodejs20.x",
+      "handler": "index.handler",
+      "timeout": 30,
+      "memory": 256,
+      "environment": {},
+      "triggers": [
+        {
+          "id": "trigger-ecom-2",
+          "type": "http",
+          "config": { "method": "POST", "path": "/api/refunds" }
+        }
+      ],
+      "createdAt": 1704067200000,
+      "updatedAt": 1704067200000
+    }
+  ],
+  "project-playwright-tests": [
+    {
+      "id": "test-ecom-1",
+      "name": "Complete Purchase Flow",
+      "description": "Test end-to-end purchase workflow",
+      "pageUrl": "/",
+      "steps": [
+        { "id": "step-ecom-1", "action": "navigate", "value": "/" },
+        { "id": "step-ecom-2", "action": "click", "selector": ".product-card:first-child" },
+        { "id": "step-ecom-3", "action": "click", "selector": "button[data-testid='add-to-cart']" },
+        { "id": "step-ecom-4", "action": "click", "selector": "a[href='/cart']" },
+        { "id": "step-ecom-5", "action": "expect", "selector": ".cart-item", "assertion": "toBeVisible" },
+        { "id": "step-ecom-6", "action": "click", "selector": "button[data-testid='checkout']" },
+        { "id": "step-ecom-7", "action": "fill", "selector": "#email", "value": "customer@example.com" },
+        { "id": "step-ecom-8", "action": "fill", "selector": "#cardNumber", "value": "4242424242424242" },
+        { "id": "step-ecom-9", "action": "click", "selector": "button[type='submit']" },
+        { "id": "step-ecom-10", "action": "expect", "selector": ".success-message", "assertion": "toBeVisible" }
+      ]
+    }
+  ],
+  "project-storybook-stories": [
+    {
+      "id": "story-ecom-1",
+      "componentName": "ProductCard",
+      "storyName": "Default",
+      "args": {
+        "name": "Premium T-Shirt",
+        "price": 29.99,
+        "image": "/images/product.jpg",
+        "rating": 4.5
+      },
+      "description": "Product card with image and details",
+      "category": "E-Commerce"
+    },
+    {
+      "id": "story-ecom-2",
+      "componentName": "ProductCard",
+      "storyName": "OnSale",
+      "args": {
+        "name": "Premium T-Shirt",
+        "price": 29.99,
+        "salePrice": 19.99,
+        "image": "/images/product.jpg",
+        "rating": 4.5
+      },
+      "description": "Product card with sale price",
+      "category": "E-Commerce"
+    }
+  ],
+  "project-unit-tests": [
+    {
+      "id": "test-ecom-unit-1",
+      "name": "Cart Calculations",
+      "description": "Test cart total and tax calculations",
+      "testType": "utility",
+      "targetFile": "/src/utils/cart.ts",
+      "testCases": [
+        {
+          "id": "case-ecom-1",
+          "description": "calculates subtotal correctly",
+          "assertions": ["expect(calculateSubtotal(items)).toBe(99.97)"]
+        },
+        {
+          "id": "case-ecom-2",
+          "description": "applies tax correctly",
+          "assertions": ["expect(calculateTax(100, 0.08)).toBe(8.00)"]
+        }
+      ]
+    }
+  ],
+  "project-component-trees": [
+    {
+      "id": "tree-ecom-1",
+      "name": "E-Commerce Layout",
+      "description": "Main store layout with header, navigation, and footer",
+      "rootNodes": [
+        {
+          "id": "root-ecom-1",
+          "type": "Container",
+          "name": "StoreContainer",
+          "props": { "maxWidth": "xl" },
+          "children": [
+            {
+              "id": "header-ecom-1",
+              "type": "AppBar",
+              "name": "StoreHeader",
+              "props": { "position": "sticky", "elevation": 1 },
+              "children": [
+                {
+                  "id": "nav-ecom-1",
+                  "type": "Toolbar",
+                  "name": "Navigation",
+                  "props": {},
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "main-ecom-1",
+              "type": "Box",
+              "name": "MainContent",
+              "props": { "sx": { "minHeight": "80vh" } },
+              "children": []
+            },
+            {
+              "id": "footer-ecom-1",
+              "type": "Box",
+              "name": "Footer",
+              "props": { "sx": { "py": 6, "bgcolor": "grey.100" } },
+              "children": []
+            }
+          ]
+        }
+      ],
+      "createdAt": 1704067200000,
+      "updatedAt": 1704067200000
+    }
+  ]
+}

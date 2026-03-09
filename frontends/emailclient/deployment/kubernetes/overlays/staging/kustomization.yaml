@@ -1,0 +1,113 @@
+# Staging Environment Overlay
+# Usage: kustomize build overlays/staging/ | kubectl apply -f -
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: emailclient-staging
+
+bases:
+  - ../../
+
+commonLabels:
+  environment: staging
+  stage: staging
+
+commonAnnotations:
+  environment: staging
+
+# Staging configuration
+configMapGenerator:
+  - name: email-service-config
+    behavior: merge
+    literals:
+      - FLASK_ENV=staging
+      - LOG_LEVEL=INFO
+      - ENABLE_METRICS=true
+      - ENABLE_HEALTH_CHECK=true
+
+# Moderate replicas for staging
+replicas:
+  - name: email-service
+    count: 2
+  - name: celery-worker
+    count: 2
+  - name: postfix
+    count: 2
+  - name: dovecot
+    count: 2
+  - name: postgres
+    count: 1
+  - name: redis
+    count: 1
+
+# Use staging images (with -staging tag)
+images:
+  - name: emailclient/email-service
+    newTag: staging
+  - name: emailclient/postfix
+    newTag: staging
+  - name: emailclient/dovecot
+    newTag: staging
+
+# Moderate resource requests for staging
+patchesStrategicMerge:
+  - kind: Deployment
+    apiVersion: apps/v1
+    metadata:
+      name: email-service
+    spec:
+      template:
+        spec:
+          containers:
+            - name: email-service
+              resources:
+                requests:
+                  cpu: 250m
+                  memory: 256Mi
+                limits:
+                  cpu: 1000m
+                  memory: 1Gi
+  - kind: Deployment
+    apiVersion: apps/v1
+    metadata:
+      name: celery-worker
+    spec:
+      template:
+        spec:
+          containers:
+            - name: celery-worker
+              resources:
+                requests:
+                  cpu: 250m
+                  memory: 256Mi
+                limits:
+                  cpu: 1000m
+                  memory: 1Gi
+
+# Configure HPA for staging (moderate scaling)
+patchesJson6902:
+  - target:
+      group: autoscaling
+      version: v2
+      kind: HorizontalPodAutoscaler
+      name: email-service-hpa
+    patch: |-
+      - op: replace
+        path: /spec/minReplicas
+        value: 2
+      - op: replace
+        path: /spec/maxReplicas
+        value: 5
+  - target:
+      group: autoscaling
+      version: v2
+      kind: HorizontalPodAutoscaler
+      name: celery-worker-hpa
+    patch: |-
+      - op: replace
+        path: /spec/minReplicas
+        value: 2
+      - op: replace
+        path: /spec/maxReplicas
+        value: 4

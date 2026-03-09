@@ -31,14 +31,14 @@ export async function GET(
     }
     
     // Get package data using DBAL
-    const packageData = await db.packageData.read(resolvedParams.packageId)
+    const packageData = await db.entity('packageData').read(resolvedParams.packageId)
     
     if (!packageData) {
       return NextResponse.json({ data: null })
     }
     
     // Parse the JSON data field
-    const data = packageData.data ? JSON.parse(packageData.data) : null
+    const data = packageData.data ? JSON.parse(packageData.data as string) : null
     
     return NextResponse.json({ data })
   } catch (error) {

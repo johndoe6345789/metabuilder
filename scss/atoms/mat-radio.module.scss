@@ -1,0 +1,311 @@
+// Radio Component - Official Angular Material M3 SCSS (CSS Module)
+// =================================================================
+// Uses official Angular Material radio styles from M3 design system
+
+@use '../m3-scss/material/radio/radio.module';
+
+// Local class to satisfy CSS modules purity requirement
+// Apply this to wrap Angular Material radio elements
+.matRadio {
+  // This class can be empty - it just needs to exist for CSS modules
+  // The actual styling comes from the Angular Material classes below
+}
+
+// ---------------------------------------------------------------
+// M3 class declarations for CSS Module export
+// ---------------------------------------------------------------
+// CSS Modules only export classes that are directly declared in this
+// file. The @use'd Angular Material module provides styling, but its
+// class names are not visible to the module hash map. We re-declare
+// every M3 class that the React component references via the s()
+// resolver so that CSS Modules hashes them and the resolver can map
+// the human-readable key to the hashed value.
+
+// Root wrapper
+.mat-mdc-radio-button {
+  @extend .matRadio;
+}
+
+// State modifiers on the root wrapper
+.mat-mdc-radio-checked {}
+.mat-mdc-radio-disabled {
+  pointer-events: none;
+  opacity: 0.38;
+}
+._mat-animation-noopable {}
+
+// MDC core radio container
+.mdc-radio {
+  display: inline-flex;
+  position: relative;
+  align-items: center;
+  cursor: pointer;
+}
+.mdc-radio--disabled {
+  cursor: default;
+}
+
+// Hidden native input
+.mdc-radio__native-control {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  cursor: inherit;
+  z-index: 1;
+}
+
+// Visual indicator wrapper
+.mdc-radio__background {
+  display: inline-flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 20px;
+  height: 20px;
+}
+
+// Outer and inner circles
+.mdc-radio__outer-circle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  border-width: 2px;
+  border-style: solid;
+  border-radius: 50%;
+}
+.mdc-radio__inner-circle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  transform: scale(0);
+  transition: transform 120ms cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+// Ripple
+.mat-radio-ripple {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  pointer-events: none;
+  overflow: hidden;
+}
+.mat-focus-indicator {}
+.mat-ripple-element {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+// Touch target
+.mat-mdc-radio-touch-target {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 48px;
+  height: 48px;
+}
+
+// Label
+.mat-internal-form-field {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  padding-left: 8px;
+  font-family: var(--mat-sys-body-medium-font, Roboto, sans-serif);
+  font-size: var(--mat-sys-body-medium-size, 14px);
+  line-height: var(--mat-sys-body-medium-line-height, 20px);
+}
+
+// React-specific additions for backward compatibility
+// These extend the Angular Material styles with size and color variants
+
+// Size variants (not in Angular Material)
+.sizeSm {
+  // Applied to .mat-mdc-radio-button
+  .mdc-radio {
+    transform: scale(0.8);
+    transform-origin: center left;
+  }
+
+  .mat-internal-form-field {
+    font-size: var(--mat-sys-body-small-size, 12px);
+  }
+}
+
+.sizeLg {
+  // Applied to .mat-mdc-radio-button
+  .mdc-radio {
+    transform: scale(1.3);
+    transform-origin: center left;
+  }
+
+  .mat-internal-form-field {
+    font-size: var(--mat-sys-body-large-size, 16px);
+  }
+}
+
+// Color variant: secondary
+.colorSecondary {
+  &.mat-mdc-radio-checked {
+    .mdc-radio__outer-circle {
+      border-color: var(--mat-sys-secondary);
+    }
+
+    .mdc-radio__inner-circle {
+      background-color: var(--mat-sys-secondary);
+    }
+  }
+
+  .mdc-radio:hover > .mdc-radio__native-control:enabled:checked + .mdc-radio__background {
+    > .mdc-radio__outer-circle {
+      border-color: var(--mat-sys-secondary);
+    }
+
+    > .mdc-radio__inner-circle {
+      background-color: var(--mat-sys-secondary);
+    }
+  }
+
+  .mdc-radio__native-control:focus:enabled:checked + .mdc-radio__background {
+    > .mdc-radio__outer-circle {
+      border-color: var(--mat-sys-secondary);
+    }
+
+    > .mdc-radio__inner-circle {
+      background-color: var(--mat-sys-secondary);
+    }
+  }
+}
+
+// Color variant: error
+.colorError {
+  &.mat-mdc-radio-checked {
+    .mdc-radio__outer-circle {
+      border-color: var(--mat-sys-error);
+    }
+
+    .mdc-radio__inner-circle {
+      background-color: var(--mat-sys-error);
+    }
+  }
+
+  .mdc-radio:hover > .mdc-radio__native-control:enabled:checked + .mdc-radio__background {
+    > .mdc-radio__outer-circle {
+      border-color: var(--mat-sys-error);
+    }
+
+    > .mdc-radio__inner-circle {
+      background-color: var(--mat-sys-error);
+    }
+  }
+
+  .mdc-radio__native-control:focus:enabled:checked + .mdc-radio__background {
+    > .mdc-radio__outer-circle {
+      border-color: var(--mat-sys-error);
+    }
+
+    > .mdc-radio__inner-circle {
+      background-color: var(--mat-sys-error);
+    }
+  }
+
+  // Unchecked border should also show error
+  .mdc-radio__outer-circle {
+    border-color: var(--mat-sys-error);
+  }
+}
+
+// Color variant: success (tertiary in M3)
+.colorSuccess {
+  &.mat-mdc-radio-checked {
+    .mdc-radio__outer-circle {
+      border-color: var(--mat-sys-tertiary);
+    }
+
+    .mdc-radio__inner-circle {
+      background-color: var(--mat-sys-tertiary);
+    }
+  }
+
+  .mdc-radio:hover > .mdc-radio__native-control:enabled:checked + .mdc-radio__background {
+    > .mdc-radio__outer-circle {
+      border-color: var(--mat-sys-tertiary);
+    }
+
+    > .mdc-radio__inner-circle {
+      background-color: var(--mat-sys-tertiary);
+    }
+  }
+
+  .mdc-radio__native-control:focus:enabled:checked + .mdc-radio__background {
+    > .mdc-radio__outer-circle {
+      border-color: var(--mat-sys-tertiary);
+    }
+
+    > .mdc-radio__inner-circle {
+      background-color: var(--mat-sys-tertiary);
+    }
+  }
+}
+
+// Color variant: warning
+.colorWarning {
+  &.mat-mdc-radio-checked {
+    .mdc-radio__outer-circle {
+      border-color: var(--mat-sys-warning, #fb8c00);
+    }
+
+    .mdc-radio__inner-circle {
+      background-color: var(--mat-sys-warning, #fb8c00);
+    }
+  }
+
+  .mdc-radio:hover > .mdc-radio__native-control:enabled:checked + .mdc-radio__background {
+    > .mdc-radio__outer-circle {
+      border-color: var(--mat-sys-warning, #fb8c00);
+    }
+
+    > .mdc-radio__inner-circle {
+      background-color: var(--mat-sys-warning, #fb8c00);
+    }
+  }
+
+  .mdc-radio__native-control:focus:enabled:checked + .mdc-radio__background {
+    > .mdc-radio__outer-circle {
+      border-color: var(--mat-sys-warning, #fb8c00);
+    }
+
+    > .mdc-radio__inner-circle {
+      background-color: var(--mat-sys-warning, #fb8c00);
+    }
+  }
+}
+
+// RadioGroup layout helpers
+.radioGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.radioGroupRow {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 16px;
+}

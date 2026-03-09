@@ -1,0 +1,67 @@
+{
+  "id": "component-tree-builder-root",
+  "type": "div",
+  "props": { "className": "h-full flex gap-4 p-6" },
+  "children": [
+    {
+      "id": "left-panel",
+      "type": "div",
+      "props": { "className": "w-80 flex flex-col gap-4" },
+      "children": [
+        {
+          "id": "toolbar",
+          "type": "ComponentTreeToolbar",
+          "bindings": {
+            "onGenerate": "builderState.generateComponentWithAI",
+            "onAddRoot": "builderState.addRootComponent"
+          }
+        },
+        {
+          "id": "tree-view",
+          "type": "ComponentTreeView",
+          "bindings": {
+            "nodes": "components",
+            "selectedNodeId": "builderState.selectedNodeId",
+            "expandedNodes": "builderState.expandedNodes",
+            "onSelectNode": "builderState.selectNode",
+            "onToggleExpand": "builderState.toggleExpand"
+          }
+        }
+      ]
+    },
+    {
+      "id": "inspector",
+      "type": "ComponentInspector",
+      "props": {
+        "muiComponents": [
+          "Box",
+          "Container",
+          "Grid",
+          "Stack",
+          "Paper",
+          "Card",
+          "CardContent",
+          "CardActions",
+          "Button",
+          "TextField",
+          "Typography",
+          "AppBar",
+          "Toolbar",
+          "List",
+          "ListItem",
+          "ListItemText",
+          "Divider",
+          "Avatar",
+          "Chip",
+          "IconButton"
+        ]
+      },
+      "bindings": {
+        "selectedNode": "builderState.selectedNode",
+        "onDelete": "builderState.deleteNode",
+        "onUpdate": "builderState.updateNode",
+        "onAddChild": "builderState.addChildComponent"
+      }
+    }
+  ]
+}

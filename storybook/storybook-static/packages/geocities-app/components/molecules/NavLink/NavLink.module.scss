@@ -1,0 +1,58 @@
+.navLink {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px;
+  font-family: 'Comic Neue', 'Comic Sans MS', cursive;
+  font-size: 1rem;
+  color: #0000ff;
+  text-decoration: none;
+  background: transparent;
+  border: 1px solid transparent;
+  transition: all 0.1s;
+  
+  &:hover {
+    color: #ff00ff;
+    background: #ffffcc;
+    border: 1px dashed #ff00ff;
+    text-decoration: underline;
+  }
+  
+  &:visited {
+    color: #800080;
+  }
+}
+
+.icon {
+  font-size: 1.2em;
+}
+
+.text {
+  text-decoration: underline;
+}
+
+.badge {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.5rem;
+  padding: 2px 4px;
+  animation: pulse 0.5s infinite;
+  
+  &.new {
+    background: #00ff00;
+    color: #000;
+  }
+  
+  &.hot {
+    background: #ff0000;
+    color: #fff;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}

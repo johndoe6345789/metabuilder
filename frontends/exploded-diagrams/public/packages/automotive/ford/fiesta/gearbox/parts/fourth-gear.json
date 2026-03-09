@@ -1,0 +1,42 @@
+{
+  "id": "fourth-gear",
+  "name": "4th Gear",
+  "partNumber": "FD-1848324",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 350.0,
+  "weightUnit": "g",
+  "baseY": 445,
+  "description": "Fourth gear - 1.03:1 ratio",
+  "installation": {
+    "tools": [
+      { "name": "Snap ring pliers", "size": "External 28mm", "required": true },
+      { "name": "Soft-face mallet", "size": "-", "required": true }
+    ],
+    "hardware": [
+      { "name": "Needle bearing", "spec": "K18x22x10", "qty": 1, "reusable": false },
+      { "name": "Thrust washer", "spec": "19x28x1.5", "qty": 1, "reusable": true },
+      { "name": "Snap ring", "spec": "28mm external", "qty": 1, "reusable": true }
+    ],
+    "torque": [],
+    "notes": [
+      "Near 1:1 ratio - high load gear",
+      "Shares synchro hub with 3rd gear",
+      "Check for blue discoloration (overheating)"
+    ]
+  },
+  "geometry": [
+    { "type": "gearRing", "teeth": 22, "outerRadius": 28, "toothHeight": 4 },
+    { "type": "cylinder", "rx": 22, "ry": 7, "height": 14 },
+    { "type": "circle", "r": 10, "fill": "#555" }
+  ],
+  "geometry3d": [
+    { "type": "cylinder", "r": 28, "height": 12, "fill": "#606570" },
+    { "type": "cylinder", "r": 26, "height": 10, "offsetY": 1, "fill": "#707580" },
+    { "type": "cylinder", "r": 20, "height": 6, "fill": "#808590" },
+    { "type": "cylinder", "r": 18, "height": 16, "fill": "#555560" },
+    { "type": "cylinder", "r": 16, "height": 18, "subtract": true },
+    { "type": "box", "width": 4, "height": 18, "depth": 34, "subtract": true },
+    { "type": "box", "width": 34, "height": 18, "depth": 4, "subtract": true }
+  ]
+}

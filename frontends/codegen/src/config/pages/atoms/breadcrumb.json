@@ -1,0 +1,6 @@
+{
+  "type": "MetabuilderNavBreadcrumb",
+  "props": {
+    "onClick": "> void"
+  }
+}

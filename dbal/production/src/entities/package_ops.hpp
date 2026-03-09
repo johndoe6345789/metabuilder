@@ -5,11 +5,11 @@
 
 #pragma once
 
-#include "package/create_package.hpp"
-#include "package/get_package.hpp"
-#include "package/update_package.hpp"
-#include "package/delete_package.hpp"
-#include "package/list_packages.hpp"
-#include "package/batch_create_packages.hpp"
-#include "package/batch_update_packages.hpp"
-#include "package/batch_delete_packages.hpp"
+#include "package/crud/create_package.hpp"
+#include "package/crud/get_package.hpp"
+#include "package/crud/update_package.hpp"
+#include "package/crud/delete_package.hpp"
+#include "package/crud/list_packages.hpp"
+#include "package/batch/batch_create_packages.hpp"
+#include "package/batch/batch_update_packages.hpp"
+#include "package/batch/batch_delete_packages.hpp"

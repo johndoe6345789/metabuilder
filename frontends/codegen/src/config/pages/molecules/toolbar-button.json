@@ -1,0 +1,6 @@
+{
+  "type": "TooltipContent, TooltipTrigger",
+  "props": {
+    "onClick": "> void"
+  }
+}

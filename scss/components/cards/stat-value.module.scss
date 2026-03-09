@@ -1,0 +1,22 @@
+/**
+ * StatValue Component Styles
+ */
+
+.statValue {
+  display: flex;
+  flex-direction: column;
+}
+
+.value {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--mat-sys-on-surface);
+  line-height: 1.2;
+}
+
+.label {
+  font-size: 0.75rem;
+  color: var(--mat-sys-on-surface-variant);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}

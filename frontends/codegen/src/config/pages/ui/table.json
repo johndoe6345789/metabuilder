@@ -1,0 +1,15 @@
+{
+  "type": "table",
+  "jsonCompatible": false,
+  "wrapperRequired": true,
+  "load": {
+    "path": "@/components/ui/table",
+    "export": "table"
+  },
+  "props": {
+    "hover": "selected]:bg-muted border-b transition-colors"
+  },
+  "metadata": {
+    "notes": "Complex logic - needs wrapper"
+  }
+}

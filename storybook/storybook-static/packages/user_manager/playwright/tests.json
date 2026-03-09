@@ -1,0 +1,193 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "user_manager",
+  "description": "User management admin panel - CRUD operations and validation",
+  "version": "1.0",
+  "tags": ["@admin", "@user-management", "@phase-3"],
+  "tests": [
+    {
+      "name": "admin can view list of users",
+      "description": "Verify admin can navigate to user list and see table populated",
+      "tags": ["@user-management", "@smoke"],
+      "timeout": 30000,
+      "steps": [
+        {"action": "navigate", "url": "/admin/users"},
+        {"action": "waitForLoadState", "state": "networkidle"},
+        {"action": "expect", "testId": "user-list-table", "assertion": {"matcher": "toBeVisible"}},
+        {"action": "expect", "role": "columnheader", "text": "Username", "assertion": {"matcher": "toBeVisible"}},
+        {"action": "expect", "role": "columnheader", "text": "Email", "assertion": {"matcher": "toBeVisible"}},
+        {"action": "expect", "role": "columnheader", "text": "Role", "assertion": {"matcher": "toBeVisible"}}
+      ]
+    },
+    {
+      "name": "can search users by username",
+      "description": "User list can be filtered by username search",
+      "tags": ["@user-management", "@search"],
+      "timeout": 30000,
+      "steps": [
+        {"action": "navigate", "url": "/admin/users"},
+        {"action": "waitForLoadState", "state": "networkidle"},
+        {"action": "fill", "placeholder": "Search users...", "value": "admin"},
+        {"action": "wait", "timeout": 500},
+        {"action": "expect", "selector": "tbody tr", "assertion": {"matcher": "toHaveCount", "count": 1}},
+        {"action": "expect", "selector": "tbody tr:first-child", "assertion": {"matcher": "toContainText", "text": "admin"}}
+      ]
+    },
+    {
+      "name": "can filter users by role",
+      "description": "User list can be filtered by role selection",
+      "tags": ["@user-management", "@filter"],
+      "timeout": 30000,
+      "steps": [
+        {"action": "navigate", "url": "/admin/users"},
+        {"action": "waitForLoadState", "state": "networkidle"},
+        {"action": "click", "testId": "role-filter-button"},
+        {"action": "click", "role": "option", "text": "Admin"},
+        {"action": "wait", "timeout": 500},
+        {"action": "expect", "selector": "tbody tr", "assertion": {"matcher": "toHaveCount", "count": 1}},
+        {"action": "expect", "selector": "tbody tr td:nth-child(3)", "assertion": {"matcher": "toContainText", "text": "Admin"}}
+      ]
+    },
+    {
+      "name": "pagination works correctly",
+      "description": "User list pagination navigates between pages",
+      "tags": ["@user-management", "@pagination"],
+      "timeout": 30000,
+      "steps": [
+        {"action": "navigate", "url": "/admin/users?page=1&limit=2"},
+        {"action": "waitForLoadState", "state": "networkidle"},
+        {"action": "expect", "selector": "tbody tr", "assertion": {"matcher": "toHaveCount", "count": 2}},
+        {"action": "expect", "role": "button", "text": "Next", "assertion": {"matcher": "toBeEnabled"}},
+        {"action": "click", "role": "button", "text": "Next"},
+        {"action": "waitForNavigation"},
+        {"action": "expect", "selector": "tbody tr:first-child", "assertion": {"matcher": "toContainText", "text": "testuser"}}
+      ]
+    },
+    {
+      "name": "admin can create new user",
+      "description": "Admin can fill form and create new user successfully",
+      "tags": ["@user-management", "@create"],
+      "timeout": 30000,
+      "steps": [
+        {"action": "navigate", "url": "/admin/users"},
+        {"action": "waitForLoadState", "state": "networkidle"},
+        {"action": "click", "role": "button", "text": "Create User"},
+        {"action": "waitForSelector", "selector": "[data-testid='user-form']", "timeout": 5000},
+        {"action": "fill", "label": "Username", "value": "newuser123"},
+        {"action": "fill", "label": "Email Address", "value": "newuser@metabuilder.local"},
+        {"action": "select", "label": "Role", "value": "user"},
+        {"action": "click", "role": "button", "text": "Create"},
+        {"action": "waitForNavigation"},
+        {"action": "expect", "role": "alert", "assertion": {"matcher": "toContainText", "text": "User created successfully"}},
+        {"action": "expect", "selector": "tbody tr", "assertion": {"matcher": "toContainText", "text": "newuser123"}}
+      ]
+    },
+    {
+      "name": "form validates required fields",
+      "description": "User creation form shows errors for empty required fields",
+      "tags": ["@user-management", "@validation"],
+      "timeout": 30000,
+      "steps": [
+        {"action": "navigate", "url": "/admin/users"},
+        {"action": "click", "role": "button", "text": "Create User"},
+        {"action": "waitForSelector", "selector": "[data-testid='user-form']"},
+        {"action": "click", "role": "button", "text": "Create"},
+        {"action": "expect", "selector": "[data-testid='username-error']", "assertion": {"matcher": "toBeVisible"}},
+        {"action": "expect", "selector": "[data-testid='username-error']", "assertion": {"matcher": "toContainText", "text": "Username is required"}},
+        {"action": "expect", "selector": "[data-testid='email-error']", "assertion": {"matcher": "toBeVisible"}}
+      ]
+    },
+    {
+      "name": "form validates email format",
+      "description": "User creation form validates email format",
+      "tags": ["@user-management", "@validation"],
+      "timeout": 30000,
+      "steps": [
+        {"action": "navigate", "url": "/admin/users"},
+        {"action": "click", "role": "button", "text": "Create User"},
+        {"action": "waitForSelector", "selector": "[data-testid='user-form']"},
+        {"action": "fill", "label": "Username", "value": "testuser"},
+        {"action": "fill", "label": "Email Address", "value": "invalid-email"},
+        {"action": "blur", "label": "Email Address"},
+        {"action": "expect", "selector": "[data-testid='email-error']", "assertion": {"matcher": "toBeVisible"}},
+        {"action": "expect", "selector": "[data-testid='email-error']", "assertion": {"matcher": "toContainText", "text": "Invalid email format"}}
+      ]
+    },
+    {
+      "name": "form validates username format",
+      "description": "User creation form validates username format",
+      "tags": ["@user-management", "@validation"],
+      "timeout": 30000,
+      "steps": [
+        {"action": "navigate", "url": "/admin/users"},
+        {"action": "click", "role": "button", "text": "Create User"},
+        {"action": "waitForSelector", "selector": "[data-testid='user-form']"},
+        {"action": "fill", "label": "Username", "value": "invalid user!"},
+        {"action": "blur", "label": "Username"},
+        {"action": "expect", "selector": "[data-testid='username-error']", "assertion": {"matcher": "toBeVisible"}},
+        {"action": "expect", "selector": "[data-testid='username-error']", "assertion": {"matcher": "toContainText", "text": "Username must be alphanumeric"}}
+      ]
+    },
+    {
+      "name": "admin can edit existing user",
+      "description": "Admin can open edit form and update user data",
+      "tags": ["@user-management", "@edit"],
+      "timeout": 30000,
+      "steps": [
+        {"action": "navigate", "url": "/admin/users"},
+        {"action": "waitForLoadState", "state": "networkidle"},
+        {"action": "click", "role": "button", "text": "Edit", "selector": "tr:has-text('testuser')"},
+        {"action": "waitForSelector", "selector": "[data-testid='user-form']"},
+        {"action": "fill", "label": "Bio", "value": "Updated bio"},
+        {"action": "click", "role": "button", "text": "Save"},
+        {"action": "waitForNavigation"},
+        {"action": "expect", "role": "alert", "assertion": {"matcher": "toContainText", "text": "User updated successfully"}}
+      ]
+    },
+    {
+      "name": "edit form loads user data",
+      "description": "User edit form pre-fills with current user data",
+      "tags": ["@user-management", "@edit"],
+      "timeout": 30000,
+      "steps": [
+        {"action": "navigate", "url": "/admin/users"},
+        {"action": "click", "role": "button", "text": "Edit", "selector": "tr:has-text('admin')"},
+        {"action": "waitForSelector", "selector": "[data-testid='user-form']"},
+        {"action": "expect", "label": "Username", "assertion": {"matcher": "toHaveValue", "value": "admin"}},
+        {"action": "expect", "label": "Email Address", "assertion": {"matcher": "toHaveValue", "value": "admin@metabuilder.local"}}
+      ]
+    },
+    {
+      "name": "admin can delete user",
+      "description": "Admin can delete a user after confirmation",
+      "tags": ["@user-management", "@delete"],
+      "timeout": 30000,
+      "steps": [
+        {"action": "navigate", "url": "/admin/users"},
+        {"action": "waitForLoadState", "state": "networkidle"},
+        {"action": "click", "role": "button", "text": "Delete", "selector": "tr:has-text('newuser123')"},
+        {"action": "waitForSelector", "selector": "[role='dialog']"},
+        {"action": "click", "role": "button", "text": "Confirm"},
+        {"action": "waitForNavigation"},
+        {"action": "expect", "role": "alert", "assertion": {"matcher": "toContainText", "text": "User deleted successfully"}},
+        {"action": "expect", "selector": "tbody", "assertion": {"matcher": "not.toContainText", "text": "newuser123"}}
+      ]
+    },
+    {
+      "name": "delete shows confirmation",
+      "description": "Delete action shows confirmation dialog before removing",
+      "tags": ["@user-management", "@delete"],
+      "timeout": 30000,
+      "steps": [
+        {"action": "navigate", "url": "/admin/users"},
+        {"action": "click", "role": "button", "text": "Delete", "selector": "tr:has-text('testuser')"},
+        {"action": "expect", "role": "dialog", "assertion": {"matcher": "toBeVisible"}},
+        {"action": "expect", "role": "heading", "assertion": {"matcher": "toContainText", "text": "Confirm Deletion"}},
+        {"action": "expect", "role": "button", "text": "Cancel", "assertion": {"matcher": "toBeVisible"}},
+        {"action": "expect", "role": "button", "text": "Confirm", "assertion": {"matcher": "toBeVisible"}},
+        {"action": "click", "role": "button", "text": "Cancel"},
+        {"action": "expect", "selector": "tbody", "assertion": {"matcher": "toContainText", "text": "testuser"}}
+      ]
+    }
+  ]
+}

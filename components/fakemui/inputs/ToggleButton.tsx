@@ -19,6 +19,7 @@ const ToggleButtonGroupContext = createContext<ToggleButtonGroupContextValue | n
 export const useToggleButtonGroup = () => useContext(ToggleButtonGroupContext)
 
 export interface ToggleButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'value'> {
+  testId?: string
   children?: React.ReactNode
   /** Whether this button is selected */
   selected?: boolean
@@ -35,7 +36,7 @@ export interface ToggleButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLB
  * Can be used standalone or within a ToggleButtonGroup
  */
 export const ToggleButton = forwardRef<HTMLButtonElement, ToggleButtonProps>(
-  ({ children, selected, value, size = 'medium', fullWidth, disabled, className = '', onClick, ...props }, ref) => {
+  ({ children, selected, value, size = 'medium', fullWidth, disabled, testId, className = '', onClick, ...props }, ref) => {
     const groupContext = useToggleButtonGroup()
     
     // Use context values if in a group
@@ -70,6 +71,7 @@ export const ToggleButton = forwardRef<HTMLButtonElement, ToggleButtonProps>(
         aria-pressed={isSelected}
         disabled={isDisabled}
         className={classes}
+        data-testid={testId}
         onClick={handleClick}
         {...props}
       >

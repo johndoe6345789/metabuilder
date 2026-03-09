@@ -1,0 +1,17 @@
+{
+  "$schema": "./schema/page-schema.json",
+  "id": "template-selector-page",
+  "name": "Template Selector",
+  "description": "Choose a project template",
+  "icon": "Files",
+  "layout": {
+    "$ref": "./layouts/single-column.json"
+  },
+  "components": [
+    {
+      "id": "template-selector-component",
+      "type": "TemplateSelector",
+      "props": {}
+    }
+  ]
+}

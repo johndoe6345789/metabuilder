@@ -1,6 +1,7 @@
 'use client'
 
 import React, { forwardRef, useState, useRef, useEffect, useId } from 'react'
+import styles from '../../../scss/atoms/mat-select.module.scss'
 
 /**
  * Select event type compatible with MUI
@@ -15,7 +16,7 @@ export interface SelectChangeEvent<T = string> {
 /**
  * Props for Select component (MUI-compatible)
  */
-export interface SelectProps<T = string> extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
+export interface SelectProps<T = string> extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'defaultValue'> {
   /** Currently selected value(s) */
   value?: T | T[]
   /** Default value for uncontrolled mode */
@@ -62,6 +63,8 @@ export interface SelectProps<T = string> extends Omit<React.HTMLAttributes<HTMLD
   IconComponent?: React.ComponentType<{ className?: string }>
   /** Input props */
   inputProps?: Record<string, unknown>
+  /** Test ID for testing frameworks */
+  testId?: string
 }
 
 /**
@@ -105,6 +108,7 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>(
       MenuProps,
       IconComponent,
       inputProps,
+      testId,
       ...props
     },
     ref
@@ -150,9 +154,10 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>(
         // Find labels for selected values
         const labels: string[] = []
         React.Children.forEach(children, (child) => {
-          if (React.isValidElement(child) && child.props.value !== undefined) {
-            if (value.includes(child.props.value)) {
-              labels.push(String(child.props.children))
+          if (React.isValidElement(child)) {
+            const props = child.props as Record<string, unknown>
+            if (props.value !== undefined && (value as unknown[]).includes(props.value)) {
+              labels.push(String(props.children))
             }
           }
         })
@@ -165,10 +170,13 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>(
       }
 
       // Find the label for the selected value
-      let displayLabel: React.ReactNode = value
+      let displayLabel: React.ReactNode = value as React.ReactNode
       React.Children.forEach(children, (child) => {
-        if (React.isValidElement(child) && child.props.value === value) {
-          displayLabel = child.props.children
+        if (React.isValidElement(child)) {
+          const props = child.props as Record<string, unknown>
+          if (props.value === value) {
+            displayLabel = props.children as React.ReactNode
+          }
         }
       })
       return displayLabel
@@ -206,8 +214,34 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>(
         setIsOpen(!isOpen)
       } else if (event.key === 'Escape') {
         setIsOpen(false)
+      } else if (isOpen && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {
+        event.preventDefault()
+        const panel = containerRef.current?.querySelector('[role="listbox"]')
+        if (!panel) return
+        const items = Array.from(panel.querySelectorAll<HTMLElement>('button:not([disabled]), [role="option"]:not([aria-disabled="true"])'))
+        const focused = document.activeElement as HTMLElement
+        const currentIndex = items.indexOf(focused)
+        const nextIndex = event.key === 'ArrowDown'
+          ? (currentIndex + 1) % items.length
+          : (currentIndex - 1 + items.length) % items.length
+        items[nextIndex]?.focus()
+      } else if (!isOpen && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {
+        event.preventDefault()
+        setIsOpen(true)
       }
     }
+
+    // Focus first or selected item when dropdown opens
+    useEffect(() => {
+      if (!isOpen) return
+      requestAnimationFrame(() => {
+        const panel = containerRef.current?.querySelector('[role="listbox"]')
+        if (!panel) return
+        const selected = panel.querySelector<HTMLElement>('[class*="highlighted"]')
+        const first = panel.querySelector<HTMLElement>('button')
+        ;(selected || first)?.focus()
+      })
+    }, [isOpen])
 
     const displayValue = getDisplayValue()
     const hasValue = displayValue !== null && displayValue !== ''
@@ -216,7 +250,7 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>(
     if (native) {
       return (
         <select
-          ref={ref as React.Ref<HTMLSelectElement>}
+          ref={ref as unknown as React.Ref<HTMLSelectElement>}
           name={name}
           value={value as string}
           onChange={(e) => {
@@ -234,13 +268,13 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>(
           disabled={disabled}
           required={required}
           multiple={multiple}
-          className={`
-            select-native
-            ${fullWidth ? 'select--full-width' : ''}
-            ${error ? 'select--error' : ''}
-            ${size === 'small' ? 'select--small' : ''}
-            ${className}
-          `.trim().replace(/\s+/g, ' ')}
+          className={[
+            styles.native,
+            fullWidth ? styles.fullWidth : '',
+            error ? styles.error : '',
+            size === 'small' ? styles.small : '',
+            className
+          ].filter(Boolean).join(' ')}
           {...inputProps}
         >
           {children}
@@ -259,19 +293,22 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>(
             (ref as React.MutableRefObject<HTMLDivElement | null>).current = node
           }
         }}
-        className={`
-          select-container
-          select-container--${variant}
-          select-container--${size}
-          ${fullWidth ? 'select-container--full-width' : ''}
-          ${autoWidth ? 'select-container--auto-width' : ''}
-          ${disabled ? 'select-container--disabled' : ''}
-          ${error ? 'select-container--error' : ''}
-          ${isOpen ? 'select-container--open' : ''}
-          ${hasValue || displayEmpty ? 'select-container--has-value' : ''}
-          ${className}
-        `.trim().replace(/\s+/g, ' ')}
+        className={[
+          styles.matSelect,
+          variant === 'outlined' ? styles.outlined : '',
+          variant === 'filled' ? styles.filled : '',
+          variant === 'standard' ? styles.standard : '',
+          size === 'small' ? styles.small : styles.medium,
+          fullWidth ? styles.fullWidth : '',
+          autoWidth ? styles.autoWidth : '',
+          disabled ? styles.disabled : '',
+          error ? styles.error : '',
+          isOpen ? styles.open : '',
+          hasValue || displayEmpty ? styles.hasValue : '',
+          className
+        ].filter(Boolean).join(' ')}
         {...props}
+        {...(testId ? { 'data-testid': testId } : {})}
       >
         {/* Hidden input for form submission */}
         <input
@@ -288,49 +325,59 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>(
           aria-haspopup="listbox"
           aria-disabled={disabled}
           aria-required={required}
+          {...(label ? { 'aria-label': label } : {})}
           tabIndex={disabled ? -1 : 0}
-          className="select-trigger"
+          className={styles.trigger}
           onClick={() => !disabled && setIsOpen(!isOpen)}
           onKeyDown={handleKeyDown}
           onBlur={onBlur}
           onFocus={onFocus}
         >
-          <span className={`select-display ${!hasValue && !displayEmpty ? 'select-display--placeholder' : ''}`}>
-            {displayValue || (displayEmpty ? <em>None</em> : null)}
+          <span className={!hasValue && !displayEmpty ? styles.placeholder : styles.valueText}>
+            <span className={styles.minLine}>
+              {displayValue || (displayEmpty ? <em>None</em> : null)}
+            </span>
           </span>
-          {IconComponent ? (
-            <IconComponent className="select-icon" />
-          ) : (
-            <svg className="select-icon" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M7 10l5 5 5-5z" />
-            </svg>
-          )}
+          <span className={styles.arrowWrapper}>
+            {IconComponent ? (
+              <IconComponent className={styles.arrow} />
+            ) : (
+              <span className={styles.arrow}>
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                  <path d="M7 10l5 5 5-5z" />
+                </svg>
+              </span>
+            )}
+          </span>
         </div>
 
         {/* Dropdown menu */}
         {isOpen && (
-          <div
-            id={`${id}-menu`}
-            role="listbox"
-            aria-multiselectable={multiple}
-            className="select-menu"
-          >
-            {React.Children.map(children, (child) => {
-              if (!React.isValidElement(child)) return child
+          <div className={styles.menuWrapper}>
+            <div
+              id={`${id}-menu`}
+              role="listbox"
+              aria-multiselectable={multiple}
+              className={styles.panel}
+            >
+              {React.Children.map(children, (child) => {
+                if (!React.isValidElement(child)) return child
 
-              const isSelected = multiple && Array.isArray(value)
-                ? value.includes(child.props.value)
-                : value === child.props.value
+                const childProps = child.props as Record<string, unknown>
+                const isSelected = multiple && Array.isArray(value)
+                  ? (value as unknown[]).includes(childProps.value)
+                  : value === childProps.value
 
-              return React.cloneElement(child, {
-                ...child.props,
-                selected: isSelected,
-                onClick: (e: React.MouseEvent) => {
-                  child.props.onClick?.(e)
-                  handleSelect(child.props.value)
-                },
-              })
-            })}
+                return React.cloneElement(child, {
+                  ...childProps,
+                  selected: isSelected,
+                  onClick: (e: React.MouseEvent) => {
+                    (childProps.onClick as ((e: React.MouseEvent) => void) | undefined)?.(e)
+                    handleSelect(childProps.value)
+                  },
+                } as Partial<typeof child.props>)
+              })}
+            </div>
           </div>
         )}
       </div>

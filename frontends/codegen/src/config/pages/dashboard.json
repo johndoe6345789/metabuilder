@@ -1,0 +1,116 @@
+{
+  "dashboardCards": [
+    {
+      "id": "completion",
+      "type": "gradient-card",
+      "title": "Project Completeness",
+      "icon": "TaskAlt",
+      "gradient": "from-primary/10 to-accent/10",
+      "components": [
+        {
+          "type": "metric",
+          "binding": "completionScore",
+          "format": "percentage",
+          "size": "large"
+        },
+        {
+          "type": "badge",
+          "binding": "completionStatus",
+          "variants": {
+            "ready": { "label": "Ready to Export", "variant": "default" },
+            "inProgress": { "label": "In Progress", "variant": "secondary" }
+          }
+        },
+        {
+          "type": "progress",
+          "binding": "completionScore"
+        },
+        {
+          "type": "text",
+          "binding": "completionMessage",
+          "className": "text-sm text-muted-foreground"
+        }
+      ]
+    },
+    {
+      "id": "build-status",
+      "type": "card",
+      "title": "GitHub Build Status",
+      "icon": "BuildCircle",
+      "component": "GitHubBuildStatus",
+      "props": {}
+    }
+  ],
+  "statCards": [
+    {
+      "id": "code-files",
+      "icon": "CodeBlocks",
+      "title": "Code Files",
+      "dataBinding": "files.length",
+      "description": "files in your project",
+      "color": "text-blue-500"
+    },
+    {
+      "id": "database-models",
+      "icon": "StorageIcon",
+      "title": "Database Models",
+      "dataBinding": "models.length",
+      "description": "Prisma schemas",
+      "color": "text-purple-500"
+    },
+    {
+      "id": "components",
+      "icon": "Cube",
+      "title": "Components",
+      "dataBinding": "components.length",
+      "description": "React components",
+      "color": "text-green-500"
+    },
+    {
+      "id": "workflows",
+      "icon": "FlowArrow",
+      "title": "Workflows",
+      "dataBinding": "workflows.length",
+      "description": "automation flows",
+      "color": "text-orange-500"
+    },
+    {
+      "id": "flask-endpoints",
+      "icon": "Flask",
+      "title": "API Endpoints",
+      "dataBinding": "flaskConfig.blueprints.reduce((acc, bp) => acc + bp.endpoints.length, 0)",
+      "description": "Flask routes",
+      "color": "text-pink-500"
+    },
+    {
+      "id": "test-suites",
+      "icon": "TestTube",
+      "title": "Test Suites",
+      "dataBinding": "playwrightTests.length + storybookStories.length + unitTests.length",
+      "description": "automated tests",
+      "color": "text-cyan-500"
+    }
+  ],
+  "layout": {
+    "type": "vertical",
+    "spacing": "6",
+    "sections": [
+      {
+        "type": "header",
+        "title": "Project Dashboard",
+        "description": "Overview of your CodeForge project"
+      },
+      {
+        "type": "cards",
+        "items": "dashboardCards",
+        "spacing": "6"
+      },
+      {
+        "type": "grid",
+        "items": "statCards",
+        "columns": { "sm": 1, "md": 2, "lg": 3 },
+        "gap": "4"
+      }
+    ]
+  }
+}

@@ -1,5 +1,5 @@
 // fakemui/react/components/email/surfaces/SignatureCard.tsx
-import React, { forwardRef } from 'react'
+import React from 'react'
 import { Card, CardProps, Typography } from '../..'
 import { useAccessible } from '../../../../hooks/useAccessible'
 
@@ -10,36 +10,37 @@ export interface SignatureCardProps extends CardProps {
   testId?: string
 }
 
-export const SignatureCard = forwardRef<HTMLDivElement, SignatureCardProps>(
-  ({ text, editMode = false, onEdit, testId: customTestId, ...props }, ref) => {
-    const accessible = useAccessible({
-      feature: 'email',
-      component: 'signature',
-      identifier: customTestId || 'signature'
-    })
+export const SignatureCard = ({
+  text,
+  editMode = false,
+  onEdit,
+  testId: customTestId,
+  ...props
+}: SignatureCardProps) => {
+  const accessible = useAccessible({
+    feature: 'email',
+    component: 'signature',
+    identifier: customTestId || 'signature'
+  })
 
-    return (
-      <Card
-        ref={ref}
-        className="signature-card"
-        {...accessible}
-        {...props}
-      >
-        {editMode ? (
-          <textarea
-            value={text}
-            onChange={(e) => onEdit?.(e.target.value)}
-            className="signature-editor"
-            placeholder="Add your signature here..."
-          />
-        ) : (
-          <Typography variant="body2" className="signature-text">
-            {text}
-          </Typography>
-        )}
-      </Card>
-    )
-  }
-)
-
-SignatureCard.displayName = 'SignatureCard'
+  return (
+    <Card
+      className="signature-card"
+      {...accessible}
+      {...props}
+    >
+      {editMode ? (
+        <textarea
+          value={text}
+          onChange={(e) => onEdit?.(e.target.value)}
+          className="signature-editor"
+          placeholder="Add your signature here..."
+        />
+      ) : (
+        <Typography variant="body2" className="signature-text">
+          {text}
+        </Typography>
+      )}
+    </Card>
+  )
+}

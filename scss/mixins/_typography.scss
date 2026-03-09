@@ -1,0 +1,133 @@
+// Typography mixins - Material Design 3
+
+@mixin text-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@mixin mono {
+  font-family: var(--font-mono);
+  font-feature-settings: "tnum" on, "lnum" on; // Tabular numbers
+}
+
+// M3 Typography Scale Mixins
+@mixin display-large {
+  font-family: var(--mat-sys-display-large-font);
+  font-size: var(--mat-sys-display-large-size);
+  font-weight: var(--mat-sys-display-large-weight);
+  line-height: var(--mat-sys-display-large-line-height);
+  letter-spacing: var(--mat-sys-display-large-tracking);
+}
+
+@mixin display-medium {
+  font-family: var(--mat-sys-display-medium-font);
+  font-size: var(--mat-sys-display-medium-size);
+  font-weight: var(--mat-sys-display-medium-weight);
+  line-height: var(--mat-sys-display-medium-line-height);
+  letter-spacing: var(--mat-sys-display-medium-tracking);
+}
+
+@mixin display-small {
+  font-family: var(--mat-sys-display-small-font);
+  font-size: var(--mat-sys-display-small-size);
+  font-weight: var(--mat-sys-display-small-weight);
+  line-height: var(--mat-sys-display-small-line-height);
+  letter-spacing: var(--mat-sys-display-small-tracking);
+}
+
+@mixin headline-large {
+  font-family: var(--mat-sys-headline-large-font);
+  font-size: var(--mat-sys-headline-large-size);
+  font-weight: var(--mat-sys-headline-large-weight);
+  line-height: var(--mat-sys-headline-large-line-height);
+  letter-spacing: var(--mat-sys-headline-large-tracking);
+}
+
+@mixin headline-medium {
+  font-family: var(--mat-sys-headline-medium-font);
+  font-size: var(--mat-sys-headline-medium-size);
+  font-weight: var(--mat-sys-headline-medium-weight);
+  line-height: var(--mat-sys-headline-medium-line-height);
+  letter-spacing: var(--mat-sys-headline-medium-tracking);
+}
+
+@mixin headline-small {
+  font-family: var(--mat-sys-headline-small-font);
+  font-size: var(--mat-sys-headline-small-size);
+  font-weight: var(--mat-sys-headline-small-weight);
+  line-height: var(--mat-sys-headline-small-line-height);
+  letter-spacing: var(--mat-sys-headline-small-tracking);
+}
+
+@mixin title-large {
+  font-family: var(--mat-sys-title-large-font);
+  font-size: var(--mat-sys-title-large-size);
+  font-weight: var(--mat-sys-title-large-weight);
+  line-height: var(--mat-sys-title-large-line-height);
+  letter-spacing: var(--mat-sys-title-large-tracking);
+}
+
+@mixin title-medium {
+  font-family: var(--mat-sys-title-medium-font);
+  font-size: var(--mat-sys-title-medium-size);
+  font-weight: var(--mat-sys-title-medium-weight);
+  line-height: var(--mat-sys-title-medium-line-height);
+  letter-spacing: var(--mat-sys-title-medium-tracking);
+}
+
+@mixin title-small {
+  font-family: var(--mat-sys-title-small-font);
+  font-size: var(--mat-sys-title-small-size);
+  font-weight: var(--mat-sys-title-small-weight);
+  line-height: var(--mat-sys-title-small-line-height);
+  letter-spacing: var(--mat-sys-title-small-tracking);
+}
+
+@mixin body-large {
+  font-family: var(--mat-sys-body-large-font);
+  font-size: var(--mat-sys-body-large-size);
+  font-weight: var(--mat-sys-body-large-weight);
+  line-height: var(--mat-sys-body-large-line-height);
+  letter-spacing: var(--mat-sys-body-large-tracking);
+}
+
+@mixin body-medium {
+  font-family: var(--mat-sys-body-medium-font);
+  font-size: var(--mat-sys-body-medium-size);
+  font-weight: var(--mat-sys-body-medium-weight);
+  line-height: var(--mat-sys-body-medium-line-height);
+  letter-spacing: var(--mat-sys-body-medium-tracking);
+}
+
+@mixin body-small {
+  font-family: var(--mat-sys-body-small-font);
+  font-size: var(--mat-sys-body-small-size);
+  font-weight: var(--mat-sys-body-small-weight);
+  line-height: var(--mat-sys-body-small-line-height);
+  letter-spacing: var(--mat-sys-body-small-tracking);
+}
+
+@mixin label-large {
+  font-family: var(--mat-sys-label-large-font);
+  font-size: var(--mat-sys-label-large-size);
+  font-weight: var(--mat-sys-label-large-weight);
+  line-height: var(--mat-sys-label-large-line-height);
+  letter-spacing: var(--mat-sys-label-large-tracking);
+}
+
+@mixin label-medium {
+  font-family: var(--mat-sys-label-medium-font);
+  font-size: var(--mat-sys-label-medium-size);
+  font-weight: var(--mat-sys-label-medium-weight);
+  line-height: var(--mat-sys-label-medium-line-height);
+  letter-spacing: var(--mat-sys-label-medium-tracking);
+}
+
+@mixin label-small {
+  font-family: var(--mat-sys-label-small-font);
+  font-size: var(--mat-sys-label-small-size);
+  font-weight: var(--mat-sys-label-small-weight);
+  line-height: var(--mat-sys-label-small-line-height);
+  letter-spacing: var(--mat-sys-label-small-tracking);
+}

@@ -1,0 +1,501 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "ui_login",
+  "description": "Login and registration UI components",
+  "components": [
+    {
+      "id": "login_form",
+      "name": "LoginForm",
+      "description": "Login form with username/password fields and validation",
+      "props": [
+        {
+          "name": "onSubmit",
+          "type": "function",
+          "required": true,
+          "description": "Callback when form is submitted"
+        },
+        {
+          "name": "onRegister",
+          "type": "function",
+          "required": false,
+          "description": "Navigate to registration page"
+        },
+        {
+          "name": "onForgotPassword",
+          "type": "function",
+          "required": false,
+          "description": "Navigate to forgot password page"
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Loading state for form submission"
+        },
+        {
+          "name": "error",
+          "type": "string",
+          "required": false,
+          "description": "Error message to display"
+        },
+        {
+          "name": "showRememberMe",
+          "type": "boolean",
+          "required": false,
+          "default": true,
+          "description": "Show remember me checkbox"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "login-form-card",
+          "children": [
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "Stack",
+                  "spacing": 3,
+                  "children": [
+                    {
+                      "type": "Text",
+                      "variant": "h5",
+                      "align": "center",
+                      "children": "Sign In"
+                    },
+                    {
+                      "type": "conditional",
+                      "condition": "{{error}}",
+                      "then": {
+                        "type": "Alert",
+                        "severity": "error",
+                        "children": "{{error}}"
+                      }
+                    },
+                    {
+                      "type": "TextField",
+                      "name": "username",
+                      "label": "Username or Email",
+                      "required": true,
+                      "fullWidth": true,
+                      "autoFocus": true
+                    },
+                    {
+                      "type": "TextField",
+                      "name": "password",
+                      "label": "Password",
+                      "type": "password",
+                      "required": true,
+                      "fullWidth": true
+                    },
+                    {
+                      "type": "conditional",
+                      "condition": "{{showRememberMe}}",
+                      "then": {
+                        "type": "FormControlLabel",
+                        "control": {
+                          "type": "Checkbox",
+                          "name": "rememberMe"
+                        },
+                        "label": "Remember me"
+                      }
+                    },
+                    {
+                      "type": "Button",
+                      "variant": "contained",
+                      "color": "primary",
+                      "fullWidth": true,
+                      "type": "submit",
+                      "disabled": "{{loading}}",
+                      "children": [
+                        {
+                          "type": "conditional",
+                          "condition": "{{loading}}",
+                          "then": {
+                            "type": "CircularProgress",
+                            "size": 20,
+                            "color": "inherit"
+                          },
+                          "else": "Sign In"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Box",
+                      "sx": { "display": "flex", "justifyContent": "space-between" },
+                      "children": [
+                        {
+                          "type": "conditional",
+                          "condition": "{{onForgotPassword}}",
+                          "then": {
+                            "type": "Link",
+                            "component": "button",
+                            "variant": "body2",
+                            "onClick": "{{onForgotPassword}}",
+                            "children": "Forgot password?"
+                          }
+                        },
+                        {
+                          "type": "conditional",
+                          "condition": "{{onRegister}}",
+                          "then": {
+                            "type": "Link",
+                            "component": "button",
+                            "variant": "body2",
+                            "onClick": "{{onRegister}}",
+                            "children": "Create account"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "register_form",
+      "name": "RegisterForm",
+      "description": "Registration form with username, email, and password fields",
+      "props": [
+        {
+          "name": "onSubmit",
+          "type": "function",
+          "required": true,
+          "description": "Callback when form is submitted"
+        },
+        {
+          "name": "onLogin",
+          "type": "function",
+          "required": false,
+          "description": "Navigate to login page"
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Loading state for form submission"
+        },
+        {
+          "name": "error",
+          "type": "string",
+          "required": false,
+          "description": "Error message to display"
+        },
+        {
+          "name": "requireAcceptTerms",
+          "type": "boolean",
+          "required": false,
+          "default": true,
+          "description": "Require terms acceptance"
+        },
+        {
+          "name": "termsUrl",
+          "type": "string",
+          "required": false,
+          "description": "Terms of service URL"
+        },
+        {
+          "name": "privacyUrl",
+          "type": "string",
+          "required": false,
+          "description": "Privacy policy URL"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "register-form-card",
+          "children": [
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "Stack",
+                  "spacing": 3,
+                  "children": [
+                    {
+                      "type": "Text",
+                      "variant": "h5",
+                      "align": "center",
+                      "children": "Create Account"
+                    },
+                    {
+                      "type": "conditional",
+                      "condition": "{{error}}",
+                      "then": {
+                        "type": "Alert",
+                        "severity": "error",
+                        "children": "{{error}}"
+                      }
+                    },
+                    {
+                      "type": "TextField",
+                      "name": "username",
+                      "label": "Username",
+                      "required": true,
+                      "fullWidth": true,
+                      "autoFocus": true,
+                      "helperText": "Minimum 3 characters"
+                    },
+                    {
+                      "type": "TextField",
+                      "name": "email",
+                      "label": "Email Address",
+                      "type": "email",
+                      "required": true,
+                      "fullWidth": true
+                    },
+                    {
+                      "type": "TextField",
+                      "name": "password",
+                      "label": "Password",
+                      "type": "password",
+                      "required": true,
+                      "fullWidth": true,
+                      "helperText": "Minimum 8 characters"
+                    },
+                    {
+                      "type": "TextField",
+                      "name": "confirmPassword",
+                      "label": "Confirm Password",
+                      "type": "password",
+                      "required": true,
+                      "fullWidth": true
+                    },
+                    {
+                      "type": "conditional",
+                      "condition": "{{requireAcceptTerms}}",
+                      "then": {
+                        "type": "FormControlLabel",
+                        "control": {
+                          "type": "Checkbox",
+                          "name": "acceptTerms",
+                          "required": true
+                        },
+                        "label": {
+                          "type": "Text",
+                          "variant": "body2",
+                          "children": [
+                            "I accept the ",
+                            {
+                              "type": "Link",
+                              "href": "{{termsUrl}}",
+                              "target": "_blank",
+                              "children": "Terms of Service"
+                            },
+                            " and ",
+                            {
+                              "type": "Link",
+                              "href": "{{privacyUrl}}",
+                              "target": "_blank",
+                              "children": "Privacy Policy"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "Button",
+                      "variant": "contained",
+                      "color": "primary",
+                      "fullWidth": true,
+                      "type": "submit",
+                      "disabled": "{{loading}}",
+                      "children": [
+                        {
+                          "type": "conditional",
+                          "condition": "{{loading}}",
+                          "then": {
+                            "type": "CircularProgress",
+                            "size": 20,
+                            "color": "inherit"
+                          },
+                          "else": "Create Account"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "conditional",
+                      "condition": "{{onLogin}}",
+                      "then": {
+                        "type": "Box",
+                        "sx": { "textAlign": "center" },
+                        "children": [
+                          {
+                            "type": "Text",
+                            "variant": "body2",
+                            "color": "text.secondary",
+                            "children": [
+                              "Already have an account? ",
+                              {
+                                "type": "Link",
+                                "component": "button",
+                                "variant": "body2",
+                                "onClick": "{{onLogin}}",
+                                "children": "Sign in"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "forgot_password_form",
+      "name": "ForgotPasswordForm",
+      "description": "Password reset request form",
+      "props": [
+        {
+          "name": "onSubmit",
+          "type": "function",
+          "required": true,
+          "description": "Callback when form is submitted"
+        },
+        {
+          "name": "onBack",
+          "type": "function",
+          "required": false,
+          "description": "Navigate back to login"
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Loading state for form submission"
+        },
+        {
+          "name": "error",
+          "type": "string",
+          "required": false,
+          "description": "Error message to display"
+        },
+        {
+          "name": "success",
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Show success message"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "forgot-password-form-card",
+          "children": [
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "Stack",
+                  "spacing": 3,
+                  "children": [
+                    {
+                      "type": "Text",
+                      "variant": "h5",
+                      "align": "center",
+                      "children": "Reset Password"
+                    },
+                    {
+                      "type": "Text",
+                      "variant": "body2",
+                      "color": "text.secondary",
+                      "align": "center",
+                      "children": "Enter your email address and we'll send you a link to reset your password."
+                    },
+                    {
+                      "type": "conditional",
+                      "condition": "{{error}}",
+                      "then": {
+                        "type": "Alert",
+                        "severity": "error",
+                        "children": "{{error}}"
+                      }
+                    },
+                    {
+                      "type": "conditional",
+                      "condition": "{{success}}",
+                      "then": {
+                        "type": "Alert",
+                        "severity": "success",
+                        "children": "Password reset email sent. Check your inbox."
+                      }
+                    },
+                    {
+                      "type": "TextField",
+                      "name": "email",
+                      "label": "Email Address",
+                      "type": "email",
+                      "required": true,
+                      "fullWidth": true,
+                      "autoFocus": true
+                    },
+                    {
+                      "type": "Button",
+                      "variant": "contained",
+                      "color": "primary",
+                      "fullWidth": true,
+                      "type": "submit",
+                      "disabled": "{{loading || success}}",
+                      "children": [
+                        {
+                          "type": "conditional",
+                          "condition": "{{loading}}",
+                          "then": {
+                            "type": "CircularProgress",
+                            "size": 20,
+                            "color": "inherit"
+                          },
+                          "else": "Send Reset Link"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "conditional",
+                      "condition": "{{onBack}}",
+                      "then": {
+                        "type": "Button",
+                        "variant": "text",
+                        "fullWidth": true,
+                          "onClick": "{{onBack}}",
+                        "startIcon": {
+                          "type": "Icon",
+                          "name": "ArrowBack"
+                        },
+                        "children": "Back to Sign In"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "exports": {
+    "components": ["LoginForm", "RegisterForm", "ForgotPasswordForm"]
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "@metabuilder/test_example_comprehensive",
+  "version": "1.0.0",
+  "description": "Comprehensive example package demonstrating all JSON test patterns",
+  "type": "module",
+  "keywords": [
+    "test",
+    "example",
+    "json",
+    "declarative"
+  ],
+  "packageId": "test_example_comprehensive",
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "testing",
+  "files": {
+    "directories": [
+      "unit-tests"
+    ],
+    "byType": {
+      "config": [
+        "package.json"
+      ],
+      "other": [
+        "unit-tests/tests.json"
+      ]
+    }
+  }
+}

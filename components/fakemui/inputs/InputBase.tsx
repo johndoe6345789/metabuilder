@@ -47,6 +47,7 @@ export const ButtonBase = forwardRef<HTMLElement, ButtonBaseProps>(function Butt
 })
 
 export interface InputBaseProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'defaultValue' | 'onFocus' | 'onBlur'> {
+  testId?: string
   disabled?: boolean
   error?: boolean
   fullWidth?: boolean
@@ -73,6 +74,7 @@ export interface InputBaseProps extends Omit<React.HTMLAttributes<HTMLDivElement
 export const InputBase = forwardRef<HTMLDivElement, InputBaseProps>(function InputBase(
   {
     className,
+    testId,
     disabled = false,
     error = false,
     fullWidth = false,
@@ -141,6 +143,7 @@ export const InputBase = forwardRef<HTMLDivElement, InputBaseProps>(function Inp
         'fakemui-input-base-fullwidth': fullWidth,
         'fakemui-input-base-multiline': multiline,
       })}
+      data-testid={testId}
       {...props}
     >
       {startAdornment && (

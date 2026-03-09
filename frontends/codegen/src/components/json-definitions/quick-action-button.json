@@ -1,0 +1,74 @@
+{
+  "id": "quick-action-button-card",
+  "type": "Card",
+  "bindings": {
+    "onClick": {
+      "source": ["onClick", "disabled"],
+      "transform": "const onClick = data[0]; const disabled = data[1]; return disabled ? undefined : onClick"
+    },
+    "className": {
+      "source": ["variant", "disabled", "className"],
+      "transform": "const variant = data[0] || 'default'; const disabled = data[1]; const className = data[2] || ''; const variantClasses = { default: 'hover:bg-muted/50 hover:border-border', primary: 'hover:bg-primary/10 hover:border-primary/50', accent: 'hover:bg-accent/10 hover:border-accent/50', muted: 'bg-muted hover:bg-muted/70' }; const baseClass = 'p-6 cursor-pointer transition-all duration-200 flex flex-col items-center justify-center gap-3 text-center hover:scale-105 active:scale-95'; const disabledClass = disabled ? 'opacity-50 cursor-not-allowed hover:scale-100' : ''; return `${baseClass} ${variantClasses[variant]} ${disabledClass} ${className}`.trim()"
+    }
+  },
+  "children": [
+    {
+      "id": "quick-action-button-icon",
+      "type": "div",
+      "bindings": {
+        "className": {
+          "source": "variant",
+          "transform": "const iconColorClasses = { default: 'text-foreground', primary: 'text-primary', accent: 'text-accent', muted: 'text-muted-foreground' }; return `text-4xl ${iconColorClasses[data] || iconColorClasses['default']}`"
+        },
+        "children": {
+          "source": "icon",
+          "transform": "data"
+        }
+      }
+    },
+    {
+      "id": "quick-action-button-content",
+      "type": "div",
+      "bindings": {
+        "className": {
+          "source": null,
+          "transform": "'space-y-1'"
+        }
+      },
+      "children": [
+        {
+          "id": "quick-action-button-label",
+          "type": "h3",
+          "bindings": {
+            "className": {
+              "source": null,
+              "transform": "'font-semibold text-foreground'"
+            },
+            "children": {
+              "source": "label",
+              "transform": "data"
+            }
+          }
+        },
+        {
+          "id": "quick-action-button-description",
+          "type": "p",
+          "bindings": {
+            "className": {
+              "source": null,
+              "transform": "'text-sm text-muted-foreground'"
+            },
+            "children": {
+              "source": "description",
+              "transform": "data"
+            },
+            "_if": {
+              "source": "description",
+              "transform": "!!data"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

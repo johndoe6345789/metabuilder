@@ -1,0 +1,6 @@
+{
+  "entity": "page-config",
+  "packageId": "role_editor",
+  "description": "Page routes for role_editor",
+  "version": "1.0.0"
+}

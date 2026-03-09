@@ -3,7 +3,7 @@
  */
 
 import { NodeExecutor, ExecuteInputs, ExecuteResult, createTemplateContext } from '../../base';
-import { interpolateTemplate, evaluateTemplate } from '../../../executor/ts/utils/template-engine';
+import { interpolateTemplate, evaluateTemplate } from '../../../../executor/ts/utils/template-engine';
 
 const resolve = (value: any, ctx: any): any => {
   if (typeof value === 'string' && value.startsWith('{{')) {

@@ -1,0 +1,29 @@
+{
+  "id": "offline-banner-root",
+  "type": "div",
+  "props": {
+    "role": "status",
+    "className": "offline-banner"
+  },
+  "children": [
+    {
+      "id": "offline-banner-icon",
+      "type": "Icon",
+      "props": {
+        "name": "WifiSlash",
+        "size": 16,
+        "className": "offline-banner__icon"
+      }
+    },
+    {
+      "id": "offline-banner-message",
+      "type": "span",
+      "props": {
+        "className": "offline-banner__message"
+      },
+      "bindings": {
+        "children": "message"
+      }
+    }
+  ]
+}
