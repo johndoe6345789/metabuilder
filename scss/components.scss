@@ -1,20 +1,20 @@
 // Component-specific styles - Material Design 3
 // Application-specific components using M3 tokens
 
-@import './components/page.scss';
-@import './components/typography.scss';
-@import './components/buttons.scss';
-@import './components/form-inputs.scss';
-@import './components/form-structure.scss';
-@import './components/badges.scss';
-@import './components/cards.scss';
-@import './components/data-display.scss';
-@import './components/feedback.scss';
-@import './components/media.scss';
-@import './components/dialogs.scss';
-@import './components/app-layout.scss';
-@import './components/conflict-features.scss';
-@import './components/feature-pages.scss';
+@use './components/page.scss';
+@use './components/typography.scss';
+@use './components/buttons.scss';
+@use './components/form-inputs.scss';
+@use './components/form-structure.scss';
+@use './components/badges.scss';
+@use './components/cards.scss';
+@use './components/data-display.scss';
+@use './components/feedback.scss';
+@use './components/media.scss';
+@use './components/dialogs.scss';
+@use './components/app-layout.scss';
+@use './components/conflict-features.scss';
+@use './components/feature-pages.scss';
 
 // Loading container
 .loading-container {
