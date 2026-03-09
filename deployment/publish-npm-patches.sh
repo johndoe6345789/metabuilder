@@ -29,6 +29,12 @@ PATCHES=(
   "tar@7.5.11"
 )
 
+# Pre-patched local packages (tarball already in deployment/npm-patches/)
+# Format: "name@version:filename"
+LOCAL_PATCHES=(
+  "@esbuild-kit/core-utils@3.3.3-metabuilder.0:esbuild-kit-core-utils-3.3.3-metabuilder.0.tgz"
+)
+
 WORK_DIR=$(mktemp -d)
 trap 'rm -rf "$WORK_DIR"' EXIT
 
@@ -53,6 +59,61 @@ EOF
 
 published=0
 skipped=0
+
+PATCHES_DIR="$SCRIPT_DIR/npm-patches"
+
+# Publish pre-patched local tarballs first
+for entry in "${LOCAL_PATCHES[@]}"; do
+  pkg_spec="${entry%%:*}"
+  tarball_name="${entry##*:}"
+  pkg_name="${pkg_spec%%@*}"
+  # handle scoped packages like @scope/name
+  if [[ "$pkg_spec" == @* ]]; then
+    pkg_name="$(echo "$pkg_spec" | cut -d@ -f1-2 | tr -d '@')"
+    pkg_name="@${pkg_name}"
+    pkg_version="$(echo "$pkg_spec" | cut -d@ -f3)"
+  else
+    pkg_version="${pkg_spec##*@}"
+  fi
+
+  log "Processing local patch $pkg_name@$pkg_version..."
+
+  TARBALL="$PATCHES_DIR/$tarball_name"
+  if [ ! -f "$TARBALL" ]; then
+    fail "  Patched tarball not found: $TARBALL"
+  fi
+
+  # Check if already published
+  ENCODED_NAME=$(echo "$pkg_name" | sed 's|/|%2F|g')
+  CHECK_URL="${NEXUS_URL}/repository/npm-hosted/${ENCODED_NAME}/${pkg_version}"
+  HTTP=$(curl -s -o /dev/null -w "%{http_code}" "$CHECK_URL")
+  if [ "$HTTP" = "200" ]; then
+    warn "  $pkg_name@$pkg_version already in Nexus, skipping"
+    ((skipped++)) || true
+    continue
+  fi
+
+  log "  Publishing $tarball_name to Nexus..."
+  HTTP=$(curl -s -o /dev/null -w "%{http_code}" -X PUT \
+    -u "$NEXUS_USER:$NEXUS_PASS" \
+    -H "Content-Type: application/octet-stream" \
+    --data-binary "@$TARBALL" \
+    "${NEXUS_NPM_HOSTED}${pkg_name}/-/${tarball_name}")
+
+  case "$HTTP" in
+    200|201)
+      log "  ${GREEN}Published${NC} $pkg_name@$pkg_version"
+      ((published++)) || true
+      ;;
+    400)
+      warn "  $pkg_name@$pkg_version already exists (HTTP 400)"
+      ((skipped++)) || true
+      ;;
+    *)
+      fail "  Failed to publish $pkg_name@$pkg_version (HTTP $HTTP)"
+      ;;
+  esac
+done
 
 for pkg_spec in "${PATCHES[@]}"; do
   pkg_name="${pkg_spec%%@*}"
@@ -108,4 +169,4 @@ log "To use patched packages, add to .npmrc:"
 log "  registry=${NEXUS_URL}/repository/npm-group/"
 echo ""
 log "Or use scoped overrides in package.json:"
-log '  "overrides": { "minimatch": "10.2.4", "tar": "7.5.11" }'
+log '  "overrides": { "minimatch": "10.2.4", "tar": "7.5.11", "@esbuild-kit/core-utils": "3.3.3-metabuilder.0" }'

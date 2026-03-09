@@ -26,8 +26,6 @@
     "@playwright/test": "^1.58.2",
     "@sentry/nextjs": "^10.39.0",
     "@spotlightjs/spotlight": "^4.10.0",
-    "@storybook/react": "^10.2.10",
-    "@storybook/react-vite": "^10.2.13",
     "@tailwindcss/vite": "^4.2.0",
     "checkly": "^7.1.0",
     "eslint": "^10.0.1",
@@ -37,8 +35,7 @@
     "eslint-plugin-react-refresh": "^0.5.0",
     "jest": "^30.2.0",
     "jsdom": "^28.1.0",
-    "npm-run-all2": "8.0.4",
-    "storybook": "^10.2.10"
+    "npm-run-all2": "8.0.4"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -68,15 +65,19 @@
       "eslint": "$eslint"
     },
     "hono": "^4.12.0",
-    "@storybook/react-vite": {
-      "vite": "^7.3.1"
-    },
+    "@storybook/react-vite": "10.2.17",
     "@storybook/builder-vite": {
       "vite": "^7.3.1"
     },
     "@joshwooding/vite-plugin-react-docgen-typescript": {
       "vite": "^7.3.1"
     },
+    "storybook": "10.2.17",
+    "@storybook/react": "10.2.17",
+    "@storybook/nextjs-vite": "10.2.17",
+    "@storybook/addon-docs": "10.2.17",
+    "@storybook/addon-a11y": "10.2.17",
+    "@storybook/addon-vitest": "10.2.17",
     "minimatch": "10.2.4",
     "tar": "7.5.11",
     "monaco-editor": "0.53.0",
@@ -93,6 +94,9 @@
     },
     "eslint-plugin-format": {
       "eslint": "$eslint"
+    },
+    "@esbuild-kit/core-utils": {
+      "esbuild": ">=0.25.0"
     }
   }
 }
