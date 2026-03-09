@@ -24,7 +24,7 @@
     "@metabuilder/components": "file:../components",
     "@metabuilder/fakemui": "file:../fakemui",
     "@reduxjs/toolkit": "^2.5.2",
-    "axios": "^1.7.7",
+    "axios": "^1.13.5",
     "classnames": "^2.3.2",
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
