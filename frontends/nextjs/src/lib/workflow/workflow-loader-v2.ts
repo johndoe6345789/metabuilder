@@ -282,7 +282,6 @@ export class ValidationCache {
       }
 
       if (cleaned > 0) {
-        // eslint-disable-next-line no-console
         console.warn(`[CACHE CLEANUP] Removed ${cleaned} expired entries`)
       }
     }, 5 * 60 * 1000) // Every 5 minutes
@@ -416,7 +415,6 @@ export class WorkflowLoaderV2 {
     const cached = this.cache.get(cacheKey)
     if (cached != null) {
       if (this.enableLogging) {
-        // eslint-disable-next-line no-console
         console.warn(`[CACHE HIT] Validation for workflow ${workflow.id}`)
       }
       return {
@@ -430,7 +428,6 @@ export class WorkflowLoaderV2 {
     const existingValidation = this.activeValidations.get(validationKey)
     if (existingValidation != null) {
       if (this.enableLogging) {
-        // eslint-disable-next-line no-console
         console.warn(
           `[DEDUP] Reusing in-flight validation for ${validationKey}`
         )
@@ -475,7 +472,6 @@ export class WorkflowLoaderV2 {
     workflows: WorkflowDefinition[]
   ): Promise<ExtendedValidationResult[]> {
     if (this.enableLogging) {
-      // eslint-disable-next-line no-console
       console.warn(`Starting batch validation for ${workflows.length} workflows`)
     }
 
@@ -541,7 +537,6 @@ export class WorkflowLoaderV2 {
     const cacheKey = `${tenantId}:${workflowId}`
     this.cache.delete(cacheKey)
     if (this.enableLogging) {
-      // eslint-disable-next-line no-console
       console.warn(`[CACHE INVALIDATED] ${workflowId}`)
     }
   }
@@ -596,7 +591,6 @@ export class WorkflowLoaderV2 {
   clearCache(): void {
     this.cache.clear()
     if (this.enableLogging) {
-      // eslint-disable-next-line no-console
       console.warn('All validation caches cleared')
     }
   }
@@ -662,7 +656,6 @@ export class WorkflowLoaderV2 {
       const duration = Date.now() - startTime
 
       if (this.enableLogging) {
-        // eslint-disable-next-line no-console
         console.warn(`[VALIDATION] Workflow ${workflow.id} validated in ${duration}ms`, {
           nodeCount: workflow.nodes.length,
           connectionCount: Object.keys(workflow.connections).length,
@@ -869,9 +862,7 @@ let globalLoader: WorkflowLoaderV2 | null = null
 export function getWorkflowLoader(
   options?: WorkflowLoaderV2Options
 ): WorkflowLoaderV2 {
-  if (globalLoader == null) {
-    globalLoader = new WorkflowLoaderV2(options)
-  }
+  globalLoader ??= new WorkflowLoaderV2(options)
   return globalLoader
 }
 

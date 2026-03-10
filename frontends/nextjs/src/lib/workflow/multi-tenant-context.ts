@@ -189,7 +189,7 @@ export class MultiTenantContextBuilder {
       triggerData: requestData?.triggerData ?? {},
       variables: this.buildVariables(requestData?.variables),
       secrets: requestData?.secrets ?? {},
-      request: this.options.captureRequestData ? requestData?.request as WorkflowContext['request'] : undefined,
+      request: this.options.captureRequestData === true ? requestData?.request as WorkflowContext['request'] : undefined,
       multiTenant: multiTenantMeta,
       requestMetadata: {
         ipAddress: this.requestContext.ipAddress,
@@ -205,15 +205,15 @@ export class MultiTenantContextBuilder {
     this.validateContextSafety(context)
 
     // 5. Load and bind credentials
-    if (this.options.enforceCredentialValidation) {
-      await this.bindCredentials(context)
+    if (this.options.enforceCredentialValidation === true) {
+      this.bindCredentials(context)
     }
 
     // 6. Validate variables don't cross tenants
     this.validateVariableTenantIsolation(context)
 
     // 7. Log context creation (audit)
-    if (this.options.enableAuditLogging) {
+    if (this.options.enableAuditLogging === true) {
       this.logContextCreation(context)
     }
 
@@ -231,13 +231,12 @@ export class MultiTenantContextBuilder {
 
     // Super-admin (level 4) can access any tenant
     if (this.requestContext.userLevel >= 4) {
-      if (!this.options.allowCrossTenantAccess) {
+      if (this.options.allowCrossTenantAccess !== true) {
         throw new Error(
           `Cross-tenant access disabled: User ${this.requestContext.userId} ` +
           `cannot access workflow in tenant ${this.workflow.tenantId}`
         )
       }
-      // eslint-disable-next-line no-console
       console.warn(
         `[SECURITY] Super-admin ${this.requestContext.userId} accessing ` +
         `cross-tenant workflow ${this.workflow.id}`
@@ -327,28 +326,24 @@ export class MultiTenantContextBuilder {
     const variables: DataRecord = {}
 
     // 1. Add workflow defaults
-    if (this.workflow.variables != null) {
-      for (const [varName, varDef] of Object.entries(this.workflow.variables)) {
-        // Only allow workflow and execution scopes (not global)
-        if (varDef.scope === 'global') {
-          // eslint-disable-next-line no-console
-          console.warn(`[SECURITY] Skipping global-scope variable ${varName} - not allowed`)
-          continue
-        }
-
-        variables[varName] = varDef.defaultValue ?? null
+    for (const [varName, varDef] of Object.entries(this.workflow.variables)) {
+      // Only allow workflow and execution scopes (not global)
+      if (varDef.scope === 'global') {
+        console.warn(`[SECURITY] Skipping global-scope variable ${varName} - not allowed`)
+        continue
       }
+
+      variables[varName] = varDef.defaultValue ?? null
     }
 
     // 2. Merge request overrides
     if (requestVariables != null) {
       for (const [varName, varValue] of Object.entries(requestVariables)) {
         // Validate variable is allowed by workflow
-        const varDef = this.workflow.variables?.[varName]
+        const varDef = this.workflow.variables[varName]
         if (varDef != null) {
           variables[varName] = varValue
         } else {
-          // eslint-disable-next-line no-console
           console.warn(
             `[SECURITY] Rejecting unknown variable ${varName} - not in workflow definition`
           )
@@ -371,7 +366,7 @@ export class MultiTenantContextBuilder {
     const errors: string[] = []
 
     // 1. Tenant ID must match (unless cross-tenant access is explicitly allowed)
-    if (context.tenantId !== this.workflow.tenantId && !this.options.allowCrossTenantAccess) {
+    if (context.tenantId !== this.workflow.tenantId && this.options.allowCrossTenantAccess !== true) {
       errors.push(
         `Context tenant ${context.tenantId} does not match ` +
         `workflow tenant ${this.workflow.tenantId}`
@@ -389,13 +384,12 @@ export class MultiTenantContextBuilder {
     }
 
     // 4. Check execution limits
-    if (this.workflow.executionLimits != null) {
-      if (context.executionLimits.maxExecutionTime > this.workflow.executionLimits.maxExecutionTime) {
-        errors.push(
-          `Requested execution time (${String(context.executionLimits.maxExecutionTime)}ms) ` +
-          `exceeds workflow limit (${String(this.workflow.executionLimits.maxExecutionTime)}ms)`
-        )
-      }
+    const workflowLimit = this.workflow.executionLimits ?? this.getDefaultExecutionLimits()
+    if (context.executionLimits.maxExecutionTime > workflowLimit.maxExecutionTime) {
+      errors.push(
+        `Requested execution time (${String(context.executionLimits.maxExecutionTime)}ms) ` +
+        `exceeds workflow limit (${String(workflowLimit.maxExecutionTime)}ms)`
+      )
     }
 
     if (errors.length > 0) {
@@ -425,8 +419,8 @@ export class MultiTenantContextBuilder {
   /**
    * Load and bind credentials from workflow definition
    */
-  private async bindCredentials(context: ExtendedWorkflowContext): Promise<void> {
-    const bindings = this.workflow.credentials ?? []
+  private bindCredentials(context: ExtendedWorkflowContext): void {
+    const bindings = this.workflow.credentials
 
     for (const binding of bindings) {
       try {
@@ -449,7 +443,6 @@ export class MultiTenantContextBuilder {
           name: binding.credentialName,
         })
       } catch (error: unknown) {
-        // eslint-disable-next-line no-console
         console.error(`Failed to bind credential for node ${binding.nodeId}:`, error)
         throw error
       }
@@ -535,7 +528,7 @@ export class MultiTenantContextBuilder {
     }
 
     // 4. Check for global scope variables
-    for (const [varName, varDef] of Object.entries(this.workflow.variables ?? {})) {
+    for (const [varName, varDef] of Object.entries(this.workflow.variables)) {
       if (varDef.scope === 'global') {
         warnings.push({
           path: `variables.${varName}`,
@@ -546,8 +539,8 @@ export class MultiTenantContextBuilder {
     }
 
     // 5. Check credentials
-    const credentialCount = this.workflow.credentials?.length ?? 0
-    if (this.options.enforceCredentialValidation && credentialCount > 0) {
+    const credentialCount = this.workflow.credentials.length
+    if (this.options.enforceCredentialValidation === true && credentialCount > 0) {
       warnings.push({
         path: 'credentials',
         message: `${String(credentialCount)} credential(s) will be validated during execution`,

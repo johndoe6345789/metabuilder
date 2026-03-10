@@ -82,7 +82,7 @@ export function getErrorMessage(error: PackageError | Error | null): string {
     return messages[error.code] ?? error.message
   }
 
-  return error.message ?? 'An unknown error occurred'
+  return error.message
 }
 
 /**
@@ -135,7 +135,7 @@ export function formatVersion(version: string): string {
   // Ensure version matches semver format
   const semverRegex = /^\d+\.\d+\.\d+/
   const match = version.match(semverRegex)
-  return match ? match[0] : version
+  return match != null ? match[0] : version
 }
 
 /**

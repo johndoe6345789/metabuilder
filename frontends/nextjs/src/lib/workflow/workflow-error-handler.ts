@@ -387,9 +387,9 @@ export class WorkflowErrorHandler {
   ): WorkflowApiResponse {
     const code = this.getErrorCode(error)
     const message = this.isDevelopment
-      ? (this.getErrorMessage(error) ?? ERROR_MESSAGES[code])
-      : (ERROR_MESSAGES[code] ?? this.getErrorMessage(error))
-    const statusCode = ERROR_STATUS_MAP[code] ?? 500
+      ? this.getErrorMessage(error)
+      : ERROR_MESSAGES[code]
+    const statusCode = ERROR_STATUS_MAP[code]
 
     const response: FormattedError = {
       success: false,
@@ -462,7 +462,7 @@ export class WorkflowErrorHandler {
     errorCode: WorkflowErrorCode,
     context: ErrorContext = {}
   ): WorkflowApiResponse {
-    const statusCode = ERROR_STATUS_MAP[errorCode] ?? 401
+    const statusCode = ERROR_STATUS_MAP[errorCode]
 
     const response: FormattedError = {
       success: false,
@@ -636,7 +636,7 @@ export class WorkflowErrorHandler {
    * Get suggestion for validation error
    */
   private getSuggestionForError(error: ValidationError): string {
-    const code = (error.code ?? '').toUpperCase()
+    const code = error.code.toUpperCase()
     const suggestions: Record<string, string> = {
       MISSING_REQUIRED_FIELD: 'Add the missing parameter to the node.',
       INVALID_NODE_TYPE: 'Use a valid node type from the registry.',

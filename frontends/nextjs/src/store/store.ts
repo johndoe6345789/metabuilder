@@ -46,14 +46,14 @@ const { store, persistor } = createPersistedStore({
   middleware: (base: Middleware[]) => {
     const middlewares: Middleware[] = [...base]
     if (isDev) {
-      middlewares.push(createLoggingMiddleware({ verbose: false }) as Middleware)
-      middlewares.push(createPerformanceMiddleware() as Middleware)
+      middlewares.push(createLoggingMiddleware({ verbose: false }))
+      middlewares.push(createPerformanceMiddleware())
     }
-    middlewares.push(createAnalyticsMiddleware() as Middleware)
-    middlewares.push(createErrorMiddleware() as Middleware)
+    middlewares.push(createAnalyticsMiddleware())
+    middlewares.push(createErrorMiddleware())
     return middlewares
   },
-  devTools: getDevToolsConfig(),
+  devTools: getDevToolsConfig() as boolean | object,
   ignoredActions: ['asyncData/fetchAsyncData/pending'],
   ignoredPaths: ['asyncData.requests.*.promise'],
 })

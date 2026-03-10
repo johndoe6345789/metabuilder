@@ -117,9 +117,8 @@ export async function GET(
     const offset = parseInt(searchParams.get('offset') ?? '0')
     const category = searchParams.get('category')
     const tags = searchParams.get('tags')?.split(',').map((t) => t.trim())
-    const active = searchParams.get('active')
-      ? searchParams.get('active') === 'true'
-      : undefined
+    const activeParam = searchParams.get('active')
+    const active = activeParam != null ? activeParam === 'true' : undefined
 
     // 6. Build filter
     const filter: Record<string, unknown> = {
@@ -286,9 +285,9 @@ export async function POST(
         notificationChannels: [],
       },
       nodes: Array.isArray(body.nodes) ? (body.nodes as unknown[]) : [],
-      connections: (body.connections as Record<string, unknown>) ?? {},
+      connections: (body.connections as Record<string, unknown>),
       triggers: Array.isArray(body.triggers) ? (body.triggers as unknown[]) : [],
-      variables: (body.variables as Record<string, unknown>) ?? {},
+      variables: (body.variables as Record<string, unknown>),
       errorHandling: {
         default: 'stopWorkflow' as const,
         errorNotification: false,
@@ -309,7 +308,7 @@ export async function POST(
         onLimitExceeded: 'reject' as const,
       },
       credentials: [],
-      metadata: (body.metadata as Record<string, unknown>) ?? {},
+      metadata: (body.metadata as Record<string, unknown>),
       executionLimits: {
         maxExecutionTime: 300000,
         maxMemoryMb: 512,

@@ -167,7 +167,7 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
                 <input
                   type="text"
                   placeholder={variable.description ?? name}
-                  value={(triggerData[name] as string) ?? ''}
+                  value={(triggerData[name] as string)}
                   onChange={(e) => {
                     handleTriggerDataChange(name, e.target.value)
                   }}
@@ -344,13 +344,13 @@ function renderConnections(workflow: WorkflowDefinition) {
 
   Object.entries(workflow.connections).forEach(([fromNodeId, portMap]: [string, Record<string, Record<string, ConnectionTarget[]>>]) => {
     const fromNode = workflow.nodes.find((n) => n.id === fromNodeId)
-    if (!fromNode) return
+    if (fromNode == null) return
 
     Object.entries(portMap).forEach(([_portName, indexMap]: [string, Record<string, ConnectionTarget[]>]) => {
       Object.entries(indexMap).forEach(([_, targets]: [string, ConnectionTarget[]]) => {
         targets.forEach((target: ConnectionTarget) => {
           const toNode = workflow.nodes.find((n) => n.id === target.node)
-          if (!toNode) return
+          if (toNode == null) return
 
           const [x1, y1] = fromNode.position
           const [x2, y2] = toNode.position

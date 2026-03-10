@@ -332,7 +332,7 @@ export async function executeScheduledWorkflow(
     })
 
     // 2. Get schedule configuration
-    const trigger = workflow.triggers?.find((t) => t.kind === 'schedule')
+    const trigger = workflow.triggers.find((t) => t.kind === 'schedule')
     const cronExpression = trigger?.schedule ?? '0 */6 * * *'
 
     const context = await builder.build(
@@ -430,7 +430,7 @@ export async function validateWorkflowExecution(req: NextRequest) {
     }
 
     const builder = new MultiTenantContextBuilder(workflow, requestContext)
-    const result = await builder.validate()
+    const result = builder.validate()
 
     // Return validation result for UI
     return NextResponse.json({
@@ -559,8 +559,8 @@ export async function logExecutionContext(context: ExtendedWorkflowContext) {
     workflow: sanitized.workflowId,
     tenant: sanitized.tenantId,
     user: sanitized.userId,
-    mode: (sanitized.multiTenant as Record<string, unknown>)?.executionMode,
-    timestamp: (sanitized.multiTenant as Record<string, unknown>)?.requestedAt,
+    mode: (sanitized.multiTenant as Record<string, unknown>).executionMode,
+    timestamp: (sanitized.multiTenant as Record<string, unknown>).requestedAt,
     // Variables listed as keys only, no values
     variables: sanitized.variables,
     // Limits included for monitoring
@@ -657,7 +657,7 @@ export async function retryFailedWorkflowExecution(
 async function verifyUserAuth(req: NextRequest): Promise<AuthenticatedUser | null> {
   // In production, parse JWT and get user details
   const authHeader = req.headers.get('authorization')
-  if (authHeader === null || !authHeader.startsWith('Bearer ')) {
+  if (authHeader?.startsWith('Bearer ') !== true) {
     return null
   }
 

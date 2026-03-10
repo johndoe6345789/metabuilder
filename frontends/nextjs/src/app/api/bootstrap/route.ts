@@ -70,7 +70,7 @@ async function dbalPost(entity: string, data: Record<string, unknown>): Promise<
 
 export async function POST(request: NextRequest) {
   const limitResponse = applyRateLimit(request, 'bootstrap')
-  if (limitResponse !== null && limitResponse !== undefined) {
+  if (limitResponse != null) {
     return limitResponse
   }
 

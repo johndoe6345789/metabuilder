@@ -28,7 +28,7 @@ export async function fetchSession(): Promise<User | null> {
       filter: { token: sessionToken }
     })
 
-    const session = sessions.data?.[0] as DbalSessionRecord | undefined
+    const session = sessions.data[0] as DbalSessionRecord | undefined
 
     if (session === undefined) {
       return null

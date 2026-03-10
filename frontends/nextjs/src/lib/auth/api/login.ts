@@ -45,7 +45,7 @@ export async function login(identifier: string, password: string): Promise<Login
       }
     })
 
-    let user = users.data?.[0] as DbalUserRecord | undefined
+    let user = users.data[0] as DbalUserRecord | undefined
 
     // If not found by username, try email
     if (user === undefined) {
@@ -54,7 +54,7 @@ export async function login(identifier: string, password: string): Promise<Login
           email: identifier
         }
       })
-      user = usersByEmail.data?.[0] as DbalUserRecord | undefined
+      user = usersByEmail.data[0] as DbalUserRecord | undefined
     }
 
     if (user === undefined) {

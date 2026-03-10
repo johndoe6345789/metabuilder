@@ -109,7 +109,7 @@ function createOps(entityName: string): EntityOps {
   return {
     async list(options?: ListOptions): Promise<ListResult> {
       const params = new URLSearchParams()
-      if (options?.filter) {
+      if (options?.filter != null) {
         for (const [k, v] of Object.entries(options.filter)) {
           if (v !== undefined && v !== null) params.set(k, String(v as string | number | boolean))
         }
@@ -127,7 +127,7 @@ function createOps(entityName: string): EntityOps {
         if (Array.isArray(payload)) {
           return { data: payload, total: payload.length }
         }
-        if (payload != null && Array.isArray(payload.data)) {
+        if (Array.isArray(payload.data)) {
           return { data: payload.data as Record<string, unknown>[], total: payload.total as number | undefined }
         }
         return { data: [] }

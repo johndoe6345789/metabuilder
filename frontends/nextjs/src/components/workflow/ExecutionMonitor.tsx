@@ -121,7 +121,7 @@ export const ExecutionMonitor: React.FC<ExecutionMonitorProps> = ({
               key={execution.id}
               execution={execution}
               isSelected={selectedExecutionId === execution.id}
-              onClick={() => handleExecutionSelect(execution.id)}
+              onClick={() => { handleExecutionSelect(execution.id) }}
             />
           ))}
 
@@ -146,11 +146,11 @@ export const ExecutionMonitor: React.FC<ExecutionMonitorProps> = ({
                   nodeId={nodeId}
                   result={result}
                   isExpanded={expandedNodeId === nodeId}
-                  onToggle={() =>
+                  onToggle={() => {
                     setExpandedNodeId(
                       expandedNodeId === nodeId ? null : nodeId
                     )
-                  }
+                  }}
                 />
               ))}
             </div>
@@ -420,7 +420,7 @@ const LogViewer: React.FC<LogViewerProps> = ({ logs }) => {
           <button
             key={level}
             className={`${styles.filterButton} ${filter === level ? styles.active : ''}`}
-            onClick={() => setFilter(level)}
+            onClick={() => { setFilter(level) }}
           >
             {level}
           </button>

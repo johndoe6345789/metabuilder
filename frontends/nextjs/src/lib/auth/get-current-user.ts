@@ -26,7 +26,7 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
     const cookieStore = await cookies()
     const sessionToken = cookieStore.get(SESSION_COOKIE)
 
-    if (!sessionToken?.value || sessionToken.value.length === 0) {
+    if (sessionToken?.value == null || sessionToken.value.length === 0) {
       return null
     }
 
@@ -35,7 +35,7 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
       filter: { token: sessionToken.value }
     })
 
-    const session = sessions.data?.[0] as DbalSessionRecord | undefined
+    const session = sessions.data[0] as DbalSessionRecord | undefined
 
     if (session == null) {
       return null

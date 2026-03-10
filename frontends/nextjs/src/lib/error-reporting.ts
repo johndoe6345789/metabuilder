@@ -161,7 +161,7 @@ class ErrorReportingService {
 
     // suggestedAction reflects the current category, even if mutated after creation
     Object.defineProperty(report, 'suggestedAction', {
-      get() { return getSuggestedAction(this.category) },
+      get(this: ErrorReport) { return getSuggestedAction(this.category) },
       enumerable: true,
       configurable: true,
     })

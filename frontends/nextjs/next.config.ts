@@ -1,5 +1,6 @@
 import type { NextConfig } from 'next'
 import type { Configuration } from 'webpack'
+import type webpack from 'webpack'
 import path from 'path'
 
 const projectDir = process.cwd()
@@ -101,12 +102,13 @@ const nextConfig: NextConfig = {
       '@dbal-ui': path.resolve(projectDir, '../../dbal/shared/ui'),
     },
   },
-  webpack(config: Configuration, { isServer, webpack }) {
+  webpack(config: Configuration, { isServer, webpack: wp }: { isServer: boolean; webpack: typeof webpack }) {
     // Stub ALL external SCSS module imports with an actual .module.scss
     // so they go through the CSS module pipeline (css-loader sets .default correctly)
     const stubScss = path.resolve(projectDir, 'src/lib/empty.module.scss')
-    config.plugins!.push(
-      new webpack.NormalModuleReplacementPlugin(
+    config.plugins ??= []
+    config.plugins.push(
+      new wp.NormalModuleReplacementPlugin(
         /\.module\.scss$/,
         function (resource: { context?: string; request?: string }) {
           const ctx = resource.context ?? ''
@@ -116,30 +118,36 @@ const nextConfig: NextConfig = {
         }
       )
     )
-    config.optimization!.minimize = false
-
-    config.resolve!.alias = {
-      ...(config.resolve!.alias as Record<string, string>),
-      '@metabuilder/components': path.resolve(projectDir, 'src/lib/components-shim.ts'),
-      '@dbal-ui': path.resolve(projectDir, '../../dbal/shared/ui'),
-      // Resolve service-adapters to source (dist/ is not pre-built)
-      '@metabuilder/service-adapters': path.resolve(monorepoRoot, 'redux/adapters/src'),
+    if (config.optimization != null) {
+      config.optimization.minimize = false
     }
 
-    config.externals = [...((config.externals as string[]) ?? []), 'esbuild']
+    if (config.resolve != null) {
+      config.resolve.alias = {
+        ...(config.resolve.alias as Record<string, string>),
+        '@metabuilder/components': path.resolve(projectDir, 'src/lib/components-shim.ts'),
+        '@dbal-ui': path.resolve(projectDir, '../../dbal/shared/ui'),
+        // Resolve service-adapters to source (dist/ is not pre-built)
+        '@metabuilder/service-adapters': path.resolve(monorepoRoot, 'redux/adapters/src'),
+      }
+    }
+
+    config.externals = [...(config.externals as string[]), 'esbuild']
 
     if (!isServer) {
-      config.resolve!.fallback = {
-        ...(config.resolve!.fallback as Record<string, false>),
-        '@aws-sdk/client-s3': false,
-        fs: false,
-        path: false,
-        crypto: false,
-        stream: false,
-        'stream/promises': false,
-        os: false,
-        buffer: false,
-        util: false,
+      if (config.resolve != null) {
+        config.resolve.fallback = {
+          ...(config.resolve.fallback as Record<string, false>),
+          '@aws-sdk/client-s3': false,
+          fs: false,
+          path: false,
+          crypto: false,
+          stream: false,
+          'stream/promises': false,
+          os: false,
+          buffer: false,
+          util: false,
+        }
       }
     }
 
