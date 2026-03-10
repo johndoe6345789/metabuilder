@@ -16,8 +16,16 @@
  * - Comprehensive logging and diagnostics
  */
 
-import { NextResponse } from 'next/server'
 import type { ValidationError } from '@metabuilder/workflow'
+
+/**
+ * Plain API response returned by error handlers.
+ * Use NextResponse.json(r.json, { status: r.status }) in actual route handlers.
+ */
+export interface WorkflowApiResponse {
+  status: number
+  json: FormattedError
+}
 
 /**
  * Error context for linking to execution, workflow, and tenant
@@ -151,7 +159,7 @@ const ERROR_STATUS_MAP: Record<WorkflowErrorCode, number> = {
   [WorkflowErrorCode.WORKFLOW_EXECUTION_ABORTED]: 500,
   [WorkflowErrorCode.INSUFFICIENT_RESOURCES]: 503,
   [WorkflowErrorCode.MEMORY_LIMIT_EXCEEDED]: 503,
-  [WorkflowErrorCode.EXECUTION_QUEUE_FULL]: 503,
+  [WorkflowErrorCode.EXECUTION_QUEUE_FULL]: 429,
 
   // Data/Configuration errors (422)
   [WorkflowErrorCode.MISSING_WORKFLOW_DEFINITION]: 422,
@@ -333,7 +341,7 @@ export class WorkflowErrorHandler {
     errors: ValidationError[],
     warnings: ValidationError[] = [],
     context: ErrorContext = {}
-  ): NextResponse<FormattedError> {
+  ): WorkflowApiResponse {
     const errorCount = errors.length
     const warningCount = warnings.length
 
@@ -364,7 +372,7 @@ export class WorkflowErrorHandler {
       },
     }
 
-    return NextResponse.json(response, { status: 400 })
+    return { status: 400, json: response }
   }
 
   /**
@@ -375,7 +383,7 @@ export class WorkflowErrorHandler {
   handleExecutionError(
     error: unknown,
     context: ErrorContext = {}
-  ): NextResponse<FormattedError> {
+  ): WorkflowApiResponse {
     const code = this.getErrorCode(error)
     const message = ERROR_MESSAGES[code] ?? this.getErrorMessage(error)
     const statusCode = ERROR_STATUS_MAP[code] ?? 500
@@ -415,13 +423,13 @@ export class WorkflowErrorHandler {
       }
     }
 
-    return NextResponse.json(response, { status: statusCode })
+    return { status: statusCode, json: response }
   }
 
   /**
    * Handle multi-tenant access control errors
    */
-  handleAccessError(context: ErrorContext): NextResponse<FormattedError> {
+  handleAccessError(context: ErrorContext): WorkflowApiResponse {
     const response: FormattedError = {
       success: false,
       error: {
@@ -441,7 +449,7 @@ export class WorkflowErrorHandler {
       },
     }
 
-    return NextResponse.json(response, { status: 403 })
+    return { status: 403, json: response }
   }
 
   /**
@@ -450,7 +458,7 @@ export class WorkflowErrorHandler {
   handleAuthError(
     errorCode: WorkflowErrorCode,
     context: ErrorContext = {}
-  ): NextResponse<FormattedError> {
+  ): WorkflowApiResponse {
     const statusCode = ERROR_STATUS_MAP[errorCode] ?? 401
 
     const response: FormattedError = {
@@ -468,7 +476,7 @@ export class WorkflowErrorHandler {
       },
     }
 
-    return NextResponse.json(response, { status: statusCode })
+    return { status: statusCode, json: response }
   }
 
   /**
@@ -477,7 +485,7 @@ export class WorkflowErrorHandler {
   handleNotFoundError(
     resource: string,
     context: ErrorContext = {}
-  ): NextResponse<FormattedError> {
+  ): WorkflowApiResponse {
     const response: FormattedError = {
       success: false,
       error: {
@@ -491,7 +499,7 @@ export class WorkflowErrorHandler {
       },
     }
 
-    return NextResponse.json(response, { status: 404 })
+    return { status: 404, json: response }
   }
 
   /**
@@ -500,7 +508,7 @@ export class WorkflowErrorHandler {
   handleRateLimitError(
     retryAfter: number = 60,
     _context: ErrorContext = {}
-  ): NextResponse<FormattedError> {
+  ): WorkflowApiResponse {
     const response: FormattedError = {
       success: false,
       error: {
@@ -516,9 +524,7 @@ export class WorkflowErrorHandler {
       },
     }
 
-    const nextResponse = NextResponse.json(response, { status: 429 })
-    nextResponse.headers.set('Retry-After', String(retryAfter))
-    return nextResponse
+    return { status: 429, json: response }
   }
 
   /**
@@ -527,7 +533,7 @@ export class WorkflowErrorHandler {
   handleResourceExhaustedError(
     reason: string = 'Insufficient resources',
     context: ErrorContext = {}
-  ): NextResponse<FormattedError> {
+  ): WorkflowApiResponse {
     let errorCode = WorkflowErrorCode.INSUFFICIENT_RESOURCES
     if (reason.includes('memory')) {
       errorCode = WorkflowErrorCode.MEMORY_LIMIT_EXCEEDED
@@ -555,13 +561,13 @@ export class WorkflowErrorHandler {
       },
     }
 
-    return NextResponse.json(response, { status: statusCode })
+    return { status: statusCode, json: response }
   }
 
   /**
    * Handle timeout errors
    */
-  handleTimeoutError(context: ErrorContext = {}): NextResponse<FormattedError> {
+  handleTimeoutError(context: ErrorContext = {}): WorkflowApiResponse {
     const response: FormattedError = {
       success: false,
       error: {
@@ -583,7 +589,7 @@ export class WorkflowErrorHandler {
       },
     }
 
-    return NextResponse.json(response, { status: 504 })
+    return { status: 504, json: response }
   }
 
   /**

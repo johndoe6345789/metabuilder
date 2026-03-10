@@ -62,7 +62,7 @@ describe('ItemsPerPageSelector', () => {
     expect(select).toBeDefined()
     
     // Check all custom options are rendered as MenuItem children
-    const menuItems = container.querySelectorAll('.menu-item')
+    const menuItems = container.querySelectorAll('option')
     expect(menuItems.length).toBe(customOptions.length)
   })
 
@@ -112,7 +112,7 @@ describe('ItemsPerPageSelector', () => {
     expect(select).toBeDefined()
     
     // Check all default options are rendered as MenuItem children
-    const menuItems = container.querySelectorAll('.menu-item')
+    const menuItems = container.querySelectorAll('option')
     expect(menuItems.length).toBe(defaultOptions.length)
   })
 })

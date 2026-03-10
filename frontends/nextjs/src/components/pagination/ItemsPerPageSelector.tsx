@@ -1,6 +1,6 @@
 'use client'
 
-import { FormControl, FormLabel, Select, MenuItem, Box } from '@/fakemui'
+import { FormControl, FormLabel, Select, Box } from '@/fakemui'
 
 export interface ItemsPerPageSelectorProps {
   value: number
@@ -40,18 +40,19 @@ export function ItemsPerPageSelector({
       <FormControl disabled={disabled} sx={{ minWidth: 120 }}>
         <FormLabel htmlFor="items-per-page-select">{label}</FormLabel>
         <Select
-          id="items-per-page-select"
+          native
           value={String(value)}
           onChange={handleChange as never}
           disabled={disabled}
+          inputProps={{ id: 'items-per-page-select' }}
           sx={{
             fontFamily: 'IBM Plex Sans, sans-serif',
           }}
         >
           {options.map((option) => (
-            <MenuItem key={option} value={option}>
+            <option key={option} value={option}>
               {option}
-            </MenuItem>
+            </option>
           ))}
         </Select>
       </FormControl>

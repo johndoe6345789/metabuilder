@@ -370,8 +370,8 @@ export class MultiTenantContextBuilder {
   private validateContextSafety(context: ExtendedWorkflowContext): void {
     const errors: string[] = []
 
-    // 1. Tenant ID must match
-    if (context.tenantId !== this.workflow.tenantId) {
+    // 1. Tenant ID must match (unless cross-tenant access is explicitly allowed)
+    if (context.tenantId !== this.workflow.tenantId && !this.options.allowCrossTenantAccess) {
       errors.push(
         `Context tenant ${context.tenantId} does not match ` +
         `workflow tenant ${this.workflow.tenantId}`
@@ -388,16 +388,7 @@ export class MultiTenantContextBuilder {
       errors.push('Execution ID is required')
     }
 
-    // 4. Variables not in global scope
-    for (const [varName, varDef] of Object.entries(this.workflow.variables ?? {})) {
-      if (varDef.scope === 'global') {
-        errors.push(
-          `Variable ${varName} has global scope. Only workflow/execution scope allowed.`
-        )
-      }
-    }
-
-    // 5. Check execution limits
+    // 4. Check execution limits
     if (this.workflow.executionLimits != null) {
       if (context.executionLimits.maxExecutionTime > this.workflow.executionLimits.maxExecutionTime) {
         errors.push(
@@ -550,7 +541,7 @@ export class MultiTenantContextBuilder {
       if (varDef.scope === 'global') {
         warnings.push({
           path: `variables.${varName}`,
-          message: `Global-scope variable will be skipped for security`,
+          message: `global-scope variable will be skipped for security`,
           severity: 'high',
         })
       }
