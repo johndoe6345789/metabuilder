@@ -26,19 +26,35 @@ export default defineConfig({
     screenshot: 'only-on-failure',
   },
 
-  /* Start workflowui dev server automatically when not running against Docker stack */
-  webServer: process.env.PLAYWRIGHT_BASE_URL ? undefined : {
-    command: 'npm run dev -w workflowui',
-    url: 'http://localhost:3000/workflowui/',
-    reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
-    env: {
-      NODE_ENV: 'development',
-      NEXT_PUBLIC_API_URL: 'http://localhost:8080',
-      NEXTAUTH_SECRET: 'test-secret',
-      NEXTAUTH_URL: 'http://localhost:3000',
+  /* Start dev servers automatically when not running against a live Docker stack */
+  webServer: process.env.PLAYWRIGHT_BASE_URL ? undefined : [
+    {
+      command: 'npm run dev -w workflowui',
+      url: 'http://localhost:3000/workflowui/',
+      reuseExistingServer: !process.env.CI,
+      timeout: 120_000,
+      env: {
+        NODE_ENV: 'development',
+        NEXT_PUBLIC_API_URL: 'http://localhost:8080',
+        NEXTAUTH_SECRET: 'test-secret',
+        NEXTAUTH_URL: 'http://localhost:3000',
+      },
     },
-  },
+    {
+      command: 'PORT=3001 npm run dev -w codesnippet',
+      url: 'http://localhost:3001/pastebin/',
+      reuseExistingServer: !process.env.CI,
+      timeout: 120_000,
+      env: {
+        NODE_ENV: 'development',
+        PORT: '3001',
+        NEXT_PUBLIC_DBAL_API_URL: 'http://localhost:8080',
+        NEXT_PUBLIC_FLASK_BACKEND_URL: 'http://localhost:5000',
+        NEXTAUTH_SECRET: 'test-secret',
+        NEXTAUTH_URL: 'http://localhost:3001',
+      },
+    },
+  ],
 
   projects: [
     {
