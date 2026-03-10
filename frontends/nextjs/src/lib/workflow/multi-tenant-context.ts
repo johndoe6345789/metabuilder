@@ -414,10 +414,8 @@ export class MultiTenantContextBuilder {
         const record = varValue as Record<string, unknown>
         if (record._tenantId != null) {
           if (record._tenantId !== context.tenantId) {
-            throw new Error(
-              `Variable ${varName} belongs to different tenant ${String(record._tenantId)}. ` +
-              `Current tenant: ${context.tenantId}`
-            )
+            // Filter out cross-tenant variable rather than failing the entire build
+            context.variables[varName] = null
           }
         }
       }

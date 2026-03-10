@@ -25,6 +25,7 @@ import type { ValidationError } from '@metabuilder/workflow'
 export interface WorkflowApiResponse {
   status: number
   json: FormattedError
+  headers?: Map<string, string>
 }
 
 /**
@@ -385,7 +386,9 @@ export class WorkflowErrorHandler {
     context: ErrorContext = {}
   ): WorkflowApiResponse {
     const code = this.getErrorCode(error)
-    const message = ERROR_MESSAGES[code] ?? this.getErrorMessage(error)
+    const message = this.isDevelopment
+      ? (this.getErrorMessage(error) ?? ERROR_MESSAGES[code])
+      : (ERROR_MESSAGES[code] ?? this.getErrorMessage(error))
     const statusCode = ERROR_STATUS_MAP[code] ?? 500
 
     const response: FormattedError = {
@@ -524,7 +527,7 @@ export class WorkflowErrorHandler {
       },
     }
 
-    return { status: 429, json: response }
+    return { status: 429, json: response, headers: new Map([['Retry-After', String(retryAfter)]]) }
   }
 
   /**
@@ -535,9 +538,10 @@ export class WorkflowErrorHandler {
     context: ErrorContext = {}
   ): WorkflowApiResponse {
     let errorCode = WorkflowErrorCode.INSUFFICIENT_RESOURCES
-    if (reason.includes('memory')) {
+    const reasonLower = reason.toLowerCase()
+    if (reasonLower.includes('memory') && reasonLower.includes('limit')) {
       errorCode = WorkflowErrorCode.MEMORY_LIMIT_EXCEEDED
-    } else if (reason.includes('queue')) {
+    } else if (reasonLower.includes('queue')) {
       errorCode = WorkflowErrorCode.EXECUTION_QUEUE_FULL
     }
 
