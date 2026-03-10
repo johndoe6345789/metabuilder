@@ -28,7 +28,7 @@ export default defineConfig({
 
   /* Start workflowui dev server automatically when not running against Docker stack */
   webServer: process.env.PLAYWRIGHT_BASE_URL ? undefined : {
-    command: 'npm run dev -w frontends/workflowui',
+    command: 'npm run dev -w workflowui',
     url: 'http://localhost:3000/workflowui/',
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
