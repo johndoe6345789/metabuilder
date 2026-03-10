@@ -33,9 +33,9 @@ export function EmptyStateShowcase() {
   const [animationsEnabled, setAnimationsEnabled] = useState(true)
 
   // Example handlers
-  const handleCreate = () => alert('Create button clicked')
-  const handleRetry = () => alert('Retry button clicked')
-  const handleAction = () => alert('Action button clicked')
+  const handleCreate = () => { alert('Create button clicked') }
+  const handleRetry = () => { alert('Retry button clicked') }
+  const handleAction = () => { alert('Action button clicked') }
 
   const items: ShowcaseItem[] = [
     {
@@ -225,9 +225,9 @@ export function EmptyStateShowcase() {
             </label>
             <select
               value={selectedSize}
-              onChange={(e) =>
+              onChange={(e) => {
                 setSelectedSize(e.target.value as 'compact' | 'normal' | 'large')
-              }
+              }}
               style={{
                 width: '100%',
                 padding: '8px',
@@ -260,7 +260,7 @@ export function EmptyStateShowcase() {
               <input
                 type="checkbox"
                 checked={animationsEnabled}
-                onChange={(e) => setAnimationsEnabled(e.target.checked)}
+                onChange={(e) => { setAnimationsEnabled(e.target.checked) }}
                 style={{
                   marginRight: '8px',
                   cursor: 'pointer',

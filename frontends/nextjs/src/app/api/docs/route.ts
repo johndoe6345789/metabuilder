@@ -93,7 +93,7 @@ function generateSwaggerHTML(specUrl: string): string {
  *
  * Returns interactive API documentation
  */
-export async function GET() {
+export function GET() {
   const html = generateSwaggerHTML('/api/docs/openapi.json')
 
   return new Response(html, {

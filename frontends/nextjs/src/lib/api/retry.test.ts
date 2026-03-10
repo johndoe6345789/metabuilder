@@ -21,7 +21,7 @@ describe('retry utilities', () => {
       { statusCode: 429, shouldRetry: true, description: 'rate limited (retryable)' },
     ])('should handle $description correctly', async ({ statusCode, shouldRetry }) => {
       let callCount = 0
-      const mockFetch = vi.fn(async () => { // eslint-disable-line @typescript-eslint/require-await
+      const mockFetch = vi.fn(async () => {
         const currentCall = callCount++
         return new Response(JSON.stringify({ test: 'data' }), {
           status: shouldRetry ? (currentCall === 0 ? statusCode : 200) : statusCode,
@@ -49,7 +49,7 @@ describe('retry utilities', () => {
     })
 
     it('should retry up to maxRetries times', async () => {
-      const mockFetch = vi.fn(async () => { // eslint-disable-line @typescript-eslint/require-await
+      const mockFetch = vi.fn(async () => {
         return new Response(JSON.stringify({ error: 'Server error' }), { status: 500 })
       })
 
@@ -65,7 +65,7 @@ describe('retry utilities', () => {
     })
 
     it('should use exponential backoff', async () => {
-      const mockFetch = vi.fn(async () => { // eslint-disable-line @typescript-eslint/require-await
+      const mockFetch = vi.fn(async () => {
         return new Response(JSON.stringify({ error: 'Server error' }), { status: 500 })
       })
 
@@ -90,7 +90,7 @@ describe('retry utilities', () => {
 
     it('should handle network errors with retries', async () => {
       let callCount = 0
-      const mockFetch = vi.fn(async () => { // eslint-disable-line @typescript-eslint/require-await
+      const mockFetch = vi.fn(async () => {
         callCount++
         if (callCount < 3) {
           throw new Error('Network error')
@@ -110,7 +110,7 @@ describe('retry utilities', () => {
     })
 
     it('should throw error after max retries exceeded', async () => {
-      const mockFetch = vi.fn(async () => { // eslint-disable-line @typescript-eslint/require-await
+      const mockFetch = vi.fn(async () => {
         throw new Error('Network error')
       })
 
@@ -125,7 +125,7 @@ describe('retry utilities', () => {
     })
 
     it('should respect maxDelayMs', async () => {
-      const mockFetch = vi.fn(async () => { // eslint-disable-line @typescript-eslint/require-await
+      const mockFetch = vi.fn(async () => {
         return new Response(JSON.stringify({ error: 'Server error' }), { status: 500 })
       })
 
@@ -148,7 +148,6 @@ describe('retry utilities', () => {
   describe('retry', () => {
     it('should retry async function on failure', async () => {
       let callCount = 0
-      // eslint-disable-next-line @typescript-eslint/require-await
       const mockFn = vi.fn(async () => {
         callCount++
         if (callCount < 2) {
@@ -168,7 +167,6 @@ describe('retry utilities', () => {
     })
 
     it('should return result on first success', async () => {
-      // eslint-disable-next-line @typescript-eslint/require-await
       const mockFn = vi.fn(async () => 'success')
 
       const result = await retry(mockFn, { maxRetries: 3, initialDelayMs: 10 })
@@ -178,7 +176,6 @@ describe('retry utilities', () => {
     })
 
     it('should throw after max retries', async () => {
-      // eslint-disable-next-line @typescript-eslint/require-await
       const mockFn = vi.fn(async () => {
         throw new Error('Persistent error')
       })
@@ -195,7 +192,6 @@ describe('retry utilities', () => {
 
     it('should use exponential backoff', async () => {
       let callCount = 0
-      // eslint-disable-next-line @typescript-eslint/require-await
       const mockFn = vi.fn(async () => {
         callCount++
         if (callCount < 4) {

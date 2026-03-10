@@ -29,7 +29,7 @@ export async function POST(
   }
 }
 
-export async function GET(
+export function GET(
   _req: NextRequest,
   { params: _params }: { params: Promise<{ tenant: string; workflowId: string }> },
 ) {

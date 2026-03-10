@@ -1,6 +1,6 @@
 /**
  * WorkflowService - Workflow execution and management
- * 
+ *
  * PHASE 5: This module requires @metabuilder/workflow package integration
  * For now, it's a placeholder to unblock Phase 4 validation
  */
@@ -22,14 +22,44 @@
 //   type ExecutionRecord,
 // } from '@metabuilder/workflow'
 
+/** Placeholder for Phase 5 workflow execution result */
+interface ExecutionResult {
+  executionId: string
+  status: string
+  output: Record<string, unknown>
+}
+
+/** Placeholder for Phase 5 workflow definition */
+interface WorkflowDefinition {
+  id: string
+  name: string
+  nodes: Record<string, unknown>[]
+}
+
+/** Placeholder for Phase 5 execution status */
+interface ExecutionStatus {
+  executionId: string
+  status: string
+  startedAt: string
+  completedAt?: string
+}
+
+/** Placeholder for Phase 5 execution list entry */
+interface ExecutionListEntry {
+  executionId: string
+  workflowId: string
+  status: string
+  startedAt: string
+}
+
 export class WorkflowService {
-  private static executor: any = null
+  private static readonly executor: unknown = null
 
   /**
    * Initialize the workflow engine
    * Phase 5: Integrate with @metabuilder/workflow
    */
-  static async initializeWorkflowEngine(): Promise<void> {
+  static initializeWorkflowEngine(): void {
     // Phase 5: Workflow initialization deferred
     console.warn('WorkflowService: Phase 5 - Workflow engine initialization deferred')
   }
@@ -38,11 +68,11 @@ export class WorkflowService {
    * Execute a workflow
    * Phase 5: Integrate with DAGExecutor
    */
-  static async executeWorkflow(
+  static executeWorkflow(
     _workflowId: string,
     _tenantId: string,
     _input: Record<string, unknown> = {},
-  ): Promise<any> {
+  ): Promise<ExecutionResult> {
     throw new Error('WorkflowService: Phase 5 - Workflow execution not yet implemented')
   }
 
@@ -50,12 +80,12 @@ export class WorkflowService {
    * Save execution record
    * Phase 5: Store execution results in database
    */
-  static async saveExecutionRecord(
+  static saveExecutionRecord(
     executionId: string,
     _workflowId: string,
     _tenantId: string,
-    _result: any,
-  ): Promise<void> {
+    _result: Record<string, unknown>,
+  ): void {
     console.warn(`WorkflowService: Phase 5 - Execution record deferred (${executionId})`)
   }
 
@@ -63,10 +93,10 @@ export class WorkflowService {
    * Load a workflow definition
    * Phase 5: Integrate with DBAL
    */
-  static async loadWorkflow(
+  static loadWorkflow(
     _workflowId: string,
     _tenantId: string,
-  ): Promise<any> {
+  ): Promise<WorkflowDefinition> {
     throw new Error('WorkflowService: Phase 5 - Workflow loading not yet implemented')
   }
 
@@ -74,10 +104,10 @@ export class WorkflowService {
    * Get execution status
    * Phase 5: Query execution records from database
    */
-  static async getExecutionStatus(
+  static getExecutionStatus(
     _executionId: string,
     _tenantId: string,
-  ): Promise<any> {
+  ): Promise<ExecutionStatus> {
     throw new Error('WorkflowService: Phase 5 - Execution status not yet implemented')
   }
 
@@ -85,12 +115,12 @@ export class WorkflowService {
    * List executions
    * Phase 5: Query execution records with filtering
    */
-  static async listExecutions(
+  static listExecutions(
     _workflowId: string,
     _tenantId: string,
     _limit: number = 50,
     _offset: number = 0,
-  ): Promise<any[]> {
+  ): Promise<ExecutionListEntry[]> {
     throw new Error('WorkflowService: Phase 5 - Execution listing not yet implemented')
   }
 
@@ -98,7 +128,7 @@ export class WorkflowService {
    * Abort a running execution
    * Phase 5: Signal abort to executor
    */
-  static async abortExecution(
+  static abortExecution(
     _executionId: string,
     _tenantId: string,
   ): Promise<void> {

@@ -3,8 +3,8 @@
 import type {
   PackageInfo,
   PackageError,
-  PackageErrorCode,
 } from '@/lib/types/package-admin-types'
+import { PackageErrorCode } from '@/lib/types/package-admin-types'
 
 /**
  * Package Management Utilities
@@ -17,44 +17,55 @@ import type {
  */
 
 /**
+ * Type guard for PackageError
+ */
+function isPackageError(error: unknown): error is PackageError {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'code' in error &&
+    typeof (error as PackageError).code === 'string'
+  )
+}
+
+/**
  * Parse error code from various error types
  */
 export function parseErrorCode(error: unknown): PackageErrorCode {
-  if (typeof error === 'object' && error !== null && 'code' in error) {
-    return (error as PackageError).code
+  if (isPackageError(error)) {
+    return error.code
   }
 
   if (error instanceof Error) {
     if (error.message.includes('already installed')) {
-      return 'ALREADY_INSTALLED' as PackageErrorCode
+      return PackageErrorCode.ALREADY_INSTALLED
     }
     if (error.message.includes('not installed')) {
-      return 'ALREADY_UNINSTALLED' as PackageErrorCode
+      return PackageErrorCode.ALREADY_UNINSTALLED
     }
     if (error.message.includes('permission')) {
-      return 'PERMISSION_DENIED' as PackageErrorCode
+      return PackageErrorCode.PERMISSION_DENIED
     }
     if (error.message.includes('dependency')) {
-      return 'DEPENDENCY_ERROR' as PackageErrorCode
+      return PackageErrorCode.DEPENDENCY_ERROR
     }
     if (error.message.includes('not found')) {
-      return 'PACKAGE_NOT_FOUND' as PackageErrorCode
+      return PackageErrorCode.PACKAGE_NOT_FOUND
     }
   }
 
-  return 'UNKNOWN_ERROR' as PackageErrorCode
+  return PackageErrorCode.UNKNOWN_ERROR
 }
 
 /**
  * Get user-friendly error message
  */
 export function getErrorMessage(error: PackageError | Error | null): string {
-  if (!error) {
+  if (error == null) {
     return 'An unknown error occurred'
   }
 
-  if ('code' in error && typeof (error as PackageError).code === 'string') {
-    const packageError = error as PackageError
+  if (isPackageError(error)) {
     const messages: Record<string, string> = {
       NETWORK_ERROR: 'Network error. Please check your connection.',
       ALREADY_INSTALLED: 'This package is already installed.',
@@ -68,28 +79,27 @@ export function getErrorMessage(error: PackageError | Error | null): string {
       UNKNOWN_ERROR: 'An unknown error occurred.',
     }
 
-    return messages[(packageError as any).code] || error.message
+    return messages[error.code] ?? error.message
   }
 
-  return error.message || 'An unknown error occurred'
+  return error.message ?? 'An unknown error occurred'
 }
 
 /**
  * Check if error is retryable
  */
 export function isRetryableError(error: PackageError | Error | null): boolean {
-  if (!error) {
+  if (error == null) {
     return false
   }
 
-  if ('code' in error && typeof (error as PackageError).code === 'string') {
-    const packageError = error as PackageError
-    const retryableCodes = [
-      'NETWORK_ERROR',
-      'SERVER_ERROR',
+  if (isPackageError(error)) {
+    const retryableCodes: PackageErrorCode[] = [
+      PackageErrorCode.NETWORK_ERROR,
+      PackageErrorCode.SERVER_ERROR,
     ]
 
-    return retryableCodes.includes((packageError as any).code)
+    return retryableCodes.includes(error.code)
   }
 
   return false
@@ -105,7 +115,7 @@ export function formatPackageStatus(status: string): string {
     disabled: 'Disabled',
   }
 
-  return map[status] || status
+  return map[status] ?? status
 }
 
 /**
@@ -198,7 +208,7 @@ export function filterPackagesBySearch(
   packages: PackageInfo[],
   searchTerm: string
 ): PackageInfo[] {
-  if (!searchTerm.trim()) {
+  if (searchTerm.trim() === '') {
     return packages
   }
 
@@ -223,8 +233,8 @@ export function sortPackages(
   const sorted = [...packages]
 
   sorted.sort((a, b) => {
-    let aVal: any
-    let bVal: any
+    let aVal: string | number
+    let bVal: string | number
 
     switch (sortBy) {
       case 'name':
@@ -315,13 +325,13 @@ export function getAvailableActions(pkg: PackageInfo): Array<'install' | 'uninst
 export function validatePackageData(pkg: Partial<PackageInfo>): string[] {
   const errors: string[] = []
 
-  if (!pkg.id || typeof pkg.id !== 'string') {
+  if (pkg.id == null || typeof pkg.id !== 'string') {
     errors.push('Invalid package ID')
   }
-  if (!pkg.name || typeof pkg.name !== 'string') {
+  if (pkg.name == null || typeof pkg.name !== 'string') {
     errors.push('Invalid package name')
   }
-  if (!pkg.version || typeof pkg.version !== 'string') {
+  if (pkg.version == null || typeof pkg.version !== 'string') {
     errors.push('Invalid version')
   }
   if (typeof pkg.rating !== 'number' || pkg.rating < 0 || pkg.rating > 5) {
@@ -345,7 +355,7 @@ export function mergePackageUpdate(
  * Get dependencies display string
  */
 export function formatDependencies(dependencies: string[]): string {
-  if (!dependencies || dependencies.length === 0) {
+  if (dependencies.length === 0) {
     return 'None'
   }
   return dependencies.join(', ')

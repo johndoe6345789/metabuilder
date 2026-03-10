@@ -29,6 +29,5 @@ declare module '@monaco-editor/react' {
   const Editor: ComponentType<EditorProps>
   export default Editor
 
-  // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
   export function useMonaco(): Monaco | null
 }

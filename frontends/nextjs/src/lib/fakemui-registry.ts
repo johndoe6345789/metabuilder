@@ -14,12 +14,12 @@ import type { ComponentType } from 'react'
  * Phase 4 validation focuses on Redux migration.
  * Fakemui component integration is deferred to Phase 5.
  */
-export const FAKEMUI_REGISTRY: Record<string, ComponentType<any>> = {}
+export const FAKEMUI_REGISTRY: Record<string, ComponentType<Record<string, unknown>>> = {}
 
 /**
  * Helper hook to get a component from the registry
  */
-export function useFakeMuiComponent(name: keyof typeof FAKEMUI_REGISTRY) {
+export function useFakeMuiComponent(name: keyof typeof FAKEMUI_REGISTRY): null {
   console.warn(`FakeMUI component ${String(name)} not available in Phase 4. Deferred to Phase 5.`)
-  return null as any
+  return null
 }

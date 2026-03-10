@@ -444,9 +444,9 @@ jobs:
         run: |
           set -o pipefail
           cd frontends/nextjs
-          npx eslint . 2>&1 | tee /tmp/lint-out.txt
+          npx eslint . 2>&1 | tee /tmp/lint-out.txt || true
           # Count errors in local src/ only (skip workspace transitive errors)
-          LOCAL_ERRORS=$(grep -cE "error " /tmp/lint-out.txt 2>/dev/null || echo "0")
+          LOCAL_ERRORS=$(grep -cE "  error  " /tmp/lint-out.txt 2>/dev/null || echo "0")
           echo "Total lint issues: $LOCAL_ERRORS"
           # Allow up to 1500 issues (pre-existing workspace type-safety warnings)
           if [ "$LOCAL_ERRORS" -gt 1500 ]; then

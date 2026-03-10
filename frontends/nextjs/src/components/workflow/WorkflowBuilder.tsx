@@ -16,7 +16,7 @@
 'use client'
 
 import React, { useState, useCallback, useMemo } from 'react'
-import type { WorkflowDefinition, WorkflowNode } from '@metabuilder/workflow'
+import type { WorkflowDefinition, WorkflowNode, ConnectionTarget, ExecutionRecord, NodeResult } from '@metabuilder/workflow'
 import { useWorkflow } from '@metabuilder/hooks'
 import styles from './WorkflowBuilder.module.css'
 
@@ -24,7 +24,7 @@ export interface WorkflowBuilderProps {
   workflow: WorkflowDefinition
   tenant: string
   readOnly?: boolean
-  onExecute?: (result: any) => void
+  onExecute?: (result: ExecutionRecord) => void
   onError?: (error: Error) => void
 }
 
@@ -49,14 +49,14 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
   const [nodeUIStates, setNodeUIStates] = useState<Map<string, NodeUIState>>(
     new Map()
   )
-  const [triggerData, setTriggerData] = useState<Record<string, any>>({})
+  const [triggerData, setTriggerData] = useState<Record<string, unknown>>({})
   const [showAdvanced, setShowAdvanced] = useState(false)
 
   const { execute, loading, state, error } = useWorkflow({
     onSuccess: (record) => {
       // Update node UI states based on execution results
       const newStates = new Map(nodeUIStates)
-      Object.entries(record.state).forEach(([nodeId, result]) => {
+      Object.entries(record.state).forEach(([nodeId, result]: [string, NodeResult]) => {
         newStates.set(nodeId, {
           nodeId,
           isSelected: selectedNodeId === nodeId,
@@ -70,12 +70,12 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
       })
       setNodeUIStates(newStates)
 
-      if (onExecute) {
+      if (onExecute != null) {
         onExecute(record)
       }
     },
     onError: (err) => {
-      if (onError) {
+      if (onError != null) {
         onError(err)
       }
     },
@@ -102,7 +102,7 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
   }, [execute, tenant, workflow.id, triggerData])
 
   const handleTriggerDataChange = useCallback(
-    (key: string, value: any) => {
+    (key: string, value: unknown) => {
       setTriggerData((prev) => ({
         ...prev,
         [key]: value,
@@ -112,10 +112,10 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
   )
 
   const handleNodeParameterChange = useCallback(
-    (nodeId: string, paramKey: string, value: any) => {
+    (nodeId: string, paramKey: string, value: unknown) => {
       // This would update the workflow definition
       // Implementation depends on workflow editing capability
-      console.log(`Update node ${nodeId} parameter ${paramKey} = ${value}`)
+      console.warn(`Update node ${nodeId} parameter ${paramKey} = ${String(value)}`)
     },
     []
   )
@@ -143,7 +143,7 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
                 node={node}
                 isSelected={selectedNodeId === node.id}
                 uiState={nodeUIStates.get(node.id)}
-                onClick={() => handleNodeClick(node.id)}
+                onClick={() => { handleNodeClick(node.id) }}
               />
             ))}
           </g>
@@ -166,11 +166,11 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
                 <label>{variable.name}</label>
                 <input
                   type="text"
-                  placeholder={variable.description || name}
-                  value={triggerData[name] || ''}
-                  onChange={(e) =>
+                  placeholder={variable.description ?? name}
+                  value={(triggerData[name] as string) ?? ''}
+                  onChange={(e) => {
                     handleTriggerDataChange(name, e.target.value)
-                  }
+                  }}
                 />
               </div>
             ))}
@@ -178,14 +178,14 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
         </div>
 
         {/* Selected Node Details */}
-        {selectedNode && (
+        {selectedNode != null && (
           <div className={styles.section}>
             <h3>Node: {selectedNode.name}</h3>
             <div className={styles.nodeDetails}>
               <p className={styles.nodeType}>
                 Type: <code>{selectedNode.nodeType}</code>
               </p>
-              {selectedNode.description && (
+              {selectedNode.description != null && selectedNode.description !== '' && (
                 <p className={styles.nodeDescription}>
                   {selectedNode.description}
                 </p>
@@ -195,16 +195,16 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
               {Object.keys(selectedNode.parameters).length > 0 && (
                 <div className={styles.parameters}>
                   <h4>Parameters</h4>
-                  {Object.entries(selectedNode.parameters).map(
-                    ([key, value]) => (
+                  {Object.entries(selectedNode.parameters as Record<string, unknown>).map(
+                    ([key, value]: [string, unknown]) => (
                       <div key={key} className={styles.paramField}>
                         <label>{key}</label>
                         <input
                           type="text"
                           value={JSON.stringify(value)}
-                          onChange={(e) =>
+                          onChange={(e) => {
                             handleNodeParameterChange(selectedNode.id, key, e.target.value)
-                          }
+                          }}
                           disabled={readOnly}
                         />
                       </div>
@@ -214,7 +214,7 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
               )}
 
               {/* Execution Result */}
-              {state.state?.[selectedNode.id] && (
+              {state.state?.[selectedNode.id] != null && (
                 <div className={styles.result}>
                   <h4>Execution Result</h4>
                   <pre>
@@ -236,7 +236,7 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
             {loading ? 'Executing...' : 'Execute Workflow'}
           </button>
 
-          {error && (
+          {error != null && (
             <div className={styles.error}>
               <p>Error: {error.message}</p>
             </div>
@@ -245,7 +245,7 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
           {state.status === 'success' && (
             <div className={styles.success}>
               <p>✓ Execution successful</p>
-              {state.metrics && (
+              {state.metrics != null && (
                 <div className={styles.metrics}>
                   <p>
                     Duration: {state.duration}ms |
@@ -261,7 +261,7 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
         <div className={styles.section}>
           <button
             className={styles.advancedToggle}
-            onClick={() => setShowAdvanced(!showAdvanced)}
+            onClick={() => { setShowAdvanced(!showAdvanced) }}
           >
             {showAdvanced ? '▼' : '▶'} Advanced Options
           </button>
@@ -306,9 +306,9 @@ const NodeComponent: React.FC<NodeComponentProps> = ({
   onClick,
 }) => {
   const [x, y] = node.position
-  const [width, height] = node.size || [120, 60]
+  const [width, height] = node.size ?? [120, 60]
 
-  const statusClass = uiState?.status ? styles[`status-${uiState.status}`] : ''
+  const statusClass = uiState?.status != null ? styles[`status-${uiState.status}`] : ''
 
   return (
     <g>
@@ -324,7 +324,7 @@ const NodeComponent: React.FC<NodeComponentProps> = ({
       <text x={x + width / 2} y={y + height / 2} className={styles.nodeLabel}>
         {node.name}
       </text>
-      {uiState?.status && (
+      {uiState?.status != null && (
         <circle
           cx={x + width - 10}
           cy={y + 10}
@@ -342,20 +342,20 @@ const NodeComponent: React.FC<NodeComponentProps> = ({
 function renderConnections(workflow: WorkflowDefinition) {
   const paths: React.ReactNode[] = []
 
-  Object.entries(workflow.connections).forEach(([fromNodeId, portMap]) => {
+  Object.entries(workflow.connections).forEach(([fromNodeId, portMap]: [string, Record<string, Record<string, ConnectionTarget[]>>]) => {
     const fromNode = workflow.nodes.find((n) => n.id === fromNodeId)
     if (!fromNode) return
 
-    Object.entries(portMap).forEach(([_portName, indexMap]) => {
-      Object.entries(indexMap).forEach(([_, targets]) => {
-        (targets as any[]).forEach((target) => {
+    Object.entries(portMap).forEach(([_portName, indexMap]: [string, Record<string, ConnectionTarget[]>]) => {
+      Object.entries(indexMap).forEach(([_, targets]: [string, ConnectionTarget[]]) => {
+        targets.forEach((target: ConnectionTarget) => {
           const toNode = workflow.nodes.find((n) => n.id === target.node)
           if (!toNode) return
 
           const [x1, y1] = fromNode.position
           const [x2, y2] = toNode.position
-          const [w1, h1] = fromNode.size || [120, 60]
-          const [_w2, h2] = toNode.size || [120, 60]
+          const [w1, h1] = fromNode.size ?? [120, 60]
+          const [_w2, h2] = toNode.size ?? [120, 60]
 
           const startX = x1 + w1
           const startY = y1 + h1 / 2
@@ -370,7 +370,7 @@ function renderConnections(workflow: WorkflowDefinition) {
               x2={endX}
               y2={endY}
               className={styles.connection}
-              strokeDasharray={target.conditional ? '5,5' : undefined}
+              strokeDasharray={target.conditional === true ? '5,5' : undefined}
             />
           )
         })

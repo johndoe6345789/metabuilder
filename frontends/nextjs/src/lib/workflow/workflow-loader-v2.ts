@@ -84,10 +84,10 @@ export interface WorkflowLoaderV2Options {
  * Layer 2: Redis cache (distributed, shared across processes)
  */
 export class ValidationCache {
-  private memoryCache: Map<string, CacheEntry>
-  private maxEntries: number
-  private ttlMs: number
-  private stats: CacheStatistics
+  private readonly memoryCache: Map<string, CacheEntry>
+  private readonly maxEntries: number
+  private readonly ttlMs: number
+  private readonly stats: CacheStatistics
   private cleanupInterval: NodeJS.Timeout | null = null
 
   /**
@@ -126,11 +126,11 @@ export class ValidationCache {
    *   console.log('Cache hit!')
    * }
    */
-  async get(key: string): Promise<WorkflowValidationResult | null> {
+  get(key: string): WorkflowValidationResult | null {
     // Try memory cache first (fast path)
     const entry = this.memoryCache.get(key)
 
-    if (entry) {
+    if (entry != null) {
       const age = Date.now() - entry.timestamp
       if (age < entry.ttl) {
         // Cache hit - still valid
@@ -151,7 +151,7 @@ export class ValidationCache {
     // if (redisValue) {
     //   const parsed = JSON.parse(redisValue)
     //   // Store in memory for future hits
-    //   await this.set(key, parsed)
+    //   this.set(key, parsed)
     //   return parsed
     // }
 
@@ -168,9 +168,9 @@ export class ValidationCache {
    * @param value - Validation result to cache
    *
    * @example
-   * await cache.set('tenant1:wf1:abc123', validationResult)
+   * cache.set('tenant1:wf1:abc123', validationResult)
    */
-  async set(key: string, value: WorkflowValidationResult): Promise<void> {
+  set(key: string, value: WorkflowValidationResult): void {
     // Store in memory cache with current timestamp
     this.memoryCache.set(key, {
       value,
@@ -181,7 +181,7 @@ export class ValidationCache {
     // Evict oldest entry if size limit exceeded (FIFO)
     if (this.memoryCache.size > this.maxEntries) {
       const firstKey = this.memoryCache.keys().next().value
-      if (firstKey) {
+      if (firstKey != null) {
         this.memoryCache.delete(firstKey)
       }
     }
@@ -203,9 +203,9 @@ export class ValidationCache {
    * @param key - Cache key to delete
    *
    * @example
-   * await cache.delete('tenant1:wf1:abc123')
+   * cache.delete('tenant1:wf1:abc123')
    */
-  async delete(key: string): Promise<void> {
+  delete(key: string): void {
     this.memoryCache.delete(key)
 
     // TODO: Delete from Redis
@@ -219,10 +219,9 @@ export class ValidationCache {
    * Removes all entries from memory and Redis, resets statistics.
    *
    * @example
-   * await cache.clear()
-   * console.log('Cache cleared')
+   * cache.clear()
    */
-  async clear(): Promise<void> {
+  clear(): void {
     this.memoryCache.clear()
     this.stats.hits = 0
     this.stats.misses = 0
@@ -283,7 +282,8 @@ export class ValidationCache {
       }
 
       if (cleaned > 0) {
-        console.log(`[CACHE CLEANUP] Removed ${cleaned} expired entries`)
+        // eslint-disable-next-line no-console
+        console.warn(`[CACHE CLEANUP] Removed ${cleaned} expired entries`)
       }
     }, 5 * 60 * 1000) // Every 5 minutes
   }
@@ -294,7 +294,7 @@ export class ValidationCache {
    * @private
    */
   destroy(): void {
-    if (this.cleanupInterval) {
+    if (this.cleanupInterval != null) {
       clearInterval(this.cleanupInterval)
       this.cleanupInterval = null
     }
@@ -352,10 +352,10 @@ interface CacheStatistics {
  * }
  */
 export class WorkflowLoaderV2 {
-  private cache: ValidationCache
-  private maxConcurrent: number
-  private activeValidations: Map<string, Promise<ExtendedValidationResult>>
-  private enableLogging: boolean
+  private readonly cache: ValidationCache
+  private readonly maxConcurrent: number
+  private readonly activeValidations: Map<string, Promise<ExtendedValidationResult>>
+  private readonly enableLogging: boolean
 
   /**
    * Creates a new WorkflowLoaderV2 instance
@@ -369,8 +369,8 @@ export class WorkflowLoaderV2 {
    * })
    */
   constructor(options: WorkflowLoaderV2Options = {}) {
-    this.cache = new ValidationCache(options.cacheTTLMs || 3600000, 100)
-    this.maxConcurrent = options.maxConcurrentValidations || 10
+    this.cache = new ValidationCache(options.cacheTTLMs ?? 3600000, 100)
+    this.maxConcurrent = options.maxConcurrentValidations ?? 10
     this.activeValidations = new Map()
     this.enableLogging = options.enableLogging !== false
   }
@@ -401,15 +401,11 @@ export class WorkflowLoaderV2 {
     workflow: WorkflowDefinition
   ): Promise<ExtendedValidationResult> {
     // Validate required fields
-    if (!workflow) {
-      throw new Error('Workflow definition is required')
-    }
-
-    if (!workflow.id) {
+    if (workflow.id.length === 0) {
       throw new Error('Workflow must have an id')
     }
 
-    if (!workflow.tenantId) {
+    if (workflow.tenantId.length === 0) {
       throw new Error('Workflow must have a tenantId')
     }
 
@@ -417,10 +413,11 @@ export class WorkflowLoaderV2 {
     const cacheKey = this.getCacheKey(workflow)
 
     // Check cache first
-    const cached = await this.cache.get(cacheKey)
-    if (cached) {
+    const cached = this.cache.get(cacheKey)
+    if (cached != null) {
       if (this.enableLogging) {
-        console.log(`[CACHE HIT] Validation for workflow ${workflow.id}`)
+        // eslint-disable-next-line no-console
+        console.warn(`[CACHE HIT] Validation for workflow ${workflow.id}`)
       }
       return {
         ...cached,
@@ -430,13 +427,15 @@ export class WorkflowLoaderV2 {
 
     // Check for duplicate concurrent validations
     const validationKey = `${workflow.tenantId}:${workflow.id}`
-    if (this.activeValidations.has(validationKey)) {
+    const existingValidation = this.activeValidations.get(validationKey)
+    if (existingValidation != null) {
       if (this.enableLogging) {
-        console.log(
+        // eslint-disable-next-line no-console
+        console.warn(
           `[DEDUP] Reusing in-flight validation for ${validationKey}`
         )
       }
-      return await this.activeValidations.get(validationKey)!
+      return await existingValidation
     }
 
     // Warn if approaching concurrency limit
@@ -452,7 +451,7 @@ export class WorkflowLoaderV2 {
 
     try {
       const result = await validationPromise
-      await this.cache.set(cacheKey, result)
+      this.cache.set(cacheKey, result)
       return result
     } finally {
       this.activeValidations.delete(validationKey)
@@ -476,31 +475,34 @@ export class WorkflowLoaderV2 {
     workflows: WorkflowDefinition[]
   ): Promise<ExtendedValidationResult[]> {
     if (this.enableLogging) {
-      console.log(`Starting batch validation for ${workflows.length} workflows`)
+      // eslint-disable-next-line no-console
+      console.warn(`Starting batch validation for ${workflows.length} workflows`)
     }
 
     const results = await Promise.allSettled(
       workflows.map((wf) => this.validateWorkflow(wf))
     )
 
-    return results.map((result, index) => {
+    return results.map((result) => {
       if (result.status === 'fulfilled') {
         return result.value
       } else {
         // Create error result for failed validation
-        const _workflow = workflows[index]
+        const reason = result.reason instanceof Error
+          ? result.reason.message
+          : String(result.reason)
         return {
           valid: false,
           errors: [
             {
               path: 'root',
-              message: `Validation failed: ${result.reason.message || result.reason}`,
+              message: `Validation failed: ${reason}`,
               severity: 'error' as const,
               code: 'VALIDATION_EXCEPTION',
             },
           ],
           warnings: [],
-        } as ExtendedValidationResult
+        } satisfies ExtendedValidationResult
       }
     })
   }
@@ -515,12 +517,12 @@ export class WorkflowLoaderV2 {
    * @example
    * const cached = await loader.getValidationResult('wf1', 'tenant1')
    */
-  async getValidationResult(
+  getValidationResult(
     workflowId: string,
     tenantId: string
-  ): Promise<WorkflowValidationResult | null> {
+  ): WorkflowValidationResult | null {
     const cacheKey = `${tenantId}:${workflowId}`
-    return await this.cache.get(cacheKey)
+    return this.cache.get(cacheKey)
   }
 
   /**
@@ -533,13 +535,14 @@ export class WorkflowLoaderV2 {
    * @param tenantId - Tenant ID
    *
    * @example
-   * await loader.invalidateCache('wf1', 'tenant1')
+   * loader.invalidateCache('wf1', 'tenant1')
    */
-  async invalidateCache(workflowId: string, tenantId: string): Promise<void> {
+  invalidateCache(workflowId: string, tenantId: string): void {
     const cacheKey = `${tenantId}:${workflowId}`
-    await this.cache.delete(cacheKey)
+    this.cache.delete(cacheKey)
     if (this.enableLogging) {
-      console.log(`[CACHE INVALIDATED] ${workflowId}`)
+      // eslint-disable-next-line no-console
+      console.warn(`[CACHE INVALIDATED] ${workflowId}`)
     }
   }
 
@@ -563,12 +566,10 @@ export class WorkflowLoaderV2 {
     return {
       workflowId: workflow.id,
       tenantId: workflow.tenantId,
-      nodeCount: workflow.nodes?.length || 0,
-      connectionCount: workflow.connections
-        ? Object.keys(workflow.connections).length
-        : 0,
-      triggerCount: workflow.triggers?.length || 0,
-      variableCount: workflow.variables ? Object.keys(workflow.variables).length : 0,
+      nodeCount: workflow.nodes.length,
+      connectionCount: Object.keys(workflow.connections).length,
+      triggerCount: workflow.triggers.length,
+      variableCount: Object.keys(workflow.variables).length,
       validation: {
         valid: validation.valid,
         errorCount: validation.errors.length,
@@ -577,8 +578,8 @@ export class WorkflowLoaderV2 {
         topWarnings: validation.warnings.slice(0, 5),
       },
       metrics: {
-        validationTimeMs: validation._validationTime || 0,
-        cacheHit: validation._cacheHit || false,
+        validationTimeMs: validation._validationTime ?? 0,
+        cacheHit: validation._cacheHit ?? false,
       },
     }
   }
@@ -590,12 +591,13 @@ export class WorkflowLoaderV2 {
    * on next access.
    *
    * @example
-   * await loader.clearCache()
+   * loader.clearCache()
    */
-  async clearCache(): Promise<void> {
-    await this.cache.clear()
+  clearCache(): void {
+    this.cache.clear()
     if (this.enableLogging) {
-      console.log('All validation caches cleared')
+      // eslint-disable-next-line no-console
+      console.warn('All validation caches cleared')
     }
   }
 
@@ -639,7 +641,7 @@ export class WorkflowLoaderV2 {
    * @param workflow - Workflow to validate
    * @returns Validation result with detailed errors/warnings
    */
-  private async _performValidation(
+  private _performValidation(
     workflow: WorkflowDefinition
   ): Promise<ExtendedValidationResult> {
     const startTime = Date.now()
@@ -660,20 +662,19 @@ export class WorkflowLoaderV2 {
       const duration = Date.now() - startTime
 
       if (this.enableLogging) {
-        console.log(`[VALIDATION] Workflow ${workflow.id} validated in ${duration}ms`, {
-          nodeCount: workflow.nodes?.length || 0,
-          connectionCount: workflow.connections
-            ? Object.keys(workflow.connections).length
-            : 0,
+        // eslint-disable-next-line no-console
+        console.warn(`[VALIDATION] Workflow ${workflow.id} validated in ${duration}ms`, {
+          nodeCount: workflow.nodes.length,
+          connectionCount: Object.keys(workflow.connections).length,
         })
       }
 
-      return {
+      return Promise.resolve({
         valid: true,
         errors: [],
         warnings: [],
         _validationTime: duration,
-      }
+      })
     } catch (error) {
       const duration = Date.now() - startTime
       console.error(`[VALIDATION ERROR] Workflow ${workflow.id}:`, error)
@@ -682,7 +683,7 @@ export class WorkflowLoaderV2 {
       const errorMessage =
         error instanceof Error ? error.message : String(error)
 
-      return {
+      return Promise.resolve({
         valid: false,
         errors: [
           {
@@ -694,7 +695,7 @@ export class WorkflowLoaderV2 {
         ],
         warnings: [],
         _validationTime: duration,
-      }
+      })
     }
   }
 
@@ -704,11 +705,11 @@ export class WorkflowLoaderV2 {
    * @private
    */
   private _validateWorkflowStructure(workflow: WorkflowDefinition): void {
-    if (!workflow.nodes || !Array.isArray(workflow.nodes)) {
+    if (!Array.isArray(workflow.nodes)) {
       throw new Error('Workflow must have nodes array')
     }
 
-    if (!workflow.connections || typeof workflow.connections !== 'object') {
+    if (typeof workflow.connections !== 'object') {
       throw new Error('Workflow must have connections object')
     }
 
@@ -726,17 +727,17 @@ export class WorkflowLoaderV2 {
     const nodeIds = new Set<string>()
     const nodeNames = new Set<string>()
 
-    for (const node of workflow.nodes || []) {
+    for (const node of workflow.nodes) {
       // Check node has required fields
-      if (!node.id) {
+      if (node.id.length === 0) {
         throw new Error('Node must have id')
       }
 
-      if (!node.name) {
+      if (node.name.length === 0) {
         throw new Error(`Node ${node.id} must have name`)
       }
 
-      if (!node.nodeType) {
+      if (node.nodeType.length === 0) {
         throw new Error(`Node ${node.id} must have nodeType`)
       }
 
@@ -760,25 +761,20 @@ export class WorkflowLoaderV2 {
    * @private
    */
   private _validateConnections(workflow: WorkflowDefinition): void {
-    const nodeIds = new Set(workflow.nodes?.map((n) => n.id) || [])
+    const nodeIds = new Set(workflow.nodes.map((n) => n.id))
 
-    for (const [sourceId, targets] of Object.entries(workflow.connections || {})) {
+    for (const [sourceId, outputTypes] of Object.entries(workflow.connections)) {
       // Source node must exist
       if (!nodeIds.has(sourceId)) {
         throw new Error(`Connection source node not found: ${sourceId}`)
       }
 
       // Validate target connections
-      if (typeof targets === 'object' && targets !== null) {
-        for (const [_, targetList] of Object.entries(targets)) {
-          if (Array.isArray(targetList)) {
-            for (const target of targetList) {
-              if (target && typeof target === 'object') {
-                const targetId = (target as any).node || (target as any).nodeId
-                if (targetId && !nodeIds.has(targetId)) {
-                  throw new Error(`Connection target node not found: ${targetId}`)
-                }
-              }
+      for (const [, outputIndices] of Object.entries(outputTypes)) {
+        for (const [, targetList] of Object.entries(outputIndices)) {
+          for (const target of targetList) {
+            if (target.node.length > 0 && !nodeIds.has(target.node)) {
+              throw new Error(`Connection target node not found: ${target.node}`)
             }
           }
         }
@@ -792,18 +788,16 @@ export class WorkflowLoaderV2 {
    * @private
    */
   private _validateMultiTenant(workflow: WorkflowDefinition): void {
-    if (!workflow.tenantId) {
+    if (workflow.tenantId.length === 0) {
       throw new Error('Workflow must have tenantId for multi-tenant safety')
     }
 
     // Check if variables have unsafe global scope
-    if (workflow.variables) {
-      for (const [varName, varDef] of Object.entries(workflow.variables)) {
-        if ((varDef as any).scope === 'global') {
-          throw new Error(
-            `Variable ${varName} has global scope. Only workflow/execution scope allowed.`
-          )
-        }
+    for (const [varName, varDef] of Object.entries(workflow.variables)) {
+      if (varDef.scope === 'global') {
+        throw new Error(
+          `Variable ${varName} has global scope. Only workflow/execution scope allowed.`
+        )
       }
     }
   }
@@ -875,7 +869,7 @@ let globalLoader: WorkflowLoaderV2 | null = null
 export function getWorkflowLoader(
   options?: WorkflowLoaderV2Options
 ): WorkflowLoaderV2 {
-  if (!globalLoader) {
+  if (globalLoader == null) {
     globalLoader = new WorkflowLoaderV2(options)
   }
   return globalLoader
@@ -890,7 +884,7 @@ export function getWorkflowLoader(
  * resetWorkflowLoader() // In test cleanup
  */
 export function resetWorkflowLoader(): void {
-  if (globalLoader) {
+  if (globalLoader != null) {
     globalLoader.destroy()
   }
   globalLoader = null

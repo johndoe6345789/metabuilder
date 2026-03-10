@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next'
+import type { Configuration } from 'webpack'
 import path from 'path'
 
 const projectDir = process.cwd()
@@ -100,36 +101,36 @@ const nextConfig: NextConfig = {
       '@dbal-ui': path.resolve(projectDir, '../../dbal/shared/ui'),
     },
   },
-  webpack(config, { isServer, webpack }) {
+  webpack(config: Configuration, { isServer, webpack }) {
     // Stub ALL external SCSS module imports with an actual .module.scss
     // so they go through the CSS module pipeline (css-loader sets .default correctly)
     const stubScss = path.resolve(projectDir, 'src/lib/empty.module.scss')
-    config.plugins.push(
+    config.plugins!.push(
       new webpack.NormalModuleReplacementPlugin(
         /\.module\.scss$/,
-        function (resource: any) {
-          const ctx = resource.context || ''
+        function (resource: { context?: string; request?: string }) {
+          const ctx = resource.context ?? ''
           if (!ctx.includes(path.join('frontends', 'nextjs', 'src'))) {
             resource.request = stubScss
           }
         }
       )
     )
-    config.optimization.minimize = false
+    config.optimization!.minimize = false
 
-    config.resolve.alias = {
-      ...config.resolve.alias,
+    config.resolve!.alias = {
+      ...(config.resolve!.alias as Record<string, string>),
       '@metabuilder/components': path.resolve(projectDir, 'src/lib/components-shim.ts'),
       '@dbal-ui': path.resolve(projectDir, '../../dbal/shared/ui'),
       // Resolve service-adapters to source (dist/ is not pre-built)
       '@metabuilder/service-adapters': path.resolve(monorepoRoot, 'redux/adapters/src'),
     }
 
-    config.externals = [...(config.externals || []), 'esbuild']
+    config.externals = [...((config.externals as string[]) ?? []), 'esbuild']
 
     if (!isServer) {
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
+      config.resolve!.fallback = {
+        ...(config.resolve!.fallback as Record<string, false>),
         '@aws-sdk/client-s3': false,
         fs: false,
         path: false,

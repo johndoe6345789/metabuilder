@@ -44,7 +44,7 @@ export type EmptyStateProps = Record<string, unknown>
 
 // Error Boundary
 export const ErrorBoundary = noop
-export const withErrorBoundary = (c: any) => c
+export const withErrorBoundary = <T>(c: T): T => c
 export const ErrorDisplay = noop
 export type ErrorBoundaryProps = Record<string, unknown>
 export type ErrorReporter = Record<string, unknown>

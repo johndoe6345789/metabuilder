@@ -26,8 +26,7 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
     const cookieStore = await cookies()
     const sessionToken = cookieStore.get(SESSION_COOKIE)
 
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (sessionToken?.value === null || sessionToken?.value === undefined || sessionToken.value.length === 0) {
+    if (!sessionToken?.value || sessionToken.value.length === 0) {
       return null
     }
 
@@ -35,18 +34,17 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
     const sessions = await db.sessions.list({
       filter: { token: sessionToken.value }
     })
-    
+
     const session = sessions.data?.[0] as DbalSessionRecord | undefined
 
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (session === null || session === undefined) {
+    if (session == null) {
       return null
     }
 
     // Get user from database using DBAL
     const user = await db.users.read(session.userId) as DbalUserRecord | null
-     
-    if (user === null || user === undefined) {
+
+    if (user == null) {
       return null
     }
 
@@ -58,11 +56,11 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
       username: user.username,
       email: user.email,
       role: user.role,
-      isInstanceOwner: user.isInstanceOwner || false,
-      profilePicture: user.profilePicture || null,
-      bio: user.bio || null,
+      isInstanceOwner: user.isInstanceOwner ?? false,
+      profilePicture: user.profilePicture ?? null,
+      bio: user.bio ?? null,
       createdAt: Number(user.createdAt),
-      tenantId: user.tenantId || null,
+      tenantId: user.tenantId ?? null,
       level,
     }
   } catch (error) {

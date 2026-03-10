@@ -6,6 +6,12 @@ import type {
   ConfirmationOptions,
   ToastOptions,
   PackageInfo,
+  PackageListState,
+  PackageListHandlers,
+  PackageActionsState,
+  PackageActionHandlers,
+  PackageDetailsState,
+  PackageDetailsHandlers,
 } from '@/lib/types/package-admin-types'
 
 /**
@@ -38,17 +44,22 @@ interface PageHandlersDependencies {
    * usePackages hook result
    */
   usePackages: {
-    state: any
-    handlers: any
-    pagination: any
+    state: PackageListState
+    handlers: PackageListHandlers
+    pagination: {
+      page: number
+      limit: number
+      total: number
+      pageCount: number
+    }
   }
 
   /**
    * usePackageActions hook result
    */
   usePackageActions: {
-    state: any
-    handlers: any
+    state: PackageActionsState
+    handlers: PackageActionHandlers
     isOperationInProgress: (id: string) => boolean
   }
 
@@ -56,8 +67,8 @@ interface PageHandlersDependencies {
    * usePackageDetails hook result
    */
   usePackageDetails: {
-    state: any
-    handlers: any
+    state: PackageDetailsState
+    handlers: PackageDetailsHandlers
   }
 
   /**
@@ -70,6 +81,21 @@ interface PageHandlersDependencies {
    * Toast notification function
    */
   showToast: (options: ToastOptions) => void
+}
+
+/**
+ * Extract error code from an unknown caught error
+ */
+function getErrorCode(err: unknown): string {
+  if (
+    err != null &&
+    typeof err === 'object' &&
+    'code' in err &&
+    typeof (err as { code: unknown }).code === 'string'
+  ) {
+    return (err as { code: string }).code
+  }
+  return ''
 }
 
 /**
@@ -89,7 +115,7 @@ function getErrorMessage(code: string, defaultMessage: string): string {
     SERVER_ERROR: 'Server error. Please try again later.',
   }
 
-  return messages[code] || defaultMessage
+  return messages[code] ?? defaultMessage
 }
 
 /**
@@ -119,8 +145,7 @@ export function createPackagePageHandlers(
   const handleFilterChange = async (status: PackageStatus): Promise<void> => {
     try {
       await usePackages.handlers.filterByStatus(status)
-    } catch (err) {
-      const _error = err instanceof Error ? err : new Error(String(err))
+    } catch (_err: unknown) {
       showToast({
         type: 'error',
         message: 'Failed to filter packages',
@@ -134,7 +159,7 @@ export function createPackagePageHandlers(
   const handlePageChange = async (page: number): Promise<void> => {
     try {
       await usePackages.handlers.changePage(page)
-    } catch (_err) {
+    } catch (_err: unknown) {
       showToast({
         type: 'error',
         message: 'Failed to change page',
@@ -148,7 +173,7 @@ export function createPackagePageHandlers(
   const handleLimitChange = async (limit: number): Promise<void> => {
     try {
       await usePackages.handlers.changeLimit(limit)
-    } catch (_err) {
+    } catch (_err: unknown) {
       showToast({
         type: 'error',
         message: 'Failed to change page size',
@@ -162,9 +187,8 @@ export function createPackagePageHandlers(
   const handleShowDetails = async (packageId: string): Promise<void> => {
     try {
       await usePackageDetails.handlers.openDetails(packageId)
-    } catch (err) {
-      const error = err as any
-      const message = getErrorMessage(error.code, 'Failed to load package details')
+    } catch (err: unknown) {
+      const message = getErrorMessage(getErrorCode(err), 'Failed to load package details')
       showToast({
         type: 'error',
         message,
@@ -186,7 +210,7 @@ export function createPackagePageHandlers(
     try {
       // Find package in list for display info
       const pkg = usePackages.state.packages.find((p: PackageInfo) => p.id === packageId)
-      if (!pkg) {
+      if (pkg == null) {
         showToast({
           type: 'error',
           message: 'Package not found',
@@ -207,7 +231,7 @@ export function createPackagePageHandlers(
         },
       })
 
-      if (!confirmed) {
+      if (confirmed !== true) {
         return
       }
 
@@ -218,9 +242,8 @@ export function createPackagePageHandlers(
         type: 'success',
         message: `${pkg.name} installed successfully`,
       })
-    } catch (err) {
-      const error = err as any
-      const message = getErrorMessage(error.code, 'Failed to install package')
+    } catch (err: unknown) {
+      const message = getErrorMessage(getErrorCode(err), 'Failed to install package')
       showToast({
         type: 'error',
         message,
@@ -234,7 +257,7 @@ export function createPackagePageHandlers(
   const handleUninstall = async (packageId: string): Promise<void> => {
     try {
       const pkg = usePackages.state.packages.find((p: PackageInfo) => p.id === packageId)
-      if (!pkg) {
+      if (pkg == null) {
         showToast({
           type: 'error',
           message: 'Package not found',
@@ -254,7 +277,7 @@ export function createPackagePageHandlers(
         },
       })
 
-      if (!confirmed) {
+      if (confirmed !== true) {
         return
       }
 
@@ -265,9 +288,8 @@ export function createPackagePageHandlers(
         type: 'success',
         message: `${pkg.name} uninstalled successfully`,
       })
-    } catch (err) {
-      const error = err as any
-      const message = getErrorMessage(error.code, 'Failed to uninstall package')
+    } catch (err: unknown) {
+      const message = getErrorMessage(getErrorCode(err), 'Failed to uninstall package')
       showToast({
         type: 'error',
         message,
@@ -281,7 +303,7 @@ export function createPackagePageHandlers(
   const handleEnable = async (packageId: string): Promise<void> => {
     try {
       const pkg = usePackages.state.packages.find((p: PackageInfo) => p.id === packageId)
-      if (!pkg) {
+      if (pkg == null) {
         showToast({
           type: 'error',
           message: 'Package not found',
@@ -301,7 +323,7 @@ export function createPackagePageHandlers(
         },
       })
 
-      if (!confirmed) {
+      if (confirmed !== true) {
         return
       }
 
@@ -312,9 +334,8 @@ export function createPackagePageHandlers(
         type: 'success',
         message: `${pkg.name} enabled`,
       })
-    } catch (err) {
-      const error = err as any
-      const message = getErrorMessage(error.code, 'Failed to enable package')
+    } catch (err: unknown) {
+      const message = getErrorMessage(getErrorCode(err), 'Failed to enable package')
       showToast({
         type: 'error',
         message,
@@ -328,7 +349,7 @@ export function createPackagePageHandlers(
   const handleDisable = async (packageId: string): Promise<void> => {
     try {
       const pkg = usePackages.state.packages.find((p: PackageInfo) => p.id === packageId)
-      if (!pkg) {
+      if (pkg == null) {
         showToast({
           type: 'error',
           message: 'Package not found',
@@ -348,7 +369,7 @@ export function createPackagePageHandlers(
         },
       })
 
-      if (!confirmed) {
+      if (confirmed !== true) {
         return
       }
 
@@ -359,9 +380,8 @@ export function createPackagePageHandlers(
         type: 'success',
         message: `${pkg.name} disabled`,
       })
-    } catch (err) {
-      const error = err as any
-      const message = getErrorMessage(error.code, 'Failed to disable package')
+    } catch (err: unknown) {
+      const message = getErrorMessage(getErrorCode(err), 'Failed to disable package')
       showToast({
         type: 'error',
         message,
@@ -374,7 +394,7 @@ export function createPackagePageHandlers(
    */
   const handleInstallFromModal = async (packageId: string): Promise<void> => {
     try {
-      if (!usePackageDetails.state.selectedPackage) {
+      if (usePackageDetails.state.selectedPackage == null) {
         showToast({
           type: 'error',
           message: 'No package selected',
@@ -393,7 +413,7 @@ export function createPackagePageHandlers(
         },
       })
 
-      if (!confirmed) {
+      if (confirmed !== true) {
         return
       }
 
@@ -407,9 +427,8 @@ export function createPackagePageHandlers(
         type: 'success',
         message: 'Package installed successfully',
       })
-    } catch (err) {
-      const error = err as any
-      const message = getErrorMessage(error.code, 'Failed to install package')
+    } catch (err: unknown) {
+      const message = getErrorMessage(getErrorCode(err), 'Failed to install package')
       showToast({
         type: 'error',
         message,
@@ -422,7 +441,7 @@ export function createPackagePageHandlers(
    */
   const handleUninstallFromModal = async (packageId: string): Promise<void> => {
     try {
-      if (!usePackageDetails.state.selectedPackage) {
+      if (usePackageDetails.state.selectedPackage == null) {
         showToast({
           type: 'error',
           message: 'No package selected',
@@ -441,7 +460,7 @@ export function createPackagePageHandlers(
         },
       })
 
-      if (!confirmed) {
+      if (confirmed !== true) {
         return
       }
 
@@ -455,9 +474,8 @@ export function createPackagePageHandlers(
         type: 'success',
         message: 'Package uninstalled successfully',
       })
-    } catch (err) {
-      const error = err as any
-      const message = getErrorMessage(error.code, 'Failed to uninstall package')
+    } catch (err: unknown) {
+      const message = getErrorMessage(getErrorCode(err), 'Failed to uninstall package')
       showToast({
         type: 'error',
         message,
@@ -481,7 +499,7 @@ export function createPackagePageHandlers(
         },
       })
 
-      if (!confirmed) {
+      if (confirmed !== true) {
         return
       }
 
@@ -495,9 +513,8 @@ export function createPackagePageHandlers(
         type: 'success',
         message: 'Package enabled',
       })
-    } catch (err) {
-      const error = err as any
-      const message = getErrorMessage(error.code, 'Failed to enable package')
+    } catch (err: unknown) {
+      const message = getErrorMessage(getErrorCode(err), 'Failed to enable package')
       showToast({
         type: 'error',
         message,
@@ -521,7 +538,7 @@ export function createPackagePageHandlers(
         },
       })
 
-      if (!confirmed) {
+      if (confirmed !== true) {
         return
       }
 
@@ -535,9 +552,8 @@ export function createPackagePageHandlers(
         type: 'success',
         message: 'Package disabled',
       })
-    } catch (err) {
-      const error = err as any
-      const message = getErrorMessage(error.code, 'Failed to disable package')
+    } catch (err: unknown) {
+      const message = getErrorMessage(getErrorCode(err), 'Failed to disable package')
       showToast({
         type: 'error',
         message,

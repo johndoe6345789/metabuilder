@@ -33,13 +33,13 @@ export async function GET(
     // Get package data using DBAL
     const packageData = await db.entity('packageData').read(resolvedParams.packageId)
     
-    if (!packageData) {
+    if (packageData == null) {
       return NextResponse.json({ data: null })
     }
-    
+
     // Parse the JSON data field
-    const data = packageData.data ? JSON.parse(packageData.data as string) : null
-    
+    const data: unknown = packageData.data != null ? JSON.parse(packageData.data as string) : null
+
     return NextResponse.json({ data })
   } catch (error) {
     console.error('Error fetching package data:', error)

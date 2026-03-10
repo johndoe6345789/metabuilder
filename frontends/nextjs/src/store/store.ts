@@ -1,3 +1,4 @@
+import type { Middleware } from '@reduxjs/toolkit'
 import { createPersistedStore } from '@metabuilder/redux-persist'
 import {
   coreReducers,
@@ -42,15 +43,15 @@ const { store, persistor } = createPersistedStore({
     key: 'nextjs-frontend',
     whitelist: ['auth', 'ui', 'workspace', 'project', 'workflows'],
   },
-  middleware: (base) => {
-    let middleware = base
+  middleware: (base: Middleware[]) => {
+    const middlewares: Middleware[] = [...base]
     if (isDev) {
-      middleware = middleware.concat(createLoggingMiddleware({ verbose: false }))
-      middleware = middleware.concat(createPerformanceMiddleware())
+      middlewares.push(createLoggingMiddleware({ verbose: false }) as Middleware)
+      middlewares.push(createPerformanceMiddleware() as Middleware)
     }
-    middleware = middleware.concat(createAnalyticsMiddleware())
-    middleware = middleware.concat(createErrorMiddleware())
-    return middleware
+    middlewares.push(createAnalyticsMiddleware() as Middleware)
+    middlewares.push(createErrorMiddleware() as Middleware)
+    return middlewares
   },
   devTools: getDevToolsConfig(),
   ignoredActions: ['asyncData/fetchAsyncData/pending'],

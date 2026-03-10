@@ -118,7 +118,7 @@ function createOps(entityName: string): EntityOps {
       if (options?.offset !== undefined) params.set('_offset', String(options.offset))
 
       const qs = params.toString()
-      const url = qs ? `${base}?${qs}` : base
+      const url = qs.length > 0 ? `${base}?${qs}` : base
 
       try {
         const raw = await dbalFetch<unknown>(url)
@@ -127,7 +127,7 @@ function createOps(entityName: string): EntityOps {
         if (Array.isArray(payload)) {
           return { data: payload, total: payload.length }
         }
-        if (payload && Array.isArray(payload.data)) {
+        if (payload != null && Array.isArray(payload.data)) {
           return { data: payload.data as Record<string, unknown>[], total: payload.total as number | undefined }
         }
         return { data: [] }
@@ -181,7 +181,7 @@ const cache = new Map<string, EntityOps>()
 function getOps(name: string): EntityOps {
   const entity = toEntityName(name)
   let ops = cache.get(entity)
-  if (!ops) {
+  if (ops == null) {
     ops = createOps(entity)
     cache.set(entity, ops)
   }

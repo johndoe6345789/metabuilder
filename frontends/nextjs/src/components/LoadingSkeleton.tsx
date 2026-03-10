@@ -124,7 +124,7 @@ export function LoadingSkeleton({
   children,
 }: LoadingSkeletonProps) {
   // Show error state if error exists
-  if (error) {
+  if (error != null) {
     return (
       errorComponent ?? (
         <div
@@ -165,7 +165,7 @@ export function LoadingSkeleton({
               animate={animate}
               className={className}
             />
-            {loadingMessage && <span style={{ marginLeft: '8px' }}>{loadingMessage}</span>}
+            {loadingMessage != null && loadingMessage !== '' && <span style={{ marginLeft: '8px' }}>{loadingMessage}</span>}
           </div>
         )
 
@@ -174,7 +174,7 @@ export function LoadingSkeleton({
         return (
           <div className={`loading-skeleton-block ${className ?? ''}`} style={style}>
             <Skeleton width={width} height={height} animate={animate} className={className} />
-            {loadingMessage && <p style={{ marginTop: '12px', color: '#666', fontSize: '14px' }}>{loadingMessage}</p>}
+            {loadingMessage != null && loadingMessage !== '' && <p style={{ marginTop: '12px', color: '#666', fontSize: '14px' }}>{loadingMessage}</p>}
           </div>
         )
     }

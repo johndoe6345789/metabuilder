@@ -287,7 +287,7 @@ export async function executePackageAction(
     const pkgResult = await db.installedPackages.list({ filter: { packageId, enabled: true } })
     const pkg = pkgResult.data[0] ?? null
     
-    if (pkg === null || pkg === undefined) {
+    if (pkg == null) {
       return options?.allowFallback === true
         ? { success: false, code: 'NOT_FOUND' }
         : { success: false, error: `Package not found or disabled: ${packageId}`, code: 'NOT_FOUND' }
@@ -368,7 +368,7 @@ export async function validateTenantAccess(
     const tenantResult = await db.entity('Tenant').list({ filter: { slug: tenantSlug } })
     const tenant = tenantResult.data[0] ?? null
     
-    if (tenant === null || tenant === undefined) {
+    if (tenant == null) {
       return { allowed: false, reason: `Tenant not found: ${tenantSlug}` }
     }
     

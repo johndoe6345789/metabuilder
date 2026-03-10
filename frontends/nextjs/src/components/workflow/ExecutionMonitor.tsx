@@ -21,6 +21,7 @@
 import React, { useState, useEffect } from 'react'
 import type {
   ExecutionRecord,
+  ExecutionMetrics,
   NodeResult,
   LogEntry,
 } from '@metabuilder/workflow'
@@ -64,7 +65,7 @@ export const ExecutionMonitor: React.FC<ExecutionMonitorProps> = ({
   // Load selected execution details
   useEffect(() => {
     const loadExecution = async () => {
-      if (!selectedExecutionId) return
+      if (selectedExecutionId === undefined) return
 
       setLoading(true)
       try {
@@ -72,7 +73,7 @@ export const ExecutionMonitor: React.FC<ExecutionMonitorProps> = ({
           `/api/v1/${tenant}/workflows/executions/${selectedExecutionId}`
         )
         if (response.ok) {
-          const data = await response.json()
+          const data = (await response.json()) as ExecutionRecord
           setCurrentExecution(data)
         }
       } catch (err) {
@@ -88,7 +89,7 @@ export const ExecutionMonitor: React.FC<ExecutionMonitorProps> = ({
   const handleExecutionSelect = (id: string) => {
     setSelectedExecutionId(id)
     setExpandedNodeId(null)
-    if (onExecutionSelect) {
+    if (onExecutionSelect !== undefined) {
       onExecutionSelect(id)
     }
   }
@@ -108,7 +109,7 @@ export const ExecutionMonitor: React.FC<ExecutionMonitorProps> = ({
           </button>
         </div>
 
-        {listError && (
+        {listError !== undefined && (
           <div className={styles.error}>
             <p>Error loading executions: {listError.message}</p>
           </div>
@@ -124,14 +125,14 @@ export const ExecutionMonitor: React.FC<ExecutionMonitorProps> = ({
             />
           ))}
 
-          {executions.length === 0 && !listError && (
+          {executions.length === 0 && listError === undefined && (
             <p className={styles.noResults}>No executions yet</p>
           )}
         </div>
       </div>
 
       {/* Execution Details */}
-      {currentExecution && (
+      {currentExecution !== null && (
         <div className={styles.executionDetails}>
           <ExecutionHeader execution={currentExecution} loading={loading} />
 
@@ -162,7 +163,7 @@ export const ExecutionMonitor: React.FC<ExecutionMonitorProps> = ({
           </div>
 
           {/* Logs */}
-          {currentExecution.logs && currentExecution.logs.length > 0 && (
+          {currentExecution.logs.length > 0 && (
             <div className={styles.section}>
               <h4>Execution Logs</h4>
               <LogViewer logs={currentExecution.logs} />
@@ -170,7 +171,7 @@ export const ExecutionMonitor: React.FC<ExecutionMonitorProps> = ({
           )}
 
           {/* Error Details */}
-          {currentExecution.error && (
+          {currentExecution.error !== undefined && (
             <div className={styles.section}>
               <h4>Error Details</h4>
               <ErrorDetails error={currentExecution.error} />
@@ -179,13 +180,13 @@ export const ExecutionMonitor: React.FC<ExecutionMonitorProps> = ({
         </div>
       )}
 
-      {!currentExecution && !loading && selectedExecutionId && (
+      {currentExecution === null && !loading && selectedExecutionId !== undefined && (
         <div className={styles.noSelection}>
           <p>No execution data available</p>
         </div>
       )}
 
-      {!selectedExecutionId && (
+      {selectedExecutionId === undefined && (
         <div className={styles.noSelection}>
           <p>Select an execution to view details</p>
         </div>
@@ -327,7 +328,7 @@ const NodeExecutionItem: React.FC<NodeExecutionItemProps> = ({
         <span className={styles.nodeId}>{nodeId}</span>
         <span className={styles.status}>{result.status}</span>
         <span className={styles.duration}>{getDurationMs()}ms</span>
-        {result.retries && result.retries > 0 && (
+        {result.retries !== undefined && result.retries > 0 && (
           <span className={styles.retries}>
             Retries: {result.retries}
           </span>
@@ -336,22 +337,22 @@ const NodeExecutionItem: React.FC<NodeExecutionItemProps> = ({
 
       {isExpanded && (
         <div className={styles.nodeItemDetails}>
-          {result.output && (
+          {result.output !== undefined && (
             <div className={styles.output}>
               <h5>Output</h5>
               <pre>{JSON.stringify(result.output, null, 2)}</pre>
             </div>
           )}
 
-          {result.error && (
+          {result.error !== undefined && (
             <div className={styles.errorDetail}>
               <h5>Error</h5>
               <p>{result.error}</p>
-              {result.errorCode && <code>{result.errorCode}</code>}
+              {result.errorCode !== undefined && <code>{result.errorCode}</code>}
             </div>
           )}
 
-          {result.inputData && (
+          {result.inputData !== undefined && (
             <div className={styles.inputData}>
               <h5>Input</h5>
               <pre>{JSON.stringify(result.inputData, null, 2)}</pre>
@@ -367,7 +368,7 @@ const NodeExecutionItem: React.FC<NodeExecutionItemProps> = ({
  * MetricsGrid - Display execution metrics
  */
 interface MetricsGridProps {
-  metrics: any
+  metrics: ExecutionMetrics
 }
 
 const MetricsGrid: React.FC<MetricsGridProps> = ({ metrics }) => {
@@ -432,7 +433,7 @@ const LogViewer: React.FC<LogViewerProps> = ({ logs }) => {
               {new Date(log.timestamp).toLocaleTimeString()}
             </span>
             <span className={styles.level}>[{log.level.toUpperCase()}]</span>
-            {log.nodeId && (
+            {log.nodeId !== undefined && (
               <span className={styles.nodeRef}>{log.nodeId}</span>
             )}
             <span className={styles.message}>{log.message}</span>
@@ -462,7 +463,7 @@ const ErrorDetails: React.FC<ErrorDetailsProps> = ({ error }) => (
     <p>
       <strong>Message:</strong> {error.message}
     </p>
-    {error.nodeId && (
+    {error.nodeId !== undefined && (
       <p>
         <strong>Node:</strong> {error.nodeId}
       </p>

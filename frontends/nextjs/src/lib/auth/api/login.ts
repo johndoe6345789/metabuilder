@@ -1,6 +1,6 @@
 /**
  * Login API
- * 
+ *
  * Authenticates a user and returns user data on success
  */
 
@@ -24,15 +24,15 @@ export interface LoginResult {
 /**
  * Hash password using SHA-512
  */
-async function hashPassword(password: string): Promise<string> {
+function hashPassword(password: string): string {
   return crypto.createHash('sha512').update(password).digest('hex')
 }
 
 /**
  * Verify password against hash
  */
-async function verifyPassword(password: string, hash: string): Promise<boolean> {
-  const passwordHash = await hashPassword(password)
+function verifyPassword(password: string, hash: string): boolean {
+  const passwordHash = hashPassword(password)
   return passwordHash === hash
 }
 
@@ -44,11 +44,11 @@ export async function login(identifier: string, password: string): Promise<Login
         username: identifier
       }
     })
-    
+
     let user = users.data?.[0] as DbalUserRecord | undefined
 
     // If not found by username, try email
-    if (!user) {
+    if (user === undefined) {
       const usersByEmail = await db.users.list({
         filter: {
           email: identifier
@@ -56,8 +56,8 @@ export async function login(identifier: string, password: string): Promise<Login
       })
       user = usersByEmail.data?.[0] as DbalUserRecord | undefined
     }
-    
-    if (!user) {
+
+    if (user === undefined) {
       return {
         success: false,
         user: null,
@@ -68,8 +68,8 @@ export async function login(identifier: string, password: string): Promise<Login
     // Get credential for this user
     const credResult = await db.credentials.list({ filter: { username: user.username } })
     const credential = (credResult.data[0] as DbalCredentialRecord | undefined) ?? null
-    
-    if (!credential?.passwordHash) {
+
+    if (credential?.passwordHash === undefined) {
       return {
         success: false,
         user: null,
@@ -78,8 +78,8 @@ export async function login(identifier: string, password: string): Promise<Login
     }
 
     // Verify password
-    const isValid = await verifyPassword(password, String(credential.passwordHash))
-    
+    const isValid = verifyPassword(password, String(credential.passwordHash))
+
     if (!isValid) {
       return {
         success: false,
@@ -87,7 +87,7 @@ export async function login(identifier: string, password: string): Promise<Login
         error: 'Invalid username or password',
       }
     }
-    
+
     return {
       success: true,
       user: {
@@ -95,11 +95,11 @@ export async function login(identifier: string, password: string): Promise<Login
         username: user.username,
         email: user.email,
         role: user.role,
-        isInstanceOwner: user.isInstanceOwner || false,
-        profilePicture: user.profilePicture || null,
-        bio: user.bio || null,
+        isInstanceOwner: user.isInstanceOwner ?? false,
+        profilePicture: user.profilePicture ?? null,
+        bio: user.bio ?? null,
         createdAt: Number(user.createdAt),
-        tenantId: user.tenantId || null,
+        tenantId: user.tenantId ?? null,
       },
       requiresPasswordChange: false,
     }

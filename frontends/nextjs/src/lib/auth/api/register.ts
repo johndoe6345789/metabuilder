@@ -1,6 +1,6 @@
 /**
  * Register API
- * 
+ *
  * Creates a new user account with username, email, and password
  */
 
@@ -24,14 +24,14 @@ export interface RegisterResult {
 /**
  * Hash password using SHA-512
  */
-async function hashPassword(password: string): Promise<string> {
+function hashPassword(password: string): string {
   return crypto.createHash('sha512').update(password).digest('hex')
 }
 
 export async function register(username: string, email: string, password: string): Promise<RegisterResult> {
   try {
     // Validate input
-    if (!username || !email || !password) {
+    if (username.length === 0 || email.length === 0 || password.length === 0) {
       return {
         success: false,
         user: null,
@@ -43,8 +43,8 @@ export async function register(username: string, email: string, password: string
     const existingByUsername = await db.users.list({
       filter: { username }
     })
-    
-    if (existingByUsername.data && existingByUsername.data.length > 0) {
+
+    if (existingByUsername.data.length > 0) {
       return {
         success: false,
         user: null,
@@ -56,8 +56,8 @@ export async function register(username: string, email: string, password: string
     const existingByEmail = await db.users.list({
       filter: { email }
     })
-    
-    if (existingByEmail.data && existingByEmail.data.length > 0) {
+
+    if (existingByEmail.data.length > 0) {
       return {
         success: false,
         user: null,
@@ -66,11 +66,11 @@ export async function register(username: string, email: string, password: string
     }
 
     // Hash password
-    const passwordHash = await hashPassword(password)
+    const passwordHash = hashPassword(password)
 
     // Create user
     const userId = crypto.randomUUID()
-    
+
     const newUser = await db.users.create({
       id: userId,
       username,
@@ -97,10 +97,10 @@ export async function register(username: string, email: string, password: string
       email: newUser.email,
       role: newUser.role,
       createdAt: Number(newUser.createdAt),
-      isInstanceOwner: newUser.isInstanceOwner || false,
-      tenantId: newUser.tenantId || null,
-      profilePicture: newUser.profilePicture || null,
-      bio: newUser.bio || null,
+      isInstanceOwner: newUser.isInstanceOwner ?? false,
+      tenantId: newUser.tenantId ?? null,
+      profilePicture: newUser.profilePicture ?? null,
+      bio: newUser.bio ?? null,
     }
 
     return {

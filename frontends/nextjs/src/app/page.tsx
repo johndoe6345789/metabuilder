@@ -15,8 +15,9 @@ interface PageConfig {
 }
 
 const dbalUrl = () =>
-  (typeof process !== 'undefined' && process.env.NEXT_PUBLIC_DBAL_API_URL) ||
-  'http://localhost:8080'
+  (typeof process !== 'undefined'
+    ? (process.env.NEXT_PUBLIC_DBAL_API_URL ?? null)
+    : null) ?? 'http://localhost:8080'
 
 export default function RootPage() {
   const router = useRouter()
@@ -31,7 +32,7 @@ export default function RootPage() {
         const homeRoute = json?.data?.find(
           (r) => r.path === '/' && r.isPublished === true
         )
-        if (homeRoute?.requiresAuth) {
+        if (homeRoute?.requiresAuth === true) {
           router.replace('/ui/login')
           return
         }

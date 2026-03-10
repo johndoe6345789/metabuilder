@@ -64,10 +64,10 @@ export class UserListErrorBoundary extends React.Component<Props, State> {
           </h2>
 
           <p className="mt-2 text-sm text-red-700">
-            {this.state.error?.message || 'An unexpected error occurred'}
+            {this.state.error?.message ?? 'An unexpected error occurred'}
           </p>
 
-          {process.env.NODE_ENV === 'development' && this.state.errorInfo && (
+          {process.env.NODE_ENV === 'development' && this.state.errorInfo != null && (
             <details className="mt-4">
               <summary className="cursor-pointer text-xs text-red-600">
                 Error details (development only)

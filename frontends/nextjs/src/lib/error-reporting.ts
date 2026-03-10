@@ -45,7 +45,7 @@ export interface ErrorReport {
 
 class ErrorReportingService {
   private errors: ErrorReport[] = []
-  private maxErrors = 100 // Keep last 100 errors in memory
+  private readonly maxErrors = 100 // Keep last 100 errors in memory
 
   /**
    * Categorize error based on message and type
@@ -55,7 +55,7 @@ class ErrorReportingService {
     const messageStr = message.toLowerCase()
 
     // Check HTTP status codes first
-    if (statusCode) {
+    if (statusCode != null) {
       if (statusCode === 401) return 'authentication'
       if (statusCode === 403) return 'permission'
       if (statusCode === 404) return 'not-found'
@@ -107,7 +107,7 @@ class ErrorReportingService {
     }
 
     // Retryable HTTP status codes
-    if (statusCode && [408, 429, 500, 502, 503, 504].includes(statusCode)) {
+    if (statusCode != null && [408, 429, 500, 502, 503, 504].includes(statusCode)) {
       return true
     }
 
@@ -131,23 +131,22 @@ class ErrorReportingService {
       unknown: 'Please try again or contact support',
     }
 
-    return actions[category] ?? 'Please try again or contact support'
+    return actions[category]
   }
 
   /**
    * Report an error with context
    */
   reportError(error: Error | string, context: ErrorReportContext = {}): ErrorReport {
-    const statusCode = context.statusCode as number | undefined || this.extractStatusCode(error)
+    const contextStatusCode = typeof context.statusCode === 'number' ? context.statusCode : undefined
+    const statusCode = contextStatusCode ?? this.extractStatusCode(error)
     const category = this.categorizeError(error, statusCode)
     const isRetryable = this.isErrorRetryable(category, statusCode)
-    const suggestedAction = this.getSuggestedAction(category)
-
     const getSuggestedAction = this.getSuggestedAction.bind(this)
     const report = {
       id: this.generateId(),
       message: typeof error === 'string' ? error : error.message,
-      code: context.code as string | undefined,
+      code: typeof context.code === 'string' ? context.code : undefined,
       statusCode,
       category,
       stack: error instanceof Error ? error.stack : undefined,
@@ -201,7 +200,7 @@ class ErrorReportingService {
   private extractStatusCode(error: Error | string): number | undefined {
     const message = typeof error === 'string' ? error : error.message
     const match = message.match(/(\d{3})/)
-    return match ? parseInt(match[1]!, 10) : undefined
+    return match != null ? parseInt(match[1], 10) : undefined
   }
 
   /**
@@ -235,7 +234,7 @@ class ErrorReportingService {
       unknown: 'An error occurred. Please try again or contact support if the problem persists.',
     }
 
-    return categoryMessages[errorCategory] ?? categoryMessages.unknown
+    return categoryMessages[errorCategory]
   }
 
   /**
@@ -255,7 +254,7 @@ class ErrorReportingService {
       504: 'Gateway timeout. Please try again later.',
     }
 
-    return messages[statusCode] ?? 'An error occurred. Please try again.'
+    return messages[statusCode]
   }
 
   /**

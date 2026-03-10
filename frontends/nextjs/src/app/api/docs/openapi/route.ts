@@ -14,7 +14,7 @@ import { NextResponse } from 'next/server'
  *
  * Returns the OpenAPI 3.0 specification in JSON format
  */
-export async function GET() {
+export function GET() {
   try {
     // Read the OpenAPI specification from the docs folder
     const specPath = path.join(
@@ -22,7 +22,7 @@ export async function GET() {
       'frontends/nextjs/src/app/api/docs/openapi.json'
     )
     const specContent = readFileSync(specPath, 'utf-8')
-    const spec = JSON.parse(specContent)
+    const spec: Record<string, unknown> = JSON.parse(specContent) as Record<string, unknown>
 
     return NextResponse.json(spec, {
       headers: {

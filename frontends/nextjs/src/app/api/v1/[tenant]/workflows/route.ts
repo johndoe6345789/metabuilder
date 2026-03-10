@@ -79,16 +79,25 @@ export async function GET(
   try {
     // 1. Apply rate limiting for list endpoints
     const limitResponse = applyRateLimit(request, 'list')
-    if (limitResponse) {
+    if (limitResponse != null) {
       return limitResponse
     }
 
     // 2. Authenticate user
     const authResult = await authenticate(request, { minLevel: 1 })
-    if (!authResult.success) {
-      return authResult.error!
+    if (!authResult.success || authResult.error != null) {
+      return authResult.error ?? NextResponse.json(
+        { error: 'Unauthorized', message: 'Authentication failed' },
+        { status: 401 }
+      )
     }
-    const user = authResult.user!
+    const user = authResult.user
+    if (user == null) {
+      return NextResponse.json(
+        { error: 'Unauthorized', message: 'Authentication failed' },
+        { status: 401 }
+      )
+    }
 
     // 3. Extract route parameters
     const resolvedParams = await params
@@ -104,8 +113,8 @@ export async function GET(
 
     // 5. Parse query parameters
     const { searchParams } = new URL(request.url)
-    const limit = Math.min(parseInt(searchParams.get('limit') || '50'), 100)
-    const offset = parseInt(searchParams.get('offset') || '0')
+    const limit = Math.min(parseInt(searchParams.get('limit') ?? '50'), 100)
+    const offset = parseInt(searchParams.get('offset') ?? '0')
     const category = searchParams.get('category')
     const tags = searchParams.get('tags')?.split(',').map((t) => t.trim())
     const active = searchParams.get('active')
@@ -113,14 +122,14 @@ export async function GET(
       : undefined
 
     // 6. Build filter
-    const filter: Record<string, any> = {
+    const filter: Record<string, unknown> = {
       tenantId: tenant,
     }
 
-    if (category) {
+    if (category != null) {
       filter.category = category
     }
-    if (tags && tags.length > 0) {
+    if (tags != null && tags.length > 0) {
       filter.tags = { $in: tags }
     }
     if (active !== undefined) {
@@ -178,16 +187,25 @@ export async function POST(
   try {
     // 1. Apply rate limiting for mutations
     const limitResponse = applyRateLimit(request, 'mutation')
-    if (limitResponse) {
+    if (limitResponse != null) {
       return limitResponse
     }
 
     // 2. Authenticate user (require level 2+)
     const authResult = await authenticate(request, { minLevel: 2 })
-    if (!authResult.success) {
-      return authResult.error!
+    if (!authResult.success || authResult.error != null) {
+      return authResult.error ?? NextResponse.json(
+        { error: 'Unauthorized', message: 'Authentication failed' },
+        { status: 401 }
+      )
     }
-    const user = authResult.user!
+    const user = authResult.user
+    if (user == null) {
+      return NextResponse.json(
+        { error: 'Unauthorized', message: 'Authentication failed' },
+        { status: 401 }
+      )
+    }
 
     // 3. Extract route parameters
     const resolvedParams = await params
@@ -202,9 +220,9 @@ export async function POST(
     }
 
     // 5. Parse and validate request body
-    let body: any
+    let body: Record<string, unknown>
     try {
-      body = await request.json()
+      body = (await request.json()) as Record<string, unknown>
     } catch (_error) {
       return NextResponse.json(
         { error: 'Bad Request', message: 'Invalid JSON in request body' },
@@ -214,20 +232,21 @@ export async function POST(
 
     // 6. Validate required fields
     const errors: string[] = []
-    if (!body.name || typeof body.name !== 'string') {
+    if (body.name == null || typeof body.name !== 'string') {
       errors.push('name is required and must be a string')
     }
+    const validCategories = [
+      'automation',
+      'integration',
+      'business-logic',
+      'data-transformation',
+      'notification',
+      'approval',
+      'other',
+    ]
     if (
-      !body.category ||
-      ![
-        'automation',
-        'integration',
-        'business-logic',
-        'data-transformation',
-        'notification',
-        'approval',
-        'other',
-      ].includes(body.category)
+      typeof body.category !== 'string' ||
+      !validCategories.includes(body.category)
     ) {
       errors.push('category must be one of: automation, integration, business-logic, etc')
     }
@@ -246,16 +265,16 @@ export async function POST(
     const workflow = {
       id: workflowId,
       tenantId: tenant,
-      name: body.name,
-      description: body.description || '',
+      name: String(body.name),
+      description: typeof body.description === 'string' ? body.description : '',
       version: '1.0.0',
       createdBy: user.id,
       createdAt: now,
       updatedAt: now,
       active: body.active !== false,
       locked: false,
-      tags: Array.isArray(body.tags) ? body.tags : [],
-      category: body.category,
+      tags: Array.isArray(body.tags) ? (body.tags as unknown[]) : [],
+      category: String(body.category),
       settings: {
         timezone: 'UTC',
         executionTimeout: 300000, // 5 minutes
@@ -266,10 +285,10 @@ export async function POST(
         enableNotifications: false,
         notificationChannels: [],
       },
-      nodes: Array.isArray(body.nodes) ? body.nodes : [],
-      connections: body.connections || {},
-      triggers: Array.isArray(body.triggers) ? body.triggers : [],
-      variables: body.variables || {},
+      nodes: Array.isArray(body.nodes) ? (body.nodes as unknown[]) : [],
+      connections: (body.connections as Record<string, unknown>) ?? {},
+      triggers: Array.isArray(body.triggers) ? (body.triggers as unknown[]) : [],
+      variables: (body.variables as Record<string, unknown>) ?? {},
       errorHandling: {
         default: 'stopWorkflow' as const,
         errorNotification: false,
@@ -290,7 +309,7 @@ export async function POST(
         onLimitExceeded: 'reject' as const,
       },
       credentials: [],
-      metadata: body.metadata || {},
+      metadata: (body.metadata as Record<string, unknown>) ?? {},
       executionLimits: {
         maxExecutionTime: 300000,
         maxMemoryMb: 512,

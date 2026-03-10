@@ -71,7 +71,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
  * Optional: Generate static params for known pages
  * This enables static generation at build time
  */
-export async function generateStaticParams() {
+export function generateStaticParams() {
   try {
     // TODO: Implement UIPage entity in DBAL
     // For now, return empty array to allow dynamic generation

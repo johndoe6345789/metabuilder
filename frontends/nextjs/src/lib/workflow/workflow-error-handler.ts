@@ -44,7 +44,7 @@ export interface ErrorDiagnostics {
   warnings?: ValidationError[]
   hint?: string
   stack?: string
-  context?: Record<string, any>
+  context?: Record<string, unknown>
   suggestions?: string[]
 }
 
@@ -57,7 +57,7 @@ export interface FormattedError {
     code: string
     message: string
     statusCode?: number
-    details?: Record<string, any>
+    details?: Record<string, unknown>
   }
   context?: {
     executionId?: string
@@ -318,7 +318,7 @@ const ERROR_HINTS: Record<WorkflowErrorCode, string> = {
  * and context linking for multi-tenant environments.
  */
 export class WorkflowErrorHandler {
-  private isDevelopment: boolean
+  private readonly isDevelopment: boolean
 
   constructor(isDevelopment: boolean = process.env.NODE_ENV !== 'production') {
     this.isDevelopment = isDevelopment
@@ -377,8 +377,8 @@ export class WorkflowErrorHandler {
     context: ErrorContext = {}
   ): NextResponse<FormattedError> {
     const code = this.getErrorCode(error)
-    const message = ERROR_MESSAGES[code] || this.getErrorMessage(error)
-    const statusCode = ERROR_STATUS_MAP[code] || 500
+    const message = ERROR_MESSAGES[code] ?? this.getErrorMessage(error)
+    const statusCode = ERROR_STATUS_MAP[code] ?? 500
 
     const response: FormattedError = {
       success: false,
@@ -400,10 +400,10 @@ export class WorkflowErrorHandler {
     }
 
     // Add diagnostics in development
-    if (this.isDevelopment && context.cause) {
+    if (this.isDevelopment && context.cause != null) {
       response.diagnostics = {
         stack: context.cause.stack,
-        hint: ERROR_HINTS[code as WorkflowErrorCode],
+        hint: ERROR_HINTS[code],
         context: {
           timestamp: context.timestamp?.toISOString(),
           userId: context.userId,
@@ -411,7 +411,7 @@ export class WorkflowErrorHandler {
       }
     } else {
       response.diagnostics = {
-        hint: ERROR_HINTS[code as WorkflowErrorCode],
+        hint: ERROR_HINTS[code],
       }
     }
 
@@ -429,7 +429,7 @@ export class WorkflowErrorHandler {
         message: ERROR_MESSAGES[WorkflowErrorCode.TENANT_MISMATCH],
         statusCode: 403,
         details: {
-          reason: context.reason || 'Tenant ID mismatch',
+          reason: context.reason ?? 'Tenant ID mismatch',
         },
       },
       context: {
@@ -451,7 +451,7 @@ export class WorkflowErrorHandler {
     errorCode: WorkflowErrorCode,
     context: ErrorContext = {}
   ): NextResponse<FormattedError> {
-    const statusCode = ERROR_STATUS_MAP[errorCode] || 401
+    const statusCode = ERROR_STATUS_MAP[errorCode] ?? 401
 
     const response: FormattedError = {
       success: false,
@@ -626,7 +626,7 @@ export class WorkflowErrorHandler {
    * Get suggestion for validation error
    */
   private getSuggestionForError(error: ValidationError): string {
-    const code = (error.code || '').toUpperCase()
+    const code = (error.code ?? '').toUpperCase()
     const suggestions: Record<string, string> = {
       MISSING_REQUIRED_FIELD: 'Add the missing parameter to the node.',
       INVALID_NODE_TYPE: 'Use a valid node type from the registry.',
@@ -638,7 +638,7 @@ export class WorkflowErrorHandler {
       CIRCULAR_DEPENDENCY: 'Remove circular connections between nodes.',
     }
 
-    return suggestions[code] || 'Fix this validation issue and retry.'
+    return suggestions[code] ?? 'Fix this validation issue and retry.'
   }
 
   /**
@@ -649,7 +649,7 @@ export class WorkflowErrorHandler {
 
     for (const error of errors) {
       const suggestion = this.getSuggestionForError(error)
-      if (suggestion) {
+      if (suggestion !== '') {
         suggestions.add(suggestion)
       }
     }
@@ -669,9 +669,7 @@ let globalHandler: WorkflowErrorHandler | null = null
 export function getWorkflowErrorHandler(
   isDevelopment?: boolean
 ): WorkflowErrorHandler {
-  if (!globalHandler) {
-    globalHandler = new WorkflowErrorHandler(isDevelopment)
-  }
+  globalHandler ??= new WorkflowErrorHandler(isDevelopment);
   return globalHandler
 }
 

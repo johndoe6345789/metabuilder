@@ -49,8 +49,8 @@ async function handleRequest(
   // 0. Apply rate limiting based on endpoint type
   // Determine endpoint type for appropriate rate limit
   const pathMatch = request.url.match(/\/api\/v1\/[^/]+\/([^/]+)\/([^/]+)/)
-  const isLogin = pathMatch?.[1] === 'auth' && pathMatch?.[2] === 'login'
-  const isRegister = pathMatch?.[1] === 'auth' && pathMatch?.[2] === 'register'
+  const isLogin = pathMatch !== null && pathMatch[1] === 'auth' && pathMatch[2] === 'login'
+  const isRegister = pathMatch !== null && pathMatch[1] === 'auth' && pathMatch[2] === 'register'
 
   // Determine which rate limiter to apply
   let rateLimitType: 'login' | 'register' | 'list' | 'mutation' | 'public' = 'public'
@@ -66,7 +66,7 @@ async function handleRequest(
 
   // Check rate limit and return 429 if exceeded
   const rateLimitResponse = applyRateLimit(request, rateLimitType)
-  if (rateLimitResponse) {
+  if (rateLimitResponse != null) {
     return rateLimitResponse as unknown as NextResponse
   }
 

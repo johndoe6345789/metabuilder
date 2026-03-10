@@ -78,7 +78,7 @@ export async function withAsyncErrorBoundary<T>(
       // Create the operation promise, optionally with timeout
       let operationPromise: Promise<T> = operation()
 
-      if (timeoutMs) {
+      if (timeoutMs != null) {
         operationPromise = Promise.race([
           operationPromise,
           createTimeoutPromise<T>(timeoutMs),
@@ -88,7 +88,7 @@ export async function withAsyncErrorBoundary<T>(
       const result = await operationPromise
 
       // If we got here after retries, report success
-      if (attempt > 0 && onRetrySuccess) {
+      if (attempt > 0 && onRetrySuccess != null) {
         onRetrySuccess(attempt)
       }
 
@@ -106,7 +106,7 @@ export async function withAsyncErrorBoundary<T>(
       }
 
       // Call error callback
-      if (onError) {
+      if (onError != null) {
         onError(lastError, attempt)
       }
 
@@ -122,7 +122,7 @@ export async function withAsyncErrorBoundary<T>(
       )
 
       // Call retry callback
-      if (onRetry) {
+      if (onRetry != null) {
         onRetry(attempt + 1, lastError)
       }
 

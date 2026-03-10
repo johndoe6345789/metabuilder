@@ -70,7 +70,7 @@ async function dbalPost(entity: string, data: Record<string, unknown>): Promise<
 
 export async function POST(request: NextRequest) {
   const limitResponse = applyRateLimit(request, 'bootstrap')
-  if (limitResponse) {
+  if (limitResponse !== null && limitResponse !== undefined) {
     return limitResponse
   }
 
@@ -85,7 +85,7 @@ export async function POST(request: NextRequest) {
       })
       if (res.ok) {
         results.packages++
-        console.log(`[Seed] Created package: ${pkg.packageId}`)
+        console.warn(`[Seed] Created package: ${pkg.packageId}`)
       } else if (res.status === 409) {
         results.skipped++
       } else {
@@ -104,7 +104,7 @@ export async function POST(request: NextRequest) {
       const res = await dbalPost('PageConfig', page)
       if (res.ok) {
         results.pages++
-        console.log(`[Seed] Created page: ${page.path}`)
+        console.warn(`[Seed] Created page: ${page.path}`)
       } else if (res.status === 409) {
         results.skipped++
       } else {
@@ -117,7 +117,7 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  console.log(`[Seed] Complete: ${results.packages} packages, ${results.pages} pages, ${results.skipped} skipped, ${results.errors} errors`)
+  console.warn(`[Seed] Complete: ${results.packages} packages, ${results.pages} pages, ${results.skipped} skipped, ${results.errors} errors`)
 
   return NextResponse.json({
     success: true,

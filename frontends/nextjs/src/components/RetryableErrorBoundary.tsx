@@ -78,10 +78,10 @@ export class RetryableErrorBoundary extends Component<
 
   override componentWillUnmount() {
     this.mounted = false
-    if (this.retryTimeoutId) {
+    if (this.retryTimeoutId !== null) {
       clearTimeout(this.retryTimeoutId)
     }
-    if (this.countdownIntervalId) {
+    if (this.countdownIntervalId !== null) {
       clearInterval(this.countdownIntervalId)
     }
   }
@@ -132,7 +132,7 @@ export class RetryableErrorBoundary extends Component<
   /**
    * Schedule automatic retry with countdown
    */
-  private scheduleAutoRetry = () => {
+  private readonly scheduleAutoRetry = () => {
     if (!this.mounted) return
 
     const delay = this.calculateRetryDelay(this.state.retryCount)
@@ -160,11 +160,11 @@ export class RetryableErrorBoundary extends Component<
   /**
    * Handle automatic retry
    */
-  private handleAutoRetry = () => {
+  private readonly handleAutoRetry = () => {
     if (!this.mounted) return
 
     // Clear countdown
-    if (this.countdownIntervalId) {
+    if (this.countdownIntervalId !== null) {
       clearInterval(this.countdownIntervalId)
       this.countdownIntervalId = null
     }
@@ -183,12 +183,12 @@ export class RetryableErrorBoundary extends Component<
   /**
    * Handle manual retry from user
    */
-  private handleManualRetry = () => {
-    if (this.retryTimeoutId) {
+  private readonly handleManualRetry = () => {
+    if (this.retryTimeoutId !== null) {
       clearTimeout(this.retryTimeoutId)
       this.retryTimeoutId = null
     }
-    if (this.countdownIntervalId) {
+    if (this.countdownIntervalId !== null) {
       clearInterval(this.countdownIntervalId)
       this.countdownIntervalId = null
     }
@@ -206,11 +206,11 @@ export class RetryableErrorBoundary extends Component<
   /**
    * Handle page reload
    */
-  private handleReload = () => {
-    if (this.retryTimeoutId) {
+  private readonly handleReload = () => {
+    if (this.retryTimeoutId !== null) {
       clearTimeout(this.retryTimeoutId)
     }
-    if (this.countdownIntervalId) {
+    if (this.countdownIntervalId !== null) {
       clearInterval(this.countdownIntervalId)
     }
     window.location.reload()
@@ -220,7 +220,7 @@ export class RetryableErrorBoundary extends Component<
    * Get error category for styling
    */
   private getErrorCategory(): ErrorCategory {
-    if (!this.state.error) return 'unknown'
+    if (this.state.error === null) return 'unknown'
 
     const report = errorReporting.reportError(this.state.error)
     return report.category
@@ -255,7 +255,7 @@ export class RetryableErrorBoundary extends Component<
       const category = this.getErrorCategory()
       const icon = this.getErrorIcon(category)
 
-      const userMessage = this.state.error
+      const userMessage = this.state.error !== null
         ? errorReporting.getUserMessage(this.state.error, category)
         : 'An error occurred while rendering this component.'
 
@@ -383,7 +383,7 @@ export class RetryableErrorBoundary extends Component<
                     }}
                   >
                     {this.state.error.message}
-                    {this.state.error.stack && `\n\n${this.state.error.stack}`}
+                    {this.state.error.stack !== undefined && this.state.error.stack !== '' && `\n\n${this.state.error.stack}`}
                   </pre>
                 </details>
               )}

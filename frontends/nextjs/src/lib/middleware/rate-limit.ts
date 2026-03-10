@@ -38,8 +38,8 @@ export interface RateLimitStore {
  * ⚠️ Not suitable for distributed systems - use Redis adapter for production multi-instance
  */
 class InMemoryRateLimitStore implements RateLimitStore {
-  private store = new Map<string, { count: number; resetAt: number }>()
-  private cleanup: ReturnType<typeof setInterval> | null = null
+  private readonly store = new Map<string, { count: number; resetAt: number }>()
+  private readonly cleanup: ReturnType<typeof setInterval> | null = null
 
   constructor() {
     // Clean up expired entries every 60 seconds
@@ -55,7 +55,7 @@ class InMemoryRateLimitStore implements RateLimitStore {
 
   get(key: string): number {
     const entry = this.store.get(key)
-    if (!entry) return 0
+    if (entry === undefined) return 0
     if (entry.resetAt < Date.now()) {
       this.store.delete(key)
       return 0
@@ -67,7 +67,7 @@ class InMemoryRateLimitStore implements RateLimitStore {
     const now = Date.now()
     const entry = this.store.get(key)
 
-    if (!entry || entry.resetAt < now) {
+    if (entry === undefined || entry.resetAt < now) {
       // Create new window
       const newEntry = { count: 1, resetAt: now + window }
       this.store.set(key, newEntry)
@@ -84,7 +84,7 @@ class InMemoryRateLimitStore implements RateLimitStore {
   }
 
   cleanup_dispose(): void {
-    if (this.cleanup) clearInterval(this.cleanup)
+    if (this.cleanup !== null) clearInterval(this.cleanup)
     this.store.clear()
   }
 }
@@ -93,9 +93,7 @@ class InMemoryRateLimitStore implements RateLimitStore {
 let globalStore: InMemoryRateLimitStore | null = null
 
 function getGlobalStore(): InMemoryRateLimitStore {
-  if (!globalStore) {
-    globalStore = new InMemoryRateLimitStore()
-  }
+  globalStore ??= new InMemoryRateLimitStore()
   return globalStore
 }
 
@@ -106,18 +104,18 @@ function getGlobalStore(): InMemoryRateLimitStore {
 function getClientIp(request: NextRequest): string {
   // Try CloudFlare header first
   const cfIp = request.headers.get('cf-connecting-ip')
-  if (cfIp) return cfIp
+  if (cfIp !== null) return cfIp
 
   // Try X-Forwarded-For (supports multiple IPs, take first)
   const forwarded = request.headers.get('x-forwarded-for')
-  if (forwarded) {
+  if (forwarded !== null) {
     const firstIp = forwarded.split(',')[0]
-    if (firstIp) return firstIp.trim()
+    if (firstIp !== undefined) return firstIp.trim()
   }
 
   // Fall back to X-Real-IP
   const realIp = request.headers.get('x-real-ip')
-  if (realIp) return realIp
+  if (realIp !== null) return realIp
 
   // Fall back to connection remote address (localhost in dev)
   return 'unknown'
@@ -140,14 +138,14 @@ function getClientIp(request: NextRequest): string {
  */
 export function createRateLimiter(config: RateLimitConfig) {
   const store = getGlobalStore()
-  const keyGenerator = config.keyGenerator || ((req) => getClientIp(req))
+  const keyGenerator = config.keyGenerator ?? ((req: NextRequest) => getClientIp(req))
 
   return function checkRateLimit(request: NextRequest): Response | null {
     const key = keyGenerator(request)
     const count = store.increment(key, config.window)
 
     if (count > config.limit) {
-      if (config.onLimitExceeded) {
+      if (config.onLimitExceeded !== undefined) {
         return config.onLimitExceeded(key, request)
       }
 
@@ -285,16 +283,6 @@ export function getRateLimitStatus(
   request: NextRequest,
   endpointType: keyof typeof rateLimiters
 ): { current: number; limit: number; remaining: number } {
-  const config = {
-    login: rateLimiters.login as any,
-    register: rateLimiters.register as any,
-    list: rateLimiters.list as any,
-    mutation: rateLimiters.mutation as any,
-    public: rateLimiters.public as any,
-    bootstrap: rateLimiters.bootstrap as any,
-  }
-
-  const _limiter = config[endpointType]
   const key = getClientIp(request)
   const store = getGlobalStore()
   const current = store.get(key)

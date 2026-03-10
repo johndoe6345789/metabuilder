@@ -211,8 +211,7 @@ export function withMotionSafety(
 export function getAnimationDuration(
   preset: keyof typeof ANIMATION_DURATIONS
 ): number {
-  const key = preset as keyof typeof ANIMATION_DURATIONS
-  const value = ANIMATION_DURATIONS[key]
+  const value = ANIMATION_DURATIONS[preset]
   return typeof value === 'number' ? value : parseInt(String(value), 10)
 }
 
