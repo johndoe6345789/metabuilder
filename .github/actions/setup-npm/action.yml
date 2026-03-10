@@ -1,5 +1,5 @@
-name: 'Setup npm with Nexus'
-description: 'Starts Nexus, publishes patched packages, then runs npm install'
+name: 'Setup npm with local registry'
+description: 'Starts Verdaccio, publishes patched packages, then runs npm install'
 
 inputs:
   node-version:
@@ -15,47 +15,57 @@ runs:
       with:
         node-version: ${{ inputs.node-version }}
 
-    - name: Cache Nexus data
-      uses: actions/cache@v4
-      with:
-        path: /tmp/nexus-data
-        key: nexus-data-v1-${{ hashFiles('deployment/npm-patches/**', 'deployment/nexus-init.sh') }}
-        restore-keys: |
-          nexus-data-v1-
-
-    - name: Start Nexus
+    - name: Start Verdaccio and publish patched packages
       shell: bash
       run: |
-        docker run -d --name nexus \
-          -p 8091:8081 \
-          -v /tmp/nexus-data:/nexus-data \
-          --platform linux/amd64 \
-          sonatype/nexus3:3.75.0
-        echo "Nexus starting..."
+        # Install and start Verdaccio (lightweight npm registry, ~2s startup)
+        npm install -g verdaccio@6 --silent
 
-    - name: Wait for Nexus
-      shell: bash
-      run: |
-        echo "Waiting for Nexus to be healthy (up to 3 minutes)..."
-        timeout 180 bash -c '
-          until curl -sf http://localhost:8091/service/rest/v1/status -u admin:nexus >/dev/null 2>&1 || \
-                curl -sf http://localhost:8091/service/rest/v1/status >/dev/null 2>&1; do
-            echo "  still waiting..."
-            sleep 10
-          done
-        '
-        echo "Nexus is up"
+        mkdir -p /tmp/verdaccio-storage
+        cat > /tmp/verdaccio.yaml << 'VERDACCIO_EOF'
+        storage: /tmp/verdaccio-storage
+        uplinks:
+          npmjs:
+            url: https://registry.npmjs.org/
+            timeout: 60s
+            max_fails: 3
+        packages:
+          '@esbuild-kit/*':
+            access: $all
+            publish: $all
+            proxy: npmjs
+          '**':
+            access: $all
+            publish: $all
+            proxy: npmjs
+        server:
+          keepAliveTimeout: 60
+        log:
+          type: stdout
+          format: pretty
+          level: warn
+        listen: 0.0.0.0:4873
+        VERDACCIO_EOF
 
-    - name: Initialise Nexus (npm repos)
-      shell: bash
-      env:
-        NEXUS_URL: http://localhost:8091
-        NEXUS_ADMIN_NEW_PASS: nexus
-      run: bash deployment/nexus-ci-init.sh
+        verdaccio --config /tmp/verdaccio.yaml &
+        VERDACCIO_PID=$!
+        echo "Verdaccio PID: $VERDACCIO_PID"
 
-    - name: Publish patched npm packages
-      shell: bash
-      run: bash deployment/publish-npm-patches.sh
+        # Wait for Verdaccio to be ready (usually <3s)
+        timeout 30 bash -c 'until curl -sf http://localhost:4873/-/ping >/dev/null 2>&1; do sleep 1; done'
+        echo "Verdaccio ready"
+
+        # Publish all patched tarballs
+        PATCHES_DIR="deployment/npm-patches"
+        for tarball in "$PATCHES_DIR"/*.tgz; do
+          [ -f "$tarball" ] || continue
+          echo "Publishing $tarball..."
+          npm publish "$tarball" \
+            --registry http://localhost:4873 \
+            --tag patched \
+            2>&1 | grep -v "^npm notice" || true
+        done
+        echo "Patched packages published to Verdaccio"
 
     - name: Install npm dependencies
       shell: bash
