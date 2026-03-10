@@ -56,9 +56,9 @@ RUN npm config set fetch-retries 5 \
     && npm config set fetch-retry-mintimeout 20000 \
     && npm config set maxsockets 5 \
     && for i in 1 2 3 4 5; do \
-         npm install 2>&1 \
-         && break \
-         || (echo "npm install failed (attempt $i/5), retrying in $((i*10))s..." && sleep $((i*10))); \
+         npm install 2>&1 && break; \
+         [ "$i" = "5" ] && echo "npm install failed after 5 attempts" && exit 1; \
+         echo "npm install failed (attempt $i/5), retrying in $((i*10))s..." && sleep $((i*10)); \
        done
 
 # Pre-install Next.js SWC binaries (avoids unreliable CDN download during
