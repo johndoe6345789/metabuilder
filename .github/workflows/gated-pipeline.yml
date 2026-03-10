@@ -762,6 +762,9 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Build workspace packages
+        run: npm run build --workspaces --if-present 2>&1 || true
+
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps chromium
 
@@ -778,7 +781,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report
-          path: frontends/nextjs/playwright-report/
+          path: playwright-report/
           retention-days: 7
 
       - name: Record validation result

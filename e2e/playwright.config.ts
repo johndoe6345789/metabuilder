@@ -2,30 +2,44 @@ import { defineConfig, devices } from '@playwright/test';
 
 /**
  * See https://playwright.dev/docs/test-configuration.
+ *
+ * baseURL resolution:
+ *   CI / local dev server: http://localhost:3000/workflowui/ (Next.js dev, port 3000)
+ *   Docker stack:          http://localhost/workflowui/     (nginx, port 80)
+ *
+ * Override via PLAYWRIGHT_BASE_URL env var, e.g.:
+ *   PLAYWRIGHT_BASE_URL=http://localhost/workflowui/ npx playwright test
  */
+const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? 'http://localhost:3000/workflowui/';
+
 export default defineConfig({
   testDir: './',
   testMatch: '**/*.spec.ts',
-  /* Run tests in files in parallel */
   fullyParallel: true,
-  /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
-  /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
-  /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
-  /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
-  /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-    /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: 'http://localhost/workflowui/',
-    /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
+    baseURL,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
   },
 
-  /* Configure projects for major browsers */
+  /* Start workflowui dev server automatically when not running against Docker stack */
+  webServer: process.env.PLAYWRIGHT_BASE_URL ? undefined : {
+    command: 'npm run dev -w frontends/workflowui',
+    url: 'http://localhost:3000/workflowui/',
+    reuseExistingServer: !process.env.CI,
+    timeout: 120_000,
+    env: {
+      NODE_ENV: 'development',
+      NEXT_PUBLIC_API_URL: 'http://localhost:8080',
+      NEXTAUTH_SECRET: 'test-secret',
+      NEXTAUTH_URL: 'http://localhost:3000',
+    },
+  },
+
   projects: [
     {
       name: 'chromium',
