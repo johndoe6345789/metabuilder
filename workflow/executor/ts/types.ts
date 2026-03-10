@@ -282,6 +282,9 @@ export interface ExecutionRecord {
 }
 
 export interface ExecutionMetrics {
+  startTime: number;
+  endTime?: number;
+  duration?: number;
   nodesExecuted: number;
   successNodes: number;
   failedNodes: number;
@@ -290,6 +293,9 @@ export interface ExecutionMetrics {
   peakMemory: number;
   dataProcessed: number;
   apiCallsMade: number;
+  validationFailures: number;
+  recoveryAttempts: number;
+  recoverySuccesses: number;
 }
 
 export interface LogEntry {
