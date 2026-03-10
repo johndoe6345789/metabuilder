@@ -1,0 +1,142 @@
+# docker-compose.smoke.yml — Lightweight smoke test stack for CI.
+#
+# Starts real admin-tool containers (phpMyAdmin, Mongo Express, RedisInsight)
+# and a stub nginx gateway that returns 200 for all app paths.
+# Uses only stock Docker Hub images — no custom builds required.
+#
+# The stub gateway lets path-routing smoke tests pass in CI without needing
+# the full built stack.  End-to-end deployment correctness is tested in
+# staging/production against the real images.
+#
+# Usage:
+#   docker compose -f deployment/docker-compose.smoke.yml up -d --wait
+#   PLAYWRIGHT_BASE_URL=http://localhost/workflowui/ npx playwright test e2e/deployment-smoke.spec.ts
+#   docker compose -f deployment/docker-compose.smoke.yml down -v
+
+services:
+
+  # ── Gateway stub ──────────────────────────────────────────────────────────
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./config/nginx-smoke/default.conf:/etc/nginx/conf.d/default.conf:ro
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1/"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - smoke
+
+  # ── Infrastructure (stock images) ─────────────────────────────────────────
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: metabuilder
+      MYSQL_USER: metabuilder
+      MYSQL_PASSWORD: metabuilder
+      MYSQL_DATABASE: metabuilder
+    command: --default-authentication-plugin=mysql_native_password
+    tmpfs:
+      - /var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "root", "-pmetabuilder"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+      start_period: 20s
+    networks:
+      - smoke
+
+  mongodb:
+    image: mongo:7.0
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: metabuilder
+      MONGO_INITDB_ROOT_PASSWORD: metabuilder
+    tmpfs:
+      - /data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')", "--quiet"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+    networks:
+      - smoke
+
+  redis:
+    image: redis:7-alpine
+    tmpfs:
+      - /data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+    networks:
+      - smoke
+
+  # ── Admin tools (real containers, specific ports to match smoke tests) ────
+  phpmyadmin:
+    image: phpmyadmin:latest
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: "3306"
+      PMA_USER: metabuilder
+      PMA_PASSWORD: metabuilder
+      MYSQL_ROOT_PASSWORD: metabuilder
+    depends_on:
+      mysql:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://127.0.0.1/"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+    networks:
+      - smoke
+
+  mongo-express:
+    image: mongo-express:latest
+    ports:
+      - "8082:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: metabuilder
+      ME_CONFIG_MONGODB_ADMINPASSWORD: metabuilder
+      ME_CONFIG_MONGODB_URL: mongodb://metabuilder:metabuilder@mongodb:27017/?authSource=admin
+      ME_CONFIG_BASICAUTH: "false"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:8081/"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    networks:
+      - smoke
+
+  redisinsight:
+    image: redis/redisinsight:latest
+    ports:
+      - "8083:5540"
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:5540/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    networks:
+      - smoke
+
+networks:
+  smoke:
+    driver: bridge

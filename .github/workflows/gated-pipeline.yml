@@ -768,6 +768,11 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps chromium
 
+      - name: Start smoke stack
+        run: |
+          docker compose -f deployment/docker-compose.smoke.yml up -d --wait --wait-timeout 180
+        timeout-minutes: 5
+
       - name: Run Playwright tests
         run: |
           if [ -f e2e/playwright.config.ts ]; then
@@ -775,6 +780,10 @@ jobs:
           else
             echo "::warning::No playwright.config.ts found — E2E tests not configured"
           fi
+
+      - name: Stop smoke stack
+        if: always()
+        run: docker compose -f deployment/docker-compose.smoke.yml down -v
 
       - name: Upload test results
         if: always()
