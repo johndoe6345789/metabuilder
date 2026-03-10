@@ -134,7 +134,7 @@ export async function manualWorkflowExecution(req: NextRequest) {
         timestamp: Date.now(),
       },
       variables,
-      secrets,
+      secrets: secrets as Record<string, string> | undefined,
     })
 
     console.warn(`[${executionId}] Context built for user ${user.id}`)
@@ -150,9 +150,8 @@ export async function manualWorkflowExecution(req: NextRequest) {
     // 6. Return result
     return NextResponse.json({
       success: true,
-      executionId: record.id,
+      executionId: record.executionId,
       status: record.status,
-      duration: record.duration,
     })
   } catch (error) {
     console.error(`[${executionId}] Execution failed:`, error)
@@ -367,12 +366,11 @@ export async function executeScheduledWorkflow(
     // 4. Log to database
     const executionLogOps = db.entity('ExecutionLog')
     await executionLogOps.create({
-      executionId: record.id,
+      executionId: record.executionId,
       tenantId,
       workflowId: workflow.id,
       triggeredBy: 'schedule',
       status: record.status,
-      duration: record.duration,
       createdAt: new Date(),
     })
 
@@ -530,7 +528,7 @@ export async function adminExecuteWorkflow(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      executionId: record.id,
+      executionId: record.executionId,
       status: record.status,
       note: 'Cross-tenant execution by super-admin',
     })
@@ -561,8 +559,8 @@ export async function logExecutionContext(context: ExtendedWorkflowContext) {
     workflow: sanitized.workflowId,
     tenant: sanitized.tenantId,
     user: sanitized.userId,
-    mode: sanitized.multiTenant.executionMode,
-    timestamp: sanitized.multiTenant.requestedAt,
+    mode: (sanitized.multiTenant as Record<string, unknown>)?.executionMode,
+    timestamp: (sanitized.multiTenant as Record<string, unknown>)?.requestedAt,
     // Variables listed as keys only, no values
     variables: sanitized.variables,
     // Limits included for monitoring

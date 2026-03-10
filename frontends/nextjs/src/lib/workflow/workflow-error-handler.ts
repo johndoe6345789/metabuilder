@@ -484,7 +484,7 @@ export class WorkflowErrorHandler {
         code: WorkflowErrorCode.NOT_FOUND,
         message: `${resource} not found`,
         statusCode: 404,
-        details: context,
+        details: { ...context },
       },
       diagnostics: {
         hint: ERROR_HINTS[WorkflowErrorCode.NOT_FOUND],

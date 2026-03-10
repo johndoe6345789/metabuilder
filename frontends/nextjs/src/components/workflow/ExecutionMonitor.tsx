@@ -109,7 +109,7 @@ export const ExecutionMonitor: React.FC<ExecutionMonitorProps> = ({
           </button>
         </div>
 
-        {listError !== undefined && (
+        {listError != null && (
           <div className={styles.error}>
             <p>Error loading executions: {listError.message}</p>
           </div>
@@ -125,7 +125,7 @@ export const ExecutionMonitor: React.FC<ExecutionMonitorProps> = ({
             />
           ))}
 
-          {executions.length === 0 && listError === undefined && (
+          {executions.length === 0 && listError == null && (
             <p className={styles.noResults}>No executions yet</p>
           )}
         </div>
@@ -380,8 +380,9 @@ const MetricsGrid: React.FC<MetricsGridProps> = ({ metrics }) => {
       <MetricCard label="Retried" value={metrics.retriedNodes} />
       <MetricCard label="Total Retries" value={metrics.totalRetries} />
       <MetricCard label="Peak Memory" value={`${metrics.peakMemory} MB`} />
-      <MetricCard label="Data Processed" value={`${metrics.dataProcessed} KB`} />
-      <MetricCard label="API Calls" value={metrics.apiCallsMade} />
+      <MetricCard label="Validation Failures" value={metrics.validationFailures} />
+      <MetricCard label="Recovery Attempts" value={metrics.recoveryAttempts} />
+      <MetricCard label="Recovery Successes" value={metrics.recoverySuccesses} />
     </div>
   )
 }

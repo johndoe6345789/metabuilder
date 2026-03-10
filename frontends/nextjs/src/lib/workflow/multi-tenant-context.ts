@@ -189,7 +189,7 @@ export class MultiTenantContextBuilder {
       triggerData: requestData?.triggerData ?? {},
       variables: this.buildVariables(requestData?.variables),
       secrets: requestData?.secrets ?? {},
-      request: this.options.captureRequestData ? requestData?.request : undefined,
+      request: this.options.captureRequestData ? requestData?.request as WorkflowContext['request'] : undefined,
       multiTenant: multiTenantMeta,
       requestMetadata: {
         ipAddress: this.requestContext.ipAddress,

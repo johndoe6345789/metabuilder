@@ -200,7 +200,7 @@ class ErrorReportingService {
   private extractStatusCode(error: Error | string): number | undefined {
     const message = typeof error === 'string' ? error : error.message
     const match = message.match(/(\d{3})/)
-    return match != null ? parseInt(match[1], 10) : undefined
+    return match?.[1] != null ? parseInt(match[1], 10) : undefined
   }
 
   /**
@@ -254,7 +254,7 @@ class ErrorReportingService {
       504: 'Gateway timeout. Please try again later.',
     }
 
-    return messages[statusCode]
+    return messages[statusCode] ?? 'An unexpected error occurred.'
   }
 
   /**
