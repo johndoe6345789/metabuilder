@@ -1,0 +1,62 @@
+name: 'Setup npm with Nexus'
+description: 'Starts Nexus, publishes patched packages, then runs npm install'
+
+inputs:
+  node-version:
+    description: 'Node.js version'
+    required: false
+    default: '20'
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+
+    - name: Cache Nexus data
+      uses: actions/cache@v4
+      with:
+        path: /tmp/nexus-data
+        key: nexus-data-v1-${{ hashFiles('deployment/npm-patches/**', 'deployment/nexus-init.sh') }}
+        restore-keys: |
+          nexus-data-v1-
+
+    - name: Start Nexus
+      shell: bash
+      run: |
+        docker run -d --name nexus \
+          -p 8091:8081 \
+          -v /tmp/nexus-data:/nexus-data \
+          --platform linux/amd64 \
+          sonatype/nexus3:3.75.0
+        echo "Nexus starting..."
+
+    - name: Wait for Nexus
+      shell: bash
+      run: |
+        echo "Waiting for Nexus to be healthy (up to 3 minutes)..."
+        timeout 180 bash -c '
+          until curl -sf http://localhost:8091/service/rest/v1/status -u admin:nexus >/dev/null 2>&1 || \
+                curl -sf http://localhost:8091/service/rest/v1/status >/dev/null 2>&1; do
+            echo "  still waiting..."
+            sleep 10
+          done
+        '
+        echo "Nexus is up"
+
+    - name: Initialise Nexus (npm repos)
+      shell: bash
+      env:
+        NEXUS_URL: http://localhost:8091
+        NEXUS_ADMIN_NEW_PASS: nexus
+      run: bash deployment/nexus-ci-init.sh
+
+    - name: Publish patched npm packages
+      shell: bash
+      run: bash deployment/publish-npm-patches.sh
+
+    - name: Install npm dependencies
+      shell: bash
+      run: npm install

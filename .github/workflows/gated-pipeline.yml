@@ -398,13 +398,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - name: Setup npm with Nexus
+        uses: ./.github/actions/setup-npm
         with:
-          node-version: 20
-
-      - name: Install dependencies
-        run: npm install
+          node-version: '20'
 
       - name: Build workspace packages
         run: npm run build --workspaces --if-present 2>&1 || true
@@ -435,13 +432,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - name: Setup npm with Nexus
+        uses: ./.github/actions/setup-npm
         with:
-          node-version: 20
-
-      - name: Install dependencies
-        run: npm install
+          node-version: '20'
 
       - name: Build workspace packages
         run: npm run build --workspaces --if-present 2>&1 || true
@@ -483,13 +477,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - name: Setup npm with Nexus
+        uses: ./.github/actions/setup-npm
         with:
-          node-version: 20
-
-      - name: Install dependencies
-        run: npm install
+          node-version: '20'
 
       - name: Run dependency audit
         run: |
@@ -696,13 +687,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - name: Setup npm with Nexus
+        uses: ./.github/actions/setup-npm
         with:
-          node-version: 20
-
-      - name: Install dependencies
-        run: npm install
+          node-version: '20'
 
       - name: Run unit tests with coverage
         run: |
@@ -769,13 +757,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - name: Setup npm with Nexus
+        uses: ./.github/actions/setup-npm
         with:
-          node-version: 20
-
-      - name: Install dependencies
-        run: npm install
+          node-version: '20'
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps chromium
@@ -819,13 +804,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - name: Setup npm with Nexus
+        uses: ./.github/actions/setup-npm
         with:
-          node-version: 20
-
-      - name: Install dependencies
-        run: npm install
+          node-version: '20'
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps chromium
@@ -932,13 +914,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - name: Setup npm with Nexus
+        uses: ./.github/actions/setup-npm
         with:
-          node-version: 20
-
-      - name: Install dependencies
-        run: npm install
+          node-version: '20'
 
       - name: Build workspace packages
         run: npm run build --workspaces --if-present 2>&1 || true
@@ -1226,13 +1205,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - name: Setup npm with Nexus
+        uses: ./.github/actions/setup-npm
         with:
-          node-version: 20
-
-      - name: Install dependencies
-        run: npm install
+          node-version: '20'
 
       - name: Build for staging
         run: npm run build -w frontends/nextjs
@@ -1279,13 +1255,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - name: Setup npm with Nexus
+        uses: ./.github/actions/setup-npm
         with:
-          node-version: 20
-
-      - name: Install dependencies
-        run: npm install
+          node-version: '20'
 
       - name: Build for production
         run: npm run build -w frontends/nextjs
