@@ -15,6 +15,8 @@ const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? 'http://localhost:3000/workfl
 export default defineConfig({
   testDir: './',
   testMatch: '**/*.spec.ts',
+  // Smoke tests require the full Docker stack — exclude in CI
+  testIgnore: process.env.CI ? ['**/deployment-smoke.spec.ts'] : [],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,

@@ -5,8 +5,7 @@ import { test, expect } from '@playwright/test'
  * through the nginx gateway on port 80.
  *
  * These tests require the full Docker stack to be running.
- * They are skipped automatically when the gateway is unreachable
- * (e.g. in CI without the stack, or in local dev without docker compose up).
+ * They are NOT run in CI (excluded via playwright.config.ts testIgnore).
  *
  * To run locally:
  *   cd deployment && docker compose -f docker-compose.stack.yml up -d
@@ -14,23 +13,6 @@ import { test, expect } from '@playwright/test'
  */
 
 const GATEWAY = 'http://localhost'
-
-let stackAvailable = false
-
-test.beforeAll(async ({ request }) => {
-  try {
-    const resp = await request.get(GATEWAY, { timeout: 5000 })
-    stackAvailable = resp.ok()
-  } catch {
-    stackAvailable = false
-  }
-})
-
-test.beforeEach(async ({}, testInfo) => {
-  if (!stackAvailable) {
-    testInfo.skip()
-  }
-})
 
 test.describe('Deployment Smoke Tests', () => {
   test.describe('Web Applications', () => {
