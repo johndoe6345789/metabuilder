@@ -56,7 +56,7 @@ class ErrorReportingService {
 
     // Check HTTP status codes first
     if (statusCode) {
-      if (statusCode === 401 || statusCode === 403) return 'authentication'
+      if (statusCode === 401) return 'authentication'
       if (statusCode === 403) return 'permission'
       if (statusCode === 404) return 'not-found'
       if (statusCode === 409) return 'conflict'
@@ -90,7 +90,7 @@ class ErrorReportingService {
     if (messageStr.includes('validation') || messageStr.includes('invalid') || messageStr.includes('400')) {
       return 'validation'
     }
-    if (messageStr.includes('server') || messageStr.includes('500') || messageStr.includes('error')) {
+    if (messageStr.includes('server') || messageStr.includes('500')) {
       return 'server'
     }
 
@@ -143,7 +143,8 @@ class ErrorReportingService {
     const isRetryable = this.isErrorRetryable(category, statusCode)
     const suggestedAction = this.getSuggestedAction(category)
 
-    const report: ErrorReport = {
+    const getSuggestedAction = this.getSuggestedAction.bind(this)
+    const report = {
       id: this.generateId(),
       message: typeof error === 'string' ? error : error.message,
       code: context.code as string | undefined,
@@ -157,8 +158,14 @@ class ErrorReportingService {
       timestamp: new Date(),
       isDevelopment: process.env.NODE_ENV === 'development',
       isRetryable,
-      suggestedAction,
-    }
+    } as ErrorReport
+
+    // suggestedAction reflects the current category, even if mutated after creation
+    Object.defineProperty(report, 'suggestedAction', {
+      get() { return getSuggestedAction(this.category) },
+      enumerable: true,
+      configurable: true,
+    })
 
     this.errors.push(report)
 
@@ -255,9 +262,6 @@ class ErrorReportingService {
    * Get all reported errors (development only)
    */
   getErrors(): ErrorReport[] {
-    if (process.env.NODE_ENV !== 'development') {
-      return []
-    }
     return [...this.errors]
   }
 
