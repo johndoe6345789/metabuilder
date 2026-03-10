@@ -404,7 +404,7 @@ jobs:
           node-version: '20'
 
       - name: Build workspace packages
-        run: npm run build --workspaces --if-present 2>&1 || true
+        run: npm run build --workspaces --if-present 2>&1
 
       - name: Run TypeScript type check
         run: npm run typecheck -w frontends/nextjs
@@ -438,12 +438,13 @@ jobs:
           node-version: '20'
 
       - name: Build workspace packages
-        run: npm run build --workspaces --if-present 2>&1 || true
+        run: npm run build --workspaces --if-present 2>&1
 
       - name: Run ESLint
         run: |
+          set -o pipefail
           cd frontends/nextjs
-          npx eslint . --format compact 2>&1 | tee /tmp/lint-out.txt || true
+          npx eslint . --format compact 2>&1 | tee /tmp/lint-out.txt
           # Count errors in local src/ only (skip workspace transitive errors)
           LOCAL_ERRORS=$(grep -c "Error -" /tmp/lint-out.txt 2>/dev/null || echo "0")
           echo "Total lint issues: $LOCAL_ERRORS"
@@ -485,7 +486,7 @@ jobs:
       - name: Run dependency audit
         run: |
           mkdir -p gate-artifacts/gate-1
-          npm audit --json > gate-artifacts/gate-1/audit-results.json 2>&1 || true
+          npm audit --json > gate-artifacts/gate-1/audit-results.json 2>&1
           echo "Security audit completed"
         continue-on-error: true
 
@@ -590,7 +591,7 @@ jobs:
           # Check for common stub patterns
           STUBS=$(grep -rn "TODO\|FIXME\|HACK\|XXX\|not implemented\|throw new Error.*not implemented" \
             --include="*.ts" --include="*.tsx" \
-            frontends/ components/ hooks/ redux/ 2>/dev/null | head -50 || true)
+            frontends/ components/ hooks/ redux/ 2>/dev/null | head -50)
           if [ -n "$STUBS" ]; then
             echo "Potential stubs/TODOs found:" > gate-artifacts/gate-1/stubs.txt
             echo "$STUBS" >> gate-artifacts/gate-1/stubs.txt
@@ -644,7 +645,7 @@ jobs:
           mkdir -p gate-artifacts/gate-1
           echo "completed" > gate-artifacts/gate-1/status.txt
           echo "$(date -Iseconds)" > gate-artifacts/gate-1/end-time.txt
-          ls -la gate-artifacts/gate-1/ || true
+          ls -la gate-artifacts/gate-1/
 
       - name: Upload consolidated gate 1 report
         uses: actions/upload-artifact@v4
@@ -694,8 +695,9 @@ jobs:
 
       - name: Run unit tests with coverage
         run: |
+          set -o pipefail
           cd frontends/nextjs
-          npx vitest run --coverage --coverage.reporter=text --coverage.reporter=json-summary 2>&1 | tee /tmp/vitest-out.txt || true
+          npx vitest run --coverage --coverage.reporter=text --coverage.reporter=json-summary 2>&1 | tee /tmp/vitest-out.txt
           FAILED=$(grep -oP '\d+ failed' /tmp/vitest-out.txt | head -1 | grep -oP '\d+' || echo "0")
           PASSED=$(grep -oP '\d+ passed' /tmp/vitest-out.txt | head -1 | grep -oP '\d+' || echo "0")
           echo "Tests: $PASSED passed, $FAILED failed"
@@ -763,7 +765,7 @@ jobs:
           node-version: '20'
 
       - name: Build workspace packages
-        run: npm run build --workspaces --if-present 2>&1 || true
+        run: npm run build --workspaces --if-present 2>&1
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps chromium
@@ -776,7 +778,7 @@ jobs:
       - name: Run Playwright tests
         run: |
           if [ -f e2e/playwright.config.ts ]; then
-            npx playwright test --config=e2e/playwright.config.ts 2>&1 || true
+            npx playwright test --config=e2e/playwright.config.ts 2>&1
           else
             echo "::warning::No playwright.config.ts found — E2E tests not configured"
           fi
@@ -827,7 +829,7 @@ jobs:
       - name: Run DBAL daemon suite
         run: |
           if [ -f e2e/playwright.dbal-daemon.config.ts ]; then
-            npx playwright test --config=e2e/playwright.dbal-daemon.config.ts 2>&1 || true
+            npx playwright test --config=e2e/playwright.dbal-daemon.config.ts 2>&1
           else
             echo "::warning::No DBAL daemon playwright config found — tests not configured"
           fi
@@ -881,7 +883,7 @@ jobs:
           mkdir -p gate-artifacts/gate-2
           echo "completed" > gate-artifacts/gate-2/status.txt
           echo "$(date -Iseconds)" > gate-artifacts/gate-2/end-time.txt
-          ls -la gate-artifacts/gate-2/ || true
+          ls -la gate-artifacts/gate-2/
 
       - name: Upload consolidated gate 2 report
         uses: actions/upload-artifact@v4
@@ -932,7 +934,7 @@ jobs:
           node-version: '20'
 
       - name: Build workspace packages
-        run: npm run build --workspaces --if-present 2>&1 || true
+        run: npm run build --workspaces --if-present 2>&1
 
       - name: Build
         id: build-step
@@ -1027,7 +1029,7 @@ jobs:
           mkdir -p gate-artifacts/gate-3
           echo "completed" > gate-artifacts/gate-3/status.txt
           echo "$(date -Iseconds)" > gate-artifacts/gate-3/end-time.txt
-          ls -la gate-artifacts/gate-3/ || true
+          ls -la gate-artifacts/gate-3/
 
       - name: Upload consolidated gate 3 report
         uses: actions/upload-artifact@v4
