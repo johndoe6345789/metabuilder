@@ -10,7 +10,7 @@
  * - Recovery suggestions and hints
  */
 
-import { describe, it, expect, beforeEach } from '@jest/globals'
+import { describe, it, expect, beforeEach } from 'vitest'
 import {
   WorkflowErrorHandler,
   WorkflowErrorCode,

@@ -16,7 +16,7 @@ export default defineConfig({
       // Use inline to avoid duplicate React instances in tests
       optimizer: {
         web: {
-          include: ['@/fakemui', 'react', 'react-dom']
+          include: ['react', 'react-dom']
         }
       }
     }
@@ -25,8 +25,8 @@ export default defineConfig({
     dedupe: ['react', 'react-dom'],
     alias: [
       // fakemui aliases must be first (more specific matches first)
-      { find: /^@\/fakemui\/(.+)$/, replacement: resolve(__dirname, '../../fakemui/$1') },
-      { find: /^@\/fakemui$/, replacement: resolve(__dirname, '../../fakemui/index.ts') },
+      { find: /^@\/fakemui\/(.+)$/, replacement: resolve(__dirname, '../../components/fakemui/$1') },
+      { find: /^@\/fakemui$/, replacement: resolve(__dirname, '../../components/fakemui/index.ts') },
       // dbal-ui alias for shared UI components
       { find: /^@dbal-ui\/(.+)$/, replacement: resolve(__dirname, '../../dbal/shared/ui/$1') },
       { find: /^@dbal-ui$/, replacement: resolve(__dirname, '../../dbal/shared/ui') },

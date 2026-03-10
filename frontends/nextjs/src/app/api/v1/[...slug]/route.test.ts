@@ -5,7 +5,9 @@
  * Integration tests verify full DBAL execution
  */
 
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
+
+vi.mock('server-only', () => ({}))
 
 describe('API Route /api/v1/[...slug]', () => {
   describe('Route structure', () => {

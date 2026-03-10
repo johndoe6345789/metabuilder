@@ -9,7 +9,7 @@
  * - Security validations
  */
 
-import { describe, it, expect, beforeEach } from '@jest/globals'
+import { describe, it, expect, beforeEach } from 'vitest'
 import {
   MultiTenantContextBuilder,
   createContextFromRequest,
