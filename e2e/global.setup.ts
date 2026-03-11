@@ -42,12 +42,13 @@ async function globalSetup() {
   try {
     const response = await fetch(setupUrl, { method: 'POST' })
     if (!response.ok) {
-      console.error('[setup] Failed to seed database:', response.status, response.statusText)
-    } else {
-      console.log('[setup] Database seeded successfully')
+      throw new Error(`Seed endpoint returned ${response.status} ${response.statusText}`)
     }
+    console.log('[setup] Database seeded successfully')
   } catch (error) {
-    console.warn('[setup] Setup endpoint not available (non-fatal):', (error as Error).message)
+    const message = error instanceof Error ? error.message : String(error)
+    console.error('[setup] Failed to seed database:', message)
+    throw new Error(`[setup] Seeding failed — aborting test suite. ${message}`)
   }
 }
 
