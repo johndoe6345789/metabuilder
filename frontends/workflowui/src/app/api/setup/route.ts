@@ -95,9 +95,10 @@ export async function POST() {
 
   console.warn(`[Seed] Complete: ${results.packages} packages, ${results.pages} pages, ${results.skipped} skipped, ${results.errors} errors`)
 
+  const status = results.errors > 0 ? 207 : 200
   return NextResponse.json({
-    success: true,
-    message: 'Database seeded successfully',
+    success: results.errors === 0,
+    message: results.errors > 0 ? `Seeded with ${results.errors} error(s)` : 'Database seeded successfully',
     results,
-  })
+  }, { status })
 }

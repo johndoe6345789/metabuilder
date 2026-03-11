@@ -5,7 +5,8 @@
 ARG BUILD_TYPE=Release
 
 # ── Build stage ──────────────────────────────────────────────────────────────
-FROM metabuilder/base-apt:latest AS builder
+ARG BASE_REGISTRY=metabuilder
+FROM ${BASE_REGISTRY}/base-apt:latest AS builder
 
 ARG BUILD_TYPE
 
@@ -56,7 +57,8 @@ RUN cd /dbal/build \
     && strip dbal_daemon
 
 # ── Runtime stage ────────────────────────────────────────────────────────────
-FROM metabuilder/base-apt:latest
+ARG BASE_REGISTRY=metabuilder
+FROM ${BASE_REGISTRY}/base-apt:latest
 
 WORKDIR /app
 
