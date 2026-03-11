@@ -654,13 +654,13 @@ jobs:
           path: gate-artifacts/
 
   # ============================================================================
-  # GATE 2: Testing Gates
+  # GATE 2: Testing Gates (runs after container images are published to GHCR)
   # ============================================================================
 
   gate-2-start:
     name: "Gate 2: Testing - Starting"
     runs-on: ubuntu-latest
-    needs: gate-1-complete
+    needs: [gate-1-complete, container-build-apps]
     steps:
       - name: Gate 2 checkpoint
         run: |
@@ -759,6 +759,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Setup npm with Nexus
         uses: ./.github/actions/setup-npm
         with:
@@ -777,7 +784,7 @@ jobs:
           else
             echo "::warning::No playwright.config.ts found — E2E tests not configured"
           fi
-        timeout-minutes: 10
+        timeout-minutes: 15
 
       - name: Upload test results
         if: always()
@@ -1311,8 +1318,8 @@ jobs:
   container-base-tier1:
     name: "Gate 7 T1: ${{ matrix.image }}"
     runs-on: ubuntu-latest
-    needs: gate-3-complete
-    if: github.event_name != 'pull_request' && github.event_name != 'issues' && github.event_name != 'issue_comment'
+    needs: gate-1-complete
+    if: github.event_name != 'issues' && github.event_name != 'issue_comment'
     strategy:
       fail-fast: false
       matrix:
@@ -1363,7 +1370,7 @@ jobs:
           context: .
           file: ${{ matrix.dockerfile }}
           platforms: ${{ matrix.platforms }}
-          push: ${{ github.event_name != 'pull_request' }}
+          push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha,scope=${{ matrix.image }}
@@ -1431,7 +1438,7 @@ jobs:
           context: .
           file: ${{ matrix.dockerfile }}
           platforms: ${{ matrix.platforms }}
-          push: ${{ github.event_name != 'pull_request' }}
+          push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha,scope=${{ matrix.image }}
@@ -1490,7 +1497,7 @@ jobs:
           context: .
           file: ./deployment/base-images/Dockerfile.devcontainer
           platforms: linux/amd64,linux/arm64
-          push: ${{ github.event_name != 'pull_request' }}
+          push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha,scope=devcontainer
@@ -1512,7 +1519,7 @@ jobs:
     name: "Gate 7 App: ${{ matrix.image }}"
     runs-on: ubuntu-latest
     needs: [container-base-tier1]
-    if: github.event_name != 'pull_request' && github.event_name != 'issues' && github.event_name != 'issue_comment' && !failure()
+    if: github.event_name != 'issues' && github.event_name != 'issue_comment' && !failure()
     strategy:
       fail-fast: false
       matrix:
@@ -1538,6 +1545,12 @@ jobs:
           - image: exploded-diagrams
             context: .
             dockerfile: ./frontends/exploded-diagrams/Dockerfile
+          - image: dbal
+            context: ./dbal
+            dockerfile: ./dbal/production/build-config/Dockerfile
+          - image: dbal-init
+            context: .
+            dockerfile: ./deployment/config/dbal/Dockerfile.init
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -1571,7 +1584,7 @@ jobs:
         with:
           context: ${{ matrix.context }}
           file: ${{ matrix.dockerfile }}
-          push: ${{ github.event_name != 'pull_request' }}
+          push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha,scope=${{ matrix.image }}

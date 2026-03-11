@@ -52,6 +52,7 @@ services:
       - smoke
 
   dbal-init:
+    image: ${DBAL_INIT_IMAGE:-ghcr.io/johndoe6345789/metabuilder/dbal-init:latest}
     build:
       context: ..
       dockerfile: deployment/config/dbal/Dockerfile.init
