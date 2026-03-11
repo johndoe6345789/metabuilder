@@ -10,7 +10,7 @@
       "steps": [
         {
           "action": "navigate",
-          "url": "/templates"
+          "url": "templates"
         },
         {
           "action": "waitForLoadState",
@@ -48,7 +48,11 @@
       "steps": [
         {
           "action": "navigate",
-          "url": "/templates"
+          "url": "templates"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "networkidle"
         },
         {
           "action": "click",
@@ -74,7 +78,11 @@
       "steps": [
         {
           "action": "navigate",
-          "url": "/templates"
+          "url": "templates"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "networkidle"
         },
         {
           "action": "click",
@@ -112,7 +120,11 @@
       "steps": [
         {
           "action": "navigate",
-          "url": "/templates"
+          "url": "templates"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "networkidle"
         },
         {
           "action": "click",
@@ -146,7 +158,11 @@
       "steps": [
         {
           "action": "navigate",
-          "url": "/templates/1"
+          "url": "templates/1"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "networkidle"
         },
         {
           "action": "click",
