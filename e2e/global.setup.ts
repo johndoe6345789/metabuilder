@@ -6,7 +6,10 @@
  * 2. Seeds the database via the /api/setup endpoint
  */
 import { DockerComposeEnvironment, Wait } from 'testcontainers'
-import { resolve } from 'path'
+import { resolve, dirname } from 'path'
+import { fileURLToPath } from 'url'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 let environment: Awaited<ReturnType<DockerComposeEnvironment['up']>> | undefined
 
