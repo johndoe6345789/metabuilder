@@ -189,7 +189,7 @@ export class MultiTenantContextBuilder {
       triggerData: requestData?.triggerData ?? {},
       variables: this.buildVariables(requestData?.variables),
       secrets: requestData?.secrets ?? {},
-      request: this.options.captureRequestData === true ? requestData?.request as WorkflowContext['request'] : undefined,
+      request: this.options.captureRequestData ? requestData?.request as WorkflowContext['request'] : undefined,
       multiTenant: multiTenantMeta,
       requestMetadata: {
         ipAddress: this.requestContext.ipAddress,
@@ -205,7 +205,7 @@ export class MultiTenantContextBuilder {
     this.validateContextSafety(context)
 
     // 5. Load and bind credentials
-    if (this.options.enforceCredentialValidation === true) {
+    if (this.options.enforceCredentialValidation) {
       this.bindCredentials(context)
     }
 
@@ -213,7 +213,7 @@ export class MultiTenantContextBuilder {
     this.validateVariableTenantIsolation(context)
 
     // 7. Log context creation (audit)
-    if (this.options.enableAuditLogging === true) {
+    if (this.options.enableAuditLogging) {
       this.logContextCreation(context)
     }
 
@@ -231,7 +231,7 @@ export class MultiTenantContextBuilder {
 
     // Super-admin (level 4) can access any tenant
     if (this.requestContext.userLevel >= 4) {
-      if (this.options.allowCrossTenantAccess !== true) {
+      if (!this.options.allowCrossTenantAccess) {
         throw new Error(
           `Cross-tenant access disabled: User ${this.requestContext.userId} ` +
           `cannot access workflow in tenant ${this.workflow.tenantId}`
@@ -366,7 +366,7 @@ export class MultiTenantContextBuilder {
     const errors: string[] = []
 
     // 1. Tenant ID must match (unless cross-tenant access is explicitly allowed)
-    if (context.tenantId !== this.workflow.tenantId && this.options.allowCrossTenantAccess !== true) {
+    if (context.tenantId !== this.workflow.tenantId && !this.options.allowCrossTenantAccess) {
       errors.push(
         `Context tenant ${context.tenantId} does not match ` +
         `workflow tenant ${this.workflow.tenantId}`
@@ -540,7 +540,7 @@ export class MultiTenantContextBuilder {
 
     // 5. Check credentials
     const credentialCount = this.workflow.credentials.length
-    if (this.options.enforceCredentialValidation === true && credentialCount > 0) {
+    if (this.options.enforceCredentialValidation && credentialCount > 0) {
       warnings.push({
         path: 'credentials',
         message: `${String(credentialCount)} credential(s) will be validated during execution`,

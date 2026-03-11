@@ -289,7 +289,7 @@ jobs:
           echo "$(date -Iseconds)" > gate-artifacts/gate-1/start-time.txt
 
       - name: Upload gate start marker
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: gate-1-start
           path: gate-artifacts/gate-1/
@@ -301,7 +301,7 @@ jobs:
     needs: gate-1-start
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -384,7 +384,7 @@ jobs:
 
       - name: Upload validation result
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: gate-1-schema-result
           path: gate-artifacts/gate-1/
@@ -396,7 +396,7 @@ jobs:
     needs: schema-check
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup npm with Nexus
         uses: ./.github/actions/setup-npm
@@ -418,7 +418,7 @@ jobs:
 
       - name: Upload validation result
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: gate-1-typecheck-result
           path: gate-artifacts/gate-1/
@@ -430,7 +430,7 @@ jobs:
     needs: schema-check
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup npm with Nexus
         uses: ./.github/actions/setup-npm
@@ -464,7 +464,7 @@ jobs:
 
       - name: Upload validation result
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: gate-1-lint-result
           path: gate-artifacts/gate-1/
@@ -476,7 +476,7 @@ jobs:
     needs: schema-check
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup npm with Nexus
         uses: ./.github/actions/setup-npm
@@ -499,7 +499,7 @@ jobs:
 
       - name: Upload validation result
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: gate-1-security-result
           path: gate-artifacts/gate-1/
@@ -511,7 +511,7 @@ jobs:
     needs: schema-check
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Check for oversized files
         run: |
@@ -534,7 +534,7 @@ jobs:
 
       - name: Upload validation result
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: gate-1-filesize-result
           path: gate-artifacts/gate-1/
@@ -546,7 +546,7 @@ jobs:
     needs: schema-check
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Check code complexity
         run: |
@@ -571,7 +571,7 @@ jobs:
 
       - name: Upload validation result
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: gate-1-complexity-result
           path: gate-artifacts/gate-1/
@@ -583,7 +583,7 @@ jobs:
     needs: schema-check
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Detect stubs and placeholder code
         run: |
@@ -609,7 +609,7 @@ jobs:
 
       - name: Upload validation result
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: gate-1-stub-result
           path: gate-artifacts/gate-1/
@@ -620,7 +620,7 @@ jobs:
     needs: [schema-check, typecheck, lint, security-scan, file-size-check, code-complexity-check, stub-detection]
     steps:
       - name: Download all gate 1 artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           pattern: gate-1-*
           path: gate-artifacts/
@@ -648,7 +648,7 @@ jobs:
           ls -la gate-artifacts/gate-1/
 
       - name: Upload consolidated gate 1 report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: gate-1-complete-report
           path: gate-artifacts/
@@ -674,7 +674,7 @@ jobs:
           echo "$(date -Iseconds)" > gate-artifacts/gate-2/start-time.txt
 
       - name: Upload gate start marker
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: gate-2-start
           path: gate-artifacts/gate-2/
@@ -686,7 +686,7 @@ jobs:
     needs: gate-2-start
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup npm with Nexus
         uses: ./.github/actions/setup-npm
@@ -730,7 +730,7 @@ jobs:
 
       - name: Upload coverage report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: coverage-report
           path: frontends/nextjs/coverage/
@@ -745,7 +745,7 @@ jobs:
 
       - name: Upload validation result
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: gate-2-unit-result
           path: gate-artifacts/gate-2/
@@ -757,7 +757,7 @@ jobs:
     needs: gate-2-start
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup npm with Nexus
         uses: ./.github/actions/setup-npm
@@ -770,11 +770,6 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps chromium
 
-      - name: Start smoke stack
-        run: |
-          docker compose -f deployment/docker-compose.smoke.yml up -d --wait --wait-timeout 180
-        timeout-minutes: 5
-
       - name: Run Playwright tests
         run: |
           if [ -f e2e/playwright.config.ts ]; then
@@ -783,13 +778,9 @@ jobs:
             echo "::warning::No playwright.config.ts found — E2E tests not configured"
           fi
 
-      - name: Stop smoke stack
-        if: always()
-        run: docker compose -f deployment/docker-compose.smoke.yml down -v
-
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: playwright-report
           path: playwright-report/
@@ -804,7 +795,7 @@ jobs:
 
       - name: Upload validation result
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: gate-2-e2e-result
           path: gate-artifacts/gate-2/
@@ -816,7 +807,7 @@ jobs:
     needs: gate-2-start
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup npm with Nexus
         uses: ./.github/actions/setup-npm
@@ -836,7 +827,7 @@ jobs:
 
       - name: Upload daemon test report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: playwright-report-dbal-daemon
           path: frontends/nextjs/playwright-report/
@@ -851,7 +842,7 @@ jobs:
 
       - name: Upload validation result
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: gate-2-dbal-result
           path: gate-artifacts/gate-2/
@@ -862,7 +853,7 @@ jobs:
     needs: [test-unit, test-e2e, test-dbal-daemon]
     steps:
       - name: Download all gate 2 artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           pattern: gate-2-*
           path: gate-artifacts/
@@ -886,7 +877,7 @@ jobs:
           ls -la gate-artifacts/gate-2/
 
       - name: Upload consolidated gate 2 report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: gate-2-complete-report
           path: gate-artifacts/
@@ -912,7 +903,7 @@ jobs:
           echo "$(date -Iseconds)" > gate-artifacts/gate-3/start-time.txt
 
       - name: Upload gate start marker
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: gate-3-start
           path: gate-artifacts/gate-3/
@@ -926,7 +917,7 @@ jobs:
       build-success: ${{ steps.build-step.outcome }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup npm with Nexus
         uses: ./.github/actions/setup-npm
@@ -941,7 +932,7 @@ jobs:
         run: npm run build -w frontends/nextjs
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: dist
           path: frontends/nextjs/.next/
@@ -956,7 +947,7 @@ jobs:
 
       - name: Upload validation result
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: gate-3-build-result
           path: gate-artifacts/gate-3/
@@ -969,7 +960,7 @@ jobs:
     if: github.event_name == 'pull_request'
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -999,7 +990,7 @@ jobs:
 
       - name: Upload validation result
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: gate-3-quality-result
           path: gate-artifacts/gate-3/
@@ -1011,7 +1002,7 @@ jobs:
     if: always() && needs.build.result == 'success' && (needs.quality-check.result == 'success' || needs.quality-check.result == 'skipped')
     steps:
       - name: Download all gate 3 artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           pattern: gate-3-*
           path: gate-artifacts/
@@ -1032,7 +1023,7 @@ jobs:
           ls -la gate-artifacts/gate-3/
 
       - name: Upload consolidated gate 3 report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: gate-3-complete-report
           path: gate-artifacts/
@@ -1048,7 +1039,7 @@ jobs:
     if: github.event_name == 'pull_request' && !github.event.pull_request.draft
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -1217,7 +1208,7 @@ jobs:
       url: https://staging.metabuilder.example.com
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup npm with Nexus
         uses: ./.github/actions/setup-npm
@@ -1267,7 +1258,7 @@ jobs:
       url: https://metabuilder.example.com
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup npm with Nexus
         uses: ./.github/actions/setup-npm
@@ -1336,16 +1327,16 @@ jobs:
             platforms: linux/amd64,linux/arm64
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@v4
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -1381,7 +1372,7 @@ jobs:
             VCS_REF=${{ github.sha }}
 
       - name: Generate artifact attestation
-        uses: actions/attest-build-provenance@v2
+        uses: actions/attest-build-provenance@v4
         with:
           subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ matrix.image }}
           subject-digest: ${{ steps.build.outputs.digest }}
@@ -1404,16 +1395,16 @@ jobs:
             platforms: linux/amd64,linux/arm64
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@v4
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -1450,7 +1441,7 @@ jobs:
             VCS_REF=${{ github.sha }}
 
       - name: Generate artifact attestation
-        uses: actions/attest-build-provenance@v2
+        uses: actions/attest-build-provenance@v4
         with:
           subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ matrix.image }}
           subject-digest: ${{ steps.build.outputs.digest }}
@@ -1463,16 +1454,16 @@ jobs:
     needs: container-base-tier2
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@v4
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -1509,7 +1500,7 @@ jobs:
             VCS_REF=${{ github.sha }}
 
       - name: Generate artifact attestation
-        uses: actions/attest-build-provenance@v2
+        uses: actions/attest-build-provenance@v4
         with:
           subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/devcontainer
           subject-digest: ${{ steps.build.outputs.digest }}
@@ -1548,13 +1539,13 @@ jobs:
             dockerfile: ./frontends/exploded-diagrams/Dockerfile
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -1591,7 +1582,7 @@ jobs:
             VERSION=${{ steps.meta.outputs.version }}
 
       - name: Generate artifact attestation
-        uses: actions/attest-build-provenance@v2
+        uses: actions/attest-build-provenance@v4
         with:
           subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ matrix.image }}
           subject-digest: ${{ steps.build.outputs.digest }}
@@ -1623,14 +1614,14 @@ jobs:
           - exploded-diagrams
     steps:
       - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@0.35.0
         timeout-minutes: 15
         with:
           image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ matrix.image }}:${{ github.ref_name }}
@@ -1638,7 +1629,7 @@ jobs:
           output: 'trivy-results-${{ matrix.image }}.sarif'
 
       - name: Upload Trivy results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: 'trivy-results-${{ matrix.image }}.sarif'
           category: container-${{ matrix.image }}
@@ -1653,7 +1644,7 @@ jobs:
       REF_NAME: ${{ github.ref_name }}
     steps:
       - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -1684,12 +1675,12 @@ jobs:
         language: ${{ inputs.codeql_languages == 'all' && fromJSON('["javascript-typescript","python","cpp","go"]') || fromJSON(format('["{0}"]', inputs.codeql_languages)) }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+        uses: github/codeql-action/init@v4
         with:
           languages: ${{ matrix.language }}
           queries: security-and-quality
@@ -1697,7 +1688,7 @@ jobs:
 
       - name: Setup Node.js
         if: matrix.language == 'javascript-typescript'
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: '20'
           cache: 'npm'
@@ -1715,10 +1706,10 @@ jobs:
           go-version: '1.21'
 
       - name: Autobuild
-        uses: github/codeql-action/autobuild@v3
+        uses: github/codeql-action/autobuild@v4
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
+        uses: github/codeql-action/analyze@v4
         with:
           category: "/language:${{ matrix.language }}"
           upload: true
@@ -1750,7 +1741,7 @@ jobs:
     if: always()
     steps:
       - name: Download all gate artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           pattern: gate-*-complete-report
           path: all-gate-artifacts/
@@ -1815,7 +1806,7 @@ jobs:
             }
 
       - name: Upload complete audit trail
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: complete-gate-audit-trail
           path: all-gate-artifacts/

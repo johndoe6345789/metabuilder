@@ -15,6 +15,13 @@ const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? 'http://localhost:3000/workfl
 export default defineConfig({
   testDir: './',
   testMatch: '**/*.spec.ts',
+  /* Exclude smoke/debug/screenshot tests in CI — they require the full Docker
+     stack on port 80 and are not compatible with the dev-server webServer config */
+  testIgnore: process.env.CI ? [
+    '**/deployment-smoke.spec.ts',
+    '**/settings-debug.spec.ts',
+    '**/screenshot-pastebin.spec.ts',
+  ] : [],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
