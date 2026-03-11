@@ -1,12 +1,8 @@
-# docker-compose.smoke.yml — Lightweight smoke test stack for CI.
+# docker-compose.smoke.yml — Smoke test stack for CI.
 #
-# Starts real admin-tool containers (phpMyAdmin, Mongo Express, RedisInsight)
-# and a stub nginx gateway that returns 200 for all app paths.
-# Uses only stock Docker Hub images — no custom builds required.
-#
-# The stub gateway lets path-routing smoke tests pass in CI without needing
-# the full built stack.  End-to-end deployment correctness is tested in
-# staging/production against the real images.
+# Includes a real DBAL daemon backed by PostgreSQL so E2E tests can seed
+# and query data.  Admin tools (phpMyAdmin, Mongo Express, RedisInsight)
+# and an nginx gateway round out the stack.
 #
 # Usage:
 #   docker compose -f deployment/docker-compose.smoke.yml up -d --wait
@@ -27,11 +23,82 @@ services:
     # On Linux (GitHub Actions) this requires the host-gateway extra_host.
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    depends_on:
+      dbal:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1/"]
       interval: 5s
       timeout: 3s
       retries: 10
+    networks:
+      - smoke
+
+  # ── DBAL + PostgreSQL ────────────────────────────────────────────────────
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: metabuilder
+      POSTGRES_PASSWORD: metabuilder
+      POSTGRES_DB: metabuilder
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U metabuilder"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - smoke
+
+  dbal-init:
+    build:
+      context: ..
+      dockerfile: deployment/config/dbal/Dockerfile.init
+    volumes:
+      - dbal-schemas:/target/schemas/entities
+      - dbal-templates:/target/templates/sql
+    networks:
+      - smoke
+
+  dbal:
+    image: ${DBAL_IMAGE:-ghcr.io/johndoe6345789/metabuilder/dbal:latest}
+    build:
+      context: ../dbal
+      dockerfile: production/build-config/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      DBAL_ADAPTER: postgres
+      DATABASE_URL: "postgresql://metabuilder:metabuilder@postgres:5432/metabuilder"
+      DBAL_SCHEMA_DIR: /app/schemas/entities
+      DBAL_TEMPLATE_DIR: /app/templates/sql
+      DBAL_SEED_DIR: /app/seeds/database
+      DBAL_SEED_ON_STARTUP: "true"
+      DBAL_BIND_ADDRESS: 0.0.0.0
+      DBAL_PORT: 8080
+      DBAL_MODE: production
+      DBAL_DAEMON: "true"
+      DBAL_LOG_LEVEL: info
+      DBAL_AUTO_CREATE_TABLES: "true"
+      DBAL_ENABLE_HEALTH_CHECK: "true"
+      DBAL_ADMIN_TOKEN: "smoke-test-admin-token"
+      DBAL_CORS_ORIGIN: "*"
+      JWT_SECRET_KEY: "test-secret"
+    volumes:
+      - dbal-schemas:/app/schemas/entities:ro
+      - dbal-templates:/app/templates/sql:ro
+    depends_on:
+      dbal-init:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:8080/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 15
+      start_period: 10s
     networks:
       - smoke
 
@@ -141,6 +208,12 @@ services:
       start_period: 10s
     networks:
       - smoke
+
+volumes:
+  dbal-schemas:
+    driver: local
+  dbal-templates:
+    driver: local
 
 networks:
   smoke:
