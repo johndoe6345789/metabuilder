@@ -71,12 +71,12 @@ permissions:
 #
 # Sequential Gates (fan-out/fan-in):
 #   Gate 1: Code Quality (DBAL schemas, typecheck, lint, security)
-#   Gate 2: Testing (unit with coverage, E2E, DBAL daemon)
+#   Gate 7: Container Build & Push to GHCR (after Gate 1, before testing)
+#   Gate 2: Testing (unit with coverage, E2E with prod images, DBAL daemon)
 #   Gate 3: Build & Package
 #   Gate 4: Development Assistance (PR only)
 #   Gate 5: Staging Deployment (main branch push)
 #   Gate 6: Production Deployment (release or manual with approval)
-#   Gate 7: Container Build & Push (push/tag/dispatch, not PRs)
 # ════════════════════════════════════════════════════════════════════════════════
 
 jobs:
@@ -654,13 +654,13 @@ jobs:
           path: gate-artifacts/
 
   # ============================================================================
-  # GATE 2: Testing Gates
+  # GATE 2: Testing Gates (runs after container images are published to GHCR)
   # ============================================================================
 
   gate-2-start:
     name: "Gate 2: Testing - Starting"
     runs-on: ubuntu-latest
-    needs: gate-1-complete
+    needs: [gate-1-complete, container-build-apps]
     steps:
       - name: Gate 2 checkpoint
         run: |
@@ -759,6 +759,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Setup npm with Nexus
         uses: ./.github/actions/setup-npm
         with:
@@ -777,7 +784,7 @@ jobs:
           else
             echo "::warning::No playwright.config.ts found — E2E tests not configured"
           fi
-        timeout-minutes: 10
+        timeout-minutes: 15
 
       - name: Upload test results
         if: always()
@@ -1297,7 +1304,7 @@ jobs:
             });
 
   # ============================================================================
-  # GATE 7: Container Build & Push (push/tag/dispatch only, not PRs)
+  # GATE 7: Container Build & Push to GHCR (after Gate 1, before testing)
   # ════════════════════════════════════════════════════════════════════════════
   # Tiered base images respecting the dependency DAG:
   #   Tier 1 (independent):  base-apt, base-node-deps, base-pip-deps
@@ -1311,8 +1318,8 @@ jobs:
   container-base-tier1:
     name: "Gate 7 T1: ${{ matrix.image }}"
     runs-on: ubuntu-latest
-    needs: gate-3-complete
-    if: github.event_name != 'pull_request' && github.event_name != 'issues' && github.event_name != 'issue_comment'
+    needs: gate-1-complete
+    if: github.event_name != 'issues' && github.event_name != 'issue_comment'
     strategy:
       fail-fast: false
       matrix:
@@ -1363,7 +1370,7 @@ jobs:
           context: .
           file: ${{ matrix.dockerfile }}
           platforms: ${{ matrix.platforms }}
-          push: ${{ github.event_name != 'pull_request' }}
+          push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha,scope=${{ matrix.image }}
@@ -1431,7 +1438,7 @@ jobs:
           context: .
           file: ${{ matrix.dockerfile }}
           platforms: ${{ matrix.platforms }}
-          push: ${{ github.event_name != 'pull_request' }}
+          push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha,scope=${{ matrix.image }}
@@ -1490,7 +1497,7 @@ jobs:
           context: .
           file: ./deployment/base-images/Dockerfile.devcontainer
           platforms: linux/amd64,linux/arm64
-          push: ${{ github.event_name != 'pull_request' }}
+          push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha,scope=devcontainer
@@ -1512,7 +1519,7 @@ jobs:
     name: "Gate 7 App: ${{ matrix.image }}"
     runs-on: ubuntu-latest
     needs: [container-base-tier1]
-    if: github.event_name != 'pull_request' && github.event_name != 'issues' && github.event_name != 'issue_comment' && !failure()
+    if: github.event_name != 'issues' && github.event_name != 'issue_comment' && !failure()
     strategy:
       fail-fast: false
       matrix:
@@ -1538,6 +1545,12 @@ jobs:
           - image: exploded-diagrams
             context: .
             dockerfile: ./frontends/exploded-diagrams/Dockerfile
+          - image: dbal
+            context: ./dbal
+            dockerfile: ./dbal/production/build-config/Dockerfile
+          - image: dbal-init
+            context: .
+            dockerfile: ./deployment/config/dbal/Dockerfile.init
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -1571,7 +1584,7 @@ jobs:
         with:
           context: ${{ matrix.context }}
           file: ${{ matrix.dockerfile }}
-          push: ${{ github.event_name != 'pull_request' }}
+          push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha,scope=${{ matrix.image }}
@@ -1613,6 +1626,8 @@ jobs:
           - postgres-dashboard
           - workflowui
           - exploded-diagrams
+          - dbal
+          - dbal-init
     steps:
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v4
@@ -1776,7 +1791,13 @@ jobs:
             summary += '  1.1 DBAL Schemas  1.2 TypeScript  1.3 Lint\n';
             summary += '  1.4 Security  1.5 File Size  1.6 Complexity  1.7 Stubs\n';
             summary += '      |\n';
-            summary += 'Gate 2: Testing (3 steps)\n';
+            summary += 'Gate 7: Containers (after Gate 1)\n';
+            summary += '  T1: base-apt, node-deps, pip-deps\n';
+            summary += '  T2: conan-deps, android-sdk\n';
+            summary += '  T3: devcontainer\n';
+            summary += '  Apps: 9 images (incl. dbal, dbal-init) -> GHCR\n';
+            summary += '      |\n';
+            summary += 'Gate 2: Testing (3 steps, pulls prod images)\n';
             summary += '  2.1 Unit Tests (+ coverage)  2.2 E2E  2.3 DBAL\n';
             summary += '      |\n';
             summary += 'Gate 3: Build (2 steps)\n';
@@ -1787,12 +1808,6 @@ jobs:
             summary += 'Gate 5: Staging (main push)\n';
             summary += '      |\n';
             summary += 'Gate 6: Production (release/manual)\n';
-            summary += '      |\n';
-            summary += 'Gate 7: Containers (push/tag/dispatch)\n';
-            summary += '  T1: base-apt, node-deps, pip-deps\n';
-            summary += '  T2: conan-deps, android-sdk\n';
-            summary += '  T3: devcontainer\n';
-            summary += '  Apps: 7 images -> Trivy scan -> Multi-arch manifests\n';
             summary += '```\n\n';
 
             console.log(summary);
