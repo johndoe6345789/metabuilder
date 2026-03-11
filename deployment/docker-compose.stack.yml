@@ -37,6 +37,29 @@
 
 services:
   # ============================================================================
+  # NPM Registry (Verdaccio) — serves patched @esbuild-kit packages
+  # ============================================================================
+
+  verdaccio:
+    image: verdaccio/verdaccio:6
+    container_name: metabuilder-verdaccio
+    restart: unless-stopped
+    ports:
+      - "4873:4873"
+    volumes:
+      - ./verdaccio.yaml:/verdaccio/conf/config.yaml:ro
+      - ./npm-patches:/verdaccio/patches:ro
+      - verdaccio-storage:/verdaccio/storage
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:4873/-/ping"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    networks:
+      - metabuilder
+
+  # ============================================================================
   # Core Services
   # ============================================================================
 
@@ -1062,6 +1085,9 @@ services:
 # Volumes
 # ============================================================================
 volumes:
+  # NPM registry
+  verdaccio-storage:
+    driver: local
   # Core
   postgres-data:
     driver: local
