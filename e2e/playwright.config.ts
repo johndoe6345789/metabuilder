@@ -15,13 +15,8 @@ const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? 'http://localhost:3000/workfl
 export default defineConfig({
   testDir: './',
   testMatch: '**/*.spec.ts',
-  /* Exclude smoke/debug/screenshot tests in CI — they require the full Docker
-     stack on port 80 and are not compatible with the dev-server webServer config */
-  testIgnore: process.env.CI ? [
-    '**/deployment-smoke.spec.ts',
-    '**/settings-debug.spec.ts',
-    '**/screenshot-pastebin.spec.ts',
-  ] : [],
+  globalSetup: './global.setup.ts',
+  globalTeardown: './global.teardown.ts',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
@@ -33,10 +28,13 @@ export default defineConfig({
     screenshot: 'only-on-failure',
   },
 
-  /* Start dev servers automatically when not running against a live Docker stack */
+  /* Start dev servers automatically when not running against a live Docker stack.
+   * In CI the smoke stack's nginx (in Docker) proxies to the host dev servers via
+   * host.docker.internal. On Linux this resolves to the Docker bridge gateway IP
+   * (e.g. 172.17.0.1), NOT 127.0.0.1 — so dev servers MUST listen on 0.0.0.0. */
   webServer: process.env.PLAYWRIGHT_BASE_URL ? undefined : [
     {
-      command: 'npm run dev -w workflowui',
+      command: `npm run dev -w workflowui -- --hostname ${process.env.CI ? '0.0.0.0' : 'localhost'}`,
       url: 'http://localhost:3000/workflowui/',
       reuseExistingServer: !process.env.CI,
       timeout: 120_000,
@@ -48,7 +46,7 @@ export default defineConfig({
       },
     },
     {
-      command: 'PORT=3001 npm run dev -w codesnippet',
+      command: `PORT=3001 npm run dev -w codesnippet -- --hostname ${process.env.CI ? '0.0.0.0' : 'localhost'}`,
       url: 'http://localhost:3001/pastebin/',
       reuseExistingServer: !process.env.CI,
       timeout: 120_000,

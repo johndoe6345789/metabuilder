@@ -4,10 +4,10 @@ import { test, expect } from '@playwright/test'
  * Deployment smoke tests — validates all services are reachable
  * through the nginx gateway on port 80.
  *
- * These tests require the full Docker stack to be running.
- * They are NOT run in CI (excluded via playwright.config.ts testIgnore).
+ * CI: The smoke stack (docker-compose.smoke.yml) provides nginx + admin tools.
+ *     Playwright dev servers bind to 0.0.0.0 so nginx can proxy via host.docker.internal.
  *
- * To run locally:
+ * Local:
  *   cd deployment && docker compose -f docker-compose.stack.yml up -d
  *   PLAYWRIGHT_BASE_URL=http://localhost/workflowui/ npx playwright test deployment-smoke
  */

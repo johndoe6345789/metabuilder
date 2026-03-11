@@ -777,6 +777,7 @@ jobs:
           else
             echo "::warning::No playwright.config.ts found — E2E tests not configured"
           fi
+        timeout-minutes: 10
 
       - name: Upload test results
         if: always()
