@@ -51,6 +51,9 @@ COPY translations/package.json                         ./translations/
 COPY types/package.json                                ./types/
 COPY workflow/package.json                             ./workflow/
 
+# Postinstall patch script (patches vulnerable bundled deps in npm)
+COPY scripts/patch-bundled-deps.sh                     ./scripts/
+
 # Install all workspace deps (generates lock file from package.json manifests)
 RUN npm config set fetch-retries 5 \
     && npm config set fetch-retry-mintimeout 20000 \

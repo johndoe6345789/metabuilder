@@ -96,6 +96,9 @@ mojo
 spec
 scripts
 .claude
+
+# Allow postinstall patch script for node-deps base image
+!scripts/patch-bundled-deps.sh
 dist
 
 # Allow specific dbal paths through for app builds
