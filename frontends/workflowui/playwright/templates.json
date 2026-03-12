@@ -128,7 +128,7 @@
         },
         {
           "action": "click",
-          "selector": "[data-testid='template-card-1'] >> text=View Template"
+          "selector": "[data-testid='template-card-email-automation'] >> text=View Template"
         },
         {
           "action": "waitForLoadState",
@@ -158,7 +158,7 @@
       "steps": [
         {
           "action": "navigate",
-          "url": "templates/1"
+          "url": "templates/email-automation"
         },
         {
           "action": "waitForLoadState",
