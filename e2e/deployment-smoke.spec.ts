@@ -51,14 +51,12 @@ test.describe('Deployment Smoke Tests', () => {
   test.describe('API Services', () => {
     test('DBAL health endpoint responds', async ({ request }) => {
       const resp = await request.get(`${GATEWAY}/api/health`)
-      // In CI smoke stacks the DBAL daemon may not be running;
-      // accept 200 (healthy) or 502/404 (gateway has no upstream yet)
-      expect(resp.status()).not.toBe(0)
+      expect(resp.ok()).toBeTruthy()
     })
 
     test('DBAL version endpoint responds', async ({ request }) => {
       const resp = await request.get(`${GATEWAY}/api/version`)
-      expect(resp.status()).not.toBe(0)
+      expect(resp.ok()).toBeTruthy()
     })
   })
 
