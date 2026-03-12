@@ -35,9 +35,10 @@ async function globalSetup() {
   await new Promise(resolve => setTimeout(resolve, 2000))
 
   // ── 3. Seed database ────────────────────────────────────────────────────
+  // workflowui uses basePath: '/workflowui', so the setup route is at /workflowui/api/setup
   const setupUrl = process.env.PLAYWRIGHT_BASE_URL
-    ? new URL('/api/setup', process.env.PLAYWRIGHT_BASE_URL.replace(/\/workflowui\/?$/, '')).href
-    : 'http://localhost:3000/api/setup'
+    ? new URL('/workflowui/api/setup', process.env.PLAYWRIGHT_BASE_URL.replace(/\/workflowui\/?$/, '')).href
+    : 'http://localhost:3000/workflowui/api/setup'
 
   try {
     const response = await fetch(setupUrl, { method: 'POST' })
