@@ -90,7 +90,7 @@
     "@commitlint/cli": "^20.4.2",
     "@commitlint/config-conventional": "^20.4.2",
     "@commitlint/prompt-cli": "^20.4.2",
-    "@electric-sql/pglite-socket": "^0.0.21",
+    "@electric-sql/pglite-socket": "^0.0.22",
     "@eslint-react/eslint-plugin": "^2.13.0",
     "@faker-js/faker": "^10.3.0",
     "@lingual/i18n-check": "^0.8.19",
