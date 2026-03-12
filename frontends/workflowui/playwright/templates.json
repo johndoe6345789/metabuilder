@@ -37,7 +37,8 @@
           "action": "expect",
           "selector": "[data-testid^='template-card-']",
           "assertion": {
-            "matcher": "toBeVisible"
+            "matcher": "toHaveCount",
+            "count": 8
           }
         }
       ]
@@ -97,7 +98,8 @@
           "action": "expect",
           "selector": "[data-testid^='template-list-item-']",
           "assertion": {
-            "matcher": "toBeVisible"
+            "matcher": "toHaveCount",
+            "count": 8
           }
         },
         {
@@ -109,7 +111,8 @@
           "action": "expect",
           "selector": "[data-testid^='template-card-']",
           "assertion": {
-            "matcher": "toBeVisible"
+            "matcher": "toHaveCount",
+            "count": 8
           }
         }
       ]
@@ -137,7 +140,8 @@
         {
           "description": "Verify on detail page",
           "action": "expect",
-          "selector": "text=Overview",
+          "role": "tab",
+          "text": "Overview",
           "assertion": {
             "matcher": "toBeVisible"
           }
@@ -179,7 +183,7 @@
         {
           "description": "Verify workspace dropdown visible",
           "action": "expect",
-          "selector": "text=Workspace",
+          "label": "Workspace",
           "assertion": {
             "matcher": "toBeVisible"
           }
