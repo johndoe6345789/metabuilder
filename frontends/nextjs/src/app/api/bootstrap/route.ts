@@ -74,6 +74,12 @@ export async function POST(request: NextRequest) {
     return limitResponse
   }
 
+  const setupSecret = process.env.SETUP_SECRET
+  const authHeader = request.headers.get('Authorization')
+  if (!setupSecret || authHeader !== `Bearer ${setupSecret}`) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
   const results = { packages: 0, pages: 0, skipped: 0, errors: 0 }
 
   // Seed InstalledPackage records

@@ -444,16 +444,15 @@ jobs:
         run: |
           set -o pipefail
           cd frontends/nextjs
-          npx eslint . 2>&1 | tee /tmp/lint-out.txt || true
-          # Count errors in local src/ only (skip workspace transitive errors)
+          npx eslint . 2>&1 | tee /tmp/lint-out.txt
+          # Count errors only (warnings are tolerated, errors are not)
           LOCAL_ERRORS=$(grep -cE "  error  " /tmp/lint-out.txt 2>/dev/null || echo "0")
-          echo "Total lint issues: $LOCAL_ERRORS"
-          # Allow up to 1500 issues (pre-existing workspace type-safety warnings)
-          if [ "$LOCAL_ERRORS" -gt 1500 ]; then
-            echo "::error::Too many lint errors ($LOCAL_ERRORS > 1500 threshold)"
+          echo "Total lint errors: $LOCAL_ERRORS"
+          if [ "$LOCAL_ERRORS" -gt 0 ]; then
+            echo "::error::Lint errors found ($LOCAL_ERRORS errors, threshold is 0)"
             exit 1
           fi
-          echo "Lint: passed with $LOCAL_ERRORS issues (within threshold)"
+          echo "Lint: passed with 0 errors"
 
       - name: Record validation result
         if: always()
@@ -661,6 +660,7 @@ jobs:
     name: "Gate 2: Testing - Starting"
     runs-on: ubuntu-latest
     needs: [gate-1-complete, container-build-apps]
+    if: ${{ !inputs.skip_tests }}
     steps:
       - name: Gate 2 checkpoint
         run: |
@@ -684,6 +684,7 @@ jobs:
     name: "Gate 2.1: Unit Tests"
     runs-on: ubuntu-latest
     needs: gate-2-start
+    if: ${{ !inputs.skip_tests }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -755,6 +756,7 @@ jobs:
     name: "Gate 2.2: E2E Tests"
     runs-on: ubuntu-latest
     needs: gate-2-start
+    if: ${{ !inputs.skip_tests }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -813,6 +815,7 @@ jobs:
     name: "Gate 2.3: DBAL Daemon E2E"
     runs-on: ubuntu-latest
     needs: gate-2-start
+    if: ${{ !inputs.skip_tests }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -1569,7 +1572,7 @@ jobs:
     name: "Gate 7 App: ${{ matrix.image }}"
     runs-on: ubuntu-latest
     needs: [container-base-tier1]
-    if: github.event_name != 'issues' && github.event_name != 'issue_comment' && !failure()
+    if: github.event_name != 'issues' && github.event_name != 'issue_comment' && needs.container-base-tier1.result == 'success'
     strategy:
       fail-fast: false
       matrix:

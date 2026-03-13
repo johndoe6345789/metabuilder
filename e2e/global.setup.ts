@@ -13,6 +13,20 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 
 let environment: Awaited<ReturnType<DockerComposeEnvironment['up']>> | undefined
 
+async function waitForServer(url: string, timeoutMs = 60000): Promise<void> {
+  const deadline = Date.now() + timeoutMs
+  while (Date.now() < deadline) {
+    try {
+      const res = await fetch(url, { method: 'GET' })
+      if (res.ok || res.status === 401 || res.status === 405) return // server is up
+    } catch {
+      // not ready yet
+    }
+    await new Promise(r => setTimeout(r, 1000))
+  }
+  throw new Error(`Server at ${url} did not become ready within ${timeoutMs}ms`)
+}
+
 async function globalSetup() {
   // ── 1. Start smoke stack via Testcontainers ──────────────────────────────
   console.log('[setup] Starting smoke stack via Testcontainers...')
@@ -32,13 +46,13 @@ async function globalSetup() {
   ;(globalThis as Record<string, unknown>).__TESTCONTAINERS_ENV__ = environment
 
   // ── 2. Wait for dev servers (started by Playwright webServer config) ─────
-  await new Promise(resolve => setTimeout(resolve, 2000))
-
   // ── 3. Seed database ────────────────────────────────────────────────────
   // workflowui uses basePath: '/workflowui', so the setup route is at /workflowui/api/setup
   const setupUrl = process.env.PLAYWRIGHT_BASE_URL
     ? new URL('/workflowui/api/setup', process.env.PLAYWRIGHT_BASE_URL.replace(/\/workflowui\/?$/, '')).href
     : 'http://localhost:3000/workflowui/api/setup'
+
+  await waitForServer(setupUrl)
 
   try {
     const response = await fetch(setupUrl, { method: 'POST' })
