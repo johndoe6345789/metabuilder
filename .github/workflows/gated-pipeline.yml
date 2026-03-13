@@ -28,6 +28,11 @@ on:
         required: false
         type: boolean
         default: false
+      skip_containers:
+        description: 'Skip container builds (use existing GHCR images)'
+        required: false
+        type: boolean
+        default: false
       run_codeql:
         description: 'Run CodeQL semantic analysis'
         required: false
@@ -659,7 +664,7 @@ jobs:
   gate-2-start:
     name: "Gate 2: Testing - Starting"
     runs-on: ubuntu-latest
-    needs: [gate-1-complete, container-build-apps]
+    needs: [gate-1-complete]
     if: ${{ !inputs.skip_tests }}
     steps:
       - name: Gate 2 checkpoint
@@ -1322,7 +1327,7 @@ jobs:
     name: "Gate 7 T1: ${{ matrix.image }}"
     runs-on: ubuntu-latest
     needs: gate-1-complete
-    if: github.event_name != 'issues' && github.event_name != 'issue_comment'
+    if: github.event_name != 'issues' && github.event_name != 'issue_comment' && !inputs.skip_containers
     strategy:
       fail-fast: false
       matrix:
@@ -1460,6 +1465,7 @@ jobs:
     name: "Gate 7 T2: ${{ matrix.image }}"
     runs-on: ubuntu-latest
     needs: container-base-tier1
+    if: ${{ !inputs.skip_containers }}
     strategy:
       fail-fast: false
       matrix:
@@ -1545,6 +1551,7 @@ jobs:
     name: "Gate 7 T3: devcontainer"
     runs-on: ubuntu-latest
     needs: container-base-tier2
+    if: ${{ !inputs.skip_containers }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -1604,7 +1611,7 @@ jobs:
     name: "Gate 7 App: ${{ matrix.image }}"
     runs-on: ubuntu-latest
     needs: [container-base-tier1]
-    if: github.event_name != 'issues' && github.event_name != 'issue_comment' && needs.container-base-tier1.result == 'success'
+    if: github.event_name != 'issues' && github.event_name != 'issue_comment' && needs.container-base-tier1.result == 'success' && !inputs.skip_containers
     strategy:
       fail-fast: false
       matrix:
