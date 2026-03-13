@@ -1403,8 +1403,22 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Check if image already exists in GHCR
+        id: check
+        shell: bash
+        run: |
+          IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ matrix.image }}:${{ github.ref_name }}"
+          if docker manifest inspect "$IMAGE" > /dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "Image $IMAGE already exists — skipping build"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "Image $IMAGE not found — will build"
+          fi
+
       - name: Extract metadata (tags, labels)
         id: meta
+        if: steps.check.outputs.exists != 'true'
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ matrix.image }}
@@ -1418,6 +1432,7 @@ jobs:
 
       - name: Build and push Docker image
         id: build
+        if: steps.check.outputs.exists != 'true'
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -1433,6 +1448,7 @@ jobs:
             VCS_REF=${{ github.sha }}
 
       - name: Generate artifact attestation
+        if: steps.check.outputs.exists != 'true'
         uses: actions/attest-build-provenance@v4
         with:
           subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ matrix.image }}
@@ -1471,8 +1487,22 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Check if image already exists in GHCR
+        id: check
+        shell: bash
+        run: |
+          IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ matrix.image }}:${{ github.ref_name }}"
+          if docker manifest inspect "$IMAGE" > /dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "Image $IMAGE already exists — skipping build"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "Image $IMAGE not found — will build"
+          fi
+
       - name: Extract metadata (tags, labels)
         id: meta
+        if: steps.check.outputs.exists != 'true'
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ matrix.image }}
@@ -1486,6 +1516,7 @@ jobs:
 
       - name: Build and push Docker image
         id: build
+        if: steps.check.outputs.exists != 'true'
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -1502,6 +1533,7 @@ jobs:
             VCS_REF=${{ github.sha }}
 
       - name: Generate artifact attestation
+        if: steps.check.outputs.exists != 'true'
         uses: actions/attest-build-provenance@v4
         with:
           subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ matrix.image }}
