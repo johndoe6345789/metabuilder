@@ -1659,30 +1659,39 @@ jobs:
           - image: nextjs-app
             context: .
             dockerfile: ./frontends/nextjs/Dockerfile
+            watch_paths: frontends/nextjs packages components
           - image: codegen
             context: .
             dockerfile: ./frontends/codegen/Dockerfile
+            watch_paths: frontends/codegen packages components
           - image: pastebin
             context: .
             dockerfile: ./frontends/pastebin/Dockerfile
+            watch_paths: frontends/pastebin packages components
           - image: emailclient
             context: .
             dockerfile: ./frontends/emailclient/Dockerfile
+            watch_paths: frontends/emailclient packages components
           - image: postgres-dashboard
             context: .
             dockerfile: ./frontends/postgres/Dockerfile
+            watch_paths: frontends/postgres packages
           - image: workflowui
             context: .
             dockerfile: ./frontends/workflowui/Dockerfile
+            watch_paths: frontends/workflowui packages components
           - image: exploded-diagrams
             context: .
             dockerfile: ./frontends/exploded-diagrams/Dockerfile
+            watch_paths: frontends/exploded-diagrams
           - image: dbal
             context: ./dbal
             dockerfile: ./dbal/production/build-config/Dockerfile
+            watch_paths: dbal
           - image: dbal-init
             context: .
             dockerfile: ./deployment/config/dbal/Dockerfile.init
+            watch_paths: deployment/config/dbal dbal/shared
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -1697,28 +1706,49 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Check if image already exists in GHCR
+      - name: Check if image needs rebuild
         id: check
         shell: bash
         run: |
           IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ matrix.image }}:${{ github.ref_name }}"
-          if docker manifest inspect "$IMAGE" > /dev/null 2>&1; then
-            echo "exists=true" >> "$GITHUB_OUTPUT"
-            echo "Image $IMAGE already exists — skipping build"
+
+          # If image doesn't exist in GHCR — must build
+          if ! docker manifest inspect "$IMAGE" > /dev/null 2>&1; then
+            echo "rebuild=true" >> "$GITHUB_OUTPUT"
+            echo "Image not in GHCR — will build"
+            exit 0
+          fi
+
+          # Image exists — check if watched paths changed in this push
+          BEFORE="${{ github.event.before }}"
+          if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+            echo "rebuild=true" >> "$GITHUB_OUTPUT"
+            echo "No before SHA (new branch or dispatch) — rebuilding"
+            exit 0
+          fi
+
+          # Fetch the before commit (shallow checkout only has HEAD)
+          git fetch --depth=1 origin "$BEFORE" 2>/dev/null || true
+
+          read -ra watch <<< "${{ matrix.watch_paths }}"
+          CHANGED=$(git diff --name-only "$BEFORE" "${{ github.sha }}" -- "${watch[@]}" 2>/dev/null || echo "")
+          if [ -z "$CHANGED" ]; then
+            echo "rebuild=false" >> "$GITHUB_OUTPUT"
+            echo "No changes in watched paths — pulling from GHCR"
           else
-            echo "exists=false" >> "$GITHUB_OUTPUT"
-            echo "Image $IMAGE not found — will build"
+            echo "rebuild=true" >> "$GITHUB_OUTPUT"
+            printf "Changes detected — rebuilding:\n%s\n" "$CHANGED"
           fi
 
       - name: Pull existing image from GHCR
-        if: steps.check.outputs.exists == 'true'
+        if: steps.check.outputs.rebuild == 'false'
         shell: bash
         run: |
           docker pull "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ matrix.image }}:${{ github.ref_name }}"
 
       - name: Extract metadata (tags, labels)
         id: meta
-        if: steps.check.outputs.exists != 'true'
+        if: steps.check.outputs.rebuild == 'true'
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ matrix.image }}
@@ -1732,7 +1762,7 @@ jobs:
 
       - name: Build and push Docker image
         id: build
-        if: steps.check.outputs.exists != 'true'
+        if: steps.check.outputs.rebuild == 'true'
         uses: docker/build-push-action@v6
         with:
           context: ${{ matrix.context }}
@@ -1751,7 +1781,7 @@ jobs:
             VERSION=${{ steps.meta.outputs.version }}
 
       - name: Generate artifact attestation
-        if: steps.check.outputs.exists != 'true'
+        if: steps.check.outputs.rebuild == 'true'
         uses: actions/attest-build-provenance@v4
         with:
           subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ matrix.image }}
