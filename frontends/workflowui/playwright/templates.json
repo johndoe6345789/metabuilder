@@ -183,7 +183,7 @@
         {
           "description": "Verify workspace dropdown visible",
           "action": "expect",
-          "label": "Workspace",
+          "selector": ":text-is('Workspace')",
           "assertion": {
             "matcher": "toBeVisible"
           }
