@@ -1578,9 +1578,11 @@ jobs:
           - image: base-conan-deps
             dockerfile: ./deployment/base-images/Dockerfile.conan-deps
             platforms: linux/amd64,linux/arm64
+            require_prebuilt: true
           - image: base-android-sdk
             dockerfile: ./deployment/base-images/Dockerfile.android-sdk
             platforms: linux/amd64,linux/arm64
+            require_prebuilt: false
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -1611,6 +1613,14 @@ jobs:
             echo "Image $IMAGE not found — will build"
           fi
 
+      - name: Fail if pre-built image required but missing
+        if: steps.check.outputs.exists != 'true' && matrix.require_prebuilt == true
+        shell: bash
+        run: |
+          echo "::error::${{ matrix.image }} must be pre-built and pushed to GHCR before CI can proceed."
+          echo "::error::Run locally: docker build --platform linux/amd64,linux/arm64 -f ${{ matrix.dockerfile }} -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ matrix.image }}:${{ github.ref_name }} --push ."
+          exit 1
+
       - name: Pull existing image from GHCR
         if: steps.check.outputs.exists == 'true'
         shell: bash
@@ -1619,7 +1629,7 @@ jobs:
 
       - name: Extract metadata (tags, labels)
         id: meta
-        if: steps.check.outputs.exists != 'true'
+        if: steps.check.outputs.exists != 'true' && matrix.require_prebuilt != true
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ matrix.image }}
@@ -1633,7 +1643,7 @@ jobs:
 
       - name: Build and push Docker image
         id: build
-        if: steps.check.outputs.exists != 'true'
+        if: steps.check.outputs.exists != 'true' && matrix.require_prebuilt != true
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -1652,7 +1662,7 @@ jobs:
             VCS_REF=${{ github.sha }}
 
       - name: Generate artifact attestation
-        if: steps.check.outputs.exists != 'true'
+        if: steps.check.outputs.exists != 'true' && matrix.require_prebuilt != true
         uses: actions/attest-build-provenance@v4
         with:
           subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ matrix.image }}
