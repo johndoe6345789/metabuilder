@@ -1,9 +1,9 @@
 # metabuilder/base-android-sdk
 #
-# Android SDK 34 + Gradle 8.12 + all Gradle dependencies pre-downloaded
-# for repoforge and caproverforge Android apps.
+# Android SDK 34 + Gradle 8.12 + common Android dependencies pre-downloaded.
+# Self-contained — generates Gradle wrapper from web, no project files needed.
 #
-# Build:  docker build -f Dockerfile.android-sdk -t metabuilder/base-android-sdk:latest ../../
+# Build:  docker build -f Dockerfile.android-sdk -t metabuilder/base-android-sdk:latest .
 
 ARG BASE_REGISTRY=metabuilder
 FROM ${BASE_REGISTRY}/base-apt:latest
@@ -62,53 +62,35 @@ RUN GRADLE_OK=false && \
       echo "ERROR: Gradle ${GRADLE_VERSION} install failed after 5 attempts" && exit 1; \
     fi
 
-# ── Pre-download Gradle dependencies for both Android apps ────────────────────
-# Copy only build files (not source) to maximise layer cache hits.
+# ── Pre-download Gradle wrapper + common Android dependencies ─────────────────
+# Generate the wrapper from the system Gradle install (no COPY from projects).
+# Then resolve a minimal Android app's dependency tree to warm the cache.
 
-# repoforge
-COPY frontends/repoforge/build.gradle.kts         /tmp/repoforge/build.gradle.kts
-COPY frontends/repoforge/settings.gradle.kts      /tmp/repoforge/settings.gradle.kts
-COPY frontends/repoforge/gradle.properties         /tmp/repoforge/gradle.properties
-COPY frontends/repoforge/gradlew                   /tmp/repoforge/gradlew
-COPY frontends/repoforge/gradle/                   /tmp/repoforge/gradle/
-COPY frontends/repoforge/app/build.gradle.kts     /tmp/repoforge/app/build.gradle.kts
-# Stub sources so gradle resolves deps without compiling real code
-RUN mkdir -p /tmp/repoforge/app/src/main/java && \
+RUN mkdir -p /tmp/gradle-warmup && \
+    cd /tmp/gradle-warmup && \
+    gradle wrapper --gradle-version ${GRADLE_VERSION} --no-daemon
+
+# Stub Android project to pull common dependencies (AGP, Kotlin, AndroidX)
+RUN mkdir -p /tmp/gradle-warmup/app/src/main/java && \
     echo 'package com.stub; public class Stub {}' \
-      > /tmp/repoforge/app/src/main/java/Stub.java && \
+      > /tmp/gradle-warmup/app/src/main/java/Stub.java && \
     printf '<?xml version="1.0" encoding="utf-8"?>\n<manifest package="com.stub"/>' \
-      > /tmp/repoforge/app/src/main/AndroidManifest.xml
+      > /tmp/gradle-warmup/app/src/main/AndroidManifest.xml && \
+    printf 'pluginManagement {\n  repositories {\n    google()\n    mavenCentral()\n    gradlePluginPortal()\n  }\n}\ndependencyResolutionManagement {\n  repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)\n  repositories {\n    google()\n    mavenCentral()\n  }\n}\nrootProject.name = "warmup"\ninclude(":app")\n' \
+      > /tmp/gradle-warmup/settings.gradle.kts && \
+    printf 'plugins {\n  id("com.android.application") version "8.7.3"\n  id("org.jetbrains.kotlin.android") version "2.1.0"\n}\nandroid {\n  namespace = "com.stub"\n  compileSdk = 34\n  defaultConfig {\n    applicationId = "com.stub"\n    minSdk = 24\n    targetSdk = 34\n  }\n}\ndependencies {\n  implementation("androidx.core:core-ktx:1.15.0")\n  implementation("androidx.appcompat:appcompat:1.7.0")\n  implementation("com.google.android.material:material:1.12.0")\n}\n' \
+      > /tmp/gradle-warmup/app/build.gradle.kts
 
-WORKDIR /tmp/repoforge
+WORKDIR /tmp/gradle-warmup
 RUN chmod +x gradlew && \
     for i in 1 2 3 4 5; do \
       ./gradlew dependencies --no-daemon --quiet \
       && break \
-      || (echo "Gradle (repoforge) failed attempt $i/5, retrying in $((i*10))s..." && sleep $((i*10))); \
-    done
-
-# caproverforge
-COPY frontends/caproverforge/build.gradle         /tmp/caproverforge/build.gradle
-COPY frontends/caproverforge/settings.gradle      /tmp/caproverforge/settings.gradle
-COPY frontends/caproverforge/gradle.properties    /tmp/caproverforge/gradle.properties
-COPY frontends/caproverforge/gradlew              /tmp/caproverforge/gradlew
-COPY frontends/caproverforge/gradle/              /tmp/caproverforge/gradle/
-COPY frontends/caproverforge/app/build.gradle     /tmp/caproverforge/app/build.gradle
-RUN mkdir -p /tmp/caproverforge/app/src/main/java && \
-    echo 'package com.stub; public class Stub {}' \
-      > /tmp/caproverforge/app/src/main/java/Stub.java && \
-    printf '<?xml version="1.0" encoding="utf-8"?>\n<manifest package="com.stub"/>' \
-      > /tmp/caproverforge/app/src/main/AndroidManifest.xml
-
-WORKDIR /tmp/caproverforge
-RUN chmod +x gradlew && \
-    for i in 1 2 3 4 5; do \
-      ./gradlew dependencies --no-daemon --quiet \
-      && break \
-      || (echo "Gradle (caproverforge) failed attempt $i/5, retrying in $((i*10))s..." && sleep $((i*10))); \
-    done
+      || (echo "Gradle warmup failed attempt $i/5, retrying in $((i*10))s..." && sleep $((i*10))); \
+    done && \
+    rm -rf /tmp/gradle-warmup
 
 WORKDIR /
 
 LABEL org.metabuilder.image="base-android-sdk" \
-      org.metabuilder.description="Android SDK 34 + Gradle 8.12 + pre-downloaded deps"
+      org.metabuilder.description="Android SDK 34 + Gradle 8.12 + common Android deps pre-downloaded"

@@ -52,6 +52,7 @@ log_err()     { echo -e "${RED}[base]${NC} $*"; }
 build_with_retry() {
     local tag="$1"
     local dockerfile="$2"
+    local context="${3:-$PROJECT_ROOT}"
     local max=5
 
     log_info "Building $tag ..."
@@ -62,7 +63,7 @@ build_with_retry() {
             --file "$BASE_DIR/$dockerfile" \
             --tag "$tag" \
             --tag "${tag%:*}:$(date +%Y%m%d)" \
-            "$PROJECT_ROOT"; then
+            "$context"; then
             echo ""
             log_ok "$tag built successfully"
             return 0
@@ -97,6 +98,12 @@ declare -A IMAGE_TAG=(
     [pip-deps]="metabuilder/base-pip-deps:latest"
     [android-sdk]="metabuilder/base-android-sdk:latest"
     [devcontainer]="metabuilder/devcontainer:latest"
+)
+
+# Build context overrides (default: $PROJECT_ROOT).
+# Images that don't COPY project files can use a minimal context for speed.
+declare -A IMAGE_CONTEXT=(
+    [android-sdk]="$BASE_DIR"
 )
 
 # Build order respects dependencies:
@@ -154,7 +161,8 @@ for name in "${BUILD_ORDER[@]}"; do
         continue
     fi
 
-    if ! build_with_retry "${IMAGE_TAG[$name]}" "${IMAGE_FILE[$name]}"; then
+    local_context="${IMAGE_CONTEXT[$name]:-}"
+    if ! build_with_retry "${IMAGE_TAG[$name]}" "${IMAGE_FILE[$name]}" ${local_context:+"$local_context"}; then
         FAILED+=("$name")
         log_warn "Continuing with remaining images..."
     fi
