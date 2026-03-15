@@ -1,0 +1,6 @@
+--artifact-server-path /tmp/act-artifacts
+--secret-file .secrets
+--env-file .act-env
+--container-architecture linux/arm64
+-W .github/workflows/gated-pipeline.yml
+--concurrent-jobs 1

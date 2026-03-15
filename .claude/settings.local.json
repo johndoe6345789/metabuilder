@@ -3,7 +3,8 @@
     "allow": [
       "Bash(echo No metabuilder images found:*)",
       "Bash(docker compose:*)",
-      "Bash(git pull:*)"
+      "Bash(git pull:*)",
+      "Skill(commit-commands:commit-push-pr)"
     ]
   }
 }
