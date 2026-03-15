@@ -68,6 +68,7 @@ RUN GRADLE_OK=false && \
 
 RUN mkdir -p /tmp/gradle-warmup && \
     cd /tmp/gradle-warmup && \
+    touch settings.gradle.kts && \
     gradle wrapper --gradle-version ${GRADLE_VERSION} --no-daemon
 
 # Stub Android project to pull common dependencies (AGP, Kotlin, AndroidX)
