@@ -116,3 +116,4 @@ bun.lockb
 /.claude/worktrees
 *.tsbuildinfo
 # frontends/pastebin/public/pyodide/ # kept in fat repo
+.vscode/settings.json
