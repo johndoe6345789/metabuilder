@@ -3,7 +3,7 @@
 import argparse
 import os
 import shutil
-from cli.helpers import PROJECT_ROOT, log_err, log_info, log_ok, run, run_check
+from cli.helpers import PROJECT_ROOT, log_err, log_info, log_ok, run as run_proc, run_check
 
 
 def run_cmd(args: argparse.Namespace, config: dict) -> int:
@@ -17,14 +17,14 @@ def run_cmd(args: argparse.Namespace, config: dict) -> int:
         if not shutil.which(tool):
             log_err(f"{tool} not found. Install: {install_msg}")
             return 1
-        run([tool, "version" if tool == "go" else "--version"])
+        run_proc([tool, "version" if tool == "go" else "--version"])
 
     log_info("Configuring Nexus Conan remote...")
-    run(["conan", "remote", "add", "nexus", nexus_url, "--force"])
+    run_proc(["conan", "remote", "add", "nexus", nexus_url, "--force"])
     run_check(["conan", "remote", "login", "nexus", nexus_user, "--password", nexus_pass])
-    run(["conan", "remote", "disable", "conancenter"])
-    run(["conan", "remote", "enable", "conancenter"])
-    run(["conan", "remote", "update", "nexus", "--index", "0"])
+    run_proc(["conan", "remote", "disable", "conancenter"])
+    run_proc(["conan", "remote", "enable", "conancenter"])
+    run_proc(["conan", "remote", "update", "nexus", "--index", "0"])
 
     if not args.skip_native:
         log_info("Building testcontainers-native/0.1.0 (C shared library)...")
@@ -53,4 +53,5 @@ def run_cmd(args: argparse.Namespace, config: dict) -> int:
     return 0
 
 
-run = run_cmd
+def run(args, config):
+    return run_cmd(args, config)

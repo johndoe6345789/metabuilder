@@ -4,7 +4,7 @@ import argparse
 import os
 import subprocess
 import time
-from cli.helpers import curl_status, run
+from cli.helpers import curl_status, run as run_proc
 
 
 REPO_CONFIGS = [
@@ -114,4 +114,5 @@ def run_cmd(args: argparse.Namespace, config: dict) -> int:
     return 0
 
 
-run = run_cmd
+def run(args, config):
+    return run_cmd(args, config)

@@ -4,7 +4,7 @@ import argparse
 import json
 import os
 import subprocess
-from cli.helpers import curl_status, log_err, run
+from cli.helpers import curl_status, log_err, run as run_proc
 
 
 def run_cmd(args: argparse.Namespace, config: dict) -> int:
@@ -42,16 +42,16 @@ def run_cmd(args: argparse.Namespace, config: dict) -> int:
         return 1
 
     # Enable anonymous access
-    run(["curl", "-sf", "-X", "PUT", f"{nexus_url}/service/rest/v1/security/anonymous",
-         "-u", auth, "-H", "Content-Type: application/json",
-         "-d", '{"enabled":true,"userId":"anonymous","realmName":"NexusAuthorizingRealm"}'])
+    run_proc(["curl", "-sf", "-X", "PUT", f"{nexus_url}/service/rest/v1/security/anonymous",
+              "-u", auth, "-H", "Content-Type: application/json",
+              "-d", '{"enabled":true,"userId":"anonymous","realmName":"NexusAuthorizingRealm"}'])
     nlog("Anonymous access enabled")
 
     if not args.ci:
         # Docker + npm token realms
-        run(["curl", "-sf", "-X", "PUT", f"{nexus_url}/service/rest/v1/security/realms/active",
-             "-u", auth, "-H", "Content-Type: application/json",
-             "-d", '["NexusAuthenticatingRealm","DockerToken","NpmToken"]'])
+        run_proc(["curl", "-sf", "-X", "PUT", f"{nexus_url}/service/rest/v1/security/realms/active",
+                  "-u", auth, "-H", "Content-Type: application/json",
+                  "-d", '["NexusAuthenticatingRealm","DockerToken","NpmToken"]'])
         nlog("Docker + npm Bearer Token realms enabled")
 
         # Docker hosted repo
@@ -75,9 +75,9 @@ def run_cmd(args: argparse.Namespace, config: dict) -> int:
             return 1
     else:
         # CI: npm token realm only
-        run(["curl", "-sf", "-X", "PUT", f"{nexus_url}/service/rest/v1/security/realms/active",
-             "-u", auth, "-H", "Content-Type: application/json",
-             "-d", '["NexusAuthenticatingRealm","NpmToken"]'])
+        run_proc(["curl", "-sf", "-X", "PUT", f"{nexus_url}/service/rest/v1/security/realms/active",
+                  "-u", auth, "-H", "Content-Type: application/json",
+                  "-d", '["NexusAuthenticatingRealm","NpmToken"]'])
 
     # npm repos (hosted, proxy, group)
     npm_repos = [
@@ -130,4 +130,5 @@ def run_cmd(args: argparse.Namespace, config: dict) -> int:
     return 0
 
 
-run = run_cmd
+def run(args, config):
+    return run_cmd(args, config)

@@ -5,7 +5,7 @@ import time
 from cli.helpers import (
     BASE_DIR, PROJECT_ROOT, GREEN, YELLOW, NC,
     docker_compose, docker_image_exists, log_err, log_info, log_ok, log_warn,
-    pull_with_retry, resolve_services, run,
+    pull_with_retry, resolve_services, run as run_proc,
 )
 
 
@@ -17,7 +17,7 @@ def run_cmd(args: argparse.Namespace, config: dict) -> int:
     node_tag = base_images["node-deps"]["tag"]
     if not docker_image_exists(node_tag):
         log_warn(f"Building {node_tag} (required by all Node.js frontends)...")
-        result = run([
+        result = run_proc([
             "docker", "build",
             "-f", str(BASE_DIR / base_images["node-deps"]["dockerfile"]),
             "-t", node_tag, str(PROJECT_ROOT),
@@ -78,7 +78,7 @@ def run_cmd(args: argparse.Namespace, config: dict) -> int:
             all_ok = True
             for svc in services:
                 log_info(f"Building {svc}...")
-                result = run(docker_compose("build", svc))
+                result = run_proc(docker_compose("build", svc))
                 if result.returncode != 0:
                     log_err(f"Failed: {svc}")
                     all_ok = False
@@ -89,7 +89,7 @@ def run_cmd(args: argparse.Namespace, config: dict) -> int:
                 break
         else:
             log_info("Parallel build (uses more RAM)...")
-            result = run(docker_compose("build", "--parallel", *services))
+            result = run_proc(docker_compose("build", "--parallel", *services))
             if result.returncode == 0:
                 build_ok = True
                 break
@@ -109,4 +109,6 @@ def run_cmd(args: argparse.Namespace, config: dict) -> int:
 
 
 # Module entry point — called by loader.dispatch()
-run = run_cmd
+# NOTE: must not shadow the imported `run` from cli.helpers
+def run(args, config):
+    return run_cmd(args, config)
