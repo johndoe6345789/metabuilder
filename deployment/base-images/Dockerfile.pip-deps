@@ -54,15 +54,15 @@ COPY workflow/plugins/python/requirements-packagerepo.txt                      /
 COPY workflow/plugins/python/requirements-testing.txt                          /deps/workflow/requirements-testing.txt
 COPY workflow/plugins/python/requirements-dev.txt                              /deps/workflow/requirements-dev.txt
 
-# Install in two passes:
-# 1. Main deps (everything except cadquerywrapper which has native dep conflicts)
-# 2. cadquerywrapper best-effort (cadquery-ocp may not resolve on all platforms)
-RUN for i in 1 2 3 4 5; do \
-      pip install --no-cache-dir \
-        $(find /deps -name '*.txt' -not -path '*/cadquerywrapper/*' -exec echo "-r {}" \;) \
-      && break \
-      || (echo "pip install failed (attempt $i/5), retrying in $((i*10))s..." && sleep $((i*10))); \
-    done && \
+# Merge all requirements (except cadquerywrapper) into a single file,
+# deduplicating packages so pip sees one consistent set of constraints.
+RUN find /deps -name '*.txt' -not -path '*/cadquerywrapper/*' \
+      -exec cat {} + \
+    | grep -v '^\s*#' | grep -v '^\s*$' | grep -v '^\s*-r ' \
+    | sort -u > /deps/merged.txt && \
+    echo "=== Merged requirements ===" && cat /deps/merged.txt && \
+    pip install --no-cache-dir -r /deps/merged.txt && \
+    # cadquerywrapper best-effort (cadquery-ocp may not resolve on all platforms)
     pip install --no-cache-dir \
       -r /deps/cadquerywrapper/requirements.txt \
       -r /deps/cadquerywrapper/requirements-dev.txt \
