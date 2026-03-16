@@ -60,6 +60,7 @@ build_with_retry() {
 
     for i in $(seq 1 $max); do
         if docker build \
+            --network=host \
             --file "$BASE_DIR/$dockerfile" \
             --tag "$tag" \
             --tag "${tag%:*}:$(date +%Y%m%d)" \
