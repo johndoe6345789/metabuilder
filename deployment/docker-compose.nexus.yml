@@ -55,15 +55,15 @@ services:
       - registry-net
 
   nexus-init:
-    image: alpine:3.21
+    image: python:3.12-alpine
     container_name: nexus-init
     depends_on:
       nexus:
         condition: service_healthy
     volumes:
       - nexus-data:/nexus-data:ro
-      - ./nexus-init.sh:/nexus-init.sh:ro
-    entrypoint: ["/bin/sh", "-c", "apk add --no-cache curl -q && sh /nexus-init.sh"]
+      - ./nexus-init.py:/nexus-init.py:ro
+    entrypoint: ["/bin/sh", "-c", "pip install -q requests && python3 /nexus-init.py"]
     environment:
       NEXUS_URL: "http://nexus:8081"
       NEXUS_ADMIN_NEW_PASS: "nexus"
@@ -98,14 +98,14 @@ services:
       - registry-net
 
   artifactory-init:
-    image: alpine:3.21
+    image: python:3.12-alpine
     container_name: artifactory-init
     depends_on:
       artifactory:
         condition: service_healthy
     volumes:
-      - ./artifactory-init.sh:/artifactory-init.sh:ro
-    entrypoint: ["/bin/sh", "-c", "apk add --no-cache curl -q && sh /artifactory-init.sh"]
+      - ./artifactory-init.py:/artifactory-init.py:ro
+    entrypoint: ["/bin/sh", "-c", "pip install -q requests && python3 /artifactory-init.py"]
     environment:
       ARTIFACTORY_URL: "http://artifactory:8081"
       ARTIFACTORY_ADMIN_PASS: "password"

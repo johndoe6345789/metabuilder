@@ -109,12 +109,12 @@ deployment.py artifactory init
 | `docker-compose.test.yml` | Integration test services |
 | `docker-compose.smoke.yml` | Smoke test environment |
 
-## Remaining Shell Scripts
+## Init Container Scripts
 
 | Script | Purpose |
 |--------|---------|
-| `nexus-init.sh` | Nexus repository setup (mounted into Docker container) |
-| `artifactory-init.sh` | Artifactory repository setup (mounted into Docker container) |
+| `nexus-init.py` | Nexus repository setup (mounted into Docker init container) |
+| `artifactory-init.py` | Artifactory repository setup (mounted into Docker init container) |
 
 These are container entrypoints used by `docker-compose.nexus.yml`, not user-facing scripts.
 
