@@ -1,13 +1,13 @@
 # metabuilder/base-node-deps
 #
-# Node 22 + all 33 workspace npm packages pre-installed.
+# Node 24 + all 33 workspace npm packages pre-installed.
 # App Dockerfiles copy node_modules from this image instead of running npm ci.
 #
 # Build:  docker build -f Dockerfile.node-deps -t metabuilder/base-node-deps:latest ../../
 # App Dockerfiles:
 #   COPY --from=metabuilder/base-node-deps /app/node_modules ./node_modules
 
-FROM node:22
+FROM node:24
 
 WORKDIR /app
 
@@ -91,11 +91,12 @@ RUN npm config set fetch-retries 5 \
          echo "    Verdaccio detected at $VERDACCIO_LOCAL"; \
        fi \
     && if [ -n "$LOCAL_REG" ]; then \
-         echo "==> Rewriting .npmrc scoped registries → $LOCAL_REG"; \
-         sed -i 's|@esbuild-kit:registry=.*|@esbuild-kit:registry='"$LOCAL_REG"'|' .npmrc; \
+         echo "==> Rewriting .npmrc registries → $LOCAL_REG"; \
          sed -i '/\/\/localhost:4873\//d' .npmrc; \
          sed -i '/\/\/localhost:8091\//d' .npmrc; \
          sed -i '/\/\/host.docker.internal/d' .npmrc; \
+         sed -i 's|^registry=.*|registry='"$LOCAL_REG"'|' .npmrc; \
+         sed -i 's|@esbuild-kit:registry=.*|@esbuild-kit:registry='"$LOCAL_REG"'|' .npmrc; \
          echo "$LOCAL_REG_AUTH" >> .npmrc; \
        else \
          echo ""; \

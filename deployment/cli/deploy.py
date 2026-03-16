@@ -1,0 +1,80 @@
+"""Build + deploy one or more apps with health check polling."""
+
+import argparse
+import subprocess
+import sys
+import time
+from cli.helpers import (
+    COMPOSE_FILE, GREEN, RED, YELLOW, BLUE, NC,
+    docker_compose, log_err, log_warn, resolve_services, run,
+)
+
+
+def run_cmd(args: argparse.Namespace, config: dict) -> int:
+    all_apps = config["definitions"]["all_apps"]
+    targets = list(all_apps) if args.all else args.apps
+    if not targets:
+        log_err("Specify app(s) to deploy, or use --all")
+        print(f"Available: {', '.join(all_apps)}")
+        return 1
+
+    services = resolve_services(targets, config)
+    if services is None:
+        return 1
+
+    print(f"\n{BLUE}{'=' * 43}{NC}")
+    print(f"{BLUE}  Deploy: {' '.join(targets)}{NC}")
+    print(f"{BLUE}{'=' * 43}{NC}\n")
+
+    # Step 1: Build
+    print(f"{YELLOW}[1/3] Building...{NC}")
+    build_args = ["--no-cache"] if args.no_cache else []
+    result = run(docker_compose("build", *build_args, *services))
+    if result.returncode != 0:
+        log_err("Build failed")
+        return 1
+
+    # Step 2: Deploy
+    print(f"\n{YELLOW}[2/3] Deploying...{NC}")
+    result = run(docker_compose("up", "-d", "--force-recreate", *services))
+    if result.returncode != 0:
+        log_err("Deploy failed")
+        return 1
+
+    # Step 3: Health check
+    print(f"\n{YELLOW}[3/3] Waiting for health checks...{NC}")
+    all_healthy = True
+    for svc in services:
+        container = f"metabuilder-{svc}"
+        sys.stdout.write(f"  {svc}: ")
+        sys.stdout.flush()
+
+        status = "unknown"
+        for _ in range(30):
+            result = subprocess.run(
+                ["docker", "inspect", "--format", "{{.State.Health.Status}}", container],
+                capture_output=True, text=True,
+            )
+            status = result.stdout.strip() if result.returncode == 0 else "missing"
+            if status in ("healthy", "unhealthy"):
+                break
+            time.sleep(2)
+
+        if status == "healthy":
+            print(f"{GREEN}healthy{NC}")
+        elif status == "unhealthy":
+            print(f"{RED}unhealthy{NC}")
+            all_healthy = False
+        else:
+            print(f"{YELLOW}timeout (status: {status}){NC}")
+            all_healthy = False
+
+    print()
+    if all_healthy:
+        print(f"{GREEN}All services deployed and healthy{NC}")
+    else:
+        log_warn(f"Some services not healthy — check: docker compose -f {COMPOSE_FILE} ps")
+    return 0 if all_healthy else 1
+
+
+run = run_cmd
