@@ -2,7 +2,7 @@
 # Uses metabuilder/base-conan-deps — all apt packages and Conan C++ packages
 # pre-installed. Build = compile only, zero downloads.
 #
-# Prerequisites: run deployment/build-base-images.sh first.
+# Prerequisites: run python3 deployment/deployment.py build base first.
 
 # Stage 1: Build environment
 ARG BASE_REGISTRY=metabuilder

@@ -2562,7 +2562,7 @@ docker-compose -f deployment/docker-compose.production.yml up -d
 
 ```bash
 # Deploy everything (PostgreSQL, DBAL, Next.js, Media daemon, Redis, Nginx)
-./deployment/deploy.sh all --bootstrap
+cd deployment && python3 deployment.py deploy --all
 ```
 
 ### Cloud Platforms

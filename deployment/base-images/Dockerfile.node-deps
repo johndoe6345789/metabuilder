@@ -111,11 +111,11 @@ RUN npm config set fetch-retries 5 \
          echo ""; \
          echo "    Nexus (recommended for desktops):"; \
          echo "      cd deployment && docker compose -f docker-compose.nexus.yml up -d"; \
-         echo "      ./publish-npm-patches.sh"; \
+         echo "      python3 deployment.py npm publish-patches"; \
          echo ""; \
          echo "    Verdaccio (lightweight, for CI runners):"; \
          echo "      npx verdaccio --config deployment/verdaccio.yaml &"; \
-         echo "      ./publish-npm-patches.sh --verdaccio"; \
+         echo "      python3 deployment.py npm publish-patches --verdaccio"; \
          echo ""; \
          echo "  Then rebuild this image."; \
          echo "========================================================"; \

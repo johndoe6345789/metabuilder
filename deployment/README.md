@@ -2,10 +2,12 @@
 
 Build and deploy the full MetaBuilder stack locally using Docker.
 
+All commands go through a single Python CLI: `python3 deployment.py --help`
+
 ## Prerequisites
 
 - Docker Desktop with BuildKit enabled
-- Bash 4+ (macOS: `brew install bash`)
+- Python 3.9+
 - Add `localhost:5050` to Docker Desktop insecure registries:
   Settings → Docker Engine → `"insecure-registries": ["localhost:5050"]`
 
@@ -23,8 +25,8 @@ docker compose -f docker-compose.nexus.yml up -d
 Wait ~2 minutes for init containers to finish, then populate:
 
 ```bash
-./push-to-nexus.sh                    # Docker images → Nexus
-./publish-npm-patches.sh              # Patched npm packages → Nexus
+python3 deployment.py nexus push          # Docker images → Nexus
+python3 deployment.py npm publish-patches # Patched npm packages → Nexus
 conan remote add artifactory http://localhost:8092/artifactory/api/conan/conan-local
 ```
 
@@ -39,10 +41,10 @@ conan remote add artifactory http://localhost:8092/artifactory/api/conan/conan-l
 ### Step 2 — Build Base Images
 
 ```bash
-./build-base-images.sh              # Build all (skips existing)
-./build-base-images.sh --force      # Rebuild all
-./build-base-images.sh node-deps    # Build a specific image
-./build-base-images.sh --list       # List available images
+python3 deployment.py build base            # Build all (skips existing)
+python3 deployment.py build base --force    # Rebuild all
+python3 deployment.py build base node-deps  # Build a specific image
+python3 deployment.py build base --list     # List available images
 ```
 
 Build order (dependencies respected automatically):
@@ -57,19 +59,19 @@ Build order (dependencies respected automatically):
 ### Step 3 — Build App Images
 
 ```bash
-./build-apps.sh                     # Build all (skips existing)
-./build-apps.sh --force             # Rebuild all
-./build-apps.sh workflowui          # Build specific app
-./build-apps.sh --sequential        # Lower RAM usage
+python3 deployment.py build apps                # Build all (skips existing)
+python3 deployment.py build apps --force        # Rebuild all
+python3 deployment.py build apps workflowui     # Build specific app
+python3 deployment.py build apps --sequential   # Lower RAM usage
 ```
 
 ### Step 4 — Start the Stack
 
 ```bash
-./start-stack.sh                    # Core services
-./start-stack.sh --monitoring       # + Prometheus, Grafana, Loki
-./start-stack.sh --media            # + Media daemon, Icecast, HLS
-./start-stack.sh --all              # Everything
+python3 deployment.py stack up              # Core services
+python3 deployment.py stack up --monitoring # + Prometheus, Grafana, Loki
+python3 deployment.py stack up --media      # + Media daemon, Icecast, HLS
+python3 deployment.py stack up --all        # Everything
 ```
 
 Portal: http://localhost (nginx welcome page with links to all apps)
@@ -77,9 +79,25 @@ Portal: http://localhost (nginx welcome page with links to all apps)
 ### Quick Deploy (rebuild + restart specific apps)
 
 ```bash
-./deploy.sh codegen                 # Build and deploy codegen
-./deploy.sh codegen pastebin        # Multiple apps
-./deploy.sh --all                   # All apps
+python3 deployment.py deploy codegen            # Build and deploy codegen
+python3 deployment.py deploy codegen pastebin   # Multiple apps
+python3 deployment.py deploy --all              # All apps
+```
+
+## CLI Command Reference
+
+```
+deployment.py build base [--force] [--list] [images...]
+deployment.py build apps [--force] [--sequential] [apps...]
+deployment.py build testcontainers [--skip-native] [--skip-sidecar]
+deployment.py deploy [apps...] [--all] [--no-cache]
+deployment.py stack up|down|build|logs|ps|clean [--monitoring] [--media] [--all]
+deployment.py release <app> [patch|minor|major|x.y.z]
+deployment.py nexus init [--ci]
+deployment.py nexus push [--tag TAG] [--src SRC] [--pull]
+deployment.py nexus populate [--skip-heavy]
+deployment.py npm publish-patches [--nexus] [--verdaccio]
+deployment.py artifactory init
 ```
 
 ## Compose Files
@@ -91,22 +109,14 @@ Portal: http://localhost (nginx welcome page with links to all apps)
 | `docker-compose.test.yml` | Integration test services |
 | `docker-compose.smoke.yml` | Smoke test environment |
 
-## Scripts Reference
+## Remaining Shell Scripts
 
 | Script | Purpose |
 |--------|---------|
-| `build-base-images.sh` | Build base Docker images |
-| `build-apps.sh` | Build app Docker images |
-| `build-testcontainers.sh` | Build test container images |
-| `start-stack.sh` | Start the full stack |
-| `deploy.sh` | Quick build + deploy for specific apps |
-| `push-to-nexus.sh` | Push Docker images to Nexus |
-| `publish-npm-patches.sh` | Publish patched npm packages to Nexus |
-| `populate-nexus.sh` | Populate Nexus with all artifacts |
-| `nexus-init.sh` | Nexus repository setup (runs automatically) |
-| `nexus-ci-init.sh` | Nexus setup for CI environments |
-| `artifactory-init.sh` | Artifactory repository setup (runs automatically) |
-| `release.sh` | Release workflow |
+| `nexus-init.sh` | Nexus repository setup (mounted into Docker container) |
+| `artifactory-init.sh` | Artifactory repository setup (mounted into Docker container) |
+
+These are container entrypoints used by `docker-compose.nexus.yml`, not user-facing scripts.
 
 ## Troubleshooting
 

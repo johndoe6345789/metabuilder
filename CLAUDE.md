@@ -18,7 +18,7 @@ All documentation is executable code. No separate markdown docs.
 ./gameengine/gameengine.py --help    # Game engine
 ./postgres/postgres.py --help        # PostgreSQL dashboard
 ./mojo/mojo.py --help               # Mojo compiler
-./deployment/build-base-images.sh --list # Docker base images
+cd deployment && python3 deployment.py build base --list  # Docker base images
 
 # Documentation (SQLite3 + FTS5 full-text search)
 cd txt && python3 reports.py search "query"     # 212 reports
@@ -227,13 +227,13 @@ Frontends (CLI C++ | Qt6 QML | Next.js React)
 ```bash
 npm run dev / build / typecheck / lint / test:e2e
 npm run build --workspaces
-cd deployment && ./build-base-images.sh  # Build Docker base images
+cd deployment && python3 deployment.py build base  # Build Docker base images
 
 # Deploy full stack
 cd deployment && docker compose -f docker-compose.stack.yml up -d
 
 # Build & deploy specific apps
-./build-apps.sh --force dbal pastebin        # Next.js frontend only
+python3 deployment.py build apps --force dbal pastebin  # Next.js frontend only
 docker compose -f docker-compose.stack.yml build pastebin-backend  # Flask backend
 
 # DBAL logs / seed verification
@@ -336,7 +336,7 @@ Multi-version peer deps. React 18/19, TypeScript 5.9.3, Next.js 14-16, @reduxjs/
 | nlohmann/json iterators | Use `it.value()` not `it->second` (std::map syntax fails) |
 | dbal-init volume stale | Rebuild with `docker compose build dbal-init` when schema file extensions change |
 | `.dockerignore` excludes `dbal/` | Whitelist specific subdirs: `!dbal/shared/seeds/database` |
-| `build-apps.sh pastebin` ≠ Flask backend | Use `docker compose build pastebin-backend` for Flask |
+| `deployment.py build apps pastebin` ≠ Flask backend | Use `docker compose build pastebin-backend` for Flask |
 | `ensureClient()` before startup DB ops | `dbal_client_` is null in `registerRoutes()` — must call `ensureClient()` first |
 | Seed data in Flask Python | NEVER — declarative seed data belongs in `dbal/shared/seeds/database/*.json` |
 | Werkzeug scrypt on macOS Python | Generate hashes inside running container: `docker exec metabuilder-pastebin-backend python3 -c "..."` |

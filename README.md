@@ -35,10 +35,10 @@ cd deployment
 docker compose -f docker-compose.stack.yml up -d
 
 # Build & deploy a specific app
-./build-apps.sh --force dbal pastebin
+python3 deployment.py build apps --force dbal pastebin
 
 # Rebuild base images (rare)
-./build-base-images.sh
+python3 deployment.py build base
 ```
 
 ---

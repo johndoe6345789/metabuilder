@@ -19,8 +19,8 @@
 # Usage:
 #   docker compose -f docker-compose.nexus.yml up -d
 #   # Wait ~2 min for init containers to finish, then:
-#   ./push-to-nexus.sh                    # Docker images → Nexus
-#   ./publish-npm-patches.sh              # Patched npm packages → Nexus
+#   python3 deployment.py nexus push       # Docker images → Nexus
+#   python3 deployment.py npm publish-patches  # Patched npm packages → Nexus
 #   conan remote add artifactory http://localhost:8092/artifactory/api/conan/conan-local
 #
 # URLs:

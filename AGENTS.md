@@ -51,7 +51,7 @@ POST /pastebin/pastebin/User
 | `frontends/pastebin/backend/app.py` | Flask JWT auth + Python runner |
 | `frontends/pastebin/src/` | Next.js React app |
 | `deployment/docker-compose.stack.yml` | Full stack compose |
-| `deployment/build-apps.sh` | Build + deploy helper |
+| `deployment/deployment.py` | Python CLI for all build/deploy/stack commands |
 
 ---
 
@@ -79,7 +79,7 @@ docker logs -f metabuilder-pastebin-backend
 cd deployment
 
 # Full rebuild + restart
-./build-apps.sh --force dbal pastebin
+python3 deployment.py build apps --force dbal pastebin
 docker compose -f docker-compose.stack.yml up -d
 
 # Flask backend (separate from Next.js)
@@ -163,7 +163,7 @@ Context variable resolution: `"${var_name}"`, `"${event.userId}"`, `"prefix-${na
 3. **Seed data in `dbal/shared/seeds/`** — never hardcode in Flask Python or C++.
 4. **No hardcoded entity names** — loaded from schema JSON.
 5. **Call `ensureClient()` before any DB op in `registerRoutes()`** — `dbal_client_` starts null.
-6. **`build-apps.sh pastebin` ≠ Flask** — that only rebuilds Next.js. Flask needs `docker compose build pastebin-backend`.
+6. **`deployment.py build apps pastebin` ≠ Flask** — that only rebuilds Next.js. Flask needs `docker compose build pastebin-backend`.
 
 ---
 
