@@ -55,9 +55,41 @@ COPY workflow/package.json                             ./workflow/
 COPY scripts/patch-bundled-deps.sh                     ./scripts/
 
 # Install all workspace deps (generates lock file from package.json manifests)
+#
+# Pre-flight: verify every registry in .npmrc is reachable before burning
+# 20+ minutes on retries that will never succeed.
 RUN npm config set fetch-retries 5 \
     && npm config set fetch-retry-mintimeout 20000 \
     && npm config set maxsockets 5 \
+    && echo "==> Checking npm registry connectivity..." \
+    && registries=$(grep -E '^\s*(@[^:]+:)?registry=' .npmrc 2>/dev/null | sed 's/.*registry=//' | sort -u) \
+    && for reg in $registries; do \
+         printf "    %-50s " "$reg"; \
+         if wget -q --spider --timeout=5 "$reg" 2>/dev/null \
+            || curl -sf --connect-timeout 5 "$reg" >/dev/null 2>&1; then \
+           echo "OK"; \
+         else \
+           echo "UNREACHABLE"; \
+           echo ""; \
+           echo "========================================================"; \
+           echo "ERROR: Cannot reach npm registry: $reg"; \
+           echo "========================================================"; \
+           echo ""; \
+           echo "If this is a local registry (Verdaccio/Nexus/Artifactory),"; \
+           echo "make sure it is running BEFORE building this image:"; \
+           echo ""; \
+           echo "  Verdaccio:  npx verdaccio --config deployment/verdaccio.yaml"; \
+           echo "  Nexus:      cd deployment && docker compose -f docker-compose.nexus.yml up -d"; \
+           echo ""; \
+           echo "Then rebuild with --network=host so the build can reach localhost:"; \
+           echo "  docker build --network=host -f Dockerfile.node-deps ..."; \
+           echo ""; \
+           echo "Or remove/comment out the unreachable registry in .npmrc"; \
+           echo "========================================================"; \
+           exit 1; \
+         fi; \
+       done \
+    && echo "==> All registries reachable, running npm install..." \
     && for i in 1 2 3 4 5; do \
          npm install 2>&1 && break; \
          [ "$i" = "5" ] && echo "npm install failed after 5 attempts" && exit 1; \
