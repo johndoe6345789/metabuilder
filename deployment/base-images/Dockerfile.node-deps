@@ -56,11 +56,74 @@ COPY scripts/patch-bundled-deps.sh                     ./scripts/
 
 # Install all workspace deps (generates lock file from package.json manifests)
 #
-# Pre-flight: verify every registry in .npmrc is reachable before burning
-# 20+ minutes on retries that will never succeed.
+# Pre-flight: auto-detect local registry (Nexus on :8091, Verdaccio on :4873)
+# and rewrite .npmrc scoped registries accordingly.  This lets the same .npmrc
+# work in CI (Verdaccio) and on desktops running Nexus.
 RUN npm config set fetch-retries 5 \
     && npm config set fetch-retry-mintimeout 20000 \
     && npm config set maxsockets 5 \
+    && echo "==> Detecting local npm registry..." \
+    && NEXUS_NPM="http://host.docker.internal:8091/repository/npm-group/" \
+    && VERDACCIO="http://host.docker.internal:4873/" \
+    && NEXUS_NPM_LOCAL="http://localhost:8091/repository/npm-group/" \
+    && VERDACCIO_LOCAL="http://localhost:4873/" \
+    && LOCAL_REG="" \
+    && LOCAL_REG_AUTH="" \
+    && if wget -q --spider --timeout=3 "$NEXUS_NPM" 2>/dev/null \
+          || curl -sf --connect-timeout 3 "$NEXUS_NPM" >/dev/null 2>&1; then \
+         LOCAL_REG="$NEXUS_NPM"; \
+         LOCAL_REG_AUTH="//host.docker.internal:8091/repository/npm-hosted/:_auth=YWRtaW46bmV4dXM="; \
+         echo "    Nexus detected at $NEXUS_NPM"; \
+       elif wget -q --spider --timeout=3 "$NEXUS_NPM_LOCAL" 2>/dev/null \
+            || curl -sf --connect-timeout 3 "$NEXUS_NPM_LOCAL" >/dev/null 2>&1; then \
+         LOCAL_REG="$NEXUS_NPM_LOCAL"; \
+         LOCAL_REG_AUTH="//localhost:8091/repository/npm-hosted/:_auth=YWRtaW46bmV4dXM="; \
+         echo "    Nexus detected at $NEXUS_NPM_LOCAL"; \
+       elif wget -q --spider --timeout=3 "$VERDACCIO" 2>/dev/null \
+            || curl -sf --connect-timeout 3 "$VERDACCIO" >/dev/null 2>&1; then \
+         LOCAL_REG="$VERDACCIO"; \
+         LOCAL_REG_AUTH="//host.docker.internal:4873/:_authToken="; \
+         echo "    Verdaccio detected at $VERDACCIO"; \
+       elif wget -q --spider --timeout=3 "$VERDACCIO_LOCAL" 2>/dev/null \
+            || curl -sf --connect-timeout 3 "$VERDACCIO_LOCAL" >/dev/null 2>&1; then \
+         LOCAL_REG="$VERDACCIO_LOCAL"; \
+         LOCAL_REG_AUTH="//localhost:4873/:_authToken="; \
+         echo "    Verdaccio detected at $VERDACCIO_LOCAL"; \
+       fi \
+    && if [ -n "$LOCAL_REG" ]; then \
+         echo "==> Rewriting .npmrc scoped registries → $LOCAL_REG"; \
+         sed -i 's|@esbuild-kit:registry=.*|@esbuild-kit:registry='"$LOCAL_REG"'|' .npmrc; \
+         sed -i '/\/\/localhost:4873\//d' .npmrc; \
+         sed -i '/\/\/localhost:8091\//d' .npmrc; \
+         sed -i '/\/\/host.docker.internal/d' .npmrc; \
+         echo "$LOCAL_REG_AUTH" >> .npmrc; \
+       else \
+         echo ""; \
+         echo "========================================================"; \
+         echo "  WARNING: No local npm registry detected!"; \
+         echo "========================================================"; \
+         echo ""; \
+         echo "  @esbuild-kit patched packages will NOT be available."; \
+         echo "  npm install may fail or use unpatched versions."; \
+         echo ""; \
+         echo "  Start one of these BEFORE building:"; \
+         echo ""; \
+         echo "    Nexus (recommended for desktops):"; \
+         echo "      cd deployment && docker compose -f docker-compose.nexus.yml up -d"; \
+         echo "      ./publish-npm-patches.sh"; \
+         echo ""; \
+         echo "    Verdaccio (lightweight, for CI runners):"; \
+         echo "      npx verdaccio --config deployment/verdaccio.yaml &"; \
+         echo "      ./publish-npm-patches.sh --verdaccio"; \
+         echo ""; \
+         echo "  Then rebuild this image."; \
+         echo "========================================================"; \
+         echo ""; \
+         echo "  Continuing without local registry — removing scoped overrides..."; \
+         sed -i '/@esbuild-kit:registry=/d' .npmrc; \
+         sed -i '/\/\/localhost:4873\//d' .npmrc; \
+       fi \
+    && echo "==> Final .npmrc:" && cat .npmrc && echo "" \
     && echo "==> Checking npm registry connectivity..." \
     && registries=$(grep -E '^\s*(@[^:]+:)?registry=' .npmrc 2>/dev/null | sed 's/.*registry=//' | sort -u) \
     && for reg in $registries; do \
