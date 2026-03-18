@@ -55,7 +55,7 @@ export async function runCodeViaFlask(opts: RunOptions): Promise<RunResult> {
       files: opts.files,
       entryPoint: opts.entryPoint,
     }),
-    signal: AbortSignal.timeout(130000),
+    signal: AbortSignal.timeout(310000),
   })
 
   if (!response.ok && response.status !== 408) {

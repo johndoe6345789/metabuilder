@@ -91,15 +91,16 @@ def auth_required(f):
 
 # Mount the Docker socket into the Flask container to enable spawning runners:
 #   -v /var/run/docker.sock:/var/run/docker.sock
-_RUN_TIMEOUT_S   = int(os.environ.get('PYTHON_RUN_TIMEOUT', '10'))
+_RUN_TIMEOUT_S   = int(os.environ.get('PYTHON_RUN_TIMEOUT', os.environ.get('RUN_TIMEOUT', '30')))
 _BUILD_TIMEOUT_S = int(os.environ.get('BUILD_TIMEOUT', '120'))
+_MAX_RUN_TIMEOUT_S = int(os.environ.get('MAX_RUN_TIMEOUT', '300'))
 
 # Shared kwargs for every runner container
 _CONTAINER_KWARGS: dict = dict(
     network_disabled=True,
     mem_limit='256m',
     nano_cpus=int(0.5e9),   # 0.5 CPUs
-    pids_limit=64,
+    pids_limit=256,
 )
 
 # Language runner dispatch table
@@ -290,12 +291,13 @@ _RUNNERS: dict = {
     },
 }
 
-# Python snippet to decode FILES_PAYLOAD env var and write files to /workspace
-_SETUP_FILES_PY = (
-    'import os,json,base64;'
-    'files=json.loads(base64.b64decode(os.environ["FILES_PAYLOAD"].encode()).decode());'
-    'os.makedirs("/workspace",exist_ok=True);'
-    '[open("/workspace/"+f["name"],"w").write(f["content"]) for f in files]'
+# POSIX shell snippet to decode FILES_PAYLOAD and write files to /workspace.
+# Uses only base64 + awk — works on every runner image (no python3 required).
+_SETUP_FILES_SH = (
+    'mkdir -p /workspace && '
+    'echo "$FILES_PAYLOAD" | base64 -d | '
+    "awk 'BEGIN{RS=\"\\x1e\";FS=\"\\x1f\"}"
+    "{if(NF>=2 && length($1)>0){f=\"/workspace/\"$1;print $2>f;close(f)}}'"
 )
 
 _docker_client = None
@@ -331,9 +333,36 @@ def _ensure_image(image_name: str, dockerfile: str | None = None) -> None:
 
 
 def _make_container_env(files: list) -> dict:
-    """Encode files as base64 JSON for FILES_PAYLOAD env var."""
-    payload = base64.b64encode(json.dumps(files).encode()).decode()
+    """Encode files as base64 for FILES_PAYLOAD env var.
+
+    Uses ASCII record-separator (\\x1e) between files and unit-separator (\\x1f)
+    between name and content so that the container can decode with pure awk —
+    no python3 dependency required.
+    """
+    parts = []
+    for f in files:
+        parts.append(f['name'] + '\x1f' + f['content'])
+    raw = '\x1e'.join(parts)
+    payload = base64.b64encode(raw.encode()).decode()
     return {'FILES_PAYLOAD': payload}
+
+
+def _get_user_run_timeout() -> int | None:
+    """Read the ``runTimeout`` value from the current user's settings, or None."""
+    try:
+        conn = get_db()
+        cursor = conn.cursor()
+        cursor.execute('SELECT settings_json FROM user_settings WHERE user_id = ?', (g.user_id,))
+        row = cursor.fetchone()
+        conn.close()
+        if row:
+            settings = json.loads(row['settings_json'])
+            val = settings.get('runTimeout')
+            if val is not None:
+                return max(5, min(int(val), _MAX_RUN_TIMEOUT_S))
+    except Exception:
+        pass
+    return None
 
 
 _SAFE_NAME_RE = re.compile(r'[^a-zA-Z0-9._\-]')
@@ -369,10 +398,16 @@ def _sanitize_files_and_entry(files: list, entry_point: str) -> tuple:
     return sanitized, resolved
 
 
-def _build_cmd(language: str, entry: str, interactive: bool = False) -> list:
-    """Build the container command for the given language."""
+def _build_cmd(language: str, entry: str, interactive: bool = False,
+               user_timeout: int | None = None) -> list:
+    """Build the container command for the given language.
+
+    Uses a pure POSIX shell file-writer so every runner image works without
+    python3.  ``user_timeout`` lets callers override the default timeout (from
+    the user's settings panel).
+    """
     runner = _RUNNERS[language]
-    write_files = f"python3 -c '{_SETUP_FILES_PY}'"
+    write_files = _SETUP_FILES_SH
     run = runner['run_tpl'].format(entry=entry)
     setup = runner.get('setup_tpl')
 
@@ -383,9 +418,12 @@ def _build_cmd(language: str, entry: str, interactive: bool = False) -> list:
 
     full_cmd = ' && '.join(parts)
     if not interactive:
-        timeout = _RUN_TIMEOUT_S if runner.get('interactive') else _BUILD_TIMEOUT_S
-        return ['timeout', '--kill-after=2s', f'{timeout}s', 'bash', '-c', full_cmd]
-    return ['bash', '-c', full_cmd]
+        default = _RUN_TIMEOUT_S if runner.get('interactive') else _BUILD_TIMEOUT_S
+        timeout = min(user_timeout or default, _MAX_RUN_TIMEOUT_S)
+        # Use 'timeout' from coreutils/busybox (present on all runner images).
+        # Pass full_cmd as a positional arg to avoid nested quoting issues.
+        return ['sh', '-c', 'exec timeout "$0" sh -c "$1"', str(timeout), full_cmd]
+    return ['sh', '-c', full_cmd]
 
 
 def _parse_run_request(data: dict):
@@ -1509,14 +1547,19 @@ def run_code():
     if runner.get('sql_runner'):
         return _run_sql_docker(language, runner, files, entry_point)
 
+    # Per-user timeout override from settings panel (clamped to MAX_RUN_TIMEOUT)
+    user_timeout = _get_user_run_timeout()
+
     image_name = runner['image']()
     _ensure_image(image_name, runner.get('dockerfile'))
-    wait_timeout = (_RUN_TIMEOUT_S + 5) if runner.get('interactive') else (_BUILD_TIMEOUT_S + 5)
+    default_timeout = _RUN_TIMEOUT_S if runner.get('interactive') else _BUILD_TIMEOUT_S
+    effective_timeout = min(user_timeout or default_timeout, _MAX_RUN_TIMEOUT_S)
+    wait_timeout = effective_timeout + 10  # grace period for Docker wait()
     container = None
     try:
         container = _docker().containers.create(
             image=image_name,
-            command=_build_cmd(language, entry_point),
+            command=_build_cmd(language, entry_point, user_timeout=user_timeout),
             working_dir='/workspace',
             environment=_make_container_env(files),
             **_CONTAINER_KWARGS,
@@ -1528,7 +1571,7 @@ def run_code():
         stderr = container.logs(stdout=False, stderr=True).decode('utf-8', errors='replace')
 
         if exit_code == 124:
-            return jsonify({'output': stdout, 'error': f'Timed out after {wait_timeout}s'}), 408
+            return jsonify({'output': stdout, 'error': f'Timed out after {effective_timeout}s'}), 408
         return jsonify({'output': stdout, 'error': stderr if exit_code != 0 else None})
 
     except _docker_lib.errors.DockerException as e:
