@@ -303,6 +303,7 @@ if(BUILD_SDL3_APP)
         src/services/impl/workflow/rendering/workflow_shadow_pass_step.cpp
         src/services/impl/workflow/rendering/workflow_shadow_setup_step.cpp
         src/services/impl/workflow/rendering/workflow_spotlight_setup_step.cpp
+        src/services/impl/workflow/rendering/workflow_spotlight_update_step.cpp
         src/services/impl/workflow/graphics/workflow_gpu_pipeline_create_step.cpp
         src/services/impl/workflow/graphics/workflow_gpu_shader_compile_step.cpp
         src/services/impl/workflow/graphics/workflow_graphics_buffer_create_index_step.cpp

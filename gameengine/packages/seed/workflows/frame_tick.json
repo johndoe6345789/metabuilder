@@ -76,6 +76,13 @@
       "position": [750, 0]
     },
     {
+      "id": "spotlight_update",
+      "name": "Update Spotlight",
+      "type": "spotlight.update",
+      "typeVersion": 1,
+      "position": [760, 0]
+    },
+    {
       "id": "frame_begin",
       "name": "Begin Offscreen Frame",
       "type": "frame.gpu.begin_offscreen",
@@ -472,6 +479,11 @@
       }
     },
     "render_prepare": {
+      "main": {
+        "0": [{ "node": "spotlight_update", "type": "main", "index": 0 }]
+      }
+    },
+    "spotlight_update": {
       "main": {
         "0": [{ "node": "frame_begin", "type": "main", "index": 0 }]
       }

@@ -83,36 +83,39 @@ float SpotlightAtten(vec3 lightToFrag, vec3 spotDir, float cosInner, float cosOu
 // Simulates light scattering through dust particles in the air
 vec3 VolumetricBeam(vec3 camPos, vec3 fragPos, vec3 flashPos, vec3 flashDir,
                     float cosInner, float cosOuter, vec3 flashColor, float flashRange) {
-    const int NUM_STEPS = 16;
-    const float FOG_DENSITY = 0.007;  // dust density in the air
+    const int NUM_STEPS = 48;
+    const float FOG_DENSITY = 0.05;
 
     vec3 rayDir = fragPos - camPos;
     float rayLen = length(rayDir);
+    vec3 rayNorm = rayDir / rayLen;
     float stepSize = rayLen / float(NUM_STEPS);
 
-    // Dithered start offset to reduce banding artifacts
-    float dither = fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453);
+    // Interleaved gradient noise - much smoother than sin-based dithering
+    // (same technique used by UE4/UE5 volumetric fog)
+    vec2 fc = gl_FragCoord.xy;
+    float dither = fract(52.9829189 * fract(0.06711056 * fc.x + 0.00583715 * fc.y));
+
+    // Mie-like forward scattering (compute once, constant along ray)
+    float viewDot = max(dot(rayNorm, flashDir), 0.0);
+    float scatter = mix(1.0, 2.5, viewDot * viewDot);
 
     vec3 accumulated = vec3(0.0);
     for (int i = 0; i < NUM_STEPS; ++i) {
         float t = (float(i) + dither) * stepSize;
-        vec3 samplePos = camPos + normalize(rayDir) * t;
+        vec3 samplePos = camPos + rayNorm * t;
 
-        // Check if this point in space is inside the spotlight cone
         vec3 toSample = samplePos - flashPos;
         float dist = length(toSample);
 
-        // Distance attenuation
+        // Smooth distance falloff
         float distAtten = clamp(1.0 - dist / flashRange, 0.0, 1.0);
         distAtten *= distAtten;
 
-        // Cone attenuation
-        float cosAngle = dot(normalize(toSample), flashDir);
+        // Cone with smooth cubic falloff at edges
+        float cosAngle = dot(toSample / dist, flashDir);
         float coneAtten = clamp((cosAngle - cosOuter) / max(cosInner - cosOuter, 0.001), 0.0, 1.0);
-
-        // Mie-like forward scattering: brighter when looking into the beam
-        float viewDot = max(dot(normalize(rayDir), flashDir), 0.0);
-        float scatter = mix(1.0, 3.0, viewDot * viewDot);
+        coneAtten *= coneAtten;  // smoother edge
 
         accumulated += flashColor * distAtten * coneAtten * scatter * FOG_DENSITY * stepSize;
     }
@@ -190,7 +193,14 @@ void main() {
     // === Ambient ===
     vec3 ambient = u_ambient.rgb * albedo;
 
-    // Combine surface + volumetric fog (fog is additive, not affected by surface)
+    // Surface color
     vec3 color = (Lo + ambient) * exposure + volumetric;
+
+    // === Distance fog (whole room) ===
+    float dist = length(v_worldPos - v_cameraPos);
+    float fogFactor = 1.0 - exp(-dist * 0.06);  // exponential fog density
+    vec3 fogColor = vec3(0.02, 0.02, 0.03);      // dark blue-grey fog
+    color = mix(color, fogColor, fogFactor);
+
     o_color = vec4(color, 1.0);
 }
