@@ -3,14 +3,22 @@ import { NextRequest, NextResponse } from 'next/server'
 const DBAL_DAEMON_URL = process.env.DBAL_DAEMON_URL ?? 'http://localhost:8080'
 
 export async function POST(request: NextRequest) {
-  const { method, path, body } = await request.json()
+  const { method, path, body, token } = await request.json()
 
   const url = `${DBAL_DAEMON_URL}${path}`
 
   try {
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    }
+
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`
+    }
+
     const fetchOptions: RequestInit = {
       method: method,
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       signal: AbortSignal.timeout(10000),
     }
 
