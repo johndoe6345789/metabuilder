@@ -862,6 +862,46 @@ def get_me():
     return jsonify({'id': user['id'], 'username': user['username']})
 
 
+@app.route('/api/profile', methods=['GET'])
+@auth_required
+def get_profile():
+    """Return a user profile from DBAL. ?username=X looks up by username, otherwise returns the authenticated user."""
+    username = request.args.get('username')
+    if username:
+        r = dbal_request('GET', f'/{DBAL_TENANT_ID}/core/User?filter.username={username}&limit=1')
+        if r and r.ok:
+            body = r.json()
+            items = body.get('data', {}).get('data', [])
+            if items:
+                return jsonify(items[0])
+        return jsonify({'error': 'Profile not found'}), 404
+    r = dbal_request('GET', f'/{DBAL_TENANT_ID}/core/User/{g.user_id}')
+    if r and r.ok:
+        body = r.json()
+        data = body.get('data', body)
+        return jsonify(data)
+    return jsonify({'error': 'Profile not found'}), 404
+
+
+@app.route('/api/profile', methods=['PUT'])
+@auth_required
+def update_profile():
+    """Update the authenticated user's profile (bio, etc.) via DBAL."""
+    payload = request.get_json(force=True, silent=True) or {}
+    # Only allow safe fields to be updated by the user
+    allowed = {}
+    if 'bio' in payload:
+        allowed['bio'] = str(payload['bio'])[:2000]
+    if not allowed:
+        return jsonify({'error': 'No updatable fields provided'}), 400
+    r = dbal_request('PUT', f'/{DBAL_TENANT_ID}/core/User/{g.user_id}', allowed)
+    if r and r.ok:
+        body = r.json()
+        data = body.get('data', body)
+        return jsonify(data)
+    return jsonify({'error': 'Failed to update profile'}), 500
+
+
 @app.route('/api/auth/settings', methods=['GET'])
 @auth_required
 def get_user_settings():

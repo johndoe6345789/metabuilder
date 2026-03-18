@@ -1,21 +1,36 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, Button, FormLabel, MaterialIcon } from '@metabuilder/components/fakemui';
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
-import { selectCurrentUser } from '@/store/selectors';
-import { updateMyProfile } from '@/store/slices/profilesSlice';
+import { selectCurrentUser, selectUserProfile } from '@/store/selectors';
+import { updateMyProfile, fetchUserProfile } from '@/store/slices/profilesSlice';
 import { MarkdownRenderer } from '@/components/error/MarkdownRenderer';
 import styles from './settings-card.module.scss';
 import profileStyles from './profile-settings-card.module.scss';
 
 export function ProfileSettingsCard() {
   const user = useAppSelector(selectCurrentUser);
+  const profile = useAppSelector(state => user ? selectUserProfile(state, user.username) : null);
   const dispatch = useAppDispatch();
   const [bio, setBio] = useState('');
+  const [bioLoaded, setBioLoaded] = useState(false);
   const [preview, setPreview] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+
+  // Fetch the full profile (including bio) on mount
+  useEffect(() => {
+    if (user?.username) dispatch(fetchUserProfile(user.username));
+  }, [user?.username, dispatch]);
+
+  // Populate bio from the fetched profile once
+  useEffect(() => {
+    if (profile?.bio !== undefined && !bioLoaded) {
+      setBio(profile.bio);
+      setBioLoaded(true);
+    }
+  }, [profile, bioLoaded]);
 
   const handleSave = async () => {
     setSaving(true);
