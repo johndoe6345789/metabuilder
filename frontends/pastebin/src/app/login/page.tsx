@@ -91,9 +91,9 @@ export default function LoginPage() {
   const displayError = localError || reduxError
 
   return (
-    <div className={styles.page}>
+    <div className={styles.page} data-testid="login-page">
       <ThemeApplier />
-      <div className={styles.container}>
+      <div className={styles.container} data-testid="login-container">
 
         {/* ── Left: brand panel ────────────────────────────────── */}
         <div className={styles.brand}>
@@ -160,15 +160,17 @@ export default function LoginPage() {
                   <p className={styles.formSub}>Enter your credentials to continue.</p>
                 </div>
 
-                {displayError && <div className={styles.error}>{displayError}</div>}
+                {displayError && <div className={styles.error} data-testid="login-error" role="alert">{displayError}</div>}
 
-                <form onSubmit={handleSignIn} style={{ display: 'contents' }}>
+                <form onSubmit={handleSignIn} style={{ display: 'contents' }} data-testid="login-form" aria-label="Sign in">
                   <div className={styles.field}>
                     <label className={styles.label} htmlFor="username">Username</label>
                     <input
                       id="username"
                       className={styles.input}
                       type="text"
+                      data-testid="login-username"
+                      aria-required="true"
                       value={username}
                       onChange={e => setUsername(e.target.value)}
                       required
@@ -184,47 +186,49 @@ export default function LoginPage() {
                         id="password"
                         className={`${styles.input} ${styles.withIcon}`}
                         type={showPass ? 'text' : 'password'}
+                        data-testid="login-password"
+                        aria-required="true"
                         value={password}
                         onChange={e => setPassword(e.target.value)}
                         required
                         autoComplete="current-password"
                       />
-                      <button type="button" className={styles.eyeBtn} aria-label="Toggle password" onClick={() => setShowPass(p => !p)}>
+                      <button type="button" className={styles.eyeBtn} aria-label={showPass ? 'Hide password' : 'Show password'} data-testid="login-toggle-password" onClick={() => setShowPass(p => !p)}>
                         <MaterialIcon name={showPass ? 'visibility_off' : 'visibility'} />
                       </button>
                     </div>
                   </div>
 
                   <div className={styles.checkRow}>
-                    <input id="remember" type="checkbox" className={styles.checkbox} checked={rememberMe} onChange={e => setRememberMe(e.target.checked)} />
+                    <input id="remember" type="checkbox" className={styles.checkbox} data-testid="login-remember" checked={rememberMe} onChange={e => setRememberMe(e.target.checked)} />
                     <label htmlFor="remember" className={styles.checkLabel}>Keep me signed in</label>
                   </div>
 
-                  <button className={styles.btn} type="submit" disabled={loading}>
+                  <button className={styles.btn} type="submit" data-testid="login-submit" disabled={loading}>
                     {loading ? 'Signing in…' : 'Log In'}
                   </button>
                 </form>
 
                 {forgot === 'closed' && (
-                  <button type="button" className={styles.textBtn} onClick={() => setForgot('open')}>
+                  <button type="button" className={styles.textBtn} data-testid="login-forgot-password" onClick={() => setForgot('open')}>
                     Forgot your password?
                   </button>
                 )}
 
                 {forgot === 'open' && (
-                  <form className={styles.forgotBox} onSubmit={handleForgot}>
+                  <form className={styles.forgotBox} onSubmit={handleForgot} data-testid="forgot-password-form" aria-label="Forgot password">
                     <p className={styles.forgotHint}>Enter your username and the email to send the reset link to.</p>
                     <div className={styles.field}>
                       <label className={styles.label} htmlFor="fgt-u">Username</label>
-                      <input id="fgt-u" className={styles.input} type="text" value={forgotUsername} onChange={e => setForgotUsername(e.target.value)} required autoFocus />
+                      <input id="fgt-u" className={styles.input} type="text" data-testid="forgot-username" aria-required="true" value={forgotUsername} onChange={e => setForgotUsername(e.target.value)} required autoFocus />
                     </div>
                     <div className={styles.field}>
                       <label className={styles.label} htmlFor="fgt-e">Email address</label>
-                      <input id="fgt-e" className={styles.input} type="email" value={forgotEmail} onChange={e => setForgotEmail(e.target.value)} required />
+                      <input id="fgt-e" className={styles.input} type="email" data-testid="forgot-email" aria-required="true" value={forgotEmail} onChange={e => setForgotEmail(e.target.value)} required />
                     </div>
                     <div className={styles.forgotActions}>
-                      <button type="button" className={styles.textBtn} onClick={() => setForgot('closed')}>Cancel</button>
-                      <button type="submit" className={styles.btnSm} disabled={forgotLoading}>
+                      <button type="button" className={styles.textBtn} data-testid="forgot-cancel" onClick={() => setForgot('closed')}>Cancel</button>
+                      <button type="submit" className={styles.btnSm} data-testid="forgot-submit" disabled={forgotLoading}>
                         {forgotLoading ? 'Sending…' : 'Send Reset Link'}
                       </button>
                     </div>
@@ -232,13 +236,13 @@ export default function LoginPage() {
                 )}
 
                 {forgot === 'sent' && (
-                  <p className={styles.success}>Reset link sent — check your inbox.</p>
+                  <p className={styles.success} data-testid="forgot-success" role="status">Reset link sent — check your inbox.</p>
                 )}
 
                 <div className={styles.divider} />
                 <div className={styles.switchRow}>
                   Don&apos;t have an account?{' '}
-                  <button type="button" onClick={() => switchMode('register')}>Create one.</button>
+                  <button type="button" data-testid="login-switch-register" onClick={() => switchMode('register')}>Create one.</button>
                 </div>
               </>
             ) : (
@@ -248,15 +252,17 @@ export default function LoginPage() {
                   <p className={styles.formSub}>Choose a username and password to get started.</p>
                 </div>
 
-                {displayError && <div className={styles.error}>{displayError}</div>}
+                {displayError && <div className={styles.error} data-testid="register-error" role="alert">{displayError}</div>}
 
-                <form onSubmit={handleRegister} style={{ display: 'contents' }}>
+                <form onSubmit={handleRegister} style={{ display: 'contents' }} data-testid="register-form" aria-label="Create account">
                   <div className={styles.field}>
                     <label className={styles.label} htmlFor="reg-u">Username</label>
                     <input
                       id="reg-u"
                       className={styles.input}
                       type="text"
+                      data-testid="register-username"
+                      aria-required="true"
                       value={username}
                       onChange={e => setUsername(e.target.value)}
                       required
@@ -272,12 +278,14 @@ export default function LoginPage() {
                         id="reg-p"
                         className={`${styles.input} ${styles.withIcon}`}
                         type={showPass ? 'text' : 'password'}
+                        data-testid="register-password"
+                        aria-required="true"
                         value={password}
                         onChange={e => setPassword(e.target.value)}
                         required
                         autoComplete="new-password"
                       />
-                      <button type="button" className={styles.eyeBtn} aria-label="Toggle password" onClick={() => setShowPass(p => !p)}>
+                      <button type="button" className={styles.eyeBtn} aria-label={showPass ? 'Hide password' : 'Show password'} data-testid="register-toggle-password" onClick={() => setShowPass(p => !p)}>
                         <MaterialIcon name={showPass ? 'visibility_off' : 'visibility'} />
                       </button>
                     </div>
@@ -290,18 +298,20 @@ export default function LoginPage() {
                         id="reg-c"
                         className={`${styles.input} ${styles.withIcon}`}
                         type={showConf ? 'text' : 'password'}
+                        data-testid="register-confirm-password"
+                        aria-required="true"
                         value={confirm}
                         onChange={e => setConfirm(e.target.value)}
                         required
                         autoComplete="new-password"
                       />
-                      <button type="button" className={styles.eyeBtn} aria-label="Toggle password" onClick={() => setShowConf(p => !p)}>
+                      <button type="button" className={styles.eyeBtn} aria-label={showConf ? 'Hide password' : 'Show password'} data-testid="register-toggle-confirm" onClick={() => setShowConf(p => !p)}>
                         <MaterialIcon name={showConf ? 'visibility_off' : 'visibility'} />
                       </button>
                     </div>
                   </div>
 
-                  <button className={styles.btn} type="submit" disabled={loading}>
+                  <button className={styles.btn} type="submit" data-testid="register-submit" disabled={loading}>
                     {loading ? 'Creating account…' : 'Create Account'}
                   </button>
                 </form>
@@ -309,7 +319,7 @@ export default function LoginPage() {
                 <div className={styles.divider} />
                 <div className={styles.switchRow}>
                   Already have an account?{' '}
-                  <button type="button" onClick={() => switchMode('signin')}>Log In.</button>
+                  <button type="button" data-testid="register-switch-login" onClick={() => switchMode('signin')}>Log In.</button>
                 </div>
               </>
             )}
