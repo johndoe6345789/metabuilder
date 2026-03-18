@@ -119,7 +119,8 @@ export function QueryConsole() {
     }
 
     try {
-      const res = await fetch('/api/query', {
+      const basePath = process.env.__NEXT_ROUTER_BASEPATH || '/dbal'
+      const res = await fetch(`${basePath}/api/query`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ method, path, body: parsedBody }),

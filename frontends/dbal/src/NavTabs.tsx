@@ -4,8 +4,8 @@ import { usePathname } from 'next/navigation'
 import styles from './NavTabs.module.scss'
 
 const tabs = [
-  { href: '/dbal', label: 'Overview' },
-  { href: '/dbal/query', label: 'Query Console' },
+  { href: '/', label: 'Overview' },
+  { href: '/query', label: 'Query Console' },
 ]
 
 export function NavTabs() {

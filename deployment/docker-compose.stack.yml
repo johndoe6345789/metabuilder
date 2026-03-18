@@ -749,8 +749,8 @@ services:
   # DBAL Frontend - Daemon overview + query console
   dbal-frontend:
     build:
-      context: ..
-      dockerfile: frontends/dbal/Dockerfile
+      context: ../frontends/dbal
+      dockerfile: Dockerfile
       args:
         DBAL_DAEMON_URL: http://dbal:8080
     container_name: metabuilder-dbal-frontend

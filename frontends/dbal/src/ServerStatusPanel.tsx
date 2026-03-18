@@ -5,7 +5,7 @@ import type { ServerHealth, StatusResponse } from './status'
 import styles from './ServerStatusPanel.module.scss'
 
 export function ServerStatusPanel() {
-  const [health, setHealth] = useState<ServerHealth[]>([])
+  const [health, setHealth] = useState<ServerHealth[]>(() => [])
   const [lastUpdated, setLastUpdated] = useState<string>('')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
@@ -15,7 +15,8 @@ export function ServerStatusPanel() {
 
     const fetchStatus = async () => {
       try {
-        const response = await fetch('/api/status', { cache: 'no-store' })
+        const basePath = process.env.__NEXT_ROUTER_BASEPATH || '/dbal'
+        const response = await fetch(`${basePath}/api/status`, { cache: 'no-store' })
         if (!response.ok) {
           throw new Error('Status endpoint failed')
         }
@@ -48,11 +49,11 @@ export function ServerStatusPanel() {
       return 'Status unavailable right now'
     }
 
-    if (health.length === 0) {
+    if (!health || health.length === 0) {
       return 'Initializing status feed...'
     }
 
-    const degraded = health.some(item => item.status !== 'online')
+    const degraded = health?.some(item => item.status !== 'online')
     return degraded ? 'Some systems need attention' : 'All systems nominal'
   }, [health, error])
 
@@ -65,7 +66,7 @@ export function ServerStatusPanel() {
       </div>
 
       <div className={styles.grid}>
-        {loading && health.length === 0 ? (
+        {loading && (!health || health.length === 0) ? (
           <div className={styles.placeholder}>Loading status...</div>
         ) : error ? (
           <div className={styles.placeholder}>
@@ -73,7 +74,7 @@ export function ServerStatusPanel() {
             <p className={styles.caption}>Try refreshing the page in a few moments.</p>
           </div>
         ) : (
-          health.map(item => (
+          (health ?? []).map(item => (
             <article key={item.name} className={styles.card}>
               <div className={styles.cardRow}>
                 <div className={styles.cardTitleGroup}>

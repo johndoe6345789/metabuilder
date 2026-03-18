@@ -14,13 +14,9 @@
     "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
-    "@metabuilder/api-clients": "*",
-    "@metabuilder/core-hooks": "*",
     "next": "^16.1.6",
     "react": "^19.2.4",
-    "react-dom": "^19.2.4",
-    "react-redux": "^9.2.0",
-    "redux": "^5.0.1"
+    "react-dom": "^19.2.4"
   },
   "overrides": {
     "react": "^19.2.4",
