@@ -51,6 +51,7 @@ void WorkflowInputPollStep::Execute(
         context.Set<bool>("input_key_d", keyState[SDL_SCANCODE_D]);
         context.Set<bool>("input_key_space", keyState[SDL_SCANCODE_SPACE]);
         context.Set<bool>("input_key_shift", keyState[SDL_SCANCODE_LSHIFT]);
+        context.Set<bool>("input_key_ctrl", keyState[SDL_SCANCODE_LCTRL]);
     }
 }
 

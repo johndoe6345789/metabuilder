@@ -27,17 +27,21 @@ void WorkflowPhysicsFpsMoveStep::Execute(
     auto* body = context.Get<btRigidBody*>("physics_body_" + playerName, nullptr);
     if (!body) return;
 
-    // Read move speed from parameters
+    // Read parameters from workflow JSON
     WorkflowStepParameterResolver paramResolver;
-    float moveSpeed = 6.0f;
-    float jumpForce = 5.0f;
+    auto getNum = [&](const char* name, float def) -> float {
+        const auto* p = paramResolver.FindParameter(step, name);
+        return (p && p->type == WorkflowParameterValue::Type::Number) ? static_cast<float>(p->numberValue) : def;
+    };
 
-    if (const auto* p = paramResolver.FindParameter(step, "move_speed")) {
-        if (p->type == WorkflowParameterValue::Type::Number) moveSpeed = static_cast<float>(p->numberValue);
-    }
-    if (const auto* p = paramResolver.FindParameter(step, "jump_force")) {
-        if (p->type == WorkflowParameterValue::Type::Number) jumpForce = static_cast<float>(p->numberValue);
-    }
+    const float moveSpeed = getNum("move_speed", 6.0f);
+    const float sprintMultiplier = getNum("sprint_multiplier", 1.8f);
+    const float crouchMultiplier = getNum("crouch_multiplier", 0.4f);
+    const float jumpForce = getNum("jump_force", 5.0f);
+    const float crouchHeight = getNum("crouch_height", 0.8f);
+    const float standHeight = getNum("stand_height", 1.6f);
+    const float airControl = getNum("air_control", 0.3f);
+    const float gravityScale = getNum("gravity_scale", 1.0f);
 
     // Read input state from context (set by input.poll)
     bool keyW = context.GetBool("input_key_w", false);
@@ -45,6 +49,8 @@ void WorkflowPhysicsFpsMoveStep::Execute(
     bool keyS = context.GetBool("input_key_s", false);
     bool keyD = context.GetBool("input_key_d", false);
     bool keySpace = context.GetBool("input_key_space", false);
+    bool keyShift = context.GetBool("input_key_shift", false);
+    bool keyCtrl = context.GetBool("input_key_ctrl", false);
 
     // Read camera yaw (set by camera.fps.update from previous frame)
     float yaw = context.Get<float>("camera_yaw", 0.0f);
@@ -64,21 +70,94 @@ void WorkflowPhysicsFpsMoveStep::Execute(
     if (keyA) { moveX -= rightX;   moveZ -= rightZ; }
     if (keyD) { moveX += rightX;   moveZ += rightZ; }
 
+    // Apply sprint/crouch speed modifiers
+    float speed = moveSpeed;
+    if (keyCtrl) {
+        speed *= crouchMultiplier;
+    } else if (keyShift) {
+        speed *= sprintMultiplier;
+    }
+
     // Normalize horizontal movement
     float len = std::sqrt(moveX * moveX + moveZ * moveZ);
     if (len > 0.001f) {
-        moveX = (moveX / len) * moveSpeed;
-        moveZ = (moveZ / len) * moveSpeed;
+        moveX = (moveX / len) * speed;
+        moveZ = (moveZ / len) * speed;
     }
 
-    // Preserve vertical velocity (gravity)
+    // Check grounded state via raycast
     btVector3 currentVel = body->getLinearVelocity();
-    body->setLinearVelocity(btVector3(moveX, currentVel.y(), moveZ));
-
-    // Jump - only if approximately grounded (vertical velocity near zero)
-    if (keySpace && std::abs(currentVel.y()) < 0.1f) {
-        body->applyCentralImpulse(btVector3(0, jumpForce, 0));
+    bool grounded = false;
+    auto* world = context.Get<btDiscreteDynamicsWorld*>("physics_world", nullptr);
+    if (world) {
+        btTransform bodyTransform;
+        body->getMotionState()->getWorldTransform(bodyTransform);
+        btVector3 from = bodyTransform.getOrigin();
+        btVector3 to = from + btVector3(0, -1.2f, 0);
+        btCollisionWorld::ClosestRayResultCallback rayResult(from, to);
+        world->rayTest(from, to, rayResult);
+        grounded = rayResult.hasHit();
     }
+
+    if (grounded) {
+        // Full ground control
+        body->setLinearVelocity(btVector3(moveX, currentVel.y(), moveZ));
+    } else {
+        // Air control: blend input with current horizontal velocity (Quake-style)
+        float curX = currentVel.x();
+        float curZ = currentVel.z();
+        float newX = curX + (moveX - curX) * airControl;
+        float newZ = curZ + (moveZ - curZ) * airControl;
+        body->setLinearVelocity(btVector3(newX, currentVel.y(), newZ));
+
+        // Extra downward gravity for snappy Quake-style landing
+        if (currentVel.y() < 0.0f) {
+            body->applyCentralForce(btVector3(0, -9.81f * body->getMass() * (gravityScale - 1.0f), 0));
+        }
+    }
+
+    // Jump - hold space for higher jump, release early for short hop
+    bool wasJumping = context.GetBool("player_jumping", false);
+    float jumpTime = context.Get<float>("player_jump_time", 0.0f);
+    float jumpDuration = getNum("jump_duration", 1.2f);
+    float jumpHeight = getNum("jump_height", 3.5f);
+
+    if (keySpace && !keyCtrl && grounded && !wasJumping) {
+        context.Set<bool>("player_jumping", true);
+        context.Set<float>("player_jump_time", 0.0f);
+        jumpTime = 0.0f;
+    }
+
+    if (context.GetBool("player_jumping", false)) {
+        float dt = 1.0f / 60.0f;
+        jumpTime += dt;
+        context.Set<float>("player_jump_time", jumpTime);
+
+        // Keep rising while space is held and under max duration
+        if (keySpace && jumpTime < jumpDuration) {
+            float t = jumpTime / jumpDuration;
+            float upSpeed = (jumpHeight / jumpDuration) * (1.0f - t * t);
+            btVector3 vel = body->getLinearVelocity();
+            body->setLinearVelocity(btVector3(vel.x(), upSpeed, vel.z()));
+        } else {
+            // Released space or hit max duration - start falling
+            context.Set<bool>("player_jumping", false);
+        }
+    }
+
+    if (grounded && !keySpace) {
+        context.Set<bool>("player_jumping", false);
+    }
+
+    // Crouch: smoothly lerp eye height for natural feel
+    float targetHeight = keyCtrl ? crouchHeight : standHeight;
+    float currentHeight = context.Get<float>("camera_eye_height", standHeight);
+    float lerpSpeed = 8.0f;  // units per second (fast but smooth)
+    float dt = context.Get<float>("physics_dt", 1.0f / 60.0f);
+    float newHeight = currentHeight + (targetHeight - currentHeight) * std::min(lerpSpeed * dt, 1.0f);
+    context.Set<float>("camera_eye_height", newHeight);
+    context.Set<bool>("player_crouching", keyCtrl);
+    context.Set<bool>("player_sprinting", keyShift && !keyCtrl);
 
     body->activate(true);
 }

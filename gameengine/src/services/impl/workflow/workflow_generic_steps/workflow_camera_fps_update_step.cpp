@@ -68,8 +68,11 @@ void WorkflowCameraFpsUpdateStep::Execute(
     context.Set<float>("camera_pitch", pitch);
 
     // Get player body position for eye position
+    // Crouch/stand height override from physics.fps.move (if set)
+    float actualEyeHeight = context.Get<float>("camera_eye_height", eyeHeight);
+
     auto playerName = context.GetString("physics_player_body", "");
-    glm::vec3 eyePos(0.0f, eyeHeight, 0.0f);
+    glm::vec3 eyePos(0.0f, actualEyeHeight, 0.0f);
 
     if (!playerName.empty()) {
         auto* body = context.Get<btRigidBody*>("physics_body_" + playerName, nullptr);
@@ -77,7 +80,7 @@ void WorkflowCameraFpsUpdateStep::Execute(
             btTransform transform;
             body->getMotionState()->getWorldTransform(transform);
             btVector3 pos = transform.getOrigin();
-            eyePos = glm::vec3(pos.x(), pos.y() + eyeHeight, pos.z());
+            eyePos = glm::vec3(pos.x(), pos.y() + actualEyeHeight, pos.z());
         }
     }
 
