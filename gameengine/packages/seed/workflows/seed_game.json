@@ -331,6 +331,18 @@
       }
     },
     {
+      "id": "load_map",
+      "name": "Load Map (glTF)",
+      "type": "map.load",
+      "typeVersion": 1,
+      "position": [750, 100],
+      "parameters": {
+        "file_path": "packages/seed/map.glb",
+        "scale": 1.0,
+        "create_physics": 1
+      }
+    },
+    {
       "id": "plane_floor",
       "name": "Create Floor Plane",
       "type": "geometry.create_plane",
@@ -1226,7 +1238,12 @@
     },
     "tex_ceiling": {
       "main": {
-        "0": [{ "node": "plane_floor", "type": "main", "index": 0 }]
+        "0": [{ "node": "load_map", "type": "main", "index": 0 }]
+      }
+    },
+    "load_map": {
+      "main": {
+        "0": [{ "node": "player", "type": "main", "index": 0 }]
       }
     },
     "plane_floor": {

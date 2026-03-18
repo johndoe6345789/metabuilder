@@ -281,6 +281,7 @@ if(BUILD_SDL3_APP)
         src/services/impl/workflow/geometry/workflow_geometry_create_cube_step.cpp
         src/services/impl/workflow/geometry/workflow_geometry_create_plane_step.cpp
         src/services/impl/workflow/geometry/workflow_geometry_cube_generate_step.cpp
+        src/services/impl/workflow/rendering/workflow_draw_map_step.cpp
         src/services/impl/workflow/rendering/workflow_draw_textured_box_step.cpp
         src/services/impl/workflow/rendering/workflow_draw_textured_step.cpp
         src/services/impl/workflow/rendering/workflow_draw_viewmodel_step.cpp
@@ -291,6 +292,7 @@ if(BUILD_SDL3_APP)
         src/services/impl/workflow/rendering/workflow_frame_end_scene_step.cpp
         src/services/impl/workflow/rendering/workflow_geometry_create_flashlight_step.cpp
         src/services/impl/workflow/rendering/workflow_lighting_setup_step.cpp
+        src/services/impl/workflow/rendering/workflow_map_load_step.cpp
         src/services/impl/workflow/rendering/workflow_model_load_step.cpp
         src/services/impl/workflow/rendering/workflow_postfx_bloom_blur_step.cpp
         src/services/impl/workflow/rendering/workflow_postfx_bloom_extract_step.cpp
