@@ -46,8 +46,8 @@
         "sensitivity": 0.003,
         "eye_height": 1.4,
         "fov": 90.0,
-        "near": 0.05,
-        "far": 1000.0
+        "near": 0.1,
+        "far": 500.0
       }
     },
     {
@@ -74,6 +74,7 @@
       "position": [1000, 0],
       "parameters": {
         "default_texture": "walls_texture",
+        "pipeline_key": "gpu_pipeline_bsp",
         "roughness": 0.7,
         "metallic": 0.0
       }

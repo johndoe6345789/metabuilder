@@ -68,7 +68,7 @@ void WorkflowGpuPipelineCreateStep::Execute(const WorkflowStepDefinition& step, 
     vbuf_desc.input_rate = SDL_GPU_VERTEXINPUTRATE_VERTEX;
     vbuf_desc.instance_step_rate = 0;
 
-    SDL_GPUVertexAttribute attrs[2] = {};
+    SDL_GPUVertexAttribute attrs[4] = {};
     attrs[0].location = 0;
     attrs[0].buffer_slot = 0;
     attrs[0].format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT3;
@@ -80,6 +80,25 @@ void WorkflowGpuPipelineCreateStep::Execute(const WorkflowStepDefinition& step, 
         // Fullscreen triangle: no vertex buffers, vertex_id only
         vertex_input.num_vertex_buffers = 0;
         vertex_input.num_vertex_attributes = 0;
+    } else if (vertex_format == "position_uv_lmuv_normal") {
+        // BSP: float3 pos + float2 uv + float2 lmuv + float3 normal = 40 bytes
+        vbuf_desc.pitch = sizeof(float) * 10;
+        attrs[1].location = 1;
+        attrs[1].buffer_slot = 0;
+        attrs[1].format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT2;
+        attrs[1].offset = sizeof(float) * 3;   // 12
+        attrs[2].location = 2;
+        attrs[2].buffer_slot = 0;
+        attrs[2].format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT2;
+        attrs[2].offset = sizeof(float) * 5;   // 20
+        attrs[3].location = 3;
+        attrs[3].buffer_slot = 0;
+        attrs[3].format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT3;
+        attrs[3].offset = sizeof(float) * 7;   // 28
+        vertex_input.vertex_buffer_descriptions = &vbuf_desc;
+        vertex_input.num_vertex_buffers = 1;
+        vertex_input.vertex_attributes = attrs;
+        vertex_input.num_vertex_attributes = 4;
     } else if (vertex_format == "position_uv") {
         // Textured: float3 position + float2 uv = 20 bytes
         vbuf_desc.pitch = sizeof(float) * 5;

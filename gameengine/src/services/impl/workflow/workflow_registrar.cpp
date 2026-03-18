@@ -45,6 +45,13 @@
 #include "services/interfaces/workflow/rendering/workflow_draw_map_step.hpp"
 #include "services/interfaces/workflow/rendering/workflow_postfx_taa_step.hpp"
 #include "services/interfaces/workflow/rendering/workflow_bsp_load_step.hpp"
+#include "services/interfaces/workflow/rendering/workflow_bsp_lightmap_atlas_step.hpp"
+#include "services/interfaces/workflow/rendering/workflow_bsp_parse_spawn_step.hpp"
+#include "services/interfaces/workflow/rendering/workflow_bsp_build_geometry_step.hpp"
+#include "services/interfaces/workflow/rendering/workflow_bsp_extract_textures_step.hpp"
+#include "services/interfaces/workflow/rendering/workflow_bsp_upload_geometry_step.hpp"
+#include "services/interfaces/workflow/rendering/workflow_bsp_build_collision_step.hpp"
+#include "services/interfaces/workflow/rendering/workflow_spawn_apply_step.hpp"
 #include "services/interfaces/workflow/rendering/workflow_draw_textured_box_step.hpp"
 #include "services/interfaces/workflow/rendering/workflow_shadow_setup_step.hpp"
 #include "services/interfaces/workflow/rendering/workflow_shadow_pass_step.hpp"
@@ -284,6 +291,13 @@ void WorkflowRegistrar::RegisterSteps(std::shared_ptr<IWorkflowStepRegistry> reg
     registry->RegisterStep(std::make_shared<WorkflowDrawMapStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowPostfxTaaStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowBspLoadStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowBspLightmapAtlasStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowBspParseSpawnStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowBspBuildGeometryStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowBspExtractTexturesStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowBspUploadGeometryStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowBspBuildCollisionStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowSpawnApplyStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowShadowSetupStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowShadowPassStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowRenderPrepareStep>(logger_));

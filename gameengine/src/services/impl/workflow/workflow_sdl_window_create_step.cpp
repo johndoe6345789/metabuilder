@@ -53,6 +53,10 @@ void WorkflowSdlWindowCreateStep::Execute(const WorkflowStepDefinition& step, Wo
         context.Set<SDL_Window*>("sdl_window", window);
         context.Set("window_created", true);
 
+        // Focus window and capture mouse for FPS controls
+        SDL_RaiseWindow(window);
+        SDL_SetWindowRelativeMouseMode(window, true);
+
         if (logger_) {
             logger_->Info("WorkflowSdlWindowCreateStep: Window created (" + std::to_string(width) + "x" +
                          std::to_string(height) + ") - " + title);

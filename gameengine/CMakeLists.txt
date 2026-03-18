@@ -284,6 +284,12 @@ if(BUILD_SDL3_APP)
         src/services/impl/workflow/geometry/workflow_geometry_create_plane_step.cpp
         src/services/impl/workflow/geometry/workflow_geometry_cube_generate_step.cpp
         src/services/impl/workflow/rendering/workflow_bsp_load_step.cpp
+        src/services/impl/workflow/rendering/workflow_bsp_lightmap_atlas_step.cpp
+        src/services/impl/workflow/rendering/workflow_bsp_parse_spawn_step.cpp
+        src/services/impl/workflow/rendering/workflow_bsp_build_geometry_step.cpp
+        src/services/impl/workflow/rendering/workflow_bsp_extract_textures_step.cpp
+        src/services/impl/workflow/rendering/workflow_bsp_upload_geometry_step.cpp
+        src/services/impl/workflow/rendering/workflow_bsp_build_collision_step.cpp
         src/services/impl/workflow/rendering/workflow_draw_map_step.cpp
         src/services/impl/workflow/rendering/workflow_draw_textured_box_step.cpp
         src/services/impl/workflow/rendering/workflow_draw_textured_step.cpp
@@ -308,6 +314,7 @@ if(BUILD_SDL3_APP)
         src/services/impl/workflow/rendering/workflow_render_prepare_step.cpp
         src/services/impl/workflow/rendering/workflow_shadow_pass_step.cpp
         src/services/impl/workflow/rendering/workflow_shadow_setup_step.cpp
+        src/services/impl/workflow/rendering/workflow_spawn_apply_step.cpp
         src/services/impl/workflow/rendering/workflow_spotlight_setup_step.cpp
         src/services/impl/workflow/rendering/workflow_spotlight_update_step.cpp
         src/services/impl/workflow/graphics/workflow_gpu_pipeline_create_step.cpp
