@@ -2,11 +2,11 @@
   "name": "Quake 3 Support",
   "version": "1.0.0",
   "id": "quake3",
-  "type": "game-format-support",
-  "category": "asset-loaders",
-  "description": "Load Quake 3 BSP maps with automatic unit conversion and Q3-correct camera/physics settings",
+  "type": "game",
+  "category": "demo",
+  "description": "Quake 3 BSP map viewer with FPS controls",
 
-  "defaultWorkflow": "workflows/load_map_with_unit_conversion.json",
+  "defaultWorkflow": "workflows/q3_game.json",
 
   "workflows": [
     "workflows/load_map_with_unit_conversion.json"

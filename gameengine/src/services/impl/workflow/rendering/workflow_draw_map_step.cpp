@@ -103,12 +103,13 @@ void WorkflowDrawMapStep::Execute(const WorkflowStepDefinition& step, WorkflowCo
         auto* meshSamp = context.Get<SDL_GPUSampler*>(texKey + "_sampler", nullptr);
         if (!meshTex || !meshSamp) continue;
 
-        if (shadow_tex && shadow_samp) {
+        {
             SDL_GPUTextureSamplerBinding bindings[2] = {};
             bindings[0].texture = meshTex;
             bindings[0].sampler = meshSamp;
-            bindings[1].texture = shadow_tex;
-            bindings[1].sampler = shadow_samp;
+            // Use shadow map if available, otherwise dummy bind the same texture
+            bindings[1].texture = shadow_tex ? shadow_tex : meshTex;
+            bindings[1].sampler = shadow_samp ? shadow_samp : meshSamp;
             SDL_BindGPUFragmentSamplers(pass, 0, bindings, 2);
         }
 

@@ -1,0 +1,129 @@
+{
+  "name": "Q3 Frame Tick",
+  "description": "Per-frame: poll input, FPS move, render BSP map with post-FX.",
+  "nodes": [
+    {
+      "id": "input_poll",
+      "type": "input.poll",
+      "typeVersion": 1,
+      "position": [0, 0]
+    },
+    {
+      "id": "physics_move",
+      "type": "physics.fps.move",
+      "typeVersion": 1,
+      "position": [200, 0],
+      "parameters": {
+        "move_speed": 8.0,
+        "sprint_multiplier": 2.0,
+        "crouch_multiplier": 0.4,
+        "jump_height": 2.0,
+        "jump_duration": 0.4,
+        "air_control": 0.5,
+        "gravity_scale": 0.3,
+        "crouch_height": 0.5,
+        "stand_height": 1.4
+      }
+    },
+    {
+      "id": "physics_step",
+      "type": "physics.step",
+      "typeVersion": 1,
+      "position": [400, 0]
+    },
+    {
+      "id": "sync_transforms",
+      "type": "physics.sync_transforms",
+      "typeVersion": 1,
+      "position": [500, 0]
+    },
+    {
+      "id": "camera_update",
+      "type": "camera.fps.update",
+      "typeVersion": 1,
+      "position": [600, 0],
+      "parameters": {
+        "sensitivity": 0.003,
+        "eye_height": 1.4,
+        "fov": 90.0,
+        "near": 0.05,
+        "far": 1000.0
+      }
+    },
+    {
+      "id": "render_prepare",
+      "type": "render.prepare",
+      "typeVersion": 1,
+      "position": [750, 0]
+    },
+    {
+      "id": "frame_begin",
+      "type": "frame.gpu.begin",
+      "typeVersion": 1,
+      "position": [800, 0],
+      "parameters": {
+        "clear_r": 0.3,
+        "clear_g": 0.5,
+        "clear_b": 0.8
+      }
+    },
+    {
+      "id": "draw_map",
+      "type": "draw.map",
+      "typeVersion": 1,
+      "position": [1000, 0],
+      "parameters": {
+        "default_texture": "walls_texture",
+        "roughness": 0.7,
+        "metallic": 0.0
+      }
+    },
+    {
+      "id": "end_scene",
+      "type": "frame.gpu.end_scene",
+      "typeVersion": 1,
+      "position": [1200, 0]
+    },
+    {
+      "id": "postfx_taa",
+      "type": "postfx.taa",
+      "typeVersion": 1,
+      "position": [1250, 0],
+      "parameters": { "blend_factor": 0.05 }
+    },
+    {
+      "id": "postfx_ssao",
+      "type": "postfx.ssao",
+      "typeVersion": 1,
+      "position": [1300, 0]
+    },
+    {
+      "id": "bloom_extract",
+      "type": "postfx.bloom_extract",
+      "typeVersion": 1,
+      "position": [1400, 0]
+    },
+    {
+      "id": "bloom_blur",
+      "type": "postfx.bloom_blur",
+      "typeVersion": 1,
+      "position": [1500, 0]
+    },
+    {
+      "id": "postfx_composite",
+      "type": "postfx.composite",
+      "typeVersion": 1,
+      "position": [1600, 0]
+    }
+  ],
+  "connections": {
+    "input_poll": { "main": { "0": [{ "node": "physics_move", "type": "main", "index": 0 }] } },
+    "physics_move": { "main": { "0": [{ "node": "physics_step", "type": "main", "index": 0 }] } },
+    "physics_step": { "main": { "0": [{ "node": "sync_transforms", "type": "main", "index": 0 }] } },
+    "sync_transforms": { "main": { "0": [{ "node": "camera_update", "type": "main", "index": 0 }] } },
+    "camera_update": { "main": { "0": [{ "node": "render_prepare", "type": "main", "index": 0 }] } },
+    "render_prepare": { "main": { "0": [{ "node": "frame_begin", "type": "main", "index": 0 }] } },
+    "frame_begin": { "main": { "0": [{ "node": "draw_map", "type": "main", "index": 0 }] } },
+    "draw_map": { "main": { "0": [{ "node": "end_scene", "type": "main", "index": 0 }] } }
+  }
+}

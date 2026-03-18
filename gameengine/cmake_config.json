@@ -51,7 +51,8 @@
       "glm",
       "stb",
       "EnTT",
-      "assimp"
+      "assimp",
+      "libzip"
     ]
   },
   "source_exclusions": [
@@ -128,6 +129,7 @@
         "glm::glm",
         "stb::stb",
         "EnTT::EnTT",
+        "libzip::zip",
         "assimp::assimp"
       ],
       "compile_definitions": [],

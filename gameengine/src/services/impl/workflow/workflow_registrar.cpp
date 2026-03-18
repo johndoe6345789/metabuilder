@@ -44,6 +44,7 @@
 #include "services/interfaces/workflow/rendering/workflow_map_load_step.hpp"
 #include "services/interfaces/workflow/rendering/workflow_draw_map_step.hpp"
 #include "services/interfaces/workflow/rendering/workflow_postfx_taa_step.hpp"
+#include "services/interfaces/workflow/rendering/workflow_bsp_load_step.hpp"
 #include "services/interfaces/workflow/rendering/workflow_draw_textured_box_step.hpp"
 #include "services/interfaces/workflow/rendering/workflow_shadow_setup_step.hpp"
 #include "services/interfaces/workflow/rendering/workflow_shadow_pass_step.hpp"
@@ -282,6 +283,7 @@ void WorkflowRegistrar::RegisterSteps(std::shared_ptr<IWorkflowStepRegistry> reg
     registry->RegisterStep(std::make_shared<WorkflowMapLoadStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowDrawMapStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowPostfxTaaStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowBspLoadStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowShadowSetupStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowShadowPassStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowRenderPrepareStep>(logger_));
