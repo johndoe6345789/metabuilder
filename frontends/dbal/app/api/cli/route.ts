@@ -57,12 +57,14 @@ export async function POST(request: NextRequest) {
       env: env as NodeJS.ProcessEnv,
     })
 
-    // Try to parse stdout as JSON
+    // Try to parse stdout as JSON, otherwise return as structured text
     let data: unknown
     try {
       data = JSON.parse(stdout)
     } catch {
-      data = stdout || stderr || '(no output)'
+      const output = (stdout || '').trim()
+      const err = (stderr || '').trim()
+      data = { output: output || err || '(no output)' }
     }
 
     return NextResponse.json({
@@ -78,7 +80,7 @@ export async function POST(request: NextRequest) {
 
     let data: unknown
     if (error.stdout) {
-      try { data = JSON.parse(error.stdout) } catch { data = error.stdout }
+      try { data = JSON.parse(error.stdout) } catch { data = { output: error.stdout.trim() } }
     }
 
     return NextResponse.json({

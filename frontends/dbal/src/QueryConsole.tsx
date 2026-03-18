@@ -135,6 +135,10 @@ function syntaxHighlight(json: string): string {
   )
 }
 
+function isPlainOutput(data: unknown): boolean {
+  return typeof data === 'object' && data !== null && 'output' in data && typeof (data as { output: unknown }).output === 'string'
+}
+
 function loadHistory(): QueryHistoryEntry[] {
   if (typeof window === 'undefined') return []
   try {
@@ -505,10 +509,12 @@ export function QueryConsole() {
                   {response.status} {response.statusText}
                 </span>
               </div>
-              <pre
-                className={styles.responsePre}
-                dangerouslySetInnerHTML={{ __html: syntaxHighlight(JSON.stringify(response.data, null, 2)) }}
-              />
+              <pre className={styles.responsePre}>
+                {isPlainOutput(response.data)
+                  ? (response.data as { output: string }).output
+                  : <span dangerouslySetInnerHTML={{ __html: syntaxHighlight(JSON.stringify(response.data, null, 2)) }} />
+                }
+              </pre>
             </div>
           )}
         </div>
