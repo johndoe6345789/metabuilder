@@ -1,10 +1,7 @@
 #include "services/interfaces/workflow/rendering/workflow_spotlight_setup_step.hpp"
 #include "services/interfaces/workflow/workflow_step_parameter_resolver.hpp"
 
-#include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
 #include <nlohmann/json.hpp>
-#include <cmath>
 
 namespace sdl3cpp::services::impl {
 
@@ -16,55 +13,57 @@ std::string WorkflowSpotlightSetupStep::GetPluginId() const {
 }
 
 void WorkflowSpotlightSetupStep::Execute(const WorkflowStepDefinition& step, WorkflowContext& context) {
-    WorkflowStepParameterResolver params;
-
-    auto getNum = [&](const char* name, float def) -> float {
-        const auto* p = params.FindParameter(step, name);
-        return (p && p->type == WorkflowParameterValue::Type::Number) ? static_cast<float>(p->numberValue) : def;
-    };
-    auto getStr = [&](const char* name, const std::string& def) -> std::string {
-        const auto* p = params.FindParameter(step, name);
-        return (p && p->type == WorkflowParameterValue::Type::String) ? p->stringValue : def;
-    };
-
-    std::string attach = getStr("attach", "camera");
-    float inner_cone = getNum("inner_cone", 12.0f);
-    float outer_cone = getNum("outer_cone", 25.0f);
-    float intensity = getNum("intensity", 2.5f);
-    float range = getNum("range", 20.0f);
-    float color_r = getNum("color_r", 1.0f);
-    float color_g = getNum("color_g", 0.95f);
-    float color_b = getNum("color_b", 0.85f);
-    float offset_x = getNum("offset_x", 0.0f);
-    float offset_y = getNum("offset_y", 0.0f);
-    float offset_z = getNum("offset_z", 0.0f);
-
+    // Pass all parameters straight through to context as JSON
+    // No hardcoded defaults — everything comes from the workflow definition
     nlohmann::json spotlight;
-    spotlight["inner_cone"] = inner_cone;
-    spotlight["outer_cone"] = outer_cone;
-    spotlight["intensity"] = intensity;
-    spotlight["range"] = range;
-    spotlight["color"] = {color_r, color_g, color_b};
-    spotlight["attach"] = attach;
-    spotlight["offset"] = {offset_x, offset_y, offset_z};
 
-    // If attached to camera, position and direction will be filled per-frame
-    // by the render.prepare step reading camera state.
-    // For static spotlights, set explicit position/direction params.
-    if (attach == "camera") {
-        // Will be updated each frame in render.prepare from camera state
-        spotlight["position"] = {0, 0, 0};
-        spotlight["direction"] = {0, 0, -1};
-    } else {
-        spotlight["position"] = {
-            getNum("pos_x", 0.0f),
-            getNum("pos_y", 0.0f),
-            getNum("pos_z", 0.0f)
+    for (const auto& [key, param] : step.parameters) {
+        switch (param.type) {
+            case WorkflowParameterValue::Type::Number:
+                spotlight[key] = param.numberValue;
+                break;
+            case WorkflowParameterValue::Type::String:
+                spotlight[key] = param.stringValue;
+                break;
+            case WorkflowParameterValue::Type::Bool:
+                spotlight[key] = param.boolValue;
+                break;
+            default:
+                break;
+        }
+    }
+
+    // Build color array from individual components if present
+    if (spotlight.contains("color_r") || spotlight.contains("color_g") || spotlight.contains("color_b")) {
+        spotlight["color"] = {
+            spotlight.value("color_r", 0.0),
+            spotlight.value("color_g", 0.0),
+            spotlight.value("color_b", 0.0)
         };
+    }
+
+    // Build offset array from individual components if present
+    if (spotlight.contains("offset_x") || spotlight.contains("offset_y") || spotlight.contains("offset_z")) {
+        spotlight["offset"] = {
+            spotlight.value("offset_x", 0.0),
+            spotlight.value("offset_y", 0.0),
+            spotlight.value("offset_z", 0.0)
+        };
+    }
+
+    // Build position/direction arrays for static spotlights
+    if (spotlight.contains("pos_x") || spotlight.contains("pos_y") || spotlight.contains("pos_z")) {
+        spotlight["position"] = {
+            spotlight.value("pos_x", 0.0),
+            spotlight.value("pos_y", 0.0),
+            spotlight.value("pos_z", 0.0)
+        };
+    }
+    if (spotlight.contains("dir_x") || spotlight.contains("dir_y") || spotlight.contains("dir_z")) {
         spotlight["direction"] = {
-            getNum("dir_x", 0.0f),
-            getNum("dir_y", -1.0f),
-            getNum("dir_z", 0.0f)
+            spotlight.value("dir_x", 0.0),
+            spotlight.value("dir_y", 0.0),
+            spotlight.value("dir_z", 0.0)
         };
     }
 

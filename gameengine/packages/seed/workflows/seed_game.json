@@ -871,7 +871,8 @@
         "color_b": 0.85,
         "offset_x": 0.15,
         "offset_y": -0.1,
-        "offset_z": -0.1
+        "offset_z": -0.1,
+        "aim_distance": 50
       }
     },
     {
