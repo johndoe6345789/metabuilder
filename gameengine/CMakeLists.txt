@@ -299,6 +299,7 @@ if(BUILD_SDL3_APP)
         src/services/impl/workflow/rendering/workflow_postfx_composite_step.cpp
         src/services/impl/workflow/rendering/workflow_postfx_setup_step.cpp
         src/services/impl/workflow/rendering/workflow_postfx_ssao_step.cpp
+        src/services/impl/workflow/rendering/workflow_postfx_taa_step.cpp
         src/services/impl/workflow/rendering/workflow_render_grid_draw_step.cpp
         src/services/impl/workflow/rendering/workflow_render_grid_setup_step.cpp
         src/services/impl/workflow/rendering/workflow_render_prepare_step.cpp

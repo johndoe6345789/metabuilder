@@ -115,6 +115,11 @@
       "name": "postfx_bloom_blur_frag_path",
       "type": "string",
       "defaultValue": "packages/seed/shaders/msl/postfx_bloom_blur.frag.metal"
+    },
+    "postfx_taa_frag_path": {
+      "name": "postfx_taa_frag_path",
+      "type": "string",
+      "defaultValue": "packages/seed/shaders/spirv/postfx_taa.frag.spv"
     }
   },
   "nodes": [
@@ -1057,6 +1062,22 @@
       }
     },
     {
+      "id": "compile_taa_frag",
+      "name": "Compile TAA Fragment",
+      "type": "graphics.gpu.shader.compile",
+      "typeVersion": 1,
+      "position": [1315, 200],
+      "parameters": {
+        "stage": "fragment",
+        "output_key": "taa_fragment_shader",
+        "num_uniform_buffers": 1,
+        "num_samplers": 2
+      },
+      "inputs": {
+        "shader_path": "postfx_taa_frag_path"
+      }
+    },
+    {
       "id": "create_ssao_pipeline",
       "name": "Create SSAO Pipeline",
       "type": "graphics.gpu.pipeline.create",
@@ -1452,6 +1473,11 @@
       }
     },
     "compile_postfx_bloom_blur_frag": {
+      "main": {
+        "0": [{ "node": "compile_taa_frag", "type": "main", "index": 0 }]
+      }
+    },
+    "compile_taa_frag": {
       "main": {
         "0": [{ "node": "create_ssao_pipeline", "type": "main", "index": 0 }]
       }

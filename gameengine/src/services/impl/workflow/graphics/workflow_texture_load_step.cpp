@@ -53,15 +53,21 @@ void WorkflowTextureLoadStep::Execute(const WorkflowStepDefinition& step, Workfl
         throw std::runtime_error("texture.load: GPU device not found in context");
     }
 
-    // Create GPU texture
+    // Calculate mip levels: floor(log2(max(w,h))) + 1
+    int maxDim = std::max(w, h);
+    Uint32 numLevels = 1;
+    while (maxDim > 1) { maxDim >>= 1; numLevels++; }
+
+    // Create GPU texture with mip chain
     SDL_GPUTextureCreateInfo tex_info = {};
     tex_info.type = SDL_GPU_TEXTURETYPE_2D;
     tex_info.format = SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM;
     tex_info.width = static_cast<Uint32>(w);
     tex_info.height = static_cast<Uint32>(h);
     tex_info.layer_count_or_depth = 1;
-    tex_info.num_levels = 1;
-    tex_info.usage = SDL_GPU_TEXTUREUSAGE_SAMPLER;
+    tex_info.num_levels = numLevels;
+    tex_info.usage = SDL_GPU_TEXTUREUSAGE_SAMPLER |
+                      (numLevels > 1 ? SDL_GPU_TEXTUREUSAGE_COLOR_TARGET : 0);
 
     SDL_GPUTexture* texture = SDL_CreateGPUTexture(device, &tex_info);
     if (!texture) {
@@ -105,6 +111,12 @@ void WorkflowTextureLoadStep::Execute(const WorkflowStepDefinition& step, Workfl
 
     SDL_UploadToGPUTexture(copy_pass, &src, &dst, false);
     SDL_EndGPUCopyPass(copy_pass);
+
+    // Generate mipmaps from the uploaded base level
+    if (numLevels > 1) {
+        SDL_GenerateMipmapsForGPUTexture(cmd, texture);
+    }
+
     SDL_SubmitGPUCommandBuffer(cmd);
     SDL_ReleaseGPUTransferBuffer(device, transfer);
 
@@ -116,6 +128,11 @@ void WorkflowTextureLoadStep::Execute(const WorkflowStepDefinition& step, Workfl
     samp_info.address_mode_u = SDL_GPU_SAMPLERADDRESSMODE_REPEAT;
     samp_info.address_mode_v = SDL_GPU_SAMPLERADDRESSMODE_REPEAT;
     samp_info.address_mode_w = SDL_GPU_SAMPLERADDRESSMODE_REPEAT;
+    samp_info.enable_anisotropy = true;
+    samp_info.max_anisotropy = 16.0f;
+    samp_info.mip_lod_bias = 0.5f;  // bias toward higher mip = less aliasing at distance
+    samp_info.min_lod = 0.0f;
+    samp_info.max_lod = static_cast<float>(numLevels);
 
     SDL_GPUSampler* sampler = SDL_CreateGPUSampler(device, &samp_info);
     if (!sampler) {

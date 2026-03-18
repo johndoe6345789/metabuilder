@@ -441,6 +441,16 @@
       "position": [1200, 0]
     },
     {
+      "id": "postfx_taa",
+      "name": "TAA Resolve",
+      "type": "postfx.taa",
+      "typeVersion": 1,
+      "position": [1250, 0],
+      "parameters": {
+        "blend_factor": 0.02
+      }
+    },
+    {
       "id": "postfx_ssao",
       "name": "SSAO Pass",
       "type": "postfx.ssao",
@@ -631,6 +641,11 @@
       }
     },
     "end_scene": {
+      "main": {
+        "0": [{ "node": "postfx_taa", "type": "main", "index": 0 }]
+      }
+    },
+    "postfx_taa": {
       "main": {
         "0": [{ "node": "postfx_ssao", "type": "main", "index": 0 }]
       }
