@@ -692,6 +692,7 @@ services:
 
   # Storybook - Component library
   storybook:
+    profiles: ["storybook"]
     build:
       context: ..
       dockerfile: storybook/Dockerfile

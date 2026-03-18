@@ -6,7 +6,8 @@ import sys
 import time
 from cli.helpers import (
     GREEN, YELLOW, BLUE, RED, NC,
-    docker_compose, log_info, log_ok, log_warn, log_err, pull_with_retry, run,
+    docker_compose, log_info, log_ok, log_warn, log_err, pull_with_retry,
+    run as run_shell,
 )
 
 
@@ -84,41 +85,41 @@ def run_cmd(args: argparse.Namespace, config: dict) -> int:
 
     if command in ("down", "stop"):
         log_info("Stopping MetaBuilder stack...")
-        run(docker_compose(*profiles, "down"))
+        run_shell(docker_compose(*profiles, "down"))
         log_ok("Stack stopped")
         return 0
 
     if command == "restart":
-        run(docker_compose(*profiles, "restart"))
+        run_shell(docker_compose(*profiles, "restart"))
         log_ok("Stack restarted")
         return 0
 
     if command == "logs":
-        run(docker_compose(*profiles, "logs", "-f"))
+        run_shell(docker_compose(*profiles, "logs", "-f"))
         return 0
 
     if command in ("ps", "status"):
-        run(docker_compose(*profiles, "ps"))
+        run_shell(docker_compose(*profiles, "ps"))
         return 0
 
     if command == "clean":
         answer = input(f"{RED}This will remove all containers and volumes! Are you sure? (yes/no): {NC}")
         if answer.strip() == "yes":
-            run(docker_compose(*profiles, "down", "-v"))
+            run_shell(docker_compose(*profiles, "down", "-v"))
             log_ok("Stack cleaned")
         return 0
 
     if command == "build":
         log_info("Building MetaBuilder stack...")
         _pull_external_images(profiles, config)
-        run(docker_compose(*profiles, "up", "-d", "--build"))
+        run_shell(docker_compose(*profiles, "up", "-d", "--build"))
         log_ok("Stack built and started")
         return 0
 
     if command in ("up", "start"):
         log_info("Starting MetaBuilder stack...")
         _pull_external_images(profiles, config)
-        run(docker_compose(*profiles, "up", "-d"))
+        run_shell(docker_compose(*profiles, "up", "-d"))
         print(f"\n{GREEN}Stack started!{NC}\n")
         _wait_for_healthy(profiles, args)
         return 0
