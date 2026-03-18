@@ -59,3 +59,8 @@ scrape_configs:
     metrics_path: '/status-json.xsl'
     static_configs:
       - targets: ['icecast:8000']
+
+  - job_name: 'starlink'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['starlink-exporter:9817']

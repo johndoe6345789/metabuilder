@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'standalone',
+  basePath: '/packagerepo',
   async rewrites() {
     // Get backend URL from environment, fallback to localhost for development
     const backendUrl = process.env.BACKEND_URL || 'http://localhost:5000';

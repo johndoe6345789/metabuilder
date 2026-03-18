@@ -2,7 +2,9 @@
 #
 # Gateway:    nginx on port 80 with welcome portal + subpath routing
 # Apps:       WorkflowUI, CodeForge, Pastebin, Postgres Dashboard,
-#             Email Client, Exploded Diagrams, Storybook, Frontend App
+#             Email Client, Exploded Diagrams, Storybook, Frontend App,
+#             DBAL Frontend, Docker Terminal, Package Repo,
+#             RepoForge Portal, CaproverForge Portal
 # Backend:    DBAL C++, Email Service (Flask), Pastebin Backend (Flask)
 # Infra:      PostgreSQL, MySQL, MongoDB, Redis, Elasticsearch,
 #             phpMyAdmin, Mongo Express, RedisInsight, Kibana
@@ -28,6 +30,13 @@
 #   http://localhost/diagrams     Exploded Diagrams
 #   http://localhost/storybook    Storybook
 #   http://localhost/app          Frontend App
+#   http://localhost/dbal          DBAL Frontend
+#   http://localhost/terminal      Docker Terminal
+#   http://localhost/packagerepo   Package Repo
+#   http://localhost/repoforge     RepoForge APK Portal
+#   http://localhost/caproverforge CaproverForge APK Portal
+#   http://localhost/grafana       Grafana (monitoring profile)
+#   http://localhost/prometheus     Prometheus (monitoring profile)
 #   http://localhost/api          DBAL API
 #   http://localhost/pastebin-api Pastebin Flask API
 #   http://localhost/phpmyadmin/  phpMyAdmin (MySQL admin)
@@ -631,6 +640,7 @@ services:
       NODE_ENV: production
       PORT: 3000
       DATABASE_URL: "postgresql://${POSTGRES_USER:-metabuilder}:${POSTGRES_PASSWORD:-metabuilder}@postgres:5432/${POSTGRES_DB:-metabuilder}"
+      JWT_SECRET: "${JWT_SECRET:-changeme-in-production}"
     depends_on:
       postgres:
         condition: service_healthy
@@ -736,6 +746,169 @@ services:
     networks:
       - metabuilder
 
+  # DBAL Frontend - Daemon overview + query console
+  dbal-frontend:
+    build:
+      context: ..
+      dockerfile: frontends/dbal/Dockerfile
+      args:
+        DBAL_DAEMON_URL: http://dbal:8080
+    container_name: metabuilder-dbal-frontend
+    restart: unless-stopped
+    ports:
+      - "3009:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      HOSTNAME: "0.0.0.0"
+      DBAL_DAEMON_URL: http://dbal:8080
+    depends_on:
+      dbal:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:3000/dbal"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    networks:
+      - metabuilder
+
+  # Docker Terminal - Container management UI + Flask backend
+  dockerterminal-backend:
+    build:
+      context: ../frontends/dockerterminal/backend
+      dockerfile: Dockerfile
+    container_name: metabuilder-dockerterminal-backend
+    restart: unless-stopped
+    environment:
+      FLASK_ENV: production
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:5000/health', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - metabuilder
+
+  dockerterminal:
+    build:
+      context: ../frontends/dockerterminal/frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: /terminal-api
+    container_name: metabuilder-dockerterminal
+    restart: unless-stopped
+    ports:
+      - "3010:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      HOSTNAME: "0.0.0.0"
+    depends_on:
+      - dockerterminal-backend
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:3000/terminal"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    networks:
+      - metabuilder
+
+  # Package Repo - Package repository UI + Flask backend
+  packagerepo-backend:
+    build:
+      context: ../frontends/packagerepo
+      dockerfile: backend/Dockerfile
+    container_name: metabuilder-packagerepo-backend
+    restart: unless-stopped
+    environment:
+      DATA_DIR: /data
+      FLASK_APP: app.py
+    volumes:
+      - packagerepo-data:/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:5000/health', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - metabuilder
+
+  packagerepo:
+    build:
+      context: ../frontends/packagerepo/frontend
+      dockerfile: Dockerfile
+      args:
+        BACKEND_URL: http://packagerepo-backend:5000
+    container_name: metabuilder-packagerepo
+    restart: unless-stopped
+    ports:
+      - "3011:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      HOSTNAME: "0.0.0.0"
+    depends_on:
+      - packagerepo-backend
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:3000/packagerepo"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    networks:
+      - metabuilder
+
+  # RepoForge - Android app download portal
+  repoforge:
+    build:
+      context: ../frontends/repoforge/portal
+      dockerfile: Dockerfile
+    container_name: metabuilder-repoforge
+    restart: unless-stopped
+    ports:
+      - "3012:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      HOSTNAME: "0.0.0.0"
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:3000/repoforge"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    networks:
+      - metabuilder
+
+  # CaproverForge - Android app download portal
+  caproverforge:
+    build:
+      context: ../frontends/caproverforge/portal
+      dockerfile: Dockerfile
+    container_name: metabuilder-caproverforge
+    restart: unless-stopped
+    ports:
+      - "3013:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      HOSTNAME: "0.0.0.0"
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:3000/caproverforge"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    networks:
+      - metabuilder
+
   # ============================================================================
   # Monitoring (--profile monitoring)
   # ============================================================================
@@ -755,6 +928,7 @@ services:
       - '--storage.tsdb.path=/prometheus'
       - '--storage.tsdb.retention.time=30d'
       - '--web.enable-lifecycle'
+      - '--web.external-url=/prometheus/'
     volumes:
       - prometheus-data:/prometheus
     healthcheck:
@@ -779,12 +953,14 @@ services:
     restart: unless-stopped
     profiles: [monitoring]
     ports:
-      - "3009:3000"
+      - "3014:3000"
     environment:
       GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
       GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
       GF_INSTALL_PLUGINS: grafana-clock-panel,grafana-simple-json-datasource
       GF_AUTH_ANONYMOUS_ENABLED: "false"
+      GF_SERVER_ROOT_URL: "%(protocol)s://%(domain)s/grafana/"
+      GF_SERVER_SERVE_FROM_SUB_PATH: "true"
     volumes:
       - grafana-data:/var/lib/grafana
     depends_on:
@@ -921,6 +1097,28 @@ services:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "/redis_exporter", "--version"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - metabuilder
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 128M
+
+  # Starlink Exporter - Starlink dish metrics
+  starlink-exporter:
+    image: danopstech/starlink_exporter:latest
+    container_name: metabuilder-starlink-exporter
+    restart: unless-stopped
+    profiles: [monitoring]
+    ports:
+      - "9817:9817"
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://127.0.0.1:9817/metrics || exit 1"]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -1141,6 +1339,8 @@ volumes:
   retro-roms:
     driver: local
   pastebin-backend-data:
+    driver: local
+  packagerepo-data:
     driver: local
 
 # ============================================================================

@@ -41,3 +41,27 @@ groups:
           severity: warning
         annotations:
           summary: "Redis memory usage above 90%"
+
+      - alert: DBALHighErrorRate
+        expr: rate(dbal_errors_total[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "DBAL daemon error rate above 0.1/s"
+
+      - alert: StarlinkHighLatency
+        expr: starlink_dish_pop_ping_latency_ms > 100
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Starlink latency above 100ms for 10 minutes"
+
+      - alert: StarlinkObstructed
+        expr: starlink_dish_currently_obstructed == 1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Starlink dish is obstructed"

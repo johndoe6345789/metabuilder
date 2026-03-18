@@ -5,6 +5,7 @@
 
 #include "server.hpp"
 #include "handlers/health_route_handler.hpp"
+#include "handlers/metrics_route_handler.hpp"
 #include "handlers/entity_route_handler.hpp"
 #include "handlers/query_route_handler.hpp"
 #include "security/jwt/jwt_validator.hpp"
@@ -218,6 +219,16 @@ void Server::registerRoutes() {
         "/api/status",
         [health_handler](const drogon::HttpRequestPtr& req, DrogonCallback&& callback) {
             health_handler->handleStatus(req, std::move(callback));
+        },
+        {drogon::HttpMethod::Get, drogon::HttpMethod::Options}
+    );
+
+    // Metrics endpoint (Prometheus format)
+    auto metrics_handler = std::make_shared<handlers::MetricsRouteHandler>(address());
+    drogon::app().registerHandler(
+        "/metrics",
+        [metrics_handler](const drogon::HttpRequestPtr& req, DrogonCallback&& callback) {
+            metrics_handler->handleMetrics(req, std::move(callback));
         },
         {drogon::HttpMethod::Get, drogon::HttpMethod::Options}
     );

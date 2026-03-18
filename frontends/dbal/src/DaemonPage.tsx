@@ -44,10 +44,10 @@ export function DBALDaemonPage() {
             A hardened, sandboxed C++ daemon serves all database operations via REST API. It validates every request, enforces ACLs, and executes SQL through safe adapters.
           </p>
           <div className={styles.buttonGroup}>
-            <Link href="/dbal-daemon" className={styles.btnPrimary}>
+            <Link href="/dbal" className={styles.btnPrimary}>
               Visit daemon docs
             </Link>
-            <Link href="/dbal-daemon#status" className={styles.btnOutline}>
+            <Link href="/dbal#status" className={styles.btnOutline}>
               Check status
             </Link>
           </div>
