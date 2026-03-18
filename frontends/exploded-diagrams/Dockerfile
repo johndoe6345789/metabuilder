@@ -1,6 +1,6 @@
 # Multi-stage build (standalone - no monorepo deps)
 # Context: monorepo root (..)
-FROM node:22-alpine AS deps
+FROM node:24-alpine AS deps
 WORKDIR /app
 
 COPY frontends/exploded-diagrams/package.json ./frontends/exploded-diagrams/
@@ -17,7 +17,7 @@ COPY frontends/exploded-diagrams/ ./frontends/exploded-diagrams/
 RUN cd frontends/exploded-diagrams && npx next build --webpack
 
 # --- Runtime stage ---
-FROM node:22-alpine
+FROM node:24-alpine
 WORKDIR /app
 
 COPY --from=builder /app/frontends/exploded-diagrams/.next/standalone ./

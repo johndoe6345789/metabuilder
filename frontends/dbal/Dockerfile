@@ -31,7 +31,7 @@ done
 RUN cd frontends/dbal && npx next build
 
 # --- Runtime stage ---
-FROM node:20-alpine
+FROM node:24-alpine
 WORKDIR /app
 
 COPY --from=builder /app/frontends/dbal/.next/standalone ./

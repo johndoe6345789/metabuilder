@@ -65,7 +65,7 @@ ENV NODE_OPTIONS="--max-old-space-size=3072"
 RUN cd frontends/postgres && npx next build --webpack
 
 # --- Runtime stage ---
-FROM node:20-alpine
+FROM node:24-alpine
 WORKDIR /app
 
 COPY --from=builder /app/frontends/postgres/.next/standalone ./

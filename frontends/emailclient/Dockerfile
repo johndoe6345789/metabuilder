@@ -61,7 +61,7 @@ done
 RUN cd frontends/emailclient && npx next build --webpack
 
 # --- Runtime stage ---
-FROM node:20-alpine
+FROM node:24-alpine
 WORKDIR /app
 
 COPY --from=builder /app/frontends/emailclient/.next/standalone ./

@@ -756,7 +756,7 @@ services:
     container_name: metabuilder-dbal-frontend
     restart: unless-stopped
     ports:
-      - "3009:3000"
+      - "3015:3000"
     environment:
       NODE_ENV: production
       PORT: 3000

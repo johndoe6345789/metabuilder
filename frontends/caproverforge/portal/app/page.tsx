@@ -51,6 +51,8 @@ export default function Home() {
       <div style={{ textAlign: "center", marginBottom: 56 }}>
         <a
           href="https://github.com/nicholasgriffintn/caproverforge/releases/latest"
+          target="_blank"
+          rel="noopener noreferrer"
           style={{
             display: "inline-block",
             background: "var(--accent)",
@@ -60,16 +62,7 @@ export default function Home() {
             padding: "14px 36px",
             borderRadius: 12,
             textDecoration: "none",
-            transition: "background 0.2s",
           }}
-          onMouseOver={(e) =>
-            ((e.currentTarget as HTMLAnchorElement).style.background =
-              "var(--accent-hover)")
-          }
-          onMouseOut={(e) =>
-            ((e.currentTarget as HTMLAnchorElement).style.background =
-              "var(--accent)")
-          }
         >
           Download APK
         </a>

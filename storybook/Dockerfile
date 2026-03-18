@@ -1,6 +1,6 @@
 # Multi-stage build: deps cached separately from source changes
 # Context: monorepo root (..)
-FROM node:20-alpine AS deps
+FROM node:24-alpine AS deps
 WORKDIR /app
 
 COPY package.json .npmrc ./
