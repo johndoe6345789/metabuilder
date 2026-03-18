@@ -53,6 +53,82 @@
           "fragment": "shaders/msl/constant_color.frag.metal"
         }
       }
+    },
+    {
+      "id": "textured",
+      "backendOrder": ["spirv", "msl"],
+      "backends": {
+        "spirv": {
+          "vertex": "shaders/spirv/textured.vert.spv",
+          "fragment": "shaders/spirv/textured.frag.spv"
+        },
+        "msl": {
+          "vertex": "shaders/msl/textured.vert.metal",
+          "fragment": "shaders/msl/textured.frag.metal"
+        }
+      }
+    },
+    {
+      "id": "shadow_depth",
+      "backendOrder": ["spirv", "msl"],
+      "backends": {
+        "spirv": {
+          "vertex": "shaders/spirv/shadow_depth.vert.spv",
+          "fragment": "shaders/spirv/shadow_depth.frag.spv"
+        },
+        "msl": {
+          "vertex": "shaders/msl/shadow_depth.vert.metal",
+          "fragment": "shaders/msl/shadow_depth.frag.metal"
+        }
+      }
+    },
+    {
+      "id": "postfx_fullscreen",
+      "backendOrder": ["spirv", "msl"],
+      "backends": {
+        "spirv": { "vertex": "shaders/spirv/postfx_fullscreen.vert.spv" },
+        "msl": { "vertex": "shaders/msl/postfx_fullscreen.vert.metal" }
+      }
+    },
+    {
+      "id": "postfx_bloom_blur",
+      "backendOrder": ["spirv", "msl"],
+      "backends": {
+        "spirv": { "fragment": "shaders/spirv/postfx_bloom_blur.frag.spv" },
+        "msl": { "fragment": "shaders/msl/postfx_bloom_blur.frag.metal" }
+      }
+    },
+    {
+      "id": "postfx_bloom_extract",
+      "backendOrder": ["spirv", "msl"],
+      "backends": {
+        "spirv": { "fragment": "shaders/spirv/postfx_bloom_extract.frag.spv" },
+        "msl": { "fragment": "shaders/msl/postfx_bloom_extract.frag.metal" }
+      }
+    },
+    {
+      "id": "postfx_composite",
+      "backendOrder": ["spirv", "msl"],
+      "backends": {
+        "spirv": { "fragment": "shaders/spirv/postfx_composite.frag.spv" },
+        "msl": { "fragment": "shaders/msl/postfx_composite.frag.metal" }
+      }
+    },
+    {
+      "id": "postfx_ssao",
+      "backendOrder": ["spirv", "msl"],
+      "backends": {
+        "spirv": { "fragment": "shaders/spirv/postfx_ssao.frag.spv" },
+        "msl": { "fragment": "shaders/msl/postfx_ssao.frag.metal" }
+      }
+    },
+    {
+      "id": "tessellate",
+      "backendOrder": ["spirv", "msl"],
+      "backends": {
+        "spirv": { "compute": "shaders/spirv/tessellate.comp.spv" },
+        "msl": { "compute": "shaders/msl/tessellate.comp.metal" }
+      }
     }
   ],
   "bundled": true,

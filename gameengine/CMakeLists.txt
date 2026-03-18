@@ -102,6 +102,8 @@ find_package(stb CONFIG REQUIRED)
 
 find_package(EnTT CONFIG REQUIRED)
 
+find_package(assimp CONFIG REQUIRED)
+
 
 # Build render stack library group
 set(SDL3CPP_RENDER_STACK_LIBS EnTT::EnTT)
@@ -281,12 +283,15 @@ if(BUILD_SDL3_APP)
         src/services/impl/workflow/geometry/workflow_geometry_cube_generate_step.cpp
         src/services/impl/workflow/rendering/workflow_draw_textured_box_step.cpp
         src/services/impl/workflow/rendering/workflow_draw_textured_step.cpp
+        src/services/impl/workflow/rendering/workflow_draw_viewmodel_step.cpp
         src/services/impl/workflow/rendering/workflow_frame_begin_gpu_step.cpp
         src/services/impl/workflow/rendering/workflow_frame_begin_offscreen_step.cpp
         src/services/impl/workflow/rendering/workflow_frame_draw_bodies_step.cpp
         src/services/impl/workflow/rendering/workflow_frame_end_gpu_step.cpp
         src/services/impl/workflow/rendering/workflow_frame_end_scene_step.cpp
+        src/services/impl/workflow/rendering/workflow_geometry_create_flashlight_step.cpp
         src/services/impl/workflow/rendering/workflow_lighting_setup_step.cpp
+        src/services/impl/workflow/rendering/workflow_model_load_step.cpp
         src/services/impl/workflow/rendering/workflow_postfx_bloom_blur_step.cpp
         src/services/impl/workflow/rendering/workflow_postfx_bloom_extract_step.cpp
         src/services/impl/workflow/rendering/workflow_postfx_composite_step.cpp
@@ -297,6 +302,7 @@ if(BUILD_SDL3_APP)
         src/services/impl/workflow/rendering/workflow_render_prepare_step.cpp
         src/services/impl/workflow/rendering/workflow_shadow_pass_step.cpp
         src/services/impl/workflow/rendering/workflow_shadow_setup_step.cpp
+        src/services/impl/workflow/rendering/workflow_spotlight_setup_step.cpp
         src/services/impl/workflow/graphics/workflow_gpu_pipeline_create_step.cpp
         src/services/impl/workflow/graphics/workflow_gpu_shader_compile_step.cpp
         src/services/impl/workflow/graphics/workflow_graphics_buffer_create_index_step.cpp
@@ -360,6 +366,7 @@ if(BUILD_SDL3_APP)
         glm::glm
         stb::stb
         EnTT::EnTT
+        assimp::assimp
     )
 endif()
 

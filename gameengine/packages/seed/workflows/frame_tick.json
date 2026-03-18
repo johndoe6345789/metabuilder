@@ -388,6 +388,23 @@
       }
     },
     {
+      "id": "draw_torch",
+      "name": "Draw Torch Viewmodel",
+      "type": "draw.viewmodel",
+      "typeVersion": 1,
+      "position": [1100, 0],
+      "parameters": {
+        "mesh": "torch_model",
+        "offset_x": 0.35,
+        "offset_y": -0.35,
+        "offset_z": -0.35,
+        "scale": 1.0,
+        "rot_x": -75,
+        "roughness": 0.5,
+        "metallic": 0.6
+      }
+    },
+    {
       "id": "end_scene",
       "name": "End Scene Pass",
       "type": "frame.gpu.end_scene",
@@ -565,6 +582,11 @@
       }
     },
     "draw_cube": {
+      "main": {
+        "0": [{ "node": "draw_torch", "type": "main", "index": 0 }]
+      }
+    },
+    "draw_torch": {
       "main": {
         "0": [{ "node": "end_scene", "type": "main", "index": 0 }]
       }

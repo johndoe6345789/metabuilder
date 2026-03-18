@@ -160,13 +160,14 @@
     {
       "id": "set_running",
       "name": "Set Grid Running",
-      "type": "variable.set",
+      "type": "value.literal",
       "typeVersion": 1,
       "position": [2200, 0],
       "parameters": {
-        "key": "grid.running",
         "value": true,
-        "value_type": "bool"
+        "outputs": {
+          "value": "grid.running"
+        }
       }
     },
     {

@@ -840,18 +840,52 @@
       "typeVersion": 1,
       "position": [1100, 200],
       "parameters": {
-        "light_dir_x": -0.4,
-        "light_dir_y": -0.7,
-        "light_dir_z": -0.5,
-        "light_color_r": 1.0,
-        "light_color_g": 0.95,
-        "light_color_b": 0.85,
-        "light_intensity": 2.5,
-        "ambient_r": 0.06,
-        "ambient_g": 0.06,
-        "ambient_b": 0.08,
+        "light_dir_x": -0.3,
+        "light_dir_y": -0.5,
+        "light_dir_z": -0.6,
+        "light_color_r": 0.4,
+        "light_color_g": 0.45,
+        "light_color_b": 0.6,
+        "light_intensity": 0.3,
+        "ambient_r": 0.04,
+        "ambient_g": 0.04,
+        "ambient_b": 0.06,
         "ambient_intensity": 1.0,
-        "exposure": 0.6
+        "exposure": 1.2
+      }
+    },
+    {
+      "id": "flashlight",
+      "name": "Flashlight (Camera Spotlight)",
+      "type": "spotlight.setup",
+      "typeVersion": 1,
+      "position": [1125, 200],
+      "parameters": {
+        "attach": "camera",
+        "inner_cone": 6,
+        "outer_cone": 16,
+        "intensity": 3.0,
+        "range": 25,
+        "color_r": 1.0,
+        "color_g": 0.95,
+        "color_b": 0.85,
+        "offset_y": -0.15
+      }
+    },
+    {
+      "id": "load_torch",
+      "name": "Create Flashlight Geometry",
+      "type": "geometry.create_flashlight",
+      "typeVersion": 1,
+      "position": [1135, 200],
+      "parameters": {
+        "name": "torch_model",
+        "segments": 16,
+        "body_radius": 0.045,
+        "body_length": 0.28,
+        "head_radius": 0.065,
+        "head_length": 0.09,
+        "lens_radius": 0.055
       }
     },
     {
@@ -862,9 +896,11 @@
       "position": [1150, 200],
       "parameters": {
         "map_size": 2048,
-        "scene_extent": 15,
-        "vertex_shader": "packages/seed/shaders/msl/shadow_depth.vert.metal",
-        "fragment_shader": "packages/seed/shaders/msl/shadow_depth.frag.metal"
+        "scene_extent": 15
+      },
+      "inputs": {
+        "vertex_shader": "shadow_vert_path",
+        "fragment_shader": "shadow_frag_path"
       }
     },
     {
@@ -1336,6 +1372,16 @@
       }
     },
     "lighting_setup": {
+      "main": {
+        "0": [{ "node": "flashlight", "type": "main", "index": 0 }]
+      }
+    },
+    "flashlight": {
+      "main": {
+        "0": [{ "node": "load_torch", "type": "main", "index": 0 }]
+      }
+    },
+    "load_torch": {
       "main": {
         "0": [{ "node": "shadow_setup", "type": "main", "index": 0 }]
       }

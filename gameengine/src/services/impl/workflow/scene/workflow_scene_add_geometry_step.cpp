@@ -5,7 +5,14 @@
 
 #include <stdexcept>
 #include <utility>
+#include <cstdio>
+
+#if defined(_WIN32)
+#include <rpc.h>
+#pragma comment(lib, "rpcrt4.lib")
+#else
 #include <uuid/uuid.h>
+#endif
 
 namespace sdl3cpp::services::impl {
 
@@ -47,11 +54,20 @@ void WorkflowSceneAddGeometryStep::Execute(const WorkflowStepDefinition& step,
     obj.objectType = "geometry_object";
 
     // Create a unique object ID
+#if defined(_WIN32)
+    UUID uuid_val;
+    UuidCreate(&uuid_val);
+    RPC_CSTR str = nullptr;
+    UuidToStringA(&uuid_val, &str);
+    std::string objectId(reinterpret_cast<char*>(str));
+    RpcStringFreeA(&str);
+#else
     uuid_t uuid_val;
     uuid_generate(uuid_val);
     char uuid_str[37];
     uuid_unparse(uuid_val, uuid_str);
     std::string objectId(uuid_str);
+#endif
 
     // Store object_id in context for reference
     context.Set(outputKey, objectId);

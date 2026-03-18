@@ -48,6 +48,11 @@ def load_config(config_path: str) -> dict:
         return json.load(f)
 
 
+def _posix_path(p: str) -> str:
+    """Normalize path separators to forward slashes for CMake compatibility."""
+    return p.replace('\\', '/')
+
+
 def expand_test_glob_patterns(config: dict) -> dict:
     """Expand glob patterns in test_targets list itself.
 
@@ -62,7 +67,7 @@ def expand_test_glob_patterns(config: dict) -> dict:
         if isinstance(test_def, dict) and 'pattern' in test_def:
             # This is a glob pattern definition - expand it
             pattern = test_def['pattern']
-            matches = sorted(glob(pattern))
+            matches = sorted(_posix_path(m) for m in glob(pattern))
             matches = [m for m in matches if m not in exclusions]
 
             template = test_def.copy()
@@ -96,12 +101,12 @@ def expand_globs(config: dict) -> dict:
             for src in target['sources']:
                 if '*' in src:
                     # Glob pattern - expand it
-                    matches = sorted(glob(src))
+                    matches = sorted(_posix_path(m) for m in glob(src))
                     # Filter out excluded files
                     matches = [m for m in matches if m not in exclusions]
                     expanded.extend(matches)
                 elif src not in exclusions:  # Check literal sources too
-                    expanded.append(src)
+                    expanded.append(_posix_path(src))
             target['sources'] = expanded
 
     for test in config.get('test_targets', []):
@@ -109,12 +114,12 @@ def expand_globs(config: dict) -> dict:
             expanded = []
             for src in test['sources']:
                 if '*' in src:
-                    matches = sorted(glob(src))
+                    matches = sorted(_posix_path(m) for m in glob(src))
                     # Filter out excluded files
                     matches = [m for m in matches if m not in exclusions]
                     expanded.extend(matches)
                 elif src not in exclusions:
-                    expanded.append(src)
+                    expanded.append(_posix_path(src))
             test['sources'] = expanded
 
         # Provide smart defaults for test targets from config

@@ -4,7 +4,34 @@
 
 #include <stdexcept>
 #include <utility>
+#include <cstdio>
+
+#if defined(_WIN32)
+#include <rpc.h>
+#pragma comment(lib, "rpcrt4.lib")
+#else
 #include <uuid/uuid.h>
+#endif
+
+namespace {
+std::string generate_uuid() {
+#if defined(_WIN32)
+    UUID uuid_val;
+    UuidCreate(&uuid_val);
+    RPC_CSTR str = nullptr;
+    UuidToStringA(&uuid_val, &str);
+    std::string result(reinterpret_cast<char*>(str));
+    RpcStringFreeA(&str);
+    return result;
+#else
+    uuid_t uuid_val;
+    uuid_generate(uuid_val);
+    char uuid_str[37];
+    uuid_unparse(uuid_val, uuid_str);
+    return std::string(uuid_str);
+#endif
+}
+}  // namespace
 
 namespace sdl3cpp::services::impl {
 
@@ -25,12 +52,7 @@ void WorkflowSceneCreateStep::Execute(const WorkflowStepDefinition& step, Workfl
     WorkflowStepIoResolver resolver;
     const std::string outputKey = resolver.GetRequiredOutputKey(step, "scene_id");
 
-    // Generate a unique scene ID
-    uuid_t uuid_val;
-    uuid_generate(uuid_val);
-    char uuid_str[37];
-    uuid_unparse(uuid_val, uuid_str);
-    std::string sceneId(uuid_str);
+    std::string sceneId = generate_uuid();
 
     // Store scene_id in context
     context.Set(outputKey, sceneId);

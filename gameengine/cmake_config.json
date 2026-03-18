@@ -50,7 +50,8 @@
       "Bullet",
       "glm",
       "stb",
-      "EnTT"
+      "EnTT",
+      "assimp"
     ]
   },
   "source_exclusions": [
@@ -126,7 +127,8 @@
         "Bullet::Bullet",
         "glm::glm",
         "stb::stb",
-        "EnTT::EnTT"
+        "EnTT::EnTT",
+        "assimp::assimp"
       ],
       "compile_definitions": [],
       "name": "sdl3_app",

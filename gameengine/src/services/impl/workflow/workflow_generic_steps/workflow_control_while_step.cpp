@@ -57,6 +57,9 @@ void WorkflowControlWhileStep::Execute(
                       (maxIterations > 0 ? ", max=" + std::to_string(maxIterations) : ""));
     }
 
+    // Suppress per-step logging inside the frame loop for performance
+    context.Set<bool>("_in_frame_loop", true);
+
     // Execute loop
     uint32_t iteration = 0;
     while (context.GetBool(conditionKey, false)) {

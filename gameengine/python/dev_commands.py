@@ -54,10 +54,21 @@ CMAKE_GENERATOR = {
 DEFAULT_BUILD_DIR = GENERATOR_DEFAULT_DIR[DEFAULT_GENERATOR]
 TRACE_ENV_VAR = "DEV_COMMANDS_TRACE"
 
-DEFAULT_VCVARSALL = (
-    "C:\\Program Files\\Microsoft Visual Studio\\2022\\Professional"
-    "\\VC\\Auxiliary\\Build\\vcvarsall.bat"
-)
+def _find_vcvarsall() -> str:
+    """Auto-detect vcvarsall.bat across VS editions and versions."""
+    if not IS_WINDOWS:
+        return ""
+    base = "C:\\Program Files\\Microsoft Visual Studio"
+    # Search newest VS version first, then editions
+    for version in ["18", "2022", "2019"]:
+        for edition in ["Community", "Professional", "Enterprise", "BuildTools"]:
+            bat = f"{base}\\{version}\\{edition}\\VC\\Auxiliary\\Build\\vcvarsall.bat"
+            if os.path.isfile(bat):
+                return bat
+    return ""
+
+
+DEFAULT_VCVARSALL = _find_vcvarsall()
 
 def _sh_quote(s: str) -> str:
     """Minimal POSIX-style quoting for display purposes on non-Windows."""
@@ -184,13 +195,103 @@ def _has_cmake_cache(build_dir: str) -> bool:
 
 
 def dependencies(args: argparse.Namespace) -> None:
-    """Run Conan profile detection and install dependencies."""
+    """Run Conan profile detection and install dependencies with C++20."""
     cmd_detect = ["conan", "profile", "detect", "-f"]
-    cmd_install = ["conan", "install", ".", "-of", "build-ninja", "-b", "missing"]
+    cmd_install = ["conan", "install", ".", "-of", "build-ninja", "-b", "missing",
+                   "-s", "compiler.cppstd=20"]
     conan_install_args = _strip_leading_double_dash(args.conan_install_args)
     if conan_install_args:
         cmd_install.extend(conan_install_args)
     run_argvs([cmd_detect, cmd_install], args.dry_run)
+
+
+def generate(args: argparse.Namespace) -> None:
+    """Generate CMakeLists.txt from cmake_config.json using Jinja2."""
+    env = {"PYTHONIOENCODING": "utf-8"}
+    cmd = [
+        "python", "generate_cmake.py",
+        "--config", args.config,
+        "--output", args.output,
+    ]
+    if args.template:
+        cmd.extend(["--template", args.template])
+    if args.validate:
+        cmd.append("--validate")
+    run_argvs([cmd], args.dry_run, env_overrides=env)
+
+    # Fix CMakeUserPresets.json to only include existing preset files
+    if not args.dry_run and not args.validate:
+        _fix_cmake_user_presets()
+
+
+def _fix_cmake_user_presets() -> None:
+    """Ensure CMakeUserPresets.json only includes existing preset files."""
+    import json as json_mod
+    presets_path = Path("CMakeUserPresets.json")
+    if not presets_path.exists():
+        return
+    try:
+        data = json_mod.loads(presets_path.read_text())
+        includes = data.get("include", [])
+        valid = [p for p in includes if Path(p).exists()]
+        if len(valid) != len(includes):
+            data["include"] = valid
+            presets_path.write_text(json_mod.dumps(data, indent=4) + "\n")
+            print(f"  Fixed CMakeUserPresets.json: kept {len(valid)}/{len(includes)} includes")
+    except (json_mod.JSONDecodeError, OSError):
+        pass
+
+
+def full_build(args: argparse.Namespace) -> None:
+    """Run the full build pipeline: dependencies + generate + configure + build."""
+    print("=== Step 1/4: Installing dependencies ===")
+    deps_args = argparse.Namespace(
+        dry_run=args.dry_run,
+        conan_install_args=None,
+    )
+    dependencies(deps_args)
+
+    print("\n=== Step 2/4: Generating CMakeLists.txt ===")
+    gen_args = argparse.Namespace(
+        dry_run=args.dry_run,
+        config="cmake_config.json",
+        template=None,
+        output="CMakeLists.txt",
+        validate=False,
+    )
+    generate(gen_args)
+
+    print("\n=== Step 3/4: Configuring CMake ===")
+    conf_args = argparse.Namespace(
+        dry_run=args.dry_run,
+        preset="conan-default",
+        generator=None,
+        build_dir=None,
+        build_type=args.build_type,
+        cmake_args=["-DBUILD_SDL3_APP=ON", "-DSDL_VERSION=SDL3"],
+    )
+    configure(conf_args)
+
+    print("\n=== Step 4/4: Building ===")
+    bld_args = argparse.Namespace(
+        dry_run=args.dry_run,
+        build_dir="build-ninja/build",
+        config=args.build_type,
+        target=args.target,
+        build_tool_args=None,
+    )
+    build(bld_args)
+
+    if args.run:
+        print("\n=== Running ===")
+        run_args = argparse.Namespace(
+            dry_run=args.dry_run,
+            build_dir="build-ninja/build/" + args.build_type,
+            target=None,
+            no_sync=False,
+            args=["--bootstrap", args.bootstrap, "--game", args.game],
+        )
+        run_demo(run_args)
 
 
 def configure(args: argparse.Namespace) -> None:
@@ -1187,6 +1288,51 @@ def main() -> int:
         ),
     )
     deps.set_defaults(func=dependencies)
+
+    gen = subparsers.add_parser("generate", help="generate CMakeLists.txt from JSON config")
+    gen.add_argument(
+        "--config", default="cmake_config.json",
+        help="path to cmake_config.json (default: cmake_config.json)",
+    )
+    gen.add_argument(
+        "--template", default=None,
+        help="path to Jinja2 template (default: CMakeLists.txt.jinja2)",
+    )
+    gen.add_argument(
+        "--output", default="CMakeLists.txt",
+        help="output CMakeLists.txt path (default: CMakeLists.txt)",
+    )
+    gen.add_argument(
+        "--validate", action="store_true",
+        help="validate config without generating",
+    )
+    gen.set_defaults(func=generate)
+
+    allp = subparsers.add_parser(
+        "all", help="full pipeline: dependencies + generate + configure + build [+ run]"
+    )
+    allp.add_argument(
+        "--build-type", default="Release",
+        help="build type (default: Release)",
+    )
+    allp.add_argument(
+        "--target", default="sdl3_app",
+        help="build target (default: sdl3_app)",
+    )
+    allp.add_argument(
+        "--run", action="store_true",
+        help="run the app after building",
+    )
+    allp.add_argument(
+        "--bootstrap", default="bootstrap_windows" if IS_WINDOWS else "bootstrap_mac",
+        help="bootstrap package (auto-detected from platform)",
+    )
+    allp.add_argument(
+        "--game", default="seed",
+        help="game package to run (default: seed)",
+    )
+    allp.set_defaults(func=full_build)
+
     conf = subparsers.add_parser("configure", help="configure CMake project")
     conf.add_argument(
         "--preset",

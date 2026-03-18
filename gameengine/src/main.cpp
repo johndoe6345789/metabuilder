@@ -84,6 +84,23 @@ int main(int argc, char** argv) {
             }
         }
 
+        // Determine shader backend from bootstrap package
+        std::string shaderDir = "msl";  // default (Mac)
+        {
+            std::filesystem::path bootPkgPath = projectRoot / "packages" / bootstrapPackage / "package.json";
+            if (std::filesystem::exists(bootPkgPath)) {
+                std::ifstream bootFile(bootPkgPath);
+                nlohmann::json bootJson;
+                bootFile >> bootJson;
+                if (bootJson.contains("config") && bootJson["config"].contains("renderer")) {
+                    std::string renderer = bootJson["config"]["renderer"].get<std::string>();
+                    if (renderer != "metal") shaderDir = "spirv";
+                }
+            }
+        }
+        appContext.Set<std::string>("shader_backend", shaderDir);
+        logger->Info("Shader backend: " + shaderDir + " (bootstrap: " + bootstrapPackage + ")");
+
         // Load and execute the default workflow
         std::filesystem::path mainWorkflowPath = projectRoot / "packages" / gamePackage / defaultWorkflow;
         if (!std::filesystem::exists(mainWorkflowPath)) {
@@ -95,7 +112,11 @@ int main(int argc, char** argv) {
         sdl3cpp::services::impl::WorkflowDefinitionParser parser(logger);
         auto mainWorkflow = parser.ParseFile(mainWorkflowPath);
 
-        // Load workflow variables into context
+        // Load workflow variables into context, rewriting shader paths for platform
+        // Shader paths in workflows default to msl/ (Mac). Bootstrap determines the
+        // actual backend — if not Metal, rewrite msl/ → spirv/ and .metal → .spv
+        const bool rewriteShaders = (shaderDir != "msl");
+
         for (const auto& [name, var] : mainWorkflow.variables) {
             if (var.defaultValue.empty()) continue;
             if (var.type == "number") {
@@ -103,7 +124,17 @@ int main(int argc, char** argv) {
                     appContext.Set(name, std::stod(var.defaultValue));
                 } catch (...) {}
             } else if (var.type == "string") {
-                appContext.Set(name, var.defaultValue);
+                std::string val = var.defaultValue;
+                if (rewriteShaders && val.find("/shaders/msl/") != std::string::npos) {
+                    // Rewrite msl path to spirv: shaders/msl/foo.metal → shaders/spirv/foo.spv
+                    auto pos = val.find("/shaders/msl/");
+                    val.replace(pos, 13, "/shaders/spirv/");
+                    // .vert.metal → .vert.spv, .frag.metal → .frag.spv, .comp.metal → .comp.spv
+                    auto ext = val.rfind(".metal");
+                    if (ext != std::string::npos) val.replace(ext, 6, ".spv");
+                    logger->Info("Shader rewrite: " + name + " → " + val);
+                }
+                appContext.Set(name, val);
             } else if (var.type == "bool") {
                 appContext.Set(name, var.defaultValue == "true");
             } else {

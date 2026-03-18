@@ -19,6 +19,9 @@ std::string WorkflowGpuShaderCompileStep::GetPluginId() const {
 std::string WorkflowGpuShaderCompileStep::ResolvePath(const std::string& path) {
     if (path.empty() || path[0] != '~') return path;
     const char* home = std::getenv("HOME");
+#if defined(_WIN32)
+    if (!home) home = std::getenv("USERPROFILE");
+#endif
     if (!home) return path;
     return std::string(home) + path.substr(1);
 }
@@ -82,10 +85,14 @@ void WorkflowGpuShaderCompileStep::Execute(const WorkflowStepDefinition& step, W
     // Detect shader format from driver
     SDL_GPUShaderFormat format = SDL_GPU_SHADERFORMAT_SPIRV;
     const char* driver = SDL_GetGPUDeviceDriver(device);
+    std::string driver_name = driver ? driver : "";
     std::string format_name = "spirv";
-    if (driver && std::string(driver) == "metal") {
+    if (driver_name == "metal") {
         format = SDL_GPU_SHADERFORMAT_MSL;
         format_name = "msl";
+    } else if (driver_name == "direct3d12") {
+        format = SDL_GPU_SHADERFORMAT_DXIL;
+        format_name = "dxil";
     }
 
     // MSL uses "main0" entrypoint, SPIRV uses "main"

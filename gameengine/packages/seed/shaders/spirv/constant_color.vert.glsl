@@ -3,7 +3,7 @@
 layout(location = 0) in vec3 a_position;
 layout(location = 1) in vec4 a_color;
 
-layout(push_constant) uniform PushConstants {
+layout(set = 1, binding = 0) uniform Uniforms {
     mat4 u_modelViewProj;
 };
 

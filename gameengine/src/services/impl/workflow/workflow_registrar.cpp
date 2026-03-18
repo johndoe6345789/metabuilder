@@ -36,6 +36,10 @@
 #include "services/interfaces/workflow/rendering/workflow_frame_end_gpu_step.hpp"
 #include "services/interfaces/workflow/rendering/workflow_draw_textured_step.hpp"
 #include "services/interfaces/workflow/rendering/workflow_lighting_setup_step.hpp"
+#include "services/interfaces/workflow/rendering/workflow_spotlight_setup_step.hpp"
+#include "services/interfaces/workflow/rendering/workflow_model_load_step.hpp"
+#include "services/interfaces/workflow/rendering/workflow_draw_viewmodel_step.hpp"
+#include "services/interfaces/workflow/rendering/workflow_geometry_create_flashlight_step.hpp"
 #include "services/interfaces/workflow/rendering/workflow_draw_textured_box_step.hpp"
 #include "services/interfaces/workflow/rendering/workflow_shadow_setup_step.hpp"
 #include "services/interfaces/workflow/rendering/workflow_shadow_pass_step.hpp"
@@ -266,6 +270,10 @@ void WorkflowRegistrar::RegisterSteps(std::shared_ptr<IWorkflowStepRegistry> reg
     registry->RegisterStep(std::make_shared<WorkflowDrawTexturedStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowDrawTexturedBoxStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowLightingSetupStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowSpotlightSetupStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowModelLoadStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowDrawViewmodelStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowGeometryCreateFlashlightStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowShadowSetupStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowShadowPassStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowRenderPrepareStep>(logger_));

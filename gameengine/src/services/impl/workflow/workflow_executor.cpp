@@ -15,7 +15,10 @@ WorkflowExecutor::WorkflowExecutor(std::shared_ptr<IWorkflowStepRegistry> regist
 }
 
 void WorkflowExecutor::Execute(const WorkflowDefinition& workflow, WorkflowContext& context) {
-    if (logger_) {
+    // Only log step-by-step for the top-level workflow (not sub-workflows in frame loops)
+    const bool verbose = !context.TryGet<bool>("_in_frame_loop");
+
+    if (logger_ && verbose) {
         logger_->Trace("WorkflowExecutor", "Execute",
                        "steps=" + std::to_string(workflow.steps.size()),
                        "Starting workflow execution");
@@ -30,18 +33,17 @@ void WorkflowExecutor::Execute(const WorkflowDefinition& workflow, WorkflowConte
             }
             continue;
         }
-        if (logger_) {
+        if (logger_ && verbose) {
             logger_->Info("WorkflowExecutor: executing step " + std::to_string(i + 1) + "/" + std::to_string(workflow.steps.size()) +
                          " plugin='" + step.plugin + "' id='" + step.id + "'");
         }
         handler->Execute(step, context);
-        if (logger_) {
+        if (logger_ && verbose) {
             logger_->Info("WorkflowExecutor: completed step '" + step.plugin + "' id='" + step.id + "'");
         }
     }
-    if (logger_) {
+    if (logger_ && verbose) {
         logger_->Info("WorkflowExecutor: Workflow execution complete (" + std::to_string(workflow.steps.size()) + " steps)");
-        logger_->Trace("WorkflowExecutor", "Execute", "", "Workflow execution complete");
     }
 }
 

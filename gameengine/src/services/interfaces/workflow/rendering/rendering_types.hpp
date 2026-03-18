@@ -26,6 +26,9 @@ struct FragmentUniformData {
     float light_color[4];
     float ambient[4];
     float material[4];     // x=roughness, y=metallic, zw=unused
+    float flash_pos[4];    // xyz=position, w=inner cone cos
+    float flash_dir[4];    // xyz=direction, w=outer cone cos
+    float flash_color[4];  // rgb=color*intensity, a=range
 };
 
 }  // namespace sdl3cpp::services::rendering
