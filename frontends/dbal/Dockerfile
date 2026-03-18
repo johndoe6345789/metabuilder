@@ -45,8 +45,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       ca-certificates wget libssl3 \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy CLI binary
+# Copy CLI binary and packages
 COPY --from=cli-builder /app/cli/build/metabuilder-cli /usr/local/bin/metabuilder-cli
+COPY packages/ /app/packages/
 
 # Copy Next.js standalone output
 COPY --from=nextjs-builder /app/public ./public
@@ -58,6 +59,7 @@ ENV NODE_ENV=production
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 ENV METABUILDER_BASE_URL=http://dbal:8080
+ENV METABUILDER_PACKAGES=/app/packages
 
 EXPOSE 3000
 
