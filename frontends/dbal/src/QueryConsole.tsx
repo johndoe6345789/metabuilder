@@ -38,13 +38,15 @@ const MAX_HISTORY = 20
 const DEFAULT_TOKEN = '069e6487a710300381cd52120eab95d56d7f53beee21479cbeba9128217cbea9'
 
 const CLI_EXAMPLES = [
+  'dbal ping',
   'dbal list Snippet',
-  'dbal read Snippet <id>',
-  'dbal create Snippet title="Hello" content="world"',
-  'dbal delete Snippet <id>',
   'dbal rest pastebin pastebin Snippet',
   'dbal rest pastebin pastebin User',
-  'dbal ping',
+  'dbal create Snippet title="Hello" content="world"',
+  'auth session',
+  'tenant list',
+  'user list',
+  'package list',
 ]
 
 function parseCli(input: string): { method: HttpMethod; path: string; body?: Record<string, unknown> } | null {
@@ -267,18 +269,43 @@ export function QueryConsole() {
     executeQuery(method, path, parsedBody)
   }, [method, body, buildPath, executeQuery])
 
-  const executeCli = useCallback(() => {
-    const parsed = parseCli(cliInput)
-    if (!parsed) {
-      setResponse({
-        status: 0, statusText: 'Parse Error',
-        data: { error: `Unknown command. Try: ${CLI_EXAMPLES[0]}` },
-        url: '', timestamp: new Date().toISOString(),
+  const executeCli = useCallback(async () => {
+    if (!cliInput.trim()) return
+    setLoading(true)
+    setResponse(null)
+
+    try {
+      const basePath = process.env.__NEXT_ROUTER_BASEPATH || '/dbal'
+      const res = await fetch(`${basePath}/api/cli`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ command: cliInput, token }),
       })
-      return
+      const data: QueryResponse & { command?: string } = await res.json()
+      setResponse(data)
+
+      const entry: QueryHistoryEntry = {
+        id: crypto.randomUUID(),
+        method: 'GET',
+        path: data.command || cliInput,
+        status: data.status,
+        statusText: data.statusText,
+        timestamp: data.timestamp,
+        cli: cliInput,
+      }
+      const updated = [entry, ...history].slice(0, MAX_HISTORY)
+      setHistory(updated)
+      saveHistory(updated)
+    } catch (err) {
+      setResponse({
+        status: 0, statusText: 'Fetch Error',
+        data: { error: err instanceof Error ? err.message : 'Unknown error' },
+        url: cliInput, timestamp: new Date().toISOString(),
+      })
+    } finally {
+      setLoading(false)
     }
-    executeQuery(parsed.method, parsed.path, parsed.body, cliInput)
-  }, [cliInput, executeQuery])
+  }, [cliInput, token, history])
 
   const restoreFromHistory = useCallback((entry: QueryHistoryEntry) => {
     if (entry.cli) {
