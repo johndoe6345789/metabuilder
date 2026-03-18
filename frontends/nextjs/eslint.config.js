@@ -117,6 +117,22 @@ export default tseslint.config(
   },
 
   // ============================================================================
+  // Workflow Files - Relaxed type-constituent rules
+  // ============================================================================
+  // Workspace package types may resolve as 'error'/'any' in local builds,
+  // causing false positives for no-redundant-type-constituents
+  {
+    files: [
+      'src/lib/workflow/**/*.ts',
+      'src/components/workflow/**/*.tsx',
+      'src/app/api/setup/**/*.ts',
+    ],
+    rules: {
+      '@typescript-eslint/no-redundant-type-constituents': 'warn',
+    },
+  },
+
+  // ============================================================================
   // Test Files - Parser Configuration (no project type-checking)
   // ============================================================================
   // Test files are excluded from type-aware linting to avoid tsconfig conflicts
