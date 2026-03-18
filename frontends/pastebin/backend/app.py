@@ -840,12 +840,14 @@ def login():
 @app.route('/api/auth/me', methods=['GET'])
 @auth_required
 def get_me():
-    # Try DBAL first for the full user profile
+    # Try DBAL first for the full user profile (response is {data: {...}, success: bool})
     dbal_resp = dbal_request('GET', f'/{DBAL_TENANT_ID}/core/User/{g.user_id}')
     if dbal_resp and dbal_resp.status_code == 200:
         try:
-            profile = dbal_resp.json()
-            return jsonify({'id': profile.get('id', g.user_id), 'username': profile.get('username', '')})
+            body = dbal_resp.json()
+            profile = body.get('data', body)  # unwrap DBAL envelope
+            if profile.get('username'):
+                return jsonify({'id': profile.get('id', g.user_id), 'username': profile['username']})
         except Exception:
             pass
 
