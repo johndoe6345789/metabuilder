@@ -142,7 +142,7 @@ export function SnippetCard({
 
   return (
     <Card
-      className={`group transition-all cursor-pointer${isSelected ? ` border-accent ${styles.cardSelected}` : ''}`}
+      className={`${styles.card} group transition-all cursor-pointer${isSelected ? ` border-accent ${styles.cardSelected}` : ''}`}
       onClick={handleView}
       data-testid={`snippet-card-${snippet.id}`}
       role="article"

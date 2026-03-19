@@ -32,7 +32,13 @@ export function CodeTerminal({ language, files, entryPoint, controller }: CodeTe
   const terminalEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    const el = terminalEndRef.current
+    if (el) {
+      const container = el.closest('[data-testid="terminal-output-area"]')
+      if (container) {
+        container.scrollTop = container.scrollHeight
+      }
+    }
   }, [lines])
 
   const hasErrors = lines.some((line) => line.type === 'error')
