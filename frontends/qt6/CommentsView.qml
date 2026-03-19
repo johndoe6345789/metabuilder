@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QmlComponents 1.0
 import "qmllib/dbal"
+import "qmllib/MetaBuilder" as Meta
 
 Rectangle {
     color: "transparent"
@@ -10,7 +11,6 @@ Rectangle {
     // ── DBAL connection ──
     DBALProvider { id: dbal }
 
-    property string newCommentText: ""
     property int sortMode: 0  // 0=Newest, 1=Oldest, 2=Most Liked
 
     // ── DBAL data loading ──
@@ -71,65 +71,46 @@ Rectangle {
         id: commentsModel
 
         ListElement {
-            commentId: 1
-            username: "alice"
-            initials: "AL"
+            commentId: 1; username: "alice"; initials: "AL"
             timestamp: "2026-03-18 09:42"
             body: "Just deployed the new workflow engine -- the event-driven architecture is really clean. Great work on the JSON config approach!"
-            likes: 12
-            liked: false
+            likes: 12; liked: false
         }
         ListElement {
-            commentId: 2
-            username: "demo"
-            initials: "DE"
+            commentId: 2; username: "demo"; initials: "DE"
             timestamp: "2026-03-18 09:15"
             body: "Has anyone tested the Redis caching layer with the read-through pattern? Seeing some impressive latency improvements."
-            likes: 8
-            liked: true
+            likes: 8; liked: true
         }
         ListElement {
-            commentId: 3
-            username: "bob"
-            initials: "BO"
+            commentId: 3; username: "bob"; initials: "BO"
             timestamp: "2026-03-17 22:30"
             body: "The FakeMUI component library is coming along nicely. 167 components and counting!"
-            likes: 5
-            liked: false
+            likes: 5; liked: false
         }
         ListElement {
-            commentId: 4
-            username: "charlie"
-            initials: "CH"
+            commentId: 4; username: "charlie"; initials: "CH"
             timestamp: "2026-03-17 18:05"
             body: "Quick question: is there a recommended way to add custom seed data for a new package? The declarative JSON approach in dbal/shared/seeds/database looks straightforward."
-            likes: 3
-            liked: false
+            likes: 3; liked: false
         }
         ListElement {
-            commentId: 5
-            username: "demo"
-            initials: "DE"
+            commentId: 5; username: "demo"; initials: "DE"
             timestamp: "2026-03-17 14:20"
             body: "Updated the forum package schema to include threaded replies. Pull request is up for review."
-            likes: 15
-            liked: false
+            likes: 15; liked: false
         }
         ListElement {
-            commentId: 6
-            username: "eve"
-            initials: "EV"
+            commentId: 6; username: "eve"; initials: "EV"
             timestamp: "2026-03-16 11:00"
             body: "The Qt6 frontend is shaping up well. Love the CCard and CListItem components -- consistent styling across all views."
-            likes: 7
-            liked: false
+            likes: 7; liked: false
         }
     }
 
-    function addComment() {
-        if (newCommentText.trim().length === 0) return
+    function addComment(text) {
+        if (text.length === 0) return
         var initials = appWindow.currentUser.substring(0, 2).toUpperCase()
-        var text = newCommentText.trim()
         commentsModel.insert(0, {
             commentId: commentsModel.count + 1,
             username: appWindow.currentUser,
@@ -140,7 +121,6 @@ Rectangle {
             liked: false
         })
         postCommentToDBAL(text)
-        newCommentText = ""
     }
 
     function canDelete(commentUser) {
@@ -184,119 +164,43 @@ Rectangle {
             }
 
             // New comment input
-            CCard {
-                Layout.fillWidth: true
-
-                CText { variant: "subtitle1"; text: "Post a Comment" }
-
-                CTextField {
-                    Layout.fillWidth: true
-                    label: "Your comment"
-                    placeholderText: "Write your thoughts..."
-                    text: newCommentText
-                    onTextChanged: newCommentText = text
-                }
-
-                FlexRow {
-                    Layout.fillWidth: true
-                    spacing: 8
-                    Item { Layout.fillWidth: true }
-                    CButton {
-                        text: "Post Comment"
-                        variant: "primary"
-                        size: "sm"
-                        enabled: newCommentText.trim().length > 0
-                        onClicked: addComment()
-                    }
-                }
+            Meta.CCommentInput {
+                onSubmit: function(text) { addComment(text) }
             }
 
             // Comments list
             Repeater {
                 model: commentsModel
 
-                delegate: CCard {
-                    Layout.fillWidth: true
+                delegate: Meta.CCommentCard {
+                    comment: ({
+                        username: model.username,
+                        initials: model.initials,
+                        timestamp: model.timestamp,
+                        body: model.body,
+                        likes: model.likes,
+                        liked: model.liked,
+                        canDelete: canDelete(model.username)
+                    })
+                    currentUser: appWindow.currentUser
 
-                    // Comment header: avatar, user, time
-                    FlexRow {
-                        Layout.fillWidth: true
-                        spacing: 12
-
-                        CAvatar {
-                            initials: model.initials
+                    onLiked: {
+                        var newLikes;
+                        if (model.liked) {
+                            newLikes = model.likes - 1;
+                            commentsModel.setProperty(index, "likes", newLikes)
+                            commentsModel.setProperty(index, "liked", false)
+                        } else {
+                            newLikes = model.likes + 1;
+                            commentsModel.setProperty(index, "likes", newLikes)
+                            commentsModel.setProperty(index, "liked", true)
                         }
-
-                        ColumnLayout {
-                            Layout.fillWidth: true
-                            spacing: 2
-
-                            FlexRow {
-                                spacing: 8
-                                CText {
-                                    variant: "subtitle1"
-                                    text: model.username
-                                }
-                                CChip {
-                                    text: model.username === appWindow.currentUser ? "You" : ""
-                                    chipColor: Theme.primary
-                                    visible: model.username === appWindow.currentUser
-                                }
-                            }
-
-                            CText {
-                                variant: "caption"
-                                text: model.timestamp
-                            }
-                        }
+                        likeCommentOnDBAL(model.commentId, newLikes)
                     }
 
-                    // Comment body
-                    CText {
-                        Layout.fillWidth: true
-                        variant: "body1"
-                        text: model.body
-                        wrapMode: Text.WordWrap
-                    }
-
-                    CDivider { Layout.fillWidth: true }
-
-                    // Actions row
-                    FlexRow {
-                        Layout.fillWidth: true
-                        spacing: 8
-
-                        CButton {
-                            text: model.liked ? "Liked (" + model.likes + ")" : "Like (" + model.likes + ")"
-                            variant: model.liked ? "primary" : "ghost"
-                            size: "sm"
-                            onClicked: {
-                                var newLikes;
-                                if (model.liked) {
-                                    newLikes = model.likes - 1;
-                                    commentsModel.setProperty(index, "likes", newLikes)
-                                    commentsModel.setProperty(index, "liked", false)
-                                } else {
-                                    newLikes = model.likes + 1;
-                                    commentsModel.setProperty(index, "likes", newLikes)
-                                    commentsModel.setProperty(index, "liked", true)
-                                }
-                                likeCommentOnDBAL(model.commentId, newLikes)
-                            }
-                        }
-
-                        Item { Layout.fillWidth: true }
-
-                        CButton {
-                            text: "Delete"
-                            variant: "danger"
-                            size: "sm"
-                            visible: canDelete(model.username)
-                            onClicked: {
-                                deleteCommentOnDBAL(model.commentId)
-                                commentsModel.remove(index)
-                            }
-                        }
+                    onDeleted: {
+                        deleteCommentOnDBAL(model.commentId)
+                        commentsModel.remove(index)
                     }
                 }
             }

@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QmlComponents 1.0
 import "qmllib/dbal"
+import "qmllib/MetaBuilder"
 
 Rectangle {
     id: root
@@ -32,7 +33,7 @@ Rectangle {
 
     Component.onCompleted: loadPlatformStatus()
 
-    // ── MD3-inspired palette ──
+    // MD3-inspired palette
     readonly property bool isDark: Theme.mode === "dark"
     readonly property color accentBlue: "#6366F1"
     readonly property color accentCyan: "#06B6D4"
@@ -42,15 +43,10 @@ Rectangle {
 
     // MD3 tonal surfaces
     readonly property color surfaceContainer: isDark ? Qt.rgba(1, 1, 1, 0.05) : Qt.rgba(0.31, 0.31, 0.44, 0.06)
-    readonly property color surfaceContainerHigh: isDark ? Qt.rgba(1, 1, 1, 0.08) : Qt.rgba(0.31, 0.31, 0.44, 0.10)
-    readonly property color surfaceContainerHighest: isDark ? Qt.rgba(1, 1, 1, 0.12) : Qt.rgba(0.31, 0.31, 0.44, 0.14)
     readonly property color onSurface: Theme.text
     readonly property color onSurfaceVariant: Theme.textSecondary
-    readonly property color outline: Theme.border
-    readonly property color outlineVariant: isDark ? Qt.rgba(1, 1, 1, 0.06) : Qt.rgba(0, 0, 0, 0.08)
-    readonly property color primaryContainer: isDark ? Qt.rgba(accentBlue.r, accentBlue.g, accentBlue.b, 0.15) : Qt.rgba(accentBlue.r, accentBlue.g, accentBlue.b, 0.12)
 
-    // ── Data ──
+    // Data models
     property var levels: [
         { level: 1, name: "Guest",     accent: "#94A3B8", desc: "Explore the platform. Component library, storybook, and public API.", tags: ["Landing", "Storybook", "Docs"] },
         { level: 2, name: "User",      accent: accentBlue, desc: "Your space. Dashboard, profile, forum, gallery, and packages.", tags: ["Dashboard", "Profile", "Forum", "Gallery"] },
@@ -77,6 +73,14 @@ Rectangle {
         { name: "Media Service",   status: "standby" }
     ]
 
+    property var quickCreds: [
+        { user: "demo",  pass: "demo",     label: "User",      level: 2, accent: accentBlue },
+        { user: "mod",   pass: "mod",      label: "Moderator", level: 3, accent: accentCyan },
+        { user: "admin", pass: "admin",    label: "Admin",     level: 4, accent: accentAmber },
+        { user: "god",   pass: "god123",   label: "God",       level: 5, accent: accentViolet },
+        { user: "super", pass: "super123", label: "Super God", level: 6, accent: accentRose }
+    ]
+
     ScrollView {
         anchors.fill: parent
         clip: true
@@ -86,168 +90,28 @@ Rectangle {
             width: parent.width
             spacing: 0
 
-            // Top breathing room
             Item { Layout.preferredHeight: 8 }
 
-            // ════════════════════════════════════════════════════════
-            // HERO
-            // ════════════════════════════════════════════════════════
-            Rectangle {
+            // Hero
+            CHeroSection {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 400
-                color: "transparent"
-
-                // Blue gradient wash
-                Rectangle {
-                    anchors.fill: parent
-                    gradient: Gradient {
-                        GradientStop { position: 0.0; color: isDark ? Qt.rgba(0.39, 0.4, 0.95, 0.06) : Qt.rgba(0.30, 0.40, 0.90, 0.12) }
-                        GradientStop { position: 0.7; color: isDark ? "transparent" : Qt.rgba(0.35, 0.45, 0.88, 0.04) }
-                        GradientStop { position: 1.0; color: "transparent" }
-                    }
-                }
-
-                ColumnLayout {
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.verticalCenterOffset: 16
-                    width: Math.min(parent.width - 80, 720)
-                    spacing: 16
-
-                    // Version pill — MD3 small chip
-                    Rectangle {
-                        Layout.alignment: Qt.AlignHCenter
-                        width: vLabel.implicitWidth + 24
-                        height: 28
-                        radius: 14
-                        color: primaryContainer
-
-                        CText {
-                            id: vLabel
-                            anchors.centerIn: parent
-                            text: "v" + platformVersion
-                            font.family: "monospace"
-                            font.pixelSize: 12
-                            color: accentBlue
-                        }
-                    }
-
-                    CText {
-                        text: "MetaBuilder"
-                        font.pixelSize: 52
-                        font.weight: Font.Black
-                        font.letterSpacing: -2
-                        color: onSurface
-                        Layout.fillWidth: true
-                        horizontalAlignment: Text.AlignHCenter
-                    }
-
-                    CText {
-                        text: "The universal platform for building data-driven applications."
-                        font.pixelSize: 17
-                        color: onSurfaceVariant
-                        Layout.fillWidth: true
-                        horizontalAlignment: Text.AlignHCenter
-                    }
-
-                    CText {
-                        text: "95% JSON config  \u00B7  5% infrastructure  \u00B7  Desktop + Web + CLI"
-                        font.pixelSize: 13
-                        font.family: "monospace"
-                        color: onSurfaceVariant
-                        opacity: isDark ? 0.4 : 0.55
-                        Layout.fillWidth: true
-                        horizontalAlignment: Text.AlignHCenter
-                    }
-
-                    RowLayout {
-                        Layout.alignment: Qt.AlignHCenter
-                        Layout.topMargin: 20
-                        spacing: 12
-
-                        CButton {
-                            text: "Get Started"
-                            variant: "primary"
-                            size: "lg"
-                            onClicked: appWindow.currentView = "login"
-                        }
-                        CButton {
-                            text: "Storybook"
-                            variant: "ghost"
-                            size: "lg"
-                            onClicked: appWindow.currentView = "storybook"
-                        }
-                        CButton {
-                            text: "Packages"
-                            variant: "ghost"
-                            size: "lg"
-                            onClicked: appWindow.currentView = "marketplace"
-                        }
-                    }
-                }
+                platformVersion: root.platformVersion
+                isDark: root.isDark
+                onGetStarted: appWindow.currentView = "login"
+                onOpenStorybook: appWindow.currentView = "storybook"
+                onOpenPackages: appWindow.currentView = "marketplace"
             }
 
-            // ════════════════════════════════════════════════════════
-            // STATS
-            // ════════════════════════════════════════════════════════
-            Rectangle {
+            // Stats
+            CStatsStrip {
                 Layout.fillWidth: true
-                Layout.preferredHeight: 88
-                color: surfaceContainer
-
-                RowLayout {
-                    anchors.fill: parent
-                    anchors.leftMargin: 60
-                    anchors.rightMargin: 60
-                    spacing: 0
-
-                    Repeater {
-                        model: [
-                            { label: "USERS",     value: publicStats.users },
-                            { label: "PACKAGES",  value: publicStats.packages },
-                            { label: "WORKFLOWS", value: publicStats.workflows },
-                            { label: "BACKENDS",  value: publicStats.backends }
-                        ]
-                        delegate: Item {
-                            Layout.fillWidth: true
-                            Layout.fillHeight: true
-
-                            RowLayout {
-                                anchors.centerIn: parent
-                                spacing: 10
-
-                                CText {
-                                    text: modelData.value
-                                    font.pixelSize: 24
-                                    font.weight: Font.Bold
-                                    font.family: "monospace"
-                                    color: accentBlue
-                                }
-                                CText {
-                                    text: modelData.label
-                                    font.pixelSize: 10
-                                    font.family: "monospace"
-                                    font.letterSpacing: 2
-                                    color: onSurfaceVariant
-                                }
-                            }
-
-                            Rectangle {
-                                visible: index < 3
-                                anchors.right: parent.right
-                                anchors.verticalCenter: parent.verticalCenter
-                                width: 1
-                                height: 32
-                                color: outlineVariant
-                            }
-                        }
-                    }
-                }
+                stats: root.publicStats
+                accentColor: accentBlue
+                isDark: root.isDark
             }
 
-            // ════════════════════════════════════════════════════════
-            // ACCESS LEVELS
-            // ════════════════════════════════════════════════════════
+            // Access Levels
             ColumnLayout {
                 Layout.fillWidth: true
                 Layout.topMargin: 48
@@ -257,8 +121,7 @@ Rectangle {
 
                 CText {
                     text: "Access Levels"
-                    font.pixelSize: 22
-                    font.weight: Font.Bold
+                    font.pixelSize: 22; font.weight: Font.Bold
                     color: onSurface
                     Layout.fillWidth: true
                     horizontalAlignment: Text.AlignHCenter
@@ -267,126 +130,33 @@ Rectangle {
                 GridLayout {
                     Layout.fillWidth: true
                     columns: Math.max(1, Math.min(5, Math.floor((parent.width + 12) / 220)))
-                    columnSpacing: 12
-                    rowSpacing: 12
+                    columnSpacing: 12; rowSpacing: 12
 
                     Repeater {
                         model: levels
-                        delegate: Rectangle {
+                        delegate: CLevelCard {
                             Layout.fillWidth: true
                             Layout.preferredHeight: 190
-                            radius: 16
-                            clip: true
-                            color: lvlMA.containsMouse ? surfaceContainerHighest : surfaceContainerHigh
-                            border.color: lvlMA.containsMouse ? modelData.accent : outlineVariant
-                            border.width: 1
-
-                            Behavior on color { ColorAnimation { duration: 200 } }
-                            Behavior on border.color { ColorAnimation { duration: 200 } }
-
-                            MouseArea {
-                                id: lvlMA
-                                anchors.fill: parent
-                                hoverEnabled: true
-                                cursorShape: Qt.PointingHandCursor
-                                onClicked: {
-                                    var views = ["frontpage", "dashboard", "admin", "god-panel", "supergod"]
-                                    if (modelData.level <= appWindow.currentLevel)
-                                        appWindow.currentView = views[modelData.level - 1]
-                                    else
-                                        appWindow.currentView = "login"
-                                }
-                            }
-
-                            ColumnLayout {
-                                id: lvlContent
-                                anchors.fill: parent
-                                anchors.margins: 16
-                                spacing: 6
-
-                                RowLayout {
-                                    spacing: 10
-
-                                    // MD3 small badge
-                                    Rectangle {
-                                        width: 28
-                                        height: 28
-                                        radius: 8
-                                        color: Qt.rgba(modelData.accent.r, modelData.accent.g, modelData.accent.b, isDark ? 0.2 : 0.15)
-
-                                        CText {
-                                            anchors.centerIn: parent
-                                            text: modelData.level.toString()
-                                            font.pixelSize: 12
-                                            font.weight: Font.Bold
-                                            color: modelData.accent
-                                        }
-                                    }
-
-                                    CText {
-                                        text: modelData.name
-                                        font.pixelSize: 16
-                                        font.weight: Font.DemiBold
-                                        color: onSurface
-                                    }
-
-                                    Item { Layout.fillWidth: true }
-
-                                    CText {
-                                        visible: modelData.level > appWindow.currentLevel
-                                        text: "\uD83D\uDD12"
-                                        font.pixelSize: 14
-                                        opacity: isDark ? 0.3 : 0.4
-                                    }
-                                }
-
-                                CText {
-                                    text: modelData.desc
-                                    font.pixelSize: 13
-                                    wrapMode: Text.Wrap
-                                    Layout.fillWidth: true
-                                    color: onSurfaceVariant
-                                    lineHeight: 1.4
-                                }
-
-                                Item { Layout.fillHeight: true }
-
-                                Flow {
-                                    Layout.fillWidth: true
-                                    spacing: 6
-
-                                    Repeater {
-                                        model: modelData.tags
-                                        Rectangle {
-                                            width: tText.implicitWidth + 16
-                                            height: 24
-                                            radius: 8
-                                            color: Qt.rgba(
-                                                levels[index].accent.r,
-                                                levels[index].accent.g,
-                                                levels[index].accent.b,
-                                                isDark ? 0.12 : 0.10)
-
-                                            CText {
-                                                id: tText
-                                                anchors.centerIn: parent
-                                                text: modelData
-                                                font.pixelSize: 11
-                                                font.weight: Font.Medium
-                                                color: levels[index].accent
-                                            }
-                                        }
-                                    }
-                                }
+                            level: modelData.level
+                            name: modelData.name
+                            accent: modelData.accent
+                            desc: modelData.desc
+                            tags: modelData.tags
+                            locked: modelData.level > appWindow.currentLevel
+                            isDark: root.isDark
+                            onClicked: {
+                                var views = ["frontpage", "dashboard", "admin", "god-panel", "supergod"]
+                                if (modelData.level <= appWindow.currentLevel)
+                                    appWindow.currentView = views[modelData.level - 1]
+                                else
+                                    appWindow.currentView = "login"
                             }
                         }
                     }
                 }
             }
 
-            // ════════════════════════════════════════════════════════
-            // TECH STACK
-            // ════════════════════════════════════════════════════════
+            // Tech Stack
             ColumnLayout {
                 Layout.fillWidth: true
                 Layout.topMargin: 48
@@ -396,8 +166,7 @@ Rectangle {
 
                 CText {
                     text: "Stack"
-                    font.pixelSize: 22
-                    font.weight: Font.Bold
+                    font.pixelSize: 22; font.weight: Font.Bold
                     color: onSurface
                     Layout.fillWidth: true
                     horizontalAlignment: Text.AlignHCenter
@@ -406,56 +175,22 @@ Rectangle {
                 GridLayout {
                     Layout.fillWidth: true
                     columns: Math.max(1, Math.min(3, Math.floor((parent.width + 12) / 260)))
-                    columnSpacing: 12
-                    rowSpacing: 12
+                    columnSpacing: 12; rowSpacing: 12
 
                     Repeater {
                         model: techStack
-                        delegate: Rectangle {
+                        delegate: CTechCard {
                             Layout.fillWidth: true
-                            Layout.preferredHeight: 72
-                            radius: 12
-                            color: surfaceContainerHigh
-                            border.color: outlineVariant
-                            border.width: 1
-
-                            RowLayout {
-                                anchors.fill: parent
-                                anchors.margins: 14
-                                spacing: 12
-
-                                Rectangle {
-                                    width: 4
-                                    height: 36
-                                    radius: 2
-                                    color: modelData.accent
-                                }
-
-                                ColumnLayout {
-                                    Layout.fillWidth: true
-                                    spacing: 3
-
-                                    CText {
-                                        text: modelData.name
-                                        font.pixelSize: 14
-                                        font.weight: Font.DemiBold
-                                        color: onSurface
-                                    }
-                                    CText {
-                                        text: modelData.desc
-                                        font.pixelSize: 12
-                                        color: onSurfaceVariant
-                                    }
-                                }
-                            }
+                            name: modelData.name
+                            desc: modelData.desc
+                            accent: modelData.accent
+                            isDark: root.isDark
                         }
                     }
                 }
             }
 
-            // ════════════════════════════════════════════════════════
-            // STATUS
-            // ════════════════════════════════════════════════════════
+            // Status
             ColumnLayout {
                 Layout.fillWidth: true
                 Layout.topMargin: 48
@@ -465,8 +200,7 @@ Rectangle {
 
                 CText {
                     text: "Status"
-                    font.pixelSize: 22
-                    font.weight: Font.Bold
+                    font.pixelSize: 22; font.weight: Font.Bold
                     color: onSurface
                     Layout.fillWidth: true
                     horizontalAlignment: Text.AlignHCenter
@@ -478,51 +212,17 @@ Rectangle {
 
                     Repeater {
                         model: services
-                        delegate: Rectangle {
+                        delegate: CServiceStatus {
                             Layout.fillWidth: true
-                            Layout.preferredHeight: 56
-                            radius: 12
-                            color: surfaceContainerHigh
-                            border.color: outlineVariant
-                            border.width: 1
-
-                            RowLayout {
-                                anchors.fill: parent
-                                anchors.leftMargin: 14
-                                anchors.rightMargin: 14
-                                spacing: 10
-
-                                Rectangle {
-                                    width: 8
-                                    height: 8
-                                    radius: 4
-                                    color: modelData.status === "online" ? accentBlue :
-                                           modelData.status === "standby" ? accentAmber : accentRose
-                                }
-
-                                CText {
-                                    text: modelData.name
-                                    font.pixelSize: 13
-                                    color: onSurface
-                                    Layout.fillWidth: true
-                                }
-
-                                CText {
-                                    text: modelData.status
-                                    font.pixelSize: 11
-                                    font.family: "monospace"
-                                    color: modelData.status === "online" ? accentBlue :
-                                           modelData.status === "standby" ? accentAmber : accentRose
-                                }
-                            }
+                            name: modelData.name
+                            status: modelData.status
+                            isDark: root.isDark
                         }
                     }
                 }
             }
 
-            // ════════════════════════════════════════════════════════
-            // QUICK LOGIN
-            // ════════════════════════════════════════════════════════
+            // Quick Access
             ColumnLayout {
                 Layout.fillWidth: true
                 Layout.topMargin: 48
@@ -532,8 +232,7 @@ Rectangle {
 
                 CText {
                     text: "Quick Access"
-                    font.pixelSize: 22
-                    font.weight: Font.Bold
+                    font.pixelSize: 22; font.weight: Font.Bold
                     color: onSurface
                     Layout.fillWidth: true
                     horizontalAlignment: Text.AlignHCenter
@@ -544,87 +243,22 @@ Rectangle {
                     spacing: 10
 
                     Repeater {
-                        model: [
-                            { user: "demo",  pass: "demo",     label: "User",      level: 2, accent: accentBlue },
-                            { user: "mod",   pass: "mod",      label: "Moderator", level: 3, accent: accentCyan },
-                            { user: "admin", pass: "admin",    label: "Admin",     level: 4, accent: accentAmber },
-                            { user: "god",   pass: "god123",   label: "God",       level: 5, accent: accentViolet },
-                            { user: "super", pass: "super123", label: "Super God", level: 6, accent: accentRose }
-                        ]
-                        delegate: Rectangle {
+                        model: quickCreds
+                        delegate: CQuickLoginCard {
                             Layout.fillWidth: true
-                            Layout.preferredHeight: 60
-                            radius: 16
-                            color: cMA.containsMouse ? surfaceContainerHighest : surfaceContainerHigh
-                            border.color: cMA.containsMouse ? modelData.accent : outlineVariant
-                            border.width: 1
-
-                            Behavior on color { ColorAnimation { duration: 150 } }
-                            Behavior on border.color { ColorAnimation { duration: 150 } }
-
-                            MouseArea {
-                                id: cMA
-                                anchors.fill: parent
-                                hoverEnabled: true
-                                cursorShape: Qt.PointingHandCursor
-                                onClicked: appWindow.login(modelData.user, modelData.pass)
-                            }
-
-                            RowLayout {
-                                anchors.fill: parent
-                                anchors.leftMargin: 14
-                                anchors.rightMargin: 14
-                                spacing: 12
-
-                                Rectangle {
-                                    width: 32
-                                    height: 32
-                                    radius: 10
-                                    color: Qt.rgba(modelData.accent.r, modelData.accent.g, modelData.accent.b, isDark ? 0.2 : 0.15)
-
-                                    CText {
-                                        anchors.centerIn: parent
-                                        text: modelData.level.toString()
-                                        font.pixelSize: 13
-                                        font.weight: Font.Bold
-                                        color: modelData.accent
-                                    }
-                                }
-
-                                ColumnLayout {
-                                    Layout.fillWidth: true
-                                    spacing: 1
-
-                                    CText {
-                                        text: modelData.label
-                                        font.pixelSize: 14
-                                        font.weight: Font.DemiBold
-                                        color: onSurface
-                                    }
-                                    CText {
-                                        text: modelData.user + " / " + modelData.pass
-                                        font.pixelSize: 11
-                                        font.family: "monospace"
-                                        color: onSurfaceVariant
-                                    }
-                                }
-
-                                CText {
-                                    text: "\u2192"
-                                    font.pixelSize: 18
-                                    color: onSurfaceVariant
-                                    opacity: cMA.containsMouse ? 1.0 : 0.3
-                                    Behavior on opacity { NumberAnimation { duration: 150 } }
-                                }
-                            }
+                            username: modelData.user
+                            password: modelData.pass
+                            label: modelData.label
+                            level: modelData.level
+                            accent: modelData.accent
+                            isDark: root.isDark
+                            onLogin: appWindow.login(modelData.user, modelData.pass)
                         }
                     }
                 }
             }
 
-            // ════════════════════════════════════════════════════════
-            // FOOTER
-            // ════════════════════════════════════════════════════════
+            // Footer
             Item { Layout.preferredHeight: 48 }
 
             Rectangle {

@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QmlComponents 1.0
+import MetaBuilder 1.0
 
 Rectangle {
     id: godPanel
@@ -64,6 +65,27 @@ Rectangle {
         "#94A3B8", accentBlue, accentCyan, accentViolet, accentRose
     ]
 
+    // Level data for the guide tab
+    readonly property var levelData: [
+        { level: "Level 1 - Public", role: "public", accentIndex: 0, desc: "Landing page, public content, registration. No authentication required. Read-only access to published pages and packages." },
+        { level: "Level 2 - User", role: "user", accentIndex: 1, desc: "Authenticated user dashboard. Access to forum, gallery, guestbook, blog, profile. Personal content creation and community interaction." },
+        { level: "Level 3 - Admin", role: "admin", accentIndex: 2, desc: "Django-style entity admin panel. CRUD operations on all entities, audit logs, analytics, watchtower monitoring. User management within tenant." },
+        { level: "Level 4 - God Builder", role: "god", accentIndex: 3, desc: "Full builder cockpit (this panel). Schema editor, workflow designer, Lua scripting, page routing, component hierarchy, CSS classes, dropdown configs, database management, and system settings." },
+        { level: "Level 5 - Super God", role: "supergod", accentIndex: 4, desc: "Cross-tenant platform control. Infrastructure management, deployment orchestration, multi-tenant provisioning, global configuration, and platform-wide observability." }
+    ]
+
+    // Config stat data for the guide tab
+    readonly property var configStatData: [
+        { label: "Schemas", value: configCounts.schemas.toString(), accent: accentBlue },
+        { label: "Workflows", value: configCounts.workflows.toString(), accent: accentCyan },
+        { label: "Lua Scripts", value: configCounts.luaScripts.toString(), accent: accentViolet },
+        { label: "Packages", value: configCounts.packages.toString(), accent: accentBlue },
+        { label: "Pages", value: configCounts.pages.toString(), accent: accentCyan },
+        { label: "Components", value: configCounts.components.toString(), accent: accentViolet },
+        { label: "CSS Classes", value: configCounts.cssClasses.toString(), accent: accentAmber },
+        { label: "DB Backends", value: configCounts.dbBackends.toString(), accent: accentRose }
+    ]
+
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 24
@@ -72,88 +94,14 @@ Rectangle {
         // ════════════════════════════════════════════════════════
         // HEADER
         // ════════════════════════════════════════════════════════
-        Rectangle {
+        CGodPanelHeader {
             Layout.fillWidth: true
-            Layout.preferredHeight: headerCol.implicitHeight + 40
-            radius: 16
-            clip: true
-            color: surfaceContainerHigh
-            border.width: 1
-            border.color: outlineVariant
-
-            // Subtle gradient wash
-            Rectangle {
-                anchors.fill: parent
-                radius: parent.radius
-                gradient: Gradient {
-                    GradientStop { position: 0.0; color: isDark ? Qt.rgba(0.39, 0.4, 0.95, 0.04) : Qt.rgba(0.30, 0.40, 0.90, 0.08) }
-                    GradientStop { position: 1.0; color: "transparent" }
-                }
-            }
-
-            ColumnLayout {
-                id: headerCol
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.top: parent.top
-                anchors.margins: 20
-                spacing: 14
-
-                RowLayout {
-                    Layout.fillWidth: true
-                    spacing: 12
-
-                    CText {
-                        text: "God Panel"
-                        font.pixelSize: 28
-                        font.weight: Font.Bold
-                        font.letterSpacing: -0.5
-                        color: onSurface
-                    }
-
-                    CBadge {
-                        text: "Level 4"
-                        variant: "primary"
-                    }
-
-                    CStatusBadge { status: "success"; text: "Active" }
-
-                    Item { Layout.fillWidth: true }
-
-                    CButton {
-                        text: "Level 1"
-                        variant: "ghost"
-                        size: "sm"
-                        onClicked: appWindow.currentView = "frontpage"
-                    }
-                    CButton {
-                        text: "Level 2"
-                        variant: "ghost"
-                        size: "sm"
-                        onClicked: appWindow.currentView = "dashboard"
-                    }
-                    CButton {
-                        text: "Level 3"
-                        variant: "ghost"
-                        size: "sm"
-                        onClicked: appWindow.currentView = "admin"
-                    }
-                }
-
-                // Config summary chips — tonal indigo
-                Flow {
-                    Layout.fillWidth: true
-                    spacing: 8
-
-                    CChip { text: configCounts.schemas + " Schemas"; variant: "primary" }
-                    CChip { text: configCounts.workflows + " Workflows"; variant: "primary" }
-                    CChip { text: configCounts.luaScripts + " Lua Scripts"; variant: "primary" }
-                    CChip { text: configCounts.packages + " Packages"; variant: "primary" }
-                    CChip { text: configCounts.pages + " Pages"; variant: "primary" }
-                    CChip { text: configCounts.components + " Components"; variant: "primary" }
-                    CChip { text: configCounts.users + " Users"; variant: "primary" }
-                    CChip { text: configCounts.dbBackends + " DB Backends"; variant: "primary" }
-                }
+            configCounts: godPanel.configCounts
+            isDark: godPanel.isDark
+            onNavigateLevel: function(level) {
+                if (level === 1) appWindow.currentView = "frontpage"
+                else if (level === 2) appWindow.currentView = "dashboard"
+                else if (level === 3) appWindow.currentView = "admin"
             }
         }
 
@@ -224,7 +172,7 @@ Rectangle {
                             }
                         }
 
-                        // Level cards — MD3 cards with colored accent bars
+                        // Level cards
                         CText {
                             text: "Access Levels"
                             font.pixelSize: 18
@@ -235,121 +183,19 @@ Rectangle {
                         }
 
                         Repeater {
-                            model: [
-                                {
-                                    level: "Level 1 - Public",
-                                    role: "public",
-                                    accentIndex: 0,
-                                    desc: "Landing page, public content, registration. No authentication required. Read-only access to published pages and packages."
-                                },
-                                {
-                                    level: "Level 2 - User",
-                                    role: "user",
-                                    accentIndex: 1,
-                                    desc: "Authenticated user dashboard. Access to forum, gallery, guestbook, blog, profile. Personal content creation and community interaction."
-                                },
-                                {
-                                    level: "Level 3 - Admin",
-                                    role: "admin",
-                                    accentIndex: 2,
-                                    desc: "Django-style entity admin panel. CRUD operations on all entities, audit logs, analytics, watchtower monitoring. User management within tenant."
-                                },
-                                {
-                                    level: "Level 4 - God Builder",
-                                    role: "god",
-                                    accentIndex: 3,
-                                    desc: "Full builder cockpit (this panel). Schema editor, workflow designer, Lua scripting, page routing, component hierarchy, CSS classes, dropdown configs, database management, and system settings."
-                                },
-                                {
-                                    level: "Level 5 - Super God",
-                                    role: "supergod",
-                                    accentIndex: 4,
-                                    desc: "Cross-tenant platform control. Infrastructure management, deployment orchestration, multi-tenant provisioning, global configuration, and platform-wide observability."
-                                }
-                            ]
-
-                            delegate: Rectangle {
+                            model: levelData
+                            delegate: CLevelReferenceCard {
                                 Layout.fillWidth: true
-                                Layout.preferredHeight: lvlCardCol.implicitHeight + 32
-                                radius: 16
-                                clip: true
-                                color: surfaceContainerHigh
-                                border.width: 1
-                                border.color: outlineVariant
-
-                                // Colored accent bar on the left
-                                Rectangle {
-                                    anchors.left: parent.left
-                                    anchors.top: parent.top
-                                    anchors.bottom: parent.bottom
-                                    width: 4
-                                    color: levelAccents[modelData.accentIndex]
-                                }
-
-                                ColumnLayout {
-                                    id: lvlCardCol
-                                    anchors.left: parent.left
-                                    anchors.right: parent.right
-                                    anchors.top: parent.top
-                                    anchors.leftMargin: 20
-                                    anchors.rightMargin: 20
-                                    anchors.topMargin: 16
-                                    spacing: 8
-
-                                    RowLayout {
-                                        Layout.fillWidth: true
-                                        spacing: 10
-
-                                        // Level number badge
-                                        Rectangle {
-                                            width: 28
-                                            height: 28
-                                            radius: 8
-                                            color: Qt.rgba(
-                                                levelAccents[modelData.accentIndex].r,
-                                                levelAccents[modelData.accentIndex].g,
-                                                levelAccents[modelData.accentIndex].b,
-                                                isDark ? 0.2 : 0.15)
-
-                                            CText {
-                                                anchors.centerIn: parent
-                                                text: (modelData.accentIndex + 1).toString()
-                                                font.pixelSize: 12
-                                                font.weight: Font.Bold
-                                                color: levelAccents[modelData.accentIndex]
-                                            }
-                                        }
-
-                                        CText {
-                                            text: modelData.level
-                                            font.pixelSize: 15
-                                            font.weight: Font.DemiBold
-                                            color: onSurface
-                                        }
-
-                                        Item { Layout.fillWidth: true }
-
-                                        CChip {
-                                            text: modelData.role
-                                            chipColor: levelAccents[modelData.accentIndex]
-                                            variant: "filter"
-                                            selected: true
-                                        }
-                                    }
-
-                                    CText {
-                                        text: modelData.desc
-                                        font.pixelSize: 13
-                                        wrapMode: Text.Wrap
-                                        Layout.fillWidth: true
-                                        color: onSurfaceVariant
-                                        lineHeight: 1.4
-                                    }
-                                }
+                                levelName: modelData.level
+                                role: modelData.role
+                                description: modelData.desc
+                                accent: levelAccents[modelData.accentIndex]
+                                levelNumber: modelData.accentIndex + 1
+                                isDark: godPanel.isDark
                             }
                         }
 
-                        // Config summary section — tonal surface
+                        // Config summary section
                         Rectangle {
                             Layout.fillWidth: true
                             Layout.preferredHeight: configSummaryCol.implicitHeight + 48
@@ -382,56 +228,13 @@ Rectangle {
                                     rowSpacing: 12
 
                                     Repeater {
-                                        model: [
-                                            { label: "Schemas", value: configCounts.schemas.toString(), accent: accentBlue },
-                                            { label: "Workflows", value: configCounts.workflows.toString(), accent: accentCyan },
-                                            { label: "Lua Scripts", value: configCounts.luaScripts.toString(), accent: accentViolet },
-                                            { label: "Packages", value: configCounts.packages.toString(), accent: accentBlue },
-                                            { label: "Pages", value: configCounts.pages.toString(), accent: accentCyan },
-                                            { label: "Components", value: configCounts.components.toString(), accent: accentViolet },
-                                            { label: "CSS Classes", value: configCounts.cssClasses.toString(), accent: accentAmber },
-                                            { label: "DB Backends", value: configCounts.dbBackends.toString(), accent: accentRose }
-                                        ]
-
-                                        delegate: Rectangle {
+                                        model: configStatData
+                                        delegate: CConfigStatCard {
                                             Layout.fillWidth: true
-                                            Layout.preferredHeight: 64
-                                            radius: 12
-                                            color: surfaceContainer
-                                            border.width: 1
-                                            border.color: outlineVariant
-
-                                            RowLayout {
-                                                anchors.fill: parent
-                                                anchors.margins: 12
-                                                spacing: 10
-
-                                                Rectangle {
-                                                    width: 4
-                                                    height: 32
-                                                    radius: 2
-                                                    color: modelData.accent
-                                                }
-
-                                                ColumnLayout {
-                                                    Layout.fillWidth: true
-                                                    spacing: 2
-
-                                                    CText {
-                                                        text: modelData.value
-                                                        font.pixelSize: 20
-                                                        font.weight: Font.Bold
-                                                        font.family: "monospace"
-                                                        color: modelData.accent
-                                                    }
-                                                    CText {
-                                                        text: modelData.label
-                                                        font.pixelSize: 11
-                                                        font.weight: Font.Medium
-                                                        color: onSurfaceVariant
-                                                    }
-                                                }
-                                            }
+                                            label: modelData.label
+                                            value: modelData.value
+                                            accent: modelData.accent
+                                            isDark: godPanel.isDark
                                         }
                                     }
                                 }
@@ -453,109 +256,73 @@ Rectangle {
             // ── 1 - Packages ──
             Rectangle {
                 color: "transparent"
-                Loader {
-                    anchors.fill: parent
-                    source: "PackageManager.qml"
-                }
+                Loader { anchors.fill: parent; source: "PackageManager.qml" }
             }
 
             // ── 2 - Page Routes ──
             Rectangle {
                 color: "transparent"
-                Loader {
-                    anchors.fill: parent
-                    source: "PageRoutesManager.qml"
-                }
+                Loader { anchors.fill: parent; source: "PageRoutesManager.qml" }
             }
 
             // ── 3 - Components ──
             Rectangle {
                 color: "transparent"
-                Loader {
-                    anchors.fill: parent
-                    source: "ComponentHierarchyEditor.qml"
-                }
+                Loader { anchors.fill: parent; source: "ComponentHierarchyEditor.qml" }
             }
 
             // ── 4 - Users ──
             Rectangle {
                 color: "transparent"
-                Loader {
-                    anchors.fill: parent
-                    source: "UserManagement.qml"
-                }
+                Loader { anchors.fill: parent; source: "UserManagement.qml" }
             }
 
             // ── 5 - Schemas ──
             Rectangle {
                 color: "transparent"
-                Loader {
-                    anchors.fill: parent
-                    source: "SchemaEditor.qml"
-                }
+                Loader { anchors.fill: parent; source: "SchemaEditor.qml" }
             }
 
             // ── 6 - Workflows ──
             Rectangle {
                 color: "transparent"
-                Loader {
-                    anchors.fill: parent
-                    source: "WorkflowEditor.qml"
-                }
+                Loader { anchors.fill: parent; source: "WorkflowEditor.qml" }
             }
 
             // ── 7 - Lua Scripts ──
             Rectangle {
                 color: "transparent"
-                Loader {
-                    anchors.fill: parent
-                    source: "LuaEditor.qml"
-                }
+                Loader { anchors.fill: parent; source: "LuaEditor.qml" }
             }
 
             // ── 8 - Snippets ──
             Rectangle {
                 color: "transparent"
-                Loader {
-                    anchors.fill: parent
-                    source: "LuaEditor.qml"
-                }
+                Loader { anchors.fill: parent; source: "LuaEditor.qml" }
             }
 
             // ── 9 - CSS Classes ──
             Rectangle {
                 color: "transparent"
-                Loader {
-                    anchors.fill: parent
-                    source: "CssClassManager.qml"
-                }
+                Loader { anchors.fill: parent; source: "CssClassManager.qml" }
             }
 
             // ── 10 - Dropdowns ──
             Rectangle {
                 color: "transparent"
-                Loader {
-                    anchors.fill: parent
-                    source: "DropdownConfigManager.qml"
-                }
+                Loader { anchors.fill: parent; source: "DropdownConfigManager.qml" }
             }
 
             // ── 11 - Database ──
             Rectangle {
                 color: "transparent"
-                Loader {
-                    anchors.fill: parent
-                    source: "DatabaseManager.qml"
-                }
+                Loader { anchors.fill: parent; source: "DatabaseManager.qml" }
             }
 
             // ── 12 - Media Service ──
             Rectangle {
                 color: "transparent"
-                Loader {
-                    anchors.fill: parent
-                    source: "MediaServicePanel.qml"
-                }
+                Loader { anchors.fill: parent; source: "MediaServicePanel.qml" }
             }
 
             // ── 13 - Settings (Theme + SMTP side by side) ──
@@ -602,27 +369,11 @@ Rectangle {
                                 RowLayout {
                                     Layout.fillWidth: true
                                     spacing: 10
-
-                                    CText {
-                                        text: "Theme Editor"
-                                        font.pixelSize: 16
-                                        font.weight: Font.DemiBold
-                                        color: onSurface
-                                    }
+                                    CText { text: "Theme Editor"; font.pixelSize: 16; font.weight: Font.DemiBold; color: onSurface }
                                     CChip { text: "Visual"; variant: "info" }
                                 }
-
-                                Rectangle {
-                                    Layout.fillWidth: true
-                                    height: 1
-                                    color: outlineVariant
-                                }
-
-                                Loader {
-                                    Layout.fillWidth: true
-                                    Layout.fillHeight: true
-                                    source: "ThemeEditor.qml"
-                                }
+                                Rectangle { Layout.fillWidth: true; height: 1; color: outlineVariant }
+                                Loader { Layout.fillWidth: true; Layout.fillHeight: true; source: "ThemeEditor.qml" }
                             }
                         }
 
@@ -643,27 +394,11 @@ Rectangle {
                                 RowLayout {
                                     Layout.fillWidth: true
                                     spacing: 10
-
-                                    CText {
-                                        text: "SMTP Configuration"
-                                        font.pixelSize: 16
-                                        font.weight: Font.DemiBold
-                                        color: onSurface
-                                    }
+                                    CText { text: "SMTP Configuration"; font.pixelSize: 16; font.weight: Font.DemiBold; color: onSurface }
                                     CChip { text: "Email"; variant: "primary" }
                                 }
-
-                                Rectangle {
-                                    Layout.fillWidth: true
-                                    height: 1
-                                    color: outlineVariant
-                                }
-
-                                Loader {
-                                    Layout.fillWidth: true
-                                    Layout.fillHeight: true
-                                    source: "SMTPConfigEditor.qml"
-                                }
+                                Rectangle { Layout.fillWidth: true; height: 1; color: outlineVariant }
+                                Loader { Layout.fillWidth: true; Layout.fillHeight: true; source: "SMTPConfigEditor.qml" }
                             }
                         }
                     }
