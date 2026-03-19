@@ -12,6 +12,7 @@ add_executable(metabuilder-cli
     src/commands/command_dispatch.cpp
     src/commands/dbal_commands.cpp
     src/commands/package_commands.cpp
+    src/commands/workflow_commands.cpp
     src/lua/lua_runner.cpp
     src/utils/http_client.cpp
 )

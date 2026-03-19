@@ -1,6 +1,7 @@
 #include "command_dispatch.h"
 #include "dbal_commands.h"
 #include "package_commands.h"
+#include "workflow_commands.h"
 
 #include <cpr/cpr.h>
 #include <iostream>
@@ -18,6 +19,7 @@ Available commands:
   tenant get <tenantId>           Get a tenant by ID
   dbal <subcommand>               DBAL operations (use 'dbal help' for details)
   package <subcommand>            Package operations (use 'package help' for details)
+  workflow <subcommand>           Workflow operations (use 'workflow help' for details)
 )";
 }
 
@@ -136,7 +138,11 @@ int dispatch(const HttpClient &client, const std::vector<std::string> &args) {
   }
 
   if (args[0] == "package") {
-    return handle_package(args);
+    return handle_package(client, args);
+  }
+
+  if (args[0] == "workflow") {
+    return handle_workflow(client, args);
   }
 
   print_help();

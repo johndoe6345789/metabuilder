@@ -1,16 +1,29 @@
 #include "package_commands.h"
 #include "../lua/lua_runner.h"
 
+#include <cpr/cpr.h>
+#include <nlohmann/json.hpp>
+
 #include <algorithm>
 #include <cstdlib>
 #include <filesystem>
 #include <fstream>
+#include <iomanip>
 #include <iostream>
 #include <sstream>
 
 namespace fs = std::filesystem;
+using json = nlohmann::json;
 
 namespace {
+
+void print_response(const cpr::Response &response) {
+    std::cout << "status: " << response.status_code << '\n';
+    if (response.error) {
+        std::cout << "error: " << response.error.message << '\n';
+    }
+    std::cout << response.text << '\n';
+}
 
 void print_package_help() {
     std::cout << R"(Usage: metabuilder-cli package <command> [options]
@@ -19,6 +32,10 @@ Commands:
   list                          List available packages with scripts
   run <package> <script> [args] Run a Lua script from a package
   generate <package_id> [opts]  Generate a new package
+  install <package_id>          Install a package via DBAL
+  uninstall <package_id>        Uninstall a package via DBAL
+  info <package_id>             Show package details from DBAL
+  search <query>                Search available packages
 
 Generate options:
   --name <name>           Display name (default: derived from package_id)
@@ -39,6 +56,10 @@ Examples:
   metabuilder-cli package list
   metabuilder-cli package run codegen_studio package_template
   metabuilder-cli package generate my_forum --category social --with-schema --entities Thread,Post
+  metabuilder-cli package install forum
+  metabuilder-cli package uninstall forum
+  metabuilder-cli package info forum
+  metabuilder-cli package search social
 )";
 }
 
@@ -56,7 +77,7 @@ fs::path find_packages_dir() {
 
     // Try relative to executable
     // (would need to pass argv[0] for this)
-    
+
     return {};
 }
 
@@ -77,16 +98,16 @@ std::vector<std::string> split_csv(const std::string& str) {
 
 int handle_list(const fs::path& packages_dir) {
     std::cout << "Available packages with scripts:\n\n";
-    
+
     int count = 0;
     for (const auto& entry : fs::directory_iterator(packages_dir)) {
         if (!entry.is_directory()) continue;
-        
+
         auto scripts_path = entry.path() / "seed" / "scripts";
         if (!fs::exists(scripts_path)) continue;
-        
+
         std::cout << "  " << entry.path().filename().string() << "\n";
-        
+
         // List available scripts/modules
         for (const auto& script : fs::directory_iterator(scripts_path)) {
             if (script.is_directory()) {
@@ -103,11 +124,11 @@ int handle_list(const fs::path& packages_dir) {
         }
         ++count;
     }
-    
+
     if (count == 0) {
         std::cout << "  (no packages with scripts found)\n";
     }
-    
+
     return 0;
 }
 
@@ -122,7 +143,7 @@ int handle_run(const fs::path& packages_dir, const std::vector<std::string>& arg
     std::string func_name = args.size() > 4 ? args[4] : "main";
 
     lua::LuaRunner runner(packages_dir);
-    
+
     if (!runner.load_module(package_id, script_name)) {
         std::cerr << "Error: " << runner.last_error() << "\n";
         return 1;
@@ -140,7 +161,7 @@ int handle_run(const fs::path& packages_dir, const std::vector<std::string>& arg
     }
 
     auto result = runner.call(func_name, config);
-    
+
     if (!result.success) {
         std::cerr << "Error: " << result.error << "\n";
         return 1;
@@ -160,7 +181,7 @@ int handle_generate(const fs::path& packages_dir, const std::vector<std::string>
     }
 
     const auto& package_id = args[2];
-    
+
     // Validate package_id format
     if (package_id.empty() || !std::isalpha(package_id[0])) {
         std::cerr << "Error: package_id must start with a letter\n";
@@ -186,13 +207,13 @@ int handle_generate(const fs::path& packages_dir, const std::vector<std::string>
     config["withSchema"] = false;
     config["withTests"] = true;
     config["withComponents"] = false;
-    
+
     bool dry_run = false;
     std::string output_dir = packages_dir.string();
 
     for (size_t i = 3; i < args.size(); ++i) {
         const auto& arg = args[i];
-        
+
         if (arg == "--name" && i + 1 < args.size()) {
             config["name"] = args[++i];
         } else if (arg == "--description" && i + 1 < args.size()) {
@@ -224,7 +245,7 @@ int handle_generate(const fs::path& packages_dir, const std::vector<std::string>
 
     // Load package_template module from codegen_studio
     lua::LuaRunner runner(packages_dir);
-    
+
     if (!runner.load_module("codegen_studio", "package_template")) {
         std::cerr << "Error: Could not load package_template module\n";
         std::cerr << "  " << runner.last_error() << "\n";
@@ -244,7 +265,7 @@ int handle_generate(const fs::path& packages_dir, const std::vector<std::string>
 
     // Generate files
     auto result = runner.call("generate", config);
-    
+
     if (!result.success) {
         std::cerr << "Error generating package: " << result.error << "\n";
         return 1;
@@ -278,31 +299,179 @@ int handle_generate(const fs::path& packages_dir, const std::vector<std::string>
     for (const auto& file : result.files) {
         fs::path full_path = package_path / file.path;
         fs::path dir = full_path.parent_path();
-        
+
         if (!dir.empty() && !fs::exists(dir)) {
             fs::create_directories(dir);
         }
-        
+
         std::ofstream out(full_path, std::ios::binary);
         if (!out) {
             std::cerr << "  Error writing: " << file.path << "\n";
             continue;
         }
-        
+
         out << file.content;
         out.close();
-        
+
         std::cout << "  Created: " << file.path << "\n";
         ++written;
     }
 
-    std::cout << "\n✅ Package '" << package_id << "' created successfully!\n";
+    std::cout << "\nPackage '" << package_id << "' created successfully!\n";
     std::cout << "   Files: " << written << "\n";
     std::cout << "\nNext steps:\n";
     std::cout << "  1. Review generated files in " << package_path << "\n";
     std::cout << "  2. Add package-specific logic to seed/scripts/\n";
     std::cout << "  3. Run: npm run packages:index\n";
-    
+
+    return 0;
+}
+
+/**
+ * @brief Print package list from DBAL as a formatted table
+ */
+void print_package_table(const cpr::Response &response) {
+    if (response.status_code != 200) {
+        print_response(response);
+        return;
+    }
+
+    try {
+        auto data = json::parse(response.text);
+
+        json items;
+        if (data.is_array()) {
+            items = data;
+        } else if (data.contains("data") && data["data"].is_array()) {
+            items = data["data"];
+        } else {
+            print_response(response);
+            return;
+        }
+
+        if (items.empty()) {
+            std::cout << "No packages found.\n";
+            return;
+        }
+
+        // Header
+        std::cout << '\n';
+        std::cout << "  " << std::left
+                  << std::setw(24) << "ID"
+                  << std::setw(28) << "NAME"
+                  << std::setw(14) << "CATEGORY"
+                  << std::setw(10) << "STATUS"
+                  << "VERSION" << '\n';
+        std::cout << "  " << std::string(86, '-') << '\n';
+
+        for (const auto &pkg : items) {
+            std::string id = pkg.value("id", pkg.value("packageId", "-"));
+            std::string name = pkg.value("name", pkg.value("title", "-"));
+            std::string category = pkg.value("category", "-");
+            std::string status = pkg.value("status", pkg.value("state", "-"));
+            std::string version = pkg.value("version", "-");
+
+            std::cout << "  " << std::left
+                      << std::setw(24) << id
+                      << std::setw(28) << name
+                      << std::setw(14) << category
+                      << std::setw(10) << status
+                      << version << '\n';
+        }
+
+        std::cout << '\n' << items.size() << " package(s) found.\n";
+    } catch (const json::exception &) {
+        print_response(response);
+    }
+}
+
+int handle_install(const HttpClient &client, const std::vector<std::string> &args) {
+    if (args.size() < 3) {
+        std::cerr << "Usage: metabuilder-cli package install <package_id>\n";
+        return 1;
+    }
+
+    std::string package_id = args[2];
+    std::string body = "{\"packageId\":\"" + package_id + "\",\"action\":\"install\"}";
+
+    std::cout << "Installing package: " << package_id << "\n";
+    auto response = client.post("/api/dbal/package/" + package_id + "/install", body);
+
+    if (response.status_code >= 200 && response.status_code < 300) {
+        std::cout << "[OK] Package '" << package_id << "' installed successfully.\n";
+        try {
+            auto data = json::parse(response.text);
+            if (data.contains("version")) {
+                std::cout << "  version: " << data["version"].get<std::string>() << '\n';
+            }
+            if (data.contains("dependencies")) {
+                std::cout << "  dependencies resolved: " << data["dependencies"].size() << '\n';
+            }
+        } catch (const json::exception &) {
+            // Ignore parse errors for status output
+        }
+    } else {
+        std::cout << "[!!] Failed to install package '" << package_id << "'.\n";
+        print_response(response);
+    }
+
+    return response.status_code >= 200 && response.status_code < 300 ? 0 : 1;
+}
+
+int handle_uninstall(const HttpClient &client, const std::vector<std::string> &args) {
+    if (args.size() < 3) {
+        std::cerr << "Usage: metabuilder-cli package uninstall <package_id>\n";
+        return 1;
+    }
+
+    std::string package_id = args[2];
+
+    std::cout << "Uninstalling package: " << package_id << "\n";
+    auto response = client.post("/api/dbal/package/" + package_id + "/uninstall",
+                                "{\"packageId\":\"" + package_id + "\",\"action\":\"uninstall\"}");
+
+    if (response.status_code >= 200 && response.status_code < 300) {
+        std::cout << "[OK] Package '" << package_id << "' uninstalled successfully.\n";
+    } else {
+        std::cout << "[!!] Failed to uninstall package '" << package_id << "'.\n";
+        print_response(response);
+    }
+
+    return response.status_code >= 200 && response.status_code < 300 ? 0 : 1;
+}
+
+int handle_info(const HttpClient &client, const std::vector<std::string> &args) {
+    if (args.size() < 3) {
+        std::cerr << "Usage: metabuilder-cli package info <package_id>\n";
+        return 1;
+    }
+
+    std::string package_id = args[2];
+    auto response = client.get("/api/dbal/package/" + package_id);
+
+    if (response.status_code != 200) {
+        print_response(response);
+        return 1;
+    }
+
+    try {
+        auto data = json::parse(response.text);
+        std::cout << data.dump(2) << '\n';
+    } catch (const json::exception &) {
+        print_response(response);
+    }
+
+    return 0;
+}
+
+int handle_search(const HttpClient &client, const std::vector<std::string> &args) {
+    if (args.size() < 3) {
+        std::cerr << "Usage: metabuilder-cli package search <query>\n";
+        return 1;
+    }
+
+    std::string query = args[2];
+    print_package_table(client.get("/api/dbal/package?search=" + query));
     return 0;
 }
 
@@ -310,30 +479,59 @@ int handle_generate(const fs::path& packages_dir, const std::vector<std::string>
 
 namespace commands {
 
-int handle_package(const std::vector<std::string>& args) {
+int handle_package(const HttpClient &client, const std::vector<std::string>& args) {
     if (args.size() < 2 || args[1] == "help" || args[1] == "--help") {
         print_package_help();
         return 0;
     }
 
-    auto packages_dir = find_packages_dir();
-    if (packages_dir.empty()) {
-        std::cerr << "Error: Could not find packages directory\n";
-        std::cerr << "Run from the MetaBuilder project root or set METABUILDER_PACKAGES\n";
-        return 1;
-    }
-
     const auto& subcommand = args[1];
 
+    // DBAL-backed commands (require HTTP client)
+    if (subcommand == "install") {
+        return handle_install(client, args);
+    }
+
+    if (subcommand == "uninstall") {
+        return handle_uninstall(client, args);
+    }
+
+    if (subcommand == "info") {
+        return handle_info(client, args);
+    }
+
+    if (subcommand == "search") {
+        return handle_search(client, args);
+    }
+
+    // Local filesystem commands
     if (subcommand == "list") {
+        auto packages_dir = find_packages_dir();
+        if (packages_dir.empty()) {
+            std::cerr << "Error: Could not find packages directory\n";
+            std::cerr << "Run from the MetaBuilder project root or set METABUILDER_PACKAGES\n";
+            return 1;
+        }
         return handle_list(packages_dir);
     }
-    
+
     if (subcommand == "run") {
+        auto packages_dir = find_packages_dir();
+        if (packages_dir.empty()) {
+            std::cerr << "Error: Could not find packages directory\n";
+            std::cerr << "Run from the MetaBuilder project root or set METABUILDER_PACKAGES\n";
+            return 1;
+        }
         return handle_run(packages_dir, args);
     }
-    
+
     if (subcommand == "generate") {
+        auto packages_dir = find_packages_dir();
+        if (packages_dir.empty()) {
+            std::cerr << "Error: Could not find packages directory\n";
+            std::cerr << "Run from the MetaBuilder project root or set METABUILDER_PACKAGES\n";
+            return 1;
+        }
         return handle_generate(packages_dir, args);
     }
 
