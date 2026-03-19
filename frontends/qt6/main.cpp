@@ -36,20 +36,25 @@ int main(int argc, char *argv[]) {
     PackageLoader packageLoader;
     NodeRegistry nodeRegistry;
     registry.loadPackage("frontpage");
-    packageLoader.setPackagesDir(QDir(QStringLiteral(SRCDIR) + QStringLiteral("/packages")).absolutePath());
+    packageLoader.setPackagesDir(
+        QDir(QStringLiteral(SRCDIR) + QStringLiteral("/packages"))
+            .absolutePath());
     packageLoader.scan();
     packageLoader.setWatching(true);
 
     // Load workflow node type registry
     const QString registryPath = QDir::cleanPath(
-        QStringLiteral(SRCDIR) + QStringLiteral("/../../workflow/plugins/registry/node-registry.json"));
+        QStringLiteral(SRCDIR)
+        + QStringLiteral(
+            "/../../workflow/plugins/registry/node-registry.json"));
     nodeRegistry.loadRegistry(registryPath);
 
-    engine.rootContext()->setContextProperty(QStringLiteral("PackageRegistry"), &registry);
-    engine.rootContext()->setContextProperty(QStringLiteral("ModPlayer"), &modPlayer);
-    engine.rootContext()->setContextProperty(QStringLiteral("DBALClient"), &dbalClient);
-    engine.rootContext()->setContextProperty(QStringLiteral("PackageLoader"), &packageLoader);
-    engine.rootContext()->setContextProperty(QStringLiteral("NodeRegistry"), &nodeRegistry);
+    auto *ctx = engine.rootContext();
+    ctx->setContextProperty(QStringLiteral("PackageRegistry"), &registry);
+    ctx->setContextProperty(QStringLiteral("ModPlayer"),       &modPlayer);
+    ctx->setContextProperty(QStringLiteral("DBALClient"),      &dbalClient);
+    ctx->setContextProperty(QStringLiteral("PackageLoader"),   &packageLoader);
+    ctx->setContextProperty(QStringLiteral("NodeRegistry"),    &nodeRegistry);
 
     const QUrl url(QStringLiteral("qrc:/qt/qml/DBALObservatory/App.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
