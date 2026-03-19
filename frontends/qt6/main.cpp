@@ -4,11 +4,11 @@
 #include <QUrl>
 #include <QDir>
 
-#include "src/PackageRegistry.h"
-#include "src/ModPlayer.h"
+#include "src/PackageRegistry.hpp"
+#include "src/ModPlayer.hpp"
 #include "src/DBALClient.h"
 #include "src/PackageLoader.h"
-#include "src/NodeRegistry.h"
+#include "src/NodeRegistry.hpp"
 
 int main(int argc, char *argv[]) {
     QGuiApplication app(argc, argv);

@@ -1,58 +1,81 @@
-#ifndef DBALCLIENT_H
-#define DBALCLIENT_H
+#pragma once
+
+// Qt6 DBAL Client Bridge
+//
+// Provides database access for QML components through the DBAL
+// daemon. Communicates via HTTP to the C++ DBAL backend.
+//
+// Usage in QML:
+//   DBALClient {
+//       id: dbal
+//       baseUrl: "http://localhost:3001/api/dbal"
+//       tenantId: "default"
+//       Component.onCompleted: {
+//           dbal.list("User", { take: 10 }, function(users) {
+//               console.log("Users:", JSON.stringify(users))
+//           })
+//       }
+//   }
+
+#include "DBALTypes.hpp"
+#include "DBALRequest.hpp"
 
 #include <QObject>
-#include <QJsonObject>
 #include <QJsonArray>
-#include <QString>
 #include <QVariantMap>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
-#include <QJSValue>
 #include <QMap>
 
-/**
- * @brief Qt6 DBAL Client Bridge
- * 
- * Provides database access for QML components through the DBAL daemon.
- * Communicates via HTTP/WebSocket to the TypeScript or C++ DBAL backend.
- * 
- * Usage in QML:
- * @code
- * DBALClient {
- *     id: dbal
- *     baseUrl: "http://localhost:3001/api/dbal"
- *     tenantId: "default"
- *     
- *     Component.onCompleted: {
- *         dbal.list("User", { take: 10 }, function(users) {
- *             console.log("Users:", JSON.stringify(users))
- *         })
- *     }
- * }
- * @endcode
- */
 class DBALClient : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString baseUrl READ baseUrl WRITE setBaseUrl NOTIFY baseUrlChanged)
-    Q_PROPERTY(QString tenantId READ tenantId WRITE setTenantId NOTIFY tenantIdChanged)
-    Q_PROPERTY(QString packageId READ packageId WRITE setPackageId NOTIFY packageIdChanged)
-    Q_PROPERTY(QString authToken READ authToken WRITE setAuthToken NOTIFY authTokenChanged)
-    Q_PROPERTY(bool connected READ isConnected NOTIFY connectedChanged)
-    Q_PROPERTY(QString lastError READ lastError NOTIFY errorOccurred)
+
+    Q_PROPERTY(
+        QString baseUrl
+        READ baseUrl
+        WRITE setBaseUrl
+        NOTIFY baseUrlChanged)
+
+    Q_PROPERTY(
+        QString tenantId
+        READ tenantId
+        WRITE setTenantId
+        NOTIFY tenantIdChanged)
+
+    Q_PROPERTY(
+        QString packageId
+        READ packageId
+        WRITE setPackageId
+        NOTIFY packageIdChanged)
+
+    Q_PROPERTY(
+        QString authToken
+        READ authToken
+        WRITE setAuthToken
+        NOTIFY authTokenChanged)
+
+    Q_PROPERTY(
+        bool connected
+        READ isConnected
+        NOTIFY connectedChanged)
+
+    Q_PROPERTY(
+        QString lastError
+        READ lastError
+        NOTIFY errorOccurred)
 
 public:
     explicit DBALClient(QObject *parent = nullptr);
     ~DBALClient() override;
 
     // Property getters
-    QString baseUrl() const { return m_baseUrl; }
-    QString tenantId() const { return m_tenantId; }
-    QString packageId() const { return m_packageId; }
-    QString authToken() const { return m_authToken; }
-    bool isConnected() const { return m_connected; }
-    QString lastError() const { return m_lastError; }
+    QString baseUrl()    const { return m_baseUrl; }
+    QString tenantId()   const { return m_tenantId; }
+    QString packageId()  const { return m_packageId; }
+    QString authToken()  const { return m_authToken; }
+    bool    isConnected() const { return m_connected; }
+    QString lastError()  const { return m_lastError; }
 
     // Property setters
     void setBaseUrl(const QString &url);
@@ -61,98 +84,70 @@ public:
     void setAuthToken(const QString &token);
 
 public slots:
-    /**
-     * @brief Create a new record
-     * @param entity Entity name (e.g., "User", "AuditLog")
-     * @param data Record data as JSON object
-     * @param callback QML callback function(result)
-     */
-    void create(const QString &entity, const QJsonObject &data, const QJSValue &callback);
+    /// Create a new record. callback: function(result)
+    void create(
+        const QString     &entity,
+        const DBALPayload &data,
+        const DBALCallback &callback);
 
-    /**
-     * @brief Read a single record by ID
-     * @param entity Entity name
-     * @param id Record ID
-     * @param callback QML callback function(result)
-     */
-    void read(const QString &entity, const QString &id, const QJSValue &callback);
+    /// Read a single record by ID. callback: function(result)
+    void read(
+        const QString     &entity,
+        const QString     &id,
+        const DBALCallback &callback);
 
-    /**
-     * @brief Update an existing record
-     * @param entity Entity name
-     * @param id Record ID
-     * @param data Updated fields
-     * @param callback QML callback function(result)
-     */
-    void update(const QString &entity, const QString &id, const QJsonObject &data, const QJSValue &callback);
+    /// Update an existing record. callback: function(result)
+    void update(
+        const QString     &entity,
+        const QString     &id,
+        const DBALPayload &data,
+        const DBALCallback &callback);
 
-    /**
-     * @brief Delete a record
-     * @param entity Entity name
-     * @param id Record ID
-     * @param callback QML callback function(success)
-     */
-    void remove(const QString &entity, const QString &id, const QJSValue &callback);
+    /// Delete a record. callback: function(success)
+    void remove(
+        const QString     &entity,
+        const QString     &id,
+        const DBALCallback &callback);
 
-    /**
-     * @brief List records with pagination and filtering
-     * @param entity Entity name
-     * @param options { take, skip, where, orderBy }
-     * @param callback QML callback function({ items, total })
-     */
-    void list(const QString &entity, const QJsonObject &options, const QJSValue &callback);
+    /// List records with pagination/filtering.
+    /// options: { take, skip, where, orderBy }
+    /// callback: function({ items, total })
+    void list(
+        const QString     &entity,
+        const DBALPayload &options,
+        const DBALCallback &callback);
 
-    /**
-     * @brief Find first record matching filter
-     * @param entity Entity name
-     * @param filter Filter criteria
-     * @param callback QML callback function(result)
-     */
-    void findFirst(const QString &entity, const QJsonObject &filter, const QJSValue &callback);
+    /// Find first record matching filter. callback: function(result)
+    void findFirst(
+        const QString     &entity,
+        const DBALPayload &filter,
+        const DBALCallback &callback);
 
-    /**
-     * @brief Execute a named query/operation
-     * @param operation Operation name
-     * @param params Operation parameters
-     * @param callback QML callback function(result)
-     */
-    void execute(const QString &operation, const QJsonObject &params, const QJSValue &callback);
+    /// Execute a named operation. callback: function(result)
+    void execute(
+        const QString     &operation,
+        const DBALPayload &params,
+        const DBALCallback &callback);
 
-    /**
-     * @brief Check connection to DBAL backend
-     */
+    /// Check connection to DBAL backend (fire-and-forget).
     void ping();
 
-    /**
-     * @brief Get DBAL health information
-     * @param callback QML callback function(result)
-     */
-    void health(const QJSValue &callback);
+    /// Get DBAL health info. callback: function(result)
+    void health(const DBALCallback &callback);
 
-    /**
-     * @brief Get DBAL version information
-     * @param callback QML callback function(result)
-     */
-    void version(const QJSValue &callback);
+    /// Get DBAL version info. callback: function(result)
+    void version(const DBALCallback &callback);
 
-    /**
-     * @brief Get DBAL status/metrics
-     * @param callback QML callback function(result)
-     */
-    void status(const QJSValue &callback);
+    /// Get DBAL status/metrics. callback: function(result)
+    void status(const DBALCallback &callback);
 
-    /**
-     * @brief List entity schemas from DBAL
-     * @param callback QML callback function(schemas)
-     */
-    void listSchemas(const QJSValue &callback);
+    /// List entity schemas. callback: function(schemas)
+    void listSchemas(const DBALCallback &callback);
 
-    /**
-     * @brief Get a specific entity schema
-     * @param entity Entity name
-     * @param callback QML callback function(schema)
-     */
-    void getSchema(const QString &entity, const QJSValue &callback);
+    /// Get a specific entity schema. callback: function(schema)
+    void getSchema(
+        const QString     &entity,
+        const DBALCallback &callback);
 
 signals:
     void baseUrlChanged();
@@ -161,27 +156,33 @@ signals:
     void authTokenChanged();
     void connectedChanged();
     void errorOccurred(const QString &error);
-    void operationCompleted(const QString &operation, const QJsonObject &result);
+    void operationCompleted(
+        const QString     &operation,
+        const DBALPayload &result);
 
 private slots:
     void handleNetworkReply(QNetworkReply *reply);
 
 private:
-    void sendRequest(const QString &method, const QString &endpoint, 
-                     const QJsonObject &body, const QJSValue &callback);
+    void sendRequest(
+        const QString     &method,
+        const QString     &endpoint,
+        const DBALPayload &body,
+        const DBALCallback &callback);
+
     void setError(const QString &error);
 
-    QNetworkAccessManager *m_networkManager;
-    QString m_baseUrl;
-    QString m_tenantId;
-    QString m_packageId;
-    QString m_authToken;
-
     QString entityPath(const QString &entity) const;
-    QString entityPath(const QString &entity, const QString &id) const;
-    bool m_connected;
-    QString m_lastError;
-    QMap<QNetworkReply*, QJSValue> m_pendingCallbacks;
-};
+    QString entityPath(
+        const QString &entity,
+        const QString &id) const;
 
-#endif // DBALCLIENT_H
+    QNetworkAccessManager          *m_networkManager;
+    QString                         m_baseUrl;
+    QString                         m_tenantId;
+    QString                         m_packageId;
+    QString                         m_authToken;
+    bool                            m_connected;
+    QString                         m_lastError;
+    QMap<QNetworkReply*, DBALCallback> m_pendingCallbacks;
+};
