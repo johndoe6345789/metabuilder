@@ -37,52 +37,65 @@ Rectangle {
 
     Component.onCompleted: loadPlatformStatus()
 
+    // ── Palette — cool/techy, no golf ──
+    readonly property color accentBlue: "#6366F1"    // indigo-500
+    readonly property color accentCyan: "#06B6D4"    // cyan-500
+    readonly property color accentViolet: "#8B5CF6"  // violet-500
+    readonly property color accentAmber: "#F59E0B"   // amber-500
+    readonly property color accentRose: "#F43F5E"    // rose-500
+    readonly property color subtleText: Qt.rgba(1, 1, 1, 0.45)
+    readonly property color subtleBorder: Qt.rgba(1, 1, 1, 0.08)
+    readonly property color cardBg: Qt.rgba(1, 1, 1, 0.03)
+
     // ── Level definitions ──
     property var levels: [
         {
-            level: 1, name: "Public",    color: "#2196F3",
-            desc: "Browse the platform, view public content, explore the component library and storybook.",
-            features: ["Landing page", "Storybook", "Public API docs"]
+            level: 1, name: "Public",    accent: "#94A3B8", // slate-400
+            icon: "\u2302", // house
+            desc: "Explore the platform. Browse the component library, storybook, and public API.",
+            tags: ["Landing", "Storybook", "Docs"]
         },
         {
-            level: 2, name: "User",      color: "#4CAF50",
-            desc: "Full access to your profile, comments, forum, gallery, guestbook, and installed packages.",
-            features: ["Dashboard", "Profile", "Forum", "Gallery"]
+            level: 2, name: "User",      accent: "#6366F1", // indigo
+            icon: "\u2605", // star
+            desc: "Your space. Dashboard, profile, forum, gallery, and all installed packages.",
+            tags: ["Dashboard", "Profile", "Forum", "Gallery"]
         },
         {
-            level: 3, name: "Admin",     color: "#FF9800",
-            desc: "Manage users, moderate content, view audit logs, and access the admin panel.",
-            features: ["User management", "Audit logs", "Moderation"]
+            level: 3, name: "Admin",     accent: "#06B6D4", // cyan
+            icon: "\u2699", // gear
+            desc: "Moderate and manage. User tables, audit logs, content moderation tools.",
+            tags: ["Users", "Audit", "Moderation"]
         },
         {
-            level: 4, name: "God",       color: "#9C27B0",
-            desc: "Full builder access. Visual workflow editor, schema browser, page builder, 14 power tools.",
-            features: ["Workflow editor", "Schema browser", "Page builder", "14 God tools"]
+            level: 4, name: "God",       accent: "#8B5CF6", // violet
+            icon: "\u26A1", // lightning
+            desc: "The builder tier. Visual workflow canvas, schema browser, page builder, 14 power tools.",
+            tags: ["Workflows", "Schemas", "Pages", "14 tools"]
         },
         {
-            level: 5, name: "Super God", color: "#FF5722",
-            desc: "Multi-tenant control, platform-wide configuration, tenant creation, and system overrides.",
-            features: ["Multi-tenant", "System config", "Tenant CRUD", "God promotion"]
+            level: 5, name: "Super God", accent: "#F43F5E", // rose
+            icon: "\u2B50", // star
+            desc: "Platform control. Multi-tenant management, system config, god-level promotions.",
+            tags: ["Tenants", "Config", "Promote"]
         }
     ]
 
-    // ── Tech stack items ──
     property var techStack: [
-        { name: "Qt6 / QML",       desc: "Native desktop frontend" },
-        { name: "Next.js / React", desc: "Web frontend" },
-        { name: "C++ DBAL",        desc: "14-backend database layer" },
-        { name: "JSON Workflows",  desc: "152 node types, visual DAG editor" },
-        { name: "C++ CLI",         desc: "Headless command interface" },
-        { name: "Docker Stack",    desc: "One-command deployment" }
+        { name: "Qt6 / QML",       desc: "Native desktop frontend",            accent: accentBlue },
+        { name: "Next.js",         desc: "React web frontend",                 accent: accentCyan },
+        { name: "C++ DBAL",        desc: "14-backend database abstraction",    accent: accentViolet },
+        { name: "JSON Workflows",  desc: "152 node types, visual DAG editor",  accent: accentAmber },
+        { name: "C++ CLI",         desc: "Headless command interface",          accent: "#94A3B8" },
+        { name: "Docker",          desc: "One-command stack deployment",        accent: accentCyan }
     ]
 
-    // ── Service status ──
     property var services: [
-        { name: "DBAL Daemon",      status: dbalOnline ? "online" : "offline" },
-        { name: "PostgreSQL",       status: "standby" },
-        { name: "Redis Cache",      status: "standby" },
-        { name: "Workflow Engine",  status: dbalOnline ? "online" : "offline" },
-        { name: "Media Service",    status: "standby" }
+        { name: "DBAL Daemon",     status: dbalOnline ? "online" : "offline" },
+        { name: "PostgreSQL",      status: "standby" },
+        { name: "Redis Cache",     status: "standby" },
+        { name: "Workflow Engine", status: dbalOnline ? "online" : "offline" },
+        { name: "Media Service",   status: "standby" }
     ]
 
     ScrollView {
@@ -95,58 +108,88 @@ Rectangle {
             spacing: 0
 
             // ═══════════════════════════════════════════════════════════
-            // HERO SECTION
+            // HERO
             // ═══════════════════════════════════════════════════════════
             Rectangle {
                 Layout.fillWidth: true
-                Layout.preferredHeight: 340
+                Layout.preferredHeight: 360
                 color: "transparent"
 
-                // Gradient background
+                // Subtle gradient — indigo → transparent → violet
                 Rectangle {
                     anchors.fill: parent
                     gradient: Gradient {
-                        GradientStop { position: 0.0; color: Qt.rgba(Theme.primary.r || 0.13, Theme.primary.g || 0.59, Theme.primary.b || 0.95, 0.08) }
-                        GradientStop { position: 0.5; color: Theme.background }
-                        GradientStop { position: 1.0; color: Qt.rgba(Theme.success.r || 0.3, Theme.success.g || 0.69, Theme.success.b || 0.31, 0.05) }
+                        orientation: Gradient.Horizontal
+                        GradientStop { position: 0.0; color: Qt.rgba(0.39, 0.4, 0.95, 0.06) }
+                        GradientStop { position: 0.5; color: "transparent" }
+                        GradientStop { position: 1.0; color: Qt.rgba(0.55, 0.36, 0.96, 0.04) }
                     }
+                }
+
+                // Top-down fade line
+                Rectangle {
+                    anchors.bottom: parent.bottom
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: 1
+                    color: subtleBorder
                 }
 
                 ColumnLayout {
                     anchors.centerIn: parent
-                    anchors.horizontalCenterOffset: 0
-                    width: Math.min(parent.width - 80, 900)
-                    spacing: 20
+                    width: Math.min(parent.width - 80, 720)
+                    spacing: 16
 
-                    CText {
-                        variant: "overline"
-                        text: "METABUILDER PLATFORM v" + platformVersion
+                    // Version pill
+                    Rectangle {
                         Layout.alignment: Qt.AlignHCenter
-                        opacity: 0.6
+                        width: versionLabel.implicitWidth + 20
+                        height: 24
+                        radius: 12
+                        color: Qt.rgba(0.39, 0.4, 0.95, 0.12)
+                        border.color: Qt.rgba(0.39, 0.4, 0.95, 0.25)
+                        border.width: 1
+
+                        CText {
+                            id: versionLabel
+                            anchors.centerIn: parent
+                            text: "v" + platformVersion
+                            variant: "caption"
+                            color: accentBlue
+                            font.family: "monospace"
+                        }
                     }
 
                     CText {
                         variant: "h1"
-                        text: "Build Anything, Visually"
+                        text: "MetaBuilder"
                         Layout.alignment: Qt.AlignHCenter
-                        font.pixelSize: 42
-                        font.bold: true
+                        font.pixelSize: 48
+                        font.weight: Font.Black
+                        font.letterSpacing: -1.5
                     }
 
                     CText {
                         variant: "body1"
-                        text: "A universal platform for building data-driven applications.\n95% JSON configuration, 5% infrastructure code. One stack — desktop, web, and CLI."
-                        wrapMode: Text.Wrap
-                        Layout.fillWidth: true
-                        horizontalAlignment: Text.AlignHCenter
-                        opacity: 0.7
-                        lineHeight: 1.5
+                        text: "The universal platform for building data-driven applications."
+                        Layout.alignment: Qt.AlignHCenter
+                        opacity: 0.5
+                        font.pixelSize: 16
+                    }
+
+                    CText {
+                        variant: "body2"
+                        text: "95% JSON config \u00B7 5% infrastructure \u00B7 Desktop + Web + CLI"
+                        Layout.alignment: Qt.AlignHCenter
+                        opacity: 0.3
+                        font.family: "monospace"
+                        font.pixelSize: 13
                     }
 
                     RowLayout {
                         Layout.alignment: Qt.AlignHCenter
-                        Layout.topMargin: 8
-                        spacing: 12
+                        Layout.topMargin: 16
+                        spacing: 10
 
                         CButton {
                             text: "Get Started"
@@ -154,12 +197,12 @@ Rectangle {
                             onClicked: appWindow.currentView = "login"
                         }
                         CButton {
-                            text: "View Storybook"
+                            text: "Storybook"
                             variant: "ghost"
                             onClicked: appWindow.currentView = "storybook"
                         }
                         CButton {
-                            text: "Browse Packages"
+                            text: "Packages"
                             variant: "ghost"
                             onClicked: appWindow.currentView = "marketplace"
                         }
@@ -168,57 +211,58 @@ Rectangle {
             }
 
             // ═══════════════════════════════════════════════════════════
-            // STATS BAR
+            // STATS STRIP
             // ═══════════════════════════════════════════════════════════
             Rectangle {
                 Layout.fillWidth: true
-                Layout.preferredHeight: 100
-                color: Theme.paper
+                Layout.preferredHeight: 80
+                color: cardBg
 
                 RowLayout {
                     anchors.fill: parent
-                    anchors.leftMargin: 40
-                    anchors.rightMargin: 40
+                    anchors.leftMargin: 60
+                    anchors.rightMargin: 60
                     spacing: 0
 
                     Repeater {
                         model: [
-                            { label: "Users",     value: publicStats.users,     icon: "U" },
-                            { label: "Packages",  value: publicStats.packages,  icon: "P" },
-                            { label: "Workflows", value: publicStats.workflows, icon: "W" },
-                            { label: "Backends",  value: publicStats.backends,  icon: "B" }
+                            { label: "USERS",     value: publicStats.users },
+                            { label: "PACKAGES",  value: publicStats.packages },
+                            { label: "WORKFLOWS", value: publicStats.workflows },
+                            { label: "BACKENDS",  value: publicStats.backends }
                         ]
                         delegate: Item {
                             Layout.fillWidth: true
                             Layout.fillHeight: true
 
-                            ColumnLayout {
+                            RowLayout {
                                 anchors.centerIn: parent
-                                spacing: 4
+                                spacing: 8
 
                                 CText {
-                                    variant: "h2"
                                     text: modelData.value
-                                    color: Theme.primary
-                                    Layout.alignment: Qt.AlignHCenter
-                                    font.bold: true
+                                    font.pixelSize: 22
+                                    font.weight: Font.Bold
+                                    font.family: "monospace"
+                                    color: accentBlue
                                 }
                                 CText {
-                                    variant: "caption"
                                     text: modelData.label
-                                    Layout.alignment: Qt.AlignHCenter
-                                    opacity: 0.6
+                                    variant: "caption"
+                                    font.family: "monospace"
+                                    font.pixelSize: 10
+                                    font.letterSpacing: 1.5
+                                    opacity: 0.35
                                 }
                             }
 
-                            // Divider between stats
                             Rectangle {
                                 visible: index < 3
                                 anchors.right: parent.right
                                 anchors.verticalCenter: parent.verticalCenter
                                 width: 1
-                                height: 40
-                                color: Theme.border
+                                height: 28
+                                color: subtleBorder
                             }
                         }
                     }
@@ -226,102 +270,100 @@ Rectangle {
             }
 
             // ═══════════════════════════════════════════════════════════
-            // FIVE LEVELS OF POWER
+            // ACCESS LEVELS
             // ═══════════════════════════════════════════════════════════
-            Item { Layout.preferredHeight: 40 }
-
             ColumnLayout {
                 Layout.fillWidth: true
+                Layout.topMargin: 48
                 Layout.leftMargin: 40
                 Layout.rightMargin: 40
-                spacing: 20
+                spacing: 24
 
-                CText {
-                    variant: "h3"
-                    text: "Five Levels of Power"
+                RowLayout {
                     Layout.alignment: Qt.AlignHCenter
-                }
-                CText {
-                    variant: "body2"
-                    text: "Each level unlocks new capabilities. Start as a visitor, rise to platform god."
-                    Layout.alignment: Qt.AlignHCenter
-                    opacity: 0.6
+                    spacing: 8
+                    CText {
+                        variant: "h3"
+                        text: "Access Levels"
+                        font.weight: Font.Bold
+                    }
+                    Rectangle {
+                        width: 40
+                        height: 2
+                        radius: 1
+                        color: accentBlue
+                        Layout.alignment: Qt.AlignVCenter
+                    }
                 }
 
-                // Level cards grid — 3 across top, 2 across bottom
-                GridLayout {
+                // Level cards — horizontal strip
+                RowLayout {
                     Layout.fillWidth: true
-                    Layout.topMargin: 8
-                    columns: 3
-                    columnSpacing: 16
-                    rowSpacing: 16
+                    spacing: 12
 
                     Repeater {
                         model: levels
                         delegate: Rectangle {
                             Layout.fillWidth: true
-                            Layout.minimumWidth: 200
-                            Layout.preferredHeight: 200
+                            Layout.preferredHeight: 180
                             radius: 8
-                            color: Theme.paper
-                            border.color: levelMA.containsMouse ? modelData.color : Theme.border
-                            border.width: levelMA.containsMouse ? 2 : 1
+                            color: cardBg
+                            border.color: lvlMA.containsMouse ? modelData.accent : subtleBorder
+                            border.width: 1
 
-                            Behavior on border.color { ColorAnimation { duration: 150 } }
+                            Behavior on border.color { ColorAnimation { duration: 200 } }
 
                             MouseArea {
-                                id: levelMA
+                                id: lvlMA
                                 anchors.fill: parent
                                 hoverEnabled: true
                                 cursorShape: Qt.PointingHandCursor
                                 onClicked: {
-                                    if (modelData.level <= appWindow.currentLevel) {
-                                        appWindow.currentView = levels[index].level === 1 ? "frontpage" :
-                                            levels[index].level === 2 ? "dashboard" :
-                                            levels[index].level === 3 ? "admin" :
-                                            levels[index].level === 4 ? "god-panel" : "supergod"
-                                    } else {
+                                    var views = ["frontpage", "dashboard", "admin", "god-panel", "supergod"]
+                                    if (modelData.level <= appWindow.currentLevel)
+                                        appWindow.currentView = views[modelData.level - 1]
+                                    else
                                         appWindow.currentView = "login"
-                                    }
                                 }
                             }
 
                             ColumnLayout {
                                 anchors.fill: parent
-                                anchors.margins: 16
-                                spacing: 8
+                                anchors.margins: 14
+                                spacing: 6
 
+                                // Header row: accent bar + level number + name
                                 RowLayout {
                                     spacing: 8
-                                    // Level badge
-                                    Rectangle {
-                                        width: 32
-                                        height: 32
-                                        radius: 16
-                                        color: modelData.color
 
-                                        CText {
-                                            anchors.centerIn: parent
-                                            text: modelData.level.toString()
-                                            color: "#FFFFFF"
-                                            font.bold: true
-                                            font.pixelSize: 14
-                                        }
+                                    Rectangle {
+                                        width: 3
+                                        height: 20
+                                        radius: 1.5
+                                        color: modelData.accent
                                     }
 
                                     CText {
-                                        variant: "h4"
+                                        text: "L" + modelData.level
+                                        font.family: "monospace"
+                                        font.pixelSize: 11
+                                        font.bold: true
+                                        color: modelData.accent
+                                    }
+
+                                    CText {
+                                        variant: "subtitle1"
                                         text: modelData.name
+                                        font.bold: true
                                     }
 
                                     Item { Layout.fillWidth: true }
 
-                                    // Lock indicator
                                     CText {
                                         visible: modelData.level > appWindow.currentLevel
                                         text: "\uD83D\uDD12"
-                                        font.pixelSize: 16
-                                        opacity: 0.4
+                                        font.pixelSize: 12
+                                        opacity: 0.3
                                     }
                                 }
 
@@ -330,22 +372,38 @@ Rectangle {
                                     text: modelData.desc
                                     wrapMode: Text.Wrap
                                     Layout.fillWidth: true
-                                    opacity: 0.7
-                                    lineHeight: 1.3
+                                    opacity: 0.45
+                                    lineHeight: 1.4
+                                    font.pixelSize: 12
                                 }
 
                                 Item { Layout.fillHeight: true }
 
-                                // Feature tags
+                                // Tags — subtle, monospace
                                 Flow {
                                     Layout.fillWidth: true
-                                    spacing: 6
+                                    spacing: 4
 
                                     Repeater {
-                                        model: modelData.features
-                                        CChip {
-                                            text: modelData
-                                            color: levels[index].color
+                                        model: modelData.tags
+                                        Rectangle {
+                                            width: tagText.implicitWidth + 12
+                                            height: 20
+                                            radius: 4
+                                            color: Qt.rgba(
+                                                levels[index] ? parseInt(levels[index].accent.substr(1,2), 16) / 255 : 0.5,
+                                                levels[index] ? parseInt(levels[index].accent.substr(3,2), 16) / 255 : 0.5,
+                                                levels[index] ? parseInt(levels[index].accent.substr(5,2), 16) / 255 : 0.5,
+                                                0.1)
+
+                                            CText {
+                                                id: tagText
+                                                anchors.centerIn: parent
+                                                text: modelData
+                                                font.pixelSize: 10
+                                                font.family: "monospace"
+                                                opacity: 0.6
+                                            }
                                         }
                                     }
                                 }
@@ -358,128 +416,72 @@ Rectangle {
             // ═══════════════════════════════════════════════════════════
             // TECH STACK
             // ═══════════════════════════════════════════════════════════
-            Item { Layout.preferredHeight: 40 }
-
-            Rectangle {
-                Layout.fillWidth: true
-                Layout.preferredHeight: techStackCol.implicitHeight + 80
-                color: Theme.paper
-
-                ColumnLayout {
-                    id: techStackCol
-                    anchors.fill: parent
-                    anchors.margins: 40
-                    spacing: 20
-
-                    CText {
-                        variant: "h3"
-                        text: "Universal Platform"
-                        Layout.alignment: Qt.AlignHCenter
-                    }
-                    CText {
-                        variant: "body2"
-                        text: "One codebase. Three frontends. Fourteen database backends. Zero compromises."
-                        Layout.alignment: Qt.AlignHCenter
-                        opacity: 0.6
-                    }
-
-                    GridLayout {
-                        Layout.fillWidth: true
-                        Layout.topMargin: 8
-                        columns: 3
-                        columnSpacing: 16
-                        rowSpacing: 16
-
-                        Repeater {
-                            model: techStack
-                            delegate: Rectangle {
-                                Layout.fillWidth: true
-                                Layout.preferredHeight: 80
-                                radius: 8
-                                color: Theme.surface || Theme.background
-                                border.color: Theme.border
-                                border.width: 1
-
-                                ColumnLayout {
-                                    anchors.fill: parent
-                                    anchors.margins: 14
-                                    spacing: 4
-
-                                    CText {
-                                        variant: "subtitle1"
-                                        text: modelData.name
-                                        font.bold: true
-                                    }
-                                    CText {
-                                        variant: "caption"
-                                        text: modelData.desc
-                                        opacity: 0.6
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            // ═══════════════════════════════════════════════════════════
-            // PLATFORM STATUS
-            // ═══════════════════════════════════════════════════════════
-            Item { Layout.preferredHeight: 40 }
-
             ColumnLayout {
                 Layout.fillWidth: true
+                Layout.topMargin: 48
                 Layout.leftMargin: 40
                 Layout.rightMargin: 40
-                spacing: 20
-
-                CText {
-                    variant: "h3"
-                    text: "Platform Status"
-                    Layout.alignment: Qt.AlignHCenter
-                }
+                spacing: 24
 
                 RowLayout {
+                    Layout.alignment: Qt.AlignHCenter
+                    spacing: 8
+                    CText {
+                        variant: "h3"
+                        text: "Stack"
+                        font.weight: Font.Bold
+                    }
+                    Rectangle {
+                        width: 28
+                        height: 2
+                        radius: 1
+                        color: accentViolet
+                        Layout.alignment: Qt.AlignVCenter
+                    }
+                }
+
+                GridLayout {
                     Layout.fillWidth: true
-                    spacing: 12
+                    columns: 3
+                    columnSpacing: 12
+                    rowSpacing: 12
 
                     Repeater {
-                        model: services
+                        model: techStack
                         delegate: Rectangle {
                             Layout.fillWidth: true
-                            Layout.preferredHeight: 64
-                            radius: 8
-                            color: Theme.paper
-                            border.color: Theme.border
+                            Layout.preferredHeight: 68
+                            radius: 6
+                            color: cardBg
+                            border.color: subtleBorder
                             border.width: 1
 
                             RowLayout {
                                 anchors.fill: parent
                                 anchors.margins: 14
-                                spacing: 10
+                                spacing: 12
 
-                                // Status dot
                                 Rectangle {
-                                    width: 10
-                                    height: 10
-                                    radius: 5
-                                    color: modelData.status === "online" ? "#4CAF50" :
-                                           modelData.status === "standby" ? "#FF9800" : "#f44336"
+                                    width: 3
+                                    height: 32
+                                    radius: 1.5
+                                    color: modelData.accent
                                 }
 
                                 ColumnLayout {
                                     Layout.fillWidth: true
                                     spacing: 2
+
                                     CText {
-                                        variant: "body2"
                                         text: modelData.name
                                         font.bold: true
+                                        font.pixelSize: 13
                                     }
                                     CText {
+                                        text: modelData.desc
                                         variant: "caption"
-                                        text: modelData.status
-                                        color: modelData.status === "online" ? "#4CAF50" :
-                                               modelData.status === "standby" ? "#FF9800" : "#f44336"
+                                        font.pixelSize: 11
+                                        opacity: 0.4
                                     }
                                 }
                             }
@@ -489,67 +491,74 @@ Rectangle {
             }
 
             // ═══════════════════════════════════════════════════════════
-            // ABOUT SECTION
+            // STATUS
             // ═══════════════════════════════════════════════════════════
-            Item { Layout.preferredHeight: 40 }
-
-            Rectangle {
+            ColumnLayout {
                 Layout.fillWidth: true
-                Layout.preferredHeight: aboutCol.implicitHeight + 80
-                color: Qt.rgba(Theme.primary.r || 0.13, Theme.primary.g || 0.59, Theme.primary.b || 0.95, 0.04)
+                Layout.topMargin: 48
+                Layout.leftMargin: 40
+                Layout.rightMargin: 40
+                spacing: 20
 
-                ColumnLayout {
-                    id: aboutCol
-                    anchors.fill: parent
-                    anchors.margins: 40
-                    spacing: 16
-
+                RowLayout {
+                    Layout.alignment: Qt.AlignHCenter
+                    spacing: 8
                     CText {
                         variant: "h3"
-                        text: "About MetaBuilder"
-                        Layout.alignment: Qt.AlignHCenter
+                        text: "Status"
+                        font.weight: Font.Bold
                     }
-
-                    CText {
-                        variant: "body1"
-                        text: "MetaBuilder is a universal platform for building data-driven applications through declarative configuration. " +
-                              "Define your entities in JSON schemas, wire them with visual workflows, and deploy across desktop (Qt6), " +
-                              "web (Next.js), and CLI — all backed by a C++ DBAL daemon that speaks to 14 database backends."
-                        wrapMode: Text.Wrap
-                        Layout.fillWidth: true
-                        Layout.maximumWidth: 700
-                        Layout.alignment: Qt.AlignHCenter
-                        horizontalAlignment: Text.AlignHCenter
-                        opacity: 0.7
-                        lineHeight: 1.6
+                    Rectangle {
+                        width: 36
+                        height: 2
+                        radius: 1
+                        color: accentCyan
+                        Layout.alignment: Qt.AlignVCenter
                     }
+                }
 
-                    CText {
-                        variant: "body2"
-                        text: "95% JSON config. 5% infrastructure code. Zero boilerplate."
-                        Layout.alignment: Qt.AlignHCenter
-                        opacity: 0.5
-                        font.italic: true
-                        Layout.topMargin: 8
-                    }
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing: 10
 
-                    RowLayout {
-                        Layout.alignment: Qt.AlignHCenter
-                        Layout.topMargin: 12
-                        spacing: 12
+                    Repeater {
+                        model: services
+                        delegate: Rectangle {
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 52
+                            radius: 6
+                            color: cardBg
+                            border.color: subtleBorder
+                            border.width: 1
 
-                        CButton {
-                            text: "Login as Demo"
-                            variant: "primary"
-                            onClicked: {
-                                appWindow.login("demo", "demo")
-                            }
-                        }
-                        CButton {
-                            text: "Login as God"
-                            variant: "ghost"
-                            onClicked: {
-                                appWindow.login("god", "god123")
+                            RowLayout {
+                                anchors.fill: parent
+                                anchors.leftMargin: 12
+                                anchors.rightMargin: 12
+                                spacing: 8
+
+                                Rectangle {
+                                    width: 7
+                                    height: 7
+                                    radius: 3.5
+                                    color: modelData.status === "online" ? accentBlue :
+                                           modelData.status === "standby" ? accentAmber : accentRose
+                                }
+
+                                CText {
+                                    text: modelData.name
+                                    font.pixelSize: 12
+                                    Layout.fillWidth: true
+                                }
+
+                                CText {
+                                    text: modelData.status
+                                    font.pixelSize: 10
+                                    font.family: "monospace"
+                                    color: modelData.status === "online" ? accentBlue :
+                                           modelData.status === "standby" ? accentAmber : accentRose
+                                    opacity: 0.7
+                                }
                             }
                         }
                     }
@@ -557,47 +566,46 @@ Rectangle {
             }
 
             // ═══════════════════════════════════════════════════════════
-            // QUICK CREDENTIALS (for demo)
+            // QUICK LOGIN
             // ═══════════════════════════════════════════════════════════
             ColumnLayout {
                 Layout.fillWidth: true
+                Layout.topMargin: 48
                 Layout.leftMargin: 40
                 Layout.rightMargin: 40
-                Layout.topMargin: 32
-                spacing: 12
+                spacing: 20
 
                 CText {
-                    variant: "h4"
                     text: "Quick Access"
+                    variant: "h4"
                     Layout.alignment: Qt.AlignHCenter
+                    font.weight: Font.Bold
                 }
 
-                GridLayout {
+                RowLayout {
                     Layout.fillWidth: true
-                    columns: 4
-                    columnSpacing: 12
-                    rowSpacing: 12
+                    spacing: 10
 
                     Repeater {
                         model: [
-                            { user: "demo",  pass: "demo",     role: "User",      level: 2, color: "#4CAF50" },
-                            { user: "admin", pass: "admin",    role: "Admin",     level: 3, color: "#FF9800" },
-                            { user: "god",   pass: "god123",   role: "God",       level: 4, color: "#9C27B0" },
-                            { user: "super", pass: "super123", role: "Super God", level: 5, color: "#FF5722" }
+                            { user: "demo",  pass: "demo",     label: "User",      level: 2, accent: accentBlue },
+                            { user: "admin", pass: "admin",    label: "Admin",     level: 3, accent: accentCyan },
+                            { user: "god",   pass: "god123",   label: "God",       level: 4, accent: accentViolet },
+                            { user: "super", pass: "super123", label: "Super God", level: 5, accent: accentRose }
                         ]
                         delegate: Rectangle {
                             Layout.fillWidth: true
-                            Layout.preferredHeight: 72
-                            radius: 8
-                            color: credMA.containsMouse ? Qt.rgba(modelData.color.r || 0, modelData.color.g || 0, modelData.color.b || 0, 0.08) : Theme.paper
-                            border.color: credMA.containsMouse ? modelData.color : Theme.border
+                            Layout.preferredHeight: 56
+                            radius: 6
+                            color: credMA2.containsMouse ? Qt.rgba(0.39, 0.4, 0.95, 0.06) : cardBg
+                            border.color: credMA2.containsMouse ? modelData.accent : subtleBorder
                             border.width: 1
 
                             Behavior on border.color { ColorAnimation { duration: 150 } }
                             Behavior on color { ColorAnimation { duration: 150 } }
 
                             MouseArea {
-                                id: credMA
+                                id: credMA2
                                 anchors.fill: parent
                                 hoverEnabled: true
                                 cursorShape: Qt.PointingHandCursor
@@ -606,45 +614,38 @@ Rectangle {
 
                             RowLayout {
                                 anchors.fill: parent
-                                anchors.margins: 12
+                                anchors.leftMargin: 12
+                                anchors.rightMargin: 12
                                 spacing: 10
 
                                 Rectangle {
-                                    width: 40
-                                    height: 40
-                                    radius: 20
-                                    color: modelData.color
-
-                                    CText {
-                                        anchors.centerIn: parent
-                                        text: modelData.level.toString()
-                                        color: "#FFFFFF"
-                                        font.bold: true
-                                        font.pixelSize: 16
-                                    }
+                                    width: 3
+                                    height: 24
+                                    radius: 1.5
+                                    color: modelData.accent
                                 }
 
                                 ColumnLayout {
                                     Layout.fillWidth: true
-                                    spacing: 2
+                                    spacing: 1
 
                                     CText {
-                                        variant: "subtitle1"
-                                        text: modelData.role
+                                        text: modelData.label
                                         font.bold: true
+                                        font.pixelSize: 13
                                     }
                                     CText {
-                                        variant: "caption"
                                         text: modelData.user + " / " + modelData.pass
-                                        opacity: 0.5
+                                        font.pixelSize: 10
+                                        font.family: "monospace"
+                                        opacity: 0.3
                                     }
                                 }
 
                                 CText {
                                     text: "\u2192"
-                                    font.pixelSize: 18
-                                    opacity: credMA.containsMouse ? 1.0 : 0.3
-
+                                    font.pixelSize: 16
+                                    opacity: credMA2.containsMouse ? 0.8 : 0.2
                                     Behavior on opacity { NumberAnimation { duration: 150 } }
                                 }
                             }
@@ -656,12 +657,20 @@ Rectangle {
             // ═══════════════════════════════════════════════════════════
             // FOOTER
             // ═══════════════════════════════════════════════════════════
-            Item { Layout.preferredHeight: 32 }
+            Item { Layout.preferredHeight: 48 }
 
             Rectangle {
                 Layout.fillWidth: true
-                Layout.preferredHeight: 60
-                color: Theme.paper
+                Layout.preferredHeight: 48
+                color: "transparent"
+
+                Rectangle {
+                    anchors.top: parent.top
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: 1
+                    color: subtleBorder
+                }
 
                 RowLayout {
                     anchors.fill: parent
@@ -669,17 +678,18 @@ Rectangle {
                     anchors.rightMargin: 40
 
                     CText {
-                        variant: "caption"
-                        text: "\u00a9 2026 MetaBuilder Platform"
-                        opacity: 0.5
+                        text: "\u00a9 2026 MetaBuilder"
+                        font.pixelSize: 11
+                        opacity: 0.25
                     }
 
                     Item { Layout.fillWidth: true }
 
                     CText {
-                        variant: "caption"
-                        text: "Qt6 \u2022 Next.js \u2022 C++ DBAL \u2022 JSON Workflows"
-                        opacity: 0.4
+                        text: "Qt6 \u00B7 Next.js \u00B7 C++ \u00B7 JSON"
+                        font.pixelSize: 11
+                        font.family: "monospace"
+                        opacity: 0.2
                     }
                 }
             }
