@@ -37,6 +37,7 @@ Rectangle {
 
     // ── Geometry ────────────────────────────────────────────────────
     radius: 12
+    clip: true
     implicitWidth: 300
     implicitHeight: contentColumn.implicitHeight
 

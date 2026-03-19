@@ -310,8 +310,10 @@ Rectangle {
                         model: levels
                         delegate: Rectangle {
                             Layout.fillWidth: true
-                            Layout.preferredHeight: 196
+                            Layout.minimumHeight: 170
+                            implicitHeight: lvlContent.implicitHeight + 32
                             radius: 16
+                            clip: true
                             color: lvlMA.containsMouse ? surfaceContainerHighest : surfaceContainerHigh
                             border.color: lvlMA.containsMouse ? modelData.accent : outlineVariant
                             border.width: 1
@@ -334,7 +336,10 @@ Rectangle {
                             }
 
                             ColumnLayout {
-                                anchors.fill: parent
+                                id: lvlContent
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                anchors.top: parent.top
                                 anchors.margins: 16
                                 spacing: 8
 
