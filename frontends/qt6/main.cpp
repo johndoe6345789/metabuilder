@@ -14,25 +14,16 @@ int main(int argc, char *argv[]) {
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
 
-    // Add shared QML component library path
-    // Resolves: import QmlComponents 1.0
-    const auto appDir = QCoreApplication::applicationDirPath();
-    // Qt6 resolves "import QmlComponents" by looking for a QmlComponents/ dir
-    // inside each import path. We symlink or reference the parent of qml/.
-    const QStringList qmlParentPaths = {
-        appDir + "/../../",
-        appDir + "/../../../",
-        appDir + "/../../../../",
-        QDir::cleanPath(QStringLiteral(SRCDIR) + "/../..")
-    };
-    for (const auto &path : qmlParentPaths) {
-        const QString candidate = QDir(path).absolutePath();
-        // Check if QmlComponents symlink or qml/ dir with qmldir exists
-        if (QDir(candidate + "/QmlComponents").exists()
-            || QDir(candidate + "/qml").exists()) {
-            engine.addImportPath(candidate);
-            break;
-        }
+    // Add shared QML component library import paths
+    // No symlinks — directly reference the qml/ directory tree
+    const QString projectRoot = QDir::cleanPath(QStringLiteral(SRCDIR) + QStringLiteral("/../.."));
+    const QString qmlDir = projectRoot + QStringLiteral("/qml");
+
+    // Add qml/ parent so Qt finds "import QmlComponents 1.0" at qml/components/
+    // and "import MetaBuilder 1.0" at qml/MetaBuilder/
+    if (QDir(qmlDir).exists()) {
+        engine.addImportPath(qmlDir);
+        engine.addImportPath(projectRoot);
     }
 
     PackageRegistry registry;

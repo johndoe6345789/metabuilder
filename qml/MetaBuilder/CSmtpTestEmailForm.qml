@@ -12,9 +12,9 @@ CCard {
     property string body: "This is a test email from MetaBuilder."
     property bool sending: false
 
-    signal recipientChanged(string value)
-    signal subjectChanged(string value)
-    signal bodyChanged(string value)
+    signal recipientEdited(string value)
+    signal subjectEdited(string value)
+    signal bodyEdited(string value)
     signal sendRequested()
 
     ColumnLayout {
@@ -34,7 +34,7 @@ CCard {
                 label: "Recipient"
                 placeholderText: "test@example.com"
                 text: root.recipient
-                onTextChanged: root.recipientChanged(text)
+                onTextChanged: root.recipientEdited(text)
             }
 
             CTextField {
@@ -42,7 +42,7 @@ CCard {
                 label: "Subject"
                 placeholderText: "Test subject"
                 text: root.subject
-                onTextChanged: root.subjectChanged(text)
+                onTextChanged: root.subjectEdited(text)
             }
         }
 
@@ -70,7 +70,7 @@ CCard {
                         color: Theme.text
                         font.pixelSize: 13
                         background: null
-                        onTextChanged: root.bodyChanged(text)
+                        onTextChanged: root.bodyEdited(text)
                     }
                 }
             }

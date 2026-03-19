@@ -12,8 +12,8 @@ CCard {
     property string fromName: ""
     property string fromEmail: ""
 
-    signal fromNameChanged(string value)
-    signal fromEmailChanged(string value)
+    signal fromNameEdited(string value)
+    signal fromEmailEdited(string value)
 
     ColumnLayout {
         anchors.fill: parent
@@ -28,7 +28,7 @@ CCard {
             label: "From Name"
             placeholderText: "MetaBuilder"
             text: root.fromName
-            onTextChanged: root.fromNameChanged(text)
+            onTextChanged: root.fromNameEdited(text)
         }
 
         CTextField {
@@ -36,7 +36,7 @@ CCard {
             label: "From Email"
             placeholderText: "noreply@example.com"
             text: root.fromEmail
-            onTextChanged: root.fromEmailChanged(text)
+            onTextChanged: root.fromEmailEdited(text)
         }
 
         CDivider { Layout.fillWidth: true }

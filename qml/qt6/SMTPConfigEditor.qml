@@ -143,16 +143,16 @@ Rectangle {
 
                 CSmtpSenderForm {
                     fromName: smtpEditor.fromName; fromEmail: smtpEditor.fromEmail
-                    onFromNameChanged: function(v) { smtpEditor.fromName = v; markDirty() }
-                    onFromEmailChanged: function(v) { smtpEditor.fromEmail = v; markDirty() }
+                    onFromNameEdited: function(v) { smtpEditor.fromName = v; markDirty() }
+                    onFromEmailEdited: function(v) { smtpEditor.fromEmail = v; markDirty() }
                 }
             }
 
             CSmtpTestEmailForm {
                 recipient: testRecipient; subject: testSubject; body: testBody; sending: sendingTest
-                onRecipientChanged: function(v) { testRecipient = v }
-                onSubjectChanged: function(v) { testSubject = v }
-                onBodyChanged: function(v) { testBody = v }
+                onRecipientEdited: function(v) { testRecipient = v }
+                onSubjectEdited: function(v) { testSubject = v }
+                onBodyEdited: function(v) { testBody = v }
                 onSendRequested: sendTestEmail()
             }
 

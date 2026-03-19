@@ -128,10 +128,10 @@ Rectangle {
                 radiusSmall: root.radiusSmall
                 radiusMedium: root.radiusMedium
                 radiusLarge: root.radiusLarge
-                onBaseSpacingChanged: function(val) { root.baseSpacing = val; hasUnsavedChanges = true }
-                onRadiusSmallChanged: function(val) { root.radiusSmall = val; hasUnsavedChanges = true }
-                onRadiusMediumChanged: function(val) { root.radiusMedium = val; hasUnsavedChanges = true }
-                onRadiusLargeChanged: function(val) { root.radiusLarge = val; hasUnsavedChanges = true }
+                onBaseSpacingEdited: function(val) { root.baseSpacing = val; hasUnsavedChanges = true }
+                onRadiusSmallEdited: function(val) { root.radiusSmall = val; hasUnsavedChanges = true }
+                onRadiusMediumEdited: function(val) { root.radiusMedium = val; hasUnsavedChanges = true }
+                onRadiusLargeEdited: function(val) { root.radiusLarge = val; hasUnsavedChanges = true }
             }
 
             // Section 6: Live Preview

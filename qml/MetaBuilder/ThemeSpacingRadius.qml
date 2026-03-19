@@ -13,10 +13,10 @@ ColumnLayout {
     property int radiusMedium: 8
     property int radiusLarge: 16
 
-    signal baseSpacingChanged(int value)
-    signal radiusSmallChanged(int value)
-    signal radiusMediumChanged(int value)
-    signal radiusLargeChanged(int value)
+    signal baseSpacingEdited(int value)
+    signal radiusSmallEdited(int value)
+    signal radiusMediumEdited(int value)
+    signal radiusLargeEdited(int value)
 
     // Spacing section
     CCard {

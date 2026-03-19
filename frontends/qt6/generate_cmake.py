@@ -29,43 +29,64 @@ def load_config(config_path: str) -> dict:
         return json.load(f)
 
 
-def find_root_qml_files(root_dir: Path) -> list[str]:
-    """Find all *.qml and *.js files in the project root and ../../qml/qt6/ directories."""
-    files = sorted(
-        list(root_dir.glob("*.qml")) + list(root_dir.glob("*.js"))
-    )
-    result = [f.name for f in files]
+def find_root_qml_files(root_dir: Path) -> list[tuple[str, str]]:
+    """Find all *.qml and *.js files in the project root and extracted qml/qt6/ directory.
 
-    # Also scan the extracted QML directory (../../qml/qt6/ relative to root_dir)
+    Returns list of (source_path, qrc_alias) tuples. Files in root_dir use just their
+    filename; files in ../../qml/qt6/ use relative paths with a QT_RESOURCE_ALIAS.
+    """
+    result = []
+    # Local root files
+    for fn in sorted(os.listdir(str(root_dir))):
+        if fn.endswith((".qml", ".js")):
+            result.append((fn, None))
+
+    # Extracted files in ../../qml/qt6/
     extracted_dir = root_dir.parent.parent / "qml" / "qt6"
     if extracted_dir.exists():
-        ext_files = sorted(
-            list(extracted_dir.glob("*.qml")) + list(extracted_dir.glob("*.js"))
-        )
-        for f in ext_files:
-            rel = os.path.relpath(f, root_dir)
-            if rel not in result:
-                result.append(rel)
-    return sorted(result)
+        local_names = {t[0] for t in result}
+        for fn in sorted(os.listdir(str(extracted_dir))):
+            if fn.endswith((".qml", ".js")) and fn not in local_names:
+                rel_path = os.path.relpath(extracted_dir / fn, root_dir)
+                result.append((rel_path, fn))
+    return result
 
 
 def find_qmllib_files(root_dir: Path) -> dict[str, list[str]]:
     """Find all *.qml and *.js files and qmldir files in qmllib/ subdirectories.
 
-    Returns a dict mapping relative paths (e.g. 'qmllib/dbal/DBALProvider.qml')
-    grouped by subdirectory.
+    Follows symlinks so that extracted component directories (e.g., qmllib/MetaBuilder
+    symlinked to ../../qml/MetaBuilder) are included with qmllib-relative paths.
+
+    Returns a dict with 'qml' (list of QML/JS paths) and 'resources' (qmldir paths).
     """
-    qmllib_dir = root_dir / "qmllib"
     result = {"qml": [], "resources": []}
-    if not qmllib_dir.exists():
-        return result
-    qml_files = sorted(
-        list(qmllib_dir.rglob("*.qml")) + list(qmllib_dir.rglob("*.js"))
-    )
-    for qml_file in qml_files:
-        result["qml"].append(str(qml_file.relative_to(root_dir)))
-    for qmldir_file in sorted(qmllib_dir.rglob("qmldir")):
-        result["resources"].append(str(qmldir_file.relative_to(root_dir)))
+
+    # Search both local qmllib/ and extracted ../../qml/{MetaBuilder,Material,dbal}
+    search_dirs = []
+    qmllib_dir = root_dir / "qmllib"
+    if qmllib_dir.exists():
+        search_dirs.append((qmllib_dir, "qmllib"))
+
+    extracted_qml = root_dir.parent.parent / "qml"
+    if extracted_qml.exists():
+        for subdir in ["MetaBuilder", "Material", "dbal"]:
+            candidate = extracted_qml / subdir
+            if candidate.exists():
+                search_dirs.append((candidate, f"qmllib/{subdir}"))
+
+    for search_dir, prefix in search_dirs:
+        for dirpath, _dirnames, filenames in os.walk(str(search_dir), followlinks=True):
+            for fn in filenames:
+                full = os.path.join(dirpath, fn)
+                # Compute path relative to search_dir, then prepend prefix
+                rel_to_search = os.path.relpath(full, str(search_dir))
+                aliased = f"{prefix}/{rel_to_search}" if prefix == f"qmllib/{search_dir.name}" else os.path.relpath(full, str(root_dir))
+                real_path = os.path.relpath(full, str(root_dir))
+                if fn.endswith((".qml", ".js")):
+                    result["qml"].append((real_path, f"{prefix}/{rel_to_search}"))
+                elif fn == "qmldir":
+                    result["resources"].append((real_path, f"{prefix}/{rel_to_search}"))
     return result
 
 
