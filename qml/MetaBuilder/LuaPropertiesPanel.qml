@@ -41,26 +41,9 @@ Rectangle {
 
                 CDivider { Layout.fillWidth: true }
 
-                CText { variant: "caption"; text: "SCRIPT NAME" }
-                CTextField {
-                    Layout.fillWidth: true
-                    text: scriptName
-                    onTextChanged: nameChanged(text)
-                }
-
-                CText { variant: "caption"; text: "DESCRIPTION" }
-                CTextField {
-                    Layout.fillWidth: true
-                    text: scriptDescription
-                    onTextChanged: descriptionChanged(text)
-                }
-
-                CText { variant: "caption"; text: "RETURN TYPE" }
-                CTextField {
-                    Layout.fillWidth: true
-                    text: returnType
-                    onTextChanged: returnTypeChanged(text)
-                }
+                CTextField { Layout.fillWidth: true; label: "SCRIPT NAME"; text: scriptName; onTextChanged: nameChanged(text) }
+                CTextField { Layout.fillWidth: true; label: "DESCRIPTION"; text: scriptDescription; onTextChanged: descriptionChanged(text) }
+                CTextField { Layout.fillWidth: true; label: "RETURN TYPE"; text: returnType; onTextChanged: returnTypeChanged(text) }
 
                 CDivider { Layout.fillWidth: true }
 

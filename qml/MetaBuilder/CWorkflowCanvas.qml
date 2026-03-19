@@ -31,9 +31,7 @@ Rectangle {
     color: Theme.background
     clip: true
 
-    function requestPaint() {
-        connectionLayer.requestPaint()
-    }
+    function requestPaint() { connectionLayer.requestPaint() }
 
     function groupColor(nodeType) {
         var prefix = nodeType ? nodeType.split(".")[0] : ""
@@ -50,7 +48,6 @@ Rectangle {
         }
     }
 
-    // Drop area for palette drag
     DropArea {
         anchors.fill: parent
         keys: ["text/node-type"]
@@ -71,13 +68,7 @@ Rectangle {
         clip: true
         boundsBehavior: Flickable.StopAtBounds
 
-        Component.onCompleted: {
-            contentX = 1500
-            contentY = 1500
-        }
-
-        function centerX() { return contentX + width / 2 }
-        function centerY() { return contentY + height / 2 }
+        Component.onCompleted: { contentX = 1500; contentY = 1500 }
 
         Item {
             id: canvasContent
@@ -85,15 +76,11 @@ Rectangle {
             height: canvas.contentHeight
 
             transform: Scale {
-                origin.x: 0
-                origin.y: 0
-                xScale: root.zoom
-                yScale: root.zoom
+                origin.x: 0; origin.y: 0
+                xScale: root.zoom; yScale: root.zoom
             }
 
-            CCanvasGrid {
-                anchors.fill: parent
-            }
+            CCanvasGrid { anchors.fill: parent }
 
             CConnectionLayer {
                 id: connectionLayer
@@ -109,7 +96,6 @@ Rectangle {
             }
 
             Repeater {
-                id: nodeRepeater
                 model: root.nodes.length
                 z: 2
 
@@ -123,42 +109,21 @@ Rectangle {
 
                     onNodeSelected: function(id) { root.nodeSelected(id) }
                     onNodeMoved: function(id, x, y) { root.nodeMoved(id, x, y) }
-                    onConnectionDragStarted: function(nodeId, portName, isOutput, portX, portY) {
-                        root.connectionDragStarted(nodeId, portName, isOutput, portX, portY)
+                    onConnectionDragStarted: function(nId, pName, isOut, pX, pY) {
+                        root.connectionDragStarted(nId, pName, isOut, pX, pY)
                     }
-                    onConnectionCompleted: function(nodeId, portName) {
-                        root.connectionCompleted(nodeId, portName)
-                    }
+                    onConnectionCompleted: function(nId, pName) { root.connectionCompleted(nId, pName) }
                     onPaintRequested: connectionLayer.requestPaint()
                 }
             }
 
-            MouseArea {
+            CCanvasInteractionArea {
                 anchors.fill: parent
-                z: 0
-                acceptedButtons: Qt.LeftButton | Qt.MiddleButton
-                hoverEnabled: true
-
-                onPositionChanged: function(mouse) {
-                    if (root.drawingConnection) {
-                        root.connectionDragUpdated(mouse.x, mouse.y)
-                    }
-                }
-
-                onReleased: function(mouse) {
-                    if (root.drawingConnection) {
-                        root.connectionDragFinished()
-                    }
-                }
-
-                onClicked: function(mouse) {
-                    root.canvasClicked()
-                }
-
-                onWheel: function(wheel) {
-                    var zoomDelta = wheel.angleDelta.y > 0 ? 0.1 : -0.1
-                    root.zoomChanged(root.zoom + zoomDelta)
-                }
+                drawingConnection: root.drawingConnection
+                onConnectionDragUpdated: function(x, y) { root.connectionDragUpdated(x, y) }
+                onConnectionDragFinished: root.connectionDragFinished()
+                onCanvasClicked: root.canvasClicked()
+                onZoomRequested: function(delta) { root.zoomChanged(root.zoom + delta) }
             }
         }
     }

@@ -105,44 +105,9 @@ CCard {
                 Layout.fillWidth: true
                 spacing: 12
 
-                CPaper {
-                    Layout.fillWidth: true
-                    implicitHeight: 60
-
-                    ColumnLayout {
-                        anchors.fill: parent
-                        anchors.margins: 10
-                        spacing: 2
-                        CText { variant: "caption"; text: "Records" }
-                        CText { variant: "h4"; text: root.backend.records.toLocaleString() }
-                    }
-                }
-
-                CPaper {
-                    Layout.fillWidth: true
-                    implicitHeight: 60
-
-                    ColumnLayout {
-                        anchors.fill: parent
-                        anchors.margins: 10
-                        spacing: 2
-                        CText { variant: "caption"; text: "Size" }
-                        CText { variant: "h4"; text: root.formatSize(root.backend.sizeKb) }
-                    }
-                }
-
-                CPaper {
-                    Layout.fillWidth: true
-                    implicitHeight: 60
-
-                    ColumnLayout {
-                        anchors.fill: parent
-                        anchors.margins: 10
-                        spacing: 2
-                        CText { variant: "caption"; text: "Last Backup" }
-                        CText { variant: "body2"; text: root.backend.lastBackup }
-                    }
-                }
+                CStatCell { label: "Records";     value: root.backend.records.toLocaleString() }
+                CStatCell { label: "Size";         value: root.formatSize(root.backend.sizeKb) }
+                CStatCell { label: "Last Backup";  value: root.backend.lastBackup; valueVariant: "body2" }
             }
         }
     }

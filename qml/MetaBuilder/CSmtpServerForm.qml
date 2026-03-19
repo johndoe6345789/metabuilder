@@ -64,26 +64,10 @@ CCard {
             onTextChanged: root.passwordEdited(text)
         }
 
-        ColumnLayout {
-            Layout.fillWidth: true
-            spacing: 4
-
-            CText { variant: "caption"; text: "Encryption" }
-
-            RowLayout {
-                Layout.fillWidth: true
-                spacing: 8
-
-                Repeater {
-                    model: root.encryptionOptions
-                    delegate: CButton {
-                        text: modelData
-                        variant: root.encryptionIndex === index ? "primary" : "ghost"
-                        size: "sm"
-                        onClicked: root.encryptionEdited(index)
-                    }
-                }
-            }
+        CEncryptionSelector {
+            options: root.encryptionOptions
+            selectedIndex: root.encryptionIndex
+            onSelectionChanged: function(idx) { root.encryptionEdited(idx) }
         }
 
         CDivider { Layout.fillWidth: true }

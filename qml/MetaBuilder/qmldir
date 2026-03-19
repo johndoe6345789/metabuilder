@@ -124,6 +124,7 @@ CGodPanelGuideTab 1.0 CGodPanelGuideTab.qml
 CNodePaletteItem 1.0 CNodePaletteItem.qml
 CNodePortColumn 1.0 CNodePortColumn.qml
 CNodePorts 1.0 CNodePorts.qml
+CKeyboardShortcuts 1.0 CKeyboardShortcuts.qml
 CPackageDetailSidebar 1.0 CPackageDetailSidebar.qml
 CPackageListItem 1.0 CPackageListItem.qml
 CssSuggestionPopup 1.0 CssSuggestionPopup.qml
@@ -154,3 +155,15 @@ CExecutionStatusDot 1.0 CExecutionStatusDot.qml
 CSmtpBodyEditor 1.0 CSmtpBodyEditor.qml
 CRoutePermissionSection 1.0 CRoutePermissionSection.qml
 LuaScriptInfoSection 1.0 LuaScriptInfoSection.qml
+CGodPanelSettingsTab 1.0 CGodPanelSettingsTab.qml
+CModeratorHeader 1.0 CModeratorHeader.qml
+ThemePreviewStatusCard 1.0 ThemePreviewStatusCard.qml
+ThemePreviewActivityCard 1.0 ThemePreviewActivityCard.qml
+MediaChannelSchedule 1.0 MediaChannelSchedule.qml
+CStatCell 1.0 CStatCell.qml
+CssPropertyRow 1.0 CssPropertyRow.qml
+DropdownExpandedList 1.0 DropdownExpandedList.qml
+MediaRadioPlaylist 1.0 MediaRadioPlaylist.qml
+CNotificationIconBadge 1.0 CNotificationIconBadge.qml
+CComponentPropsList 1.0 CComponentPropsList.qml
+MediaJobRow 1.0 MediaJobRow.qml

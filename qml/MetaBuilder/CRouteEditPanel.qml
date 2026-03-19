@@ -46,13 +46,7 @@ CCard {
             Layout.fillWidth: true
             model: levelOptions
             currentIndex: root.route ? root.route.level - 1 : 0
-            onCurrentIndexChanged: {
-                if (root.route) {
-                    var newLvl = currentIndex + 1
-                    if (newLvl !== root.route.level)
-                        root.fieldChanged("level", newLvl)
-                }
-            }
+            onCurrentIndexChanged: if (root.route && currentIndex + 1 !== root.route.level) root.fieldChanged("level", currentIndex + 1)
         }
 
         CText { variant: "caption"; text: "Layout Type" }
@@ -60,13 +54,7 @@ CCard {
             Layout.fillWidth: true
             model: layoutOptions
             currentIndex: root.route ? layoutOptions.indexOf(root.route.layout) : 0
-            onCurrentIndexChanged: {
-                if (root.route) {
-                    var newLayoutVal = layoutOptions[currentIndex]
-                    if (newLayoutVal !== root.route.layout)
-                        root.fieldChanged("layout", newLayoutVal)
-                }
-            }
+            onCurrentIndexChanged: if (root.route && layoutOptions[currentIndex] !== root.route.layout) root.fieldChanged("layout", layoutOptions[currentIndex])
         }
 
         FlexRow {

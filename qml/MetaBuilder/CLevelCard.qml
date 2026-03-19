@@ -88,28 +88,10 @@ Rectangle {
 
         Item { Layout.fillHeight: true }
 
-        Flow {
-            Layout.fillWidth: true
-            spacing: 6
-
-            Repeater {
-                model: root.tags
-                Rectangle {
-                    width: tText.implicitWidth + 16
-                    height: 24
-                    radius: 8
-                    color: Qt.rgba(accent.r, accent.g, accent.b, isDark ? 0.12 : 0.10)
-
-                    CText {
-                        id: tText
-                        anchors.centerIn: parent
-                        text: modelData
-                        font.pixelSize: 11
-                        font.weight: Font.Medium
-                        color: accent
-                    }
-                }
-            }
+        CLevelTagFlow {
+            tags: root.tags
+            accent: root.accent
+            isDark: root.isDark
         }
     }
 }

@@ -13,11 +13,8 @@ Rectangle {
     signal openStorybook()
     signal openPackages()
 
-    // MD3 tonal surfaces
     readonly property color accentBlue: "#6366F1"
-    readonly property color primaryContainer: isDark
-        ? Qt.rgba(accentBlue.r, accentBlue.g, accentBlue.b, 0.15)
-        : Qt.rgba(accentBlue.r, accentBlue.g, accentBlue.b, 0.12)
+    readonly property color primaryContainer: isDark ? Qt.rgba(accentBlue.r, accentBlue.g, accentBlue.b, 0.15) : Qt.rgba(accentBlue.r, accentBlue.g, accentBlue.b, 0.12)
     readonly property color onSurface: Theme.text
     readonly property color onSurfaceVariant: Theme.textSecondary
 
@@ -41,22 +38,11 @@ Rectangle {
         width: Math.min(parent.width - 80, 720)
         spacing: 16
 
-        // Version pill
-        Rectangle {
+        CVersionPill {
             Layout.alignment: Qt.AlignHCenter
-            width: vLabel.implicitWidth + 24
-            height: 28
-            radius: 14
-            color: primaryContainer
-
-            CText {
-                id: vLabel
-                anchors.centerIn: parent
-                text: "v" + platformVersion
-                font.family: "monospace"
-                font.pixelSize: 12
-                color: accentBlue
-            }
+            version: platformVersion
+            accent: accentBlue
+            containerColor: primaryContainer
         }
 
         CText {
