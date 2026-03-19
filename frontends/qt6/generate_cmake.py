@@ -100,6 +100,19 @@ def find_audio_assets(root_dir: Path) -> list[str]:
     return [str(f.relative_to(root_dir)) for f in files if f.is_file()]
 
 
+def find_config_files(root_dir: Path) -> dict[str, list[str]]:
+    """Find config/ files: JS goes into QML_FILES, JSON into RESOURCES."""
+    config_dir = root_dir / "config"
+    result = {"qml": [], "resources": []}
+    if not config_dir.exists():
+        return result
+    for f in sorted(config_dir.rglob("*.js")):
+        result["qml"].append(str(f.relative_to(root_dir)))
+    for f in sorted(config_dir.rglob("*.json")):
+        result["resources"].append(str(f.relative_to(root_dir)))
+    return result
+
+
 def find_cpp_sources(root_dir: Path) -> dict[str, list[str]]:
     """Find all *.cpp and *.h files in src/."""
     src_dir = root_dir / "src"

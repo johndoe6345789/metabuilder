@@ -10,8 +10,8 @@ CCard {
     property string fontFamily: "Inter"
     property int baseFontSize: 14
 
-    signal fontFamilyChanged(string family)
-    signal baseFontSizeChanged(int size)
+    signal fontFamilyEdited(string family)
+    signal baseFontSizeEdited(int size)
 
     ColumnLayout {
         anchors.fill: parent
@@ -36,7 +36,7 @@ CCard {
                     label: "Font Family"
                     placeholderText: "e.g., Inter, Roboto, system-ui"
                     text: fontFamily
-                    onTextChanged: fontFamilyChanged(text)
+                    onTextChanged: fontFamilyEdited(text)
                 }
             }
 
@@ -52,7 +52,7 @@ CCard {
                     to: 24
                     stepSize: 1
                     value: baseFontSize
-                    onValueChanged: baseFontSizeChanged(value)
+                    onValueChanged: baseFontSizeEdited(value)
 
                     background: Rectangle {
                         x: parent.leftPadding

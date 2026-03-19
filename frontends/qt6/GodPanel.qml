@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QmlComponents 1.0
-import MetaBuilder 1.0
+import "qmllib/MetaBuilder"
 import "config/GodPanelConfig.js" as GodPanelConfig
 
 Rectangle {

@@ -19,7 +19,7 @@ CCard {
     property string customSuccess: "#000000"
     property string customInfo: "#000000"
 
-    signal colorChanged(string token, string value)
+    signal tokenColorEdited(string token, string value)
 
     // Inline color field component
     component ColorField: RowLayout {
@@ -88,57 +88,57 @@ CCard {
             ColorField {
                 label: "Primary"
                 colorValue: customPrimary
-                onColorEdited: function(val) { colorChanged("primary", val) }
+                onColorEdited: function(val) { tokenColorEdited("primary", val) }
             }
             ColorField {
                 label: "Background"
                 colorValue: customBackground
-                onColorEdited: function(val) { colorChanged("background", val) }
+                onColorEdited: function(val) { tokenColorEdited("background", val) }
             }
             ColorField {
                 label: "Surface"
                 colorValue: customSurface
-                onColorEdited: function(val) { colorChanged("surface", val) }
+                onColorEdited: function(val) { tokenColorEdited("surface", val) }
             }
             ColorField {
                 label: "Paper"
                 colorValue: customPaper
-                onColorEdited: function(val) { colorChanged("paper", val) }
+                onColorEdited: function(val) { tokenColorEdited("paper", val) }
             }
             ColorField {
                 label: "Text"
                 colorValue: customText
-                onColorEdited: function(val) { colorChanged("text", val) }
+                onColorEdited: function(val) { tokenColorEdited("text", val) }
             }
             ColorField {
                 label: "Text Secondary"
                 colorValue: customTextSecondary
-                onColorEdited: function(val) { colorChanged("textSecondary", val) }
+                onColorEdited: function(val) { tokenColorEdited("textSecondary", val) }
             }
             ColorField {
                 label: "Border"
                 colorValue: customBorder
-                onColorEdited: function(val) { colorChanged("border", val) }
+                onColorEdited: function(val) { tokenColorEdited("border", val) }
             }
             ColorField {
                 label: "Error"
                 colorValue: customError
-                onColorEdited: function(val) { colorChanged("error", val) }
+                onColorEdited: function(val) { tokenColorEdited("error", val) }
             }
             ColorField {
                 label: "Warning"
                 colorValue: customWarning
-                onColorEdited: function(val) { colorChanged("warning", val) }
+                onColorEdited: function(val) { tokenColorEdited("warning", val) }
             }
             ColorField {
                 label: "Success"
                 colorValue: customSuccess
-                onColorEdited: function(val) { colorChanged("success", val) }
+                onColorEdited: function(val) { tokenColorEdited("success", val) }
             }
             ColorField {
                 label: "Info"
                 colorValue: customInfo
-                onColorEdited: function(val) { colorChanged("info", val) }
+                onColorEdited: function(val) { tokenColorEdited("info", val) }
             }
         }
     }

@@ -16,11 +16,11 @@ CCard {
     property var encryptionOptions: ["None", "TLS", "SSL"]
     property string connectionStatus: "untested"
 
-    signal hostChanged(string value)
-    signal portChanged(string value)
-    signal usernameChanged(string value)
-    signal passwordChanged(string value)
-    signal encryptionChanged(int index)
+    signal hostEdited(string value)
+    signal portEdited(string value)
+    signal usernameEdited(string value)
+    signal passwordEdited(string value)
+    signal encryptionEdited(int index)
     signal testRequested()
 
     ColumnLayout {
@@ -36,7 +36,7 @@ CCard {
             label: "Host"
             placeholderText: "smtp.example.com"
             text: root.host
-            onTextChanged: root.hostChanged(text)
+            onTextChanged: root.hostEdited(text)
         }
 
         CTextField {
@@ -44,7 +44,7 @@ CCard {
             label: "Port"
             placeholderText: "587"
             text: root.port
-            onTextChanged: root.portChanged(text)
+            onTextChanged: root.portEdited(text)
         }
 
         CTextField {
@@ -52,7 +52,7 @@ CCard {
             label: "Username"
             placeholderText: "user@example.com"
             text: root.username
-            onTextChanged: root.usernameChanged(text)
+            onTextChanged: root.usernameEdited(text)
         }
 
         CTextField {
@@ -61,7 +61,7 @@ CCard {
             placeholderText: "Enter password"
             echoMode: TextInput.Password
             text: root.password
-            onTextChanged: root.passwordChanged(text)
+            onTextChanged: root.passwordEdited(text)
         }
 
         ColumnLayout {
@@ -80,7 +80,7 @@ CCard {
                         text: modelData
                         variant: root.encryptionIndex === index ? "primary" : "ghost"
                         size: "sm"
-                        onClicked: root.encryptionChanged(index)
+                        onClicked: root.encryptionEdited(index)
                     }
                 }
             }

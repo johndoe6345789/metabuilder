@@ -118,3 +118,4 @@ bun.lockb
 # frontends/pastebin/public/pyodide/ # kept in fat repo
 .vscode/settings.json
 .act-env
+/frontends/qt6/_build
