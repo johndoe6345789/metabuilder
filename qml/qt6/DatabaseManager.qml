@@ -66,8 +66,11 @@ Rectangle {
                 text: "Import a JSON dump into the active backend ("
                     + backends[actBk].name + ")." }
             CTextField { label: "Import file"
-                placeholderText: "/path/to/dbal-export.json"; Layout.fillWidth: true }
-            CAlert { severity: "warning"; text: "Existing records with matching IDs will be overwritten." }
+                placeholderText: "/path/to/dbal-export.json"
+                    Layout.fillWidth: true }
+            CAlert { severity: "warning"
+                text: "Existing records with matching IDs "
+                    + "will be overwritten." }
         }
     }
     ColumnLayout {
@@ -76,17 +79,21 @@ Rectangle {
             Layout.fillWidth: true; spacing: 12
             CText { variant: "h3"; text: "Database Manager" }
             CStatusBadge { status: "success"
-                text: Logic.connectedCount(backends) + " / " + backends.length + " connected" }
+                text: Logic.connectedCount(backends) + " / " + backends.length
+                    + " connected" }
             CBadge { text: useLiveData ? "Connected to DBAL" : "Mock Data"
                 badgeColor: useLiveData ? Theme.success : Theme.warning }
             Item { Layout.fillWidth: true }
-            CButton { text: "Export"; variant: "ghost"; onClicked: showExpDlg = true }
-            CButton { text: "Import"; variant: "ghost"; onClicked: showImpDlg = true }
+            CButton { text: "Export"
+                variant: "ghost"; onClicked: showExpDlg = true }
+            CButton { text: "Import"
+                variant: "ghost"; onClicked: showImpDlg = true }
         }
         CDatabaseStatsRow {
             totalRecords: Logic.totalRecords(backends).toLocaleString()
             totalSize: Logic.formatSize(Logic.totalSize(backends))
-            activeBackend: backends[actBk].name; adapterPattern: adPats[root.adPat]
+            activeBackend: backends[actBk].name
+                adapterPattern: adPats[root.adPat]
         }
         RowLayout {
             Layout.fillWidth: true; Layout.fillHeight: true; spacing: 16
@@ -96,8 +103,10 @@ Rectangle {
                 Layout.fillWidth: true; Layout.fillHeight: true; spacing: 16
                 CBackendDetailPanel {
                     backend: backends[selBk]; isActive: selBk === actBk
-                    testingIndex: root.testIdx; backendIndex: selBk; testResult: testRes[selBk]
-                    onTestConnectionRequested: Logic.testConnectionLive(root, dbal, testTimer, selBk)
+                    testingIndex: root.testIdx
+                        backendIndex: selBk; testResult: testRes[selBk]
+                    onTestConnectionRequested: Logic.testConnectionLive(root,
+                        dbal, testTimer, selBk)
                     onSetActiveRequested: actBk = selBk
                 }
                 CDatabaseEnvConfig {

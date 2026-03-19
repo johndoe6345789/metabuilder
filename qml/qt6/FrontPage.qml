@@ -47,18 +47,23 @@ Rectangle {
                 Layout.leftMargin: 40; Layout.rightMargin: 40; spacing: 24
                 CText { text: "Access Levels"; font.pixelSize: 22
                     font.weight: Font.Bold; color: onSurface
-                    Layout.fillWidth: true; horizontalAlignment: Text.AlignHCenter }
+                    Layout.fillWidth: true
+                        horizontalAlignment: Text.AlignHCenter }
                 GridLayout {
                     Layout.fillWidth: true; columnSpacing: 12; rowSpacing: 12
-                    columns: Math.max(1, Math.min(5, Math.floor((parent.width + 12) / 220)))
+                    columns: Math.max(1, Math.min(5, Math.floor((parent.width +
+                        12) / 220)))
                     Repeater {
                         model: levels
                         delegate: CLevelCard {
                             Layout.fillWidth: true; Layout.preferredHeight: 190
                             level: modelData.level; name: modelData.name
-                            accent: modelData.accent; desc: modelData.desc; tags: modelData.tags
-                            locked: modelData.level > appWindow.currentLevel; isDark: root.isDark
-                            onClicked: Logic.onLevelClicked(modelData, appWindow)
+                            accent: modelData.accent
+                                desc: modelData.desc; tags: modelData.tags
+                            locked: modelData.level > appWindow.currentLevel
+                                isDark: root.isDark
+                            onClicked: Logic.onLevelClicked(modelData,
+                                appWindow)
                         }
                     }
                 }
@@ -66,11 +71,15 @@ Rectangle {
             ColumnLayout {
                 Layout.fillWidth: true; Layout.topMargin: 48
                 Layout.leftMargin: 40; Layout.rightMargin: 40; spacing: 24
-                CText { text: "Stack"; font.pixelSize: 22; font.weight: Font.Bold
-                    color: onSurface; Layout.fillWidth: true; horizontalAlignment: Text.AlignHCenter }
+                CText { text: "Stack"
+                    font.pixelSize: 22; font.weight: Font.Bold
+                    color: onSurface
+                        Layout.fillWidth: true
+                    horizontalAlignment: Text.AlignHCenter }
                 GridLayout {
                     Layout.fillWidth: true; columnSpacing: 12; rowSpacing: 12
-                    columns: Math.max(1, Math.min(3, Math.floor((parent.width + 12) / 260)))
+                    columns: Math.max(1, Math.min(3, Math.floor((parent.width +
+                        12) / 260)))
                     Repeater { model: techStack
                         delegate: CTechCard { Layout.fillWidth: true
                             name: modelData.name; desc: modelData.desc
@@ -80,20 +89,28 @@ Rectangle {
             ColumnLayout {
                 Layout.fillWidth: true; Layout.topMargin: 48
                 Layout.leftMargin: 40; Layout.rightMargin: 40; spacing: 20
-                CText { text: "Status"; font.pixelSize: 22; font.weight: Font.Bold
-                    color: onSurface; Layout.fillWidth: true; horizontalAlignment: Text.AlignHCenter }
+                CText { text: "Status"
+                    font.pixelSize: 22; font.weight: Font.Bold
+                    color: onSurface
+                        Layout.fillWidth: true
+                    horizontalAlignment: Text.AlignHCenter }
                 RowLayout {
                     Layout.fillWidth: true; spacing: 10
                     Repeater { model: services
                         delegate: CServiceStatus { Layout.fillWidth: true
-                            name: modelData.name; status: modelData.status; isDark: root.isDark } }
+                            name: modelData.name
+                                status: modelData.status
+                                isDark: root.isDark } }
                 }
             }
             ColumnLayout {
                 Layout.fillWidth: true; Layout.topMargin: 48
                 Layout.leftMargin: 40; Layout.rightMargin: 40; spacing: 20
-                CText { text: "Quick Access"; font.pixelSize: 22; font.weight: Font.Bold
-                    color: onSurface; Layout.fillWidth: true; horizontalAlignment: Text.AlignHCenter }
+                CText { text: "Quick Access"
+                    font.pixelSize: 22; font.weight: Font.Bold
+                    color: onSurface
+                        Layout.fillWidth: true
+                    horizontalAlignment: Text.AlignHCenter }
                 RowLayout {
                     Layout.fillWidth: true; spacing: 10
                     Repeater {
@@ -103,13 +120,15 @@ Rectangle {
                             username: modelData.user; password: modelData.pass
                             label: modelData.label; level: modelData.level
                             accent: modelData.accent; isDark: root.isDark
-                            onLogin: appWindow.login(modelData.user, modelData.pass)
+                            onLogin: appWindow.login(modelData.user,
+                                modelData.pass)
                         }
                     }
                 }
             }
             Item { Layout.preferredHeight: 48 }
-            CFrontPageFooter { surfaceColor: surfaceContainer; textColor: onSurfaceVariant; isDark: root.isDark }
+            CFrontPageFooter { surfaceColor: surfaceContainer
+                textColor: onSurfaceVariant; isDark: root.isDark }
         }
     }
 }

@@ -4,7 +4,8 @@ import "qmllib/MetaBuilder"
 import "qmllib/MetaBuilder/SmtpLogic.js" as Logic
 Rectangle {
     id: se; color: "transparent"
-    property string smtpHost: "smtp.example.com"; property string smtpPort: "587"
+    property string smtpHost: "smtp.example.com"
+    property string smtpPort: "587"
     property string smtpUsername: ""; property string smtpPassword: ""
     property int encryptionIndex: 1; property var encryptionOptions: []
     property string fromName: "MetaBuilder"
@@ -77,15 +78,25 @@ Rectangle {
                     connectionStatus: se.connectionStatus
                     onHostEdited: function(v) { smtpHost = v; isDirty = true }
                     onPortEdited: function(v) { smtpPort = v; isDirty = true }
-                    onUsernameEdited: function(v) { smtpUsername = v; isDirty = true }
-                    onPasswordEdited: function(v) { smtpPassword = v; isDirty = true }
-                    onEncryptionEdited: function(i) { encryptionIndex = i; isDirty = true }
+                    onUsernameEdited: function(v) {
+                        smtpUsername = v; isDirty = true
+                    }
+                    onPasswordEdited: function(v) {
+                        smtpPassword = v; isDirty = true
+                    }
+                    onEncryptionEdited: function(i) {
+                        encryptionIndex = i; isDirty = true
+                    }
                     onTestRequested: Logic.testConnection(se, connTimer)
                 }
                 CSmtpSenderForm {
                     fromName: se.fromName; fromEmail: se.fromEmail
-                    onFromNameEdited: function(v) { se.fromName = v; isDirty = true }
-                    onFromEmailEdited: function(v) { se.fromEmail = v; isDirty = true }
+                    onFromNameEdited: function(v) {
+                        se.fromName = v; isDirty = true
+                    }
+                    onFromEmailEdited: function(v) {
+                        se.fromEmail = v; isDirty = true
+                    }
                 }
             }
             CSmtpTestEmailForm {
