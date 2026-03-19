@@ -1,6 +1,6 @@
 # Phase 9: Visual Workflow Canvas + Frontend Parity
 
-**Status**: In Progress
+**Status**: Complete
 **Started**: 2026-03-19
 
 ---
@@ -84,17 +84,20 @@ Replace the list-based WorkflowEditor with a spatial infinite canvas.
 
 ---
 
-## Part B: Next.js Frontend Alignment (LATER)
+## Part B: Next.js Frontend Alignment ✓
 
-- [ ] Level-based layout (5 levels matching `old/`)
-- [ ] Sidebar navigation matching Qt6
-- [ ] God Panel tabs
-- [ ] Wire in workflowui editor
+- [x] AppShell with 5-level auth gating (Guest → SuperGod)
+- [x] Sidebar with static core items + dynamic DBAL package nav
+- [x] God Panel with 10 tabs (schemas, workflows, packages, users, DB, etc.)
+- [x] Super God Panel with multi-tenant control
+- [x] JSON-driven config (sidebar-config.json, god-panel-config.json)
+- [x] Workflow editor integration via WorkflowBuilder component
 
-## Part C: CLI Feature Parity (LATER)
+## Part C: CLI Feature Parity ✓
 
-- [ ] `workflow list/get/run/create` commands
-- [ ] `package list/install/uninstall` commands
+- [x] `workflow list/get/run/create/status` commands
+- [x] `package list/install/uninstall/info/search` commands
+- [x] Formatted table + JSON output, DBAL REST API backed
 
 ---
 
