@@ -45,35 +45,62 @@ Rectangle {
             Item { Layout.preferredHeight: 24 }
 
             // ── Welcome header ───────────────────────────────────
-            CCard {
+            Rectangle {
                 Layout.fillWidth: true
                 Layout.leftMargin: 24
                 Layout.rightMargin: 24
-                variant: "filled"
+                implicitHeight: welcomeRow.implicitHeight + 40
+                radius: 16
+                color: surfaceContainerHigh
+                border.color: isDark ? Qt.rgba(1,1,1,0.06) : Qt.rgba(0,0,0,0.08)
+                border.width: 1
 
-                CText {
-                    Layout.fillWidth: true
-                    variant: "h3"
-                    text: "Welcome back, " + appWindow.currentUser
-                }
+                RowLayout {
+                    id: welcomeRow
+                    anchors.fill: parent
+                    anchors.margins: 20
+                    spacing: 16
 
-                Item { Layout.preferredHeight: 4 }
+                    // User avatar
+                    Rectangle {
+                        width: 56
+                        height: 56
+                        radius: 28
+                        color: Qt.rgba(0.39, 0.4, 0.95, isDark ? 0.2 : 0.15)
 
-                CText {
-                    Layout.fillWidth: true
-                    variant: "body1"
-                    text: "Level " + appWindow.currentLevel + " \u00b7 " + appWindow.currentRole + " access"
-                    color: onSurfaceVariant
-                }
+                        CText {
+                            anchors.centerIn: parent
+                            text: appWindow.currentUser ? appWindow.currentUser.charAt(0).toUpperCase() : "?"
+                            font.pixelSize: 24
+                            font.weight: Font.Bold
+                            color: "#6366F1"
+                        }
+                    }
 
-                Item { Layout.preferredHeight: 12 }
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        spacing: 4
 
-                CButton {
-                    text: dbal.loading ? "Refreshing..." : "Refresh"
-                    variant: "ghost"
-                    size: "sm"
-                    enabled: !dbal.loading
-                    onClicked: refreshDBAL()
+                        CText {
+                            text: "Welcome back, " + appWindow.currentUser
+                            font.pixelSize: 22
+                            font.weight: Font.Bold
+                            color: onSurface
+                        }
+                        CText {
+                            text: "Level " + appWindow.currentLevel + " \u00b7 " + appWindow.currentRole
+                            font.pixelSize: 13
+                            color: onSurfaceVariant
+                        }
+                    }
+
+                    CButton {
+                        text: dbal.loading ? "Refreshing..." : "Refresh"
+                        variant: "ghost"
+                        size: "sm"
+                        enabled: !dbal.loading
+                        onClicked: refreshDBAL()
+                    }
                 }
             }
 

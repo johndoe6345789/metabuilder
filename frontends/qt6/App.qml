@@ -103,78 +103,41 @@ ApplicationWindow {
 
     // ── App bar ──
     header: CAppBar {
-        height: 52
+        height: 48
 
         RowLayout {
             anchors.fill: parent
             anchors.leftMargin: 16
-            anchors.rightMargin: 16
-            spacing: 8
+            anchors.rightMargin: 12
+            spacing: 6
 
-            // Logo
+            // Logo + DBAL status
             CText {
                 text: "MetaBuilder"
-                font.pixelSize: 16
+                font.pixelSize: 15
                 font.weight: Font.Bold
                 font.letterSpacing: -0.5
             }
 
-            // Level pill
             Rectangle {
-                width: lvlText.implicitWidth + 16
-                height: 24
-                radius: 12
-                color: Qt.rgba(accentBlue.r, accentBlue.g, accentBlue.b, isDark ? 0.15 : 0.12)
-
-                CText {
-                    id: lvlText
-                    anchors.centerIn: parent
-                    text: "L" + currentLevel
-                    font.pixelSize: 11
-                    font.weight: Font.Bold
-                    font.family: "monospace"
-                    color: accentBlue
-                }
-            }
-
-            // DBAL dot
-            Rectangle {
-                width: 7
-                height: 7
-                radius: 3.5
-                color: dbalProvider.connected ? accentBlue : "#f44336"
-                Layout.leftMargin: 4
-            }
-            CText {
-                text: "DBAL"
-                font.pixelSize: 11
-                font.family: "monospace"
-                color: Theme.textSecondary
-            }
-
-            // Theme toggle
-            CButton {
-                text: currentTheme === "dark" ? "\u263E Dark" : "\u2600 Light"
-                variant: "ghost"
-                size: "sm"
-                onClicked: {
-                    currentTheme = currentTheme === "dark" ? "light" : "dark"
-                    if (typeof Theme.setTheme === "function")
-                        Theme.setTheme(currentTheme)
-                }
+                width: 6
+                height: 6
+                radius: 3
+                color: dbalProvider.connected ? "#22C55E" : "#F43F5E"
+                Layout.leftMargin: 2
             }
 
             Item { Layout.fillWidth: true }
 
-            // Level navigation
+            // Level navigation — center
             Repeater {
                 model: [
-                    { label: "Public",    level: 1, view: "frontpage" },
-                    { label: "User",      level: 2, view: "dashboard" },
-                    { label: "Mod",       level: 3, view: "moderator" },
-                    { label: "Admin",     level: 4, view: "admin" },
-                    { label: "God",       level: 5, view: "god-panel" },
-                    { label: "Super",     level: 6, view: "supergod" }
+                    { label: "Home",   level: 1, view: "frontpage" },
+                    { label: "User",   level: 2, view: "dashboard" },
+                    { label: "Mod",    level: 3, view: "moderator" },
+                    { label: "Admin",  level: 4, view: "admin" },
+                    { label: "God",    level: 5, view: "god-panel" },
+                    { label: "Super",  level: 6, view: "supergod" }
                 ]
                 delegate: CButton {
                     visible: modelData.level <= currentLevel
@@ -185,9 +148,74 @@ ApplicationWindow {
                 }
             }
 
+            Item { Layout.fillWidth: true }
+
             Item { width: 4 }
 
-            // Login / user info
+            // Language selector
+            Rectangle {
+                visible: loggedIn
+                width: langText.implicitWidth + 20
+                height: 28
+                radius: 14
+                color: surfaceContainer
+                border.color: outlineVariant
+                border.width: 1
+
+                CText {
+                    id: langText
+                    anchors.centerIn: parent
+                    text: "EN"
+                    font.pixelSize: 11
+                    font.weight: Font.Bold
+                    font.family: "monospace"
+                    color: Theme.textSecondary
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    // TODO: language picker popup
+                }
+            }
+
+            // Alerts bell
+            Rectangle {
+                visible: loggedIn
+                width: 32
+                height: 32
+                radius: 16
+                color: bellMA.containsMouse ? surfaceContainer : "transparent"
+
+                CText {
+                    anchors.centerIn: parent
+                    text: "\uD83D\uDD14"
+                    font.pixelSize: 16
+                }
+
+                // Notification dot
+                Rectangle {
+                    visible: true
+                    anchors.top: parent.top
+                    anchors.right: parent.right
+                    anchors.topMargin: 2
+                    anchors.rightMargin: 4
+                    width: 8
+                    height: 8
+                    radius: 4
+                    color: "#F43F5E"
+                }
+
+                MouseArea {
+                    id: bellMA
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    // TODO: notification panel
+                }
+            }
+
+            // Login button (not logged in)
             CButton {
                 visible: !loggedIn
                 text: "Login"
@@ -196,19 +224,190 @@ ApplicationWindow {
                 onClicked: currentView = "login"
             }
 
-            CText {
+            // User avatar with dropdown (logged in)
+            Rectangle {
+                id: userAvatar
                 visible: loggedIn
-                text: currentUser
-                font.pixelSize: 13
-                font.weight: Font.Medium
-            }
+                width: 32
+                height: 32
+                radius: 16
+                color: avatarMA.containsMouse
+                    ? Qt.rgba(0.39, 0.4, 0.95, isDark ? 0.25 : 0.2)
+                    : Qt.rgba(0.39, 0.4, 0.95, isDark ? 0.15 : 0.12)
 
-            CButton {
-                visible: loggedIn
-                text: "Logout"
-                variant: "ghost"
-                size: "sm"
-                onClicked: logout()
+                Behavior on color { ColorAnimation { duration: 150 } }
+
+                CText {
+                    anchors.centerIn: parent
+                    text: currentUser ? currentUser.charAt(0).toUpperCase() : "?"
+                    font.pixelSize: 14
+                    font.weight: Font.Bold
+                    color: "#6366F1"
+                }
+
+                MouseArea {
+                    id: avatarMA
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: userMenu.visible = !userMenu.visible
+                }
+
+                // Dropdown menu
+                Rectangle {
+                    id: userMenu
+                    visible: false
+                    anchors.top: parent.bottom
+                    anchors.right: parent.right
+                    anchors.topMargin: 8
+                    width: 200
+                    height: menuCol.implicitHeight + 16
+                    radius: 12
+                    color: Theme.paper
+                    border.color: isDark ? Qt.rgba(1,1,1,0.1) : Qt.rgba(0,0,0,0.1)
+                    border.width: 1
+                    z: 100
+
+                    ColumnLayout {
+                        id: menuCol
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.top: parent.top
+                        anchors.margins: 8
+                        spacing: 2
+
+                        // User info header
+                        RowLayout {
+                            Layout.fillWidth: true
+                            Layout.margins: 8
+                            spacing: 10
+
+                            Rectangle {
+                                width: 36
+                                height: 36
+                                radius: 18
+                                color: Qt.rgba(0.39, 0.4, 0.95, isDark ? 0.2 : 0.15)
+
+                                CText {
+                                    anchors.centerIn: parent
+                                    text: currentUser ? currentUser.charAt(0).toUpperCase() : "?"
+                                    font.pixelSize: 16
+                                    font.weight: Font.Bold
+                                    color: "#6366F1"
+                                }
+                            }
+
+                            ColumnLayout {
+                                Layout.fillWidth: true
+                                spacing: 1
+                                CText {
+                                    text: currentUser
+                                    font.pixelSize: 14
+                                    font.weight: Font.DemiBold
+                                }
+                                CText {
+                                    text: "L" + currentLevel + " \u00B7 " + currentRole
+                                    font.pixelSize: 11
+                                    font.family: "monospace"
+                                    color: Theme.textSecondary
+                                }
+                            }
+                        }
+
+                        // Divider
+                        Rectangle {
+                            Layout.fillWidth: true
+                            Layout.leftMargin: 8
+                            Layout.rightMargin: 8
+                            height: 1
+                            color: isDark ? Qt.rgba(1,1,1,0.06) : Qt.rgba(0,0,0,0.06)
+                        }
+
+                        // Menu items
+                        Repeater {
+                            model: [
+                                { label: "Profile",  icon: "P", view: "profile" },
+                                { label: "Settings", icon: "S", view: "settings" }
+                            ]
+                            delegate: Rectangle {
+                                Layout.fillWidth: true
+                                height: 36
+                                radius: 8
+                                color: menuItemMA.containsMouse ? (isDark ? Qt.rgba(1,1,1,0.06) : Qt.rgba(0,0,0,0.04)) : "transparent"
+
+                                RowLayout {
+                                    anchors.fill: parent
+                                    anchors.leftMargin: 12
+                                    spacing: 10
+                                    CText {
+                                        text: modelData.icon
+                                        font.pixelSize: 14
+                                        color: Theme.textSecondary
+                                    }
+                                    CText {
+                                        text: modelData.label
+                                        font.pixelSize: 13
+                                    }
+                                }
+
+                                MouseArea {
+                                    id: menuItemMA
+                                    anchors.fill: parent
+                                    hoverEnabled: true
+                                    cursorShape: Qt.PointingHandCursor
+                                    onClicked: {
+                                        currentView = modelData.view
+                                        userMenu.visible = false
+                                    }
+                                }
+                            }
+                        }
+
+                        // Divider
+                        Rectangle {
+                            Layout.fillWidth: true
+                            Layout.leftMargin: 8
+                            Layout.rightMargin: 8
+                            height: 1
+                            color: isDark ? Qt.rgba(1,1,1,0.06) : Qt.rgba(0,0,0,0.06)
+                        }
+
+                        // Logout
+                        Rectangle {
+                            Layout.fillWidth: true
+                            height: 36
+                            radius: 8
+                            color: logoutMA.containsMouse ? Qt.rgba(0.96, 0.25, 0.37, 0.08) : "transparent"
+
+                            RowLayout {
+                                anchors.fill: parent
+                                anchors.leftMargin: 12
+                                spacing: 10
+                                CText {
+                                    text: "\u2192"
+                                    font.pixelSize: 14
+                                    color: "#F43F5E"
+                                }
+                                CText {
+                                    text: "Sign out"
+                                    font.pixelSize: 13
+                                    color: "#F43F5E"
+                                }
+                            }
+
+                            MouseArea {
+                                id: logoutMA
+                                anchors.fill: parent
+                                hoverEnabled: true
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: {
+                                    userMenu.visible = false
+                                    logout()
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
