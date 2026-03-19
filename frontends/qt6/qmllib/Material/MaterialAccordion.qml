@@ -66,4 +66,3 @@ Rectangle {
 
     default property alias content: contentLoader.sourceComponent
 }
-}

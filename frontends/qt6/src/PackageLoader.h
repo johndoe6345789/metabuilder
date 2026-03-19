@@ -8,6 +8,7 @@
 #include <QStringList>
 #include <QFileSystemWatcher>
 #include <QMap>
+#include <QUrl>
 #include <QVariantList>
 
 class PackageLoader : public QObject
@@ -38,6 +39,8 @@ public slots:
     QVariantMap getPackage(const QString &packageId) const;
     QStringList resolveDependencies(const QString &packageId) const;
     QString qmlPath(const QString &packageId) const;
+    QUrl qmlPathUrl(const QString &packageId) const;
+    QVariantList navigablePackages() const;
 
 signals:
     void packagesChanged();
@@ -56,6 +59,8 @@ private:
     void loadPackage(const QString &dir);
     bool validateMetadata(const QJsonObject &metadata) const;
     QStringList resolveDepChain(const QString &packageId, QStringList &visited) const;
+    void loadInstallState();
+    void saveInstallState() const;
 
     QString m_packagesDir;
     bool m_watching;

@@ -1,4 +1,5 @@
 import QtQuick
+import QmlComponents 1.0
 
 /**
  * CText.qml - Styled text component (mirrors SCSS text utilities)

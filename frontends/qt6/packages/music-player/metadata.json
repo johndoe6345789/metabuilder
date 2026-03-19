@@ -3,5 +3,10 @@
   "name": "Music Player",
   "version": "1.0.0",
   "description": "Ambient audio player with playlists, scrobbling, and visualizers.",
-  "dependencies": ["gallery", "analytics"]
+  "dependencies": ["gallery", "analytics"],
+  "level": 2,
+  "category": "media",
+  "icon": "M",
+  "navLabel": "Music Player",
+  "showInNav": false
 }

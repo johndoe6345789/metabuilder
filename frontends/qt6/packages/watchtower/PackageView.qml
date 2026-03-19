@@ -36,7 +36,7 @@ Rectangle {
         ListElement { severity: "info"; message: "System startup complete — all services initialized"; timestamp: "07:40:00" }
         ListElement { severity: "error"; message: "Failed health check on Postgres (timeout), auto-retried OK"; timestamp: "07:38:45" }
         ListElement { severity: "warning"; message: "Memory usage spike to 78% during backup (normalized)"; timestamp: "06:30:10" }
-    ]
+    }
 
     Timer {
         id: refreshTimer

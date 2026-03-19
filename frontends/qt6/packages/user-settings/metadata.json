@@ -3,5 +3,10 @@
   "name": "User Settings",
   "version": "1.0.0",
   "description": "Personalization controls for notifications, themes, and privacy knobs.",
-  "dependencies": ["login"]
+  "dependencies": ["login"],
+  "level": 2,
+  "category": "core",
+  "icon": "U",
+  "navLabel": "Settings",
+  "showInNav": false
 }

@@ -1,4 +1,5 @@
 import QtQuick
+import QmlComponents 1.0
 
 /**
  * CAvatar.qml - Circular avatar (mirrors _avatar.scss)

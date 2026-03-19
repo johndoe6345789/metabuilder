@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import QmlComponents 1.0
 
 /**
  * CBlockquote.qml - Blockquote (mirrors _blockquote.scss)

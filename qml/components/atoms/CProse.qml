@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import QmlComponents 1.0
 
 /**
  * CProse.qml - Long-form text container (mirrors _prose.scss)

@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import QmlComponents 1.0
 
 /**
  * CSection.qml - Content section (mirrors _section.scss)

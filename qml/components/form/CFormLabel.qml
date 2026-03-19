@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import QmlComponents 1.0
 
 Text {
     id: label

@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import QmlComponents 1.0
 
 /**
  * CErrorState.qml - Error state display (mirrors _error-state.scss)

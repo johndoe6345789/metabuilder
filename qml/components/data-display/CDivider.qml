@@ -1,4 +1,5 @@
 import QtQuick
+import QmlComponents 1.0
 
 /**
  * CDivider.qml - Divider/separator component (mirrors _divider.scss)

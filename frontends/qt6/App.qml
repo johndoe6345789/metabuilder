@@ -64,6 +64,36 @@ ApplicationWindow {
         currentView = "frontpage"
     }
 
+    // ── Static view registry (fixed indices 0–8) ──
+    readonly property var staticViews: [
+        "frontpage", "login", "dashboard", "profile",
+        "admin", "god-panel", "supergod", "settings", "comments"
+    ]
+
+    // ── Dynamic view index computation ──
+    function viewIndex(view) {
+        // Check static views first (indices 0–8)
+        var staticIdx = staticViews.indexOf(view)
+        if (staticIdx >= 0)
+            return staticIdx
+
+        // Check dynamic package views (indices 9+)
+        var navPkgs = PackageLoader.navigablePackages()
+        for (var i = 0; i < navPkgs.length; i++) {
+            var pkg = navPkgs[i]
+            var viewName = pkg.navLabel ? pkg.navLabel.toLowerCase().replace(/ /g, "-") : pkg.packageId
+            if (viewName === view || pkg.packageId === view)
+                return staticViews.length + i
+        }
+
+        return 0
+    }
+
+    // Convert packageId to view name for navigation
+    function packageViewName(pkg) {
+        return pkg.navLabel ? pkg.navLabel.toLowerCase().replace(/ /g, "-") : pkg.packageId
+    }
+
     // ── App bar ──
     header: CAppBar {
         height: 56
@@ -205,22 +235,15 @@ ApplicationWindow {
                     Layout.bottomMargin: 8
                 }
 
+                // Static core nav items
                 Repeater {
                     model: {
                         var items = [
                             { label: "Dashboard",   view: "dashboard",   icon: "~", level: 2 },
                             { label: "Profile",     view: "profile",     icon: "P", level: 2 },
-                            { label: "Forum",       view: "forum",       icon: "F", level: 2 },
-                            { label: "Gallery",     view: "gallery",     icon: "G", level: 2 },
-                            { label: "Guestbook",   view: "guestbook",   icon: "B", level: 2 },
-                            { label: "Blog",        view: "blog",        icon: "W", level: 2 },
                             { label: "Comments",    view: "comments",    icon: "C", level: 2 },
                             { label: "Admin Panel", view: "admin",       icon: "A", level: 3 },
-                            { label: "Analytics",   view: "analytics",   icon: "A", level: 3 },
-                            { label: "Watchtower",  view: "watchtower",  icon: "W", level: 3 },
                             { label: "God Panel",   view: "god-panel",   icon: "G", level: 4 },
-                            { label: "Packages",    view: "packages",    icon: "P", level: 4 },
-                            { label: "Storybook",   view: "storybook",   icon: "S", level: 4 },
                             { label: "Super God",   view: "supergod",    icon: "S", level: 5 }
                         ]
                         return items.filter(function(item) { return item.level <= currentLevel })
@@ -232,6 +255,25 @@ ApplicationWindow {
                         leadingIcon: modelData.icon
                         selected: currentView === modelData.view
                         onClicked: currentView = modelData.view
+                    }
+                }
+
+                // Dynamic package nav items (from PackageLoader)
+                Repeater {
+                    model: {
+                        var navPkgs = PackageLoader.navigablePackages()
+                        return navPkgs.filter(function(pkg) {
+                            var lvl = pkg.level ? pkg.level : 2
+                            return lvl <= currentLevel
+                        })
+                    }
+
+                    delegate: CListItem {
+                        Layout.fillWidth: true
+                        title: modelData.navLabel ? modelData.navLabel : modelData.name
+                        leadingIcon: modelData.icon ? modelData.icon : modelData.name.charAt(0)
+                        selected: currentView === packageViewName(modelData)
+                        onClicked: currentView = packageViewName(modelData)
                     }
                 }
 
@@ -259,36 +301,26 @@ ApplicationWindow {
                 anchors.fill: parent
                 currentIndex: viewIndex(currentView)
 
+                // Static views (indices 0–8)
                 FrontPage {}         // 0: Public landing
                 LoginView {}         // 1: Login
                 DashboardView {}     // 2: Dashboard
                 ProfileView {}       // 3: Profile
-                PackageViewLoader { packageId: "forum" }             // 4
-                PackageViewLoader { packageId: "gallery" }           // 5
-                PackageViewLoader { packageId: "guestbook" }         // 6
-                PackageViewLoader { packageId: "blog" }              // 7
-                AdminView {}         // 8: Admin
-                PackageViewLoader { packageId: "analytics" }         // 9
-                PackageViewLoader { packageId: "watchtower" }        // 10
-                GodPanel {}          // 11: God Panel (13-tab builder)
-                PackageManager {}    // 12: Package Manager
-                Storybook {}         // 13: Storybook
-                SuperGodPanel {}     // 14: Super God Panel
-                SettingsView {}      // 15: Settings
-                CommentsView {}      // 16: Comments
+                AdminView {}         // 4: Admin
+                GodPanel {}          // 5: God Panel (13-tab builder)
+                SuperGodPanel {}     // 6: Super God Panel
+                SettingsView {}      // 7: Settings
+                CommentsView {}      // 8: Comments
+
+                // Dynamic package views (indices 9+)
+                Repeater {
+                    model: PackageLoader.navigablePackages()
+                    delegate: PackageViewLoader {
+                        packageId: modelData.packageId
+                    }
+                }
             }
         }
-    }
-
-    function viewIndex(view) {
-        var views = [
-            "frontpage", "login", "dashboard", "profile", "forum",
-            "gallery", "guestbook", "blog", "admin", "analytics",
-            "watchtower", "god-panel", "packages", "storybook",
-            "supergod", "settings", "comments"
-        ]
-        var idx = views.indexOf(view)
-        return idx >= 0 ? idx : 0
     }
 
     // ── Window state persistence ──

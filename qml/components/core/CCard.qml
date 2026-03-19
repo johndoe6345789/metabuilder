@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Effects
+import QmlComponents 1.0
 
 /**
  * CCard.qml - Card container component (mirrors _card.scss)

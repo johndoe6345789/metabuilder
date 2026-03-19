@@ -1,4 +1,5 @@
 import QtQuick
+import QmlComponents 1.0
 
 /**
  * CRadio.qml - radio control

@@ -3,5 +3,10 @@
   "name": "Guestbook",
   "version": "1.0.0",
   "description": "Simple contributions feed for visitors to leave messages.",
-  "dependencies": []
+  "dependencies": [],
+  "level": 2,
+  "category": "social",
+  "icon": "B",
+  "navLabel": "Guestbook",
+  "showInNav": true
 }

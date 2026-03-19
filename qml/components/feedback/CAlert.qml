@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import QmlComponents 1.0
 
 /**
  * CAlert.qml - Alert/notification component (mirrors _alert.scss)

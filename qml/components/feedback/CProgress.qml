@@ -1,4 +1,5 @@
 import QtQuick
+import QmlComponents 1.0
 
 /**
  * CProgress.qml - Progress indicator (mirrors _progress.scss)

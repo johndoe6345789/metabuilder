@@ -9,14 +9,26 @@ Rectangle {
 
     property string packageId: ""
 
-    // Try to load the package's QML view from disk
+    // Resolve view URL via PackageLoader (disk → QRC fallback)
     Loader {
         id: viewLoader
         anchors.fill: parent
-        source: resolvePackageView()
+        source: packageId !== "" ? PackageLoader.qmlPathUrl(packageId) : ""
         onStatusChanged: {
             if (status === Loader.Error) {
                 console.warn("PackageViewLoader: failed to load", packageId, source)
+            }
+        }
+    }
+
+    // Hot-reload: react to QML file changes on disk
+    Connections {
+        target: PackageLoader
+        function onPackageUpdated(id) {
+            if (id === packageId) {
+                var url = PackageLoader.qmlPathUrl(packageId)
+                viewLoader.source = ""
+                viewLoader.source = url
             }
         }
     }
@@ -40,7 +52,7 @@ Rectangle {
             CText {
                 variant: "body1"
                 text: {
-                    var meta = PackageRegistry.metadata(packageId)
+                    var meta = PackageLoader.getPackage(packageId)
                     return meta && meta.description ? meta.description : "Package view for " + packageId
                 }
                 Layout.alignment: Qt.AlignHCenter
@@ -56,26 +68,15 @@ Rectangle {
                 variant: "primary"
                 Layout.alignment: Qt.AlignHCenter
                 onClicked: {
-                    if (PackageRegistry.loadPackage(packageId)) {
-                        console.log("Loaded package:", packageId)
-                    }
+                    PackageLoader.install(packageId)
+                    console.log("Installed package:", packageId)
                 }
             }
         }
     }
 
-    function resolvePackageView() {
-        // Try to find the PackageView.qml from package directories
-        var paths = [
-            "packages/" + packageId + "/PackageView.qml",
-            "../packages/" + packageId + "/PackageView.qml"
-        ]
-        // Return first candidate; QML Loader handles missing gracefully
-        return paths[0]
-    }
-
     function formatTitle(id) {
-        return id.split("-").map(function(w) {
+        return id.split("_").map(function(w) {
             return w.charAt(0).toUpperCase() + w.slice(1)
         }).join(" ")
     }

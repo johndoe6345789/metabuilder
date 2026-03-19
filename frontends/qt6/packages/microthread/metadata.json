@@ -3,5 +3,10 @@
   "name": "MicroThread",
   "version": "1.0.0",
   "description": "Rapid-fire posting feed, like a micro-blogging stream.",
-  "dependencies": ["login", "profile_page"]
+  "dependencies": ["login", "profile_page"],
+  "level": 2,
+  "category": "social",
+  "icon": "T",
+  "navLabel": "MicroThread",
+  "showInNav": false
 }

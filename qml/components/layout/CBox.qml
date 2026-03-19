@@ -1,4 +1,5 @@
 import QtQuick
+import QmlComponents 1.0
 
 /**
  * CBox.qml - Generic container component (mirrors common SCSS patterns)

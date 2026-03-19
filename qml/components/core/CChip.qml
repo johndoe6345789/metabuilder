@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QmlComponents 1.0
 
 /**
  * CChip.qml - Chip/tag component (mirrors _chip.scss)
@@ -15,6 +16,7 @@ Rectangle {
     property string size: "sm" // sm, md
     property bool clickable: false
     property bool closable: false
+    property bool checked: false
     
     signal clicked()
     signal closeClicked()

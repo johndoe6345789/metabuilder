@@ -112,6 +112,10 @@ CUseMediaQuery 1.0 components/utils/CUseMediaQuery.qml
 CPopover 1.0 components/utils/CPopover.qml
 
 # Theming Components
+singleton Theme 1.0 components/theming/Theme.qml
+singleton StyleVariables 1.0 components/theming/StyleVariables.qml
+singleton StyleMixins 1.0 components/theming/StyleMixins.qml
+singleton Responsive 1.0 components/theming/Responsive.qml
 CThemeProvider 1.0 components/theming/CThemeProvider.qml
 CStyled 1.0 components/theming/CStyled.qml
 

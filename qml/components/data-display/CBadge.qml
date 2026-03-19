@@ -1,4 +1,5 @@
 import QtQuick
+import QmlComponents 1.0
 
 /**
  * CBadge.qml - Notification badge (mirrors _badge.scss)
@@ -11,6 +12,7 @@ Rectangle {
     property string variant: "primary"   // primary, success, warning, error
     property int count: 0                // Number to display (0 = dot only)
     property bool dot: false             // Show as dot without number
+    property string text: ""             // Direct text label (overrides count)
     
     // Size mapping
     readonly property var _sizes: ({
@@ -34,6 +36,7 @@ Rectangle {
     readonly property color _textColor: variant === "warning" ? "#000000" : "#ffffff"
     
     // Sizing
+    readonly property bool _hasText: text !== ""
     width: dot ? _sizeConfig.height : Math.max(_sizeConfig.minWidth, label.implicitWidth + _sizeConfig.padding * 2)
     height: _sizeConfig.height
     radius: height / 2
@@ -43,10 +46,10 @@ Rectangle {
     Text {
         id: label
         anchors.centerIn: parent
-        text: root.count > 99 ? "99+" : root.count.toString()
+        text: root._hasText ? root.text : (root.count > 99 ? "99+" : root.count.toString())
         color: root._textColor
         font.pixelSize: root._sizeConfig.fontSize
         font.weight: Font.DemiBold
-        visible: !root.dot && root.count > 0
+        visible: !root.dot && (root._hasText || root.count > 0)
     }
 }

@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QmlComponents 1.0
 
 /**
  * CCodeBlock.qml - Code block display (mirrors _code-block.scss)

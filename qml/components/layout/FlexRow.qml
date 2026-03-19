@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import QmlComponents 1.0
 
 /**
  * FlexRow.qml - Horizontal flex container (mirrors SCSS .flex, .flex-row utilities)

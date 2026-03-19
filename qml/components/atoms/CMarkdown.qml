@@ -1,4 +1,5 @@
 import QtQuick
+import QmlComponents 1.0
 
 /**
  * CMarkdown.qml - Markdown text display (mirrors _markdown.scss)

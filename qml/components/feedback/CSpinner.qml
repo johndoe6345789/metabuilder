@@ -1,4 +1,5 @@
 import QtQuick
+import QmlComponents 1.0
 
 /**
  * CSpinner.qml - Loading spinner (mirrors _spinner.scss)

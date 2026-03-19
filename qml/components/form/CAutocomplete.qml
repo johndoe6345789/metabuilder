@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QmlComponents 1.0
 
 /**
  * CAutocomplete.qml - simple autocomplete input with popup suggestions

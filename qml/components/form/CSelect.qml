@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Layouts
 
 /**
  * CSelect.qml - simple select (ComboBox wrapper)
@@ -7,7 +8,5 @@ import QtQuick.Controls
 ComboBox {
     id: root
     model: []
-    property alias currentIndex: root.currentIndex
-    property alias currentText: root.currentText
     Layout.preferredWidth: 200
 }

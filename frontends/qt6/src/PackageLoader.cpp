@@ -5,6 +5,7 @@
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QDebug>
+#include <algorithm>
 
 PackageLoader::PackageLoader(QObject *parent)
     : QObject(parent)
@@ -72,6 +73,10 @@ void PackageLoader::setWatching(bool enabled)
             const QString metaPath = pkgDir + QStringLiteral("/metadata.json");
             if (QFile::exists(metaPath))
                 m_watcher->addPath(metaPath);
+
+            const QString qmlViewPath = pkgDir + QStringLiteral("/PackageView.qml");
+            if (QFile::exists(qmlViewPath))
+                m_watcher->addPath(qmlViewPath);
         }
     } else {
         delete m_watcher;
@@ -101,6 +106,7 @@ void PackageLoader::scan()
         loadPackage(root.absoluteFilePath(entry));
     }
 
+    loadInstallState();
     emit packagesChanged();
 }
 
@@ -157,6 +163,7 @@ void PackageLoader::install(const QString &packageId)
         return;
     }
     m_installed[packageId] = true;
+    saveInstallState();
     emit packageInstalled(packageId);
     emit packagesChanged();
 }
@@ -166,6 +173,7 @@ void PackageLoader::uninstall(const QString &packageId)
     if (!m_installed.contains(packageId))
         return;
     m_installed.remove(packageId);
+    saveInstallState();
     emit packageUninstalled(packageId);
     emit packagesChanged();
 }
@@ -227,6 +235,94 @@ QString PackageLoader::qmlPath(const QString &packageId) const
     return dir + QStringLiteral("/PackageView.qml");
 }
 
+QUrl PackageLoader::qmlPathUrl(const QString &packageId) const
+{
+    if (!m_packages.contains(packageId))
+        return {};
+
+    // Try disk path first (dev mode)
+    const QString diskPath = qmlPath(packageId);
+    if (QFile::exists(diskPath))
+        return QUrl::fromLocalFile(diskPath);
+
+    // Fall back to QRC for bundled builds
+    const QString qrcPath = QStringLiteral("qrc:/packages/") + packageId + QStringLiteral("/PackageView.qml");
+    return QUrl(qrcPath);
+}
+
+QVariantList PackageLoader::navigablePackages() const
+{
+    QVariantList result;
+    for (auto it = m_packages.constBegin(); it != m_packages.constEnd(); ++it) {
+        const QJsonObject &meta = it.value();
+        if (meta.value(QStringLiteral("showInNav")).toBool(false)) {
+            QVariantMap entry = meta.toVariantMap();
+            entry[QStringLiteral("installed")] = m_installed.value(it.key(), false);
+            result.append(entry);
+        }
+    }
+
+    // Sort by level (ascending) then by name (alphabetical)
+    std::sort(result.begin(), result.end(), [](const QVariant &a, const QVariant &b) {
+        const QVariantMap ma = a.toMap();
+        const QVariantMap mb = b.toMap();
+        const int levelA = ma.value(QStringLiteral("level"), 2).toInt();
+        const int levelB = mb.value(QStringLiteral("level"), 2).toInt();
+        if (levelA != levelB)
+            return levelA < levelB;
+        return ma.value(QStringLiteral("name")).toString() < mb.value(QStringLiteral("name")).toString();
+    });
+
+    return result;
+}
+
+// ---------------------------------------------------------------------------
+// Persistent install state
+// ---------------------------------------------------------------------------
+
+void PackageLoader::loadInstallState()
+{
+    const QString path = m_packagesDir + QStringLiteral("/installed.json");
+    QFile file(path);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        return;
+
+    QJsonParseError parseErr;
+    const QJsonDocument doc = QJsonDocument::fromJson(file.readAll(), &parseErr);
+    file.close();
+
+    if (parseErr.error != QJsonParseError::NoError) {
+        qWarning() << "PackageLoader: failed to parse installed.json:" << parseErr.errorString();
+        return;
+    }
+
+    m_installed.clear();
+    const QJsonObject obj = doc.object();
+    for (auto it = obj.constBegin(); it != obj.constEnd(); ++it) {
+        if (it.value().toBool())
+            m_installed[it.key()] = true;
+    }
+}
+
+void PackageLoader::saveInstallState() const
+{
+    const QString path = m_packagesDir + QStringLiteral("/installed.json");
+    QFile file(path);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        qWarning() << "PackageLoader: failed to write installed.json:" << path;
+        return;
+    }
+
+    QJsonObject obj;
+    for (auto it = m_installed.constBegin(); it != m_installed.constEnd(); ++it) {
+        if (it.value())
+            obj[it.key()] = true;
+    }
+
+    file.write(QJsonDocument(obj).toJson(QJsonDocument::Indented));
+    file.close();
+}
+
 // ---------------------------------------------------------------------------
 // File system watcher slots
 // ---------------------------------------------------------------------------
@@ -262,18 +358,25 @@ void PackageLoader::onFileChanged(const QString &path)
 {
     emit fileChanged(path);
 
-    // Re-read the metadata.json that was modified
     QFileInfo fi(path);
     const QString pkgDir = fi.absolutePath();
-    loadPackage(pkgDir);
+    const bool isQmlFile = path.endsWith(QStringLiteral(".qml"));
 
+    if (!isQmlFile) {
+        // Re-read the metadata.json that was modified
+        loadPackage(pkgDir);
+    }
+
+    // Emit packageUpdated for both metadata and QML file changes
     for (auto it = m_packages.constBegin(); it != m_packages.constEnd(); ++it) {
         if (it.value().value(QStringLiteral("_dir")).toString() == pkgDir) {
             emit packageUpdated(it.key());
             break;
         }
     }
-    emit packagesChanged();
+
+    if (!isQmlFile)
+        emit packagesChanged();
 
     // QFileSystemWatcher may drop the watch after a file change – re-add
     if (m_watcher && QFile::exists(path) && !m_watcher->files().contains(path))

@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import QmlComponents 1.0
 
 /**
  * CGrid.qml - Responsive grid layout (mirrors _grid.scss)

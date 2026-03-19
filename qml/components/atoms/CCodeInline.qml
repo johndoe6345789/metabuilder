@@ -1,4 +1,5 @@
 import QtQuick
+import QmlComponents 1.0
 
 /**
  * CCodeInline.qml - Inline code (mirrors _code-inline.scss)

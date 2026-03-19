@@ -1,4 +1,5 @@
 import QtQuick
+import QmlComponents 1.0
 
 /**
  * Spacer.qml - Flexible spacer utility (mirrors SCSS spacing utilities)

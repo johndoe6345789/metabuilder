@@ -3,5 +3,10 @@
   "name": "Community Forum",
   "version": "1.0.0",
   "description": "Threaded discussions with tagging and moderation tools.",
-  "dependencies": ["profile_page", "guestbook"]
+  "dependencies": ["profile_page", "guestbook"],
+  "level": 2,
+  "category": "social",
+  "icon": "F",
+  "navLabel": "Forum",
+  "showInNav": true
 }

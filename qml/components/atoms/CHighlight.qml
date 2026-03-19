@@ -1,4 +1,5 @@
 import QtQuick
+import QmlComponents 1.0
 
 /**
  * CHighlight.qml - Text highlighting (mirrors _highlight.scss)

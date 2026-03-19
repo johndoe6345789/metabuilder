@@ -1,4 +1,5 @@
 import QtQuick
+import QmlComponents 1.0
 
 /**
  * CContainer.qml - Responsive container with max-width (mirrors CSS container)

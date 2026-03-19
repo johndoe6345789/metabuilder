@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QmlComponents 1.0
 
 /**
  * CDialog.qml - Modal dialog (mirrors _dialog.scss)
@@ -12,7 +13,7 @@ Popup {
     property string title: ""
     property string size: "md"           // sm, md, lg, xl
     property bool showClose: true
-    property alias contentItem: contentArea.data
+    property alias dialogContent: contentArea.data
     property alias footerItem: footerArea.data
     
     // Size mapping

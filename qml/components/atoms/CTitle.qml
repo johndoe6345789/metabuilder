@@ -1,4 +1,5 @@
 import QtQuick
+import QmlComponents 1.0
 
 /**
  * CTitle.qml - Title text (mirrors _title.scss)

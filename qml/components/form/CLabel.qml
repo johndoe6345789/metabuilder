@@ -1,4 +1,5 @@
 import QtQuick
+import QmlComponents 1.0
 
 /**
  * CLabel.qml - Form label (mirrors _label.scss)

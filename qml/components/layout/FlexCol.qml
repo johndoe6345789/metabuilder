@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import QmlComponents 1.0
 
 /**
  * FlexCol.qml - Vertical flex container (mirrors SCSS .flex, .flex-col utilities)

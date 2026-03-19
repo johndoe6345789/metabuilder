@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Effects
+import QmlComponents 1.0
 
 /**
  * CPanel.qml - Panel component (mirrors _panel.scss)
