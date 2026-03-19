@@ -4,7 +4,6 @@ import QtQuick.Layouts
 
 Rectangle {
     id: root
-
     property string customPaper: "#000000"
     property string customText: "#000000"
     property string customTextSecondary: "#000000"
@@ -30,17 +29,11 @@ Rectangle {
 
         Text {
             text: "Activity"
-            font.pixelSize: baseFontSize
-            font.weight: Font.Bold
-            font.family: fontFamily
-            color: customText
+            font.pixelSize: baseFontSize; font.weight: Font.Bold
+            font.family: fontFamily; color: customText
         }
 
-        Rectangle {
-            Layout.fillWidth: true
-            height: 1
-            color: customBorder
-        }
+        Rectangle { Layout.fillWidth: true; height: 1; color: customBorder }
 
         Repeater {
             model: [
@@ -48,20 +41,15 @@ Rectangle {
                 { msg: "Package installed", t: "5m ago" },
                 { msg: "Schema updated", t: "1h ago" }
             ]
-
             ColumnLayout {
                 spacing: 2
                 Text {
-                    text: modelData.msg
-                    font.pixelSize: baseFontSize - 2
-                    font.family: fontFamily
-                    color: customText
+                    text: modelData.msg; font.pixelSize: baseFontSize - 2
+                    font.family: fontFamily; color: customText
                 }
                 Text {
-                    text: modelData.t
-                    font.pixelSize: baseFontSize - 4
-                    font.family: fontFamily
-                    color: customTextSecondary
+                    text: modelData.t; font.pixelSize: baseFontSize - 4
+                    font.family: fontFamily; color: customTextSecondary
                 }
             }
         }
@@ -69,32 +57,20 @@ Rectangle {
         Item { Layout.fillHeight: true }
 
         Rectangle {
-            Layout.fillWidth: true
-            height: 24
-            radius: radiusSmall
+            Layout.fillWidth: true; height: 24; radius: radiusSmall
             color: Qt.alpha(customError, 0.15)
-
             Text {
-                anchors.centerIn: parent
-                text: "1 alert"
-                font.pixelSize: baseFontSize - 4
-                font.family: fontFamily
-                color: customError
+                anchors.centerIn: parent; text: "1 alert"
+                font.pixelSize: baseFontSize - 4; font.family: fontFamily; color: customError
             }
         }
 
         Rectangle {
-            Layout.fillWidth: true
-            height: 24
-            radius: radiusSmall
+            Layout.fillWidth: true; height: 24; radius: radiusSmall
             color: Qt.alpha(customInfo, 0.15)
-
             Text {
-                anchors.centerIn: parent
-                text: "3 notifications"
-                font.pixelSize: baseFontSize - 4
-                font.family: fontFamily
-                color: customInfo
+                anchors.centerIn: parent; text: "3 notifications"
+                font.pixelSize: baseFontSize - 4; font.family: fontFamily; color: customInfo
             }
         }
     }

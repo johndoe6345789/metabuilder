@@ -21,15 +21,12 @@ Rectangle {
     color: "transparent"
     implicitHeight: 400
 
-    // Blue gradient wash
     Rectangle {
-        anchors.fill: parent
-        gradient: Gradient {
-            GradientStop { position: 0.0; color: isDark ? Qt.rgba(0.39, 0.4, 0.95, 0.06) : Qt.rgba(0.30, 0.40, 0.90, 0.12) }
-            GradientStop { position: 0.7; color: isDark ? "transparent" : Qt.rgba(0.35, 0.45, 0.88, 0.04) }
+        anchors.fill: parent; gradient: Gradient {
+            GradientStop { position: 0.0; color: isDark ? Qt.rgba(0.39,0.4,0.95,0.06) : Qt.rgba(0.30,0.40,0.90,0.12) }
+            GradientStop { position: 0.7; color: isDark ? "transparent" : Qt.rgba(0.35,0.45,0.88,0.04) }
             GradientStop { position: 1.0; color: "transparent" }
-        }
-    }
+    } }
 
     ColumnLayout {
         anchors.horizontalCenter: parent.horizontalCenter

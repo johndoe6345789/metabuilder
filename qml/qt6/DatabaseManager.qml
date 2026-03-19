@@ -97,18 +97,10 @@ Rectangle {
                     onTestConnectionRequested: Logic.testConnectionLive(root, dbal, testTimer, selectedBackendIndex)
                     onSetActiveRequested: activeBackendIndex = selectedBackendIndex
                 }
-                CCard {
-                    Layout.fillWidth: true
-                    ColumnLayout {
-                        anchors.fill: parent; anchors.margins: 16; spacing: 12
-                        CText { variant: "subtitle1"; text: "Environment Configuration" }
-                        CTextField { label: "DATABASE_URL"; text: databaseUrl; onTextChanged: databaseUrl = text; placeholderText: "sqlite:///path/to/db or postgres://user:pass@host/db"; Layout.fillWidth: true }
-                        CTextField { label: "DBAL_CACHE_URL (Redis)"; text: cacheUrl; onTextChanged: cacheUrl = text; placeholderText: "redis://localhost:6379/0?ttl=300&pattern=read-through"; Layout.fillWidth: true }
-                        CTextField { label: "DBAL_SEARCH_URL (Elasticsearch)"; text: searchUrl; onTextChanged: searchUrl = text; placeholderText: "http://localhost:9200?index=dbal_search&refresh=true"; Layout.fillWidth: true }
-                        CDivider { Layout.fillWidth: true }
-                        CAdapterPatternSelector { selectedPattern: root.adapterPattern; onPatternChanged: function(index) { root.adapterPattern = index } }
-                        Item { height: 16 }
-                    }
+                CDatabaseEnvConfig {
+                    databaseUrl: root.databaseUrl; cacheUrl: root.cacheUrl; searchUrl: root.searchUrl; selectedPattern: root.adapterPattern
+                    onDatabaseUrlEdited: function(v) { root.databaseUrl = v }; onCacheUrlEdited: function(v) { root.cacheUrl = v }
+                    onSearchUrlEdited: function(v) { root.searchUrl = v }; onPatternChanged: function(i) { root.adapterPattern = i }
                 }
             }
         }

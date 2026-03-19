@@ -34,10 +34,8 @@ Rectangle {
     }
 
     Rectangle {
-        width: 4
-        height: parent.height - 8
-        anchors.left: parent.left
-        anchors.leftMargin: 4
+        width: 4; height: parent.height - 8
+        anchors.left: parent.left; anchors.leftMargin: 4
         anchors.verticalCenter: parent.verticalCenter
         radius: 2
         color: root.notification ? typeColor(root.notification.type) : "#9e9e9e"
@@ -46,68 +44,33 @@ Rectangle {
     RowLayout {
         id: notifContent
         anchors.fill: parent
-        anchors.leftMargin: 16
-        anchors.rightMargin: 12
-        anchors.topMargin: 12
-        anchors.bottomMargin: 12
+        anchors.leftMargin: 16; anchors.rightMargin: 12
+        anchors.topMargin: 12; anchors.bottomMargin: 12
         spacing: 12
 
         CNotificationIconBadge {
             notificationType: root.notification ? root.notification.type : ""
         }
 
-        ColumnLayout {
+        CNotificationContent {
             Layout.fillWidth: true
-            spacing: 4
-
-            FlexRow {
-                Layout.fillWidth: true
-                spacing: 8
-
-                CText {
-                    variant: root.isRead ? "body1" : "subtitle1"
-                    text: root.notification ? root.notification.title : ""
-                    font.bold: !root.isRead
-                }
-
-                CBadge {
-                    text: root.notification ? root.notification.type : ""
-                }
-
-                Item { Layout.fillWidth: true }
-
-                CText {
-                    variant: "caption"
-                    text: root.notification ? formatTimestamp(root.notification.timestamp) : ""
-                    opacity: 0.6
-                }
-            }
-
-            CText {
-                Layout.fillWidth: true
-                variant: "body2"
-                text: root.notification ? root.notification.message : ""
-                opacity: root.isRead ? 0.6 : 0.85
-                wrapMode: Text.WordWrap
-            }
+            title: root.notification ? root.notification.title : ""
+            message: root.notification ? root.notification.message : ""
+            type: root.notification ? root.notification.type : ""
+            timestamp: root.notification ? formatTimestamp(root.notification.timestamp) : ""
+            isRead: root.isRead
         }
 
         ColumnLayout {
             Layout.alignment: Qt.AlignTop
             spacing: 4
-
             CButton {
-                visible: !root.isRead
-                text: "Read"
-                variant: "ghost"
-                size: "sm"
+                visible: !root.isRead; text: "Read"
+                variant: "ghost"; size: "sm"
                 onClicked: root.markRead()
             }
-
             CButton {
-                text: "Dismiss"
-                variant: "ghost"
-                size: "sm"
+                text: "Dismiss"; variant: "ghost"; size: "sm"
                 onClicked: root.dismiss()
             }
         }
@@ -115,15 +78,12 @@ Rectangle {
 
     CDivider {
         anchors.bottom: parent.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.leftMargin: 16
-        anchors.rightMargin: 16
+        anchors.left: parent.left; anchors.right: parent.right
+        anchors.leftMargin: 16; anchors.rightMargin: 16
     }
 
     MouseArea {
-        anchors.fill: parent
-        z: -1
+        anchors.fill: parent; z: -1
         onClicked: root.markRead()
         cursorShape: Qt.PointingHandCursor
     }

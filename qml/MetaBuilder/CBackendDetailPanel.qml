@@ -36,65 +36,28 @@ CCard {
             FlexRow {
                 Layout.fillWidth: true
                 spacing: 12
-
                 CText { variant: "h4"; text: root.backend.name }
                 CStatusBadge {
                     status: root.backend.status === "connected" ? "success" : (root.backend.status === "error" ? "error" : "warning")
                     text: root.backend.status
                 }
-
                 Item { Layout.fillWidth: true }
-
-                CBadge {
-                    text: root.isActive ? "ACTIVE" : "INACTIVE"
-                    accent: root.isActive
-                }
+                CBadge { text: root.isActive ? "ACTIVE" : "INACTIVE"; accent: root.isActive }
             }
 
-            CText {
-                variant: "body1"
-                text: root.backend.description
-                wrapMode: Text.Wrap
-                Layout.fillWidth: true
-            }
+            CText { variant: "body1"; text: root.backend.description; wrapMode: Text.Wrap; Layout.fillWidth: true }
 
             CDivider { Layout.fillWidth: true }
 
-            CText { variant: "subtitle1"; text: "Connection" }
-
-            CTextField {
-                label: "Connection String"
-                text: root.backend.connectionString
+            CBackendConnectionSection {
                 Layout.fillWidth: true
-            }
-
-            FlexRow {
-                Layout.fillWidth: true
-                spacing: 8
-
-                CButton {
-                    text: root.testingIndex === root.backendIndex ? "Testing..." : "Test Connection"
-                    variant: "primary"
-                    enabled: root.testingIndex === -1
-                    onClicked: root.testConnectionRequested()
-                }
-
-                CButton {
-                    text: root.isActive ? "Active Backend" : "Set as Active"
-                    variant: root.isActive ? "ghost" : "primary"
-                    enabled: !root.isActive && root.backend.status === "connected"
-                    onClicked: root.setActiveRequested()
-                }
-
-                Item { Layout.fillWidth: true }
-
-                Loader {
-                    active: root.testResult !== undefined
-                    sourceComponent: CStatusBadge {
-                        status: root.testResult === "success" ? "success" : "error"
-                        text: root.testResult === "success" ? "Connection OK" : "Connection Failed"
-                    }
-                }
+                connectionString: root.backend.connectionString
+                isActive: root.isActive
+                isTesting: root.testingIndex === root.backendIndex
+                isConnected: root.backend.status === "connected"
+                testResult: root.testResult
+                onTestConnectionRequested: root.testConnectionRequested()
+                onSetActiveRequested: root.setActiveRequested()
             }
 
             CDivider { Layout.fillWidth: true }
@@ -104,7 +67,6 @@ CCard {
             FlexRow {
                 Layout.fillWidth: true
                 spacing: 12
-
                 CStatCell { label: "Records";     value: root.backend.records.toLocaleString() }
                 CStatCell { label: "Size";         value: root.formatSize(root.backend.sizeKb) }
                 CStatCell { label: "Last Backup";  value: root.backend.lastBackup; valueVariant: "body2" }

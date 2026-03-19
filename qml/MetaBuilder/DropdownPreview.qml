@@ -5,7 +5,6 @@ import QmlComponents 1.0
 
 CPaper {
     id: root
-
     property var dropdown: null
     implicitHeight: previewColumn.implicitHeight + 32
 
@@ -15,12 +14,7 @@ CPaper {
         anchors.margins: 16
         spacing: 12
 
-        CText {
-            variant: "caption"
-            text: "This is how the dropdown will render in forms:"
-            color: Theme.text
-            opacity: 0.6
-        }
+        CText { variant: "caption"; text: "This is how the dropdown will render in forms:"; color: Theme.text; opacity: 0.6 }
 
         ColumnLayout {
             Layout.fillWidth: true

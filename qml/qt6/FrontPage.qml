@@ -22,11 +22,7 @@ Rectangle {
     readonly property color onSurface: Theme.text
     readonly property color onSurfaceVariant: Theme.textSecondary
 
-    property var levels: []
-    property var techStack: []
-    property var services: []
-    property var quickCreds: []
-
+    property var levels: []; property var techStack: []; property var services: []; property var quickCreds: []
     Component.onCompleted: { Logic.loadFallbackData(root); Logic.loadPlatformStatus(root, dbal) }
     onDbalOnlineChanged: Logic.refreshServiceStatuses(root)
 
@@ -96,15 +92,7 @@ Rectangle {
             }
 
             Item { Layout.preferredHeight: 48 }
-            Rectangle {
-                Layout.fillWidth: true; Layout.preferredHeight: 52; color: surfaceContainer
-                RowLayout {
-                    anchors.fill: parent; anchors.leftMargin: 40; anchors.rightMargin: 40
-                    CText { text: "\u00a9 2026 MetaBuilder"; font.pixelSize: 12; color: onSurfaceVariant }
-                    Item { Layout.fillWidth: true }
-                    CText { text: "Qt6 \u00B7 Next.js \u00B7 C++ \u00B7 JSON"; font.pixelSize: 12; font.family: "monospace"; color: onSurfaceVariant; opacity: isDark ? 0.4 : 0.5 }
-                }
-            }
+            CFrontPageFooter { surfaceColor: surfaceContainer; textColor: onSurfaceVariant; isDark: root.isDark }
         }
     }
 }

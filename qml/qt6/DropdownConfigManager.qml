@@ -18,11 +18,7 @@ Rectangle {
     property var dropdowns: []
 
     function selectedDropdown() { return (selectedIndex >= 0 && selectedIndex < dropdowns.length) ? dropdowns[selectedIndex] : null; }
-
-    function applyUpdate(updated) {
-        dropdowns = updated;
-        if (useLiveData) saveDropdown(selectedIndex);
-    }
+    function applyUpdate(updated) { dropdowns = updated; if (useLiveData) saveDropdown(selectedIndex); }
 
     function loadDropdowns() {
         dbal.execute("core/dropdown-configs", {}, function(result, error) {

@@ -28,64 +28,29 @@ ColumnLayout {
         spacing: 8
 
         CText {
-            variant: "body2"
-            text: root.job.id || ""
-            font.family: "monospace"
-            Layout.preferredWidth: 100
+            variant: "body2"; text: root.job.id || ""
+            font.family: "monospace"; Layout.preferredWidth: 100
         }
 
-        CBadge {
-            text: root.job.type || ""
-            Layout.preferredWidth: 80
-        }
+        CBadge { text: root.job.type || ""; Layout.preferredWidth: 80 }
 
         CStatusBadge {
             status: jobStatusColor(root.job.status || "")
-            text: root.job.status || ""
-            Layout.preferredWidth: 100
+            text: root.job.status || ""; Layout.preferredWidth: 100
         }
 
-        Rectangle {
-            Layout.fillWidth: true
-            Layout.preferredHeight: 20
-            color: "transparent"
-
-            Rectangle {
-                anchors.verticalCenter: parent.verticalCenter
-                width: parent.width
-                height: 6
-                radius: 3
-                color: Theme.border
-
-                Rectangle {
-                    width: parent.width * ((root.job.progress || 0) / 100)
-                    height: parent.height
-                    radius: 3
-                    color: root.job.status === "failed" ? Theme.error
-                         : root.job.status === "completed" ? Theme.success
-                         : Theme.primary
-                }
-            }
-
-            CText {
-                anchors.right: parent.right
-                anchors.verticalCenter: parent.verticalCenter
-                variant: "caption"
-                text: (root.job.progress || 0) + "%"
-            }
+        CJobProgressBar {
+            progress: root.job.progress || 0
+            status: root.job.status || ""
         }
 
         CText {
-            variant: "caption"
-            text: root.job.created || ""
-            Layout.preferredWidth: 160
-            color: Theme.textSecondary
+            variant: "caption"; text: root.job.created || ""
+            Layout.preferredWidth: 160; color: Theme.textSecondary
         }
 
         CButton {
-            text: "Cancel"
-            variant: "danger"
-            size: "sm"
+            text: "Cancel"; variant: "danger"; size: "sm"
             enabled: root.job.status === "queued" || root.job.status === "processing"
             visible: root.job.status !== "completed" && root.job.status !== "failed"
             Layout.preferredWidth: 70
@@ -98,8 +63,5 @@ ColumnLayout {
         }
     }
 
-    CDivider {
-        Layout.fillWidth: true
-        visible: !root.isLast
-    }
+    CDivider { Layout.fillWidth: true; visible: !root.isLast }
 }

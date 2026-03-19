@@ -5,7 +5,6 @@ import QmlComponents 1.0
 
 CCard {
     id: root
-
     property var selectedClass: null
     property var propertySuggestions: []
 

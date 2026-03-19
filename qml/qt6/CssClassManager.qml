@@ -21,16 +21,7 @@ Rectangle {
     property var propertySuggestions: []
 
     function selectedClass() { return Logic.selectedClass(root) }
-
-    function loadSeedData() {
-        var xhr = new XMLHttpRequest()
-        xhr.open("GET", Qt.resolvedUrl("config/css-classes-seed.json"), false); xhr.send()
-        if (xhr.status === 200) {
-            var data = JSON.parse(xhr.responseText)
-            cssClasses = data.cssClasses; propertySuggestions = data.propertySuggestions
-        }
-    }
-
+    function loadSeedData() { var xhr = new XMLHttpRequest(); xhr.open("GET", Qt.resolvedUrl("config/css-classes-seed.json"), false); xhr.send(); if (xhr.status === 200) { var d = JSON.parse(xhr.responseText); cssClasses = d.cssClasses; propertySuggestions = d.propertySuggestions } }
     onUseLiveDataChanged: { if (useLiveData) Logic.loadCssClasses(root, dbal) }
     Component.onCompleted: { loadSeedData(); Logic.loadCssClasses(root, dbal) }
 
