@@ -159,6 +159,7 @@ def generate_cmake(config: dict, root_dir: Path) -> str:
     root_qml = find_root_qml_files(root_dir)
     qmllib = find_qmllib_files(root_dir)
     package_qml = find_package_qml_files(root_dir)
+    config_files = find_config_files(root_dir)
     cpp_sources = find_cpp_sources(root_dir)
     svg_assets = find_svg_assets(root_dir)
     audio_assets = find_audio_assets(root_dir)
@@ -179,11 +180,11 @@ def generate_cmake(config: dict, root_dir: Path) -> str:
     source_files = ["main.cpp"]
     source_files.extend(cpp_sources["cpp"])
 
-    # Build QML files list: root QML + qmllib QML + package QML
-    all_qml_files = root_qml + qmllib["qml"] + package_qml
+    # Build QML files list: root QML + qmllib QML + package QML + config JS
+    all_qml_files = root_qml + qmllib["qml"] + package_qml + config_files["qml"]
 
-    # Build RESOURCES list: audio + qmllib resources (qmldir files)
-    resource_files = audio_assets + qmllib["resources"]
+    # Build RESOURCES list: audio + config JSON + qmllib resources (qmldir files)
+    resource_files = audio_assets + config_files["resources"] + qmllib["resources"]
 
     # Build compile definitions
     defs_lines = []
