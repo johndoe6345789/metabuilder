@@ -6,6 +6,8 @@
 
 #include "src/PackageRegistry.h"
 #include "src/ModPlayer.h"
+#include "src/DBALClient.h"
+#include "src/PackageLoader.h"
 
 int main(int argc, char *argv[]) {
     QGuiApplication app(argc, argv);
@@ -29,9 +31,16 @@ int main(int argc, char *argv[]) {
 
     PackageRegistry registry;
     ModPlayer modPlayer;
+    DBALClient dbalClient;
+    PackageLoader packageLoader;
     registry.loadPackage("frontpage");
+    packageLoader.setPackagesDir(QDir(QStringLiteral(SRCDIR) + QStringLiteral("/packages")).absolutePath());
+    packageLoader.scan();
+    packageLoader.setWatching(true);
     engine.rootContext()->setContextProperty(QStringLiteral("PackageRegistry"), &registry);
     engine.rootContext()->setContextProperty(QStringLiteral("ModPlayer"), &modPlayer);
+    engine.rootContext()->setContextProperty(QStringLiteral("DBALClient"), &dbalClient);
+    engine.rootContext()->setContextProperty(QStringLiteral("PackageLoader"), &packageLoader);
 
     const QUrl url(QStringLiteral("qrc:/DBALObservatory/App.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

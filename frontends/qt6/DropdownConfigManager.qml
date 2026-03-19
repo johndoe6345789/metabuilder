@@ -2,10 +2,15 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QmlComponents 1.0
+import "qmllib/dbal"
 
 Rectangle {
     id: root
     color: Theme.background
+
+    // ── DBAL ──────────────────────────────────────────────────────────
+    DBALProvider { id: dbal }
+    property bool useLiveData: dbal.connected
 
     property int selectedIndex: -1
     property bool addDialogOpen: false
@@ -122,6 +127,7 @@ Rectangle {
         var copy = dropdowns.slice()
         copy[index] = updated
         dropdowns = copy
+        if (useLiveData) saveDropdown(index)
     }
 
     function updateSelectedField(field, value) {
@@ -165,16 +171,18 @@ Rectangle {
 
     function addDropdown() {
         if (newDropdownName.trim() === "") return
-        var copy = dropdowns.slice()
-        copy.push({
+        var newDd = {
             name: newDropdownName.trim().toLowerCase().replace(/ /g, "_"),
             description: newDropdownDescription.trim() || "No description",
             allowCustom: false,
             required: false,
-            options: [
-                { label: "Option 1", value: "option_1" }
-            ]
-        })
+            options: [{ label: "Option 1", value: "option_1" }]
+        }
+        if (useLiveData) {
+            dbal.execute("core/dropdown-configs/create", { data: newDd }, function(r, e) { if (!e) loadDropdowns() })
+        }
+        var copy = dropdowns.slice()
+        copy.push(newDd)
         dropdowns = copy
         selectedIndex = dropdowns.length - 1
         newDropdownName = ""
@@ -184,11 +192,39 @@ Rectangle {
 
     function deleteSelectedDropdown() {
         if (selectedIndex < 0) return
+        if (useLiveData && dropdowns[selectedIndex].id) {
+            dbal.execute("core/dropdown-configs/delete", { id: dropdowns[selectedIndex].id }, function(r, e) { if (!e) loadDropdowns() })
+        }
         var copy = dropdowns.slice()
         copy.splice(selectedIndex, 1)
         dropdowns = copy
         selectedIndex = copy.length > 0 ? Math.min(selectedIndex, copy.length - 1) : -1
         deleteDialogOpen = false
+    }
+
+    // ── DBAL Integration ─────────────────────────────────────────────
+    function loadDropdowns() {
+        dbal.execute("core/dropdown-configs", {}, function(result, error) {
+            if (!error && result && result.items && result.items.length > 0) {
+                var parsed = []
+                for (var i = 0; i < result.items.length; i++) {
+                    var d = result.items[i]
+                    parsed.push({ id: d.id, name: d.name || "", description: d.description || "", allowCustom: d.allowCustom || false, required: d.required || false, options: d.options || [] })
+                }
+                dropdowns = parsed
+                if (selectedIndex >= dropdowns.length) selectedIndex = dropdowns.length > 0 ? dropdowns.length - 1 : -1
+            }
+        })
+    }
+    onUseLiveDataChanged: { if (useLiveData) loadDropdowns() }
+    Component.onCompleted: { loadDropdowns() }
+
+    function saveDropdown(index) {
+        if (!useLiveData || index < 0 || index >= dropdowns.length) return
+        var dd = dropdowns[index]
+        var data = { name: dd.name, description: dd.description, allowCustom: dd.allowCustom, required: dd.required, options: dd.options }
+        if (dd.id) dbal.execute("core/dropdown-configs/update", { id: dd.id, data: data }, function(r, e) {})
+        else dbal.execute("core/dropdown-configs/create", { data: data }, function(r, e) { if (!e) loadDropdowns() })
     }
 
     ColumnLayout {

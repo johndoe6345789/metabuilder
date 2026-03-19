@@ -37,6 +37,7 @@ Rectangle {
         { label: "CSS Classes" },
         { label: "Dropdowns" },
         { label: "Database" },
+        { label: "Media" },
         { label: "Settings" }
     ]
 
@@ -312,7 +313,16 @@ Rectangle {
                 }
             }
 
-            // 12 - Settings (inline: Theme + SMTP side by side)
+            // 12 - Media Service
+            Rectangle {
+                color: "transparent"
+                Loader {
+                    anchors.fill: parent
+                    source: "MediaServicePanel.qml"
+                }
+            }
+
+            // 13 - Settings (inline: Theme + SMTP side by side)
             Rectangle {
                 color: "transparent"
 

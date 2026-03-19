@@ -2,10 +2,80 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QmlComponents 1.0
+import "qmllib/dbal"
 
 Rectangle {
     id: root
     color: Theme.background
+
+    // ── DBAL connection ──────────────────────────────────────────
+    DBALProvider { id: dbal }
+
+    property bool useLiveData: dbal.connected
+
+    property var mockBackends: JSON.parse(JSON.stringify(backends))
+
+    function loadAdapterStatus() {
+        dbal.execute("core/adapters", {}, function(result, error) {
+            if (!error && result && result.adapters && result.adapters.length > 0) {
+                var liveBackends = []
+                for (var i = 0; i < result.adapters.length; i++) {
+                    var a = result.adapters[i]
+                    liveBackends.push({
+                        name: a.name || "",
+                        key: a.key || "",
+                        status: a.status || "disconnected",
+                        description: a.description || "",
+                        connectionString: a.connectionString || "",
+                        records: a.records || 0,
+                        sizeKb: a.sizeKb || 0,
+                        lastBackup: a.lastBackup || "Never"
+                    })
+                }
+                backends = liveBackends
+                if (selectedBackendIndex >= liveBackends.length)
+                    selectedBackendIndex = 0
+                if (activeBackendIndex >= liveBackends.length)
+                    activeBackendIndex = 0
+            }
+            // On error or empty result, keep existing mock backends as fallback
+        })
+    }
+
+    function testConnectionLive(index) {
+        var backend = backends[index]
+        testingIndex = index
+        if (useLiveData) {
+            dbal.execute("core/test-connection", { adapter: backend.key }, function(result, error) {
+                var newResults = Object.assign({}, testResults)
+                if (!error && result && result.success) {
+                    newResults[index] = "success"
+                } else {
+                    newResults[index] = "error"
+                }
+                testResults = newResults
+                testingIndex = -1
+            })
+        } else {
+            // Fall back to mock timer
+            testTimer.targetIndex = index
+            testTimer.start()
+        }
+    }
+
+    function checkHealth() {
+        if (useLiveData) {
+            dbal.ping()
+        }
+    }
+
+    onUseLiveDataChanged: {
+        if (useLiveData) loadAdapterStatus()
+    }
+
+    Component.onCompleted: {
+        loadAdapterStatus()
+    }
 
     // ── State ──────────────────────────────────────────────────────────
     property int selectedBackendIndex: 2
@@ -143,6 +213,11 @@ Rectangle {
 
             CText { variant: "h3"; text: "Database Manager" }
             CStatusBadge { status: "success"; text: connectedCount() + " / " + backends.length + " connected" }
+
+            CBadge {
+                text: useLiveData ? "Connected to DBAL" : "Mock Data"
+                color: useLiveData ? Theme.success : Theme.warning
+            }
 
             Item { Layout.fillWidth: true }
 
@@ -316,7 +391,7 @@ Rectangle {
                                 text: testingIndex === selectedBackendIndex ? "Testing..." : "Test Connection"
                                 variant: "primary"
                                 enabled: testingIndex === -1
-                                onClicked: testConnection(selectedBackendIndex)
+                                onClicked: testConnectionLive(selectedBackendIndex)
                             }
 
                             CButton {

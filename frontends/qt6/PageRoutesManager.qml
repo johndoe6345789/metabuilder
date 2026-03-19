@@ -2,10 +2,15 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QmlComponents 1.0
+import "qmllib/dbal"
 
 Rectangle {
     id: root
     color: Theme.background
+
+    // ── DBAL ──────────────────────────────────────────────────────────
+    DBALProvider { id: dbal }
+    property bool useLiveData: dbal.connected
 
     property int selectedIndex: -1
     property bool addDialogVisible: false
@@ -18,6 +23,18 @@ Rectangle {
 
     property var layoutOptions: ["default", "sidebar", "dashboard", "blank"]
     property var levelOptions: [1, 2, 3, 4, 5]
+
+    property var mockRoutes: [
+        { path: "/",           title: "Home",          level: 1, layout: "default",   enabled: true,  permissions: "public" },
+        { path: "/dashboard",  title: "Dashboard",     level: 1, layout: "dashboard", enabled: true,  permissions: "authenticated" },
+        { path: "/admin",      title: "Admin Panel",   level: 3, layout: "sidebar",   enabled: true,  permissions: "role:admin" },
+        { path: "/forum",      title: "Forum",         level: 1, layout: "sidebar",   enabled: true,  permissions: "authenticated" },
+        { path: "/gallery",    title: "Gallery",       level: 1, layout: "default",   enabled: true,  permissions: "public" },
+        { path: "/profile",    title: "Profile",       level: 1, layout: "sidebar",   enabled: true,  permissions: "authenticated" },
+        { path: "/settings",   title: "Settings",      level: 2, layout: "sidebar",   enabled: true,  permissions: "authenticated" },
+        { path: "/god-panel",  title: "God Panel",     level: 4, layout: "dashboard", enabled: true,  permissions: "role:god" },
+        { path: "/supergod",   title: "Super God",     level: 5, layout: "blank",     enabled: false, permissions: "role:supergod" }
+    ]
 
     property var routes: [
         { path: "/",           title: "Home",          level: 1, layout: "default",   enabled: true,  permissions: "public" },
@@ -41,20 +58,28 @@ Rectangle {
             selectedIndex = -1
             selectedIndex = index
         }
+        if (useLiveData) saveRoute(index)
     }
 
     function addRoute() {
         if (newPath.length === 0 || newTitle.length === 0) return
-        var updated = routes.slice()
-        updated.push({
+        var newRoute = {
             path: newPath,
             title: newTitle,
             level: newLevel,
             layout: newLayout,
             enabled: true,
             permissions: "authenticated"
-        })
-        routes = updated
+        }
+        if (useLiveData) {
+            dbal.create("ui_page", newRoute, function(result, error) {
+                if (!error) loadRoutes()
+            })
+        } else {
+            var updated = routes.slice()
+            updated.push(newRoute)
+            routes = updated
+        }
         newPath = ""
         newTitle = ""
         newLevel = 1
@@ -64,9 +89,15 @@ Rectangle {
 
     function deleteRoute() {
         if (selectedIndex < 0 || selectedIndex >= routes.length) return
-        var updated = routes.slice()
-        updated.splice(selectedIndex, 1)
-        routes = updated
+        if (useLiveData && routes[selectedIndex].id) {
+            dbal.remove("ui_page", routes[selectedIndex].id, function(result, error) {
+                if (!error) loadRoutes()
+            })
+        } else {
+            var updated = routes.slice()
+            updated.splice(selectedIndex, 1)
+            routes = updated
+        }
         selectedIndex = -1
         deleteDialogVisible = false
     }
@@ -88,6 +119,55 @@ Rectangle {
         if (level === 3) return "#ff9800"
         if (level === 4) return "#f44336"
         return "#9c27b0"
+    }
+
+    // ── DBAL Integration ─────────────────────────────────────────────
+
+    function loadRoutes() {
+        dbal.list("ui_page", { take: 100 }, function(result, error) {
+            if (!error && result && result.items && result.items.length > 0) {
+                var parsed = []
+                for (var i = 0; i < result.items.length; i++) {
+                    var r = result.items[i]
+                    parsed.push({
+                        id: r.id || undefined,
+                        path: r.path || r.route || "",
+                        title: r.title || r.name || "",
+                        level: r.level || 1,
+                        layout: r.layout || "default",
+                        enabled: r.enabled !== undefined ? r.enabled : true,
+                        permissions: r.permissions || "public"
+                    })
+                }
+                routes = parsed
+            }
+            // On error or empty result, keep existing mock routes as fallback
+        })
+    }
+
+    onUseLiveDataChanged: {
+        if (useLiveData) loadRoutes()
+    }
+
+    Component.onCompleted: {
+        loadRoutes()
+    }
+
+    // ── CRUD wiring ──────────────────────────────────────────────────
+
+    function saveRoute(index) {
+        if (!useLiveData) return
+        var route = routes[index]
+        var data = { path: route.path, title: route.title, level: route.level, layout: route.layout, enabled: route.enabled, permissions: route.permissions }
+        if (route.id) {
+            dbal.update("ui_page", route.id, data, function(result, error) {
+                if (!error) loadRoutes()
+            })
+        } else {
+            dbal.create("ui_page", data, function(result, error) {
+                if (!error) loadRoutes()
+            })
+        }
     }
 
     ColumnLayout {

@@ -2,12 +2,33 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QmlComponents 1.0
+import "qmllib/dbal"
 
 Rectangle {
     id: root
     color: Theme.background
 
+    // ── DBAL ──────────────────────────────────────────────────────────
+    DBALProvider { id: dbal }
+    property bool useLiveData: dbal.connected
+
     // Flat array representing tree structure; depth encodes hierarchy
+    property var mockTreeNodes: [
+        { nodeId: 0,  name: "App",            type: "container", depth: 0, visible: true, props: [{ key: "maxWidth", value: "1280" }] },
+        { nodeId: 1,  name: "NavBar",          type: "layout",    depth: 1, visible: true, props: [{ key: "sticky", value: "true" }, { key: "height", value: "64" }] },
+        { nodeId: 2,  name: "MainContent",     type: "container", depth: 1, visible: true, props: [{ key: "padding", value: "24" }] },
+        { nodeId: 3,  name: "HeroSection",     type: "widget",    depth: 2, visible: true, props: [{ key: "title", value: "Welcome" }, { key: "backgroundImage", value: "hero.png" }] },
+        { nodeId: 4,  name: "FeatureGrid",     type: "layout",    depth: 2, visible: true, props: [{ key: "columns", value: "3" }, { key: "gap", value: "16" }] },
+        { nodeId: 5,  name: "FeatureCard",     type: "atom",      depth: 3, visible: true, props: [{ key: "icon", value: "speed" }, { key: "label", value: "Fast" }] },
+        { nodeId: 6,  name: "FeatureCard",     type: "atom",      depth: 3, visible: true, props: [{ key: "icon", value: "shield" }, { key: "label", value: "Secure" }] },
+        { nodeId: 7,  name: "FeatureCard",     type: "atom",      depth: 3, visible: true, props: [{ key: "icon", value: "plug" }, { key: "label", value: "Extensible" }] },
+        { nodeId: 8,  name: "ContactForm",     type: "widget",    depth: 2, visible: true, props: [{ key: "action", value: "/api/contact" }] },
+        { nodeId: 9,  name: "Footer",          type: "layout",    depth: 1, visible: true, props: [{ key: "copyright", value: "2026" }] },
+        { nodeId: 10, name: "Sidebar",         type: "container", depth: 1, visible: true, props: [{ key: "width", value: "280" }, { key: "collapsible", value: "true" }] },
+        { nodeId: 11, name: "NavigationList",  type: "widget",    depth: 2, visible: true, props: [{ key: "items", value: "5" }] },
+        { nodeId: 12, name: "UserPanel",       type: "widget",    depth: 2, visible: true, props: [{ key: "showAvatar", value: "true" }] }
+    ]
+
     property var treeNodes: [
         { nodeId: 0,  name: "App",            type: "container", depth: 0, visible: true, props: [{ key: "maxWidth", value: "1280" }] },
         { nodeId: 1,  name: "NavBar",          type: "layout",    depth: 1, visible: true, props: [{ key: "sticky", value: "true" }, { key: "height", value: "64" }] },
@@ -59,6 +80,9 @@ Rectangle {
             props: []
         }
         nextNodeId++
+        if (useLiveData) {
+            dbal.create("component_node", newNode, function(r, e) { if (!e) loadComponents() })
+        }
         var updated = treeNodes.slice()
         updated.splice(insertAt, 0, newNode)
         treeNodes = updated
@@ -69,6 +93,9 @@ Rectangle {
         if (idx < 0 || idx >= treeNodes.length) return
         // Prevent removing root
         if (treeNodes[idx].depth === 0) return
+        if (useLiveData && treeNodes[idx].id) {
+            dbal.remove("component_node", treeNodes[idx].id, function(r, e) { if (!e) loadComponents() })
+        }
         var endIdx = subtreeEnd(idx)
         var updated = treeNodes.slice()
         updated.splice(idx, endIdx - idx)
@@ -93,6 +120,30 @@ Rectangle {
             s += (i === depth - 1) ? " \u251C\u2500 " : " \u2502  "
         }
         return s
+    }
+
+    // ── DBAL Integration ─────────────────────────────────────────────
+    function loadComponents() {
+        dbal.list("component_node", { take: 200 }, function(result, error) {
+            if (!error && result && result.items && result.items.length > 0) {
+                var parsed = []; var maxId = 0
+                for (var i = 0; i < result.items.length; i++) {
+                    var n = result.items[i]; var nid = n.nodeId || n.id || i
+                    if (nid > maxId) maxId = nid
+                    parsed.push({ id: n.id, nodeId: nid, name: n.name || "Component", type: n.type || "atom", depth: n.depth !== undefined ? n.depth : 0, visible: n.visible !== undefined ? n.visible : true, props: n.props || [] })
+                }
+                treeNodes = parsed; nextNodeId = maxId + 1
+            }
+        })
+    }
+    onUseLiveDataChanged: { if (useLiveData) loadComponents() }
+    Component.onCompleted: { loadComponents() }
+    function saveNode(idx) {
+        if (!useLiveData) return
+        var node = treeNodes[idx]
+        var data = { nodeId: node.nodeId, name: node.name, type: node.type, depth: node.depth, visible: node.visible, props: node.props }
+        if (node.id) dbal.update("component_node", node.id, data, function(r, e) { if (!e) loadComponents() })
+        else dbal.create("component_node", data, function(r, e) { if (!e) loadComponents() })
     }
 
     ColumnLayout {
@@ -300,6 +351,7 @@ Rectangle {
                                         var updated = treeNodes.slice()
                                         updated[selectedIndex] = Object.assign({}, updated[selectedIndex], { name: text })
                                         treeNodes = updated
+                                        saveNode(selectedIndex)
                                     }
                                 }
                             }
@@ -325,6 +377,7 @@ Rectangle {
                                                 var updated = treeNodes.slice()
                                                 updated[selectedIndex] = Object.assign({}, updated[selectedIndex], { type: modelData })
                                                 treeNodes = updated
+                                                saveNode(selectedIndex)
                                             }
                                         }
                                     }
@@ -346,6 +399,7 @@ Rectangle {
                                         var updated = treeNodes.slice()
                                         updated[selectedIndex] = Object.assign({}, updated[selectedIndex], { visible: checked })
                                         treeNodes = updated
+                                        saveNode(selectedIndex)
                                     }
                                 }
                             }

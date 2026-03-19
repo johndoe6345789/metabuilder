@@ -2,14 +2,41 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QmlComponents 1.0
+import "qmllib/dbal"
 
 Rectangle {
     id: superGodPanel
     color: "transparent"
 
+    // ── DBAL connection ──
+    DBALProvider { id: dbal }
+
+    property bool dbalOnline: dbal.connected
+
     property int currentTab: 0
 
-    // ── Tenant data ──
+    // ── Mock fallback data ──
+    property var mockTenants: [
+        { name: "default", owner: "admin", status: "active", homepage: "/", created: "2025-01-15" },
+        { name: "staging", owner: "devops", status: "active", homepage: "/staging", created: "2025-06-01" },
+        { name: "production", owner: "platform-admin", status: "active", homepage: "/prod", created: "2025-08-20" }
+    ]
+    property var mockGodUsers: [
+        { username: "admin", initials: "AD", role: "supergod", level: 5, tenant: "default", status: "online" },
+        { username: "platform-admin", initials: "PA", role: "supergod", level: 5, tenant: "production", status: "online" },
+        { username: "devops", initials: "DO", role: "god", level: 4, tenant: "staging", status: "online" },
+        { username: "builder01", initials: "B1", role: "god", level: 4, tenant: "default", status: "offline" },
+        { username: "builder02", initials: "B2", role: "god", level: 4, tenant: "production", status: "away" }
+    ]
+    property var mockDaemons: [
+        { name: "DBAL", status: "healthy", uptime: "14d 7h 32m", port: 8080 },
+        { name: "Nginx", status: "healthy", uptime: "14d 7h 30m", port: 443 },
+        { name: "PostgreSQL", status: "healthy", uptime: "14d 6h 55m", port: 5432 },
+        { name: "Redis", status: "degraded", uptime: "2d 1h 12m", port: 6379 }
+    ]
+    property var mockSystemMetrics: ({ cpu: 34, memory: 62, disk: 47, network: 18 })
+
+    // ── Live data (falls back to mock) ──
     property var tenants: [
         { name: "default", owner: "admin", status: "active", homepage: "/", created: "2025-01-15" },
         { name: "staging", owner: "devops", status: "active", homepage: "/staging", created: "2025-06-01" },
@@ -21,13 +48,7 @@ Rectangle {
     property string newTenantHomepage: ""
 
     // ── God users data ──
-    property var godUsers: [
-        { username: "admin", initials: "AD", role: "supergod", level: 5, tenant: "default", status: "online" },
-        { username: "platform-admin", initials: "PA", role: "supergod", level: 5, tenant: "production", status: "online" },
-        { username: "devops", initials: "DO", role: "god", level: 4, tenant: "staging", status: "online" },
-        { username: "builder01", initials: "B1", role: "god", level: 4, tenant: "default", status: "offline" },
-        { username: "builder02", initials: "B2", role: "god", level: 4, tenant: "production", status: "away" }
-    ]
+    property var godUsers: mockGodUsers
 
     // ── Power transfer data ──
     property bool showTransferForm: false
@@ -45,13 +66,8 @@ Rectangle {
     ]
 
     // ── System data ──
-    property var daemons: [
-        { name: "DBAL", status: "healthy", uptime: "14d 7h 32m", port: 8080 },
-        { name: "Nginx", status: "healthy", uptime: "14d 7h 30m", port: 443 },
-        { name: "PostgreSQL", status: "healthy", uptime: "14d 6h 55m", port: 5432 },
-        { name: "Redis", status: "degraded", uptime: "2d 1h 12m", port: 6379 }
-    ]
-    property var systemMetrics: ({ cpu: 34, memory: 62, disk: 47, network: 18 })
+    property var daemons: mockDaemons
+    property var systemMetrics: mockSystemMetrics
     property bool showReseedDialog: false
     property bool showClearCacheDialog: false
     property bool showRestartDialog: false
@@ -63,6 +79,67 @@ Rectangle {
         { label: "Power Transfer" },
         { label: "System" }
     ]
+
+    // ── DBAL data loading ──
+    function loadTenants() {
+        dbal.list("tenant", { take: 20 }, function(result, error) {
+            if (result && result.items) {
+                tenants = result.items;
+            } else {
+                tenants = mockTenants;
+            }
+        });
+    }
+
+    function loadGodUsers() {
+        dbal.list("user", { take: 50 }, function(result, error) {
+            if (result && result.items) {
+                var gods = [];
+                for (var i = 0; i < result.items.length; i++) {
+                    var u = result.items[i];
+                    if (u.role === "god" || u.role === "supergod") {
+                        gods.push(u);
+                    }
+                }
+                godUsers = gods.length > 0 ? gods : mockGodUsers;
+            } else {
+                godUsers = mockGodUsers;
+            }
+        });
+    }
+
+    function loadSystemHealth() {
+        dbal.execute("core/status", {}, function(result, error) {
+            if (result) {
+                if (result.daemons) daemons = result.daemons;
+                if (result.metrics) systemMetrics = result.metrics;
+            } else {
+                daemons = mockDaemons;
+                systemMetrics = mockSystemMetrics;
+            }
+        });
+    }
+
+    function executePowerTransfer(tenantId, newOwnerId) {
+        dbal.update("tenant", tenantId, { owner: newOwnerId }, function(result, error) {
+            if (result) {
+                console.log("Power transfer completed for tenant:", tenantId);
+                loadTenants();
+            } else {
+                console.warn("Power transfer failed:", error);
+            }
+        });
+    }
+
+    Component.onCompleted: {
+        dbal.ping(function(success) {
+            if (success) {
+                loadTenants();
+                loadGodUsers();
+                loadSystemHealth();
+            }
+        });
+    }
 
     ColumnLayout {
         anchors.fill: parent

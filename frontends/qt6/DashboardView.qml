@@ -2,9 +2,29 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QmlComponents 1.0
+import "qmllib/dbal"
 
 Rectangle {
+    id: dashRoot
     color: "transparent"
+
+    // ── DBAL connection ──────────────────────────────────────────
+    DBALProvider { id: dbal }
+
+    property var healthData: ({})
+    property bool dbalOnline: dbal.connected
+
+    function refreshDBAL() {
+        dbal.ping(function(success, error) {
+            if (success) {
+                dbal.execute("health", {}, function(result, err) {
+                    if (result) healthData = result;
+                });
+            }
+        });
+    }
+
+    Component.onCompleted: refreshDBAL()
 
     ScrollView {
         anchors.fill: parent
@@ -31,6 +51,14 @@ Rectangle {
                         variant: "body1"
                         text: "Level " + appWindow.currentLevel + " \u00b7 " + appWindow.currentRole + " access"
                     }
+
+                    CButton {
+                        text: dbal.loading ? "Refreshing..." : "Refresh"
+                        variant: "ghost"
+                        size: "sm"
+                        enabled: !dbal.loading
+                        onClicked: refreshDBAL()
+                    }
                 }
             }
 
@@ -41,7 +69,7 @@ Rectangle {
 
                 Repeater {
                     model: [
-                        { title: "DBAL Status",  value: "Healthy",  status: "success" },
+                        { title: "DBAL Status",  value: dbalOnline ? "Healthy" : "Offline",  status: dbalOnline ? "success" : "error" },
                         { title: "Packages",     value: "20",       status: "info" },
                         { title: "Active Users", value: "4",        status: "info" },
                         { title: "Uptime",       value: "99.9%",    status: "success" }

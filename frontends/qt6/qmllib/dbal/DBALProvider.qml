@@ -35,9 +35,10 @@ import QtQuick
 Item {
     id: root
     
-    // Configuration
-    property string baseUrl: "http://localhost:3001/api/dbal"
+    // Configuration — DBAL REST: /api/v1/{tenant}/{package}/{entity}[/{id}]
+    property string baseUrl: "http://localhost:8080"
     property string tenantId: "default"
+    property string packageId: "core"
     property string authToken: ""
     
     // State
@@ -99,111 +100,59 @@ Item {
         }
     }
     
-    // Public API
-    
-    /**
-     * Create a new record
-     * @param {string} entity - Entity name (e.g., "User", "AuditLog")
-     * @param {object} data - Record data
-     * @param {function} callback - Callback(result, error)
-     */
+    // REST path helpers
+    function entityPath(entity) {
+        return "/api/v1/" + tenantId + "/" + packageId + "/" + entity.toLowerCase()
+    }
+
+    function entityPathWithId(entity, id) {
+        return entityPath(entity) + "/" + id
+    }
+
+    // Public API — DBAL REST: /api/v1/{tenant}/{package}/{entity}[/{id}]
+
     function create(entity, data, callback) {
-        internal.request("POST", "/create", {
-            entity: entity,
-            data: data,
-            tenantId: tenantId
-        }, callback)
+        internal.request("POST", entityPath(entity), data, callback)
     }
-    
-    /**
-     * Read a single record by ID
-     * @param {string} entity - Entity name
-     * @param {string} id - Record ID
-     * @param {function} callback - Callback(result, error)
-     */
+
     function read(entity, id, callback) {
-        internal.request("GET", "/read/" + entity + "/" + id, null, callback)
+        internal.request("GET", entityPathWithId(entity, id), null, callback)
     }
-    
-    /**
-     * Update an existing record
-     * @param {string} entity - Entity name
-     * @param {string} id - Record ID
-     * @param {object} data - Updated fields
-     * @param {function} callback - Callback(result, error)
-     */
+
     function update(entity, id, data, callback) {
-        internal.request("PUT", "/update", {
-            entity: entity,
-            id: id,
-            data: data
-        }, callback)
+        internal.request("PUT", entityPathWithId(entity, id), data, callback)
     }
-    
-    /**
-     * Delete a record
-     * @param {string} entity - Entity name
-     * @param {string} id - Record ID
-     * @param {function} callback - Callback(success, error)
-     */
+
     function remove(entity, id, callback) {
-        internal.request("DELETE", "/delete/" + entity + "/" + id, null, callback)
+        internal.request("DELETE", entityPathWithId(entity, id), null, callback)
     }
-    
-    /**
-     * List records with pagination and filtering
-     * @param {string} entity - Entity name
-     * @param {object} options - { take, skip, where, orderBy }
-     * @param {function} callback - Callback({ items, total }, error)
-     */
+
     function list(entity, options, callback) {
-        var body = {
-            entity: entity,
-            tenantId: tenantId
-        }
-        
-        if (options.take !== undefined) body.take = options.take
-        if (options.skip !== undefined) body.skip = options.skip
-        if (options.where !== undefined) body.where = options.where
-        if (options.orderBy !== undefined) body.orderBy = options.orderBy
-        
-        internal.request("POST", "/list", body, callback)
+        var path = entityPath(entity)
+        var queryParts = []
+        if (options.take !== undefined) queryParts.push("take=" + options.take)
+        if (options.skip !== undefined) queryParts.push("skip=" + options.skip)
+        if (options.orderBy !== undefined) queryParts.push("orderBy=" + options.orderBy)
+        if (queryParts.length > 0) path += "?" + queryParts.join("&")
+
+        internal.request("GET", path, null, callback)
     }
-    
-    /**
-     * Find first record matching filter
-     * @param {string} entity - Entity name
-     * @param {object} filter - Filter criteria
-     * @param {function} callback - Callback(result, error)
-     */
+
     function findFirst(entity, filter, callback) {
-        internal.request("POST", "/findFirst", {
-            entity: entity,
-            tenantId: tenantId,
-            filter: filter
-        }, callback)
+        var path = entityPath(entity) + "?take=1"
+        for (var key in filter) {
+            path += "&" + encodeURIComponent(key) + "=" + encodeURIComponent(filter[key])
+        }
+        internal.request("GET", path, null, callback)
     }
-    
-    /**
-     * Execute a named operation
-     * @param {string} operation - Operation name
-     * @param {object} params - Operation parameters
-     * @param {function} callback - Callback(result, error)
-     */
+
     function execute(operation, params, callback) {
-        internal.request("POST", "/execute", {
-            operation: operation,
-            params: params,
-            tenantId: tenantId
-        }, callback)
+        var path = "/api/v1/" + tenantId + "/" + operation
+        internal.request("POST", path, params, callback)
     }
-    
-    /**
-     * Check connection to DBAL backend
-     * @param {function} callback - Callback(success, error)
-     */
+
     function ping(callback) {
-        internal.request("GET", "/ping", null, function(result, error) {
+        internal.request("GET", "/health", null, function(result, error) {
             root.connected = !error
             if (callback) callback(!error, error)
         })

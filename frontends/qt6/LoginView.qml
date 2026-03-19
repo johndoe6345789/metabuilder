@@ -2,12 +2,18 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QmlComponents 1.0
+import "qmllib/dbal"
 
 Rectangle {
     id: loginView
     color: "transparent"
 
     property string errorMessage: ""
+    property bool loggingIn: false
+
+    DBALProvider {
+        id: dbal
+    }
 
     ColumnLayout {
         anchors.centerIn: parent
@@ -39,6 +45,7 @@ Rectangle {
                     Layout.fillWidth: true
                     label: "Username"
                     placeholderText: "demo, admin, god, or super"
+                    enabled: !loggingIn
                 }
 
                 CTextField {
@@ -47,20 +54,22 @@ Rectangle {
                     label: "Password"
                     placeholderText: "Enter password"
                     echoMode: TextInput.Password
+                    enabled: !loggingIn
                     onAccepted: doLogin()
                 }
 
-                CText {
+                CAlert {
+                    Layout.fillWidth: true
                     visible: errorMessage.length > 0
+                    severity: "error"
                     text: errorMessage
-                    colorVariant: "error"
-                    variant: "body2"
                 }
 
                 CButton {
                     Layout.fillWidth: true
-                    text: "Sign In"
+                    text: loggingIn ? "Signing in..." : "Sign In"
                     variant: "primary"
+                    enabled: !loggingIn
                     onClicked: doLogin()
                 }
 
@@ -77,11 +86,34 @@ Rectangle {
         }
     }
 
+    function loginWithDBAL(username, password) {
+        loggingIn = true
+        errorMessage = ""
+
+        dbal.execute("core/auth/login", { username: username, password: password }, function(result, error) {
+            if (!error && result && result.token) {
+                appWindow.currentUser = result.username || username
+                appWindow.currentRole = result.role || "user"
+                appWindow.currentLevel = result.level || 2
+                appWindow.loggedIn = true
+                appWindow.authToken = result.token
+                dbal.authToken = result.token
+                appWindow.currentView = "dashboard"
+                loggingIn = false
+            } else {
+                // DBAL failed — fall back to local seed user auth
+                loggingIn = false
+                if (appWindow.login(username, password)) {
+                    errorMessage = ""
+                } else {
+                    errorMessage = error || "Invalid username or password"
+                }
+            }
+        })
+    }
+
     function doLogin() {
-        if (appWindow.login(usernameField.text, passwordField.text)) {
-            errorMessage = ""
-        } else {
-            errorMessage = "Invalid username or password"
-        }
+        errorMessage = ""
+        loginWithDBAL(usernameField.text, passwordField.text)
     }
 }

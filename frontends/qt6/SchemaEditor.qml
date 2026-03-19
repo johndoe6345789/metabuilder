@@ -2,9 +2,14 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QmlComponents 1.0
+import "qmllib/dbal"
 
 Rectangle {
     color: Theme.background
+
+    // ── DBAL ──────────────────────────────────────────────────────────
+
+    DBALProvider { id: dbal }
 
     // ── State ──────────────────────────────────────────────────────────
 
@@ -106,6 +111,50 @@ Rectangle {
 
     property var fieldTypes: ["string", "integer", "number", "boolean", "text", "json", "enum", "datetime", "date", "uuid", "array"]
 
+    property var mockSchemas: JSON.parse(JSON.stringify(schemas))
+
+    // ── DBAL Integration ─────────────────────────────────────────────
+
+    function loadSchemas() {
+        dbal.execute("core/schema", {}, function(result, error) {
+            if (!error && result && result.items) {
+                var parsed = []
+                for (var i = 0; i < result.items.length; i++) {
+                    var item = result.items[i]
+                    var fields = []
+                    if (item.fields) {
+                        for (var j = 0; j < item.fields.length; j++) {
+                            var f = item.fields[j]
+                            fields.push({
+                                name: f.name || "",
+                                type: f.type || "string",
+                                required: f.required || false,
+                                defaultValue: f.defaultValue || f["default"] || "",
+                                description: f.description || ""
+                            })
+                        }
+                    }
+                    parsed.push({
+                        name: item.name || "",
+                        description: item.description || "",
+                        fields: fields
+                    })
+                }
+                if (parsed.length > 0) {
+                    schemas = parsed
+                    selectedSchemaIndex = 0
+                    selectedFieldIndex = -1
+                }
+                // If parsed is empty, keep existing mock schemas as fallback
+            }
+            // On error, keep existing mock schemas as fallback
+        })
+    }
+
+    Component.onCompleted: {
+        loadSchemas()
+    }
+
     // ── Helpers ────────────────────────────────────────────────────────
 
     function currentSchema() {
@@ -132,20 +181,40 @@ Rectangle {
 
     function addSchema() {
         if (newSchemaName.trim() === "") return
-        var copy = JSON.parse(JSON.stringify(schemas))
-        copy.push({
+        var schemaData = {
             name: newSchemaName.trim(),
             description: newSchemaDescription.trim(),
             fields: [
                 { name: "id", type: "string", required: true, defaultValue: "uuid()", description: "Primary key" }
             ]
-        })
-        schemas = copy
-        selectedSchemaIndex = copy.length - 1
-        selectedFieldIndex = -1
+        }
+
+        // POST to DBAL when connected, then update local state
+        if (dbal.connected) {
+            dbal.create("schema", schemaData, function(result, error) {
+                if (!error) {
+                    // Reload from server to stay in sync
+                    loadSchemas()
+                } else {
+                    // Fallback: add locally
+                    addSchemaLocally(schemaData)
+                }
+            })
+        } else {
+            addSchemaLocally(schemaData)
+        }
+
         newSchemaName = ""
         newSchemaDescription = ""
         createSchemaDialogOpen = false
+    }
+
+    function addSchemaLocally(schemaData) {
+        var copy = JSON.parse(JSON.stringify(schemas))
+        copy.push(schemaData)
+        schemas = copy
+        selectedSchemaIndex = copy.length - 1
+        selectedFieldIndex = -1
     }
 
     function deleteSchema() {

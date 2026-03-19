@@ -1,6 +1,6 @@
 # Qt6 Frontend Roadmap
 
-**Status**: Compiles and links (25 QML views, ~12,800 LOC)
+**Status**: Compiles and links (26 QML views, ~14,500 LOC)
 **Last Build**: 2026-03-19 | Qt 6.7.3 via Conan | MSVC 19.5 | C++20
 
 ---
@@ -34,7 +34,7 @@
 - [x] Level 2: `ProfileView.qml` — Avatar, bio, password change, connected accounts
 - [x] Level 2: `CommentsView.qml` — Post/like/delete, sort, role-based visibility
 - [x] Level 3: `AdminView.qml` — 10 entities, CRUD dialogs, search, filter, pagination, bulk delete (871 LOC)
-- [x] Level 4: `GodPanel.qml` — 13-tab builder container with config summary
+- [x] Level 4: `GodPanel.qml` — 14-tab builder container with config summary
 - [x] Level 5: `SuperGodPanel.qml` — Tenants, god users, power transfer, system health
 
 ### Phase 4: God Panel Builder Tools (15 Agents)
@@ -50,41 +50,48 @@
 - [x] `ThemeEditor.qml` — 9 theme selector, color swatches, typography (876 LOC)
 - [x] `SMTPConfigEditor.qml` — Server config, test send, email templates (632 LOC)
 
----
-
-## In Progress
-
 ### Phase 5: DBAL Integration
-- [ ] Register `DBALClient` as QML singleton type (currently context property)
-- [ ] Wire `AdminView` entity table to real DBAL endpoints (`/{tenant}/{package}/{entity}`)
-- [ ] Wire `SchemaEditor` to load from `dbal/shared/api/schema/entities/`
-- [ ] Wire `UserManagement` to real User entity CRUD
-- [ ] Wire `DashboardView` health cards to `/health`, `/version`, `/status`
-- [ ] Add DBAL connection status indicator in app bar (ping on startup)
-- [ ] Replace mock data in all editors with `DBALProvider.list/create/update/remove` calls
+- [x] Register `DBALClient` as QML context property in `main.cpp`
+- [x] Migrate to DBAL REST API: `/api/v1/{tenant}/{package}/{entity}[/{id}]`
+- [x] Add `packageId` property to DBALClient (C++ + QML), default `"core"`
+- [x] Wire `AdminView` entity table to DBAL REST endpoints with mock fallback
+- [x] Wire `SchemaEditor` to load schemas from DBAL with mock fallback
+- [x] Wire `UserManagement` to real User entity CRUD with mock fallback
+- [x] Wire `DashboardView` health cards to `/health` endpoint
+- [x] Add DBAL connection status indicator in app bar (green/red dot + "DBAL")
+- [x] Add DBAL offline banner below app bar ("DBAL Offline — showing cached data")
+- [x] Add `health()`, `version()`, `status()`, `listSchemas()`, `getSchema()` to C++ DBALClient
+- [x] `DBALProvider.qml` — REST-based QML HTTP client with `entityPath()` helpers
+
+### Phase 6: Build System (Python + stdlib)
+- [x] Create `generate_cmake.py` — zero-dependency script (Python stdlib only)
+  - Globs all `*.qml` files automatically (root, qmllib/, packages/)
+  - Reads `metadata.json` from each package for auto-registration
+  - Discovers `src/*.cpp` and `src/*.h` for C++ sources
+  - Handles SVG/audio/resource globbing
+  - Supports conditional features (libopenmpt, Qt Multimedia)
+- [x] Create `cmake_config.json` defining modules, dependencies, feature flags
+- [x] `--dry-run` mode to preview generated CMakeLists.txt
+- [x] `--output` and `--config` CLI options
+
+### Phase 7: Runtime Polish
+- [x] Dark/light theme switching (toggle button in app bar)
+- [x] Keyboard shortcuts (Ctrl+K search, Ctrl+L login/logout, Ctrl+1-5 level switch, Escape back)
+- [x] Window state persistence via `Qt.labs.settings` (size, position, theme)
+- [x] Error boundary — DBAL offline banner with warning styling
+
+### Phase 4.5: Media Service Integration
+- [x] `MediaServicePanel.qml` — 4-tab media service management (~730 LOC)
+  - Jobs tab: submission form, active jobs table, progress bars, cancel
+  - Radio tab: channel management, playlists, start/stop streaming
+  - TV tab: channel scheduling, multi-resolution, broadcast controls
+  - Plugins tab: FFmpeg/ImageMagick/Pandoc/Radio/LibRetro grid with reload
+- [x] Integrated into GodPanel as tab 12 (14 total tabs)
+- [x] Separate HTTP client for media service at `http://localhost:8090`
 
 ---
 
 ## Planned
-
-### Phase 6: Build System (Python + Jinja2 + JSON + GLOB)
-- [ ] Create `generate_cmake.py` script that:
-  - Globs all `*.qml` files automatically (no manual CMakeLists.txt maintenance)
-  - Reads `metadata.json` from each package for auto-registration
-  - Templates `CMakeLists.txt` via Jinja2 from `cmake_config.json`
-  - Handles SVG/audio/resource globbing
-  - Supports conditional features (libopenmpt, Qt Multimedia)
-- [ ] Create `cmake_config.json` defining modules, dependencies, feature flags
-- [ ] Add `--dry-run` mode to preview generated CMakeLists.txt
-- [ ] Integrate into pre-commit or CI
-
-### Phase 7: Runtime Polish
-- [ ] Dark/light theme switching (Theme singleton already supports 9 themes)
-- [ ] i18n integration (LanguageContext from shared `/qml/` — 19 languages ready)
-- [ ] Responsive layout (Responsive singleton from shared `/qml/`)
-- [ ] Keyboard shortcuts (Ctrl+K search, Ctrl+L login/logout)
-- [ ] Window state persistence (size, position, last view)
-- [ ] Error boundary / graceful degradation when DBAL is offline
 
 ### Phase 8: Package System
 - [ ] Dynamic package view loading from disk (PackageViewLoader → real file resolution)
@@ -111,18 +118,21 @@
 
 ```
 App.qml (ApplicationWindow)
-├── CAppBar (Level navigation + auth)
+├── CAppBar (Level nav + auth + DBAL status + theme toggle)
+├── DBAL Offline Banner (conditional warning strip)
 ├── Sidebar (CListItem navigation, level-gated)
+├── Settings (Qt.labs.settings — window size/position/theme persistence)
+├── Shortcuts (Ctrl+K/L/1-5, Escape)
 └── StackLayout (17 views)
     ├── FrontPage          (Level 1 - Public)
     ├── LoginView          (Auth)
-    ├── DashboardView      (Level 2 - User)
+    ├── DashboardView      (Level 2 - User, DBAL health)
     ├── ProfileView        (Level 2)
     ├── CommentsView       (Level 2)
     ├── PackageViewLoader×6 (Level 2 - Forum, Gallery, etc.)
-    ├── AdminView          (Level 3 - Django CRUD)
-    ├── GodPanel           (Level 4 - 13-tab builder)
-    │   ├── SchemaEditor
+    ├── AdminView          (Level 3 - Django CRUD, DBAL REST)
+    ├── GodPanel           (Level 4 - 14-tab builder)
+    │   ├── SchemaEditor      (DBAL REST)
     │   ├── WorkflowEditor
     │   ├── LuaEditor
     │   ├── DatabaseManager
@@ -130,9 +140,10 @@ App.qml (ApplicationWindow)
     │   ├── ComponentHierarchyEditor
     │   ├── CssClassManager
     │   ├── DropdownConfigManager
-    │   ├── UserManagement
+    │   ├── UserManagement    (DBAL REST)
     │   ├── ThemeEditor
-    │   └── SMTPConfigEditor
+    │   ├── SMTPConfigEditor
+    │   └── MediaServicePanel (Media Daemon REST)
     ├── PackageManager     (Level 4)
     ├── Storybook          (Level 4)
     └── SuperGodPanel      (Level 5 - Tenants + Power Transfer)
@@ -140,7 +151,14 @@ App.qml (ApplicationWindow)
 C++ Backend
 ├── PackageRegistry   (JSON metadata loader)
 ├── ModPlayer         (stub — libopenmpt pending)
-└── DBALClient        (HTTP client → DBAL daemon)
+└── DBALClient        (REST client → DBAL daemon :8080)
+    ├── CRUD: /api/v1/{tenant}/{package}/{entity}[/{id}]
+    ├── System: /health, /version, /status
+    └── Schema: /api/v1/{tenant}/schema[/{entity}]
+
+Build System
+├── generate_cmake.py  (auto-generates CMakeLists.txt from file globs)
+└── cmake_config.json  (project config, Qt components, feature flags)
 
 Shared: /qml/ QmlComponents 1.0 (119 components, 9 themes, 19 languages)
 ```

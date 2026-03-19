@@ -2,10 +2,17 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QmlComponents 1.0
+import "qmllib/dbal"
 
 Rectangle {
     id: root
     color: Theme.background
+
+    // ── DBAL ──────────────────────────────────────────────────────────
+
+    DBALProvider { id: dbal }
+
+    property bool useLiveData: dbal.connected
 
     // ── Local state ──────────────────────────────────────────────────
     property var users: [
@@ -34,6 +41,41 @@ Rectangle {
     property bool formActive: true
 
     readonly property var roles: ["user", "admin", "god", "supergod"]
+
+    property var mockUsers: JSON.parse(JSON.stringify(users))
+
+    // ── DBAL Integration ─────────────────────────────────────────────
+
+    function loadUsers() {
+        dbal.list("user", { take: 50 }, function(result, error) {
+            if (!error && result && result.items && result.items.length > 0) {
+                var parsed = []
+                for (var i = 0; i < result.items.length; i++) {
+                    var u = result.items[i]
+                    parsed.push({
+                        uid: u.id || u.uid || (i + 1),
+                        username: u.username || "",
+                        email: u.email || "",
+                        role: u.role || "user",
+                        level: levelForRole(u.role || "user"),
+                        status: u.status || "active",
+                        created: u.createdAt ? u.createdAt.slice(0, 10) : (u.created || "")
+                    })
+                }
+                users = parsed
+                nextUid = parsed.length + 1
+            }
+            // On error or empty result, keep existing mock users as fallback
+        })
+    }
+
+    onUseLiveDataChanged: {
+        if (useLiveData) loadUsers()
+    }
+
+    Component.onCompleted: {
+        loadUsers()
+    }
 
     // ── Helpers ──────────────────────────────────────────────────────
     function initials(name) {
@@ -105,45 +147,110 @@ Rectangle {
 
     function createUser() {
         if (formUsername === "" || formEmail === "") return
-        var newUser = {
-            uid: nextUid,
+        var userData = {
             username: formUsername,
             email: formEmail,
             role: formRole,
-            level: levelForRole(formRole),
-            status: formActive ? "active" : "inactive",
+            status: formActive ? "active" : "inactive"
+        }
+
+        if (useLiveData) {
+            dbal.create("user", userData, function(result, error) {
+                if (!error) {
+                    loadUsers()
+                } else {
+                    createUserLocally(userData)
+                }
+                createDialogOpen = false
+                clearForm()
+            })
+        } else {
+            createUserLocally(userData)
+            createDialogOpen = false
+            clearForm()
+        }
+    }
+
+    function createUserLocally(userData) {
+        var newUser = {
+            uid: nextUid,
+            username: userData.username,
+            email: userData.email,
+            role: userData.role,
+            level: levelForRole(userData.role),
+            status: userData.status,
             created: new Date().toISOString().slice(0, 10)
         }
         var copy = users.slice()
         copy.push(newUser)
         users = copy
         nextUid++
-        createDialogOpen = false
-        clearForm()
     }
 
     function saveEdit() {
         if (editIndex < 0) return
-        var copy = users.slice()
-        copy[editIndex] = Object.assign({}, copy[editIndex], {
+        var userData = {
             username: formUsername,
             email: formEmail,
             role: formRole,
-            level: levelForRole(formRole),
             status: formActive ? "active" : "inactive"
+        }
+
+        if (useLiveData) {
+            var userId = users[editIndex].uid
+            dbal.update("user", userId, userData, function(result, error) {
+                if (!error) {
+                    loadUsers()
+                } else {
+                    saveEditLocally(userData)
+                }
+                editDialogOpen = false
+                clearForm()
+            })
+        } else {
+            saveEditLocally(userData)
+            editDialogOpen = false
+            clearForm()
+        }
+    }
+
+    function saveEditLocally(userData) {
+        var copy = users.slice()
+        copy[editIndex] = Object.assign({}, copy[editIndex], {
+            username: userData.username,
+            email: userData.email,
+            role: userData.role,
+            level: levelForRole(userData.role),
+            status: userData.status
         })
         users = copy
-        editDialogOpen = false
-        clearForm()
     }
 
     function confirmDelete() {
         if (deleteIndex < 0) return
+
+        if (useLiveData) {
+            var userId = users[deleteIndex].uid
+            dbal.remove("user", userId, function(result, error) {
+                if (!error) {
+                    loadUsers()
+                } else {
+                    confirmDeleteLocally()
+                }
+                deleteDialogOpen = false
+                deleteIndex = -1
+            })
+        } else {
+            confirmDeleteLocally()
+            deleteDialogOpen = false
+            deleteIndex = -1
+        }
+    }
+
+    function confirmDeleteLocally() {
         var copy = users.slice()
         copy.splice(deleteIndex, 1)
         users = copy
-        deleteDialogOpen = false
-        deleteIndex = -1
     }
 
     // ── Main layout ──────────────────────────────────────────────────

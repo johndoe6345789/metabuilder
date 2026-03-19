@@ -1,7 +1,9 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import Qt.labs.settings 1.0
 import QmlComponents 1.0
+import "qmllib/dbal"
 
 ApplicationWindow {
     id: appWindow
@@ -11,11 +13,23 @@ ApplicationWindow {
     title: "MetaBuilder Observatory"
     color: Theme.background
 
+    // ── DBAL connection ──
+    DBALProvider {
+        id: dbalProvider
+    }
+
+    // ── Theme ──
+    property string currentTheme: "dark"
+
+    // ── DBAL offline detection ──
+    property bool dbalConnected: dbalProvider.connected
+
     // ── Auth state ──
     property int currentLevel: 1
     property string currentUser: ""
     property string currentRole: "public"
     property bool loggedIn: false
+    property string authToken: ""
     property string currentView: "frontpage"
 
     // Seed users (mirrors old/ seed data)
@@ -45,6 +59,8 @@ ApplicationWindow {
         currentRole = "public"
         currentLevel = 1
         loggedIn = false
+        authToken = ""
+        dbalProvider.authToken = ""
         currentView = "frontpage"
     }
 
@@ -65,6 +81,39 @@ ApplicationWindow {
 
             CBadge {
                 text: "Level " + currentLevel
+            }
+
+            // DBAL connection status
+            Row {
+                spacing: 4
+                Layout.leftMargin: 4
+
+                Rectangle {
+                    width: 8
+                    height: 8
+                    radius: 4
+                    color: dbalProvider.connected ? "#4caf50" : "#f44336"
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+
+                CText {
+                    variant: "caption"
+                    text: "DBAL"
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+            }
+
+            // Theme toggle
+            CButton {
+                variant: "ghost"
+                size: "sm"
+                text: currentTheme === "dark" ? "Light" : "Dark"
+                onClicked: {
+                    currentTheme = currentTheme === "dark" ? "light" : "dark"
+                    if (typeof Theme.setTheme === "function") {
+                        Theme.setTheme(currentTheme)
+                    }
+                }
             }
 
             Item { Layout.fillWidth: true }
@@ -111,9 +160,29 @@ ApplicationWindow {
         }
     }
 
+    // ── DBAL offline banner ──
+    Rectangle {
+        id: dbalBanner
+        visible: !dbalConnected
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: 28
+        color: "#e65100"
+        z: 10
+
+        CText {
+            anchors.centerIn: parent
+            text: "DBAL Offline — showing cached data"
+            variant: "caption"
+            color: "#ffffff"
+        }
+    }
+
     // ── Sidebar + Content ──
     RowLayout {
         anchors.fill: parent
+        anchors.topMargin: dbalBanner.visible ? 28 : 0
         spacing: 0
 
         // Sidebar (Level 2+)
@@ -205,7 +274,7 @@ ApplicationWindow {
                 PackageManager {}    // 12: Package Manager
                 Storybook {}         // 13: Storybook
                 SuperGodPanel {}     // 14: Super God Panel
-                PackageViewLoader { packageId: "user-settings" }     // 15: Settings
+                SettingsView {}      // 15: Settings
                 CommentsView {}      // 16: Comments
             }
         }
@@ -220,5 +289,92 @@ ApplicationWindow {
         ]
         var idx = views.indexOf(view)
         return idx >= 0 ? idx : 0
+    }
+
+    // ── Window state persistence ──
+    Settings {
+        id: windowSettings
+        category: "MetaBuilder"
+        property alias windowWidth: appWindow.width
+        property alias windowHeight: appWindow.height
+        property alias windowX: appWindow.x
+        property alias windowY: appWindow.y
+        property alias theme: appWindow.currentTheme
+        property alias authToken: appWindow.authToken
+    }
+
+    // ── Auto-login with persisted token ──
+    Component.onCompleted: {
+        if (authToken !== "") {
+            dbalProvider.authToken = authToken
+            dbalProvider.execute("core/auth/validate", { token: authToken }, function(result, error) {
+                if (!error && result && result.valid) {
+                    currentUser = result.username || ""
+                    currentRole = result.role || "user"
+                    currentLevel = result.level || 2
+                    loggedIn = true
+                    currentView = "dashboard"
+                } else {
+                    // Token invalid or expired — clear it
+                    authToken = ""
+                    dbalProvider.authToken = ""
+                }
+            })
+        }
+    }
+
+    // ── Keyboard shortcuts ──
+    Shortcut {
+        sequence: "Ctrl+K"
+        onActivated: console.log("[MetaBuilder] Command palette (Ctrl+K) — not yet implemented")
+    }
+
+    Shortcut {
+        sequence: "Ctrl+L"
+        onActivated: {
+            if (loggedIn) {
+                logout()
+            } else {
+                currentView = "login"
+            }
+        }
+    }
+
+    Shortcut {
+        sequence: "Ctrl+1"
+        onActivated: currentView = "frontpage"
+    }
+
+    Shortcut {
+        sequence: "Ctrl+2"
+        onActivated: if (currentLevel >= 2) currentView = "dashboard"
+    }
+
+    Shortcut {
+        sequence: "Ctrl+3"
+        onActivated: if (currentLevel >= 3) currentView = "admin"
+    }
+
+    Shortcut {
+        sequence: "Ctrl+4"
+        onActivated: if (currentLevel >= 4) currentView = "god-panel"
+    }
+
+    Shortcut {
+        sequence: "Ctrl+5"
+        onActivated: if (currentLevel >= 5) currentView = "supergod"
+    }
+
+    Shortcut {
+        sequence: "Escape"
+        onActivated: {
+            if (currentView === "login") {
+                currentView = "frontpage"
+            } else if (loggedIn && currentView !== "dashboard") {
+                currentView = "dashboard"
+            } else if (!loggedIn && currentView !== "frontpage") {
+                currentView = "frontpage"
+            }
+        }
     }
 }

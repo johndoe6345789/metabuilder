@@ -2,16 +2,83 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QmlComponents 1.0
+import "qmllib/dbal"
 
 Rectangle {
     color: "transparent"
 
-    property string userBio: "MetaBuilder enthusiast and open-source contributor."
-    property string userEmail: "demo@metabuilder.io"
+    // ── DBAL connection ──
+    DBALProvider { id: dbal }
+
+    // ── Mock fallback data ──
+    property string mockBio: "MetaBuilder enthusiast and open-source contributor."
+    property string mockEmail: "demo@metabuilder.io"
+
+    property string userBio: mockBio
+    property string userEmail: mockEmail
     property string userDisplayName: appWindow.currentUser
     property string currentPassword: ""
     property string newPassword: ""
     property string confirmPassword: ""
+    property bool saving: false
+    property string saveStatus: ""
+
+    // ── DBAL data loading ──
+    function loadProfile() {
+        if (!appWindow.currentUser) return;
+        dbal.read("user", appWindow.currentUser, function(result, error) {
+            if (result) {
+                if (result.bio) userBio = result.bio;
+                if (result.email) userEmail = result.email;
+                if (result.displayName) userDisplayName = result.displayName;
+            }
+            // On error, keep existing mock data
+        });
+    }
+
+    function saveProfile() {
+        saving = true;
+        saveStatus = "";
+        var profileData = {
+            displayName: userDisplayName,
+            email: userEmail,
+            bio: userBio
+        };
+        dbal.update("user", appWindow.currentUser, profileData, function(result, error) {
+            saving = false;
+            if (result) {
+                saveStatus = "saved";
+                console.log("Profile saved for", appWindow.currentUser);
+            } else {
+                saveStatus = "error";
+                console.warn("Profile save failed:", error);
+            }
+        });
+    }
+
+    function changePassword() {
+        if (newPassword !== confirmPassword) return;
+        dbal.execute("core/change-password", {
+            userId: appWindow.currentUser,
+            oldPassword: currentPassword,
+            newPassword: newPassword
+        }, function(result, error) {
+            if (result) {
+                currentPassword = "";
+                newPassword = "";
+                confirmPassword = "";
+                console.log("Password changed successfully");
+            } else {
+                console.warn("Password change failed:", error);
+            }
+        });
+    }
+
+    Component.onCompleted: {
+        dbal.ping(function(success) {
+            if (success) loadProfile();
+        });
+    }
 
     function userInitials() {
         var name = appWindow.currentUser
@@ -262,11 +329,10 @@ Rectangle {
                 spacing: 12
                 Item { Layout.fillWidth: true }
                 CButton {
-                    text: "Save Changes"
+                    text: saving ? "Saving..." : "Save Changes"
                     variant: "primary"
-                    onClicked: {
-                        console.log("Profile saved for", appWindow.currentUser)
-                    }
+                    enabled: !saving
+                    onClicked: saveProfile()
                 }
             }
 

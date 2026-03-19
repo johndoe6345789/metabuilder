@@ -2,10 +2,65 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QmlComponents 1.0
+import "qmllib/dbal"
 
 Rectangle {
     id: root
     color: Theme.background
+
+    // ── DBAL connection ──
+    DBALProvider { id: dbal }
+
+    property bool dbalOnline: dbal.connected
+    property string platformVersion: ""
+    property var publicStats: ({ users: "---", packages: "---", workflows: "---" })
+
+    // ── Mock fallback data ──
+    property var mockStatusItems: [
+        { label: "DBAL stack", value: "healthy" },
+        { label: "Prisma migrations", value: "pending" },
+        { label: "Daemon progress", value: "building" }
+    ]
+
+    function loadPlatformStatus() {
+        dbal.ping(function(success) {
+            if (success) {
+                // Load version info
+                dbal.execute("core/version", {}, function(result, error) {
+                    if (result && result.version) {
+                        platformVersion = result.version;
+                    }
+                });
+
+                // Load public stats
+                dbal.execute("core/stats", {}, function(result, error) {
+                    if (result) {
+                        publicStats = {
+                            users: result.totalUsers || publicStats.users,
+                            packages: result.totalPackages || publicStats.packages,
+                            workflows: result.totalWorkflows || publicStats.workflows
+                        };
+                    }
+                });
+
+                // Load live status items
+                dbal.execute("health", {}, function(result, error) {
+                    if (result && result.services) {
+                        var liveItems = [];
+                        for (var i = 0; i < result.services.length; i++) {
+                            var svc = result.services[i];
+                            liveItems.push({ label: svc.name, value: svc.status });
+                        }
+                        if (liveItems.length > 0) {
+                            statusItems = liveItems;
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    Component.onCompleted: loadPlatformStatus()
 
     property int currentTab: 0
 
@@ -21,11 +76,7 @@ Rectangle {
         { name: "prisma-migrations", status: "running" }
     ]
 
-    property var statusItems: [
-        { label: "DBAL stack", value: "healthy" },
-        { label: "Prisma migrations", value: "pending" },
-        { label: "Daemon progress", value: "building" }
-    ]
+    property var statusItems: mockStatusItems
 
     ScrollView {
         anchors.fill: parent

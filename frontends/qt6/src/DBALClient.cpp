@@ -7,8 +7,9 @@
 DBALClient::DBALClient(QObject *parent)
     : QObject(parent)
     , m_networkManager(new QNetworkAccessManager(this))
-    , m_baseUrl("http://localhost:3001/api/dbal")
+    , m_baseUrl("http://localhost:8080")
     , m_tenantId("default")
+    , m_packageId("core")
     , m_connected(false)
 {
     connect(m_networkManager, &QNetworkAccessManager::finished,
@@ -43,6 +44,25 @@ void DBALClient::setAuthToken(const QString &token)
         m_authToken = token;
         emit authTokenChanged();
     }
+}
+
+void DBALClient::setPackageId(const QString &pkg)
+{
+    if (m_packageId != pkg) {
+        m_packageId = pkg;
+        emit packageIdChanged();
+    }
+}
+
+QString DBALClient::entityPath(const QString &entity) const
+{
+    // REST: /api/v1/{tenant}/{package}/{entity}
+    return QString("/api/v1/%1/%2/%3").arg(m_tenantId, m_packageId, entity.toLower());
+}
+
+QString DBALClient::entityPath(const QString &entity, const QString &id) const
+{
+    return entityPath(entity) + "/" + id;
 }
 
 void DBALClient::setError(const QString &error)
@@ -125,76 +145,89 @@ void DBALClient::handleNetworkReply(QNetworkReply *reply)
     }
 }
 
-// CRUD Operations
+// CRUD Operations — DBAL REST API: /api/v1/{tenant}/{package}/{entity}[/{id}]
 
 void DBALClient::create(const QString &entity, const QJsonObject &data, const QJSValue &callback)
 {
-    QJsonObject body;
-    body["entity"] = entity;
-    body["data"] = data;
-    body["tenantId"] = m_tenantId;
-    
-    sendRequest("POST", "/create", body, callback);
+    sendRequest("POST", entityPath(entity), data, callback);
 }
 
 void DBALClient::read(const QString &entity, const QString &id, const QJSValue &callback)
 {
-    QString endpoint = QString("/read/%1/%2").arg(entity, id);
-    sendRequest("GET", endpoint, QJsonObject(), callback);
+    sendRequest("GET", entityPath(entity, id), QJsonObject(), callback);
 }
 
-void DBALClient::update(const QString &entity, const QString &id, 
+void DBALClient::update(const QString &entity, const QString &id,
                         const QJsonObject &data, const QJSValue &callback)
 {
-    QJsonObject body;
-    body["entity"] = entity;
-    body["id"] = id;
-    body["data"] = data;
-    
-    sendRequest("PUT", "/update", body, callback);
+    sendRequest("PUT", entityPath(entity, id), data, callback);
 }
 
 void DBALClient::remove(const QString &entity, const QString &id, const QJSValue &callback)
 {
-    QString endpoint = QString("/delete/%1/%2").arg(entity, id);
-    sendRequest("DELETE", endpoint, QJsonObject(), callback);
+    sendRequest("DELETE", entityPath(entity, id), QJsonObject(), callback);
 }
 
 void DBALClient::list(const QString &entity, const QJsonObject &options, const QJSValue &callback)
 {
-    QJsonObject body;
-    body["entity"] = entity;
-    body["tenantId"] = m_tenantId;
-    
-    if (options.contains("take")) body["take"] = options["take"];
-    if (options.contains("skip")) body["skip"] = options["skip"];
-    if (options.contains("where")) body["where"] = options["where"];
-    if (options.contains("orderBy")) body["orderBy"] = options["orderBy"];
-    
-    sendRequest("POST", "/list", body, callback);
+    // Build query string from options (take, skip, where, orderBy)
+    QString path = entityPath(entity);
+    QStringList queryParts;
+    if (options.contains("take")) queryParts << "take=" + QString::number(options["take"].toInt());
+    if (options.contains("skip")) queryParts << "skip=" + QString::number(options["skip"].toInt());
+    if (options.contains("orderBy")) queryParts << "orderBy=" + options["orderBy"].toString();
+    if (!queryParts.isEmpty()) path += "?" + queryParts.join("&");
+
+    sendRequest("GET", path, QJsonObject(), callback);
 }
 
 void DBALClient::findFirst(const QString &entity, const QJsonObject &filter, const QJSValue &callback)
 {
-    QJsonObject body;
-    body["entity"] = entity;
-    body["tenantId"] = m_tenantId;
-    body["filter"] = filter;
-    
-    sendRequest("POST", "/findFirst", body, callback);
+    // GET with query params for simple filters
+    QString path = entityPath(entity);
+    QStringList queryParts;
+    queryParts << "take=1";
+    for (auto it = filter.begin(); it != filter.end(); ++it) {
+        queryParts << QUrl::toPercentEncoding(it.key()) + "=" + QUrl::toPercentEncoding(it.value().toString());
+    }
+    if (!queryParts.isEmpty()) path += "?" + queryParts.join("&");
+
+    sendRequest("GET", path, QJsonObject(), callback);
 }
 
 void DBALClient::execute(const QString &operation, const QJsonObject &params, const QJSValue &callback)
 {
-    QJsonObject body;
-    body["operation"] = operation;
-    body["params"] = params;
-    body["tenantId"] = m_tenantId;
-    
-    sendRequest("POST", "/execute", body, callback);
+    // Execute maps to POST /{tenant}/{package}/{entity}/{action} or system endpoints
+    QString path = QString("/api/v1/%1/%2").arg(m_tenantId, operation);
+    sendRequest("POST", path, params, callback);
 }
 
 void DBALClient::ping()
 {
-    sendRequest("GET", "/ping", QJsonObject(), QJSValue());
+    sendRequest("GET", "/health", QJsonObject(), QJSValue());
+}
+
+void DBALClient::health(const QJSValue &callback)
+{
+    sendRequest("GET", "/health", QJsonObject(), callback);
+}
+
+void DBALClient::version(const QJSValue &callback)
+{
+    sendRequest("GET", "/version", QJsonObject(), callback);
+}
+
+void DBALClient::status(const QJSValue &callback)
+{
+    sendRequest("GET", "/status", QJsonObject(), callback);
+}
+
+void DBALClient::listSchemas(const QJSValue &callback)
+{
+    sendRequest("GET", "/api/v1/" + m_tenantId + "/schema", QJsonObject(), callback);
+}
+
+void DBALClient::getSchema(const QString &entity, const QJSValue &callback)
+{
+    sendRequest("GET", "/api/v1/" + m_tenantId + "/schema/" + entity.toLower(), QJsonObject(), callback);
 }

@@ -11,7 +11,6 @@ qt/*:qtdeclarative=True
 qt/*:qtshadertools=True
 
 [tool_requires]
-cmake/3.30.0
 ninja/1.12.1
 
 [layout]

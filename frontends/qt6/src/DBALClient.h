@@ -37,6 +37,7 @@ class DBALClient : public QObject
     Q_OBJECT
     Q_PROPERTY(QString baseUrl READ baseUrl WRITE setBaseUrl NOTIFY baseUrlChanged)
     Q_PROPERTY(QString tenantId READ tenantId WRITE setTenantId NOTIFY tenantIdChanged)
+    Q_PROPERTY(QString packageId READ packageId WRITE setPackageId NOTIFY packageIdChanged)
     Q_PROPERTY(QString authToken READ authToken WRITE setAuthToken NOTIFY authTokenChanged)
     Q_PROPERTY(bool connected READ isConnected NOTIFY connectedChanged)
     Q_PROPERTY(QString lastError READ lastError NOTIFY errorOccurred)
@@ -48,6 +49,7 @@ public:
     // Property getters
     QString baseUrl() const { return m_baseUrl; }
     QString tenantId() const { return m_tenantId; }
+    QString packageId() const { return m_packageId; }
     QString authToken() const { return m_authToken; }
     bool isConnected() const { return m_connected; }
     QString lastError() const { return m_lastError; }
@@ -55,6 +57,7 @@ public:
     // Property setters
     void setBaseUrl(const QString &url);
     void setTenantId(const QString &id);
+    void setPackageId(const QString &pkg);
     void setAuthToken(const QString &token);
 
 public slots:
@@ -120,9 +123,41 @@ public slots:
      */
     void ping();
 
+    /**
+     * @brief Get DBAL health information
+     * @param callback QML callback function(result)
+     */
+    void health(const QJSValue &callback);
+
+    /**
+     * @brief Get DBAL version information
+     * @param callback QML callback function(result)
+     */
+    void version(const QJSValue &callback);
+
+    /**
+     * @brief Get DBAL status/metrics
+     * @param callback QML callback function(result)
+     */
+    void status(const QJSValue &callback);
+
+    /**
+     * @brief List entity schemas from DBAL
+     * @param callback QML callback function(schemas)
+     */
+    void listSchemas(const QJSValue &callback);
+
+    /**
+     * @brief Get a specific entity schema
+     * @param entity Entity name
+     * @param callback QML callback function(schema)
+     */
+    void getSchema(const QString &entity, const QJSValue &callback);
+
 signals:
     void baseUrlChanged();
     void tenantIdChanged();
+    void packageIdChanged();
     void authTokenChanged();
     void connectedChanged();
     void errorOccurred(const QString &error);
@@ -139,7 +174,11 @@ private:
     QNetworkAccessManager *m_networkManager;
     QString m_baseUrl;
     QString m_tenantId;
+    QString m_packageId;
     QString m_authToken;
+
+    QString entityPath(const QString &entity) const;
+    QString entityPath(const QString &entity, const QString &id) const;
     bool m_connected;
     QString m_lastError;
     QMap<QNetworkReply*, QJSValue> m_pendingCallbacks;

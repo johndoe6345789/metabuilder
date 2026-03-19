@@ -2,12 +2,70 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QmlComponents 1.0
+import "qmllib/dbal"
 
 Rectangle {
     color: "transparent"
 
+    // ── DBAL connection ──
+    DBALProvider { id: dbal }
+
     property string newCommentText: ""
     property int sortMode: 0  // 0=Newest, 1=Oldest, 2=Most Liked
+
+    // ── DBAL data loading ──
+    function loadComments() {
+        dbal.list("comment", { take: 50 }, function(result, error) {
+            if (result && result.items && result.items.length > 0) {
+                commentsModel.clear();
+                for (var i = 0; i < result.items.length; i++) {
+                    var c = result.items[i];
+                    commentsModel.append({
+                        commentId: c.id || (i + 1),
+                        username: c.username || c.author || "unknown",
+                        initials: (c.username || c.author || "??").substring(0, 2).toUpperCase(),
+                        timestamp: c.timestamp || c.createdAt || "Unknown",
+                        body: c.body || c.text || "",
+                        likes: c.likes || 0,
+                        liked: false
+                    });
+                }
+            }
+            // On error or empty result, keep existing mock data
+        });
+    }
+
+    function postCommentToDBAL(text) {
+        var commentData = {
+            text: text,
+            author: appWindow.currentUser,
+            username: appWindow.currentUser
+        };
+        dbal.create("comment", commentData, function(result, error) {
+            if (error) {
+                console.warn("Failed to post comment to DBAL:", error);
+            }
+            // Comment is already added locally via addComment()
+        });
+    }
+
+    function likeCommentOnDBAL(commentId, newLikes) {
+        dbal.update("comment", commentId, { likes: newLikes }, function(result, error) {
+            if (error) console.warn("Failed to update like on DBAL:", error);
+        });
+    }
+
+    function deleteCommentOnDBAL(commentId) {
+        dbal.remove("comment", commentId, function(result, error) {
+            if (error) console.warn("Failed to delete comment on DBAL:", error);
+        });
+    }
+
+    Component.onCompleted: {
+        dbal.ping(function(success) {
+            if (success) loadComments();
+        });
+    }
 
     ListModel {
         id: commentsModel
@@ -71,15 +129,17 @@ Rectangle {
     function addComment() {
         if (newCommentText.trim().length === 0) return
         var initials = appWindow.currentUser.substring(0, 2).toUpperCase()
+        var text = newCommentText.trim()
         commentsModel.insert(0, {
             commentId: commentsModel.count + 1,
             username: appWindow.currentUser,
             initials: initials,
             timestamp: "Just now",
-            body: newCommentText.trim(),
+            body: text,
             likes: 0,
             liked: false
         })
+        postCommentToDBAL(text)
         newCommentText = ""
     }
 
@@ -220,13 +280,17 @@ Rectangle {
                                 variant: model.liked ? "primary" : "ghost"
                                 size: "sm"
                                 onClicked: {
+                                    var newLikes;
                                     if (model.liked) {
-                                        commentsModel.setProperty(index, "likes", model.likes - 1)
+                                        newLikes = model.likes - 1;
+                                        commentsModel.setProperty(index, "likes", newLikes)
                                         commentsModel.setProperty(index, "liked", false)
                                     } else {
-                                        commentsModel.setProperty(index, "likes", model.likes + 1)
+                                        newLikes = model.likes + 1;
+                                        commentsModel.setProperty(index, "likes", newLikes)
                                         commentsModel.setProperty(index, "liked", true)
                                     }
+                                    likeCommentOnDBAL(model.commentId, newLikes)
                                 }
                             }
 
@@ -237,7 +301,10 @@ Rectangle {
                                 variant: "danger"
                                 size: "sm"
                                 visible: canDelete(model.username)
-                                onClicked: commentsModel.remove(index)
+                                onClicked: {
+                                    deleteCommentOnDBAL(model.commentId)
+                                    commentsModel.remove(index)
+                                }
                             }
                         }
                     }

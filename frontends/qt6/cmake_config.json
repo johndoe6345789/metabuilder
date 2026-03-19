@@ -1,0 +1,25 @@
+{
+  "project": {
+    "name": "dbal_qml",
+    "version": "0.1",
+    "executable": "dbal-qml"
+  },
+  "qt": {
+    "version": "6.7.3",
+    "components": ["Core", "Gui", "Quick", "Qml", "Network"]
+  },
+  "cpp": {
+    "standard": 20
+  },
+  "qml": {
+    "uri": "DBALObservatory",
+    "version": "1.0"
+  },
+  "features": {
+    "libopenmpt": false,
+    "qt_multimedia": false
+  },
+  "compile_definitions": {
+    "SRCDIR": "${CMAKE_CURRENT_SOURCE_DIR}"
+  }
+}

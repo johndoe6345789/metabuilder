@@ -2,10 +2,92 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QmlComponents 1.0
+import "qmllib/dbal"
 
 Rectangle {
     id: root
     color: "transparent"
+
+    // ── DBAL connection ──────────────────────────────────────────
+    DBALProvider { id: dbal }
+
+    property bool useLiveData: dbal.connected
+
+    // ── Mock workflow data kept as fallback ───────────────────────
+    property var mockWorkflows: JSON.parse(JSON.stringify(workflows))
+
+    function loadWorkflows() {
+        dbal.list("workflow", { take: 50 }, function(result, error) {
+            if (!error && result && result.items && result.items.length > 0) {
+                var parsed = []
+                for (var i = 0; i < result.items.length; i++) {
+                    var w = result.items[i]
+                    parsed.push({
+                        id: w.id || "",
+                        name: w.name || "unnamed_workflow",
+                        enabled: w.enabled !== undefined ? w.enabled : true,
+                        nodes: w.nodes || []
+                    })
+                }
+                workflows = parsed
+                if (selectedWorkflowIndex >= parsed.length)
+                    selectedWorkflowIndex = 0
+            }
+            // On error or empty result, keep existing mock workflows as fallback
+        })
+    }
+
+    function saveWorkflow(wf, callback) {
+        var workflowData = { name: wf.name, enabled: wf.enabled, nodes: wf.nodes }
+        if (useLiveData) {
+            if (wf.id) {
+                dbal.update("workflow", wf.id, workflowData, function(result, error) {
+                    if (!error) loadWorkflows()
+                    if (callback) callback(result, error)
+                })
+            } else {
+                dbal.create("workflow", workflowData, function(result, error) {
+                    if (!error) loadWorkflows()
+                    if (callback) callback(result, error)
+                })
+            }
+        }
+    }
+
+    function deleteWorkflow(index) {
+        var wf = workflows[index]
+        if (useLiveData && wf.id) {
+            dbal.remove("workflow", wf.id, function(result, error) {
+                if (!error) {
+                    loadWorkflows()
+                    if (selectedWorkflowIndex >= workflows.length - 1)
+                        selectedWorkflowIndex = Math.max(0, workflows.length - 2)
+                    selectedNodeIndex = -1
+                } else {
+                    deleteWorkflowLocally(index)
+                }
+            })
+        } else {
+            deleteWorkflowLocally(index)
+        }
+    }
+
+    function deleteWorkflowLocally(index) {
+        var copy = workflows.slice()
+        copy.splice(index, 1)
+        workflows = copy
+        if (selectedWorkflowIndex >= copy.length)
+            selectedWorkflowIndex = Math.max(0, copy.length - 1)
+        selectedNodeIndex = -1
+    }
+
+    onUseLiveDataChanged: {
+        if (useLiveData) loadWorkflows()
+    }
+
+    Component.onCompleted: {
+        loadWorkflows()
+    }
 
     // ── State ──────────────────────────────────────────────────────────
     property int selectedWorkflowIndex: 0
@@ -170,6 +252,7 @@ Rectangle {
                             config: "// configure " + addNodeName
                         })
                         workflows = workflows  // trigger re-bind
+                        if (useLiveData) saveWorkflow(wf)
                         addNodeName = ""
                         addNodeType = "Action"
                         addNodeDialog.close()
@@ -236,6 +319,11 @@ Rectangle {
                     accent: currentWorkflow.enabled
                 }
 
+                CBadge {
+                    text: useLiveData ? "Live" : "Mock"
+                    color: useLiveData ? Theme.success : Theme.warning
+                }
+
                 Item { Layout.fillWidth: true }
 
                 CSwitch {
@@ -243,6 +331,7 @@ Rectangle {
                     onCheckedChanged: {
                         workflows[selectedWorkflowIndex].enabled = checked
                         workflows = workflows
+                        if (useLiveData) saveWorkflow(workflows[selectedWorkflowIndex])
                     }
                 }
 
@@ -257,11 +346,26 @@ Rectangle {
                                 { type: "Trigger", name: "StartEvent", config: "event: custom.event" }
                             ]
                         }
-                        var wfs = workflows.slice()
-                        wfs.push(newWf)
-                        workflows = wfs
-                        selectedWorkflowIndex = wfs.length - 1
-                        selectedNodeIndex = -1
+                        if (useLiveData) {
+                            dbal.create("workflow", newWf, function(result, error) {
+                                if (!error) {
+                                    loadWorkflows()
+                                } else {
+                                    // Fallback to local
+                                    var wfs = workflows.slice()
+                                    wfs.push(newWf)
+                                    workflows = wfs
+                                    selectedWorkflowIndex = wfs.length - 1
+                                    selectedNodeIndex = -1
+                                }
+                            })
+                        } else {
+                            var wfs = workflows.slice()
+                            wfs.push(newWf)
+                            workflows = wfs
+                            selectedWorkflowIndex = wfs.length - 1
+                            selectedNodeIndex = -1
+                        }
                     }
                 }
 
@@ -463,6 +567,7 @@ Rectangle {
                                                 wf.nodes.splice(index, 1)
                                                 workflows = workflows
                                                 selectedNodeIndex = -1
+                                                if (useLiveData) saveWorkflow(wf)
                                             }
                                         }
                                     }

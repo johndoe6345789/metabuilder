@@ -21,6 +21,7 @@ qt_add_executable(dbal-qml
     src/PackageRegistry.cpp
     src/ModPlayer.cpp
     src/DBALClient.cpp
+    src/PackageLoader.cpp
 )
 
 # Pass source dir so the binary can find shared QML components at runtime
@@ -55,6 +56,9 @@ qt_add_qml_module(dbal-qml
         ModPlayerPanel.qml
         PackageManager.qml
         Storybook.qml
+        MediaServicePanel.qml
+        NotificationsPanel.qml
+        SettingsView.qml
         qmllib/dbal/DBALProvider.qml
     RESOURCES
         assets/audio/retro-gaming.mod

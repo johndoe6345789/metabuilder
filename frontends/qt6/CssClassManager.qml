@@ -2,9 +2,15 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QmlComponents 1.0
+import "qmllib/dbal"
 
 Rectangle {
+    id: root
     color: Theme.background
+
+    // ── DBAL ──────────────────────────────────────────────────────────
+    DBALProvider { id: dbal }
+    property bool useLiveData: dbal.connected
 
     // ── Mock data ──────────────────────────────────────────────────────
     property var cssClasses: [
@@ -104,6 +110,7 @@ Rectangle {
 
     function updateClasses(arr) {
         cssClasses = arr
+        if (useLiveData) saveCssClass(selectedClassIndex)
     }
 
     function addPropertyToSelected() {
@@ -155,21 +162,24 @@ Rectangle {
     }
 
     function addClass(name) {
+        var newClass = { name: name, usageCount: 0, properties: [{ prop: "color", value: "#ffffff" }] }
+        if (useLiveData) {
+            dbal.execute("core/css-classes/create", { data: newClass }, function(r, e) { if (!e) loadCssClasses() })
+        }
         var cls = cssClasses.slice()
-        cls.push({
-            name: name,
-            usageCount: 0,
-            properties: [{ prop: "color", value: "#ffffff" }]
-        })
-        updateClasses(cls)
+        cls.push(newClass)
+        cssClasses = cls
         selectedClassIndex = cls.length - 1
     }
 
     function deleteSelectedClass() {
         if (cssClasses.length <= 1) return
+        if (useLiveData && cssClasses[selectedClassIndex].id) {
+            dbal.execute("core/css-classes/delete", { id: cssClasses[selectedClassIndex].id }, function(r, e) { if (!e) loadCssClasses() })
+        }
         var cls = cssClasses.slice()
         cls.splice(selectedClassIndex, 1)
-        updateClasses(cls)
+        cssClasses = cls
         if (selectedClassIndex >= cls.length)
             selectedClassIndex = cls.length - 1
     }
@@ -202,6 +212,31 @@ Rectangle {
         var bg = resolvePreviewColor(properties, "background-color", "")
         if (bg) return bg
         return resolvePreviewColor(properties, "color", Theme.surface)
+    }
+
+    // ── DBAL Integration ─────────────────────────────────────────────
+    function loadCssClasses() {
+        dbal.execute("core/css-classes", {}, function(result, error) {
+            if (!error && result && result.items && result.items.length > 0) {
+                var parsed = []
+                for (var i = 0; i < result.items.length; i++) {
+                    var c = result.items[i]
+                    parsed.push({ id: c.id, name: c.name || "", usageCount: c.usageCount || 0, properties: c.properties || [] })
+                }
+                cssClasses = parsed
+                if (selectedClassIndex >= cssClasses.length) selectedClassIndex = cssClasses.length - 1
+            }
+        })
+    }
+    onUseLiveDataChanged: { if (useLiveData) loadCssClasses() }
+    Component.onCompleted: { loadCssClasses() }
+
+    function saveCssClass(index) {
+        if (!useLiveData || index < 0 || index >= cssClasses.length) return
+        var cls = cssClasses[index]
+        var data = { name: cls.name, usageCount: cls.usageCount, properties: cls.properties }
+        if (cls.id) dbal.execute("core/css-classes/update", { id: cls.id, data: data }, function(r, e) {})
+        else dbal.execute("core/css-classes/create", { data: data }, function(r, e) { if (!e) loadCssClasses() })
     }
 
     // ── Layout ──────────────────────────────────────────────────────────

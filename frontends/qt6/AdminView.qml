@@ -2,10 +2,44 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QmlComponents 1.0
+import "qmllib/dbal"
 
 Rectangle {
     id: root
     color: "transparent"
+
+    // ── DBAL connection ──────────────────────────────────────────
+    DBALProvider { id: dbal }
+
+    property bool useLiveData: dbal.connected
+
+    function loadEntityData() {
+        if (!useLiveData) return;
+        dbal.list(selectedEntity, { take: pageSize, skip: currentPage * pageSize }, function(result, error) {
+            if (error || !result) return;
+            var items = result.items || [];
+            var fields = entityFields[selectedEntity] || [];
+            var liveRecords = [];
+            for (var i = 0; i < items.length; i++) {
+                var rec = {};
+                for (var f = 0; f < fields.length; f++) {
+                    rec[fields[f]] = items[i][fields[f]] || "";
+                }
+                liveRecords.push(rec);
+            }
+            var updated = Object.assign({}, records);
+            updated[selectedEntity] = liveRecords;
+            records = updated;
+        });
+    }
+
+    Component.onCompleted: {
+        if (useLiveData) loadEntityData();
+    }
+
+    onUseLiveDataChanged: {
+        if (useLiveData) loadEntityData();
+    }
 
     // ── State ──────────────────────────────────────────────────────
     property string selectedEntity: "User"
@@ -281,6 +315,7 @@ Rectangle {
         selectAll = false;
         searchText = "";
         activeFilter = "All";
+        if (useLiveData) loadEntityData();
     }
 
     // ── Layout ─────────────────────────────────────────────────────
@@ -395,6 +430,10 @@ Rectangle {
                         Layout.fillWidth: true
                         spacing: 12
                         CText { variant: "h3"; text: (entityIcons[selectedEntity] || "") + "  " + selectedEntity + " Management" }
+                        CStatusBadge {
+                            status: useLiveData ? "success" : "warning"
+                            text: useLiveData ? "Live" : "Mock"
+                        }
                         Item { Layout.fillWidth: true }
                         CButton {
                             text: "Create Record"
@@ -749,7 +788,17 @@ Rectangle {
                             newRec[fields[f]] = createFormData[fields[f]] || "";
                         }
                         if (!newRec.status) newRec.status = "Active";
-                        addRecord(newRec);
+                        if (useLiveData) {
+                            dbal.create(selectedEntity, newRec, function(result, error) {
+                                if (!error) {
+                                    loadEntityData();
+                                } else {
+                                    addRecord(newRec);
+                                }
+                            });
+                        } else {
+                            addRecord(newRec);
+                        }
                         createDialogOpen = false;
                     }
                 }
@@ -810,7 +859,17 @@ Rectangle {
                         for (var f = 1; f < fields.length; f++) {
                             updatedRec[fields[f]] = editFormData[fields[f]] || editingRecord[fields[f]] || "";
                         }
-                        updateRecord(updatedRec);
+                        if (useLiveData) {
+                            dbal.update(selectedEntity, editingRecord.id, updatedRec, function(result, error) {
+                                if (!error) {
+                                    loadEntityData();
+                                } else {
+                                    updateRecord(updatedRec);
+                                }
+                            });
+                        } else {
+                            updateRecord(updatedRec);
+                        }
                         editDialogOpen = false;
                     }
                 }
@@ -861,7 +920,21 @@ Rectangle {
                     variant: "danger"
                     size: "sm"
                     onClicked: {
-                        deleteRecord(editingIndex);
+                        if (useLiveData) {
+                            var paged = getPagedRecords();
+                            var rec = paged[editingIndex];
+                            if (rec) {
+                                dbal.remove(selectedEntity, rec.id, function(result, error) {
+                                    if (!error) {
+                                        loadEntityData();
+                                    } else {
+                                        deleteRecord(editingIndex);
+                                    }
+                                });
+                            }
+                        } else {
+                            deleteRecord(editingIndex);
+                        }
                         deleteDialogOpen = false;
                     }
                 }
