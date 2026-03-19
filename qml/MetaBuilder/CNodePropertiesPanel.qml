@@ -98,112 +98,17 @@ Rectangle {
 
         CDivider { Layout.fillWidth: true }
 
-        // Parameters
-        CText { variant: "body2"; text: "Parameters"; font.bold: true }
-
-        ListView {
+        CNodeParameterList {
             Layout.fillWidth: true
-            Layout.preferredHeight: Math.min(contentHeight, 200)
-            clip: true
-            spacing: 8
-
-            model: {
-                if (!root.node) return []
-                var regEntry = NodeRegistry.nodeType(root.node.type)
-                return regEntry ? (regEntry.properties || []) : []
-            }
-
-            delegate: ColumnLayout {
-                width: parent ? parent.width : 250
-                spacing: 4
-
-                CText {
-                    variant: "caption"
-                    text: modelData.displayName || modelData.name
-                }
-
-                Loader {
-                    Layout.fillWidth: true
-                    sourceComponent: {
-                        if (modelData.options && modelData.options.length > 0) return selectComp
-                        return textFieldComp
-                    }
-                }
-
-                Component {
-                    id: textFieldComp
-                    CTextField {
-                        text: root.node && root.node.parameters
-                            ? (root.node.parameters[modelData.name] || modelData.default || "") : ""
-                        placeholderText: modelData.description || ""
-                        onTextChanged: {
-                            if (root.node) {
-                                root.parameterChanged(modelData.name, text)
-                            }
-                        }
-                    }
-                }
-
-                Component {
-                    id: selectComp
-                    CSelect {
-                        model: {
-                            var opts = modelData.options || []
-                            var labels = []
-                            for (var i = 0; i < opts.length; i++) {
-                                labels.push(opts[i].name || opts[i].value || "")
-                            }
-                            return labels
-                        }
-                    }
-                }
-            }
+            node: root.node
+            onParameterChanged: function(key, value) { root.parameterChanged(key, value) }
         }
 
         CDivider { Layout.fillWidth: true }
 
-        // Inputs/Outputs display
-        CText { variant: "body2"; text: "Ports"; font.bold: true }
-
-        FlexRow {
+        CNodePortsDisplay {
             Layout.fillWidth: true
-            spacing: 12
-
-            ColumnLayout {
-                spacing: 4
-                CText { variant: "caption"; text: "Inputs" }
-                Repeater {
-                    model: root.node ? (root.node.inputs || []) : []
-                    CChip {
-                        text: modelData.displayName || modelData.name
-                        chipColor: Theme.primary
-                    }
-                }
-                CText {
-                    visible: !root.node || !root.node.inputs || root.node.inputs.length === 0
-                    variant: "caption"
-                    text: "None"
-                    opacity: 0.5
-                }
-            }
-
-            ColumnLayout {
-                spacing: 4
-                CText { variant: "caption"; text: "Outputs" }
-                Repeater {
-                    model: root.node ? (root.node.outputs || []) : []
-                    CChip {
-                        text: modelData.displayName || modelData.name
-                        chipColor: Theme.success
-                    }
-                }
-                CText {
-                    visible: !root.node || !root.node.outputs || root.node.outputs.length === 0
-                    variant: "caption"
-                    text: "None"
-                    opacity: 0.5
-                }
-            }
+            node: root.node
         }
 
         // Workflow Variables section

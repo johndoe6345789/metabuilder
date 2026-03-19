@@ -74,81 +74,22 @@ CCard {
             clip: true
             spacing: 0
 
-            delegate: Rectangle {
-                id: rowDelegate
-                width: tableView.width
-                height: 48
-                property var rowData: modelData
-                property int rowIndex: index
-                color: {
-                    if (root.selectedRow === rowIndex) return Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12);
-                    if (root.selectedRows[rowIndex]) return Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.06);
-                    return rowIndex % 2 === 0 ? "transparent" : Theme.surfaceVariant;
+            delegate: CTableRowDelegate {
+                rowData: modelData
+                rowIndex: index
+                fields: root.fields
+                isSelected: root.selectedRow === index
+                isChecked: root.selectedRows[index] || false
+                tableWidth: tableView.width
+                onClicked: root.rowClicked(rowIndex)
+                onCheckChanged: function(checked) {
+                    var newSel = Object.assign({}, root.selectedRows);
+                    newSel[rowIndex] = checked;
+                    root.selectedRows = newSel;
+                    root.rowSelectionChanged(newSel);
                 }
-                radius: 0
-
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: root.rowClicked(rowDelegate.rowIndex)
-                }
-
-                RowLayout {
-                    anchors.fill: parent
-                    anchors.leftMargin: 12
-                    anchors.rightMargin: 12
-                    spacing: 0
-
-                    CheckBox {
-                        Layout.preferredWidth: 36
-                        checked: root.selectedRows[rowDelegate.rowIndex] || false
-                        onCheckedChanged: {
-                            var newSel = Object.assign({}, root.selectedRows);
-                            newSel[rowDelegate.rowIndex] = checked;
-                            root.selectedRows = newSel;
-                            root.rowSelectionChanged(newSel);
-                        }
-                    }
-
-                    Repeater {
-                        model: root.fields
-                        delegate: Item {
-                            Layout.fillWidth: index > 0
-                            Layout.preferredWidth: index === 0 ? 80 : -1
-                            implicitHeight: 48
-
-                            CText {
-                                anchors.verticalCenter: parent.verticalCenter
-                                anchors.left: parent.left
-                                anchors.right: parent.right
-                                variant: "body2"
-                                text: {
-                                    var key = modelData;
-                                    var rec = rowDelegate.rowData;
-                                    return rec ? (String(rec[key] || "")) : "";
-                                }
-                                elide: Text.ElideRight
-                            }
-                        }
-                    }
-
-                    FlexRow {
-                        Layout.preferredWidth: 110
-                        Layout.alignment: Qt.AlignRight
-                        spacing: 4
-                        CButton {
-                            text: "Edit"
-                            variant: "ghost"
-                            size: "sm"
-                            onClicked: root.editClicked(rowDelegate.rowIndex, rowDelegate.rowData)
-                        }
-                        CButton {
-                            text: "Del"
-                            variant: "danger"
-                            size: "sm"
-                            onClicked: root.deleteClicked(rowDelegate.rowIndex, rowDelegate.rowData)
-                        }
-                    }
-                }
+                onEditClicked: function(idx, record) { root.editClicked(idx, record) }
+                onDeleteClicked: function(idx, record) { root.deleteClicked(idx, record) }
             }
         }
 

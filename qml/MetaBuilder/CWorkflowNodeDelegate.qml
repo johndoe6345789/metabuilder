@@ -81,84 +81,34 @@ Rectangle {
     }
 
     // Input ports
-    Column {
+    CNodePortColumn {
         anchors.left: parent.left
         anchors.leftMargin: -portRadius
         anchors.top: nodeHeader.bottom
         anchors.topMargin: 8
-        spacing: portSpacing - portRadius * 2
-
-        Repeater {
-            model: nodeRect.nodeData.inputs || []
-            Item {
-                width: nodeRect.portRadius * 2
-                height: nodeRect.portRadius * 2
-
-                Rectangle {
-                    id: inPort
-                    width: nodeRect.portRadius * 2
-                    height: nodeRect.portRadius * 2
-                    radius: nodeRect.portRadius
-                    color: Theme.primary
-                    border.color: "#FFFFFF"
-                    border.width: 1.5
-
-                    MouseArea {
-                        anchors.fill: parent
-                        anchors.margins: -6
-                        cursorShape: Qt.CrossCursor
-                        hoverEnabled: true
-
-                        onPressed: {
-                            if (nodeRect.drawingConnection && nodeRect.connSourceIsOutput) {
-                                nodeRect.connectionCompleted(nodeRect.nodeData.id, modelData.name)
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        ports: nodeRect.nodeData.inputs || []
+        isOutput: false
+        portRadius: nodeRect.portRadius
+        portSpacing: nodeRect.portSpacing
+        nodeId: nodeRect.nodeData.id || ""
+        drawingConnection: nodeRect.drawingConnection
+        connSourceIsOutput: nodeRect.connSourceIsOutput
+        onConnectionCompleted: function(nId, pName) { nodeRect.connectionCompleted(nId, pName) }
     }
 
     // Output ports
-    Column {
+    CNodePortColumn {
         anchors.right: parent.right
         anchors.rightMargin: -portRadius
         anchors.top: nodeHeader.bottom
         anchors.topMargin: 8
-        spacing: portSpacing - portRadius * 2
-
-        Repeater {
-            model: nodeRect.nodeData.outputs || []
-            Item {
-                width: nodeRect.portRadius * 2
-                height: nodeRect.portRadius * 2
-
-                Rectangle {
-                    id: outPort
-                    width: nodeRect.portRadius * 2
-                    height: nodeRect.portRadius * 2
-                    radius: nodeRect.portRadius
-                    color: Theme.success
-                    border.color: "#FFFFFF"
-                    border.width: 1.5
-
-                    MouseArea {
-                        anchors.fill: parent
-                        anchors.margins: -6
-                        cursorShape: Qt.CrossCursor
-                        hoverEnabled: true
-
-                        onPressed: {
-                            if (nodeRect.canvasContentItem) {
-                                var globalPos = outPort.mapToItem(nodeRect.canvasContentItem, nodeRect.portRadius, nodeRect.portRadius)
-                                nodeRect.connectionDragStarted(nodeRect.nodeData.id, modelData.name, true, globalPos.x, globalPos.y)
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        ports: nodeRect.nodeData.outputs || []
+        isOutput: true
+        portRadius: nodeRect.portRadius
+        portSpacing: nodeRect.portSpacing
+        nodeId: nodeRect.nodeData.id || ""
+        canvasContentItem: nodeRect.canvasContentItem
+        onConnectionDragStarted: function(nId, pName, isOut, px, py) { nodeRect.connectionDragStarted(nId, pName, isOut, px, py) }
     }
 
     // Drag handler for moving the node

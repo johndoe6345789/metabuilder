@@ -105,59 +105,15 @@ CCard {
                             }
                         }
 
-                        Rectangle {
-                            visible: root.showSuggestions && root.editingPropertyIndex === index
+                        CssSuggestionPopup {
                             anchors.top: propNameField.bottom
                             anchors.left: propNameField.left
                             width: propNameField.width
-                            height: Math.min(suggestCol.implicitHeight + 8, 180)
-                            z: 100
-                            color: Theme.paper
-                            border.color: Theme.border
-                            border.width: 1
-                            radius: 6
-                            clip: true
-
-                            Flickable {
-                                anchors.fill: parent
-                                anchors.margins: 4
-                                contentHeight: suggestCol.implicitHeight
-                                clip: true
-
-                                Column {
-                                    id: suggestCol
-                                    width: parent.width
-                                    spacing: 2
-
-                                    Repeater {
-                                        model: root.propertySuggestions
-
-                                        Rectangle {
-                                            width: suggestCol.width
-                                            height: 26
-                                            radius: 4
-                                            color: suggestMa.containsMouse ? Theme.surface : "transparent"
-
-                                            CText {
-                                                anchors.verticalCenter: parent.verticalCenter
-                                                anchors.left: parent.left
-                                                anchors.leftMargin: 8
-                                                variant: "body2"
-                                                text: modelData
-                                            }
-
-                                            MouseArea {
-                                                id: suggestMa
-                                                anchors.fill: parent
-                                                hoverEnabled: true
-                                                onClicked: {
-                                                    root.propertyNameChanged(root.editingPropertyIndex, modelData)
-                                                    root.showSuggestions = false
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
+                            suggestions: root.propertySuggestions
+                            shown: root.showSuggestions && root.editingPropertyIndex === index
+                            onSuggestionClicked: function(value) {
+                                root.propertyNameChanged(root.editingPropertyIndex, value)
+                                root.showSuggestions = false
                             }
                         }
                     }

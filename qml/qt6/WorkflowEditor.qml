@@ -3,6 +3,8 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QmlComponents 1.0
 import "qmllib/dbal"
+import "../MetaBuilder/WorkflowMutations.js" as Mutations
+import "../MetaBuilder/WorkflowDBAL.js" as DBAL
 
 Rectangle {
     id: root
@@ -47,83 +49,31 @@ Rectangle {
     property real connDragX: 0
     property real connDragY: 0
 
-    // ── Mock data (loaded from JSON) ─────────────────────────────
+    // ── Mock data ──────────────────────────────────────────────
     property var mockWorkflows: []
 
-    function loadMockData() {
-        var xhr = new XMLHttpRequest()
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                if (xhr.status === 200 || xhr.status === 0) {
-                    try {
-                        mockWorkflows = JSON.parse(xhr.responseText)
-                    } catch (e) {
-                        console.warn("WorkflowEditor: failed to parse mock data:", e)
-                        mockWorkflows = []
-                    }
-                }
-                loadWorkflows()
-            }
-        }
-        xhr.open("GET", Qt.resolvedUrl("config/workflow-mock-data.json"))
-        xhr.send()
-    }
-
-    // ── DBAL Load/Save ──────────────────────────────────────────
+    // ── DBAL + persistence delegates ───────────────────────────
     function loadWorkflows() {
-        dbal.list("workflow", { take: 50 }, function(result, error) {
-            if (!error && result && result.items && result.items.length > 0) {
-                var parsed = []
-                for (var i = 0; i < result.items.length; i++) {
-                    var w = result.items[i]
-                    parsed.push({
-                        id: w.id || "",
-                        name: w.name || "unnamed_workflow",
-                        active: w.active !== undefined ? w.active : true,
-                        settings: w.settings || {},
-                        tags: w.tags || [],
-                        meta: w.meta || {},
-                        variables: w.variables || {},
-                        nodes: w.nodes || [],
-                        connections: w.connections || {}
-                    })
-                }
-                workflows = parsed
-                if (selectedWorkflowIndex >= parsed.length)
-                    selectedWorkflowIndex = parsed.length > 0 ? 0 : -1
-            } else {
-                workflows = JSON.parse(JSON.stringify(mockWorkflows))
-                if (selectedWorkflowIndex < 0 && workflows.length > 0)
-                    selectedWorkflowIndex = 0
-            }
+        DBAL.loadWorkflows(dbal, mockWorkflows, function(parsed) {
+            workflows = parsed
+            if (selectedWorkflowIndex >= parsed.length)
+                selectedWorkflowIndex = parsed.length > 0 ? 0 : -1
+            else if (selectedWorkflowIndex < 0 && parsed.length > 0)
+                selectedWorkflowIndex = 0
         })
     }
 
-    function saveWorkflow(wf, callback) {
+    function saveWorkflow(wf) {
         if (!useLiveData) return
-        if (wf.id) {
-            dbal.update("workflow", wf.id, wf, function(result, error) {
-                if (!error) loadWorkflows()
-                if (callback) callback(result, error)
-            })
-        } else {
-            dbal.create("workflow", wf, function(result, error) {
-                if (!error) loadWorkflows()
-                if (callback) callback(result, error)
-            })
-        }
+        DBAL.saveWorkflow(dbal, wf, function() { loadWorkflows() })
     }
 
     function deleteWorkflow(index) {
         var wf = workflows[index]
         if (useLiveData && wf.id) {
-            dbal.remove("workflow", wf.id, function(result, error) {
-                if (!error) {
-                    loadWorkflows()
-                } else {
-                    deleteWorkflowLocally(index)
-                }
-            })
+            DBAL.deleteWorkflow(dbal, wf,
+                function() { loadWorkflows() },
+                function() { deleteWorkflowLocally(index) })
         } else {
             deleteWorkflowLocally(index)
         }
@@ -138,24 +88,11 @@ Rectangle {
         selectedNodeId = ""
     }
 
-    // ── Node/Connection mutation helpers ─────────────────────────
+    // ── Thin mutation wrappers ─────────────────────────────────
     function addNodeToCanvas(nodeType, posX, posY) {
         if (!currentWorkflow) return
-        var regEntry = NodeRegistry.nodeType(nodeType)
-        var newId = nodeType.replace(/\./g, "_") + "_" + Date.now()
-        var newNode = {
-            id: newId,
-            name: regEntry.displayName || nodeType.split(".").pop(),
-            type: nodeType,
-            typeVersion: 1,
-            position: [posX / zoom, posY / zoom],
-            parameters: {},
-            inputs: regEntry.inputs || [],
-            outputs: regEntry.outputs || []
-        }
         var wf = workflows[selectedWorkflowIndex]
-        wf.nodes = wf.nodes.slice()
-        wf.nodes.push(newNode)
+        var newId = Mutations.addNodeToCanvas(wf, nodeType, posX, posY, zoom, NodeRegistry)
         workflows = workflows.slice()
         selectedNodeId = newId
         workflowCanvas.requestPaint()
@@ -165,23 +102,7 @@ Rectangle {
     function removeNode(nodeId) {
         if (!currentWorkflow) return
         var wf = workflows[selectedWorkflowIndex]
-        wf.nodes = wf.nodes.filter(function(n) { return n.id !== nodeId })
-        var newConns = {}
-        for (var srcId in wf.connections) {
-            if (srcId === nodeId) continue
-            var srcConns = wf.connections[srcId]
-            var newSrcConns = {}
-            for (var outName in srcConns) {
-                var newOut = {}
-                for (var idx in srcConns[outName]) {
-                    var targets = srcConns[outName][idx].filter(function(t) { return t.node !== nodeId })
-                    if (targets.length > 0) newOut[idx] = targets
-                }
-                if (Object.keys(newOut).length > 0) newSrcConns[outName] = newOut
-            }
-            if (Object.keys(newSrcConns).length > 0) newConns[srcId] = newSrcConns
-        }
-        wf.connections = newConns
+        Mutations.removeNode(wf, nodeId)
         workflows = workflows.slice()
         if (selectedNodeId === nodeId) selectedNodeId = ""
         workflowCanvas.requestPaint()
@@ -189,43 +110,12 @@ Rectangle {
     }
 
     function addConnection(srcNodeId, srcPort, dstNodeId, dstPort) {
-        if (!currentWorkflow || srcNodeId === dstNodeId) return
+        if (!currentWorkflow) return
         var wf = workflows[selectedWorkflowIndex]
-        if (!wf.connections) wf.connections = {}
-        if (!wf.connections[srcNodeId]) wf.connections[srcNodeId] = {}
-        if (!wf.connections[srcNodeId][srcPort]) wf.connections[srcNodeId][srcPort] = {}
-        if (!wf.connections[srcNodeId][srcPort]["0"]) wf.connections[srcNodeId][srcPort]["0"] = []
-        var existing = wf.connections[srcNodeId][srcPort]["0"]
-        for (var i = 0; i < existing.length; i++) {
-            if (existing[i].node === dstNodeId) return
-        }
-        existing.push({ node: dstNodeId, type: dstPort, index: 0 })
-        workflows = workflows.slice()
-        workflowCanvas.requestPaint()
-        if (useLiveData) saveWorkflow(wf)
-    }
-
-    function updateNodeName(name) {
-        if (!selectedNode) return
-        var wf = workflows[selectedWorkflowIndex]
-        for (var i = 0; i < wf.nodes.length; i++) {
-            if (wf.nodes[i].id === selectedNodeId) {
-                wf.nodes[i].name = name
-                break
-            }
-        }
-        workflows = workflows.slice()
-    }
-
-    function updateNodeParameter(key, value) {
-        if (!selectedNode) return
-        var wf = workflows[selectedWorkflowIndex]
-        for (var i = 0; i < wf.nodes.length; i++) {
-            if (wf.nodes[i].id === selectedNodeId) {
-                if (!wf.nodes[i].parameters) wf.nodes[i].parameters = {}
-                wf.nodes[i].parameters[key] = value
-                break
-            }
+        if (Mutations.addConnection(wf, srcNodeId, srcPort, dstNodeId, dstPort)) {
+            workflows = workflows.slice()
+            workflowCanvas.requestPaint()
+            if (useLiveData) saveWorkflow(wf)
         }
     }
 
@@ -242,7 +132,7 @@ Rectangle {
             connections: {}
         }
         if (useLiveData) {
-            dbal.create("workflow", newWf, function(result, error) {
+            DBAL.saveWorkflow(dbal, newWf, function(result, error) {
                 if (!error) loadWorkflows()
                 else appendWorkflowLocally(newWf)
             })
@@ -271,7 +161,10 @@ Rectangle {
     }
 
     Component.onCompleted: {
-        loadMockData()
+        DBAL.loadMockData(Qt.resolvedUrl("config/workflow-mock-data.json"), function(data) {
+            mockWorkflows = data
+            loadWorkflows()
+        })
     }
 
     // ── Test execution ──────────────────────────────────────────
@@ -308,7 +201,6 @@ Rectangle {
         anchors.fill: parent
         spacing: 0
 
-        // ── TOP BAR ─────────────────────────────────────────────
         CWorkflowToolbar {
             Layout.fillWidth: true
             workflow: currentWorkflow
@@ -328,13 +220,11 @@ Rectangle {
             onRunTest: runTestExecution()
         }
 
-        // ── CONTENT ROW ─────────────────────────────────────────
         RowLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
             spacing: 0
 
-            // ── LEFT: Workflow List + Node Palette ───────────────
             CWorkflowSidebar {
                 workflows: root.workflows
                 selectedWorkflowIndex: root.selectedWorkflowIndex
@@ -353,7 +243,6 @@ Rectangle {
                 }
             }
 
-            // ── CENTER: Infinite Canvas ──────────────────────────
             CWorkflowCanvas {
                 id: workflowCanvas
                 Layout.fillWidth: true
@@ -374,12 +263,7 @@ Rectangle {
                 onNodeDropped: function(type, x, y) { addNodeToCanvas(type, x, y) }
                 onNodeMoved: function(id, x, y) {
                     var wf = workflows[selectedWorkflowIndex]
-                    for (var i = 0; i < wf.nodes.length; i++) {
-                        if (wf.nodes[i].id === id) {
-                            wf.nodes[i].position = [x, y]
-                            break
-                        }
-                    }
+                    Mutations.moveNode(wf, id, x, y)
                     workflows = workflows.slice()
                     workflowCanvas.requestPaint()
                     if (useLiveData) saveWorkflow(wf)
@@ -413,21 +297,19 @@ Rectangle {
                 }
             }
 
-            // ── RIGHT: Properties Panel ─────────────────────────
             CNodePropertiesPanel {
                 Layout.preferredWidth: selectedNode ? 300 : 0
                 Layout.fillHeight: true
                 node: root.selectedNode
                 workflowVariables: root.workflowVariables
 
-                onNameChanged: function(name) { updateNodeName(name) }
-                onParameterChanged: function(key, value) { updateNodeParameter(key, value) }
+                onNameChanged: function(name) { Mutations.updateNodeName(workflows[selectedWorkflowIndex], selectedNodeId, name); workflows = workflows.slice() }
+                onParameterChanged: function(key, value) { Mutations.updateNodeParameter(workflows[selectedWorkflowIndex], selectedNodeId, key, value) }
                 onDeleteRequested: removeNode(selectedNodeId)
                 onClosed: root.selectedNodeId = ""
             }
         }
 
-        // ── BOTTOM: Test Execution Panel ────────────────────────
         CWorkflowTestPanel {
             panelVisible: root.testPanelVisible
             executionStatus: root.executionStatus

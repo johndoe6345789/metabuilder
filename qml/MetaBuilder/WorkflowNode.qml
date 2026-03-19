@@ -18,7 +18,6 @@ Rectangle {
     property bool selected: false
     property real zoom: 1.0
 
-    // Port geometry constants
     readonly property int portRadius: 6
     readonly property int portSpacing: 24
     readonly property int headerHeight: 32
@@ -67,7 +66,6 @@ Rectangle {
         radius: 8
         color: groupColor()
 
-        // Square off bottom corners
         Rectangle {
             anchors.bottom: parent.bottom
             anchors.left: parent.left
@@ -88,127 +86,46 @@ Rectangle {
         }
     }
 
-    // Drag handler on the header
     DragHandler {
         id: dragHandler
         target: nodeRoot
         onActiveChanged: {
-            if (!active) {
-                nodeRoot.moved(nodeId, nodeRoot.x, nodeRoot.y)
-            }
+            if (!active) nodeRoot.moved(nodeId, nodeRoot.x, nodeRoot.y)
         }
     }
 
-    // Click handler
     TapHandler {
         onTapped: nodeRoot.clicked(nodeId)
         onDoubleTapped: nodeRoot.doubleClicked(nodeId)
     }
 
     // Input ports (left side)
-    Column {
+    CNodePorts {
         anchors.left: parent.left
         anchors.leftMargin: -portRadius
         anchors.top: header.bottom
         anchors.topMargin: 8
-        spacing: portSpacing - portRadius * 2
-
-        Repeater {
-            model: nodeInputs
-            delegate: Item {
-                width: portRadius * 2 + 60
-                height: portRadius * 2
-
-                Rectangle {
-                    id: inputPort
-                    width: portRadius * 2
-                    height: portRadius * 2
-                    radius: portRadius
-                    color: Theme.primary
-                    border.color: Theme.background
-                    border.width: 1
-
-                    MouseArea {
-                        anchors.fill: parent
-                        anchors.margins: -4
-                        hoverEnabled: true
-                        cursorShape: Qt.CrossCursor
-
-                        onPressed: function(mouse) {
-                            var global = inputPort.mapToItem(null, portRadius, portRadius)
-                            nodeRoot.portPressed(nodeId, modelData.name, modelData.type, false, global.x, global.y)
-                        }
-                        onReleased: function(mouse) {
-                            var global = inputPort.mapToItem(null, portRadius, portRadius)
-                            nodeRoot.portReleased(nodeId, modelData.name, modelData.type, false, global.x, global.y)
-                        }
-                    }
-                }
-
-                CText {
-                    anchors.left: inputPort.right
-                    anchors.leftMargin: 4
-                    anchors.verticalCenter: inputPort.verticalCenter
-                    text: modelData.displayName || modelData.name || "in"
-                    variant: "caption"
-                    font.pixelSize: 10
-                }
-            }
-        }
+        ports: nodeInputs
+        isOutput: false
+        portRadius: nodeRoot.portRadius
+        portSpacing: nodeRoot.portSpacing
+        nodeId: nodeRoot.nodeId
+        onPortPressed: function(nId, name, type, isOut, gx, gy) { nodeRoot.portPressed(nId, name, type, isOut, gx, gy) }
+        onPortReleased: function(nId, name, type, isOut, gx, gy) { nodeRoot.portReleased(nId, name, type, isOut, gx, gy) }
     }
 
     // Output ports (right side)
-    Column {
+    CNodePorts {
         anchors.right: parent.right
         anchors.rightMargin: -portRadius
         anchors.top: header.bottom
         anchors.topMargin: 8
-        spacing: portSpacing - portRadius * 2
-
-        Repeater {
-            model: nodeOutputs
-            delegate: Item {
-                width: portRadius * 2 + 60
-                height: portRadius * 2
-                layoutDirection: Qt.RightToLeft
-
-                CText {
-                    anchors.right: outputPort.left
-                    anchors.rightMargin: 4
-                    anchors.verticalCenter: outputPort.verticalCenter
-                    text: modelData.displayName || modelData.name || "out"
-                    variant: "caption"
-                    font.pixelSize: 10
-                    horizontalAlignment: Text.AlignRight
-                }
-
-                Rectangle {
-                    id: outputPort
-                    anchors.right: parent.right
-                    width: portRadius * 2
-                    height: portRadius * 2
-                    radius: portRadius
-                    color: Theme.success
-                    border.color: Theme.background
-                    border.width: 1
-
-                    MouseArea {
-                        anchors.fill: parent
-                        anchors.margins: -4
-                        hoverEnabled: true
-                        cursorShape: Qt.CrossCursor
-
-                        onPressed: function(mouse) {
-                            var global = outputPort.mapToItem(null, portRadius, portRadius)
-                            nodeRoot.portPressed(nodeId, modelData.name, modelData.type, true, global.x, global.y)
-                        }
-                        onReleased: function(mouse) {
-                            var global = outputPort.mapToItem(null, portRadius, portRadius)
-                            nodeRoot.portReleased(nodeId, modelData.name, modelData.type, true, global.x, global.y)
-                        }
-                    }
-                }
-            }
-        }
+        ports: nodeOutputs
+        isOutput: true
+        portRadius: nodeRoot.portRadius
+        portSpacing: nodeRoot.portSpacing
+        nodeId: nodeRoot.nodeId
+        onPortPressed: function(nId, name, type, isOut, gx, gy) { nodeRoot.portPressed(nId, name, type, isOut, gx, gy) }
+        onPortReleased: function(nId, name, type, isOut, gx, gy) { nodeRoot.portReleased(nId, name, type, isOut, gx, gy) }
     }
 }
