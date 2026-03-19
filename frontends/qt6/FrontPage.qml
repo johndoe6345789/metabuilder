@@ -37,15 +37,17 @@ Rectangle {
 
     Component.onCompleted: loadPlatformStatus()
 
-    // ── Palette — cool/techy, no golf ──
+    // ── Palette — cool/techy, theme-aware ──
     readonly property color accentBlue: "#6366F1"    // indigo-500
     readonly property color accentCyan: "#06B6D4"    // cyan-500
     readonly property color accentViolet: "#8B5CF6"  // violet-500
     readonly property color accentAmber: "#F59E0B"   // amber-500
     readonly property color accentRose: "#F43F5E"    // rose-500
-    readonly property color subtleText: Qt.rgba(1, 1, 1, 0.45)
-    readonly property color subtleBorder: Qt.rgba(1, 1, 1, 0.08)
-    readonly property color cardBg: Qt.rgba(1, 1, 1, 0.03)
+    // Theme-aware surface colors (work in both light and dark)
+    readonly property bool isDark: Theme.mode === "dark"
+    readonly property color subtleText: isDark ? Qt.rgba(1, 1, 1, 0.45) : Qt.rgba(0, 0, 0, 0.45)
+    readonly property color subtleBorder: isDark ? Qt.rgba(1, 1, 1, 0.08) : Qt.rgba(0, 0, 0, 0.08)
+    readonly property color cardBg: isDark ? Qt.rgba(1, 1, 1, 0.03) : Qt.rgba(0, 0, 0, 0.02)
 
     // ── Level definitions ──
     property var levels: [
@@ -115,14 +117,14 @@ Rectangle {
                 Layout.preferredHeight: 360
                 color: "transparent"
 
-                // Subtle gradient — indigo → transparent → violet
+                // Subtle gradient — uses accent colors, theme-aware
                 Rectangle {
                     anchors.fill: parent
                     gradient: Gradient {
                         orientation: Gradient.Horizontal
-                        GradientStop { position: 0.0; color: Qt.rgba(0.39, 0.4, 0.95, 0.06) }
+                        GradientStop { position: 0.0; color: Qt.rgba(accentBlue.r, accentBlue.g, accentBlue.b, 0.06) }
                         GradientStop { position: 0.5; color: "transparent" }
-                        GradientStop { position: 1.0; color: Qt.rgba(0.55, 0.36, 0.96, 0.04) }
+                        GradientStop { position: 1.0; color: Qt.rgba(accentViolet.r, accentViolet.g, accentViolet.b, 0.04) }
                     }
                 }
 
@@ -597,7 +599,7 @@ Rectangle {
                             Layout.fillWidth: true
                             Layout.preferredHeight: 56
                             radius: 6
-                            color: credMA2.containsMouse ? Qt.rgba(0.39, 0.4, 0.95, 0.06) : cardBg
+                            color: credMA2.containsMouse ? Qt.rgba(accentBlue.r, accentBlue.g, accentBlue.b, 0.06) : cardBg
                             border.color: credMA2.containsMouse ? modelData.accent : subtleBorder
                             border.width: 1
 

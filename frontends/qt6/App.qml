@@ -335,8 +335,20 @@ ApplicationWindow {
         property alias authToken: appWindow.authToken
     }
 
+    // ── Restore persisted theme ──
+    onCurrentThemeChanged: {
+        if (typeof Theme.setTheme === "function") {
+            Theme.setTheme(currentTheme)
+        }
+    }
+
     // ── Auto-login with persisted token ──
     Component.onCompleted: {
+        // Apply saved theme on startup
+        if (typeof Theme.setTheme === "function") {
+            Theme.setTheme(currentTheme)
+        }
+
         if (authToken !== "") {
             dbalProvider.authToken = authToken
             dbalProvider.execute("core/auth/validate", { token: authToken }, function(result, error) {

@@ -30,9 +30,9 @@ QtObject {
     
     // Theme definitions - matches React themes.js
     readonly property var themes: ({
-        system: { name: "System", mode: "dark", primary: "#10a37f", background: "#0d0d0d", paper: "#1a1a1a", surface: "#242424", text: "#ffffff", textSecondary: "#a0a0a0", border: "#333333", error: "#ef4444", warning: "#f59e0b", success: "#22c55e", info: "#3b82f6" },
-        dark: { name: "Dark", mode: "dark", primary: "#10a37f", background: "#0d0d0d", paper: "#1a1a1a", surface: "#242424", text: "#ffffff", textSecondary: "#a0a0a0", border: "#333333", error: "#ef4444", warning: "#f59e0b", success: "#22c55e", info: "#3b82f6" },
-        light: { name: "Light", mode: "light", primary: "#10a37f", background: "#ffffff", paper: "#f7f7f8", surface: "#eeeeee", text: "#1a1a1a", textSecondary: "#6e6e80", border: "#e0e0e0", error: "#d32f2f", warning: "#ed6c02", success: "#2e7d32", info: "#0288d1" },
+        system: { name: "System", mode: "dark", primary: "#6366f1", background: "#0d0d0d", paper: "#1a1a1a", surface: "#242424", text: "#ffffff", textSecondary: "#a0a0a0", border: "#333333", error: "#ef4444", warning: "#f59e0b", success: "#22c55e", info: "#3b82f6" },
+        dark: { name: "Dark", mode: "dark", primary: "#6366f1", background: "#0d0d0d", paper: "#1a1a1a", surface: "#242424", text: "#ffffff", textSecondary: "#a0a0a0", border: "#333333", error: "#ef4444", warning: "#f59e0b", success: "#22c55e", info: "#3b82f6" },
+        light: { name: "Light", mode: "light", primary: "#4f46e5", background: "#f0f0f3", paper: "#e8e8ec", surface: "#dddde2", text: "#1a1a2e", textSecondary: "#5a5a72", border: "#c8c8d4", error: "#d32f2f", warning: "#ed6c02", success: "#2e7d32", info: "#0288d1" },
         midnight: { name: "Midnight", mode: "dark", primary: "#6366f1", background: "#0f172a", paper: "#1e293b", surface: "#334155", text: "#f1f5f9", textSecondary: "#94a3b8", border: "#334155", error: "#ef4444", warning: "#f59e0b", success: "#22c55e", info: "#3b82f6" },
         forest: { name: "Forest", mode: "dark", primary: "#22c55e", background: "#0a1f0a", paper: "#14331a", surface: "#1a4d23", text: "#ecfdf5", textSecondary: "#a7f3d0", border: "#166534", error: "#ef4444", warning: "#f59e0b", success: "#22c55e", info: "#3b82f6" },
         ocean: { name: "Ocean", mode: "dark", primary: "#0ea5e9", background: "#0c1929", paper: "#132f4c", surface: "#1e4976", text: "#e0f2fe", textSecondary: "#7dd3fc", border: "#0369a1", error: "#ef4444", warning: "#f59e0b", success: "#22c55e", info: "#0ea5e9" },
