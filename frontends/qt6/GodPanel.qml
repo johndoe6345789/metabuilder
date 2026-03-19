@@ -5,7 +5,7 @@ import QmlComponents 1.0
 
 Rectangle {
     id: godPanel
-    color: "transparent"
+    color: Theme.background
 
     property int currentTab: 0
 
@@ -41,26 +41,81 @@ Rectangle {
         { label: "Settings" }
     ]
 
+    // ── MD3-inspired palette ──
+    readonly property bool isDark: Theme.mode === "dark"
+    readonly property color accentBlue: "#6366F1"
+    readonly property color accentCyan: "#06B6D4"
+    readonly property color accentViolet: "#8B5CF6"
+    readonly property color accentAmber: "#F59E0B"
+    readonly property color accentRose: "#F43F5E"
+
+    // MD3 tonal surfaces
+    readonly property color surfaceContainer: isDark ? Qt.rgba(1, 1, 1, 0.05) : Qt.rgba(0.31, 0.31, 0.44, 0.06)
+    readonly property color surfaceContainerHigh: isDark ? Qt.rgba(1, 1, 1, 0.08) : Qt.rgba(0.31, 0.31, 0.44, 0.10)
+    readonly property color surfaceContainerHighest: isDark ? Qt.rgba(1, 1, 1, 0.12) : Qt.rgba(0.31, 0.31, 0.44, 0.14)
+    readonly property color onSurface: Theme.text
+    readonly property color onSurfaceVariant: Theme.textSecondary
+    readonly property color outline: Theme.border
+    readonly property color outlineVariant: isDark ? Qt.rgba(1, 1, 1, 0.06) : Qt.rgba(0, 0, 0, 0.08)
+    readonly property color primaryContainer: isDark ? Qt.rgba(accentBlue.r, accentBlue.g, accentBlue.b, 0.15) : Qt.rgba(accentBlue.r, accentBlue.g, accentBlue.b, 0.12)
+
+    // Level accent colors for guide cards
+    readonly property var levelAccents: [
+        "#94A3B8", accentBlue, accentCyan, accentViolet, accentRose
+    ]
+
     ColumnLayout {
         anchors.fill: parent
-        anchors.margins: 20
-        spacing: 16
+        anchors.margins: 24
+        spacing: 20
 
-        // ── Header ──
-        CCard {
+        // ════════════════════════════════════════════════════════
+        // HEADER
+        // ════════════════════════════════════════════════════════
+        Rectangle {
             Layout.fillWidth: true
+            Layout.preferredHeight: headerCol.implicitHeight + 40
+            radius: 16
+            clip: true
+            color: surfaceContainerHigh
+            border.width: 1
+            border.color: outlineVariant
+
+            // Subtle gradient wash
+            Rectangle {
+                anchors.fill: parent
+                radius: parent.radius
+                gradient: Gradient {
+                    GradientStop { position: 0.0; color: isDark ? Qt.rgba(0.39, 0.4, 0.95, 0.04) : Qt.rgba(0.30, 0.40, 0.90, 0.08) }
+                    GradientStop { position: 1.0; color: "transparent" }
+                }
+            }
 
             ColumnLayout {
-                anchors.fill: parent
+                id: headerCol
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.top: parent.top
                 anchors.margins: 20
-                spacing: 12
+                spacing: 14
 
-                FlexRow {
+                RowLayout {
                     Layout.fillWidth: true
                     spacing: 12
 
-                    CText { variant: "h2"; text: "God Panel" }
-                    CBadge { text: "Level 4" }
+                    CText {
+                        text: "God Panel"
+                        font.pixelSize: 28
+                        font.weight: Font.Bold
+                        font.letterSpacing: -0.5
+                        color: onSurface
+                    }
+
+                    CBadge {
+                        text: "Level 4"
+                        variant: "primary"
+                    }
+
                     CStatusBadge { status: "success"; text: "Active" }
 
                     Item { Layout.fillWidth: true }
@@ -85,26 +140,26 @@ Rectangle {
                     }
                 }
 
-                CDivider { Layout.fillWidth: true }
-
-                // Config summary chips
-                FlexRow {
+                // Config summary chips — tonal indigo
+                Flow {
                     Layout.fillWidth: true
                     spacing: 8
 
-                    CChip { text: configCounts.schemas + " Schemas" }
-                    CChip { text: configCounts.workflows + " Workflows" }
-                    CChip { text: configCounts.luaScripts + " Lua Scripts" }
-                    CChip { text: configCounts.packages + " Packages" }
-                    CChip { text: configCounts.pages + " Pages" }
-                    CChip { text: configCounts.components + " Components" }
-                    CChip { text: configCounts.users + " Users" }
-                    CChip { text: configCounts.dbBackends + " DB Backends" }
+                    CChip { text: configCounts.schemas + " Schemas"; variant: "primary" }
+                    CChip { text: configCounts.workflows + " Workflows"; variant: "primary" }
+                    CChip { text: configCounts.luaScripts + " Lua Scripts"; variant: "primary" }
+                    CChip { text: configCounts.packages + " Packages"; variant: "primary" }
+                    CChip { text: configCounts.pages + " Pages"; variant: "primary" }
+                    CChip { text: configCounts.components + " Components"; variant: "primary" }
+                    CChip { text: configCounts.users + " Users"; variant: "primary" }
+                    CChip { text: configCounts.dbBackends + " DB Backends"; variant: "primary" }
                 }
             }
         }
 
-        // ── Tab bar ──
+        // ════════════════════════════════════════════════════════
+        // TAB BAR
+        // ════════════════════════════════════════════════════════
         CTabBar {
             id: tabBar
             Layout.fillWidth: true
@@ -113,108 +168,289 @@ Rectangle {
             tabs: tabModel
         }
 
-        // ── Tab content ──
+        // ════════════════════════════════════════════════════════
+        // TAB CONTENT
+        // ════════════════════════════════════════════════════════
         StackLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
             currentIndex: currentTab
 
-            // 0 - Guide (inline)
+            // ── 0 - Guide ──
             Rectangle {
                 color: "transparent"
 
                 ScrollView {
                     anchors.fill: parent
                     clip: true
+                    contentWidth: availableWidth
 
                     ColumnLayout {
                         width: parent.width
-                        spacing: 16
+                        spacing: 20
 
-                        CCard {
+                        // Intro section
+                        Rectangle {
                             Layout.fillWidth: true
+                            Layout.preferredHeight: guideIntroCol.implicitHeight + 48
+                            radius: 16
+                            color: surfaceContainerHigh
+                            border.width: 1
+                            border.color: outlineVariant
 
                             ColumnLayout {
-                                anchors.fill: parent
+                                id: guideIntroCol
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                anchors.top: parent.top
                                 anchors.margins: 24
                                 spacing: 16
 
-                                CText { variant: "h3"; text: "Builder Quick Reference" }
                                 CText {
-                                    variant: "body1"
+                                    text: "Builder Quick Reference"
+                                    font.pixelSize: 22
+                                    font.weight: Font.Bold
+                                    color: onSurface
+                                    Layout.fillWidth: true
+                                }
+                                CText {
                                     text: "MetaBuilder uses a 5-level permission and interface system. Each level unlocks progressively more powerful tools."
+                                    font.pixelSize: 14
                                     wrapMode: Text.Wrap
+                                    Layout.fillWidth: true
+                                    color: onSurfaceVariant
+                                    lineHeight: 1.5
+                                }
+                            }
+                        }
+
+                        // Level cards — MD3 cards with colored accent bars
+                        CText {
+                            text: "Access Levels"
+                            font.pixelSize: 18
+                            font.weight: Font.DemiBold
+                            color: onSurface
+                            Layout.fillWidth: true
+                            Layout.topMargin: 4
+                        }
+
+                        Repeater {
+                            model: [
+                                {
+                                    level: "Level 1 - Public",
+                                    role: "public",
+                                    accentIndex: 0,
+                                    desc: "Landing page, public content, registration. No authentication required. Read-only access to published pages and packages."
+                                },
+                                {
+                                    level: "Level 2 - User",
+                                    role: "user",
+                                    accentIndex: 1,
+                                    desc: "Authenticated user dashboard. Access to forum, gallery, guestbook, blog, profile. Personal content creation and community interaction."
+                                },
+                                {
+                                    level: "Level 3 - Admin",
+                                    role: "admin",
+                                    accentIndex: 2,
+                                    desc: "Django-style entity admin panel. CRUD operations on all entities, audit logs, analytics, watchtower monitoring. User management within tenant."
+                                },
+                                {
+                                    level: "Level 4 - God Builder",
+                                    role: "god",
+                                    accentIndex: 3,
+                                    desc: "Full builder cockpit (this panel). Schema editor, workflow designer, Lua scripting, page routing, component hierarchy, CSS classes, dropdown configs, database management, and system settings."
+                                },
+                                {
+                                    level: "Level 5 - Super God",
+                                    role: "supergod",
+                                    accentIndex: 4,
+                                    desc: "Cross-tenant platform control. Infrastructure management, deployment orchestration, multi-tenant provisioning, global configuration, and platform-wide observability."
+                                }
+                            ]
+
+                            delegate: Rectangle {
+                                Layout.fillWidth: true
+                                Layout.preferredHeight: lvlCardCol.implicitHeight + 32
+                                radius: 16
+                                clip: true
+                                color: surfaceContainerHigh
+                                border.width: 1
+                                border.color: outlineVariant
+
+                                // Colored accent bar on the left
+                                Rectangle {
+                                    anchors.left: parent.left
+                                    anchors.top: parent.top
+                                    anchors.bottom: parent.bottom
+                                    width: 4
+                                    color: levelAccents[modelData.accentIndex]
+                                }
+
+                                ColumnLayout {
+                                    id: lvlCardCol
+                                    anchors.left: parent.left
+                                    anchors.right: parent.right
+                                    anchors.top: parent.top
+                                    anchors.leftMargin: 20
+                                    anchors.rightMargin: 20
+                                    anchors.topMargin: 16
+                                    spacing: 8
+
+                                    RowLayout {
+                                        Layout.fillWidth: true
+                                        spacing: 10
+
+                                        // Level number badge
+                                        Rectangle {
+                                            width: 28
+                                            height: 28
+                                            radius: 8
+                                            color: Qt.rgba(
+                                                levelAccents[modelData.accentIndex].r,
+                                                levelAccents[modelData.accentIndex].g,
+                                                levelAccents[modelData.accentIndex].b,
+                                                isDark ? 0.2 : 0.15)
+
+                                            CText {
+                                                anchors.centerIn: parent
+                                                text: (modelData.accentIndex + 1).toString()
+                                                font.pixelSize: 12
+                                                font.weight: Font.Bold
+                                                color: levelAccents[modelData.accentIndex]
+                                            }
+                                        }
+
+                                        CText {
+                                            text: modelData.level
+                                            font.pixelSize: 15
+                                            font.weight: Font.DemiBold
+                                            color: onSurface
+                                        }
+
+                                        Item { Layout.fillWidth: true }
+
+                                        CChip {
+                                            text: modelData.role
+                                            chipColor: levelAccents[modelData.accentIndex]
+                                            variant: "filter"
+                                            selected: true
+                                        }
+                                    }
+
+                                    CText {
+                                        text: modelData.desc
+                                        font.pixelSize: 13
+                                        wrapMode: Text.Wrap
+                                        Layout.fillWidth: true
+                                        color: onSurfaceVariant
+                                        lineHeight: 1.4
+                                    }
+                                }
+                            }
+                        }
+
+                        // Config summary section — tonal surface
+                        Rectangle {
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: configSummaryCol.implicitHeight + 48
+                            Layout.topMargin: 8
+                            radius: 16
+                            color: surfaceContainerHigh
+                            border.width: 1
+                            border.color: outlineVariant
+
+                            ColumnLayout {
+                                id: configSummaryCol
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                anchors.top: parent.top
+                                anchors.margins: 24
+                                spacing: 16
+
+                                CText {
+                                    text: "Current Configuration"
+                                    font.pixelSize: 16
+                                    font.weight: Font.DemiBold
+                                    color: onSurface
                                     Layout.fillWidth: true
                                 }
 
-                                CDivider { Layout.fillWidth: true }
+                                GridLayout {
+                                    Layout.fillWidth: true
+                                    columns: Math.max(2, Math.min(4, Math.floor((parent.width + 12) / 180)))
+                                    columnSpacing: 12
+                                    rowSpacing: 12
 
-                                Repeater {
-                                    model: [
-                                        {
-                                            level: "Level 1 - Public",
-                                            role: "public",
-                                            desc: "Landing page, public content, registration. No authentication required. Read-only access to published pages and packages."
-                                        },
-                                        {
-                                            level: "Level 2 - User",
-                                            role: "user",
-                                            desc: "Authenticated user dashboard. Access to forum, gallery, guestbook, blog, profile. Personal content creation and community interaction."
-                                        },
-                                        {
-                                            level: "Level 3 - Admin",
-                                            role: "admin",
-                                            desc: "Django-style entity admin panel. CRUD operations on all entities, audit logs, analytics, watchtower monitoring. User management within tenant."
-                                        },
-                                        {
-                                            level: "Level 4 - God Builder",
-                                            role: "god",
-                                            desc: "Full builder cockpit (this panel). Schema editor, workflow designer, Lua scripting, page routing, component hierarchy, CSS classes, dropdown configs, database management, and system settings."
-                                        },
-                                        {
-                                            level: "Level 5 - Super God",
-                                            role: "supergod",
-                                            desc: "Cross-tenant platform control. Infrastructure management, deployment orchestration, multi-tenant provisioning, global configuration, and platform-wide observability."
-                                        }
-                                    ]
+                                    Repeater {
+                                        model: [
+                                            { label: "Schemas", value: configCounts.schemas.toString(), accent: accentBlue },
+                                            { label: "Workflows", value: configCounts.workflows.toString(), accent: accentCyan },
+                                            { label: "Lua Scripts", value: configCounts.luaScripts.toString(), accent: accentViolet },
+                                            { label: "Packages", value: configCounts.packages.toString(), accent: accentBlue },
+                                            { label: "Pages", value: configCounts.pages.toString(), accent: accentCyan },
+                                            { label: "Components", value: configCounts.components.toString(), accent: accentViolet },
+                                            { label: "CSS Classes", value: configCounts.cssClasses.toString(), accent: accentAmber },
+                                            { label: "DB Backends", value: configCounts.dbBackends.toString(), accent: accentRose }
+                                        ]
 
-                                    delegate: CCard {
-                                        Layout.fillWidth: true
-                                        variant: "outlined"
+                                        delegate: Rectangle {
+                                            Layout.fillWidth: true
+                                            Layout.preferredHeight: 64
+                                            radius: 12
+                                            color: surfaceContainer
+                                            border.width: 1
+                                            border.color: outlineVariant
 
-                                        ColumnLayout {
-                                            anchors.fill: parent
-                                            anchors.margins: 16
-                                            spacing: 8
-
-                                            FlexRow {
+                                            RowLayout {
+                                                anchors.fill: parent
+                                                anchors.margins: 12
                                                 spacing: 10
-                                                CText { variant: "subtitle1"; text: modelData.level }
-                                                CBadge { text: modelData.role }
-                                            }
-                                            CText {
-                                                variant: "body2"
-                                                text: modelData.desc
-                                                wrapMode: Text.Wrap
-                                                Layout.fillWidth: true
+
+                                                Rectangle {
+                                                    width: 4
+                                                    height: 32
+                                                    radius: 2
+                                                    color: modelData.accent
+                                                }
+
+                                                ColumnLayout {
+                                                    Layout.fillWidth: true
+                                                    spacing: 2
+
+                                                    CText {
+                                                        text: modelData.value
+                                                        font.pixelSize: 20
+                                                        font.weight: Font.Bold
+                                                        font.family: "monospace"
+                                                        color: modelData.accent
+                                                    }
+                                                    CText {
+                                                        text: modelData.label
+                                                        font.pixelSize: 11
+                                                        font.weight: Font.Medium
+                                                        color: onSurfaceVariant
+                                                    }
+                                                }
                                             }
                                         }
                                     }
                                 }
-
-                                CDivider { Layout.fillWidth: true }
-
-                                CAlert {
-                                    severity: "info"
-                                    text: "Philosophy: 95% JSON config, 5% TypeScript/C++ infrastructure. Entities, workflows, pages, and business logic are all declarative."
-                                }
                             }
                         }
+
+                        // Philosophy alert
+                        CAlert {
+                            Layout.fillWidth: true
+                            severity: "info"
+                            text: "Philosophy: 95% JSON config, 5% TypeScript/C++ infrastructure. Entities, workflows, pages, and business logic are all declarative."
+                        }
+
+                        Item { Layout.preferredHeight: 16 }
                     }
                 }
             }
 
-            // 1 - Packages
+            // ── 1 - Packages ──
             Rectangle {
                 color: "transparent"
                 Loader {
@@ -223,7 +459,7 @@ Rectangle {
                 }
             }
 
-            // 2 - Page Routes
+            // ── 2 - Page Routes ──
             Rectangle {
                 color: "transparent"
                 Loader {
@@ -232,7 +468,7 @@ Rectangle {
                 }
             }
 
-            // 3 - Components
+            // ── 3 - Components ──
             Rectangle {
                 color: "transparent"
                 Loader {
@@ -241,7 +477,7 @@ Rectangle {
                 }
             }
 
-            // 4 - Users
+            // ── 4 - Users ──
             Rectangle {
                 color: "transparent"
                 Loader {
@@ -250,7 +486,7 @@ Rectangle {
                 }
             }
 
-            // 5 - Schemas
+            // ── 5 - Schemas ──
             Rectangle {
                 color: "transparent"
                 Loader {
@@ -259,7 +495,7 @@ Rectangle {
                 }
             }
 
-            // 6 - Workflows
+            // ── 6 - Workflows ──
             Rectangle {
                 color: "transparent"
                 Loader {
@@ -268,7 +504,7 @@ Rectangle {
                 }
             }
 
-            // 7 - Lua Scripts
+            // ── 7 - Lua Scripts ──
             Rectangle {
                 color: "transparent"
                 Loader {
@@ -277,7 +513,7 @@ Rectangle {
                 }
             }
 
-            // 8 - Snippets
+            // ── 8 - Snippets ──
             Rectangle {
                 color: "transparent"
                 Loader {
@@ -286,7 +522,7 @@ Rectangle {
                 }
             }
 
-            // 9 - CSS Classes
+            // ── 9 - CSS Classes ──
             Rectangle {
                 color: "transparent"
                 Loader {
@@ -295,7 +531,7 @@ Rectangle {
                 }
             }
 
-            // 10 - Dropdowns
+            // ── 10 - Dropdowns ──
             Rectangle {
                 color: "transparent"
                 Loader {
@@ -304,7 +540,7 @@ Rectangle {
                 }
             }
 
-            // 11 - Database
+            // ── 11 - Database ──
             Rectangle {
                 color: "transparent"
                 Loader {
@@ -313,7 +549,7 @@ Rectangle {
                 }
             }
 
-            // 12 - Media Service
+            // ── 12 - Media Service ──
             Rectangle {
                 color: "transparent"
                 Loader {
@@ -322,45 +558,65 @@ Rectangle {
                 }
             }
 
-            // 13 - Settings (inline: Theme + SMTP side by side)
+            // ── 13 - Settings (Theme + SMTP side by side) ──
             Rectangle {
                 color: "transparent"
 
                 ColumnLayout {
                     anchors.fill: parent
-                    spacing: 16
+                    spacing: 20
 
-                    CText { variant: "h3"; text: "System Settings" }
                     CText {
-                        variant: "body2"
-                        text: "Theme customization and SMTP configuration for outbound email."
-                        color: Theme.textSecondary
+                        text: "System Settings"
+                        font.pixelSize: 22
+                        font.weight: Font.Bold
+                        color: onSurface
+                        Layout.fillWidth: true
                     }
-
-                    CDivider { Layout.fillWidth: true }
+                    CText {
+                        text: "Theme customization and SMTP configuration for outbound email."
+                        font.pixelSize: 14
+                        color: onSurfaceVariant
+                        Layout.fillWidth: true
+                    }
 
                     RowLayout {
                         Layout.fillWidth: true
                         Layout.fillHeight: true
                         spacing: 16
 
-                        // Theme editor
-                        CCard {
+                        // Theme editor card
+                        Rectangle {
                             Layout.fillWidth: true
                             Layout.fillHeight: true
+                            radius: 16
+                            color: surfaceContainerHigh
+                            border.width: 1
+                            border.color: outlineVariant
 
                             ColumnLayout {
                                 anchors.fill: parent
-                                anchors.margins: 16
-                                spacing: 8
+                                anchors.margins: 20
+                                spacing: 12
 
-                                FlexRow {
-                                    spacing: 8
-                                    CText { variant: "h4"; text: "Theme Editor" }
-                                    CBadge { text: "Visual" }
+                                RowLayout {
+                                    Layout.fillWidth: true
+                                    spacing: 10
+
+                                    CText {
+                                        text: "Theme Editor"
+                                        font.pixelSize: 16
+                                        font.weight: Font.DemiBold
+                                        color: onSurface
+                                    }
+                                    CChip { text: "Visual"; variant: "info" }
                                 }
 
-                                CDivider { Layout.fillWidth: true }
+                                Rectangle {
+                                    Layout.fillWidth: true
+                                    height: 1
+                                    color: outlineVariant
+                                }
 
                                 Loader {
                                     Layout.fillWidth: true
@@ -370,23 +626,38 @@ Rectangle {
                             }
                         }
 
-                        // SMTP config
-                        CCard {
+                        // SMTP config card
+                        Rectangle {
                             Layout.fillWidth: true
                             Layout.fillHeight: true
+                            radius: 16
+                            color: surfaceContainerHigh
+                            border.width: 1
+                            border.color: outlineVariant
 
                             ColumnLayout {
                                 anchors.fill: parent
-                                anchors.margins: 16
-                                spacing: 8
+                                anchors.margins: 20
+                                spacing: 12
 
-                                FlexRow {
-                                    spacing: 8
-                                    CText { variant: "h4"; text: "SMTP Configuration" }
-                                    CBadge { text: "Email" }
+                                RowLayout {
+                                    Layout.fillWidth: true
+                                    spacing: 10
+
+                                    CText {
+                                        text: "SMTP Configuration"
+                                        font.pixelSize: 16
+                                        font.weight: Font.DemiBold
+                                        color: onSurface
+                                    }
+                                    CChip { text: "Email"; variant: "primary" }
                                 }
 
-                                CDivider { Layout.fillWidth: true }
+                                Rectangle {
+                                    Layout.fillWidth: true
+                                    height: 1
+                                    color: outlineVariant
+                                }
 
                                 Loader {
                                     Layout.fillWidth: true
