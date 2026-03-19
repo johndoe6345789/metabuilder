@@ -123,30 +123,34 @@ Button {
         }
     }
 
-    contentItem: RowLayout {
-        id: contentRow
-        spacing: 8
+    contentItem: Item {
+        implicitWidth: contentRow.implicitWidth
+        implicitHeight: contentRow.implicitHeight
 
-        BusyIndicator {
-            Layout.preferredWidth: 16
-            Layout.preferredHeight: 16
-            running: control.loading
-            visible: control.loading
-        }
+        RowLayout {
+            id: contentRow
+            anchors.centerIn: parent
+            spacing: 8
 
-        Text {
-            visible: control._effectiveIcon !== "" && !control.loading
-            text: control._effectiveIcon
-            font.pixelSize: control.font.pixelSize
-            color: control._foreground
-        }
+            BusyIndicator {
+                Layout.preferredWidth: 16
+                Layout.preferredHeight: 16
+                running: control.loading
+                visible: control.loading
+            }
 
-        Text {
-            text: control.text
-            font: control.font
-            color: control._foreground
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
+            Text {
+                visible: control._effectiveIcon !== "" && !control.loading
+                text: control._effectiveIcon
+                font.pixelSize: control.font.pixelSize
+                color: control._foreground
+            }
+
+            Text {
+                text: control.text
+                font: control.font
+                color: control._foreground
+            }
         }
     }
 }
