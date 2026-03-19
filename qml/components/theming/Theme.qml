@@ -25,24 +25,144 @@ QtObject {
     
     // Available themes list
     readonly property var themeKeys: [
-        "system", "dark", "light", "midnight", "forest", "ocean", "sunset", "rose", "highContrast"
+        "system", "dark", "light",
+        "midnight", "forest", "ocean",
+        "sunset", "rose", "highContrast"
     ]
     
     // Theme definitions - matches React themes.js
     readonly property var themes: ({
-        system: { name: "System", mode: "dark", primary: "#6366f1", background: "#0d0d0d", paper: "#1a1a1a", surface: "#242424", text: "#ffffff", textSecondary: "#a0a0a0", border: "#333333", error: "#ef4444", warning: "#f59e0b", success: "#22c55e", info: "#3b82f6" },
-        dark: { name: "Dark", mode: "dark", primary: "#6366f1", background: "#0d0d0d", paper: "#1a1a1a", surface: "#242424", text: "#ffffff", textSecondary: "#a0a0a0", border: "#333333", error: "#ef4444", warning: "#f59e0b", success: "#22c55e", info: "#3b82f6" },
-        light: { name: "Light", mode: "light", primary: "#4f46e5", background: "#e8eaf2", paper: "#f0f1f8", surface: "#e0e2ec", text: "#1b1b22", textSecondary: "#44464f", border: "#c4c6d4", error: "#ba1a1a", warning: "#ed6c02", success: "#2e7d32", info: "#0061a4" },
-        midnight: { name: "Midnight", mode: "dark", primary: "#6366f1", background: "#0f172a", paper: "#1e293b", surface: "#334155", text: "#f1f5f9", textSecondary: "#94a3b8", border: "#334155", error: "#ef4444", warning: "#f59e0b", success: "#22c55e", info: "#3b82f6" },
-        forest: { name: "Forest", mode: "dark", primary: "#22c55e", background: "#0a1f0a", paper: "#14331a", surface: "#1a4d23", text: "#ecfdf5", textSecondary: "#a7f3d0", border: "#166534", error: "#ef4444", warning: "#f59e0b", success: "#22c55e", info: "#3b82f6" },
-        ocean: { name: "Ocean", mode: "dark", primary: "#0ea5e9", background: "#0c1929", paper: "#132f4c", surface: "#1e4976", text: "#e0f2fe", textSecondary: "#7dd3fc", border: "#0369a1", error: "#ef4444", warning: "#f59e0b", success: "#22c55e", info: "#0ea5e9" },
-        sunset: { name: "Sunset", mode: "dark", primary: "#f97316", background: "#1c1210", paper: "#2d1f1a", surface: "#44302a", text: "#fff7ed", textSecondary: "#fed7aa", border: "#9a3412", error: "#ef4444", warning: "#f97316", success: "#22c55e", info: "#3b82f6" },
-        rose: { name: "Rose", mode: "dark", primary: "#f43f5e", background: "#1a0f12", paper: "#2d1a1f", surface: "#44252d", text: "#fff1f2", textSecondary: "#fecdd3", border: "#be123c", error: "#f43f5e", warning: "#f59e0b", success: "#22c55e", info: "#3b82f6" },
-        highContrast: { name: "High Contrast", mode: "dark", primary: "#ffff00", background: "#000000", paper: "#111111", surface: "#222222", text: "#ffffff", textSecondary: "#eeeeee", border: "#ffffff", error: "#ff0000", warning: "#ffff00", success: "#00ff00", info: "#00ffff" }
+        system: {
+            name: "System", mode: "dark",
+            primary: "#6366f1",
+            background: "#0d0d0d",
+            paper: "#1a1a1a",
+            surface: "#242424",
+            text: "#ffffff",
+            textSecondary: "#a0a0a0",
+            border: "#333333",
+            error: "#ef4444",
+            warning: "#f59e0b",
+            success: "#22c55e",
+            info: "#3b82f6"
+        },
+        dark: {
+            name: "Dark", mode: "dark",
+            primary: "#6366f1",
+            background: "#0d0d0d",
+            paper: "#1a1a1a",
+            surface: "#242424",
+            text: "#ffffff",
+            textSecondary: "#a0a0a0",
+            border: "#333333",
+            error: "#ef4444",
+            warning: "#f59e0b",
+            success: "#22c55e",
+            info: "#3b82f6"
+        },
+        light: {
+            name: "Light", mode: "light",
+            primary: "#4f46e5",
+            background: "#e8eaf2",
+            paper: "#f0f1f8",
+            surface: "#e0e2ec",
+            text: "#1b1b22",
+            textSecondary: "#44464f",
+            border: "#c4c6d4",
+            error: "#ba1a1a",
+            warning: "#ed6c02",
+            success: "#2e7d32",
+            info: "#0061a4"
+        },
+        midnight: {
+            name: "Midnight", mode: "dark",
+            primary: "#6366f1",
+            background: "#0f172a",
+            paper: "#1e293b",
+            surface: "#334155",
+            text: "#f1f5f9",
+            textSecondary: "#94a3b8",
+            border: "#334155",
+            error: "#ef4444",
+            warning: "#f59e0b",
+            success: "#22c55e",
+            info: "#3b82f6"
+        },
+        forest: {
+            name: "Forest", mode: "dark",
+            primary: "#22c55e",
+            background: "#0a1f0a",
+            paper: "#14331a",
+            surface: "#1a4d23",
+            text: "#ecfdf5",
+            textSecondary: "#a7f3d0",
+            border: "#166534",
+            error: "#ef4444",
+            warning: "#f59e0b",
+            success: "#22c55e",
+            info: "#3b82f6"
+        },
+        ocean: {
+            name: "Ocean", mode: "dark",
+            primary: "#0ea5e9",
+            background: "#0c1929",
+            paper: "#132f4c",
+            surface: "#1e4976",
+            text: "#e0f2fe",
+            textSecondary: "#7dd3fc",
+            border: "#0369a1",
+            error: "#ef4444",
+            warning: "#f59e0b",
+            success: "#22c55e",
+            info: "#0ea5e9"
+        },
+        sunset: {
+            name: "Sunset", mode: "dark",
+            primary: "#f97316",
+            background: "#1c1210",
+            paper: "#2d1f1a",
+            surface: "#44302a",
+            text: "#fff7ed",
+            textSecondary: "#fed7aa",
+            border: "#9a3412",
+            error: "#ef4444",
+            warning: "#f97316",
+            success: "#22c55e",
+            info: "#3b82f6"
+        },
+        rose: {
+            name: "Rose", mode: "dark",
+            primary: "#f43f5e",
+            background: "#1a0f12",
+            paper: "#2d1a1f",
+            surface: "#44252d",
+            text: "#fff1f2",
+            textSecondary: "#fecdd3",
+            border: "#be123c",
+            error: "#f43f5e",
+            warning: "#f59e0b",
+            success: "#22c55e",
+            info: "#3b82f6"
+        },
+        highContrast: {
+            name: "High Contrast", mode: "dark",
+            primary: "#ffff00",
+            background: "#000000",
+            paper: "#111111",
+            surface: "#222222",
+            text: "#ffffff",
+            textSecondary: "#eeeeee",
+            border: "#ffffff",
+            error: "#ff0000",
+            warning: "#ffff00",
+            success: "#00ff00",
+            info: "#00ffff"
+        }
     })
     
     // Current theme object
-    readonly property var currentTheme: themes[current] || themes.dark
+    readonly property var currentTheme:
+        themes[current] || themes.dark
     
     // Primary palette from current theme
     property color primary: currentTheme.primary
@@ -100,19 +220,35 @@ QtObject {
     property color text: currentTheme.text
     property color textSecondary: currentTheme.textSecondary
     property color textMuted: Qt.darker(textSecondary, 1.2)
-    property color textDisabled: mode === "dark" ? "rgba(255, 255, 255, 0.38)" : "rgba(0, 0, 0, 0.38)"
+    property color textDisabled:
+        mode === "dark"
+            ? "rgba(255, 255, 255, 0.38)"
+            : "rgba(0, 0, 0, 0.38)"
     
     // Border and divider from current theme
     property color border: currentTheme.border
     property color divider: Qt.darker(border, 1.1)
     
     // Action colors
-    property color actionActive: mode === "dark" ? "rgba(255, 255, 255, 0.54)" : "rgba(0, 0, 0, 0.54)"
-    property color actionHover: mode === "dark" ? "rgba(255, 255, 255, 0.04)" : "rgba(0, 0, 0, 0.04)"
-    property color actionSelected: mode === "dark" ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.08)"
-    property color actionDisabled: mode === "dark" ? "rgba(255, 255, 255, 0.26)" : "rgba(0, 0, 0, 0.26)"
+    property color actionActive:
+        mode === "dark"
+            ? "rgba(255, 255, 255, 0.54)"
+            : "rgba(0, 0, 0, 0.54)"
+    property color actionHover:
+        mode === "dark"
+            ? "rgba(255, 255, 255, 0.04)"
+            : "rgba(0, 0, 0, 0.04)"
+    property color actionSelected:
+        mode === "dark"
+            ? "rgba(255, 255, 255, 0.08)"
+            : "rgba(0, 0, 0, 0.08)"
+    property color actionDisabled:
+        mode === "dark"
+            ? "rgba(255, 255, 255, 0.26)"
+            : "rgba(0, 0, 0, 0.26)"
     
-    // Legacy aliases (binding, not alias - can't alias same-object properties)
+    // Legacy aliases (binding, not alias -
+    // can't alias same-object properties)
     property color accent: primary
     
     // Typography - delegate to StyleVariables for consistency
@@ -249,7 +385,9 @@ QtObject {
             if (options.palette.mode) mode = options.palette.mode
         }
         if (options.shape) {
-            if (options.shape.borderRadius) shapeBorderRadius = options.shape.borderRadius
+            if (options.shape.borderRadius)
+                shapeBorderRadius =
+                    options.shape.borderRadius
         }
     }
 }

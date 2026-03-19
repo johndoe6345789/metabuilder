@@ -14,7 +14,10 @@ Rectangle {
     // PackageLoader helper — caller must provide this function
     // to convert a package object to a view name
     property var packageViewName: function(pkg) {
-        return pkg.navLabel ? pkg.navLabel.toLowerCase().replace(/ /g, "-") : pkg.packageId
+        return pkg.navLabel
+            ? pkg.navLabel.toLowerCase()
+                .replace(/ /g, "-")
+            : pkg.packageId
     }
 
     signal navigate(string view)
@@ -41,23 +44,42 @@ Rectangle {
         Repeater {
             model: {
                 var items = [
-                    { label: "Dashboard",   view: "dashboard",   icon: "~", level: 2 },
-                    { label: "Profile",     view: "profile",     icon: "P", level: 2 },
-                    { label: "Comments",    view: "comments",    icon: "C", level: 2 },
-                    { label: "Mod Tools",   view: "moderator",   icon: "M", level: 3 },
-                    { label: "Admin Panel", view: "admin",       icon: "A", level: 4 },
-                    { label: "God Panel",   view: "god-panel",   icon: "G", level: 5 },
-                    { label: "Super God",   view: "supergod",    icon: "S", level: 6 }
+                    { label: "Dashboard",
+                      view: "dashboard",
+                      icon: "~", level: 2 },
+                    { label: "Profile",
+                      view: "profile",
+                      icon: "P", level: 2 },
+                    { label: "Comments",
+                      view: "comments",
+                      icon: "C", level: 2 },
+                    { label: "Mod Tools",
+                      view: "moderator",
+                      icon: "M", level: 3 },
+                    { label: "Admin Panel",
+                      view: "admin",
+                      icon: "A", level: 4 },
+                    { label: "God Panel",
+                      view: "god-panel",
+                      icon: "G", level: 5 },
+                    { label: "Super God",
+                      view: "supergod",
+                      icon: "S", level: 6 }
                 ]
-                return items.filter(function(item) { return item.level <= root.currentLevel })
+                return items.filter(function(item) {
+                    return item.level <= root.currentLevel
+                })
             }
 
             delegate: CListItem {
                 Layout.fillWidth: true
                 title: modelData.label
                 leadingIcon: modelData.icon
-                selected: root.currentView === modelData.view
-                onClicked: root.navigate(modelData.view)
+                selected: root.currentView
+                    === modelData.view
+                onClicked: {
+                    root.navigate(modelData.view)
+                }
             }
         }
 
@@ -73,10 +95,16 @@ Rectangle {
 
             delegate: CListItem {
                 Layout.fillWidth: true
-                title: modelData.navLabel ? modelData.navLabel : modelData.name
-                leadingIcon: modelData.icon ? modelData.icon : modelData.name.charAt(0)
-                selected: root.currentView === root.packageViewName(modelData)
-                onClicked: root.navigate(root.packageViewName(modelData))
+                title: modelData.navLabel
+                    ? modelData.navLabel
+                    : modelData.name
+                leadingIcon: modelData.icon
+                    ? modelData.icon
+                    : modelData.name.charAt(0)
+                selected: root.currentView
+                    === root.packageViewName(modelData)
+                onClicked: root.navigate(
+                    root.packageViewName(modelData))
             }
         }
 

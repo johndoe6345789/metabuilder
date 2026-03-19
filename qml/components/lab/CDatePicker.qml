@@ -24,10 +24,15 @@ Item {
     
     function formatDate(d) {
         if (!d || isNaN(d.getTime())) return ""
-        var month = String(d.getMonth() + 1).padStart(2, '0')
-        var day = String(d.getDate()).padStart(2, '0')
+        var month = String(
+            d.getMonth() + 1).padStart(2, '0')
+        var day = String(
+            d.getDate()).padStart(2, '0')
         var year = d.getFullYear()
-        return format.replace("MM", month).replace("dd", day).replace("yyyy", year)
+        return format
+            .replace("MM", month)
+            .replace("dd", day)
+            .replace("yyyy", year)
     }
     
     ColumnLayout {
@@ -48,11 +53,13 @@ Item {
             Layout.fillWidth: true
             Layout.preferredHeight: 40
             radius: 4
-            color: datePicker.disabled ? "#f5f5f5" : "#ffffff"
+            color: datePicker.disabled
+                ? "#f5f5f5" : "#ffffff"
             border.width: 1
             border.color: {
                 if (datePicker.error) return "#d32f2f"
-                if (inputMouse.containsMouse) return "#1976d2"
+                if (inputMouse.containsMouse)
+                    return "#1976d2"
                 return "#c4c4c4"
             }
             
@@ -64,15 +71,21 @@ Item {
                 
                 Text {
                     Layout.fillWidth: true
-                    text: formatDate(datePicker.value) || datePicker.placeholder
+                    text: formatDate(
+                        datePicker.value)
+                        || datePicker.placeholder
                     font.pixelSize: 14
-                    color: formatDate(datePicker.value) ? "#1a1a1a" : "#9e9e9e"
+                    color: formatDate(
+                        datePicker.value)
+                        ? "#1a1a1a"
+                        : "#9e9e9e"
                     elide: Text.ElideRight
                 }
                 
                 // Clear button
                 Text {
-                    visible: datePicker.clearable && formatDate(datePicker.value)
+                    visible: datePicker.clearable
+                        && formatDate(datePicker.value)
                     text: "×"
                     font.pixelSize: 18
                     color: "#666666"
@@ -82,8 +95,10 @@ Item {
                         anchors.margins: -4
                         cursorShape: Qt.PointingHandCursor
                         onClicked: {
-                            datePicker.value = new Date(NaN)
-                            dateChanged(datePicker.value)
+                            datePicker.value =
+                                new Date(NaN)
+                            dateChanged(
+                                datePicker.value)
                         }
                     }
                 }
@@ -100,7 +115,8 @@ Item {
                 anchors.fill: parent
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
-                enabled: !datePicker.disabled && !datePicker.readOnly
+                enabled: !datePicker.disabled
+                    && !datePicker.readOnly
                 onClicked: calendarPopup.open()
             }
         }
@@ -110,10 +126,11 @@ Item {
             visible: datePicker.helperText
             text: datePicker.helperText
             font.pixelSize: 12
-            color: datePicker.error ? "#d32f2f" : "#666666"
+            color: datePicker.error
+                ? "#d32f2f" : "#666666"
         }
     }
-    
+
     // Calendar popup
     Popup {
         id: calendarPopup
@@ -156,7 +173,8 @@ Item {
                 
                 Text {
                     Layout.fillWidth: true
-                    text: viewDate.toLocaleString(Qt.locale(), "MMMM yyyy")
+                    text: viewDate.toLocaleString(
+                        Qt.locale(), "MMMM yyyy")
                     font.pixelSize: 16
                     font.weight: Font.Medium
                     horizontalAlignment: Text.AlignHCenter
@@ -181,14 +199,18 @@ Item {
                 spacing: 0
                 
                 Repeater {
-                    model: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
+                    model: [
+                        "Su", "Mo", "Tu", "We",
+                        "Th", "Fr", "Sa"
+                    ]
                     
                     Text {
                         Layout.fillWidth: true
                         text: modelData
                         font.pixelSize: 12
                         color: "#9e9e9e"
-                        horizontalAlignment: Text.AlignHCenter
+                        horizontalAlignment:
+                            Text.AlignHCenter
                     }
                 }
             }
@@ -221,28 +243,46 @@ Item {
                         
                         property int day: index + 1
                         property bool isSelected: {
-                            return datePicker.value && 
-                                   datePicker.value.getDate() === day &&
-                                   datePicker.value.getMonth() === viewDate.getMonth() &&
-                                   datePicker.value.getFullYear() === viewDate.getFullYear()
+                            return datePicker.value
+                                && datePicker.value
+                                    .getDate() === day
+                                && datePicker.value
+                                    .getMonth()
+                                    === viewDate.getMonth()
+                                && datePicker.value
+                                    .getFullYear()
+                                    === viewDate
+                                        .getFullYear()
                         }
                         property bool isToday: {
                             var today = new Date()
-                            return today.getDate() === day &&
-                                   today.getMonth() === viewDate.getMonth() &&
-                                   today.getFullYear() === viewDate.getFullYear()
+                            return today.getDate()
+                                    === day
+                                && today.getMonth()
+                                    === viewDate.getMonth()
+                                && today.getFullYear()
+                                    === viewDate
+                                        .getFullYear()
                         }
                         property bool isDisabled: {
-                            var d = new Date(viewDate.getFullYear(), viewDate.getMonth(), day)
-                            return d < datePicker.minDate || d > datePicker.maxDate
+                            var d = new Date(
+                                viewDate.getFullYear(),
+                                viewDate.getMonth(),
+                                day)
+                            return d < datePicker.minDate
+                                || d > datePicker.maxDate
                         }
                         
                         color: {
                             if (isSelected) return "#1976d2"
-                            if (dayMouse.containsMouse && !isDisabled) return "#e3f2fd"
+                            if (dayMouse.containsMouse
+                                    && !isDisabled)
+                                return "#e3f2fd"
                             return "transparent"
                         }
-                        border.width: isToday && !isSelected ? 1 : 0
+                        border.width:
+                            isToday && !isSelected
+                                ? 1 : 0
                         border.color: "#1976d2"
                         
                         Text {
@@ -261,10 +301,16 @@ Item {
                             anchors.fill: parent
                             hoverEnabled: true
                             enabled: !isDisabled
-                            cursorShape: isDisabled ? Qt.ForbiddenCursor : Qt.PointingHandCursor
+                            cursorShape: isDisabled
+                                ? Qt.ForbiddenCursor
+                                : Qt.PointingHandCursor
                             onClicked: {
-                                datePicker.value = new Date(viewDate.getFullYear(), viewDate.getMonth(), day)
-                                dateChanged(datePicker.value)
+                                datePicker.value = new Date(
+                                    viewDate.getFullYear(),
+                                    viewDate.getMonth(),
+                                    day)
+                                dateChanged(
+                                    datePicker.value)
                                 calendarPopup.close()
                             }
                         }
@@ -274,7 +320,13 @@ Item {
         }
     }
     
-    property date viewDate: value && !isNaN(value.getTime()) ? value : new Date()
-    property int daysInMonth: new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 0).getDate()
-    property int firstDayOfMonth: new Date(viewDate.getFullYear(), viewDate.getMonth(), 1).getDay()
+    property date viewDate:
+        value && !isNaN(value.getTime())
+            ? value : new Date()
+    property int daysInMonth: new Date(
+        viewDate.getFullYear(),
+        viewDate.getMonth() + 1, 0).getDate()
+    property int firstDayOfMonth: new Date(
+        viewDate.getFullYear(),
+        viewDate.getMonth(), 1).getDay()
 }

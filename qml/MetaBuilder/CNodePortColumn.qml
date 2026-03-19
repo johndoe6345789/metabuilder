@@ -31,7 +31,9 @@ Column {
     property bool drawingConnection: false
     property bool connSourceIsOutput: true
 
-    signal connectionDragStarted(string nodeId, string portName, bool isOutput, real portX, real portY)
+    signal connectionDragStarted(
+        string nodeId, string portName,
+        bool isOutput, real portX, real portY)
     signal connectionCompleted(string nodeId, string portName)
 
     spacing: portSpacing - portRadius * 2
@@ -60,12 +62,21 @@ Column {
                     onPressed: {
                         if (portCol.isOutput) {
                             if (portCol.canvasContentItem) {
-                                var globalPos = portDot.mapToItem(portCol.canvasContentItem, portCol.portRadius, portCol.portRadius)
-                                portCol.connectionDragStarted(portCol.nodeId, modelData.name, true, globalPos.x, globalPos.y)
+                                var globalPos = portDot.mapToItem(
+                                    portCol.canvasContentItem,
+                                    portCol.portRadius,
+                                    portCol.portRadius)
+                                portCol.connectionDragStarted(
+                                    portCol.nodeId,
+                                    modelData.name, true,
+                                    globalPos.x, globalPos.y)
                             }
                         } else {
-                            if (portCol.drawingConnection && portCol.connSourceIsOutput) {
-                                portCol.connectionCompleted(portCol.nodeId, modelData.name)
+                            if (portCol.drawingConnection
+                                && portCol.connSourceIsOutput) {
+                                portCol.connectionCompleted(
+                                    portCol.nodeId,
+                                    modelData.name)
                             }
                         }
                     }

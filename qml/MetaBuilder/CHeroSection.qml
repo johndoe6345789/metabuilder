@@ -14,7 +14,12 @@ Rectangle {
     signal openPackages()
 
     readonly property color accentBlue: "#6366F1"
-    readonly property color primaryContainer: isDark ? Qt.rgba(accentBlue.r, accentBlue.g, accentBlue.b, 0.15) : Qt.rgba(accentBlue.r, accentBlue.g, accentBlue.b, 0.12)
+    readonly property color primaryContainer:
+        isDark
+            ? Qt.rgba(accentBlue.r,
+                accentBlue.g, accentBlue.b, 0.15)
+            : Qt.rgba(accentBlue.r,
+                accentBlue.g, accentBlue.b, 0.12)
     readonly property color onSurface: Theme.text
     readonly property color onSurfaceVariant: Theme.textSecondary
 
@@ -23,8 +28,18 @@ Rectangle {
 
     Rectangle {
         anchors.fill: parent; gradient: Gradient {
-            GradientStop { position: 0.0; color: isDark ? Qt.rgba(0.39,0.4,0.95,0.06) : Qt.rgba(0.30,0.40,0.90,0.12) }
-            GradientStop { position: 0.7; color: isDark ? "transparent" : Qt.rgba(0.35,0.45,0.88,0.04) }
+            GradientStop {
+                position: 0.0
+                color: isDark
+                    ? Qt.rgba(0.39,0.4,0.95,0.06)
+                    : Qt.rgba(0.30,0.40,0.90,0.12)
+            }
+            GradientStop {
+                position: 0.7
+                color: isDark
+                    ? "transparent"
+                    : Qt.rgba(0.35,0.45,0.88,0.04)
+            }
             GradientStop { position: 1.0; color: "transparent" }
     } }
 
@@ -53,7 +68,9 @@ Rectangle {
         }
 
         CText {
-            text: "The universal platform for building data-driven applications."
+            text: "The universal platform for"
+                + " building data-driven"
+                + " applications."
             font.pixelSize: 17
             color: onSurfaceVariant
             Layout.fillWidth: true
@@ -61,7 +78,9 @@ Rectangle {
         }
 
         CText {
-            text: "95% JSON config  \u00B7  5% infrastructure  \u00B7  Desktop + Web + CLI"
+            text: "95% JSON config  \u00B7  "
+                + "5% infrastructure  \u00B7  "
+                + "Desktop + Web + CLI"
             font.pixelSize: 13
             font.family: "monospace"
             color: onSurfaceVariant

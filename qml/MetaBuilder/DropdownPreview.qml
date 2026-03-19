@@ -14,7 +14,12 @@ CPaper {
         anchors.margins: 16
         spacing: 12
 
-        CText { variant: "caption"; text: "This is how the dropdown will render in forms:"; color: Theme.text; opacity: 0.6 }
+        CText {
+            variant: "caption"
+            text: "This is how the dropdown will"
+                + " render in forms:"
+            color: Theme.text; opacity: 0.6
+        }
 
         ColumnLayout {
             Layout.fillWidth: true
@@ -22,7 +27,11 @@ CPaper {
 
             CText {
                 variant: "body2"
-                text: (root.dropdown ? root.dropdown.name : "") + (root.dropdown && root.dropdown.required ? " *" : "")
+                text: (root.dropdown
+                        ? root.dropdown.name : "")
+                    + (root.dropdown
+                        && root.dropdown.required
+                        ? " *" : "")
                 font.bold: true
             }
 
@@ -83,13 +92,25 @@ CPaper {
             Layout.fillWidth: true
             spacing: 8
 
-            CBadge { text: root.dropdown ? root.dropdown.options.length + " options" : "0 options" }
             CBadge {
-                text: root.dropdown && root.dropdown.required ? "Required" : "Optional"
-                accent: root.dropdown ? root.dropdown.required : false
+                text: root.dropdown
+                    ? root.dropdown.options.length
+                        + " options"
+                    : "0 options"
             }
             CBadge {
-                text: root.dropdown && root.dropdown.allowCustom ? "Custom values OK" : "Fixed options only"
+                text: root.dropdown
+                    && root.dropdown.required
+                    ? "Required" : "Optional"
+                accent: root.dropdown
+                    ? root.dropdown.required
+                    : false
+            }
+            CBadge {
+                text: root.dropdown
+                    && root.dropdown.allowCustom
+                    ? "Custom values OK"
+                    : "Fixed options only"
             }
         }
     }

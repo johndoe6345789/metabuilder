@@ -22,20 +22,30 @@ Rectangle {
     readonly property int portSpacing: 24
     readonly property int headerHeight: 32
     readonly property int minWidth: 180
-    readonly property int minHeight: headerHeight + Math.max(nodeInputs.length, nodeOutputs.length) * portSpacing + 16
+    readonly property int minHeight: headerHeight
+        + Math.max(nodeInputs.length,
+            nodeOutputs.length) * portSpacing + 16
 
     signal moved(string id, real newX, real newY)
     signal clicked(string id)
     signal doubleClicked(string id)
-    signal portPressed(string nodeId, string portName, string portType, bool isOutput, real globalX, real globalY)
-    signal portReleased(string nodeId, string portName, string portType, bool isOutput, real globalX, real globalY)
+    signal portPressed(
+        string nodeId, string portName,
+        string portType, bool isOutput,
+        real globalX, real globalY)
+    signal portReleased(
+        string nodeId, string portName,
+        string portType, bool isOutput,
+        real globalX, real globalY)
 
     x: nodeX
     y: nodeY
     width: minWidth
     height: minHeight
     radius: 8
-    color: selected ? Qt.lighter(Theme.paper, 1.1) : Theme.paper
+    color: selected
+        ? Qt.lighter(Theme.paper, 1.1)
+        : Theme.paper
     border.color: selected ? groupColor() : Theme.border
     border.width: selected ? 2 : 1
 
@@ -90,7 +100,9 @@ Rectangle {
         id: dragHandler
         target: nodeRoot
         onActiveChanged: {
-            if (!active) nodeRoot.moved(nodeId, nodeRoot.x, nodeRoot.y)
+            if (!active)
+                nodeRoot.moved(
+                    nodeId, nodeRoot.x, nodeRoot.y)
         }
     }
 
@@ -110,8 +122,18 @@ Rectangle {
         portRadius: nodeRoot.portRadius
         portSpacing: nodeRoot.portSpacing
         nodeId: nodeRoot.nodeId
-        onPortPressed: function(nId, name, type, isOut, gx, gy) { nodeRoot.portPressed(nId, name, type, isOut, gx, gy) }
-        onPortReleased: function(nId, name, type, isOut, gx, gy) { nodeRoot.portReleased(nId, name, type, isOut, gx, gy) }
+        onPortPressed: function(
+            nId, name, type, isOut, gx, gy
+        ) {
+            nodeRoot.portPressed(
+                nId, name, type, isOut, gx, gy)
+        }
+        onPortReleased: function(
+            nId, name, type, isOut, gx, gy
+        ) {
+            nodeRoot.portReleased(
+                nId, name, type, isOut, gx, gy)
+        }
     }
 
     // Output ports (right side)
@@ -125,7 +147,17 @@ Rectangle {
         portRadius: nodeRoot.portRadius
         portSpacing: nodeRoot.portSpacing
         nodeId: nodeRoot.nodeId
-        onPortPressed: function(nId, name, type, isOut, gx, gy) { nodeRoot.portPressed(nId, name, type, isOut, gx, gy) }
-        onPortReleased: function(nId, name, type, isOut, gx, gy) { nodeRoot.portReleased(nId, name, type, isOut, gx, gy) }
+        onPortPressed: function(
+            nId, name, type, isOut, gx, gy
+        ) {
+            nodeRoot.portPressed(
+                nId, name, type, isOut, gx, gy)
+        }
+        onPortReleased: function(
+            nId, name, type, isOut, gx, gy
+        ) {
+            nodeRoot.portReleased(
+                nId, name, type, isOut, gx, gy)
+        }
     }
 }

@@ -40,7 +40,12 @@ QtObject {
         CCard {
             width: parent ? parent.width - 96 : 400
             title: "Card headline"
-            CText { text: "Cards provide a container for grouped content, actions, and media."; wrapMode: Text.Wrap }
+            CText {
+                text: "Cards provide a container for"
+                    + " grouped content, actions,"
+                    + " and media."
+                wrapMode: Text.Wrap
+            }
             FlexRow {
                 spacing: 10
                 CButton { text: "Action"; variant: "primary" }
@@ -63,11 +68,17 @@ QtObject {
             CAccordionItem {
                 title: "Expandable details"
                 expanded: true
-                CText { text: "Content appears inside the accordion when expanded." }
+                CText {
+                    text: "Content appears inside"
+                        + " the accordion when expanded."
+                }
             }
             CAccordionItem {
                 title: "Another section"
-                CText { text: "MetaBuilder uses structured seeds to orchestrate the UI." }
+                CText {
+                    text: "MetaBuilder uses structured"
+                        + " seeds to orchestrate the UI."
+                }
             }
         }
     }
@@ -77,7 +88,11 @@ QtObject {
             spacing: 12
             CTabBar {
                 Layout.fillWidth: true
-                tabs: [{ label: "Overview" }, { label: "Settings" }, { label: "Logs" }]
+                tabs: [
+                    { label: "Overview" },
+                    { label: "Settings" },
+                    { label: "Logs" }
+                ]
             }
             CText { text: "Tab content renders here based on selection." }
         }
@@ -103,8 +118,15 @@ QtObject {
             spacing: 8
             CText { variant: "h1"; text: "Headline" }
             CText { variant: "h3"; text: "Section title" }
-            CText { variant: "body1"; text: "Body copy demonstrates Material font styling." }
-            CText { variant: "caption"; text: "Caption text for metadata" }
+            CText {
+                variant: "body1"
+                text: "Body copy demonstrates"
+                    + " Material font styling."
+            }
+            CText {
+                variant: "caption"
+                text: "Caption text for metadata"
+            }
         }
     }
 

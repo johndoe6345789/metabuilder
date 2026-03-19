@@ -8,7 +8,9 @@ Item {
     property var rows: []
     property var columns: []
     property int pageSize: 10
-    property var rowsPerPageOptions: [5, 10, 25, 50]
+    property var rowsPerPageOptions: [
+        5, 10, 25, 50
+    ]
     property bool pagination: true
     property bool checkboxSelection: false
     property bool disableSelectionOnClick: false
@@ -22,12 +24,14 @@ Item {
     property int currentPage: 0
     
     signal selectionChanged(var selectedIds)
-    signal sortChanged(string field, string direction)
+    signal sortChanged(
+        string field, string direction)
     signal rowClicked(var row)
     signal cellClicked(string field, var value)
     signal pageChanged(int page)
     
-    implicitWidth: parent ? parent.width : 600
+    implicitWidth: parent
+        ? parent.width : 600
     implicitHeight: contentColumn.implicitHeight
     
     property int rowHeight: {
@@ -61,10 +65,12 @@ Item {
         return sortedRows.slice(start, start + pageSize)
     }
     
-    property int totalPages: Math.ceil(rows.length / pageSize)
+    property int totalPages:
+        Math.ceil(rows.length / pageSize)
     
     function getRowId(row) {
-        return row.id !== undefined ? row.id : rows.indexOf(row)
+        return row.id !== undefined
+            ? row.id : rows.indexOf(row)
     }
     
     function toggleSelection(rowId) {
@@ -89,7 +95,8 @@ Item {
     
     function handleSort(field) {
         if (sortField === field) {
-            sortDirection = sortDirection === "asc" ? "desc" : "asc"
+            sortDirection = sortDirection === "asc"
+                ? "desc" : "asc"
         } else {
             sortField = field
             sortDirection = "asc"
@@ -118,7 +125,9 @@ Item {
                 CheckBox {
                     visible: dataGrid.checkboxSelection
                     Layout.preferredWidth: 48
-                    checked: selectedIds.length === rows.length && rows.length > 0
+                    checked:
+                        selectedIds.length === rows.length
+                        && rows.length > 0
                     onClicked: selectAll(checked)
                 }
                 
@@ -127,8 +136,10 @@ Item {
                     model: dataGrid.columns
                     
                     Item {
-                        Layout.fillWidth: modelData.flex ? true : false
-                        Layout.preferredWidth: modelData.width || 100
+                        Layout.fillWidth:
+                            modelData.flex ? true : false
+                        Layout.preferredWidth:
+                            modelData.width || 100
                         Layout.fillHeight: true
                         
                         RowLayout {
@@ -137,15 +148,19 @@ Item {
                             spacing: 4
                             
                             Text {
-                                text: modelData.headerName || modelData.field
+                                text: modelData.headerName
+                                    || modelData.field
                                 font.pixelSize: 14
                                 font.weight: Font.Medium
                                 color: "#1a1a1a"
                             }
                             
                             Text {
-                                visible: dataGrid.sortField === modelData.field
-                                text: dataGrid.sortDirection === "asc" ? "↑" : "↓"
+                                visible:
+                                    dataGrid.sortField
+                                        === modelData.field
+                                text: dataGrid.sortDirection
+                                    === "asc" ? "↑" : "↓"
                                 font.pixelSize: 12
                                 color: "#666666"
                             }
@@ -153,7 +168,10 @@ Item {
                         
                         MouseArea {
                             anchors.fill: parent
-                            cursorShape: modelData.sortable !== false ? Qt.PointingHandCursor : Qt.ArrowCursor
+                            cursorShape:
+                                modelData.sortable !== false
+                                    ? Qt.PointingHandCursor
+                                    : Qt.ArrowCursor
                             onClicked: {
                                 if (modelData.sortable !== false) {
                                     dataGrid.handleSort(modelData.field)
@@ -184,7 +202,9 @@ Item {
         Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            Layout.minimumHeight: Math.min(paginatedRows.length, 5) * rowHeight
+            Layout.minimumHeight:
+                Math.min(paginatedRows.length, 5)
+                    * rowHeight
             
             // Loading overlay
             Rectangle {
@@ -217,7 +237,9 @@ Item {
             Rectangle {
                 anchors.fill: parent
                 color: "#fff"
-                visible: paginatedRows.length === 0 && !dataGrid.loading && !dataGrid.error
+                visible: paginatedRows.length === 0
+                    && !dataGrid.loading
+                    && !dataGrid.error
                 
                 Text {
                     anchors.centerIn: parent
@@ -237,11 +259,15 @@ Item {
                     width: ListView.view.width
                     height: dataGrid.rowHeight
                     color: {
-                        var rowId = dataGrid.getRowId(modelData)
-                        if (dataGrid.selectedIds.indexOf(rowId) !== -1) {
-                            return Qt.rgba(0.1, 0.46, 0.82, 0.08)
+                        var rowId = dataGrid
+                            .getRowId(modelData)
+                        if (dataGrid.selectedIds
+                                .indexOf(rowId) !== -1) {
+                            return Qt.rgba(
+                                0.1, 0.46, 0.82, 0.08)
                         }
-                        return index % 2 === 0 ? "#ffffff" : "#fafafa"
+                        return index % 2 === 0
+                            ? "#ffffff" : "#fafafa"
                     }
                     
                     RowLayout {
@@ -254,8 +280,14 @@ Item {
                         CheckBox {
                             visible: dataGrid.checkboxSelection
                             Layout.preferredWidth: 48
-                            checked: dataGrid.selectedIds.indexOf(dataGrid.getRowId(modelData)) !== -1
-                            onClicked: dataGrid.toggleSelection(dataGrid.getRowId(modelData))
+                            checked: dataGrid.selectedIds
+                                .indexOf(dataGrid
+                                    .getRowId(modelData))
+                                !== -1
+                            onClicked: dataGrid
+                                .toggleSelection(
+                                    dataGrid.getRowId(
+                                        modelData))
                         }
                         
                         // Cell values
@@ -263,17 +295,26 @@ Item {
                             model: dataGrid.columns
                             
                             Item {
-                                Layout.fillWidth: modelData.flex ? true : false
-                                Layout.preferredWidth: modelData.width || 100
+                                Layout.fillWidth:
+                                    modelData.flex
+                                        ? true : false
+                                Layout.preferredWidth:
+                                    modelData.width || 100
                                 Layout.fillHeight: true
                                 
                                 Text {
                                     anchors.fill: parent
                                     anchors.leftMargin: 8
                                     text: {
-                                        var row = dataGrid.paginatedRows[index]
-                                        var value = row ? row[modelData.field] : ""
-                                        return value !== undefined && value !== null ? String(value) : ""
+                                        var row = dataGrid
+                                            .paginatedRows[index]
+                                        var value = row
+                                            ? row[modelData.field]
+                                            : ""
+                                        return value !== undefined
+                                            && value !== null
+                                            ? String(value)
+                                            : ""
                                     }
                                     font.pixelSize: 14
                                     color: "#1a1a1a"
@@ -284,8 +325,11 @@ Item {
                                 MouseArea {
                                     anchors.fill: parent
                                     onClicked: {
-                                        var row = dataGrid.paginatedRows[index]
-                                        dataGrid.cellClicked(modelData.field, row[modelData.field])
+                                        var row = dataGrid
+                                            .paginatedRows[index]
+                                        dataGrid.cellClicked(
+                                            modelData.field,
+                                            row[modelData.field])
                                     }
                                 }
                             }
@@ -296,9 +340,15 @@ Item {
                         anchors.fill: parent
                         z: -1
                         onClicked: {
-                            dataGrid.rowClicked(modelData)
-                            if (!dataGrid.disableSelectionOnClick && dataGrid.checkboxSelection) {
-                                dataGrid.toggleSelection(dataGrid.getRowId(modelData))
+                            dataGrid.rowClicked(
+                                modelData)
+                            if (!dataGrid
+                                    .disableSelectionOnClick
+                                && dataGrid
+                                    .checkboxSelection) {
+                                dataGrid.toggleSelection(
+                                    dataGrid.getRowId(
+                                        modelData))
                             }
                         }
                     }
@@ -341,10 +391,14 @@ Item {
                 
                 ComboBox {
                     model: dataGrid.rowsPerPageOptions
-                    currentIndex: rowsPerPageOptions.indexOf(pageSize)
+                    currentIndex:
+                        rowsPerPageOptions.indexOf(
+                            pageSize)
                     implicitWidth: 70
                     onCurrentIndexChanged: {
-                        dataGrid.pageSize = rowsPerPageOptions[currentIndex]
+                        dataGrid.pageSize =
+                            rowsPerPageOptions[
+                                currentIndex]
                         dataGrid.currentPage = 0
                     }
                 }
@@ -353,9 +407,14 @@ Item {
                 
                 Text {
                     text: {
-                        var start = currentPage * pageSize + 1
-                        var end = Math.min((currentPage + 1) * pageSize, rows.length)
-                        return start + "–" + end + " of " + rows.length
+                        var start =
+                            currentPage * pageSize + 1
+                        var end = Math.min(
+                            (currentPage + 1)
+                                * pageSize,
+                            rows.length)
+                        return start + "–" + end
+                            + " of " + rows.length
                     }
                     font.pixelSize: 14
                     color: "#666666"

@@ -25,7 +25,9 @@ CCard {
 
             CText {
                 variant: "h4"
-                text: root.schema ? root.schema.name + " Fields" : "No Schema Selected"
+                text: root.schema
+                    ? root.schema.name + " Fields"
+                    : "No Schema Selected"
             }
             Item { Layout.fillWidth: true }
             CButton {
@@ -53,10 +55,28 @@ CCard {
                 anchors.rightMargin: 12
                 spacing: 8
 
-                CText { variant: "caption"; text: "NAME";     Layout.preferredWidth: 140; font.bold: true }
-                CText { variant: "caption"; text: "TYPE";     Layout.preferredWidth: 100; font.bold: true }
-                CText { variant: "caption"; text: "REQUIRED"; Layout.preferredWidth: 80;  font.bold: true }
-                CText { variant: "caption"; text: "DEFAULT";  Layout.fillWidth: true;     font.bold: true }
+                CText {
+                    variant: "caption"; text: "NAME"
+                    Layout.preferredWidth: 140
+                    font.bold: true
+                }
+                CText {
+                    variant: "caption"; text: "TYPE"
+                    Layout.preferredWidth: 100
+                    font.bold: true
+                }
+                CText {
+                    variant: "caption"
+                    text: "REQUIRED"
+                    Layout.preferredWidth: 80
+                    font.bold: true
+                }
+                CText {
+                    variant: "caption"
+                    text: "DEFAULT"
+                    Layout.fillWidth: true
+                    font.bold: true
+                }
             }
         }
 
@@ -79,7 +99,8 @@ CCard {
 
         CText {
             variant: "caption"
-            text: root.schema ? root.schema.description : ""
+            text: root.schema
+                ? root.schema.description : ""
             color: Theme.border
         }
     }

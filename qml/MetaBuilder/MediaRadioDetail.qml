@@ -42,15 +42,24 @@ CCard {
 
                 CText { variant: "h3"; text: detailRoot.channel.name }
                 CStatusBadge {
-                    status: detailRoot.channel.status === "live" ? "success" : "error"
-                    text: detailRoot.channel.status === "live" ? "Live" : "Offline"
+                    status: detailRoot.channel.status
+                        === "live"
+                        ? "success" : "error"
+                    text: detailRoot.channel.status
+                        === "live"
+                        ? "Live" : "Offline"
                 }
 
                 Item { Layout.fillWidth: true }
 
                 CButton {
-                    text: detailRoot.channel.status === "live" ? "Stop Stream" : "Start Stream"
-                    variant: detailRoot.channel.status === "live" ? "danger" : "primary"
+                    text: detailRoot.channel.status
+                        === "live"
+                        ? "Stop Stream"
+                        : "Start Stream"
+                    variant: detailRoot.channel.status
+                        === "live"
+                        ? "danger" : "primary"
                     onClicked: detailRoot.toggleStream()
                 }
             }
@@ -61,8 +70,15 @@ CCard {
                 Layout.fillWidth: true
                 spacing: 12
 
-                CStatCell { label: "Listeners";   value: detailRoot.channel.listeners.toString() }
-                CStatCell { label: "Bitrate";      value: detailRoot.channel.bitrate }
+                CStatCell {
+                    label: "Listeners"
+                    value: detailRoot.channel
+                        .listeners.toString()
+                }
+                CStatCell {
+                    label: "Bitrate"
+                    value: detailRoot.channel.bitrate
+                }
                 CStatCell {
                     label: "Now Playing"
                     value: detailRoot.channel.currentTrack
@@ -75,8 +91,11 @@ CCard {
             MediaRadioPlaylist {
                 Layout.fillWidth: true
                 playlist: detailRoot.channel.playlist
-                currentTrack: detailRoot.channel.currentTrack
-                isLive: detailRoot.channel.status === "live"
+                currentTrack: {
+                    return detailRoot.channel.currentTrack
+                }
+                isLive: detailRoot.channel.status
+                    === "live"
             }
 
             Item { Layout.preferredHeight: 8 }

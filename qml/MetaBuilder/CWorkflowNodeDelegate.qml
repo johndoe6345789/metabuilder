@@ -13,8 +13,11 @@ Rectangle {
 
     signal nodeSelected(string id)
     signal nodeMoved(string id, real x, real y)
-    signal connectionDragStarted(string nodeId, string portName, bool isOutput, real portX, real portY)
-    signal connectionCompleted(string nodeId, string portName)
+    signal connectionDragStarted(
+        string nodeId, string portName,
+        bool isOutput, real portX, real portY)
+    signal connectionCompleted(
+        string nodeId, string portName)
     signal paintRequested()
 
     // Provide access to canvasContent for port coordinate mapping
@@ -24,17 +27,26 @@ Rectangle {
     readonly property int headerHeight: 32
     readonly property int portSpacing: 24
     readonly property int nodeWidth: 180
-    readonly property int inputCount: nodeData.inputs ? nodeData.inputs.length : 0
-    readonly property int outputCount: nodeData.outputs ? nodeData.outputs.length : 0
-    readonly property int bodyPorts: Math.max(inputCount, outputCount)
+    readonly property int inputCount: nodeData.inputs
+        ? nodeData.inputs.length : 0
+    readonly property int outputCount: nodeData.outputs
+        ? nodeData.outputs.length : 0
+    readonly property int bodyPorts:
+        Math.max(inputCount, outputCount)
 
-    x: nodeData.position ? nodeData.position[0] : 0
-    y: nodeData.position ? nodeData.position[1] : 0
+    x: nodeData.position
+        ? nodeData.position[0] : 0
+    y: nodeData.position
+        ? nodeData.position[1] : 0
     width: nodeWidth
-    height: headerHeight + Math.max(1, bodyPorts) * portSpacing + 16
+    height: headerHeight
+        + Math.max(1, bodyPorts) * portSpacing + 16
     radius: 8
-    color: isSelected ? Qt.lighter(Theme.paper, 1.1) : Theme.paper
-    border.color: isSelected ? groupColorValue : Theme.border
+    color: isSelected
+        ? Qt.lighter(Theme.paper, 1.1)
+        : Theme.paper
+    border.color: isSelected
+        ? groupColorValue : Theme.border
     border.width: isSelected ? 2 : 1
     z: isSelected ? 10 : 2
 
@@ -58,7 +70,8 @@ Rectangle {
 
         CText {
             anchors.centerIn: parent
-            text: nodeRect.nodeData.name || nodeRect.nodeData.type || ""
+            text: nodeRect.nodeData.name
+                || nodeRect.nodeData.type || ""
             color: "#FFFFFF"
             variant: "body2"
             font.bold: true
@@ -76,7 +89,8 @@ Rectangle {
         text: nodeRect.nodeData.type || ""
         variant: "caption"
         font.pixelSize: 9
-        color: Theme.textSecondary || Theme.text
+        color: Theme.textSecondary
+            || Theme.text
         opacity: 0.6
     }
 
@@ -93,7 +107,9 @@ Rectangle {
         nodeId: nodeRect.nodeData.id || ""
         drawingConnection: nodeRect.drawingConnection
         connSourceIsOutput: nodeRect.connSourceIsOutput
-        onConnectionCompleted: function(nId, pName) { nodeRect.connectionCompleted(nId, pName) }
+        onConnectionCompleted: function(nId, pName) {
+            nodeRect.connectionCompleted(nId, pName)
+        }
     }
 
     // Output ports
@@ -108,7 +124,12 @@ Rectangle {
         portSpacing: nodeRect.portSpacing
         nodeId: nodeRect.nodeData.id || ""
         canvasContentItem: nodeRect.canvasContentItem
-        onConnectionDragStarted: function(nId, pName, isOut, px, py) { nodeRect.connectionDragStarted(nId, pName, isOut, px, py) }
+        onConnectionDragStarted: function(
+            nId, pName, isOut, px, py
+        ) {
+            nodeRect.connectionDragStarted(
+                nId, pName, isOut, px, py)
+        }
     }
 
     // Drag handler for moving the node
@@ -117,7 +138,9 @@ Rectangle {
         target: nodeRect
         onActiveChanged: {
             if (!active) {
-                nodeRect.nodeMoved(nodeRect.nodeData.id, nodeRect.x, nodeRect.y)
+                nodeRect.nodeMoved(
+                    nodeRect.nodeData.id,
+                    nodeRect.x, nodeRect.y)
             }
         }
         onCentroidChanged: {
@@ -128,7 +151,8 @@ Rectangle {
     // Click to select
     TapHandler {
         onTapped: {
-            nodeRect.nodeSelected(nodeRect.nodeData.id)
+            nodeRect.nodeSelected(
+                nodeRect.nodeData.id)
         }
     }
 }

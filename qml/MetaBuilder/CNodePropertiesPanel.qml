@@ -21,7 +21,12 @@ Rectangle {
     clip: true
     visible: node !== null
 
-    Behavior on Layout.preferredWidth { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
+    Behavior on Layout.preferredWidth {
+        NumberAnimation {
+            duration: 200
+            easing.type: Easing.OutCubic
+        }
+    }
 
     function groupColor(nodeType) {
         var prefix = nodeType ? nodeType.split(".")[0] : ""
@@ -73,7 +78,9 @@ Rectangle {
             CText { variant: "body2"; text: "Type" }
             CChip {
                 text: root.node ? root.node.type : ""
-                chipColor: root.node ? groupColor(root.node.type) : Theme.primary
+                chipColor: root.node
+                    ? groupColor(root.node.type)
+                    : Theme.primary
             }
         }
 
@@ -93,7 +100,12 @@ Rectangle {
         CText { variant: "body2"; text: "Position" }
         CText {
             variant: "caption"
-            text: root.node ? "x: " + Math.round(root.node.position[0]) + "  y: " + Math.round(root.node.position[1]) : ""
+            text: root.node
+                ? "x: " + Math.round(
+                    root.node.position[0])
+                  + "  y: " + Math.round(
+                    root.node.position[1])
+                : ""
         }
 
         CDivider { Layout.fillWidth: true }
@@ -101,7 +113,9 @@ Rectangle {
         CNodeParameterList {
             Layout.fillWidth: true
             node: root.node
-            onParameterChanged: function(key, value) { root.parameterChanged(key, value) }
+            onParameterChanged: function(key, value) {
+                root.parameterChanged(key, value)
+            }
         }
 
         CDivider { Layout.fillWidth: true }
@@ -112,13 +126,18 @@ Rectangle {
         }
 
         // Workflow Variables section
-        CDivider { Layout.fillWidth: true; visible: Object.keys(root.workflowVariables).length > 0 }
+        CDivider {
+            Layout.fillWidth: true
+            visible: Object.keys(
+                root.workflowVariables).length > 0
+        }
 
         CText {
             variant: "body2"
             text: "Workflow Variables"
             font.bold: true
-            visible: Object.keys(root.workflowVariables).length > 0
+            visible: Object.keys(
+                root.workflowVariables).length > 0
         }
 
         Repeater {
@@ -131,7 +150,11 @@ Rectangle {
                     variant: "caption"
                     text: {
                         var v = root.workflowVariables[modelData]
-                        return v ? (v.defaultValue !== undefined ? String(v.defaultValue) : "") : ""
+                        return v
+                            ? (v.defaultValue !== undefined
+                                ? String(v.defaultValue)
+                                : "")
+                            : ""
                     }
                     opacity: 0.7
                 }

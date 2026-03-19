@@ -9,17 +9,23 @@ Rectangle {
     id: modView
     color: Theme.background
 
-    readonly property bool isDark: Theme.mode === "dark"
+    readonly property bool isDark:
+        Theme.mode === "dark"
     readonly property color accentCyan: "#06B6D4"
     readonly property color onSurface: Theme.text
-    readonly property color onSurfaceVariant: Theme.textSecondary
+    readonly property color onSurfaceVariant:
+        Theme.textSecondary
     property int currentTab: 0
-    property var reportQueue: Data.defaultReportQueue()
-    property var recentActions: Data.defaultRecentActions()
-    property var modStats: Data.buildStats(reportQueue, recentActions, accentCyan)
+    property var reportQueue:
+        Data.defaultReportQueue()
+    property var recentActions:
+        Data.defaultRecentActions()
+    property var modStats: Data.buildStats(
+        reportQueue, recentActions, accentCyan)
 
     ScrollView {
-        anchors.fill: parent; clip: true; contentWidth: availableWidth
+        anchors.fill: parent; clip: true
+        contentWidth: availableWidth
 
         ColumnLayout {
             width: parent.width; spacing: 0
@@ -27,47 +33,92 @@ Rectangle {
             Item { Layout.preferredHeight: 24 }
 
             Meta.CModeratorHeader {
-                accentCyan: modView.accentCyan; onSurface: modView.onSurface; onSurfaceVariant: modView.onSurfaceVariant
+                accentCyan: modView.accentCyan
+                onSurface: modView.onSurface
+                onSurfaceVariant:
+                    modView.onSurfaceVariant
             }
 
             Item { Layout.preferredHeight: 24 }
 
             Meta.CModStatsRow {
-                Layout.leftMargin: 24; Layout.rightMargin: 24
-                stats: modView.modStats; isDark: modView.isDark
+                Layout.leftMargin: 24
+                Layout.rightMargin: 24
+                stats: modView.modStats
+                isDark: modView.isDark
             }
 
             Item { Layout.preferredHeight: 24 }
 
             CTabBar {
-                Layout.fillWidth: true; Layout.leftMargin: 24; Layout.rightMargin: 24
-                currentIndex: currentTab; onCurrentIndexChanged: currentTab = currentIndex
-                tabs: [{ label: "Report Queue" }, { label: "Recent Actions" }, { label: "Settings" }]
+                Layout.fillWidth: true
+                Layout.leftMargin: 24
+                Layout.rightMargin: 24
+                currentIndex: currentTab
+                onCurrentIndexChanged:
+                    currentTab = currentIndex
+                tabs: [
+                    { label: "Report Queue" },
+                    { label: "Recent Actions" },
+                    { label: "Settings" }
+                ]
             }
 
             Item { Layout.preferredHeight: 16 }
 
             StackLayout {
-                Layout.fillWidth: true; Layout.fillHeight: true; Layout.leftMargin: 24; Layout.rightMargin: 24
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.leftMargin: 24
+                Layout.rightMargin: 24
                 currentIndex: currentTab
 
                 ColumnLayout {
                     spacing: 8
-                    Repeater { model: reportQueue; delegate: Meta.CReportCard { report: modelData; isDark: modView.isDark } }
-                    Item { Layout.fillHeight: true }
+                    Repeater {
+                        model: reportQueue
+                        delegate: Meta.CReportCard {
+                            report: modelData
+                            isDark: modView.isDark
+                        }
+                    }
+                    Item {
+                        Layout.fillHeight: true
+                    }
                 }
 
                 ColumnLayout {
                     spacing: 8
-                    Repeater { model: recentActions; delegate: Meta.CModActionCard { action: modelData; isDark: modView.isDark } }
-                    Item { Layout.fillHeight: true }
+                    Repeater {
+                        model: recentActions
+                        delegate:
+                            Meta.CModActionCard {
+                            action: modelData
+                            isDark: modView.isDark
+                        }
+                    }
+                    Item {
+                        Layout.fillHeight: true
+                    }
                 }
 
                 ColumnLayout {
                     spacing: 16
-                    CText { text: "Moderation Settings"; font.pixelSize: 18; font.weight: Font.Bold }
-                    CText { text: "Auto-flag threshold, word filters, and notification preferences."; color: onSurfaceVariant }
-                    Item { Layout.fillHeight: true }
+                    CText {
+                        text: "Moderation Settings"
+                        font.pixelSize: 18
+                        font.weight: Font.Bold
+                    }
+                    CText {
+                        text: "Auto-flag threshold,"
+                            + " word filters, and"
+                            + " notification"
+                            + " preferences."
+                        color: onSurfaceVariant
+                    }
+                    Item {
+                        Layout.fillHeight: true
+                    }
                 }
             }
         }

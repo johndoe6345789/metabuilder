@@ -15,9 +15,14 @@ Rectangle {
             return allPkgs
         var lower = searchText.toLowerCase()
         return allPkgs.filter(function(pkg) {
-            return pkg.name.toLowerCase().indexOf(lower) !== -1
-                || pkg.packageId.toLowerCase().indexOf(lower) !== -1
-                || (pkg.description && pkg.description.toLowerCase().indexOf(lower) !== -1)
+            return pkg.name.toLowerCase()
+                    .indexOf(lower) !== -1
+                || pkg.packageId.toLowerCase()
+                    .indexOf(lower) !== -1
+                || (pkg.description
+                    && pkg.description
+                        .toLowerCase()
+                        .indexOf(lower) !== -1)
         })
     }
 
@@ -29,10 +34,14 @@ Rectangle {
         FlexRow {
             Layout.fillWidth: true
             spacing: 12
-            CText { variant: "h3"; text: "Package Manager" }
+            CText {
+                variant: "h3"
+                text: "Package Manager"
+            }
             CStatusBadge {
                 status: "success"
-                text: PackageLoader.packageCount + " packages"
+                text: PackageLoader.packageCount
+                    + " packages"
             }
         }
 
@@ -42,11 +51,12 @@ Rectangle {
             spacing: 16
 
             CPackageDetailSidebar {
-                selectedPackageId: root.selectedPackageId
-                onRescanRequested: PackageLoader.scan()
+                selectedPackageId:
+                    root.selectedPackageId
+                onRescanRequested:
+                    PackageLoader.scan()
             }
 
-            // Package list
             CCard {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
@@ -60,14 +70,20 @@ Rectangle {
                         Layout.fillWidth: true
                         spacing: 12
                         CTextField {
-                            placeholderText: "Search packages"
+                            placeholderText:
+                                "Search packages"
                             text: searchText
-                            onTextChanged: searchText = text
+                            onTextChanged:
+                                searchText = text
                             Layout.fillWidth: true
                         }
                         CText {
                             variant: "caption"
-                            text: filteredPackages().length + " / " + PackageLoader.packageCount
+                            text:
+                                filteredPackages()
+                                .length + " / "
+                                + PackageLoader
+                                    .packageCount
                         }
                     }
 
@@ -77,12 +93,25 @@ Rectangle {
                         model: filteredPackages()
                         spacing: 8
                         clip: true
-                        delegate: CPackageListItem {
-                            width: parent ? parent.width : 400
+                        delegate:
+                            CPackageListItem {
+                            width: parent
+                                ? parent.width
+                                : 400
                             packageData: modelData
-                            onInstallRequested: PackageLoader.install(modelData.packageId)
-                            onUninstallRequested: PackageLoader.uninstall(modelData.packageId)
-                            onDetailsRequested: selectedPackageId = modelData.packageId
+                            onInstallRequested:
+                                PackageLoader
+                                .install(modelData
+                                    .packageId)
+                            onUninstallRequested:
+                                PackageLoader
+                                .uninstall(
+                                    modelData
+                                    .packageId)
+                            onDetailsRequested:
+                                selectedPackageId
+                                = modelData
+                                    .packageId
                         }
                     }
                 }

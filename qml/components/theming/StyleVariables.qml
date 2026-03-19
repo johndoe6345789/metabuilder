@@ -21,23 +21,29 @@ QtObject {
     readonly property color colorBg: "#0d0d0d"
     readonly property color colorBgPaper: "#1a1a1a"
     readonly property color colorBgElevated: "#242424"
-    readonly property color colorBgHover: Qt.rgba(255/255, 255/255, 255/255, 0.08)
+    readonly property color colorBgHover:
+        Qt.rgba(255/255, 255/255, 255/255, 0.08)
     
     readonly property color colorText: "#ffffff"
     readonly property color colorTextSecondary: "#a0a0a0"
     readonly property color colorTextDisabled: "#666666"
     
     readonly property color colorBorder: "#333333"
-    readonly property color colorDivider: Qt.rgba(255/255, 255/255, 255/255, 0.12)
+    readonly property color colorDivider:
+        Qt.rgba(255/255, 255/255, 255/255, 0.12)
     
     readonly property color colorSuccess: "#22c55e"
-    readonly property color colorSuccessBg: Qt.rgba(34/255, 197/255, 94/255, 0.1)
+    readonly property color colorSuccessBg:
+        Qt.rgba(34/255, 197/255, 94/255, 0.1)
     readonly property color colorWarning: "#f59e0b"
-    readonly property color colorWarningBg: Qt.rgba(245/255, 158/255, 11/255, 0.1)
+    readonly property color colorWarningBg:
+        Qt.rgba(245/255, 158/255, 11/255, 0.1)
     readonly property color colorError: "#ef4444"
-    readonly property color colorErrorBg: Qt.rgba(239/255, 68/255, 68/255, 0.1)
+    readonly property color colorErrorBg:
+        Qt.rgba(239/255, 68/255, 68/255, 0.1)
     readonly property color colorInfo: "#3b82f6"
-    readonly property color colorInfoBg: Qt.rgba(59/255, 130/255, 246/255, 0.1)
+    readonly property color colorInfoBg:
+        Qt.rgba(59/255, 130/255, 246/255, 0.1)
 
     // ============================================
     // Spacing (matches SCSS --spacing-*)
@@ -70,24 +76,42 @@ QtObject {
     // ============================================
     
     // Shadow values as objects for MultiEffect
-    readonly property var shadowSm: ({ blur: 0.1, offset: 2, color: "#4D000000" })
-    readonly property var shadowMd: ({ blur: 0.2, offset: 4, color: "#66000000" })
-    readonly property var shadowLg: ({ blur: 0.3, offset: 10, color: "#80000000" })
-    readonly property var shadowXl: ({ blur: 0.4, offset: 15, color: "#99000000" })
+    readonly property var shadowSm: ({
+        blur: 0.1, offset: 2,
+        color: "#4D000000"
+    })
+    readonly property var shadowMd: ({
+        blur: 0.2, offset: 4,
+        color: "#66000000"
+    })
+    readonly property var shadowLg: ({
+        blur: 0.3, offset: 10,
+        color: "#80000000"
+    })
+    readonly property var shadowXl: ({
+        blur: 0.4, offset: 15,
+        color: "#99000000"
+    })
 
     // ============================================
     // Typography (matches SCSS --font-*)
     // ============================================
     
-    readonly property string fontFamily: "Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
-    readonly property string fontMono: "Fira Code, Consolas, Monaco, monospace"
-    
-    readonly property int fontSizeXs: 10  // 0.75rem = 12px, scaled to 10 for QML
-    readonly property int fontSizeSm: 12  // 0.875rem = 14px, scaled
-    readonly property int fontSizeMd: 14  // 1rem = 16px, scaled
-    readonly property int fontSizeLg: 16  // 1.125rem = 18px, scaled
-    readonly property int fontSizeXl: 18  // 1.25rem = 20px, scaled
-    readonly property int fontSize2xl: 22 // 1.5rem = 24px, scaled
+    readonly property string fontFamily:
+        "Roboto, -apple-system, "
+        + "BlinkMacSystemFont, "
+        + "'Segoe UI', sans-serif"
+    readonly property string fontMono:
+        "Fira Code, Consolas, "
+        + "Monaco, monospace"
+
+    // Scaled for QML (not CSS rem)
+    readonly property int fontSizeXs: 10
+    readonly property int fontSizeSm: 12
+    readonly property int fontSizeMd: 14
+    readonly property int fontSizeLg: 16
+    readonly property int fontSizeXl: 18
+    readonly property int fontSize2xl: 22
     
     // Font weights
     readonly property int fontWeightLight: 300
@@ -128,15 +152,35 @@ QtObject {
     
     // Button sizes
     readonly property var buttonSizes: ({
-        sm: { height: 28, paddingH: spacingSm, fontSize: fontSizeXs },
-        md: { height: 36, paddingH: spacingMd, fontSize: fontSizeSm },
-        lg: { height: 44, paddingH: spacingLg, fontSize: fontSizeMd }
+        sm: {
+            height: 28,
+            paddingH: spacingSm,
+            fontSize: fontSizeXs
+        },
+        md: {
+            height: 36,
+            paddingH: spacingMd,
+            fontSize: fontSizeSm
+        },
+        lg: {
+            height: 44,
+            paddingH: spacingLg,
+            fontSize: fontSizeMd
+        }
     })
     
     // Chip sizes
     readonly property var chipSizes: ({
-        sm: { height: 24, paddingH: 10, fontSize: fontSizeXs },
-        md: { height: 32, paddingH: 14, fontSize: fontSizeSm }
+        sm: {
+            height: 24,
+            paddingH: 10,
+            fontSize: fontSizeXs
+        },
+        md: {
+            height: 32,
+            paddingH: 14,
+            fontSize: fontSizeSm
+        }
     })
     
     // Icon button sizes

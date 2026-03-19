@@ -39,23 +39,37 @@ CCard {
 
                 CText { variant: "h3"; text: channel ? channel.name : "" }
                 CStatusBadge {
-                    status: channel && channel.status === "broadcasting" ? "success" : "error"
-                    text: channel && channel.status === "broadcasting" ? "Broadcasting" : "Offline"
+                    status: channel
+                        && channel.status
+                            === "broadcasting"
+                        ? "success" : "error"
+                    text: channel
+                        && channel.status
+                            === "broadcasting"
+                        ? "Broadcasting" : "Offline"
                 }
 
                 Rectangle {
                     width: resLabel.implicitWidth + 16
                     height: 24
                     radius: 4
-                    color: channel ? resolutionColor(channel.resolution) : "transparent"
+                    color: channel
+                        ? resolutionColor(
+                            channel.resolution)
+                        : "transparent"
                     opacity: 0.15
 
                     CText {
                         id: resLabel
                         anchors.centerIn: parent
                         variant: "caption"
-                        text: channel ? channel.resolution : ""
-                        color: channel ? channelDetail.resolutionColor(channel.resolution) : Theme.textSecondary
+                        text: channel
+                            ? channel.resolution : ""
+                        color: channel
+                            ? channelDetail
+                                .resolutionColor(
+                                    channel.resolution)
+                            : Theme.textSecondary
                         font.bold: true
                     }
                 }
@@ -63,9 +77,18 @@ CCard {
                 Item { Layout.fillWidth: true }
 
                 CButton {
-                    text: channel && channel.status === "broadcasting" ? "Stop Broadcast" : "Start Broadcast"
-                    variant: channel && channel.status === "broadcasting" ? "danger" : "primary"
-                    onClicked: channelDetail.toggleBroadcast()
+                    text: channel
+                        && channel.status
+                            === "broadcasting"
+                        ? "Stop Broadcast"
+                        : "Start Broadcast"
+                    variant: channel
+                        && channel.status
+                            === "broadcasting"
+                        ? "danger" : "primary"
+                    onClicked: {
+                        channelDetail.toggleBroadcast()
+                    }
                 }
             }
 
@@ -75,9 +98,22 @@ CCard {
                 Layout.fillWidth: true
                 spacing: 12
 
-                CStatCell { label: "Viewers";    value: channel ? channel.viewers.toString() : "0" }
-                CStatCell { label: "Resolution"; value: channel ? channel.resolution : "" }
-                CStatCell { label: "Uptime";     value: channel ? channel.uptime : "" }
+                CStatCell {
+                    label: "Viewers"
+                    value: channel
+                        ? channel.viewers.toString()
+                        : "0"
+                }
+                CStatCell {
+                    label: "Resolution"
+                    value: channel
+                        ? channel.resolution : ""
+                }
+                CStatCell {
+                    label: "Uptime"
+                    value: channel
+                        ? channel.uptime : ""
+                }
             }
 
             CDivider { Layout.fillWidth: true }

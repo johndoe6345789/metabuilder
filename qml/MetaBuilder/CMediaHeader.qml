@@ -24,11 +24,21 @@ CCard {
             CText { variant: "h2"; text: "Media Service" }
             CBadge { text: "God Panel" }
             CStatusBadge {
-                status: root.serviceStatus === "online" ? "success" : root.serviceStatus === "offline" ? "error" : "warning"
-                text: root.serviceStatus === "online" ? "Online" : root.serviceStatus === "offline" ? "Offline" : "Checking..."
+                status: root.serviceStatus === "online"
+                    ? "success"
+                    : root.serviceStatus === "offline"
+                        ? "error" : "warning"
+                text: root.serviceStatus === "online"
+                    ? "Online"
+                    : root.serviceStatus === "offline"
+                        ? "Offline" : "Checking..."
             }
             Item { Layout.fillWidth: true }
-            CButton { text: "Refresh"; variant: "ghost"; size: "sm"; onClicked: root.refreshClicked() }
+            CButton {
+                text: "Refresh"
+                variant: "ghost"; size: "sm"
+                onClicked: root.refreshClicked()
+            }
         }
         CDivider { Layout.fillWidth: true }
         FlexRow {
@@ -38,8 +48,19 @@ CCard {
             CChip { text: root.tvCount + " TV Channels" }
             CChip { text: root.pluginCount + " Plugins" }
             Item { Layout.fillWidth: true }
-            CText { visible: root.lastHealthCheck.length > 0; variant: "caption"; text: "Last check: " + root.lastHealthCheck; color: Theme.textSecondary }
-            CText { visible: root.serviceVersion.length > 0; variant: "caption"; text: "v" + root.serviceVersion; color: Theme.textSecondary }
+            CText {
+                visible: root.lastHealthCheck.length > 0
+                variant: "caption"
+                text: "Last check: "
+                    + root.lastHealthCheck
+                color: Theme.textSecondary
+            }
+            CText {
+                visible: root.serviceVersion.length > 0
+                variant: "caption"
+                text: "v" + root.serviceVersion
+                color: Theme.textSecondary
+            }
         }
     }
 }

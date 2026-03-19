@@ -74,11 +74,14 @@ Item {
                         width: 36
                         height: 36
                         radius: 18
-                        color: Qt.rgba(0.39, 0.4, 0.95, root.isDark ? 0.2 : 0.15)
+                        color: Qt.rgba(0.39, 0.4, 0.95,
+                            root.isDark ? 0.2 : 0.15)
 
                         CText {
                             anchors.centerIn: parent
-                            text: root.username ? root.username.charAt(0).toUpperCase() : "?"
+                            text: root.username
+                                ? root.username.charAt(0).toUpperCase()
+                                : "?"
                             font.pixelSize: 16
                             font.weight: Font.Bold
                             color: "#6366F1"
@@ -108,7 +111,9 @@ Item {
                     Layout.fillWidth: true
                     height: 36
                     radius: 8
-                    color: logoutMA.containsMouse ? Qt.rgba(0.96, 0.25, 0.37, 0.08) : "transparent"
+                    color: logoutMA.containsMouse
+                        ? Qt.rgba(0.96, 0.25, 0.37, 0.08)
+                        : "transparent"
 
                     RowLayout {
                         anchors.fill: parent

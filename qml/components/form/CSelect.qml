@@ -19,7 +19,9 @@ ComboBox {
 
     model: []
     Layout.preferredWidth: 200
-    implicitHeight: size === "sm" ? 40 : (size === "lg" ? 56 : 48)
+    implicitHeight: size === "sm"
+        ? 40
+        : (size === "lg" ? 56 : 48)
 
     font.pixelSize: 14
     font.family: Theme.fontFamily
@@ -31,7 +33,9 @@ ComboBox {
         verticalAlignment: Text.AlignVCenter
         text: root.displayText
         font: root.font
-        color: root.enabled ? Theme.text : Theme.textDisabled
+        color: root.enabled
+            ? Theme.text
+            : Theme.textDisabled
         elide: Text.ElideRight
     }
 
@@ -43,7 +47,8 @@ ComboBox {
 
         Text {
             anchors.centerIn: parent
-            text: root.popup.visible ? "\u25B2" : "\u25BC"
+            text: root.popup.visible
+                ? "\u25B2" : "\u25BC"
             font.pixelSize: 10
             color: {
                 if (!root.enabled) return Theme.textDisabled
@@ -51,7 +56,11 @@ ComboBox {
                 return Theme.textSecondary
             }
 
-            Behavior on color { ColorAnimation { duration: Theme.transitionShortest } }
+            Behavior on color {
+                ColorAnimation {
+                    duration: Theme.transitionShortest
+                }
+            }
         }
     }
 
@@ -59,8 +68,14 @@ ComboBox {
     background: Rectangle {
         id: bg
         radius: 8
-        color: root.activeFocus ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.04) : "transparent"
-        border.width: root.activeFocus ? 2 : 1
+        color: root.activeFocus
+            ? Qt.rgba(
+                Theme.primary.r,
+                Theme.primary.g,
+                Theme.primary.b, 0.04)
+            : "transparent"
+        border.width: root.activeFocus
+            ? 2 : 1
         border.color: {
             if (!root.enabled) return Theme.actionDisabled
             if (root.hasError) return Theme.error
@@ -69,9 +84,21 @@ ComboBox {
             return Theme.border
         }
 
-        Behavior on border.color { ColorAnimation { duration: Theme.transitionShortest } }
-        Behavior on border.width { NumberAnimation { duration: Theme.transitionShortest } }
-        Behavior on color { ColorAnimation { duration: Theme.transitionShortest } }
+        Behavior on border.color {
+            ColorAnimation {
+                duration: Theme.transitionShortest
+            }
+        }
+        Behavior on border.width {
+            NumberAnimation {
+                duration: Theme.transitionShortest
+            }
+        }
+        Behavior on color {
+            ColorAnimation {
+                duration: Theme.transitionShortest
+            }
+        }
 
         MouseArea {
             id: bgHover
@@ -86,7 +113,10 @@ ComboBox {
             id: floatingLabel
             text: root.label
             visible: root.label.length > 0
-            font.pixelSize: (root.activeFocus || root.currentIndex >= 0) ? 11 : 14
+            font.pixelSize:
+                (root.activeFocus
+                    || root.currentIndex >= 0)
+                ? 11 : 14
             font.family: Theme.fontFamily
             font.weight: Font.Medium
             color: {
@@ -97,11 +127,28 @@ ComboBox {
             }
 
             x: 16
-            y: (root.activeFocus || root.currentIndex >= 0) ? 6 : (parent.height - height) / 2
+            y: (root.activeFocus
+                    || root.currentIndex >= 0)
+                ? 6
+                : (parent.height - height) / 2
 
-            Behavior on y { NumberAnimation { duration: Theme.transitionShortest; easing.type: Easing.OutCubic } }
-            Behavior on font.pixelSize { NumberAnimation { duration: Theme.transitionShortest; easing.type: Easing.OutCubic } }
-            Behavior on color { ColorAnimation { duration: Theme.transitionShortest } }
+            Behavior on y {
+                NumberAnimation {
+                    duration: Theme.transitionShortest
+                    easing.type: Easing.OutCubic
+                }
+            }
+            Behavior on font.pixelSize {
+                NumberAnimation {
+                    duration: Theme.transitionShortest
+                    easing.type: Easing.OutCubic
+                }
+            }
+            Behavior on color {
+                ColorAnimation {
+                    duration: Theme.transitionShortest
+                }
+            }
         }
     }
 
@@ -115,7 +162,8 @@ ComboBox {
         contentItem: ListView {
             clip: true
             implicitHeight: contentHeight
-            model: root.popup.visible ? root.delegateModel : null
+            model: root.popup.visible
+                ? root.delegateModel : null
             currentIndex: root.highlightedIndex
             ScrollIndicator.vertical: ScrollIndicator {}
         }
@@ -156,10 +204,14 @@ ComboBox {
         leftPadding: 16
 
         contentItem: Text {
-            text: modelData !== undefined ? modelData : (model.display !== undefined ? model.display : "")
+            text: modelData !== undefined
+                ? modelData
+                : (model.display !== undefined
+                    ? model.display : "")
             font.pixelSize: 14
             font.family: Theme.fontFamily
-            color: itemDelegate.highlighted ? Theme.primary : Theme.text
+            color: itemDelegate.highlighted
+                ? Theme.primary : Theme.text
             verticalAlignment: Text.AlignVCenter
             elide: Text.ElideRight
         }
@@ -167,15 +219,26 @@ ComboBox {
         background: Rectangle {
             radius: 4
             color: {
-                if (itemDelegate.highlighted) return Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12)
-                if (itemDelegate.hovered) return Theme.actionHover
+                if (itemDelegate.highlighted)
+                    return Qt.rgba(
+                        Theme.primary.r,
+                        Theme.primary.g,
+                        Theme.primary.b,
+                        0.12)
+                if (itemDelegate.hovered)
+                    return Theme.actionHover
                 return "transparent"
             }
 
-            Behavior on color { ColorAnimation { duration: Theme.transitionShortest } }
+            Behavior on color {
+                ColorAnimation {
+                    duration: Theme.transitionShortest
+                }
+            }
         }
 
-        highlighted: root.highlightedIndex === index
+        highlighted:
+            root.highlightedIndex === index
     }
 
     // Helper / error text below the field
@@ -186,10 +249,13 @@ ComboBox {
         anchors.topMargin: 4
         anchors.left: root.left
         anchors.leftMargin: 16
-        text: root.hasError ? root.errorText : root.helper
+        text: root.hasError
+            ? root.errorText : root.helper
         font.pixelSize: 11
         font.family: Theme.fontFamily
-        color: root.hasError ? Theme.error : Theme.textSecondary
+        color: root.hasError
+            ? Theme.error
+            : Theme.textSecondary
         visible: text.length > 0
     }
 }

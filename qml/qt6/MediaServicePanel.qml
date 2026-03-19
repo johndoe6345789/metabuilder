@@ -18,64 +18,166 @@ Rectangle {
     property var radioChannels: []
     property var tvChannels: []
     property var plugins: []
-    property string baseUrl: "http://localhost:8090"
+    property string baseUrl:
+        "http://localhost:8090"
 
-    property var tabModel: [{ label: "Jobs" }, { label: "Radio" }, { label: "TV" }, { label: "Plugins" }]
+    property var tabModel: [
+        { label: "Jobs" },
+        { label: "Radio" },
+        { label: "TV" },
+        { label: "Plugins" }
+    ]
 
-    function request(method, endpoint, body, callback) { Crud.httpRequest(baseUrl, method, endpoint, body, callback); }
+    function request(method, ep, body, cb) {
+        Crud.httpRequest(
+            baseUrl, method, ep, body, cb)
+    }
 
     function healthCheck() {
-        serviceStatus = "unknown";
-        request("GET", "/health", null, function(result, error) {
-            if (error) { serviceStatus = "offline"; serviceVersion = ""; }
-            else { serviceStatus = "online"; serviceVersion = result.version || ""; }
-            lastHealthCheck = Qt.formatDateTime(new Date(), "hh:mm:ss");
-        });
-        healthTimeout.start();
+        serviceStatus = "unknown"
+        request("GET", "/health", null,
+            function(result, error) {
+                if (error) {
+                    serviceStatus = "offline"
+                    serviceVersion = ""
+                } else {
+                    serviceStatus = "online"
+                    serviceVersion =
+                        result.version || ""
+                }
+                lastHealthCheck =
+                    Qt.formatDateTime(
+                        new Date(), "hh:mm:ss")
+            })
+        healthTimeout.start()
     }
 
     Component.onCompleted: {
-        Crud.loadJson("config/media-mock-data.json", function(data) {
-            jobs = data.jobs || []; radioChannels = data.radioChannels || [];
-            tvChannels = data.tvChannels || []; plugins = data.plugins || [];
-        });
-        healthCheck();
+        Crud.loadJson(
+            "config/media-mock-data.json",
+            function(data) {
+                jobs = data.jobs || []
+                radioChannels =
+                    data.radioChannels || []
+                tvChannels =
+                    data.tvChannels || []
+                plugins = data.plugins || []
+            })
+        healthCheck()
     }
 
-    Timer { id: healthTimeout; interval: 3000; repeat: false; onTriggered: { if (serviceStatus === "unknown") { serviceStatus = "offline"; lastHealthCheck = Qt.formatDateTime(new Date(), "hh:mm:ss"); } } }
-    Timer { interval: 30000; repeat: true; running: true; onTriggered: healthCheck() }
+    Timer {
+        id: healthTimeout
+        interval: 3000; repeat: false
+        onTriggered: {
+            if (serviceStatus === "unknown") {
+                serviceStatus = "offline"
+                lastHealthCheck =
+                    Qt.formatDateTime(
+                        new Date(), "hh:mm:ss")
+            }
+        }
+    }
+    Timer {
+        interval: 30000; repeat: true
+        running: true
+        onTriggered: healthCheck()
+    }
 
     ColumnLayout {
-        anchors.fill: parent; anchors.margins: 20; spacing: 16
+        anchors.fill: parent
+        anchors.margins: 20; spacing: 16
 
         CMediaHeader {
-            serviceStatus: root.serviceStatus; serviceVersion: root.serviceVersion; lastHealthCheck: root.lastHealthCheck
-            jobCount: jobs.length; radioCount: radioChannels.length; tvCount: tvChannels.length; pluginCount: plugins.length
+            serviceStatus:
+                root.serviceStatus
+            serviceVersion:
+                root.serviceVersion
+            lastHealthCheck:
+                root.lastHealthCheck
+            jobCount: jobs.length
+            radioCount: radioChannels.length
+            tvCount: tvChannels.length
+            pluginCount: plugins.length
             onRefreshClicked: healthCheck()
         }
 
-        CTabBar { id: tabBar; Layout.fillWidth: true; currentIndex: currentTab; onCurrentIndexChanged: currentTab = currentIndex; tabs: tabModel }
+        CTabBar {
+            id: tabBar
+            Layout.fillWidth: true
+            currentIndex: currentTab
+            onCurrentIndexChanged:
+                currentTab = currentIndex
+            tabs: tabModel
+        }
 
         StackLayout {
-            Layout.fillWidth: true; Layout.fillHeight: true; currentIndex: currentTab
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            currentIndex: currentTab
 
             CMediaJobsTab {
                 jobs: root.jobs
-                onJobSubmitted: function(type, input, output, priority) {
-                    if (input.length === 0 || output.length === 0) return;
-                    request("POST", "/api/jobs", { type: type, input: input, output: output, priority: priority }, function(result, error) {
-                        if (!error && result) jobs = Crud.prependJob(jobs, result, type);
-                    });
+                onJobSubmitted:
+                    function(type, inp,
+                        out, pri) {
+                    if (inp.length === 0
+                        || out.length === 0)
+                        return
+                    request("POST",
+                        "/api/jobs", {
+                            type: type,
+                            input: inp,
+                            output: out,
+                            priority: pri
+                        },
+                        function(result, err) {
+                            if (!err && result)
+                                jobs =
+                                    Crud.prependJob(
+                                    jobs, result,
+                                    type)
+                        })
                 }
-                onCancelRequested: function(jobId) { request("DELETE", "/api/jobs/" + jobId, null, null); jobs = Crud.cancelJob(jobs, jobId); }
+                onCancelRequested:
+                    function(jobId) {
+                    request("DELETE",
+                        "/api/jobs/" + jobId,
+                        null, null)
+                    jobs = Crud.cancelJob(
+                        jobs, jobId)
+                }
             }
 
-            MediaRadioTab { radioChannels: root.radioChannels; onToggleStream: function(i) { radioChannels = Crud.toggleRadio(radioChannels, i); } }
-            MediaTvTab { tvChannels: root.tvChannels; onToggleBroadcast: function(i) { tvChannels = Crud.toggleTv(tvChannels, i); } }
+            MediaRadioTab {
+                radioChannels:
+                    root.radioChannels
+                onToggleStream: function(i) {
+                    radioChannels =
+                        Crud.toggleRadio(
+                            radioChannels, i)
+                }
+            }
+            MediaTvTab {
+                tvChannels: root.tvChannels
+                onToggleBroadcast:
+                    function(i) {
+                    tvChannels =
+                        Crud.toggleTv(
+                            tvChannels, i)
+                }
+            }
             MediaPluginsTab {
                 plugins: root.plugins
-                onReloadAll: request("POST", "/api/plugins/reload", null, null)
-                onReloadPlugin: function(name) { request("POST", "/api/plugins/" + name + "/reload", null, null); }
+                onReloadAll: request("POST",
+                    "/api/plugins/reload",
+                    null, null)
+                onReloadPlugin:
+                    function(name) {
+                    request("POST",
+                        "/api/plugins/" + name
+                        + "/reload", null, null)
+                }
             }
         }
     }

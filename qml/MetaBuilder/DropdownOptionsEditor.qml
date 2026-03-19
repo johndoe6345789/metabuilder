@@ -10,12 +10,18 @@ ColumnLayout {
     signal addOptionClicked()
     signal removeOptionClicked(int optIndex)
     signal moveOptionClicked(int optIndex, int direction)
-    signal optionFieldChanged(int optIndex, string field, string value)
+    signal optionFieldChanged(
+        int optIndex, string field, string value)
 
     FlexRow {
         Layout.fillWidth: true; spacing: 8
         CText { variant: "body2"; text: "Options"; font.bold: true }
-        CBadge { text: root.dropdown ? root.dropdown.options.length + " items" : "0 items" }
+        CBadge {
+            text: root.dropdown
+                ? root.dropdown.options.length
+                    + " items"
+                : "0 items"
+        }
         Item { Layout.fillWidth: true }
         CButton {
             text: "+ Add Option"; variant: "primary"; size: "sm"
@@ -38,12 +44,22 @@ ColumnLayout {
                 CTextField {
                     label: "Label"; placeholderText: "Display label"
                     text: modelData.label; Layout.fillWidth: true
-                    onTextChanged: { if (text !== modelData.label) root.optionFieldChanged(index, "label", text) }
+                    onTextChanged: {
+                        if (text !== modelData.label)
+                            root.optionFieldChanged(
+                                index, "label", text)
+                    }
                 }
                 CTextField {
-                    label: "Value"; placeholderText: "stored_value"
-                    text: modelData.value; Layout.fillWidth: true
-                    onTextChanged: { if (text !== modelData.value) root.optionFieldChanged(index, "value", text) }
+                    label: "Value"
+                    placeholderText: "stored_value"
+                    text: modelData.value
+                    Layout.fillWidth: true
+                    onTextChanged: {
+                        if (text !== modelData.value)
+                            root.optionFieldChanged(
+                                index, "value", text)
+                    }
                 }
                 ColumnLayout {
                     spacing: 2
@@ -53,8 +69,14 @@ ColumnLayout {
                     }
                     CButton {
                         text: "\u25BC"; variant: "ghost"; size: "sm"
-                        enabled: root.dropdown ? index < root.dropdown.options.length - 1 : false
-                        onClicked: root.moveOptionClicked(index, 1)
+                        enabled: root.dropdown
+                            ? index < root.dropdown
+                                .options.length - 1
+                            : false
+                        onClicked: {
+                            root.moveOptionClicked(
+                                index, 1)
+                        }
                     }
                 }
                 CButton {

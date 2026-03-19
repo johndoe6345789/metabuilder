@@ -19,19 +19,26 @@ Rectangle {
 
     signal nodeSelected(string id)
     signal nodeMoved(string id, real x, real y)
-    signal connectionCreated(string srcId, string srcPort, string dstId, string dstPort)
+    signal connectionCreated(
+        string srcId, string srcPort,
+        string dstId, string dstPort)
     signal nodeDropped(string type, real x, real y)
     signal zoomChanged(real zoom)
     signal canvasClicked()
-    signal connectionDragStarted(string nodeId, string portName, bool isOutput, real portX, real portY)
+    signal connectionDragStarted(
+        string nodeId, string portName,
+        bool isOutput, real portX, real portY)
     signal connectionDragUpdated(real x, real y)
     signal connectionDragFinished()
-    signal connectionCompleted(string nodeId, string portName)
+    signal connectionCompleted(
+        string nodeId, string portName)
 
     color: Theme.background
     clip: true
 
-    function requestPaint() { viewport.connectionLayer.requestPaint() }
+    function requestPaint() {
+        viewport.connectionLayer.requestPaint()
+    }
 
     function groupColor(nodeType) {
         var prefix = nodeType ? nodeType.split(".")[0] : ""
@@ -52,10 +59,15 @@ Rectangle {
         anchors.fill: parent
         keys: ["text/node-type"]
         onDropped: function(drop) {
-            var nodeType = drop.getDataAsString("text/node-type")
+            var nodeType = drop.getDataAsString(
+                "text/node-type")
             if (nodeType) {
-                var localPos = mapToItem(viewport.canvasContent, drop.x, drop.y)
-                root.nodeDropped(nodeType, localPos.x, localPos.y)
+                var localPos = mapToItem(
+                    viewport.canvasContent,
+                    drop.x, drop.y)
+                root.nodeDropped(
+                    nodeType,
+                    localPos.x, localPos.y)
             }
         }
     }
@@ -73,27 +85,53 @@ Rectangle {
         connDragX: root.connDragX
         connDragY: root.connDragY
         groupColorFn: root.groupColor
-        onNodeSelected: function(id) { root.nodeSelected(id) }
-        onNodeMoved: function(id, x, y) { root.nodeMoved(id, x, y) }
-        onConnectionDragStarted: function(nId, p, o, pX, pY) { root.connectionDragStarted(nId, p, o, pX, pY) }
-        onConnectionCompleted: function(nId, p) { root.connectionCompleted(nId, p) }
-        onConnectionDragUpdated: function(x, y) { root.connectionDragUpdated(x, y) }
-        onConnectionDragFinished: root.connectionDragFinished()
+        onNodeSelected: function(id) {
+            root.nodeSelected(id)
+        }
+        onNodeMoved: function(id, x, y) {
+            root.nodeMoved(id, x, y)
+        }
+        onConnectionDragStarted:
+            function(nId, p, o, pX, pY) {
+                root.connectionDragStarted(
+                    nId, p, o, pX, pY)
+            }
+        onConnectionCompleted:
+            function(nId, p) {
+                root.connectionCompleted(nId, p)
+            }
+        onConnectionDragUpdated:
+            function(x, y) {
+                root.connectionDragUpdated(x, y)
+            }
+        onConnectionDragFinished: {
+            root.connectionDragFinished()
+        }
         onCanvasClicked: root.canvasClicked()
-        onZoomRequested: function(d) { root.zoomChanged(root.zoom + d) }
+        onZoomRequested: function(d) {
+            root.zoomChanged(root.zoom + d)
+        }
     }
 
     CCanvasZoomOverlay {
-        anchors.bottom: parent.bottom; anchors.right: parent.right; anchors.margins: 12
+        anchors.bottom: parent.bottom
+        anchors.right: parent.right
+        anchors.margins: 12
         zoom: root.zoom
-        onZoomIn: root.zoomChanged(root.zoom + 0.1)
-        onZoomOut: root.zoomChanged(root.zoom - 0.1)
+        onZoomIn: {
+            root.zoomChanged(root.zoom + 0.1)
+        }
+        onZoomOut: {
+            root.zoomChanged(root.zoom - 0.1)
+        }
     }
 
     CText {
         anchors.centerIn: parent
         visible: root.nodes.length === 0
-        text: "Empty canvas — drag nodes from the palette or double-click a node type"
+        text: "Empty canvas \u2014 drag nodes"
+            + " from the palette or"
+            + " double-click a node type"
         variant: "body1"; opacity: 0.5
     }
 }

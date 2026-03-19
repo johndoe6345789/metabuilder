@@ -19,7 +19,11 @@ CCard {
         spacing: 16
 
         CText { variant: "h4"; text: "Typography" }
-        CText { variant: "caption"; text: "Configure font family and base size for the entire interface" }
+        CText {
+            variant: "caption"
+            text: "Configure font family and base"
+                + " size for the entire interface"
+        }
 
         CDivider { Layout.fillWidth: true }
 
@@ -34,7 +38,8 @@ CCard {
                 CTextField {
                     Layout.fillWidth: true
                     label: "Font Family"
-                    placeholderText: "e.g., Inter, Roboto, system-ui"
+                    placeholderText:
+                        "e.g., Inter, Roboto, system-ui"
                     text: fontFamily
                     onTextChanged: fontFamilyEdited(text)
                 }
@@ -44,7 +49,11 @@ CCard {
                 Layout.fillWidth: true
                 spacing: 8
 
-                CText { variant: "body2"; text: "Base Font Size: " + baseFontSize + "px" }
+                CText {
+                    variant: "body2"
+                    text: "Base Font Size: "
+                        + baseFontSize + "px"
+                }
 
                 Slider {
                     Layout.fillWidth: true
@@ -52,18 +61,24 @@ CCard {
                     to: 24
                     stepSize: 1
                     value: baseFontSize
-                    onValueChanged: baseFontSizeEdited(value)
+                    onValueChanged: {
+                        baseFontSizeEdited(value)
+                    }
 
                     background: Rectangle {
                         x: parent.leftPadding
-                        y: parent.topPadding + parent.availableHeight / 2 - height / 2
+                        y: parent.topPadding
+                            + parent.availableHeight / 2
+                            - height / 2
                         width: parent.availableWidth
                         height: 4
                         radius: 2
                         color: Theme.border
 
                         Rectangle {
-                            width: parent.parent.visualPosition * parent.width
+                            width: parent.parent
+                                .visualPosition
+                                * parent.width
                             height: parent.height
                             radius: 2
                             color: Theme.primary
@@ -71,8 +86,13 @@ CCard {
                     }
 
                     handle: Rectangle {
-                        x: parent.leftPadding + parent.visualPosition * (parent.availableWidth - width)
-                        y: parent.topPadding + parent.availableHeight / 2 - height / 2
+                        x: parent.leftPadding
+                            + parent.visualPosition
+                            * (parent.availableWidth
+                                - width)
+                        y: parent.topPadding
+                            + parent.availableHeight / 2
+                            - height / 2
                         width: 18
                         height: 18
                         radius: 9

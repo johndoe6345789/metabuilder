@@ -29,14 +29,46 @@ CCard {
                 anchors.rightMargin: 12
                 spacing: 8
 
-                CText { variant: "caption"; text: "AVATAR";   Layout.preferredWidth: 56 }
-                CText { variant: "caption"; text: "USERNAME"; Layout.preferredWidth: 120 }
-                CText { variant: "caption"; text: "EMAIL";    Layout.fillWidth: true }
-                CText { variant: "caption"; text: "ROLE";     Layout.preferredWidth: 100 }
-                CText { variant: "caption"; text: "LEVEL";    Layout.preferredWidth: 50 }
-                CText { variant: "caption"; text: "STATUS";   Layout.preferredWidth: 90 }
-                CText { variant: "caption"; text: "CREATED";  Layout.preferredWidth: 100 }
-                CText { variant: "caption"; text: "ACTIONS";  Layout.preferredWidth: 140 }
+                CText {
+                    variant: "caption"
+                    text: "AVATAR"
+                    Layout.preferredWidth: 56
+                }
+                CText {
+                    variant: "caption"
+                    text: "USERNAME"
+                    Layout.preferredWidth: 120
+                }
+                CText {
+                    variant: "caption"
+                    text: "EMAIL"
+                    Layout.fillWidth: true
+                }
+                CText {
+                    variant: "caption"
+                    text: "ROLE"
+                    Layout.preferredWidth: 100
+                }
+                CText {
+                    variant: "caption"
+                    text: "LEVEL"
+                    Layout.preferredWidth: 50
+                }
+                CText {
+                    variant: "caption"
+                    text: "STATUS"
+                    Layout.preferredWidth: 90
+                }
+                CText {
+                    variant: "caption"
+                    text: "CREATED"
+                    Layout.preferredWidth: 100
+                }
+                CText {
+                    variant: "caption"
+                    text: "ACTIONS"
+                    Layout.preferredWidth: 140
+                }
             }
         }
 

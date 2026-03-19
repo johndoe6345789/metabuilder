@@ -18,7 +18,9 @@ import QmlComponents 1.0
 Button {
     id: control
 
-    property string variant: "default" // default, primary, secondary, ghost, outlined, danger, text
+    // default, primary, secondary,
+    // ghost, outlined, danger, text
+    property string variant: "default"
     property string size: "md" // sm, md, lg
     property string iconSource: ""
     property string iconText: ""
@@ -35,7 +37,10 @@ Button {
         }
     }
 
-    implicitWidth: Math.max(implicitHeight, contentRow.implicitWidth + _paddingH * 2)
+    implicitWidth: Math.max(
+        implicitHeight,
+        contentRow.implicitWidth + _paddingH * 2
+    )
 
     readonly property int _paddingH: {
         switch (size) {
@@ -48,17 +53,24 @@ Button {
     font.pixelSize: 14
     font.weight: Font.DemiBold
 
-    // Resolve whether this variant is filled, outlined, tonal, or text
-    readonly property bool _isFilled: variant === "primary" || variant === "danger"
-    readonly property bool _isOutlined: variant === "ghost" || variant === "outlined"
+    // Resolve variant type: filled/outlined/tonal/text
+    readonly property bool _isFilled:
+        variant === "primary" || variant === "danger"
+    readonly property bool _isOutlined:
+        variant === "ghost" || variant === "outlined"
     readonly property bool _isText: variant === "text"
-    readonly property bool _isTonal: variant === "default" || variant === "secondary"
+    readonly property bool _isTonal:
+        variant === "default"
+        || variant === "secondary"
 
     // Base fill color (before state layers)
     readonly property color _baseFill: {
         if (variant === "primary") return Theme.primary
         if (variant === "danger") return Theme.error
-        if (_isTonal) return Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12)
+        if (_isTonal) return Qt.rgba(
+            Theme.primary.r,
+            Theme.primary.g,
+            Theme.primary.b, 0.12)
         return "transparent" // ghost, outlined, text
     }
 
@@ -71,15 +83,20 @@ Button {
     }
 
     opacity: enabled ? 1.0 : 0.38
-    Behavior on opacity { NumberAnimation { duration: Theme.transitionShortest } }
+    Behavior on opacity {
+        NumberAnimation {
+            duration: Theme.transitionShortest
+        }
+    }
 
     background: Rectangle {
         radius: control.height / 2
 
-        // State layer: hover = 8% overlay, pressed = 12% overlay
+        // State layer: hover=8%, pressed=12%
         readonly property color _stateLayer: {
-            if (control._isFilled) return "#ffffff" // white overlay on filled
-            return Theme.primary                     // primary overlay on others
+            if (control._isFilled)
+                return "#ffffff"
+            return Theme.primary
         }
 
         color: {
@@ -89,37 +106,66 @@ Button {
             }
             if (control.down) {
                 if (control._isFilled)
-                    return Qt.rgba(_stateLayer.r, _stateLayer.g, _stateLayer.b, 0.12)
-                          // blend: we layer 12% on top of base
-                          // For filled, darken slightly instead
+                    return Qt.rgba(
+                        _stateLayer.r,
+                        _stateLayer.g,
+                        _stateLayer.b, 0.12)
                 if (control._isTonal)
-                    return Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.22)
-                return Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12)
+                    return Qt.rgba(
+                        Theme.primary.r,
+                        Theme.primary.g,
+                        Theme.primary.b, 0.22)
+                return Qt.rgba(
+                    Theme.primary.r,
+                    Theme.primary.g,
+                    Theme.primary.b, 0.12)
             }
             if (control.hovered) {
                 if (control._isFilled)
-                    return control._baseFill // overlay handled by stateOverlay
+                    return control._baseFill
                 if (control._isTonal)
-                    return Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.18)
-                return Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.08)
+                    return Qt.rgba(
+                        Theme.primary.r,
+                        Theme.primary.g,
+                        Theme.primary.b, 0.18)
+                return Qt.rgba(
+                    Theme.primary.r,
+                    Theme.primary.g,
+                    Theme.primary.b, 0.08)
             }
             return control._baseFill
         }
 
         border.width: control._isOutlined ? 1 : 0
-        border.color: control.enabled ? Theme.border : Theme.actionDisabled
+        border.color: control.enabled
+            ? Theme.border
+            : Theme.actionDisabled
 
-        Behavior on color { ColorAnimation { duration: Theme.transitionShortest } }
+        Behavior on color {
+            ColorAnimation {
+                duration: Theme.transitionShortest
+            }
+        }
 
-        // State layer overlay for filled buttons (hover/press)
+        // State layer overlay for filled buttons
         Rectangle {
             anchors.fill: parent
             radius: parent.radius
-            visible: control._isFilled && control.enabled && (control.hovered || control.down)
-            color: control.variant === "danger" ? "#000000" : "#ffffff"
-            opacity: control.down ? 0.12 : (control.hovered ? 0.08 : 0)
+            visible: control._isFilled
+                && control.enabled
+                && (control.hovered
+                    || control.down)
+            color: control.variant === "danger"
+                ? "#000000" : "#ffffff"
+            opacity: control.down
+                ? 0.12
+                : (control.hovered ? 0.08 : 0)
 
-            Behavior on opacity { NumberAnimation { duration: Theme.transitionShortest } }
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: Theme.transitionShortest
+                }
+            }
         }
     }
 

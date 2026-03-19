@@ -19,30 +19,68 @@ ColumnLayout {
     signal deleteSelectedClicked()
 
     FlexRow {
-        Layout.fillWidth: true; spacing: 12
-        CText { variant: "h3"; text: (root.entityIcons[root.selectedEntity] || "") + "  " + root.selectedEntity + " Management" }
-        CStatusBadge { status: root.useLiveData ? "success" : "warning"; text: root.useLiveData ? "Live" : "Mock" }
+        Layout.fillWidth: true
+        spacing: 12
+        CText {
+            variant: "h3"
+            text: (root.entityIcons[
+                root.selectedEntity] || "")
+                + "  " + root.selectedEntity
+                + " Management"
+        }
+        CStatusBadge {
+            status: root.useLiveData
+                ? "success" : "warning"
+            text: root.useLiveData
+                ? "Live" : "Mock"
+        }
         Item { Layout.fillWidth: true }
-        CButton { text: "Create Record"; variant: "primary"; size: "sm"; onClicked: root.createClicked() }
+        CButton {
+            text: "Create Record"
+            variant: "primary"
+            size: "sm"
+            onClicked: root.createClicked()
+        }
     }
 
     FlexRow {
-        Layout.fillWidth: true; spacing: 8
+        Layout.fillWidth: true
+        spacing: 8
         CTextField {
-            Layout.preferredWidth: 280; label: "Search"
-            placeholderText: "Filter " + root.selectedEntity.toLowerCase() + " records..."
-            text: root.searchText; onTextChanged: root.searchChanged(text)
+            Layout.preferredWidth: 280
+            label: "Search"
+            placeholderText:
+                "Filter "
+                + root.selectedEntity
+                    .toLowerCase()
+                + " records..."
+            text: root.searchText
+            onTextChanged:
+                root.searchChanged(text)
         }
         Item { Layout.preferredWidth: 12 }
         Repeater {
             model: ["All", "Active", "Inactive"]
             delegate: CChip {
-                text: modelData; checked: root.activeFilter === modelData
-                chipColor: root.activeFilter === modelData ? Theme.primary : Theme.surface
-                onClicked: root.filterChanged(modelData)
+                text: modelData
+                checked: root.activeFilter
+                    === modelData
+                chipColor: root.activeFilter
+                    === modelData
+                    ? Theme.primary
+                    : Theme.surface
+                onClicked:
+                    root.filterChanged(modelData)
             }
         }
         Item { Layout.fillWidth: true }
-        CButton { text: "Delete Selected"; variant: "danger"; size: "sm"; enabled: root.hasSelectedRows; onClicked: root.deleteSelectedClicked() }
+        CButton {
+            text: "Delete Selected"
+            variant: "danger"
+            size: "sm"
+            enabled: root.hasSelectedRows
+            onClicked:
+                root.deleteSelectedClicked()
+        }
     }
 }

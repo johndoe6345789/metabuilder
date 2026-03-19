@@ -22,15 +22,22 @@ TextField {
 
     signal suffixClicked()
 
-    implicitHeight: size === "sm" ? 40 : (size === "lg" ? 56 : 48)
+    implicitHeight: size === "sm"
+        ? 40
+        : (size === "lg" ? 56 : 48)
     leftPadding: prefixIcon ? 40 : 16
-    rightPadding: (clearable && text.length > 0) || suffixIcon ? 40 : 16
-    topPadding: label && (activeFocus || text.length > 0) ? 18 : 0
+    rightPadding:
+        (clearable && text.length > 0)
+            || suffixIcon ? 40 : 16
+    topPadding:
+        label && (activeFocus || text.length > 0)
+            ? 18 : 0
     verticalAlignment: TextInput.AlignVCenter
 
     font.pixelSize: 14
     font.family: Theme.fontFamily
-    color: enabled ? Theme.text : Theme.textDisabled
+    color: enabled
+        ? Theme.text : Theme.textDisabled
     placeholderTextColor: Theme.textSecondary
     selectionColor: Theme.primary
     selectedTextColor: Theme.primaryContrastText
@@ -38,19 +45,38 @@ TextField {
     background: Rectangle {
         id: bg
         radius: 8
-        color: control.activeFocus ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.04) : "transparent"
-        border.width: control.activeFocus ? 2 : 1
+        color: control.activeFocus
+            ? Qt.rgba(
+                Theme.primary.r,
+                Theme.primary.g,
+                Theme.primary.b, 0.04)
+            : "transparent"
+        border.width: control.activeFocus
+            ? 2 : 1
         border.color: {
             if (!control.enabled) return Theme.actionDisabled
             if (control.hasError) return Theme.error
             if (control.activeFocus) return Theme.primary
-            if (bgMouseArea.containsMouse) return Theme.text
+            if (bgMouseArea.containsMouse)
+                return Theme.text
             return Theme.border
         }
 
-        Behavior on border.color { ColorAnimation { duration: Theme.transitionShortest } }
-        Behavior on border.width { NumberAnimation { duration: Theme.transitionShortest } }
-        Behavior on color { ColorAnimation { duration: Theme.transitionShortest } }
+        Behavior on border.color {
+            ColorAnimation {
+                duration: Theme.transitionShortest
+            }
+        }
+        Behavior on border.width {
+            NumberAnimation {
+                duration: Theme.transitionShortest
+            }
+        }
+        Behavior on color {
+            ColorAnimation {
+                duration: Theme.transitionShortest
+            }
+        }
 
         // Hover detection for the background area
         MouseArea {
@@ -66,7 +92,10 @@ TextField {
             id: floatingLabel
             text: control.label
             visible: control.label.length > 0
-            font.pixelSize: (control.activeFocus || control.text.length > 0) ? 11 : 14
+            font.pixelSize:
+                (control.activeFocus
+                    || control.text.length > 0)
+                ? 11 : 14
             font.family: Theme.fontFamily
             font.weight: Font.Medium
             color: {
@@ -77,11 +106,28 @@ TextField {
             }
 
             x: control.prefixIcon ? 40 : 16
-            y: (control.activeFocus || control.text.length > 0) ? 6 : (parent.height - height) / 2
+            y: (control.activeFocus
+                    || control.text.length > 0)
+                ? 6
+                : (parent.height - height) / 2
 
-            Behavior on y { NumberAnimation { duration: Theme.transitionShortest; easing.type: Easing.OutCubic } }
-            Behavior on font.pixelSize { NumberAnimation { duration: Theme.transitionShortest; easing.type: Easing.OutCubic } }
-            Behavior on color { ColorAnimation { duration: Theme.transitionShortest } }
+            Behavior on y {
+                NumberAnimation {
+                    duration: Theme.transitionShortest
+                    easing.type: Easing.OutCubic
+                }
+            }
+            Behavior on font.pixelSize {
+                NumberAnimation {
+                    duration: Theme.transitionShortest
+                    easing.type: Easing.OutCubic
+                }
+            }
+            Behavior on color {
+                ColorAnimation {
+                    duration: Theme.transitionShortest
+                }
+            }
         }
 
         // Prefix icon
@@ -98,7 +144,11 @@ TextField {
             }
             visible: control.prefixIcon.length > 0
 
-            Behavior on color { ColorAnimation { duration: Theme.transitionShortest } }
+            Behavior on color {
+                ColorAnimation {
+                    duration: Theme.transitionShortest
+                }
+            }
         }
 
         // Suffix / clear button
@@ -107,14 +157,21 @@ TextField {
             anchors.right: parent.right
             anchors.rightMargin: 12
             anchors.verticalCenter: parent.verticalCenter
-            text: control.clearable && control.text.length > 0 ? "\u2715" : control.suffixIcon
+            text: control.clearable
+                    && control.text.length > 0
+                ? "\u2715"
+                : control.suffixIcon
             font.pixelSize: 16
             color: {
                 if (!control.enabled) return Theme.textDisabled
-                if (clearMouseArea.containsMouse) return Theme.text
+                if (clearMouseArea.containsMouse)
+                    return Theme.text
                 return Theme.textSecondary
             }
-            visible: (control.clearable && control.text.length > 0) || control.suffixIcon.length > 0
+            visible:
+                (control.clearable
+                    && control.text.length > 0)
+                || control.suffixIcon.length > 0
 
             MouseArea {
                 id: clearMouseArea
@@ -123,7 +180,8 @@ TextField {
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
                 onClicked: {
-                    if (control.clearable && control.text.length > 0) {
+                    if (control.clearable
+                            && control.text.length > 0) {
                         control.text = ""
                     } else {
                         control.suffixClicked()
@@ -141,10 +199,14 @@ TextField {
         anchors.topMargin: 4
         anchors.left: control.left
         anchors.leftMargin: 16
-        text: control.hasError ? control.errorText : control.helper
+        text: control.hasError
+            ? control.errorText
+            : control.helper
         font.pixelSize: 11
         font.family: Theme.fontFamily
-        color: control.hasError ? Theme.error : Theme.textSecondary
+        color: control.hasError
+            ? Theme.error
+            : Theme.textSecondary
         visible: text.length > 0
     }
 }

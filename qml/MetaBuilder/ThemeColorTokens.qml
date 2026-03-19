@@ -22,17 +22,39 @@ CCard {
     signal tokenColorEdited(string token, string value)
 
     readonly property var tokenModel: [
-        { label: "Primary",        token: "primary",       value: customPrimary },
-        { label: "Background",     token: "background",    value: customBackground },
-        { label: "Surface",        token: "surface",       value: customSurface },
-        { label: "Paper",          token: "paper",         value: customPaper },
-        { label: "Text",           token: "text",          value: customText },
-        { label: "Text Secondary", token: "textSecondary", value: customTextSecondary },
-        { label: "Border",         token: "border",        value: customBorder },
-        { label: "Error",          token: "error",         value: customError },
-        { label: "Warning",        token: "warning",       value: customWarning },
-        { label: "Success",        token: "success",       value: customSuccess },
-        { label: "Info",           token: "info",          value: customInfo }
+        { label: "Primary",
+          token: "primary",
+          value: customPrimary },
+        { label: "Background",
+          token: "background",
+          value: customBackground },
+        { label: "Surface",
+          token: "surface",
+          value: customSurface },
+        { label: "Paper",
+          token: "paper",
+          value: customPaper },
+        { label: "Text",
+          token: "text",
+          value: customText },
+        { label: "Text Secondary",
+          token: "textSecondary",
+          value: customTextSecondary },
+        { label: "Border",
+          token: "border",
+          value: customBorder },
+        { label: "Error",
+          token: "error",
+          value: customError },
+        { label: "Warning",
+          token: "warning",
+          value: customWarning },
+        { label: "Success",
+          token: "success",
+          value: customSuccess },
+        { label: "Info",
+          token: "info",
+          value: customInfo }
     ]
 
     ColumnLayout {
@@ -48,7 +70,12 @@ CCard {
             CChip { text: "11 tokens" }
         }
 
-        CText { variant: "caption"; text: "Click any swatch to fine-tune. Values must be valid hex colors (#RRGGBB)." }
+        CText {
+            variant: "caption"
+            text: "Click any swatch to fine-tune."
+                + " Values must be valid hex"
+                + " colors (#RRGGBB)."
+        }
 
         CDivider { Layout.fillWidth: true }
 
@@ -63,7 +90,10 @@ CCard {
                 ThemeColorField {
                     label: modelData.label
                     colorValue: modelData.value
-                    onColorEdited: function(val) { colorTokens.tokenColorEdited(modelData.token, val) }
+                    onColorEdited: function(val) {
+                        colorTokens.tokenColorEdited(
+                            modelData.token, val)
+                    }
                 }
             }
         }

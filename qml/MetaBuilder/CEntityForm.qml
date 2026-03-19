@@ -28,7 +28,8 @@ CDialog {
     signal save(var data)
     signal cancel()
 
-    title: (isEdit ? "Edit " : "Create ") + entity + (isEdit && editId ? " - " + editId : "")
+    title: (isEdit ? "Edit " : "Create ") + entity
+        + (isEdit && editId ? " - " + editId : "")
 
     // Internal form data store
     property var _formData: ({})
@@ -73,7 +74,9 @@ CDialog {
                 Layout.fillWidth: true
                 label: modelData.label
                 text: modelData.value || ""
-                placeholderText: "Enter " + modelData.label.toLowerCase() + "..."
+                placeholderText: "Enter "
+                    + modelData.label.toLowerCase()
+                    + "..."
                 onTextChanged: root._setField(modelData.field, text)
             }
         }
@@ -98,7 +101,8 @@ CDialog {
                     // Fill in any fields not yet touched
                     for (var i = 0; i < root.fields.length; i++) {
                         var f = root.fields[i];
-                        if (data[f.field] === undefined || data[f.field] === "") {
+                        if (data[f.field] === undefined
+                            || data[f.field] === "") {
                             data[f.field] = f.value || "";
                         }
                     }

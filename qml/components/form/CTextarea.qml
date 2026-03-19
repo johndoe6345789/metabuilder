@@ -30,10 +30,17 @@ ScrollView {
     signal textChanged()
 
     implicitWidth: 200
-    implicitHeight: Math.max(minHeight, Math.min(textArea.implicitHeight + 32, maxHeight))
+    implicitHeight: Math.max(
+        minHeight,
+        Math.min(
+            textArea.implicitHeight + 32,
+            maxHeight))
     clip: true
 
-    ScrollBar.vertical.policy: textArea.implicitHeight + 32 > root.maxHeight ? ScrollBar.AsNeeded : ScrollBar.AlwaysOff
+    ScrollBar.vertical.policy:
+        textArea.implicitHeight + 32 > root.maxHeight
+            ? ScrollBar.AsNeeded
+            : ScrollBar.AlwaysOff
     ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
 
     TextArea {
@@ -41,7 +48,9 @@ ScrollView {
         wrapMode: Text.WordWrap
         font.pixelSize: 14
         font.family: Theme.fontFamily
-        color: root.enabled ? Theme.text : Theme.textDisabled
+        color: root.enabled
+            ? Theme.text
+            : Theme.textDisabled
         placeholderTextColor: Theme.textSecondary
         selectionColor: Theme.primary
         selectedTextColor: Theme.primaryContrastText
@@ -57,19 +66,38 @@ ScrollView {
         background: Rectangle {
             id: bg
             radius: 8
-            color: textArea.activeFocus ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.04) : "transparent"
-            border.width: textArea.activeFocus ? 2 : 1
+            color: textArea.activeFocus
+                ? Qt.rgba(
+                    Theme.primary.r,
+                    Theme.primary.g,
+                    Theme.primary.b, 0.04)
+                : "transparent"
+            border.width: textArea.activeFocus
+                ? 2 : 1
             border.color: {
                 if (!root.enabled) return Theme.actionDisabled
                 if (root.hasError) return Theme.error
                 if (textArea.activeFocus) return Theme.primary
-                if (bgHover.containsMouse) return Theme.text
+                if (bgHover.containsMouse)
+                    return Theme.text
                 return Theme.border
             }
 
-            Behavior on border.color { ColorAnimation { duration: Theme.transitionShortest } }
-            Behavior on border.width { NumberAnimation { duration: Theme.transitionShortest } }
-            Behavior on color { ColorAnimation { duration: Theme.transitionShortest } }
+            Behavior on border.color {
+                ColorAnimation {
+                    duration: Theme.transitionShortest
+                }
+            }
+            Behavior on border.width {
+                NumberAnimation {
+                    duration: Theme.transitionShortest
+                }
+            }
+            Behavior on color {
+                ColorAnimation {
+                    duration: Theme.transitionShortest
+                }
+            }
 
             MouseArea {
                 id: bgHover
@@ -84,7 +112,10 @@ ScrollView {
                 id: floatingLabel
                 text: root.label
                 visible: root.label.length > 0
-                font.pixelSize: (textArea.activeFocus || textArea.text.length > 0) ? 11 : 14
+                font.pixelSize:
+                    (textArea.activeFocus
+                        || textArea.text.length > 0)
+                    ? 11 : 14
                 font.family: Theme.fontFamily
                 font.weight: Font.Medium
                 color: {
@@ -95,11 +126,27 @@ ScrollView {
                 }
 
                 x: 16
-                y: (textArea.activeFocus || textArea.text.length > 0) ? 6 : 14
+                y: (textArea.activeFocus
+                        || textArea.text.length > 0)
+                    ? 6 : 14
 
-                Behavior on y { NumberAnimation { duration: Theme.transitionShortest; easing.type: Easing.OutCubic } }
-                Behavior on font.pixelSize { NumberAnimation { duration: Theme.transitionShortest; easing.type: Easing.OutCubic } }
-                Behavior on color { ColorAnimation { duration: Theme.transitionShortest } }
+                Behavior on y {
+                    NumberAnimation {
+                        duration: Theme.transitionShortest
+                        easing.type: Easing.OutCubic
+                    }
+                }
+                Behavior on font.pixelSize {
+                    NumberAnimation {
+                        duration: Theme.transitionShortest
+                        easing.type: Easing.OutCubic
+                    }
+                }
+                Behavior on color {
+                    ColorAnimation {
+                        duration: Theme.transitionShortest
+                    }
+                }
             }
         }
     }
@@ -112,10 +159,13 @@ ScrollView {
         anchors.topMargin: 4
         anchors.left: root.left
         anchors.leftMargin: 16
-        text: root.hasError ? root.errorText : root.helper
+        text: root.hasError
+            ? root.errorText : root.helper
         font.pixelSize: 11
         font.family: Theme.fontFamily
-        color: root.hasError ? Theme.error : Theme.textSecondary
+        color: root.hasError
+            ? Theme.error
+            : Theme.textSecondary
         visible: text.length > 0
     }
 }

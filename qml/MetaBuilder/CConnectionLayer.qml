@@ -59,7 +59,9 @@ Canvas {
                     var targets = srcConns[outName][outIdx]
                     var outIndex = parseInt(outIdx)
                     var srcX = srcNode.position[0] + nodeW
-                    var srcY = srcNode.position[1] + headerH + portOffset + outIndex * portSpacing + 6
+                    var srcY = srcNode.position[1]
+                        + headerH + portOffset
+                        + outIndex * portSpacing + 6
 
                     for (var t = 0; t < targets.length; t++) {
                         var target = targets[t]
@@ -68,7 +70,9 @@ Canvas {
 
                         var inIndex = target.index || 0
                         var dstX = dstNode.position[0]
-                        var dstY = dstNode.position[1] + headerH + portOffset + inIndex * portSpacing + 6
+                        var dstY = dstNode.position[1]
+                            + headerH + portOffset
+                            + inIndex * portSpacing + 6
 
                         // Draw Bezier
                         var cpOffset = Math.max(80, Math.abs(dstX - srcX) * 0.4)
@@ -76,7 +80,10 @@ Canvas {
                         ctx.globalAlpha = 0.8
                         ctx.beginPath()
                         ctx.moveTo(srcX, srcY)
-                        ctx.bezierCurveTo(srcX + cpOffset, srcY, dstX - cpOffset, dstY, dstX, dstY)
+                        ctx.bezierCurveTo(
+                            srcX + cpOffset, srcY,
+                            dstX - cpOffset, dstY,
+                            dstX, dstY)
                         ctx.stroke()
 
                         // Arrow at destination

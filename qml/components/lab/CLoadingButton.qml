@@ -6,10 +6,13 @@ Button {
     id: control
     
     property string variant: "contained" // contained, outlined, text
-    property string color: "primary" // primary, secondary, error, warning, info, success
+    // primary, secondary, error,
+    // warning, info, success
+    property string color: "primary"
     property string size: "medium" // small, medium, large
     property bool loading: false
-    property string loadingPosition: "center" // start, center, end
+    // start, center, end
+    property string loadingPosition: "center"
     property string startIcon: ""
     property string endIcon: ""
     property bool fullWidth: false
@@ -23,7 +26,12 @@ Button {
             default: return 36
         }
     }
-    implicitWidth: fullWidth ? parent.width : Math.max(implicitHeight, contentRow.implicitWidth + horizontalPadding * 2)
+    implicitWidth: fullWidth
+        ? parent.width
+        : Math.max(
+            implicitHeight,
+            contentRow.implicitWidth
+                + horizontalPadding * 2)
     
     property int horizontalPadding: {
         switch(size) {
@@ -33,7 +41,9 @@ Button {
         }
     }
     
-    font.pixelSize: size === "small" ? 12 : size === "large" ? 16 : 14
+    font.pixelSize: size === "small"
+        ? 12
+        : size === "large" ? 16 : 14
     font.weight: Font.Medium
     
     // Color palette
@@ -64,22 +74,46 @@ Button {
     background: Rectangle {
         radius: 4
         color: {
-            if (!control.enabled && !control.loading) return "#e0e0e0"
-            if (control.loading) return Qt.lighter(control.mainColor, 1.2)
+            if (!control.enabled && !control.loading)
+                return "#e0e0e0"
+            if (control.loading)
+                return Qt.lighter(control.mainColor, 1.2)
             if (control.variant === "contained") {
-                return control.down ? control.darkColor : 
-                       control.hovered ? Qt.darker(control.mainColor, 1.1) : control.mainColor
+                return control.down
+                    ? control.darkColor
+                    : control.hovered
+                        ? Qt.darker(
+                            control.mainColor,
+                            1.1)
+                        : control.mainColor
             }
             if (control.variant === "outlined") {
-                return control.hovered ? Qt.rgba(control.mainColor.r, control.mainColor.g, control.mainColor.b, 0.04) : "transparent"
+                return control.hovered
+                    ? Qt.rgba(
+                        control.mainColor.r,
+                        control.mainColor.g,
+                        control.mainColor.b,
+                        0.04)
+                    : "transparent"
             }
             // text variant
-            return control.hovered ? Qt.rgba(control.mainColor.r, control.mainColor.g, control.mainColor.b, 0.04) : "transparent"
+            return control.hovered
+                ? Qt.rgba(
+                    control.mainColor.r,
+                    control.mainColor.g,
+                    control.mainColor.b,
+                    0.04)
+                : "transparent"
         }
         border.width: control.variant === "outlined" ? 1 : 0
-        border.color: control.enabled || control.loading ? control.mainColor : "#e0e0e0"
-        
-        Behavior on color { ColorAnimation { duration: 150 } }
+        border.color:
+            control.enabled || control.loading
+                ? control.mainColor
+                : "#e0e0e0"
+
+        Behavior on color {
+            ColorAnimation { duration: 150 }
+        }
     }
     
     contentItem: RowLayout {
@@ -90,36 +124,55 @@ Button {
         BusyIndicator {
             Layout.preferredWidth: 16
             Layout.preferredHeight: 16
-            running: control.loading && control.loadingPosition === "start"
-            visible: control.loading && control.loadingPosition === "start"
-            palette.dark: control.variant === "contained" ? "#ffffff" : control.mainColor
+            running: control.loading
+                && control.loadingPosition === "start"
+            visible: control.loading
+                && control.loadingPosition === "start"
+            palette.dark:
+                control.variant === "contained"
+                    ? "#ffffff"
+                    : control.mainColor
         }
         
         // Start icon
         Text {
-            visible: control.startIcon && !control.loading
+            visible: control.startIcon
+                && !control.loading
             text: control.startIcon
             font.pixelSize: control.font.pixelSize
-            color: control.variant === "contained" ? "#ffffff" : control.mainColor
+            color:
+                control.variant === "contained"
+                    ? "#ffffff"
+                    : control.mainColor
         }
         
         // Center loading indicator (replaces text)
         BusyIndicator {
             Layout.preferredWidth: 20
             Layout.preferredHeight: 20
-            running: control.loading && control.loadingPosition === "center"
-            visible: control.loading && control.loadingPosition === "center"
-            palette.dark: control.variant === "contained" ? "#ffffff" : control.mainColor
+            running: control.loading
+                && control.loadingPosition === "center"
+            visible: control.loading
+                && control.loadingPosition === "center"
+            palette.dark:
+                control.variant === "contained"
+                    ? "#ffffff"
+                    : control.mainColor
         }
         
         // Button text
         Text {
-            visible: !control.loading || control.loadingPosition !== "center"
+            visible: !control.loading
+                || control.loadingPosition !== "center"
             text: control.text
             font: control.font
             color: {
-                if (!control.enabled && !control.loading) return "#9e9e9e"
-                return control.variant === "contained" ? "#ffffff" : control.mainColor
+                if (!control.enabled
+                        && !control.loading)
+                    return "#9e9e9e"
+                return control.variant === "contained"
+                    ? "#ffffff"
+                    : control.mainColor
             }
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
@@ -127,21 +180,32 @@ Button {
         
         // End icon
         Text {
-            visible: control.endIcon && !control.loading
+            visible: control.endIcon
+                && !control.loading
             text: control.endIcon
             font.pixelSize: control.font.pixelSize
-            color: control.variant === "contained" ? "#ffffff" : control.mainColor
+            color:
+                control.variant === "contained"
+                    ? "#ffffff"
+                    : control.mainColor
         }
         
         // End loading indicator
         BusyIndicator {
             Layout.preferredWidth: 16
             Layout.preferredHeight: 16
-            running: control.loading && control.loadingPosition === "end"
-            visible: control.loading && control.loadingPosition === "end"
-            palette.dark: control.variant === "contained" ? "#ffffff" : control.mainColor
+            running: control.loading
+                && control.loadingPosition === "end"
+            visible: control.loading
+                && control.loadingPosition === "end"
+            palette.dark:
+                control.variant === "contained"
+                    ? "#ffffff"
+                    : control.mainColor
         }
     }
     
-    Behavior on opacity { NumberAnimation { duration: 150 } }
+    Behavior on opacity {
+        NumberAnimation { duration: 150 }
+    }
 }

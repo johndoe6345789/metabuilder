@@ -8,7 +8,14 @@ CCard {
     Layout.fillWidth: true
     Layout.fillHeight: true
 
-    property var backend: ({ name: "", key: "", status: "disconnected", description: "", connectionString: "", records: 0, sizeKb: 0, lastBackup: "Never" })
+    property var backend: ({
+        name: "", key: "",
+        status: "disconnected",
+        description: "",
+        connectionString: "",
+        records: 0, sizeKb: 0,
+        lastBackup: "Never"
+    })
     property bool isActive: false
     property int testingIndex: -1
     property int backendIndex: -1
@@ -25,7 +32,8 @@ CCard {
     Flickable {
         anchors.fill: parent
         anchors.margins: 16
-        contentHeight: detailColumn.implicitHeight
+        contentHeight:
+            detailColumn.implicitHeight
         clip: true
 
         ColumnLayout {
@@ -36,40 +44,78 @@ CCard {
             FlexRow {
                 Layout.fillWidth: true
                 spacing: 12
-                CText { variant: "h4"; text: root.backend.name }
+                CText {
+                    variant: "h4"
+                    text: root.backend.name
+                }
                 CStatusBadge {
-                    status: root.backend.status === "connected" ? "success" : (root.backend.status === "error" ? "error" : "warning")
+                    status: root.backend.status
+                        === "connected"
+                        ? "success"
+                        : (root.backend.status
+                            === "error"
+                            ? "error" : "warning")
                     text: root.backend.status
                 }
                 Item { Layout.fillWidth: true }
-                CBadge { text: root.isActive ? "ACTIVE" : "INACTIVE"; accent: root.isActive }
+                CBadge {
+                    text: root.isActive
+                        ? "ACTIVE" : "INACTIVE"
+                    accent: root.isActive
+                }
             }
 
-            CText { variant: "body1"; text: root.backend.description; wrapMode: Text.Wrap; Layout.fillWidth: true }
+            CText {
+                variant: "body1"
+                text: root.backend.description
+                wrapMode: Text.Wrap
+                Layout.fillWidth: true
+            }
 
             CDivider { Layout.fillWidth: true }
 
             CBackendConnectionSection {
                 Layout.fillWidth: true
-                connectionString: root.backend.connectionString
+                connectionString:
+                    root.backend.connectionString
                 isActive: root.isActive
-                isTesting: root.testingIndex === root.backendIndex
-                isConnected: root.backend.status === "connected"
+                isTesting: root.testingIndex
+                    === root.backendIndex
+                isConnected:
+                    root.backend.status
+                    === "connected"
                 testResult: root.testResult
-                onTestConnectionRequested: root.testConnectionRequested()
-                onSetActiveRequested: root.setActiveRequested()
+                onTestConnectionRequested:
+                    root.testConnectionRequested()
+                onSetActiveRequested:
+                    root.setActiveRequested()
             }
 
             CDivider { Layout.fillWidth: true }
 
-            CText { variant: "subtitle1"; text: "Storage Statistics" }
+            CText {
+                variant: "subtitle1"
+                text: "Storage Statistics"
+            }
 
             FlexRow {
                 Layout.fillWidth: true
                 spacing: 12
-                CStatCell { label: "Records";     value: root.backend.records.toLocaleString() }
-                CStatCell { label: "Size";         value: root.formatSize(root.backend.sizeKb) }
-                CStatCell { label: "Last Backup";  value: root.backend.lastBackup; valueVariant: "body2" }
+                CStatCell {
+                    label: "Records"
+                    value: root.backend
+                        .records.toLocaleString()
+                }
+                CStatCell {
+                    label: "Size"
+                    value: root.formatSize(
+                        root.backend.sizeKb)
+                }
+                CStatCell {
+                    label: "Last Backup"
+                    value: root.backend.lastBackup
+                    valueVariant: "body2"
+                }
             }
         }
     }

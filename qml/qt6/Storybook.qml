@@ -20,10 +20,15 @@ Rectangle {
 
     Component.onCompleted: {
         var xhr = new XMLHttpRequest()
-        xhr.open("GET", "../../frontends/qt6/config/storybook-components.json")
+        xhr.open("GET",
+            "../../frontends/qt6/config"
+            + "/storybook-components.json")
         xhr.onreadystatechange = function() {
-            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200)
-                componentList = JSON.parse(xhr.responseText)
+            if (xhr.readyState
+                === XMLHttpRequest.DONE
+                && xhr.status === 200)
+                componentList = JSON.parse(
+                    xhr.responseText)
         }
         xhr.send()
     }
@@ -35,13 +40,26 @@ Rectangle {
         spacing: 20
 
         StorybookSidebar {
-            componentList: parent.parent.componentList
-            selectedComponent: parent.parent.selectedComponent
-            outlinedMode: parent.parent.outlinedMode
-            showSnackbar: parent.parent.showSnackbar
-            onComponentSelected: function(name) { selectedComponent = name }
-            onOutlinedModeChanged: function(v) { outlinedMode = v }
-            onShowSnackbarChanged: function(v) { showSnackbar = v }
+            componentList:
+                parent.parent.componentList
+            selectedComponent:
+                parent.parent.selectedComponent
+            outlinedMode:
+                parent.parent.outlinedMode
+            showSnackbar:
+                parent.parent.showSnackbar
+            onComponentSelected:
+                function(name) {
+                selectedComponent = name
+            }
+            onOutlinedModeChanged:
+                function(v) {
+                outlinedMode = v
+            }
+            onShowSnackbarChanged:
+                function(v) {
+                showSnackbar = v
+            }
         }
 
         ColumnLayout {
@@ -52,8 +70,14 @@ Rectangle {
             FlexRow {
                 Layout.fillWidth: true
                 spacing: 12
-                CText { variant: "h3"; text: selectedComponent + " preview" }
-                Item { Layout.fillWidth: true }
+                CText {
+                    variant: "h3"
+                    text: selectedComponent
+                        + " preview"
+                }
+                Item {
+                    Layout.fillWidth: true
+                }
                 CBadge { text: "Live" }
             }
 
@@ -65,13 +89,18 @@ Rectangle {
                 Loader {
                     anchors.fill: parent
                     anchors.margins: 24
-                    sourceComponent: samples.sampleComponent(selectedComponent)
+                    sourceComponent:
+                        samples.sampleComponent(
+                            selectedComponent)
                 }
             }
 
             CText {
                 variant: "caption"
-                text: "Select a component on the left to inspect interactions, props, and styling."
+                text: "Select a component"
+                    + " on the left to"
+                    + " inspect interactions"
+                    + ", props, and styling."
             }
         }
     }

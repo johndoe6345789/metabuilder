@@ -10,7 +10,9 @@ Rectangle {
     property var pendingTransfers: []
     property var transferHistory: []
 
-    signal transferSubmitted(string from, string to, string reason, string expiry)
+    signal transferSubmitted(
+        string from, string to,
+        string reason, string expiry)
     signal transferApproved(int index)
     signal transferDenied(int index)
 
@@ -37,21 +39,33 @@ Rectangle {
 
             CText {
                 variant: "body2"
-                text: "Transfer elevated privileges between god-level users. All transfers require approval and are logged for audit."
-                wrapMode: Text.Wrap; Layout.fillWidth: true; color: Theme.textSecondary
+                text: "Transfer elevated privileges"
+                    + " between god-level users."
+                    + " All transfers require"
+                    + " approval and are logged"
+                    + " for audit."
+                wrapMode: Text.Wrap
+                Layout.fillWidth: true
+                color: Theme.textSecondary
             }
 
             CTransferForm {
                 visible: root.showForm
                 onSubmitted: function(from, to, reason, expiry) {
-                    root.transferSubmitted(from, to, reason, expiry)
+                    root.transferSubmitted(
+                        from, to, reason, expiry)
                     root.showForm = false
                 }
             }
 
             CDivider { Layout.fillWidth: true }
 
-            CText { variant: "h4"; text: "Pending Transfers (" + root.pendingTransfers.length + ")" }
+            CText {
+                variant: "h4"
+                text: "Pending Transfers ("
+                    + root.pendingTransfers.length
+                    + ")"
+            }
 
             Repeater {
                 model: root.pendingTransfers
@@ -62,7 +76,14 @@ Rectangle {
                 }
             }
 
-            CAlert { severity: "info"; text: "No pending transfers."; visible: root.pendingTransfers.length === 0 }
+            CAlert {
+                severity: "info"
+                text: "No pending transfers."
+                visible: {
+                    return root.pendingTransfers
+                        .length === 0
+                }
+            }
 
             CDivider { Layout.fillWidth: true }
 
@@ -78,12 +99,32 @@ Rectangle {
                             spacing: 4; Layout.fillWidth: true
                             FlexRow {
                                 spacing: 8
-                                CText { variant: "subtitle1"; text: modelData.from + " -> " + modelData.to }
-                                CStatusBadge { status: modelData.status === "approved" ? "success" : "error"; text: modelData.status }
+                                CText {
+                                    variant: "subtitle1"
+                                    text: modelData.from
+                                        + " -> "
+                                        + modelData.to
+                                }
+                                CStatusBadge {
+                                    status: modelData.status
+                                        === "approved"
+                                        ? "success"
+                                        : "error"
+                                    text: modelData.status
+                                }
                             }
-                            CText { variant: "body2"; text: modelData.reason; wrapMode: Text.Wrap; Layout.fillWidth: true }
+                            CText {
+                                variant: "body2"
+                                text: modelData.reason
+                                wrapMode: Text.Wrap
+                                Layout.fillWidth: true
+                            }
                         }
-                        CText { variant: "caption"; text: modelData.date; color: Theme.textSecondary }
+                        CText {
+                            variant: "caption"
+                            text: modelData.date
+                            color: Theme.textSecondary
+                        }
                     }
                 }
             }

@@ -24,7 +24,8 @@ Rectangle {
     property string title: ""
     property string icon: ""
     property string variant: "default"  // default, elevated
-    property string position: "none"    // none, fixed-br, fixed-bl, fixed-tr, fixed-tl
+    // none, fixed-br, fixed-bl, fixed-tr, fixed-tl
+    property string position: "none"
     property bool collapsible: false
     property bool collapsed: false
     property string footer: ""
@@ -37,20 +38,37 @@ Rectangle {
 
     // Size
     implicitWidth: 280
-    implicitHeight: collapsed ? headerRect.height : (headerRect.height + bodyLoader.height + footerLoader.height)
+    implicitHeight: collapsed
+        ? headerRect.height
+        : (headerRect.height
+            + bodyLoader.height
+            + footerLoader.height)
 
     // Positioning
-    anchors.right: position === "fixed-br" || position === "fixed-tr" ? parent.right : undefined
-    anchors.left: position === "fixed-bl" || position === "fixed-tl" ? parent.left : undefined
-    anchors.bottom: position === "fixed-br" || position === "fixed-bl" ? parent.bottom : undefined
-    anchors.top: position === "fixed-tr" || position === "fixed-tl" ? parent.top : undefined
-    anchors.margins: position !== "none" ? 16 : 0
+    anchors.right: position === "fixed-br"
+        || position === "fixed-tr"
+        ? parent.right : undefined
+    anchors.left: position === "fixed-bl"
+        || position === "fixed-tl"
+        ? parent.left : undefined
+    anchors.bottom: position === "fixed-br"
+        || position === "fixed-bl"
+        ? parent.bottom : undefined
+    anchors.top: position === "fixed-tr"
+        || position === "fixed-tl"
+        ? parent.top : undefined
+    anchors.margins:
+        position !== "none" ? 16 : 0
 
     // MD3 Surface container
-    color: Theme.mode === "dark" ? Qt.rgba(1, 1, 1, 0.08) : Qt.rgba(0.31, 0.31, 0.44, 0.10)
+    color: Theme.mode === "dark"
+        ? Qt.rgba(1, 1, 1, 0.08)
+        : Qt.rgba(0.31, 0.31, 0.44, 0.10)
     radius: 16
     border.width: 1
-    border.color: Theme.mode === "dark" ? Qt.rgba(1, 1, 1, 0.12) : Qt.rgba(0, 0, 0, 0.12)
+    border.color: Theme.mode === "dark"
+        ? Qt.rgba(1, 1, 1, 0.12)
+        : Qt.rgba(0, 0, 0, 0.12)
 
     // MD3 elevation shadow for elevated variant
     layer.enabled: variant === "elevated"
@@ -64,7 +82,10 @@ Rectangle {
 
     // Smooth collapse animation
     Behavior on implicitHeight {
-        NumberAnimation { duration: 250; easing.type: Easing.OutCubic }
+        NumberAnimation {
+            duration: 250
+            easing.type: Easing.OutCubic
+        }
     }
 
     // Layout
@@ -77,11 +98,15 @@ Rectangle {
             id: headerRect
             Layout.fillWidth: true
             Layout.preferredHeight: 48
-            color: Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12)
+            color: Qt.rgba(
+                Theme.primary.r,
+                Theme.primary.g,
+                Theme.primary.b, 0.12)
             radius: root.radius
-            visible: root.title || root.icon
+            visible: root.title
+                || root.icon
 
-            // Square off bottom corners when not collapsed
+            // Square off bottom corners
             Rectangle {
                 anchors.left: parent.left
                 anchors.right: parent.right
@@ -93,7 +118,9 @@ Rectangle {
 
             MouseArea {
                 anchors.fill: parent
-                cursorShape: root.collapsible ? Qt.PointingHandCursor : Qt.ArrowCursor
+                cursorShape: root.collapsible
+                    ? Qt.PointingHandCursor
+                    : Qt.ArrowCursor
                 onClicked: {
                     if (root.collapsible) {
                         root.collapsed = !root.collapsed
@@ -146,7 +173,9 @@ Rectangle {
 
             sourceComponent: Rectangle {
                 width: bodyLoader.width
-                height: Math.min(bodyContent.implicitHeight + 32, 332)
+                height: Math.min(
+                    bodyContent.implicitHeight + 32,
+                    332)
                 color: "transparent"
                 clip: true
 
@@ -156,7 +185,8 @@ Rectangle {
                     anchors.bottomMargin: 16
                     anchors.leftMargin: 16
                     anchors.rightMargin: 16
-                    contentHeight: bodyContent.implicitHeight
+                    contentHeight:
+                        bodyContent.implicitHeight
                     clip: true
                     boundsBehavior: Flickable.StopAtBounds
 
@@ -167,7 +197,10 @@ Rectangle {
                     }
 
                     ScrollBar.vertical: ScrollBar {
-                        policy: bodyContent.implicitHeight > 300 ? ScrollBar.AsNeeded : ScrollBar.AlwaysOff
+                        policy:
+                            bodyContent.implicitHeight > 300
+                                ? ScrollBar.AsNeeded
+                                : ScrollBar.AlwaysOff
                     }
                 }
             }
@@ -177,7 +210,8 @@ Rectangle {
         Loader {
             id: footerLoader
             Layout.fillWidth: true
-            active: root.footer && !root.collapsed
+            active: root.footer
+                && !root.collapsed
             visible: active
 
             sourceComponent: Rectangle {
@@ -191,7 +225,9 @@ Rectangle {
                     anchors.left: parent.left
                     anchors.right: parent.right
                     height: 1
-                    color: Theme.mode === "dark" ? Qt.rgba(1, 1, 1, 0.12) : Qt.rgba(0, 0, 0, 0.12)
+                    color: Theme.mode === "dark"
+                        ? Qt.rgba(1, 1, 1, 0.12)
+                        : Qt.rgba(0, 0, 0, 0.12)
                 }
 
                 Text {
