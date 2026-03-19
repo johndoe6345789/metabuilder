@@ -52,11 +52,12 @@ Rectangle {
 
     // ── Data ──
     property var levels: [
-        { level: 1, name: "Public",    accent: "#94A3B8", desc: "Explore the platform. Component library, storybook, and public API.", tags: ["Landing", "Storybook", "Docs"] },
+        { level: 1, name: "Guest",     accent: "#94A3B8", desc: "Explore the platform. Component library, storybook, and public API.", tags: ["Landing", "Storybook", "Docs"] },
         { level: 2, name: "User",      accent: accentBlue, desc: "Your space. Dashboard, profile, forum, gallery, and packages.", tags: ["Dashboard", "Profile", "Forum", "Gallery"] },
-        { level: 3, name: "Admin",     accent: accentCyan, desc: "Moderate and manage. User tables, audit logs, content tools.", tags: ["Users", "Audit", "Moderation"] },
-        { level: 4, name: "God",       accent: accentViolet, desc: "The builder tier. Visual workflows, schema browser, 14 power tools.", tags: ["Workflows", "Schemas", "Pages", "14 tools"] },
-        { level: 5, name: "Super God", accent: accentRose, desc: "Platform control. Multi-tenant management, system config.", tags: ["Tenants", "Config", "Promote"] }
+        { level: 3, name: "Moderator", accent: accentCyan, desc: "Community management. Moderate content, manage reports, user warnings.", tags: ["Moderation", "Reports", "Warnings"] },
+        { level: 4, name: "Admin",     accent: accentAmber, desc: "System administration. User tables, audit logs, entity management.", tags: ["Users", "Audit", "Entities", "Config"] },
+        { level: 5, name: "God",       accent: accentViolet, desc: "The builder tier. Visual workflows, schema browser, 14 power tools.", tags: ["Workflows", "Schemas", "Pages", "14 tools"] },
+        { level: 6, name: "Super God", accent: accentRose, desc: "Platform control. Multi-tenant management, system overrides.", tags: ["Tenants", "Config", "Promote"] }
     ]
 
     property var techStack: [
@@ -545,9 +546,10 @@ Rectangle {
                     Repeater {
                         model: [
                             { user: "demo",  pass: "demo",     label: "User",      level: 2, accent: accentBlue },
-                            { user: "admin", pass: "admin",    label: "Admin",     level: 3, accent: accentCyan },
-                            { user: "god",   pass: "god123",   label: "God",       level: 4, accent: accentViolet },
-                            { user: "super", pass: "super123", label: "Super God", level: 5, accent: accentRose }
+                            { user: "mod",   pass: "mod",      label: "Moderator", level: 3, accent: accentCyan },
+                            { user: "admin", pass: "admin",    label: "Admin",     level: 4, accent: accentAmber },
+                            { user: "god",   pass: "god123",   label: "God",       level: 5, accent: accentViolet },
+                            { user: "super", pass: "super123", label: "Super God", level: 6, accent: accentRose }
                         ]
                         delegate: Rectangle {
                             Layout.fillWidth: true

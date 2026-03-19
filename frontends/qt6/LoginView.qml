@@ -111,9 +111,10 @@ Rectangle {
             Repeater {
                 model: [
                     { user: "demo",  pass: "demo",     label: "User",      level: 2, accent: accentBlue },
-                    { user: "admin", pass: "admin",    label: "Admin",     level: 3, accent: accentCyan },
-                    { user: "god",   pass: "god123",   label: "God",       level: 4, accent: accentViolet },
-                    { user: "super", pass: "super123", label: "Super God", level: 5, accent: accentRose }
+                    { user: "mod",   pass: "mod",      label: "Moderator", level: 3, accent: accentCyan },
+                    { user: "admin", pass: "admin",    label: "Admin",     level: 4, accent: accentAmber },
+                    { user: "god",   pass: "god123",   label: "God",       level: 5, accent: accentViolet },
+                    { user: "super", pass: "super123", label: "Super God", level: 6, accent: accentRose }
                 ]
                 delegate: Rectangle {
                     Layout.fillWidth: true

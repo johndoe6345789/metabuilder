@@ -32,12 +32,13 @@ ApplicationWindow {
     property string authToken: ""
     property string currentView: "frontpage"
 
-    // Seed users (mirrors old/ seed data)
+    // Seed users — 6-level hierarchy
     property var users: [
-        { username: "demo",  password: "demo",     role: "user",     level: 2 },
-        { username: "admin", password: "admin",     role: "admin",    level: 3 },
-        { username: "god",   password: "god123",    role: "god",      level: 4 },
-        { username: "super", password: "super123",  role: "supergod", level: 5 }
+        { username: "demo",  password: "demo",     role: "user",      level: 2 },
+        { username: "mod",   password: "mod",       role: "moderator", level: 3 },
+        { username: "admin", password: "admin",     role: "admin",     level: 4 },
+        { username: "god",   password: "god123",    role: "god",       level: 5 },
+        { username: "super", password: "super123",  role: "supergod",  level: 6 }
     ]
 
     function login(username, password) {
@@ -64,10 +65,10 @@ ApplicationWindow {
         currentView = "frontpage"
     }
 
-    // ── Static view registry (fixed indices 0–8) ──
+    // ── Static view registry (fixed indices 0–9) ──
     readonly property var staticViews: [
         "frontpage", "login", "dashboard", "profile",
-        "admin", "god-panel", "supergod", "settings", "comments"
+        "moderator", "admin", "god-panel", "supergod", "settings", "comments"
     ]
 
     // ── Dynamic view index computation ──
@@ -170,9 +171,10 @@ ApplicationWindow {
                 model: [
                     { label: "Public",    level: 1, view: "frontpage" },
                     { label: "User",      level: 2, view: "dashboard" },
-                    { label: "Admin",     level: 3, view: "admin" },
-                    { label: "God",       level: 4, view: "god-panel" },
-                    { label: "Super",     level: 5, view: "supergod" }
+                    { label: "Mod",       level: 3, view: "moderator" },
+                    { label: "Admin",     level: 4, view: "admin" },
+                    { label: "God",       level: 5, view: "god-panel" },
+                    { label: "Super",     level: 6, view: "supergod" }
                 ]
                 delegate: CButton {
                     visible: modelData.level <= currentLevel
@@ -263,9 +265,10 @@ ApplicationWindow {
                             { label: "Dashboard",   view: "dashboard",   icon: "~", level: 2 },
                             { label: "Profile",     view: "profile",     icon: "P", level: 2 },
                             { label: "Comments",    view: "comments",    icon: "C", level: 2 },
-                            { label: "Admin Panel", view: "admin",       icon: "A", level: 3 },
-                            { label: "God Panel",   view: "god-panel",   icon: "G", level: 4 },
-                            { label: "Super God",   view: "supergod",    icon: "S", level: 5 }
+                            { label: "Mod Tools",   view: "moderator",   icon: "M", level: 3 },
+                            { label: "Admin Panel", view: "admin",       icon: "A", level: 4 },
+                            { label: "God Panel",   view: "god-panel",   icon: "G", level: 5 },
+                            { label: "Super God",   view: "supergod",    icon: "S", level: 6 }
                         ]
                         return items.filter(function(item) { return item.level <= currentLevel })
                     }
@@ -322,16 +325,17 @@ ApplicationWindow {
                 anchors.fill: parent
                 currentIndex: viewIndex(currentView)
 
-                // Static views (indices 0–8)
-                FrontPage {}         // 0: Public landing
+                // Static views (indices 0–9)
+                FrontPage {}         // 0: Public/Guest landing
                 LoginView {}         // 1: Login
-                DashboardView {}     // 2: Dashboard
+                DashboardView {}     // 2: User dashboard
                 ProfileView {}       // 3: Profile
-                AdminView {}         // 4: Admin
-                GodPanel {}          // 5: God Panel (13-tab builder)
-                SuperGodPanel {}     // 6: Super God Panel
-                SettingsView {}      // 7: Settings
-                CommentsView {}      // 8: Comments
+                ModeratorView {}     // 4: Moderator tools
+                AdminView {}         // 5: Admin panel
+                GodPanel {}          // 6: God Panel (14-tab builder)
+                SuperGodPanel {}     // 7: Super God Panel
+                SettingsView {}      // 8: Settings
+                CommentsView {}      // 9: Comments
 
                 // Dynamic package views (indices 9+)
                 Repeater {
@@ -417,17 +421,22 @@ ApplicationWindow {
 
     Shortcut {
         sequence: "Ctrl+3"
-        onActivated: if (currentLevel >= 3) currentView = "admin"
+        onActivated: if (currentLevel >= 3) currentView = "moderator"
     }
 
     Shortcut {
         sequence: "Ctrl+4"
-        onActivated: if (currentLevel >= 4) currentView = "god-panel"
+        onActivated: if (currentLevel >= 4) currentView = "admin"
     }
 
     Shortcut {
         sequence: "Ctrl+5"
-        onActivated: if (currentLevel >= 5) currentView = "supergod"
+        onActivated: if (currentLevel >= 5) currentView = "god-panel"
+    }
+
+    Shortcut {
+        sequence: "Ctrl+6"
+        onActivated: if (currentLevel >= 6) currentView = "supergod"
     }
 
     Shortcut {
