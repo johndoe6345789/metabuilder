@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QmlComponents 1.0
 import "qmllib/dbal"
+import "qmllib/MetaBuilder"
 
 Rectangle {
     id: profileRoot
@@ -13,9 +14,6 @@ Rectangle {
 
     // ── MD3 palette ──────────────────────────────────────────────
     readonly property bool isDark: Theme.mode === "dark"
-    readonly property color surfaceContainer: isDark ? Qt.rgba(1, 1, 1, 0.05) : Qt.rgba(0.31, 0.31, 0.44, 0.06)
-    readonly property color surfaceContainerHigh: isDark ? Qt.rgba(1, 1, 1, 0.08) : Qt.rgba(0.31, 0.31, 0.44, 0.10)
-    readonly property color onSurface: Theme.text
     readonly property color onSurfaceVariant: Theme.textSecondary
 
     // ── Mock fallback data ───────────────────────────────────────
@@ -40,19 +38,17 @@ Rectangle {
                 if (result.email) userEmail = result.email;
                 if (result.displayName) userDisplayName = result.displayName;
             }
-            // On error, keep existing mock data
         });
     }
 
     function saveProfile() {
         saving = true;
         saveStatus = "";
-        var profileData = {
-            displayName: userDisplayName,
-            email: userEmail,
-            bio: userBio
-        };
-        dbal.update("user", appWindow.currentUser, profileData, function(result, error) {
+        var data = profileForm.getData();
+        userDisplayName = data.displayName;
+        userEmail = data.email;
+        userBio = data.bio;
+        dbal.update("user", appWindow.currentUser, data, function(result, error) {
             saving = false;
             if (result) {
                 saveStatus = "saved";
@@ -88,15 +84,6 @@ Rectangle {
         });
     }
 
-    function userInitials() {
-        var name = appWindow.currentUser
-        if (!name || name.length === 0) return "??"
-        var parts = name.split(" ")
-        if (parts.length >= 2)
-            return (parts[0][0] + parts[1][0]).toUpperCase()
-        return name.substring(0, 2).toUpperCase()
-    }
-
     ScrollView {
         anchors.fill: parent
         clip: true
@@ -108,57 +95,18 @@ Rectangle {
 
             Item { Layout.preferredHeight: 24 }
 
-            // ── Profile header card ──────────────────────────────
-            CCard {
-                Layout.fillWidth: true
-                Layout.leftMargin: 24
-                Layout.rightMargin: 24
-                variant: "filled"
-
-                FlexRow {
-                    Layout.fillWidth: true
-                    spacing: 16
-
-                    CAvatar {
-                        initials: userInitials()
-                    }
-
-                    ColumnLayout {
-                        Layout.fillWidth: true
-                        spacing: 6
-
-                        CText {
-                            Layout.fillWidth: true
-                            variant: "h3"
-                            text: appWindow.currentUser
-                        }
-
-                        CText {
-                            Layout.fillWidth: true
-                            variant: "body2"
-                            text: userEmail
-                            color: onSurfaceVariant
-                        }
-
-                        FlexRow {
-                            spacing: 8
-                            CBadge { text: appWindow.currentRole; badgeColor: Theme.primary }
-                            CBadge { text: "Level 2"; badgeColor: Theme.info }
-                        }
-
-                        CText {
-                            Layout.fillWidth: true
-                            variant: "caption"
-                            text: "Member since January 15, 2026"
-                            color: onSurfaceVariant
-                        }
-                    }
-                }
+            // ── Profile header ──────────────────────────────────
+            CProfileHeader {
+                username: appWindow.currentUser
+                level: 2
+                role: appWindow.currentRole
+                email: profileRoot.userEmail
+                isDark: profileRoot.isDark
             }
 
             Item { Layout.preferredHeight: 16 }
 
-            // ── Activity summary ─────────────────────────────────
+            // ── Activity summary ────────────────────────────────
             CCard {
                 Layout.fillWidth: true
                 Layout.leftMargin: 24
@@ -172,9 +120,7 @@ Rectangle {
                 }
 
                 Item { Layout.preferredHeight: 8 }
-
                 CDivider { Layout.fillWidth: true }
-
                 Item { Layout.preferredHeight: 12 }
 
                 FlexRow {
@@ -212,57 +158,20 @@ Rectangle {
 
             Item { Layout.preferredHeight: 16 }
 
-            // ── Edit profile ─────────────────────────────────────
-            CCard {
-                Layout.fillWidth: true
-                Layout.leftMargin: 24
-                Layout.rightMargin: 24
-                variant: "filled"
-
-                CText {
-                    Layout.fillWidth: true
-                    variant: "h4"
-                    text: "Edit Profile"
-                }
-
-                Item { Layout.preferredHeight: 8 }
-
-                CDivider { Layout.fillWidth: true }
-
-                Item { Layout.preferredHeight: 14 }
-
-                CTextField {
-                    Layout.fillWidth: true
-                    label: "Display Name"
-                    placeholderText: "Enter display name"
-                    text: userDisplayName
-                    onTextChanged: userDisplayName = text
-                }
-
-                Item { Layout.preferredHeight: 14 }
-
-                CTextField {
-                    Layout.fillWidth: true
-                    label: "Email"
-                    placeholderText: "Enter email address"
-                    text: userEmail
-                    onTextChanged: userEmail = text
-                }
-
-                Item { Layout.preferredHeight: 14 }
-
-                CTextField {
-                    Layout.fillWidth: true
-                    label: "Bio"
-                    placeholderText: "Tell us about yourself..."
-                    text: userBio
-                    onTextChanged: userBio = text
-                }
+            // ── Edit profile ────────────────────────────────────
+            CProfileForm {
+                id: profileForm
+                profile: ({
+                    displayName: profileRoot.userDisplayName,
+                    email: profileRoot.userEmail,
+                    bio: profileRoot.userBio
+                })
+                isDark: profileRoot.isDark
             }
 
             Item { Layout.preferredHeight: 16 }
 
-            // ── Change password ───────────────────────────────────
+            // ── Change password ─────────────────────────────────
             CCard {
                 Layout.fillWidth: true
                 Layout.leftMargin: 24
@@ -276,9 +185,7 @@ Rectangle {
                 }
 
                 Item { Layout.preferredHeight: 8 }
-
                 CDivider { Layout.fillWidth: true }
-
                 Item { Layout.preferredHeight: 14 }
 
                 CTextField {
@@ -331,7 +238,7 @@ Rectangle {
 
             Item { Layout.preferredHeight: 16 }
 
-            // ── Connected accounts ────────────────────────────────
+            // ── Connected accounts ──────────────────────────────
             CCard {
                 Layout.fillWidth: true
                 Layout.leftMargin: 24
@@ -345,9 +252,7 @@ Rectangle {
                 }
 
                 Item { Layout.preferredHeight: 8 }
-
                 CDivider { Layout.fillWidth: true }
-
                 Item { Layout.preferredHeight: 8 }
 
                 CListItem {
@@ -367,9 +272,7 @@ Rectangle {
                 }
 
                 Item { Layout.preferredHeight: 8 }
-
                 CDivider { Layout.fillWidth: true }
-
                 Item { Layout.preferredHeight: 8 }
 
                 CListItem {
@@ -391,7 +294,7 @@ Rectangle {
 
             Item { Layout.preferredHeight: 16 }
 
-            // ── Save button ──────────────────────────────────────
+            // ── Save button ─────────────────────────────────────
             FlexRow {
                 Layout.fillWidth: true
                 Layout.leftMargin: 24
@@ -402,11 +305,10 @@ Rectangle {
                     text: saving ? "Saving..." : "Save Changes"
                     variant: "primary"
                     enabled: !saving
-                    onClicked: saveProfile()
+                    onClicked: profileRoot.saveProfile()
                 }
             }
 
-            // Bottom spacer
             Item { Layout.preferredHeight: 24 }
         }
     }

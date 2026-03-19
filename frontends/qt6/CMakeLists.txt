@@ -127,6 +127,11 @@ qt_add_qml_module(dbal-qml
         qmllib/MetaBuilder/NavBar.qml
         qmllib/MetaBuilder/StatusCard.qml
         qmllib/MetaBuilder/WorkflowNode.qml
+        qmllib/MetaBuilder/CWorkflowToolbar.qml
+        qmllib/MetaBuilder/CNodePalette.qml
+        qmllib/MetaBuilder/CNodePropertiesPanel.qml
+        qmllib/MetaBuilder/CConnectionLayer.qml
+        qmllib/MetaBuilder/CWorkflowCanvas.qml
         qmllib/dbal/DBALProvider.qml
         packages/analytics/PackageView.qml
         packages/blog/PackageView.qml

@@ -42,3 +42,8 @@ CCommentInput 1.0 CCommentInput.qml
 CReportCard 1.0 CReportCard.qml
 CModActionCard 1.0 CModActionCard.qml
 CModStatsRow 1.0 CModStatsRow.qml
+CWorkflowToolbar 1.0 CWorkflowToolbar.qml
+CNodePalette 1.0 CNodePalette.qml
+CNodePropertiesPanel 1.0 CNodePropertiesPanel.qml
+CConnectionLayer 1.0 CConnectionLayer.qml
+CWorkflowCanvas 1.0 CWorkflowCanvas.qml

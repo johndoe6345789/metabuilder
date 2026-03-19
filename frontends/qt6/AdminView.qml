@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QmlComponents 1.0
 import "qmllib/dbal"
+import "qmllib/MetaBuilder"
 
 Rectangle {
     id: root
@@ -33,15 +34,10 @@ Rectangle {
         });
     }
 
-    Component.onCompleted: {
-        if (useLiveData) loadEntityData();
-    }
+    Component.onCompleted: { if (useLiveData) loadEntityData(); }
+    onUseLiveDataChanged: { if (useLiveData) loadEntityData(); }
 
-    onUseLiveDataChanged: {
-        if (useLiveData) loadEntityData();
-    }
-
-    // ── State ──────────────────────────────────────────────────────
+    // ── State ────────────────────────────────────────────────────
     property string selectedEntity: "User"
     property string searchText: ""
     property string activeFilter: "All"
@@ -57,7 +53,7 @@ Rectangle {
     property int editingIndex: -1
     property var editingRecord: ({})
 
-    // ── Entity definitions ─────────────────────────────────────────
+    // ── Entity definitions ───────────────────────────────────────
     property var entities: [
         "User", "Session", "Workflow", "Package", "UiPage",
         "Credential", "Forum", "Notification", "AuditLog", "Media"
@@ -70,7 +66,6 @@ Rectangle {
         "Media": "\u{1F3AC}"
     })
 
-    // Column schemas per entity
     property var entityColumns: ({
         "User":         ["ID", "Username", "Email", "Role", "Status", "Created"],
         "Session":      ["ID", "User", "IP Address", "Status", "Started", "Expires"],
@@ -84,7 +79,6 @@ Rectangle {
         "Media":        ["ID", "Filename", "Type", "Size", "Status", "Uploaded"]
     })
 
-    // Field keys matching columns (for record objects)
     property var entityFields: ({
         "User":         ["id", "username", "email", "role", "status", "created"],
         "Session":      ["id", "user", "ip", "status", "started", "expires"],
@@ -98,7 +92,7 @@ Rectangle {
         "Media":        ["id", "filename", "type", "size", "status", "uploaded"]
     })
 
-    // ── Mock data store ────────────────────────────────────────────
+    // ── Mock data store ──────────────────────────────────────────
     property var records: ({
         "User": [
             { id: "USR-001", username: "admin",      email: "admin@metabuilder.io",    role: "god",       status: "Active",   created: "2025-11-02" },
@@ -184,16 +178,14 @@ Rectangle {
         ]
     })
 
-    // ── Computed helpers ────────────────────────────────────────────
+    // ── Computed helpers ──────────────────────────────────────────
     function getFilteredRecords() {
         var data = records[selectedEntity] || [];
         var result = [];
         for (var i = 0; i < data.length; i++) {
             var rec = data[i];
-            // Filter by status
             if (activeFilter === "Active" && rec.status !== "Active") continue;
             if (activeFilter === "Inactive" && rec.status !== "Inactive") continue;
-            // Filter by search text
             if (searchText.length > 0) {
                 var fields = entityFields[selectedEntity];
                 var match = false;
@@ -216,17 +208,9 @@ Rectangle {
         return filtered.slice(start, start + pageSize);
     }
 
-    function totalFiltered() {
-        return getFilteredRecords().length;
-    }
-
-    function totalPages() {
-        return Math.max(1, Math.ceil(totalFiltered() / pageSize));
-    }
-
-    function statCount(entity) {
-        return (records[entity] || []).length;
-    }
+    function totalFiltered() { return getFilteredRecords().length; }
+    function totalPages() { return Math.max(1, Math.ceil(totalFiltered() / pageSize)); }
+    function statCount(entity) { return (records[entity] || []).length; }
 
     function generateId() {
         var prefixes = { "User": "USR", "Session": "SES", "Workflow": "WF", "Package": "PKG",
@@ -241,10 +225,7 @@ Rectangle {
         var data = records[selectedEntity].slice();
         var actualRec = getPagedRecords()[idx];
         for (var i = 0; i < data.length; i++) {
-            if (data[i].id === actualRec.id) {
-                data.splice(i, 1);
-                break;
-            }
+            if (data[i].id === actualRec.id) { data.splice(i, 1); break; }
         }
         var updated = Object.assign({}, records);
         updated[selectedEntity] = data;
@@ -289,10 +270,7 @@ Rectangle {
         var pagedRecs = getPagedRecords();
         var targetId = pagedRecs[editingIndex] ? pagedRecs[editingIndex].id : "";
         for (var i = 0; i < data.length; i++) {
-            if (data[i].id === targetId) {
-                data[i] = rec;
-                break;
-            }
+            if (data[i].id === targetId) { data[i] = rec; break; }
         }
         var updated = Object.assign({}, records);
         updated[selectedEntity] = data;
@@ -300,116 +278,65 @@ Rectangle {
     }
 
     function hasSelectedRows() {
-        for (var key in selectedRows) {
-            if (selectedRows[key]) return true;
-        }
+        for (var key in selectedRows) { if (selectedRows[key]) return true; }
         return false;
     }
 
-    // Reset pagination/selection on entity change
+    function buildFormFields(includeValues) {
+        var fields = entityFields[selectedEntity] || [];
+        var cols = entityColumns[selectedEntity] || [];
+        var result = [];
+        for (var i = 1; i < fields.length; i++) {
+            var entry = { field: fields[i], label: cols[i] || fields[i] };
+            if (includeValues) entry.value = editingRecord[fields[i]] || "";
+            result.push(entry);
+        }
+        return result;
+    }
+
     onSelectedEntityChanged: {
-        currentPage = 0;
-        selectedRow = -1;
-        selectedRows = {};
-        selectAll = false;
-        searchText = "";
-        activeFilter = "All";
+        currentPage = 0; selectedRow = -1; selectedRows = {};
+        selectAll = false; searchText = ""; activeFilter = "All";
         if (useLiveData) loadEntityData();
     }
 
-    // ── Layout ─────────────────────────────────────────────────────
+    // ── Layout ───────────────────────────────────────────────────
     ColumnLayout {
         anchors.fill: parent
         spacing: 0
 
-        // ── Stats bar ──────────────────────────────────────────────
-        Rectangle {
-            Layout.fillWidth: true
-            Layout.preferredHeight: 88
-            color: Theme.surface
-            radius: 0
-
-            RowLayout {
-                anchors.fill: parent
-                anchors.margins: 12
-                spacing: 12
-
-                Repeater {
-                    model: [
-                        { label: "Total Users",     key: "User",     accent: "#4CAF50" },
-                        { label: "Active Sessions", key: "Session",  accent: "#2196F3" },
-                        { label: "Workflows",       key: "Workflow", accent: "#FF9800" },
-                        { label: "Audit Events",    key: "AuditLog", accent: "#9C27B0" }
-                    ]
-
-                    delegate: CCard {
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-
-                        RowLayout {
-                            Layout.fillWidth: true
-                            spacing: 8
-
-                            Rectangle {
-                                width: 4
-                                Layout.fillHeight: true
-                                color: modelData.accent
-                                radius: 2
-                            }
-
-                            ColumnLayout {
-                                Layout.fillWidth: true
-                                spacing: 2
-                                CText { variant: "caption"; text: modelData.label; color: Theme.textSecondary }
-                                CText { variant: "h3"; text: String(statCount(modelData.key)) }
-                            }
-                        }
-                    }
-                }
-            }
+        // ── Stats bar ────────────────────────────────────────────
+        CAdminStatsBar {
+            stats: [
+                { label: "Total Users",     value: statCount("User"),     accent: "#4CAF50" },
+                { label: "Active Sessions", value: statCount("Session"),  accent: "#2196F3" },
+                { label: "Workflows",       value: statCount("Workflow"), accent: "#FF9800" },
+                { label: "Audit Events",    value: statCount("AuditLog"), accent: "#9C27B0" }
+            ]
         }
 
-        // ── Main content row ───────────────────────────────────────
+        // ── Main content row ─────────────────────────────────────
         RowLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
             spacing: 0
 
-            // ── Entity sidebar ─────────────────────────────────────
-            Rectangle {
-                Layout.preferredWidth: 220
-                Layout.fillHeight: true
-                color: Theme.surface
-
-                ColumnLayout {
-                    anchors.fill: parent
-                    anchors.margins: 12
-                    spacing: 4
-
-                    CText { variant: "h4"; text: "Entities" }
-                    CText { variant: "caption"; text: "God Panel Level 3"; color: Theme.textSecondary }
-
-                    CDivider { Layout.fillWidth: true; Layout.topMargin: 8; Layout.bottomMargin: 4 }
-
-                    ListView {
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        model: entities
-                        spacing: 2
-                        clip: true
-                        delegate: CListItem {
-                            width: parent ? parent.width : 200
-                            title: modelData
-                            subtitle: statCount(modelData) + " records"
-                            leadingIcon: entityIcons[modelData] || ""
-                            selected: selectedEntity === modelData
-                            onClicked: selectedEntity = modelData
-                        }
+            // ── Entity sidebar ───────────────────────────────────
+            CEntitySidebar {
+                entities: root.entities
+                entityIcons: root.entityIcons
+                selectedEntity: root.selectedEntity
+                entityCounts: {
+                    var counts = {};
+                    for (var i = 0; i < root.entities.length; i++) {
+                        counts[root.entities[i]] = statCount(root.entities[i]);
                     }
+                    return counts;
                 }
+                onEntitySelected: function(name) { root.selectedEntity = name; }
             }
 
-            // ── Main data area ─────────────────────────────────────
+            // ── Main data area ───────────────────────────────────
             Rectangle {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
@@ -420,7 +347,7 @@ Rectangle {
                     anchors.margins: 16
                     spacing: 12
 
-                    // ── Title row ──────────────────────────────────
+                    // ── Title row ────────────────────────────────
                     FlexRow {
                         Layout.fillWidth: true
                         spacing: 12
@@ -434,14 +361,11 @@ Rectangle {
                             text: "Create Record"
                             variant: "primary"
                             size: "sm"
-                            onClicked: {
-                                editingRecord = {};
-                                createDialogOpen = true;
-                            }
+                            onClicked: { editingRecord = {}; createDialogOpen = true; }
                         }
                     }
 
-                    // ── Search + filters ───────────────────────────
+                    // ── Search + filters + bulk toolbar ──────────
                     FlexRow {
                         Layout.fillWidth: true
                         spacing: 8
@@ -477,237 +401,30 @@ Rectangle {
                         }
                     }
 
-                    // ── Data table card ────────────────────────────
-                    CCard {
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
+                    // ── Data table ───────────────────────────────
+                    CDataTable {
+                        headers: entityColumns[selectedEntity] || []
+                        fields: entityFields[selectedEntity] || []
+                        rows: getPagedRecords()
+                        totalFiltered: root.totalFiltered()
+                        page: currentPage
+                        pageSize: root.pageSize
+                        selectedRow: root.selectedRow
+                        selectedRows: root.selectedRows
+                        selectAll: root.selectAll
 
-                        ColumnLayout {
-                            Layout.fillWidth: true
-                            spacing: 0
-
-                            // ── Column headers ────────────────────
-                            Rectangle {
-                                Layout.fillWidth: true
-                                height: 44
-                                color: Theme.surfaceVariant
-                                radius: 0
-
-                                RowLayout {
-                                    anchors.fill: parent
-                                    anchors.leftMargin: 12
-                                    anchors.rightMargin: 12
-                                    spacing: 0
-
-                                    // Select All checkbox
-                                    CheckBox {
-                                        Layout.preferredWidth: 36
-                                        checked: selectAll
-                                        onCheckedChanged: {
-                                            selectAll = checked;
-                                            var paged = getPagedRecords();
-                                            var newSel = {};
-                                            for (var i = 0; i < paged.length; i++) {
-                                                newSel[i] = checked;
-                                            }
-                                            selectedRows = newSel;
-                                        }
-                                    }
-
-                                    Repeater {
-                                        model: entityColumns[selectedEntity] || []
-                                        delegate: CText {
-                                            Layout.fillWidth: index > 0
-                                            Layout.preferredWidth: index === 0 ? 80 : -1
-                                            variant: "subtitle2"
-                                            text: modelData
-                                        }
-                                    }
-
-                                    CText {
-                                        Layout.preferredWidth: 110
-                                        variant: "subtitle2"
-                                        text: "Actions"
-                                        horizontalAlignment: Text.AlignRight
-                                    }
-                                }
-                            }
-
-                            CDivider { Layout.fillWidth: true }
-
-                            // ── Data rows ─────────────────────────
-                            ListView {
-                                id: tableView
-                                Layout.fillWidth: true
-                                Layout.fillHeight: true
-                                model: getPagedRecords()
-                                clip: true
-                                spacing: 0
-
-                                delegate: Rectangle {
-                                    id: rowDelegate
-                                    width: tableView.width
-                                    height: 48
-                                    property var rowData: modelData
-                                    property int rowIndex: index
-                                    color: {
-                                        if (selectedRow === rowIndex) return Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12);
-                                        if (selectedRows[rowIndex]) return Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.06);
-                                        return rowIndex % 2 === 0 ? "transparent" : Theme.surfaceVariant;
-                                    }
-                                    radius: 0
-
-                                    MouseArea {
-                                        anchors.fill: parent
-                                        onClicked: selectedRow = rowDelegate.rowIndex
-                                    }
-
-                                    RowLayout {
-                                        anchors.fill: parent
-                                        anchors.leftMargin: 12
-                                        anchors.rightMargin: 12
-                                        spacing: 0
-
-                                        CheckBox {
-                                            Layout.preferredWidth: 36
-                                            checked: selectedRows[rowDelegate.rowIndex] || false
-                                            onCheckedChanged: {
-                                                var newSel = Object.assign({}, selectedRows);
-                                                newSel[rowDelegate.rowIndex] = checked;
-                                                selectedRows = newSel;
-                                            }
-                                        }
-
-                                        Repeater {
-                                            model: entityFields[selectedEntity] || []
-                                            delegate: Item {
-                                                Layout.fillWidth: index > 0
-                                                Layout.preferredWidth: index === 0 ? 80 : -1
-                                                implicitHeight: 48
-
-                                                CText {
-                                                    anchors.verticalCenter: parent.verticalCenter
-                                                    anchors.left: parent.left
-                                                    anchors.right: parent.right
-                                                    variant: "body2"
-                                                    text: {
-                                                        var key = modelData;
-                                                        var rec = rowDelegate.rowData;
-                                                        return rec ? (String(rec[key] || "")) : "";
-                                                    }
-                                                    elide: Text.ElideRight
-                                                }
-                                            }
-                                        }
-
-                                        FlexRow {
-                                            Layout.preferredWidth: 110
-                                            Layout.alignment: Qt.AlignRight
-                                            spacing: 4
-                                            CButton {
-                                                text: "Edit"
-                                                variant: "ghost"
-                                                size: "sm"
-                                                onClicked: {
-                                                    editingIndex = rowDelegate.rowIndex;
-                                                    editingRecord = Object.assign({}, rowDelegate.rowData);
-                                                    editDialogOpen = true;
-                                                }
-                                            }
-                                            CButton {
-                                                text: "Del"
-                                                variant: "danger"
-                                                size: "sm"
-                                                onClicked: {
-                                                    editingIndex = rowDelegate.rowIndex;
-                                                    deleteDialogOpen = true;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            // Empty state
-                            Item {
-                                Layout.fillWidth: true
-                                Layout.fillHeight: totalFiltered() === 0
-                                visible: totalFiltered() === 0
-                                Layout.preferredHeight: visible ? 120 : 0
-
-                                ColumnLayout {
-                                    anchors.centerIn: parent
-                                    spacing: 8
-
-                                    CText {
-                                        Layout.fillWidth: true
-                                        horizontalAlignment: Text.AlignHCenter
-                                        variant: "h4"
-                                        text: "No records found"
-                                        color: Theme.textSecondary
-                                    }
-                                    CText {
-                                        Layout.fillWidth: true
-                                        horizontalAlignment: Text.AlignHCenter
-                                        variant: "caption"
-                                        text: "Try adjusting your search or filter criteria."
-                                        color: Theme.textMuted
-                                    }
-                                }
-                            }
-
-                            CDivider { Layout.fillWidth: true }
-
-                            // ── Pagination footer ─────────────────
-                            Rectangle {
-                                Layout.fillWidth: true
-                                height: 48
-                                color: Theme.surfaceVariant
-                                radius: 0
-
-                                RowLayout {
-                                    anchors.fill: parent
-                                    anchors.leftMargin: 16
-                                    anchors.rightMargin: 16
-                                    spacing: 8
-
-                                    CText {
-                                        variant: "caption"
-                                        text: {
-                                            var total = totalFiltered();
-                                            if (total === 0) return "0 records";
-                                            var start = currentPage * pageSize + 1;
-                                            var end = Math.min(start + pageSize - 1, total);
-                                            return start + "-" + end + " of " + total + " records";
-                                        }
-                                        color: Theme.textSecondary
-                                    }
-
-                                    Item { Layout.fillWidth: true }
-
-                                    CButton {
-                                        text: "Previous"
-                                        variant: "ghost"
-                                        size: "sm"
-                                        enabled: currentPage > 0
-                                        onClicked: currentPage--
-                                    }
-
-                                    CText {
-                                        variant: "caption"
-                                        text: "Page " + (currentPage + 1) + " of " + totalPages()
-                                        color: Theme.textSecondary
-                                    }
-
-                                    CButton {
-                                        text: "Next"
-                                        variant: "ghost"
-                                        size: "sm"
-                                        enabled: currentPage < totalPages() - 1
-                                        onClicked: currentPage++
-                                    }
-                                }
-                            }
+                        onRowClicked: function(index) { root.selectedRow = index; }
+                        onPageChanged: function(page) { root.currentPage = page; }
+                        onRowSelectionChanged: function(sel) { root.selectedRows = sel; }
+                        onSelectAllChanged: function(checked) { root.selectAll = checked; }
+                        onEditClicked: function(index, record) {
+                            editingIndex = index;
+                            editingRecord = Object.assign({}, record);
+                            editDialogOpen = true;
+                        }
+                        onDeleteClicked: function(index, record) {
+                            editingIndex = index;
+                            deleteDialogOpen = true;
                         }
                     }
                 }
@@ -715,180 +432,57 @@ Rectangle {
         }
     }
 
-    // ── Form data for CRUD dialogs ───────────────────────────────
-    property var createFormData: ({})
-    property var editFormData: ({})
-
-    function setCreateField(key, val) {
-        var d = Object.assign({}, createFormData);
-        d[key] = val;
-        createFormData = d;
-    }
-
-    function setEditField(key, val) {
-        var d = Object.assign({}, editFormData);
-        d[key] = val;
-        editFormData = d;
-    }
-
-    onCreateDialogOpenChanged: {
-        if (createDialogOpen) createFormData = {};
-    }
-
-    onEditDialogOpenChanged: {
-        if (editDialogOpen) {
-            var d = {};
-            var fields = entityFields[selectedEntity] || [];
-            for (var i = 0; i < fields.length; i++) {
-                d[fields[i]] = editingRecord[fields[i]] || "";
-            }
-            editFormData = d;
-        }
-    }
-
-    // ── CRUD Dialogs ───────────────────────────────────────────────
-
-    // Create Record Dialog
-    CDialog {
-        id: createDialog
+    // ── Create dialog ────────────────────────────────────────────
+    CEntityForm {
         visible: createDialogOpen
-        title: "Create " + selectedEntity
-
-        ColumnLayout {
-            width: 400
-            spacing: 12
-
-            Repeater {
-                model: {
-                    var fields = entityFields[selectedEntity] || [];
-                    var cols = entityColumns[selectedEntity] || [];
-                    var result = [];
-                    for (var i = 1; i < fields.length; i++) {
-                        result.push({ field: fields[i], label: cols[i] || fields[i] });
-                    }
-                    return result;
-                }
-
-                delegate: CTextField {
-                    Layout.fillWidth: true
-                    label: modelData.label
-                    placeholderText: "Enter " + modelData.label.toLowerCase() + "..."
-                    onTextChanged: setCreateField(modelData.field, text)
-                }
+        entity: selectedEntity
+        fields: buildFormFields(false)
+        isEdit: false
+        onSave: function(data) {
+            var newRec = { id: generateId() };
+            var fieldKeys = entityFields[selectedEntity];
+            for (var f = 1; f < fieldKeys.length; f++) {
+                newRec[fieldKeys[f]] = data[fieldKeys[f]] || "";
             }
-
-            FlexRow {
-                Layout.fillWidth: true
-                Layout.topMargin: 8
-                spacing: 8
-                Item { Layout.fillWidth: true }
-                CButton {
-                    text: "Cancel"
-                    variant: "ghost"
-                    size: "sm"
-                    onClicked: createDialogOpen = false
-                }
-                CButton {
-                    text: "Create"
-                    variant: "primary"
-                    size: "sm"
-                    onClicked: {
-                        var fields = entityFields[selectedEntity];
-                        var newRec = { id: generateId() };
-                        for (var f = 1; f < fields.length; f++) {
-                            newRec[fields[f]] = createFormData[fields[f]] || "";
-                        }
-                        if (!newRec.status) newRec.status = "Active";
-                        if (useLiveData) {
-                            dbal.create(selectedEntity, newRec, function(result, error) {
-                                if (!error) {
-                                    loadEntityData();
-                                } else {
-                                    addRecord(newRec);
-                                }
-                            });
-                        } else {
-                            addRecord(newRec);
-                        }
-                        createDialogOpen = false;
-                    }
-                }
+            if (!newRec.status) newRec.status = "Active";
+            if (useLiveData) {
+                dbal.create(selectedEntity, newRec, function(result, error) {
+                    if (!error) { loadEntityData(); } else { addRecord(newRec); }
+                });
+            } else {
+                addRecord(newRec);
             }
+            createDialogOpen = false;
         }
+        onCancel: createDialogOpen = false
     }
 
-    // Edit Record Dialog
-    CDialog {
-        id: editDialog
+    // ── Edit dialog ──────────────────────────────────────────────
+    CEntityForm {
         visible: editDialogOpen
-        title: "Edit " + selectedEntity + " - " + (editingRecord.id || "")
-
-        ColumnLayout {
-            width: 400
-            spacing: 12
-
-            CText { variant: "caption"; text: "ID: " + (editingRecord.id || ""); color: Theme.textSecondary }
-
-            Repeater {
-                model: {
-                    var fields = entityFields[selectedEntity] || [];
-                    var cols = entityColumns[selectedEntity] || [];
-                    var result = [];
-                    for (var i = 1; i < fields.length; i++) {
-                        result.push({ field: fields[i], label: cols[i] || fields[i], value: editingRecord[fields[i]] || "" });
-                    }
-                    return result;
-                }
-
-                delegate: CTextField {
-                    Layout.fillWidth: true
-                    label: modelData.label
-                    text: modelData.value
-                    placeholderText: "Enter " + modelData.label.toLowerCase() + "..."
-                    onTextChanged: setEditField(modelData.field, text)
-                }
+        entity: selectedEntity
+        fields: buildFormFields(true)
+        isEdit: true
+        editId: editingRecord.id || ""
+        onSave: function(data) {
+            var updatedRec = { id: editingRecord.id };
+            var fieldKeys = entityFields[selectedEntity];
+            for (var f = 1; f < fieldKeys.length; f++) {
+                updatedRec[fieldKeys[f]] = data[fieldKeys[f]] || editingRecord[fieldKeys[f]] || "";
             }
-
-            FlexRow {
-                Layout.fillWidth: true
-                Layout.topMargin: 8
-                spacing: 8
-                Item { Layout.fillWidth: true }
-                CButton {
-                    text: "Cancel"
-                    variant: "ghost"
-                    size: "sm"
-                    onClicked: editDialogOpen = false
-                }
-                CButton {
-                    text: "Save"
-                    variant: "primary"
-                    size: "sm"
-                    onClicked: {
-                        var fields = entityFields[selectedEntity];
-                        var updatedRec = { id: editingRecord.id };
-                        for (var f = 1; f < fields.length; f++) {
-                            updatedRec[fields[f]] = editFormData[fields[f]] || editingRecord[fields[f]] || "";
-                        }
-                        if (useLiveData) {
-                            dbal.update(selectedEntity, editingRecord.id, updatedRec, function(result, error) {
-                                if (!error) {
-                                    loadEntityData();
-                                } else {
-                                    updateRecord(updatedRec);
-                                }
-                            });
-                        } else {
-                            updateRecord(updatedRec);
-                        }
-                        editDialogOpen = false;
-                    }
-                }
+            if (useLiveData) {
+                dbal.update(selectedEntity, editingRecord.id, updatedRec, function(result, error) {
+                    if (!error) { loadEntityData(); } else { updateRecord(updatedRec); }
+                });
+            } else {
+                updateRecord(updatedRec);
             }
+            editDialogOpen = false;
         }
+        onCancel: editDialogOpen = false
     }
 
-    // Delete Confirmation Dialog
+    // ── Delete confirmation dialog ───────────────────────────────
     CDialog {
         id: deleteConfirmDialog
         visible: deleteDialogOpen
@@ -936,11 +530,7 @@ Rectangle {
                             var rec = paged[editingIndex];
                             if (rec) {
                                 dbal.remove(selectedEntity, rec.id, function(result, error) {
-                                    if (!error) {
-                                        loadEntityData();
-                                    } else {
-                                        deleteRecord(editingIndex);
-                                    }
+                                    if (!error) { loadEntityData(); } else { deleteRecord(editingIndex); }
                                 });
                             }
                         } else {

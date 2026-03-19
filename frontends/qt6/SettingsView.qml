@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QmlComponents 1.0
 import "qmllib/dbal"
+import "qmllib/MetaBuilder"
 
 Rectangle {
     id: root
@@ -19,17 +20,6 @@ Rectangle {
     property bool profileSaved: false
 
     // ── Appearance state ─────────────────────────────────────────
-    property var availableThemes: [
-        { id: "dark",           label: "Dark" },
-        { id: "light",          label: "Light" },
-        { id: "midnight",       label: "Midnight" },
-        { id: "solarized",      label: "Solarized" },
-        { id: "nord",           label: "Nord" },
-        { id: "dracula",        label: "Dracula" },
-        { id: "monokai",        label: "Monokai" },
-        { id: "github",         label: "GitHub" },
-        { id: "high-contrast",  label: "High Contrast" }
-    ]
     property string selectedTheme: appWindow.currentTheme
     property string fontSize: "medium"
 
@@ -37,12 +27,6 @@ Rectangle {
     property bool emailNotifications: true
     property bool desktopNotifications: true
     property bool soundAlerts: false
-
-    // ── Connection state ─────────────────────────────────────────
-    property string dbalUrl: dbal.baseUrl
-    property string mediaServiceUrl: "http://localhost:9090"
-    property string dbalConnectionStatus: dbal.connected ? "connected" : "disconnected"
-    property string mediaConnectionStatus: "unknown"
 
     // ── Helpers ──────────────────────────────────────────────────
     function userInitials() {
@@ -85,44 +69,6 @@ Rectangle {
             }, function(result, error) {
                 if (!error) console.log("[Settings] Preferences saved to DBAL")
             })
-        }
-    }
-
-    function testDBALConnection() {
-        dbalConnectionStatus = "testing"
-        dbal.baseUrl = dbalUrl
-        dbal.ping(function(success, error) {
-            dbalConnectionStatus = success ? "connected" : "disconnected"
-        })
-    }
-
-    function testMediaConnection() {
-        mediaConnectionStatus = "testing"
-        var xhr = new XMLHttpRequest()
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                mediaConnectionStatus = (xhr.status >= 200 && xhr.status < 300) ? "connected" : "disconnected"
-            }
-        }
-        xhr.open("GET", mediaServiceUrl + "/health")
-        xhr.send()
-    }
-
-    function connectionStatusColor(status) {
-        switch (status) {
-            case "connected":    return "success"
-            case "disconnected": return "error"
-            case "testing":      return "warning"
-            default:             return "info"
-        }
-    }
-
-    function connectionStatusLabel(status) {
-        switch (status) {
-            case "connected":    return "Connected"
-            case "disconnected": return "Disconnected"
-            case "testing":      return "Testing..."
-            default:             return "Unknown"
         }
     }
 
@@ -170,25 +116,20 @@ Rectangle {
             width: parent.width
             spacing: 20
 
-            // Page title
             CText {
                 variant: "h3"
                 text: "Settings"
             }
 
             // ── Profile Section ─────────────────────────────────
-            CCard {
-                Layout.fillWidth: true
-
-                CText { variant: "h4"; text: "Profile" }
-                CDivider { Layout.fillWidth: true }
+            CSettingsSection {
+                title: "Profile"
 
                 FlexRow {
                     Layout.fillWidth: true
                     Layout.topMargin: 4
                     spacing: 16
 
-                    // Avatar
                     CAvatar {
                         size: "lg"
                         initials: userInitials()
@@ -249,42 +190,23 @@ Rectangle {
             }
 
             // ── Appearance Section ──────────────────────────────
-            CCard {
-                Layout.fillWidth: true
+            CSettingsSection {
+                title: "Appearance"
 
-                CText { variant: "h4"; text: "Appearance" }
-                CDivider { Layout.fillWidth: true }
-
-                // Theme selector
-                CText {
-                    variant: "subtitle2"
-                    text: "Theme"
-                    Layout.topMargin: 4
-                }
-
-                Flow {
+                CThemePicker {
                     Layout.fillWidth: true
-                    spacing: 8
+                    currentTheme: root.selectedTheme
 
-                    Repeater {
-                        model: availableThemes
-                        delegate: CButton {
-                            text: modelData.label
-                            variant: selectedTheme === modelData.id ? "primary" : "default"
-                            size: "sm"
-                            onClicked: {
-                                selectedTheme = modelData.id
-                                appWindow.currentTheme = modelData.id
-                                if (typeof Theme.setTheme === "function") {
-                                    Theme.setTheme(modelData.id)
-                                }
-                                savePreferences()
-                            }
+                    onThemeSelected: function(name) {
+                        root.selectedTheme = name
+                        appWindow.currentTheme = name
+                        if (typeof Theme.setTheme === "function") {
+                            Theme.setTheme(name)
                         }
+                        savePreferences()
                     }
                 }
 
-                // Font size selector
                 CText {
                     variant: "subtitle2"
                     text: "Font Size"
@@ -315,13 +237,9 @@ Rectangle {
             }
 
             // ── Notifications Section ───────────────────────────
-            CCard {
-                Layout.fillWidth: true
+            CSettingsSection {
+                title: "Notifications"
 
-                CText { variant: "h4"; text: "Notifications" }
-                CDivider { Layout.fillWidth: true }
-
-                // Email notifications toggle
                 FlexRow {
                     Layout.fillWidth: true
                     Layout.topMargin: 4
@@ -345,7 +263,6 @@ Rectangle {
 
                 CDivider { Layout.fillWidth: true }
 
-                // Desktop notifications toggle
                 FlexRow {
                     Layout.fillWidth: true
                     spacing: 12
@@ -368,7 +285,6 @@ Rectangle {
 
                 CDivider { Layout.fillWidth: true }
 
-                // Sound alerts toggle
                 FlexRow {
                     Layout.fillWidth: true
                     spacing: 12
@@ -391,89 +307,17 @@ Rectangle {
             }
 
             // ── Connection Section ──────────────────────────────
-            CCard {
-                Layout.fillWidth: true
+            CSettingsSection {
+                title: "Connection"
 
-                CText { variant: "h4"; text: "Connection" }
-                CDivider { Layout.fillWidth: true }
-
-                // DBAL URL
-                CText { variant: "subtitle2"; text: "DBAL Server"; Layout.topMargin: 4 }
-
-                FlexRow {
+                CConnectionTest {
                     Layout.fillWidth: true
-                    spacing: 12
-
-                    CTextField {
-                        Layout.fillWidth: true
-                        label: "DBAL URL"
-                        placeholderText: "http://localhost:8080"
-                        text: dbalUrl
-                        onTextChanged: dbalUrl = text
-                    }
-
-                    ColumnLayout {
-                        spacing: 4
-                        Layout.alignment: Qt.AlignBottom
-
-                        CButton {
-                            text: dbalConnectionStatus === "testing" ? "Testing..." : "Test Connection"
-                            variant: "default"
-                            size: "sm"
-                            enabled: dbalConnectionStatus !== "testing"
-                            onClicked: testDBALConnection()
-                        }
-
-                        CStatusBadge {
-                            status: connectionStatusColor(dbalConnectionStatus)
-                            text: connectionStatusLabel(dbalConnectionStatus)
-                        }
-                    }
-                }
-
-                CDivider { Layout.fillWidth: true }
-
-                // Media Service URL
-                CText { variant: "subtitle2"; text: "Media Service" }
-
-                FlexRow {
-                    Layout.fillWidth: true
-                    spacing: 12
-
-                    CTextField {
-                        Layout.fillWidth: true
-                        label: "Media Service URL"
-                        placeholderText: "http://localhost:9090"
-                        text: mediaServiceUrl
-                        onTextChanged: mediaServiceUrl = text
-                    }
-
-                    ColumnLayout {
-                        spacing: 4
-                        Layout.alignment: Qt.AlignBottom
-
-                        CButton {
-                            text: mediaConnectionStatus === "testing" ? "Testing..." : "Test Connection"
-                            variant: "default"
-                            size: "sm"
-                            enabled: mediaConnectionStatus !== "testing"
-                            onClicked: testMediaConnection()
-                        }
-
-                        CStatusBadge {
-                            status: connectionStatusColor(mediaConnectionStatus)
-                            text: connectionStatusLabel(mediaConnectionStatus)
-                        }
-                    }
                 }
             }
 
             // ── About Section ───────────────────────────────────
-            CCard {
-                Layout.fillWidth: true
-
-                CText { variant: "h4"; text: "About" }
-                CDivider { Layout.fillWidth: true }
+            CSettingsSection {
+                title: "About"
 
                 Repeater {
                     model: [
@@ -536,7 +380,6 @@ Rectangle {
                 }
             }
 
-            // Bottom spacer
             Item { Layout.preferredHeight: 20 }
         }
     }

@@ -39,12 +39,7 @@ Rectangle {
         return null
     }
 
-    // Node palette state
-    property string paletteSearch: ""
-    property string paletteGroup: ""
-    property bool paletteVisible: true
-
-    // Connection drawing state
+    // Connection drawing state (orchestrator owns this)
     property bool drawingConnection: false
     property string connSourceNode: ""
     property string connSourcePort: ""
@@ -53,7 +48,6 @@ Rectangle {
     property real connDragY: 0
 
     // ── DBAL Load/Save ──────────────────────────────────────────
-    // Mock workflow data as fallback
     property var mockWorkflows: [
         {
             name: "on_user_created",
@@ -128,7 +122,6 @@ Rectangle {
                 if (selectedWorkflowIndex >= parsed.length)
                     selectedWorkflowIndex = parsed.length > 0 ? 0 : -1
             } else {
-                // Fallback to mock data
                 workflows = JSON.parse(JSON.stringify(mockWorkflows))
                 if (selectedWorkflowIndex < 0 && workflows.length > 0)
                     selectedWorkflowIndex = 0
@@ -175,49 +168,7 @@ Rectangle {
         selectedNodeId = ""
     }
 
-    onUseLiveDataChanged: {
-        if (useLiveData) loadWorkflows()
-    }
-
-    Component.onCompleted: {
-        loadWorkflows()
-    }
-
-    // ── Node type helpers ───────────────────────────────────────
-    function groupColor(nodeType) {
-        var prefix = nodeType ? nodeType.split(".")[0] : ""
-        switch (prefix) {
-            case "metabuilder": return Theme.success
-            case "logic":       return Theme.warning
-            case "transform":
-            case "packagerepo": return "#FF9800"
-            case "sdl":
-            case "graphics":    return "#2196F3"
-            case "integration": return "#9C27B0"
-            case "io":          return "#00BCD4"
-            default:            return Theme.primary
-        }
-    }
-
-    // ── Canvas helpers ──────────────────────────────────────────
-    function findNodeById(id) {
-        if (!workflowNodes) return null
-        for (var i = 0; i < workflowNodes.length; i++) {
-            if (workflowNodes[i].id === id) return workflowNodes[i]
-        }
-        return null
-    }
-
-    function getNodePortY(node, portIndex, isOutput) {
-        var headerH = 32
-        var portSpacing = 24
-        return node.position[1] + headerH + 8 + portIndex * portSpacing + 6
-    }
-
-    function getNodeOutputX(node) {
-        return node.position[0] + 180 // node width
-    }
-
+    // ── Node/Connection mutation helpers ─────────────────────────
     function addNodeToCanvas(nodeType, posX, posY) {
         if (!currentWorkflow) return
         var regEntry = NodeRegistry.nodeType(nodeType)
@@ -237,7 +188,7 @@ Rectangle {
         wf.nodes.push(newNode)
         workflows = workflows.slice()
         selectedNodeId = newId
-        connectionLayer.requestPaint()
+        workflowCanvas.requestPaint()
         if (useLiveData) saveWorkflow(wf)
     }
 
@@ -245,7 +196,6 @@ Rectangle {
         if (!currentWorkflow) return
         var wf = workflows[selectedWorkflowIndex]
         wf.nodes = wf.nodes.filter(function(n) { return n.id !== nodeId })
-        // Remove connections referencing this node
         var newConns = {}
         for (var srcId in wf.connections) {
             if (srcId === nodeId) continue
@@ -264,7 +214,7 @@ Rectangle {
         wf.connections = newConns
         workflows = workflows.slice()
         if (selectedNodeId === nodeId) selectedNodeId = ""
-        connectionLayer.requestPaint()
+        workflowCanvas.requestPaint()
         if (useLiveData) saveWorkflow(wf)
     }
 
@@ -275,15 +225,46 @@ Rectangle {
         if (!wf.connections[srcNodeId]) wf.connections[srcNodeId] = {}
         if (!wf.connections[srcNodeId][srcPort]) wf.connections[srcNodeId][srcPort] = {}
         if (!wf.connections[srcNodeId][srcPort]["0"]) wf.connections[srcNodeId][srcPort]["0"] = []
-        // Avoid duplicate
         var existing = wf.connections[srcNodeId][srcPort]["0"]
         for (var i = 0; i < existing.length; i++) {
             if (existing[i].node === dstNodeId) return
         }
         existing.push({ node: dstNodeId, type: dstPort, index: 0 })
         workflows = workflows.slice()
-        connectionLayer.requestPaint()
+        workflowCanvas.requestPaint()
         if (useLiveData) saveWorkflow(wf)
+    }
+
+    function updateNodeName(name) {
+        if (!selectedNode) return
+        var wf = workflows[selectedWorkflowIndex]
+        for (var i = 0; i < wf.nodes.length; i++) {
+            if (wf.nodes[i].id === selectedNodeId) {
+                wf.nodes[i].name = name
+                break
+            }
+        }
+        workflows = workflows.slice()
+    }
+
+    function updateNodeParameter(key, value) {
+        if (!selectedNode) return
+        var wf = workflows[selectedWorkflowIndex]
+        for (var i = 0; i < wf.nodes.length; i++) {
+            if (wf.nodes[i].id === selectedNodeId) {
+                if (!wf.nodes[i].parameters) wf.nodes[i].parameters = {}
+                wf.nodes[i].parameters[key] = value
+                break
+            }
+        }
+    }
+
+    onUseLiveDataChanged: {
+        if (useLiveData) loadWorkflows()
+    }
+
+    Component.onCompleted: {
+        loadWorkflows()
     }
 
     // ── Test execution ──────────────────────────────────────────
@@ -321,126 +302,60 @@ Rectangle {
         spacing: 0
 
         // ── TOP BAR ─────────────────────────────────────────────
-        Rectangle {
+        CWorkflowToolbar {
             Layout.fillWidth: true
-            Layout.preferredHeight: 56
-            color: Theme.paper
-            border.color: Theme.border
-            border.width: 1
+            workflow: currentWorkflow
+            useLiveData: root.useLiveData
+            zoom: root.zoom
+            executionStatus: root.executionStatus
+            nodeCount: workflowNodes.length
+            tags: workflowTags
 
-            RowLayout {
-                anchors.fill: parent
-                anchors.leftMargin: 16
-                anchors.rightMargin: 16
-                spacing: 12
-
-                CText {
-                    variant: "h3"
-                    text: currentWorkflow ? currentWorkflow.name : "No Workflow"
+            onResetZoom: root.zoom = 1.0
+            onToggleActive: function(active) {
+                workflows[selectedWorkflowIndex].active = active
+                workflows = workflows.slice()
+                if (useLiveData) saveWorkflow(workflows[selectedWorkflowIndex])
+            }
+            onNewWorkflow: {
+                var newWf = {
+                    name: "new_workflow_" + (workflows.length + 1),
+                    active: false,
+                    settings: {},
+                    tags: [],
+                    meta: { description: "" },
+                    variables: {},
+                    nodes: [
+                        { id: "trigger_1", name: "Start", type: "metabuilder.trigger", position: [200, 250],
+                          parameters: { triggerType: "manual" },
+                          inputs: [], outputs: [{ name: "main", type: "main", displayName: "Output" }] }
+                    ],
+                    connections: {}
                 }
-
-                CBadge {
-                    visible: currentWorkflow !== null
-                    text: currentWorkflow && currentWorkflow.active ? "Active" : "Inactive"
-                    accent: currentWorkflow ? currentWorkflow.active : false
-                }
-
-                CBadge {
-                    text: useLiveData ? "Live" : "Mock"
-                    color: useLiveData ? Theme.success : Theme.warning
-                }
-
-                // Tags
-                Repeater {
-                    model: workflowTags.length > 3 ? 3 : workflowTags.length
-                    CChip {
-                        text: workflowTags[index] ? workflowTags[index].name : ""
-                        chipColor: Theme.border
-                    }
-                }
-
-                CBadge {
-                    visible: workflowNodes.length > 0
-                    text: workflowNodes.length + " nodes"
-                    color: Theme.border
-                }
-
-                Item { Layout.fillWidth: true }
-
-                CText {
-                    variant: "caption"
-                    text: Math.round(zoom * 100) + "%"
-                }
-
-                CButton {
-                    text: "Fit"
-                    variant: "ghost"
-                    size: "sm"
-                    onClicked: zoom = 1.0
-                }
-
-                CSwitch {
-                    visible: currentWorkflow !== null
-                    checked: currentWorkflow ? currentWorkflow.active : false
-                    onCheckedChanged: {
-                        if (currentWorkflow && currentWorkflow.active !== checked) {
-                            workflows[selectedWorkflowIndex].active = checked
-                            workflows = workflows.slice()
-                            if (useLiveData) saveWorkflow(workflows[selectedWorkflowIndex])
-                        }
-                    }
-                }
-
-                CButton {
-                    text: "New"
-                    variant: "ghost"
-                    onClicked: {
-                        var newWf = {
-                            name: "new_workflow_" + (workflows.length + 1),
-                            active: false,
-                            settings: {},
-                            tags: [],
-                            meta: { description: "" },
-                            variables: {},
-                            nodes: [
-                                { id: "trigger_1", name: "Start", type: "metabuilder.trigger", position: [200, 250],
-                                  parameters: { triggerType: "manual" },
-                                  inputs: [], outputs: [{ name: "main", type: "main", displayName: "Output" }] }
-                            ],
-                            connections: {}
-                        }
-                        if (useLiveData) {
-                            dbal.create("workflow", newWf, function(result, error) {
-                                if (!error) loadWorkflows()
-                                else {
-                                    var wfs = workflows.slice()
-                                    wfs.push(newWf)
-                                    workflows = wfs
-                                    selectedWorkflowIndex = wfs.length - 1
-                                    selectedNodeId = ""
-                                }
-                            })
-                        } else {
+                if (useLiveData) {
+                    dbal.create("workflow", newWf, function(result, error) {
+                        if (!error) loadWorkflows()
+                        else {
                             var wfs = workflows.slice()
                             wfs.push(newWf)
                             workflows = wfs
                             selectedWorkflowIndex = wfs.length - 1
                             selectedNodeId = ""
                         }
-                    }
+                    })
+                } else {
+                    var wfs = workflows.slice()
+                    wfs.push(newWf)
+                    workflows = wfs
+                    selectedWorkflowIndex = wfs.length - 1
+                    selectedNodeId = ""
                 }
-
-                CButton {
-                    text: executionStatus === "running" ? "Running..." : "Run Test"
-                    variant: "primary"
-                    enabled: executionStatus !== "running" && currentWorkflow !== null
-                    onClicked: {
-                        executionStatus = "running"
-                        testOutput = "Executing workflow " + currentWorkflow.name + "..."
-                        testPanelVisible = true
-                        executionTimer.start()
-                    }
-                }
+            }
+            onRunTest: {
+                executionStatus = "running"
+                testOutput = "Executing workflow " + currentWorkflow.name + "..."
+                testPanelVisible = true
+                executionTimer.start()
             }
         }
 
@@ -490,7 +405,7 @@ Rectangle {
                                     selectedNodeId = ""
                                     testOutput = ""
                                     executionStatus = ""
-                                    connectionLayer.requestPaint()
+                                    workflowCanvas.requestPaint()
                                 }
 
                                 CBadge {
@@ -507,807 +422,91 @@ Rectangle {
                     CDivider { Layout.fillWidth: true }
 
                     // Node Palette Section
-                    ColumnLayout {
+                    CNodePalette {
                         Layout.fillWidth: true
                         Layout.fillHeight: true
                         Layout.margins: 12
-                        spacing: 8
 
-                        FlexRow {
-                            Layout.fillWidth: true
-                            spacing: 4
-                            CText { variant: "h4"; text: "Node Palette" }
-                            CText {
-                                variant: "caption"
-                                text: NodeRegistry.nodeCount + " types"
-                            }
-                        }
-
-                        CTextField {
-                            Layout.fillWidth: true
-                            placeholderText: "Search nodes..."
-                            text: paletteSearch
-                            onTextChanged: paletteSearch = text
-                        }
-
-                        // Group filter chips
-                        Flow {
-                            Layout.fillWidth: true
-                            spacing: 4
-                            CChip {
-                                text: "All"
-                                selected: paletteGroup === ""
-                                chipColor: Theme.primary
-                                MouseArea {
-                                    anchors.fill: parent
-                                    cursorShape: Qt.PointingHandCursor
-                                    onClicked: paletteGroup = ""
-                                }
-                            }
-                            Repeater {
-                                model: NodeRegistry.groups
-                                CChip {
-                                    text: modelData
-                                    selected: paletteGroup === modelData
-                                    chipColor: groupColor(modelData + ".x")
-                                    MouseArea {
-                                        anchors.fill: parent
-                                        cursorShape: Qt.PointingHandCursor
-                                        onClicked: paletteGroup = (paletteGroup === modelData) ? "" : modelData
-                                    }
-                                }
-                            }
-                        }
-
-                        // Node type list
-                        ListView {
-                            id: paletteList
-                            Layout.fillWidth: true
-                            Layout.fillHeight: true
-                            clip: true
-                            spacing: 2
-
-                            model: {
-                                var nodes = paletteSearch
-                                    ? NodeRegistry.searchNodes(paletteSearch)
-                                    : (paletteGroup ? NodeRegistry.nodesByGroup(paletteGroup) : NodeRegistry.nodeTypes)
-                                return nodes
-                            }
-
-                            delegate: Rectangle {
-                                width: paletteList.width
-                                height: 40
-                                radius: 4
-                                color: paletteMA.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.08) : "transparent"
-                                border.color: paletteMA.containsMouse ? Theme.border : "transparent"
-                                border.width: 1
-
-                                RowLayout {
-                                    anchors.fill: parent
-                                    anchors.margins: 6
-                                    spacing: 8
-
-                                    Rectangle {
-                                        width: 6
-                                        height: 24
-                                        radius: 3
-                                        color: groupColor(modelData.name || "")
-                                    }
-
-                                    ColumnLayout {
-                                        Layout.fillWidth: true
-                                        spacing: 0
-                                        CText {
-                                            variant: "body2"
-                                            text: modelData.displayName || modelData.name || ""
-                                            font.bold: true
-                                            elide: Text.ElideRight
-                                            Layout.fillWidth: true
-                                        }
-                                        CText {
-                                            variant: "caption"
-                                            text: modelData.group || ""
-                                            font.pixelSize: 9
-                                        }
-                                    }
-                                }
-
-                                MouseArea {
-                                    id: paletteMA
-                                    anchors.fill: parent
-                                    hoverEnabled: true
-                                    cursorShape: Qt.PointingHandCursor
-
-                                    // Double-click to add node at center of canvas
-                                    onDoubleClicked: {
-                                        var cx = canvas.contentX + canvas.width / 2
-                                        var cy = canvas.contentY + canvas.height / 2
-                                        addNodeToCanvas(modelData.name, cx, cy)
-                                    }
-                                }
-
-                                // Drag to canvas
-                                Drag.active: paletteDragHandler.active
-                                Drag.hotSpot.x: width / 2
-                                Drag.hotSpot.y: height / 2
-                                Drag.mimeData: ({ "text/node-type": modelData.name || "" })
-
-                                DragHandler {
-                                    id: paletteDragHandler
-                                }
-                            }
+                        onNodeDoubleClicked: function(nodeType) {
+                            var cx = workflowCanvas.width / 2
+                            var cy = workflowCanvas.height / 2
+                            addNodeToCanvas(nodeType, cx, cy)
                         }
                     }
                 }
             }
 
             // ── CENTER: Infinite Canvas ──────────────────────────
-            Rectangle {
+            CWorkflowCanvas {
+                id: workflowCanvas
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                color: Theme.background
-                clip: true
+                nodes: workflowNodes
+                connections: workflowConnections
+                zoom: root.zoom
+                selectedNodeId: root.selectedNodeId
+                drawingConnection: root.drawingConnection
+                connSourceNode: root.connSourceNode
+                connSourcePort: root.connSourcePort
+                connSourceIsOutput: root.connSourceIsOutput
+                connDragX: root.connDragX
+                connDragY: root.connDragY
 
-                // Drop area for palette drag
-                DropArea {
-                    anchors.fill: parent
-                    keys: ["text/node-type"]
-                    onDropped: function(drop) {
-                        var nodeType = drop.getDataAsString("text/node-type")
-                        if (nodeType) {
-                            var localPos = mapToItem(canvasContent, drop.x, drop.y)
-                            addNodeToCanvas(nodeType, localPos.x, localPos.y)
+                onNodeSelected: function(id) { root.selectedNodeId = id }
+                onCanvasClicked: root.selectedNodeId = ""
+                onNodeDropped: function(type, x, y) { addNodeToCanvas(type, x, y) }
+                onNodeMoved: function(id, x, y) {
+                    var wf = workflows[selectedWorkflowIndex]
+                    for (var i = 0; i < wf.nodes.length; i++) {
+                        if (wf.nodes[i].id === id) {
+                            wf.nodes[i].position = [x, y]
+                            break
                         }
                     }
+                    workflows = workflows.slice()
+                    workflowCanvas.requestPaint()
+                    if (useLiveData) saveWorkflow(wf)
                 }
-
-                Flickable {
-                    id: canvas
-                    anchors.fill: parent
-                    contentWidth: 5000
-                    contentHeight: 5000
-                    clip: true
-                    boundsBehavior: Flickable.StopAtBounds
-
-                    // Start centered
-                    Component.onCompleted: {
-                        contentX = 1500
-                        contentY = 1500
-                    }
-
-                    Item {
-                        id: canvasContent
-                        width: canvas.contentWidth
-                        height: canvas.contentHeight
-
-                        transform: Scale {
-                            id: canvasScale
-                            origin.x: 0
-                            origin.y: 0
-                            xScale: zoom
-                            yScale: zoom
-                        }
-
-                        // Grid background
-                        Canvas {
-                            id: gridLayer
-                            anchors.fill: parent
-                            onPaint: {
-                                var ctx = getContext("2d")
-                                ctx.reset()
-                                var gridSize = 50
-                                ctx.strokeStyle = Qt.rgba(0.5, 0.5, 0.5, 0.1)
-                                ctx.lineWidth = 1
-
-                                for (var x = 0; x < width; x += gridSize) {
-                                    ctx.beginPath()
-                                    ctx.moveTo(x, 0)
-                                    ctx.lineTo(x, height)
-                                    ctx.stroke()
-                                }
-                                for (var y = 0; y < height; y += gridSize) {
-                                    ctx.beginPath()
-                                    ctx.moveTo(0, y)
-                                    ctx.lineTo(width, y)
-                                    ctx.stroke()
-                                }
-                            }
-                            Component.onCompleted: requestPaint()
-                        }
-
-                        // Connection layer (Bezier curves)
-                        Canvas {
-                            id: connectionLayer
-                            anchors.fill: parent
-                            z: 1
-
-                            onPaint: {
-                                var ctx = getContext("2d")
-                                ctx.reset()
-                                ctx.lineWidth = 2.5
-
-                                if (!workflowConnections || !workflowNodes) return
-
-                                var nodeW = 180
-                                var headerH = 32
-                                var portSpacing = 24
-                                var portOffset = 8
-
-                                // Draw established connections
-                                for (var srcId in workflowConnections) {
-                                    var srcNode = findNodeById(srcId)
-                                    if (!srcNode) continue
-
-                                    var srcConns = workflowConnections[srcId]
-                                    for (var outName in srcConns) {
-                                        for (var outIdx in srcConns[outName]) {
-                                            var targets = srcConns[outName][outIdx]
-                                            var outIndex = parseInt(outIdx)
-                                            var srcX = srcNode.position[0] + nodeW
-                                            var srcY = srcNode.position[1] + headerH + portOffset + outIndex * portSpacing + 6
-
-                                            for (var t = 0; t < targets.length; t++) {
-                                                var target = targets[t]
-                                                var dstNode = findNodeById(target.node)
-                                                if (!dstNode) continue
-
-                                                var inIndex = target.index || 0
-                                                var dstX = dstNode.position[0]
-                                                var dstY = dstNode.position[1] + headerH + portOffset + inIndex * portSpacing + 6
-
-                                                // Draw Bezier
-                                                var cpOffset = Math.max(80, Math.abs(dstX - srcX) * 0.4)
-                                                ctx.strokeStyle = groupColor(srcNode.type)
-                                                ctx.globalAlpha = 0.8
-                                                ctx.beginPath()
-                                                ctx.moveTo(srcX, srcY)
-                                                ctx.bezierCurveTo(srcX + cpOffset, srcY, dstX - cpOffset, dstY, dstX, dstY)
-                                                ctx.stroke()
-
-                                                // Arrow at destination
-                                                ctx.globalAlpha = 1.0
-                                                ctx.fillStyle = groupColor(srcNode.type)
-                                                ctx.beginPath()
-                                                ctx.moveTo(dstX, dstY)
-                                                ctx.lineTo(dstX - 8, dstY - 4)
-                                                ctx.lineTo(dstX - 8, dstY + 4)
-                                                ctx.closePath()
-                                                ctx.fill()
-                                            }
-                                        }
-                                    }
-                                }
-
-                                // Draw connection being dragged
-                                if (drawingConnection && connSourceNode) {
-                                    var dragSrc = findNodeById(connSourceNode)
-                                    if (dragSrc) {
-                                        var sx, sy
-                                        if (connSourceIsOutput) {
-                                            sx = dragSrc.position[0] + nodeW
-                                            sy = dragSrc.position[1] + headerH + portOffset + 6
-                                        } else {
-                                            sx = dragSrc.position[0]
-                                            sy = dragSrc.position[1] + headerH + portOffset + 6
-                                        }
-                                        var dx = connDragX
-                                        var dy = connDragY
-                                        var cp = Math.max(60, Math.abs(dx - sx) * 0.4)
-
-                                        ctx.strokeStyle = Theme.primary
-                                        ctx.globalAlpha = 0.6
-                                        ctx.setLineDash([6, 4])
-                                        ctx.lineWidth = 2
-                                        ctx.beginPath()
-                                        ctx.moveTo(sx, sy)
-                                        ctx.bezierCurveTo(sx + cp, sy, dx - cp, dy, dx, dy)
-                                        ctx.stroke()
-                                        ctx.setLineDash([])
-                                    }
-                                }
-                            }
-                        }
-
-                        // Node layer
-                        Repeater {
-                            id: nodeRepeater
-                            model: workflowNodes.length
-                            z: 2
-
-                            delegate: Rectangle {
-                                id: nodeRect
-                                property var nodeData: workflowNodes[index]
-                                property bool isSelected: selectedNodeId === nodeData.id
-                                property int portRadius: 6
-                                property int headerHeight: 32
-                                property int portSpacing: 24
-                                property int nodeWidth: 180
-                                property int inputCount: nodeData.inputs ? nodeData.inputs.length : 0
-                                property int outputCount: nodeData.outputs ? nodeData.outputs.length : 0
-                                property int bodyPorts: Math.max(inputCount, outputCount)
-
-                                x: nodeData.position[0]
-                                y: nodeData.position[1]
-                                width: nodeWidth
-                                height: headerHeight + Math.max(1, bodyPorts) * portSpacing + 16
-                                radius: 8
-                                color: isSelected ? Qt.lighter(Theme.paper, 1.1) : Theme.paper
-                                border.color: isSelected ? groupColor(nodeData.type) : Theme.border
-                                border.width: isSelected ? 2 : 1
-                                z: isSelected ? 10 : 2
-
-                                // Header
-                                Rectangle {
-                                    id: nodeHeader
-                                    anchors.top: parent.top
-                                    anchors.left: parent.left
-                                    anchors.right: parent.right
-                                    height: headerHeight
-                                    radius: 8
-                                    color: groupColor(nodeData.type)
-
-                                    Rectangle {
-                                        anchors.bottom: parent.bottom
-                                        anchors.left: parent.left
-                                        anchors.right: parent.right
-                                        height: parent.radius
-                                        color: parent.color
-                                    }
-
-                                    CText {
-                                        anchors.centerIn: parent
-                                        text: nodeData.name || nodeData.type
-                                        color: "#FFFFFF"
-                                        variant: "body2"
-                                        font.bold: true
-                                        elide: Text.ElideRight
-                                        width: parent.width - 16
-                                        horizontalAlignment: Text.AlignHCenter
-                                    }
-                                }
-
-                                // Type label below header
-                                CText {
-                                    anchors.top: nodeHeader.bottom
-                                    anchors.topMargin: 2
-                                    anchors.horizontalCenter: parent.horizontalCenter
-                                    text: nodeData.type
-                                    variant: "caption"
-                                    font.pixelSize: 9
-                                    color: Theme.textSecondary || Theme.text
-                                    opacity: 0.6
-                                }
-
-                                // Input ports
-                                Column {
-                                    anchors.left: parent.left
-                                    anchors.leftMargin: -portRadius
-                                    anchors.top: nodeHeader.bottom
-                                    anchors.topMargin: 8
-                                    spacing: portSpacing - portRadius * 2
-
-                                    Repeater {
-                                        model: nodeData.inputs || []
-                                        Item {
-                                            width: portRadius * 2
-                                            height: portRadius * 2
-
-                                            Rectangle {
-                                                id: inPort
-                                                width: portRadius * 2
-                                                height: portRadius * 2
-                                                radius: portRadius
-                                                color: Theme.primary
-                                                border.color: "#FFFFFF"
-                                                border.width: 1.5
-
-                                                MouseArea {
-                                                    anchors.fill: parent
-                                                    anchors.margins: -6
-                                                    cursorShape: Qt.CrossCursor
-                                                    hoverEnabled: true
-
-                                                    onPressed: {
-                                                        if (drawingConnection && connSourceIsOutput) {
-                                                            // Complete connection
-                                                            addConnection(connSourceNode, connSourcePort, nodeData.id, modelData.name)
-                                                            drawingConnection = false
-                                                            connSourceNode = ""
-                                                            connectionLayer.requestPaint()
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-
-                                // Output ports
-                                Column {
-                                    anchors.right: parent.right
-                                    anchors.rightMargin: -portRadius
-                                    anchors.top: nodeHeader.bottom
-                                    anchors.topMargin: 8
-                                    spacing: portSpacing - portRadius * 2
-
-                                    Repeater {
-                                        model: nodeData.outputs || []
-                                        Item {
-                                            width: portRadius * 2
-                                            height: portRadius * 2
-
-                                            Rectangle {
-                                                id: outPort
-                                                width: portRadius * 2
-                                                height: portRadius * 2
-                                                radius: portRadius
-                                                color: Theme.success
-                                                border.color: "#FFFFFF"
-                                                border.width: 1.5
-
-                                                MouseArea {
-                                                    anchors.fill: parent
-                                                    anchors.margins: -6
-                                                    cursorShape: Qt.CrossCursor
-                                                    hoverEnabled: true
-
-                                                    onPressed: {
-                                                        drawingConnection = true
-                                                        connSourceNode = nodeData.id
-                                                        connSourcePort = modelData.name
-                                                        connSourceIsOutput = true
-                                                        var globalPos = outPort.mapToItem(canvasContent, portRadius, portRadius)
-                                                        connDragX = globalPos.x
-                                                        connDragY = globalPos.y
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-
-                                // Drag handler for moving the node
-                                DragHandler {
-                                    id: nodeDrag
-                                    target: nodeRect
-                                    onActiveChanged: {
-                                        if (!active) {
-                                            // Update position in model
-                                            var wf = workflows[selectedWorkflowIndex]
-                                            for (var i = 0; i < wf.nodes.length; i++) {
-                                                if (wf.nodes[i].id === nodeData.id) {
-                                                    wf.nodes[i].position = [nodeRect.x, nodeRect.y]
-                                                    break
-                                                }
-                                            }
-                                            workflows = workflows.slice()
-                                            connectionLayer.requestPaint()
-                                            if (useLiveData) saveWorkflow(wf)
-                                        }
-                                    }
-                                    // Repaint connections while dragging
-                                    onCentroidChanged: {
-                                        connectionLayer.requestPaint()
-                                    }
-                                }
-
-                                // Click to select
-                                TapHandler {
-                                    onTapped: {
-                                        selectedNodeId = nodeData.id
-                                    }
-                                }
-                            }
-                        }
-
-                        // Canvas mouse area for connection drawing + zoom
-                        MouseArea {
-                            anchors.fill: parent
-                            z: 0
-                            acceptedButtons: Qt.LeftButton | Qt.MiddleButton
-                            hoverEnabled: true
-
-                            onPositionChanged: function(mouse) {
-                                if (drawingConnection) {
-                                    connDragX = mouse.x
-                                    connDragY = mouse.y
-                                    connectionLayer.requestPaint()
-                                }
-                            }
-
-                            onReleased: function(mouse) {
-                                if (drawingConnection) {
-                                    drawingConnection = false
-                                    connSourceNode = ""
-                                    connectionLayer.requestPaint()
-                                }
-                            }
-
-                            onClicked: function(mouse) {
-                                // Click on empty canvas deselects
-                                selectedNodeId = ""
-                            }
-
-                            onWheel: function(wheel) {
-                                var zoomDelta = wheel.angleDelta.y > 0 ? 0.1 : -0.1
-                                var newZoom = Math.max(minZoom, Math.min(maxZoom, zoom + zoomDelta))
-                                zoom = newZoom
-                            }
-                        }
-                    }
+                onConnectionDragStarted: function(nodeId, portName, isOutput, portX, portY) {
+                    drawingConnection = true
+                    connSourceNode = nodeId
+                    connSourcePort = portName
+                    connSourceIsOutput = isOutput
+                    connDragX = portX
+                    connDragY = portY
                 }
-
-                // Zoom overlay
-                Rectangle {
-                    anchors.bottom: parent.bottom
-                    anchors.right: parent.right
-                    anchors.margins: 12
-                    width: 120
-                    height: 36
-                    radius: 18
-                    color: Qt.rgba(Theme.paper.r || 0.1, Theme.paper.g || 0.1, Theme.paper.b || 0.1, 0.9)
-                    border.color: Theme.border
-                    border.width: 1
-
-                    RowLayout {
-                        anchors.centerIn: parent
-                        spacing: 8
-
-                        CButton {
-                            text: "-"
-                            variant: "ghost"
-                            size: "sm"
-                            onClicked: zoom = Math.max(minZoom, zoom - 0.1)
-                        }
-
-                        CText {
-                            variant: "caption"
-                            text: Math.round(zoom * 100) + "%"
-                        }
-
-                        CButton {
-                            text: "+"
-                            variant: "ghost"
-                            size: "sm"
-                            onClicked: zoom = Math.min(maxZoom, zoom + 0.1)
-                        }
-                    }
+                onConnectionDragUpdated: function(x, y) {
+                    connDragX = x
+                    connDragY = y
+                    workflowCanvas.requestPaint()
                 }
-
-                // Empty state
-                CText {
-                    anchors.centerIn: parent
-                    visible: !currentWorkflow || workflowNodes.length === 0
-                    text: currentWorkflow ? "Empty canvas — drag nodes from the palette or double-click a node type" : "Select a workflow from the sidebar"
-                    variant: "body1"
-                    opacity: 0.5
+                onConnectionDragFinished: {
+                    drawingConnection = false
+                    connSourceNode = ""
+                    workflowCanvas.requestPaint()
+                }
+                onConnectionCompleted: function(nodeId, portName) {
+                    addConnection(connSourceNode, connSourcePort, nodeId, portName)
+                    drawingConnection = false
+                    connSourceNode = ""
+                    workflowCanvas.requestPaint()
+                }
+                onZoomChanged: function(newZoom) {
+                    root.zoom = Math.max(minZoom, Math.min(maxZoom, newZoom))
                 }
             }
 
             // ── RIGHT: Properties Panel ─────────────────────────
-            Rectangle {
+            CNodePropertiesPanel {
                 Layout.preferredWidth: selectedNode ? 300 : 0
                 Layout.fillHeight: true
-                color: Theme.paper
-                border.color: Theme.border
-                border.width: selectedNode ? 1 : 0
-                clip: true
-                visible: selectedNode !== null
+                node: root.selectedNode
+                workflowVariables: root.workflowVariables
 
-                Behavior on Layout.preferredWidth { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
-
-                ColumnLayout {
-                    anchors.fill: parent
-                    anchors.margins: 16
-                    spacing: 12
-                    visible: selectedNode !== null
-
-                    // Header
-                    FlexRow {
-                        Layout.fillWidth: true
-                        spacing: 8
-                        CText { variant: "h4"; text: "Node Properties" }
-                        Item { Layout.fillWidth: true }
-                        CButton {
-                            text: "Delete"
-                            variant: "danger"
-                            size: "sm"
-                            onClicked: removeNode(selectedNodeId)
-                        }
-                        CButton {
-                            text: "X"
-                            variant: "ghost"
-                            size: "sm"
-                            onClicked: selectedNodeId = ""
-                        }
-                    }
-
-                    CDivider { Layout.fillWidth: true }
-
-                    // Type badge
-                    FlexRow {
-                        Layout.fillWidth: true
-                        spacing: 8
-                        CText { variant: "body2"; text: "Type" }
-                        CChip {
-                            text: selectedNode ? selectedNode.type : ""
-                            chipColor: selectedNode ? groupColor(selectedNode.type) : Theme.primary
-                        }
-                    }
-
-                    // Name field
-                    CText { variant: "body2"; text: "Name" }
-                    CTextField {
-                        Layout.fillWidth: true
-                        text: selectedNode ? selectedNode.name : ""
-                        onTextChanged: {
-                            if (selectedNode && text !== selectedNode.name) {
-                                var wf = workflows[selectedWorkflowIndex]
-                                for (var i = 0; i < wf.nodes.length; i++) {
-                                    if (wf.nodes[i].id === selectedNodeId) {
-                                        wf.nodes[i].name = text
-                                        break
-                                    }
-                                }
-                                workflows = workflows.slice()
-                            }
-                        }
-                    }
-
-                    // Position display
-                    CText { variant: "body2"; text: "Position" }
-                    CText {
-                        variant: "caption"
-                        text: selectedNode ? "x: " + Math.round(selectedNode.position[0]) + "  y: " + Math.round(selectedNode.position[1]) : ""
-                    }
-
-                    CDivider { Layout.fillWidth: true }
-
-                    // Parameters
-                    CText { variant: "body2"; text: "Parameters"; font.bold: true }
-
-                    ListView {
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: Math.min(contentHeight, 200)
-                        clip: true
-                        spacing: 8
-
-                        model: {
-                            if (!selectedNode) return []
-                            // Get parameter schema from NodeRegistry
-                            var regEntry = NodeRegistry.nodeType(selectedNode.type)
-                            return regEntry ? (regEntry.properties || []) : []
-                        }
-
-                        delegate: ColumnLayout {
-                            width: parent ? parent.width : 250
-                            spacing: 4
-
-                            CText {
-                                variant: "caption"
-                                text: modelData.displayName || modelData.name
-                            }
-
-                            Loader {
-                                Layout.fillWidth: true
-                                sourceComponent: {
-                                    if (modelData.options && modelData.options.length > 0) return selectComp
-                                    return textFieldComp
-                                }
-                            }
-
-                            Component {
-                                id: textFieldComp
-                                CTextField {
-                                    text: selectedNode && selectedNode.parameters
-                                        ? (selectedNode.parameters[modelData.name] || modelData.default || "") : ""
-                                    placeholderText: modelData.description || ""
-                                    onTextChanged: {
-                                        if (selectedNode) {
-                                            var wf = workflows[selectedWorkflowIndex]
-                                            for (var i = 0; i < wf.nodes.length; i++) {
-                                                if (wf.nodes[i].id === selectedNodeId) {
-                                                    if (!wf.nodes[i].parameters) wf.nodes[i].parameters = {}
-                                                    wf.nodes[i].parameters[modelData.name] = text
-                                                    break
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            Component {
-                                id: selectComp
-                                CSelect {
-                                    model: {
-                                        var opts = modelData.options || []
-                                        var labels = []
-                                        for (var i = 0; i < opts.length; i++) {
-                                            labels.push(opts[i].name || opts[i].value || "")
-                                        }
-                                        return labels
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    CDivider { Layout.fillWidth: true }
-
-                    // Inputs/Outputs display
-                    CText { variant: "body2"; text: "Ports"; font.bold: true }
-
-                    FlexRow {
-                        Layout.fillWidth: true
-                        spacing: 12
-
-                        ColumnLayout {
-                            spacing: 4
-                            CText { variant: "caption"; text: "Inputs" }
-                            Repeater {
-                                model: selectedNode ? (selectedNode.inputs || []) : []
-                                CChip {
-                                    text: modelData.displayName || modelData.name
-                                    chipColor: Theme.primary
-                                }
-                            }
-                            CText {
-                                visible: !selectedNode || !selectedNode.inputs || selectedNode.inputs.length === 0
-                                variant: "caption"
-                                text: "None"
-                                opacity: 0.5
-                            }
-                        }
-
-                        ColumnLayout {
-                            spacing: 4
-                            CText { variant: "caption"; text: "Outputs" }
-                            Repeater {
-                                model: selectedNode ? (selectedNode.outputs || []) : []
-                                CChip {
-                                    text: modelData.displayName || modelData.name
-                                    chipColor: Theme.success
-                                }
-                            }
-                            CText {
-                                visible: !selectedNode || !selectedNode.outputs || selectedNode.outputs.length === 0
-                                variant: "caption"
-                                text: "None"
-                                opacity: 0.5
-                            }
-                        }
-                    }
-
-                    // Metadata section (variables, tags)
-                    CDivider { Layout.fillWidth: true; visible: Object.keys(workflowVariables).length > 0 }
-
-                    CText {
-                        variant: "body2"
-                        text: "Workflow Variables"
-                        font.bold: true
-                        visible: Object.keys(workflowVariables).length > 0
-                    }
-
-                    Repeater {
-                        model: Object.keys(workflowVariables)
-                        FlexRow {
-                            Layout.fillWidth: true
-                            spacing: 4
-                            CText { variant: "caption"; text: modelData + ":" }
-                            CText {
-                                variant: "caption"
-                                text: {
-                                    var v = workflowVariables[modelData]
-                                    return v ? (v.defaultValue !== undefined ? String(v.defaultValue) : "") : ""
-                                }
-                                opacity: 0.7
-                            }
-                        }
-                    }
-
-                    Item { Layout.fillHeight: true }
-                }
+                onNameChanged: function(name) { updateNodeName(name) }
+                onParameterChanged: function(key, value) { updateNodeParameter(key, value) }
+                onDeleteRequested: removeNode(selectedNodeId)
+                onClosed: root.selectedNodeId = ""
             }
         }
 
