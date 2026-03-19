@@ -47,7 +47,6 @@ CModActionCard 1.0 CModActionCard.qml
 CModStatsRow 1.0 CModStatsRow.qml
 CWorkflowToolbar 1.0 CWorkflowToolbar.qml
 CNodePalette 1.0 CNodePalette.qml
-CNodePaletteItem 1.0 CNodePaletteItem.qml
 CNodePropertiesPanel 1.0 CNodePropertiesPanel.qml
 CNodeParameterList 1.0 CNodeParameterList.qml
 CNodePortsDisplay 1.0 CNodePortsDisplay.qml
@@ -60,7 +59,6 @@ DropdownPreview 1.0 DropdownPreview.qml
 UserStatsBar 1.0 UserStatsBar.qml
 UserSearchFilter 1.0 UserSearchFilter.qml
 UserTable 1.0 UserTable.qml
-UserTableRow 1.0 UserTableRow.qml
 UserFormDialog 1.0 UserFormDialog.qml
 CssClassSidebar 1.0 CssClassSidebar.qml
 CssPropertyEditor 1.0 CssPropertyEditor.qml

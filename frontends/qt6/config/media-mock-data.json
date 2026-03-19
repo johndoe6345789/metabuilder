@@ -1,0 +1,55 @@
+{
+    "jobs": [
+        { "id": "job-001", "type": "video",    "status": "completed",  "progress": 100, "created": "2026-03-19 08:12:34" },
+        { "id": "job-002", "type": "audio",    "status": "processing", "progress": 67,  "created": "2026-03-19 09:45:01" },
+        { "id": "job-003", "type": "image",    "status": "queued",     "progress": 0,   "created": "2026-03-19 10:02:18" },
+        { "id": "job-004", "type": "document", "status": "failed",     "progress": 23,  "created": "2026-03-19 10:15:42" },
+        { "id": "job-005", "type": "video",    "status": "processing", "progress": 34,  "created": "2026-03-19 10:30:55" }
+    ],
+    "radioChannels": [
+        {
+            "name": "MetaBuilder FM", "status": "live", "listeners": 142,
+            "currentTrack": "Synthwave Dreams - NeonCoder", "bitrate": "320 kbps",
+            "playlist": ["Synthwave Dreams - NeonCoder", "Digital Horizon - ByteRunner", "Midnight Protocol - CipherAce", "Neon Streets - RetroVolt", "Electric Soul - WaveForm"]
+        },
+        {
+            "name": "Chiptune Radio", "status": "live", "listeners": 87,
+            "currentTrack": "8-Bit Adventure - PixelMaster", "bitrate": "192 kbps",
+            "playlist": ["8-Bit Adventure - PixelMaster", "Game Over Theme - ChipTuner", "Level Up! - BitCrafter", "Boss Battle - NEStalgia"]
+        },
+        {
+            "name": "Ambient Lounge", "status": "offline", "listeners": 0,
+            "currentTrack": "---", "bitrate": "256 kbps",
+            "playlist": ["Deep Focus - AmbientWave", "Ocean Drift - CalmCode", "Forest Rain - NatureByte"]
+        }
+    ],
+    "tvChannels": [
+        {
+            "name": "MetaBuilder TV", "status": "broadcasting", "resolution": "1080p",
+            "viewers": 234, "uptime": "6h 14m",
+            "schedule": [
+                { "time": "10:00", "program": "Morning Code Review", "duration": "60 min" },
+                { "time": "11:00", "program": "Architecture Deep Dive", "duration": "90 min" },
+                { "time": "12:30", "program": "Live Build Session", "duration": "120 min" },
+                { "time": "14:30", "program": "Community Q&A", "duration": "60 min" },
+                { "time": "15:30", "program": "Plugin Showcase", "duration": "45 min" }
+            ]
+        },
+        {
+            "name": "Retro Gaming Channel", "status": "offline", "resolution": "720p",
+            "viewers": 0, "uptime": "0m",
+            "schedule": [
+                { "time": "18:00", "program": "Speedrun Saturday", "duration": "120 min" },
+                { "time": "20:00", "program": "Retro Reviews", "duration": "60 min" },
+                { "time": "21:00", "program": "Chiptune Live", "duration": "90 min" }
+            ]
+        }
+    ],
+    "plugins": [
+        { "name": "FFmpeg",       "version": "8.0.1",  "status": "active",   "capabilities": ["H.264", "H.265", "VP9", "AV1", "AAC", "FLAC", "Opus"] },
+        { "name": "ImageMagick",  "version": "7.1.1",  "status": "active",   "capabilities": ["JPEG", "PNG", "WebP", "AVIF", "SVG", "TIFF", "Resize", "Crop"] },
+        { "name": "Pandoc",       "version": "3.6.1",  "status": "active",   "capabilities": ["Markdown", "PDF", "DOCX", "HTML", "LaTeX", "EPUB"] },
+        { "name": "Radio",        "version": "1.2.0",  "status": "active",   "capabilities": ["Icecast", "MP3 Stream", "OGG Stream", "Playlist", "Metadata"] },
+        { "name": "LibRetro",     "version": "1.19.1", "status": "inactive", "capabilities": ["NES", "SNES", "Genesis", "GBA", "N64", "PS1", "Recording"] }
+    ]
+}

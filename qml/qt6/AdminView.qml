@@ -227,30 +227,18 @@ Rectangle {
     }
 
     // ── Delete confirmation dialog ───────────────────────────────
-    CDialog {
-        id: deleteConfirmDialog; visible: deleteDialogOpen; title: "Delete " + selectedEntity
-        ColumnLayout {
-            width: 360; spacing: 16
-            CAlert { Layout.fillWidth: true; severity: "warning"; text: "This action cannot be undone." }
-            CText {
-                Layout.fillWidth: true; variant: "body1"
-                text: { var rec = getPagedRecords()[editingIndex]; return rec ? "Are you sure you want to delete record " + rec.id + "?" : "Delete this record?"; }
-            }
-            FlexRow {
-                Layout.fillWidth: true; Layout.topMargin: 8; spacing: 8
-                Item { Layout.fillWidth: true }
-                CButton { text: "Cancel"; variant: "ghost"; size: "sm"; onClicked: deleteDialogOpen = false }
-                CButton {
-                    text: "Delete"; variant: "danger"; size: "sm"
-                    onClicked: {
-                        if (useLiveData) {
-                            var rec = getPagedRecords()[editingIndex];
-                            if (rec) dbal.remove(selectedEntity, rec.id, function(result, error) { if (!error) loadEntityData(); else deleteRecord(editingIndex); });
-                        } else { deleteRecord(editingIndex); }
-                        deleteDialogOpen = false;
-                    }
-                }
-            }
+    CDeleteRecordDialog {
+        visible: deleteDialogOpen
+        entity: selectedEntity
+        recordId: { var rec = getPagedRecords()[editingIndex]; return rec ? rec.id : ""; }
+        useLiveData: root.useLiveData
+        onConfirmed: {
+            if (useLiveData) {
+                var rec = getPagedRecords()[editingIndex];
+                if (rec) dbal.remove(selectedEntity, rec.id, function(result, error) { if (!error) loadEntityData(); else deleteRecord(editingIndex); });
+            } else { deleteRecord(editingIndex); }
+            deleteDialogOpen = false;
         }
+        onCancelled: deleteDialogOpen = false
     }
 }
