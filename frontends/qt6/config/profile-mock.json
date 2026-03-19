@@ -1,0 +1,34 @@
+{
+    "defaults": {
+        "bio": "MetaBuilder enthusiast and open-source contributor.",
+        "email": "demo@metabuilder.io"
+    },
+    "activityStats": [
+        { "label": "Posts",      "value": "42" },
+        { "label": "Comments",   "value": "128" },
+        { "label": "Last Login", "value": "Today, 09:15" }
+    ],
+    "passwordFields": [
+        { "key": "current",  "label": "Current Password",     "placeholder": "Enter current password" },
+        { "key": "new",      "label": "New Password",         "placeholder": "Enter new password" },
+        { "key": "confirm",  "label": "Confirm New Password", "placeholder": "Re-enter new password" }
+    ],
+    "connectedAccounts": [
+        {
+            "service": "GitHub",
+            "icon": "github",
+            "linked": true,
+            "statusText": "Connected",
+            "statusType": "success",
+            "unlinkLabel": "Unlink"
+        },
+        {
+            "service": "Discord",
+            "icon": "discord",
+            "linked": false,
+            "statusText": "Not Connected",
+            "statusType": "warning",
+            "linkLabel": "Link Account"
+        }
+    ]
+}

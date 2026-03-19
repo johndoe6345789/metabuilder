@@ -1,0 +1,13 @@
+{
+    "seedUsers": [
+        { "username": "demo",  "password": "demo",     "role": "user",      "level": 2 },
+        { "username": "mod",   "password": "mod",      "role": "moderator", "level": 3 },
+        { "username": "admin", "password": "admin",    "role": "admin",     "level": 4 },
+        { "username": "god",   "password": "god123",   "role": "god",       "level": 5 },
+        { "username": "super", "password": "super123", "role": "supergod",  "level": 6 }
+    ],
+    "staticViews": [
+        "frontpage", "login", "dashboard", "profile",
+        "moderator", "admin", "god-panel", "supergod", "settings", "comments"
+    ]
+}

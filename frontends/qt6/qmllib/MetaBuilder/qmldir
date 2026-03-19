@@ -23,6 +23,9 @@ CQuickLoginCard 1.0 CQuickLoginCard.qml
 CAdminStatsBar 1.0 CAdminStatsBar.qml
 CEntitySidebar 1.0 CEntitySidebar.qml
 CDataTable 1.0 CDataTable.qml
+CTableHeader 1.0 CTableHeader.qml
+CTablePagination 1.0 CTablePagination.qml
+CDropdownMenu 1.0 CDropdownMenu.qml
 CEntityForm 1.0 CEntityForm.qml
 CGodPanelHeader 1.0 CGodPanelHeader.qml
 CLevelReferenceCard 1.0 CLevelReferenceCard.qml
@@ -96,4 +99,5 @@ CSmtpTemplateList 1.0 CSmtpTemplateList.qml
 CSmtpTemplateEditor 1.0 CSmtpTemplateEditor.qml
 CCanvasGrid 1.0 CCanvasGrid.qml
 CCanvasZoomOverlay 1.0 CCanvasZoomOverlay.qml
+CNotificationToggles 1.0 CNotificationToggles.qml
 CWorkflowNodeDelegate 1.0 CWorkflowNodeDelegate.qml

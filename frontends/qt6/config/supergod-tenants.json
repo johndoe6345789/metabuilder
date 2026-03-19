@@ -1,0 +1,5 @@
+[
+    { "name": "default", "owner": "admin", "status": "active", "homepage": "/", "created": "2025-01-15" },
+    { "name": "staging", "owner": "devops", "status": "active", "homepage": "/staging", "created": "2025-06-01" },
+    { "name": "production", "owner": "platform-admin", "status": "active", "homepage": "/prod", "created": "2025-08-20" }
+]

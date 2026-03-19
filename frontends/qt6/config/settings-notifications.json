@@ -1,0 +1,20 @@
+[
+    {
+        "id": "emailNotifications",
+        "title": "Email Notifications",
+        "description": "Receive notification summaries via email",
+        "defaultValue": true
+    },
+    {
+        "id": "desktopNotifications",
+        "title": "Desktop Notifications",
+        "description": "Show desktop push notifications for alerts",
+        "defaultValue": true
+    },
+    {
+        "id": "soundAlerts",
+        "title": "Sound Alerts",
+        "description": "Play a sound when new notifications arrive",
+        "defaultValue": false
+    }
+]

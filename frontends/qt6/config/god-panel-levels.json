@@ -1,0 +1,32 @@
+[
+    {
+        "level": "Level 1 - Public",
+        "role": "public",
+        "accentIndex": 0,
+        "desc": "Landing page, public content, registration. No authentication required. Read-only access to published pages and packages."
+    },
+    {
+        "level": "Level 2 - User",
+        "role": "user",
+        "accentIndex": 1,
+        "desc": "Authenticated user dashboard. Access to forum, gallery, guestbook, blog, profile. Personal content creation and community interaction."
+    },
+    {
+        "level": "Level 3 - Admin",
+        "role": "admin",
+        "accentIndex": 2,
+        "desc": "Django-style entity admin panel. CRUD operations on all entities, audit logs, analytics, watchtower monitoring. User management within tenant."
+    },
+    {
+        "level": "Level 4 - God Builder",
+        "role": "god",
+        "accentIndex": 3,
+        "desc": "Full builder cockpit (this panel). Schema editor, workflow designer, Lua scripting, page routing, component hierarchy, CSS classes, dropdown configs, database management, and system settings."
+    },
+    {
+        "level": "Level 5 - Super God",
+        "role": "supergod",
+        "accentIndex": 4,
+        "desc": "Cross-tenant platform control. Infrastructure management, deployment orchestration, multi-tenant provisioning, global configuration, and platform-wide observability."
+    }
+]

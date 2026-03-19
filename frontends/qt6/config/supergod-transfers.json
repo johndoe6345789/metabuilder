@@ -1,0 +1,10 @@
+{
+    "pending": [
+        { "from": "admin", "to": "devops", "reason": "Scheduled maintenance window", "expiry": "2026-03-25", "status": "pending" }
+    ],
+    "history": [
+        { "from": "platform-admin", "to": "admin", "reason": "Emergency access grant", "date": "2026-02-10 14:32", "status": "approved" },
+        { "from": "admin", "to": "builder01", "reason": "Sprint deployment authority", "date": "2026-01-28 09:15", "status": "approved" },
+        { "from": "devops", "to": "admin", "reason": "Incident response escalation", "date": "2025-12-05 22:47", "status": "denied" }
+    ]
+}

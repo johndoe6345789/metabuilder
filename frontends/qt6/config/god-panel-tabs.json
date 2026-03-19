@@ -1,0 +1,16 @@
+[
+    { "label": "Guide" },
+    { "label": "Packages", "source": "PackageManager.qml" },
+    { "label": "Page Routes", "source": "PageRoutesManager.qml" },
+    { "label": "Components", "source": "ComponentHierarchyEditor.qml" },
+    { "label": "Users", "source": "UserManagement.qml" },
+    { "label": "Schemas", "source": "SchemaEditor.qml" },
+    { "label": "Workflows", "source": "WorkflowEditor.qml" },
+    { "label": "Lua Scripts", "source": "LuaEditor.qml" },
+    { "label": "Snippets", "source": "LuaEditor.qml" },
+    { "label": "CSS Classes", "source": "CssClassManager.qml" },
+    { "label": "Dropdowns", "source": "DropdownConfigManager.qml" },
+    { "label": "Database", "source": "DatabaseManager.qml" },
+    { "label": "Media", "source": "MediaServicePanel.qml" },
+    { "label": "Settings" }
+]
