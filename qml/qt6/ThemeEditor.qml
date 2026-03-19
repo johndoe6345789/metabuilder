@@ -38,13 +38,11 @@ Rectangle {
     )
 
     ScrollView {
-        anchors.fill: parent
+        anchors.fill: parent; clip: true
         anchors.margins: 24
-        clip: true
         contentWidth: availableWidth
         ColumnLayout {
             width: parent.width; spacing: 20
-
             FlexRow {
                 Layout.fillWidth: true; spacing: 12
                 CText {
@@ -154,14 +152,28 @@ Rectangle {
                 CButton {
                     text: "Reset to Default"
                     variant: "ghost"
+                    activeFocusOnTab: true
+                    Accessible.role: Accessible.Button
+                    Accessible.name:
+                        "Reset theme to defaults"
+                    Keys.onReturnPressed:
+                        TELogic.resetToDefaults(
+                            root, Theme)
                     onClicked: TELogic.resetToDefaults(
-                        root, Theme
-                    )
+                        root, Theme)
                 }
                 Item { Layout.fillWidth: true }
                 CButton {
                     text: "Apply Theme"
                     variant: "primary"
+                    activeFocusOnTab: true
+                    Accessible.role: Accessible.Button
+                    Accessible.name: "Apply theme"
+                    Keys.onReturnPressed: {
+                        hasUnsavedChanges = false
+                        feedbackAlert.visible = true
+                        feedbackTimer.restart()
+                    }
                     onClicked: {
                         hasUnsavedChanges = false
                         feedbackAlert.visible = true

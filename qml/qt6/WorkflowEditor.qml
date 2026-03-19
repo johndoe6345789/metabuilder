@@ -9,6 +9,10 @@ Rectangle {
     objectName: "view_workflow_editor"
     Accessible.role: Accessible.Pane
     Accessible.name: "Workflow Editor"
+    Accessible.description:
+        "Visual workflow editor. " +
+        "Drag nodes from the sidebar " +
+        "onto the canvas to build workflows."
     DBALProvider { id: dbal }
     CWorkflowState {
         id: wfState; dbal: dbal
@@ -72,6 +76,15 @@ Rectangle {
             }
             CWorkflowCanvas {
                 id: workflowCanvas
+                objectName: "canvas_workflow"
+                Accessible.role: Accessible.Canvas
+                Accessible.name: "Workflow Canvas"
+                Accessible.description:
+                    "Interactive canvas. " +
+                    "Drag nodes to reposition. " +
+                    "Connect ports by dragging " +
+                    "between them."
+                activeFocusOnTab: true
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 nodes: wfState.workflowNodes

@@ -37,32 +37,55 @@ CDialog {
             Layout.fillWidth: true
             placeholderText: "/new-page"
             text: root.newPath
+            activeFocusOnTab: true
+            Accessible.role: Accessible.EditableText
+            Accessible.name: "Route path"
             onTextChanged: root.newPath = text
         }
 
-        CText { variant: "caption"; text: "Page Title" }
+        CText {
+            variant: "caption"; text: "Page Title"
+        }
         CTextField {
             Layout.fillWidth: true
             placeholderText: "New Page"
             text: root.newTitle
+            activeFocusOnTab: true
+            Accessible.role: Accessible.EditableText
+            Accessible.name: "Page title"
             onTextChanged: root.newTitle = text
         }
 
-        CText { variant: "caption"; text: "Required Level" }
+        CText {
+            variant: "caption"
+            text: "Required Level"
+        }
         CSelect {
             Layout.fillWidth: true
             model: root.levelOptions
             currentIndex: root.newLevel - 1
-            onCurrentIndexChanged: root.newLevel = currentIndex + 1
+            activeFocusOnTab: true
+            Accessible.role: Accessible.ComboBox
+            Accessible.name: "Required access level"
+            onCurrentIndexChanged:
+                root.newLevel = currentIndex + 1
         }
 
-        CText { variant: "caption"; text: "Layout Type" }
+        CText {
+            variant: "caption"; text: "Layout Type"
+        }
         CSelect {
             Layout.fillWidth: true
             model: root.layoutOptions
-            currentIndex: root.layoutOptions.indexOf(root.newLayout)
-            onCurrentIndexChanged: root.newLayout =
-                root.layoutOptions[currentIndex]
+            currentIndex:
+                root.layoutOptions.indexOf(
+                    root.newLayout)
+            activeFocusOnTab: true
+            Accessible.role: Accessible.ComboBox
+            Accessible.name: "Layout type"
+            onCurrentIndexChanged:
+                root.newLayout =
+                    root.layoutOptions[currentIndex]
         }
 
         FlexRow {
@@ -72,6 +95,17 @@ CDialog {
             CButton {
                 text: "Cancel"
                 variant: "ghost"
+                activeFocusOnTab: true
+                Accessible.role: Accessible.Button
+                Accessible.name: "Cancel"
+                Keys.onReturnPressed: {
+                    root.reset()
+                    root.visible = false
+                }
+                Keys.onSpacePressed: {
+                    root.reset()
+                    root.visible = false
+                }
                 onClicked: {
                     root.reset()
                     root.visible = false
@@ -81,9 +115,37 @@ CDialog {
             CButton {
                 text: "Add Route"
                 variant: "primary"
-                enabled: root.newPath.length > 0 && root.newTitle.length > 0
+                enabled:
+                    root.newPath.length > 0 &&
+                    root.newTitle.length > 0
+                activeFocusOnTab: true
+                Accessible.role: Accessible.Button
+                Accessible.name: "Add route"
+                Keys.onReturnPressed: {
+                    if (!enabled) return
+                    root.addRoute(
+                        root.newPath,
+                        root.newTitle,
+                        root.newLevel,
+                        root.newLayout)
+                    root.reset()
+                    root.visible = false
+                }
+                Keys.onSpacePressed: {
+                    if (!enabled) return
+                    root.addRoute(
+                        root.newPath,
+                        root.newTitle,
+                        root.newLevel,
+                        root.newLayout)
+                    root.reset()
+                    root.visible = false
+                }
                 onClicked: {
-                    root.addRoute(root.newPath, root.newTitle, root.newLevel,
+                    root.addRoute(
+                        root.newPath,
+                        root.newTitle,
+                        root.newLevel,
                         root.newLayout)
                     root.reset()
                     root.visible = false

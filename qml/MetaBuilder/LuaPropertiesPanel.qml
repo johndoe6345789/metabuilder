@@ -44,13 +44,33 @@ Rectangle {
 
                 CDivider { Layout.fillWidth: true }
 
-                CTextField { Layout.fillWidth: true; label: "SCRIPT NAME"
-                text: scriptName; onTextChanged: nameChanged(text) }
-                CTextField { Layout.fillWidth: true; label: "DESCRIPTION"
-                text: scriptDescription
-                onTextChanged: descriptionChanged(text) }
-                CTextField { Layout.fillWidth: true; label: "RETURN TYPE"
-                text: returnType; onTextChanged: returnTypeChanged(text) }
+                CTextField {
+                    Layout.fillWidth: true
+                    label: "SCRIPT NAME"
+                    activeFocusOnTab: true
+                    Accessible.role: Accessible.EditableText
+                    Accessible.name: "Script name"
+                    text: scriptName
+                    onTextChanged: nameChanged(text)
+                }
+                CTextField {
+                    Layout.fillWidth: true
+                    label: "DESCRIPTION"
+                    activeFocusOnTab: true
+                    Accessible.role: Accessible.EditableText
+                    Accessible.name: "Script description"
+                    text: scriptDescription
+                    onTextChanged: descriptionChanged(text)
+                }
+                CTextField {
+                    Layout.fillWidth: true
+                    label: "RETURN TYPE"
+                    activeFocusOnTab: true
+                    Accessible.role: Accessible.EditableText
+                    Accessible.name: "Return type"
+                    text: returnType
+                    onTextChanged: returnTypeChanged(text)
+                }
 
                 CDivider { Layout.fillWidth: true }
 
@@ -83,6 +103,13 @@ Rectangle {
                     text: "Add Parameter"
                     variant: "ghost"
                     Layout.fillWidth: true
+                    activeFocusOnTab: true
+                    Accessible.role: Accessible.Button
+                    Accessible.name: "Add parameter"
+                    Accessible.description:
+                        "Add a new parameter to the script"
+                    Keys.onReturnPressed: paramAdded()
+                    Keys.onSpacePressed: paramAdded()
                     onClicked: paramAdded()
                 }
 

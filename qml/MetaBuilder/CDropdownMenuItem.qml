@@ -41,6 +41,9 @@ Rectangle {
         }
     }
 
+    Keys.onReturnPressed: root.triggered(root.action)
+    Keys.onSpacePressed: root.triggered(root.action)
+
     MouseArea {
         id: itemMA
         anchors.fill: parent

@@ -7,6 +7,8 @@ Rectangle {
     objectName: "overlay_canvas_zoom"
     Accessible.role: Accessible.ToolBar
     Accessible.name: "Zoom Controls"
+    Accessible.description:
+        "Zoom in or out on the workflow canvas"
 
     property real zoom: 1.0
 
@@ -26,22 +28,43 @@ Rectangle {
         spacing: 8
 
         CButton {
+            objectName: "btn_zoom_out"
             text: "-"
             variant: "ghost"
             size: "sm"
+            activeFocusOnTab: true
+            Accessible.role: Accessible.Button
+            Accessible.name: "Zoom Out"
+            Accessible.description:
+                "Decrease canvas zoom level"
             onClicked: root.zoomOut()
+            Keys.onReturnPressed: root.zoomOut()
+            Keys.onSpacePressed:  root.zoomOut()
         }
 
         CText {
             variant: "caption"
             text: Math.round(root.zoom * 100) + "%"
+            Accessible.role: Accessible.StaticText
+            Accessible.name:
+                "Zoom level " +
+                Math.round(root.zoom * 100) +
+                " percent"
         }
 
         CButton {
+            objectName: "btn_zoom_in"
             text: "+"
             variant: "ghost"
             size: "sm"
+            activeFocusOnTab: true
+            Accessible.role: Accessible.Button
+            Accessible.name: "Zoom In"
+            Accessible.description:
+                "Increase canvas zoom level"
             onClicked: root.zoomIn()
+            Keys.onReturnPressed: root.zoomIn()
+            Keys.onSpacePressed:  root.zoomIn()
         }
     }
 }

@@ -85,9 +85,22 @@ Popup {
                 objectName: "lang_" + modelData.id
                 Accessible.role: Accessible.ListItem
                 Accessible.name: modelData.name
+                Accessible.description:
+                    modelData.id
+                    === popup.currentLanguage
+                    ? modelData.name
+                        + ", currently selected"
+                    : modelData.name
                 activeFocusOnTab: true
+                Keys.onReturnPressed: {
+                    popup.languageSelected(
+                        modelData.id)
+                    popup.close()
+                }
 
-                highlighted: modelData.id === popup.currentLanguage
+                highlighted:
+                    modelData.id
+                    === popup.currentLanguage
                 
                 background: Rectangle {
                     color: parent.highlighted

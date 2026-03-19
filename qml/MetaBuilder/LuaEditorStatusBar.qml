@@ -23,22 +23,30 @@ Rectangle {
             text: "Lua 5.4"
             font.pixelSize: 11
             color: "#a6adc8"
+            Accessible.role: Accessible.StaticText
+            Accessible.name: "Language: Lua 5.4"
         }
         Text {
             text: "UTF-8"
             font.pixelSize: 11
             color: "#a6adc8"
+            Accessible.role: Accessible.StaticText
+            Accessible.name: "Encoding: UTF-8"
         }
         Text {
             text: root.lineCount + " lines"
             font.pixelSize: 11
             color: "#a6adc8"
+            Accessible.role: Accessible.StaticText
+            Accessible.name: root.lineCount + " lines"
         }
         Item { Layout.fillWidth: true }
         Text {
             text: "MetaBuilder Lua Runtime"
             font.pixelSize: 11
             color: "#585b70"
+            Accessible.role: Accessible.StaticText
+            Accessible.name: "MetaBuilder Lua Runtime"
         }
     }
 }

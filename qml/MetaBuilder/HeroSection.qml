@@ -46,6 +46,13 @@ Rectangle {
             Button {
                 text: "Explore levels"
                 font.pixelSize: 15
+                activeFocusOnTab: true
+                Accessible.role: Accessible.Button
+                Accessible.name: "Explore levels"
+                Keys.onReturnPressed:
+                    hero.primaryAction()
+                Keys.onSpacePressed:
+                    hero.primaryAction()
                 onClicked: hero.primaryAction()
                 background: Rectangle {
                     radius: 12
@@ -58,6 +65,13 @@ Rectangle {
             Button {
                 text: "View live demo"
                 font.pixelSize: 15
+                activeFocusOnTab: true
+                Accessible.role: Accessible.Button
+                Accessible.name: "View live demo"
+                Keys.onReturnPressed:
+                    hero.secondaryAction()
+                Keys.onSpacePressed:
+                    hero.secondaryAction()
                 onClicked: hero.secondaryAction()
                 background: Rectangle {
                     radius: 12

@@ -40,16 +40,40 @@ CCard {
             CButton {
                 text: "Refresh"
                 variant: "ghost"; size: "sm"
+                activeFocusOnTab: true
+                Accessible.role: Accessible.Button
+                Accessible.name: "Refresh media service"
+                Keys.onReturnPressed: root.refreshClicked()
+                Keys.onSpacePressed: root.refreshClicked()
                 onClicked: root.refreshClicked()
             }
         }
         CDivider { Layout.fillWidth: true }
         FlexRow {
             Layout.fillWidth: true; spacing: 8
-            CChip { text: root.jobCount + " Jobs" }
-            CChip { text: root.radioCount + " Radio Channels" }
-            CChip { text: root.tvCount + " TV Channels" }
-            CChip { text: root.pluginCount + " Plugins" }
+            CChip {
+                text: root.jobCount + " Jobs"
+                Accessible.role: Accessible.StaticText
+                Accessible.name: root.jobCount + " Jobs"
+            }
+            CChip {
+                text: root.radioCount + " Radio Channels"
+                Accessible.role: Accessible.StaticText
+                Accessible.name: root.radioCount
+                    + " Radio Channels"
+            }
+            CChip {
+                text: root.tvCount + " TV Channels"
+                Accessible.role: Accessible.StaticText
+                Accessible.name: root.tvCount
+                    + " TV Channels"
+            }
+            CChip {
+                text: root.pluginCount + " Plugins"
+                Accessible.role: Accessible.StaticText
+                Accessible.name: root.pluginCount
+                    + " Plugins"
+            }
             Item { Layout.fillWidth: true }
             CText {
                 visible: root.lastHealthCheck.length > 0

@@ -137,6 +137,34 @@ Rectangle {
                     level: modelData.level
                     accent: modelData.accent
                     isDark: loginView.isDark
+                    activeFocusOnTab: true
+                    Accessible.role:
+                        Accessible.Button
+                    Accessible.name:
+                        "Sign in as "
+                        + modelData.label
+                    Accessible.description:
+                        "Level "
+                        + modelData.level
+                        + " dev credential"
+                    Keys.onReturnPressed: {
+                        loginForm.username =
+                            modelData.user
+                        loginForm.password =
+                            modelData.pass
+                        appWindow.login(
+                            modelData.user,
+                            modelData.pass)
+                    }
+                    Keys.onSpacePressed: {
+                        loginForm.username =
+                            modelData.user
+                        loginForm.password =
+                            modelData.pass
+                        appWindow.login(
+                            modelData.user,
+                            modelData.pass)
+                    }
                     onLogin: {
                         loginForm.username =
                             modelData.user
@@ -153,6 +181,15 @@ Rectangle {
             text: "\u2190 Back to home"
             variant: "text"; size: "sm"
             Layout.alignment: Qt.AlignHCenter
+            activeFocusOnTab: true
+            Accessible.role: Accessible.Button
+            Accessible.name: "Back to home"
+            Keys.onReturnPressed:
+                appWindow.currentView =
+                    "frontpage"
+            Keys.onSpacePressed:
+                appWindow.currentView =
+                    "frontpage"
             onClicked:
                 appWindow.currentView =
                     "frontpage"

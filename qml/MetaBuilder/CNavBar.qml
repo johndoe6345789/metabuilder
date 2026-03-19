@@ -33,13 +33,23 @@ Item {
         Repeater {
             model: root.levels
             delegate: CButton {
-                Accessible.role: Accessible.MenuItem
+                activeFocusOnTab: true
+                Accessible.role: Accessible.Link
                 Accessible.name: modelData.label
-                visible: modelData.level <= root.currentLevel
+                Accessible.description:
+                    "Navigate to "
+                    + modelData.label + " view"
+                visible:
+                    modelData.level <= root.currentLevel
                 text: modelData.label
-                variant: root.currentView === modelData.view
+                variant:
+                    root.currentView === modelData.view
                     ? "default" : "text"
                 size: "sm"
+                Keys.onReturnPressed:
+                    root.navigate(modelData.view)
+                Keys.onSpacePressed:
+                    root.navigate(modelData.view)
                 onClicked: root.navigate(modelData.view)
             }
         }

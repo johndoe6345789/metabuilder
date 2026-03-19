@@ -5,8 +5,13 @@ import QtQuick.Layouts
 MouseArea {
     id: root
     objectName: "area_canvas_interaction"
-    Accessible.role: Accessible.Pane
+    Accessible.role: Accessible.Canvas
     Accessible.name: "Canvas Interaction Area"
+    Accessible.description:
+        "Pan the canvas by dragging. " +
+        "Scroll to zoom in or out. " +
+        "Click to deselect nodes."
+    activeFocusOnTab: true
 
     property bool drawingConnection: false
 
@@ -38,5 +43,18 @@ MouseArea {
     onWheel: function(wheel) {
         var zoomDelta = wheel.angleDelta.y > 0 ? 0.1 : -0.1
         root.zoomRequested(zoomDelta)
+    }
+
+    Keys.onReturnPressed: root.canvasClicked()
+    Keys.onSpacePressed:  root.canvasClicked()
+    Keys.onPressed: function(event) {
+        if (event.key === Qt.Key_Plus ||
+                event.key === Qt.Key_Equal) {
+            root.zoomRequested(0.1)
+            event.accepted = true
+        } else if (event.key === Qt.Key_Minus) {
+            root.zoomRequested(-0.1)
+            event.accepted = true
+        }
     }
 }

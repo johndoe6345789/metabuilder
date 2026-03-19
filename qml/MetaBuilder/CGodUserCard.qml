@@ -51,6 +51,14 @@ CCard {
             text: "Manage"
             variant: "ghost"
             size: "sm"
+            activeFocusOnTab: true
+            Accessible.role: Accessible.Button
+            Accessible.name: "Manage " + root.user.username
+            Accessible.description:
+                "Open management options for "
+                + root.user.username
+            Keys.onReturnPressed: root.demote()
+            Keys.onSpacePressed: root.demote()
             onClicked: root.demote()
         }
     }

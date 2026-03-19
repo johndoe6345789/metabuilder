@@ -205,8 +205,13 @@ Rectangle {
                     objectName: "ajaxExpandBtn"
                     Accessible.role: Accessible.Button
                     Accessible.name: expanded
-                        ? "Collapse" : "Expand"
+                        ? "Collapse queue"
+                        : "Expand queue"
                     activeFocusOnTab: true
+                    Keys.onReturnPressed:
+                        expanded = !expanded
+                    Keys.onSpacePressed:
+                        expanded = !expanded
 
                     Text {
                         anchors.centerIn: parent
@@ -223,7 +228,7 @@ Rectangle {
                         onClicked: expanded = !expanded
                     }
                 }
-                
+
                 // Close button
                 Rectangle {
                     width: 24
@@ -234,7 +239,29 @@ Rectangle {
                     objectName: "ajaxCloseBtn"
                     Accessible.role: Accessible.Button
                     Accessible.name: "Close queue"
+                    Accessible.description:
+                        ajaxQueue
+                            && ajaxQueue.pending > 0
+                        ? "Unavailable while"
+                            + " requests are pending"
+                        : "Clear and hide the queue"
                     activeFocusOnTab: true
+                    Keys.onReturnPressed: {
+                        if (ajaxQueue
+                                && ajaxQueue.pending
+                                === 0) {
+                            ajaxQueue.clearCompleted()
+                            ajaxQueue.hide()
+                        }
+                    }
+                    Keys.onSpacePressed: {
+                        if (ajaxQueue
+                                && ajaxQueue.pending
+                                === 0) {
+                            ajaxQueue.clearCompleted()
+                            ajaxQueue.hide()
+                        }
+                    }
 
                     Text {
                         anchors.centerIn: parent
@@ -249,7 +276,9 @@ Rectangle {
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
                         onClicked: {
-                            if (ajaxQueue && ajaxQueue.pending === 0) {
+                            if (ajaxQueue
+                                    && ajaxQueue.pending
+                                    === 0) {
                                 ajaxQueue.clearCompleted()
                                 ajaxQueue.hide()
                             }

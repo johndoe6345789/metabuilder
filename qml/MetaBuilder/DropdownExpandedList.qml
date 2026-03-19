@@ -30,11 +30,21 @@ Rectangle {
             model: root.options
 
             Rectangle {
+                id: optItem
                 Layout.fillWidth: true
                 Layout.preferredHeight: 36
-                color: optMouse.containsMouse ? Theme.primary : "transparent"
-                opacity: optMouse.containsMouse ? 0.12 : 1.0
+                color: optMouse.containsMouse || optItem.activeFocus
+                    ? Theme.primary : "transparent"
+                opacity: optMouse.containsMouse
+                    || optItem.activeFocus ? 0.12 : 1.0
                 radius: 2
+                activeFocusOnTab: true
+                Accessible.role: Accessible.MenuItem
+                Accessible.name: modelData.label
+                    + " (" + modelData.value + ")"
+
+                Keys.onReturnPressed: optMouse.clicked(null)
+                Keys.onSpacePressed: optMouse.clicked(null)
 
                 RowLayout {
                     anchors.fill: parent
@@ -60,6 +70,7 @@ Rectangle {
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
+                    onClicked: optItem.forceActiveFocus()
                 }
             }
         }

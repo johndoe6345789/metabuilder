@@ -6,8 +6,12 @@ import QmlComponents 1.0
 Flickable {
     id: canvas
     objectName: "viewport_canvas"
-    Accessible.role: Accessible.Pane
+    Accessible.role: Accessible.Canvas
     Accessible.name: "Canvas Viewport"
+    Accessible.description:
+        "Scrollable workflow canvas. " +
+        "Contains nodes and connections. " +
+        "Use zoom controls to resize the view."
 
     property alias canvasContent: contentItem
     property alias connectionLayer: connLayer

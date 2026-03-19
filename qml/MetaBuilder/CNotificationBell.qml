@@ -7,10 +7,17 @@ import QmlComponents 1.0
 Item {
     id: root
     Accessible.role: Accessible.Button
-    Accessible.name: "Notifications"
+    Accessible.name: notificationCount > 0
+        ? notificationCount + " notifications"
+        : "No notifications"
+    activeFocusOnTab: true
 
     property bool hasNotifications: true
+    property int notificationCount: 0
     property bool isDark: Theme.mode === "dark"
+
+    Keys.onReturnPressed: root.clicked()
+    Keys.onSpacePressed: root.clicked()
 
     signal clicked()
 

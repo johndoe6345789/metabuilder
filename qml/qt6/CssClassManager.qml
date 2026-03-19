@@ -63,6 +63,13 @@ Rectangle {
             CButton {
                 text: "Add Class"
                 variant: "primary"; size: "sm"
+                activeFocusOnTab: true
+                Accessible.role: Accessible.Button
+                Accessible.name: "Add CSS class"
+                Keys.onReturnPressed: {
+                    newClassName = ""
+                    showAddClassDialog = true
+                }
                 onClicked: {
                     newClassName = ""
                     showAddClassDialog = true
@@ -156,6 +163,8 @@ Rectangle {
                 label: "Class Name"
                 placeholderText: "my-class"
                 text: newClassName
+                Accessible.role: Accessible.EditableText
+                Accessible.name: "New CSS class name"
                 onTextChanged: newClassName = text
             }
             FlexRow {
@@ -165,6 +174,11 @@ Rectangle {
                 CButton {
                     text: "Cancel"
                     variant: "ghost"; size: "sm"
+                    activeFocusOnTab: true
+                    Accessible.role: Accessible.Button
+                    Accessible.name: "Cancel add class"
+                    Keys.onReturnPressed:
+                        showAddClassDialog = false
                     onClicked:
                         showAddClassDialog = false
                 }
@@ -173,6 +187,14 @@ Rectangle {
                     variant: "primary"; size: "sm"
                     enabled:
                         newClassName.trim().length > 0
+                    activeFocusOnTab: true
+                    Accessible.role: Accessible.Button
+                    Accessible.name: "Create CSS class"
+                    Keys.onReturnPressed: {
+                        Logic.addClass(root, dbal,
+                            newClassName.trim())
+                        showAddClassDialog = false
+                    }
                     onClicked: {
                         Logic.addClass(root, dbal,
                             newClassName.trim())
@@ -216,12 +238,25 @@ Rectangle {
                 CButton {
                     text: "Cancel"
                     variant: "ghost"; size: "sm"
+                    activeFocusOnTab: true
+                    Accessible.role: Accessible.Button
+                    Accessible.name: "Cancel delete"
+                    Keys.onReturnPressed:
+                        showDeleteConfirm = false
                     onClicked:
                         showDeleteConfirm = false
                 }
                 CButton {
                     text: "Delete"
                     variant: "danger"; size: "sm"
+                    activeFocusOnTab: true
+                    Accessible.role: Accessible.Button
+                    Accessible.name: "Confirm delete"
+                    Keys.onReturnPressed: {
+                        Logic.deleteSelectedClass(
+                            root, dbal)
+                        showDeleteConfirm = false
+                    }
                     onClicked: {
                         Logic.deleteSelectedClass(
                             root, dbal

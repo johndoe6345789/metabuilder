@@ -31,10 +31,31 @@ CDialog {
         FlexRow {
             Layout.fillWidth: true; Layout.topMargin: 8; spacing: 8
             Item { Layout.fillWidth: true }
-            CButton { text: "Cancel"; variant: "ghost"; size: "sm"
-            onClicked: cancelled() }
-            CButton { text: "Delete"; variant: "danger"; size: "sm"
-            onClicked: confirmed() }
+            CButton {
+                text: "Cancel"
+                variant: "ghost"
+                size: "sm"
+                activeFocusOnTab: true
+                Accessible.role: Accessible.Button
+                Accessible.name: "Cancel"
+                Keys.onReturnPressed: cancelled()
+                Keys.onSpacePressed: cancelled()
+                onClicked: cancelled()
+            }
+            CButton {
+                text: "Delete"
+                variant: "danger"
+                size: "sm"
+                activeFocusOnTab: true
+                Accessible.role: Accessible.Button
+                Accessible.name: "Confirm delete"
+                Accessible.description:
+                    "Permanently delete record " +
+                    recordId
+                Keys.onReturnPressed: confirmed()
+                Keys.onSpacePressed: confirmed()
+                onClicked: confirmed()
+            }
         }
     }
 }

@@ -105,14 +105,17 @@ Rectangle {
                     label: "Display Name"
                     placeholderText: "Enter display name"
                     text: displayName
+                    Accessible.role: Accessible.EditableText
+                    Accessible.name: "Display Name"
                     onTextChanged: displayName = text
                 }
                 CTextField {
                     Layout.fillWidth: true
                     label: "Email"
-                    placeholderText:
-                        "Enter email address"
+                    placeholderText: "Enter email address"
                     text: userEmail
+                    Accessible.role: Accessible.EditableText
+                    Accessible.name: "Email address"
                     onTextChanged: userEmail = text
                 }
                 FlexRow {
@@ -128,9 +131,13 @@ Rectangle {
                     CButton {
                         text: "Save Profile"
                         variant: "primary"
-                        onClicked: Logic.saveProfile(
-                            root, dbal
-                        )
+                        activeFocusOnTab: true
+                        Accessible.role: Accessible.Button
+                        Accessible.name: "Save profile"
+                        Keys.onReturnPressed:
+                            Logic.saveProfile(root, dbal)
+                        onClicked:
+                            Logic.saveProfile(root, dbal)
                     }
                 }
             }
@@ -167,11 +174,19 @@ Rectangle {
                                 === modelData.id
                                 ? "primary" : "default"
                             size: "sm"
+                            activeFocusOnTab: true
+                            Accessible.role: Accessible.RadioButton
+                            Accessible.name: "Font size: "
+                                + modelData.label
+                            Accessible.checked:
+                                fontSize === modelData.id
+                            Keys.onReturnPressed: {
+                                fontSize = modelData.id
+                                Logic.savePreferences(root, dbal)
+                            }
                             onClicked: {
                                 fontSize = modelData.id
-                                Logic.savePreferences(
-                                    root, dbal
-                                )
+                                Logic.savePreferences(root, dbal)
                             }
                         }
                     }

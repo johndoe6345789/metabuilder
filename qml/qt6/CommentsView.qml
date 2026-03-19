@@ -71,6 +71,9 @@ Rectangle {
                         { label: "Oldest" },
                         { label: "Most Liked" }
                     ]
+                    activeFocusOnTab: true
+                    Accessible.role: Accessible.PageTabList
+                    Accessible.name: "Sort comments by"
                     onCurrentIndexChanged:
                         sortMode = currentIndex
                 }

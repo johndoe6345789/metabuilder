@@ -99,41 +99,60 @@ Dialog {
                 objectName: "patchCopyBtn"
                 Accessible.role: Accessible.Button
                 Accessible.name: "Copy to clipboard"
+                Accessible.description: "Copy patch"
                 activeFocusOnTab: true
-                onClicked: {
+                Keys.onReturnPressed:
                     app.copyToClipboard(patchText)
-                }
+                Keys.onSpacePressed:
+                    app.copyToClipboard(patchText)
+                onClicked: app.copyToClipboard(
+                    patchText)
                 background: Rectangle {
                     color: parent.hovered
-                        ? Qt.lighter(colors.paper, 1.2) : colors.paper
+                        ? Qt.lighter(
+                            colors.paper, 1.2)
+                        : colors.paper
                     radius: 4
                     border.color: colors.border
                 }
                 contentItem: Text {
                     text: parent.text
                     color: colors.text
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment:
+                        Text.AlignHCenter
+                    verticalAlignment:
+                        Text.AlignVCenter
                 }
             }
-            
+
             Button {
                 text: "💾 Save to File"
-                onClicked: {
-                    // For now just copy - could add file save dialog later
+                objectName: "patchSaveBtn"
+                Accessible.role: Accessible.Button
+                Accessible.name: "Save to file"
+                Accessible.description: "Save patch"
+                activeFocusOnTab: true
+                Keys.onReturnPressed:
                     app.copyToClipboard(patchText)
-                }
+                Keys.onSpacePressed:
+                    app.copyToClipboard(patchText)
+                onClicked: app.copyToClipboard(
+                    patchText)
                 background: Rectangle {
                     color: parent.hovered
-                        ? Qt.lighter(colors.paper, 1.2) : colors.paper
+                        ? Qt.lighter(
+                            colors.paper, 1.2)
+                        : colors.paper
                     radius: 4
                     border.color: colors.border
                 }
                 contentItem: Text {
                     text: parent.text
                     color: colors.text
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment:
+                        Text.AlignHCenter
+                    verticalAlignment:
+                        Text.AlignVCenter
                 }
             }
         }
@@ -160,6 +179,11 @@ Dialog {
                 wrapMode: Text.NoWrap
                 selectByMouse: true
                 textFormat: Text.PlainText
+                Accessible.role: Accessible.StaticText
+                Accessible.name: "Patch diff"
+                Accessible.description:
+                    additions + " additions, "
+                    + deletions + " deletions"
                 
                 background: Rectangle {
                     color: colors.codeBackground

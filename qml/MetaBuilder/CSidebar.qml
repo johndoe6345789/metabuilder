@@ -81,6 +81,16 @@ Rectangle {
                 leadingIcon: modelData.icon
                 selected: root.currentView
                     === modelData.view
+                Accessible.role: Accessible.MenuItem
+                Accessible.name: modelData.label
+                Accessible.description:
+                    selected
+                    ? modelData.label + ", current page"
+                    : modelData.label
+                Keys.onReturnPressed:
+                    root.navigate(modelData.view)
+                Keys.onSpacePressed:
+                    root.navigate(modelData.view)
                 onClicked: {
                     root.navigate(modelData.view)
                 }
@@ -108,6 +118,20 @@ Rectangle {
                     : modelData.name.charAt(0)
                 selected: root.currentView
                     === root.packageViewName(modelData)
+                Accessible.role: Accessible.MenuItem
+                Accessible.name: modelData.navLabel
+                    || modelData.name
+                Accessible.description:
+                    selected
+                    ? (modelData.navLabel
+                        || modelData.name)
+                        + ", current page"
+                    : (modelData.navLabel
+                        || modelData.name)
+                Keys.onReturnPressed: root.navigate(
+                    root.packageViewName(modelData))
+                Keys.onSpacePressed: root.navigate(
+                    root.packageViewName(modelData))
                 onClicked: root.navigate(
                     root.packageViewName(modelData))
             }
@@ -123,6 +147,10 @@ Rectangle {
             title: "Settings"
             leadingIcon: "S"
             selected: root.currentView === "settings"
+            Accessible.role: Accessible.MenuItem
+            Accessible.name: "Settings"
+            Keys.onReturnPressed: root.navigate("settings")
+            Keys.onSpacePressed: root.navigate("settings")
             onClicked: root.navigate("settings")
         }
     }

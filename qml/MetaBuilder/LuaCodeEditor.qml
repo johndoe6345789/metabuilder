@@ -33,6 +33,12 @@ Rectangle {
 
                 TextArea {
                     id: codeEditor
+                    activeFocusOnTab: true
+                    Accessible.role: Accessible.EditableText
+                    Accessible.name: "Lua code editor"
+                    Accessible.multiLine: true
+                    Accessible.description:
+                        "Enter Lua script code here"
                     font.family: "Consolas, 'Courier New', monospace"
                     font.pixelSize: 13
                     color: "#cdd6f4"

@@ -25,6 +25,11 @@ CCard {
         label: "Your comment"
         placeholderText: "Write your thoughts..."
         text: root.commentText
+        activeFocusOnTab: true
+        Accessible.role: Accessible.EditableText
+        Accessible.name: "Your comment"
+        Accessible.description:
+            "Type your comment here"
         onTextChanged: root.commentText = text
     }
 
@@ -33,10 +38,31 @@ CCard {
         spacing: 8
         Item { Layout.fillWidth: true }
         CButton {
-            text: root.loading ? "Posting..." : "Post Comment"
+            text: root.loading
+                ? "Posting..." : "Post Comment"
             variant: "primary"
             size: "sm"
-            enabled: root.commentText.trim().length > 0 && !root.loading
+            enabled: root.commentText.trim().length > 0
+                && !root.loading
+            activeFocusOnTab: true
+            Accessible.role: Accessible.Button
+            Accessible.name: root.loading
+                ? "Posting comment"
+                : "Post Comment"
+            Keys.onReturnPressed: {
+                if (enabled) {
+                    root.submit(
+                        root.commentText.trim())
+                    root.commentText = ""
+                }
+            }
+            Keys.onSpacePressed: {
+                if (enabled) {
+                    root.submit(
+                        root.commentText.trim())
+                    root.commentText = ""
+                }
+            }
             onClicked: {
                 root.submit(root.commentText.trim())
                 root.commentText = ""

@@ -64,6 +64,18 @@ ColumnLayout {
                 variant: index
                     === root.selectedPattern
                     ? "primary" : "ghost"
+                activeFocusOnTab: true
+                Accessible.role: Accessible.Button
+                Accessible.name:
+                    modelData + " pattern"
+                Accessible.description:
+                    index === root.selectedPattern
+                    ? "Selected"
+                    : "Select " + modelData + " pattern"
+                Keys.onReturnPressed:
+                    root.patternChanged(index)
+                Keys.onSpacePressed:
+                    root.patternChanged(index)
                 onClicked:
                     root.patternChanged(index)
             }
@@ -81,6 +93,10 @@ ColumnLayout {
             anchors.margins: 12
             variant: "body2"
             wrapMode: Text.Wrap
+            Accessible.role: Accessible.StaticText
+            Accessible.name: root.patterns[
+                root.selectedPattern]
+                + " pattern description"
             text: root.descriptions[
                 root.selectedPattern]
         }

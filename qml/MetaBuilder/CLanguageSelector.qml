@@ -17,6 +17,9 @@ Item {
 
     width: langText.implicitWidth + 20
     height: 28
+    activeFocusOnTab: true
+    Keys.onReturnPressed: root.clicked()
+    Keys.onSpacePressed: root.clicked()
 
     // ── MD3 palette ──
     readonly property color surfaceContainer: isDark

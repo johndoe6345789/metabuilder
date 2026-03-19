@@ -22,6 +22,9 @@ CDialog {
             placeholderText: "e.g. Invoice"
             text: dlg.schemaName
             Layout.fillWidth: true
+            activeFocusOnTab: true
+            Accessible.role: Accessible.EditableText
+            Accessible.name: "Schema Name"
             onTextChanged:
                 dlg.schemaName = text
         }
@@ -31,6 +34,9 @@ CDialog {
                 + " of this schema"
             text: dlg.schemaDescription
             Layout.fillWidth: true
+            activeFocusOnTab: true
+            Accessible.role: Accessible.EditableText
+            Accessible.name: "Schema Description"
             onTextChanged:
                 dlg.schemaDescription = text
         }
@@ -40,6 +46,19 @@ CDialog {
             CButton {
                 text: "Cancel"
                 variant: "ghost"
+                activeFocusOnTab: true
+                Accessible.role: Accessible.Button
+                Accessible.name: "Cancel"
+                Keys.onReturnPressed: {
+                    dlg.schemaName = ""
+                    dlg.schemaDescription = ""
+                    cancelled()
+                }
+                Keys.onSpacePressed: {
+                    dlg.schemaName = ""
+                    dlg.schemaDescription = ""
+                    cancelled()
+                }
                 onClicked: {
                     dlg.schemaName = ""
                     dlg.schemaDescription = ""
@@ -51,6 +70,25 @@ CDialog {
                 variant: "primary"
                 enabled:
                     dlg.schemaName.trim() !== ""
+                activeFocusOnTab: true
+                Accessible.role: Accessible.Button
+                Accessible.name: "Create schema"
+                Keys.onReturnPressed: {
+                    if (!enabled) return
+                    createRequested(
+                        dlg.schemaName,
+                        dlg.schemaDescription)
+                    dlg.schemaName = ""
+                    dlg.schemaDescription = ""
+                }
+                Keys.onSpacePressed: {
+                    if (!enabled) return
+                    createRequested(
+                        dlg.schemaName,
+                        dlg.schemaDescription)
+                    dlg.schemaName = ""
+                    dlg.schemaDescription = ""
+                }
                 onClicked: {
                     createRequested(
                         dlg.schemaName,

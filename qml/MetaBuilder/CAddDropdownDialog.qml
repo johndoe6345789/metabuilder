@@ -35,6 +35,12 @@ CDialog {
                 "e.g. ticket_types"
             text: dropdownName
             Layout.fillWidth: true
+            activeFocusOnTab: true
+            Accessible.role: Accessible.EditableText
+            Accessible.name: "Dropdown Name"
+            Accessible.description:
+                "Enter a name; it will be " +
+                "normalized to snake_case"
             onTextChanged:
                 addDropdownDialog
                     .dropdownName = text
@@ -45,6 +51,12 @@ CDialog {
                 + "dropdown be used for?"
             text: dropdownDescription
             Layout.fillWidth: true
+            activeFocusOnTab: true
+            Accessible.role: Accessible.EditableText
+            Accessible.name: "Description"
+            Accessible.description:
+                "Optional description of " +
+                "what this dropdown is for"
             onTextChanged:
                 addDropdownDialog
                     .dropdownDescription = text
@@ -64,6 +76,26 @@ CDialog {
             CButton {
                 text: "Cancel"
                 variant: "ghost"
+                activeFocusOnTab: true
+                Accessible.role: Accessible.Button
+                Accessible.name: "Cancel"
+                Accessible.description:
+                    "Dismiss this dialog without " +
+                    "creating a dropdown"
+                Keys.onReturnPressed: {
+                    addDropdownDialog
+                        .dropdownName = ""
+                    addDropdownDialog
+                        .dropdownDescription = ""
+                    cancelled()
+                }
+                Keys.onSpacePressed: {
+                    addDropdownDialog
+                        .dropdownName = ""
+                    addDropdownDialog
+                        .dropdownDescription = ""
+                    cancelled()
+                }
                 onClicked: {
                     addDropdownDialog
                         .dropdownName = ""
@@ -77,6 +109,32 @@ CDialog {
                 variant: "primary"
                 enabled:
                     dropdownName.trim() !== ""
+                activeFocusOnTab: true
+                Accessible.role: Accessible.Button
+                Accessible.name: "Create dropdown"
+                Accessible.description:
+                    "Create the new dropdown " +
+                    "configuration"
+                Keys.onReturnPressed: {
+                    if (!enabled) return
+                    createRequested(
+                        dropdownName,
+                        dropdownDescription)
+                    addDropdownDialog
+                        .dropdownName = ""
+                    addDropdownDialog
+                        .dropdownDescription = ""
+                }
+                Keys.onSpacePressed: {
+                    if (!enabled) return
+                    createRequested(
+                        dropdownName,
+                        dropdownDescription)
+                    addDropdownDialog
+                        .dropdownName = ""
+                    addDropdownDialog
+                        .dropdownDescription = ""
+                }
                 onClicked: {
                     createRequested(
                         dropdownName,

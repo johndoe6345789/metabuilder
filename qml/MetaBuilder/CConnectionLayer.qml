@@ -4,8 +4,11 @@ import QmlComponents 1.0
 Canvas {
     id: root
     objectName: "layer_connection"
-    Accessible.role: Accessible.Pane
+    Accessible.role: Accessible.Canvas
     Accessible.name: "Connection Layer"
+    Accessible.description:
+        "Renders Bezier curves between " +
+        "connected workflow node ports"
 
     property var nodes: []
     property var connections: ({})

@@ -70,38 +70,43 @@ Rectangle {
                             text: "Notifications"
                         }
                         CBadge {
-                            visible:
-                                unreadCount > 0
+                            visible: unreadCount > 0
                             text: unreadCount
                                 + " unread"
                         }
-                        Item {
-                            Layout.fillWidth:
-                                true
-                        }
+                        Item { Layout.fillWidth: true }
                         CButton {
                             text: "Mark All Read"
-                            variant: "ghost"
-                            size: "sm"
-                            enabled:
-                                unreadCount > 0
-                            onClicked:
+                            variant: "ghost"; size: "sm"
+                            enabled: unreadCount > 0
+                            activeFocusOnTab: true
+                            Accessible.role:
+                                Accessible.Button
+                            Accessible.name:
+                                "Mark all read"
+                            Keys.onReturnPressed:
                                 markAllRead()
+                            onClicked: markAllRead()
                         }
                         CButton {
                             text: dbal.loading
                                 ? "Loading..."
                                 : "Refresh"
-                            variant: "ghost"
-                            size: "sm"
-                            enabled:
-                                !dbal.loading
+                            variant: "ghost"; size: "sm"
+                            enabled: !dbal.loading
+                            activeFocusOnTab: true
+                            Accessible.role:
+                                Accessible.Button
+                            Accessible.name:
+                                dbal.loading
+                                ? "Loading"
+                                : "Refresh notifications"
+                            Keys.onReturnPressed:
+                                refresh()
                             onClicked: refresh()
                         }
                     }
-                    CDivider {
-                        Layout.fillWidth: true
-                    }
+                    CDivider { Layout.fillWidth: true }
                     FlexRow {
                         Layout.fillWidth: true
                         spacing: 8
@@ -109,15 +114,19 @@ Rectangle {
                             model: filters
                             delegate: CButton {
                                 text: modelData
-                                variant:
-                                    activeFilter
+                                variant: activeFilter
                                     === modelData
-                                    ? "primary"
-                                    : "ghost"
+                                    ? "primary" : "ghost"
                                 size: "sm"
+                                activeFocusOnTab: true
+                                Accessible.role:
+                                    Accessible.Button
+                                Accessible.name:
+                                    "Filter: " + modelData
+                                Keys.onReturnPressed:
+                                    activeFilter = modelData
                                 onClicked:
-                                    activeFilter
-                                        = modelData
+                                    activeFilter = modelData
                             }
                         }
                     }
@@ -132,21 +141,16 @@ Rectangle {
                     ).length > 0
                 ColumnLayout {
                     anchors.fill: parent
-                    anchors.margins: 16
-                    spacing: 0
+                    anchors.margins: 16; spacing: 0
                     Repeater {
                         model:
-                            DBAL
-                            .filterNotifications(
+                            DBAL.filterNotifications(
                                 notifications,
                                 activeFilter)
-                        delegate:
-                            CNotificationItem {
-                            notification:
-                                modelData
+                        delegate: CNotificationItem {
+                            notification: modelData
                             onMarkRead:
-                                markReadById(
-                                    modelData.id)
+                                markReadById(modelData.id)
                             onDismiss:
                                 dismissNotification(
                                     modelData.id)
@@ -163,13 +167,10 @@ Rectangle {
                 filterLabel: activeFilter
             }
             FlexRow {
-                Layout.fillWidth: true
-                spacing: 8
-                visible:
-                    notifications.length > 0
+                Layout.fillWidth: true; spacing: 8
+                visible: notifications.length > 0
                 CText {
-                    variant: "caption"
-                    opacity: 0.5
+                    variant: "caption"; opacity: 0.5
                     text: notifications.length
                         + " total notifications"
                 }
@@ -178,20 +179,14 @@ Rectangle {
                     text: " \u00b7 "; opacity: 0.3
                 }
                 CText {
-                    variant: "caption"
-                    text: unreadCount
-                        + " unread"
-                    opacity: 0.5
+                    variant: "caption"; opacity: 0.5
+                    text: unreadCount + " unread"
                 }
-                Item {
-                    Layout.fillWidth: true
-                }
+                Item { Layout.fillWidth: true }
                 CText {
-                    variant: "caption"
+                    variant: "caption"; opacity: 0.4
                     text: useLiveData
-                        ? "Live data"
-                        : "Mock data"
-                    opacity: 0.4
+                        ? "Live data" : "Mock data"
                 }
             }
             Item { Layout.preferredHeight: 20 }

@@ -81,7 +81,14 @@ CDialog {
                 placeholderText: "Enter "
                     + modelData.label.toLowerCase()
                     + "..."
-                onTextChanged: root._setField(modelData.field, text)
+                activeFocusOnTab: true
+                Accessible.role: Accessible.EditableText
+                Accessible.name: modelData.label
+                Accessible.description:
+                    "Enter " + modelData.label
+                    + " for " + root.entity
+                onTextChanged: root._setField(
+                    modelData.field, text)
             }
         }
 
@@ -94,24 +101,44 @@ CDialog {
                 text: "Cancel"
                 variant: "ghost"
                 size: "sm"
+                activeFocusOnTab: true
+                Accessible.role: Accessible.Button
+                Accessible.name: "Cancel"
+                Accessible.description:
+                    "Cancel and close the form"
+                Keys.onReturnPressed: root.cancel()
+                Keys.onSpacePressed: root.cancel()
                 onClicked: root.cancel()
             }
             CButton {
                 text: root.isEdit ? "Save" : "Create"
                 variant: "primary"
                 size: "sm"
-                onClicked: {
-                    var data = Object.assign({}, root._formData);
-                    // Fill in any fields not yet touched
-                    for (var i = 0; i < root.fields.length; i++) {
+                activeFocusOnTab: true
+                Accessible.role: Accessible.Button
+                Accessible.name:
+                    root.isEdit ? "Save" : "Create"
+                Accessible.description:
+                    (root.isEdit ? "Save" : "Create")
+                    + " " + root.entity
+                Keys.onReturnPressed: submitForm()
+                Keys.onSpacePressed: submitForm()
+                function submitForm() {
+                    var data = Object.assign(
+                        {}, root._formData);
+                    for (var i = 0;
+                            i < root.fields.length;
+                            i++) {
                         var f = root.fields[i];
                         if (data[f.field] === undefined
                             || data[f.field] === "") {
-                            data[f.field] = f.value || "";
+                            data[f.field] =
+                                f.value || "";
                         }
                     }
                     root.save(data);
                 }
+                onClicked: submitForm()
             }
         }
     }

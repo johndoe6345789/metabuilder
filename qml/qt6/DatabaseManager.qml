@@ -51,8 +51,14 @@ Rectangle {
                 text: "Export the active database ("
                     + backends[actBk].name + ") to a JSON dump file." }
             CTextField { label: "Output path"
-                text: "/tmp/dbal-export-" + backends[actBk].key + ".json"
-                Layout.fillWidth: true }
+                text: "/tmp/dbal-export-"
+                    + backends[actBk].key + ".json"
+                Layout.fillWidth: true
+                activeFocusOnTab: true
+                Accessible.role: Accessible.EditableText
+                Accessible.name: "Export output path"
+                Accessible.description:
+                    "File path for the exported JSON dump" }
             CAlert { severity: "success"
                 text: "Export includes all tenants and entity data ("
                     + backends[actBk].records + " records)." }
@@ -70,7 +76,12 @@ Rectangle {
                     + backends[actBk].name + ")." }
             CTextField { label: "Import file"
                 placeholderText: "/path/to/dbal-export.json"
-                    Layout.fillWidth: true }
+                Layout.fillWidth: true
+                activeFocusOnTab: true
+                Accessible.role: Accessible.EditableText
+                Accessible.name: "Import file path"
+                Accessible.description:
+                    "Path to the JSON dump file to import" }
             CAlert { severity: "warning"
                 text: "Existing records with matching IDs "
                     + "will be overwritten." }
@@ -88,9 +99,25 @@ Rectangle {
                 badgeColor: useLiveData ? Theme.success : Theme.warning }
             Item { Layout.fillWidth: true }
             CButton { text: "Export"
-                variant: "ghost"; onClicked: showExpDlg = true }
+                variant: "ghost"
+                activeFocusOnTab: true
+                Accessible.role: Accessible.Button
+                Accessible.name: "Export Database"
+                Accessible.description:
+                    "Export the active database to a JSON file"
+                Keys.onReturnPressed: showExpDlg = true
+                Keys.onSpacePressed: showExpDlg = true
+                onClicked: showExpDlg = true }
             CButton { text: "Import"
-                variant: "ghost"; onClicked: showImpDlg = true }
+                variant: "ghost"
+                activeFocusOnTab: true
+                Accessible.role: Accessible.Button
+                Accessible.name: "Import Database"
+                Accessible.description:
+                    "Import a JSON dump into the active backend"
+                Keys.onReturnPressed: showImpDlg = true
+                Keys.onSpacePressed: showImpDlg = true
+                onClicked: showImpDlg = true }
         }
         CDatabaseStatsRow {
             totalRecords: Logic.totalRecords(backends).toLocaleString()

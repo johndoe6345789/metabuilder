@@ -30,6 +30,9 @@ ColumnLayout {
         CTextField {
             Layout.fillWidth: true
             text: root.node ? root.node.name : ""
+            activeFocusOnTab: true
+            Accessible.role: Accessible.EditableText
+            Accessible.name: "Component name"
             onTextChanged: {
                 if (root.node && text !== root.node.name)
                     root.nameChanged(text)
@@ -46,12 +49,25 @@ ColumnLayout {
             spacing: 6
 
             Repeater {
-                model: ["container", "layout", "widget", "atom"]
+                model: ["container", "layout",
+                    "widget", "atom"]
                 delegate: CButton {
                     text: modelData
                     size: "sm"
-                    variant: (root.node && root.node.type === modelData)
+                    variant: (root.node
+                        && root.node.type === modelData)
                         ? "primary" : "ghost"
+                    activeFocusOnTab: true
+                    Accessible.role: Accessible.RadioButton
+                    Accessible.name: modelData + " type"
+                    Accessible.description:
+                        (root.node
+                         && root.node.type === modelData)
+                        ? "Selected" : "Not selected"
+                    Keys.onReturnPressed:
+                        root.typeChanged(modelData)
+                    Keys.onSpacePressed:
+                        root.typeChanged(modelData)
                     onClicked: root.typeChanged(modelData)
                 }
             }
@@ -65,8 +81,15 @@ ColumnLayout {
         Item { Layout.fillWidth: true }
         CSwitch {
             checked: root.node ? root.node.visible : false
+            activeFocusOnTab: true
+            Accessible.role: Accessible.CheckBox
+            Accessible.name: "Component visible"
+            Accessible.description: checked
+                ? "Component is visible"
+                : "Component is hidden"
             onCheckedChanged: {
-                if (root.node && checked !== root.node.visible)
+                if (root.node
+                        && checked !== root.node.visible)
                     root.visibleChanged(checked)
             }
         }

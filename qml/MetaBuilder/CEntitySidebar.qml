@@ -53,9 +53,22 @@ Rectangle {
             delegate: CListItem {
                 width: parent ? parent.width : 200
                 title: modelData
-                subtitle: (root.entityCounts[modelData] || 0) + " records"
-                leadingIcon: root.entityIcons[modelData] || ""
-                selected: root.selectedEntity === modelData
+                subtitle: (root.entityCounts[modelData]
+                    || 0) + " records"
+                leadingIcon:
+                    root.entityIcons[modelData] || ""
+                selected:
+                    root.selectedEntity === modelData
+                activeFocusOnTab: true
+                Accessible.role: Accessible.ListItem
+                Accessible.name: modelData
+                Accessible.description:
+                    (root.entityCounts[modelData]
+                    || 0) + " records"
+                Keys.onReturnPressed:
+                    root.entitySelected(modelData)
+                Keys.onSpacePressed:
+                    root.entitySelected(modelData)
                 onClicked: root.entitySelected(modelData)
             }
         }

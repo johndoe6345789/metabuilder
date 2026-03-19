@@ -24,6 +24,13 @@ ColumnLayout {
         CButton {
             text: "Clear"
             variant: "ghost"
+            activeFocusOnTab: true
+            Accessible.role: Accessible.Button
+            Accessible.name: "Clear output"
+            Accessible.description:
+                "Clears the output console"
+            Keys.onReturnPressed: outputConsole.clearOutput()
+            Keys.onSpacePressed: outputConsole.clearOutput()
             onClicked: outputConsole.clearOutput()
         }
     }
@@ -43,6 +50,11 @@ ColumnLayout {
 
             TextArea {
                 readOnly: true
+                Accessible.role: Accessible.EditableText
+                Accessible.name: "Script output"
+                Accessible.multiLine: true
+                Accessible.description:
+                    "Read-only output from script execution"
                 text: {
                     var output = "";
                     if (testOutput) output += testOutput;

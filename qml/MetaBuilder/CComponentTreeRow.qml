@@ -8,7 +8,16 @@ Rectangle {
     objectName: "row_component_tree"
     Accessible.role: Accessible.ListItem
     Accessible.name: node ? node.name : ""
+    Accessible.description: node
+        ? node.type + ", depth "
+            + node.depth
+            + (childCount > 0
+                ? ", " + childCount + " children"
+                : "")
+        : ""
     activeFocusOnTab: true
+    Keys.onReturnPressed: root.clicked()
+    Keys.onSpacePressed: root.clicked()
 
     property var node
     property bool isSelected: false

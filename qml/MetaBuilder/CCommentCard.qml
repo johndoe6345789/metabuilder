@@ -75,6 +75,15 @@ CCard {
                 : "Like (" + root.comment.likes + ")"
             variant: root.comment.liked ? "primary" : "ghost"
             size: "sm"
+            activeFocusOnTab: true
+            Accessible.role: Accessible.Button
+            Accessible.name: root.comment.liked
+                ? "Unlike comment, "
+                    + root.comment.likes + " likes"
+                : "Like comment, "
+                    + root.comment.likes + " likes"
+            Keys.onReturnPressed: root.liked()
+            Keys.onSpacePressed: root.liked()
             onClicked: root.liked()
         }
 
@@ -85,6 +94,12 @@ CCard {
             variant: "danger"
             size: "sm"
             visible: root.comment.canDelete || false
+            activeFocusOnTab: visible
+            Accessible.role: Accessible.Button
+            Accessible.name: "Delete comment by "
+                + (root.comment.username || "user")
+            Keys.onReturnPressed: root.deleted()
+            Keys.onSpacePressed: root.deleted()
             onClicked: root.deleted()
         }
     }

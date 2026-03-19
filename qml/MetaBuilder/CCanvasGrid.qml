@@ -3,8 +3,10 @@ import QtQuick
 Canvas {
     id: root
     objectName: "canvas_grid"
-    Accessible.role: Accessible.Pane
+    Accessible.role: Accessible.Canvas
     Accessible.name: "Canvas Grid"
+    Accessible.description:
+        "Background grid overlay for the workflow canvas"
 
     onPaint: {
         var ctx = getContext("2d")

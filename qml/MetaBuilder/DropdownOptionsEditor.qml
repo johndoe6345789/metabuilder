@@ -28,6 +28,11 @@ ColumnLayout {
         Item { Layout.fillWidth: true }
         CButton {
             text: "+ Add Option"; variant: "primary"; size: "sm"
+            activeFocusOnTab: true
+            Accessible.role: Accessible.Button
+            Accessible.name: "Add option"
+            Keys.onReturnPressed: root.addOptionClicked()
+            Keys.onSpacePressed: root.addOptionClicked()
             onClicked: root.addOptionClicked()
         }
     }
@@ -45,8 +50,13 @@ ColumnLayout {
                     Layout.preferredWidth: 24; color: Theme.text; opacity: 0.5
                 }
                 CTextField {
-                    label: "Label"; placeholderText: "Display label"
-                    text: modelData.label; Layout.fillWidth: true
+                    label: "Label"
+                    placeholderText: "Display label"
+                    text: modelData.label
+                    Layout.fillWidth: true
+                    Accessible.role: Accessible.EditableText
+                    Accessible.name: "Option "
+                        + (index + 1) + " label"
                     onTextChanged: {
                         if (text !== modelData.label)
                             root.optionFieldChanged(
@@ -58,6 +68,9 @@ ColumnLayout {
                     placeholderText: "stored_value"
                     text: modelData.value
                     Layout.fillWidth: true
+                    Accessible.role: Accessible.EditableText
+                    Accessible.name: "Option "
+                        + (index + 1) + " value"
                     onTextChanged: {
                         if (text !== modelData.value)
                             root.optionFieldChanged(
@@ -67,25 +80,57 @@ ColumnLayout {
                 ColumnLayout {
                     spacing: 2
                     CButton {
-                        text: "\u25B2"; variant: "ghost"; size: "sm"
+                        text: "\u25B2"
+                        variant: "ghost"; size: "sm"
                         enabled: index > 0
-                        onClicked: root.moveOptionClicked(index, -1)
+                        activeFocusOnTab: true
+                        Accessible.role: Accessible.Button
+                        Accessible.name: "Move option "
+                            + (index + 1) + " up"
+                        Keys.onReturnPressed:
+                            root.moveOptionClicked(
+                                index, -1)
+                        Keys.onSpacePressed:
+                            root.moveOptionClicked(
+                                index, -1)
+                        onClicked:
+                            root.moveOptionClicked(
+                                index, -1)
                     }
                     CButton {
-                        text: "\u25BC"; variant: "ghost"; size: "sm"
+                        text: "\u25BC"
+                        variant: "ghost"; size: "sm"
                         enabled: root.dropdown
                             ? index < root.dropdown
                                 .options.length - 1
                             : false
-                        onClicked: {
+                        activeFocusOnTab: true
+                        Accessible.role: Accessible.Button
+                        Accessible.name: "Move option "
+                            + (index + 1) + " down"
+                        Keys.onReturnPressed:
                             root.moveOptionClicked(
                                 index, 1)
-                        }
+                        Keys.onSpacePressed:
+                            root.moveOptionClicked(
+                                index, 1)
+                        onClicked:
+                            root.moveOptionClicked(
+                                index, 1)
                     }
                 }
                 CButton {
                     text: "X"; variant: "danger"; size: "sm"
-                    onClicked: root.removeOptionClicked(index)
+                    activeFocusOnTab: true
+                    Accessible.role: Accessible.Button
+                    Accessible.name: "Remove option "
+                        + (index + 1)
+                    Keys.onReturnPressed:
+                        root.removeOptionClicked(index)
+                    Keys.onSpacePressed:
+                        root.removeOptionClicked(index)
+                    onClicked:
+                        root.removeOptionClicked(index)
                 }
             }
         }

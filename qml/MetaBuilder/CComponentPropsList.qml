@@ -26,6 +26,11 @@ ColumnLayout {
             text: "Add Prop"
             variant: "ghost"
             size: "sm"
+            activeFocusOnTab: true
+            Accessible.role: Accessible.Button
+            Accessible.name: "Add custom property"
+            Keys.onReturnPressed: root.addProp()
+            Keys.onSpacePressed: root.addProp()
             onClicked: root.addProp()
         }
     }
@@ -63,6 +68,15 @@ ColumnLayout {
                     text: "\u00D7"
                     variant: "ghost"
                     size: "sm"
+                    activeFocusOnTab: true
+                    Accessible.role: Accessible.Button
+                    Accessible.name:
+                        "Remove property "
+                        + modelData.key
+                    Keys.onReturnPressed:
+                        root.removeProp(index)
+                    Keys.onSpacePressed:
+                        root.removeProp(index)
                     onClicked: root.removeProp(index)
                 }
             }

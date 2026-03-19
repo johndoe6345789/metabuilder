@@ -38,6 +38,9 @@ Rectangle {
             delegate: CCard {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+                Accessible.role: Accessible.StaticText
+                Accessible.name: modelData.label
+                    + ": " + String(modelData.value)
 
                 RowLayout {
                     Layout.fillWidth: true

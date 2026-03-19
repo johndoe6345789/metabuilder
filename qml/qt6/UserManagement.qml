@@ -130,8 +130,12 @@ Rectangle {
             CButton {
                 text: "Create User"
                 variant: "primary"
-                onClicked:
+                activeFocusOnTab: true
+                Accessible.role: Accessible.Button
+                Accessible.name: "Create new user"
+                Keys.onReturnPressed:
                     createDialogOpen = true
+                onClicked: createDialogOpen = true
             }
         }
         UserStatsBar {
@@ -244,6 +248,13 @@ Rectangle {
                 CButton {
                     text: "Cancel"
                     variant: "ghost"
+                    activeFocusOnTab: true
+                    Accessible.role: Accessible.Button
+                    Accessible.name: "Cancel deletion"
+                    Keys.onReturnPressed: {
+                        deleteDialogOpen = false
+                        deleteIndex = -1
+                    }
                     onClicked: {
                         deleteDialogOpen = false
                         deleteIndex = -1
@@ -252,6 +263,12 @@ Rectangle {
                 CButton {
                     text: "Delete"
                     variant: "danger"
+                    activeFocusOnTab: true
+                    Accessible.role: Accessible.Button
+                    Accessible.name:
+                        "Confirm delete user"
+                    Keys.onReturnPressed:
+                        confirmDelete()
                     onClicked: confirmDelete()
                 }
             }

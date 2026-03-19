@@ -23,8 +23,15 @@ Item {
         id: avatarCircle
         anchors.fill: parent
         radius: 16
+        activeFocusOnTab: true
         Accessible.role: Accessible.Button
         Accessible.name: "User menu: " + root.username
+        Accessible.description:
+            "Open user menu for " + root.username
+        Keys.onReturnPressed:
+            dropdownMenu.visible = !dropdownMenu.visible
+        Keys.onSpacePressed:
+            dropdownMenu.visible = !dropdownMenu.visible
         color: avatarMA.containsMouse
             ? Qt.rgba(0.39, 0.4, 0.95, isDark ? 0.25 : 0.2)
             : Qt.rgba(0.39, 0.4, 0.95, isDark ? 0.15 : 0.12)
@@ -115,6 +122,17 @@ Item {
                     Layout.fillWidth: true
                     height: 36
                     radius: 8
+                    activeFocusOnTab: true
+                    Accessible.role: Accessible.Button
+                    Accessible.name: "Sign out"
+                    Keys.onReturnPressed: {
+                        dropdownMenu.close()
+                        root.signOut()
+                    }
+                    Keys.onSpacePressed: {
+                        dropdownMenu.close()
+                        root.signOut()
+                    }
                     color: logoutMA.containsMouse
                         ? Qt.rgba(0.96, 0.25, 0.37, 0.08)
                         : "transparent"

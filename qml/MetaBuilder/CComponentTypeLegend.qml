@@ -20,12 +20,19 @@ FlexRow {
         ]
         delegate: Row {
             spacing: 4
+            Accessible.role: Accessible.StaticText
+            Accessible.name: modelData.label
+                + " component type"
             Rectangle {
                 width: 10; height: 10; radius: 2
                 color: modelData.color
-                anchors.verticalCenter: parent.verticalCenter
+                anchors.verticalCenter:
+                    parent.verticalCenter
             }
-            CText { variant: "caption"; text: modelData.label }
+            CText {
+                variant: "caption"
+                text: modelData.label
+            }
         }
     }
 }

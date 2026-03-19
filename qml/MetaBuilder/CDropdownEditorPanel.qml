@@ -62,6 +62,15 @@ CCard {
                     text: "Delete"
                     variant: "danger"
                     size: "sm"
+                    activeFocusOnTab: true
+                    Accessible.role: Accessible.Button
+                    Accessible.name: "Delete dropdown"
+                    Accessible.description:
+                        "Delete the selected dropdown"
+                    Keys.onReturnPressed:
+                        root.deleteClicked()
+                    Keys.onSpacePressed:
+                        root.deleteClicked()
                     onClicked: root.deleteClicked()
                 }
             }

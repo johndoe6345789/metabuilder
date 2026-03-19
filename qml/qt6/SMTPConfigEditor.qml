@@ -46,10 +46,23 @@ Rectangle {
                 Layout.fillWidth: true; spacing: 12
                 CText { variant: "h3"; text: "SMTP Configuration" }
                 CBadge { text: "Email" }; Item { Layout.fillWidth: true }
-                CButton { text: "Reset"; variant: "ghost"; size: "sm"
+                CButton { text: "Reset"
+                    variant: "ghost"; size: "sm"
+                    activeFocusOnTab: true
+                    Accessible.role: Accessible.Button
+                    Accessible.name: "Reset SMTP settings"
+                    Keys.onReturnPressed:
+                        Logic.resetAll(se)
                     onClicked: Logic.resetAll(se) }
-                CButton { text: "Save Configuration"; variant: "primary"
-                    size: "sm"; onClicked: Logic.saveAll(se) }
+                CButton { text: "Save Configuration"
+                    variant: "primary"; size: "sm"
+                    activeFocusOnTab: true
+                    Accessible.role: Accessible.Button
+                    Accessible.name:
+                        "Save SMTP configuration"
+                    Keys.onReturnPressed:
+                        Logic.saveAll(se)
+                    onClicked: Logic.saveAll(se) }
             }
             CCard {
                 Layout.fillWidth: true

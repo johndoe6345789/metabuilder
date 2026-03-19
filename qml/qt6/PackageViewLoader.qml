@@ -72,9 +72,19 @@ Rectangle {
                 text: "Load Package"
                 variant: "primary"
                 Layout.alignment: Qt.AlignHCenter
+                activeFocusOnTab: true
+                Accessible.role: Accessible.Button
+                Accessible.name:
+                    "Load package: "
+                    + formatTitle(packageId)
+                Keys.onReturnPressed:
+                    PackageLoader.install(
+                        packageId)
                 onClicked: {
                     PackageLoader.install(packageId)
-                    console.log("Installed package:", packageId)
+                    console.log(
+                        "Installed package:",
+                        packageId)
                 }
             }
         }

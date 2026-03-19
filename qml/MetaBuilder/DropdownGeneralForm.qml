@@ -24,6 +24,8 @@ ColumnLayout {
             placeholderText: "dropdown_name"
             text: root.dropdown ? root.dropdown.name : ""
             Layout.fillWidth: true
+            Accessible.role: Accessible.EditableText
+            Accessible.name: "Dropdown name"
             onTextChanged: {
                 if (root.dropdown && text !== root.dropdown.name)
                     root.fieldChanged("name", text)
@@ -35,8 +37,11 @@ ColumnLayout {
             placeholderText: "What is this dropdown for?"
             text: root.dropdown ? root.dropdown.description : ""
             Layout.fillWidth: true
+            Accessible.role: Accessible.EditableText
+            Accessible.name: "Dropdown description"
             onTextChanged: {
-                if (root.dropdown && text !== root.dropdown.description)
+                if (root.dropdown
+                    && text !== root.dropdown.description)
                     root.fieldChanged("description", text)
             }
         }
@@ -49,21 +54,33 @@ ColumnLayout {
         RowLayout {
             spacing: 8
             Switch {
-                checked: root.dropdown ? root.dropdown.allowCustom : false
+                checked: root.dropdown
+                    ? root.dropdown.allowCustom : false
+                activeFocusOnTab: true
+                Accessible.role: Accessible.CheckBox
+                Accessible.name: "Allow custom values"
                 onCheckedChanged: {
-                    if (root.dropdown && checked !== root.dropdown.allowCustom)
+                    if (root.dropdown
+                        && checked !== root.dropdown.allowCustom)
                         root.fieldChanged("allowCustom", checked)
                 }
             }
-            CText { variant: "body2"; text: "Allow custom values" }
+            CText {
+                variant: "body2"; text: "Allow custom values"
+            }
         }
 
         RowLayout {
             spacing: 8
             Switch {
-                checked: root.dropdown ? root.dropdown.required : false
+                checked: root.dropdown
+                    ? root.dropdown.required : false
+                activeFocusOnTab: true
+                Accessible.role: Accessible.CheckBox
+                Accessible.name: "Required"
                 onCheckedChanged: {
-                    if (root.dropdown && checked !== root.dropdown.required)
+                    if (root.dropdown
+                        && checked !== root.dropdown.required)
                         root.fieldChanged("required", checked)
                 }
             }

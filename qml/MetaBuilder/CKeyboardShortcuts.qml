@@ -8,6 +8,29 @@ Item {
 
     required property var appWindow
 
+    // Accessible descriptions for each shortcut
+    readonly property var shortcutDefs: [
+        { action: "Command palette", keys: "Ctrl+K" },
+        { action: "Login or logout", keys: "Ctrl+L" },
+        { action: "Front page", keys: "Ctrl+1" },
+        { action: "Dashboard", keys: "Ctrl+2" },
+        { action: "Moderator panel", keys: "Ctrl+3" },
+        { action: "Admin panel", keys: "Ctrl+4" },
+        { action: "God panel", keys: "Ctrl+5" },
+        { action: "Super God panel", keys: "Ctrl+6" },
+        { action: "Go back or dismiss", keys: "Escape" }
+    ]
+
+    Repeater {
+        model: shortcuts.shortcutDefs
+        Item {
+            visible: false
+            Accessible.role: Accessible.StaticText
+            Accessible.name: modelData.action
+                + ": " + modelData.keys
+        }
+    }
+
     Shortcut {
         sequence: "Ctrl+K"
         onActivated: console.log(

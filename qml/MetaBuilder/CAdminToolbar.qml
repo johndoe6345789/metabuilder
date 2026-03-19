@@ -42,6 +42,17 @@ ColumnLayout {
             text: "Create Record"
             variant: "primary"
             size: "sm"
+            activeFocusOnTab: true
+            Accessible.role: Accessible.Button
+            Accessible.name: "Create Record"
+            Accessible.description:
+                "Create a new "
+                + root.selectedEntity
+                + " record"
+            Keys.onReturnPressed:
+                root.createClicked()
+            Keys.onSpacePressed:
+                root.createClicked()
             onClicked: root.createClicked()
         }
     }
@@ -58,6 +69,11 @@ ColumnLayout {
                     .toLowerCase()
                 + " records..."
             text: root.searchText
+            activeFocusOnTab: true
+            Accessible.role: Accessible.EditableText
+            Accessible.name: "Search "
+                + root.selectedEntity
+                + " records"
             onTextChanged:
                 root.searchChanged(text)
         }
@@ -72,6 +88,18 @@ ColumnLayout {
                     === modelData
                     ? Theme.primary
                     : Theme.surface
+                activeFocusOnTab: true
+                Accessible.role: Accessible.CheckBox
+                Accessible.name:
+                    "Filter: " + modelData
+                Accessible.description:
+                    checked
+                    ? modelData + " filter active"
+                    : modelData + " filter inactive"
+                Keys.onReturnPressed:
+                    root.filterChanged(modelData)
+                Keys.onSpacePressed:
+                    root.filterChanged(modelData)
                 onClicked:
                     root.filterChanged(modelData)
             }
@@ -82,6 +110,17 @@ ColumnLayout {
             variant: "danger"
             size: "sm"
             enabled: root.hasSelectedRows
+            activeFocusOnTab: true
+            Accessible.role: Accessible.Button
+            Accessible.name: "Delete Selected"
+            Accessible.description:
+                "Delete all selected "
+                + root.selectedEntity
+                + " records"
+            Keys.onReturnPressed:
+                root.deleteSelectedClicked()
+            Keys.onSpacePressed:
+                root.deleteSelectedClicked()
             onClicked:
                 root.deleteSelectedClicked()
         }

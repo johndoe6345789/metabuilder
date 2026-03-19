@@ -60,16 +60,31 @@ Rectangle {
             CButton {
                 text: "Level 1"; variant: "ghost"
                 size: "sm"
+                activeFocusOnTab: true
+                Accessible.role: Accessible.Button
+                Accessible.name: "Navigate to Level 1"
+                Keys.onReturnPressed: root.navigateLevel(1)
+                Keys.onSpacePressed: root.navigateLevel(1)
                 onClicked: root.navigateLevel(1)
             }
             CButton {
                 text: "Level 2"; variant: "ghost"
                 size: "sm"
+                activeFocusOnTab: true
+                Accessible.role: Accessible.Button
+                Accessible.name: "Navigate to Level 2"
+                Keys.onReturnPressed: root.navigateLevel(2)
+                Keys.onSpacePressed: root.navigateLevel(2)
                 onClicked: root.navigateLevel(2)
             }
             CButton {
                 text: "Level 3"; variant: "ghost"
                 size: "sm"
+                activeFocusOnTab: true
+                Accessible.role: Accessible.Button
+                Accessible.name: "Navigate to Level 3"
+                Keys.onReturnPressed: root.navigateLevel(3)
+                Keys.onSpacePressed: root.navigateLevel(3)
                 onClicked: root.navigateLevel(3)
             }
         }

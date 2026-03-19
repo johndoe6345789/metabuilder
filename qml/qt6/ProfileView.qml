@@ -181,6 +181,15 @@ Rectangle {
                         : "Save Changes"
                     variant: "primary"
                     enabled: !saving
+                    activeFocusOnTab: true
+                    Accessible.role: Accessible.Button
+                    Accessible.name: saving
+                        ? "Saving profile"
+                        : "Save profile changes"
+                    Keys.onReturnPressed:
+                        profileRoot.saveProfile()
+                    Keys.onSpacePressed:
+                        profileRoot.saveProfile()
                     onClicked:
                         profileRoot.saveProfile()
                 }

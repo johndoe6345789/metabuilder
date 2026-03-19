@@ -89,6 +89,12 @@ ApplicationWindow {
             CButton {
                 visible: !loggedIn; text: "Login"
                 variant: "primary"; size: "sm"
+                activeFocusOnTab: true
+                Accessible.role: Accessible.Button
+                Accessible.name: "Login"
+                Accessible.description: "Open login"
+                Keys.onReturnPressed: currentView = "login"
+                Keys.onSpacePressed: currentView = "login"
                 onClicked: currentView = "login"
             }
             CUserMenu {

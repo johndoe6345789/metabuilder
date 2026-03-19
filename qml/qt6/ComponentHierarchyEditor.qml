@@ -119,23 +119,46 @@ Rectangle {
                             text: "Add Child"
                             variant: "primary"
                             size: "sm"
-                            enabled:
-                                selectedIndex >= 0
+                            enabled: selectedIndex >= 0
+                            activeFocusOnTab: true
+                            Accessible.role:
+                                Accessible.Button
+                            Accessible.name:
+                                "Add child component"
+                            Keys.onReturnPressed:
+                                if (enabled)
+                                    root.addChild(
+                                        selectedIndex)
+                            Keys.onSpacePressed:
+                                if (enabled)
+                                    root.addChild(
+                                        selectedIndex)
                             onClicked:
                                 root.addChild(
-                                    selectedIndex
-                                )
+                                    selectedIndex)
                         }
                         CButton {
                             text: "Remove"
                             variant: "danger"
                             size: "sm"
-                            enabled:
-                                selectedIndex > 0
+                            enabled: selectedIndex > 0
+                            activeFocusOnTab: true
+                            Accessible.role:
+                                Accessible.Button
+                            Accessible.name:
+                                "Remove selected"
+                                + " component"
+                            Keys.onReturnPressed:
+                                if (enabled)
+                                    root.removeNode(
+                                        selectedIndex)
+                            Keys.onSpacePressed:
+                                if (enabled)
+                                    root.removeNode(
+                                        selectedIndex)
                             onClicked:
                                 root.removeNode(
-                                    selectedIndex
-                                )
+                                    selectedIndex)
                         }
                     }
                     CDivider {

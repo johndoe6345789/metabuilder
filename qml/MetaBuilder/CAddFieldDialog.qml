@@ -30,6 +30,9 @@ CDialog {
             placeholderText: "e.g. quantity"
             text: dlg.fieldName
             Layout.fillWidth: true
+            activeFocusOnTab: true
+            Accessible.role: Accessible.EditableText
+            Accessible.name: "Field Name"
             onTextChanged: dlg.fieldName = text
         }
         ColumnLayout {
@@ -43,6 +46,9 @@ CDialog {
                     dlg.fieldTypes.indexOf(
                         dlg.fieldType)
                 Layout.fillWidth: true
+                activeFocusOnTab: true
+                Accessible.role: Accessible.ComboBox
+                Accessible.name: "Field Type"
                 onCurrentIndexChanged:
                     dlg.fieldType =
                         dlg.fieldTypes[currentIndex]
@@ -51,6 +57,12 @@ CDialog {
         CSwitch {
             text: "Required"
             checked: dlg.fieldRequired
+            activeFocusOnTab: true
+            Accessible.role: Accessible.CheckBox
+            Accessible.name: "Required field"
+            Accessible.description:
+                "Toggle whether this field " +
+                "is mandatory"
             onCheckedChanged:
                 dlg.fieldRequired = checked
         }
@@ -59,6 +71,9 @@ CDialog {
             placeholderText: "Optional default"
             text: dlg.fieldDefault
             Layout.fillWidth: true
+            activeFocusOnTab: true
+            Accessible.role: Accessible.EditableText
+            Accessible.name: "Default Value"
             onTextChanged:
                 dlg.fieldDefault = text
         }
@@ -68,6 +83,9 @@ CDialog {
                 "What this field represents"
             text: dlg.fieldDescription
             Layout.fillWidth: true
+            activeFocusOnTab: true
+            Accessible.role: Accessible.EditableText
+            Accessible.name: "Field Description"
             onTextChanged:
                 dlg.fieldDescription = text
         }
@@ -77,6 +95,13 @@ CDialog {
             CButton {
                 text: "Cancel"
                 variant: "ghost"
+                activeFocusOnTab: true
+                Accessible.role: Accessible.Button
+                Accessible.name: "Cancel"
+                Keys.onReturnPressed:
+                    { reset(); cancelled() }
+                Keys.onSpacePressed:
+                    { reset(); cancelled() }
                 onClicked: { reset(); cancelled() }
             }
             CButton {
@@ -84,6 +109,31 @@ CDialog {
                 variant: "primary"
                 enabled:
                     dlg.fieldName.trim() !== ""
+                activeFocusOnTab: true
+                Accessible.role: Accessible.Button
+                Accessible.name: "Add Field"
+                Keys.onReturnPressed: {
+                    if (!enabled) return
+                    fieldAdded({
+                        name: fieldName,
+                        type: fieldType,
+                        required: fieldRequired,
+                        defaultValue: fieldDefault,
+                        description: fieldDescription
+                    })
+                    reset()
+                }
+                Keys.onSpacePressed: {
+                    if (!enabled) return
+                    fieldAdded({
+                        name: fieldName,
+                        type: fieldType,
+                        required: fieldRequired,
+                        defaultValue: fieldDefault,
+                        description: fieldDescription
+                    })
+                    reset()
+                }
                 onClicked: {
                     fieldAdded({
                         name: fieldName,

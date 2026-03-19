@@ -95,6 +95,8 @@ Rectangle {
             onCurrentIndexChanged:
                 currentTab = currentIndex
             tabs: tabModel
+            Accessible.role: Accessible.PageTabList
+            Accessible.name: "God Panel tabs"
         }
 
         StackLayout {

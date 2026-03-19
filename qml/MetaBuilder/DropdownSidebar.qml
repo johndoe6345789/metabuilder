@@ -28,6 +28,11 @@ CCard {
                 text: "+ Add"
                 variant: "primary"
                 size: "sm"
+                activeFocusOnTab: true
+                Accessible.role: Accessible.Button
+                Accessible.name: "Add dropdown"
+                Keys.onReturnPressed: root.addClicked()
+                Keys.onSpacePressed: root.addClicked()
                 onClicked: root.addClicked()
             }
         }
@@ -47,6 +52,14 @@ CCard {
                 title: modelData.name
                 subtitle: modelData.description
                 selected: index === root.selectedIndex
+                activeFocusOnTab: true
+                Accessible.role: Accessible.ListItem
+                Accessible.name: modelData.name
+                Accessible.description: modelData.description
+                    + ", " + modelData.options.length
+                    + " options"
+                Keys.onReturnPressed: root.itemClicked(index)
+                Keys.onSpacePressed: root.itemClicked(index)
                 onClicked: root.itemClicked(index)
 
                 CBadge {

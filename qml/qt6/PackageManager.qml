@@ -80,6 +80,11 @@ Rectangle {
                             onTextChanged:
                                 searchText = text
                             Layout.fillWidth: true
+                            activeFocusOnTab: true
+                            Accessible.role:
+                                Accessible.EditableText
+                            Accessible.name:
+                                "Search packages"
                         }
                         CText {
                             variant: "caption"

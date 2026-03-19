@@ -26,8 +26,18 @@ ColumnLayout {
             model: root.options
             delegate: CButton {
                 text: modelData
-                variant: root.selectedIndex === index ? "primary" : "ghost"
+                variant: root.selectedIndex === index
+                    ? "primary" : "ghost"
                 size: "sm"
+                activeFocusOnTab: true
+                Accessible.role: Accessible.RadioButton
+                Accessible.name: modelData + " encryption"
+                Accessible.description:
+                    root.selectedIndex === index
+                        ? modelData + " selected"
+                        : modelData + " not selected"
+                Keys.onReturnPressed: root.selectionChanged(index)
+                Keys.onSpacePressed: root.selectionChanged(index)
                 onClicked: root.selectionChanged(index)
             }
         }

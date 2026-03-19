@@ -42,6 +42,11 @@ Rectangle {
             Layout.fillWidth: true
             placeholderText: "Username"
             enabled: !root.loading
+            activeFocusOnTab: true
+            Accessible.role: Accessible.EditableText
+            Accessible.name: "Username"
+            Accessible.description: "Enter your username"
+            KeyNavigation.tab: passwordField
         }
 
         CTextField {
@@ -50,7 +55,14 @@ Rectangle {
             placeholderText: "Password"
             echoMode: TextInput.Password
             enabled: !root.loading
-            onAccepted: root.login(usernameField.text, passwordField.text)
+            activeFocusOnTab: true
+            Accessible.role: Accessible.EditableText
+            Accessible.name: "Password"
+            Accessible.description: "Enter your password"
+            KeyNavigation.tab: signInBtn
+            onAccepted: root.login(
+                usernameField.text,
+                passwordField.text)
         }
 
         CAlert {
@@ -61,11 +73,25 @@ Rectangle {
         }
 
         CButton {
+            id: signInBtn
             Layout.fillWidth: true
             text: root.loading ? "Signing in..." : "Sign In"
             variant: "primary"
             enabled: !root.loading
-            onClicked: root.login(usernameField.text, passwordField.text)
+            activeFocusOnTab: true
+            Accessible.role: Accessible.Button
+            Accessible.name: root.loading
+                ? "Signing in, please wait"
+                : "Sign In"
+            Keys.onReturnPressed: root.login(
+                usernameField.text,
+                passwordField.text)
+            Keys.onSpacePressed: root.login(
+                usernameField.text,
+                passwordField.text)
+            onClicked: root.login(
+                usernameField.text,
+                passwordField.text)
         }
     }
 }

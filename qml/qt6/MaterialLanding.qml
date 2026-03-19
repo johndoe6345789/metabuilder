@@ -19,31 +19,74 @@ Rectangle {
 
         FlexRow {
             spacing: 16
-            CButton { text: "Primary action"; variant: "primary" }
-            CButton { text: "Ghost action"; variant: "ghost" }
-            CButton { text: "Danger"; variant: "danger" }
+            CButton {
+                text: "Primary action"; variant: "primary"
+                activeFocusOnTab: true
+                Accessible.role: Accessible.Button
+                Accessible.name: "Primary action"
+            }
+            CButton {
+                text: "Ghost action"; variant: "ghost"
+                activeFocusOnTab: true
+                Accessible.role: Accessible.Button
+                Accessible.name: "Ghost action"
+            }
+            CButton {
+                text: "Danger"; variant: "danger"
+                activeFocusOnTab: true
+                Accessible.role: Accessible.Button
+                Accessible.name: "Danger action"
+            }
         }
 
         FlexRow {
             spacing: 16
-            CTextField { placeholderText: "Email address"
-            Layout.preferredWidth: 240 }
-            CTextField { placeholderText: "Your role"
-            Layout.preferredWidth: 180 }
+            CTextField {
+                placeholderText: "Email address"
+                Layout.preferredWidth: 240
+                activeFocusOnTab: true
+                Accessible.role: Accessible.EditableText
+                Accessible.name: "Email address"
+            }
+            CTextField {
+                placeholderText: "Your role"
+                Layout.preferredWidth: 180
+                activeFocusOnTab: true
+                Accessible.role: Accessible.EditableText
+                Accessible.name: "Your role"
+            }
         }
 
         FlexRow {
             spacing: 12
-            CChip { text: "Design" }
-            CChip { text: "Data" }
-            CChip { text: "Runtime" }
-            CChip { text: "Automation" }
+            CChip {
+                text: "Design"
+                Accessible.role: Accessible.StaticText
+                Accessible.name: "Design"
+            }
+            CChip {
+                text: "Data"
+                Accessible.role: Accessible.StaticText
+                Accessible.name: "Data"
+            }
+            CChip {
+                text: "Runtime"
+                Accessible.role: Accessible.StaticText
+                Accessible.name: "Runtime"
+            }
+            CChip {
+                text: "Automation"
+                Accessible.role: Accessible.StaticText
+                Accessible.name: "Automation"
+            }
         }
 
         CDivider { Layout.fillWidth: true }
 
         CPaper {
             Layout.fillWidth: true
+            Accessible.role: Accessible.Grouping
+            Accessible.name: "Paper surface"
             ColumnLayout {
                 anchors.fill: parent
                 anchors.margins: 16
@@ -60,8 +103,20 @@ Rectangle {
                 }
                 FlexRow {
                     spacing: 12
-                    CButton { text: "Continue"; variant: "primary" }
-                    CButton { text: "Cancel"; variant: "ghost" }
+                    CButton {
+                        text: "Continue"
+                        variant: "primary"
+                        activeFocusOnTab: true
+                        Accessible.role: Accessible.Button
+                        Accessible.name: "Continue"
+                    }
+                    CButton {
+                        text: "Cancel"
+                        variant: "ghost"
+                        activeFocusOnTab: true
+                        Accessible.role: Accessible.Button
+                        Accessible.name: "Cancel"
+                    }
                 }
             }
         }
@@ -69,6 +124,8 @@ Rectangle {
         CCard {
             Layout.fillWidth: true
             title: "Card headline"
+            Accessible.role: Accessible.Grouping
+            Accessible.name: "Card headline"
             CText {
                 text: "Cards can load any content, here we show simple stacked
                     text with Material spacing."
@@ -81,9 +138,21 @@ Rectangle {
             CText { variant: "subtitle1"; text: "Badge samples" }
             FlexRow {
                 spacing: 10
-                CBadge { text: "alpha" }
-                CBadge { text: "stable" }
-                CBadge { text: "live" }
+                CBadge {
+                    text: "alpha"
+                    Accessible.role: Accessible.StaticText
+                    Accessible.name: "alpha"
+                }
+                CBadge {
+                    text: "stable"
+                    Accessible.role: Accessible.StaticText
+                    Accessible.name: "stable"
+                }
+                CBadge {
+                    text: "live"
+                    Accessible.role: Accessible.StaticText
+                    Accessible.name: "live"
+                }
             }
         }
     }

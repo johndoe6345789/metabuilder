@@ -19,6 +19,8 @@ FlexRow {
     CCard {
         Layout.fillWidth: true
         implicitHeight: 72
+        Accessible.role: Accessible.StaticText
+        Accessible.name: "Total Records: " + root.totalRecords
 
         ColumnLayout {
             anchors.fill: parent
@@ -32,6 +34,8 @@ FlexRow {
     CCard {
         Layout.fillWidth: true
         implicitHeight: 72
+        Accessible.role: Accessible.StaticText
+        Accessible.name: "Total Size: " + root.totalSize
 
         ColumnLayout {
             anchors.fill: parent
@@ -45,6 +49,8 @@ FlexRow {
     CCard {
         Layout.fillWidth: true
         implicitHeight: 72
+        Accessible.role: Accessible.StaticText
+        Accessible.name: "Active Backend: " + root.activeBackend
 
         ColumnLayout {
             anchors.fill: parent
@@ -58,6 +64,8 @@ FlexRow {
     CCard {
         Layout.fillWidth: true
         implicitHeight: 72
+        Accessible.role: Accessible.StaticText
+        Accessible.name: "Adapter Pattern: " + root.adapterPattern
 
         ColumnLayout {
             anchors.fill: parent

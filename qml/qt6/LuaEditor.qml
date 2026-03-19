@@ -50,6 +50,11 @@ Rectangle {
                     CBadge { text: curRet }; Item { Layout.fillWidth: true }
                     CSelect {
                         Layout.preferredWidth: 200
+                        activeFocusOnTab: true
+                        Accessible.role: Accessible.ComboBox
+                        Accessible.name: "Load example script"
+                        Accessible.description:
+                            "Select a Lua example to load"
                         model: Logic.exampleLabels(examples)
                         currentIndex: selExIdx
                         onCurrentIndexChanged: {
@@ -58,11 +63,45 @@ Rectangle {
                                 curCode = examples[currentIndex].code }
                     }
                     CButton { text: "New Script"; variant: "ghost"
+                        activeFocusOnTab: true
+                        Accessible.role: Accessible.Button
+                        Accessible.name: "New script"
+                        Keys.onReturnPressed:
+                            Logic.newScript(root)
+                        Keys.onSpacePressed:
+                            Logic.newScript(root)
                         onClicked: Logic.newScript(root) }
                     CButton { text: "Run"; variant: "primary"
-                        onClicked: testOutput = Logic.runScript(curName) }
-                    CButton { text: "Security Scan"; variant: "danger"
-                        onClicked: scanResult = Logic.securityScan(curName) }
+                        activeFocusOnTab: true
+                        Accessible.role: Accessible.Button
+                        Accessible.name: "Run script"
+                        Accessible.description:
+                            "Execute the current Lua script"
+                        Keys.onReturnPressed:
+                            testOutput =
+                                Logic.runScript(curName)
+                        Keys.onSpacePressed:
+                            testOutput =
+                                Logic.runScript(curName)
+                        onClicked:
+                            testOutput =
+                                Logic.runScript(curName) }
+                    CButton { text: "Security Scan"
+                        variant: "danger"
+                        activeFocusOnTab: true
+                        Accessible.role: Accessible.Button
+                        Accessible.name: "Security scan"
+                        Accessible.description:
+                            "Scan script for security issues"
+                        Keys.onReturnPressed:
+                            scanResult =
+                                Logic.securityScan(curName)
+                        Keys.onSpacePressed:
+                            scanResult =
+                                Logic.securityScan(curName)
+                        onClicked:
+                            scanResult =
+                                Logic.securityScan(curName) }
                 }
             }
             RowLayout {

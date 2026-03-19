@@ -62,12 +62,9 @@ Rectangle {
         deleteDialogVisible = false
     }
     function moveRoute(from, dir) {
-        var r = DBAL.moveRoute(
-            routes, from, dir)
-        routes = r.routes
-        selectedIndex = r.newIndex
+        var r = DBAL.moveRoute(routes, from, dir)
+        routes = r.routes; selectedIndex = r.newIndex
     }
-
     onUseLiveDataChanged:
         if (useLiveData) reload()
     Component.onCompleted: reload()
@@ -88,8 +85,12 @@ Rectangle {
             CButton {
                 text: "Add Route"
                 variant: "primary"; size: "sm"
-                onClicked:
+                activeFocusOnTab: true
+                Accessible.role: Accessible.Button
+                Accessible.name: "Add new route"
+                Keys.onReturnPressed:
                     addDialogVisible = true
+                onClicked: addDialogVisible = true
             }
         }
         RowLayout {
@@ -161,9 +162,7 @@ Rectangle {
                     anchors.fill: parent
                     anchors.margins: 16
                     spacing: 12
-                    Item {
-                        Layout.fillHeight: true
-                    }
+                    Item { Layout.fillHeight: true }
                     CText {
                         variant: "body2"
                         text: "Select a route"
@@ -174,9 +173,7 @@ Rectangle {
                             Text.AlignHCenter
                         wrapMode: Text.WordWrap
                     }
-                    Item {
-                        Layout.fillHeight: true
-                    }
+                    Item { Layout.fillHeight: true }
                 }
             }
         }
@@ -186,8 +183,7 @@ Rectangle {
         layoutOptions: root.layoutOptions
         levelOptions: root.levelOptions
         onAddRoute: function(p, t, l, ly) {
-            root.addRoute(p, t, l, ly)
-        }
+            root.addRoute(p, t, l, ly) }
     }
     CDeleteConfirmDialog {
         visible: deleteDialogVisible

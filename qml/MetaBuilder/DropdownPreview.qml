@@ -45,6 +45,12 @@ CPaper {
                 border.color: Theme.border
                 border.width: 1
                 radius: 4
+                activeFocusOnTab: true
+                Accessible.role: Accessible.ComboBox
+                Accessible.name: root.dropdown
+                    ? root.dropdown.name : "Dropdown"
+                Accessible.description: root.dropdown
+                    ? root.dropdown.description : ""
 
                 RowLayout {
                     anchors.fill: parent

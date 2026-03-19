@@ -99,20 +99,36 @@ Rectangle {
 
             CButton {
                 text: "Get Started"
-                variant: "primary"
-                size: "lg"
+                variant: "primary"; size: "lg"
+                activeFocusOnTab: true
+                Accessible.role: Accessible.Button
+                Accessible.name: "Get Started"
+                Keys.onReturnPressed: root.getStarted()
+                Keys.onSpacePressed: root.getStarted()
                 onClicked: root.getStarted()
             }
             CButton {
                 text: "Storybook"
-                variant: "ghost"
-                size: "lg"
+                variant: "ghost"; size: "lg"
+                activeFocusOnTab: true
+                Accessible.role: Accessible.Button
+                Accessible.name: "Open Storybook"
+                Keys.onReturnPressed:
+                    root.openStorybook()
+                Keys.onSpacePressed:
+                    root.openStorybook()
                 onClicked: root.openStorybook()
             }
             CButton {
                 text: "Packages"
-                variant: "ghost"
-                size: "lg"
+                variant: "ghost"; size: "lg"
+                activeFocusOnTab: true
+                Accessible.role: Accessible.Button
+                Accessible.name: "Open Packages"
+                Keys.onReturnPressed:
+                    root.openPackages()
+                Keys.onSpacePressed:
+                    root.openPackages()
                 onClicked: root.openPackages()
             }
         }

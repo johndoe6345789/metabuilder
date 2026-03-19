@@ -37,10 +37,17 @@ CCard {
                 title: modelData.name
                 subtitle: modelData.key
                 selected: index === root.selectedIndex
-                leadingIcon: modelData.status === "connected" ? "check_circle"
+                leadingIcon: modelData.status === "connected"
+                    ? "check_circle"
                     : (modelData.status === "error"
                         ? "error" : "radio_button_unchecked")
-
+                activeFocusOnTab: true
+                Accessible.role: Accessible.ListItem
+                Accessible.name: modelData.name
+                Accessible.description:
+                    modelData.key + " — " + modelData.status
+                Keys.onReturnPressed: root.backendSelected(index)
+                Keys.onSpacePressed: root.backendSelected(index)
                 onClicked: root.backendSelected(index)
 
                 CStatusBadge {

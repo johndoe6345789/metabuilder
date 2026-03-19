@@ -8,6 +8,8 @@ Rectangle {
     Accessible.role: Accessible.Button
     Accessible.name: name + " Level " + level
     activeFocusOnTab: true
+    Keys.onReturnPressed: root.clicked()
+    Keys.onSpacePressed: root.clicked()
 
     property int level: 1
     property string name: ""

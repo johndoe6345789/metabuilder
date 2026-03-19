@@ -66,19 +66,33 @@ CCard {
                 rowIndex: index
                 fields: root.fields
                 isSelected: root.selectedRow === index
-                isChecked: root.selectedRows[index] || false
+                isChecked:
+                    root.selectedRows[index] || false
                 tableWidth: tableView.width
+                activeFocusOnTab: true
+                Accessible.role: Accessible.Row
+                Accessible.name: "Row " + (index + 1)
+                Accessible.description:
+                    "Table row " + (index + 1)
+                    + " of " + root.totalFiltered
+                Keys.onReturnPressed:
+                    root.rowClicked(rowIndex)
+                Keys.onSpacePressed:
+                    root.rowClicked(rowIndex)
                 onClicked: root.rowClicked(rowIndex)
                 onCheckChanged: function(checked) {
-                    var newSel = Object.assign({}, root.selectedRows);
+                    var newSel = Object.assign(
+                        {}, root.selectedRows);
                     newSel[rowIndex] = checked;
                     root.selectedRows = newSel;
                     root.rowSelectionChanged(newSel);
                 }
-                onEditClicked: function(idx, record) { root.editClicked(idx,
-                    record) }
-                onDeleteClicked: function(idx, record) { root.deleteClicked(idx,
-                    record) }
+                onEditClicked: function(idx, record) {
+                    root.editClicked(idx, record)
+                }
+                onDeleteClicked: function(idx, record) {
+                    root.deleteClicked(idx, record)
+                }
             }
         }
 

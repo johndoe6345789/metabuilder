@@ -26,16 +26,43 @@ CPaper {
         FlexRow {
             spacing: 12
             CButton {
-                text: ModPlayer.playing ? "Replay MOD" : "Play MOD"
+                text: ModPlayer.playing
+                    ? "Replay MOD" : "Play MOD"
                 variant: "primary"
+                activeFocusOnTab: true
+                Accessible.role: Accessible.Button
+                Accessible.name: ModPlayer.playing
+                    ? "Replay MOD" : "Play MOD"
+                Keys.onReturnPressed:
+                    ModPlayer.play(
+                        "frontends/qt6/assets"
+                        + "/audio/retro-gaming.mod")
+                Keys.onSpacePressed:
+                    ModPlayer.play(
+                        "frontends/qt6/assets"
+                        + "/audio/retro-gaming.mod")
                 onClicked: ModPlayer.play(
-                    "frontends/qt6/assets/audio/retro-gaming.mod")
+                    "frontends/qt6/assets"
+                    + "/audio/retro-gaming.mod")
             }
             CButton {
                 text: "Stop"
                 variant: "ghost"
-                onClicked: ModPlayer.stop()
                 enabled: ModPlayer.playing
+                activeFocusOnTab: true
+                Accessible.role: Accessible.Button
+                Accessible.name: "Stop MOD playback"
+                Accessible.description:
+                    ModPlayer.playing
+                    ? "Stop the current track"
+                    : "No track playing"
+                Keys.onReturnPressed:
+                    if (ModPlayer.playing)
+                        ModPlayer.stop()
+                Keys.onSpacePressed:
+                    if (ModPlayer.playing)
+                        ModPlayer.stop()
+                onClicked: ModPlayer.stop()
             }
         }
 

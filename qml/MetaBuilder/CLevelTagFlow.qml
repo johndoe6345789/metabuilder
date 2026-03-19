@@ -21,8 +21,12 @@ Flow {
             width: tText.implicitWidth + 16
             height: 24
             radius: 8
-            color: Qt.rgba(root.accent.r, root.accent.g, root.accent.b,
+            color: Qt.rgba(
+                root.accent.r, root.accent.g,
+                root.accent.b,
                 root.isDark ? 0.12 : 0.10)
+            Accessible.role: Accessible.StaticText
+            Accessible.name: modelData
 
             CText {
                 id: tText

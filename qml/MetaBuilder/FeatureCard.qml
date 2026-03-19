@@ -4,7 +4,7 @@ import QtQuick.Layouts
 Rectangle {
     id: card
     objectName: "featureCard"
-    Accessible.role: Accessible.Pane
+    Accessible.role: Accessible.Grouping
     Accessible.name: title
     property string title: ""
     property string description: ""
@@ -24,6 +24,8 @@ Rectangle {
             font.pixelSize: 16
             color: "#f5f8ff"
             wrapMode: Text.Wrap
+            Accessible.role: Accessible.StaticText
+            Accessible.name: card.title
         }
 
         Text {
@@ -31,6 +33,8 @@ Rectangle {
             font.pixelSize: 13
             color: "#aeb8cf"
             wrapMode: Text.Wrap
+            Accessible.role: Accessible.StaticText
+            Accessible.name: card.description
         }
     }
 }

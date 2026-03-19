@@ -6,8 +6,9 @@ import QmlComponents 1.0
 Rectangle {
     id: root
     objectName: "card_level_ref_" + levelNumber
-    Accessible.role: Accessible.ListItem
-    Accessible.name: levelName
+    Accessible.role: Accessible.Grouping
+    Accessible.name: levelName + ", Level "
+        + levelNumber + ", " + role
 
     property string levelName: ""
     property string role: ""
@@ -85,6 +86,8 @@ Rectangle {
                 chipColor: root.accent
                 variant: "filter"
                 selected: true
+                Accessible.role: Accessible.StaticText
+                Accessible.name: root.role
             }
         }
 

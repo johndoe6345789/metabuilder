@@ -45,6 +45,11 @@ Rectangle {
             CBadge { text: cf().length + " fields"; visible: cs() !== null }
             CButton { text: "Create Schema";
                 variant: "primary"; size: "md";
+                activeFocusOnTab: true
+                Accessible.role: Accessible.Button
+                Accessible.name: "Create Schema"
+                Keys.onReturnPressed: createDlg = true
+                Keys.onSpacePressed: createDlg = true
                 onClicked: createDlg = true }
         }
         CDivider { Layout.fillWidth: true; Layout.bottomMargin: 16 }
@@ -75,13 +80,38 @@ Rectangle {
         }
         CDivider { Layout.fillWidth: true; Layout.topMargin: 16 }
         FlexRow {
-            Layout.fillWidth: true; Layout.topMargin: 12; spacing: 12
-            CButton { text: "Save Schema"; variant: "primary"; size: "md" }
-            CButton { text: "Export JSON"; variant: "secondary"; size: "md" }
+            Layout.fillWidth: true
+            Layout.topMargin: 12; spacing: 12
+            CButton {
+                text: "Save Schema"
+                variant: "primary"; size: "md"
+                activeFocusOnTab: true
+                Accessible.role: Accessible.Button
+                Accessible.name: "Save Schema"
+            }
+            CButton {
+                text: "Export JSON"
+                variant: "secondary"; size: "md"
+                activeFocusOnTab: true
+                Accessible.role: Accessible.Button
+                Accessible.name: "Export JSON"
+                Accessible.description:
+                    "Export schema as JSON"
+            }
             Item { Layout.fillWidth: true }
-            CButton { text: "Delete Schema";
-                variant: "danger"; size: "md";
-                enabled: schemas.length > 1; onClicked: deleteSchema() }
+            CButton {
+                text: "Delete Schema"
+                variant: "danger"; size: "md"
+                enabled: schemas.length > 1
+                activeFocusOnTab: true
+                Accessible.role: Accessible.Button
+                Accessible.name: "Delete Schema"
+                Accessible.description:
+                    "Delete the current schema"
+                Keys.onReturnPressed: deleteSchema()
+                Keys.onSpacePressed: deleteSchema()
+                onClicked: deleteSchema()
+            }
         }
     }
     CCreateSchemaDialog {
