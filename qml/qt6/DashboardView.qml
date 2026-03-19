@@ -10,6 +10,9 @@ import "qmllib/MetaBuilder/DashboardDBAL.js"
 Rectangle {
     id: dashRoot
     color: Theme.background
+    objectName: "view_dashboard"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Dashboard"
 
     DBALProvider { id: dbal }
 

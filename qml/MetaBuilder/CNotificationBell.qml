@@ -6,6 +6,8 @@ import QmlComponents 1.0
 // Bell icon with red notification dot
 Item {
     id: root
+    Accessible.role: Accessible.Button
+    Accessible.name: "Notifications"
 
     property bool hasNotifications: true
     property bool isDark: Theme.mode === "dark"

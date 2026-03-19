@@ -8,6 +8,9 @@ import "PageRoutesDBAL.js" as DBAL
 
 Rectangle {
     id: root; color: Theme.background
+    objectName: "view_page_routes"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Page Routes Manager"
     DBALProvider { id: dbal }
     property bool useLiveData: dbal.connected
     property int selectedIndex: -1

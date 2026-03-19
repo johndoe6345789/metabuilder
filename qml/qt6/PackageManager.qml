@@ -4,7 +4,11 @@ import QtQuick.Layouts
 import QmlComponents 1.0
 
 Rectangle {
+    id: pkgRoot
     color: Theme.background
+    objectName: "view_package_manager"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Package Manager"
 
     property string searchText: ""
     property string selectedPackageId: ""

@@ -4,6 +4,9 @@ import "qmllib/dbal"; import "qmllib/MetaBuilder"
 import "qmllib/MetaBuilder/DatabaseLogic.js" as Logic
 Rectangle {
     id: root; color: Theme.background
+    objectName: "view_database_manager"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Database Manager"
     DBALProvider { id: dbal }
     property bool useLiveData: dbal.connected
     property int selBk: 2; property int actBk: 2; property int adPat: 0

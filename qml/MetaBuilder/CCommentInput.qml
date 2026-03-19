@@ -5,6 +5,10 @@ import QmlComponents 1.0
 
 CCard {
     id: root
+    objectName: "card_comment_input"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Post a Comment"
+    activeFocusOnTab: true
 
     property bool isDark: false
     property bool loading: false

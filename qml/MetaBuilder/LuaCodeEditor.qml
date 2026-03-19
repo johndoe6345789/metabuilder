@@ -5,6 +5,9 @@ import QmlComponents 1.0
 
 Rectangle {
     id: codeEditorRoot
+    objectName: "luaCodeEditor"
+    Accessible.role: Accessible.EditableText
+    Accessible.name: "Lua code editor"
     Layout.fillWidth: true
     Layout.fillHeight: true
     color: "#1e1e2e"

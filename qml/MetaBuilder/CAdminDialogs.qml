@@ -4,6 +4,9 @@ import QmlComponents 1.0
 
 Item {
     id: root
+    objectName: "container_admin_dialogs"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Admin Dialogs"
 
     property bool createDialogOpen: false
     property bool editDialogOpen: false

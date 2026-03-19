@@ -5,6 +5,10 @@ import QmlComponents 1.0
 
 CDialog {
     id: root
+    objectName: "dialog_delete_confirm"
+    Accessible.role: Accessible.Dialog
+    Accessible.name: title
+    activeFocusOnTab: true
 
     property string itemName: ""
     property string description: "This action cannot be undone."

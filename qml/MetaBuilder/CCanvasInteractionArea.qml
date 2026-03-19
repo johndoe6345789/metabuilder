@@ -4,6 +4,9 @@ import QtQuick.Layouts
 
 MouseArea {
     id: root
+    objectName: "area_canvas_interaction"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Canvas Interaction Area"
 
     property bool drawingConnection: false
 

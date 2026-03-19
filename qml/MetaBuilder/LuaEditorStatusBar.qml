@@ -3,6 +3,9 @@ import QtQuick.Layouts
 
 Rectangle {
     id: root
+    objectName: "luaEditorStatusBar"
+    Accessible.role: Accessible.StatusBar
+    Accessible.name: "Editor status bar"
 
     property int lineCount: 0
 

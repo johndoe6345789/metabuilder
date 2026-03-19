@@ -3,6 +3,9 @@ import QtQuick.Layouts; import QmlComponents 1.0
 import "../AdminCrud.js" as Crud
 Rectangle {
     id: panel; color: Theme.background
+    objectName: "panel_admin_content"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Admin Content Panel"
     property var adminRoot
     property var adminDlg
     ColumnLayout {

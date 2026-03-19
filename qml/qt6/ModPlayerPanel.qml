@@ -4,6 +4,9 @@ import QmlComponents 1.0
 
 CPaper {
     id: panel
+    objectName: "view_mod_player"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "MOD Player"
     width: 420
     implicitHeight: contentCol.implicitHeight + 32
 

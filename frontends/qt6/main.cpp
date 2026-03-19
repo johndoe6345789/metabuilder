@@ -14,16 +14,20 @@ int main(int argc, char *argv[]) {
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
 
-    // Add shared QML component library import paths
-    // No symlinks — directly reference the qml/ directory tree
-    const QString projectRoot = QDir::cleanPath(QStringLiteral(SRCDIR) + QStringLiteral("/../.."));
-    const QString qmlDir = projectRoot + QStringLiteral("/qml");
-
-    // Add qml/ parent so Qt finds "import QmlComponents 1.0" at qml/components/
-    // and "import MetaBuilder 1.0" at qml/MetaBuilder/
+    // QML import paths — no symlinks needed
+    // qml/qmldir has "module QmlComponents"
+    // qml/MetaBuilder/qmldir has "module MetaBuilder"
+    //
+    // Qt resolves "import X 1.0" by scanning import paths
+    // for a qmldir that declares "module X". Adding qml/
+    // as an import path lets Qt find the QmlComponents
+    // module (qml/qmldir) and MetaBuilder (qml/MetaBuilder/)
+    const QString projectRoot = QDir::cleanPath(
+        QStringLiteral(SRCDIR) + QStringLiteral("/../.."));
+    const QString qmlDir =
+        projectRoot + QStringLiteral("/qml");
     if (QDir(qmlDir).exists()) {
         engine.addImportPath(qmlDir);
-        engine.addImportPath(projectRoot);
     }
 
     PackageRegistry registry;

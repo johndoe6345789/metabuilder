@@ -5,6 +5,9 @@ import QmlComponents 1.0
 
 CCard {
     id: root
+    objectName: "card_god_user"
+    Accessible.role: Accessible.ListItem
+    Accessible.name: user ? user.username : ""
 
     required property var user
     property bool isDark: false

@@ -9,6 +9,9 @@ import "DropdownCrud.js" as Crud
 Rectangle {
     id: root
     color: Theme.background
+    objectName: "view_dropdown_config"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Dropdown Configuration"
 
     DBALProvider { id: dbal }
     property bool useLiveData: dbal.connected

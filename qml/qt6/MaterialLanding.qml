@@ -4,7 +4,11 @@ import QtQuick.Layouts
 import QmlComponents 1.0
 
 Rectangle {
+    id: materialRoot
     color: Theme.background
+    objectName: "view_material_landing"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Material Landing"
 
     ColumnLayout {
         anchors.fill: parent

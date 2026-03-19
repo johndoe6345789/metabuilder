@@ -4,6 +4,9 @@ import QmlComponents 1.0
 
 Rectangle {
     id: footer
+    objectName: "footer_frontpage"
+    Accessible.role: Accessible.Footer
+    Accessible.name: "Page Footer"
 
     property color surfaceColor: "transparent"
     property color textColor: Theme.textSecondary

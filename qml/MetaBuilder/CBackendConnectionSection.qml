@@ -5,6 +5,9 @@ import QmlComponents 1.0
 
 ColumnLayout {
     id: root
+    objectName: "section_backend_connection"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Backend Connection"
     Layout.fillWidth: true
     spacing: 16
 

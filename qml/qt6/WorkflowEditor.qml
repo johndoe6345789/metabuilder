@@ -6,6 +6,9 @@ import "qmllib/MetaBuilder"
 
 Rectangle {
     id: root; color: "transparent"
+    objectName: "view_workflow_editor"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Workflow Editor"
     DBALProvider { id: dbal }
     CWorkflowState {
         id: wfState; dbal: dbal

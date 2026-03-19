@@ -9,6 +9,9 @@ import "qmllib/MetaBuilder/ComponentTreeDBAL.js" as CTDBAL
 Rectangle {
     id: root
     color: Theme.background
+    objectName: "view_component_hierarchy"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Component Hierarchy Editor"
 
     DBALProvider { id: dbal }
     property bool useLiveData: dbal.connected

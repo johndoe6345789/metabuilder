@@ -5,6 +5,9 @@ import QmlComponents 1.0
 
 ColumnLayout {
     id: root
+    objectName: "dropdownOptionsEditor"
+    Accessible.role: Accessible.Form
+    Accessible.name: "Dropdown options editor"
     spacing: 16
     property var dropdown: null
     signal addOptionClicked()

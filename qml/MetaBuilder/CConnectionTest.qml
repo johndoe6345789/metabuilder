@@ -10,6 +10,9 @@ import "../dbal"
  */
 ColumnLayout {
     id: root
+    objectName: "panel_connection_test"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Connection Test"
     spacing: 12
 
     property bool isDark: Theme.mode === "dark"

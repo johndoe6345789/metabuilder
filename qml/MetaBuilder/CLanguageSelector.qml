@@ -6,6 +6,9 @@ import QmlComponents 1.0
 // Language selector pill (e.g. "EN")
 Item {
     id: root
+    Accessible.role: Accessible.Button
+    Accessible.name: "Language: "
+        + currentLanguage
 
     property string currentLanguage: "EN"
     property bool isDark: Theme.mode === "dark"

@@ -15,6 +15,9 @@ import QmlComponents 1.0
  */
 Rectangle {
     id: root
+    objectName: "bar_admin_stats"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Admin Statistics"
 
     property var stats: []   // Array of { label, value, accent }
     property bool isDark: Theme.mode === "dark"

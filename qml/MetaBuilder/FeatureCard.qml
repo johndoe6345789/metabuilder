@@ -3,6 +3,9 @@ import QtQuick.Layouts
 
 Rectangle {
     id: card
+    objectName: "featureCard"
+    Accessible.role: Accessible.Pane
+    Accessible.name: title
     property string title: ""
     property string description: ""
 

@@ -5,6 +5,11 @@ import QmlComponents 1.0
 
 CCard {
     id: root
+    objectName: "card_comment"
+    Accessible.role: Accessible.Pane
+    Accessible.name: comment.username
+        ? comment.username + " comment"
+        : "Comment"
 
     required property var comment
     property string currentUser: ""

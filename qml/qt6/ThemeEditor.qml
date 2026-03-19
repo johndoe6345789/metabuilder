@@ -8,6 +8,9 @@ import "qmllib/MetaBuilder/ThemeEditorLogic.js" as TELogic
 Rectangle {
     id: root
     color: Theme.background
+    objectName: "view_theme_editor"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Theme Editor"
 
     property string selectedTheme: "dark"
     property bool hasUnsavedChanges: false

@@ -7,6 +7,8 @@ import QmlComponents 1.0
 // Settings
 Rectangle {
     id: root
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Navigation"
 
     property string currentView: "frontpage"
     property int currentLevel: 1
@@ -74,6 +76,7 @@ Rectangle {
 
             delegate: CListItem {
                 Layout.fillWidth: true
+                activeFocusOnTab: true
                 title: modelData.label
                 leadingIcon: modelData.icon
                 selected: root.currentView
@@ -96,6 +99,7 @@ Rectangle {
 
             delegate: CListItem {
                 Layout.fillWidth: true
+                activeFocusOnTab: true
                 title: modelData.navLabel
                     ? modelData.navLabel
                     : modelData.name
@@ -115,6 +119,7 @@ Rectangle {
 
         CListItem {
             Layout.fillWidth: true
+            activeFocusOnTab: true
             title: "Settings"
             leadingIcon: "S"
             selected: root.currentView === "settings"

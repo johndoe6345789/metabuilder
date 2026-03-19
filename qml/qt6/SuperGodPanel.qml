@@ -9,6 +9,9 @@ import "SuperGodCrud.js" as Crud
 Rectangle {
     id: root
     color: Theme.background
+    objectName: "view_supergod_panel"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Super God Panel"
 
     DBALProvider { id: dbal }
     property bool dbalOnline: dbal.connected

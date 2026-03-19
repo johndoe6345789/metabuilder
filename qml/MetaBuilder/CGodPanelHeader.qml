@@ -5,6 +5,9 @@ import QmlComponents 1.0
 
 Rectangle {
     id: root
+    objectName: "header_god_panel"
+    Accessible.role: Accessible.Heading
+    Accessible.name: "God Panel"
     property var configCounts: ({})
     property bool isDark: false
     signal navigateLevel(int level)

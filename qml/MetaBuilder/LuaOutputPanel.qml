@@ -5,6 +5,9 @@ import QmlComponents 1.0
 
 Rectangle {
     id: outputPanel
+    objectName: "luaOutputPanel"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Lua output panel"
     Layout.fillWidth: true
     Layout.preferredHeight: 220
     color: Theme.paper

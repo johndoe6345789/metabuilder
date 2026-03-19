@@ -9,6 +9,9 @@ import QmlComponents 1.0
  */
 CCard {
     id: root
+    objectName: "table_data"
+    Accessible.role: Accessible.Table
+    Accessible.name: "Data Table"
 
     property var headers: []
     property var fields: []

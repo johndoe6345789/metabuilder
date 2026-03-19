@@ -4,6 +4,9 @@ import "qmllib/dbal"; import "qmllib/MetaBuilder"
 import "qmllib/MetaBuilder/SchemaEditorDBAL.js" as SDBAL
 Rectangle {
     id: root; color: Theme.background
+    objectName: "view_schema_editor"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Schema Editor"
     DBALProvider { id: dbal }
     property int selSch: 0; property int selFld: -1
     property bool createDlg: false; property bool addFldDlg: false

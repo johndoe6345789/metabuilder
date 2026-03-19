@@ -4,10 +4,14 @@ import QtQuick.Layouts
 
 Popup {
     id: popup
+    objectName: "languageSelector"
+    Accessible.role: Accessible.Dialog
+    Accessible.name: "Language selector"
+
     width: 220
     height: Math.min(400, langList.contentHeight + 60)
     padding: 8
-    
+
     property string currentLanguage: "en"
     property var themeColors: ({})
     
@@ -67,6 +71,9 @@ Popup {
         
         ListView {
             id: langList
+            objectName: "languageList"
+            Accessible.role: Accessible.List
+            Accessible.name: "Available languages"
             Layout.fillWidth: true
             Layout.fillHeight: true
             clip: true
@@ -75,7 +82,11 @@ Popup {
             delegate: ItemDelegate {
                 width: langList.width
                 height: 36
-                
+                objectName: "lang_" + modelData.id
+                Accessible.role: Accessible.ListItem
+                Accessible.name: modelData.name
+                activeFocusOnTab: true
+
                 highlighted: modelData.id === popup.currentLanguage
                 
                 background: Rectangle {

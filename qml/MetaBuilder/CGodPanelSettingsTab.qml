@@ -5,6 +5,9 @@ import QmlComponents 1.0
 
 Rectangle {
     id: root
+    objectName: "tab_god_panel_settings"
+    Accessible.role: Accessible.PageTab
+    Accessible.name: "Settings"
     color: "transparent"
 
     required property bool isDark

@@ -5,6 +5,9 @@ import QmlComponents 1.0
 
 Rectangle {
     id: root
+    objectName: "tab_god_users"
+    Accessible.role: Accessible.PageTab
+    Accessible.name: "God Users"
     color: "transparent"
 
     // ── Data ──

@@ -5,6 +5,9 @@ import QmlComponents 1.0
 
 Rectangle {
     id: root
+    objectName: "card_config_stat"
+    Accessible.role: Accessible.StaticText
+    Accessible.name: label + ": " + value
 
     property string label: ""
     property string value: ""

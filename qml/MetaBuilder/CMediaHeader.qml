@@ -4,6 +4,9 @@ import QmlComponents 1.0
 
 CCard {
     id: root
+    objectName: "mediaHeader"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Media service header"
     Layout.fillWidth: true
 
     property string serviceStatus: "unknown"

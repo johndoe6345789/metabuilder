@@ -8,6 +8,9 @@ import "LoginDBAL.js" as DBAL
 
 Rectangle {
     id: loginView; color: "transparent"
+    objectName: "view_login"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Login"
     property string errorMessage: ""
     property bool loggingIn: false
     property bool isDark:

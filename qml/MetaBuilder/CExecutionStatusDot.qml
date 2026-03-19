@@ -4,6 +4,9 @@ import QmlComponents 1.0
 
 FlexRow {
     id: root
+    objectName: "status_execution"
+    Accessible.role: Accessible.Indicator
+    Accessible.name: "Execution Status"
 
     property string status: ""
 

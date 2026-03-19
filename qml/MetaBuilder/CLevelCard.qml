@@ -4,6 +4,10 @@ import QmlComponents 1.0
 
 Rectangle {
     id: root
+    objectName: "card_level_" + level
+    Accessible.role: Accessible.Button
+    Accessible.name: name + " Level " + level
+    activeFocusOnTab: true
 
     property int level: 1
     property string name: ""

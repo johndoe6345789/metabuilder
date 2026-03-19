@@ -5,6 +5,11 @@ import QmlComponents 1.0
 
 ColumnLayout {
     id: root
+    objectName: "panel_component_properties"
+    Accessible.role: Accessible.Pane
+    Accessible.name: node
+        ? node.name + " Properties"
+        : "Component Properties"
     Layout.fillWidth: true
     Layout.fillHeight: true
     spacing: 14

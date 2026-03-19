@@ -9,6 +9,9 @@ import "qmllib/MetaBuilder/CssClassLogic.js" as Logic
 Rectangle {
     id: root
     color: Theme.background
+    objectName: "view_css_class_manager"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "CSS Class Manager"
 
     DBALProvider { id: dbal }
     property bool useLiveData: dbal.connected

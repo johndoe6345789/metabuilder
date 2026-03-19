@@ -5,6 +5,9 @@ import QmlComponents 1.0
 
 CCard {
     id: root
+    objectName: "list_activity"
+    Accessible.role: Accessible.List
+    Accessible.name: "Recent Activity"
 
     property var activities: []
     property bool isDark: false

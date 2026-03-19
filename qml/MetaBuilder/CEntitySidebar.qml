@@ -16,6 +16,9 @@ import QmlComponents 1.0
  */
 Rectangle {
     id: root
+    objectName: "sidebar_entity"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Entity Sidebar"
 
     property var entities: []          // Array of entity name strings
     property string selectedEntity: "" // Currently selected entity

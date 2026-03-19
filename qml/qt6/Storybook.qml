@@ -5,7 +5,11 @@ import QmlComponents 1.0
 import "qmllib/MetaBuilder"
 
 Rectangle {
+    id: storybookRoot
     color: Theme.background
+    objectName: "view_storybook"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Storybook"
 
     property string selectedComponent: "Button"
     property bool outlinedMode: false

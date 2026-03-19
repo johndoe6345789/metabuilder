@@ -4,6 +4,9 @@ import "qmllib/dbal"; import "qmllib/MetaBuilder"
 import "qmllib/MetaBuilder/FrontPageLogic.js" as Logic
 Rectangle {
     id: root; color: Theme.background
+    objectName: "view_frontpage"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Front Page"
     DBALProvider { id: dbal }
     property bool dbalOnline: dbal.connected
     property string platformVersion: "0.9.1"

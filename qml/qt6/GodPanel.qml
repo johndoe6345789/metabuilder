@@ -9,6 +9,9 @@ import "config/GodPanelConfig.js"
 Rectangle {
     id: godPanel
     color: Theme.background
+    objectName: "view_god_panel"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "God Panel"
 
     property int currentTab: 0
     property var configCounts: ({

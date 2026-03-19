@@ -2,6 +2,9 @@ import QtQuick
 
 Canvas {
     id: root
+    objectName: "canvas_grid"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Canvas Grid"
 
     onPaint: {
         var ctx = getContext("2d")

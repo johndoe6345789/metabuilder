@@ -9,6 +9,9 @@ import "qmllib/MetaBuilder/ProfileDBAL.js"
 
 Rectangle {
     id: profileRoot; color: Theme.background
+    objectName: "view_profile"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Profile"
     DBALProvider { id: dbal }
     readonly property bool isDark:
         Theme.mode === "dark"

@@ -9,6 +9,9 @@ import "qmllib/MetaBuilder/SettingsLogic.js" as Logic
 Rectangle {
     id: root
     color: "transparent"
+    objectName: "view_settings"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Settings"
 
     DBALProvider { id: dbal }
     property bool useLiveData: dbal.connected

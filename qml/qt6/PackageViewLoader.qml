@@ -6,6 +6,9 @@ import QmlComponents 1.0
 Rectangle {
     id: loader
     color: "transparent"
+    objectName: "view_package_" + packageId
+    Accessible.role: Accessible.Pane
+    Accessible.name: formatTitle(packageId)
 
     property string packageId: ""
 

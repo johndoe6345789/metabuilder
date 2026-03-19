@@ -5,6 +5,9 @@ import QmlComponents 1.0
 
 Flickable {
     id: canvas
+    objectName: "viewport_canvas"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Canvas Viewport"
 
     property alias canvasContent: contentItem
     property alias connectionLayer: connLayer

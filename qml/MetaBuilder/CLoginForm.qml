@@ -5,6 +5,10 @@ import QmlComponents 1.0
 
 Rectangle {
     id: root
+    objectName: "form_login"
+    Accessible.role: Accessible.Form
+    Accessible.name: "Login Form"
+    activeFocusOnTab: true
 
     property bool isDark: false
     property bool loading: false

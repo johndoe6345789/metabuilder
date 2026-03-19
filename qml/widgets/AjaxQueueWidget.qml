@@ -4,7 +4,10 @@ import QtQuick.Layouts
 
 Rectangle {
     id: root
-    
+    objectName: "ajaxQueueWidget"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "AJAX Queue"
+
     // Properties from controller
     property var ajaxQueue: null
     property bool expanded: false
@@ -199,14 +202,19 @@ Rectangle {
                     radius: 12
                     color: mouseArea1.containsMouse
                         ? "#40ffffff" : "transparent"
-                    
+                    objectName: "ajaxExpandBtn"
+                    Accessible.role: Accessible.Button
+                    Accessible.name: expanded
+                        ? "Collapse" : "Expand"
+                    activeFocusOnTab: true
+
                     Text {
                         anchors.centerIn: parent
                         text: expanded ? "▲" : "▼"
                         font.pixelSize: 10
                         color: "#fff"
                     }
-                    
+
                     MouseArea {
                         id: mouseArea1
                         anchors.fill: parent
@@ -223,14 +231,18 @@ Rectangle {
                     radius: 12
                     color: mouseArea2.containsMouse
                         ? "#40ffffff" : "transparent"
-                    
+                    objectName: "ajaxCloseBtn"
+                    Accessible.role: Accessible.Button
+                    Accessible.name: "Close queue"
+                    activeFocusOnTab: true
+
                     Text {
                         anchors.centerIn: parent
                         text: "✕"
                         font.pixelSize: 12
                         color: "#fff"
                     }
-                    
+
                     MouseArea {
                         id: mouseArea2
                         anchors.fill: parent
@@ -272,6 +284,9 @@ Rectangle {
         // Expanded list view
         ListView {
             id: listView
+            objectName: "ajaxQueueList"
+            Accessible.role: Accessible.List
+            Accessible.name: "AJAX requests"
             Layout.fillWidth: true
             Layout.fillHeight: true
             visible: expanded

@@ -5,6 +5,9 @@ import QmlComponents 1.0
 
 ColumnLayout {
     id: root
+    objectName: "list_component_props"
+    Accessible.role: Accessible.List
+    Accessible.name: "Custom Properties"
     Layout.fillWidth: true
     Layout.fillHeight: true
     spacing: 8

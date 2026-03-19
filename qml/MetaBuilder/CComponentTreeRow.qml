@@ -5,6 +5,10 @@ import QmlComponents 1.0
 
 Rectangle {
     id: root
+    objectName: "row_component_tree"
+    Accessible.role: Accessible.ListItem
+    Accessible.name: node ? node.name : ""
+    activeFocusOnTab: true
 
     property var node
     property bool isSelected: false

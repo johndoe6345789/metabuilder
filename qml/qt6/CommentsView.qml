@@ -7,7 +7,11 @@ import "qmllib/MetaBuilder" as Meta
 import "CommentsDBAL.js" as DBAL
 
 Rectangle {
+    id: commentsRoot
     color: "transparent"
+    objectName: "view_comments"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Discussion Board"
 
     DBALProvider { id: dbal }
     property int sortMode: 0

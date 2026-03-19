@@ -4,6 +4,9 @@ import QmlComponents 1.0
 
 Flow {
     id: root
+    objectName: "flow_level_tags"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Level Tags"
 
     property var tags: []
     property color accent: "#94A3B8"

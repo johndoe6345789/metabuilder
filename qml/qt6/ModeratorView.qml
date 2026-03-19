@@ -8,6 +8,9 @@ import "ModeratorData.js" as Data
 Rectangle {
     id: modView
     color: Theme.background
+    objectName: "view_moderator"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Moderator View"
 
     readonly property bool isDark:
         Theme.mode === "dark"

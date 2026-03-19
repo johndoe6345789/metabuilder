@@ -6,6 +6,8 @@ import QmlComponents 1.0
 // Centered level navigation buttons for the app bar
 Item {
     id: root
+    Accessible.role: Accessible.MenuBar
+    Accessible.name: "Level navigation"
 
     property string currentView: "frontpage"
     property int currentLevel: 1
@@ -31,6 +33,8 @@ Item {
         Repeater {
             model: root.levels
             delegate: CButton {
+                Accessible.role: Accessible.MenuItem
+                Accessible.name: modelData.label
                 visible: modelData.level <= root.currentLevel
                 text: modelData.label
                 variant: root.currentView === modelData.view

@@ -5,6 +5,9 @@ import QmlComponents 1.0
 
 CCard {
     id: root
+    objectName: "dropdownSidebar"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Dropdown sidebar"
 
     property var dropdowns: []
     property int selectedIndex: -1

@@ -3,6 +3,9 @@ import QmlComponents 1.0
 
 Canvas {
     id: root
+    objectName: "layer_connection"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Connection Layer"
 
     property var nodes: []
     property var connections: ({})

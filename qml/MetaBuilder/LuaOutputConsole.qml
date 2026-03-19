@@ -5,6 +5,9 @@ import QmlComponents 1.0
 
 ColumnLayout {
     id: outputConsole
+    objectName: "luaOutputConsole"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Lua output console"
     Layout.fillWidth: true
     Layout.fillHeight: true
     spacing: 8

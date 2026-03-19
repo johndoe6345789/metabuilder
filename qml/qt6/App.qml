@@ -9,9 +9,12 @@ import "qmllib/MetaBuilder/AppLogic.js" as Logic
 
 ApplicationWindow {
     id: appWindow
+    objectName: "appWindow"
     visible: true; width: 1400; height: 900
     title: "MetaBuilder Observatory"
     color: Theme.background
+    Accessible.role: Accessible.Window
+    Accessible.name: "MetaBuilder"
 
     DBALProvider { id: dbalProvider }
 
@@ -46,6 +49,7 @@ ApplicationWindow {
     }
 
     header: CAppBar {
+        objectName: "appBar"
         height: 48
         RowLayout {
             anchors.fill: parent
@@ -122,6 +126,7 @@ ApplicationWindow {
         anchors.topMargin:
             dbalBanner.visible ? 28 : 0
         CSidebar {
+            objectName: "sidebar"
             currentView: appWindow.currentView
             currentLevel: appWindow.currentLevel
             loggedIn: appWindow.loggedIn
@@ -138,6 +143,7 @@ ApplicationWindow {
             Layout.fillHeight: true
             color: "transparent"
             StackLayout {
+                objectName: "mainContent"
                 anchors.fill: parent
                 currentIndex:
                     viewIndex(currentView)

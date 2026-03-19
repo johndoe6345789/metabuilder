@@ -4,6 +4,9 @@ import QtQuick.Layouts
 
 Rectangle {
     id: hero
+    objectName: "heroSection"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Hero section"
     property string headline: "Build entire stacks visually,
         from public sites to secure admin panels."
     property string subhead: "MetaBuilder layers marketing, observability,

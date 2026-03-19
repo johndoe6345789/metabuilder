@@ -9,6 +9,9 @@ import "MediaServiceCrud.js" as Crud
 Rectangle {
     id: root
     color: "transparent"
+    objectName: "view_media_service"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Media Service Panel"
 
     property int currentTab: 0
     property string serviceStatus: "unknown"

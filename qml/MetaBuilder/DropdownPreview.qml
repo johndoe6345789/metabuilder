@@ -5,6 +5,9 @@ import QmlComponents 1.0
 
 CPaper {
     id: root
+    objectName: "dropdownPreview"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Dropdown preview"
     property var dropdown: null
     implicitHeight: previewColumn.implicitHeight + 32
 

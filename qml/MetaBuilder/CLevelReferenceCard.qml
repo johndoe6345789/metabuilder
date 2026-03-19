@@ -5,6 +5,9 @@ import QmlComponents 1.0
 
 Rectangle {
     id: root
+    objectName: "card_level_ref_" + levelNumber
+    Accessible.role: Accessible.ListItem
+    Accessible.name: levelName
 
     property string levelName: ""
     property string role: ""

@@ -9,6 +9,9 @@ import "qmllib/MetaBuilder/UserManagementDBAL.js" as UDBAL
 Rectangle {
     id: root
     color: Theme.background
+    objectName: "view_user_management"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "User Management"
 
     DBALProvider { id: dbal }
     property bool useLiveData: dbal.connected

@@ -8,6 +8,9 @@ import "NotificationsDBAL.js" as DBAL
 
 Rectangle {
     id: root; color: "transparent"
+    objectName: "view_notifications"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Notifications Panel"
     DBALProvider { id: dbal }
     property bool useLiveData: dbal.connected
     property string activeFilter: "All"

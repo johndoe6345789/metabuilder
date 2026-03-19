@@ -5,6 +5,9 @@ import QmlComponents 1.0
 
 CCard {
     id: root
+    objectName: "panel_dropdown_editor"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Dropdown Editor"
     Layout.fillWidth: true
     Layout.fillHeight: true
 

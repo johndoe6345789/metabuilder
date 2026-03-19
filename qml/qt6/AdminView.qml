@@ -4,6 +4,9 @@ import "qmllib/dbal"; import "qmllib/MetaBuilder"
 import "AdminCrud.js" as Crud
 Rectangle {
     id: root; color: Theme.background
+    objectName: "view_admin"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Admin View"
     DBALProvider { id: dbal }
     property bool useLiveData: dbal.connected; property bool configLoaded: false
     property string selEnt: "User"

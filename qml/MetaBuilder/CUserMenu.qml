@@ -23,6 +23,8 @@ Item {
         id: avatarCircle
         anchors.fill: parent
         radius: 16
+        Accessible.role: Accessible.Button
+        Accessible.name: "User menu: " + root.username
         color: avatarMA.containsMouse
             ? Qt.rgba(0.39, 0.4, 0.95, isDark ? 0.25 : 0.2)
             : Qt.rgba(0.39, 0.4, 0.95, isDark ? 0.15 : 0.12)
@@ -48,6 +50,8 @@ Item {
         // ── Dropdown menu ──
         CDropdownMenu {
             id: dropdownMenu
+            Accessible.role: Accessible.Menu
+            Accessible.name: "User actions"
             visible: false
             anchors.top: parent.bottom
             anchors.right: parent.right

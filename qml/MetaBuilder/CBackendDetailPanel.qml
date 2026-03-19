@@ -5,6 +5,9 @@ import QmlComponents 1.0
 
 CCard {
     id: root
+    objectName: "panel_backend_detail"
+    Accessible.role: Accessible.Pane
+    Accessible.name: backend.name || "Backend"
     Layout.fillWidth: true
     Layout.fillHeight: true
 

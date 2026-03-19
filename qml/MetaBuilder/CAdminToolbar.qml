@@ -4,6 +4,9 @@ import QmlComponents 1.0
 
 ColumnLayout {
     id: root
+    objectName: "toolbar_admin"
+    Accessible.role: Accessible.ToolBar
+    Accessible.name: "Admin Toolbar"
     spacing: 12
 
     property string selectedEntity: ""

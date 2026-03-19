@@ -4,6 +4,10 @@ import QmlComponents 1.0
 
 Rectangle {
     id: root
+    objectName: "menuitem_" + action
+    Accessible.role: Accessible.MenuItem
+    Accessible.name: label
+    activeFocusOnTab: true
 
     property bool isDark: Theme.mode === "dark"
     property string icon: ""

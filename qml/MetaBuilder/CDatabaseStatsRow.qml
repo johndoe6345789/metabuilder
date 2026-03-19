@@ -5,6 +5,9 @@ import QmlComponents 1.0
 
 FlexRow {
     id: root
+    objectName: "row_database_stats"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Database Statistics"
     Layout.fillWidth: true
     spacing: 12
 

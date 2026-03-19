@@ -5,6 +5,9 @@ import QmlComponents 1.0
 
 Rectangle {
     id: root
+    objectName: "dropdownExpandedList"
+    Accessible.role: Accessible.List
+    Accessible.name: "Dropdown options list"
 
     property var options: []
 

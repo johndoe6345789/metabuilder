@@ -4,6 +4,9 @@ import "qmllib/MetaBuilder"
 import "qmllib/MetaBuilder/LuaEditorLogic.js" as Logic
 Rectangle {
     id: root; color: "transparent"
+    objectName: "view_lua_editor"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Lua Editor"
     property int selIdx: 0
     property string testOutput: ""
     property string scanResult: ""

@@ -5,6 +5,9 @@ import QmlComponents 1.0
 
 Rectangle {
     id: guideTab
+    objectName: "tab_god_panel_guide"
+    Accessible.role: Accessible.PageTab
+    Accessible.name: "Guide"
     color: "transparent"
 
     required property var levelData

@@ -5,6 +5,9 @@ import QmlComponents 1.0
 
 ColumnLayout {
     id: root
+    objectName: "dropdownGeneralForm"
+    Accessible.role: Accessible.Form
+    Accessible.name: "Dropdown general settings"
     spacing: 16
 
     property var dropdown: null

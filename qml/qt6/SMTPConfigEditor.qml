@@ -4,6 +4,9 @@ import "qmllib/MetaBuilder"
 import "qmllib/MetaBuilder/SmtpLogic.js" as Logic
 Rectangle {
     id: se; color: "transparent"
+    objectName: "view_smtp_config"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "SMTP Configuration"
     property string smtpHost: "smtp.example.com"
     property string smtpPort: "587"
     property string smtpUsername: ""; property string smtpPassword: ""

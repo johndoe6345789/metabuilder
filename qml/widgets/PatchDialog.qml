@@ -4,6 +4,10 @@ import QtQuick.Layouts
 
 Dialog {
     id: dialog
+    objectName: "patchDialog"
+    Accessible.role: Accessible.Dialog
+    Accessible.name: "Git Patch"
+
     title: "Git Patch"
     width: 900
     height: 650
@@ -92,6 +96,10 @@ Dialog {
             
             Button {
                 text: "📋 Copy to Clipboard"
+                objectName: "patchCopyBtn"
+                Accessible.role: Accessible.Button
+                Accessible.name: "Copy to clipboard"
+                activeFocusOnTab: true
                 onClicked: {
                     app.copyToClipboard(patchText)
                 }

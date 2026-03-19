@@ -5,6 +5,9 @@ import QmlComponents 1.0
 
 Rectangle {
     id: root
+    objectName: "mediaJobsTab"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Media jobs"
     color: "transparent"
 
     property var jobs: []

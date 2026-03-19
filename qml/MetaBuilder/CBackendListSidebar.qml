@@ -5,6 +5,9 @@ import QmlComponents 1.0
 
 CCard {
     id: root
+    objectName: "sidebar_backend_list"
+    Accessible.role: Accessible.List
+    Accessible.name: "Backend List"
     Layout.preferredWidth: 300
     Layout.fillHeight: true
 

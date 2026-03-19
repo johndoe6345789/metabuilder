@@ -2,6 +2,9 @@ import QtQuick
 
 Item {
     id: shortcuts
+    objectName: "keyboard_shortcuts"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Keyboard Shortcuts"
 
     required property var appWindow
 

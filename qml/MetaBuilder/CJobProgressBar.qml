@@ -5,6 +5,9 @@ import QmlComponents 1.0
 
 Rectangle {
     id: root
+    objectName: "progressbar_job"
+    Accessible.role: Accessible.ProgressBar
+    Accessible.name: "Job Progress"
     Layout.fillWidth: true
     Layout.preferredHeight: 20
     color: "transparent"

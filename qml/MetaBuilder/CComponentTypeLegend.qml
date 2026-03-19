@@ -5,6 +5,9 @@ import QmlComponents 1.0
 
 FlexRow {
     id: root
+    objectName: "legend_component_type"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Component Type Legend"
     Layout.fillWidth: true
     spacing: 6
 

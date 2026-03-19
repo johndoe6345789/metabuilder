@@ -4,6 +4,9 @@ import QmlComponents 1.0
 
 CCard {
     id: envConfig
+    objectName: "card_database_env_config"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Environment Configuration"
     Layout.fillWidth: true
 
     property string databaseUrl: ""

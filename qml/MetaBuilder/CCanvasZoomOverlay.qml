@@ -4,6 +4,9 @@ import QmlComponents 1.0
 
 Rectangle {
     id: root
+    objectName: "overlay_canvas_zoom"
+    Accessible.role: Accessible.ToolBar
+    Accessible.name: "Zoom Controls"
 
     property real zoom: 1.0
 

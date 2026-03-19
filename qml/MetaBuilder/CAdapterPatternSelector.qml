@@ -5,6 +5,9 @@ import QmlComponents 1.0
 
 ColumnLayout {
     id: root
+    objectName: "selector_adapter_pattern"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Multi-Adapter Pattern"
     Layout.fillWidth: true
     spacing: 12
 

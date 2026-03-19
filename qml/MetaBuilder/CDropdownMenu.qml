@@ -5,6 +5,9 @@ import QmlComponents 1.0
 
 Rectangle {
     id: root
+    objectName: "menu_dropdown"
+    Accessible.role: Accessible.PopupMenu
+    Accessible.name: "Dropdown Menu"
 
     property bool isDark: Theme.mode === "dark"
     property var menuItems: []

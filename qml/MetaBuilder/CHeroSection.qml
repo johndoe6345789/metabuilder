@@ -5,6 +5,9 @@ import QmlComponents 1.0
 
 Rectangle {
     id: root
+    objectName: "section_hero"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "MetaBuilder Hero"
 
     property string platformVersion: "0.9.1"
     property bool isDark: false

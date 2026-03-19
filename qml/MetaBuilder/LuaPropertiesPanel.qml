@@ -5,6 +5,9 @@ import QmlComponents 1.0
 
 Rectangle {
     id: propsPanel
+    objectName: "luaPropertiesPanel"
+    Accessible.role: Accessible.Pane
+    Accessible.name: "Lua script properties"
     Layout.preferredWidth: 260
     Layout.fillHeight: true
     color: Theme.paper
