@@ -2,8 +2,10 @@ import QtQuick
 import QmlComponents 1.0
 
 /**
- * CText.qml - Material Design 3 typography component
- * Implements the full MD3 type scale with variant and color support
+ * CText.qml - Material Design 3 typography component (desktop-scaled)
+ *
+ * MD3 type scale adapted for desktop density. Sizes are ~60% of mobile MD3 spec
+ * to avoid bloated text on 96-144 DPI screens.
  *
  * Usage:
  *   CText { text: "Body text" }
@@ -14,39 +16,38 @@ import QmlComponents 1.0
 Text {
     id: root
 
-    // Public properties
-    property string variant: "body1"       // h1-h6, subtitle1, subtitle2, body1, body2, caption, overline, button
+    property string variant: "body1"
     property string colorVariant: "primary" // primary, secondary, disabled, error, success, warning, info, inherit
     property bool mono: false
     property bool truncate: false
 
-    // MD3 Typography Scale
+    // Desktop-scaled MD3 type sizes
     font.pixelSize: {
         switch (variant) {
-            case "h1":        return 57
-            case "h2":        return 45
-            case "h3":        return 36
-            case "h4":        return 32
-            case "h5":        return 28
-            case "h6":        return 24
-            case "subtitle1": return 16
-            case "subtitle2": return 14
-            case "body1":     return 16
-            case "body2":     return 14
-            case "caption":   return 12
-            case "overline":  return 12
-            case "button":    return 14
-            default:          return 16
+            case "h1":        return 32
+            case "h2":        return 26
+            case "h3":        return 22
+            case "h4":        return 18
+            case "h5":        return 16
+            case "h6":        return 15
+            case "subtitle1": return 14
+            case "subtitle2": return 13
+            case "body1":     return 14
+            case "body2":     return 13
+            case "caption":   return 11
+            case "overline":  return 10
+            case "button":    return 13
+            default:          return 14
         }
     }
 
     font.weight: {
         switch (variant) {
-            case "h1":        return Font.Normal
-            case "h2":        return Font.Normal
-            case "h3":        return Font.Normal
-            case "h4":        return Font.Normal
-            case "h5":        return Font.Normal
+            case "h1":        return Font.Bold
+            case "h2":        return Font.Bold
+            case "h3":        return Font.DemiBold
+            case "h4":        return Font.DemiBold
+            case "h5":        return Font.Medium
             case "h6":        return Font.Medium
             case "subtitle1": return Font.Medium
             case "subtitle2": return Font.Medium
@@ -61,19 +62,9 @@ Text {
 
     font.letterSpacing: {
         switch (variant) {
-            case "h1":        return -0.25
-            case "h2":        return 0
-            case "h3":        return 0
-            case "h4":        return 0
-            case "h5":        return 0
-            case "h6":        return 0
-            case "subtitle1": return 0.15
-            case "subtitle2": return 0.1
-            case "body1":     return 0.5
-            case "body2":     return 0.25
-            case "caption":   return 0.4
-            case "overline":  return 1.5
-            case "button":    return 0.1
+            case "h1":        return -0.5
+            case "h2":        return -0.25
+            case "overline":  return 1.2
             default:          return 0
         }
     }
@@ -82,10 +73,13 @@ Text {
 
     font.family: mono ? Theme.fontFamilyMono : Theme.fontFamily
 
-    lineHeight: variant === "body1" ? 1.5 : 1.0
-    lineHeightMode: Text.ProportionalHeight
+    // Only body1 gets expanded line height; everything else stays compact
+    lineHeight: variant === "body1" ? 1.4 : 1.0
+    lineHeightMode: variant === "body1" ? Text.ProportionalHeight : Text.FixedHeight
 
-    // MD3 color mapping
+    // Default to no wrap — callers opt in with wrapMode: Text.Wrap
+    wrapMode: truncate ? Text.NoWrap : Text.NoWrap
+
     color: {
         switch (colorVariant) {
             case "secondary": return Theme.textSecondary
@@ -99,8 +93,6 @@ Text {
         }
     }
 
-    // Truncation
     elide: truncate ? Text.ElideRight : Text.ElideNone
     maximumLineCount: truncate ? 1 : undefined
-    wrapMode: truncate ? Text.NoWrap : Text.WordWrap
 }

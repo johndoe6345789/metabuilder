@@ -302,16 +302,17 @@ Rectangle {
                     Layout.alignment: Qt.AlignHCenter
                 }
 
-                RowLayout {
+                GridLayout {
                     Layout.fillWidth: true
-                    spacing: 12
+                    columns: Math.max(1, Math.min(5, Math.floor((parent.width + 12) / 220)))
+                    columnSpacing: 12
+                    rowSpacing: 12
 
                     Repeater {
                         model: levels
                         delegate: Rectangle {
                             Layout.fillWidth: true
-                            Layout.minimumHeight: 170
-                            implicitHeight: lvlContent.implicitHeight + 32
+                            Layout.preferredHeight: 190
                             radius: 16
                             clip: true
                             color: lvlMA.containsMouse ? surfaceContainerHighest : surfaceContainerHigh
@@ -337,11 +338,9 @@ Rectangle {
 
                             ColumnLayout {
                                 id: lvlContent
-                                anchors.left: parent.left
-                                anchors.right: parent.right
-                                anchors.top: parent.top
+                                anchors.fill: parent
                                 anchors.margins: 16
-                                spacing: 8
+                                spacing: 6
 
                                 RowLayout {
                                     spacing: 10
@@ -443,7 +442,7 @@ Rectangle {
 
                 GridLayout {
                     Layout.fillWidth: true
-                    columns: 3
+                    columns: Math.max(1, Math.min(3, Math.floor((parent.width + 12) / 260)))
                     columnSpacing: 12
                     rowSpacing: 12
 
