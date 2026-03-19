@@ -49,66 +49,12 @@ Rectangle {
                 Repeater {
                     model: plugins
 
-                    delegate: CCard {
-                        Layout.fillWidth: true
-                        variant: "outlined"
-
-                        ColumnLayout {
-                            anchors.fill: parent
-                            anchors.margins: 16
-                            spacing: 10
-
-                            FlexRow {
-                                Layout.fillWidth: true
-                                spacing: 8
-
-                                CText { variant: "subtitle1"; text: modelData.name }
-
-                                Item { Layout.fillWidth: true }
-
-                                CStatusBadge {
-                                    status: modelData.status === "active" ? "success" : "warning"
-                                    text: modelData.status
-                                }
-                            }
-
-                            CText {
-                                variant: "caption"
-                                text: "v" + modelData.version
-                                color: Theme.textSecondary
-                            }
-
-                            CDivider { Layout.fillWidth: true }
-
-                            CText { variant: "caption"; text: "Capabilities" }
-
-                            Flow {
-                                Layout.fillWidth: true
-                                spacing: 6
-
-                                Repeater {
-                                    model: modelData.capabilities
-
-                                    delegate: CChip {
-                                        text: modelData
-                                    }
-                                }
-                            }
-
-                            FlexRow {
-                                Layout.fillWidth: true
-                                spacing: 8
-
-                                Item { Layout.fillWidth: true }
-
-                                CButton {
-                                    text: "Reload"
-                                    variant: "ghost"
-                                    size: "sm"
-                                    onClicked: reloadPlugin(plugins[index].name.toLowerCase())
-                                }
-                            }
-                        }
+                    delegate: MediaPluginCard {
+                        name: modelData.name
+                        version: modelData.version
+                        status: modelData.status
+                        capabilities: modelData.capabilities
+                        onReloadRequested: reloadPlugin(plugins[index].name.toLowerCase())
                     }
                 }
             }

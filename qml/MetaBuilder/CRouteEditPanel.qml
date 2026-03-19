@@ -84,24 +84,10 @@ CCard {
             }
         }
 
-        CDivider { Layout.fillWidth: true }
-
-        CText { variant: "caption"; text: "Permission Rules" }
-        CTextField {
-            Layout.fillWidth: true
-            text: root.route ? root.route.permissions : ""
-            onTextChanged: {
-                if (root.route && text !== root.route.permissions)
-                    root.fieldChanged("permissions", text)
-            }
-        }
-
-        CAlert {
-            Layout.fillWidth: true
-            severity: root.route && root.route.level >= 4 ? "warning" : "info"
-            text: root.route && root.route.level >= 4
-                  ? "High privilege route (level " + root.route.level + ")"
-                  : "Standard access route"
+        CRoutePermissionSection {
+            permissions: root.route ? root.route.permissions : ""
+            level: root.route ? root.route.level : 1
+            onPermissionsChanged: function(value) { root.fieldChanged("permissions", value) }
         }
 
         Item { Layout.fillHeight: true }

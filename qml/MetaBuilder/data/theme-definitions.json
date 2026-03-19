@@ -1,0 +1,11 @@
+[
+    { "name": "dark",          "label": "Dark",          "bg": "#1a1a2e", "surface": "#252542", "primary": "#6c63ff", "text": "#e0e0e0" },
+    { "name": "light",         "label": "Light",         "bg": "#fafafa", "surface": "#ffffff", "primary": "#1976d2", "text": "#212121" },
+    { "name": "midnight",      "label": "Midnight",      "bg": "#0d1117", "surface": "#161b22", "primary": "#58a6ff", "text": "#c9d1d9" },
+    { "name": "forest",        "label": "Forest",        "bg": "#1b2d1b", "surface": "#243524", "primary": "#4caf50", "text": "#c8e6c9" },
+    { "name": "ocean",         "label": "Ocean",         "bg": "#0a1929", "surface": "#132f4c", "primary": "#5090d3", "text": "#b2bac2" },
+    { "name": "sunset",        "label": "Sunset",        "bg": "#2d1b1b", "surface": "#3d2525", "primary": "#ff7043", "text": "#ffccbc" },
+    { "name": "rose",          "label": "Rose",          "bg": "#2d1b25", "surface": "#3d2535", "primary": "#f06292", "text": "#f8bbd0" },
+    { "name": "highContrast",  "label": "High Contrast", "bg": "#000000", "surface": "#1a1a1a", "primary": "#ffff00", "text": "#ffffff" },
+    { "name": "system",        "label": "System",        "bg": "#2b2b2b", "surface": "#363636", "primary": "#90caf9", "text": "#e0e0e0" }
+]

@@ -21,46 +21,19 @@ CCard {
 
     signal tokenColorEdited(string token, string value)
 
-    // Inline color field component
-    component ColorField: RowLayout {
-        Layout.fillWidth: true
-        spacing: 10
-
-        property string label: ""
-        property string colorValue: "#000000"
-        signal colorEdited(string val)
-
-        Rectangle {
-            width: 32
-            height: 32
-            radius: 6
-            color: colorValue
-            border.width: 1
-            border.color: Theme.border
-
-            Rectangle {
-                anchors.fill: parent
-                anchors.margins: 1
-                radius: 5
-                color: "transparent"
-                border.width: 1
-                border.color: Qt.darker(colorValue, 1.4)
-                z: -1
-            }
-        }
-
-        CTextField {
-            Layout.fillWidth: true
-            label: parent.label
-            placeholderText: "#RRGGBB"
-            text: colorValue
-            onTextChanged: {
-                if (/^#[0-9a-fA-F]{6}$/.test(text)) {
-                    colorEdited(text)
-                }
-            }
-        }
-    }
+    readonly property var tokenModel: [
+        { label: "Primary",        token: "primary",       value: customPrimary },
+        { label: "Background",     token: "background",    value: customBackground },
+        { label: "Surface",        token: "surface",       value: customSurface },
+        { label: "Paper",          token: "paper",         value: customPaper },
+        { label: "Text",           token: "text",          value: customText },
+        { label: "Text Secondary", token: "textSecondary", value: customTextSecondary },
+        { label: "Border",         token: "border",        value: customBorder },
+        { label: "Error",          token: "error",         value: customError },
+        { label: "Warning",        token: "warning",       value: customWarning },
+        { label: "Success",        token: "success",       value: customSuccess },
+        { label: "Info",           token: "info",          value: customInfo }
+    ]
 
     ColumnLayout {
         anchors.fill: parent
@@ -85,60 +58,13 @@ CCard {
             rowSpacing: 12
             columnSpacing: 16
 
-            ColorField {
-                label: "Primary"
-                colorValue: customPrimary
-                onColorEdited: function(val) { tokenColorEdited("primary", val) }
-            }
-            ColorField {
-                label: "Background"
-                colorValue: customBackground
-                onColorEdited: function(val) { tokenColorEdited("background", val) }
-            }
-            ColorField {
-                label: "Surface"
-                colorValue: customSurface
-                onColorEdited: function(val) { tokenColorEdited("surface", val) }
-            }
-            ColorField {
-                label: "Paper"
-                colorValue: customPaper
-                onColorEdited: function(val) { tokenColorEdited("paper", val) }
-            }
-            ColorField {
-                label: "Text"
-                colorValue: customText
-                onColorEdited: function(val) { tokenColorEdited("text", val) }
-            }
-            ColorField {
-                label: "Text Secondary"
-                colorValue: customTextSecondary
-                onColorEdited: function(val) { tokenColorEdited("textSecondary", val) }
-            }
-            ColorField {
-                label: "Border"
-                colorValue: customBorder
-                onColorEdited: function(val) { tokenColorEdited("border", val) }
-            }
-            ColorField {
-                label: "Error"
-                colorValue: customError
-                onColorEdited: function(val) { tokenColorEdited("error", val) }
-            }
-            ColorField {
-                label: "Warning"
-                colorValue: customWarning
-                onColorEdited: function(val) { tokenColorEdited("warning", val) }
-            }
-            ColorField {
-                label: "Success"
-                colorValue: customSuccess
-                onColorEdited: function(val) { tokenColorEdited("success", val) }
-            }
-            ColorField {
-                label: "Info"
-                colorValue: customInfo
-                onColorEdited: function(val) { tokenColorEdited("info", val) }
+            Repeater {
+                model: colorTokens.tokenModel
+                ThemeColorField {
+                    label: modelData.label
+                    colorValue: modelData.value
+                    onColorEdited: function(val) { colorTokens.tokenColorEdited(modelData.token, val) }
+                }
             }
         }
     }

@@ -14,33 +14,12 @@ ColumnLayout {
 
     property bool isDark: Theme.mode === "dark"
 
-    // ── Internal DBAL provider ──────────────────────────────────
     DBALProvider { id: dbal }
 
-    // ── Connection state ────────────────────────────────────────
     property string dbalUrl: dbal.baseUrl
     property string mediaServiceUrl: "http://localhost:9090"
     property string dbalConnectionStatus: dbal.connected ? "connected" : "disconnected"
     property string mediaConnectionStatus: "unknown"
-
-    // ── Helpers ─────────────────────────────────────────────────
-    function connectionStatusColor(status) {
-        switch (status) {
-            case "connected":    return "success"
-            case "disconnected": return "error"
-            case "testing":      return "warning"
-            default:             return "info"
-        }
-    }
-
-    function connectionStatusLabel(status) {
-        switch (status) {
-            case "connected":    return "Connected"
-            case "disconnected": return "Disconnected"
-            case "testing":      return "Testing..."
-            default:             return "Unknown"
-        }
-    }
 
     function testDBALConnection() {
         dbalConnectionStatus = "testing"
@@ -63,73 +42,27 @@ ColumnLayout {
         xhr.send()
     }
 
-    // ── DBAL Server ─────────────────────────────────────────────
-    CText { variant: "subtitle2"; text: "DBAL Server"; Layout.topMargin: 4 }
-
-    FlexRow {
+    CServiceConnectionRow {
         Layout.fillWidth: true
-        spacing: 12
-
-        CTextField {
-            Layout.fillWidth: true
-            label: "DBAL URL"
-            placeholderText: "http://localhost:8080"
-            text: root.dbalUrl
-            onTextChanged: root.dbalUrl = text
-        }
-
-        ColumnLayout {
-            spacing: 4
-            Layout.alignment: Qt.AlignBottom
-
-            CButton {
-                text: dbalConnectionStatus === "testing" ? "Testing..." : "Test Connection"
-                variant: "default"
-                size: "sm"
-                enabled: dbalConnectionStatus !== "testing"
-                onClicked: testDBALConnection()
-            }
-
-            CStatusBadge {
-                status: connectionStatusColor(dbalConnectionStatus)
-                text: connectionStatusLabel(dbalConnectionStatus)
-            }
-        }
+        label: "DBAL Server"
+        fieldLabel: "DBAL URL"
+        placeholder: "http://localhost:8080"
+        url: root.dbalUrl
+        connectionStatus: root.dbalConnectionStatus
+        onUrlChanged: function(newUrl) { root.dbalUrl = newUrl }
+        onTestRequested: root.testDBALConnection()
     }
 
     CDivider { Layout.fillWidth: true }
 
-    // ── Media Service ───────────────────────────────────────────
-    CText { variant: "subtitle2"; text: "Media Service" }
-
-    FlexRow {
+    CServiceConnectionRow {
         Layout.fillWidth: true
-        spacing: 12
-
-        CTextField {
-            Layout.fillWidth: true
-            label: "Media Service URL"
-            placeholderText: "http://localhost:9090"
-            text: root.mediaServiceUrl
-            onTextChanged: root.mediaServiceUrl = text
-        }
-
-        ColumnLayout {
-            spacing: 4
-            Layout.alignment: Qt.AlignBottom
-
-            CButton {
-                text: mediaConnectionStatus === "testing" ? "Testing..." : "Test Connection"
-                variant: "default"
-                size: "sm"
-                enabled: mediaConnectionStatus !== "testing"
-                onClicked: testMediaConnection()
-            }
-
-            CStatusBadge {
-                status: connectionStatusColor(mediaConnectionStatus)
-                text: connectionStatusLabel(mediaConnectionStatus)
-            }
-        }
+        label: "Media Service"
+        fieldLabel: "Media Service URL"
+        placeholder: "http://localhost:9090"
+        url: root.mediaServiceUrl
+        connectionStatus: root.mediaConnectionStatus
+        onUrlChanged: function(newUrl) { root.mediaServiceUrl = newUrl }
+        onTestRequested: root.testMediaConnection()
     }
 }

@@ -1,0 +1,21 @@
+{
+    "staticStats": [
+        { "label": "Packages",     "value": "20",    "status": "info" },
+        { "label": "Active Users", "value": "4",     "status": "info" },
+        { "label": "Uptime",       "value": "99.9%", "status": "success" }
+    ],
+    "activities": [
+        { "action": "Package installed", "detail": "material_ui v2.1.0", "time": "2 min ago" },
+        { "action": "User logged in",   "detail": "admin",              "time": "5 min ago" },
+        { "action": "Workflow executed", "detail": "on_user_created",    "time": "12 min ago" },
+        { "action": "Schema updated",   "detail": "forum entity",       "time": "1 hr ago" },
+        { "action": "Seed data loaded", "detail": "5 namespaces",       "time": "2 hr ago" }
+    ],
+    "quickActions": [
+        { "label": "Forum",     "view": "forum",     "variant": "default" },
+        { "label": "Gallery",   "view": "gallery",   "variant": "default" },
+        { "label": "Guestbook", "view": "guestbook", "variant": "default" },
+        { "label": "Blog",      "view": "blog",      "variant": "default" },
+        { "label": "Profile",   "view": "profile",   "variant": "ghost" }
+    ]
+}

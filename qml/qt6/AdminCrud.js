@@ -79,3 +79,38 @@ function buildFormFields(entityFields, entityColumns, entity, editingRecord, inc
     }
     return result;
 }
+
+function buildNewRecord(idPrefixes, entityFields, entity, records, data) {
+    var rec = { id: generateId(idPrefixes, entity, records) };
+    var fk = entityFields[entity];
+    for (var f = 1; f < fk.length; f++) rec[fk[f]] = data[fk[f]] || "";
+    if (!rec.status) rec.status = "Active";
+    return rec;
+}
+
+function buildUpdatedRecord(entityFields, entity, editingRecord, data) {
+    var rec = { id: editingRecord.id };
+    var fk = entityFields[entity];
+    for (var f = 1; f < fk.length; f++) rec[fk[f]] = data[fk[f]] || editingRecord[fk[f]] || "";
+    return rec;
+}
+
+function addToEntity(records, entity, rec) {
+    var d = records[entity].slice(); d.push(rec);
+    return replaceEntity(records, entity, d);
+}
+
+function updateInEntity(records, entity, targetId, updatedRec) {
+    var d = records[entity].slice();
+    for (var i = 0; i < d.length; i++) { if (d[i].id === targetId) { d[i] = updatedRec; break; } }
+    return replaceEntity(records, entity, d);
+}
+
+function clampPage(currentPage, totalPages) {
+    return currentPage >= totalPages ? Math.max(0, totalPages - 1) : currentPage;
+}
+
+function deleteSelectedRows(records, entity, selectedRows, pagedRecs) {
+    var ids = collectSelectedIds(selectedRows, pagedRecs);
+    return replaceEntity(records, entity, removeByIds(records[entity].slice(), ids));
+}

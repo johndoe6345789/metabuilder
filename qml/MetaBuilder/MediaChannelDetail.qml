@@ -75,88 +75,16 @@ CCard {
                 Layout.fillWidth: true
                 spacing: 12
 
-                CPaper {
-                    Layout.fillWidth: true
-                    implicitHeight: 60
-                    ColumnLayout {
-                        anchors.fill: parent; anchors.margins: 10; spacing: 2
-                        CText { variant: "caption"; text: "Viewers" }
-                        CText { variant: "h4"; text: channel ? channel.viewers.toString() : "0" }
-                    }
-                }
-
-                CPaper {
-                    Layout.fillWidth: true
-                    implicitHeight: 60
-                    ColumnLayout {
-                        anchors.fill: parent; anchors.margins: 10; spacing: 2
-                        CText { variant: "caption"; text: "Resolution" }
-                        CText { variant: "h4"; text: channel ? channel.resolution : "" }
-                    }
-                }
-
-                CPaper {
-                    Layout.fillWidth: true
-                    implicitHeight: 60
-                    ColumnLayout {
-                        anchors.fill: parent; anchors.margins: 10; spacing: 2
-                        CText { variant: "caption"; text: "Uptime" }
-                        CText { variant: "h4"; text: channel ? channel.uptime : "" }
-                    }
-                }
+                CStatCell { label: "Viewers";    value: channel ? channel.viewers.toString() : "0" }
+                CStatCell { label: "Resolution"; value: channel ? channel.resolution : "" }
+                CStatCell { label: "Uptime";     value: channel ? channel.uptime : "" }
             }
 
             CDivider { Layout.fillWidth: true }
 
-            CText { variant: "subtitle1"; text: "Schedule" }
-            CText {
-                variant: "caption"
-                text: channel ? channel.schedule.length + " programs" : "0 programs"
-                color: Theme.textSecondary
-            }
-
-            FlexRow {
+            MediaChannelSchedule {
                 Layout.fillWidth: true
-                spacing: 8
-                CText { variant: "caption"; text: "Time";     Layout.preferredWidth: 80 }
-                CText { variant: "caption"; text: "Program";  Layout.fillWidth: true }
-                CText { variant: "caption"; text: "Duration"; Layout.preferredWidth: 80 }
-            }
-
-            CDivider { Layout.fillWidth: true }
-
-            Repeater {
-                model: channel ? channel.schedule : []
-
-                delegate: ColumnLayout {
-                    Layout.fillWidth: true
-                    spacing: 4
-
-                    FlexRow {
-                        Layout.fillWidth: true
-                        spacing: 8
-
-                        CText {
-                            variant: "body2"; text: modelData.time
-                            font.family: "monospace"; font.bold: true
-                            Layout.preferredWidth: 80
-                        }
-                        CText {
-                            variant: "body2"; text: modelData.program
-                            Layout.fillWidth: true
-                        }
-                        CText {
-                            variant: "caption"; text: modelData.duration
-                            color: Theme.textSecondary
-                            Layout.preferredWidth: 80
-                        }
-                    }
-
-                    CDivider {
-                        Layout.fillWidth: true
-                        visible: channel ? index < channel.schedule.length - 1 : false
-                    }
-                }
+                schedule: channel ? channel.schedule : []
             }
 
             Item { Layout.preferredHeight: 8 }

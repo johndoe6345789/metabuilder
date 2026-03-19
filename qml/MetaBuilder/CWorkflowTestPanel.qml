@@ -39,24 +39,7 @@ Rectangle {
                 font.bold: true
             }
 
-            Rectangle {
-                width: 10; height: 10; radius: 5
-                visible: executionStatus !== ""
-                color: {
-                    if (executionStatus === "running") return Theme.warning
-                    if (executionStatus === "success") return Theme.success
-                    return Theme.error
-                }
-            }
-            CText {
-                variant: "caption"
-                visible: executionStatus !== ""
-                text: {
-                    if (executionStatus === "running") return "Running..."
-                    if (executionStatus === "success") return "Passed"
-                    return "Failed"
-                }
-            }
+            CExecutionStatusDot { status: executionStatus }
 
             Item { Layout.fillWidth: true }
 
@@ -94,34 +77,10 @@ Rectangle {
                 }
             }
 
-            ColumnLayout {
+            CWorkflowOutputLog {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                spacing: 6
-
-                CText { variant: "caption"; text: "Output Log" }
-                Rectangle {
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    color: Theme.surface
-                    radius: 4
-                    border.color: Theme.border
-                    border.width: 1
-
-                    ScrollView {
-                        anchors.fill: parent
-                        anchors.margins: 8
-
-                        Text {
-                            width: parent.width
-                            text: root.testOutput
-                            color: Theme.text
-                            font.family: "monospace"
-                            font.pixelSize: 11
-                            wrapMode: Text.WrapAnywhere
-                        }
-                    }
-                }
+                output: root.testOutput
             }
         }
     }

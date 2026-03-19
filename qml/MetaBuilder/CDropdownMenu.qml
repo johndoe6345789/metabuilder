@@ -3,24 +3,6 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QmlComponents 1.0
 
-/**
- * CDropdownMenu.qml - Reusable dropdown menu panel with header, items, and footer
- *
- * Usage:
- *   CDropdownMenu {
- *       visible: false
- *       width: 200
- *       isDark: Theme.mode === "dark"
- *       menuItems: [
- *           { label: "Profile", icon: "P", action: "profile" },
- *           { label: "Settings", icon: "S", action: "settings" }
- *       ]
- *       onItemClicked: function(action) { ... }
- *
- *       headerContent: RowLayout { ... }   // optional
- *       footerContent: Rectangle { ... }   // optional
- *   }
- */
 Rectangle {
     id: root
 
@@ -73,37 +55,13 @@ Rectangle {
         // Menu items
         Repeater {
             model: root.menuItems
-            delegate: Rectangle {
-                Layout.fillWidth: true
-                height: 36
-                radius: 8
-                color: itemMA.containsMouse ? (isDark ? Qt.rgba(1,1,1,0.06) : Qt.rgba(0,0,0,0.04)) : "transparent"
-
-                RowLayout {
-                    anchors.fill: parent
-                    anchors.leftMargin: 12
-                    spacing: 10
-                    CText {
-                        text: modelData.icon
-                        font.pixelSize: 14
-                        color: modelData.color || Theme.textSecondary
-                    }
-                    CText {
-                        text: modelData.label
-                        font.pixelSize: 13
-                        color: modelData.color || Theme.text
-                    }
-                }
-
-                MouseArea {
-                    id: itemMA
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: {
-                        root.itemClicked(modelData.action)
-                    }
-                }
+            delegate: CDropdownMenuItem {
+                isDark: root.isDark
+                icon: modelData.icon
+                label: modelData.label
+                itemColor: modelData.color || "transparent"
+                action: modelData.action
+                onTriggered: function(act) { root.itemClicked(act) }
             }
         }
 

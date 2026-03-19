@@ -10,11 +10,22 @@ Rectangle {
     property string selectedComponent: "Button"
     property bool outlinedMode: false
     property bool showSnackbar: true
+    property var componentList: []
 
     StorybookSamples {
         id: samples
         outlinedMode: root.outlinedMode
         showSnackbar: root.showSnackbar
+    }
+
+    Component.onCompleted: {
+        var xhr = new XMLHttpRequest()
+        xhr.open("GET", "../../frontends/qt6/config/storybook-components.json")
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200)
+                componentList = JSON.parse(xhr.responseText)
+        }
+        xhr.send()
     }
 
     RowLayout {
@@ -23,63 +34,16 @@ Rectangle {
         anchors.margins: 24
         spacing: 20
 
-        // Sidebar
-        CCard {
-            Layout.preferredWidth: 260
-            Layout.fillHeight: true
-
-            ColumnLayout {
-                anchors.fill: parent
-                anchors.margins: 18
-                spacing: 12
-
-                CText { variant: "h4"; text: "Components" }
-
-                ListView {
-                    Layout.fillHeight: true
-                    Layout.fillWidth: true
-                    model: ListModel {
-                        ListElement { name: "Button";    desc: "Primary/outline actions" }
-                        ListElement { name: "Card";      desc: "Elevated surfaces" }
-                        ListElement { name: "Checkbox";  desc: "Binary toggle" }
-                        ListElement { name: "Accordion"; desc: "Expandable sections" }
-                        ListElement { name: "Tabs";      desc: "Navigation tabs" }
-                        ListElement { name: "Snackbar";  desc: "Transient notices" }
-                        ListElement { name: "Avatar";    desc: "Identity badges" }
-                        ListElement { name: "MOD Player"; desc: "Play tracker tunes" }
-                        ListElement { name: "Typography"; desc: "Styled text" }
-                        ListElement { name: "Alert";     desc: "Status messages" }
-                    }
-                    spacing: 4
-                    delegate: CListItem {
-                        width: parent ? parent.width : 220
-                        title: model.name
-                        subtitle: model.desc
-                        selected: selectedComponent === model.name
-                        onClicked: selectedComponent = model.name
-                    }
-                }
-
-                CDivider { Layout.fillWidth: true }
-
-                ColumnLayout {
-                    spacing: 8
-                    CText { variant: "caption"; text: "Playground knobs" }
-                    CSwitch {
-                        text: "Outlined mode"
-                        checked: outlinedMode
-                        onCheckedChanged: outlinedMode = checked
-                    }
-                    CSwitch {
-                        text: "Show snackbar"
-                        checked: showSnackbar
-                        onCheckedChanged: showSnackbar = checked
-                    }
-                }
-            }
+        StorybookSidebar {
+            componentList: parent.parent.componentList
+            selectedComponent: parent.parent.selectedComponent
+            outlinedMode: parent.parent.outlinedMode
+            showSnackbar: parent.parent.showSnackbar
+            onComponentSelected: function(name) { selectedComponent = name }
+            onOutlinedModeChanged: function(v) { outlinedMode = v }
+            onShowSnackbarChanged: function(v) { showSnackbar = v }
         }
 
-        // Preview
         ColumnLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true

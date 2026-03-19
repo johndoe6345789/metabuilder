@@ -73,85 +73,21 @@ CCard {
             spacing: 6
             clip: true
 
-            delegate: Item {
+            delegate: CssPropertyRow {
                 width: propertyListView.width
-                height: 48
-
-                RowLayout {
-                    anchors.fill: parent
-                    spacing: 8
-
-                    Item {
-                        Layout.preferredWidth: 200
-                        Layout.fillHeight: true
-
-                        CTextField {
-                            id: propNameField
-                            anchors.fill: parent
-                            label: index === 0 ? "Property" : ""
-                            placeholderText: "property-name"
-                            text: modelData.prop
-                            onTextChanged: {
-                                if (text !== modelData.prop)
-                                    root.propertyNameChanged(index, text)
-                            }
-                            onActiveFocusChanged: {
-                                if (activeFocus) {
-                                    root.editingPropertyIndex = index
-                                    root.showSuggestions = true
-                                } else {
-                                    suggestHideTimer.start()
-                                }
-                            }
-                        }
-
-                        CssSuggestionPopup {
-                            anchors.top: propNameField.bottom
-                            anchors.left: propNameField.left
-                            width: propNameField.width
-                            suggestions: root.propertySuggestions
-                            shown: root.showSuggestions && root.editingPropertyIndex === index
-                            onSuggestionClicked: function(value) {
-                                root.propertyNameChanged(root.editingPropertyIndex, value)
-                                root.showSuggestions = false
-                            }
-                        }
-                    }
-
-                    CTextField {
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        label: index === 0 ? "Value" : ""
-                        placeholderText: "#000000"
-                        text: modelData.value
-                        onTextChanged: {
-                            if (text !== modelData.value)
-                                root.propertyValueChanged(index, text)
-                        }
-                    }
-
-                    Rectangle {
-                        Layout.preferredWidth: 24
-                        Layout.preferredHeight: 24
-                        Layout.alignment: Qt.AlignVCenter
-                        radius: 4
-                        border.color: Theme.border
-                        border.width: 1
-                        color: {
-                            var v = modelData.value
-                            if (v.charAt(0) === "#" || v.indexOf("rgb") === 0)
-                                return v
-                            return "transparent"
-                        }
-                        visible: modelData.prop === "color" || modelData.prop === "background-color"
-                    }
-
-                    CButton {
-                        text: "x"
-                        variant: "ghost"
-                        size: "sm"
-                        onClicked: root.removePropertyClicked(index)
-                    }
+                propName: modelData.prop
+                propValue: modelData.value
+                isFirst: index === 0
+                suggestions: root.propertySuggestions
+                suggestionsShown: root.showSuggestions && root.editingPropertyIndex === index
+                onPropNameEdited: function(name) { root.propertyNameChanged(index, name) }
+                onPropValueEdited: function(value) { root.propertyValueChanged(index, value) }
+                onRemoveClicked: root.removePropertyClicked(index)
+                onFocusGained: { root.editingPropertyIndex = index; root.showSuggestions = true }
+                onFocusLost: suggestHideTimer.start()
+                onSuggestionPicked: function(value) {
+                    root.propertyNameChanged(root.editingPropertyIndex, value)
+                    root.showSuggestions = false
                 }
             }
         }

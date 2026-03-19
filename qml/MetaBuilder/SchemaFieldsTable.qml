@@ -29,16 +29,12 @@ CCard {
             }
             Item { Layout.fillWidth: true }
             CButton {
-                text: "Add Field"
-                variant: "primary"
-                size: "sm"
+                text: "Add Field"; variant: "primary"; size: "sm"
                 onClicked: root.addFieldClicked()
                 visible: root.schema !== null
             }
             CButton {
-                text: "Remove Field"
-                variant: "danger"
-                size: "sm"
+                text: "Remove Field"; variant: "danger"; size: "sm"
                 enabled: root.selectedFieldIndex >= 0
                 visible: root.schema !== null
                 onClicked: root.removeFieldClicked()
@@ -71,50 +67,11 @@ CCard {
             spacing: 2
             clip: true
 
-            delegate: Rectangle {
-                width: parent ? parent.width : 400
-                height: 40
-                radius: 4
-                color: index === root.selectedFieldIndex
-                    ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12)
-                    : (fieldMouse.containsMouse ? Theme.surface : "transparent")
-
-                MouseArea {
-                    id: fieldMouse
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    onClicked: root.fieldClicked(index)
-                }
-
-                RowLayout {
-                    anchors.fill: parent
-                    anchors.leftMargin: 12
-                    anchors.rightMargin: 12
-                    spacing: 8
-
-                    CText {
-                        variant: "body2"
-                        text: modelData.name
-                        Layout.preferredWidth: 140
-                        font.bold: index === root.selectedFieldIndex
-                    }
-                    CChip {
-                        text: modelData.type
-                        Layout.preferredWidth: 100
-                    }
-                    CText {
-                        variant: "body2"
-                        text: modelData.required ? "Yes" : "No"
-                        color: modelData.required ? Theme.primary : Theme.border
-                        Layout.preferredWidth: 80
-                    }
-                    CText {
-                        variant: "caption"
-                        text: modelData.defaultValue || "-"
-                        Layout.fillWidth: true
-                        elide: Text.ElideRight
-                    }
-                }
+            delegate: SchemaFieldRow {
+                fieldData: modelData
+                fieldIndex: index
+                isSelected: index === root.selectedFieldIndex
+                onClicked: root.fieldClicked(index)
             }
         }
 

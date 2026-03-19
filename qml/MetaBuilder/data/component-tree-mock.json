@@ -1,0 +1,15 @@
+[
+    { "nodeId": 0,  "name": "App",            "type": "container", "depth": 0, "visible": true, "props": [{ "key": "maxWidth", "value": "1280" }] },
+    { "nodeId": 1,  "name": "NavBar",          "type": "layout",    "depth": 1, "visible": true, "props": [{ "key": "sticky", "value": "true" }, { "key": "height", "value": "64" }] },
+    { "nodeId": 2,  "name": "MainContent",     "type": "container", "depth": 1, "visible": true, "props": [{ "key": "padding", "value": "24" }] },
+    { "nodeId": 3,  "name": "HeroSection",     "type": "widget",    "depth": 2, "visible": true, "props": [{ "key": "title", "value": "Welcome" }, { "key": "backgroundImage", "value": "hero.png" }] },
+    { "nodeId": 4,  "name": "FeatureGrid",     "type": "layout",    "depth": 2, "visible": true, "props": [{ "key": "columns", "value": "3" }, { "key": "gap", "value": "16" }] },
+    { "nodeId": 5,  "name": "FeatureCard",     "type": "atom",      "depth": 3, "visible": true, "props": [{ "key": "icon", "value": "speed" }, { "key": "label", "value": "Fast" }] },
+    { "nodeId": 6,  "name": "FeatureCard",     "type": "atom",      "depth": 3, "visible": true, "props": [{ "key": "icon", "value": "shield" }, { "key": "label", "value": "Secure" }] },
+    { "nodeId": 7,  "name": "FeatureCard",     "type": "atom",      "depth": 3, "visible": true, "props": [{ "key": "icon", "value": "plug" }, { "key": "label", "value": "Extensible" }] },
+    { "nodeId": 8,  "name": "ContactForm",     "type": "widget",    "depth": 2, "visible": true, "props": [{ "key": "action", "value": "/api/contact" }] },
+    { "nodeId": 9,  "name": "Footer",          "type": "layout",    "depth": 1, "visible": true, "props": [{ "key": "copyright", "value": "2026" }] },
+    { "nodeId": 10, "name": "Sidebar",         "type": "container", "depth": 1, "visible": true, "props": [{ "key": "width", "value": "280" }, { "key": "collapsible", "value": "true" }] },
+    { "nodeId": 11, "name": "NavigationList",  "type": "widget",    "depth": 2, "visible": true, "props": [{ "key": "items", "value": "5" }] },
+    { "nodeId": 12, "name": "UserPanel",       "type": "widget",    "depth": 2, "visible": true, "props": [{ "key": "showAvatar", "value": "true" }] }
+]

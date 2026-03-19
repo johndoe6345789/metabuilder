@@ -6,26 +6,19 @@ import QmlComponents 1.0
 Rectangle {
     id: root
     color: "transparent"
-
-    // ── Data ──
     property var daemons: []
     property var systemMetrics: ({ cpu: 0, memory: 0, disk: 0, network: 0 })
-
-    // ── Signals ──
     signal reseedRequested()
     signal clearCacheRequested()
     signal restartRequested(string target)
 
     ScrollView {
-        anchors.fill: parent
-        clip: true
+        anchors.fill: parent; clip: true
         ColumnLayout {
-            width: parent.width
-            spacing: 16
+            width: parent.width; spacing: 16
 
             CText { variant: "h3"; text: "System Overview" }
             CText { variant: "h4"; text: "Daemon Status" }
-
             GridLayout {
                 Layout.fillWidth: true; columns: 2; columnSpacing: 16; rowSpacing: 16
                 Repeater {
@@ -43,10 +36,8 @@ Rectangle {
                     }
                 }
             }
-
             CDivider { Layout.fillWidth: true }
             CText { variant: "h4"; text: "System Metrics" }
-
             GridLayout {
                 Layout.fillWidth: true; columns: 4; columnSpacing: 16; rowSpacing: 16
                 Repeater {
@@ -59,10 +50,8 @@ Rectangle {
                     delegate: CSystemMetricCard { label: modelData.label; value: modelData.value }
                 }
             }
-
             CDivider { Layout.fillWidth: true }
             CText { variant: "h4"; text: "System Actions" }
-
             FlexRow {
                 Layout.fillWidth: true; spacing: 12
                 CButton { text: "Force Re-seed"; variant: "primary"; size: "sm"; onClicked: root.reseedRequested() }
@@ -70,10 +59,8 @@ Rectangle {
                 CButton { text: "Restart DBAL"; variant: "danger"; size: "sm"; onClicked: root.restartRequested("DBAL") }
                 CButton { text: "Restart Redis"; variant: "danger"; size: "sm"; onClicked: root.restartRequested("Redis") }
             }
-
             CDivider { Layout.fillWidth: true }
             CText { variant: "h4"; text: "Environment" }
-
             CCard {
                 Layout.fillWidth: true
                 RowLayout {

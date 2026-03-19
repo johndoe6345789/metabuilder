@@ -1,0 +1,6 @@
+[
+    { "uid": 1, "username": "demo",  "email": "demo@metabuilder.dev",  "role": "user",     "level": 2, "status": "active",   "created": "2025-11-02" },
+    { "uid": 2, "username": "admin", "email": "admin@metabuilder.dev", "role": "admin",    "level": 3, "status": "active",   "created": "2025-09-14" },
+    { "uid": 3, "username": "god",   "email": "god@metabuilder.dev",   "role": "god",      "level": 4, "status": "active",   "created": "2025-06-01" },
+    { "uid": 4, "username": "super", "email": "super@metabuilder.dev", "role": "supergod", "level": 5, "status": "inactive", "created": "2025-03-22" }
+]

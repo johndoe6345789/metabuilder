@@ -1,0 +1,9 @@
+{
+    "emailTemplates": [
+        { "id": "welcome_email",  "name": "Welcome Email",  "subject": "Welcome to {{app_name}}, {{user_name}}!", "body": "Hi {{user_name}},\n\nWelcome to {{app_name}}! Your account has been created successfully.\n\nYour username: {{username}}\n\nGet started by visiting your dashboard.\n\nBest regards,\nThe {{app_name}} Team" },
+        { "id": "password_reset", "name": "Password Reset",  "subject": "Password Reset Request - {{app_name}}", "body": "Hi {{user_name}},\n\nWe received a request to reset your password.\n\nClick the link below to set a new password:\n{{reset_link}}\n\nThis link expires in {{expiry_minutes}} minutes.\n\nIf you did not request this, please ignore this email.\n\nBest regards,\nThe {{app_name}} Team" },
+        { "id": "notification",   "name": "Notification",    "subject": "[{{app_name}}] {{notification_title}}", "body": "Hi {{user_name}},\n\n{{notification_body}}\n\nView details: {{action_url}}\n\nBest regards,\nThe {{app_name}} Team" },
+        { "id": "invite",         "name": "Invite",          "subject": "You've been invited to {{app_name}}", "body": "Hi,\n\n{{inviter_name}} has invited you to join {{app_name}}.\n\nClick below to accept your invitation:\n{{invite_link}}\n\nThis invitation expires on {{expiry_date}}.\n\nBest regards,\nThe {{app_name}} Team" }
+    ],
+    "encryptionOptions": ["None", "TLS", "SSL"]
+}

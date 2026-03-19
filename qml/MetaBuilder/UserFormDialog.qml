@@ -5,7 +5,6 @@ import QmlComponents 1.0
 
 CDialog {
     id: root
-
     property bool isEdit: false
     property string formUsername: ""
     property string formEmail: ""
@@ -13,57 +12,40 @@ CDialog {
     property string formRole: "user"
     property bool formActive: true
     property var roles: ["user", "admin", "god", "supergod"]
-
     signal accepted()
     signal cancelled()
-
     title: isEdit ? "Edit User" : "Create User"
 
     ColumnLayout {
-        spacing: 14
-        width: 380
+        spacing: 14; width: 380
 
         CTextField {
-            Layout.fillWidth: true
-            label: "Username"
+            Layout.fillWidth: true; label: "Username"
             placeholderText: "Enter username"
             text: root.formUsername
             onTextChanged: root.formUsername = text
         }
-
         CTextField {
-            Layout.fillWidth: true
-            label: "Email"
+            Layout.fillWidth: true; label: "Email"
             placeholderText: "Enter email address"
             text: root.formEmail
             onTextChanged: root.formEmail = text
         }
-
         ColumnLayout {
-            Layout.fillWidth: true
-            spacing: 4
-
+            Layout.fillWidth: true; spacing: 4
             CTextField {
-                Layout.fillWidth: true
-                label: "Password"
+                Layout.fillWidth: true; label: "Password"
                 placeholderText: root.isEdit ? "Leave blank to keep current" : "Enter password"
-                text: root.formPassword
-                echoMode: TextInput.Password
+                text: root.formPassword; echoMode: TextInput.Password
                 onTextChanged: root.formPassword = text
             }
-
             CBadge { text: "SHA-512 hashed"; badgeColor: "#607d8b" }
         }
-
         ColumnLayout {
-            Layout.fillWidth: true
-            spacing: 6
+            Layout.fillWidth: true; spacing: 6
             CText { variant: "caption"; text: "Role" }
-
             FlexRow {
-                Layout.fillWidth: true
-                spacing: 6
-
+                Layout.fillWidth: true; spacing: 6
                 Repeater {
                     model: root.roles
                     CChip {
@@ -74,27 +56,20 @@ CDialog {
                 }
             }
         }
-
         FlexRow {
-            Layout.fillWidth: true
-            spacing: 8
+            Layout.fillWidth: true; spacing: 8
             CText { variant: "body2"; text: "Active" }
             CSwitch {
                 checked: root.formActive
                 onCheckedChanged: root.formActive = checked
             }
         }
-
         CDivider { Layout.fillWidth: true }
-
         FlexRow {
-            Layout.fillWidth: true
-            spacing: 8
-
+            Layout.fillWidth: true; spacing: 8
             Item { Layout.fillWidth: true }
             CButton {
-                text: "Cancel"
-                variant: "ghost"
+                text: "Cancel"; variant: "ghost"
                 onClicked: root.cancelled()
             }
             CButton {

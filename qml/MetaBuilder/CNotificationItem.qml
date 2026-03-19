@@ -17,16 +17,6 @@ Rectangle {
 
     color: isRead ? "transparent" : Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.04)
 
-    function typeIcon(type) {
-        switch (type) {
-            case "system":  return "\u2699"
-            case "alert":   return "\u26A0"
-            case "warning": return "\u26A0"
-            case "info":    return "\u2139"
-            default:        return "\u2709"
-        }
-    }
-
     function typeColor(type) {
         switch (type) {
             case "system":  return "#2196f3"
@@ -62,18 +52,8 @@ Rectangle {
         anchors.bottomMargin: 12
         spacing: 12
 
-        Rectangle {
-            width: 36
-            height: 36
-            radius: 18
-            color: root.notification ? Qt.rgba(typeColor(root.notification.type).r, typeColor(root.notification.type).g, typeColor(root.notification.type).b, 0.15) : "transparent"
-            Layout.alignment: Qt.AlignTop
-
-            CText {
-                anchors.centerIn: parent
-                text: root.notification ? typeIcon(root.notification.type) : ""
-                variant: "body1"
-            }
+        CNotificationIconBadge {
+            notificationType: root.notification ? root.notification.type : ""
         }
 
         ColumnLayout {
