@@ -49,9 +49,18 @@ export const ENV_DEFAULTS = {
 
 /**
  * HTTP status codes
- * Re-exported from routing for convenience
+ * Defined here directly to avoid pulling in routing's server-only dependencies.
  */
-export { STATUS } from '@/lib/routing'
+export const STATUS = {
+  OK: 200,
+  CREATED: 201,
+  BAD_REQUEST: 400,
+  UNAUTHORIZED: 401,
+  FORBIDDEN: 403,
+  NOT_FOUND: 404,
+  ERROR: 500,
+  INTERNAL_ERROR: 500,
+} as const
 
 /**
  * Session cookie name
