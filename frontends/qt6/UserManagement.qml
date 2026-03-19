@@ -595,7 +595,7 @@ Rectangle {
                     onTextChanged: formPassword = text
                 }
 
-                CBadge { text: "SHA-512 hashed"; color: "#607d8b" }
+                CBadge { text: "SHA-512 hashed"; badgeColor: "#607d8b" }
             }
 
             ColumnLayout {
@@ -689,7 +689,7 @@ Rectangle {
                     onTextChanged: formPassword = text
                 }
 
-                CBadge { text: "SHA-512 hashed"; color: "#607d8b" }
+                CBadge { text: "SHA-512 hashed"; badgeColor: "#607d8b" }
             }
 
             ColumnLayout {

@@ -355,7 +355,7 @@ Rectangle {
                     model: workflowTags.length > 3 ? 3 : workflowTags.length
                     CChip {
                         text: workflowTags[index] ? workflowTags[index].name : ""
-                        color: Theme.border
+                        chipColor: Theme.border
                     }
                 }
 
@@ -537,7 +537,7 @@ Rectangle {
                             CChip {
                                 text: "All"
                                 selected: paletteGroup === ""
-                                color: Theme.primary
+                                chipColor: Theme.primary
                                 MouseArea {
                                     anchors.fill: parent
                                     cursorShape: Qt.PointingHandCursor
@@ -549,7 +549,7 @@ Rectangle {
                                 CChip {
                                     text: modelData
                                     selected: paletteGroup === modelData
-                                    color: groupColor(modelData + ".x")
+                                    chipColor: groupColor(modelData + ".x")
                                     MouseArea {
                                         anchors.fill: parent
                                         cursorShape: Qt.PointingHandCursor
@@ -1131,7 +1131,7 @@ Rectangle {
                         CText { variant: "body2"; text: "Type" }
                         CChip {
                             text: selectedNode ? selectedNode.type : ""
-                            color: selectedNode ? groupColor(selectedNode.type) : Theme.primary
+                            chipColor: selectedNode ? groupColor(selectedNode.type) : Theme.primary
                         }
                     }
 
@@ -1249,7 +1249,7 @@ Rectangle {
                                 model: selectedNode ? (selectedNode.inputs || []) : []
                                 CChip {
                                     text: modelData.displayName || modelData.name
-                                    color: Theme.primary
+                                    chipColor: Theme.primary
                                 }
                             }
                             CText {
@@ -1267,7 +1267,7 @@ Rectangle {
                                 model: selectedNode ? (selectedNode.outputs || []) : []
                                 CChip {
                                     text: modelData.displayName || modelData.name
-                                    color: Theme.success
+                                    chipColor: Theme.success
                                 }
                             }
                             CText {

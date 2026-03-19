@@ -15,7 +15,7 @@ Rectangle {
 
     property string text: ""
     property bool accent: false
-    property color color: accent ? Theme.primary : Theme.error
+    property color badgeColor: accent ? Theme.primary : Theme.error
     property int count: 0
     property bool dot: false
     property string variant: "primary" // primary, success, warning, error (legacy compat)
@@ -27,7 +27,7 @@ Rectangle {
             case "success": return Theme.success
             case "warning": return Theme.warning
             case "error": return Theme.error
-            default: return color
+            default: return badgeColor
         }
     }
 

@@ -25,7 +25,7 @@ Rectangle {
     property bool closable: false
     property bool checked: false
     property bool selected: false
-    property color color: Theme.primary
+    property color chipColor: Theme.primary
 
     signal clicked()
     signal closeClicked()
@@ -47,7 +47,7 @@ Rectangle {
             case "error": return Theme.error
             case "info": return Theme.info
             case "primary": return Theme.primary
-            default: return color
+            default: return chipColor
         }
     }
 
