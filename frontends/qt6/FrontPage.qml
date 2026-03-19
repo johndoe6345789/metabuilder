@@ -117,14 +117,24 @@ Rectangle {
                 Layout.preferredHeight: 360
                 color: "transparent"
 
-                // Subtle gradient — uses accent colors, theme-aware
+                // Subtle gradient — stronger in light mode for warmth
                 Rectangle {
                     anchors.fill: parent
                     gradient: Gradient {
                         orientation: Gradient.Horizontal
-                        GradientStop { position: 0.0; color: Qt.rgba(accentBlue.r, accentBlue.g, accentBlue.b, 0.06) }
-                        GradientStop { position: 0.5; color: "transparent" }
-                        GradientStop { position: 1.0; color: Qt.rgba(accentViolet.r, accentViolet.g, accentViolet.b, 0.04) }
+                        GradientStop { position: 0.0; color: isDark ? Qt.rgba(0.39, 0.4, 0.95, 0.06) : Qt.rgba(0.30, 0.45, 0.90, 0.15) }
+                        GradientStop { position: 0.5; color: isDark ? "transparent" : Qt.rgba(0.35, 0.55, 0.95, 0.06) }
+                        GradientStop { position: 1.0; color: isDark ? Qt.rgba(0.55, 0.36, 0.96, 0.04) : Qt.rgba(0.50, 0.40, 0.92, 0.12) }
+                    }
+                }
+                // Vertical blue wash in light mode
+                Rectangle {
+                    anchors.fill: parent
+                    visible: !isDark
+                    gradient: Gradient {
+                        GradientStop { position: 0.0; color: Qt.rgba(0.35, 0.50, 0.95, 0.10) }
+                        GradientStop { position: 0.6; color: Qt.rgba(0.40, 0.55, 0.90, 0.04) }
+                        GradientStop { position: 1.0; color: "transparent" }
                     }
                 }
 
@@ -218,7 +228,7 @@ Rectangle {
             Rectangle {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 80
-                color: cardBg
+                color: isDark ? cardBg : Qt.rgba(0.35, 0.50, 0.90, 0.07)
 
                 RowLayout {
                     anchors.fill: parent
