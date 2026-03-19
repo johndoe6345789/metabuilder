@@ -94,98 +94,188 @@ ApplicationWindow {
         return pkg.navLabel ? pkg.navLabel.toLowerCase().replace(/ /g, "-") : pkg.packageId
     }
 
+    // ── MD3 palette helpers (match FrontPage) ──
+    readonly property bool isDark: Theme.mode === "dark"
+    readonly property color accentBlue: "#6366F1"
+    readonly property color surfaceContainer: isDark ? Qt.rgba(1, 1, 1, 0.05) : Qt.rgba(0.31, 0.31, 0.44, 0.06)
+    readonly property color outlineVariant: isDark ? Qt.rgba(1, 1, 1, 0.06) : Qt.rgba(0, 0, 0, 0.08)
+
     // ── App bar ──
     header: CAppBar {
-        height: 56
+        height: 52
 
         RowLayout {
             anchors.fill: parent
-            anchors.leftMargin: 20
-            anchors.rightMargin: 20
-            spacing: 12
+            anchors.leftMargin: 16
+            anchors.rightMargin: 16
+            spacing: 8
 
+            // Logo
             CText {
-                variant: "h4"
                 text: "MetaBuilder"
+                font.pixelSize: 16
+                font.weight: Font.Bold
+                font.letterSpacing: -0.5
             }
 
-            CBadge {
-                text: "Level " + currentLevel
-            }
-
-            // DBAL connection status
-            Row {
-                spacing: 4
-                Layout.leftMargin: 4
-
-                Rectangle {
-                    width: 8
-                    height: 8
-                    radius: 4
-                    color: dbalProvider.connected ? "#4caf50" : "#f44336"
-                    anchors.verticalCenter: parent.verticalCenter
-                }
+            // Level pill
+            Rectangle {
+                width: lvlText.implicitWidth + 16
+                height: 24
+                radius: 12
+                color: Qt.rgba(accentBlue.r, accentBlue.g, accentBlue.b, isDark ? 0.15 : 0.12)
 
                 CText {
-                    variant: "caption"
-                    text: "DBAL"
-                    anchors.verticalCenter: parent.verticalCenter
+                    id: lvlText
+                    anchors.centerIn: parent
+                    text: "L" + currentLevel
+                    font.pixelSize: 11
+                    font.weight: Font.Bold
+                    font.family: "monospace"
+                    color: accentBlue
                 }
             }
 
-            // Theme toggle
-            CButton {
-                variant: "ghost"
-                size: "sm"
-                text: currentTheme === "dark" ? "Light" : "Dark"
-                onClicked: {
-                    currentTheme = currentTheme === "dark" ? "light" : "dark"
-                    if (typeof Theme.setTheme === "function") {
-                        Theme.setTheme(currentTheme)
+            // DBAL dot
+            Rectangle {
+                width: 7
+                height: 7
+                radius: 3.5
+                color: dbalProvider.connected ? accentBlue : "#f44336"
+                Layout.leftMargin: 4
+            }
+            CText {
+                text: "DBAL"
+                font.pixelSize: 11
+                font.family: "monospace"
+                color: Theme.textSecondary
+            }
+
+            // Theme toggle — MD3 icon-style pill
+            Rectangle {
+                width: themeText.implicitWidth + 20
+                height: 28
+                radius: 14
+                color: surfaceContainer
+                border.color: outlineVariant
+                border.width: 1
+
+                CText {
+                    id: themeText
+                    anchors.centerIn: parent
+                    text: currentTheme === "dark" ? "\u263E Dark" : "\u2600 Light"
+                    font.pixelSize: 11
+                    color: Theme.textSecondary
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: {
+                        currentTheme = currentTheme === "dark" ? "light" : "dark"
+                        if (typeof Theme.setTheme === "function")
+                            Theme.setTheme(currentTheme)
                     }
                 }
             }
 
             Item { Layout.fillWidth: true }
 
-            // Level navigation
+            // Level navigation — MD3 segmented/pill buttons
             Repeater {
                 model: [
                     { label: "Public",    level: 1, view: "frontpage" },
                     { label: "User",      level: 2, view: "dashboard" },
                     { label: "Admin",     level: 3, view: "admin" },
                     { label: "God",       level: 4, view: "god-panel" },
-                    { label: "Super God", level: 5, view: "supergod" }
+                    { label: "Super",     level: 5, view: "supergod" }
                 ]
-                delegate: CButton {
+                delegate: Rectangle {
                     visible: modelData.level <= currentLevel
-                    text: modelData.label
-                    variant: currentView === modelData.view ? "primary" : "ghost"
-                    size: "sm"
-                    onClicked: currentView = modelData.view
+                    width: navLabel.implicitWidth + 20
+                    height: 30
+                    radius: 15
+                    color: currentView === modelData.view
+                        ? Qt.rgba(accentBlue.r, accentBlue.g, accentBlue.b, isDark ? 0.2 : 0.15)
+                        : navMA.containsMouse ? surfaceContainer : "transparent"
+
+                    Behavior on color { ColorAnimation { duration: 150 } }
+
+                    CText {
+                        id: navLabel
+                        anchors.centerIn: parent
+                        text: modelData.label
+                        font.pixelSize: 12
+                        font.weight: currentView === modelData.view ? Font.DemiBold : Font.Normal
+                        color: currentView === modelData.view ? accentBlue : Theme.textSecondary
+                    }
+
+                    MouseArea {
+                        id: navMA
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: currentView = modelData.view
+                    }
                 }
             }
 
-            Item { width: 8 }
+            Item { width: 4 }
 
-            CButton {
+            // Login / user info
+            Rectangle {
                 visible: !loggedIn
-                text: "Login"
-                variant: "primary"
-                size: "sm"
-                onClicked: currentView = "login"
+                width: loginText.implicitWidth + 24
+                height: 30
+                radius: 15
+                color: accentBlue
+
+                CText {
+                    id: loginText
+                    anchors.centerIn: parent
+                    text: "Login"
+                    font.pixelSize: 12
+                    font.weight: Font.DemiBold
+                    color: "#ffffff"
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: currentView = "login"
+                }
             }
+
             CText {
                 visible: loggedIn
-                text: currentUser + " (" + currentRole + ")"
-                variant: "body2"
+                text: currentUser
+                font.pixelSize: 13
+                font.weight: Font.Medium
+                color: Theme.text
             }
-            CButton {
+
+            Rectangle {
                 visible: loggedIn
-                text: "Logout"
-                variant: "ghost"
-                size: "sm"
-                onClicked: logout()
+                width: logoutText.implicitWidth + 20
+                height: 28
+                radius: 14
+                color: "transparent"
+                border.color: outlineVariant
+                border.width: 1
+
+                CText {
+                    id: logoutText
+                    anchors.centerIn: parent
+                    text: "Logout"
+                    font.pixelSize: 11
+                    color: Theme.textSecondary
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: logout()
+                }
             }
         }
     }
