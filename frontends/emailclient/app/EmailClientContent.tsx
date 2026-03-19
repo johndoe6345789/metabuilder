@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   MailboxLayout,
   MailboxHeader,
@@ -14,6 +14,13 @@ import { useEmailClient } from './hooks/useEmailClient'
 
 export default function EmailClientContent() {
   const { state, actions } = useEmailClient()
+
+  useEffect(() => {
+    document.documentElement.setAttribute(
+      'data-theme',
+      state.isDarkMode ? 'dark' : 'light'
+    )
+  }, [state.isDarkMode])
 
   const header = (
     <MailboxHeader
@@ -53,7 +60,9 @@ export default function EmailClientContent() {
           variant="body2"
           className="mailbox-thread-folder-label"
         >
-          {state.activeFolder}
+          {state.activeFolder
+            .replace(/_/g, ' ')
+            .replace(/^\w/, c => c.toUpperCase())}
           {state.filteredEmails.length > 0 &&
             ` (${state.filteredEmails.length})`}
         </Typography>
@@ -66,6 +75,11 @@ export default function EmailClientContent() {
       </Box>
       {state.filteredEmails.length === 0 ? (
         <Box className="mailbox-empty-state">
+          <span className="material-symbols-outlined mailbox-empty-icon">
+            {state.activeFolder === 'inbox' || state.searchQuery
+              ? 'inbox'
+              : 'folder_open'}
+          </span>
           <Typography variant="body2">
             {state.activeFolder === 'inbox' &&
             state.searchQuery

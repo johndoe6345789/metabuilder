@@ -24,6 +24,7 @@ export const ComposeWindow = ({
   const [bcc, setBcc] = useState<string[]>([])
   const [subject, setSubject] = useState('')
   const [body, setBody] = useState('')
+  const [showCcBcc, setShowCcBcc] = useState(false)
   const accessible = useAccessible({
     feature: 'email', component: 'compose',
     identifier: customTestId || 'compose'
@@ -58,15 +59,37 @@ export const ComposeWindow = ({
         </button>
       </Box>
       <Box className="compose-body">
-        <RecipientInput recipientType="to"
-          recipients={to} onRecipientsChange={setTo}
-          placeholder="To:" />
-        <RecipientInput recipientType="cc"
-          recipients={cc} onRecipientsChange={setCc}
-          placeholder="Cc:" />
-        <RecipientInput recipientType="bcc"
-          recipients={bcc} onRecipientsChange={setBcc}
-          placeholder="Bcc:" />
+        <Box style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <RecipientInput recipientType="to"
+            recipients={to} onRecipientsChange={setTo}
+            placeholder="To:" />
+          {!showCcBcc && (
+            <button
+              type="button"
+              onClick={() => setShowCcBcc(true)}
+              style={{
+                fontSize: '0.75rem',
+                color: 'var(--mat-sys-on-surface-variant)',
+                whiteSpace: 'nowrap',
+                flexShrink: 0,
+                padding: '4px 6px',
+              }}
+              aria-label="Show Cc and Bcc fields"
+            >
+              Cc/Bcc
+            </button>
+          )}
+        </Box>
+        {showCcBcc && (
+          <>
+            <RecipientInput recipientType="cc"
+              recipients={cc} onRecipientsChange={setCc}
+              placeholder="Cc:" />
+            <RecipientInput recipientType="bcc"
+              recipients={bcc} onRecipientsChange={setBcc}
+              placeholder="Bcc:" />
+          </>
+        )}
         <input type="text" placeholder="Subject"
           value={subject} id="compose-subject"
           aria-label="Subject"

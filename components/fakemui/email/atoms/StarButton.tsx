@@ -1,5 +1,5 @@
 // fakemui/email/atoms/StarButton.tsx
-import React, { forwardRef, useState } from 'react'
+import React, { forwardRef, useEffect, useState } from 'react'
 import { MaterialIcon } from '../../../../icons/react/fakemui'
 import { useAccessible } from '../../../../hooks/useAccessible'
 
@@ -15,6 +15,8 @@ export const StarButton = forwardRef<
   StarButtonProps
 >(({ isStarred = false, onToggleStar, testId, ...props }, ref) => {
   const [starred, setStarred] = useState(isStarred)
+
+  useEffect(() => { setStarred(isStarred) }, [isStarred])
 
   const accessible = useAccessible({
     feature: 'email',

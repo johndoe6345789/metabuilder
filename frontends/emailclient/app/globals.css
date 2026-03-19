@@ -339,10 +339,15 @@ input, textarea, select {
 }
 
 .folder-nav-item .unread-count {
-  font-size: 0.75rem;
-  font-weight: 600;
+  background-color: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
+  border-radius: var(--mat-sys-corner-full);
+  padding: 0 6px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  min-width: 18px;
+  text-align: center;
   margin-left: auto;
-  color: var(--mat-sys-on-surface-variant);
 }
 
 /* Active folder — filled tonal */
@@ -616,8 +621,17 @@ input, textarea, select {
   border-color: var(--mat-sys-surface-variant);
 }
 
+/* Issue 1 — selected card distinct highlight */
+.email-card[aria-current="true"] {
+  background-color: var(--mat-sys-secondary-container) !important;
+  border-left: 3px solid var(--mat-sys-primary);
+  padding-left: 13px;
+}
+
 .email-card--unread {
   background-color: var(--mat-sys-surface-container-lowest);
+  border-left: 3px solid var(--mat-sys-primary);
+  padding-left: 13px;
 }
 
 .email-card--unread .email-from,
@@ -698,6 +712,15 @@ input, textarea, select {
   background-color: var(--mat-sys-surface-container-high);
 }
 
+/* Issue 4 — starred state amber color */
+.star-button--active {
+  color: #f9a825;
+}
+
+.star-button--active .material-symbols-outlined {
+  color: #f9a825;
+}
+
 /* ============================================ */
 /* Email Detail / Reading Pane                  */
 /* ============================================ */
@@ -712,6 +735,21 @@ input, textarea, select {
   color: var(--mat-sys-on-surface);
   margin-bottom: 16px;
   line-height: 1.3;
+}
+
+/* Issue 9 — email header metadata layout */
+.header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.header-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 12px;
 }
 
 /* ============================================ */
