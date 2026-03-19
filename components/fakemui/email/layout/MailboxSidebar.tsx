@@ -1,5 +1,6 @@
 import React from 'react'
 import { Box, BoxProps } from '../..'
+import { MaterialIcon } from '../../../../icons/react/fakemui'
 import { useAccessible } from '../../../../hooks/useAccessible'
 import { FolderNavigation, type FolderNavigationItem } from '../navigation'
 
@@ -30,7 +31,8 @@ export const MailboxSidebar = ({
       {onCompose && (
         <Box className="mailbox-sidebar-compose">
           <button className="compose-btn" onClick={onCompose}>
-            ✏️ {composeLabel}
+            <MaterialIcon name="edit" size={20} />
+            <span>{composeLabel}</span>
           </button>
         </Box>
       )}

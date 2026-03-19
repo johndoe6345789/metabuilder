@@ -1,5 +1,6 @@
 import React from 'react'
 import { Box, BoxProps, Button, IconButton } from '../..'
+import { MaterialIcon } from '../../../../icons/react/fakemui'
 import { useAccessible } from '../../../../hooks/useAccessible'
 import { EmailHeader } from '../data-display'
 
@@ -46,33 +47,29 @@ export const EmailDetail = ({
     <Box className="email-detail" {...accessible} {...props}>
       <Box className="email-detail-toolbar">
         {onClose && (
-          <IconButton
-            aria-label="Back to list"
-            className="email-detail-back"
-            onClick={onClose}
-          >
-            <span>←</span>
+          <IconButton aria-label="Back to list" className="email-detail-back" onClick={onClose}>
+            <MaterialIcon name="arrow_back" size={20} />
           </IconButton>
         )}
         <Box className="email-detail-actions">
           {onArchive && (
             <IconButton aria-label="Archive" title="Archive" onClick={onArchive}>
-              <span>📥</span>
+              <MaterialIcon name="archive" size={20} />
             </IconButton>
           )}
           {onDelete && (
             <IconButton aria-label="Delete" title="Delete" onClick={onDelete}>
-              <span>🗑️</span>
+              <MaterialIcon name="delete" size={20} />
             </IconButton>
           )}
           {onReply && (
             <IconButton aria-label="Reply" title="Reply" onClick={onReply}>
-              <span>↩️</span>
+              <MaterialIcon name="reply" size={20} />
             </IconButton>
           )}
           {onForward && (
             <IconButton aria-label="Forward" title="Forward" onClick={onForward}>
-              <span>↪️</span>
+              <MaterialIcon name="forward" size={20} />
             </IconButton>
           )}
         </Box>
@@ -95,12 +92,14 @@ export const EmailDetail = ({
       <Box className="email-detail-reply-bar">
         {onReply && (
           <Button variant="outlined" className="email-detail-reply-btn" onClick={onReply}>
-            ↩️ Reply
+            <MaterialIcon name="reply" size={16} />
+            Reply
           </Button>
         )}
         {onForward && (
           <Button variant="outlined" className="email-detail-reply-btn" onClick={onForward}>
-            ↪️ Forward
+            <MaterialIcon name="forward" size={16} />
+            Forward
           </Button>
         )}
       </Box>

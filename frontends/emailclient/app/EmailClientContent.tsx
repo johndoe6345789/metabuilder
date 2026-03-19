@@ -17,12 +17,12 @@ import { Box, Typography } from '@metabuilder/fakemui'
 // ─────────────────────────────────────────────────────────────────────────────
 
 const DEMO_FOLDERS: FolderNavigationItem[] = [
-  { id: 'inbox', label: 'Inbox', icon: '📥', unreadCount: 3, isActive: true },
-  { id: 'starred', label: 'Starred', icon: '⭐' },
-  { id: 'sent', label: 'Sent', icon: '📤' },
-  { id: 'drafts', label: 'Drafts', icon: '📝', unreadCount: 1 },
-  { id: 'spam', label: 'Spam', icon: '⚠️' },
-  { id: 'trash', label: 'Trash', icon: '🗑️' },
+  { id: 'inbox', label: 'Inbox', icon: 'inbox', unreadCount: 3, isActive: true },
+  { id: 'starred', label: 'Starred', icon: 'star' },
+  { id: 'sent', label: 'Sent', icon: 'send' },
+  { id: 'drafts', label: 'Drafts', icon: 'drafts', unreadCount: 1 },
+  { id: 'spam', label: 'Spam', icon: 'report' },
+  { id: 'trash', label: 'Trash', icon: 'delete' },
 ]
 
 const now = Date.now()
@@ -115,6 +115,8 @@ export default function EmailClientContent() {
   const [emails, setEmails] = useState(DEMO_EMAILS)
   const [showCompose, setShowCompose] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const [isDarkMode, setIsDarkMode] = useState(true)
+  const [sidebarOpen, setSidebarOpen] = useState(true)
 
   const folders = DEMO_FOLDERS.map(f => ({
     ...f,
@@ -181,7 +183,17 @@ export default function EmailClientContent() {
     <MailboxHeader
       searchQuery={searchQuery}
       onSearchChange={setSearchQuery}
+      isDarkMode={isDarkMode}
+      onToggleTheme={() => {
+        setIsDarkMode(prev => !prev)
+        document.documentElement.setAttribute('data-theme', isDarkMode ? 'light' : 'dark')
+      }}
+      onMenuClick={() => setSidebarOpen(prev => !prev)}
       onSettingsClick={() => {}}
+      onAlertsClick={() => {}}
+      alertCount={unreadCount}
+      locale="EN"
+      onCycleLocale={() => {}}
     />
   )
 

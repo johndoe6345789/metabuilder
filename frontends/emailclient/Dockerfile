@@ -66,6 +66,7 @@ WORKDIR /app
 
 COPY --from=builder /app/frontends/emailclient/.next/standalone ./
 COPY --from=builder /app/frontends/emailclient/.next/static ./frontends/emailclient/.next/static
+COPY --from=builder /app/frontends/emailclient/public ./frontends/emailclient/public
 
 ENV NODE_ENV=production
 ENV PORT=3000
