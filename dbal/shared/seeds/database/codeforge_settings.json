@@ -1,0 +1,27 @@
+{
+  "entity": "Settings",
+  "version": "1.0",
+  "package": "codeforge",
+  "description": "Default application settings for CodeForge",
+  "records": [
+    {
+      "id": "app",
+      "tenantId": "default",
+      "autoSave": true,
+      "autoSync": true,
+      "syncInterval": 30000,
+      "dbalApiUrl": "http://localhost:8080",
+      "useIndexedDB": true,
+      "theme": "light",
+      "locale": "en",
+      "createdAt": 0,
+      "updatedAt": 0
+    }
+  ],
+  "metadata": {
+    "bootstrap": true,
+    "skipIfExists": true,
+    "timestampField": "createdAt",
+    "useCurrentTimestamp": true
+  }
+}
