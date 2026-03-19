@@ -132,14 +132,16 @@ Rectangle {
                         font.weight: Font.Black
                         font.letterSpacing: -2
                         color: onSurface
-                        Layout.alignment: Qt.AlignHCenter
+                        Layout.fillWidth: true
+                        horizontalAlignment: Text.AlignHCenter
                     }
 
                     CText {
                         text: "The universal platform for building data-driven applications."
                         font.pixelSize: 17
                         color: onSurfaceVariant
-                        Layout.alignment: Qt.AlignHCenter
+                        Layout.fillWidth: true
+                        horizontalAlignment: Text.AlignHCenter
                     }
 
                     CText {
@@ -148,7 +150,8 @@ Rectangle {
                         font.family: "monospace"
                         color: onSurfaceVariant
                         opacity: isDark ? 0.4 : 0.55
-                        Layout.alignment: Qt.AlignHCenter
+                        Layout.fillWidth: true
+                        horizontalAlignment: Text.AlignHCenter
                     }
 
                     RowLayout {
@@ -299,7 +302,8 @@ Rectangle {
                     font.pixelSize: 22
                     font.weight: Font.Bold
                     color: onSurface
-                    Layout.alignment: Qt.AlignHCenter
+                    Layout.fillWidth: true
+                    horizontalAlignment: Text.AlignHCenter
                 }
 
                 GridLayout {
@@ -437,7 +441,8 @@ Rectangle {
                     font.pixelSize: 22
                     font.weight: Font.Bold
                     color: onSurface
-                    Layout.alignment: Qt.AlignHCenter
+                    Layout.fillWidth: true
+                    horizontalAlignment: Text.AlignHCenter
                 }
 
                 GridLayout {
@@ -505,7 +510,8 @@ Rectangle {
                     font.pixelSize: 22
                     font.weight: Font.Bold
                     color: onSurface
-                    Layout.alignment: Qt.AlignHCenter
+                    Layout.fillWidth: true
+                    horizontalAlignment: Text.AlignHCenter
                 }
 
                 RowLayout {
@@ -571,7 +577,8 @@ Rectangle {
                     font.pixelSize: 22
                     font.weight: Font.Bold
                     color: onSurface
-                    Layout.alignment: Qt.AlignHCenter
+                    Layout.fillWidth: true
+                    horizontalAlignment: Text.AlignHCenter
                 }
 
                 RowLayout {
