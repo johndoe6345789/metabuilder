@@ -1,87 +1,109 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import "../theming"
 
 Rectangle {
     id: tabBar
-    
+
     property int currentIndex: 0
-    property var tabs: [] // [{label: "Tab 1", icon: "🏠"}]
-    
+    property var tabs: [] // [{label: "Tab 1", icon: "home"}]
+
+    signal tabClicked(int index)
+
     implicitHeight: 48
     color: "transparent"
-    
+
     RowLayout {
         anchors.fill: parent
         spacing: 0
-        
+
         Repeater {
+            id: tabRepeater
             model: tabBar.tabs
-            
+
             Rectangle {
+                id: tabDelegate
+
+                readonly property bool isActive: tabBar.currentIndex === index
+
                 Layout.fillHeight: true
-                Layout.preferredWidth: tabText.implicitWidth + 32
-                
-                color: tabBar.currentIndex === index ? "#2d2d2d" : (tabMouse.containsMouse ? "#252525" : "transparent")
-                
-                Behavior on color { ColorAnimation { duration: 150 } }
-                
-                ColumnLayout {
+                Layout.preferredWidth: tabContent.implicitWidth + 32
+
+                color: "transparent"
+
+                // MD3 state layer on hover
+                Rectangle {
+                    anchors.fill: parent
+                    color: Theme.text
+                    opacity: tabMouse.containsMouse && !tabDelegate.isActive ? 0.08 : 0
+                    Behavior on opacity { NumberAnimation { duration: 150 } }
+                }
+
+                RowLayout {
+                    id: tabContent
                     anchors.centerIn: parent
-                    spacing: 4
-                    
-                    RowLayout {
-                        Layout.alignment: Qt.AlignHCenter
-                        spacing: 6
-                        
-                        Text {
-                            text: modelData.icon || ""
-                            font.pixelSize: 14
-                            visible: modelData.icon
-                        }
-                        
-                        Text {
-                            id: tabText
-                            text: modelData.label || modelData
-                            font.pixelSize: 13
-                            font.weight: tabBar.currentIndex === index ? Font.DemiBold : Font.Normal
-                            color: tabBar.currentIndex === index ? "#4dabf7" : "#888888"
-                            
-                            Behavior on color { ColorAnimation { duration: 150 } }
-                        }
+                    spacing: 6
+
+                    Text {
+                        text: modelData.icon || ""
+                        font.pixelSize: 14
+                        color: tabDelegate.isActive ? Theme.primary : Theme.textSecondary
+                        visible: modelData.icon !== undefined && modelData.icon !== ""
+                        Behavior on color { ColorAnimation { duration: 150 } }
+                    }
+
+                    Text {
+                        text: modelData.label || modelData
+                        font.pixelSize: 14
+                        font.weight: tabDelegate.isActive ? Font.DemiBold : Font.Medium
+                        color: tabDelegate.isActive ? Theme.primary : Theme.textSecondary
+                        Behavior on color { ColorAnimation { duration: 150 } }
                     }
                 }
-                
-                // Active indicator
-                Rectangle {
-                    anchors.bottom: parent.bottom
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    width: parent.width - 16
-                    height: 3
-                    radius: 1.5
-                    color: "#4dabf7"
-                    visible: tabBar.currentIndex === index
-                }
-                
+
                 MouseArea {
                     id: tabMouse
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: tabBar.currentIndex = index
+                    onClicked: {
+                        tabBar.currentIndex = index
+                        tabBar.tabClicked(index)
+                    }
                 }
             }
         }
-        
+
         Item { Layout.fillWidth: true }
     }
-    
-    // Bottom border
+
+    // MD3 active indicator pill — animates x and width smoothly
+    Rectangle {
+        id: activeIndicator
+        anchors.bottom: parent.bottom
+        height: 3
+        radius: 1.5
+        color: Theme.primary
+        visible: tabRepeater.count > 0
+
+        property Item targetTab: tabRepeater.count > 0 && tabBar.currentIndex >= 0 && tabBar.currentIndex < tabRepeater.count
+                                 ? tabRepeater.itemAt(tabBar.currentIndex) : null
+
+        x: targetTab ? targetTab.x + 8 : 0
+        width: targetTab ? targetTab.width - 16 : 0
+
+        Behavior on x { NumberAnimation { duration: 250; easing.type: Easing.OutCubic } }
+        Behavior on width { NumberAnimation { duration: 250; easing.type: Easing.OutCubic } }
+    }
+
+    // Subtle bottom divider
     Rectangle {
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         height: 1
-        color: "#2d2d2d"
+        color: Theme.border
+        opacity: 0.4
     }
 }

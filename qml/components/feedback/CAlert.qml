@@ -3,9 +3,9 @@ import QtQuick.Layouts
 import QmlComponents 1.0
 
 /**
- * CAlert.qml - Alert/notification component (mirrors _alert.scss)
+ * CAlert.qml - Material Design 3 Alert component
  * Displays contextual feedback messages with severity levels
- * 
+ *
  * Usage:
  *   CAlert {
  *       severity: "error"
@@ -15,7 +15,7 @@ import QmlComponents 1.0
  */
 Rectangle {
     id: root
-    
+
     // Public properties
     property string text: ""
     property string title: ""
@@ -23,10 +23,10 @@ Rectangle {
     property string icon: ""          // Custom icon, auto-selected if empty
     property bool closable: false
     property string variant: "filled" // filled, outlined, standard
-    
+
     // Signals
     signal closed()
-    
+
     // Auto-select icon based on severity
     readonly property string _effectiveIcon: icon || {
         "info": "ℹ️",
@@ -34,91 +34,128 @@ Rectangle {
         "warning": "⚠️",
         "error": "❌"
     }[severity] || "ℹ️"
-    
-    // Get colors based on severity
+
+    // MD3 severity color
+    readonly property color _severityColor: {
+        switch (severity) {
+            case "success": return Theme.success
+            case "error": return Theme.error
+            case "warning": return Theme.warning
+            case "info": return Theme.info
+            default: return Theme.info
+        }
+    }
+
+    // MD3 tonal background based on severity (12% opacity)
     readonly property color _bgColor: {
         if (variant === "outlined") return "transparent"
-        if (variant === "standard") return Qt.rgba(_accentColor.r, _accentColor.g, _accentColor.b, 0.08)
-        // filled
-        return Qt.rgba(_accentColor.r, _accentColor.g, _accentColor.b, 0.15)
+        if (variant === "standard") return Qt.rgba(_severityColor.r, _severityColor.g, _severityColor.b, 0.08)
+        // filled — MD3 tonal surface
+        return Qt.rgba(_severityColor.r, _severityColor.g, _severityColor.b, 0.12)
     }
-    
-    readonly property color _accentColor: StyleMixins.statusColor(severity)
-    
+
+    readonly property color _accentColor: _severityColor
+
     readonly property color _textColor: {
-        if (variant === "filled") return _accentColor
+        if (variant === "filled") return _severityColor
         return Theme.text
     }
-    
+
     // Size and appearance
-    implicitHeight: contentLayout.implicitHeight + StyleVariables.spacingMd * 2
+    implicitHeight: contentLayout.implicitHeight + 16 * 2
     implicitWidth: 300
-    
+
     color: _bgColor
-    radius: StyleVariables.radiusSm
+    radius: 12
     border.width: variant === "outlined" ? 1 : 0
     border.color: _accentColor
-    
+
+    // MD3 left accent bar
+    Rectangle {
+        id: accentBar
+        width: 4
+        height: parent.height - 8
+        anchors.left: parent.left
+        anchors.leftMargin: 4
+        anchors.verticalCenter: parent.verticalCenter
+        radius: 2
+        color: root._severityColor
+        visible: root.variant !== "outlined"
+    }
+
     // Content
     RowLayout {
         id: contentLayout
         anchors.fill: parent
-        anchors.margins: StyleVariables.spacingMd
-        spacing: StyleVariables.spacingSm
-        
+        anchors.leftMargin: 16
+        anchors.rightMargin: 16
+        anchors.topMargin: 16
+        anchors.bottomMargin: 16
+        spacing: 12
+
         // Icon
         Text {
             text: root._effectiveIcon
-            font.pixelSize: StyleVariables.fontSizeLg
+            font.pixelSize: 20
             Layout.alignment: Qt.AlignTop
         }
-        
+
         // Text content
         ColumnLayout {
             Layout.fillWidth: true
-            spacing: StyleVariables.spacingXs
-            
+            spacing: 4
+
             // Title (optional)
             Text {
-                visible: root.title
+                visible: root.title !== ""
                 text: root.title
-                font.pixelSize: StyleVariables.fontSizeSm
-                font.weight: Font.Bold
-                color: root._textColor
+                font.pixelSize: 13
+                font.weight: Font.DemiBold
+                color: root._severityColor
                 Layout.fillWidth: true
                 wrapMode: Text.WordWrap
             }
-            
+
             // Message
             Text {
                 text: root.text
-                font.pixelSize: StyleVariables.fontSizeSm
-                color: root._textColor
+                font.pixelSize: 14
+                color: root.title ? Theme.text : root._textColor
                 opacity: root.title ? 0.9 : 1.0
                 Layout.fillWidth: true
                 wrapMode: Text.WordWrap
+                lineHeight: 1.4
             }
         }
-        
+
         // Close button
-        Text {
+        Rectangle {
             visible: root.closable
-            text: "✕"
-            font.pixelSize: StyleVariables.fontSizeSm
-            color: Theme.textSecondary
+            width: 28
+            height: 28
+            radius: 14
+            color: closeArea.containsMouse ? Qt.rgba(root._severityColor.r, root._severityColor.g, root._severityColor.b, 0.12) : "transparent"
             Layout.alignment: Qt.AlignTop
-            
+
+            Text {
+                anchors.centerIn: parent
+                text: "✕"
+                font.pixelSize: 14
+                color: Theme.textSecondary
+            }
+
             MouseArea {
+                id: closeArea
                 anchors.fill: parent
-                anchors.margins: -8
                 cursorShape: Qt.PointingHandCursor
+                hoverEnabled: true
                 onClicked: root.closed()
             }
         }
     }
-    
+
     // Entry animation
     opacity: 0
     Component.onCompleted: opacity = 1
-    Behavior on opacity { NumberAnimation { duration: StyleVariables.transitionNormal } }
+    Behavior on opacity { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
 }

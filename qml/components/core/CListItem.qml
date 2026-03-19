@@ -1,10 +1,11 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import "../theming"
 
 Rectangle {
     id: listItem
-    
+
     property string title: ""
     property string subtitle: ""
     property string caption: ""
@@ -14,20 +15,30 @@ Rectangle {
     property bool selected: false
     property bool showDivider: true
     property alias trailing: trailingLoader.sourceComponent
-    
+
     signal clicked()
     signal trailingClicked()
-    
-    implicitHeight: Math.max(56, contentColumn.implicitHeight + 16)
-    
-    color: {
-        if (selected) return "#1a3a5c"
-        if (mouseArea.containsMouse) return "#2d2d2d"
-        return "transparent"
+
+    implicitHeight: subtitle || caption ? 56 : 48
+    radius: 0
+    color: "transparent"
+
+    // MD3 state layer
+    Rectangle {
+        anchors.fill: parent
+        radius: 0
+
+        color: {
+            if (listItem.selected)
+                return Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12)
+            if (mouseArea.containsMouse)
+                return Qt.rgba(Theme.text.r, Theme.text.g, Theme.text.b, 0.08)
+            return "transparent"
+        }
+
+        Behavior on color { ColorAnimation { duration: 150 } }
     }
-    
-    Behavior on color { ColorAnimation { duration: 150 } }
-    
+
     MouseArea {
         id: mouseArea
         anchors.fill: parent
@@ -35,80 +46,87 @@ Rectangle {
         cursorShape: Qt.PointingHandCursor
         onClicked: listItem.clicked()
     }
-    
+
     RowLayout {
         anchors.fill: parent
         anchors.leftMargin: 16
         anchors.rightMargin: 16
-        spacing: 12
-        
-        // Leading icon
+        spacing: 16
+
+        // Leading element area (40px)
         Rectangle {
             Layout.preferredWidth: 40
             Layout.preferredHeight: 40
+            Layout.alignment: Qt.AlignVCenter
             radius: 20
-            color: "#2d2d2d"
-            visible: listItem.leadingIcon
-            
+            color: Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12)
+            visible: listItem.leadingIcon !== ""
+
             Text {
                 anchors.centerIn: parent
                 text: listItem.leadingIcon
                 font.pixelSize: 18
+                color: Theme.primary
             }
         }
-        
+
         // Content
         ColumnLayout {
             id: contentColumn
             Layout.fillWidth: true
+            Layout.alignment: Qt.AlignVCenter
             spacing: 2
-            
+
             Text {
                 Layout.fillWidth: true
                 text: listItem.title
                 font.pixelSize: 14
-                font.weight: Font.Medium
-                color: "#ffffff"
+                font.weight: Font.Normal
+                color: listItem.selected ? Theme.primary : Theme.text
                 elide: Text.ElideRight
             }
-            
+
             Text {
                 Layout.fillWidth: true
                 text: listItem.subtitle
                 font.pixelSize: 12
-                color: "#888888"
+                color: Theme.textSecondary
                 elide: Text.ElideRight
-                visible: listItem.subtitle
+                visible: listItem.subtitle !== ""
             }
-            
+
             Text {
                 Layout.fillWidth: true
                 text: listItem.caption
                 font.pixelSize: 11
-                color: "#666666"
+                color: Theme.textMuted
                 elide: Text.ElideRight
-                visible: listItem.caption
+                visible: listItem.caption !== ""
             }
         }
-        
-        // Trailing
+
+        // Trailing text
         Text {
             text: listItem.trailingText
             font.pixelSize: 12
-            color: "#888888"
-            visible: listItem.trailingText
+            color: Theme.textSecondary
+            visible: listItem.trailingText !== ""
         }
-        
+
+        // Trailing custom content
         Loader {
             id: trailingLoader
         }
-        
+
+        // Trailing icon
         Text {
             text: listItem.trailingIcon
             font.pixelSize: 16
-            color: trailingMouseArea.containsMouse ? "#ffffff" : "#888888"
-            visible: listItem.trailingIcon
-            
+            color: trailingMouseArea.containsMouse ? Theme.text : Theme.textSecondary
+            visible: listItem.trailingIcon !== ""
+
+            Behavior on color { ColorAnimation { duration: 150 } }
+
             MouseArea {
                 id: trailingMouseArea
                 anchors.fill: parent
@@ -122,15 +140,17 @@ Rectangle {
             }
         }
     }
-    
+
     // Divider
     Rectangle {
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.leftMargin: listItem.leadingIcon ? 68 : 16
+        anchors.leftMargin: listItem.leadingIcon !== "" ? 72 : 16
+        anchors.rightMargin: 16
         height: 1
-        color: "#2d2d2d"
+        color: Theme.border
+        opacity: 0.5
         visible: listItem.showDivider
     }
 }

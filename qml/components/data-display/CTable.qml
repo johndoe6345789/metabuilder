@@ -3,115 +3,195 @@ import QtQuick.Layouts
 import QmlComponents 1.0
 
 /**
- * CTable.qml - Data table (mirrors _table.scss)
- * Simple table with headers and rows
+ * CTable.qml - Material Design 3 data table
+ * Surface container header, 48px rows, hover state layer, outlineVariant borders
+ *
+ * Usage:
+ *   CTable {
+ *       headers: ["Name", "Email", "Role"]
+ *       rows: [["Alice", "alice@co", "Admin"], ["Bob", "bob@co", "User"]]
+ *       sortColumn: 0; sortAscending: true
+ *   }
  */
 Rectangle {
     id: root
-    
+
     property var headers: []             // Array of header strings
     property var rows: []                // Array of row arrays
     property var columnWidths: []        // Optional column width ratios
     property bool striped: true
     property bool bordered: true
-    
+
+    // MD3 sort support
+    property int sortColumn: -1          // Column index currently sorted (-1 = none)
+    property bool sortAscending: true
+    signal headerClicked(int columnIndex)
+
     color: "transparent"
     radius: StyleVariables.radiusSm
     border.width: bordered ? 1 : 0
-    border.color: Theme.divider
-    
+    border.color: Theme.border
+
     implicitWidth: parent ? parent.width : 400
     implicitHeight: tableCol.implicitHeight
-    
+
     clip: true
-    
+
     ColumnLayout {
         id: tableCol
         anchors.fill: parent
         spacing: 0
-        
-        // Header row
+
+        // Header row - MD3 surfaceContainer background
         Rectangle {
             Layout.fillWidth: true
-            implicitHeight: headerRow.implicitHeight
-            color: Theme.mode === "dark" ? Qt.rgba(255, 255, 255, 0.08) : Qt.rgba(0, 0, 0, 0.04)
-            
+            implicitHeight: 48
+            color: Theme.mode === "dark"
+                ? Qt.rgba(1, 1, 1, 0.08)
+                : Qt.rgba(0, 0, 0, 0.04)
+
             RowLayout {
                 id: headerRow
                 anchors.fill: parent
                 spacing: 0
-                
+
                 Repeater {
                     model: root.headers
-                    
-                    Rectangle {
+
+                    Item {
                         Layout.fillWidth: root.columnWidths.length === 0
-                        Layout.preferredWidth: root.columnWidths[index] || -1
-                        implicitHeight: headerText.implicitHeight + StyleVariables.spacingSm * 2
-                        color: "transparent"
-                        border.width: root.bordered && index > 0 ? 1 : 0
-                        border.color: Theme.divider
-                        
-                        Text {
-                            id: headerText
+                        Layout.preferredWidth: root.columnWidths.length > index ? root.columnWidths[index] : -1
+                        implicitHeight: 48
+
+                        // MD3 header cell content
+                        Row {
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.leftMargin: 16
+                            anchors.rightMargin: 16
+                            spacing: 4
+
+                            Text {
+                                text: modelData
+                                color: Theme.textSecondary
+                                font.pixelSize: 14
+                                font.weight: Font.DemiBold
+                                font.family: Theme.fontFamily
+                                elide: Text.ElideRight
+                                anchors.verticalCenter: parent.verticalCenter
+                            }
+
+                            // Sort indicator arrow
+                            Text {
+                                visible: root.sortColumn === index
+                                text: root.sortAscending ? "\u25B2" : "\u25BC"
+                                color: Theme.textSecondary
+                                font.pixelSize: 10
+                                anchors.verticalCenter: parent.verticalCenter
+                            }
+                        }
+
+                        // Clickable area for sorting
+                        MouseArea {
                             anchors.fill: parent
-                            anchors.margins: StyleVariables.spacingSm
-                            text: modelData
-                            color: Theme.onSurface
-                            font.pixelSize: StyleVariables.fontSizeSm
-                            font.weight: Font.DemiBold
-                            elide: Text.ElideRight
-                            verticalAlignment: Text.AlignVCenter
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: root.headerClicked(index)
+                        }
+
+                        // Column separator
+                        Rectangle {
+                            visible: root.bordered && index > 0
+                            width: 1
+                            height: parent.height
+                            anchors.left: parent.left
+                            color: Theme.border
                         }
                     }
                 }
             }
         }
-        
+
+        // Bottom border under header
+        Rectangle {
+            Layout.fillWidth: true
+            height: 1
+            color: Theme.border
+        }
+
         // Data rows
         Repeater {
             model: root.rows
-            
+
             Rectangle {
+                id: rowDelegate
                 Layout.fillWidth: true
-                implicitHeight: dataRow.implicitHeight
-                color: root.striped && index % 2 === 1 
-                    ? (Theme.mode === "dark" ? Qt.rgba(255, 255, 255, 0.02) : Qt.rgba(0, 0, 0, 0.02))
-                    : "transparent"
-                
-                // Top border
+                implicitHeight: 48
+
+                property bool hovered: rowMouse.containsMouse
+
+                // MD3: alternating tint + hover state layer (4%)
+                color: {
+                    if (hovered)
+                        return Theme.mode === "dark"
+                            ? Qt.rgba(1, 1, 1, 0.04)
+                            : Qt.rgba(0, 0, 0, 0.04)
+                    if (root.striped && index % 2 === 1)
+                        return Theme.mode === "dark"
+                            ? Qt.rgba(1, 1, 1, 0.02)
+                            : Qt.rgba(0, 0, 0, 0.02)
+                    return "transparent"
+                }
+
+                MouseArea {
+                    id: rowMouse
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    acceptedButtons: Qt.NoButton
+                }
+
+                // Row border (outlineVariant between rows)
                 Rectangle {
                     width: parent.width
                     height: root.bordered ? 1 : 0
-                    color: Theme.divider
+                    anchors.bottom: parent.bottom
+                    color: Theme.border
                 }
-                
+
                 RowLayout {
                     id: dataRow
                     anchors.fill: parent
-                    anchors.topMargin: root.bordered ? 1 : 0
                     spacing: 0
-                    
+
                     Repeater {
                         model: modelData
-                        
-                        Rectangle {
+
+                        Item {
                             Layout.fillWidth: root.columnWidths.length === 0
-                            Layout.preferredWidth: root.columnWidths[index] || -1
-                            implicitHeight: cellText.implicitHeight + StyleVariables.spacingSm * 2
-                            color: "transparent"
-                            border.width: root.bordered && index > 0 ? 1 : 0
-                            border.color: Theme.divider
-                            
+                            Layout.preferredWidth: root.columnWidths.length > index ? root.columnWidths[index] : -1
+                            implicitHeight: 48
+
                             Text {
-                                id: cellText
-                                anchors.fill: parent
-                                anchors.margins: StyleVariables.spacingSm
+                                anchors.verticalCenter: parent.verticalCenter
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                anchors.leftMargin: 16
+                                anchors.rightMargin: 16
                                 text: modelData
-                                color: Theme.onSurface
-                                font.pixelSize: StyleVariables.fontSizeSm
+                                color: Theme.text
+                                font.pixelSize: 14
+                                font.family: Theme.fontFamily
                                 elide: Text.ElideRight
                                 verticalAlignment: Text.AlignVCenter
+                            }
+
+                            // Column separator
+                            Rectangle {
+                                visible: root.bordered && index > 0
+                                width: 1
+                                height: parent.height
+                                anchors.left: parent.left
+                                color: Theme.border
                             }
                         }
                     }
