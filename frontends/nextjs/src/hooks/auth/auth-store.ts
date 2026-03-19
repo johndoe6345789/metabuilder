@@ -1,15 +1,21 @@
 /**
  * @file auth-store.ts
  * @description Authentication state management store
+ *
+ * All auth operations go through API routes to avoid importing
+ * server-only modules into the client bundle.
  */
 
-import { fetchSession } from '@/lib/auth/api/fetch-session'
-import { login as loginRequest } from '@/lib/auth/api/login'
-import { logout as logoutRequest } from '@/lib/auth/api/logout'
-import { register as registerRequest } from '@/lib/auth/api/register'
-
+import type { User } from '@/lib/types/level-types'
 import type { AuthState } from './auth-types'
 import { mapUserToAuthUser } from './utils/map-user'
+import { BASE_PATH } from '@/lib/app-config'
+
+interface AuthApiResponse {
+  success: boolean
+  user: User | null
+  error?: string
+}
 
 export class AuthStore {
   private state: AuthState = {
@@ -51,8 +57,15 @@ export class AuthStore {
     })
 
     try {
-      const result = await loginRequest(identifier, password)
-      
+      const response = await fetch(`${BASE_PATH}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ identifier, password }),
+      })
+
+      const result = await response.json() as AuthApiResponse
+
       if (!result.success || result.user === null) {
         this.setState({
           ...this.state,
@@ -60,7 +73,7 @@ export class AuthStore {
         })
         throw new Error(result.error ?? 'Login failed')
       }
-      
+
       this.setState({
         user: mapUserToAuthUser(result.user),
         isAuthenticated: true,
@@ -82,8 +95,15 @@ export class AuthStore {
     })
 
     try {
-      const result = await registerRequest(username, email, password)
-      
+      const response = await fetch(`${BASE_PATH}/api/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ username, email, password }),
+      })
+
+      const result = await response.json() as AuthApiResponse
+
       if (!result.success || result.user === null) {
         this.setState({
           ...this.state,
@@ -91,7 +111,7 @@ export class AuthStore {
         })
         throw new Error(result.error ?? 'Registration failed')
       }
-      
+
       this.setState({
         user: mapUserToAuthUser(result.user),
         isAuthenticated: true,
@@ -108,7 +128,10 @@ export class AuthStore {
 
   async logout(): Promise<void> {
     try {
-      await logoutRequest()
+      await fetch(`${BASE_PATH}/api/auth/logout`, {
+        method: 'POST',
+        credentials: 'include',
+      })
     } finally {
       this.setState({
         user: null,
@@ -125,10 +148,15 @@ export class AuthStore {
     })
 
     try {
-      const user = await fetchSession()
-      if (user !== null && user !== undefined) {
+      const response = await fetch(`${BASE_PATH}/api/auth/session`, {
+        credentials: 'include',
+      })
+
+      const result = await response.json() as { user: User | null }
+
+      if (result.user !== null && result.user !== undefined) {
         this.setState({
-          user: mapUserToAuthUser(user),
+          user: mapUserToAuthUser(result.user),
           isAuthenticated: true,
           isLoading: false,
         })
