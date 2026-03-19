@@ -10,3 +10,4 @@ export { useMailboxes, type UseMailboxesResult, type Folder } from './useMailbox
 export { useAccounts, type UseAccountsResult, type EmailAccount } from './useAccounts'
 export { useCompose, type UseComposeResult, type EmailDraft } from './useCompose'
 export { useMessages, type UseMessagesResult, type Message } from './useMessages'
+export { useKeyboardShortcuts, type KeyboardShortcutMap } from './useKeyboardShortcuts'

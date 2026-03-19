@@ -5,11 +5,14 @@ import { useAccessible } from '../../../../hooks/useAccessible'
 import { EmailCard, type EmailCardProps } from '../surfaces'
 
 export interface ThreadListProps extends BoxProps {
-  emails: Array<Omit<EmailCardProps, 'onSelect' | 'onToggleRead' | 'onToggleStar'>>
+  emails: Array<Omit<
+    EmailCardProps,
+    'onSelect' | 'onToggleRead' | 'onToggleStar'
+  >>
   selectedEmailId?: string
   onSelectEmail?: (emailId: string) => void
-  onToggleRead?: (emailId: string, read: boolean) => void
-  onToggleStar?: (emailId: string, starred: boolean) => void
+  onToggleRead?: (id: string, read: boolean) => void
+  onToggleStar?: (id: string, star: boolean) => void
   testId?: string
 }
 
@@ -28,23 +31,44 @@ export const ThreadList = ({
     identifier: customTestId || 'threads'
   })
 
+  const emailId = (e: typeof emails[0], i: number) =>
+    e.testId || `email-${i}`
+
   return (
     <Box
+      role="list"
+      aria-label="Email messages"
       className="thread-list"
       {...accessible}
       {...props}
     >
       {emails.length === 0 ? (
-        <div className="no-emails">No emails</div>
+        <div className="no-emails" role="status">
+          No emails
+        </div>
       ) : (
         emails.map((email, idx) => (
-          <EmailCard
-            key={idx}
-            {...email}
-            onSelect={() => onSelectEmail?.(email.testId || `email-${idx}`)}
-            onToggleRead={(read) => onToggleRead?.(email.testId || `email-${idx}`, read)}
-            onToggleStar={(starred) => onToggleStar?.(email.testId || `email-${idx}`, starred)}
-          />
+          <div role="listitem" key={idx}>
+            <EmailCard
+              {...email}
+              selected={
+                selectedEmailId === email.testId
+              }
+              onSelect={() =>
+                onSelectEmail?.(emailId(email, idx))
+              }
+              onToggleRead={(read) =>
+                onToggleRead?.(
+                  emailId(email, idx), read
+                )
+              }
+              onToggleStar={(starred) =>
+                onToggleStar?.(
+                  emailId(email, idx), starred
+                )
+              }
+            />
+          </div>
         ))
       )}
     </Box>

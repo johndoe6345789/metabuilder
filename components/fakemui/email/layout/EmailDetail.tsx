@@ -44,31 +44,64 @@ export const EmailDetail = ({
   })
 
   return (
-    <Box className="email-detail" {...accessible} {...props}>
-      <Box className="email-detail-toolbar">
+    <Box
+      role="article"
+      aria-label={email.subject}
+      className="email-detail"
+      {...accessible}
+      {...props}
+    >
+      <Box
+        id="email-detail-toolbar"
+        className="email-detail-toolbar"
+      >
         {onClose && (
-          <IconButton aria-label="Back to list" className="email-detail-back" onClick={onClose}>
+          <IconButton
+            aria-label="Back to list"
+            data-testid="email-back"
+            onClick={onClose}
+          >
             <MaterialIcon name="arrow_back" size={20} />
           </IconButton>
         )}
         <Box className="email-detail-actions">
           {onArchive && (
-            <IconButton aria-label="Archive" title="Archive" onClick={onArchive}>
+            <IconButton
+              aria-label="Archive"
+              title="Archive"
+              data-testid="email-archive"
+              onClick={onArchive}
+            >
               <MaterialIcon name="archive" size={20} />
             </IconButton>
           )}
           {onDelete && (
-            <IconButton aria-label="Delete" title="Delete" onClick={onDelete}>
+            <IconButton
+              aria-label="Delete"
+              title="Delete"
+              data-testid="email-delete"
+              onClick={onDelete}
+            >
               <MaterialIcon name="delete" size={20} />
             </IconButton>
           )}
           {onReply && (
-            <IconButton aria-label="Reply" title="Reply" onClick={onReply}>
+            <IconButton
+              aria-label="Reply"
+              title="Reply"
+              data-testid="email-reply"
+              onClick={onReply}
+            >
               <MaterialIcon name="reply" size={20} />
             </IconButton>
           )}
           {onForward && (
-            <IconButton aria-label="Forward" title="Forward" onClick={onForward}>
+            <IconButton
+              aria-label="Forward"
+              title="Forward"
+              data-testid="email-forward"
+              onClick={onForward}
+            >
               <MaterialIcon name="forward" size={20} />
             </IconButton>
           )}
@@ -85,19 +118,33 @@ export const EmailDetail = ({
         onToggleStar={onToggleStar}
       />
 
-      <Box className="email-detail-body">
+      <Box
+        id="email-detail-body"
+        className="email-detail-body"
+      >
         {email.body}
       </Box>
 
-      <Box className="email-detail-reply-bar">
+      <Box
+        id="email-detail-reply-bar"
+        className="email-detail-reply-bar"
+      >
         {onReply && (
-          <Button variant="outlined" className="email-detail-reply-btn" onClick={onReply}>
+          <Button
+            variant="outlined"
+            data-testid="email-reply-btn"
+            onClick={onReply}
+          >
             <MaterialIcon name="reply" size={16} />
             Reply
           </Button>
         )}
         {onForward && (
-          <Button variant="outlined" className="email-detail-reply-btn" onClick={onForward}>
+          <Button
+            variant="outlined"
+            data-testid="email-forward-btn"
+            onClick={onForward}
+          >
             <MaterialIcon name="forward" size={16} />
             Forward
           </Button>

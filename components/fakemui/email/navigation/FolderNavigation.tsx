@@ -31,24 +31,37 @@ export const FolderNavigation = ({
   return (
     <Box
       className="folder-navigation"
+      role="navigation"
+      aria-label="Mail folders"
       {...accessible}
       {...props}
     >
-      <nav className="folder-nav-list">
+      <nav className="folder-nav-list" role="list">
         {items.map((item) => (
-          <Button
-            key={item.id}
-            variant={item.isActive ? 'primary' : 'ghost'}
-            fullWidth
-            className="folder-nav-item"
-            onClick={() => onNavigate?.(item.id)}
-          >
-            {item.icon && <span className="folder-icon">{item.icon}</span>}
-            <span className="folder-label">{item.label}</span>
-            {item.unreadCount ? (
-              <span className="unread-count">{item.unreadCount}</span>
-            ) : null}
-          </Button>
+          <div key={item.id} role="listitem">
+            <Button
+              variant={item.isActive ? 'primary' : 'ghost'}
+              fullWidth
+              className="folder-nav-item"
+              onClick={() => onNavigate?.(item.id)}
+              aria-current={item.isActive || undefined}
+              data-testid={`folder-nav-${item.id}`}
+            >
+              {item.icon && (
+                <span className="folder-icon">
+                  {item.icon}
+                </span>
+              )}
+              <span className="folder-label">
+                {item.label}
+              </span>
+              {item.unreadCount ? (
+                <span className="unread-count">
+                  {item.unreadCount}
+                </span>
+              ) : null}
+            </Button>
+          </div>
         ))}
       </nav>
     </Box>

@@ -31,15 +31,23 @@ export const EmailHeader = ({
     component: 'email-header',
     identifier: customTestId || subject
   })
+  const iso = new Date(receivedAt).toISOString()
+  const display = new Date(receivedAt).toLocaleString()
 
   return (
     <Box
+      role="banner"
+      aria-label="Email details"
       className="email-header"
       {...accessible}
       {...props}
     >
       <div className="header-top">
-        <Typography variant="h5" className="subject">
+        <Typography
+          variant="h5"
+          id="email-subject"
+          className="subject"
+        >
           {subject}
         </Typography>
         <StarButton
@@ -48,19 +56,35 @@ export const EmailHeader = ({
         />
       </div>
       <div className="header-details">
-        <Typography variant="body2" className="from">
+        <Typography
+          variant="body2"
+          className="from"
+          data-testid="email-from"
+        >
           From: <strong>{from}</strong>
         </Typography>
-        <Typography variant="body2" className="to">
+        <Typography
+          variant="body2"
+          className="to"
+          data-testid="email-to"
+        >
           To: <strong>{to.join(', ')}</strong>
         </Typography>
         {cc && cc.length > 0 && (
-          <Typography variant="body2" className="cc">
+          <Typography
+            variant="body2"
+            className="cc"
+            data-testid="email-cc"
+          >
             Cc: <strong>{cc.join(', ')}</strong>
           </Typography>
         )}
-        <Typography variant="caption" className="date">
-          {new Date(receivedAt).toLocaleString()}
+        <Typography
+          variant="caption"
+          className="date"
+          data-testid="email-date"
+        >
+          <time dateTime={iso}>{display}</time>
         </Typography>
       </div>
     </Box>

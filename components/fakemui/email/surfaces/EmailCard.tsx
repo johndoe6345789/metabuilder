@@ -11,6 +11,7 @@ export interface EmailCardProps extends CardProps {
   receivedAt: number
   isRead: boolean
   isStarred?: boolean
+  selected?: boolean
   onSelect?: () => void
   onToggleRead?: (read: boolean) => void
   onToggleStar?: (starred: boolean) => void
@@ -24,6 +25,7 @@ export const EmailCard = ({
   receivedAt,
   isRead,
   isStarred = false,
+  selected,
   onSelect,
   onToggleRead,
   onToggleStar,
@@ -36,19 +38,40 @@ export const EmailCard = ({
     identifier: customTestId || subject.substring(0, 20)
   })
 
-  const formatDate = (timestamp: number) => {
-    const date = new Date(timestamp)
-    const today = new Date()
-    if (date.toDateString() === today.toDateString()) {
-      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  const date = new Date(receivedAt)
+  const today = new Date()
+  const isToday =
+    date.toDateString() === today.toDateString()
+  const displayDate = isToday
+    ? date.toLocaleTimeString(
+        [], { hour: '2-digit', minute: '2-digit' }
+      )
+    : date.toLocaleDateString(
+        [], { month: 'short', day: 'numeric' }
+      )
+
+  const handleKeyDown = (
+    e: React.KeyboardEvent
+  ) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      onSelect?.()
     }
-    return date.toLocaleDateString([], { month: 'short', day: 'numeric' })
   }
 
   return (
     <Card
-      className={`email-card ${isRead ? 'email-card--read' : 'email-card--unread'}`}
+      role="article"
+      aria-label={`Email from ${from}: ${subject}`}
+      aria-current={selected ? 'true' : undefined}
+      tabIndex={0}
+      className={
+        `email-card ${isRead
+          ? 'email-card--read'
+          : 'email-card--unread'}`
+      }
       onClick={onSelect}
+      onKeyDown={handleKeyDown}
       {...accessible}
       {...props}
     >
@@ -58,7 +81,10 @@ export const EmailCard = ({
           onToggleRead={onToggleRead}
           onClick={(e) => e.stopPropagation()}
         />
-        <Typography variant="subtitle2" className="email-from">
+        <Typography
+          variant="subtitle2"
+          className="email-from"
+        >
           {from}
         </Typography>
         <div className="email-card-actions">
@@ -67,15 +93,27 @@ export const EmailCard = ({
             onToggleStar={onToggleStar}
             onClick={(e) => e.stopPropagation()}
           />
-          <Typography variant="caption" className="email-date">
-            {formatDate(receivedAt)}
-          </Typography>
+          <time dateTime={date.toISOString()}>
+            <Typography
+              variant="caption"
+              className="email-date"
+            >
+              {displayDate}
+            </Typography>
+          </time>
         </div>
       </Box>
-      <Typography variant="h6" className="email-subject">
+      <Typography
+        variant="h6"
+        className="email-subject"
+      >
         {subject}
       </Typography>
-      <Typography variant="body2" className="email-preview" noWrap>
+      <Typography
+        variant="body2"
+        className="email-preview"
+        noWrap
+      >
         {preview}
       </Typography>
     </Card>
