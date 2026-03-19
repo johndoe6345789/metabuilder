@@ -40,6 +40,9 @@ Rectangle {
         }
     }
 
+    Accessible.role: Accessible.Graphic
+    Accessible.name: initials || "Avatar"
+
     width: _size
     height: _size
     radius: _size / 2

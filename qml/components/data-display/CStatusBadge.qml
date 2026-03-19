@@ -51,6 +51,9 @@ Rectangle {
     // MD3 on-container text: full status color
     readonly property color _textColor: _statusColor
 
+    Accessible.role: Accessible.StaticText
+    Accessible.name: text + " (" + status + ")"
+
     implicitHeight: 24
     implicitWidth: badgeRow.implicitWidth + 20
     radius: 12 // Full pill for status badges

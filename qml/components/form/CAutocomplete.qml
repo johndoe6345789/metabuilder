@@ -26,6 +26,14 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         placeholderText: root.placeholderText
+
+        // Accessibility
+        Accessible.role: Accessible.EditableText
+        Accessible.name:
+            root.placeholderText || ""
+        Accessible.description: ""
+        activeFocusOnTab: true
+        objectName: "input_autocomplete"
         color: Theme.text
         font.pixelSize: 14
         font.family: Theme.fontFamily

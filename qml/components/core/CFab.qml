@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Controls
 import QmlComponents 1.0
 
 /**
@@ -9,6 +10,13 @@ import QmlComponents 1.0
  */
 Rectangle {
     id: root
+
+    Accessible.role: Accessible.Button
+    Accessible.name: icon || "Button"
+    Accessible.description: ""
+    activeFocusOnTab: true
+    objectName: "btn_" + (icon || "fab")
+        .toLowerCase().replace(/ /g, "_")
 
     property alias icon: iconLabel.text
     property int size: 56

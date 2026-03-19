@@ -19,6 +19,10 @@ import QmlComponents 1.0
 Item {
     id: root
 
+    // Accessibility
+    Accessible.role: Accessible.AlertMessage
+    Accessible.name: _message
+
     // Public properties
     property int duration: 4000  // Auto-hide duration in ms (0 = no auto-hide)
     property string position: "bottom"  // bottom, top

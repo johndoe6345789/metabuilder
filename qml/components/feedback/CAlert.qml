@@ -16,6 +16,11 @@ import QmlComponents 1.0
 Rectangle {
     id: root
 
+    // Accessibility
+    Accessible.role: Accessible.AlertMessage
+    Accessible.name: title || text
+    objectName: "alert_" + severity
+
     // Public properties
     property string text: ""
     property string title: ""

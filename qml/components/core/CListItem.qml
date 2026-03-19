@@ -6,6 +6,12 @@ import "../theming"
 Rectangle {
     id: listItem
 
+    Accessible.role: Accessible.ListItem
+    Accessible.name: title
+    activeFocusOnTab: true
+    objectName: "listitem_" + title.toLowerCase()
+        .replace(/ /g, "_")
+
     property string title: ""
     property string subtitle: ""
     property string caption: ""

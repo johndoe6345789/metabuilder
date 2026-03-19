@@ -18,6 +18,13 @@ import QmlComponents 1.0
 Button {
     id: control
 
+    Accessible.role: Accessible.Button
+    Accessible.name: text || "Button"
+    Accessible.description: ""
+    activeFocusOnTab: true
+    objectName: "btn_" + text.toLowerCase()
+        .replace(/ /g, "_")
+
     // default, primary, secondary,
     // ghost, outlined, danger, text
     property string variant: "default"

@@ -16,6 +16,13 @@ import QmlComponents 1.0
 Item {
     id: control
 
+    Accessible.role: Accessible.Button
+    Accessible.name: tooltip || icon || "Button"
+    Accessible.description: ""
+    activeFocusOnTab: true
+    objectName: "btn_" + (tooltip || icon)
+        .toLowerCase().replace(/ /g, "_")
+
     property string icon: ""
     property string size: "md" // sm, md, lg
     property string variant: "default" // default, primary, ghost

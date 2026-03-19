@@ -20,6 +20,15 @@ TextField {
     property bool clearable: false
     property string size: "md" // "sm", "md", "lg"
 
+    // Accessibility
+    Accessible.role: Accessible.EditableText
+    Accessible.name: label || placeholderText || ""
+    Accessible.description: helper || ""
+    activeFocusOnTab: true
+    objectName: "input_"
+        + (label || "field")
+            .toLowerCase().replace(/ /g, "_")
+
     signal suffixClicked()
 
     implicitHeight: size === "sm"

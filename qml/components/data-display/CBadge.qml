@@ -45,6 +45,9 @@ Rectangle {
 
     readonly property bool _showText: !dot && (text !== "" || count > 0)
 
+    Accessible.role: Accessible.StaticText
+    Accessible.name: text || count.toString()
+
     // MD3 small badge: 6px dot, standard badge: 16px pill
     width: dot ? 6 : Math.max(16, label.implicitWidth + 8)
     height: dot ? 6 : 16

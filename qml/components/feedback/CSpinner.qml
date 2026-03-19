@@ -16,6 +16,10 @@ import QmlComponents 1.0
 Item {
     id: root
 
+    // Accessibility
+    Accessible.role: Accessible.Animation
+    Accessible.name: "Loading"
+
     // Public properties
     property string size: "md"          // sm (24px), md (40px), lg (56px)
     property color color: Theme.primary

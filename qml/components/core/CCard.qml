@@ -39,6 +39,9 @@ Rectangle {
             ? Qt.rgba(1, 1, 1, 0.08)
             : Qt.rgba(0.31, 0.31, 0.44, 0.10)
 
+    Accessible.role: Accessible.Pane
+    Accessible.name: title
+
     // Geometry
     radius: 12
     clip: true

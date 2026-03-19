@@ -45,6 +45,17 @@ ScrollView {
 
     TextArea {
         id: textArea
+
+        // Accessibility
+        Accessible.role: Accessible.EditableText
+        Accessible.name:
+            root.label || placeholderText || ""
+        Accessible.description: root.helper || ""
+        activeFocusOnTab: true
+        objectName: "input_"
+            + (root.label || "field")
+                .toLowerCase().replace(/ /g, "_")
+
         wrapMode: Text.WordWrap
         font.pixelSize: 14
         font.family: Theme.fontFamily

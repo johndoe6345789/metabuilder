@@ -63,6 +63,9 @@ Rectangle {
 
     readonly property var _config: _sizes[size] || _sizes.md
 
+    Accessible.role: Accessible.StaticText
+    Accessible.name: label + ": " + value
+
     color: _bgColor
     radius: 12 // MD3 medium container radius
 

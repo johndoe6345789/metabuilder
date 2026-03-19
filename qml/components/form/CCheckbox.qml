@@ -16,6 +16,14 @@ Rectangle {
     property alias text: label.text
     property bool enabled: true
 
+    // Accessibility
+    Accessible.role: Accessible.CheckBox
+    Accessible.name: text
+    Accessible.checked: checked
+    activeFocusOnTab: true
+    objectName: "checkbox_"
+        + text.toLowerCase().replace(/ /g, "_")
+
     signal toggled(bool checked)
 
     width: row.implicitWidth

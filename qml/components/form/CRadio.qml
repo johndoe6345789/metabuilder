@@ -14,6 +14,12 @@ Rectangle {
     property alias text: label.text
     property bool enabled: true
 
+    // Accessibility
+    Accessible.role: Accessible.RadioButton
+    Accessible.name: text
+    Accessible.checked: checked
+    activeFocusOnTab: true
+
     signal toggled(bool checked)
 
     width: row.implicitWidth

@@ -6,6 +6,10 @@ import "../theming"
 Rectangle {
     id: tabBar
 
+    // Accessibility
+    Accessible.role: Accessible.PageTabList
+    Accessible.name: "Tab bar"
+
     property int currentIndex: 0
     property var tabs: [] // [{label, icon}]
 
@@ -24,6 +28,12 @@ Rectangle {
 
             Rectangle {
                 id: tabDelegate
+
+                // Accessibility
+                Accessible.role: Accessible.PageTab
+                Accessible.name:
+                    modelData.label || modelData
+                activeFocusOnTab: true
 
                 readonly property bool isActive:
                     tabBar.currentIndex === index

@@ -18,6 +18,11 @@ Row {
     property color filledColor: "#ffc107"
     property color emptyColor: Theme.border
 
+    // Accessibility
+    Accessible.role: Accessible.Slider
+    Accessible.name: "Rating"
+    Accessible.value: value
+
     signal valueChanged(int newValue)
 
     spacing: 4

@@ -18,6 +18,11 @@ import QmlComponents 1.0
 Rectangle {
     id: chip
 
+    Accessible.role: Accessible.Button
+    Accessible.name: text
+    objectName: "chip_" + text.toLowerCase()
+        .replace(/ /g, "_")
+
     property string text: ""
     property string icon: ""
     // assist, filter, input, suggestion,

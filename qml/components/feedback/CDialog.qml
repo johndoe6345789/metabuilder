@@ -10,6 +10,12 @@ import QmlComponents 1.0
 Popup {
     id: root
 
+    // Accessibility
+    Accessible.role: Accessible.Dialog
+    Accessible.name: title
+    objectName: "dialog_" + title.toLowerCase()
+        .replace(/ /g, "_")
+
     property string title: ""
     property string size: "md"           // sm, md, lg, xl
     property bool showClose: true

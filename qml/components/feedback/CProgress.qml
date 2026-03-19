@@ -15,6 +15,11 @@ import QmlComponents 1.0
 Item {
     id: root
 
+    // Accessibility
+    Accessible.role: Accessible.ProgressBar
+    Accessible.name: label || "Progress"
+    Accessible.value: value * 100
+
     // Public properties
     property real value: 0              // 0.0 to 1.0
     property bool indeterminate: false

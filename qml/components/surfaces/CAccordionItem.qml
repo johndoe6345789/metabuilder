@@ -31,6 +31,11 @@ Rectangle {
     readonly property color surfaceContainer:
         isDark ? Qt.rgba(1, 1, 1, 0.05) : Qt.rgba(0.31, 0.31, 0.44, 0.06)
 
+    Accessible.role: Accessible.Button
+    Accessible.name: title
+    Accessible.expanded: expanded
+    activeFocusOnTab: true
+
     // -- Layout --
     Layout.fillWidth: true
     radius: 12

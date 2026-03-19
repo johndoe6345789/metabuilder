@@ -17,6 +17,11 @@ ComboBox {
     property bool hasError: errorText.length > 0
     property string size: "md" // "sm", "md", "lg"
 
+    // Accessibility
+    Accessible.role: Accessible.ComboBox
+    Accessible.name: label || ""
+    activeFocusOnTab: true
+
     model: []
     Layout.preferredWidth: 200
     implicitHeight: size === "sm"

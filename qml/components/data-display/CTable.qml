@@ -29,6 +29,8 @@ Rectangle {
     property bool sortAscending: true
     signal headerClicked(int columnIndex)
 
+    Accessible.role: Accessible.Table
+
     color: "transparent"
     radius: StyleVariables.radiusSm
     border.width: bordered ? 1 : 0
@@ -130,6 +132,8 @@ Rectangle {
                 id: rowDelegate
                 Layout.fillWidth: true
                 implicitHeight: 48
+
+                Accessible.role: Accessible.Row
 
                 property bool hovered: rowMouse.containsMouse
 

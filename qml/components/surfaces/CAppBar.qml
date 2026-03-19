@@ -5,6 +5,8 @@ import QmlComponents 1.0
 
 ToolBar {
     id: appbar
+    Accessible.role: Accessible.ToolBar
+    Accessible.name: "Application toolbar"
 
     background: Rectangle {
         color: Theme.paper

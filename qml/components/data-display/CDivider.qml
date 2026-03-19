@@ -24,9 +24,12 @@ Item {
     // MD3: 1px line using outlineVariant (softer than border)
     readonly property color _lineColor: Theme.border
 
+    Accessible.role: Accessible.Separator
+
     // Size
     implicitWidth: orientation === "horizontal" ? 200 : 1
-    implicitHeight: orientation === "horizontal" ? (text ? 24 : 1) : 200
+    implicitHeight: orientation === "horizontal"
+        ? (text ? 24 : 1) : 200
 
     // Horizontal divider
     Row {
