@@ -2,54 +2,60 @@ import QtQuick
 import QmlComponents 1.0
 
 /**
- * CBadge.qml - Notification badge (mirrors _badge.scss)
- * Small indicator for counts or status
+ * CBadge.qml - Material Design 3 Badge
+ *
+ * Small: 6px dot indicator, no text
+ * Standard: 16px height pill with count/text, radius 8
+ * Large: 20px for bigger counts
+ *
+ * MD3 default color: Theme.error (notification badge)
  */
 Rectangle {
     id: root
-    
-    property string size: "md"           // sm, md, lg
-    property string variant: "primary"   // primary, success, warning, error
-    property int count: 0                // Number to display (0 = dot only)
-    property bool dot: false             // Show as dot without number
-    property string text: ""             // Direct text label (overrides count)
-    
-    // Size mapping
-    readonly property var _sizes: ({
-        sm: { minWidth: 14, height: 14, fontSize: 9, padding: 3 },
-        md: { minWidth: 16, height: 16, fontSize: 10, padding: 4 },
-        lg: { minWidth: 20, height: 20, fontSize: 11, padding: 5 }
-    })
-    
-    readonly property var _sizeConfig: _sizes[size] || _sizes.md
-    
-    // Color mapping
+
+    property string text: ""
+    property bool accent: false
+    property color color: accent ? Theme.primary : Theme.error
+    property int count: 0
+    property bool dot: false
+    property string variant: "primary" // primary, success, warning, error (legacy compat)
+
+    // Resolve badge color from variant or explicit color
     readonly property color _bgColor: {
+        if (accent) return Theme.primary
         switch (variant) {
             case "success": return Theme.success
             case "warning": return Theme.warning
             case "error": return Theme.error
-            default: return Theme.primary
+            default: return color
         }
     }
-    
+
+    // MD3: white text on badge, dark text on warning
     readonly property color _textColor: variant === "warning" ? "#000000" : "#ffffff"
-    
-    // Sizing
-    readonly property bool _hasText: text !== ""
-    width: dot ? _sizeConfig.height : Math.max(_sizeConfig.minWidth, label.implicitWidth + _sizeConfig.padding * 2)
-    height: _sizeConfig.height
-    radius: height / 2
+
+    // Display string
+    readonly property string _displayText: {
+        if (text !== "") return text
+        if (count > 99) return "99+"
+        return count.toString()
+    }
+
+    readonly property bool _showText: !dot && (text !== "" || count > 0)
+
+    // MD3 small badge: 6px dot, standard badge: 16px pill
+    width: dot ? 6 : Math.max(16, label.implicitWidth + 8)
+    height: dot ? 6 : 16
+    radius: dot ? 3 : 8
     color: _bgColor
-    
-    // Badge text
+
     Text {
         id: label
         anchors.centerIn: parent
-        text: root._hasText ? root.text : (root.count > 99 ? "99+" : root.count.toString())
+        text: root._displayText
         color: root._textColor
-        font.pixelSize: root._sizeConfig.fontSize
-        font.weight: Font.DemiBold
-        visible: !root.dot && (root._hasText || root.count > 0)
+        font.pixelSize: 11
+        font.weight: Font.Bold
+        visible: root._showText
     }
 }

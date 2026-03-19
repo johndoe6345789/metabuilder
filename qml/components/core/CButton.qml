@@ -4,115 +4,149 @@ import QtQuick.Layouts
 import QmlComponents 1.0
 
 /**
- * CButton.qml - Styled button component (mirrors _button.scss)
- * Uses StyleVariables for consistent sizing and spacing
+ * CButton.qml - Material Design 3 button component
+ *
+ * Variants:
+ *   primary   - Filled button (pill, Theme.primary bg, white text)
+ *   default   - Tonal button (pill, 12% primary tint bg)
+ *   secondary - Tonal button (pill, 12% primary tint bg)
+ *   ghost     - Outlined button (pill, border, transparent bg)
+ *   outlined  - Outlined button (alias for ghost)
+ *   text      - Text button (no border, no bg, colored text)
+ *   danger    - Filled danger button (pill, Theme.error bg)
  */
 Button {
     id: control
-    
-    property string variant: "default" // default, primary, secondary, ghost, danger, text
+
+    property string variant: "default" // default, primary, secondary, ghost, outlined, danger, text
     property string size: "md" // sm, md, lg
     property string iconSource: ""
-    property string iconText: "" // Alias for simpler icon usage (emoji/text icons)
+    property string iconText: ""
     property bool loading: false
-    
-    // Effective icon: prefer iconText over iconSource
+
     readonly property string _effectiveIcon: iconText || iconSource
-    
-    // Use StyleVariables for sizing (mirrors _button.scss)
+
+    // MD3 sizing: sm=32, md=40, lg=48
     implicitHeight: {
         switch (size) {
-            case "sm": return StyleVariables.buttonSizes.sm.height
-            case "lg": return StyleVariables.buttonSizes.lg.height
-            default: return StyleVariables.buttonSizes.md.height
+            case "sm": return 32
+            case "lg": return 48
+            default: return 40
         }
     }
-    
+
     implicitWidth: Math.max(implicitHeight, contentRow.implicitWidth + _paddingH * 2)
-    
+
     readonly property int _paddingH: {
         switch (size) {
-            case "sm": return StyleVariables.buttonSizes.sm.paddingH
-            case "lg": return StyleVariables.buttonSizes.lg.paddingH
-            default: return StyleVariables.buttonSizes.md.paddingH
+            case "sm": return 16
+            case "lg": return 28
+            default: return 24
         }
     }
-    
-    font.pixelSize: {
-        switch (size) {
-            case "sm": return StyleVariables.buttonSizes.sm.fontSize
-            case "lg": return StyleVariables.buttonSizes.lg.fontSize
-            default: return StyleVariables.buttonSizes.md.fontSize
-        }
+
+    font.pixelSize: 14
+    font.weight: Font.DemiBold
+
+    // Resolve whether this variant is filled, outlined, tonal, or text
+    readonly property bool _isFilled: variant === "primary" || variant === "danger"
+    readonly property bool _isOutlined: variant === "ghost" || variant === "outlined"
+    readonly property bool _isText: variant === "text"
+    readonly property bool _isTonal: variant === "default" || variant === "secondary"
+
+    // Base fill color (before state layers)
+    readonly property color _baseFill: {
+        if (variant === "primary") return Theme.primary
+        if (variant === "danger") return Theme.error
+        if (_isTonal) return Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12)
+        return "transparent" // ghost, outlined, text
     }
-    font.weight: Font.Medium
-    
+
+    // Foreground / text color
+    readonly property color _foreground: {
+        if (!enabled) return Theme.textDisabled
+        if (variant === "primary") return "#ffffff"
+        if (variant === "danger") return "#ffffff"
+        return Theme.primary
+    }
+
+    opacity: enabled ? 1.0 : 0.38
+    Behavior on opacity { NumberAnimation { duration: Theme.transitionShortest } }
+
     background: Rectangle {
-        radius: StyleVariables.radiusSm
+        radius: control.height / 2
+
+        // State layer: hover = 8% overlay, pressed = 12% overlay
+        readonly property color _stateLayer: {
+            if (control._isFilled) return "#ffffff" // white overlay on filled
+            return Theme.primary                     // primary overlay on others
+        }
+
         color: {
-            if (!control.enabled) return Theme.surface
+            if (!control.enabled) {
+                if (control._isFilled) return Theme.surface
+                return "transparent"
+            }
             if (control.down) {
-                switch(control.variant) {
-                    case "primary": return Qt.darker(Theme.primary, 1.3)
-                    case "secondary": return Qt.darker(Theme.success, 1.3)
-                    case "danger": return Qt.darker(Theme.error, 1.3)
-                    case "ghost": 
-                    case "text": return StyleMixins.activeBg(Theme.mode === "dark")
-                    default: return Qt.darker(Theme.surface, 1.2)
-                }
+                if (control._isFilled)
+                    return Qt.rgba(_stateLayer.r, _stateLayer.g, _stateLayer.b, 0.12)
+                          // blend: we layer 12% on top of base
+                          // For filled, darken slightly instead
+                if (control._isTonal)
+                    return Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.22)
+                return Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12)
             }
             if (control.hovered) {
-                switch(control.variant) {
-                    case "primary": return Qt.darker(Theme.primary, 1.1)
-                    case "secondary": return Qt.darker(Theme.success, 1.1)
-                    case "danger": return Qt.darker(Theme.error, 1.1)
-                    case "ghost":
-                    case "text": return StyleMixins.hoverBg(Theme.mode === "dark")
-                    default: return Qt.lighter(Theme.surface, 1.1)
-                }
+                if (control._isFilled)
+                    return control._baseFill // overlay handled by stateOverlay
+                if (control._isTonal)
+                    return Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.18)
+                return Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.08)
             }
-            switch(control.variant) {
-                case "primary": return Theme.primary
-                case "secondary": return Theme.success
-                case "danger": return Theme.error
-                case "ghost": return "transparent"
-                case "text": return "transparent"
-                default: return Theme.surface
-            }
+            return control._baseFill
         }
-        border.width: control.variant === "ghost" ? 1 : 0
-        border.color: Theme.border
-        
-        Behavior on color { ColorAnimation { duration: StyleVariables.transitionFast } }
+
+        border.width: control._isOutlined ? 1 : 0
+        border.color: control.enabled ? Theme.border : Theme.actionDisabled
+
+        Behavior on color { ColorAnimation { duration: Theme.transitionShortest } }
+
+        // State layer overlay for filled buttons (hover/press)
+        Rectangle {
+            anchors.fill: parent
+            radius: parent.radius
+            visible: control._isFilled && control.enabled && (control.hovered || control.down)
+            color: control.variant === "danger" ? "#000000" : "#ffffff"
+            opacity: control.down ? 0.12 : (control.hovered ? 0.08 : 0)
+
+            Behavior on opacity { NumberAnimation { duration: Theme.transitionShortest } }
+        }
     }
-    
+
     contentItem: RowLayout {
         id: contentRow
-        spacing: StyleVariables.spacingSm
-        
+        spacing: 8
+
         BusyIndicator {
             Layout.preferredWidth: 16
             Layout.preferredHeight: 16
             running: control.loading
             visible: control.loading
         }
-        
+
         Text {
-            visible: control._effectiveIcon && !control.loading
+            visible: control._effectiveIcon !== "" && !control.loading
             text: control._effectiveIcon
             font.pixelSize: control.font.pixelSize
-            color: control.enabled ? Theme.text : Theme.textDisabled
+            color: control._foreground
         }
-        
+
         Text {
             text: control.text
             font: control.font
-            color: control.enabled ? Theme.text : Theme.textDisabled
+            color: control._foreground
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
         }
     }
-    
-    Behavior on opacity { NumberAnimation { duration: StyleVariables.transitionFast } }
-    opacity: enabled ? 1.0 : 0.5
 }

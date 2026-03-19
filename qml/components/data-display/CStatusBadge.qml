@@ -1,63 +1,87 @@
 import QtQuick
+import QmlComponents 1.0
 
+/**
+ * CStatusBadge.qml - Material Design 3 Status Pill
+ *
+ * Status indicator pill with tonal background matching the status color.
+ * Statuses: completed/success, running/info, queued/warning, failed/error, unknown/neutral
+ */
 Rectangle {
     id: badge
-    
-    property string status: "unknown" // completed, running, queued, failed, unknown
+
+    property string status: "unknown" // completed, running, queued, failed, unknown, success, warning, error, info
     property string text: status
     property bool showDot: true
     property var themeColors: ({})
-    
-    // Internal colors with fallbacks
-    readonly property var colors: ({
-        success: themeColors.success || "#22c55e",
-        info: themeColors.info || "#3b82f6",
-        warning: themeColors.warning || "#f59e0b",
-        error: themeColors.error || "#ef4444",
-        neutral: themeColors.mid || "#333333"
-    })
-    
-    implicitHeight: 22
-    implicitWidth: badgeRow.implicitWidth + 12
-    radius: 4
-    
-    color: {
-        switch(status) {
-            case "completed": return colors.success
-            case "running": return colors.info
-            case "queued": return colors.warning
-            case "failed": return colors.error
-            default: return colors.neutral
+
+    // Resolve status to a semantic category
+    readonly property string _semantic: {
+        switch (status) {
+            case "completed":
+            case "success":   return "success"
+            case "running":
+            case "info":      return "info"
+            case "queued":
+            case "warning":   return "warning"
+            case "failed":
+            case "error":     return "error"
+            default:          return "neutral"
         }
     }
-    
+
+    // MD3 status colors with theme fallbacks
+    readonly property color _statusColor: {
+        switch (_semantic) {
+            case "success": return themeColors.success || Theme.success
+            case "info":    return themeColors.info    || Theme.info
+            case "warning": return themeColors.warning || Theme.warning
+            case "error":   return themeColors.error   || Theme.error
+            default:        return themeColors.mid     || Theme.textSecondary
+        }
+    }
+
+    // MD3 tonal background: 12% opacity of status color
+    readonly property color _bgColor: Qt.rgba(_statusColor.r, _statusColor.g, _statusColor.b, 0.12)
+
+    // MD3 on-container text: full status color
+    readonly property color _textColor: _statusColor
+
+    implicitHeight: 24
+    implicitWidth: badgeRow.implicitWidth + 20
+    radius: 12 // Full pill for status badges
+
+    color: _bgColor
+
     Row {
         id: badgeRow
         anchors.centerIn: parent
         spacing: 6
-        
-        // Animated dot for running status
+
+        // Status dot indicator
         Rectangle {
             anchors.verticalCenter: parent.verticalCenter
             width: 6
             height: 6
             radius: 3
-            color: "#ffffff"
-            visible: badge.showDot && badge.status === "running"
-            
+            color: badge._textColor
+            visible: badge.showDot
+
+            // Pulse animation for running/active status
             SequentialAnimation on opacity {
-                running: badge.status === "running"
+                running: badge._semantic === "info" && badge.showDot
                 loops: Animation.Infinite
-                NumberAnimation { to: 0.3; duration: 500 }
-                NumberAnimation { to: 1.0; duration: 500 }
+                NumberAnimation { to: 0.3; duration: 600; easing.type: Easing.InOutSine }
+                NumberAnimation { to: 1.0; duration: 600; easing.type: Easing.InOutSine }
             }
         }
-        
+
         Text {
             text: badge.text
-            font.pixelSize: 11
+            font.pixelSize: 12
             font.weight: Font.Medium
-            color: "#ffffff"
+            font.letterSpacing: 0.2
+            color: badge._textColor
             textFormat: Text.PlainText
         }
     }

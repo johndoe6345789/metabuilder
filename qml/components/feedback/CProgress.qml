@@ -2,183 +2,108 @@ import QtQuick
 import QmlComponents 1.0
 
 /**
- * CProgress.qml - Progress indicator (mirrors _progress.scss)
- * Linear or circular progress indicator
- * 
+ * CProgress.qml - Material Design 3 Linear Progress Indicator
+ *
+ * MD3 spec: 4px track with rounded ends, primary indicator, indeterminate sliding animation
+ *
  * Usage:
- *   CProgress { value: 0.5 }                    // 50% linear
- *   CProgress { variant: "circular"; value: 0.75 }
- *   CProgress { indeterminate: true }           // Animated indeterminate
+ *   CProgress { value: 0.5 }                    // 50% determinate
+ *   CProgress { indeterminate: true }            // Animated indeterminate
+ *   CProgress { value: 0.75; label: "75%" }      // With label
  */
 Item {
     id: root
-    
+
     // Public properties
-    property real value: 0           // 0.0 to 1.0
-    property string variant: "linear"  // linear, circular
+    property real value: 0              // 0.0 to 1.0
     property bool indeterminate: false
-    property string color: ""        // Custom color, uses primary if empty
-    property string trackColor: ""   // Custom track color
-    property int thickness: 4        // Line thickness
-    property string size: "md"       // sm, md, lg (for circular)
-    property string label: ""        // Optional label (for linear)
-    
-    // Computed colors
-    readonly property color _progressColor: color || Theme.primary
-    readonly property color _trackColor: trackColor || Qt.rgba(Theme.text.r, Theme.text.g, Theme.text.b, 0.12)
-    
-    // Size based on variant
-    implicitWidth: variant === "circular" ? _circularSize : 200
-    implicitHeight: variant === "circular" ? _circularSize : (label ? thickness + StyleVariables.fontSizeSm + StyleVariables.spacingXs : thickness)
-    
-    readonly property int _circularSize: {
+    property string color: ""           // Custom indicator color, uses Theme.primary if empty
+    property string trackColor: ""      // Custom track color
+    property string size: "md"          // sm, md, lg (track thickness)
+    property string label: ""           // Optional label below track
+
+    // Computed colors (MD3: primary for indicator, surfaceContainerHighest for track)
+    readonly property color _indicatorColor: color || Theme.primary
+    readonly property color _trackColor: trackColor || Qt.rgba(Theme.surface.r, Theme.surface.g, Theme.surface.b, 0.38)
+
+    // MD3 track height: 4px standard
+    readonly property int _trackHeight: {
         switch (size) {
-            case "sm": return 24
-            case "lg": return 56
-            default: return 40
+            case "sm": return 2
+            case "lg": return 6
+            default: return 4
         }
     }
-    
-    // Linear progress
-    Item {
-        visible: root.variant === "linear"
-        anchors.fill: parent
-        
-        // Track
+
+    implicitWidth: 200
+    implicitHeight: label ? _trackHeight + Theme.fontSizeXs + Theme.spacingXs : _trackHeight
+
+    // Track background (MD3: rounded, surfaceContainerHighest)
+    Rectangle {
+        id: track
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: parent.top
+        height: root._trackHeight
+        radius: root._trackHeight / 2
+        color: root._trackColor
+        clip: true
+
+        // Determinate indicator
         Rectangle {
-            id: track
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.top: parent.top
-            height: root.thickness
-            radius: root.thickness / 2
-            color: root._trackColor
-        }
-        
-        // Progress bar
-        Rectangle {
-            id: progressBar
+            id: determinateBar
+            visible: !root.indeterminate
             anchors.left: parent.left
             anchors.top: parent.top
-            height: root.thickness
-            width: root.indeterminate ? parent.width * 0.3 : parent.width * root.value
-            radius: root.thickness / 2
-            color: root._progressColor
-            
+            height: parent.height
+            width: parent.width * Math.max(0, Math.min(1, root.value))
+            radius: root._trackHeight / 2
+            color: root._indicatorColor
+
             Behavior on width {
-                enabled: !root.indeterminate
-                NumberAnimation { duration: StyleVariables.transitionNormal }
+                NumberAnimation {
+                    duration: Theme.transitionStandard
+                    easing.type: Easing.OutCubic
+                }
             }
         }
-        
-        // Indeterminate animation
-        SequentialAnimation on progressBar.x {
-            running: root.indeterminate && root.variant === "linear"
-            loops: Animation.Infinite
-            
-            NumberAnimation {
-                from: -track.width * 0.3
-                to: track.width
-                duration: 1500
-                easing.type: Easing.InOutQuad
+
+        // Indeterminate indicator (MD3: sliding bar that traverses the track)
+        Rectangle {
+            id: indeterminateBar
+            visible: root.indeterminate
+            anchors.top: parent.top
+            height: parent.height
+            width: parent.width * 0.4
+            radius: root._trackHeight / 2
+            color: root._indicatorColor
+
+            SequentialAnimation {
+                running: root.indeterminate && root.visible
+                loops: Animation.Infinite
+
+                // Slide right, accelerating
+                NumberAnimation {
+                    target: indeterminateBar
+                    property: "x"
+                    from: -indeterminateBar.width
+                    to: track.width
+                    duration: 1500
+                    easing.type: Easing.InOutQuad
+                }
             }
-        }
-        
-        // Label
-        Text {
-            visible: root.label
-            anchors.top: track.bottom
-            anchors.topMargin: StyleVariables.spacingXs
-            anchors.horizontalCenter: parent.horizontalCenter
-            text: root.label
-            font.pixelSize: StyleVariables.fontSizeXs
-            color: Theme.textSecondary
         }
     }
-    
-    // Circular progress
-    Item {
-        visible: root.variant === "circular"
-        anchors.fill: parent
-        
-        // Track circle
-        Canvas {
-            id: circularTrack
-            anchors.fill: parent
-            
-            onPaint: {
-                var ctx = getContext("2d")
-                ctx.reset()
-                ctx.strokeStyle = root._trackColor
-                ctx.lineWidth = root.thickness
-                ctx.lineCap = "round"
-                
-                var centerX = width / 2
-                var centerY = height / 2
-                var radius = (Math.min(width, height) - root.thickness) / 2
-                
-                ctx.beginPath()
-                ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI)
-                ctx.stroke()
-            }
-        }
-        
-        // Progress arc
-        Canvas {
-            id: circularProgress
-            anchors.fill: parent
-            
-            property real animatedValue: root.indeterminate ? 0.25 : root.value
-            property real rotation: 0
-            
-            Behavior on animatedValue {
-                enabled: !root.indeterminate
-                NumberAnimation { duration: StyleVariables.transitionNormal }
-            }
-            
-            // Indeterminate rotation
-            RotationAnimation on rotation {
-                running: root.indeterminate
-                from: 0
-                to: 360
-                duration: 1400
-                loops: Animation.Infinite
-            }
-            
-            transform: Rotation {
-                origin.x: circularProgress.width / 2
-                origin.y: circularProgress.height / 2
-                angle: circularProgress.rotation - 90
-            }
-            
-            onPaint: {
-                var ctx = getContext("2d")
-                ctx.reset()
-                ctx.strokeStyle = root._progressColor
-                ctx.lineWidth = root.thickness
-                ctx.lineCap = "round"
-                
-                var centerX = width / 2
-                var centerY = height / 2
-                var radius = (Math.min(width, height) - root.thickness) / 2
-                
-                ctx.beginPath()
-                ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI * animatedValue)
-                ctx.stroke()
-            }
-            
-            onAnimatedValueChanged: requestPaint()
-            onRotationChanged: requestPaint()
-        }
-        
-        // Center label (percentage)
-        Text {
-            visible: !root.indeterminate && root.size !== "sm"
-            anchors.centerIn: parent
-            text: Math.round(root.value * 100) + "%"
-            font.pixelSize: root._circularSize / 4
-            font.weight: Font.Medium
-            color: Theme.text
-        }
+
+    // Optional label
+    Text {
+        visible: root.label !== ""
+        anchors.top: track.bottom
+        anchors.topMargin: Theme.spacingXs
+        anchors.horizontalCenter: parent.horizontalCenter
+        text: root.label
+        font.pixelSize: Theme.fontSizeXs
+        font.family: Theme.fontFamily
+        color: Theme.textSecondary
     }
 }

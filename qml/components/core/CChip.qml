@@ -4,92 +4,168 @@ import QtQuick.Layouts
 import QmlComponents 1.0
 
 /**
- * CChip.qml - Chip/tag component (mirrors _chip.scss)
- * Uses StyleVariables and StyleMixins for consistent styling
+ * CChip.qml - Material Design 3 Chip component
+ *
+ * Variants:
+ *   assist   - Outlined, transparent fill (default)
+ *   filter   - Tonal fill when selected, outlined when not
+ *   input    - Outlined with optional close icon
+ *   suggestion - Outlined, similar to assist
+ *
+ * Status variants (legacy compat): success, warning, error, info, primary
  */
 Rectangle {
     id: chip
-    
+
     property string text: ""
     property string icon: ""
-    property string variant: "default" // default, success, warning, error, info, primary, outlined
-    property string size: "sm" // sm, md
+    property string variant: "assist" // assist, filter, input, suggestion, success, warning, error, info, primary, outlined
+    property string size: "md" // sm, md
     property bool clickable: false
     property bool closable: false
     property bool checked: false
-    
+    property bool selected: false
+    property color color: Theme.primary
+
     signal clicked()
     signal closeClicked()
-    
-    // Use StyleVariables for sizing
-    implicitHeight: size === "sm" ? StyleVariables.chipSizes.sm.height : StyleVariables.chipSizes.md.height
-    implicitWidth: chipRow.implicitWidth + (size === "sm" ? StyleVariables.chipSizes.sm.paddingH : StyleVariables.chipSizes.md.paddingH) * 2
-    radius: StyleVariables.radiusFull
-    
-    // Use StyleMixins for status colors
-    color: {
-        if (variant === "outlined") return "transparent"
-        switch(variant) {
-            case "success": return StyleMixins.statusBgColor("success")
-            case "warning": return StyleMixins.statusBgColor("warning")
-            case "error": return StyleMixins.statusBgColor("error")
-            case "info": return StyleMixins.statusBgColor("info")
-            case "primary": return Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.15)
-            default: return Theme.surface
-        }
-    }
-    
-    border.width: variant === "outlined" ? 1 : 0
-    border.color: _chipColor
-    
-    readonly property color _chipColor: {
-        switch(variant) {
-            case "success": return StyleMixins.statusColor("success")
-            case "warning": return StyleMixins.statusColor("warning")
-            case "error": return StyleMixins.statusColor("error")
-            case "info": return StyleMixins.statusColor("info")
+
+    // MD3: 32px height
+    implicitHeight: 32
+    implicitWidth: chipRow.implicitWidth + _paddingH * 2
+
+    readonly property real _paddingH: size === "sm" ? 12 : 16
+
+    // MD3: 8px radius (not full pill)
+    radius: 8
+
+    // Resolve the effective color for status variants
+    readonly property color _resolvedColor: {
+        switch (variant) {
+            case "success": return Theme.success
+            case "warning": return Theme.warning
+            case "error": return Theme.error
+            case "info": return Theme.info
             case "primary": return Theme.primary
-            default: return Theme.textSecondary
+            default: return color
         }
     }
-    
+
+    readonly property bool _isStatusVariant: {
+        return variant === "success" || variant === "warning" ||
+               variant === "error" || variant === "info" || variant === "primary"
+    }
+
+    // MD3 fill logic
+    color: {
+        // Status variants: tonal fill
+        if (_isStatusVariant) {
+            return Qt.rgba(_resolvedColor.r, _resolvedColor.g, _resolvedColor.b, 0.12)
+        }
+        switch (variant) {
+            case "filter":
+                // Selected filter chips get tonal fill
+                if (selected || checked) {
+                    return Qt.rgba(_resolvedColor.r, _resolvedColor.g, _resolvedColor.b, 0.12)
+                }
+                return "transparent"
+            case "assist":
+            case "input":
+            case "suggestion":
+            case "outlined":
+            default:
+                return "transparent"
+        }
+    }
+
+    // MD3 border: 1px outline for non-selected, no border for tonal/selected
+    border.width: {
+        if (_isStatusVariant) return 0
+        if (variant === "filter" && (selected || checked)) return 0
+        return 1
+    }
+    border.color: {
+        if (_isStatusVariant) return _resolvedColor
+        return Theme.border
+    }
+
+    // MD3 text/icon color
+    readonly property color _contentColor: {
+        if (_isStatusVariant) return _resolvedColor
+        if (variant === "filter" && (selected || checked)) return _resolvedColor
+        return Theme.text
+    }
+
     Behavior on color { ColorAnimation { duration: StyleVariables.transitionFast } }
-    
+    Behavior on border.width { NumberAnimation { duration: StyleVariables.transitionFast } }
+
+    // Hover/press overlay
+    Rectangle {
+        anchors.fill: parent
+        radius: parent.radius
+        color: chip._contentColor
+        opacity: mouseArea.containsPress ? 0.12 : mouseArea.containsMouse ? 0.08 : 0
+        Behavior on opacity { NumberAnimation { duration: 100 } }
+    }
+
     MouseArea {
+        id: mouseArea
         anchors.fill: parent
         hoverEnabled: chip.clickable
         cursorShape: chip.clickable ? Qt.PointingHandCursor : Qt.ArrowCursor
         onClicked: if (chip.clickable) chip.clicked()
     }
-    
+
     RowLayout {
         id: chipRow
         anchors.centerIn: parent
         spacing: StyleVariables.spacingXs
-        
+
+        // Leading icon
         Text {
             text: chip.icon
-            font.pixelSize: size === "sm" ? StyleVariables.chipSizes.sm.fontSize : StyleVariables.chipSizes.md.fontSize
-            color: chip._chipColor
-            visible: chip.icon
+            font.pixelSize: 18
+            color: chip._contentColor
+            visible: chip.icon !== ""
         }
-        
+
+        // Check icon for selected filter chips
+        Text {
+            text: "\u2713"
+            font.pixelSize: 14
+            font.weight: Font.Bold
+            color: chip._contentColor
+            visible: chip.variant === "filter" && (chip.selected || chip.checked)
+        }
+
+        // Label
         Text {
             text: chip.text
-            font.pixelSize: size === "sm" ? StyleVariables.chipSizes.sm.fontSize : StyleVariables.chipSizes.md.fontSize
+            font.pixelSize: 13
             font.weight: Font.Medium
-            color: chip._chipColor
+            color: chip._contentColor
         }
-        
-        Text {
-            text: "✕"
-            font.pixelSize: size === "sm" ? StyleVariables.fontSizeXs : StyleVariables.fontSizeSm
-            color: Qt.darker(chip._chipColor, 1.2)
-            visible: chip.closable
-            
+
+        // Close/remove icon for input chips or closable chips
+        Rectangle {
+            width: 18
+            height: 18
+            radius: 9
+            color: closeMouseArea.containsMouse ? Qt.rgba(chip._contentColor.r, chip._contentColor.g, chip._contentColor.b, 0.12) : "transparent"
+            visible: chip.closable || chip.variant === "input"
+
+            Text {
+                anchors.centerIn: parent
+                text: "\u2715"
+                font.pixelSize: 11
+                font.weight: Font.Medium
+                color: chip._contentColor
+            }
+
             MouseArea {
+                id: closeMouseArea
                 anchors.fill: parent
-                anchors.margins: -4
+                hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
                 onClicked: chip.closeClicked()
             }
