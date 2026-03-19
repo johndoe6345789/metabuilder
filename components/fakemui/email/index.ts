@@ -57,6 +57,13 @@ export {
 export {
   MailboxLayout,
   type MailboxLayoutProps,
+  MailboxHeader,
+  type MailboxHeaderProps,
+  MailboxSidebar,
+  type MailboxSidebarProps,
+  EmailDetail,
+  type EmailDetailProps,
+  type EmailDetailEmail,
   ComposerLayout,
   type ComposerLayoutProps,
   SettingsLayout,

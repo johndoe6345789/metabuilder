@@ -3,18 +3,14 @@
 import React, { useState, useCallback } from 'react'
 import {
   MailboxLayout,
-  FolderNavigation,
+  MailboxHeader,
+  MailboxSidebar,
+  EmailDetail,
   type FolderNavigationItem,
   ThreadList,
-  EmailHeader,
   ComposeWindow,
 } from '@metabuilder/fakemui/email'
-import {
-  Box,
-  Typography,
-  IconButton,
-  Button,
-} from '@metabuilder/fakemui'
+import { Box, Typography } from '@metabuilder/fakemui'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Demo data — replace with useMessages/useMailboxes hooks when IMAP backend is ready
@@ -133,7 +129,6 @@ export default function EmailClientContent() {
     if (activeFolder === 'drafts') return false
     if (activeFolder === 'spam') return false
     if (activeFolder === 'trash') return false
-    // inbox
     if (searchQuery) {
       const q = searchQuery.toLowerCase()
       return (
@@ -147,7 +142,6 @@ export default function EmailClientContent() {
 
   const handleSelectEmail = useCallback((emailId: string) => {
     setSelectedEmailId(emailId)
-    // Mark as read
     setEmails(prev => prev.map(e => e.id === emailId ? { ...e, isRead: true } : e))
   }, [])
 
@@ -162,6 +156,7 @@ export default function EmailClientContent() {
   const handleSend = useCallback((data: { to: string[]; cc?: string[]; bcc?: string[]; subject: string; body: string }) => {
     const newEmail = {
       id: String(Date.now()),
+      testId: String(Date.now()),
       from: 'You',
       to: data.to,
       subject: data.subject,
@@ -180,81 +175,40 @@ export default function EmailClientContent() {
     setSelectedEmailId(null)
   }, [])
 
-  // ── Sidebar ──────────────────────────────────────────────────────────────
-  const sidebar = (
-    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <Box sx={{ padding: '16px' }}>
-        <Button
-          variant="contained"
-          onClick={() => setShowCompose(true)}
-          sx={{ width: '100%', borderRadius: '24px', padding: '12px 24px', fontSize: '0.9375rem', fontWeight: 500, textTransform: 'none', boxShadow: '0 1px 3px rgba(0,0,0,0.12)' }}
-        >
-          ✏️ Compose
-        </Button>
-      </Box>
-      <FolderNavigation items={folders} onNavigate={handleNavigateFolder} />
-    </Box>
-  )
+  const unreadCount = filteredEmails.filter(e => !e.isRead).length
 
-  // ── Header ───────────────────────────────────────────────────────────────
   const header = (
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: '12px', width: '100%', padding: '0 8px' }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <span style={{ fontSize: '24px' }}>📧</span>
-        <Typography variant="h6" sx={{ fontWeight: 600, fontSize: '1.125rem' }}>
-          MetaMail
-        </Typography>
-      </Box>
-      <Box sx={{ flex: 1, maxWidth: '680px', margin: '0 auto' }}>
-        <input
-          type="search"
-          placeholder="Search mail"
-          value={searchQuery}
-          onChange={e => setSearchQuery(e.target.value)}
-          style={{
-            width: '100%',
-            padding: '10px 16px',
-            borderRadius: '24px',
-            border: 'none',
-            backgroundColor: '#f1f3f4',
-            fontSize: '0.9375rem',
-            outline: 'none',
-          }}
-        />
-      </Box>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-        <IconButton aria-label="Settings" title="Settings">
-          <span style={{ fontSize: '20px' }}>⚙️</span>
-        </IconButton>
-        <Box sx={{
-          width: '32px', height: '32px', borderRadius: '50%',
-          backgroundColor: '#1976d2', color: 'white',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: '0.875rem', fontWeight: 600, cursor: 'pointer',
-        }}>
-          U
-        </Box>
-      </Box>
-    </Box>
+    <MailboxHeader
+      searchQuery={searchQuery}
+      onSearchChange={setSearchQuery}
+      onSettingsClick={() => {}}
+    />
   )
 
-  // ── Main (thread list) ───────────────────────────────────────────────────
+  const sidebar = (
+    <MailboxSidebar
+      folders={folders}
+      onNavigate={handleNavigateFolder}
+      onCompose={() => setShowCompose(true)}
+    />
+  )
+
   const main = (
-    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-      <Box sx={{ padding: '8px 16px', borderBottom: '1px solid #e0e0e0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Typography variant="body2" sx={{ color: '#5f6368', fontWeight: 500, textTransform: 'capitalize' }}>
+    <Box className="mailbox-thread-panel">
+      <Box className="mailbox-thread-toolbar">
+        <Typography variant="body2" className="mailbox-thread-folder-label">
           {activeFolder} {filteredEmails.length > 0 && `(${filteredEmails.length})`}
         </Typography>
-        <Typography variant="caption" sx={{ color: '#5f6368' }}>
-          {filteredEmails.filter(e => !e.isRead).length} unread
+        <Typography variant="caption" className="mailbox-thread-unread-label">
+          {unreadCount} unread
         </Typography>
       </Box>
       {filteredEmails.length === 0 ? (
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, color: '#5f6368', gap: '8px' }}>
-          <span style={{ fontSize: '48px', opacity: 0.5 }}>
+        <Box className="mailbox-empty-state">
+          <span className="mailbox-empty-icon">
             {activeFolder === 'starred' ? '⭐' : activeFolder === 'trash' ? '🗑️' : '📭'}
           </span>
-          <Typography variant="body1">
+          <Typography variant="body2">
             {activeFolder === 'inbox' && searchQuery ? 'No results found' : `No messages in ${activeFolder}`}
           </Typography>
         </Box>
@@ -270,53 +224,16 @@ export default function EmailClientContent() {
     </Box>
   )
 
-  // ── Detail (selected email) ──────────────────────────────────────────────
   const detail = selectedEmail ? (
-    <Box sx={{ height: '100%', overflow: 'auto', padding: '16px' }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
-        <button
-          onClick={() => setSelectedEmailId(null)}
-          style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.25rem', padding: '4px' }}
-          aria-label="Back to list"
-        >
-          ←
-        </button>
-        <Box sx={{ display: 'flex', gap: '4px' }}>
-          <IconButton aria-label="Archive" title="Archive">
-            <span style={{ fontSize: '18px' }}>📥</span>
-          </IconButton>
-          <IconButton aria-label="Delete" title="Delete">
-            <span style={{ fontSize: '18px' }}>🗑️</span>
-          </IconButton>
-          <IconButton aria-label="Reply" title="Reply">
-            <span style={{ fontSize: '18px' }}>↩️</span>
-          </IconButton>
-          <IconButton aria-label="Forward" title="Forward">
-            <span style={{ fontSize: '18px' }}>↪️</span>
-          </IconButton>
-        </Box>
-      </Box>
-      <EmailHeader
-        from={selectedEmail.from}
-        to={selectedEmail.to || ['you@metabuilder.io']}
-        cc={selectedEmail.cc}
-        subject={selectedEmail.subject}
-        receivedAt={selectedEmail.receivedAt}
-        isStarred={selectedEmail.isStarred}
-        onToggleStar={(starred) => handleToggleStar(selectedEmail.id, starred)}
-      />
-      <Box sx={{ marginTop: '24px', fontSize: '0.9375rem', lineHeight: 1.7, whiteSpace: 'pre-wrap', color: '#3c4043' }}>
-        {selectedEmail.body}
-      </Box>
-      <Box sx={{ marginTop: '32px', borderTop: '1px solid #e0e0e0', paddingTop: '16px' }}>
-        <Button variant="outlined" onClick={() => setShowCompose(true)} sx={{ borderRadius: '20px', textTransform: 'none' }}>
-          ↩️ Reply
-        </Button>
-        <Button variant="outlined" onClick={() => setShowCompose(true)} sx={{ borderRadius: '20px', textTransform: 'none', marginLeft: '8px' }}>
-          ↪️ Forward
-        </Button>
-      </Box>
-    </Box>
+    <EmailDetail
+      email={selectedEmail}
+      onClose={() => setSelectedEmailId(null)}
+      onArchive={() => {}}
+      onDelete={() => {}}
+      onReply={() => setShowCompose(true)}
+      onForward={() => setShowCompose(true)}
+      onToggleStar={(starred) => handleToggleStar(selectedEmail.id, starred)}
+    />
   ) : undefined
 
   return (
