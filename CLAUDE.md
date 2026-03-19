@@ -340,6 +340,9 @@ Multi-version peer deps. React 18/19, TypeScript 5.9.3, Next.js 14-16, @reduxjs/
 | `ensureClient()` before startup DB ops | `dbal_client_` is null in `registerRoutes()` — must call `ensureClient()` first |
 | Seed data in Flask Python | NEVER — declarative seed data belongs in `dbal/shared/seeds/database/*.json` |
 | Werkzeug scrypt on macOS Python | Generate hashes inside running container: `docker exec metabuilder-pastebin-backend python3 -c "..."` |
+| `loadFromDirectory` vs `loadFromFile` | Both must stay in sync — `loadFromDirectory` is used in production; check both when adding schema parsing features |
+| New DBAL entity missing from frontend | Add JSON schema in `dbal/shared/api/schema/entities/{package}/`, seed in `dbal/shared/seeds/database/`, rebuild `dbal-init` + DBAL image |
+| ComponentNode schema vs C++ struct | JSON schema must match C++ struct in `types.generated.hpp` (pageId, parentId, childIds, order), NOT the Redux slice shape |
 
 ### Critical Folders to Check Before Any Task
 
