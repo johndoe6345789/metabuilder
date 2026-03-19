@@ -1,7 +1,7 @@
 {
   "entity": "ComponentNode",
   "version": "1.0",
-  "description": "Visual component definition with props and child hierarchy",
+  "description": "Visual component node in a page tree with parent-child hierarchy and ordering",
   "tenantId": true,
   "fields": {
     "id": {
@@ -10,34 +10,34 @@
       "generated": true,
       "description": "Unique component node identifier"
     },
-    "name": {
+    "pageId": {
       "type": "string",
       "required": true,
-      "max_length": 255,
-      "description": "Component display name"
+      "description": "Page this component belongs to"
+    },
+    "parentId": {
+      "type": "string",
+      "optional": true,
+      "nullable": true,
+      "description": "Parent component ID (null for root components)"
     },
     "type": {
-      "type": "enum",
+      "type": "string",
       "required": true,
-      "values": ["atom", "molecule", "organism"],
-      "description": "Component classification tier"
+      "min_length": 1,
+      "max_length": 100,
+      "description": "Component type name"
     },
-    "code": {
-      "type": "text",
+    "childIds": {
+      "type": "string",
       "required": true,
-      "description": "Component source code"
+      "description": "Serialized list of child component IDs"
     },
-    "props": {
-      "type": "json",
-      "description": "Array of prop definitions [{name, type, required, defaultValue, description}]"
-    },
-    "metadata": {
-      "type": "json",
-      "description": "Additional component metadata"
-    },
-    "updatedAt": {
-      "type": "bigint",
-      "generated": true
+    "order": {
+      "type": "integer",
+      "required": true,
+      "default": 0,
+      "description": "Display order within parent scope (non-negative)"
     }
   },
   "indexes": [
@@ -45,9 +45,22 @@
       "fields": ["tenantId"]
     },
     {
-      "fields": ["type"]
+      "fields": ["pageId"]
+    },
+    {
+      "fields": ["parentId"]
+    },
+    {
+      "fields": ["pageId", "parentId", "order"]
     }
   ],
+  "relations": {
+    "page": {
+      "type": "belongs-to",
+      "entity": "UiPage",
+      "foreign_key": "pageId"
+    }
+  },
   "acl": {
     "create": { "user": true },
     "read": { "self": true, "admin": true },

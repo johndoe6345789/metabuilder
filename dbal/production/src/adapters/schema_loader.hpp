@@ -259,6 +259,22 @@ public:
                             entity.fields.push_back(field);
                         }
                     }
+                    // Auto-add tenantId field if top-level tenantId: true is set
+                    if (json.contains("tenantId") && json["tenantId"].is_boolean()) {
+                        if (json["tenantId"].get<bool>()) {
+                            bool has_tenant = false;
+                            for (const auto& f : entity.fields)
+                                if (f.name == "tenantId") { has_tenant = true; break; }
+                            if (!has_tenant) {
+                                FieldDefinition tenant_field;
+                                tenant_field.name     = "tenantId";
+                                tenant_field.type     = "string";
+                                tenant_field.required = false;
+                                tenant_field.nullable = true;
+                                entity.fields.push_back(tenant_field);
+                            }
+                        }
+                    }
                     if (json.contains("indexes")) {
                         for (const auto& idx : json["indexes"]) {
                             IndexDefinition index;
