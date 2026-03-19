@@ -1,0 +1,99 @@
+{
+  "tabs": [
+    {
+      "id": "overview",
+      "label": "Overview",
+      "icon": "dashboard",
+      "description": "System health and quick actions"
+    },
+    {
+      "id": "schemas",
+      "label": "Schemas",
+      "icon": "database",
+      "description": "Entity schema editor for DBAL"
+    },
+    {
+      "id": "workflows",
+      "label": "Workflows",
+      "icon": "workflow",
+      "description": "Visual DAG workflow builder"
+    },
+    {
+      "id": "packages",
+      "label": "Packages",
+      "icon": "package",
+      "description": "Install and manage platform packages"
+    },
+    {
+      "id": "pages",
+      "label": "Page Routes",
+      "icon": "pages",
+      "description": "Configure URL routes and page mappings"
+    },
+    {
+      "id": "components",
+      "label": "Components",
+      "icon": "components",
+      "description": "Component hierarchy and JSON renderer"
+    },
+    {
+      "id": "users",
+      "label": "Users",
+      "icon": "people",
+      "description": "User management and role assignment"
+    },
+    {
+      "id": "database",
+      "label": "Database",
+      "icon": "storage",
+      "description": "Database inspection and management"
+    },
+    {
+      "id": "credentials",
+      "label": "Credentials",
+      "icon": "key",
+      "description": "God-tier credential management"
+    },
+    {
+      "id": "theme",
+      "label": "Theme",
+      "icon": "palette",
+      "description": "Theme and styling configuration"
+    }
+  ],
+  "tools": [
+    {
+      "id": "export-db",
+      "label": "Export Database",
+      "icon": "download",
+      "action": "exportDatabase"
+    },
+    {
+      "id": "import-db",
+      "label": "Import Database",
+      "icon": "upload",
+      "action": "importDatabase"
+    },
+    {
+      "id": "preview-l1",
+      "label": "Preview Level 1",
+      "icon": "visibility",
+      "action": "previewLevel",
+      "params": { "level": 1 }
+    },
+    {
+      "id": "preview-l2",
+      "label": "Preview Level 2",
+      "icon": "visibility",
+      "action": "previewLevel",
+      "params": { "level": 2 }
+    },
+    {
+      "id": "preview-l3",
+      "label": "Preview Level 3",
+      "icon": "visibility",
+      "action": "previewLevel",
+      "params": { "level": 3 }
+    }
+  ]
+}
