@@ -1,5 +1,0 @@
-{
-  "$schema": "https://metabuilder.dev/schemas/events.schema.json",
-  "schemaVersion": "1.0.0",
-  "package": "minimal-example"
-}

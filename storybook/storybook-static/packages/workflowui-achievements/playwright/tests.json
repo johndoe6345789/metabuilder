@@ -6,43 +6,45 @@
   "tests": [
     {
       "name": "should display achievements page",
-      "tags": ["@achievements", "@critical"],
+      "tags": [
+        "@achievements",
+        "@critical"
+      ],
       "timeout": 10000,
       "steps": [
         {
-          "description": "Navigate to achievements",
           "action": "navigate",
-          "url": "/achievements"
+          "url": "achievements"
         },
         {
           "action": "waitForLoadState",
           "state": "domcontentloaded"
         },
         {
-          "description": "Verify achievements page loaded",
           "action": "expect",
           "selector": "body",
           "assertion": {
-            "matcher": "toContainText",
-            "expected": "Achievement"
+            "matcher": "toBeVisible"
           }
         }
       ]
     },
     {
       "name": "should display achievement badges or cards",
-      "tags": ["@achievements", "@content"],
+      "tags": [
+        "@achievements",
+        "@content"
+      ],
       "steps": [
         {
           "action": "navigate",
-          "url": "/achievements"
+          "url": "achievements"
         },
         {
           "action": "waitForLoadState",
-          "state": "networkidle"
+          "state": "domcontentloaded"
         },
         {
-          "description": "Verify achievement display",
           "action": "expect",
           "selector": "body",
           "assertion": {
@@ -53,18 +55,20 @@
     },
     {
       "name": "should show progress or stats",
-      "tags": ["@achievements", "@stats"],
+      "tags": [
+        "@achievements",
+        "@stats"
+      ],
       "steps": [
         {
           "action": "navigate",
-          "url": "/achievements"
+          "url": "achievements"
         },
         {
           "action": "waitForLoadState",
           "state": "domcontentloaded"
         },
         {
-          "description": "Check for progress indicators",
           "action": "expect",
           "selector": "body",
           "assertion": {

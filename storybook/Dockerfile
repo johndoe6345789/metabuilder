@@ -3,7 +3,7 @@
 FROM node:24-alpine AS deps
 WORKDIR /app
 
-COPY package.json .npmrc ./
+COPY package.json package-lock.json .npmrc ./
 
 # Workspace package.json files
 COPY types/package.json ./types/

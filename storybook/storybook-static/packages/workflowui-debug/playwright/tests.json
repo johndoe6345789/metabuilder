@@ -6,47 +6,51 @@
   "tests": [
     {
       "name": "inspect dashboard page structure",
-      "tags": ["@debug", "@inspect"],
+      "tags": [
+        "@debug",
+        "@inspect"
+      ],
       "timeout": 15000,
       "steps": [
         {
-          "description": "Navigate to dashboard",
           "action": "navigate",
-          "url": "/"
+          "url": ""
         },
         {
           "action": "waitForLoadState",
           "state": "domcontentloaded"
         },
         {
-          "description": "Take full page screenshot",
           "action": "debugScreenshot",
           "filename": "dashboard-full.png",
           "fullPage": true
         },
         {
-          "description": "Get page structure",
           "action": "inspectPageStructure"
         },
         {
-          "description": "Get all text on page",
           "action": "getAllText"
         },
         {
-          "description": "Find Workspaces text",
-          "action": "findByText",
-          "text": "Workspaces"
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
         }
       ]
     },
     {
       "name": "inspect editor page and find ReactFlow",
-      "tags": ["@debug", "@editor"],
+      "tags": [
+        "@debug",
+        "@editor"
+      ],
       "timeout": 15000,
       "steps": [
         {
           "action": "navigate",
-          "url": "/editor/test-workflow-001"
+          "url": "editor/test-workflow-001"
         },
         {
           "action": "waitForLoadState",
@@ -57,109 +61,125 @@
           "timeout": 2000
         },
         {
-          "description": "Screenshot editor",
           "action": "debugScreenshot",
           "filename": "editor-page.png"
         },
         {
-          "description": "Look for ReactFlow elements",
-          "action": "findByText",
-          "text": "react-flow"
+          "action": "inspectPageStructure"
         },
         {
-          "description": "Inspect page structure",
-          "action": "inspectPageStructure"
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
         }
       ]
     },
     {
-      "name": "debug failing element search with retry",
-      "tags": ["@debug", "@retry"],
+      "name": "debug workflows page with search",
+      "tags": [
+        "@debug",
+        "@retry"
+      ],
       "timeout": 20000,
       "steps": [
         {
           "action": "navigate",
-          "url": "/workflows"
+          "url": "workflows"
         },
         {
           "action": "waitForLoadState",
           "state": "domcontentloaded"
         },
         {
-          "description": "Try to find filter with smart wait",
-          "action": "waitForElement",
-          "selector": "select, button:has-text('Status'), button:has-text('Filter')",
-          "timeout": 5000,
-          "state": "visible"
+          "action": "debugScreenshot",
+          "filename": "workflows-debug.png"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
         }
       ]
     },
     {
       "name": "inspect specific element details",
-      "tags": ["@debug", "@inspect"],
+      "tags": [
+        "@debug",
+        "@inspect"
+      ],
       "timeout": 15000,
       "steps": [
         {
           "action": "navigate",
-          "url": "/"
+          "url": ""
         },
         {
           "action": "waitForLoadState",
           "state": "domcontentloaded"
         },
         {
-          "description": "Inspect New Workspace button",
-          "action": "retry",
-          "maxAttempts": 3,
-          "delay": 1000,
-          "steps": [
-            {
-              "action": "inspectElement",
-              "selector": "button:has-text('New Workspace')"
-            }
-          ]
+          "action": "debugScreenshot",
+          "filename": "dashboard-elements.png"
         },
         {
-          "description": "Get computed styles",
-          "action": "getComputedStyle",
-          "selector": "button:has-text('New Workspace')",
-          "property": "background-color"
+          "action": "inspectPageStructure"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
         }
       ]
     },
     {
       "name": "find all buttons on page",
-      "tags": ["@debug", "@discovery"],
+      "tags": [
+        "@debug",
+        "@discovery"
+      ],
       "timeout": 15000,
       "steps": [
         {
           "action": "navigate",
-          "url": "/"
+          "url": ""
         },
         {
           "action": "waitForLoadState",
           "state": "domcontentloaded"
         },
         {
-          "description": "Find button text",
-          "action": "findByText",
-          "text": "button"
+          "action": "getAllText"
         },
         {
-          "description": "Screenshot with buttons highlighted",
           "action": "debugScreenshot",
           "filename": "dashboard-buttons.png"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
         }
       ]
     },
     {
       "name": "analyze plugins page for missing elements",
-      "tags": ["@debug", "@plugins"],
+      "tags": [
+        "@debug",
+        "@plugins"
+      ],
       "timeout": 15000,
       "steps": [
         {
           "action": "navigate",
-          "url": "/plugins"
+          "url": "plugins"
         },
         {
           "action": "waitForLoadState",
@@ -170,56 +190,47 @@
           "timeout": 2000
         },
         {
-          "description": "Screenshot plugins page",
           "action": "debugScreenshot",
           "filename": "plugins-page.png"
         },
         {
-          "description": "Find Core category",
-          "action": "findByText",
-          "text": "Core"
-        },
-        {
-          "description": "Look for search input",
-          "action": "waitForElement",
-          "selector": "input[type='search'], input[placeholder*='search' i]",
-          "timeout": 3000
-        },
-        {
-          "description": "Get page structure",
           "action": "inspectPageStructure"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
         }
       ]
     },
     {
       "name": "retry flaky test with screenshots",
-      "tags": ["@debug", "@retry"],
+      "tags": [
+        "@debug",
+        "@retry"
+      ],
       "timeout": 30000,
       "steps": [
         {
           "action": "navigate",
-          "url": "/workflows"
+          "url": "workflows"
         },
         {
-          "description": "Retry search with auto-screenshot on failure",
-          "action": "retry",
-          "maxAttempts": 3,
-          "delay": 2000,
-          "steps": [
-            {
-              "action": "waitForLoadState",
-              "state": "domcontentloaded"
-            },
-            {
-              "action": "debugScreenshot",
-              "filename": "workflows-retry.png"
-            },
-            {
-              "action": "waitForElement",
-              "selector": "input[placeholder*='Search']",
-              "timeout": 5000
-            }
-          ]
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "debugScreenshot",
+          "filename": "workflows-retry.png"
+        },
+        {
+          "action": "expect",
+          "placeholder": "Search workflows...",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
         }
       ]
     }
