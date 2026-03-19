@@ -1,12 +1,18 @@
 {
   "project": {
-    "name": "dbal_qml",
+    "name": "metabuilder_qt6",
     "version": "0.1",
-    "executable": "dbal-qml"
+    "executable": "metabuilder-qt6"
   },
   "qt": {
     "version": "6.7.3",
-    "components": ["Core", "Gui", "Quick", "Qml", "Network"]
+    "components": [
+      "Core",
+      "Gui",
+      "Quick",
+      "Qml",
+      "Network"
+    ]
   },
   "cpp": {
     "standard": 20
