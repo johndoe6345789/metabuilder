@@ -92,12 +92,20 @@ Rectangle {
             }
         }
 
-        // Quick login credentials
+        // Quick login credentials — visible until project matures
         CText {
-            text: "Quick Access"
+            text: "Dev Credentials"
             font.pixelSize: 14
             font.weight: Font.DemiBold
             color: Theme.textSecondary
+            Layout.fillWidth: true
+            horizontalAlignment: Text.AlignHCenter
+        }
+        CText {
+            text: "Click any card below to sign in instantly"
+            font.pixelSize: 12
+            color: Theme.textSecondary
+            opacity: isDark ? 0.5 : 0.6
             Layout.fillWidth: true
             horizontalAlignment: Text.AlignHCenter
         }
