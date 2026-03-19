@@ -59,7 +59,8 @@ Item {
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.top: parent.top
                 anchors.topMargin: 4
-                color: timelineItem.dotVariant === "filled" ? timelineItem.dotColor : "transparent"
+                color: timelineItem.dotVariant === "filled"
+                    ? timelineItem.dotColor : "transparent"
                 border.width: timelineItem.dotVariant === "outlined" ? 2 : 0
                 border.color: timelineItem.dotColor
             }

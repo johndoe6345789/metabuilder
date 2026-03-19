@@ -146,7 +146,9 @@ Item {
     function updateTime() {
         var hours = hoursSpinner.value
         if (timePicker.ampm) {
-            var isPM = (ampmCombo ? ampmCombo.currentIndex === 1 : timePicker.value.getHours() >= 12)
+            var isPM = (ampmCombo
+                ? ampmCombo.currentIndex === 1
+                : timePicker.value.getHours() >= 12)
             if (isPM && hours < 12) hours += 12
             if (!isPM && hours === 12) hours = 0
         }

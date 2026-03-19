@@ -29,7 +29,8 @@ Popup {
         { id: "ocean", name: "Ocean", icon: "🌊", color: "#0ea5e9" },
         { id: "sunset", name: "Sunset", icon: "🌅", color: "#f97316" },
         { id: "rose", name: "Rose", icon: "🌹", color: "#f43f5e" },
-        { id: "highContrast", name: "High Contrast", icon: "🔳", color: "#ffff00" },
+        { id: "highContrast", name: "High Contrast", icon: "🔳",
+            color: "#ffff00" },
     ]
     
     background: Rectangle {
@@ -61,7 +62,10 @@ Popup {
                 highlighted: modelData.id === popup.currentTheme
                 
                 background: Rectangle {
-                    color: parent.highlighted ? (themeColors.accent || "#10a37f") : (parent.hovered ? (themeColors.alternateBase || "#242424") : "transparent")
+                    color: parent.highlighted ? (themeColors.accent ||
+                        "#10a37f") : (parent.hovered
+                            ? (themeColors.alternateBase || "#242424")
+                            : "transparent")
                     radius: 4
                 }
                 
@@ -85,7 +89,8 @@ Popup {
                     
                     Label {
                         text: modelData.name
-                        color: parent.parent.highlighted ? "#ffffff" : (themeColors.windowText || "#ffffff")
+                        color: parent.parent.highlighted
+                            ? "#ffffff" : (themeColors.windowText || "#ffffff")
                         Layout.fillWidth: true
                     }
                     

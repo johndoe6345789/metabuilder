@@ -10,7 +10,8 @@ Rectangle {
     property int selectedWorkflowIndex: -1
 
     signal workflowSelected(int index)
-    signal nodeDoubleClicked(string nodeType, real canvasCenterX, real canvasCenterY)
+    signal nodeDoubleClicked(string nodeType, real canvasCenterX,
+        real canvasCenterY)
 
     // Pass canvas dimensions so parent can compute center
     property real canvasWidth: 800
@@ -36,7 +37,8 @@ Rectangle {
             CText { variant: "h4"; text: "Workflows" }
             CText { variant: "caption"; text: workflows.length + " registered" }
 
-            CDivider { Layout.fillWidth: true; Layout.topMargin: 4; Layout.bottomMargin: 4 }
+            CDivider { Layout.fillWidth: true; Layout.topMargin: 4
+            Layout.bottomMargin: 4 }
 
             ListView {
                 Layout.fillWidth: true
@@ -47,7 +49,8 @@ Rectangle {
                 delegate: CListItem {
                     width: parent ? parent.width : 200
                     title: workflows[index].name
-                    subtitle: (workflows[index].nodes ? workflows[index].nodes.length : 0) + " nodes"
+                    subtitle: (workflows[index].nodes
+                        ? workflows[index].nodes.length : 0) + " nodes"
                     selected: root.selectedWorkflowIndex === index
                     onClicked: root.workflowSelected(index)
 

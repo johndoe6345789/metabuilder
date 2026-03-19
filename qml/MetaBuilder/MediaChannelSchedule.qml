@@ -20,9 +20,10 @@ ColumnLayout {
     FlexRow {
         Layout.fillWidth: true
         spacing: 8
-        CText { variant: "caption"; text: "Time";     Layout.preferredWidth: 80 }
+        CText { variant: "caption"; text: "Time"; Layout.preferredWidth: 80 }
         CText { variant: "caption"; text: "Program";  Layout.fillWidth: true }
-        CText { variant: "caption"; text: "Duration"; Layout.preferredWidth: 80 }
+        CText { variant: "caption"; text: "Duration"
+        Layout.preferredWidth: 80 }
     }
 
     CDivider { Layout.fillWidth: true }

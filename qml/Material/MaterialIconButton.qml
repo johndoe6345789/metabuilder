@@ -13,7 +13,8 @@ Rectangle {
     width: 48
     height: 48
     radius: width / 2
-    color: iconButton.hovered && !disabled ? MaterialPalette.surfaceVariant : MaterialPalette.surface
+    color: iconButton.hovered && !disabled
+        ? MaterialPalette.surfaceVariant : MaterialPalette.surface
     border.color: MaterialPalette.outline
     border.width: 1
 

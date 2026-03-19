@@ -40,7 +40,8 @@ Rectangle {
 
                 ColumnLayout {
                     id: guideIntroCol
-                    anchors { left: parent.left; right: parent.right; top: parent.top; margins: 24 }
+                    anchors { left: parent.left; right: parent.right
+                    top: parent.top; margins: 24 }
                     spacing: 16
                     CText {
                         text: "Builder Quick Reference"
@@ -98,7 +99,8 @@ Rectangle {
 
                 ColumnLayout {
                     id: configSummaryCol
-                    anchors { left: parent.left; right: parent.right; top: parent.top; margins: 24 }
+                    anchors { left: parent.left; right: parent.right
+                    top: parent.top; margins: 24 }
                     spacing: 16
                     CText {
                         text: "Current Configuration"

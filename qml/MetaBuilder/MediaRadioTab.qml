@@ -31,7 +31,9 @@ Rectangle {
                     spacing: 8
 
                     CText { variant: "h4"; text: "Radio Channels" }
-                    CText { variant: "caption"; text: radioChannels.length + " channels"; color: Theme.textSecondary }
+                    CText { variant: "caption"
+                    text: radioChannels.length + " channels"
+                    color: Theme.textSecondary }
                 }
 
                 CDivider { Layout.fillWidth: true }

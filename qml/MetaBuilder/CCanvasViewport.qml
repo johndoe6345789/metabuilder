@@ -22,7 +22,8 @@ Flickable {
 
     signal nodeSelected(string id)
     signal nodeMoved(string id, real x, real y)
-    signal connectionDragStarted(string nodeId, string portName, bool isOutput, real portX, real portY)
+    signal connectionDragStarted(string nodeId, string portName, bool isOutput,
+        real portX, real portY)
     signal connectionCompleted(string nodeId, string portName)
     signal connectionDragUpdated(real x, real y)
     signal connectionDragFinished()
@@ -70,8 +71,10 @@ Flickable {
                 canvasContentItem: contentItem
                 onNodeSelected: function(id) { canvas.nodeSelected(id) }
                 onNodeMoved: function(id, x, y) { canvas.nodeMoved(id, x, y) }
-                onConnectionDragStarted: function(nId, p, o, pX, pY) { canvas.connectionDragStarted(nId, p, o, pX, pY) }
-                onConnectionCompleted: function(nId, p) { canvas.connectionCompleted(nId, p) }
+                onConnectionDragStarted: function(nId, p, o, pX,
+                    pY) { canvas.connectionDragStarted(nId, p, o, pX, pY) }
+                onConnectionCompleted: function(nId,
+                    p) { canvas.connectionCompleted(nId, p) }
                 onPaintRequested: connLayer.requestPaint()
             }
         }
@@ -79,7 +82,8 @@ Flickable {
         CCanvasInteractionArea {
             anchors.fill: parent
             drawingConnection: canvas.drawingConnection
-            onConnectionDragUpdated: function(x, y) { canvas.connectionDragUpdated(x, y) }
+            onConnectionDragUpdated: function(x,
+                y) { canvas.connectionDragUpdated(x, y) }
             onConnectionDragFinished: canvas.connectionDragFinished()
             onCanvasClicked: canvas.canvasClicked()
             onZoomRequested: function(d) { canvas.zoomRequested(d) }

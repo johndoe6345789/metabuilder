@@ -24,7 +24,9 @@ CCard {
         CText {
             Layout.alignment: Qt.AlignHCenter
             variant: "h4"
-            text: filterLabel === "All" ? "No notifications" : "No " + filterLabel.toLowerCase() + " notifications"
+            text: filterLabel === "All"
+                ? "No notifications"
+                : "No " + filterLabel.toLowerCase() + " notifications"
         }
 
         CText {

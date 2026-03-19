@@ -21,7 +21,8 @@ Rectangle {
     property string padding: "none"    // none, xs, sm, md, lg, xl or number
     property string paddingX: ""       // Horizontal padding override
     property string paddingY: ""       // Vertical padding override
-    property string background: "transparent"  // transparent, paper, surface, elevated, primary, or color
+    // transparent, paper, surface, elevated, primary, or color
+    property string background: "transparent"
     property string radius: "none"     // none, sm, md, lg, full or number
     property string borderColor: ""    // Border color (empty = no border)
     property int borderWidth: 1

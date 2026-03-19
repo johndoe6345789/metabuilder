@@ -27,7 +27,7 @@ Rectangle {
 
     default property alias cardContent: contentColumn.data
 
-    // ── MD3 surface tints ─────────────────
+    // ── MD3 surface tints ──────────────
     readonly property bool isDark: Theme.mode === "dark"
 
     readonly property color surfaceContainer:
@@ -39,7 +39,7 @@ Rectangle {
             ? Qt.rgba(1, 1, 1, 0.08)
             : Qt.rgba(0.31, 0.31, 0.44, 0.10)
 
-    // ── Geometry ─────────────────────────
+    // Geometry
     radius: 12
     clip: true
     implicitWidth: 300
@@ -54,7 +54,7 @@ Rectangle {
         }
     }
 
-    // ── Border ──────────────────────────
+    // Border
     border.width: variant === "elevated" ? 0 : 1
     border.color: {
         if ((hoverable || clickable)
@@ -81,7 +81,7 @@ Rectangle {
         }
     }
 
-    // ── Hover overlay ────────────────────
+    // Hover overlay
     Rectangle {
         anchors.fill: parent
         radius: parent.radius
@@ -101,7 +101,7 @@ Rectangle {
         }
     }
 
-    // ── Elevation (shadow) ────────────────
+    // ── Elevation (shadow) ──────────────
     layer.enabled: elevated
         || variant === "elevated"
     layer.effect: MultiEffect {
@@ -114,7 +114,7 @@ Rectangle {
             StyleVariables.shadowMd.offset
     }
 
-    // ── Interaction ─────────────────────
+    // Interaction
     MouseArea {
         id: mouseArea
         anchors.fill: parent

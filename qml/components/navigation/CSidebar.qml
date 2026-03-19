@@ -65,7 +65,9 @@ Rectangle {
                 x: 8
                 height: 40
                 radius: 8
-                color: sidebar.currentIndex === index ? "#1a3a5c" : (itemMouse.containsMouse ? "#2d2d2d" : "transparent")
+                color: sidebar.currentIndex === index
+                    ? "#1a3a5c"
+                    : (itemMouse.containsMouse ? "#2d2d2d" : "transparent")
                 
                 Behavior on color { ColorAnimation { duration: 150 } }
                 
@@ -85,8 +87,10 @@ Rectangle {
                         Layout.fillWidth: true
                         text: modelData.label || modelData
                         font.pixelSize: 14
-                        font.weight: sidebar.currentIndex === index ? Font.Medium : Font.Normal
-                        color: sidebar.currentIndex === index ? "#ffffff" : "#b0b0b0"
+                        font.weight: sidebar.currentIndex === index
+                            ? Font.Medium : Font.Normal
+                        color: sidebar.currentIndex === index
+                            ? "#ffffff" : "#b0b0b0"
                     }
                 }
                 

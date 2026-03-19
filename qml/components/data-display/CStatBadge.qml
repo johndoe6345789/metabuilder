@@ -14,16 +14,21 @@ Rectangle {
     property string label: ""
     property string value: ""
     property string icon: ""
-    property string variant: "default" // default, primary, success, warning, error
+    // default, primary, success, warning, error
+    property string variant: "default"
     property string size: "md" // sm, md, lg
 
     // MD3 tonal surface container colors
     readonly property color _bgColor: {
         switch (variant) {
-            case "primary": return Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12)
-            case "success": return Qt.rgba(Theme.success.r, Theme.success.g, Theme.success.b, 0.12)
-            case "warning": return Qt.rgba(Theme.warning.r, Theme.warning.g, Theme.warning.b, 0.12)
-            case "error":   return Qt.rgba(Theme.error.r, Theme.error.g, Theme.error.b, 0.12)
+            case "primary": return
+                Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12)
+            case "success": return
+                Qt.rgba(Theme.success.r, Theme.success.g, Theme.success.b, 0.12)
+            case "warning": return
+                Qt.rgba(Theme.warning.r, Theme.warning.g, Theme.warning.b, 0.12)
+            case "error":   return
+                Qt.rgba(Theme.error.r, Theme.error.g, Theme.error.b, 0.12)
             default:        return Theme.surfaceVariant
         }
     }
@@ -48,9 +53,12 @@ Rectangle {
 
     // Size config
     readonly property var _sizes: ({
-        sm: { padding: 12, valueSize: 20, labelSize: 11, iconSize: 20, spacing: 2 },
-        md: { padding: 16, valueSize: 28, labelSize: 13, iconSize: 28, spacing: 4 },
-        lg: { padding: 20, valueSize: 36, labelSize: 15, iconSize: 36, spacing: 6 }
+        sm: { padding: 12, valueSize: 20, labelSize: 11, iconSize: 20,
+            spacing: 2 },
+        md: { padding: 16, valueSize: 28, labelSize: 13, iconSize: 28,
+            spacing: 4 },
+        lg: { padding: 20, valueSize: 36, labelSize: 15, iconSize: 36,
+            spacing: 6 }
     })
 
     readonly property var _config: _sizes[size] || _sizes.md

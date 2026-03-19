@@ -35,7 +35,8 @@ CDialog {
             Layout.fillWidth: true; spacing: 4
             CTextField {
                 Layout.fillWidth: true; label: "Password"
-                placeholderText: root.isEdit ? "Leave blank to keep current" : "Enter password"
+                placeholderText: root.isEdit
+                    ? "Leave blank to keep current" : "Enter password"
                 text: root.formPassword; echoMode: TextInput.Password
                 onTextChanged: root.formPassword = text
             }
@@ -77,7 +78,8 @@ CDialog {
                 variant: "primary"
                 enabled: root.isEdit
                     ? root.formUsername !== "" && root.formEmail !== ""
-                    : root.formUsername !== "" && root.formEmail !== "" && root.formPassword !== ""
+                    : root.formUsername !== "" &&
+                        root.formEmail !== "" && root.formPassword !== ""
                 onClicked: root.accepted()
             }
         }

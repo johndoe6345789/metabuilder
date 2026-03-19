@@ -10,10 +10,12 @@ Rectangle {
     property color accent: "#6366F1"
     property bool isDark: false
 
-    readonly property color surfaceContainerHigh: isDark ? Qt.rgba(1, 1, 1, 0.08) : Qt.rgba(0.31, 0.31, 0.44, 0.10)
+    readonly property color surfaceContainerHigh: isDark
+        ? Qt.rgba(1, 1, 1, 0.08) : Qt.rgba(0.31, 0.31, 0.44, 0.10)
     readonly property color onSurface: Theme.text
     readonly property color onSurfaceVariant: Theme.textSecondary
-    readonly property color outlineVariant: isDark ? Qt.rgba(1, 1, 1, 0.06) : Qt.rgba(0, 0, 0, 0.08)
+    readonly property color outlineVariant: isDark
+        ? Qt.rgba(1, 1, 1, 0.06) : Qt.rgba(0, 0, 0, 0.08)
 
     implicitHeight: 72
     radius: 12

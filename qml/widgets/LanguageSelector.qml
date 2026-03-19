@@ -79,7 +79,9 @@ Popup {
                 highlighted: modelData.id === popup.currentLanguage
                 
                 background: Rectangle {
-                    color: parent.highlighted ? colors.accent : (parent.hovered ? colors.hover : "transparent")
+                    color: parent.highlighted
+                        ? colors.accent
+                        : (parent.hovered ? colors.hover : "transparent")
                     radius: 4
                 }
                 

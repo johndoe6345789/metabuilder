@@ -4,7 +4,8 @@ function loadJsonSync(path) {
     var xhr = new XMLHttpRequest();
     xhr.open("GET", Qt.resolvedUrl(path), false);
     xhr.send();
-    if (xhr.status === 200 || xhr.status === 0) return JSON.parse(xhr.responseText);
+    if (xhr.status === 200 ||
+        xhr.status === 0) return JSON.parse(xhr.responseText);
     console.warn("Failed to load JSON:", path, xhr.status);
     return null;
 }
@@ -18,7 +19,8 @@ function filterGodUsers(items) {
     return gods;
 }
 
-function processTransferAction(pendingTransfers, transferHistory, index, status) {
+function processTransferAction(pendingTransfers, transferHistory, index,
+    status) {
     var entry = {
         from: pendingTransfers[index].from,
         to: pendingTransfers[index].to,

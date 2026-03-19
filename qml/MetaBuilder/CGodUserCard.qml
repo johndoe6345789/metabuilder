@@ -26,18 +26,21 @@ CCard {
             FlexRow {
                 spacing: 8
                 CText { variant: "subtitle1"; text: root.user.username }
-                CBadge { text: "L" + root.user.level; badgeColor: Theme.primary }
+                CBadge { text: "L" + root.user.level
+                badgeColor: Theme.primary }
                 CBadge { text: root.user.role; badgeColor: Theme.secondary }
             }
 
             FlexRow {
                 spacing: 8
-                CText { variant: "caption"; text: "Tenant: " + root.user.tenant; color: Theme.textSecondary }
+                CText { variant: "caption"; text: "Tenant: " + root.user.tenant
+                color: Theme.textSecondary }
             }
         }
 
         CStatusBadge {
-            status: root.user.status === "online" ? "success" : root.user.status === "away" ? "warning" : "error"
+            status: root.user.status === "online"
+                ? "success" : root.user.status === "away" ? "warning" : "error"
             text: root.user.status
         }
 

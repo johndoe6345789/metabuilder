@@ -18,10 +18,12 @@ CCard {
         Layout.fillWidth: true
         spacing: 10
 
-        CText { variant: "subtitle1"; text: root.transfer.from + " -> " + root.transfer.to }
+        CText { variant: "subtitle1"
+        text: root.transfer.from + " -> " + root.transfer.to }
         CStatusBadge { status: "warning"; text: "Pending" }
         Item { Layout.fillWidth: true }
-        CText { variant: "caption"; text: "Expires: " + root.transfer.expiry; color: Theme.textSecondary }
+        CText { variant: "caption"; text: "Expires: " + root.transfer.expiry
+        color: Theme.textSecondary }
     }
 
     CText {

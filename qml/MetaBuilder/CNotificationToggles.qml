@@ -39,7 +39,8 @@ ColumnLayout {
                     Layout.fillWidth: true
                     spacing: 2
                     CText { variant: "subtitle2"; text: modelData.title }
-                    CText { variant: "caption"; text: modelData.description; opacity: 0.6 }
+                    CText { variant: "caption"; text: modelData.description
+                    opacity: 0.6 }
                 }
 
                 CSwitch {

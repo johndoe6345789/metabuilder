@@ -78,11 +78,15 @@ CCard {
                 propValue: modelData.value
                 isFirst: index === 0
                 suggestions: root.propertySuggestions
-                suggestionsShown: root.showSuggestions && root.editingPropertyIndex === index
-                onPropNameEdited: function(name) { root.propertyNameChanged(index, name) }
-                onPropValueEdited: function(value) { root.propertyValueChanged(index, value) }
+                suggestionsShown: root.showSuggestions &&
+                    root.editingPropertyIndex === index
+                onPropNameEdited: function(
+                    name) { root.propertyNameChanged(index, name) }
+                onPropValueEdited: function(
+                    value) { root.propertyValueChanged(index, value) }
                 onRemoveClicked: root.removePropertyClicked(index)
-                onFocusGained: { root.editingPropertyIndex = index; root.showSuggestions = true }
+                onFocusGained: { root.editingPropertyIndex = index
+                root.showSuggestions = true }
                 onFocusLost: suggestHideTimer.start()
                 onSuggestionPicked: function(value) {
                     root.propertyNameChanged(root.editingPropertyIndex, value)

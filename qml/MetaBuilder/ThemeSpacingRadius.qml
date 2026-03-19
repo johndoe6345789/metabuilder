@@ -21,7 +21,8 @@ ColumnLayout {
     ThemeSpacingEditor {
         Layout.fillWidth: true
         baseSpacing: spacingRadiusRoot.baseSpacing
-        onBaseSpacingEdited: function(value) { spacingRadiusRoot.baseSpacingEdited(value) }
+        onBaseSpacingEdited: function(
+            value) { spacingRadiusRoot.baseSpacingEdited(value) }
     }
 
     ThemeRadiusEditor {
@@ -29,8 +30,11 @@ ColumnLayout {
         radiusSmall: spacingRadiusRoot.radiusSmall
         radiusMedium: spacingRadiusRoot.radiusMedium
         radiusLarge: spacingRadiusRoot.radiusLarge
-        onRadiusSmallEdited: function(value) { spacingRadiusRoot.radiusSmallEdited(value) }
-        onRadiusMediumEdited: function(value) { spacingRadiusRoot.radiusMediumEdited(value) }
-        onRadiusLargeEdited: function(value) { spacingRadiusRoot.radiusLargeEdited(value) }
+        onRadiusSmallEdited: function(
+            value) { spacingRadiusRoot.radiusSmallEdited(value) }
+        onRadiusMediumEdited: function(
+            value) { spacingRadiusRoot.radiusMediumEdited(value) }
+        onRadiusLargeEdited: function(
+            value) { spacingRadiusRoot.radiusLargeEdited(value) }
     }
 }

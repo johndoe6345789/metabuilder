@@ -70,11 +70,13 @@ ColumnLayout {
         Item { Layout.fillWidth: true }
 
         CBadge {
-            text: (root.dropdown && root.dropdown.required ? "Required" : "Optional")
+            text: (root.dropdown && root.dropdown.required
+                ? "Required" : "Optional")
             accent: root.dropdown ? root.dropdown.required : false
         }
         CBadge {
-            text: (root.dropdown && root.dropdown.allowCustom ? "Custom allowed" : "Fixed options")
+            text: (root.dropdown && root.dropdown.allowCustom
+                ? "Custom allowed" : "Fixed options")
         }
     }
 }

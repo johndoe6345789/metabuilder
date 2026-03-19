@@ -4,7 +4,8 @@ import QtQuick.Layouts
 import QmlComponents 1.0
 
 /**
- * CTablePagination.qml - Pagination controls with page info and prev/next buttons
+ * CTablePagination.qml - Pagination controls with page info and prev/next
+ // buttons
  *
  * Usage:
  *   CTablePagination {
@@ -23,7 +24,8 @@ Rectangle {
 
     signal pageRequested(int newPage)
 
-    readonly property int _totalPages: Math.max(1, Math.ceil(totalFiltered / pageSize))
+    readonly property int _totalPages: Math.max(1,
+        Math.ceil(totalFiltered / pageSize))
 
     Layout.fillWidth: true
     height: 48

@@ -24,7 +24,8 @@ CCard {
             spacing: 8
 
             CText { variant: "h4"; text: "TV Channels" }
-            CText { variant: "caption"; text: channels.length + " channels"; color: Theme.textSecondary }
+            CText { variant: "caption"; text: channels.length + " channels"
+            color: Theme.textSecondary }
         }
 
         CDivider { Layout.fillWidth: true }

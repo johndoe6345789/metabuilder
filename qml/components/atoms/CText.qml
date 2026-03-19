@@ -17,7 +17,8 @@ Text {
     id: root
 
     property string variant: "body1"
-    property string colorVariant: "primary" // primary, secondary, disabled, error, success, warning, info, inherit
+    // primary, secondary, disabled, error, success, warning, info, inherit
+    property string colorVariant: "primary"
     property bool mono: false
     property bool truncate: false
 
@@ -69,7 +70,8 @@ Text {
         }
     }
 
-    font.capitalization: variant === "overline" ? Font.AllUppercase : Font.MixedCase
+    font.capitalization: variant === "overline"
+        ? Font.AllUppercase : Font.MixedCase
 
     font.family: mono ? Theme.fontFamilyMono : Theme.fontFamily
 

@@ -3,7 +3,8 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QmlComponents 1.0
 
-// Left sidebar with navigation header, static items, dynamic package items, Settings
+// Left sidebar with navigation header, static items, dynamic package items,
+// Settings
 Rectangle {
     id: root
 

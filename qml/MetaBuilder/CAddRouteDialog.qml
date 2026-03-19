@@ -57,7 +57,8 @@ CDialog {
             Layout.fillWidth: true
             model: root.layoutOptions
             currentIndex: root.layoutOptions.indexOf(root.newLayout)
-            onCurrentIndexChanged: root.newLayout = root.layoutOptions[currentIndex]
+            onCurrentIndexChanged: root.newLayout =
+                root.layoutOptions[currentIndex]
         }
 
         FlexRow {
@@ -78,7 +79,8 @@ CDialog {
                 variant: "primary"
                 enabled: root.newPath.length > 0 && root.newTitle.length > 0
                 onClicked: {
-                    root.addRoute(root.newPath, root.newTitle, root.newLevel, root.newLayout)
+                    root.addRoute(root.newPath, root.newTitle, root.newLevel,
+                        root.newLayout)
                     root.reset()
                     root.visible = false
                 }

@@ -81,7 +81,8 @@ Item {
                     return v
                 return "transparent"
             }
-            visible: root.propName === "color" || root.propName === "background-color"
+            visible: root.propName === "color" ||
+                root.propName === "background-color"
         }
 
         CButton {

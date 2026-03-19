@@ -99,7 +99,8 @@ Rectangle {
             width: buttonLabel.implicitWidth + Theme.spacingLg * 2
             height: 40
             radius: 20
-            color: buttonArea.containsMouse ? Qt.lighter(Theme.primary, 1.15) : Theme.primary
+            color: buttonArea.containsMouse
+                ? Qt.lighter(Theme.primary, 1.15) : Theme.primary
             visible: root.showRetry
 
             Text {

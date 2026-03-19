@@ -4,7 +4,8 @@ import QtQuick.Layouts
 import QmlComponents 1.0
 
 /**
- * CDataTable.qml - Generic data table with checkboxes, pagination, search, actions
+ * CDataTable.qml - Generic data table with checkboxes, pagination, search,
+ // actions
  */
 CCard {
     id: root
@@ -71,8 +72,10 @@ CCard {
                     root.selectedRows = newSel;
                     root.rowSelectionChanged(newSel);
                 }
-                onEditClicked: function(idx, record) { root.editClicked(idx, record) }
-                onDeleteClicked: function(idx, record) { root.deleteClicked(idx, record) }
+                onEditClicked: function(idx, record) { root.editClicked(idx,
+                    record) }
+                onDeleteClicked: function(idx, record) { root.deleteClicked(idx,
+                    record) }
             }
         }
 

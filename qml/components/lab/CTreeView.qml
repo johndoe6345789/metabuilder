@@ -90,7 +90,8 @@ Item {
             Rectangle {
                 anchors.fill: parent
                 color: modelData.isSelected ? Qt.rgba(0.1, 0.46, 0.82, 0.12) : 
-                       itemMouse.containsMouse ? Qt.rgba(0, 0, 0, 0.04) : "transparent"
+                       itemMouse.containsMouse
+                           ? Qt.rgba(0, 0, 0, 0.04) : "transparent"
                 radius: 4
             }
             
@@ -103,7 +104,9 @@ Item {
                 // Expand/collapse icon
                 Text {
                     visible: modelData.hasChildren
-                    text: modelData.isExpanded ? treeView.defaultCollapseIcon : treeView.defaultExpandIcon
+                    text: modelData.isExpanded
+                        ? treeView.defaultCollapseIcon
+                        : treeView.defaultExpandIcon
                     font.pixelSize: 10
                     color: "#666666"
                     

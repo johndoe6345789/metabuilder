@@ -89,7 +89,8 @@ QtObject {
             
             // New Prompt
             createNewTask: "Create New Task",
-            sendPromptDesc: "Send a prompt to Codex to create a new coding task",
+            sendPromptDesc:
+                "Send a prompt to Codex to create a new coding task",
             taskPrompt: "Task Prompt",
             promptPlaceholder: "Describe what you want Codex to do...",
             branch: "Branch",
@@ -102,7 +103,8 @@ QtObject {
             tip1: "Be specific about what you want Codex to implement",
             tip2: "Mention file paths if you know them",
             tip3: "Include any constraints or requirements",
-            tip4: "Use \"Best Of\" > 1 to generate multiple solutions and pick the best",
+            tip4: "Use \"Best Of\" > 1 to generate multiple solutions and pick
+                the best",
             
             // User Info
             loading: "Loading...",
@@ -111,7 +113,8 @@ QtObject {
             disconnected: "Disconnected",
             unknown: "Unknown",
             connectedDesc: "Your session is active and connected to Codex API",
-            disconnectedDesc: "Could not connect to Codex API. Please check your authentication.",
+            disconnectedDesc: "Could not connect to Codex API. Please check
+                your authentication.",
             apiBase: "API Base",
             refresh: "Refresh",
             accountInfo: "Account Information",
@@ -134,9 +137,12 @@ QtObject {
             installation: "Installation",
             quickStart: "Quick Start",
             quickStartDesc: "Here's how to get started with Codex Task Runner",
-            configDesc: "Configure your environment with the following settings",
-            gettingStartedIntro: "Welcome to Codex Task Runner! This guide will help you get started.",
-            usingUIIntro: "The UI provides an intuitive way to manage your coding tasks.",
+            configDesc:
+                "Configure your environment with the following settings",
+            gettingStartedIntro: "Welcome to Codex Task Runner! This guide will
+                help you get started.",
+            usingUIIntro:
+                "The UI provides an intuitive way to manage your coding tasks.",
             navigation: "Navigation",
             navigationDesc: "Use the drawer menu to navigate between sections:",
             navTasks: "Tasks - View and manage your coding tasks",
@@ -144,10 +150,13 @@ QtObject {
             navAccount: "Account - View your profile and connection status",
             navDocs: "Documentation - Access help and API documentation",
             taskList: "Task List",
-            taskListDesc: "Filter and browse tasks with different status filters and limits.",
-            taskDetailDesc: "View task details, turns, patches, and create pull requests.",
+            taskListDesc: "Filter and browse tasks with different status
+                filters and limits.",
+            taskDetailDesc:
+                "View task details, turns, patches, and create pull requests.",
             keyboardShortcuts: "Keyboard Shortcuts",
-            apiReferenceIntro: "Complete API reference for the Codex Task Runner backend.",
+            apiReferenceIntro:
+                "Complete API reference for the Codex Task Runner backend.",
             getTasksDesc: "List all tasks with optional filtering",
             getTaskDesc: "Get detailed information about a specific task",
             postPromptDesc: "Create a new coding task from a prompt",
@@ -157,7 +166,8 @@ QtObject {
             cliRunDesc: "Run a new task with a prompt",
             cliPollDesc: "Poll a task for status updates",
             cliPRDesc: "Create a pull request for a task",
-            authenticationIntro: "Authentication methods and security best practices.",
+            authenticationIntro:
+                "Authentication methods and security best practices.",
             apiKey: "API Key",
             apiKeyDesc: "Use an API key for server-to-server authentication",
             sessionCookie: "Session Cookie",
@@ -214,7 +224,9 @@ QtObject {
             currentTurn: "Turno Actual",
             lines: "líneas",
             createNewTask: "Crear Nueva Tarea",
-            sendPromptDesc: "Envía un prompt a Codex para crear una nueva tarea de código",
+            sendPromptDesc:
+                "Envía un prompt a Codex para "
+                + "crear una nueva tarea de código",
             taskPrompt: "Prompt de Tarea",
             promptPlaceholder: "Describe lo que quieres que Codex haga...",
             branch: "Rama",
@@ -233,8 +245,10 @@ QtObject {
             connected: "Conectado",
             disconnected: "Desconectado",
             unknown: "Desconocido",
-            connectedDesc: "Tu sesión está activa y conectada a la API de Codex",
-            disconnectedDesc: "No se pudo conectar a la API. Verifica tu autenticación.",
+            connectedDesc:
+                "Tu sesión está activa y conectada a la API de Codex",
+            disconnectedDesc:
+                "No se pudo conectar a la API. Verifica tu autenticación.",
             apiBase: "Base API",
             refresh: "Actualizar",
             accountInfo: "Información de Cuenta",

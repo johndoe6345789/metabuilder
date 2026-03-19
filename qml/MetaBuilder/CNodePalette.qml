@@ -69,7 +69,8 @@ ColumnLayout {
                 MouseArea {
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: root.selectedGroup = (root.selectedGroup === modelData) ? "" : modelData
+                    onClicked: root.selectedGroup = (
+                        root.selectedGroup === modelData) ? "" : modelData
                 }
             }
         }
@@ -86,7 +87,9 @@ ColumnLayout {
         model: {
             var nodes = root.searchText
                 ? NodeRegistry.searchNodes(root.searchText)
-                : (root.selectedGroup ? NodeRegistry.nodesByGroup(root.selectedGroup) : NodeRegistry.nodeTypes)
+                : (root.selectedGroup
+                    ? NodeRegistry.nodesByGroup(root.selectedGroup)
+                    : NodeRegistry.nodeTypes)
             return nodes
         }
 

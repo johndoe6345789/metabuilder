@@ -44,8 +44,10 @@ CCard {
         Layout.fillWidth: true
         spacing: 8
         CChip { text: root.tenantCount + " Tenants"; chipColor: Theme.primary }
-        CChip { text: root.godUserCount + " God Users"; chipColor: Theme.primary }
-        CChip { text: root.pendingTransferCount + " Pending Transfers"; chipColor: Theme.warning }
+        CChip { text: root.godUserCount + " God Users"
+        chipColor: Theme.primary }
+        CChip { text: root.pendingTransferCount + " Pending Transfers"
+        chipColor: Theme.warning }
         CChip { text: "14 DB Backends"; chipColor: Theme.info }
         CChip { text: "4 Daemons"; chipColor: Theme.success }
     }

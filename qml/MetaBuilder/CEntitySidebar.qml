@@ -35,9 +35,11 @@ Rectangle {
         spacing: 4
 
         CText { variant: "h4"; text: "Entities" }
-        CText { variant: "caption"; text: "God Panel Level 3"; color: Theme.textSecondary }
+        CText { variant: "caption"; text: "God Panel Level 3"
+        color: Theme.textSecondary }
 
-        CDivider { Layout.fillWidth: true; Layout.topMargin: 8; Layout.bottomMargin: 4 }
+        CDivider { Layout.fillWidth: true; Layout.topMargin: 8
+        Layout.bottomMargin: 4 }
 
         ListView {
             Layout.fillWidth: true

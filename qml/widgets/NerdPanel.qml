@@ -18,7 +18,8 @@ Rectangle {
         secondary: themeColors.accent || themeColors.secondary || "#69db7c",
         accent: themeColors.accent || "#ffd43b",
         text: themeColors.text || themeColors.windowText || "#ffffff",
-        textMuted: themeColors.textSecondary || themeColors.textMuted || "#888888",
+        textMuted: themeColors.textSecondary ||
+            themeColors.textMuted || "#888888",
         border: themeColors.mid || themeColors.border || "#3d3d5c",
         success: themeColors.success || "#51cf66",
         warning: themeColors.warning || "#fcc419",
@@ -77,12 +78,14 @@ Rectangle {
                 font.pixelSize: 11
                 
                 background: Rectangle {
-                    color: nerdTabs.currentIndex === 0 ? colors.surface : "transparent"
+                    color: nerdTabs.currentIndex === 0
+                        ? colors.surface : "transparent"
                     radius: 4
                 }
                 contentItem: Text {
                     text: parent.text
-                    color: nerdTabs.currentIndex === 0 ? colors.nerd : colors.textMuted
+                    color: nerdTabs.currentIndex === 0
+                        ? colors.nerd : colors.textMuted
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                 }
@@ -93,12 +96,14 @@ Rectangle {
                 font.pixelSize: 11
                 
                 background: Rectangle {
-                    color: nerdTabs.currentIndex === 1 ? colors.surface : "transparent"
+                    color: nerdTabs.currentIndex === 1
+                        ? colors.surface : "transparent"
                     radius: 4
                 }
                 contentItem: Text {
                     text: parent.text
-                    color: nerdTabs.currentIndex === 1 ? colors.nerd : colors.textMuted
+                    color: nerdTabs.currentIndex === 1
+                        ? colors.nerd : colors.textMuted
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                 }
@@ -109,12 +114,14 @@ Rectangle {
                 font.pixelSize: 11
                 
                 background: Rectangle {
-                    color: nerdTabs.currentIndex === 2 ? colors.surface : "transparent"
+                    color: nerdTabs.currentIndex === 2
+                        ? colors.surface : "transparent"
                     radius: 4
                 }
                 contentItem: Text {
                     text: parent.text
-                    color: nerdTabs.currentIndex === 2 ? colors.nerd : colors.textMuted
+                    color: nerdTabs.currentIndex === 2
+                        ? colors.nerd : colors.textMuted
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                 }
@@ -138,7 +145,8 @@ Rectangle {
                         Layout.fillWidth: true
                         
                         Label {
-                            text: logArea.text.split('\n').length - 1 + " entries"
+                            text: logArea.text.split(
+                                '\n').length - 1 + " entries"
                             color: colors.textMuted
                             font.pixelSize: 10
                         }
@@ -160,7 +168,8 @@ Rectangle {
                                 horizontalAlignment: Text.AlignHCenter
                             }
                             background: Rectangle {
-                                color: parent.hovered ? colors.surface : "transparent"
+                                color: parent.hovered
+                                    ? colors.surface : "transparent"
                                 radius: 2
                             }
                         }
@@ -177,7 +186,8 @@ Rectangle {
                                 horizontalAlignment: Text.AlignHCenter
                             }
                             background: Rectangle {
-                                color: parent.hovered ? colors.surface : "transparent"
+                                color: parent.hovered
+                                    ? colors.surface : "transparent"
                                 radius: 2
                             }
                         }
@@ -225,7 +235,8 @@ Rectangle {
                         // Session status
                         Rectangle {
                             Layout.fillWidth: true
-                            Layout.preferredHeight: sessionCol.implicitHeight + 16
+                            Layout.preferredHeight: sessionCol.implicitHeight +
+                                16
                             color: Qt.darker(colors.background, 1.2)
                             radius: 4
                             
@@ -251,8 +262,11 @@ Rectangle {
                                         radius: 4
                                         color: {
                                             try {
-                                                var info = JSON.parse(sessionInfo)
-                                                return info.has_session ? colors.success : colors.error
+                                                var info = JSON.parse(
+                                                    sessionInfo)
+                                                return info.has_session
+                                                    ? colors.success
+                                                    : colors.error
                                             } catch(e) {
                                                 return colors.error
                                             }
@@ -262,8 +276,11 @@ Rectangle {
                                     Label {
                                         text: {
                                             try {
-                                                var info = JSON.parse(sessionInfo)
-                                                return info.has_session ? "Connected" : "Not Connected"
+                                                var info = JSON.parse(
+                                                    sessionInfo)
+                                                return info.has_session
+                                                    ? "Connected"
+                                                    : "Not Connected"
                                             } catch(e) {
                                                 return "Unknown"
                                             }
@@ -277,7 +294,8 @@ Rectangle {
                                     text: {
                                         try {
                                             var info = JSON.parse(sessionInfo)
-                                            return "Cookie: " + (info.cookie_preview || "N/A")
+                                            return "Cookie: " + (
+                                                info.cookie_preview || "N/A")
                                         } catch(e) {
                                             return "Cookie: N/A"
                                         }
@@ -291,7 +309,8 @@ Rectangle {
                                     text: {
                                         try {
                                             var info = JSON.parse(sessionInfo)
-                                            return "Base URL: " + (info.base_url || "N/A")
+                                            return "Base URL: " + (
+                                                info.base_url || "N/A")
                                         } catch(e) {
                                             return "Base URL: N/A"
                                         }
@@ -355,7 +374,8 @@ Rectangle {
                                 { key: "F5", action: "Refresh Tasks" },
                                 { key: "Ctrl+T", action: "Toggle Theme" },
                                 { key: "Ctrl+`", action: "Toggle Nerd Mode" },
-                                { key: "Ctrl+Enter", action: "Send Prompt (in dialog)" },
+                                { key: "Ctrl+Enter",
+                                    action: "Send Prompt (in dialog)" },
                                 { key: "Escape", action: "Close Dialog" },
                             ]
                             
@@ -402,7 +422,18 @@ Rectangle {
                             font.family: "Menlo"
                             font.pixelSize: 10
                             color: colors.primary
-                            text: "codex tasks          # List tasks\ncodex task <id>      # Task detail\ncodex prompt \"...\"   # Create task\ncodex patch <id>     # Extract diff\ncodex yolo           # Auto-merge all\ncodex ui             # Launch this UI"
+                            text: "codex tasks"
+                                + "          # List tasks\n"
+                                + "codex task <id>"
+                                + "      # Task detail\n"
+                                + "codex prompt \"...\""
+                                + "   # Create task\n"
+                                + "codex patch <id>"
+                                + "     # Extract diff\n"
+                                + "codex yolo"
+                                + "           # Auto-merge all\n"
+                                + "codex ui"
+                                + "             # Launch this UI"
                             
                             background: Rectangle {
                                 color: Qt.darker(colors.background, 1.2)

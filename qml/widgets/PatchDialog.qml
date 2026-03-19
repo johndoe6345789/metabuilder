@@ -54,8 +54,10 @@ Dialog {
         additions = 0
         deletions = 0
         for (var i = 0; i < lines.length; i++) {
-            if (lines[i].startsWith('+') && !lines[i].startsWith('+++')) additions++
-            if (lines[i].startsWith('-') && !lines[i].startsWith('---')) deletions++
+            if (lines[i].startsWith('+') &&
+                !lines[i].startsWith('+++')) additions++
+            if (lines[i].startsWith('-') &&
+                !lines[i].startsWith('---')) deletions++
         }
         open()
     }
@@ -94,7 +96,8 @@ Dialog {
                     app.copyToClipboard(patchText)
                 }
                 background: Rectangle {
-                    color: parent.hovered ? Qt.lighter(colors.paper, 1.2) : colors.paper
+                    color: parent.hovered
+                        ? Qt.lighter(colors.paper, 1.2) : colors.paper
                     radius: 4
                     border.color: colors.border
                 }
@@ -113,7 +116,8 @@ Dialog {
                     app.copyToClipboard(patchText)
                 }
                 background: Rectangle {
-                    color: parent.hovered ? Qt.lighter(colors.paper, 1.2) : colors.paper
+                    color: parent.hovered
+                        ? Qt.lighter(colors.paper, 1.2) : colors.paper
                     radius: 4
                     border.color: colors.border
                 }

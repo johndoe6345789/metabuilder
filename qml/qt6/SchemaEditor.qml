@@ -8,8 +8,7 @@ Rectangle {
     property int selSch: 0; property int selFld: -1
     property bool createDlg: false; property bool addFldDlg: false
     property string nfName: ""; property string nfType: "string"
-    property bool nfReq: false; property string nfDef: ""
-    property string nfDesc: ""
+    property bool nfR: false; property string nfDv: ""; property string nfDc: ""
     property var schemas: SDBAL.loadJson(Qt.resolvedUrl(
         "qmllib/MetaBuilder/data/schema-mock.json"))
     property var fieldTypes: ["string","integer","number",
@@ -22,14 +21,12 @@ Rectangle {
     }
     Component.onCompleted: loadSchemas()
     function addField() {
-        var r = SDBAL.addField(schemas, selSch,
-            { name: nfName, type: nfType,
-              required: nfReq, defaultValue: nfDef,
-              description: nfDesc })
+        var f = { name: nfName, type: nfType, required: nfR,
+            defaultValue: nfDv, description: nfDc }
+        var r = SDBAL.addField(schemas, selSch, f)
         if (r) { schemas = r.schemas; selFld = r.selectedFieldIndex }
-        nfName = ""; nfType = "string"; nfReq = false
-        nfDef = ""; nfDesc = ""; addFldDlg = false
-    }
+        nfName = ""; nfType = "string"; nfR = false
+        nfDv = ""; nfDc = ""; addFldDlg = false }
     function deleteSchema() {
         var r = SDBAL.deleteSchema(schemas, selSch)
         if (r) { schemas = r.schemas; selSch = r.selectedIndex; selFld = -1 }
@@ -69,8 +66,7 @@ Rectangle {
                 Layout.preferredWidth: 280
                 Layout.fillHeight: true; visible: selFld >= 0
                 field: SDBAL.currentField(schemas, selSch, selFld)
-                fieldTypes: root.fieldTypes
-                onFieldUpdated: function(k, v) {
+                fieldTypes: root.fieldTypes; onFieldUpdated: function(k, v) {
                     schemas = SDBAL.updateField(schemas, selSch, selFld, k, v) }
             }
         }
@@ -86,19 +82,18 @@ Rectangle {
         }
     }
     CCreateSchemaDialog {
-        visible: createDlg
+        visible: createDlg; onCancelled: createDlg = false
         onCreateRequested: function(n, d) {
             var r = SDBAL.addSchema(schemas, n, d, dbal, loadSchemas)
             if (r) { schemas = r.schemas;
                 selSch = r.selectedIndex; selFld = -1 }
             createDlg = false }
-        onCancelled: createDlg = false
     }
     CAddFieldDialog {
         visible: addFldDlg; fieldTypes: root.fieldTypes
         onFieldAdded: function(f) {
-            nfName = f.name; nfType = f.type; nfReq = f.required
-            nfDef = f.defaultValue; nfDesc = f.description; addField() }
+            nfName = f.name; nfType = f.type; nfR = f.required
+            nfDv = f.defaultValue; nfDc = f.description; addField() }
         onCancelled: addFldDlg = false
     }
 }

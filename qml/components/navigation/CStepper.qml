@@ -11,7 +11,8 @@ Row {
         delegate: Rectangle {
             width: 32; height: 32; radius: 16
             color: index === root.activeIndex ? "#1976d2" : "#ddd"
-            Text { anchors.centerIn: parent; text: (index+1).toString(); color: index===root.activeIndex?"white":"black" }
+            Text { anchors.centerIn: parent; text: (index+1).toString()
+            color: index===root.activeIndex?"white":"black" }
         }
     }
 }

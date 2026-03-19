@@ -32,7 +32,8 @@ Row {
                         return Theme.primary
                     return Theme.textSecondary
                 }
-                opacity: index === root.items.length - 1 ? 1.0 : (crumbMouse.containsMouse ? 1.0 : 0.9)
+                opacity: index === root.items.length - 1
+                    ? 1.0 : (crumbMouse.containsMouse ? 1.0 : 0.9)
                 verticalAlignment: Text.AlignVCenter
 
                 Behavior on color { ColorAnimation { duration: 150 } }
@@ -41,7 +42,8 @@ Row {
                     id: crumbMouse
                     anchors.fill: parent
                     hoverEnabled: index < root.items.length - 1
-                    cursorShape: index < root.items.length - 1 ? Qt.PointingHandCursor : Qt.ArrowCursor
+                    cursorShape: index < root.items.length - 1
+                        ? Qt.PointingHandCursor : Qt.ArrowCursor
                     enabled: index < root.items.length - 1
                     onClicked: root.itemClicked(index, modelData)
                 }

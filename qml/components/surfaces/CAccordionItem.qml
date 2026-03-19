@@ -12,7 +12,7 @@ Rectangle {
     id: root
     objectName: "CAccordionItem"
 
-    // ── Public properties ───────────────────────────────────────────
+    // ── Public properties ──────────────
     property string title: ""
     property string icon: ""
     property string subtitle: ""
@@ -26,12 +26,12 @@ Rectangle {
     // Content slot
     default property alias content: contentColumn.data
 
-    // ── MD3 surface tints ───────────────────────────────────────────
+    // ── MD3 surface tints ──────────────
     readonly property bool isDark: Theme.mode === "dark"
     readonly property color surfaceContainer:
         isDark ? Qt.rgba(1, 1, 1, 0.05) : Qt.rgba(0.31, 0.31, 0.44, 0.06)
 
-    // ── Layout ──────────────────────────────────────────────────────
+    // -- Layout --
     Layout.fillWidth: true
     radius: 12
     clip: true
@@ -48,9 +48,10 @@ Rectangle {
         }
     }
 
-    Behavior on color { ColorAnimation { duration: StyleVariables.transitionFast } }
+    Behavior on color {
+        ColorAnimation { duration: StyleVariables.transitionFast } }
 
-    // ── Header ──────────────────────────────────────────────────────
+    // -- Header --
     Rectangle {
         id: headerRect
         width: parent.width
@@ -60,13 +61,15 @@ Rectangle {
             ? StyleMixins.hoverBg(root.isDark)
             : "transparent"
 
-        Behavior on color { ColorAnimation { duration: StyleVariables.transitionFast } }
+        Behavior on color {
+            ColorAnimation { duration: StyleVariables.transitionFast } }
 
         MouseArea {
             id: headerMouse
             anchors.fill: parent
             hoverEnabled: !root.disabled
-            cursorShape: root.disabled ? Qt.ForbiddenCursor : Qt.PointingHandCursor
+            cursorShape: root.disabled
+                ? Qt.ForbiddenCursor : Qt.PointingHandCursor
 
             onClicked: {
                 if (!root.disabled) {
@@ -149,7 +152,7 @@ Rectangle {
         }
     }
 
-    // ── Content area ────────────────────────────────────────────────
+    // -- Content area --
     Item {
         id: contentWrapper
         anchors.top: headerRect.bottom

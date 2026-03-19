@@ -41,10 +41,12 @@ QtObject {
     readonly property bool isMobile: windowWidth < breakpointSm
     
     // Tablet: 600px - 899px
-    readonly property bool isTablet: windowWidth >= breakpointSm && windowWidth < breakpointMd
+    readonly property bool isTablet: windowWidth >= breakpointSm &&
+        windowWidth < breakpointMd
     
     // Desktop: 900px - 1199px
-    readonly property bool isDesktop: windowWidth >= breakpointMd && windowWidth < breakpointLg
+    readonly property bool isDesktop: windowWidth >= breakpointMd &&
+        windowWidth < breakpointLg
     
     // Large: >= 1200px
     readonly property bool isLarge: windowWidth >= breakpointLg
@@ -91,7 +93,8 @@ QtObject {
 
     /**
      * Responsive column count
-     * Usage: Responsive.columns(4, 1, 2) => 4 on desktop, 2 on tablet, 1 on mobile
+     * Usage: Responsive.columns(4, 1, 2) => 4 on desktop, 2 on tablet, 1 on
+     // mobile
      */
     function columns(desktop, mobile, tablet) {
         if (isMobile) return mobile || 1
@@ -101,7 +104,8 @@ QtObject {
 
     /**
      * Responsive spacing
-     * Usage: Responsive.space(24, 8, 16) => 24 on desktop, 16 on tablet, 8 on mobile
+     * Usage: Responsive.space(24, 8, 16) => 24 on desktop, 16 on tablet, 8 on
+     // mobile
      */
     function space(desktop, mobile, tablet) {
         if (isMobile) return mobile || 8
@@ -154,7 +158,8 @@ QtObject {
 
     /**
      * Fluid value that scales with window width
-     * Usage: Responsive.fluid(16, 24) => scales from 16 at mobile to 24 at desktop
+     * Usage: Responsive.fluid(16, 24) => scales from 16 at mobile to 24 at
+     // desktop
      */
     function fluid(minValue, maxValue) {
         var ratio = (windowWidth - breakpointSm) / (breakpointLg - breakpointSm)
@@ -166,7 +171,8 @@ QtObject {
      * Container max-width based on breakpoint (like CSS container queries)
      */
     readonly property int containerMaxWidth: {
-        if (windowWidth < breakpointSm) return windowWidth - 32  // 16px padding each side
+        // 16px padding each side
+        if (windowWidth < breakpointSm) return windowWidth - 32
         if (windowWidth < breakpointMd) return breakpointSm - 48
         if (windowWidth < breakpointLg) return breakpointMd - 64
         return breakpointLg - 80

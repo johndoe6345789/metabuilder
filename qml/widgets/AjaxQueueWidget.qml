@@ -18,7 +18,8 @@ Rectangle {
         secondary: themeColors.accent || themeColors.secondary || "#69db7c",
         accent: themeColors.accent || "#ffd43b",
         text: themeColors.text || themeColors.windowText || "#ffffff",
-        textMuted: themeColors.textSecondary || themeColors.textMuted || "#888888",
+        textMuted: themeColors.textSecondary ||
+            themeColors.textMuted || "#888888",
         border: themeColors.mid || themeColors.border || "#3d3d5c",
         success: themeColors.success || "#51cf66",
         warning: themeColors.warning || "#fcc419",
@@ -29,14 +30,17 @@ Rectangle {
     visible: ajaxQueue && (ajaxQueue.visible || ajaxQueue.pending > 0)
     
     width: 320
-    height: expanded ? Math.min(400, headerHeight + listView.contentHeight + 8) : headerHeight + (ajaxQueue && ajaxQueue.total > 0 ? summaryHeight : 0)
+    height: expanded
+        ? Math.min(400, headerHeight + listView.contentHeight + 8)
+        : headerHeight + (ajaxQueue && ajaxQueue.total > 0 ? summaryHeight : 0)
     radius: 8
     color: colors.surface
     border.color: colors.border
     border.width: 1
     
     // Animation
-    Behavior on height { NumberAnimation { duration: 200; easing.type: Easing.OutQuad } }
+    Behavior on height { NumberAnimation { duration: 200
+    easing.type: Easing.OutQuad } }
     Behavior on opacity { NumberAnimation { duration: 200 } }
     
     property int headerHeight: 44
@@ -111,7 +115,8 @@ Rectangle {
                         
                         Text {
                             anchors.centerIn: parent
-                            text: ajaxQueue ? Math.min(ajaxQueue.pending, 99) : 0
+                            text: ajaxQueue
+                                ? Math.min(ajaxQueue.pending, 99) : 0
                             font.pixelSize: 10
                             font.bold: true
                             color: "#000"
@@ -192,7 +197,8 @@ Rectangle {
                     width: 24
                     height: 24
                     radius: 12
-                    color: mouseArea1.containsMouse ? "#40ffffff" : "transparent"
+                    color: mouseArea1.containsMouse
+                        ? "#40ffffff" : "transparent"
                     
                     Text {
                         anchors.centerIn: parent
@@ -215,7 +221,8 @@ Rectangle {
                     width: 24
                     height: 24
                     radius: 12
-                    color: mouseArea2.containsMouse ? "#40ffffff" : "transparent"
+                    color: mouseArea2.containsMouse
+                        ? "#40ffffff" : "transparent"
                     
                     Text {
                         anchors.centerIn: parent
@@ -247,13 +254,15 @@ Rectangle {
             color: colors.border
             visible: ajaxQueue && ajaxQueue.pending > 0
             
-            Behavior on Layout.preferredHeight { NumberAnimation { duration: 200 } }
+            Behavior on Layout.preferredHeight {
+                NumberAnimation { duration: 200 } }
             
             Rectangle {
                 anchors.left: parent.left
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
-                width: parent.width * (ajaxQueue ? (ajaxQueue.completed + ajaxQueue.failed) / Math.max(ajaxQueue.total, 1) : 0)
+                width: parent.width * (ajaxQueue ? (ajaxQueue.completed +
+                    ajaxQueue.failed) / Math.max(ajaxQueue.total, 1) : 0)
                 color: colors.primary
                 
                 Behavior on width { NumberAnimation { duration: 200 } }
@@ -273,8 +282,9 @@ Rectangle {
             delegate: Rectangle {
                 width: listView.width
                 height: 48
-                color: model.status === "error" ? Qt.darker(colors.error, 1.5) : 
-                       (delegateMouseArea.containsMouse ? Qt.lighter(colors.surface, 1.2) : colors.surface)
+                color: model.status === "error" ? Qt.darker(colors.error, 1.5) :
+                       (delegateMouseArea.containsMouse
+                           ? Qt.lighter(colors.surface, 1.2) : colors.surface)
                 opacity: model.status === "pending" ? 1.0 : 0.7
                 
                 MouseArea {
@@ -336,7 +346,8 @@ Rectangle {
                                 Text {
                                     id: progressText
                                     anchors.centerIn: parent
-                                    text: model.progressCurrent + "/" + model.progressTotal
+                                    text: model.progressCurrent + "/" +
+                                        model.progressTotal
                                     font.pixelSize: 9
                                     color: colors.textMuted
                                 }
@@ -397,7 +408,8 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
                 text: {
                     if (!ajaxQueue || ajaxQueue.total === 0) return ""
-                    var label = ajaxQueue.model && ajaxQueue.model.rowCount() > 0 ? 
+                    var label = ajaxQueue.model &&
+                        ajaxQueue.model.rowCount() > 0 ?
                                 "Processing..." : "Idle"
                     if (ajaxQueue.pending > 1) {
                         label += " (+" + (ajaxQueue.pending - 1) + " more)"

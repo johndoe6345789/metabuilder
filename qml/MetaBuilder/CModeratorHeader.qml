@@ -27,7 +27,8 @@ ColumnLayout {
             width: lvl.implicitWidth + 16
             height: 24
             radius: 12
-            color: Qt.rgba(root.accentCyan.r, root.accentCyan.g, root.accentCyan.b, 0.15)
+            color: Qt.rgba(root.accentCyan.r, root.accentCyan.g,
+                root.accentCyan.b, 0.15)
             CText {
                 id: lvl
                 anchors.centerIn: parent
@@ -41,7 +42,8 @@ ColumnLayout {
     }
 
     CText {
-        text: "Manage reports, moderate content, and keep the community healthy."
+        text:
+            "Manage reports, moderate content, and keep the community healthy."
         color: root.onSurfaceVariant
     }
 }

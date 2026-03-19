@@ -16,7 +16,8 @@ Rectangle {
 
     signal login(string username, string password)
 
-    readonly property color surfaceContainerHigh: isDark ? Qt.rgba(1, 1, 1, 0.08) : Qt.rgba(0.31, 0.31, 0.44, 0.10)
+    readonly property color surfaceContainerHigh: isDark
+        ? Qt.rgba(1, 1, 1, 0.08) : Qt.rgba(0.31, 0.31, 0.44, 0.10)
 
     implicitHeight: formCol.implicitHeight + 48
     radius: 16

@@ -4,8 +4,10 @@ import QtQuick.Layouts
 
 Rectangle {
     id: hero
-    property string headline: "Build entire stacks visually, from public sites to secure admin panels."
-    property string subhead: "MetaBuilder layers marketing, observability, and runtime tooling into a single declarative canvas."
+    property string headline: "Build entire stacks visually,
+        from public sites to secure admin panels."
+    property string subhead: "MetaBuilder layers marketing, observability,
+        and runtime tooling into a single declarative canvas."
     signal primaryAction()
     signal secondaryAction()
 

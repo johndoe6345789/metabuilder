@@ -61,7 +61,8 @@ Rectangle {
             color: Qt.alpha(customError, 0.15)
             Text {
                 anchors.centerIn: parent; text: "1 alert"
-                font.pixelSize: baseFontSize - 4; font.family: fontFamily; color: customError
+                font.pixelSize: baseFontSize - 4; font.family: fontFamily
+                color: customError
             }
         }
 
@@ -70,7 +71,8 @@ Rectangle {
             color: Qt.alpha(customInfo, 0.15)
             Text {
                 anchors.centerIn: parent; text: "3 notifications"
-                font.pixelSize: baseFontSize - 4; font.family: fontFamily; color: customInfo
+                font.pixelSize: baseFontSize - 4; font.family: fontFamily
+                color: customInfo
             }
         }
     }

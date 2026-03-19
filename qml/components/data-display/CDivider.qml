@@ -9,7 +9,8 @@ import QmlComponents 1.0
  *   CDivider {}                                       // Full-width horizontal
  *   CDivider { variant: "inset" }                     // 16px left inset
  *   CDivider { orientation: "vertical" }              // Vertical divider
- *   CDivider { text: "OR" }                           // Divider with centered text
+ *   CDivider { text: "OR" }                           // Divider with centered
+ // text
  */
 Item {
     id: root
@@ -31,13 +32,15 @@ Item {
     Row {
         visible: root.orientation === "horizontal"
         anchors.fill: parent
-        anchors.leftMargin: root.variant === "inset" ? root.inset : (root.variant === "middle" ? root.inset : 0)
+        anchors.leftMargin: root.variant === "inset"
+            ? root.inset : (root.variant === "middle" ? root.inset : 0)
         anchors.rightMargin: root.variant === "middle" ? root.inset : 0
         spacing: root.text ? StyleVariables.spacingMd : 0
 
         // Left line
         Rectangle {
-            width: root.text ? (parent.width - textLabel.width - StyleVariables.spacingMd * 2) / 2 : parent.width
+            width: root.text ? (parent.width - textLabel.width -
+                StyleVariables.spacingMd * 2) / 2 : parent.width
             height: 1
             anchors.verticalCenter: parent.verticalCenter
             color: root._lineColor
@@ -58,7 +61,8 @@ Item {
         // Right line
         Rectangle {
             visible: root.text !== ""
-            width: (parent.width - textLabel.width - StyleVariables.spacingMd * 2) / 2
+            width: (parent.width - textLabel.width - StyleVariables.spacingMd *
+                2) / 2
             height: 1
             anchors.verticalCenter: parent.verticalCenter
             color: root._lineColor

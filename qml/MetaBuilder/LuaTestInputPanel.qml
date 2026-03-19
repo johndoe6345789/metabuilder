@@ -33,13 +33,15 @@ ColumnLayout {
 
                     CText {
                         variant: "caption"
-                        text: params[index].name + " (" + params[index].type + ")"
+                        text: params[index].name + " (
+                            " + params[index].type + ")"
                     }
                     CTextField {
                         Layout.fillWidth: true
                         placeholderText: "Enter " + params[index].name + "..."
                         text: params[index].value || ""
-                        onTextChanged: testInputPanel.paramValueChanged(index, text)
+                        onTextChanged: testInputPanel.paramValueChanged(index,
+                            text)
                     }
                 }
             }
@@ -53,7 +55,8 @@ ColumnLayout {
         onClicked: {
             var args = [];
             for (var i = 0; i < params.length; i++) {
-                args.push(params[i].name + " = " + JSON.stringify(params[i].value || ""));
+                args.push(params[i].name + " = " +
+                    JSON.stringify(params[i].value || ""));
             }
             testInputPanel.executeTest(args)
         }

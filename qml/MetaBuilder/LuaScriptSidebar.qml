@@ -27,7 +27,8 @@ Rectangle {
         CText { variant: "h4"; text: "Lua Scripts" }
         CText { variant: "caption"; text: scripts.length + " scripts loaded" }
 
-        CDivider { Layout.fillWidth: true; Layout.topMargin: 8; Layout.bottomMargin: 4 }
+        CDivider { Layout.fillWidth: true; Layout.topMargin: 8
+        Layout.bottomMargin: 4 }
 
         ListView {
             Layout.fillWidth: true
@@ -38,13 +39,16 @@ Rectangle {
             delegate: CListItem {
                 width: parent ? parent.width : 200
                 title: modelData.name
-                subtitle: modelData.returnType + " | " + modelData.params.length + " param" + (modelData.params.length !== 1 ? "s" : "")
+                subtitle: modelData.returnType + " | " +
+                    modelData.params.length + " param" + (
+                        modelData.params.length !== 1 ? "s" : "")
                 selected: selectedScriptIndex === index
                 onClicked: scriptSelected(index)
             }
         }
 
-        CDivider { Layout.fillWidth: true; Layout.topMargin: 4; Layout.bottomMargin: 4 }
+        CDivider { Layout.fillWidth: true; Layout.topMargin: 4
+        Layout.bottomMargin: 4 }
 
         // Snippet library toggle
         CButton {

@@ -45,15 +45,18 @@ ColumnLayout {
                     if (testOutput) output += testOutput;
                     if (securityScanResult) {
                         if (output) output += "\n\n";
-                        output += "--- Security Scan ---\n" + securityScanResult;
+                        output += "--- Security Scan ---\n" +
+                            securityScanResult;
                     }
-                    if (!output) output = "No output yet. Run a test or security scan.";
+                    if (!output) output = "No output yet. Run a test or
+                        security scan.";
                     return output;
                 }
                 font.family: "Consolas, 'Courier New', monospace"
                 font.pixelSize: 12
                 color: {
-                    if (securityScanResult && securityScanResult.indexOf("WARN") !== -1)
+                    if (securityScanResult &&
+                        securityScanResult.indexOf("WARN") !== -1)
                         return "#f9e2af";
                     if (testOutput && testOutput.indexOf("SUCCESS") !== -1)
                         return "#a6e3a1";

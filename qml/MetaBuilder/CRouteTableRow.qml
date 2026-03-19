@@ -17,7 +17,9 @@ Rectangle {
 
     width: parent ? parent.width : 400
     height: 48
-    color: isSelected ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.1) : (hoverHandler.hovered ? Theme.surface : "transparent")
+    color: isSelected
+        ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.1)
+        : (hoverHandler.hovered ? Theme.surface : "transparent")
     radius: 4
 
     function levelColor(level) {

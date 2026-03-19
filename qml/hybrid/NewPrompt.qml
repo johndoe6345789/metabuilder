@@ -46,7 +46,8 @@ Item {
     
     function onPromptSuccess(taskId) {
         loading = false
-        successMessage = LanguageContext.t("taskCreated") + " (" + taskId.substring(0, 8) + "...)"
+        successMessage = LanguageContext.t(
+            "taskCreated") + " (" + taskId.substring(0, 8) + "...)"
         prompt = ""
         successTimer.start()
     }
@@ -125,7 +126,8 @@ Item {
                         Layout.fillWidth: true
                         visible: error !== ""
                         height: 48
-                        color: Qt.rgba(Theme.error.r, Theme.error.g, Theme.error.b, 0.12)
+                        color: Qt.rgba(Theme.error.r, Theme.error.g,
+                            Theme.error.b, 0.12)
                         radius: 4
                         
                         Text {
@@ -140,7 +142,8 @@ Item {
                         Layout.fillWidth: true
                         visible: successMessage !== ""
                         height: 48
-                        color: Qt.rgba(Theme.success.r, Theme.success.g, Theme.success.b, 0.12)
+                        color: Qt.rgba(Theme.success.r, Theme.success.g,
+                            Theme.success.b, 0.12)
                         radius: 4
                         
                         Text {
@@ -170,7 +173,8 @@ Item {
                                 id: promptInput
                                 text: prompt
                                 onTextChanged: prompt = text
-                                placeholderText: LanguageContext.t("promptPlaceholder")
+                                placeholderText: LanguageContext.t(
+                                    "promptPlaceholder")
                                 wrapMode: Text.Wrap
                                 enabled: !loading
                                 font.pixelSize: 14
@@ -178,8 +182,10 @@ Item {
                                 
                                 background: Rectangle {
                                     color: Theme.surface
-                                    border.color: promptInput.activeFocus ? Theme.primary : Theme.border
-                                    border.width: promptInput.activeFocus ? 2 : 1
+                                    border.color: promptInput.activeFocus
+                                        ? Theme.primary : Theme.border
+                                    border.width: promptInput.activeFocus
+                                        ? 2 : 1
                                     radius: 4
                                 }
                             }
@@ -259,8 +265,10 @@ Item {
                                 
                                 background: Rectangle {
                                     color: Theme.surface
-                                    border.color: branchInput.activeFocus ? Theme.primary : Theme.border
-                                    border.width: branchInput.activeFocus ? 2 : 1
+                                    border.color: branchInput.activeFocus
+                                        ? Theme.primary : Theme.border
+                                    border.width: branchInput.activeFocus
+                                        ? 2 : 1
                                     radius: 4
                                     implicitHeight: 40
                                 }
@@ -301,7 +309,9 @@ Item {
                     CButton {
                         Layout.fillWidth: true
                         Layout.preferredHeight: 48
-                        text: loading ? LanguageContext.t("creating") : LanguageContext.t("createNewTask")
+                        text: loading
+                            ? LanguageContext.t("creating")
+                            : LanguageContext.t("createNewTask")
                         variant: "primary"
                         enabled: !loading && prompt.trim() !== ""
                         onClicked: handleSubmit()

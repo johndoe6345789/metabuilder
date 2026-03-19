@@ -59,7 +59,8 @@ ColumnLayout {
     Rectangle {
         Layout.fillWidth: true
         height: 1
-        color: Theme.mode === "dark" ? Qt.rgba(1, 1, 1, 0.12) : Qt.rgba(0, 0, 0, 0.12)
+        color: Theme.mode === "dark"
+            ? Qt.rgba(1, 1, 1, 0.12) : Qt.rgba(0, 0, 0, 0.12)
         visible: root.divider && root.title !== ""
     }
 

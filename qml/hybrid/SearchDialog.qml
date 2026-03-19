@@ -96,7 +96,8 @@ Dialog {
             
             background: Rectangle {
                 color: Theme.background
-                border.color: searchInput.activeFocus ? Theme.primary : Theme.border
+                border.color: searchInput.activeFocus
+                    ? Theme.primary : Theme.border
                 border.width: searchInput.activeFocus ? 2 : 1
                 radius: 4
                 implicitHeight: 44
@@ -151,7 +152,8 @@ Dialog {
                     Layout.rightMargin: 4
                     height: taskColumn.height + 16
                     color: taskMouse.containsMouse ? 
-                           Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.08) : 
+                           Qt.rgba(Theme.primary.r, Theme.primary.g,
+                               Theme.primary.b, 0.08) :
                            "transparent"
                     radius: 4
                     
@@ -191,7 +193,8 @@ Dialog {
                                 radius: 4
                                 color: status === "completed" ? Theme.success :
                                        status === "running" ? Theme.primary :
-                                       status === "error" ? Theme.error : Theme.warning
+                                       status === "error"
+                                           ? Theme.error : Theme.warning
                             }
                             
                             Text {

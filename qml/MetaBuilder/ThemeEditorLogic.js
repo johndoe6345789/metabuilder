@@ -34,6 +34,7 @@ function loadJson(relativePath) {
     var xhr = new XMLHttpRequest()
     xhr.open("GET", relativePath, false)
     xhr.send()
-    if (xhr.status === 200 || xhr.status === 0) return JSON.parse(xhr.responseText)
+    if (xhr.status === 200 ||
+        xhr.status === 0) return JSON.parse(xhr.responseText)
     return []
 }

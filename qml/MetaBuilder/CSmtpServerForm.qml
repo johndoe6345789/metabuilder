@@ -77,7 +77,8 @@ CCard {
             spacing: 8
 
             CButton {
-                text: root.connectionStatus === "testing" ? "Testing..." : "Test Connection"
+                text: root.connectionStatus === "testing"
+                    ? "Testing..." : "Test Connection"
                 variant: "primary"
                 size: "sm"
                 enabled: root.connectionStatus !== "testing"
@@ -85,8 +86,10 @@ CCard {
             }
 
             CStatusBadge {
-                visible: root.connectionStatus === "success" || root.connectionStatus === "failed"
-                status: root.connectionStatus === "success" ? "success" : "error"
+                visible: root.connectionStatus === "success" ||
+                    root.connectionStatus === "failed"
+                status: root.connectionStatus === "success"
+                    ? "success" : "error"
                 text: root.connectionStatus === "success" ? "OK" : "Fail"
             }
         }

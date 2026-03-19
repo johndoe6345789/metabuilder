@@ -18,9 +18,11 @@ Rectangle {
         id: shimmer
         anchors.fill: parent
         gradient: Gradient {
-            GradientStop { position: 0.0; color: Qt.rgba(highlightColor.r, highlightColor.g, highlightColor.b, 0) }
+            GradientStop { position: 0.0; color: Qt.rgba(highlightColor.r,
+                highlightColor.g, highlightColor.b, 0) }
             GradientStop { position: 0.5; color: highlightColor }
-            GradientStop { position: 1.0; color: Qt.rgba(highlightColor.r, highlightColor.g, highlightColor.b, 0) }
+            GradientStop { position: 1.0; color: Qt.rgba(highlightColor.r,
+                highlightColor.g, highlightColor.b, 0) }
         }
         opacity: animated ? 1 : 0
         Behavior on x {

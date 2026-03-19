@@ -34,8 +34,10 @@ Rectangle {
     width: tableWidth
     height: 48
     color: {
-        if (isSelected) return Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12);
-        if (isChecked) return Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.06);
+        if (isSelected) return
+            Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12);
+        if (isChecked) return
+            Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.06);
         return rowIndex % 2 === 0 ? "transparent" : Theme.surfaceVariant;
     }
     radius: 0

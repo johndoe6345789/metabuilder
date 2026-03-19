@@ -10,9 +10,12 @@ Rectangle {
     property bool elevated: true
     property string iconPath: ""
     property color fillColor: outlined ? "transparent" : MaterialPalette.primary
-    property color borderColor: outlined ? MaterialPalette.outline : "transparent"
-    property color textColor: outlined ? MaterialPalette.primary : MaterialPalette.onPrimary
-    property color rippleColor: outlined ? MaterialPalette.primary : MaterialPalette.onPrimary
+    property color borderColor: outlined
+        ? MaterialPalette.outline : "transparent"
+    property color textColor: outlined
+        ? MaterialPalette.primary : MaterialPalette.onPrimary
+    property color rippleColor: outlined
+        ? MaterialPalette.primary : MaterialPalette.onPrimary
     property bool disabled: false
     property real cornerRadius: 12
     signal clicked()

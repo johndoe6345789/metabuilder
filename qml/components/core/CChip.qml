@@ -4,22 +4,26 @@ import QtQuick.Layouts
 import QmlComponents 1.0
 
 /**
- * CChip.qml - Material Design 3 Chip component
+ * CChip.qml - Material Design 3 Chip
  *
  * Variants:
- *   assist   - Outlined, transparent fill (default)
- *   filter   - Tonal fill when selected, outlined when not
- *   input    - Outlined with optional close icon
- *   suggestion - Outlined, similar to assist
+ *   assist   - Outlined, transparent fill
+ *   filter   - Tonal fill when selected
+ *   input    - Outlined with close icon
+ *   suggestion - Outlined, like assist
  *
- * Status variants (legacy compat): success, warning, error, info, primary
+ * Status variants (legacy compat):
+ *   success, warning, error, info, primary
  */
 Rectangle {
     id: chip
 
     property string text: ""
     property string icon: ""
-    property string variant: "assist" // assist, filter, input, suggestion, success, warning, error, info, primary, outlined
+    // assist, filter, input, suggestion,
+    // success, warning, error, info,
+    // primary, outlined
+    property string variant: "assist"
     property string size: "md" // sm, md
     property bool clickable: false
     property bool closable: false
@@ -32,14 +36,16 @@ Rectangle {
 
     // MD3: 32px height
     implicitHeight: 32
-    implicitWidth: chipRow.implicitWidth + _paddingH * 2
+    implicitWidth:
+        chipRow.implicitWidth + _paddingH * 2
 
-    readonly property real _paddingH: size === "sm" ? 12 : 16
+    readonly property real _paddingH:
+        size === "sm" ? 12 : 16
 
     // MD3: 8px radius (not full pill)
     radius: 8
 
-    // Resolve the effective color for status variants
+    // Resolve effective color for status
     readonly property color _resolvedColor: {
         switch (variant) {
             case "success": return Theme.success
@@ -52,21 +58,30 @@ Rectangle {
     }
 
     readonly property bool _isStatusVariant: {
-        return variant === "success" || variant === "warning" ||
-               variant === "error" || variant === "info" || variant === "primary"
+        return variant === "success"
+            || variant === "warning"
+            || variant === "error"
+            || variant === "info"
+            || variant === "primary"
     }
 
     // MD3 fill logic
     color: {
         // Status variants: tonal fill
         if (_isStatusVariant) {
-            return Qt.rgba(_resolvedColor.r, _resolvedColor.g, _resolvedColor.b, 0.12)
+            return Qt.rgba(
+                _resolvedColor.r,
+                _resolvedColor.g,
+                _resolvedColor.b, 0.12)
         }
         switch (variant) {
             case "filter":
-                // Selected filter chips get tonal fill
                 if (selected || checked) {
-                    return Qt.rgba(_resolvedColor.r, _resolvedColor.g, _resolvedColor.b, 0.12)
+                    return Qt.rgba(
+                        _resolvedColor.r,
+                        _resolvedColor.g,
+                        _resolvedColor.b,
+                        0.12)
                 }
                 return "transparent"
             case "assist":
@@ -78,42 +93,65 @@ Rectangle {
         }
     }
 
-    // MD3 border: 1px outline for non-selected, no border for tonal/selected
+    // MD3 border
     border.width: {
         if (_isStatusVariant) return 0
-        if (variant === "filter" && (selected || checked)) return 0
+        if (variant === "filter"
+            && (selected || checked))
+            return 0
         return 1
     }
     border.color: {
-        if (_isStatusVariant) return _resolvedColor
+        if (_isStatusVariant)
+            return _resolvedColor
         return Theme.border
     }
 
     // MD3 text/icon color
     readonly property color _contentColor: {
-        if (_isStatusVariant) return _resolvedColor
-        if (variant === "filter" && (selected || checked)) return _resolvedColor
+        if (_isStatusVariant)
+            return _resolvedColor
+        if (variant === "filter"
+            && (selected || checked))
+            return _resolvedColor
         return Theme.text
     }
 
-    Behavior on color { ColorAnimation { duration: StyleVariables.transitionFast } }
-    Behavior on border.width { NumberAnimation { duration: StyleVariables.transitionFast } }
+    Behavior on color {
+        ColorAnimation {
+            duration: StyleVariables.transitionFast
+        }
+    }
+    Behavior on border.width {
+        NumberAnimation {
+            duration: StyleVariables.transitionFast
+        }
+    }
 
     // Hover/press overlay
     Rectangle {
         anchors.fill: parent
         radius: parent.radius
         color: chip._contentColor
-        opacity: mouseArea.containsPress ? 0.12 : mouseArea.containsMouse ? 0.08 : 0
-        Behavior on opacity { NumberAnimation { duration: 100 } }
+        opacity: mouseArea.containsPress
+            ? 0.12
+            : mouseArea.containsMouse
+                ? 0.08 : 0
+        Behavior on opacity {
+            NumberAnimation { duration: 100 }
+        }
     }
 
     MouseArea {
         id: mouseArea
         anchors.fill: parent
         hoverEnabled: chip.clickable
-        cursorShape: chip.clickable ? Qt.PointingHandCursor : Qt.ArrowCursor
-        onClicked: if (chip.clickable) chip.clicked()
+        cursorShape: chip.clickable
+            ? Qt.PointingHandCursor
+            : Qt.ArrowCursor
+        onClicked: {
+            if (chip.clickable) chip.clicked()
+        }
     }
 
     RowLayout {
@@ -129,13 +167,15 @@ Rectangle {
             visible: chip.icon !== ""
         }
 
-        // Check icon for selected filter chips
+        // Check icon for selected filter
         Text {
             text: "\u2713"
             font.pixelSize: 14
             font.weight: Font.Bold
             color: chip._contentColor
-            visible: chip.variant === "filter" && (chip.selected || chip.checked)
+            visible: chip.variant === "filter"
+                && (chip.selected
+                    || chip.checked)
         }
 
         // Label
@@ -146,13 +186,20 @@ Rectangle {
             color: chip._contentColor
         }
 
-        // Close/remove icon for input chips or closable chips
+        // Close/remove icon
         Rectangle {
             width: 18
             height: 18
             radius: 9
-            color: closeMouseArea.containsMouse ? Qt.rgba(chip._contentColor.r, chip._contentColor.g, chip._contentColor.b, 0.12) : "transparent"
-            visible: chip.closable || chip.variant === "input"
+            color: closeMouseArea.containsMouse
+                ? Qt.rgba(
+                    chip._contentColor.r,
+                    chip._contentColor.g,
+                    chip._contentColor.b,
+                    0.12)
+                : "transparent"
+            visible: chip.closable
+                || chip.variant === "input"
 
             Text {
                 anchors.centerIn: parent
@@ -166,7 +213,8 @@ Rectangle {
                 id: closeMouseArea
                 anchors.fill: parent
                 hoverEnabled: true
-                cursorShape: Qt.PointingHandCursor
+                cursorShape:
+                    Qt.PointingHandCursor
                 onClicked: chip.closeClicked()
             }
         }

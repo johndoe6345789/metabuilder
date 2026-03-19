@@ -12,8 +12,10 @@ Rectangle {
     signal dismiss()
     signal takeAction()
 
-    readonly property color surfaceContainerHigh: isDark ? Qt.rgba(1, 1, 1, 0.08) : Qt.rgba(0.31, 0.31, 0.44, 0.10)
-    readonly property color outlineVariant: isDark ? Qt.rgba(1, 1, 1, 0.06) : Qt.rgba(0, 0, 0, 0.08)
+    readonly property color surfaceContainerHigh: isDark
+        ? Qt.rgba(1, 1, 1, 0.08) : Qt.rgba(0.31, 0.31, 0.44, 0.10)
+    readonly property color outlineVariant: isDark
+        ? Qt.rgba(1, 1, 1, 0.06) : Qt.rgba(0, 0, 0, 0.08)
     readonly property color onSurfaceVariant: Theme.textSecondary
 
     Layout.fillWidth: true
@@ -48,7 +50,8 @@ Rectangle {
                 Layout.fillWidth: true
             }
             CText {
-                text: root.report.type + " \u00B7 " + root.report.user + " \u00B7 " + root.report.reported
+                text: root.report.type + " \u00B7 " + root.report.user + "
+                    \u00B7 " + root.report.reported
                 font.pixelSize: 11
                 color: root.onSurfaceVariant
             }

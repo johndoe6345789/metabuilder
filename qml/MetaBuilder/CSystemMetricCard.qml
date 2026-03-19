@@ -36,7 +36,8 @@ CCard {
             width: parent.width * (root.value / 100)
             height: parent.height
             radius: 3
-            color: root.value > 80 ? Theme.error : root.value > 60 ? Theme.warning : Theme.primary
+            color: root.value > 80
+                ? Theme.error : root.value > 60 ? Theme.warning : Theme.primary
         }
     }
 }

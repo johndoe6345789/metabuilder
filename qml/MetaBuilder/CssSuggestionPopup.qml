@@ -39,7 +39,8 @@ Rectangle {
                     width: suggestCol.width
                     height: 26
                     radius: 4
-                    color: suggestMa.containsMouse ? Theme.surface : "transparent"
+                    color: suggestMa.containsMouse
+                        ? Theme.surface : "transparent"
 
                     CText {
                         anchors.verticalCenter: parent.verticalCenter

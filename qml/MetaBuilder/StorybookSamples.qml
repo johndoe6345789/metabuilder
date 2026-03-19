@@ -137,7 +137,8 @@ QtObject {
     property Component alertSample: Component {
         ColumnLayout {
             spacing: 12
-            CAlert { severity: "success"; text: "Operation completed successfully" }
+            CAlert { severity: "success"
+            text: "Operation completed successfully" }
             CAlert { severity: "warning"; text: "Disk usage above 80%" }
             CAlert { severity: "error"; text: "Connection to DBAL failed" }
             CAlert { severity: "info"; text: "New package version available" }

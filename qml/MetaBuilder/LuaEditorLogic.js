@@ -79,6 +79,29 @@ function updateParamValue(params, index, value) {
     return p
 }
 
+function exampleLabels(examples) {
+    var labels = [];
+    for (var i = 0; i < examples.length; i++)
+        labels.push(examples[i].label);
+    return labels;
+}
+
+function newScript(root) {
+    root.curCode =
+        "-- new_script.lua\n"
+        + "-- Enter your Lua code here\n\n"
+        + "local function main()\n"
+        + "    -- TODO: implement\n"
+        + "    return nil\nend\n\n"
+        + "return main";
+    root.curName = "new_script";
+    root.curDesc = "New untitled script";
+    root.curRet = "nil";
+    root.curParams = [];
+    root.testOutput = "";
+    root.scanResult = "";
+}
+
 function loadJson(relativePath) {
     var xhr = new XMLHttpRequest()
     xhr.open("GET", relativePath, false)

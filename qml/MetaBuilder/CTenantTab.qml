@@ -34,8 +34,11 @@ Rectangle {
 
             CText {
                 variant: "body2"
-                text: "Cross-tenant provisioning and configuration. Each tenant operates in full isolation with its own schemas, users, and data."
-                wrapMode: Text.Wrap; Layout.fillWidth: true; color: Theme.textSecondary
+                text: "Cross-tenant provisioning and configuration. Each tenant
+                    operates in full isolation with its own schemas, users, and
+                        data."
+                wrapMode: Text.Wrap; Layout.fillWidth: true
+                color: Theme.textSecondary
             }
 
             CDivider { Layout.fillWidth: true }

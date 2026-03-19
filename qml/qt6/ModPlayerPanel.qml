@@ -16,7 +16,8 @@ CPaper {
         CText { variant: "h4"; text: "MOD Player" }
         CText {
             variant: "body2"
-            text: "Play the procedural Retro Gaming MOD and watch the visualizer react."
+            text: "Play the procedural Retro Gaming MOD and watch the
+                visualizer react."
         }
 
         FlexRow {
@@ -24,7 +25,8 @@ CPaper {
             CButton {
                 text: ModPlayer.playing ? "Replay MOD" : "Play MOD"
                 variant: "primary"
-                onClicked: ModPlayer.play("frontends/qt6/assets/audio/retro-gaming.mod")
+                onClicked: ModPlayer.play(
+                    "frontends/qt6/assets/audio/retro-gaming.mod")
             }
             CButton {
                 text: "Stop"

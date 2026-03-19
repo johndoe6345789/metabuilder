@@ -152,10 +152,135 @@ function updateInEntity(records, entity,
     return replaceEntity(records, entity, d);
 }
 
+function adminStats(records) {
+    return [
+        { label: "Total Users",
+          value: (records["User"]||[]).length,
+          accent: "#4CAF50" },
+        { label: "Active Sessions",
+          value: (records["Session"]||[]).length,
+          accent: "#2196F3" },
+        { label: "Workflows",
+          value: (records["Workflow"]||[]).length,
+          accent: "#FF9800" },
+        { label: "Audit Events",
+          value: (records["AuditLog"]||[]).length,
+          accent: "#9C27B0" }
+    ];
+}
+
+function entityCounts(entities, records) {
+    var c = {};
+    for (var i = 0; i < entities.length; i++)
+        c[entities[i]] =
+            (records[entities[i]]||[]).length;
+    return c;
+}
+
+function parseLiveData(items, fields) {
+    var live = [];
+    for (var i = 0; i < items.length; i++) {
+        var r = {};
+        for (var f = 0; f < fields.length; f++)
+            r[fields[f]] = items[i][fields[f]] || "";
+        live.push(r);
+    }
+    return live;
+}
+
 function clampPage(currentPage, totalPages) {
     return currentPage >= totalPages
         ? Math.max(0, totalPages - 1)
         : currentPage;
+}
+
+function doCreate(root, dbal, dlg, data) {
+    var n = buildNewRecord(root.idPfx,
+        root.entFlds, root.selEnt,
+        root.records, data);
+    if (root.useLiveData)
+        dbal.create(root.selEnt, n,
+            function(r, e) {
+                if (!e) root.loadData();
+                else root.records =
+                    addToEntity(root.records,
+                        root.selEnt, n);
+            });
+    else root.records = addToEntity(
+        root.records, root.selEnt, n);
+    dlg.createDialogOpen = false;
+}
+
+function doEdit(root, dbal, dlg, data) {
+    var u = buildUpdatedRecord(root.entFlds,
+        root.selEnt, root.editRec, data);
+    var pg = root.pg();
+    var tid = pg[root.editIdx]
+        ? pg[root.editIdx].id : "";
+    if (root.useLiveData)
+        dbal.update(root.selEnt, tid, u,
+            function(r, e) {
+                if (!e) root.loadData();
+                else root.records =
+                    updateInEntity(root.records,
+                        root.selEnt, tid, u);
+            });
+    else root.records = updateInEntity(
+        root.records, root.selEnt, tid, u);
+    dlg.editDialogOpen = false;
+}
+
+function doDelete(root, dbal, dlg) {
+    var pg = root.pg();
+    var rec = pg[root.editIdx];
+    if (!rec) { dlg.deleteDialogOpen = false; return; }
+    if (root.useLiveData)
+        dbal.remove(root.selEnt, rec.id,
+            function(r, e) {
+                if (!e) root.loadData();
+                else root.records =
+                    replaceEntity(root.records,
+                        root.selEnt,
+                        removeById(
+                            root.records[root.selEnt]
+                                .slice(), rec.id));
+            });
+    else root.records = replaceEntity(
+        root.records, root.selEnt,
+        removeById(
+            root.records[root.selEnt].slice(),
+            rec.id));
+    root.selRow = -1;
+    root.curPage = clampPage(
+        root.curPage,
+        Math.max(1, Math.ceil(
+            root.fil().length / root.pgSize)));
+    dlg.deleteDialogOpen = false;
+}
+
+function handleCreate(ctx, data) {
+    var n = buildNewRecord(ctx.idPrefixes,
+        ctx.entityFields, ctx.selectedEntity,
+        ctx.records, data);
+    return { record: n };
+}
+
+function handleEdit(ctx, data) {
+    var u = buildUpdatedRecord(ctx.entityFields,
+        ctx.selectedEntity, ctx.editingRecord,
+        data);
+    var tid = ctx.pagedRow
+        ? ctx.pagedRow.id : "";
+    return { record: u, targetId: tid };
+}
+
+function resetEntity(root) {
+    root.currentPage = 0;
+    root.selectedRow = -1;
+    root.selectedRows = {};
+    root.selectAll = false;
+    root.searchText = "";
+    root.activeFilter = "All";
 }
 
 function deleteSelectedRows(records, entity,

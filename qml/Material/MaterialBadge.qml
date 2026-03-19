@@ -14,7 +14,8 @@ Rectangle {
     height: dense ? 24 : 28
     radius: height / 2
     implicitWidth: label.width + (iconSource.length > 0 ? 32 : 20)
-    color: outlined ? "transparent" : (accent ? MaterialPalette.secondaryContainer : MaterialPalette.surfaceVariant)
+    color: outlined ? "transparent" : (accent ?
+        MaterialPalette.secondaryContainer : MaterialPalette.surfaceVariant)
     border.color: outlined ? MaterialPalette.secondary : "transparent"
     border.width: outlined ? 1 : 0
 
@@ -38,7 +39,8 @@ Rectangle {
             id: label
             text: badge.text
             font.pixelSize: dense ? 12 : 14
-            color: accent ? MaterialPalette.secondary : MaterialPalette.onSurface
+            color: accent
+                ? MaterialPalette.secondary : MaterialPalette.onSurface
         }
     }
 }

@@ -23,8 +23,10 @@ Rectangle {
             CText { variant: "h3"; text: "God Users (Level 4+)" }
             CText {
                 variant: "body2"
-                text: "All users with god-level (L4) or super-god-level (L5) platform access across all tenants."
-                wrapMode: Text.Wrap; Layout.fillWidth: true; color: Theme.textSecondary
+                text: "All users with god-level (L4) or super-god-level (L5)
+                    platform access across all tenants."
+                wrapMode: Text.Wrap; Layout.fillWidth: true
+                color: Theme.textSecondary
             }
 
             CDivider { Layout.fillWidth: true }

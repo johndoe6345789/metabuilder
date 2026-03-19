@@ -6,7 +6,8 @@ import QmlComponents 1.0
  * Displays image or initials in a circular container with tonal surface
  *
  * Usage:
- *   CAvatar { initials: "JD" }                        // Tonal primary with initials
+ *   CAvatar { initials: "JD" }                        // Tonal primary with
+ // initials
  *   CAvatar { src: "avatar.png" }                     // Image avatar
  *   CAvatar { size: "lg"; initials: "AB" }            // Large avatar
  *   CAvatar { size: "sm"; bgColor: Theme.error }      // Custom color
@@ -17,7 +18,8 @@ Rectangle {
     property string size: "md"           // sm, md, lg
     property string src: ""              // Image source URL
     property string initials: ""         // Fallback initials (e.g. "JD")
-    property color bgColor: Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.16)
+    property color bgColor:
+        Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.16)
     property color textColor: Theme.primary
 
     // MD3 size mapping: sm=32, md=40, lg=56

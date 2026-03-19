@@ -3,7 +3,8 @@ import QtQuick.Layouts
 import QmlComponents 1.0
 
 /**
- * FlexRow.qml - Horizontal flex container (mirrors SCSS .flex, .flex-row utilities)
+ * FlexRow.qml - Horizontal flex container (mirrors SCSS .flex, .flex-row
+ // utilities)
  * Simplified RowLayout with common flex patterns
  * 
  * Usage:
@@ -23,7 +24,8 @@ RowLayout {
     id: root
     
     // Public properties
-    property string justify: "start"  // start, center, end, space-between, space-around
+    // start, center, end, space-between, space-around
+    property string justify: "start"
     property string align: "stretch"  // start, center, end, stretch
     property string gap: "sm"         // none, xs, sm, md, lg, xl, or number
     property bool wrap: false

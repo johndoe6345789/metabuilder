@@ -3,7 +3,8 @@ import QtQuick.Layouts
 import QmlComponents 1.0
 
 /**
- * FlexCol.qml - Vertical flex container (mirrors SCSS .flex, .flex-col utilities)
+ * FlexCol.qml - Vertical flex container (mirrors SCSS .flex, .flex-col
+ // utilities)
  * Simplified ColumnLayout with common flex patterns
  * 
  * Usage:

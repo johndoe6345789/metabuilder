@@ -33,7 +33,8 @@ Item {
             delegate: CButton {
                 visible: modelData.level <= root.currentLevel
                 text: modelData.label
-                variant: root.currentView === modelData.view ? "default" : "text"
+                variant: root.currentView === modelData.view
+                    ? "default" : "text"
                 size: "sm"
                 onClicked: root.navigate(modelData.view)
             }

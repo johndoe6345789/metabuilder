@@ -27,7 +27,9 @@ CCard {
 
             CText {
                 anchors.centerIn: parent
-                text: packageData.icon ? packageData.icon : (packageData.name ? packageData.name.charAt(0) : "?")
+                text: packageData.icon
+                    ? packageData.icon
+                    : (packageData.name ? packageData.name.charAt(0) : "?")
                 variant: "subtitle1"
                 color: packageData.installed ? "#ffffff" : Theme.textPrimary
             }
@@ -37,7 +39,8 @@ CCard {
             Layout.fillWidth: true
             spacing: 4
             CText { variant: "subtitle1"; text: packageData.name || "" }
-            CText { variant: "body2"; text: packageData.description || ""; wrapMode: Text.Wrap }
+            CText { variant: "body2"; text: packageData.description || ""
+            wrapMode: Text.Wrap }
             FlexRow {
                 spacing: 8
                 CBadge { text: "v" + (packageData.version || "0.0.0") }

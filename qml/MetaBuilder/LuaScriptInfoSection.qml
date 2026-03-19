@@ -16,5 +16,6 @@ ColumnLayout {
     CText { variant: "caption"; text: "LINES OF CODE" }
     CText { variant: "body2"; text: currentCode.split("\n").length.toString() }
     CText { variant: "caption"; text: "SIZE" }
-    CText { variant: "body2"; text: (currentCode.length / 1024).toFixed(1) + " KB" }
+    CText { variant: "body2"
+    text: (currentCode.length / 1024).toFixed(1) + " KB" }
 }

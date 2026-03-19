@@ -12,8 +12,10 @@ Rectangle {
     property bool isDark: false
 
     // MD3 tonal surfaces
-    readonly property color surfaceContainer: isDark ? Qt.rgba(1, 1, 1, 0.05) : Qt.rgba(0.31, 0.31, 0.44, 0.06)
-    readonly property color outlineVariant: isDark ? Qt.rgba(1, 1, 1, 0.06) : Qt.rgba(0, 0, 0, 0.08)
+    readonly property color surfaceContainer: isDark
+        ? Qt.rgba(1, 1, 1, 0.05) : Qt.rgba(0.31, 0.31, 0.44, 0.06)
+    readonly property color outlineVariant: isDark
+        ? Qt.rgba(1, 1, 1, 0.06) : Qt.rgba(0, 0, 0, 0.08)
     readonly property color onSurfaceVariant: Theme.textSecondary
 
     implicitHeight: 64

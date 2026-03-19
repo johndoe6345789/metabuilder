@@ -50,9 +50,12 @@ CCard {
         CButton {
             text: "Submit Transfer"; variant: "primary"; size: "sm"
             onClicked: {
-                if (root.transferFrom && root.transferTo && root.transferReason) {
-                    root.submitted(root.transferFrom, root.transferTo, root.transferReason, root.transferExpiry || "No expiry")
-                    root.transferFrom = ""; root.transferTo = ""; root.transferReason = ""; root.transferExpiry = ""
+                if (root.transferFrom &&
+                    root.transferTo && root.transferReason) {
+                    root.submitted(root.transferFrom, root.transferTo,
+                        root.transferReason, root.transferExpiry || "No expiry")
+                    root.transferFrom = ""; root.transferTo = ""
+                    root.transferReason = ""; root.transferExpiry = ""
                 }
             }
         }

@@ -19,7 +19,8 @@ Item {
     // Public properties
     property int colSpan: 1    // Number of columns to span
     property int rowSpan: 1    // Number of rows to span
-    property string align: ""  // Override alignment: start, center, end, stretch
+    // Override alignment: start, center, end, stretch
+    property string align: ""
     
     // Content slot
     default property alias content: contentItem.data

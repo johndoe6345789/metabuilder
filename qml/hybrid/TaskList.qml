@@ -135,7 +135,8 @@ Item {
             
             // Task count - use model count
             Text {
-                text: app.taskModel.rowCount() + " " + LanguageContext.t("tasksCount")
+                text: app.taskModel.rowCount(
+                    ) + " " + LanguageContext.t("tasksCount")
                 color: Theme.textSecondary
                 font.pixelSize: 14
             }
@@ -179,7 +180,8 @@ Item {
             GridLayout {
                 id: taskGrid
                 width: parent.width
-                // Auto-fill grid similar to CSS: repeat(auto-fill, minmax(320px, 1fr))
+                // Auto-fill grid similar to CSS: repeat(auto-fill,
+                // minmax(320px, 1fr))
                 columns: Math.max(1, Math.floor(width / 320))
                 columnSpacing: 16
                 rowSpacing: 16
@@ -220,7 +222,8 @@ Item {
                                     spacing: 8
                                     
                                     CChip {
-                                        text: getStatusLabel(status, hasPr, prUrl)
+                                        text: getStatusLabel(status, hasPr,
+                                            prUrl)
                                         color: getStatusColor(status, hasPr)
                                     }
                                     
@@ -233,7 +236,8 @@ Item {
                                 // Title
                                 Text {
                                     Layout.fillWidth: true
-                                    text: title || LanguageContext.t("untitledTask")
+                                    text: title ||
+                                        LanguageContext.t("untitledTask")
                                     font.pixelSize: 16
                                     font.bold: true
                                     color: Theme.text
@@ -242,17 +246,21 @@ Item {
                                     wrapMode: Text.WordWrap
                                 }
                                 
-                                // Description placeholder (would use prompt from full task data)
+                                // Description placeholder (would use prompt
+                                // from full task data)
                                 Text {
                                     Layout.fillWidth: true
                                     Layout.fillHeight: true
-                                    text: ""  // Description not available from TaskModel roles
+                                    // Description not available from TaskModel
+                                    // roles
+                                    text: ""
                                     font.pixelSize: 13
                                     color: Theme.textSecondary
                                     wrapMode: Text.WordWrap
                                     maximumLineCount: 2
                                     elide: Text.ElideRight
-                                    visible: false  // Hidden until we have description data
+                                    // Hidden until we have description data
+                                    visible: false
                                 }
                                 
                                 // Spacer to push content up
@@ -269,7 +277,8 @@ Item {
                                 
                                 // Branch / ID (nerd mode)
                                 Text {
-                                    text: NerdModeContext.nerdMode ? taskId : (branch || "main")
+                                    text: NerdModeContext.nerdMode
+                                        ? taskId : (branch || "main")
                                     font.pixelSize: 12
                                     font.family: "monospace"
                                     color: Theme.textMuted
@@ -278,7 +287,8 @@ Item {
                                 }
                             }
                             
-                            // Actions row with top border (matches React card__actions)
+                            // Actions row with top border (matches React
+                            // card__actions)
                             Rectangle {
                                 Layout.fillWidth: true
                                 height: 1

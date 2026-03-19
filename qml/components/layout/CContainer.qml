@@ -20,7 +20,8 @@ Item {
     
     // Properties
     property string size: "lg"            // sm, md, lg, xl, full
-    property int paddingH: Responsive.isMobile ? StyleVariables.spacingSm : StyleVariables.spacingMd
+    property int paddingH: Responsive.isMobile
+        ? StyleVariables.spacingSm : StyleVariables.spacingMd
     property int paddingV: 0
     property bool centerContent: true
     
@@ -47,7 +48,8 @@ Item {
     Item {
         id: contentItem
         width: Math.min(root.width - (root.paddingH * 2), root._maxWidth)
-        anchors.horizontalCenter: root.centerContent ? parent.horizontalCenter : undefined
+        anchors.horizontalCenter: root.centerContent
+            ? parent.horizontalCenter : undefined
         x: root.centerContent ? undefined : root.paddingH
         y: root.paddingV
         implicitHeight: childrenRect.height

@@ -44,7 +44,8 @@ Dialog {
         }
     }
     
-    signal promptSubmitted(string prompt, string envId, string branch, int bestOf)
+    signal promptSubmitted(string prompt, string envId, string branch,
+        int bestOf)
     
     function open() {
         promptField.text = ""
@@ -127,7 +128,8 @@ Dialog {
                 background: Rectangle {
                     color: colors.paper
                     radius: 4
-                    border.color: branchField.activeFocus ? colors.accent : colors.border
+                    border.color: branchField.activeFocus
+                        ? colors.accent : colors.border
                 }
             }
             
@@ -150,7 +152,8 @@ Dialog {
                     border.color: colors.border
                 }
                 contentItem: TextInput {
-                    text: bestOfSpinner.textFromValue(bestOfSpinner.value, bestOfSpinner.locale)
+                    text: bestOfSpinner.textFromValue(bestOfSpinner.value,
+                        bestOfSpinner.locale)
                     color: colors.text
                     horizontalAlignment: Qt.AlignHCenter
                     verticalAlignment: Qt.AlignVCenter
@@ -174,7 +177,10 @@ Dialog {
             
             TextArea {
                 id: promptField
-                placeholderText: "Describe the task you want Codex to perform...\n\nExample:\nAdd a dark mode toggle to the settings page. It should persist the preference in localStorage."
+                placeholderText: "Describe the task you want Codex to
+                    perform...\n\nExample:\nAdd a dark mode toggle to the
+                        settings page. It should persist the preference in
+                            localStorage."
                 wrapMode: Text.Wrap
                 font.pixelSize: 14
                 enabled: !sending
@@ -185,7 +191,8 @@ Dialog {
                 background: Rectangle {
                     color: colors.paper
                     radius: 4
-                    border.color: promptField.activeFocus ? colors.accent : colors.border
+                    border.color: promptField.activeFocus
+                        ? colors.accent : colors.border
                 }
             }
         }
@@ -215,11 +222,13 @@ Dialog {
             Button {
                 id: sendButton
                 text: sending ? "Sending..." : "🚀 Send Prompt"
-                enabled: !sending && promptField.text.trim().length > 0 && envCombo.currentIndex >= 0
+                enabled: !sending && promptField.text.trim(
+                    ).length > 0 && envCombo.currentIndex >= 0
                 highlighted: true
                 
                 background: Rectangle {
-                    color: sendButton.enabled ? colors.accent : Qt.darker(colors.accent, 1.5)
+                    color: sendButton.enabled
+                        ? colors.accent : Qt.darker(colors.accent, 1.5)
                     radius: 4
                     opacity: sendButton.hovered ? 0.9 : 1.0
                 }
@@ -236,7 +245,8 @@ Dialog {
                         errorLabel.text = "Please enter a prompt"
                         return
                     }
-                    if (environments.length === 0 || envCombo.currentIndex < 0) {
+                    if (environments.length === 0 ||
+                        envCombo.currentIndex < 0) {
                         errorLabel.text = "No environment selected"
                         return
                     }

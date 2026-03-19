@@ -5,12 +5,15 @@ import QmlComponents 1.0
  * CStatusBadge.qml - Material Design 3 Status Pill
  *
  * Status indicator pill with tonal background matching the status color.
- * Statuses: completed/success, running/info, queued/warning, failed/error, unknown/neutral
+ * Statuses: completed/success, running/info, queued/warning, failed/error,
+ // unknown/neutral
  */
 Rectangle {
     id: badge
 
-    property string status: "unknown" // completed, running, queued, failed, unknown, success, warning, error, info
+    // completed, running, queued, failed, unknown, success, warning, error,
+    // info
+    property string status: "unknown"
     property string text: status
     property bool showDot: true
     property var themeColors: ({})
@@ -42,7 +45,8 @@ Rectangle {
     }
 
     // MD3 tonal background: 12% opacity of status color
-    readonly property color _bgColor: Qt.rgba(_statusColor.r, _statusColor.g, _statusColor.b, 0.12)
+    readonly property color _bgColor:
+        Qt.rgba(_statusColor.r, _statusColor.g, _statusColor.b, 0.12)
 
     // MD3 on-container text: full status color
     readonly property color _textColor: _statusColor
@@ -71,8 +75,10 @@ Rectangle {
             SequentialAnimation on opacity {
                 running: badge._semantic === "info" && badge.showDot
                 loops: Animation.Infinite
-                NumberAnimation { to: 0.3; duration: 600; easing.type: Easing.InOutSine }
-                NumberAnimation { to: 1.0; duration: 600; easing.type: Easing.InOutSine }
+                NumberAnimation { to: 0.3; duration: 600
+                easing.type: Easing.InOutSine }
+                NumberAnimation { to: 1.0; duration: 600
+                easing.type: Easing.InOutSine }
             }
         }
 

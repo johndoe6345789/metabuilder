@@ -15,5 +15,6 @@ Rectangle {
     }
 
     height: expanded ? loader.implicitHeight : 0
-    Behavior on height { NumberAnimation { duration: 200; easing.type: Easing.OutQuad } }
+    Behavior on height { NumberAnimation { duration: 200
+    easing.type: Easing.OutQuad } }
 }

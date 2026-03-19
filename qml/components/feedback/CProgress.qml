@@ -4,7 +4,8 @@ import QmlComponents 1.0
 /**
  * CProgress.qml - Material Design 3 Linear Progress Indicator
  *
- * MD3 spec: 4px track with rounded ends, primary indicator, indeterminate sliding animation
+ * MD3 spec: 4px track with rounded ends, primary indicator, indeterminate
+ // sliding animation
  *
  * Usage:
  *   CProgress { value: 0.5 }                    // 50% determinate
@@ -17,14 +18,17 @@ Item {
     // Public properties
     property real value: 0              // 0.0 to 1.0
     property bool indeterminate: false
-    property string color: ""           // Custom indicator color, uses Theme.primary if empty
+    // Custom indicator color, uses Theme.primary if empty
+    property string color: ""
     property string trackColor: ""      // Custom track color
     property string size: "md"          // sm, md, lg (track thickness)
     property string label: ""           // Optional label below track
 
-    // Computed colors (MD3: primary for indicator, surfaceContainerHighest for track)
+    // Computed colors (MD3: primary for indicator, surfaceContainerHighest for
+    // track)
     readonly property color _indicatorColor: color || Theme.primary
-    readonly property color _trackColor: trackColor || Qt.rgba(Theme.surface.r, Theme.surface.g, Theme.surface.b, 0.38)
+    readonly property color _trackColor: trackColor ||
+        Qt.rgba(Theme.surface.r, Theme.surface.g, Theme.surface.b, 0.38)
 
     // MD3 track height: 4px standard
     readonly property int _trackHeight: {
@@ -36,7 +40,8 @@ Item {
     }
 
     implicitWidth: 200
-    implicitHeight: label ? _trackHeight + Theme.fontSizeXs + Theme.spacingXs : _trackHeight
+    implicitHeight: label
+        ? _trackHeight + Theme.fontSizeXs + Theme.spacingXs : _trackHeight
 
     // Track background (MD3: rounded, surfaceContainerHighest)
     Rectangle {

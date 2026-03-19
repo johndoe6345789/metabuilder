@@ -36,7 +36,8 @@ CCard {
             CBadge { text: "Interactive" }
         }
 
-        CText { variant: "caption"; text: "A sample UI rendered with your current theme configuration" }
+        CText { variant: "caption"
+        text: "A sample UI rendered with your current theme configuration" }
 
         CDivider { Layout.fillWidth: true }
 

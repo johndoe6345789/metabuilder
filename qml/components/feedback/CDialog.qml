@@ -37,16 +37,20 @@ Popup {
     // MD3 open animation: scale + opacity
     enter: Transition {
         ParallelAnimation {
-            NumberAnimation { property: "opacity"; from: 0; to: 1; duration: 250; easing.type: Easing.OutCubic }
-            NumberAnimation { property: "scale"; from: 0.85; to: 1.0; duration: 250; easing.type: Easing.OutCubic }
+            NumberAnimation { property: "opacity"; from: 0; to: 1; duration: 250
+            easing.type: Easing.OutCubic }
+            NumberAnimation { property: "scale"; from: 0.85; to: 1.0
+            duration: 250; easing.type: Easing.OutCubic }
         }
     }
 
     // MD3 close animation
     exit: Transition {
         ParallelAnimation {
-            NumberAnimation { property: "opacity"; from: 1; to: 0; duration: 200; easing.type: Easing.InCubic }
-            NumberAnimation { property: "scale"; from: 1.0; to: 0.85; duration: 200; easing.type: Easing.InCubic }
+            NumberAnimation { property: "opacity"; from: 1; to: 0; duration: 200
+            easing.type: Easing.InCubic }
+            NumberAnimation { property: "scale"; from: 1.0; to: 0.85
+            duration: 200; easing.type: Easing.InCubic }
         }
     }
 
@@ -113,7 +117,8 @@ Popup {
                     width: 32
                     height: 32
                     radius: 16
-                    color: closeHover.containsMouse ? Theme.actionHover : "transparent"
+                    color: closeHover.containsMouse
+                        ? Theme.actionHover : "transparent"
 
                     Text {
                         anchors.centerIn: parent

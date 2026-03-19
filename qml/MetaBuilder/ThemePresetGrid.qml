@@ -36,7 +36,8 @@ CCard {
                     radius: radiusMedium
                     color: modelData.surface
                     border.width: selectedTheme === modelData.name ? 2 : 1
-                    border.color: selectedTheme === modelData.name ? Theme.primary : Theme.border
+                    border.color: selectedTheme === modelData.name
+                        ? Theme.primary : Theme.border
 
                     MouseArea {
                         anchors.fill: parent
@@ -54,7 +55,8 @@ CCard {
                             spacing: 4
 
                             Repeater {
-                                model: [modelData.bg, modelData.primary, modelData.text, modelData.surface]
+                                model: [modelData.bg, modelData.primary,
+                                    modelData.text, modelData.surface]
 
                                 Rectangle {
                                     width: 16
@@ -72,7 +74,9 @@ CCard {
                         Text {
                             text: themeDefinitions[index].label
                             font.pixelSize: 12
-                            font.weight: selectedTheme === themeDefinitions[index].name ? Font.Bold : Font.Normal
+                            font.weight: selectedTheme ===
+                                themeDefinitions[index].name
+                                    ? Font.Bold : Font.Normal
                             color: themeDefinitions[index].text
                         }
 
@@ -81,7 +85,9 @@ CCard {
                             width: 8
                             height: 8
                             radius: 4
-                            color: selectedTheme === themeDefinitions[index].name ? Theme.primary : "transparent"
+                            color: selectedTheme ===
+                                themeDefinitions[index].name
+                                    ? Theme.primary : "transparent"
                         }
                     }
                 }

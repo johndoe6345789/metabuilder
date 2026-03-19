@@ -18,7 +18,8 @@ Flow {
             width: tText.implicitWidth + 16
             height: 24
             radius: 8
-            color: Qt.rgba(root.accent.r, root.accent.g, root.accent.b, root.isDark ? 0.12 : 0.10)
+            color: Qt.rgba(root.accent.r, root.accent.g, root.accent.b,
+                root.isDark ? 0.12 : 0.10)
 
             CText {
                 id: tText

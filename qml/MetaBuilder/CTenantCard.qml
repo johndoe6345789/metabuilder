@@ -35,17 +35,20 @@ CCard {
 
         ColumnLayout {
             spacing: 4
-            CText { variant: "caption"; text: "Owner"; color: Theme.textSecondary }
+            CText { variant: "caption"; text: "Owner"
+            color: Theme.textSecondary }
             CText { variant: "body1"; text: root.tenant.owner }
         }
         ColumnLayout {
             spacing: 4
-            CText { variant: "caption"; text: "Homepage"; color: Theme.textSecondary }
+            CText { variant: "caption"; text: "Homepage"
+            color: Theme.textSecondary }
             CText { variant: "body1"; text: root.tenant.homepage }
         }
         ColumnLayout {
             spacing: 4
-            CText { variant: "caption"; text: "Created"; color: Theme.textSecondary }
+            CText { variant: "caption"; text: "Created"
+            color: Theme.textSecondary }
             CText { variant: "body1"; text: root.tenant.created }
         }
         Item { Layout.fillWidth: true }

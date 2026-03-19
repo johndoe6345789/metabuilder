@@ -92,7 +92,8 @@ Item {
                 blocks.push({ type: "h3", text: line.substring(4) })
             }
             // Horizontal rule
-            else if (line.match(/^-{3,}$/) || line.match(/^_{3,}$/) || line.match(/^\*{3,}$/)) {
+            else if (line.match(/^-{3,}$/) || line.match(/^_{3,
+                }$/) || line.match(/^\*{3,}$/)) {
                 blocks.push({ type: "hr" })
             }
             // Blockquote
@@ -103,7 +104,8 @@ Item {
             else if (line.match(/^[\-\*]\s/)) {
                 // Collect consecutive list items
                 const items = [line.substring(2)]
-                while (i + 1 < lines.length && lines[i + 1].match(/^[\-\*]\s/)) {
+                while (i + 1 < lines.length &&
+                    lines[i + 1].match(/^[\-\*]\s/)) {
                     i++
                     items.push(lines[i].substring(2))
                 }
@@ -127,7 +129,9 @@ Item {
         if (!text) return ""
         
         // Replace inline code
-        text = text.replace(/`([^`]+)`/g, '<span style="font-family: Courier New; background-color: rgba(0,0,0,0.2); padding: 2px 4px; border-radius: 3px;">$1</span>')
+        text = text.replace(/`([^`]+)`/g, '<span style="font-family: Courier New
+        background-color: rgba(0,0,0,0.2); padding: 2px 4px
+        border-radius: 3px;">$1</span>')
         
         // Replace bold
         text = text.replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>')
@@ -138,7 +142,8 @@ Item {
         text = text.replace(/_([^_]+)_/g, '<i>$1</i>')
         
         // Replace links
-        text = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" style="color: ' + Theme.primary + ';">$1</a>')
+        text = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g,
+            '<a href="$2" style="color: ' + Theme.primary + ';">$1</a>')
         
         return text
     }
@@ -231,7 +236,8 @@ Item {
         Rectangle {
             width: parent.width
             height: quoteText.height + 16
-            color: Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.08)
+            color:
+                Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.08)
             radius: 4
             
             Rectangle {

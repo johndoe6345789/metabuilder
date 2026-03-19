@@ -25,7 +25,9 @@ Item {
             spacing: 8
             
             Label {
-                text: taskIndex >= 0 ? "Task #" + (taskIndex + 1) : "Select a task"
+                text: taskIndex >= 0
+                    ? "Task #" + (taskIndex + 1)
+                    : "Select a task"
                 font.bold: true
                 font.pixelSize: 18
                 color: themeColors.windowText || "#ffffff"
@@ -41,28 +43,40 @@ Item {
                 ToolTip.text: "Extract git patch (Ctrl+P)"
                 
                 background: Rectangle {
-                    color: parent.hovered ? (themeColors.alternateBase || "#242424") : (themeColors.base || "#1a1a1a")
+                    color: parent.hovered
+                        ? (themeColors.alternateBase
+                            || "#242424")
+                        : (themeColors.base
+                            || "#1a1a1a")
                     radius: 4
-                    border.color: themeColors.border || "#333333"
+                    border.color: themeColors.border
+                        || "#333333"
                     border.width: 1
                 }
                 contentItem: Text {
                     text: parent.text
-                    color: themeColors.windowText || "#ffffff"
+                    color: themeColors.windowText
+                        || "#ffffff"
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                 }
             }
-            
+
             Button {
                 text: "🔀 Create PR"
-                enabled: taskIndex >= 0 && taskData && !taskData.pull_request
+                enabled: taskIndex >= 0
+                    && taskData
+                    && !taskData.pull_request
                 onClicked: root.prClicked()
                 ToolTip.visible: hovered
                 ToolTip.text: "Create pull request"
-                
+
                 background: Rectangle {
-                    color: parent.enabled ? (themeColors.accent || "#10a37f") : (themeColors.mid || "#333333")
+                    color: parent.enabled
+                        ? (themeColors.accent
+                            || "#10a37f")
+                        : (themeColors.mid
+                            || "#333333")
                     radius: 4
                 }
                 contentItem: Text {
@@ -81,27 +95,36 @@ Item {
                 ToolTip.text: "Archive this task"
                 
                 background: Rectangle {
-                    color: parent.hovered ? (themeColors.alternateBase || "#242424") : (themeColors.base || "#1a1a1a")
+                    color: parent.hovered
+                        ? (themeColors.alternateBase
+                            || "#242424")
+                        : (themeColors.base
+                            || "#1a1a1a")
                     radius: 4
-                    border.color: themeColors.border || "#333333"
+                    border.color: themeColors.border
+                        || "#333333"
                     border.width: 1
                 }
                 contentItem: Text {
                     text: parent.text
-                    color: themeColors.windowText || "#ffffff"
+                    color: themeColors.windowText
+                        || "#ffffff"
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                 }
             }
         }
-        
+
         // Task summary card
         Rectangle {
             Layout.fillWidth: true
-            Layout.preferredHeight: summaryColumn.implicitHeight + 24
-            color: themeColors.alternateBase || "#242424"
+            Layout.preferredHeight:
+                summaryColumn.implicitHeight + 24
+            color: themeColors.alternateBase
+                || "#242424"
             radius: 8
-            border.color: themeColors.border || "#333333"
+            border.color: themeColors.border
+                || "#333333"
             border.width: 1
             visible: taskIndex >= 0 && taskData
             
@@ -114,39 +137,55 @@ Item {
                 // Title
                 Label {
                     Layout.fillWidth: true
-                    text: taskData ? (taskData.title || "Untitled Task") : ""
+                    text: taskData
+                        ? (taskData.title
+                            || "Untitled Task")
+                        : ""
                     font.bold: true
                     font.pixelSize: 16
                     wrapMode: Text.Wrap
-                    color: themeColors.windowText || "#ffffff"
+                    color: themeColors.windowText
+                        || "#ffffff"
                 }
-                
+
                 // Repository & Branch
                 RowLayout {
                     Layout.fillWidth: true
                     spacing: 16
                     
                     Label {
-                        text: "📁 " + (taskData && taskData.repository ? taskData.repository.full_name : "")
+                        text: "📁 " + (taskData
+                            && taskData.repository
+                            ? taskData.repository
+                                .full_name
+                            : "")
                         opacity: 0.8
-                        visible: taskData && taskData.repository
-                        color: themeColors.windowText || "#ffffff"
+                        visible: taskData
+                            && taskData.repository
+                        color: themeColors.windowText
+                            || "#ffffff"
                         
                         MouseArea {
                             anchors.fill: parent
                             cursorShape: Qt.PointingHandCursor
                             onClicked: {
                                 if (taskData && taskData.repository) {
-                                    app.openUrl("https://github.com/" + taskData.repository.full_name)
+                                    app.openUrl("https://github.com/" +
+                                        taskData.repository.full_name)
                                 }
                             }
                         }
                     }
                     
                     Label {
-                        text: "🌿 " + (taskData ? (taskData.head_branch || taskData.branch || "") : "")
+                        text: "🌿 " + (taskData
+                            ? (taskData.head_branch
+                                || taskData.branch
+                                || "")
+                            : "")
                         opacity: 0.8
-                        visible: taskData && (taskData.head_branch || taskData.branch)
+                        visible: taskData &&
+                            (taskData.head_branch || taskData.branch)
                         color: themeColors.windowText || "#ffffff"
                     }
                 }
@@ -158,7 +197,10 @@ Item {
                     
                     // Status badge
                     Label {
-                        text: taskData ? (taskData.status || "unknown") : ""
+                        text: taskData
+                            ? (taskData.status
+                                || "unknown")
+                            : ""
                         font.pixelSize: 12
                         padding: 4
                         leftPadding: 10
@@ -166,13 +208,25 @@ Item {
                         background: Rectangle {
                             radius: 4
                             color: {
-                                if (!taskData) return themeColors.mid || "#333333"
+                                if (!taskData)
+                                    return themeColors.mid
+                                        || "#333333"
                                 switch(taskData.status) {
-                                    case "completed": return themeColors.success || "#22c55e"
-                                    case "running": return themeColors.info || "#3b82f6"
-                                    case "failed": return themeColors.error || "#ef4444"
-                                    case "queued": return themeColors.warning || "#f59e0b"
-                                    default: return themeColors.mid || "#333333"
+                                case "completed":
+                                    return themeColors.success
+                                        || "#22c55e"
+                                case "running":
+                                    return themeColors.info
+                                        || "#3b82f6"
+                                case "failed":
+                                    return themeColors.error
+                                        || "#ef4444"
+                                case "queued":
+                                    return themeColors.warning
+                                        || "#f59e0b"
+                                default:
+                                    return themeColors.mid
+                                        || "#333333"
                                 }
                             }
                         }
@@ -203,10 +257,16 @@ Item {
                     
                     // Created date
                     Label {
-                        text: taskData && taskData.created_at ? ("Created: " + taskData.created_at.substring(0, 10)) : ""
+                        text: taskData
+                            && taskData.created_at
+                            ? ("Created: "
+                                + taskData.created_at
+                                    .substring(0, 10))
+                            : ""
                         opacity: 0.6
                         font.pixelSize: 12
-                        color: themeColors.textSecondary || themeColors.windowText || "#a0a0a0"
+                        color: themeColors.textSecondary ||
+                            themeColors.windowText || "#a0a0a0"
                     }
                 }
             }
@@ -228,12 +288,16 @@ Item {
             TabButton {
                 text: "📝 Details"
                 background: Rectangle {
-                    color: tabBar.currentIndex === 0 ? (themeColors.alternateBase || "#242424") : "transparent"
+                    color: tabBar.currentIndex === 0
+                        ? (themeColors.alternateBase || "#242424")
+                        : "transparent"
                     radius: 4
                 }
                 contentItem: Text {
                     text: parent.text
-                    color: tabBar.currentIndex === 0 ? (themeColors.accent || "#10a37f") : (themeColors.textSecondary || "#a0a0a0")
+                    color: tabBar.currentIndex === 0
+                        ? (themeColors.accent || "#10a37f")
+                        : (themeColors.textSecondary || "#a0a0a0")
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     font.pixelSize: 13
@@ -242,12 +306,16 @@ Item {
             TabButton {
                 text: "💬 Prompt"
                 background: Rectangle {
-                    color: tabBar.currentIndex === 1 ? (themeColors.alternateBase || "#242424") : "transparent"
+                    color: tabBar.currentIndex === 1
+                        ? (themeColors.alternateBase || "#242424")
+                        : "transparent"
                     radius: 4
                 }
                 contentItem: Text {
                     text: parent.text
-                    color: tabBar.currentIndex === 1 ? (themeColors.accent || "#10a37f") : (themeColors.textSecondary || "#a0a0a0")
+                    color: tabBar.currentIndex === 1
+                        ? (themeColors.accent || "#10a37f")
+                        : (themeColors.textSecondary || "#a0a0a0")
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     font.pixelSize: 13
@@ -256,12 +324,16 @@ Item {
             TabButton {
                 text: "🔧 Raw JSON"
                 background: Rectangle {
-                    color: tabBar.currentIndex === 2 ? (themeColors.alternateBase || "#242424") : "transparent"
+                    color: tabBar.currentIndex === 2
+                        ? (themeColors.alternateBase || "#242424")
+                        : "transparent"
                     radius: 4
                 }
                 contentItem: Text {
                     text: parent.text
-                    color: tabBar.currentIndex === 2 ? (themeColors.accent || "#10a37f") : (themeColors.textSecondary || "#a0a0a0")
+                    color: tabBar.currentIndex === 2
+                        ? (themeColors.accent || "#10a37f")
+                        : (themeColors.textSecondary || "#a0a0a0")
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     font.pixelSize: 13
@@ -292,7 +364,8 @@ Item {
                         radius: 4
                         border.color: themeColors.border || "#333333"
                         border.width: 1
-                        visible: taskData && taskData.turns && taskData.turns.length > 0
+                        visible: taskData &&
+                            taskData.turns && taskData.turns.length > 0
                         
                         ColumnLayout {
                             id: turnsColumn
@@ -301,12 +374,16 @@ Item {
                             spacing: 4
                             
                             Label {
-                                text: "Turns: " + (taskData && taskData.turns ? taskData.turns.length : 0)
+                                text: "Turns: " + (taskData && taskData.turns ?
+                                    taskData.turns.length : 0)
                                 font.bold: true
                             }
                             
                             Label {
-                                text: taskData && taskData.current_turn_id ? ("Current: " + taskData.current_turn_id.substring(0, 8) + "...") : ""
+                                text: taskData && taskData.current_turn_id ?
+                                    ("Current: " +
+                                        taskData.current_turn_id.substring(0,
+                                            8) + "...") : ""
                                 opacity: 0.7
                                 font.pixelSize: 12
                             }
@@ -319,7 +396,8 @@ Item {
                         text: "Select 'Raw JSON' tab to see full task details"
                         opacity: 0.5
                         horizontalAlignment: Text.AlignHCenter
-                        visible: !(taskData && taskData.turns && taskData.turns.length > 0)
+                        visible: !(taskData &&
+                            taskData.turns && taskData.turns.length > 0)
                     }
                 }
             }
@@ -334,12 +412,18 @@ Item {
                         // Try to find the prompt in various locations
                         if (taskData.prompt) return taskData.prompt
                         if (taskData.input_items) {
-                            for (var i = 0; i < taskData.input_items.length; i++) {
-                                var item = taskData.input_items[i]
+                            var items = taskData.input_items
+                            for (var i = 0;
+                                i < items.length;
+                                i++) {
+                                var item = items[i]
                                 if (item.content) {
-                                    for (var j = 0; j < item.content.length; j++) {
-                                        if (item.content[j].text) {
-                                            return item.content[j].text
+                                    var c = item.content
+                                    for (var j = 0;
+                                        j < c.length;
+                                        j++) {
+                                        if (c[j].text) {
+                                            return c[j].text
                                         }
                                     }
                                 }

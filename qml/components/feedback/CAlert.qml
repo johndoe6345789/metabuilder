@@ -49,9 +49,11 @@ Rectangle {
     // MD3 tonal background based on severity (12% opacity)
     readonly property color _bgColor: {
         if (variant === "outlined") return "transparent"
-        if (variant === "standard") return Qt.rgba(_severityColor.r, _severityColor.g, _severityColor.b, 0.08)
+        if (variant === "standard") return
+            Qt.rgba(_severityColor.r, _severityColor.g, _severityColor.b, 0.08)
         // filled — MD3 tonal surface
-        return Qt.rgba(_severityColor.r, _severityColor.g, _severityColor.b, 0.12)
+        return
+            Qt.rgba(_severityColor.r, _severityColor.g, _severityColor.b, 0.12)
     }
 
     readonly property color _accentColor: _severityColor
@@ -134,7 +136,9 @@ Rectangle {
             width: 28
             height: 28
             radius: 14
-            color: closeArea.containsMouse ? Qt.rgba(root._severityColor.r, root._severityColor.g, root._severityColor.b, 0.12) : "transparent"
+            color: closeArea.containsMouse ? Qt.rgba(root._severityColor.r,
+                root._severityColor.g, root._severityColor.b,
+                    0.12) : "transparent"
             Layout.alignment: Qt.AlignTop
 
             Text {
@@ -157,5 +161,6 @@ Rectangle {
     // Entry animation
     opacity: 0
     Component.onCompleted: opacity = 1
-    Behavior on opacity { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
+    Behavior on opacity { NumberAnimation { duration: 200
+    easing.type: Easing.OutCubic } }
 }

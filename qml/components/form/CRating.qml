@@ -14,7 +14,8 @@ Row {
     property int max: 5
     property bool readOnly: false
     property int hoverValue: -1
-    property color filledColor: "#ffc107"  // MD3 amber / override with Theme.primary if desired
+    // MD3 amber / override with Theme.primary if desired
+    property color filledColor: "#ffc107"
     property color emptyColor: Theme.border
 
     signal valueChanged(int newValue)
@@ -45,7 +46,8 @@ Row {
 
                 // Scale bump on hover
                 scale: starMouseArea.containsMouse ? 1.2 : 1.0
-                Behavior on scale { NumberAnimation { duration: 100; easing.type: Easing.OutCubic } }
+                Behavior on scale { NumberAnimation { duration: 100
+                easing.type: Easing.OutCubic } }
             }
 
             MouseArea {
@@ -53,7 +55,8 @@ Row {
                 anchors.fill: parent
                 hoverEnabled: !root.readOnly
                 enabled: !root.readOnly
-                cursorShape: root.readOnly ? Qt.ArrowCursor : Qt.PointingHandCursor
+                cursorShape: root.readOnly
+                    ? Qt.ArrowCursor : Qt.PointingHandCursor
 
                 onClicked: {
                     root.value = index + 1;

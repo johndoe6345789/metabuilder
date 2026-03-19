@@ -9,16 +9,22 @@ Rectangle {
     id: root
 
     property alias text: label.text
-    property string variant: "default"   // default, success, warning, error, info
+    // default, success, warning, error, info
+    property string variant: "default"
 
     // MD3 tonal color mapping
     readonly property color _bgColor: {
         switch (variant) {
-            case "success": return Qt.rgba(Theme.success.r, Theme.success.g, Theme.success.b, 0.15)
-            case "warning": return Qt.rgba(Theme.warning.r, Theme.warning.g, Theme.warning.b, 0.15)
-            case "error": return Qt.rgba(Theme.error.r, Theme.error.g, Theme.error.b, 0.15)
-            case "info": return Qt.rgba(Theme.info.r, Theme.info.g, Theme.info.b, 0.15)
-            default: return Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.15)
+            case "success": return
+                Qt.rgba(Theme.success.r, Theme.success.g, Theme.success.b, 0.15)
+            case "warning": return
+                Qt.rgba(Theme.warning.r, Theme.warning.g, Theme.warning.b, 0.15)
+            case "error": return
+                Qt.rgba(Theme.error.r, Theme.error.g, Theme.error.b, 0.15)
+            case "info": return
+                Qt.rgba(Theme.info.r, Theme.info.g, Theme.info.b, 0.15)
+            default: return
+                Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.15)
         }
     }
 

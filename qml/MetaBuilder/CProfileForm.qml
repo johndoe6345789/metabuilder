@@ -21,13 +21,14 @@ CCard {
 
     signal save(var data)
 
-    // ── Local editable copies ───────────────────────────────────
+    // ── Local editable copies ──────────
     property string editDisplayName: profile.displayName || ""
     property string editEmail: profile.email || ""
     property string editBio: profile.bio || ""
 
     onProfileChanged: {
-        editDisplayName = (profile && profile.displayName) ? profile.displayName : ""
+        editDisplayName = (profile && profile.displayName)
+            ? profile.displayName : ""
         editEmail = (profile && profile.email) ? profile.email : ""
         editBio = (profile && profile.bio) ? profile.bio : ""
     }

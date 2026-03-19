@@ -17,7 +17,8 @@ CCard {
         spacing: 16
 
         CText { variant: "h4"; text: "Spacing" }
-        CText { variant: "caption"; text: "Base spacing unit used as a multiplier across the layout system" }
+        CText { variant: "caption"; text: "Base spacing unit used as a
+            multiplier across the layout system" }
 
         CDivider { Layout.fillWidth: true }
 

@@ -100,14 +100,19 @@ Item {
                             width: 12
                             height: 12
                             radius: 6
-                            color: connectionStatus === "connected" ? Theme.success :
-                                   connectionStatus === "disconnected" ? Theme.error : Theme.warning
+                            color: connectionStatus === "connected"
+                                ? Theme.success :
+                                   connectionStatus === "disconnected"
+                                       ? Theme.error : Theme.warning
                         }
                         
                         Text {
-                            text: connectionStatus === "connected" ? LanguageContext.t("connected") :
-                                  connectionStatus === "disconnected" ? LanguageContext.t("disconnected") :
-                                  connectionStatus === "checking" ? "Checking..." :
+                            text: connectionStatus === "connected"
+                                ? LanguageContext.t("connected") :
+                                  connectionStatus === "disconnected"
+                                      ? LanguageContext.t("disconnected") :
+                                  connectionStatus === "checking"
+                                      ? "Checking..." :
                                   LanguageContext.t("unknown")
                             font.pixelSize: 16
                             color: Theme.text
@@ -186,7 +191,8 @@ Item {
                         Text {
                             text: sessionInfo?.has_session ? "Yes" : "No"
                             font.pixelSize: 14
-                            color: sessionInfo?.has_session ? Theme.success : Theme.error
+                            color: sessionInfo
+                                ?.has_session ? Theme.success : Theme.error
                         }
                         
                         Text {
@@ -317,13 +323,15 @@ Item {
                     }
                     
                     Text {
-                        text: "3. Copy the __Secure-next-auth.session-token value"
+                        text:
+                            "3. Copy the __Secure-next-auth.session-token value"
                         font.pixelSize: 14
                         color: Theme.textSecondary
                     }
                     
                     Text {
-                        text: "4. Create a .env file with CODEX_SESSION_TOKEN=<token>"
+                        text: "4. Create a .env file with
+                            CODEX_SESSION_TOKEN=<token>"
                         font.pixelSize: 14
                         color: Theme.textSecondary
                     }

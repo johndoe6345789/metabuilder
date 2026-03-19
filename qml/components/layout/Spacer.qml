@@ -50,8 +50,10 @@ Item {
     // Layout properties
     Layout.fillWidth: _fixedSize < 0 && _isHorizontal
     Layout.fillHeight: _fixedSize < 0 && !_isHorizontal
-    Layout.preferredWidth: _fixedSize >= 0 && _isHorizontal ? _fixedSize : undefined
-    Layout.preferredHeight: _fixedSize >= 0 && !_isHorizontal ? _fixedSize : undefined
+    Layout.preferredWidth: _fixedSize >= 0 && _isHorizontal
+        ? _fixedSize : undefined
+    Layout.preferredHeight: _fixedSize >= 0 && !_isHorizontal
+        ? _fixedSize : undefined
     
     implicitWidth: _fixedSize >= 0 ? _fixedSize : 0
     implicitHeight: _fixedSize >= 0 ? _fixedSize : 0

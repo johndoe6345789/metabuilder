@@ -16,11 +16,14 @@ Rectangle {
     signal clicked()
 
     // MD3 tonal surfaces
-    readonly property color surfaceContainerHigh: isDark ? Qt.rgba(1, 1, 1, 0.08) : Qt.rgba(0.31, 0.31, 0.44, 0.10)
-    readonly property color surfaceContainerHighest: isDark ? Qt.rgba(1, 1, 1, 0.12) : Qt.rgba(0.31, 0.31, 0.44, 0.14)
+    readonly property color surfaceContainerHigh: isDark
+        ? Qt.rgba(1, 1, 1, 0.08) : Qt.rgba(0.31, 0.31, 0.44, 0.10)
+    readonly property color surfaceContainerHighest: isDark
+        ? Qt.rgba(1, 1, 1, 0.12) : Qt.rgba(0.31, 0.31, 0.44, 0.14)
     readonly property color onSurface: Theme.text
     readonly property color onSurfaceVariant: Theme.textSecondary
-    readonly property color outlineVariant: isDark ? Qt.rgba(1, 1, 1, 0.06) : Qt.rgba(0, 0, 0, 0.08)
+    readonly property color outlineVariant: isDark
+        ? Qt.rgba(1, 1, 1, 0.06) : Qt.rgba(0, 0, 0, 0.08)
 
     radius: 16
     clip: true
@@ -49,7 +52,8 @@ Rectangle {
 
             Rectangle {
                 width: 28; height: 28; radius: 8
-                color: Qt.rgba(accent.r, accent.g, accent.b, isDark ? 0.2 : 0.15)
+                color: Qt.rgba(accent.r, accent.g, accent.b, isDark
+                    ? 0.2 : 0.15)
 
                 CText {
                     anchors.centerIn: parent

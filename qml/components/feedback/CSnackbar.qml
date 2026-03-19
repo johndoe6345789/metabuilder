@@ -26,7 +26,8 @@ Item {
 
     // Internal state
     property string _message: ""
-    property string _severity: "default"  // default, success, warning, error, info
+    // default, success, warning, error, info
+    property string _severity: "default"
     property string _actionText: ""
     property var _actionCallback: null
     property bool _visible: false
@@ -48,7 +49,8 @@ Item {
     z: StyleVariables.zToast
 
     // Show snackbar
-    function show(message, severity, customDuration, actionText, actionCallback) {
+    function show(message, severity, customDuration, actionText,
+        actionCallback) {
         _message = message || ""
         _severity = severity || "default"
         _actionText = actionText || ""
@@ -57,7 +59,8 @@ Item {
 
         // Start auto-hide timer
         if ((customDuration !== undefined ? customDuration : duration) > 0) {
-            hideTimer.interval = customDuration !== undefined ? customDuration : duration
+            hideTimer.interval = customDuration !== undefined
+                ? customDuration : duration
             hideTimer.restart()
         }
     }
@@ -75,11 +78,14 @@ Item {
     }
 
     // MD3 inverse surface color
-    readonly property color _inverseSurface: Theme.mode === "dark" ? "#E6E1E5" : "#313033"
+    readonly property color _inverseSurface: Theme.mode === "dark"
+        ? "#E6E1E5" : "#313033"
     // MD3 inverse on surface (text color)
-    readonly property color _inverseOnSurface: Theme.mode === "dark" ? "#313033" : "#F4EFF4"
+    readonly property color _inverseOnSurface: Theme.mode === "dark"
+        ? "#313033" : "#F4EFF4"
     // MD3 inverse primary (action button color)
-    readonly property color _inversePrimary: Theme.mode === "dark" ? Qt.darker(Theme.primary, 1.3) : Qt.lighter(Theme.primary, 1.4)
+    readonly property color _inversePrimary: Theme.mode === "dark"
+        ? Qt.darker(Theme.primary, 1.3) : Qt.lighter(Theme.primary, 1.4)
 
     // Snackbar content
     Rectangle {
@@ -144,7 +150,8 @@ Item {
                 font.letterSpacing: 0.25
                 color: root._inverseOnSurface
                 Layout.fillWidth: true
-                Layout.maximumWidth: root.maxWidth - 16 * 3 - (actionButton.visible ? actionButton.width + 12 : 0)
+                Layout.maximumWidth: root.maxWidth - 16 * 3 - (
+                    actionButton.visible ? actionButton.width + 12 : 0)
                 wrapMode: Text.WordWrap
                 lineHeight: 1.4
             }
@@ -156,7 +163,9 @@ Item {
                 width: actionLabel.implicitWidth + 16
                 height: actionLabel.implicitHeight + 12
                 radius: 4
-                color: actionArea.containsMouse ? Qt.rgba(root._inversePrimary.r, root._inversePrimary.g, root._inversePrimary.b, 0.12) : "transparent"
+                color: actionArea.containsMouse ?
+                    Qt.rgba(root._inversePrimary.r, root._inversePrimary.g,
+                        root._inversePrimary.b, 0.12) : "transparent"
 
                 Text {
                     id: actionLabel

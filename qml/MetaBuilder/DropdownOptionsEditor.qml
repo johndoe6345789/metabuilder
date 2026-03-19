@@ -65,7 +65,8 @@ ColumnLayout {
                     spacing: 2
                     CButton {
                         text: "\u25B2"; variant: "ghost"; size: "sm"
-                        enabled: index > 0; onClicked: root.moveOptionClicked(index, -1)
+                        enabled: index > 0
+                        onClicked: root.moveOptionClicked(index, -1)
                     }
                     CButton {
                         text: "\u25BC"; variant: "ghost"; size: "sm"

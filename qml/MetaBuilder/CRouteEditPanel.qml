@@ -46,15 +46,19 @@ CCard {
             Layout.fillWidth: true
             model: levelOptions
             currentIndex: root.route ? root.route.level - 1 : 0
-            onCurrentIndexChanged: if (root.route && currentIndex + 1 !== root.route.level) root.fieldChanged("level", currentIndex + 1)
+            onCurrentIndexChanged: if (root.route && currentIndex + 1 !==
+                root.route.level) root.fieldChanged("level", currentIndex + 1)
         }
 
         CText { variant: "caption"; text: "Layout Type" }
         CSelect {
             Layout.fillWidth: true
             model: layoutOptions
-            currentIndex: root.route ? layoutOptions.indexOf(root.route.layout) : 0
-            onCurrentIndexChanged: if (root.route && layoutOptions[currentIndex] !== root.route.layout) root.fieldChanged("layout", layoutOptions[currentIndex])
+            currentIndex: root.route
+                ? layoutOptions.indexOf(root.route.layout) : 0
+            onCurrentIndexChanged: if (root.route &&
+                layoutOptions[currentIndex] !== root.route.layout)
+                    root.fieldChanged("layout", layoutOptions[currentIndex])
         }
 
         FlexRow {
@@ -75,7 +79,8 @@ CCard {
         CRoutePermissionSection {
             permissions: root.route ? root.route.permissions : ""
             level: root.route ? root.route.level : 1
-            onPermissionsChanged: function(value) { root.fieldChanged("permissions", value) }
+            onPermissionsChanged: function(
+                value) { root.fieldChanged("permissions", value) }
         }
 
         Item { Layout.fillHeight: true }

@@ -50,7 +50,8 @@ Rectangle {
                     ColumnLayout {
                         Layout.fillWidth: true
                         spacing: 2
-                        CText { variant: "caption"; text: modelData.label; color: Theme.textSecondary }
+                        CText { variant: "caption"; text: modelData.label
+                        color: Theme.textSecondary }
                         CText { variant: "h3"; text: String(modelData.value) }
                     }
                 }

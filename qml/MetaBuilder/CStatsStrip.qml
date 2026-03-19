@@ -5,12 +5,14 @@ import QmlComponents 1.0
 Rectangle {
     id: root
 
-    property var stats: ({ users: "0", packages: "0", workflows: "0", backends: "0" })
+    property var stats: ({ users: "0", packages: "0", workflows: "0",
+        backends: "0" })
     property color accentColor: "#6366F1"
     property bool isDark: false
 
     readonly property color onSurfaceVariant: Theme.textSecondary
-    readonly property color outlineVariant: isDark ? Qt.rgba(1, 1, 1, 0.06) : Qt.rgba(0, 0, 0, 0.08)
+    readonly property color outlineVariant: isDark
+        ? Qt.rgba(1, 1, 1, 0.06) : Qt.rgba(0, 0, 0, 0.08)
 
     implicitHeight: 88
     color: isDark ? Qt.rgba(1, 1, 1, 0.05) : Qt.rgba(0.31, 0.31, 0.44, 0.06)

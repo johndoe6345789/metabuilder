@@ -45,7 +45,8 @@ ColumnLayout {
                 delegate: CButton {
                     text: modelData
                     size: "sm"
-                    variant: (root.node && root.node.type === modelData) ? "primary" : "ghost"
+                    variant: (root.node && root.node.type === modelData)
+                        ? "primary" : "ghost"
                     onClicked: root.typeChanged(modelData)
                 }
             }
@@ -74,7 +75,8 @@ ColumnLayout {
         ColumnLayout {
             spacing: 2
             CText { variant: "caption"; text: "DEPTH" }
-            CText { variant: "body1"; text: root.node ? root.node.depth.toString() : "0" }
+            CText { variant: "body1"; text: root.node
+                ? root.node.depth.toString() : "0" }
         }
         ColumnLayout {
             spacing: 2
@@ -84,7 +86,8 @@ ColumnLayout {
         ColumnLayout {
             spacing: 2
             CText { variant: "caption"; text: "NODE ID" }
-            CText { variant: "body1"; text: root.node ? root.node.nodeId.toString() : "-" }
+            CText { variant: "body1"; text: root.node
+                ? root.node.nodeId.toString() : "-" }
         }
     }
 

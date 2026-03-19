@@ -11,7 +11,8 @@ Item {
     
     signal dateTimeChanged(date newDateTime)
     
-    implicitWidth: datePickerItem.implicitWidth + timePickerItem.implicitWidth + 16
+    implicitWidth: datePickerItem.implicitWidth + timePickerItem.implicitWidth
+        + 16
     implicitHeight: contentColumn.implicitHeight
     
     ColumnLayout {
@@ -39,7 +40,8 @@ Item {
                 onDateChanged: function(newDate) {
                     if (newDate && !isNaN(newDate.getTime())) {
                         var current = dateTimePicker.value
-                        newDate.setHours(current.getHours(), current.getMinutes())
+                        newDate.setHours(current.getHours(),
+                            current.getMinutes())
                         dateTimePicker.value = newDate
                         dateTimeChanged(newDate)
                     }
@@ -55,7 +57,8 @@ Item {
                     if (newTime && !isNaN(newTime.getTime())) {
                         var current = dateTimePicker.value
                         var newDate = new Date(current)
-                        newDate.setHours(newTime.getHours(), newTime.getMinutes())
+                        newDate.setHours(newTime.getHours(),
+                            newTime.getMinutes())
                         dateTimePicker.value = newDate
                         dateTimeChanged(newDate)
                     }

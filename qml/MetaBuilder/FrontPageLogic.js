@@ -61,6 +61,15 @@ function refreshServiceStatuses(root) {
     })
 }
 
+function onLevelClicked(modelData, appWindow) {
+    var views = [
+        "frontpage", "dashboard", "admin",
+        "god-panel", "supergod"];
+    appWindow.currentView =
+        modelData.level <= appWindow.currentLevel
+            ? views[modelData.level - 1] : "login";
+}
+
 function loadPlatformStatus(root, dbal) {
     dbal.ping(function(success) {
         if (success) {

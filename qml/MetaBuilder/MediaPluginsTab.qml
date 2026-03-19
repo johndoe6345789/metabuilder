@@ -25,7 +25,8 @@ Rectangle {
                 spacing: 12
 
                 CText { variant: "h3"; text: "Installed Plugins" }
-                CText { variant: "caption"; text: plugins.length + " plugins"; color: Theme.textSecondary }
+                CText { variant: "caption"; text: plugins.length + " plugins"
+                color: Theme.textSecondary }
 
                 Item { Layout.fillWidth: true }
 
@@ -54,7 +55,8 @@ Rectangle {
                         version: modelData.version
                         status: modelData.status
                         capabilities: modelData.capabilities
-                        onReloadRequested: reloadPlugin(plugins[index].name.toLowerCase())
+                        onReloadRequested: reloadPlugin(
+                            plugins[index].name.toLowerCase())
                     }
                 }
             }

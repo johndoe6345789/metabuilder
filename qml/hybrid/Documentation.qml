@@ -177,7 +177,8 @@ Item {
                     
                     background: Rectangle {
                         color: tabBar.currentIndex === index ? 
-                               Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : 
+                               Qt.rgba(Theme.primary.r, Theme.primary.g,
+                                   Theme.primary.b, 0.12) :
                                "transparent"
                     }
                     
@@ -185,7 +186,8 @@ Item {
                         text: parent.text
                         font.pixelSize: 14
                         font.bold: tabBar.currentIndex === index
-                        color: tabBar.currentIndex === index ? Theme.primary : Theme.textSecondary
+                        color: tabBar.currentIndex === index
+                            ? Theme.primary : Theme.textSecondary
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                     }
@@ -203,15 +205,27 @@ Item {
             DocContent {
                 content: [
                     { type: "h1", text: LanguageContext.t("gettingStarted") },
-                    { type: "p", text: LanguageContext.t("gettingStartedIntro") },
+                    { type: "p",
+                        text: LanguageContext.t("gettingStartedIntro") },
                     { type: "h2", text: LanguageContext.t("installation") },
                     { type: "code", text: "pip install codex-task-runner" },
                     { type: "h2", text: LanguageContext.t("quickStart") },
                     { type: "p", text: LanguageContext.t("quickStartDesc") },
-                    { type: "code", text: "from codex_task_runner import CodexClient\n\nclient = CodexClient()\ntask = client.create_task(\"Fix the bug in main.py\")\nprint(task.id)" },
+                    { type: "code",
+                        text: "from codex_task_runner"
+                            + " import CodexClient\n\n"
+                            + "client = CodexClient()\n"
+                            + "task = client.create_task("
+                            + "\"Fix the bug in "
+                            + "main.py\")\n"
+                            + "print(task.id)" },
                     { type: "h2", text: LanguageContext.t("configuration") },
                     { type: "p", text: LanguageContext.t("configDesc") },
-                    { type: "code", text: "# .env file\nCODEX_API_KEY=your_api_key\nCODEX_BASE_URL=https://api.codex.com" }
+                    { type: "code",
+                        text: "# .env file\n"
+                        + "CODEX_API_KEY=your_api_key\n"
+                        + "CODEX_BASE_URL="
+                        + "https://api.codex.com" }
                 ]
             }
             
@@ -232,8 +246,13 @@ Item {
                     { type: "p", text: LanguageContext.t("taskListDesc") },
                     { type: "h2", text: LanguageContext.t("taskDetail") },
                     { type: "p", text: LanguageContext.t("taskDetailDesc") },
-                    { type: "h2", text: LanguageContext.t("keyboardShortcuts") },
-                    { type: "code", text: "Ctrl+K / ⌘K  - Open search\nCtrl+N / ⌘N  - New task\nCtrl+R / ⌘R  - Refresh\nEsc          - Close dialogs" }
+                    { type: "h2",
+                        text: LanguageContext.t("keyboardShortcuts") },
+                    { type: "code",
+                        text: "Ctrl+K / ⌘K  - Search\n"
+                        + "Ctrl+N / ⌘N  - New task\n"
+                        + "Ctrl+R / ⌘R  - Refresh\n"
+                        + "Esc          - Close" }
                 ]
             }
             
@@ -244,16 +263,35 @@ Item {
                     { type: "p", text: LanguageContext.t("apiReferenceIntro") },
                     { type: "h2", text: "GET /tasks" },
                     { type: "p", text: LanguageContext.t("getTasksDesc") },
-                    { type: "code", text: "curl -X GET 'http://localhost:5000/tasks?status=all&limit=20'" },
+                    { type: "code",
+                        text: "curl -X GET "
+                            + "'http://localhost:5000"
+                            + "/tasks?status=all"
+                            + "&limit=20'" },
                     { type: "h2", text: "GET /task/:id" },
                     { type: "p", text: LanguageContext.t("getTaskDesc") },
-                    { type: "code", text: "curl -X GET 'http://localhost:5000/task/abc123'" },
+                    { type: "code",
+                        text: "curl -X GET "
+                            + "'http://localhost:5000"
+                            + "/task/abc123'" },
                     { type: "h2", text: "POST /prompt" },
                     { type: "p", text: LanguageContext.t("postPromptDesc") },
-                    { type: "code", text: "curl -X POST 'http://localhost:5000/prompt' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\"prompt_text\": \"Fix the bug\", \"branch\": \"main\"}'" },
+                    { type: "code",
+                        text: "curl -X POST "
+                            + "'http://localhost:5000"
+                            + "/prompt' \\\n"
+                            + "  -H 'Content-Type: "
+                            + "application/json' \\\n"
+                            + "  -d '{\"prompt_text\":"
+                            + " \"Fix the bug\", "
+                            + "\"branch\": "
+                            + "\"main\"}'" },
                     { type: "h2", text: "POST /task/:id/pr" },
                     { type: "p", text: LanguageContext.t("createPRDesc") },
-                    { type: "code", text: "curl -X POST 'http://localhost:5000/task/abc123/pr'" }
+                    { type: "code",
+                        text: "curl -X POST "
+                            + "'http://localhost:5000"
+                            + "/task/abc123/pr'" }
                 ]
             }
             
@@ -264,16 +302,19 @@ Item {
                     { type: "p", text: LanguageContext.t("cliCommandsIntro") },
                     { type: "h2", text: "codex tasks" },
                     { type: "p", text: LanguageContext.t("cliTasksDesc") },
-                    { type: "code", text: "codex tasks --status=running --limit=10" },
+                    { type: "code",
+                        text: "codex tasks --status=running --limit=10" },
                     { type: "h2", text: "codex run" },
                     { type: "p", text: LanguageContext.t("cliRunDesc") },
-                    { type: "code", text: "codex run \"Implement the login feature\"" },
+                    { type: "code",
+                        text: "codex run \"Implement the login feature\"" },
                     { type: "h2", text: "codex poll" },
                     { type: "p", text: LanguageContext.t("cliPollDesc") },
                     { type: "code", text: "codex poll abc123 --interval=5" },
                     { type: "h2", text: "codex pr" },
                     { type: "p", text: LanguageContext.t("cliPRDesc") },
-                    { type: "code", text: "codex pr abc123 --title=\"Feature: Login\"" }
+                    { type: "code",
+                        text: "codex pr abc123 --title=\"Feature: Login\"" }
                 ]
             }
             
@@ -281,13 +322,20 @@ Item {
             DocContent {
                 content: [
                     { type: "h1", text: LanguageContext.t("authentication") },
-                    { type: "p", text: LanguageContext.t("authenticationIntro") },
+                    { type: "p",
+                        text: LanguageContext.t("authenticationIntro") },
                     { type: "h2", text: LanguageContext.t("apiKey") },
                     { type: "p", text: LanguageContext.t("apiKeyDesc") },
-                    { type: "code", text: "export CODEX_API_KEY=your_api_key_here" },
+                    { type: "code",
+                        text: "export CODEX_API_KEY=your_api_key_here" },
                     { type: "h2", text: LanguageContext.t("sessionCookie") },
                     { type: "p", text: LanguageContext.t("sessionCookieDesc") },
-                    { type: "code", text: "# Cookie is automatically managed by the browser\n# For CLI, export from browser developer tools" },
+                    { type: "code",
+                        text: "# Cookie is auto "
+                            + "managed by the browser"
+                            + "\n# For CLI, export "
+                            + "from browser dev tools"
+                    },
                     { type: "h2", text: LanguageContext.t("securityTips") },
                     { type: "ul", items: [
                         LanguageContext.t("securityTip1"),

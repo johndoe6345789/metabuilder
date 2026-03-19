@@ -28,7 +28,8 @@ Rectangle {
         LuaTestInputPanel {
             params: outputPanel.params
             onExecuteTest: function(args) { outputPanel.executeTest(args) }
-            onParamValueChanged: function(index, value) { outputPanel.paramValueChanged(index, value) }
+            onParamValueChanged: function(index,
+                value) { outputPanel.paramValueChanged(index, value) }
         }
 
         Rectangle {

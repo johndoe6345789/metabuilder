@@ -22,7 +22,8 @@ Rectangle {
     border.width: 1
     clip: true
 
-    Behavior on Layout.preferredHeight { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
+    Behavior on Layout.preferredHeight { NumberAnimation { duration: 200
+    easing.type: Easing.OutCubic } }
 
     ColumnLayout {
         anchors.fill: parent
@@ -70,7 +71,8 @@ Rectangle {
                     onTextChanged: root.testInput = text
                 }
                 CButton {
-                    text: executionStatus === "running" ? "Executing..." : "Execute"
+                    text: executionStatus === "running"
+                        ? "Executing..." : "Execute"
                     variant: "primary"
                     enabled: executionStatus !== "running" && canExecute
                     onClicked: root.executeRequested()

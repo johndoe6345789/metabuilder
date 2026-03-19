@@ -53,7 +53,8 @@ ColumnLayout {
             Layout.alignment: Qt.AlignBottom
 
             CButton {
-                text: root.connectionStatus === "testing" ? "Testing..." : "Test Connection"
+                text: root.connectionStatus === "testing"
+                    ? "Testing..." : "Test Connection"
                 variant: "default"; size: "sm"
                 enabled: root.connectionStatus !== "testing"
                 onClicked: root.testRequested()

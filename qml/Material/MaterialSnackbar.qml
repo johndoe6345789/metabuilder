@@ -17,8 +17,11 @@ Rectangle {
     border.color: MaterialPalette.outline
     border.width: 1
     opacity: open ? 1 : 0
-    y: open ? (parent ? parent.height - implicitHeight - 32 : 0) : (parent ? parent.height : implicitHeight)
-    Behavior on y { NumberAnimation { duration: 300; easing.type: Easing.OutQuad } }
+    y: open
+        ? (parent ? parent.height - implicitHeight - 32
+        : 0) : (parent ? parent.height : implicitHeight)
+    Behavior on y { NumberAnimation { duration: 300
+    easing.type: Easing.OutQuad } }
 
     RowLayout {
         anchors.fill: parent

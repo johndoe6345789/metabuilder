@@ -15,10 +15,12 @@ ColumnLayout {
     CAlert {
         Layout.fillWidth: true
         severity: securityScanResult
-                  ? (securityScanResult.indexOf("WARN") !== -1 ? "warning" : "success")
+                  ? (securityScanResult.indexOf("WARN") !== -1 ? "warning" :
+                      "success")
                   : "info"
         text: securityScanResult
-              ? (securityScanResult.indexOf("WARN") !== -1 ? "Advisories found" : "All checks passed")
+              ? (securityScanResult.indexOf("WARN") !== -1 ? "Advisories found"
+                  : "All checks passed")
               : "Not scanned yet"
     }
 

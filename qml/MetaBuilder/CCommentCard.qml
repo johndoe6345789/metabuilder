@@ -35,7 +35,8 @@ CCard {
                     text: root.comment.username
                 }
                 CChip {
-                    text: root.comment.username === root.currentUser ? "You" : ""
+                    text: root.comment.username === root.currentUser
+                        ? "You" : ""
                     chipColor: Theme.primary
                     visible: root.comment.username === root.currentUser
                 }
@@ -64,7 +65,9 @@ CCard {
         spacing: 8
 
         CButton {
-            text: root.comment.liked ? "Liked (" + root.comment.likes + ")" : "Like (" + root.comment.likes + ")"
+            text: root.comment.liked
+                ? "Liked (" + root.comment.likes + ")"
+                : "Like (" + root.comment.likes + ")"
             variant: root.comment.liked ? "primary" : "ghost"
             size: "sm"
             onClicked: root.liked()

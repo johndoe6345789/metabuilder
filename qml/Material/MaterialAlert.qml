@@ -32,10 +32,16 @@ Rectangle {
             radius: 14
             color: severity === "success" ? MaterialPalette.primary :
                    severity === "error" ? MaterialPalette.error :
-                   severity === "warning" ? MaterialPalette.secondary : MaterialPalette.primary
+                   severity === "warning"
+                       ? MaterialPalette.secondary : MaterialPalette.primary
             Text {
                 anchors.centerIn: parent
-                text: severity === "success" ? "✓" : severity === "error" ? "!" : severity === "warning" ? "!" : "ℹ"
+                text: severity === "success"
+                    ? "✓"
+                    : severity === "error"
+                    ? "!"
+                    : severity === "warning"
+                    ? "!" : "ℹ"
                 color: "#fff"
                 font.pixelSize: 16
                 font.bold: true

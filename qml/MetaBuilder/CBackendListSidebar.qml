@@ -18,7 +18,8 @@ CCard {
         anchors.margins: 16
         spacing: 8
 
-        CText { variant: "subtitle1"; text: "Backends (" + backends.length + ")" }
+        CText { variant: "subtitle1"
+        text: "Backends (" + backends.length + ")" }
         CDivider { Layout.fillWidth: true }
 
         ListView {
@@ -33,7 +34,9 @@ CCard {
                 title: modelData.name
                 subtitle: modelData.key
                 selected: index === root.selectedIndex
-                leadingIcon: modelData.status === "connected" ? "check_circle" : (modelData.status === "error" ? "error" : "radio_button_unchecked")
+                leadingIcon: modelData.status === "connected" ? "check_circle"
+                    : (modelData.status === "error"
+                        ? "error" : "radio_button_unchecked")
 
                 onClicked: root.backendSelected(index)
 
@@ -41,7 +44,9 @@ CCard {
                     anchors.right: parent.right
                     anchors.rightMargin: 12
                     anchors.verticalCenter: parent.verticalCenter
-                    status: modelData.status === "connected" ? "success" : (modelData.status === "error" ? "error" : "warning")
+                    status: modelData.status === "connected"
+                        ? "success"
+                        : (modelData.status === "error" ? "error" : "warning")
                     text: modelData.status
                 }
             }

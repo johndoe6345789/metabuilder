@@ -9,7 +9,8 @@ Rectangle {
 
     property var jobs: []
 
-    signal jobSubmitted(string type, string input, string output, string priority)
+    signal jobSubmitted(string type, string input, string output,
+        string priority)
     signal cancelRequested(string jobId)
 
     ScrollView {
@@ -20,13 +21,16 @@ Rectangle {
             MediaJobForm {
                 id: jobForm
                 onSubmitRequested: {
-                    root.jobSubmitted(jobForm.jobTypes[jobForm.jobTypeIndex], jobForm.jobInputPath, jobForm.jobOutputPath, jobForm.jobPriorities[jobForm.jobPriorityIndex])
+                    root.jobSubmitted(jobForm.jobTypes[jobForm.jobTypeIndex],
+                        jobForm.jobInputPath, jobForm.jobOutputPath,
+                        jobForm.jobPriorities[jobForm.jobPriorityIndex])
                     jobForm.jobInputPath = ""
                     jobForm.jobOutputPath = ""
                 }
             }
 
-            MediaJobTable { jobs: root.jobs; onCancelRequested: function(jobId) { root.cancelRequested(jobId) } }
+            MediaJobTable { jobs: root.jobs
+            onCancelRequested: function(jobId) { root.cancelRequested(jobId) } }
             Item { Layout.preferredHeight: 8 }
         }
     }

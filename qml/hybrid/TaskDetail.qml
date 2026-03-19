@@ -135,17 +135,21 @@ Item {
                     spacing: 8
                     
                     CChip {
-                        text: detail?.repository?.full_name || detail?.repo || LanguageContext.t("noRepo")
+                        text: detail?.repository?.full_name ||
+                            detail?.repo || LanguageContext.t("noRepo")
                     }
                     
                     CChip {
-                        text: detail?.head_branch || detail?.base_branch || "main"
+                        text: detail
+                            ?.head_branch || detail?.base_branch || "main"
                         variant: "outlined"
                     }
                     
                     CChip {
                         text: detail?.status || "pending"
-                        color: detail?.status === "completed" ? Theme.success : Theme.textMuted
+                        color: detail
+                            ?.status === "completed" ? Theme.success
+                            : Theme.textMuted
                     }
                 }
                 
@@ -256,7 +260,8 @@ Item {
                             
                             MarkdownRenderer {
                                 Layout.fillWidth: true
-                                text: detail?.description || detail?.prompt || ""
+                                text: detail
+                                    ?.description || detail?.prompt || ""
                             }
                         }
                     }
@@ -295,7 +300,8 @@ Item {
                             CIconButton {
                                 icon: "📋"
                                 tooltip: "Copy"
-                                onClicked: copyToClipboard(detail?.patch?.diff || "")
+                                onClicked: copyToClipboard(detail
+                                    ?.patch?.diff || "")
                             }
                         }
                         
@@ -307,7 +313,8 @@ Item {
                             
                             TextArea {
                                 width: parent.width
-                                text: detail?.patch?.diff || LanguageContext.t("noPatch")
+                                text: detail?.patch?.diff ||
+                                    LanguageContext.t("noPatch")
                                 font.family: "monospace"
                                 font.pixelSize: 12
                                 color: Theme.text

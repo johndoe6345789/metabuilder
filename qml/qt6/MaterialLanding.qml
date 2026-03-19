@@ -22,8 +22,10 @@ Rectangle {
 
         FlexRow {
             spacing: 16
-            CTextField { placeholderText: "Email address"; Layout.preferredWidth: 240 }
-            CTextField { placeholderText: "Your role"; Layout.preferredWidth: 180 }
+            CTextField { placeholderText: "Email address"
+            Layout.preferredWidth: 240 }
+            CTextField { placeholderText: "Your role"
+            Layout.preferredWidth: 180 }
         }
 
         FlexRow {
@@ -46,7 +48,9 @@ Rectangle {
                 CText { variant: "h4"; text: "Paper surface" }
                 CText {
                     variant: "body1"
-                    text: "Use surfaces to group related controls, apply elevation, and keep spacing consistent with Material principles."
+                    text: "Use surfaces to group related controls, apply
+                        elevation, and keep spacing consistent with Material
+                            principles."
                     wrapMode: Text.Wrap
                     Layout.fillWidth: true
                 }
@@ -62,7 +66,8 @@ Rectangle {
             Layout.fillWidth: true
             title: "Card headline"
             CText {
-                text: "Cards can load any content, here we show simple stacked text with Material spacing."
+                text: "Cards can load any content, here we show simple stacked
+                    text with Material spacing."
                 wrapMode: Text.Wrap
             }
         }

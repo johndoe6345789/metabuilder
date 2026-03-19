@@ -18,5 +18,6 @@ Rectangle {
     border.width: 0
     border.color: "transparent"
 
-    Behavior on color { ColorAnimation { duration: StyleVariables.transitionFast } }
+    Behavior on color {
+        ColorAnimation { duration: StyleVariables.transitionFast } }
 }

@@ -12,7 +12,9 @@ Rectangle {
 
     height: 40
     radius: 4
-    color: paletteMA.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.08) : "transparent"
+    color: paletteMA.containsMouse
+        ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.08)
+        : "transparent"
     border.color: paletteMA.containsMouse ? Theme.border : "transparent"
     border.width: 1
 

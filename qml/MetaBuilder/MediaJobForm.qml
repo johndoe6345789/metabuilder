@@ -42,7 +42,8 @@ CCard {
                         model: jobTypes
                         delegate: CButton {
                             text: modelData
-                            variant: jobTypeIndex === index ? "primary" : "ghost"
+                            variant: jobTypeIndex === index
+                                ? "primary" : "ghost"
                             size: "sm"
                             onClicked: jobTypeIndex = index
                         }

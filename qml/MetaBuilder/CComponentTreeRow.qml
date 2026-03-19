@@ -15,7 +15,8 @@ Rectangle {
     width: parent ? parent.width : 400
     height: 40
     radius: 6
-    color: isSelected ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12)
+    color: isSelected
+        ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12)
                       : mouseArea.containsMouse ? Theme.surface : "transparent"
 
     function typeBadgeColor(nodeType) {

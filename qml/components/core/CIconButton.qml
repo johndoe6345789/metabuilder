@@ -5,10 +5,12 @@ import QmlComponents 1.0
 /**
  * CIconButton.qml - Material Design 3 Icon Button
  *
- * MD3 icon button: 40px circle, transparent background, hover/press state layers.
+ * MD3 icon button: 40px circle, transparent background, hover/press state
+ // layers.
  * Variants:
  *   default - transparent bg, icon in textSecondary, hover state layer
- *   primary - transparent bg, icon in primary, hover state layer in primary tint
+ *   primary - transparent bg, icon in primary, hover state layer in primary
+     tint
  *   ghost   - same as default (backward compat)
  */
 Item {
@@ -26,7 +28,8 @@ Item {
     height: width
 
     opacity: enabled ? 1.0 : 0.38
-    Behavior on opacity { NumberAnimation { duration: Theme.transitionShortest } }
+    Behavior on opacity {
+        NumberAnimation { duration: Theme.transitionShortest } }
 
     Rectangle {
         id: bg
@@ -34,14 +37,17 @@ Item {
         radius: width / 2
         color: "transparent"
 
-        Behavior on color { ColorAnimation { duration: Theme.transitionShortest } }
+        Behavior on color {
+            ColorAnimation { duration: Theme.transitionShortest } }
 
         // State layer overlay
         Rectangle {
             id: stateLayer
             anchors.fill: parent
             radius: parent.radius
-            color: control.variant === "primary" ? Theme.primary : (Theme.mode === "dark" ? "#ffffff" : "#000000")
+            color: control.variant === "primary"
+                ? Theme.primary
+                : (Theme.mode === "dark" ? "#ffffff" : "#000000")
             opacity: {
                 if (!control.enabled) return 0
                 if (mouseArea.pressed) return 0.12
@@ -50,7 +56,8 @@ Item {
             }
             visible: opacity > 0
 
-            Behavior on opacity { NumberAnimation { duration: Theme.transitionShortest } }
+            Behavior on opacity {
+                NumberAnimation { duration: Theme.transitionShortest } }
         }
     }
 
@@ -65,7 +72,8 @@ Item {
     Text {
         anchors.centerIn: parent
         text: control.icon
-        font.pixelSize: control.size === "sm" ? 16 : control.size === "lg" ? 24 : 20
+        font.pixelSize: control.size === "sm"
+            ? 16 : control.size === "lg" ? 24 : 20
         font.weight: Font.DemiBold
         color: {
             if (!control.enabled) return Theme.textDisabled

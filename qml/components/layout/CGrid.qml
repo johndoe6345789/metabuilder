@@ -39,9 +39,11 @@ Item {
     
     // Public properties
     property string variant: "fixed"      // fixed, auto, responsive
-    property int columns: 2               // Number of columns (for fixed variant)
+    // Number of columns (for fixed variant)
+    property int columns: 2
     property string gap: "md"             // none, xs, sm, md, lg, xl or number
-    property int minItemWidth: 320        // Minimum item width (for auto variant)
+    // Minimum item width (for auto variant)
+    property int minItemWidth: 320
     property string align: "stretch"      // start, center, end, stretch
     
     // Responsive columns (for variant: "responsive")
@@ -84,9 +86,11 @@ Item {
     readonly property int _effectiveColumns: {
         switch (variant) {
             case "auto":
-                return Math.max(1, Math.floor((width + _gap) / (minItemWidth + _gap)))
+                return Math.max(1,
+                    Math.floor((width + _gap) / (minItemWidth + _gap)))
             case "responsive":
-                return Responsive.columns(columnsDesktop, columnsMobile, columnsTablet)
+                return Responsive.columns(columnsDesktop, columnsMobile,
+                    columnsTablet)
             default:
                 return columns
         }

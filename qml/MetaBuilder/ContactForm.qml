@@ -23,7 +23,8 @@ Rectangle {
         }
 
         Text {
-            text: "Share your stack vision and MetaBuilder will map it to seeds, workflows, and runtime automation."
+            text: "Share your stack vision and MetaBuilder will map it to
+                seeds, workflows, and runtime automation."
             font.pixelSize: 16
             color: "#aeb8cf"
             wrapMode: Text.Wrap
@@ -58,7 +59,8 @@ Rectangle {
                 radius: 10
                 color: "#5a7dff"
             }
-            onClicked: contact.submitRequested(nameInput.text, companyInput.text, emailInput.text)
+            onClicked: contact.submitRequested(nameInput.text,
+                companyInput.text, emailInput.text)
         }
     }
 }

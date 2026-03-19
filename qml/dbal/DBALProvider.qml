@@ -89,7 +89,8 @@ Item {
             xhr.setRequestHeader("X-Tenant-ID", root.tenantId)
             
             if (root.authToken) {
-                xhr.setRequestHeader("Authorization", "Bearer " + root.authToken)
+                xhr.setRequestHeader("Authorization",
+                    "Bearer " + root.authToken)
             }
             
             if (body) {
@@ -102,7 +103,8 @@ Item {
     
     // REST path helpers
     function entityPath(entity) {
-        return "/api/v1/" + tenantId + "/" + packageId + "/" + entity.toLowerCase()
+        return "/api/v1/" + tenantId + "/" + packageId + "/" +
+            entity.toLowerCase()
     }
 
     function entityPathWithId(entity, id) {
@@ -132,7 +134,8 @@ Item {
         var queryParts = []
         if (options.take !== undefined) queryParts.push("take=" + options.take)
         if (options.skip !== undefined) queryParts.push("skip=" + options.skip)
-        if (options.orderBy !== undefined) queryParts.push("orderBy=" + options.orderBy)
+        if (options.orderBy !== undefined) queryParts.push("orderBy=" +
+            options.orderBy)
         if (queryParts.length > 0) path += "?" + queryParts.join("&")
 
         internal.request("GET", path, null, callback)
@@ -141,7 +144,8 @@ Item {
     function findFirst(entity, filter, callback) {
         var path = entityPath(entity) + "?take=1"
         for (var key in filter) {
-            path += "&" + encodeURIComponent(key) + "=" + encodeURIComponent(filter[key])
+            path += "&" + encodeURIComponent(
+                key) + "=" + encodeURIComponent(filter[key])
         }
         internal.request("GET", path, null, callback)
     }

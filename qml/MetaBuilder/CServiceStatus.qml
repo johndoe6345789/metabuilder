@@ -13,10 +13,13 @@ Rectangle {
     readonly property color accentAmber: "#F59E0B"
     readonly property color accentRose: "#F43F5E"
     readonly property color statusColor: status === "online" ? accentBlue
-                                       : status === "standby" ? accentAmber : accentRose
-    readonly property color surfaceContainerHigh: isDark ? Qt.rgba(1, 1, 1, 0.08) : Qt.rgba(0.31, 0.31, 0.44, 0.10)
+                                       : status === "standby"
+                                           ? accentAmber : accentRose
+    readonly property color surfaceContainerHigh: isDark
+        ? Qt.rgba(1, 1, 1, 0.08) : Qt.rgba(0.31, 0.31, 0.44, 0.10)
     readonly property color onSurface: Theme.text
-    readonly property color outlineVariant: isDark ? Qt.rgba(1, 1, 1, 0.06) : Qt.rgba(0, 0, 0, 0.08)
+    readonly property color outlineVariant: isDark
+        ? Qt.rgba(1, 1, 1, 0.06) : Qt.rgba(0, 0, 0, 0.08)
 
     implicitHeight: 56
     radius: 12

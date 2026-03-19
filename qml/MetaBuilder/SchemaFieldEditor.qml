@@ -43,7 +43,8 @@ CCard {
                 }
                 Layout.fillWidth: true
                 onCurrentIndexChanged: {
-                    if (root.field && root.fieldTypes[currentIndex] !== root.field.type)
+                    if (root.field &&
+                        root.fieldTypes[currentIndex] !== root.field.type)
                         root.fieldUpdated("type", root.fieldTypes[currentIndex])
                 }
             }

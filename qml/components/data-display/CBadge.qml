@@ -18,7 +18,8 @@ Rectangle {
     property color badgeColor: accent ? Theme.primary : Theme.error
     property int count: 0
     property bool dot: false
-    property string variant: "primary" // primary, success, warning, error (legacy compat)
+    // primary, success, warning, error (legacy compat)
+    property string variant: "primary"
 
     // Resolve badge color from variant or explicit color
     readonly property color _bgColor: {
@@ -32,7 +33,8 @@ Rectangle {
     }
 
     // MD3: white text on badge, dark text on warning
-    readonly property color _textColor: variant === "warning" ? "#000000" : "#ffffff"
+    readonly property color _textColor: variant === "warning"
+        ? "#000000" : "#ffffff"
 
     // Display string
     readonly property string _displayText: {

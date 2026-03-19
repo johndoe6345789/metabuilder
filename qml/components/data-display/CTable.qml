@@ -4,7 +4,8 @@ import QmlComponents 1.0
 
 /**
  * CTable.qml - Material Design 3 data table
- * Surface container header, 48px rows, hover state layer, outlineVariant borders
+ * Surface container header, 48px rows, hover state layer, outlineVariant
+ // borders
  *
  * Usage:
  *   CTable {
@@ -23,7 +24,8 @@ Rectangle {
     property bool bordered: true
 
     // MD3 sort support
-    property int sortColumn: -1          // Column index currently sorted (-1 = none)
+    // Column index currently sorted (-1 = none)
+    property int sortColumn: -1
     property bool sortAscending: true
     signal headerClicked(int columnIndex)
 
@@ -60,7 +62,8 @@ Rectangle {
 
                     Item {
                         Layout.fillWidth: root.columnWidths.length === 0
-                        Layout.preferredWidth: root.columnWidths.length > index ? root.columnWidths[index] : -1
+                        Layout.preferredWidth: root.columnWidths.length > index
+                            ? root.columnWidths[index] : -1
                         implicitHeight: 48
 
                         // MD3 header cell content
@@ -168,7 +171,8 @@ Rectangle {
 
                         Item {
                             Layout.fillWidth: root.columnWidths.length === 0
-                            Layout.preferredWidth: root.columnWidths.length > index ? root.columnWidths[index] : -1
+                            Layout.preferredWidth: root.columnWidths.length >
+                                index ? root.columnWidths[index] : -1
                             implicitHeight: 48
 
                             Text {

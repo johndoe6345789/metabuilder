@@ -35,8 +35,10 @@ Rectangle {
                 anchors.centerIn: parent
                 width: 40; height: 40
                 radius: 20
-                color: root.checked ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.08)
-                                    : Qt.rgba(Theme.text.r, Theme.text.g, Theme.text.b, 0.08)
+                color: root.checked ? Qt.rgba(Theme.primary.r, Theme.primary.g,
+                    Theme.primary.b, 0.08)
+                                    : Qt.rgba(Theme.text.r, Theme.text.g,
+                                        Theme.text.b, 0.08)
                 opacity: mouseArea.containsMouse || mouseArea.pressed ? 1 : 0
                 Behavior on opacity { NumberAnimation { duration: 150 } }
             }
@@ -52,7 +54,8 @@ Rectangle {
                 border.color: root.checked ? Theme.primary : Theme.border
                 opacity: root.enabled ? 1.0 : 0.38
 
-                Behavior on border.color { ColorAnimation { duration: 200; easing.type: Easing.OutCubic } }
+                Behavior on border.color { ColorAnimation { duration: 200
+                easing.type: Easing.OutCubic } }
 
                 // Inner filled dot
                 Rectangle {

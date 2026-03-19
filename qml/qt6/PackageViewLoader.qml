@@ -16,7 +16,8 @@ Rectangle {
         source: packageId !== "" ? PackageLoader.qmlPathUrl(packageId) : ""
         onStatusChanged: {
             if (status === Loader.Error) {
-                console.warn("PackageViewLoader: failed to load", packageId, source)
+                console.warn("PackageViewLoader: failed to load", packageId,
+                    source)
             }
         }
     }
@@ -53,7 +54,8 @@ Rectangle {
                 variant: "body1"
                 text: {
                     var meta = PackageLoader.getPackage(packageId)
-                    return meta && meta.description ? meta.description : "Package view for " + packageId
+                    return meta && meta.description
+                        ? meta.description : "Package view for " + packageId
                 }
                 Layout.alignment: Qt.AlignHCenter
             }

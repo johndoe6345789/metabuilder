@@ -26,7 +26,8 @@ ColumnLayout {
                 }
             }
             CText {
-                visible: !portsDisplay.node || !portsDisplay.node.inputs || portsDisplay.node.inputs.length === 0
+                visible: !portsDisplay.node || !portsDisplay.node.inputs ||
+                    portsDisplay.node.inputs.length === 0
                 variant: "caption"
                 text: "None"
                 opacity: 0.5
@@ -37,14 +38,16 @@ ColumnLayout {
             spacing: 4
             CText { variant: "caption"; text: "Outputs" }
             Repeater {
-                model: portsDisplay.node ? (portsDisplay.node.outputs || []) : []
+                model: portsDisplay.node
+                    ? (portsDisplay.node.outputs || []) : []
                 CChip {
                     text: modelData.displayName || modelData.name
                     chipColor: Theme.success
                 }
             }
             CText {
-                visible: !portsDisplay.node || !portsDisplay.node.outputs || portsDisplay.node.outputs.length === 0
+                visible: !portsDisplay.node || !portsDisplay.node.outputs ||
+                    portsDisplay.node.outputs.length === 0
                 variant: "caption"
                 text: "None"
                 opacity: 0.5

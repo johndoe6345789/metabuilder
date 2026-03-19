@@ -16,16 +16,21 @@ CDialog {
 
     ColumnLayout {
         width: 360; spacing: 16
-        CAlert { Layout.fillWidth: true; severity: "warning"; text: "This action cannot be undone." }
+        CAlert { Layout.fillWidth: true; severity: "warning"
+        text: "This action cannot be undone." }
         CText {
             Layout.fillWidth: true; variant: "body1"
-            text: recordId ? "Are you sure you want to delete record " + recordId + "?" : "Delete this record?"
+            text: recordId
+                ? "Are you sure you want to delete record " + recordId + "?"
+                : "Delete this record?"
         }
         FlexRow {
             Layout.fillWidth: true; Layout.topMargin: 8; spacing: 8
             Item { Layout.fillWidth: true }
-            CButton { text: "Cancel"; variant: "ghost"; size: "sm"; onClicked: cancelled() }
-            CButton { text: "Delete"; variant: "danger"; size: "sm"; onClicked: confirmed() }
+            CButton { text: "Cancel"; variant: "ghost"; size: "sm"
+            onClicked: cancelled() }
+            CButton { text: "Delete"; variant: "danger"; size: "sm"
+            onClicked: confirmed() }
         }
     }
 }

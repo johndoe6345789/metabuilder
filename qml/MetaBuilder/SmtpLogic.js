@@ -1,5 +1,19 @@
 // SmtpLogic.js — business logic for SMTPConfigEditor
 
+function connBadgeStatus(cs) {
+    if (cs === "success") return "success";
+    if (cs === "failed") return "error";
+    if (cs === "testing") return "warning";
+    return "info";
+}
+
+function connBadgeText(cs) {
+    if (cs === "success") return "Connected";
+    if (cs === "failed") return "Failed";
+    if (cs === "testing") return "Testing...";
+    return "Not Tested";
+}
+
 function testConnection(root, connectionTimer) {
     root.connectionStatus = "testing"
     root.lastTestResult = ""
@@ -10,7 +24,8 @@ function onConnectionTestComplete(root) {
     var success = root.smtpHost.length > 0 && root.smtpPort.length > 0
     root.connectionStatus = success ? "success" : "failed"
     root.lastTestResult = success
-        ? "Connected to " + root.smtpHost + ":" + root.smtpPort + " via " + root.encryptionOptions[root.encryptionIndex]
+        ? "Connected to " + root.smtpHost + ":" + root.smtpPort + " via " +
+            root.encryptionOptions[root.encryptionIndex]
         : "Failed to connect. Check host and port."
     root.lastTestTime = Qt.formatDateTime(new Date(), "yyyy-MM-dd hh:mm:ss")
 }
@@ -62,5 +77,6 @@ function resetAll(root) {
     root.testRecipient = ""; root.testSubject = "MetaBuilder SMTP Test"
     root.testBody = "This is a test email from MetaBuilder."
     root.connectionStatus = "untested"; root.lastTestResult = ""
-    root.lastTestTime = ""; root.selectedTemplateIndex = -1; root.isDirty = false
+    root.lastTestTime = ""; root.selectedTemplateIndex = -1
+    root.isDirty = false
 }

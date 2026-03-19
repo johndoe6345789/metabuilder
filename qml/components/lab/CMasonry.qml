@@ -63,7 +63,8 @@ Item {
                     delegateItem.height = item.height
                     // Update column height
                     var heights = masonry.columnHeights.slice()
-                    heights[delegateItem.targetColumn] = delegateItem.y + item.height + masonry.spacing
+                    heights[delegateItem.targetColumn] = delegateItem.y +
+                        item.height + masonry.spacing
                     masonry.columnHeights = heights
                 }
             }

@@ -61,10 +61,13 @@ CCard {
                 columns: Math.ceil(width / 12)
                 clip: true
                 Repeater {
-                    model: Math.ceil(parent.parent.width / 12) * Math.ceil(parent.parent.height / 12)
+                    model: Math.ceil(parent.parent.width / 12) *
+                        Math.ceil(parent.parent.height / 12)
                     Rectangle {
                         width: 12; height: 12
-                        color: (Math.floor(index / Math.ceil(parent.parent.width / 12)) + index) % 2 === 0
+                        color: (Math.floor(index /
+                            Math.ceil(
+                                parent.parent.width / 12)) + index) % 2 === 0
                                ? "#2a2a2a" : "#333333"
                     }
                 }
@@ -74,20 +77,26 @@ CCard {
                 anchors.centerIn: parent
                 width: Math.min(parent.width - 40, 280)
                 height: Math.min(parent.height - 20, 72)
-                radius: root.selectedClass ? resolveRadius(root.selectedClass.properties) : 0
-                opacity: root.selectedClass ? resolveOpacity(root.selectedClass.properties) : 1.0
+                radius: root.selectedClass
+                    ? resolveRadius(root.selectedClass.properties) : 0
+                opacity: root.selectedClass
+                    ? resolveOpacity(root.selectedClass.properties) : 1.0
                 color: root.selectedClass
-                       ? resolveColor(root.selectedClass.properties, "background-color", Theme.surface)
+                       ? resolveColor(root.selectedClass.properties,
+                           "background-color", Theme.surface)
                        : Theme.surface
 
                 CText {
                     anchors.centerIn: parent
                     variant: "body1"
-                    text: root.selectedClass ? "." + root.selectedClass.name : ""
+                    text: root.selectedClass
+                        ? "." + root.selectedClass.name : ""
                     color: root.selectedClass
-                           ? resolveColor(root.selectedClass.properties, "color", Theme.text)
+                           ? resolveColor(root.selectedClass.properties,
+                               "color", Theme.text)
                            : Theme.text
-                    font.pixelSize: root.selectedClass ? resolveFontSize(root.selectedClass.properties) : 14
+                    font.pixelSize: root.selectedClass
+                        ? resolveFontSize(root.selectedClass.properties) : 14
                 }
             }
         }

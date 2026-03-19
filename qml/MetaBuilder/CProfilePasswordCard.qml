@@ -38,12 +38,14 @@ CCard {
 
     CAlert {
         Layout.fillWidth: true; severity: "info"
-        text: "Passwords must be at least 8 characters with uppercase, lowercase, and a number."
+        text: "Passwords must be at least 8 characters with uppercase,
+            lowercase, and a number."
         visible: root.passwords["new"].length > 0
     }
     CAlert {
         Layout.fillWidth: true; severity: "error"
         text: "Passwords do not match."
-        visible: root.passwords["confirm"].length > 0 && root.passwords["new"] !== root.passwords["confirm"]
+        visible: root.passwords["confirm"].length > 0 &&
+            root.passwords["new"] !== root.passwords["confirm"]
     }
 }

@@ -49,7 +49,8 @@ ColumnLayout {
             active: root.testResult !== undefined
             sourceComponent: CStatusBadge {
                 status: root.testResult === "success" ? "success" : "error"
-                text: root.testResult === "success" ? "Connection OK" : "Connection Failed"
+                text: root.testResult === "success"
+                    ? "Connection OK" : "Connection Failed"
             }
         }
     }

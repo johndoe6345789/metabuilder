@@ -4,7 +4,8 @@ import QtQuick.Layouts
 import QmlComponents 1.0
 
 /**
- * CAutocomplete.qml - Material Design 3 autocomplete input with popup suggestions
+ * CAutocomplete.qml - Material Design 3 autocomplete input with popup
+ // suggestions
  * TextField + dropdown popup with 8px radius, surface background, and elevation
  */
 Item {
@@ -108,7 +109,8 @@ Item {
         Rectangle {
             width: list.width
             height: 48
-            color: delegateMouseArea.containsMouse ? Theme.actionHover : "transparent"
+            color: delegateMouseArea.containsMouse
+                ? Theme.actionHover : "transparent"
             radius: 0
 
             Text {
@@ -148,7 +150,8 @@ Item {
                     var before = src.substring(0, idx)
                     var match = src.substring(idx, idx + query.length)
                     var after = src.substring(idx + query.length)
-                    return before + "<font color='" + Theme.primary + "'>" + match + "</font>" + after
+                    return before + "<font color='" + Theme.primary + "'>" +
+                        match + "</font>" + after
                 }
             }
 
@@ -168,19 +171,24 @@ Item {
                     var src = modelData
                     var query = input.text.toLowerCase()
                     var idx = src.toLowerCase().indexOf(query)
-                    if (idx < 0) return "<font color='" + Theme.text + "'>" + src + "</font>"
+                    if (idx < 0) return "<font color='" + Theme.text + "'>" +
+                        src + "</font>"
                     var before = src.substring(0, idx)
                     var match = src.substring(idx, idx + query.length)
                     var after = src.substring(idx + query.length)
-                    return "<font color='" + Theme.text + "'>" + before + "</font>"
-                         + "<font color='" + Theme.primary + "'><b>" + match + "</b></font>"
-                         + "<font color='" + Theme.text + "'>" + after + "</font>"
+                    return "<font color='" + Theme.text + "'>" + before +
+                        "</font>"
+                         + "<font color='" + Theme.primary + "'><b>" + match +
+                             "</b></font>"
+                         + "<font color='" + Theme.text + "'>" + after +
+                             "</font>"
                 }
             }
 
             // Hide plain text when highlighted version is showing
             Component.onCompleted: {
-                delegateText.visible = Qt.binding(function() { return input.text.length === 0 })
+                delegateText.visible = Qt.binding(
+                    function() { return input.text.length === 0 })
             }
 
             MouseArea {

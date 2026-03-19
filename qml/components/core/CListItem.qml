@@ -30,7 +30,8 @@ Rectangle {
 
         color: {
             if (listItem.selected)
-                return Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12)
+                return Qt.rgba(Theme.primary.r, Theme.primary.g,
+                    Theme.primary.b, 0.12)
             if (mouseArea.containsMouse)
                 return Qt.rgba(Theme.text.r, Theme.text.g, Theme.text.b, 0.08)
             return "transparent"
@@ -59,7 +60,8 @@ Rectangle {
             Layout.preferredHeight: 40
             Layout.alignment: Qt.AlignVCenter
             radius: 20
-            color: Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12)
+            color:
+                Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12)
             visible: listItem.leadingIcon !== ""
 
             Text {
@@ -122,7 +124,8 @@ Rectangle {
         Text {
             text: listItem.trailingIcon
             font.pixelSize: 16
-            color: trailingMouseArea.containsMouse ? Theme.text : Theme.textSecondary
+            color: trailingMouseArea.containsMouse
+                ? Theme.text : Theme.textSecondary
             visible: listItem.trailingIcon !== ""
 
             Behavior on color { ColorAnimation { duration: 150 } }

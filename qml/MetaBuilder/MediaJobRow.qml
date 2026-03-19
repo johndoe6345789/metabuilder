@@ -51,14 +51,17 @@ ColumnLayout {
 
         CButton {
             text: "Cancel"; variant: "danger"; size: "sm"
-            enabled: root.job.status === "queued" || root.job.status === "processing"
-            visible: root.job.status !== "completed" && root.job.status !== "failed"
+            enabled: root.job.status === "queued" ||
+                root.job.status === "processing"
+            visible: root.job.status !== "completed" &&
+                root.job.status !== "failed"
             Layout.preferredWidth: 70
             onClicked: root.cancelRequested()
         }
 
         Item {
-            visible: root.job.status === "completed" || root.job.status === "failed"
+            visible: root.job.status === "completed" ||
+                root.job.status === "failed"
             Layout.preferredWidth: 70
         }
     }

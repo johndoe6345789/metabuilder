@@ -9,8 +9,11 @@ import QtQuick
  *   import "styles" as Styles
  *   Rectangle {
  *       // Apply interactive hover behavior
- *       Behavior on color { ColorAnimation { duration: Styles.Mixins.transitionFast } }
- *       color: mouseArea.containsMouse ? Styles.Mixins.hoverBg(Theme.mode) : Theme.paper
+ *       Behavior on color { ColorAnimation { duration:
+     Styles.Mixins.transitionFast
+ // } }
+ *       color: mouseArea.containsMouse ? Styles.Mixins.hoverBg(Theme.mode) :
+ // Theme.paper
  *   }
  */
 QtObject {
@@ -73,7 +76,8 @@ QtObject {
     
     /**
      * Get typography style object for different variants
-     * @param variant: "body1" | "body2" | "caption" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "subtitle1" | "subtitle2"
+     * @param variant: "body1" | "body2" | "caption" | "h1" | "h2" | "h3" |
+     // "h4" | "h5" | "h6" | "subtitle1" | "subtitle2"
      */
     function typography(variant) {
         const styles = {
@@ -97,7 +101,8 @@ QtObject {
     /**
      * Get monospace font family
      */
-    readonly property string monoFont: "Menlo, Monaco, Consolas, 'Fira Code', monospace"
+    readonly property string monoFont: "Menlo, Monaco, Consolas, 'Fira Code',
+        monospace"
     
     /**
      * Text truncation with ellipsis - returns style object

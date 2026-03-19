@@ -16,7 +16,8 @@ Rectangle {
     Layout.fillWidth: true
     height: 36
     radius: 8
-    color: itemMA.containsMouse ? (isDark ? Qt.rgba(1,1,1,0.06) : Qt.rgba(0,0,0,0.04)) : "transparent"
+    color: itemMA.containsMouse
+        ? (isDark ? Qt.rgba(1,1,1,0.06) : Qt.rgba(0,0,0,0.04)) : "transparent"
 
     RowLayout {
         anchors.fill: parent
@@ -25,12 +26,14 @@ Rectangle {
         CText {
             text: root.icon
             font.pixelSize: 14
-            color: root.itemColor !== "transparent" ? root.itemColor : Theme.textSecondary
+            color: root.itemColor !== "transparent"
+                ? root.itemColor : Theme.textSecondary
         }
         CText {
             text: root.label
             font.pixelSize: 13
-            color: root.itemColor !== "transparent" ? root.itemColor : Theme.text
+            color: root.itemColor !== "transparent"
+                ? root.itemColor : Theme.text
         }
     }
 

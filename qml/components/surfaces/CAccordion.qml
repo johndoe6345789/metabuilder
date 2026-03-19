@@ -40,7 +40,8 @@ ColumnLayout {
         if (exclusive && expanded) {
             // Collapse all others
             for (var i = 0; i < children.length; i++) {
-                if (children[i].objectName === "CAccordionItem" && i !== index) {
+                if (children[i].objectName === "CAccordionItem" &&
+                    i !== index) {
                     children[i].expanded = false
                 }
             }

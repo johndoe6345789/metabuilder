@@ -15,8 +15,11 @@ Rectangle {
 
     RowLayout {
         anchors.fill: parent; anchors.leftMargin: 40; anchors.rightMargin: 40
-        CText { text: "\u00a9 2026 MetaBuilder"; font.pixelSize: 12; color: footer.textColor }
+        CText { text: "\u00a9 2026 MetaBuilder"; font.pixelSize: 12
+        color: footer.textColor }
         Item { Layout.fillWidth: true }
-        CText { text: "Qt6 \u00B7 Next.js \u00B7 C++ \u00B7 JSON"; font.pixelSize: 12; font.family: "monospace"; color: footer.textColor; opacity: footer.isDark ? 0.4 : 0.5 }
+        CText { text: "Qt6 \u00B7 Next.js \u00B7 C++ \u00B7 JSON"
+        font.pixelSize: 12; font.family: "monospace"; color: footer.textColor
+        opacity: footer.isDark ? 0.4 : 0.5 }
     }
 }

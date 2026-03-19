@@ -37,7 +37,8 @@ ColumnLayout {
             Loader {
                 Layout.fillWidth: true
                 sourceComponent: {
-                    if (modelData.options && modelData.options.length > 0) return selectComp
+                    if (modelData.options &&
+                        modelData.options.length > 0) return selectComp
                     return textFieldComp
                 }
             }
@@ -46,7 +47,8 @@ ColumnLayout {
                 id: textFieldComp
                 CTextField {
                     text: parameterList.node && parameterList.node.parameters
-                        ? (parameterList.node.parameters[modelData.name] || modelData.default || "") : ""
+                        ? (parameterList.node.parameters[modelData.name] ||
+                            modelData.default || "") : ""
                     placeholderText: modelData.description || ""
                     onTextChanged: {
                         if (parameterList.node) {

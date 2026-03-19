@@ -18,7 +18,9 @@ Rectangle {
     function statusString(s) { return s === "active" ? "success" : "warning" }
 
     height: 56
-    color: index % 2 === 0 ? "transparent" : Qt.rgba(Theme.surface.r, Theme.surface.g, Theme.surface.b, 0.3)
+    color: index % 2 === 0
+        ? "transparent"
+        : Qt.rgba(Theme.surface.r, Theme.surface.g, Theme.surface.b, 0.3)
 
     RowLayout {
         anchors.fill: parent
@@ -55,7 +57,8 @@ Rectangle {
             Layout.preferredWidth: 90; Layout.preferredHeight: 40
             CStatusBadge {
                 anchors.verticalCenter: parent.verticalCenter
-                status: root.statusString(modelData.status); text: modelData.status
+                status: root.statusString(modelData.status)
+                text: modelData.status
             }
         }
         CText {

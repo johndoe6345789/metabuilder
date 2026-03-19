@@ -14,7 +14,8 @@ Rectangle {
 
     signal refresh()
 
-    readonly property color surfaceContainerHigh: isDark ? Qt.rgba(1, 1, 1, 0.08) : Qt.rgba(0.31, 0.31, 0.44, 0.10)
+    readonly property color surfaceContainerHigh: isDark
+        ? Qt.rgba(1, 1, 1, 0.08) : Qt.rgba(0.31, 0.31, 0.44, 0.10)
     readonly property color onSurface: Theme.text
     readonly property color onSurfaceVariant: Theme.textSecondary
 
@@ -39,7 +40,8 @@ Rectangle {
 
             CText {
                 anchors.centerIn: parent
-                text: root.username ? root.username.charAt(0).toUpperCase() : "?"
+                text: root.username
+                    ? root.username.charAt(0).toUpperCase() : "?"
                 font.pixelSize: 24
                 font.weight: Font.Bold
                 color: "#6366F1"

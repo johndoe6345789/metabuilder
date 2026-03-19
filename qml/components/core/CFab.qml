@@ -34,7 +34,8 @@ Rectangle {
         opacity: mouseArea.pressed ? 0.12 : (mouseArea.containsMouse ? 0.08 : 0)
         visible: opacity > 0
 
-        Behavior on opacity { NumberAnimation { duration: Theme.transitionShortest } }
+        Behavior on opacity {
+            NumberAnimation { duration: Theme.transitionShortest } }
     }
 
     Text {

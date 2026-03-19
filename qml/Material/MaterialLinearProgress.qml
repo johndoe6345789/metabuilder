@@ -16,7 +16,8 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
         y: (parent.height - height) / 2
         height: parent.height
-        width: ((progress.value - progress.minValue) / Math.max(0.0001, progress.maxValue - progress.minValue)) * parent.width
+        width: ((progress.value - progress.minValue) / Math.max(0.0001,
+            progress.maxValue - progress.minValue)) * parent.width
         radius: 3
         color: MaterialPalette.primary
     }

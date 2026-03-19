@@ -7,7 +7,7 @@ Rectangle {
     id: tabBar
 
     property int currentIndex: 0
-    property var tabs: [] // [{label: "Tab 1", icon: "home"}]
+    property var tabs: [] // [{label, icon}]
 
     signal tabClicked(int index)
 
@@ -25,10 +25,12 @@ Rectangle {
             Rectangle {
                 id: tabDelegate
 
-                readonly property bool isActive: tabBar.currentIndex === index
+                readonly property bool isActive:
+                    tabBar.currentIndex === index
 
                 Layout.fillHeight: true
-                Layout.preferredWidth: tabContent.implicitWidth + 32
+                Layout.preferredWidth:
+                    tabContent.implicitWidth + 32
 
                 color: "transparent"
 
@@ -36,8 +38,12 @@ Rectangle {
                 Rectangle {
                     anchors.fill: parent
                     color: Theme.text
-                    opacity: tabMouse.containsMouse && !tabDelegate.isActive ? 0.08 : 0
-                    Behavior on opacity { NumberAnimation { duration: 150 } }
+                    opacity: tabMouse.containsMouse
+                        && !tabDelegate.isActive
+                        ? 0.08 : 0
+                    Behavior on opacity {
+                        NumberAnimation { duration: 150 }
+                    }
                 }
 
                 RowLayout {
@@ -48,17 +54,33 @@ Rectangle {
                     Text {
                         text: modelData.icon || ""
                         font.pixelSize: 14
-                        color: tabDelegate.isActive ? Theme.primary : Theme.textSecondary
-                        visible: modelData.icon !== undefined && modelData.icon !== ""
-                        Behavior on color { ColorAnimation { duration: 150 } }
+                        color: tabDelegate.isActive
+                            ? Theme.primary
+                            : Theme.textSecondary
+                        visible:
+                            modelData.icon !== undefined
+                            && modelData.icon !== ""
+                        Behavior on color {
+                            ColorAnimation {
+                                duration: 150
+                            }
+                        }
                     }
 
                     Text {
                         text: modelData.label || modelData
                         font.pixelSize: 14
-                        font.weight: tabDelegate.isActive ? Font.DemiBold : Font.Medium
-                        color: tabDelegate.isActive ? Theme.primary : Theme.textSecondary
-                        Behavior on color { ColorAnimation { duration: 150 } }
+                        font.weight: tabDelegate.isActive
+                            ? Font.DemiBold
+                            : Font.Medium
+                        color: tabDelegate.isActive
+                            ? Theme.primary
+                            : Theme.textSecondary
+                        Behavior on color {
+                            ColorAnimation {
+                                duration: 150
+                            }
+                        }
                     }
                 }
 
@@ -78,7 +100,7 @@ Rectangle {
         Item { Layout.fillWidth: true }
     }
 
-    // MD3 active indicator pill — animates x and width smoothly
+    // MD3 active indicator pill
     Rectangle {
         id: activeIndicator
         anchors.bottom: parent.bottom
@@ -87,14 +109,31 @@ Rectangle {
         color: Theme.primary
         visible: tabRepeater.count > 0
 
-        property Item targetTab: tabRepeater.count > 0 && tabBar.currentIndex >= 0 && tabBar.currentIndex < tabRepeater.count
-                                 ? tabRepeater.itemAt(tabBar.currentIndex) : null
+        property Item targetTab:
+            tabRepeater.count > 0
+            && tabBar.currentIndex >= 0
+            && tabBar.currentIndex
+                < tabRepeater.count
+            ? tabRepeater.itemAt(
+                tabBar.currentIndex)
+            : null
 
         x: targetTab ? targetTab.x + 8 : 0
-        width: targetTab ? targetTab.width - 16 : 0
+        width: targetTab
+            ? targetTab.width - 16 : 0
 
-        Behavior on x { NumberAnimation { duration: 250; easing.type: Easing.OutCubic } }
-        Behavior on width { NumberAnimation { duration: 250; easing.type: Easing.OutCubic } }
+        Behavior on x {
+            NumberAnimation {
+                duration: 250
+                easing.type: Easing.OutCubic
+            }
+        }
+        Behavior on width {
+            NumberAnimation {
+                duration: 250
+                easing.type: Easing.OutCubic
+            }
+        }
     }
 
     // Subtle bottom divider

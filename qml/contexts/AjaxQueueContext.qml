@@ -31,7 +31,8 @@ QtObject {
     /**
      * Add a new request to the queue
      * @param label - Display name for the request
-     * @param options - Optional: { progress: { current, total }, group: string }
+     * @param options - Optional: { progress: { current, total }, group:
+     // string }
      * @returns request ID
      */
     function addRequest(label, options) {
@@ -121,7 +122,8 @@ QtObject {
                 // Clear old completed requests
                 const cutoff = Date.now() - 2000
                 ajaxQueue.queue = ajaxQueue.queue.filter(function(r) {
-                    return r.status === "pending" || (r.endTime && r.endTime > cutoff)
+                    return r.status === "pending" || (r.endTime &&
+                        r.endTime > cutoff)
                 })
                 
                 if (ajaxQueue.queue.length === 0) {

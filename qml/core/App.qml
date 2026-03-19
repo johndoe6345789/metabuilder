@@ -32,7 +32,8 @@ ApplicationWindow {
     property bool searchOpen: false
     
     // Drawer width - responsive!
-    readonly property int drawerWidth: Responsive.isMobile ? 0 : (Responsive.isTablet ? 200 : 240)
+    readonly property int drawerWidth: Responsive.isMobile
+        ? 0 : (Responsive.isTablet ? 200 : 240)
     
     function onStatusMessage(msg) {
         // Could show a snackbar/toast here
@@ -98,7 +99,8 @@ ApplicationWindow {
                 Rectangle {
                     Layout.fillWidth: true
                     Layout.preferredHeight: 1
-                    color: Qt.rgba(Theme.text.r, Theme.text.g, Theme.text.b, 0.12)
+                    color:
+                        Qt.rgba(Theme.text.r, Theme.text.g, Theme.text.b, 0.12)
                 }
                 
                 // Navigation Items
@@ -108,8 +110,10 @@ ApplicationWindow {
                     interactive: false
                     
                     model: ListModel {
-                        ListElement { viewId: "tasks"; emoji: "☰"; labelKey: "tasks" }
-                        ListElement { viewId: "newPrompt"; emoji: "＋"; labelKey: "newTask" }
+                        ListElement { viewId: "tasks"; emoji: "☰"
+                        labelKey: "tasks" }
+                        ListElement { viewId: "newPrompt"; emoji: "＋"
+                        labelKey: "newTask" }
                     }
                     
                     delegate: ItemDelegate {
@@ -135,8 +139,11 @@ ApplicationWindow {
                         }
                         
                         background: Rectangle {
-                            color: highlighted ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) 
-                                              : (hovered ? Qt.rgba(Theme.text.r, Theme.text.g, Theme.text.b, 0.04) : "transparent")
+                            color: highlighted ? Qt.rgba(Theme.primary.r,
+                                Theme.primary.g, Theme.primary.b, 0.12)
+                                              : (hovered ? Qt.rgba(Theme.text.r,
+                                                  Theme.text.g, Theme.text.b,
+                                                  0.04) : "transparent")
                         }
                         
                         onClicked: navigateTo(viewId)
@@ -147,7 +154,8 @@ ApplicationWindow {
                 Rectangle {
                     Layout.fillWidth: true
                     Layout.preferredHeight: 1
-                    color: Qt.rgba(Theme.text.r, Theme.text.g, Theme.text.b, 0.12)
+                    color:
+                        Qt.rgba(Theme.text.r, Theme.text.g, Theme.text.b, 0.12)
                 }
                 
                 // Secondary Navigation
@@ -157,8 +165,10 @@ ApplicationWindow {
                     interactive: false
                     
                     model: ListModel {
-                        ListElement { viewId: "user"; emoji: "👤"; labelKey: "profile" }
-                        ListElement { viewId: "docs"; emoji: "📖"; labelKey: "documentation" }
+                        ListElement { viewId: "user"; emoji: "👤"
+                        labelKey: "profile" }
+                        ListElement { viewId: "docs"; emoji: "📖"
+                        labelKey: "documentation" }
                     }
                     
                     delegate: ItemDelegate {
@@ -184,8 +194,11 @@ ApplicationWindow {
                         }
                         
                         background: Rectangle {
-                            color: highlighted ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) 
-                                              : (hovered ? Qt.rgba(Theme.text.r, Theme.text.g, Theme.text.b, 0.04) : "transparent")
+                            color: highlighted ? Qt.rgba(Theme.primary.r,
+                                Theme.primary.g, Theme.primary.b, 0.12)
+                                              : (hovered ? Qt.rgba(Theme.text.r,
+                                                  Theme.text.g, Theme.text.b,
+                                                  0.04) : "transparent")
                         }
                         
                         onClicked: navigateTo(viewId)
@@ -196,7 +209,8 @@ ApplicationWindow {
                 Rectangle {
                     Layout.fillWidth: true
                     Layout.preferredHeight: 1
-                    color: Qt.rgba(Theme.text.r, Theme.text.g, Theme.text.b, 0.12)
+                    color:
+                        Qt.rgba(Theme.text.r, Theme.text.g, Theme.text.b, 0.12)
                 }
                 
                 // Settings Section
@@ -243,7 +257,8 @@ ApplicationWindow {
                         }
                         
                         Text {
-                            text: LanguageContext.t("theme") + ": " + Theme.current.name
+                            text: LanguageContext.t(
+                                "theme") + ": " + Theme.current.name
                             font.pixelSize: 14
                             color: Theme.text
                         }
@@ -291,7 +306,12 @@ ApplicationWindow {
                         }
                         
                         Text {
-                            text: LanguageContext.t("language") + ": " + LanguageContext.languages[LanguageContext.language].flag
+                            text:
+                                LanguageContext.t("language")
+                                + ": "
+                                + LanguageContext.languages[
+                                    LanguageContext.language
+                                ].flag
                             font.pixelSize: 14
                             color: Theme.text
                         }
@@ -306,10 +326,17 @@ ApplicationWindow {
                             model: LanguageContext.languageKeys
                             
                             MenuItem {
-                                text: LanguageContext.languages[modelData].flag + " " + LanguageContext.languages[modelData].name
+                                text:
+                                    LanguageContext.languages[
+                                        modelData
+                                    ].flag + " "
+                                    + LanguageContext.languages[
+                                        modelData
+                                    ].name
                                 checkable: true
                                 checked: LanguageContext.language === modelData
-                                onTriggered: LanguageContext.setLanguage(modelData)
+                                onTriggered: LanguageContext.setLanguage(
+                                    modelData)
                             }
                         }
                     }
@@ -323,7 +350,8 @@ ApplicationWindow {
                     Layout.fillWidth: true
                     Layout.preferredHeight: 48
                     Layout.margins: 16
-                    color: Qt.rgba(Theme.text.r, Theme.text.g, Theme.text.b, 0.08)
+                    color:
+                        Qt.rgba(Theme.text.r, Theme.text.g, Theme.text.b, 0.08)
                     radius: 24
                     
                     RowLayout {
@@ -369,11 +397,16 @@ ApplicationWindow {
                         Text {
                             text: {
                                 switch(currentView) {
-                                    case "tasks": return LanguageContext.t("tasks")
-                                    case "taskDetail": return LanguageContext.t("taskDetail")
-                                    case "newPrompt": return LanguageContext.t("newTask")
-                                    case "user": return LanguageContext.t("profile")
-                                    case "docs": return LanguageContext.t("documentation")
+                                    case "tasks":
+                                        return LanguageContext.t("tasks")
+                                    case "taskDetail":
+                                        return LanguageContext.t("taskDetail")
+                                    case "newPrompt":
+                                        return LanguageContext.t("newTask")
+                                    case "user":
+                                        return LanguageContext.t("profile")
+                                    case "docs": return LanguageContext.t(
+                                        "documentation")
                                     default: return ""
                                 }
                             }

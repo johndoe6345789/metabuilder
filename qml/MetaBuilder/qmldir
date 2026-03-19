@@ -180,5 +180,6 @@ CDatabaseEnvConfig 1.0 CDatabaseEnvConfig.qml
 CSettingsAbout 1.0 CSettingsAbout.qml
 CProfilePasswordCard 1.0 CProfilePasswordCard.qml
 CProfileConnectedAccounts 1.0 CProfileConnectedAccounts.qml
+CAdminContentPanel 1.0 CAdminContentPanel.qml
 CCreateSchemaDialog 1.0 CCreateSchemaDialog.qml
 CAddFieldDialog 1.0 CAddFieldDialog.qml

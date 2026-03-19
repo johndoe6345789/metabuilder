@@ -3,7 +3,8 @@
 function loadJson(path, callback) {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
-        if (xhr.readyState === XMLHttpRequest.DONE && (xhr.status === 200 || xhr.status === 0))
+        if (xhr.readyState === XMLHttpRequest.DONE &&
+            (xhr.status === 200 || xhr.status === 0))
             callback(JSON.parse(xhr.responseText));
     };
     xhr.open("GET", path, true);
@@ -30,7 +31,8 @@ function updateField(dropdowns, index, field, value) {
 function addOption(dropdowns, index) {
     if (index < 0) return dropdowns;
     var dd = deepCopy(dropdowns[index]);
-    dd.options.push({ label: "New Option", value: "new_option_" + dd.options.length });
+    dd.options.push({ label: "New Option",
+        value: "new_option_" + dd.options.length });
     return replaceAt(dropdowns, index, dd);
 }
 
@@ -95,5 +97,6 @@ function parseDbalItems(items) {
 }
 
 function toSaveData(dd) {
-    return { name: dd.name, description: dd.description, allowCustom: dd.allowCustom, required: dd.required, options: dd.options };
+    return { name: dd.name, description: dd.description, allowCustom:
+        dd.allowCustom, required: dd.required, options: dd.options };
 }

@@ -34,7 +34,8 @@ function removeNode(wf, nodeId) {
         for (var outName in srcConns) {
             var newOut = {}
             for (var idx in srcConns[outName]) {
-                var targets = srcConns[outName][idx].filter(function(t) { return t.node !== nodeId })
+                var targets = srcConns[outName][idx].filter(
+                    function(t) { return t.node !== nodeId })
                 if (targets.length > 0) newOut[idx] = targets
             }
             if (Object.keys(newOut).length > 0) newSrcConns[outName] = newOut
@@ -48,8 +49,10 @@ function addConnection(wf, srcNodeId, srcPort, dstNodeId, dstPort) {
     if (srcNodeId === dstNodeId) return false
     if (!wf.connections) wf.connections = {}
     if (!wf.connections[srcNodeId]) wf.connections[srcNodeId] = {}
-    if (!wf.connections[srcNodeId][srcPort]) wf.connections[srcNodeId][srcPort] = {}
-    if (!wf.connections[srcNodeId][srcPort]["0"]) wf.connections[srcNodeId][srcPort]["0"] = []
+    if (!wf.connections[srcNodeId][srcPort]) wf.connections[srcNodeId][srcPort]
+        = {}
+    if (!wf.connections[srcNodeId][srcPort]["0"])
+        wf.connections[srcNodeId][srcPort]["0"] = []
     var existing = wf.connections[srcNodeId][srcPort]["0"]
     for (var i = 0; i < existing.length; i++) {
         if (existing[i].node === dstNodeId) return false

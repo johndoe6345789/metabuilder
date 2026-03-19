@@ -22,7 +22,8 @@ function loadComments(dbal, model) {
                 model.append({
                     commentId: c.id || (i + 1),
                     username: c.username || c.author || "unknown",
-                    initials: (c.username || c.author || "??").substring(0, 2).toUpperCase(),
+                    initials: (c.username || c.author || "
+                        ??").substring(0, 2).toUpperCase(),
                     timestamp: c.timestamp || c.createdAt || "Unknown",
                     body: c.body || c.text || "",
                     likes: c.likes || 0,
@@ -34,13 +35,15 @@ function loadComments(dbal, model) {
 }
 
 function postComment(dbal, text, currentUser) {
-    dbal.create("comment", { text: text, author: currentUser, username: currentUser }, function(result, error) {
+    dbal.create("comment", { text: text, author: currentUser,
+        username: currentUser }, function(result, error) {
         if (error) console.warn("Failed to post comment to DBAL:", error)
     })
 }
 
 function likeComment(dbal, commentId, newLikes) {
-    dbal.update("comment", commentId, { likes: newLikes }, function(result, error) {
+    dbal.update("comment", commentId, { likes: newLikes }, function(result,
+        error) {
         if (error) console.warn("Failed to update like on DBAL:", error)
     })
 }

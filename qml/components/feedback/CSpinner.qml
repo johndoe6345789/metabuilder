@@ -5,7 +5,8 @@ import QmlComponents 1.0
  * CSpinner.qml - Material Design 3 Circular Progress Indicator
  *
  * MD3 spec: Canvas-based arc with rotation + arc sweep animation.
- * Arc sweeps between 10-300 degrees while the whole spinner rotates at 1.5s/rev.
+ * Arc sweeps between 10-300 degrees while the whole spinner rotates at
+ // 1.5s/rev.
  *
  * Usage:
  *   CSpinner {}

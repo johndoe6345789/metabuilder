@@ -18,7 +18,8 @@ ColumnLayout {
 
     property string dbalUrl: dbal.baseUrl
     property string mediaServiceUrl: "http://localhost:9090"
-    property string dbalConnectionStatus: dbal.connected ? "connected" : "disconnected"
+    property string dbalConnectionStatus: dbal.connected
+        ? "connected" : "disconnected"
     property string mediaConnectionStatus: "unknown"
 
     function testDBALConnection() {
