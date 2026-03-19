@@ -1,6 +1,5 @@
 [requires]
 qt/6.7.3
-cpr/1.14.1
 
 [generators]
 CMakeDeps
@@ -9,8 +8,7 @@ CMakeToolchain
 [options]
 qt/*:shared=True
 qt/*:qtdeclarative=True
-qt/*:qtquick=True
-qt/*:qtquickcontrols2=True
+qt/*:qtshadertools=True
 
 [tool_requires]
 cmake/3.30.0

@@ -1,0 +1,146 @@
+# Qt6 Frontend Roadmap
+
+**Status**: Compiles and links (25 QML views, ~12,800 LOC)
+**Last Build**: 2026-03-19 | Qt 6.7.3 via Conan | MSVC 19.5 | C++20
+
+---
+
+## Completed
+
+### Phase 1: Qt5 → Qt6 Migration
+- [x] Replace versioned imports (`import QtQuick 2.15` → `import QtQuick`) across 62 files
+- [x] Remove `QtGraphicalEffects` (4 files) — shadows dropped, Qt6 has no direct equivalent without Qt5Compat
+- [x] Replace `TabView`/`Tab` (Qt Quick Controls 1) with `TabBar` + `StackLayout`
+- [x] Stub `ModPlayer` — libopenmpt not available via Conan; Qt6 `QAudioSink` API ready when it is
+- [x] Fix `QJSValue::engine()` removal in `DBALClient.cpp`
+- [x] Fix `MaterialLanding.qml` brace nesting
+- [x] Fix `PackageManager.qml` `modelData` access and `onClicked` scoping
+- [x] Add `CMAKE_AUTOMOC`, `QTP0001` policy, `/Zc:__cplusplus` for MSVC
+- [x] Remove unused `cpr` dependency
+
+### Phase 2: Shared Component Library Migration
+- [x] Migrate from local `qmllib/Material/` (35 components) to shared `/qml/` library (`QmlComponents 1.0`, 119 components)
+- [x] Update all 22 package views to use `QmlComponents 1.0`
+- [x] Add `engine.addImportPath()` in `main.cpp` for runtime QML resolution
+- [x] Map component APIs: `MaterialButton` → `CButton`, `MaterialPalette` → `Theme`, etc.
+- [x] Fix API differences: `CListItem.title` (not `.text`), `CTabBar.tabs` (not `.model`), `CAlert.text` (not `.message`)
+
+### Phase 3: 5-Level Navigation (old/ Vision Restored)
+- [x] `App.qml` — Main shell with app bar, level badges, sidebar, `StackLayout` router
+- [x] Auth system — 4 seed users (demo/admin/god/super), level-gated navigation
+- [x] Level 1: `FrontPage.qml` — Hero, feature cards, tabbed CI/status panels
+- [x] Level 1: `LoginView.qml` — Credentials form with seed user hints
+- [x] Level 2: `DashboardView.qml` — Stats cards, activity feed, quick actions
+- [x] Level 2: `ProfileView.qml` — Avatar, bio, password change, connected accounts
+- [x] Level 2: `CommentsView.qml` — Post/like/delete, sort, role-based visibility
+- [x] Level 3: `AdminView.qml` — 10 entities, CRUD dialogs, search, filter, pagination, bulk delete (871 LOC)
+- [x] Level 4: `GodPanel.qml` — 13-tab builder container with config summary
+- [x] Level 5: `SuperGodPanel.qml` — Tenants, god users, power transfer, system health
+
+### Phase 4: God Panel Builder Tools (15 Agents)
+- [x] `SchemaEditor.qml` — Visual JSON schema editor (634 LOC)
+- [x] `WorkflowEditor.qml` — Node-based DAG editor with test runner (772 LOC)
+- [x] `LuaEditor.qml` — Code editor, parameters, snippets, security scan (910 LOC)
+- [x] `DatabaseManager.qml` — 14 DBAL backends, connection test, adapter patterns (467 LOC)
+- [x] `PageRoutesManager.qml` — Route table, level/layout config (524 LOC)
+- [x] `ComponentHierarchyEditor.qml` — UI tree editor with properties (468 LOC)
+- [x] `CssClassManager.qml` — Style class editor with live preview (691 LOC)
+- [x] `DropdownConfigManager.qml` — Select field config with reorder (785 LOC)
+- [x] `UserManagement.qml` — User CRUD, role filter, SHA-512 badge (676 LOC)
+- [x] `ThemeEditor.qml` — 9 theme selector, color swatches, typography (876 LOC)
+- [x] `SMTPConfigEditor.qml` — Server config, test send, email templates (632 LOC)
+
+---
+
+## In Progress
+
+### Phase 5: DBAL Integration
+- [ ] Register `DBALClient` as QML singleton type (currently context property)
+- [ ] Wire `AdminView` entity table to real DBAL endpoints (`/{tenant}/{package}/{entity}`)
+- [ ] Wire `SchemaEditor` to load from `dbal/shared/api/schema/entities/`
+- [ ] Wire `UserManagement` to real User entity CRUD
+- [ ] Wire `DashboardView` health cards to `/health`, `/version`, `/status`
+- [ ] Add DBAL connection status indicator in app bar (ping on startup)
+- [ ] Replace mock data in all editors with `DBALProvider.list/create/update/remove` calls
+
+---
+
+## Planned
+
+### Phase 6: Build System (Python + Jinja2 + JSON + GLOB)
+- [ ] Create `generate_cmake.py` script that:
+  - Globs all `*.qml` files automatically (no manual CMakeLists.txt maintenance)
+  - Reads `metadata.json` from each package for auto-registration
+  - Templates `CMakeLists.txt` via Jinja2 from `cmake_config.json`
+  - Handles SVG/audio/resource globbing
+  - Supports conditional features (libopenmpt, Qt Multimedia)
+- [ ] Create `cmake_config.json` defining modules, dependencies, feature flags
+- [ ] Add `--dry-run` mode to preview generated CMakeLists.txt
+- [ ] Integrate into pre-commit or CI
+
+### Phase 7: Runtime Polish
+- [ ] Dark/light theme switching (Theme singleton already supports 9 themes)
+- [ ] i18n integration (LanguageContext from shared `/qml/` — 19 languages ready)
+- [ ] Responsive layout (Responsive singleton from shared `/qml/`)
+- [ ] Keyboard shortcuts (Ctrl+K search, Ctrl+L login/logout)
+- [ ] Window state persistence (size, position, last view)
+- [ ] Error boundary / graceful degradation when DBAL is offline
+
+### Phase 8: Package System
+- [ ] Dynamic package view loading from disk (PackageViewLoader → real file resolution)
+- [ ] Package install/uninstall with metadata validation
+- [ ] Package dependency resolution (metadata.json `dependencies` field)
+- [ ] Hot-reload QML when package files change (QFileSystemWatcher)
+
+### Phase 9: Audio & Media
+- [ ] Integrate libopenmpt via Conan when available (ModPlayer currently stubbed)
+- [ ] Add Qt6 Multimedia (`QAudioSink`) for .mod playback
+- [ ] Waveform visualizer in ModPlayerPanel
+
+### Phase 10: Production Readiness
+- [ ] Installer (Qt Installer Framework or NSIS)
+- [ ] Code signing (Windows Authenticode)
+- [ ] Auto-update mechanism
+- [ ] Crash reporter
+- [ ] Telemetry opt-in
+- [ ] CI/CD: GitHub Actions build matrix (Windows, macOS, Linux)
+
+---
+
+## Architecture
+
+```
+App.qml (ApplicationWindow)
+├── CAppBar (Level navigation + auth)
+├── Sidebar (CListItem navigation, level-gated)
+└── StackLayout (17 views)
+    ├── FrontPage          (Level 1 - Public)
+    ├── LoginView          (Auth)
+    ├── DashboardView      (Level 2 - User)
+    ├── ProfileView        (Level 2)
+    ├── CommentsView       (Level 2)
+    ├── PackageViewLoader×6 (Level 2 - Forum, Gallery, etc.)
+    ├── AdminView          (Level 3 - Django CRUD)
+    ├── GodPanel           (Level 4 - 13-tab builder)
+    │   ├── SchemaEditor
+    │   ├── WorkflowEditor
+    │   ├── LuaEditor
+    │   ├── DatabaseManager
+    │   ├── PageRoutesManager
+    │   ├── ComponentHierarchyEditor
+    │   ├── CssClassManager
+    │   ├── DropdownConfigManager
+    │   ├── UserManagement
+    │   ├── ThemeEditor
+    │   └── SMTPConfigEditor
+    ├── PackageManager     (Level 4)
+    ├── Storybook          (Level 4)
+    └── SuperGodPanel      (Level 5 - Tenants + Power Transfer)
+
+C++ Backend
+├── PackageRegistry   (JSON metadata loader)
+├── ModPlayer         (stub — libopenmpt pending)
+└── DBALClient        (HTTP client → DBAL daemon)
+
+Shared: /qml/ QmlComponents 1.0 (119 components, 9 themes, 19 languages)
+```

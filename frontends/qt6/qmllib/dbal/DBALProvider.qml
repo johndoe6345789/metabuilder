@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Controls.Material
 
 /**
  * QML DBAL Client Component

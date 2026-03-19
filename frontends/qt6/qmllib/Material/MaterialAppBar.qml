@@ -1,6 +1,5 @@
-import QtQuick 2.15
-import QtQuick.Layouts 1.15
-import QtGraphicalEffects 1.15
+import QtQuick
+import QtQuick.Layouts
 
 import "MaterialPalette.qml" as MaterialPalette
 
@@ -15,15 +14,6 @@ Rectangle {
     border.color: MaterialPalette.outline
     border.width: 1
     radius: 0
-    layer.enabled: elevated
-    layer.effect: DropShadow {
-        anchors.fill: parent
-        horizontalOffset: 0
-        verticalOffset: elevated ? 4 : 0
-        radius: elevated ? 12 : 0
-        samples: 16
-        color: "#22000000"
-    }
 
     RowLayout {
         id: layout

@@ -1,10 +1,7 @@
 #pragma once
 
 #include <QObject>
-
-class QAudioOutput;
-
-namespace openmpt { class module; }
+#include <QString>
 
 class ModPlayer : public QObject {
     Q_OBJECT
@@ -23,10 +20,6 @@ signals:
     void playbackChanged();
 
 private:
-    class Backend;
-    std::unique_ptr<Backend> m_backend;
-    QAudioOutput *m_audioOutput = nullptr;
-    std::unique_ptr<openmpt::module> m_module;
     bool m_playing = false;
     void updatePlaying(bool playing);
 };

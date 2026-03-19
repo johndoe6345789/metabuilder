@@ -8,6 +8,8 @@
 #include <QVariantMap>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include <QJSValue>
+#include <QMap>
 
 /**
  * @brief Qt6 DBAL Client Bridge

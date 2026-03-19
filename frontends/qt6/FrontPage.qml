@@ -1,14 +1,13 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
-
-import "qmllib/MetaBuilder" as MetaBuilder
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+import QmlComponents 1.0
 
 Rectangle {
     id: root
-    width: 1280
-    height: 900
-    color: "#03030a"
+    color: Theme.background
+
+    property int currentTab: 0
 
     property var featureHighlights: [
         { title: "Visual stacks", desc: "Compose landing, admin, and observability panels through drag-and-drop sections." },
@@ -28,32 +27,8 @@ Rectangle {
         { label: "Daemon progress", value: "building" }
     ]
 
-    Rectangle {
-        anchors.fill: parent
-        gradient: Gradient {
-            GradientStop { position: 0.0; color: "#040b22" }
-            GradientStop { position: 0.5; color: "#0b1121" }
-            GradientStop { position: 1.0; color: "#03030a" }
-        }
-    }
-
-    MetaBuilder.NavBar {
-        id: navBar
-        anchors {
-            top: parent.top
-            left: parent.left
-            right: parent.right
-        }
-        onActionTriggered: console.log("navbar action:", action)
-    }
-
     ScrollView {
-        anchors {
-            top: navBar.bottom
-            left: parent.left
-            right: parent.right
-            bottom: parent.bottom
-        }
+        anchors.fill: parent
         anchors.margins: 24
         clip: true
 
@@ -61,167 +36,180 @@ Rectangle {
             width: parent.width - 24
             spacing: 28
 
-            MetaBuilder.HeroSection {
+            // Hero section
+            CCard {
                 Layout.fillWidth: true
-                onPrimaryAction: console.log("Hero primary action")
-                onSecondaryAction: console.log("Hero secondary action")
+                ColumnLayout {
+                    anchors.fill: parent
+                    anchors.margins: 32
+                    spacing: 16
+
+                    CText {
+                        variant: "h1"
+                        text: "MetaBuilder Observatory"
+                    }
+                    CText {
+                        variant: "body1"
+                        text: "A native Qt6 cockpit for the MetaBuilder platform. Monitor DBAL health, manage packages, and build declarative UIs."
+                        wrapMode: Text.Wrap
+                        Layout.fillWidth: true
+                    }
+
+                    FlexRow {
+                        spacing: 12
+                        CButton {
+                            text: "Explore Levels"
+                            variant: "primary"
+                            onClicked: appWindow.currentView = "login"
+                        }
+                        CButton {
+                            text: "View Storybook"
+                            variant: "ghost"
+                            onClicked: appWindow.currentView = "storybook"
+                        }
+                    }
+                }
             }
 
-            TabView {
-                width: parent.width
-                height: 420
-                background: Rectangle { color: "transparent" }
+            // Tab navigation
+            ColumnLayout {
+                Layout.fillWidth: true
+                spacing: 0
 
-                Tab {
-                    title: "Home"
+                CTabBar {
+                    id: tabBar
+                    Layout.fillWidth: true
+                    currentIndex: currentTab
+                    onCurrentIndexChanged: currentTab = currentIndex
+
+                    tabs: [
+                        { label: "Home" },
+                        { label: "GitHub Actions" },
+                        { label: "Status" }
+                    ]
+                }
+
+                StackLayout {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 400
+                    currentIndex: currentTab
+
+                    // Home tab
                     Rectangle {
-                        anchors.fill: parent
                         color: "transparent"
                         ColumnLayout {
                             anchors.fill: parent
-                            spacing: 24
+                            anchors.topMargin: 16
+                            spacing: 20
 
-                            Rectangle {
-                                width: parent.width
-                                radius: 12
-                                color: "#0b1121"
-                                border.color: "#1d1f2f"
-                                border.width: 1
-                                padding: 22
-
+                            CCard {
+                                Layout.fillWidth: true
                                 ColumnLayout {
+                                    anchors.fill: parent
+                                    anchors.margins: 20
                                     spacing: 12
-                                    Text {
-                                        text: "Why builders choose MetaBuilder"
-                                        font.pixelSize: 22
-                                        color: "#f6f9ff"
-                                    }
-                                    RowLayout {
-                                        width: parent.width
+                                    CText { variant: "h4"; text: "Why builders choose MetaBuilder" }
+                                    FlexRow {
+                                        Layout.fillWidth: true
                                         spacing: 16
-
                                         Repeater {
                                             model: featureHighlights
-                                            delegate: MetaBuilder.FeatureCard {
+                                            delegate: CCard {
                                                 Layout.fillWidth: true
-                                                Layout.preferredWidth: (parent.width - 32) / 3
-                                                title: modelData.title
-                                                description: modelData.desc
+                                                variant: "outlined"
+                                                ColumnLayout {
+                                                    anchors.fill: parent
+                                                    anchors.margins: 14
+                                                    spacing: 6
+                                                    CText { variant: "subtitle1"; text: modelData.title }
+                                                    CText { variant: "body2"; text: modelData.desc; wrapMode: Text.Wrap; Layout.fillWidth: true }
+                                                }
                                             }
                                         }
                                     }
                                 }
                             }
 
-                            Rectangle {
-                                width: parent.width
-                                radius: 12
-                                color: "#0b1121"
-                                border.color: "#1d1f2f"
-                                border.width: 1
-                                padding: 22
-
+                            CCard {
+                                Layout.fillWidth: true
                                 ColumnLayout {
+                                    anchors.fill: parent
+                                    anchors.margins: 20
                                     spacing: 10
-                                    Text {
-                                        text: "About MetaBuilder"
-                                        font.pixelSize: 22
-                                        color: "#ffffff"
-                                    }
-                                    Text {
-                                        text: "MetaBuilder turns seed metadata, dbal automation, and Prisma migrations into cohesive UX experiences without losing low-level control."
-                                        font.pixelSize: 16
-                                        color: "#aeb8cf"
+                                    CText { variant: "h4"; text: "About MetaBuilder" }
+                                    CText {
+                                        variant: "body1"
+                                        text: "MetaBuilder turns seed metadata, DBAL automation, and Prisma migrations into cohesive UX experiences without losing low-level control."
                                         wrapMode: Text.Wrap
+                                        Layout.fillWidth: true
                                     }
                                 }
                             }
                         }
                     }
-                }
 
-                Tab {
-                    title: "GitHub Actions"
+                    // GitHub Actions tab
                     Rectangle {
-                        anchors.fill: parent
                         color: "transparent"
                         ColumnLayout {
-                            spacing: 16
+                            anchors.fill: parent
+                            anchors.topMargin: 16
+                            spacing: 12
                             Repeater {
                                 model: ciRuns
-                                delegate: Rectangle {
-                                    width: parent.width
-                                    height: 56
-                                    radius: 10
-                                    color: "#0f1324"
-                                    border.color: "#1f2b46"
-                                    border.width: 1
-                                    anchors.horizontalCenter: parent.horizontalCenter
-                                    RowLayout {
+                                delegate: CCard {
+                                    Layout.fillWidth: true
+                                    FlexRow {
                                         anchors.fill: parent
-                                        anchors.margins: 12
-                                        spacing: 16
-                                        Text {
-                                            text: modelData.name
-                                            color: "#eef2ff"
-                                            font.pixelSize: 16
-                                        }
-                                        Rectangle {
-                                            width: 8
-                                            height: 8
-                                            radius: 4
-                                            color: modelData.status === "passing" ? "#39d98a" : "#facc15"
-                                            anchors.right: parent.right
-                                        }
-                                        Text {
+                                        anchors.margins: 16
+                                        spacing: 12
+                                        CText { text: modelData.name; variant: "body1"; Layout.fillWidth: true }
+                                        CStatusBadge {
+                                            status: modelData.status === "passing" ? "success" : "warning"
                                             text: modelData.status
-                                            color: modelData.status === "passing" ? "#39d98a" : "#facc15"
-                                            font.pixelSize: 15
-                                            anchors.rightMargin: 0
                                         }
                                     }
                                 }
                             }
+                            Item { Layout.fillHeight: true }
                         }
                     }
-                }
 
-                Tab {
-                    title: "Status"
+                    // Status tab
                     Rectangle {
-                        anchors.fill: parent
                         color: "transparent"
                         ColumnLayout {
-                            spacing: 16
+                            anchors.fill: parent
+                            anchors.topMargin: 16
+                            spacing: 12
                             Repeater {
                                 model: statusItems
-                                delegate: MetaBuilder.StatusCard {
+                                delegate: CCard {
                                     Layout.fillWidth: true
-                                    label: modelData.label
-                                    value: modelData.value
+                                    FlexRow {
+                                        anchors.fill: parent
+                                        anchors.margins: 16
+                                        spacing: 12
+                                        CText { text: modelData.label; variant: "body1"; Layout.fillWidth: true }
+                                        CStatusBadge {
+                                            status: modelData.value === "healthy" ? "success" : "warning"
+                                            text: modelData.value
+                                        }
+                                    }
                                 }
                             }
+                            Item { Layout.fillHeight: true }
                         }
                     }
                 }
             }
 
-            MetaBuilder.ContactForm {
+            // Footer
+            FlexRow {
                 Layout.fillWidth: true
-                onSubmitRequested: console.log("contact form submitted", name, company, email)
-            }
-
-            RowLayout {
-                width: parent.width
                 spacing: 20
-                Text {
-                    text: "© MetaBuilder • Public interface preview"
-                    color: "#7e899d"
-                }
-                Text {
-                    text: "Built for data-driven builders"
-                    color: "#7e899d"
-                }
+                CText { variant: "caption"; text: "\u00a9 MetaBuilder \u2022 Public interface preview" }
+                CText { variant: "caption"; text: "Built for data-driven builders" }
             }
         }
     }

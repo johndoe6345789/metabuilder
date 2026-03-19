@@ -1,0 +1,930 @@
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+import QmlComponents 1.0
+
+Rectangle {
+    id: superGodPanel
+    color: "transparent"
+
+    property int currentTab: 0
+
+    // ── Tenant data ──
+    property var tenants: [
+        { name: "default", owner: "admin", status: "active", homepage: "/", created: "2025-01-15" },
+        { name: "staging", owner: "devops", status: "active", homepage: "/staging", created: "2025-06-01" },
+        { name: "production", owner: "platform-admin", status: "active", homepage: "/prod", created: "2025-08-20" }
+    ]
+    property bool showCreateTenantDialog: false
+    property string newTenantName: ""
+    property string newTenantOwner: ""
+    property string newTenantHomepage: ""
+
+    // ── God users data ──
+    property var godUsers: [
+        { username: "admin", initials: "AD", role: "supergod", level: 5, tenant: "default", status: "online" },
+        { username: "platform-admin", initials: "PA", role: "supergod", level: 5, tenant: "production", status: "online" },
+        { username: "devops", initials: "DO", role: "god", level: 4, tenant: "staging", status: "online" },
+        { username: "builder01", initials: "B1", role: "god", level: 4, tenant: "default", status: "offline" },
+        { username: "builder02", initials: "B2", role: "god", level: 4, tenant: "production", status: "away" }
+    ]
+
+    // ── Power transfer data ──
+    property bool showTransferForm: false
+    property string transferFrom: ""
+    property string transferTo: ""
+    property string transferReason: ""
+    property string transferExpiry: ""
+    property var pendingTransfers: [
+        { from: "admin", to: "devops", reason: "Scheduled maintenance window", expiry: "2026-03-25", status: "pending" }
+    ]
+    property var transferHistory: [
+        { from: "platform-admin", to: "admin", reason: "Emergency access grant", date: "2026-02-10 14:32", status: "approved" },
+        { from: "admin", to: "builder01", reason: "Sprint deployment authority", date: "2026-01-28 09:15", status: "approved" },
+        { from: "devops", to: "admin", reason: "Incident response escalation", date: "2025-12-05 22:47", status: "denied" }
+    ]
+
+    // ── System data ──
+    property var daemons: [
+        { name: "DBAL", status: "healthy", uptime: "14d 7h 32m", port: 8080 },
+        { name: "Nginx", status: "healthy", uptime: "14d 7h 30m", port: 443 },
+        { name: "PostgreSQL", status: "healthy", uptime: "14d 6h 55m", port: 5432 },
+        { name: "Redis", status: "degraded", uptime: "2d 1h 12m", port: 6379 }
+    ]
+    property var systemMetrics: ({ cpu: 34, memory: 62, disk: 47, network: 18 })
+    property bool showReseedDialog: false
+    property bool showClearCacheDialog: false
+    property bool showRestartDialog: false
+    property string restartTarget: ""
+
+    property var tabModel: [
+        { label: "Tenants" },
+        { label: "God Users" },
+        { label: "Power Transfer" },
+        { label: "System" }
+    ]
+
+    ColumnLayout {
+        anchors.fill: parent
+        anchors.margins: 20
+        spacing: 16
+
+        // ── Header ──
+        CCard {
+            Layout.fillWidth: true
+
+            ColumnLayout {
+                anchors.fill: parent
+                anchors.margins: 20
+                spacing: 12
+
+                FlexRow {
+                    Layout.fillWidth: true
+                    spacing: 12
+
+                    CText { variant: "h2"; text: "Super God Panel" }
+                    CBadge { text: "Level 5" }
+                    CStatusBadge { status: "success"; text: "Platform Control" }
+
+                    Item { Layout.fillWidth: true }
+
+                    CButton {
+                        text: "Level 4"
+                        variant: "ghost"
+                        size: "sm"
+                        onClicked: appWindow.currentView = "god"
+                    }
+                    CButton {
+                        text: "Level 3"
+                        variant: "ghost"
+                        size: "sm"
+                        onClicked: appWindow.currentView = "admin"
+                    }
+                    CButton {
+                        text: "Level 2"
+                        variant: "ghost"
+                        size: "sm"
+                        onClicked: appWindow.currentView = "dashboard"
+                    }
+                }
+
+                CDivider { Layout.fillWidth: true }
+
+                FlexRow {
+                    Layout.fillWidth: true
+                    spacing: 8
+
+                    CChip { text: tenants.length + " Tenants" }
+                    CChip { text: godUsers.length + " God Users" }
+                    CChip { text: pendingTransfers.length + " Pending Transfers" }
+                    CChip { text: "14 DB Backends" }
+                    CChip { text: "4 Daemons" }
+                }
+            }
+        }
+
+        // ── Tab bar ──
+        CTabBar {
+            id: tabBar
+            Layout.fillWidth: true
+            currentIndex: currentTab
+            onCurrentIndexChanged: currentTab = currentIndex
+            tabs: tabModel
+        }
+
+        // ── Tab content ──
+        StackLayout {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            currentIndex: currentTab
+
+            // ══════════════════════════════════════════
+            // 0 - TENANTS
+            // ══════════════════════════════════════════
+            Rectangle {
+                color: "transparent"
+
+                ScrollView {
+                    anchors.fill: parent
+                    clip: true
+
+                    ColumnLayout {
+                        width: parent.width
+                        spacing: 16
+
+                        FlexRow {
+                            Layout.fillWidth: true
+                            spacing: 12
+
+                            CText { variant: "h3"; text: "Tenant Management" }
+                            Item { Layout.fillWidth: true }
+                            CButton {
+                                text: "Create Tenant"
+                                variant: "primary"
+                                size: "sm"
+                                onClicked: showCreateTenantDialog = true
+                            }
+                        }
+
+                        CText {
+                            variant: "body2"
+                            text: "Cross-tenant provisioning and configuration. Each tenant operates in full isolation with its own schemas, users, and data."
+                            wrapMode: Text.Wrap
+                            Layout.fillWidth: true
+                            color: Theme.textSecondary
+                        }
+
+                        CDivider { Layout.fillWidth: true }
+
+                        Repeater {
+                            model: tenants
+
+                            delegate: CCard {
+                                Layout.fillWidth: true
+
+                                ColumnLayout {
+                                    anchors.fill: parent
+                                    anchors.margins: 16
+                                    spacing: 10
+
+                                    FlexRow {
+                                        Layout.fillWidth: true
+                                        spacing: 10
+
+                                        CText { variant: "h4"; text: modelData.name }
+                                        CStatusBadge {
+                                            status: modelData.status === "active" ? "success" : "warning"
+                                            text: modelData.status
+                                        }
+                                        Item { Layout.fillWidth: true }
+                                        CBadge { text: "Tenant" }
+                                    }
+
+                                    CDivider { Layout.fillWidth: true }
+
+                                    RowLayout {
+                                        Layout.fillWidth: true
+                                        spacing: 24
+
+                                        ColumnLayout {
+                                            spacing: 4
+                                            CText { variant: "caption"; text: "Owner"; color: Theme.textSecondary }
+                                            CText { variant: "body1"; text: modelData.owner }
+                                        }
+                                        ColumnLayout {
+                                            spacing: 4
+                                            CText { variant: "caption"; text: "Homepage"; color: Theme.textSecondary }
+                                            CText { variant: "body1"; text: modelData.homepage }
+                                        }
+                                        ColumnLayout {
+                                            spacing: 4
+                                            CText { variant: "caption"; text: "Created"; color: Theme.textSecondary }
+                                            CText { variant: "body1"; text: modelData.created }
+                                        }
+                                        Item { Layout.fillWidth: true }
+                                        CButton {
+                                            text: "Configure"
+                                            variant: "ghost"
+                                            size: "sm"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // ══════════════════════════════════════════
+            // 1 - GOD USERS
+            // ══════════════════════════════════════════
+            Rectangle {
+                color: "transparent"
+
+                ScrollView {
+                    anchors.fill: parent
+                    clip: true
+
+                    ColumnLayout {
+                        width: parent.width
+                        spacing: 16
+
+                        CText { variant: "h3"; text: "God Users (Level 4+)" }
+                        CText {
+                            variant: "body2"
+                            text: "All users with god-level (L4) or super-god-level (L5) platform access across all tenants."
+                            wrapMode: Text.Wrap
+                            Layout.fillWidth: true
+                            color: Theme.textSecondary
+                        }
+
+                        CDivider { Layout.fillWidth: true }
+
+                        Repeater {
+                            model: godUsers
+
+                            delegate: CCard {
+                                Layout.fillWidth: true
+
+                                RowLayout {
+                                    anchors.fill: parent
+                                    anchors.margins: 16
+                                    spacing: 16
+
+                                    CAvatar { initials: modelData.initials }
+
+                                    ColumnLayout {
+                                        spacing: 4
+                                        Layout.fillWidth: true
+
+                                        FlexRow {
+                                            spacing: 8
+                                            CText { variant: "subtitle1"; text: modelData.username }
+                                            CBadge { text: "L" + modelData.level }
+                                            CBadge { text: modelData.role }
+                                        }
+
+                                        FlexRow {
+                                            spacing: 8
+                                            CText { variant: "caption"; text: "Tenant: " + modelData.tenant; color: Theme.textSecondary }
+                                        }
+                                    }
+
+                                    CStatusBadge {
+                                        status: modelData.status === "online" ? "success" : modelData.status === "away" ? "warning" : "error"
+                                        text: modelData.status
+                                    }
+
+                                    CButton {
+                                        text: "Manage"
+                                        variant: "ghost"
+                                        size: "sm"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // ══════════════════════════════════════════
+            // 2 - POWER TRANSFER
+            // ══════════════════════════════════════════
+            Rectangle {
+                color: "transparent"
+
+                ScrollView {
+                    anchors.fill: parent
+                    clip: true
+
+                    ColumnLayout {
+                        width: parent.width
+                        spacing: 16
+
+                        FlexRow {
+                            Layout.fillWidth: true
+                            spacing: 12
+
+                            CText { variant: "h3"; text: "Power Transfer" }
+                            Item { Layout.fillWidth: true }
+                            CButton {
+                                text: showTransferForm ? "Cancel" : "Initiate Transfer"
+                                variant: showTransferForm ? "ghost" : "primary"
+                                size: "sm"
+                                onClicked: showTransferForm = !showTransferForm
+                            }
+                        }
+
+                        CText {
+                            variant: "body2"
+                            text: "Transfer elevated privileges between god-level users. All transfers require approval and are logged for audit."
+                            wrapMode: Text.Wrap
+                            Layout.fillWidth: true
+                            color: Theme.textSecondary
+                        }
+
+                        // ── Transfer form ──
+                        CCard {
+                            Layout.fillWidth: true
+                            visible: showTransferForm
+
+                            ColumnLayout {
+                                anchors.fill: parent
+                                anchors.margins: 20
+                                spacing: 12
+
+                                CText { variant: "h4"; text: "New Transfer Request" }
+                                CDivider { Layout.fillWidth: true }
+
+                                RowLayout {
+                                    Layout.fillWidth: true
+                                    spacing: 16
+
+                                    CTextField {
+                                        Layout.fillWidth: true
+                                        label: "From User"
+                                        placeholderText: "e.g. admin"
+                                        text: transferFrom
+                                        onTextChanged: transferFrom = text
+                                    }
+                                    CTextField {
+                                        Layout.fillWidth: true
+                                        label: "To User"
+                                        placeholderText: "e.g. devops"
+                                        text: transferTo
+                                        onTextChanged: transferTo = text
+                                    }
+                                }
+
+                                CTextField {
+                                    Layout.fillWidth: true
+                                    label: "Reason"
+                                    placeholderText: "Describe the reason for this transfer"
+                                    text: transferReason
+                                    onTextChanged: transferReason = text
+                                }
+
+                                CTextField {
+                                    Layout.fillWidth: true
+                                    label: "Expiry Date"
+                                    placeholderText: "YYYY-MM-DD"
+                                    text: transferExpiry
+                                    onTextChanged: transferExpiry = text
+                                }
+
+                                FlexRow {
+                                    Layout.fillWidth: true
+                                    spacing: 8
+
+                                    Item { Layout.fillWidth: true }
+                                    CButton {
+                                        text: "Submit Transfer"
+                                        variant: "primary"
+                                        size: "sm"
+                                        onClicked: {
+                                            if (transferFrom && transferTo && transferReason) {
+                                                var newTransfer = {
+                                                    from: transferFrom,
+                                                    to: transferTo,
+                                                    reason: transferReason,
+                                                    expiry: transferExpiry || "No expiry",
+                                                    status: "pending"
+                                                };
+                                                var updated = pendingTransfers.slice();
+                                                updated.push(newTransfer);
+                                                pendingTransfers = updated;
+                                                transferFrom = "";
+                                                transferTo = "";
+                                                transferReason = "";
+                                                transferExpiry = "";
+                                                showTransferForm = false;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        CDivider { Layout.fillWidth: true }
+
+                        // ── Pending transfers ──
+                        CText { variant: "h4"; text: "Pending Transfers (" + pendingTransfers.length + ")" }
+
+                        Repeater {
+                            model: pendingTransfers
+
+                            delegate: CCard {
+                                Layout.fillWidth: true
+
+                                ColumnLayout {
+                                    anchors.fill: parent
+                                    anchors.margins: 16
+                                    spacing: 10
+
+                                    FlexRow {
+                                        Layout.fillWidth: true
+                                        spacing: 10
+
+                                        CText { variant: "subtitle1"; text: modelData.from + " → " + modelData.to }
+                                        CStatusBadge { status: "warning"; text: "Pending" }
+                                        Item { Layout.fillWidth: true }
+                                        CText { variant: "caption"; text: "Expires: " + modelData.expiry; color: Theme.textSecondary }
+                                    }
+
+                                    CText {
+                                        variant: "body2"
+                                        text: modelData.reason
+                                        wrapMode: Text.Wrap
+                                        Layout.fillWidth: true
+                                    }
+
+                                    FlexRow {
+                                        Layout.fillWidth: true
+                                        spacing: 8
+
+                                        Item { Layout.fillWidth: true }
+                                        CButton {
+                                            text: "Approve"
+                                            variant: "primary"
+                                            size: "sm"
+                                            onClicked: {
+                                                var entry = {
+                                                    from: pendingTransfers[index].from,
+                                                    to: pendingTransfers[index].to,
+                                                    reason: pendingTransfers[index].reason,
+                                                    date: "2026-03-18 " + Qt.formatTime(new Date(), "hh:mm"),
+                                                    status: "approved"
+                                                };
+                                                var hist = transferHistory.slice();
+                                                hist.unshift(entry);
+                                                transferHistory = hist;
+                                                var pend = pendingTransfers.slice();
+                                                pend.splice(index, 1);
+                                                pendingTransfers = pend;
+                                            }
+                                        }
+                                        CButton {
+                                            text: "Deny"
+                                            variant: "danger"
+                                            size: "sm"
+                                            onClicked: {
+                                                var entry = {
+                                                    from: pendingTransfers[index].from,
+                                                    to: pendingTransfers[index].to,
+                                                    reason: pendingTransfers[index].reason,
+                                                    date: "2026-03-18 " + Qt.formatTime(new Date(), "hh:mm"),
+                                                    status: "denied"
+                                                };
+                                                var hist = transferHistory.slice();
+                                                hist.unshift(entry);
+                                                transferHistory = hist;
+                                                var pend = pendingTransfers.slice();
+                                                pend.splice(index, 1);
+                                                pendingTransfers = pend;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        CAlert {
+                            severity: "info"
+                            text: "No pending transfers."
+                            visible: pendingTransfers.length === 0
+                        }
+
+                        CDivider { Layout.fillWidth: true }
+
+                        // ── Transfer history ──
+                        CText { variant: "h4"; text: "Transfer History" }
+
+                        Repeater {
+                            model: transferHistory
+
+                            delegate: CCard {
+                                Layout.fillWidth: true
+                                variant: "outlined"
+
+                                RowLayout {
+                                    anchors.fill: parent
+                                    anchors.margins: 14
+                                    spacing: 16
+
+                                    ColumnLayout {
+                                        spacing: 4
+                                        Layout.fillWidth: true
+
+                                        FlexRow {
+                                            spacing: 8
+                                            CText { variant: "subtitle1"; text: modelData.from + " → " + modelData.to }
+                                            CStatusBadge {
+                                                status: modelData.status === "approved" ? "success" : "error"
+                                                text: modelData.status
+                                            }
+                                        }
+                                        CText { variant: "body2"; text: modelData.reason; wrapMode: Text.Wrap; Layout.fillWidth: true }
+                                    }
+
+                                    CText { variant: "caption"; text: modelData.date; color: Theme.textSecondary }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // ══════════════════════════════════════════
+            // 3 - SYSTEM
+            // ══════════════════════════════════════════
+            Rectangle {
+                color: "transparent"
+
+                ScrollView {
+                    anchors.fill: parent
+                    clip: true
+
+                    ColumnLayout {
+                        width: parent.width
+                        spacing: 16
+
+                        CText { variant: "h3"; text: "System Overview" }
+
+                        // ── Daemon status cards ──
+                        CText { variant: "h4"; text: "Daemon Status" }
+
+                        GridLayout {
+                            Layout.fillWidth: true
+                            columns: 2
+                            columnSpacing: 16
+                            rowSpacing: 16
+
+                            Repeater {
+                                model: daemons
+
+                                delegate: CCard {
+                                    Layout.fillWidth: true
+
+                                    ColumnLayout {
+                                        anchors.fill: parent
+                                        anchors.margins: 16
+                                        spacing: 10
+
+                                        FlexRow {
+                                            Layout.fillWidth: true
+                                            spacing: 10
+
+                                            CText { variant: "subtitle1"; text: modelData.name }
+                                            CStatusBadge {
+                                                status: modelData.status === "healthy" ? "success" : "warning"
+                                                text: modelData.status
+                                            }
+                                            Item { Layout.fillWidth: true }
+                                            CBadge { text: ":" + modelData.port }
+                                        }
+
+                                        CText { variant: "caption"; text: "Uptime: " + modelData.uptime; color: Theme.textSecondary }
+                                    }
+                                }
+                            }
+                        }
+
+                        CDivider { Layout.fillWidth: true }
+
+                        // ── System metrics ──
+                        CText { variant: "h4"; text: "System Metrics" }
+
+                        GridLayout {
+                            Layout.fillWidth: true
+                            columns: 4
+                            columnSpacing: 16
+                            rowSpacing: 16
+
+                            Repeater {
+                                model: [
+                                    { label: "CPU", value: systemMetrics.cpu },
+                                    { label: "Memory", value: systemMetrics.memory },
+                                    { label: "Disk", value: systemMetrics.disk },
+                                    { label: "Network", value: systemMetrics.network }
+                                ]
+
+                                delegate: CCard {
+                                    Layout.fillWidth: true
+
+                                    ColumnLayout {
+                                        anchors.fill: parent
+                                        anchors.margins: 16
+                                        spacing: 8
+
+                                        CText { variant: "caption"; text: modelData.label; color: Theme.textSecondary }
+                                        CText { variant: "h3"; text: modelData.value + "%" }
+
+                                        Rectangle {
+                                            Layout.fillWidth: true
+                                            height: 6
+                                            radius: 3
+                                            color: Theme.border
+
+                                            Rectangle {
+                                                width: parent.width * (modelData.value / 100)
+                                                height: parent.height
+                                                radius: 3
+                                                color: modelData.value > 80 ? Theme.error : modelData.value > 60 ? Theme.warning : Theme.primary
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        CDivider { Layout.fillWidth: true }
+
+                        // ── Actions ──
+                        CText { variant: "h4"; text: "System Actions" }
+
+                        FlexRow {
+                            Layout.fillWidth: true
+                            spacing: 12
+
+                            CButton {
+                                text: "Force Re-seed"
+                                variant: "primary"
+                                size: "sm"
+                                onClicked: showReseedDialog = true
+                            }
+                            CButton {
+                                text: "Clear Cache"
+                                variant: "ghost"
+                                size: "sm"
+                                onClicked: showClearCacheDialog = true
+                            }
+                            CButton {
+                                text: "Restart DBAL"
+                                variant: "danger"
+                                size: "sm"
+                                onClicked: { restartTarget = "DBAL"; showRestartDialog = true }
+                            }
+                            CButton {
+                                text: "Restart Redis"
+                                variant: "danger"
+                                size: "sm"
+                                onClicked: { restartTarget = "Redis"; showRestartDialog = true }
+                            }
+                        }
+
+                        CDivider { Layout.fillWidth: true }
+
+                        // ── Environment info ──
+                        CText { variant: "h4"; text: "Environment" }
+
+                        CCard {
+                            Layout.fillWidth: true
+
+                            ColumnLayout {
+                                anchors.fill: parent
+                                anchors.margins: 16
+                                spacing: 8
+
+                                RowLayout {
+                                    Layout.fillWidth: true
+                                    spacing: 24
+
+                                    ColumnLayout {
+                                        spacing: 4
+                                        CText { variant: "caption"; text: "Version"; color: Theme.textSecondary }
+                                        CText { variant: "body1"; text: "2.5.0-rc1" }
+                                    }
+                                    ColumnLayout {
+                                        spacing: 4
+                                        CText { variant: "caption"; text: "Build Date"; color: Theme.textSecondary }
+                                        CText { variant: "body1"; text: "2026-03-15" }
+                                    }
+                                    ColumnLayout {
+                                        spacing: 4
+                                        CText { variant: "caption"; text: "Node Count"; color: Theme.textSecondary }
+                                        CText { variant: "body1"; text: "4 nodes" }
+                                    }
+                                    ColumnLayout {
+                                        spacing: 4
+                                        CText { variant: "caption"; text: "Platform"; color: Theme.textSecondary }
+                                        CText { variant: "body1"; text: "MetaBuilder Universal" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // ══════════════════════════════════════════
+    // DIALOGS
+    // ══════════════════════════════════════════
+
+    // ── Create Tenant dialog ──
+    CDialog {
+        id: createTenantDialog
+        visible: showCreateTenantDialog
+        title: "Create Tenant"
+
+        ColumnLayout {
+            spacing: 12
+            width: 400
+
+            CText {
+                variant: "body2"
+                text: "Provision a new isolated tenant with its own schemas, users, and data store."
+                wrapMode: Text.Wrap
+                Layout.fillWidth: true
+            }
+
+            CTextField {
+                Layout.fillWidth: true
+                label: "Tenant Name"
+                placeholderText: "e.g. acme-corp"
+                text: newTenantName
+                onTextChanged: newTenantName = text
+            }
+
+            CTextField {
+                Layout.fillWidth: true
+                label: "Owner"
+                placeholderText: "e.g. admin@acme.com"
+                text: newTenantOwner
+                onTextChanged: newTenantOwner = text
+            }
+
+            CTextField {
+                Layout.fillWidth: true
+                label: "Homepage"
+                placeholderText: "e.g. /acme"
+                text: newTenantHomepage
+                onTextChanged: newTenantHomepage = text
+            }
+
+            FlexRow {
+                Layout.fillWidth: true
+                spacing: 8
+
+                Item { Layout.fillWidth: true }
+                CButton {
+                    text: "Cancel"
+                    variant: "ghost"
+                    size: "sm"
+                    onClicked: showCreateTenantDialog = false
+                }
+                CButton {
+                    text: "Create"
+                    variant: "primary"
+                    size: "sm"
+                    onClicked: {
+                        if (newTenantName && newTenantOwner) {
+                            var updated = tenants.slice();
+                            updated.push({
+                                name: newTenantName,
+                                owner: newTenantOwner,
+                                status: "active",
+                                homepage: newTenantHomepage || "/",
+                                created: "2026-03-18"
+                            });
+                            tenants = updated;
+                            newTenantName = "";
+                            newTenantOwner = "";
+                            newTenantHomepage = "";
+                            showCreateTenantDialog = false;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // ── Force Re-seed confirmation dialog ──
+    CDialog {
+        id: reseedDialog
+        visible: showReseedDialog
+        title: "Force Re-seed"
+
+        ColumnLayout {
+            spacing: 12
+            width: 400
+
+            CAlert {
+                severity: "warning"
+                text: "This will re-run all seed data scripts. Existing seed records will be skipped (idempotent), but this may take several minutes."
+            }
+
+            FlexRow {
+                Layout.fillWidth: true
+                spacing: 8
+
+                Item { Layout.fillWidth: true }
+                CButton {
+                    text: "Cancel"
+                    variant: "ghost"
+                    size: "sm"
+                    onClicked: showReseedDialog = false
+                }
+                CButton {
+                    text: "Re-seed"
+                    variant: "primary"
+                    size: "sm"
+                    onClicked: showReseedDialog = false
+                }
+            }
+        }
+    }
+
+    // ── Clear Cache confirmation dialog ──
+    CDialog {
+        id: clearCacheDialog
+        visible: showClearCacheDialog
+        title: "Clear Cache"
+
+        ColumnLayout {
+            spacing: 12
+            width: 400
+
+            CAlert {
+                severity: "warning"
+                text: "This will flush all Redis caches across all tenants. Subsequent requests will experience cache misses until the cache is repopulated."
+            }
+
+            FlexRow {
+                Layout.fillWidth: true
+                spacing: 8
+
+                Item { Layout.fillWidth: true }
+                CButton {
+                    text: "Cancel"
+                    variant: "ghost"
+                    size: "sm"
+                    onClicked: showClearCacheDialog = false
+                }
+                CButton {
+                    text: "Clear Cache"
+                    variant: "danger"
+                    size: "sm"
+                    onClicked: showClearCacheDialog = false
+                }
+            }
+        }
+    }
+
+    // ── Restart Daemon confirmation dialog ──
+    CDialog {
+        id: restartDaemonDialog
+        visible: showRestartDialog
+        title: "Restart " + restartTarget
+
+        ColumnLayout {
+            spacing: 12
+            width: 400
+
+            CAlert {
+                severity: "error"
+                text: "Restarting " + restartTarget + " will cause a brief service interruption. All active connections will be dropped. Are you sure?"
+            }
+
+            FlexRow {
+                Layout.fillWidth: true
+                spacing: 8
+
+                Item { Layout.fillWidth: true }
+                CButton {
+                    text: "Cancel"
+                    variant: "ghost"
+                    size: "sm"
+                    onClicked: showRestartDialog = false
+                }
+                CButton {
+                    text: "Restart"
+                    variant: "danger"
+                    size: "sm"
+                    onClicked: showRestartDialog = false
+                }
+            }
+        }
+    }
+}

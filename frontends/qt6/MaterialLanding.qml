@@ -1,132 +1,80 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+import QmlComponents 1.0
 
-import "qmllib/Material" as Material
-
-ApplicationWindow {
-    visible: true
-    width: 1100
-    height: 700
-    title: "Material Inspo"
-    color: Material.MaterialPalette.background
-
-    Rectangle {
-        anchors.fill: parent
-        color: Material.MaterialPalette.background
-    }
+Rectangle {
+    color: Theme.background
 
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 32
         spacing: 24
 
-        Text {
-            text: "Material-style UI in Qt Quick"
-            font.pixelSize: 28
-        color: Material.MaterialPalette.onSurface
-            font.bold: true
-        }
+        CText { variant: "h2"; text: "Material-style UI in Qt Quick" }
 
-        RowLayout {
+        FlexRow {
             spacing: 16
-            Material.MaterialButton {
-                text: "Primary action"
-                onClicked: console.log("primary")
-            }
-            Material.MaterialButton {
-                text: "Outlined action"
-                outlined: true
-                font.pixelSize: 14
-                onClicked: console.log("outlined")
-            }
+            CButton { text: "Primary action"; variant: "primary" }
+            CButton { text: "Ghost action"; variant: "ghost" }
+            CButton { text: "Danger"; variant: "danger" }
         }
 
-        RowLayout {
+        FlexRow {
             spacing: 16
-            Material.MaterialTextField {
-                placeholderText: "Email address"
-                width: parent.width / 3
-            }
-            Material.MaterialTextField {
-                placeholderText: "Your role"
-                width: parent.width / 4
-            }
+            CTextField { placeholderText: "Email address"; Layout.preferredWidth: 240 }
+            CTextField { placeholderText: "Your role"; Layout.preferredWidth: 180 }
         }
 
-        RowLayout {
+        FlexRow {
             spacing: 12
-            Material.MaterialChip { text: "Design" }
-            Material.MaterialChip { text: "Data" }
-            Material.MaterialChip { text: "Runtime" }
-            Material.MaterialChip { text: "Automation" }
+            CChip { text: "Design" }
+            CChip { text: "Data" }
+            CChip { text: "Runtime" }
+            CChip { text: "Automation" }
         }
 
-        Material.MaterialDivider {
-            width: parent.width
-        }
+        CDivider { Layout.fillWidth: true }
 
-        Material.MaterialSurface {
+        CPaper {
             Layout.fillWidth: true
-            elevation: 14
-            contentComponent: Component {
-                ColumnLayout {
-                    spacing: 14
+            ColumnLayout {
+                anchors.fill: parent
+                anchors.margins: 16
+                spacing: 14
 
-                    Text {
-                    text: "Material surface"
-                    font.pixelSize: 20
-                    color: Material.MaterialPalette.onSurface
-                    font.bold: true
-                }
-
-                Text {
+                CText { variant: "h4"; text: "Paper surface" }
+                CText {
+                    variant: "body1"
                     text: "Use surfaces to group related controls, apply elevation, and keep spacing consistent with Material principles."
-                    font.pixelSize: 15
-                    color: Material.MaterialPalette.onSurface
                     wrapMode: Text.Wrap
+                    Layout.fillWidth: true
                 }
-
-                RowLayout {
+                FlexRow {
                     spacing: 12
-                    Material.MaterialButton { text: "Continue" }
-                    Material.MaterialButton { text: "Cancel" ; outlined: true }
+                    CButton { text: "Continue"; variant: "primary" }
+                    CButton { text: "Cancel"; variant: "ghost" }
                 }
             }
         }
 
-        Material.MaterialCard {
+        CCard {
             Layout.fillWidth: true
-            contentItem: ColumnLayout {
-                spacing: 10
-                Text {
-                    text: "Card headline"
-                    font.pixelSize: 20
-                    color: Material.MaterialPalette.onSurface
-                }
-                Text {
-                    text: "Cards can load any content, here we show simple stacked text with Material spacing."
-                    font.pixelSize: 15
-                    color: Material.MaterialPalette.onSurface
-                    wrapMode: Text.Wrap
-                }
+            title: "Card headline"
+            CText {
+                text: "Cards can load any content, here we show simple stacked text with Material spacing."
+                wrapMode: Text.Wrap
             }
         }
 
         ColumnLayout {
             spacing: 10
-            Text {
-                text: "Badge samples"
-                font.pixelSize: 18
-                color: Material.MaterialPalette.onSurface
-                font.bold: true
-            }
-
-            RowLayout {
+            CText { variant: "subtitle1"; text: "Badge samples" }
+            FlexRow {
                 spacing: 10
-                Material.MaterialBadge { text: "alpha"; accent: true }
-                Material.MaterialBadge { text: "stable"; dense: true }
-                Material.MaterialBadge { text: "live"; outlined: true }
+                CBadge { text: "alpha" }
+                CBadge { text: "stable" }
+                CBadge { text: "live" }
             }
         }
     }

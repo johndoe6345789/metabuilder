@@ -106,11 +106,12 @@ void DBALClient::handleNetworkReply(QNetworkReply *reply)
     
     if (callback.isCallable()) {
         QJSValueList args;
-        // Convert QJsonObject to QJSValue through QVariant
+        // In Qt6, QJSValue::engine() is removed. Pass data as JSON string
+        // and let QML parse it, or pass QVariant directly.
         if (doc.isObject()) {
-            args << callback.engine()->toScriptValue(doc.object().toVariantMap());
+            args << QJSValue(QString::fromUtf8(data));
         } else if (doc.isArray()) {
-            args << callback.engine()->toScriptValue(doc.array().toVariantList());
+            args << QJSValue(QString::fromUtf8(data));
         } else {
             args << QJSValue::NullValue;
         }

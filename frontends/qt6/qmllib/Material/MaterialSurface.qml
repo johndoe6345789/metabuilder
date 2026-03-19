@@ -1,7 +1,6 @@
-import QtQuick 2.15
-import QtQuick.Layouts 1.15
-import QtQuick.Controls 2.15
-import QtGraphicalEffects 1.15
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Controls
 
 import "MaterialPalette.qml" as MaterialPalette
 
@@ -17,15 +16,6 @@ Rectangle {
     border.color: outlined ? MaterialPalette.outline : "transparent"
     border.width: outlined ? 1 : 0
     width: parent ? parent.width : 320
-    layer.enabled: elevation > 0
-    layer.effect: DropShadow {
-        anchors.fill: parent
-        horizontalOffset: 0
-        verticalOffset: elevation / 2
-        radius: elevation
-        samples: 16
-        color: "#22000000"
-    }
 
     Loader {
         id: loader

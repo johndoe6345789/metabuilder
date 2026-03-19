@@ -1,5 +1,5 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
+import QtQuick
+import QtQuick.Controls
 
 import "MaterialPalette.qml" as MaterialPalette
 
@@ -7,7 +7,7 @@ Rectangle {
     id: iconButton
     property url iconSource: ""
     property bool disabled: false
-    property alias tooltip: mouseArea.toolTip
+    property string tooltip: ""
     signal clicked()
 
     width: 48
