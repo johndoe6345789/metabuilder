@@ -502,10 +502,26 @@ Rectangle {
                             Layout.fillWidth: true
                             RowLayout {
                                 Layout.fillWidth: true; spacing: 24
-                                ColumnLayout { spacing: 4; CText { variant: "caption"; text: "Version"; color: Theme.textSecondary }; CText { variant: "body1"; text: "2.5.0-rc1" } }
-                                ColumnLayout { spacing: 4; CText { variant: "caption"; text: "Build Date"; color: Theme.textSecondary }; CText { variant: "body1"; text: "2026-03-15" } }
-                                ColumnLayout { spacing: 4; CText { variant: "caption"; text: "Node Count"; color: Theme.textSecondary }; CText { variant: "body1"; text: "4 nodes" } }
-                                ColumnLayout { spacing: 4; CText { variant: "caption"; text: "Platform"; color: Theme.textSecondary }; CText { variant: "body1"; text: "MetaBuilder Universal" } }
+                                ColumnLayout {
+                                    spacing: 4
+                                    CText { variant: "caption"; text: "Version"; color: Theme.textSecondary }
+                                    CText { variant: "body1"; text: "2.5.0-rc1" }
+                                }
+                                ColumnLayout {
+                                    spacing: 4
+                                    CText { variant: "caption"; text: "Build Date"; color: Theme.textSecondary }
+                                    CText { variant: "body1"; text: "2026-03-15" }
+                                }
+                                ColumnLayout {
+                                    spacing: 4
+                                    CText { variant: "caption"; text: "Node Count"; color: Theme.textSecondary }
+                                    CText { variant: "body1"; text: "4 nodes" }
+                                }
+                                ColumnLayout {
+                                    spacing: 4
+                                    CText { variant: "caption"; text: "Platform"; color: Theme.textSecondary }
+                                    CText { variant: "body1"; text: "MetaBuilder Universal" }
+                                }
                             }
                         }
                     }

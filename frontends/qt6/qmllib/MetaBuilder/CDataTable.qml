@@ -36,11 +36,9 @@ CCard {
     signal rowClicked(int index)
     signal editClicked(int index, var record)
     signal deleteClicked(int index, var record)
-    signal pageChanged(int page)
+    signal pageRequested(int newPage)
     signal selectAllChanged(bool checked)
     signal rowSelectionChanged(var selectedRows)
-
-    readonly property int _totalPages: Math.max(1, Math.ceil(totalFiltered / pageSize))
 
     Layout.fillWidth: true
     Layout.fillHeight: true
@@ -50,49 +48,18 @@ CCard {
         spacing: 0
 
         // ── Column headers ──────────────────────────────────────
-        Rectangle {
-            Layout.fillWidth: true
-            height: 44
-            color: Theme.surfaceVariant
-            radius: 0
-
-            RowLayout {
-                anchors.fill: parent
-                anchors.leftMargin: 12
-                anchors.rightMargin: 12
-                spacing: 0
-
-                CheckBox {
-                    Layout.preferredWidth: 36
-                    checked: root.selectAll
-                    onCheckedChanged: {
-                        root.selectAll = checked;
-                        var newSel = {};
-                        for (var i = 0; i < root.rows.length; i++) {
-                            newSel[i] = checked;
-                        }
-                        root.selectedRows = newSel;
-                        root.rowSelectionChanged(newSel);
-                        root.selectAllChanged(checked);
-                    }
+        CTableHeader {
+            headers: root.headers
+            selectAll: root.selectAll
+            onSelectAllToggled: function(checked) {
+                root.selectAll = checked;
+                var newSel = {};
+                for (var i = 0; i < root.rows.length; i++) {
+                    newSel[i] = checked;
                 }
-
-                Repeater {
-                    model: root.headers
-                    delegate: CText {
-                        Layout.fillWidth: index > 0
-                        Layout.preferredWidth: index === 0 ? 80 : -1
-                        variant: "subtitle2"
-                        text: modelData
-                    }
-                }
-
-                CText {
-                    Layout.preferredWidth: 110
-                    variant: "subtitle2"
-                    text: "Actions"
-                    horizontalAlignment: Text.AlignRight
-                }
+                root.selectedRows = newSel;
+                root.rowSelectionChanged(newSel);
+                root.selectAllChanged(checked);
             }
         }
 
@@ -216,54 +183,11 @@ CCard {
         CDivider { Layout.fillWidth: true }
 
         // ── Pagination footer ───────────────────────────────────
-        Rectangle {
-            Layout.fillWidth: true
-            height: 48
-            color: Theme.surfaceVariant
-            radius: 0
-
-            RowLayout {
-                anchors.fill: parent
-                anchors.leftMargin: 16
-                anchors.rightMargin: 16
-                spacing: 8
-
-                CText {
-                    variant: "caption"
-                    text: {
-                        var total = root.totalFiltered;
-                        if (total === 0) return "0 records";
-                        var start = root.page * root.pageSize + 1;
-                        var end = Math.min(start + root.pageSize - 1, total);
-                        return start + "-" + end + " of " + total + " records";
-                    }
-                    color: Theme.textSecondary
-                }
-
-                Item { Layout.fillWidth: true }
-
-                CButton {
-                    text: "Previous"
-                    variant: "ghost"
-                    size: "sm"
-                    enabled: root.page > 0
-                    onClicked: root.pageChanged(root.page - 1)
-                }
-
-                CText {
-                    variant: "caption"
-                    text: "Page " + (root.page + 1) + " of " + root._totalPages
-                    color: Theme.textSecondary
-                }
-
-                CButton {
-                    text: "Next"
-                    variant: "ghost"
-                    size: "sm"
-                    enabled: root.page < root._totalPages - 1
-                    onClicked: root.pageChanged(root.page + 1)
-                }
-            }
+        CTablePagination {
+            page: root.page
+            pageSize: root.pageSize
+            totalFiltered: root.totalFiltered
+            onPageChanged: function(newPage) { root.pageRequested(newPage) }
         }
     }
 }

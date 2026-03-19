@@ -18,9 +18,6 @@ Item {
     width: 32
     height: 32
 
-    // ── MD3 palette ──
-    readonly property color surfaceContainer: isDark ? Qt.rgba(1, 1, 1, 0.05) : Qt.rgba(0.31, 0.31, 0.44, 0.06)
-
     // ── Avatar circle ──
     Rectangle {
         id: avatarCircle
@@ -49,29 +46,25 @@ Item {
         }
 
         // ── Dropdown menu ──
-        Rectangle {
+        CDropdownMenu {
             id: dropdownMenu
             visible: false
             anchors.top: parent.bottom
             anchors.right: parent.right
             anchors.topMargin: 8
-            width: 200
-            height: menuCol.implicitHeight + 16
-            radius: 12
-            color: Theme.paper
-            border.color: isDark ? Qt.rgba(1,1,1,0.1) : Qt.rgba(0,0,0,0.1)
-            border.width: 1
-            z: 100
+            isDark: root.isDark
 
-            ColumnLayout {
-                id: menuCol
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.top: parent.top
-                anchors.margins: 8
-                spacing: 2
+            menuItems: [
+                { label: "Profile",  icon: "P", action: "profile" },
+                { label: "Settings", icon: "S", action: "settings" }
+            ]
 
-                // User info header
+            onItemClicked: function(action) {
+                root.navigateTo(action);
+                dropdownMenu.close();
+            }
+
+            headerContent: Component {
                 RowLayout {
                     Layout.fillWidth: true
                     Layout.margins: 8
@@ -81,11 +74,11 @@ Item {
                         width: 36
                         height: 36
                         radius: 18
-                        color: Qt.rgba(0.39, 0.4, 0.95, isDark ? 0.2 : 0.15)
+                        color: Qt.rgba(0.39, 0.4, 0.95, root.isDark ? 0.2 : 0.15)
 
                         CText {
                             anchors.centerIn: parent
-                            text: username ? username.charAt(0).toUpperCase() : "?"
+                            text: root.username ? root.username.charAt(0).toUpperCase() : "?"
                             font.pixelSize: 16
                             font.weight: Font.Bold
                             color: "#6366F1"
@@ -96,78 +89,21 @@ Item {
                         Layout.fillWidth: true
                         spacing: 1
                         CText {
-                            text: username
+                            text: root.username
                             font.pixelSize: 14
                             font.weight: Font.DemiBold
                         }
                         CText {
-                            text: "L" + level + " \u00B7 " + role
+                            text: "L" + root.level + " \u00B7 " + root.role
                             font.pixelSize: 11
                             font.family: "monospace"
                             color: Theme.textSecondary
                         }
                     }
                 }
+            }
 
-                // Divider
-                Rectangle {
-                    Layout.fillWidth: true
-                    Layout.leftMargin: 8
-                    Layout.rightMargin: 8
-                    height: 1
-                    color: isDark ? Qt.rgba(1,1,1,0.06) : Qt.rgba(0,0,0,0.06)
-                }
-
-                // Menu items
-                Repeater {
-                    model: [
-                        { label: "Profile",  icon: "P", view: "profile" },
-                        { label: "Settings", icon: "S", view: "settings" }
-                    ]
-                    delegate: Rectangle {
-                        Layout.fillWidth: true
-                        height: 36
-                        radius: 8
-                        color: menuItemMA.containsMouse ? (isDark ? Qt.rgba(1,1,1,0.06) : Qt.rgba(0,0,0,0.04)) : "transparent"
-
-                        RowLayout {
-                            anchors.fill: parent
-                            anchors.leftMargin: 12
-                            spacing: 10
-                            CText {
-                                text: modelData.icon
-                                font.pixelSize: 14
-                                color: Theme.textSecondary
-                            }
-                            CText {
-                                text: modelData.label
-                                font.pixelSize: 13
-                            }
-                        }
-
-                        MouseArea {
-                            id: menuItemMA
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: {
-                                root.navigateTo(modelData.view)
-                                dropdownMenu.visible = false
-                            }
-                        }
-                    }
-                }
-
-                // Divider
-                Rectangle {
-                    Layout.fillWidth: true
-                    Layout.leftMargin: 8
-                    Layout.rightMargin: 8
-                    height: 1
-                    color: isDark ? Qt.rgba(1,1,1,0.06) : Qt.rgba(0,0,0,0.06)
-                }
-
-                // Sign out
+            footerContent: Component {
                 Rectangle {
                     Layout.fillWidth: true
                     height: 36
@@ -196,7 +132,7 @@ Item {
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
                         onClicked: {
-                            dropdownMenu.visible = false
+                            dropdownMenu.close()
                             root.signOut()
                         }
                     }

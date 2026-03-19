@@ -101,3 +101,5 @@ CCanvasGrid 1.0 CCanvasGrid.qml
 CCanvasZoomOverlay 1.0 CCanvasZoomOverlay.qml
 CNotificationToggles 1.0 CNotificationToggles.qml
 CWorkflowNodeDelegate 1.0 CWorkflowNodeDelegate.qml
+CWorkflowTestPanel 1.0 CWorkflowTestPanel.qml
+CWorkflowSidebar 1.0 CWorkflowSidebar.qml
