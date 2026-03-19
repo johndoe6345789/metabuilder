@@ -169,7 +169,7 @@ def find_audio_assets(root_dir: Path) -> list[str]:
 
 
 def find_cpp_sources(root_dir: Path) -> dict[str, list[str]]:
-    """Find all *.cpp and *.h files in src/."""
+    """Find all *.cpp, *.h, and *.hpp files in src/."""
     src_dir = root_dir / "src"
     result = {"cpp": [], "h": []}
     if not src_dir.exists():
@@ -177,8 +177,9 @@ def find_cpp_sources(root_dir: Path) -> dict[str, list[str]]:
     result["cpp"] = sorted(
         str(f.relative_to(root_dir)) for f in src_dir.rglob("*.cpp")
     )
+    headers = list(src_dir.rglob("*.h")) + list(src_dir.rglob("*.hpp"))
     result["h"] = sorted(
-        str(f.relative_to(root_dir)) for f in src_dir.rglob("*.h")
+        str(f.relative_to(root_dir)) for f in headers
     )
     return result
 
