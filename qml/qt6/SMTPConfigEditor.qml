@@ -45,7 +45,8 @@ Rectangle {
             FlexRow {
                 Layout.fillWidth: true; spacing: 12
                 CText { variant: "h3"; text: "SMTP Configuration" }
-                CBadge { text: "Email" }; Item { Layout.fillWidth: true }
+                CBadge { text: "Email" }
+                Item { Layout.fillWidth: true }
                 CButton { text: "Reset"
                     variant: "ghost"; size: "sm"
                     activeFocusOnTab: true

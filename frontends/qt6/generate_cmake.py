@@ -211,7 +211,9 @@ def generate_cmake(config: dict, root_dir: Path) -> str:
     qt_components_str = " ".join(all_components)
 
     # Build source files list
-    source_files = ["main.cpp"] + cpp_sources["cpp"]
+    # .hpp files with Q_OBJECT must be listed so AUTOMOC scans them
+    hpp_headers = [h for h in cpp_sources["h"] if h.endswith(".hpp")]
+    source_files = ["main.cpp"] + cpp_sources["cpp"] + hpp_headers
 
     # Collect all QML files: (path, alias_or_None)
     all_qml: list[tuple[str, Optional[str]]] = []

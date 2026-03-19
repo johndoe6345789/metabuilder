@@ -22,8 +22,8 @@ function loadComments(dbal, model) {
                 model.append({
                     commentId: c.id || (i + 1),
                     username: c.username || c.author || "unknown",
-                    initials: (c.username || c.author || "
-                        ??").substring(0, 2).toUpperCase(),
+                    initials: (c.username || c.author || "??")
+                        .substring(0, 2).toUpperCase(),
                     timestamp: c.timestamp || c.createdAt || "Unknown",
                     body: c.body || c.text || "",
                     likes: c.likes || 0,

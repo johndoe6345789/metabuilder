@@ -47,7 +47,8 @@ Rectangle {
                     anchors.fill: parent; anchors.leftMargin: 16
                     anchors.rightMargin: 16; spacing: 12
                     CText { variant: "h4"; text: curName + ".lua" }
-                    CBadge { text: curRet }; Item { Layout.fillWidth: true }
+                    CBadge { text: curRet }
+                    Item { Layout.fillWidth: true }
                     CSelect {
                         Layout.preferredWidth: 200
                         activeFocusOnTab: true
