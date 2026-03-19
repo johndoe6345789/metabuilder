@@ -229,6 +229,43 @@ Rectangle {
         }
     }
 
+    function createNewWorkflow() {
+        var newWf = {
+            name: "new_workflow_" + (workflows.length + 1),
+            active: false, settings: {}, tags: [],
+            meta: { description: "" }, variables: {},
+            nodes: [
+                { id: "trigger_1", name: "Start", type: "metabuilder.trigger", position: [200, 250],
+                  parameters: { triggerType: "manual" },
+                  inputs: [], outputs: [{ name: "main", type: "main", displayName: "Output" }] }
+            ],
+            connections: {}
+        }
+        if (useLiveData) {
+            dbal.create("workflow", newWf, function(result, error) {
+                if (!error) loadWorkflows()
+                else appendWorkflowLocally(newWf)
+            })
+        } else {
+            appendWorkflowLocally(newWf)
+        }
+    }
+
+    function appendWorkflowLocally(wf) {
+        var wfs = workflows.slice()
+        wfs.push(wf)
+        workflows = wfs
+        selectedWorkflowIndex = wfs.length - 1
+        selectedNodeId = ""
+    }
+
+    function runTestExecution() {
+        executionStatus = "running"
+        testOutput = "Executing workflow " + currentWorkflow.name + "..."
+        testPanelVisible = true
+        executionTimer.start()
+    }
+
     onUseLiveDataChanged: {
         if (useLiveData) loadWorkflows()
     }
@@ -287,46 +324,8 @@ Rectangle {
                 workflows = workflows.slice()
                 if (useLiveData) saveWorkflow(workflows[selectedWorkflowIndex])
             }
-            onNewWorkflow: {
-                var newWf = {
-                    name: "new_workflow_" + (workflows.length + 1),
-                    active: false,
-                    settings: {},
-                    tags: [],
-                    meta: { description: "" },
-                    variables: {},
-                    nodes: [
-                        { id: "trigger_1", name: "Start", type: "metabuilder.trigger", position: [200, 250],
-                          parameters: { triggerType: "manual" },
-                          inputs: [], outputs: [{ name: "main", type: "main", displayName: "Output" }] }
-                    ],
-                    connections: {}
-                }
-                if (useLiveData) {
-                    dbal.create("workflow", newWf, function(result, error) {
-                        if (!error) loadWorkflows()
-                        else {
-                            var wfs = workflows.slice()
-                            wfs.push(newWf)
-                            workflows = wfs
-                            selectedWorkflowIndex = wfs.length - 1
-                            selectedNodeId = ""
-                        }
-                    })
-                } else {
-                    var wfs = workflows.slice()
-                    wfs.push(newWf)
-                    workflows = wfs
-                    selectedWorkflowIndex = wfs.length - 1
-                    selectedNodeId = ""
-                }
-            }
-            onRunTest: {
-                executionStatus = "running"
-                testOutput = "Executing workflow " + currentWorkflow.name + "..."
-                testPanelVisible = true
-                executionTimer.start()
-            }
+            onNewWorkflow: createNewWorkflow()
+            onRunTest: runTestExecution()
         }
 
         // ── CONTENT ROW ─────────────────────────────────────────
@@ -336,73 +335,21 @@ Rectangle {
             spacing: 0
 
             // ── LEFT: Workflow List + Node Palette ───────────────
-            Rectangle {
-                Layout.preferredWidth: 260
-                Layout.fillHeight: true
-                color: Theme.paper
-                border.color: Theme.border
-                border.width: 1
+            CWorkflowSidebar {
+                workflows: root.workflows
+                selectedWorkflowIndex: root.selectedWorkflowIndex
+                canvasWidth: workflowCanvas.width
+                canvasHeight: workflowCanvas.height
 
-                ColumnLayout {
-                    anchors.fill: parent
-                    spacing: 0
-
-                    // Workflow List Section
-                    ColumnLayout {
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: 200
-                        Layout.margins: 12
-                        spacing: 4
-
-                        CText { variant: "h4"; text: "Workflows" }
-                        CText { variant: "caption"; text: workflows.length + " registered" }
-
-                        CDivider { Layout.fillWidth: true; Layout.topMargin: 4; Layout.bottomMargin: 4 }
-
-                        ListView {
-                            Layout.fillWidth: true
-                            Layout.fillHeight: true
-                            model: workflows.length
-                            spacing: 2
-                            clip: true
-                            delegate: CListItem {
-                                width: parent ? parent.width : 200
-                                title: workflows[index].name
-                                subtitle: (workflows[index].nodes ? workflows[index].nodes.length : 0) + " nodes"
-                                selected: selectedWorkflowIndex === index
-                                onClicked: {
-                                    selectedWorkflowIndex = index
-                                    selectedNodeId = ""
-                                    testOutput = ""
-                                    executionStatus = ""
-                                    workflowCanvas.requestPaint()
-                                }
-
-                                CBadge {
-                                    anchors.right: parent.right
-                                    anchors.rightMargin: 8
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    text: workflows[index].active ? "ON" : "OFF"
-                                    accent: workflows[index].active
-                                }
-                            }
-                        }
-                    }
-
-                    CDivider { Layout.fillWidth: true }
-
-                    // Node Palette Section
-                    CNodePalette {
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        Layout.margins: 12
-
-                        onNodeDoubleClicked: function(nodeType) {
-                            var cx = workflowCanvas.width / 2
-                            var cy = workflowCanvas.height / 2
-                            addNodeToCanvas(nodeType, cx, cy)
-                        }
-                    }
+                onWorkflowSelected: function(index) {
+                    root.selectedWorkflowIndex = index
+                    root.selectedNodeId = ""
+                    testOutput = ""
+                    executionStatus = ""
+                    workflowCanvas.requestPaint()
+                }
+                onNodeDoubleClicked: function(nodeType, cx, cy) {
+                    addNodeToCanvas(nodeType, cx, cy)
                 }
             }
 
@@ -481,121 +428,16 @@ Rectangle {
         }
 
         // ── BOTTOM: Test Execution Panel ────────────────────────
-        Rectangle {
-            Layout.fillWidth: true
-            Layout.preferredHeight: testPanelVisible ? 220 : 36
-            color: Theme.paper
-            border.color: Theme.border
-            border.width: 1
-            clip: true
+        CWorkflowTestPanel {
+            panelVisible: root.testPanelVisible
+            executionStatus: root.executionStatus
+            testInput: root.testInput
+            testOutput: root.testOutput
+            canExecute: currentWorkflow !== null
 
-            Behavior on Layout.preferredHeight { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
-
-            ColumnLayout {
-                anchors.fill: parent
-                anchors.margins: 10
-                spacing: 8
-
-                FlexRow {
-                    Layout.fillWidth: true
-                    spacing: 8
-
-                    CText {
-                        variant: "body2"
-                        text: "Test Execution"
-                        font.bold: true
-                    }
-
-                    Rectangle {
-                        width: 10; height: 10; radius: 5
-                        visible: executionStatus !== ""
-                        color: {
-                            if (executionStatus === "running") return Theme.warning
-                            if (executionStatus === "success") return Theme.success
-                            return Theme.error
-                        }
-                    }
-                    CText {
-                        variant: "caption"
-                        visible: executionStatus !== ""
-                        text: {
-                            if (executionStatus === "running") return "Running..."
-                            if (executionStatus === "success") return "Passed"
-                            return "Failed"
-                        }
-                    }
-
-                    Item { Layout.fillWidth: true }
-
-                    CButton {
-                        text: testPanelVisible ? "Hide" : "Show"
-                        variant: "ghost"
-                        size: "sm"
-                        onClicked: testPanelVisible = !testPanelVisible
-                    }
-                }
-
-                RowLayout {
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    spacing: 12
-                    visible: testPanelVisible
-
-                    ColumnLayout {
-                        Layout.preferredWidth: 300
-                        Layout.fillHeight: true
-                        spacing: 6
-
-                        CText { variant: "caption"; text: "Test Input (JSON)" }
-                        CTextField {
-                            Layout.fillWidth: true
-                            Layout.fillHeight: true
-                            text: testInput
-                            onTextChanged: testInput = text
-                        }
-                        CButton {
-                            text: executionStatus === "running" ? "Executing..." : "Execute"
-                            variant: "primary"
-                            enabled: executionStatus !== "running" && currentWorkflow !== null
-                            onClicked: {
-                                executionStatus = "running"
-                                testOutput = "Executing workflow " + currentWorkflow.name + "..."
-                                executionTimer.start()
-                            }
-                        }
-                    }
-
-                    ColumnLayout {
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        spacing: 6
-
-                        CText { variant: "caption"; text: "Output Log" }
-                        Rectangle {
-                            Layout.fillWidth: true
-                            Layout.fillHeight: true
-                            color: Theme.surface
-                            radius: 4
-                            border.color: Theme.border
-                            border.width: 1
-
-                            ScrollView {
-                                anchors.fill: parent
-                                anchors.margins: 8
-
-                                Text {
-                                    width: parent.width
-                                    text: testOutput
-                                    color: Theme.text
-                                    font.family: "monospace"
-                                    font.pixelSize: 11
-                                    wrapMode: Text.WrapAnywhere
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            onToggleVisibility: root.testPanelVisible = !root.testPanelVisible
+            onExecuteRequested: runTestExecution()
+            onTestInputChanged: root.testInput = testInput
         }
     }
 }

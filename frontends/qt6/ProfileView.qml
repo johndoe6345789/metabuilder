@@ -23,7 +23,6 @@ Rectangle {
         return null
     }
 
-    // ── Profile state ──
     property string userBio: ""
     property string userEmail: ""
     property string userDisplayName: appWindow.currentUser
@@ -31,7 +30,6 @@ Rectangle {
     property bool saving: false
     property string saveStatus: ""
 
-    // ── DBAL operations ──
     function loadProfile() {
         if (!appWindow.currentUser) return;
         dbal.read("user", appWindow.currentUser, function(result, error) {
@@ -91,7 +89,6 @@ Rectangle {
             }
             Item { Layout.preferredHeight: 16 }
 
-            // ── Activity summary ──
             CCard {
                 Layout.fillWidth: true; Layout.leftMargin: 24; Layout.rightMargin: 24; variant: "filled"
                 CText { Layout.fillWidth: true; variant: "h4"; text: "Activity Summary" }
@@ -113,7 +110,6 @@ Rectangle {
             }
             Item { Layout.preferredHeight: 16 }
 
-            // ── Edit profile ──
             CProfileForm {
                 id: profileForm
                 profile: ({ displayName: profileRoot.userDisplayName, email: profileRoot.userEmail, bio: profileRoot.userBio })
@@ -121,7 +117,6 @@ Rectangle {
             }
             Item { Layout.preferredHeight: 16 }
 
-            // ── Change password ──
             CCard {
                 Layout.fillWidth: true; Layout.leftMargin: 24; Layout.rightMargin: 24; variant: "filled"
                 CText { Layout.fillWidth: true; variant: "h4"; text: "Change Password" }
@@ -156,7 +151,6 @@ Rectangle {
             }
             Item { Layout.preferredHeight: 16 }
 
-            // ── Connected accounts ──
             CCard {
                 Layout.fillWidth: true; Layout.leftMargin: 24; Layout.rightMargin: 24; variant: "filled"
                 CText { Layout.fillWidth: true; variant: "h4"; text: "Connected Accounts" }
@@ -189,7 +183,6 @@ Rectangle {
             }
             Item { Layout.preferredHeight: 16 }
 
-            // ── Save button ──
             FlexRow {
                 Layout.fillWidth: true; Layout.leftMargin: 24; Layout.rightMargin: 24; spacing: 12
                 Item { Layout.fillWidth: true }

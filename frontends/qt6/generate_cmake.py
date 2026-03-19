@@ -30,13 +30,15 @@ def load_config(config_path: str) -> dict:
 
 
 def find_root_qml_files(root_dir: Path) -> list[str]:
-    """Find all *.qml files in the project root directory (not subdirectories)."""
-    files = sorted(root_dir.glob("*.qml"))
+    """Find all *.qml and *.js files in the project root directory (not subdirectories)."""
+    files = sorted(
+        list(root_dir.glob("*.qml")) + list(root_dir.glob("*.js"))
+    )
     return [f.name for f in files]
 
 
 def find_qmllib_files(root_dir: Path) -> dict[str, list[str]]:
-    """Find all *.qml files and qmldir files in qmllib/ subdirectories.
+    """Find all *.qml and *.js files and qmldir files in qmllib/ subdirectories.
 
     Returns a dict mapping relative paths (e.g. 'qmllib/dbal/DBALProvider.qml')
     grouped by subdirectory.
@@ -45,7 +47,10 @@ def find_qmllib_files(root_dir: Path) -> dict[str, list[str]]:
     result = {"qml": [], "resources": []}
     if not qmllib_dir.exists():
         return result
-    for qml_file in sorted(qmllib_dir.rglob("*.qml")):
+    qml_files = sorted(
+        list(qmllib_dir.rglob("*.qml")) + list(qmllib_dir.rglob("*.js"))
+    )
+    for qml_file in qml_files:
         result["qml"].append(str(qml_file.relative_to(root_dir)))
     for qmldir_file in sorted(qmllib_dir.rglob("qmldir")):
         result["resources"].append(str(qmldir_file.relative_to(root_dir)))
@@ -53,11 +58,13 @@ def find_qmllib_files(root_dir: Path) -> dict[str, list[str]]:
 
 
 def find_package_qml_files(root_dir: Path) -> list[str]:
-    """Find all *.qml files in packages/ subdirectories."""
+    """Find all *.qml and *.js files in packages/ subdirectories."""
     packages_dir = root_dir / "packages"
     if not packages_dir.exists():
         return []
-    files = sorted(packages_dir.rglob("*.qml"))
+    files = sorted(
+        list(packages_dir.rglob("*.qml")) + list(packages_dir.rglob("*.js"))
+    )
     return [str(f.relative_to(root_dir)) for f in files]
 
 
