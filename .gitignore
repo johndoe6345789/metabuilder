@@ -117,3 +117,4 @@ bun.lockb
 *.tsbuildinfo
 # frontends/pastebin/public/pyodide/ # kept in fat repo
 .vscode/settings.json
+.act-env
