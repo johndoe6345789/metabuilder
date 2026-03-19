@@ -182,7 +182,7 @@ Rectangle {
 
                                 CAvatar {
                                     initials: modelData.icon
-                                    backgroundColor: statusColor(modelData.status)
+                                    bgColor: statusColor(modelData.status)
                                 }
 
                                 ColumnLayout {

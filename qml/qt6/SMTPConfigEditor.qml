@@ -133,11 +133,11 @@ Rectangle {
                 CSmtpServerForm {
                     host: smtpHost; port: smtpPort; username: smtpUsername; password: smtpPassword
                     encryptionIndex: smtpEditor.encryptionIndex; encryptionOptions: smtpEditor.encryptionOptions; connectionStatus: smtpEditor.connectionStatus
-                    onHostChanged: function(v) { smtpHost = v; markDirty() }
-                    onPortChanged: function(v) { smtpPort = v; markDirty() }
-                    onUsernameChanged: function(v) { smtpUsername = v; markDirty() }
-                    onPasswordChanged: function(v) { smtpPassword = v; markDirty() }
-                    onEncryptionChanged: function(i) { encryptionIndex = i; markDirty() }
+                    onHostEdited: function(v) { smtpHost = v; markDirty() }
+                    onPortEdited: function(v) { smtpPort = v; markDirty() }
+                    onUsernameEdited: function(v) { smtpUsername = v; markDirty() }
+                    onPasswordEdited: function(v) { smtpPassword = v; markDirty() }
+                    onEncryptionEdited: function(i) { encryptionIndex = i; markDirty() }
                     onTestRequested: testConnection()
                 }
 

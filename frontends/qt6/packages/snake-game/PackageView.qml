@@ -17,7 +17,7 @@ CPaper {
 
         RowLayout {
             spacing: 12
-            CAvatar { initials: title.left(2).toUpper(); backgroundColor: Theme.primary }
+            CAvatar { initials: title.left(2).toUpper(); bgColor: Theme.primary }
             ColumnLayout {
                 spacing: 4
                 CText { variant: "h3"; text: title }

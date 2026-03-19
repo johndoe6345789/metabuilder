@@ -128,7 +128,7 @@ Rectangle {
                         // Service icon
                         CAvatar {
                             initials: modelData.icon
-                            backgroundColor: modelData.connected ? Theme.primary : Theme.border
+                            bgColor: modelData.connected ? Theme.primary : Theme.border
                         }
 
                         // Service info
