@@ -44,7 +44,7 @@ CCard {
             label: "Port"
             placeholderText: "587"
             text: root.port
-            onTextChanged: root.portChanged(text)
+            onTextChanged: root.portEdited(text)
         }
 
         CTextField {
@@ -52,7 +52,7 @@ CCard {
             label: "Username"
             placeholderText: "user@example.com"
             text: root.username
-            onTextChanged: root.usernameChanged(text)
+            onTextChanged: root.usernameEdited(text)
         }
 
         CTextField {
@@ -61,7 +61,7 @@ CCard {
             placeholderText: "Enter password"
             echoMode: TextInput.Password
             text: root.password
-            onTextChanged: root.passwordChanged(text)
+            onTextChanged: root.passwordEdited(text)
         }
 
         ColumnLayout {
@@ -80,7 +80,7 @@ CCard {
                         text: modelData
                         variant: root.encryptionIndex === index ? "primary" : "ghost"
                         size: "sm"
-                        onClicked: root.encryptionChanged(index)
+                        onClicked: root.encryptionEdited(index)
                     }
                 }
             }

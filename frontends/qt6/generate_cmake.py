@@ -30,11 +30,23 @@ def load_config(config_path: str) -> dict:
 
 
 def find_root_qml_files(root_dir: Path) -> list[str]:
-    """Find all *.qml and *.js files in the project root directory (not subdirectories)."""
+    """Find all *.qml and *.js files in the project root and ../../qml/qt6/ directories."""
     files = sorted(
         list(root_dir.glob("*.qml")) + list(root_dir.glob("*.js"))
     )
-    return [f.name for f in files]
+    result = [f.name for f in files]
+
+    # Also scan the extracted QML directory (../../qml/qt6/ relative to root_dir)
+    extracted_dir = root_dir.parent.parent / "qml" / "qt6"
+    if extracted_dir.exists():
+        ext_files = sorted(
+            list(extracted_dir.glob("*.qml")) + list(extracted_dir.glob("*.js"))
+        )
+        for f in ext_files:
+            rel = os.path.relpath(f, root_dir)
+            if rel not in result:
+                result.append(rel)
+    return sorted(result)
 
 
 def find_qmllib_files(root_dir: Path) -> dict[str, list[str]]:

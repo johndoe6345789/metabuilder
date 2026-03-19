@@ -11,38 +11,9 @@ Rectangle {
     property string testInput: '{"userId": "u-42", "email": "demo@example.com"}'
     property string testOutput: ""
     property bool canExecute: true
-    property string workflowName: ""
-    property var workflowNodes: []
 
     signal toggleVisibility()
-
-    function execute() {
-        if (!canExecute) return
-        executionStatus = "running"
-        testOutput = "Executing workflow " + workflowName + "..."
-        panelVisible = true
-        executionTimer.start()
-    }
-
-    Timer {
-        id: executionTimer
-        interval: 1800
-        onTriggered: {
-            var nodes = root.workflowNodes || []
-            var lines = []
-            lines.push("[" + Qt.formatTime(new Date(), "HH:mm:ss") + "] Workflow: " + root.workflowName)
-            lines.push("[" + Qt.formatTime(new Date(), "HH:mm:ss") + "] Nodes: " + nodes.length)
-            lines.push("")
-            for (var i = 0; i < nodes.length; i++) {
-                var n = nodes[i]
-                lines.push("  [" + (i + 1) + "/" + nodes.length + "] " + n.type + "::" + n.name + " ... OK")
-            }
-            lines.push("")
-            lines.push("[RESULT] Workflow completed successfully.")
-            root.executionStatus = "success"
-            root.testOutput = lines.join("\n")
-        }
-    }
+    signal executeRequested()
 
     Layout.fillWidth: true
     Layout.preferredHeight: panelVisible ? 220 : 36
@@ -119,7 +90,7 @@ Rectangle {
                     text: executionStatus === "running" ? "Executing..." : "Execute"
                     variant: "primary"
                     enabled: executionStatus !== "running" && canExecute
-                    onClicked: root.execute()
+                    onClicked: root.executeRequested()
                 }
             }
 
