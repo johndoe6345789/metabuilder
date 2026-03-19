@@ -6,7 +6,7 @@ import "qmllib/dbal"
 
 Rectangle {
     id: root
-    color: "transparent"
+    color: Theme.background
 
     // ── DBAL connection ──────────────────────────────────────────
     DBALProvider { id: dbal }
@@ -239,7 +239,6 @@ Rectangle {
 
     function deleteRecord(idx) {
         var data = records[selectedEntity].slice();
-        var filtered = getFilteredRecords();
         var actualRec = getPagedRecords()[idx];
         for (var i = 0; i < data.length; i++) {
             if (data[i].id === actualRec.id) {
@@ -326,10 +325,9 @@ Rectangle {
         // ── Stats bar ──────────────────────────────────────────────
         Rectangle {
             Layout.fillWidth: true
-            Layout.preferredHeight: 80
-            color: Theme.paper
-            border.color: Theme.border
-            border.width: 1
+            Layout.preferredHeight: 88
+            color: Theme.surface
+            radius: 0
 
             RowLayout {
                 anchors.fill: parent
@@ -349,8 +347,7 @@ Rectangle {
                         Layout.fillHeight: true
 
                         RowLayout {
-                            anchors.fill: parent
-                            anchors.margins: 12
+                            Layout.fillWidth: true
                             spacing: 8
 
                             Rectangle {
@@ -382,9 +379,7 @@ Rectangle {
             Rectangle {
                 Layout.preferredWidth: 220
                 Layout.fillHeight: true
-                color: Theme.paper
-                border.color: Theme.border
-                border.width: 1
+                color: Theme.surface
 
                 ColumnLayout {
                     anchors.fill: parent
@@ -418,7 +413,7 @@ Rectangle {
             Rectangle {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                color: "transparent"
+                color: Theme.background
 
                 ColumnLayout {
                     anchors.fill: parent
@@ -466,6 +461,7 @@ Rectangle {
                             delegate: CChip {
                                 text: modelData
                                 checked: activeFilter === modelData
+                                chipColor: activeFilter === modelData ? Theme.primary : Theme.surface
                                 onClicked: { activeFilter = modelData; currentPage = 0; }
                             }
                         }
@@ -487,15 +483,15 @@ Rectangle {
                         Layout.fillHeight: true
 
                         ColumnLayout {
-                            anchors.fill: parent
-                            anchors.margins: 1
+                            Layout.fillWidth: true
                             spacing: 0
 
                             // ── Column headers ────────────────────
                             Rectangle {
                                 Layout.fillWidth: true
                                 height: 44
-                                color: Theme.surface
+                                color: Theme.surfaceVariant
+                                radius: 0
 
                                 RowLayout {
                                     anchors.fill: parent
@@ -557,8 +553,9 @@ Rectangle {
                                     color: {
                                         if (selectedRow === rowIndex) return Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12);
                                         if (selectedRows[rowIndex]) return Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.06);
-                                        return rowIndex % 2 === 0 ? "transparent" : Qt.rgba(Theme.surface.r, Theme.surface.g, Theme.surface.b, 0.4);
+                                        return rowIndex % 2 === 0 ? "transparent" : Theme.surfaceVariant;
                                     }
+                                    radius: 0
 
                                     MouseArea {
                                         anchors.fill: parent
@@ -638,11 +635,24 @@ Rectangle {
                                 visible: totalFiltered() === 0
                                 Layout.preferredHeight: visible ? 120 : 0
 
-                                CText {
+                                ColumnLayout {
                                     anchors.centerIn: parent
-                                    variant: "body1"
-                                    text: "No records found"
-                                    color: Theme.textSecondary
+                                    spacing: 8
+
+                                    CText {
+                                        Layout.fillWidth: true
+                                        horizontalAlignment: Text.AlignHCenter
+                                        variant: "h4"
+                                        text: "No records found"
+                                        color: Theme.textSecondary
+                                    }
+                                    CText {
+                                        Layout.fillWidth: true
+                                        horizontalAlignment: Text.AlignHCenter
+                                        variant: "caption"
+                                        text: "Try adjusting your search or filter criteria."
+                                        color: Theme.textMuted
+                                    }
                                 }
                             }
 
@@ -652,7 +662,8 @@ Rectangle {
                             Rectangle {
                                 Layout.fillWidth: true
                                 height: 48
-                                color: Theme.surface
+                                color: Theme.surfaceVariant
+                                radius: 0
 
                                 RowLayout {
                                     anchors.fill: parent

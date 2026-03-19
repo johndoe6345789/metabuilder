@@ -6,7 +6,7 @@ import "qmllib/dbal"
 
 Rectangle {
     id: superGodPanel
-    color: "transparent"
+    color: Theme.background
 
     // ── DBAL connection ──
     DBALProvider { id: dbal }
@@ -150,53 +150,47 @@ Rectangle {
         CCard {
             Layout.fillWidth: true
 
-            ColumnLayout {
-                anchors.fill: parent
-                anchors.margins: 20
+            FlexRow {
+                Layout.fillWidth: true
                 spacing: 12
 
-                FlexRow {
-                    Layout.fillWidth: true
-                    spacing: 12
+                CText { variant: "h2"; text: "Super God Panel" }
+                CBadge { text: "Level 5"; badgeColor: Theme.primary }
+                CStatusBadge { status: "success"; text: "Platform Control" }
 
-                    CText { variant: "h2"; text: "Super God Panel" }
-                    CBadge { text: "Level 5" }
-                    CStatusBadge { status: "success"; text: "Platform Control" }
+                Item { Layout.fillWidth: true }
 
-                    Item { Layout.fillWidth: true }
-
-                    CButton {
-                        text: "Level 4"
-                        variant: "ghost"
-                        size: "sm"
-                        onClicked: appWindow.currentView = "god"
-                    }
-                    CButton {
-                        text: "Level 3"
-                        variant: "ghost"
-                        size: "sm"
-                        onClicked: appWindow.currentView = "admin"
-                    }
-                    CButton {
-                        text: "Level 2"
-                        variant: "ghost"
-                        size: "sm"
-                        onClicked: appWindow.currentView = "dashboard"
-                    }
+                CButton {
+                    text: "Level 4"
+                    variant: "ghost"
+                    size: "sm"
+                    onClicked: appWindow.currentView = "god"
                 }
-
-                CDivider { Layout.fillWidth: true }
-
-                FlexRow {
-                    Layout.fillWidth: true
-                    spacing: 8
-
-                    CChip { text: tenants.length + " Tenants" }
-                    CChip { text: godUsers.length + " God Users" }
-                    CChip { text: pendingTransfers.length + " Pending Transfers" }
-                    CChip { text: "14 DB Backends" }
-                    CChip { text: "4 Daemons" }
+                CButton {
+                    text: "Level 3"
+                    variant: "ghost"
+                    size: "sm"
+                    onClicked: appWindow.currentView = "admin"
                 }
+                CButton {
+                    text: "Level 2"
+                    variant: "ghost"
+                    size: "sm"
+                    onClicked: appWindow.currentView = "dashboard"
+                }
+            }
+
+            CDivider { Layout.fillWidth: true }
+
+            FlexRow {
+                Layout.fillWidth: true
+                spacing: 8
+
+                CChip { text: tenants.length + " Tenants"; chipColor: Theme.primary }
+                CChip { text: godUsers.length + " God Users"; chipColor: Theme.primary }
+                CChip { text: pendingTransfers.length + " Pending Transfers"; chipColor: Theme.warning }
+                CChip { text: "14 DB Backends"; chipColor: Theme.info }
+                CChip { text: "4 Daemons"; chipColor: Theme.success }
             }
         }
 
@@ -259,51 +253,45 @@ Rectangle {
                             delegate: CCard {
                                 Layout.fillWidth: true
 
-                                ColumnLayout {
-                                    anchors.fill: parent
-                                    anchors.margins: 16
+                                FlexRow {
+                                    Layout.fillWidth: true
                                     spacing: 10
 
-                                    FlexRow {
-                                        Layout.fillWidth: true
-                                        spacing: 10
-
-                                        CText { variant: "h4"; text: modelData.name }
-                                        CStatusBadge {
-                                            status: modelData.status === "active" ? "success" : "warning"
-                                            text: modelData.status
-                                        }
-                                        Item { Layout.fillWidth: true }
-                                        CBadge { text: "Tenant" }
+                                    CText { variant: "h4"; text: modelData.name }
+                                    CStatusBadge {
+                                        status: modelData.status === "active" ? "success" : "warning"
+                                        text: modelData.status
                                     }
+                                    Item { Layout.fillWidth: true }
+                                    CBadge { text: "Tenant"; badgeColor: Theme.primary }
+                                }
 
-                                    CDivider { Layout.fillWidth: true }
+                                CDivider { Layout.fillWidth: true }
 
-                                    RowLayout {
-                                        Layout.fillWidth: true
-                                        spacing: 24
+                                RowLayout {
+                                    Layout.fillWidth: true
+                                    spacing: 24
 
-                                        ColumnLayout {
-                                            spacing: 4
-                                            CText { variant: "caption"; text: "Owner"; color: Theme.textSecondary }
-                                            CText { variant: "body1"; text: modelData.owner }
-                                        }
-                                        ColumnLayout {
-                                            spacing: 4
-                                            CText { variant: "caption"; text: "Homepage"; color: Theme.textSecondary }
-                                            CText { variant: "body1"; text: modelData.homepage }
-                                        }
-                                        ColumnLayout {
-                                            spacing: 4
-                                            CText { variant: "caption"; text: "Created"; color: Theme.textSecondary }
-                                            CText { variant: "body1"; text: modelData.created }
-                                        }
-                                        Item { Layout.fillWidth: true }
-                                        CButton {
-                                            text: "Configure"
-                                            variant: "ghost"
-                                            size: "sm"
-                                        }
+                                    ColumnLayout {
+                                        spacing: 4
+                                        CText { variant: "caption"; text: "Owner"; color: Theme.textSecondary }
+                                        CText { variant: "body1"; text: modelData.owner }
+                                    }
+                                    ColumnLayout {
+                                        spacing: 4
+                                        CText { variant: "caption"; text: "Homepage"; color: Theme.textSecondary }
+                                        CText { variant: "body1"; text: modelData.homepage }
+                                    }
+                                    ColumnLayout {
+                                        spacing: 4
+                                        CText { variant: "caption"; text: "Created"; color: Theme.textSecondary }
+                                        CText { variant: "body1"; text: modelData.created }
+                                    }
+                                    Item { Layout.fillWidth: true }
+                                    CButton {
+                                        text: "Configure"
+                                        variant: "ghost"
+                                        size: "sm"
                                     }
                                 }
                             }
@@ -344,8 +332,7 @@ Rectangle {
                                 Layout.fillWidth: true
 
                                 RowLayout {
-                                    anchors.fill: parent
-                                    anchors.margins: 16
+                                    Layout.fillWidth: true
                                     spacing: 16
 
                                     CAvatar { initials: modelData.initials }
@@ -357,8 +344,8 @@ Rectangle {
                                         FlexRow {
                                             spacing: 8
                                             CText { variant: "subtitle1"; text: modelData.username }
-                                            CBadge { text: "L" + modelData.level }
-                                            CBadge { text: modelData.role }
+                                            CBadge { text: "L" + modelData.level; badgeColor: Theme.primary }
+                                            CBadge { text: modelData.role; badgeColor: Theme.secondary }
                                         }
 
                                         FlexRow {
@@ -425,77 +412,71 @@ Rectangle {
                             Layout.fillWidth: true
                             visible: showTransferForm
 
-                            ColumnLayout {
-                                anchors.fill: parent
-                                anchors.margins: 20
-                                spacing: 12
+                            CText { variant: "h4"; text: "New Transfer Request" }
+                            CDivider { Layout.fillWidth: true }
 
-                                CText { variant: "h4"; text: "New Transfer Request" }
-                                CDivider { Layout.fillWidth: true }
-
-                                RowLayout {
-                                    Layout.fillWidth: true
-                                    spacing: 16
-
-                                    CTextField {
-                                        Layout.fillWidth: true
-                                        label: "From User"
-                                        placeholderText: "e.g. admin"
-                                        text: transferFrom
-                                        onTextChanged: transferFrom = text
-                                    }
-                                    CTextField {
-                                        Layout.fillWidth: true
-                                        label: "To User"
-                                        placeholderText: "e.g. devops"
-                                        text: transferTo
-                                        onTextChanged: transferTo = text
-                                    }
-                                }
+                            RowLayout {
+                                Layout.fillWidth: true
+                                spacing: 16
 
                                 CTextField {
                                     Layout.fillWidth: true
-                                    label: "Reason"
-                                    placeholderText: "Describe the reason for this transfer"
-                                    text: transferReason
-                                    onTextChanged: transferReason = text
+                                    label: "From User"
+                                    placeholderText: "e.g. admin"
+                                    text: transferFrom
+                                    onTextChanged: transferFrom = text
                                 }
-
                                 CTextField {
                                     Layout.fillWidth: true
-                                    label: "Expiry Date"
-                                    placeholderText: "YYYY-MM-DD"
-                                    text: transferExpiry
-                                    onTextChanged: transferExpiry = text
+                                    label: "To User"
+                                    placeholderText: "e.g. devops"
+                                    text: transferTo
+                                    onTextChanged: transferTo = text
                                 }
+                            }
 
-                                FlexRow {
-                                    Layout.fillWidth: true
-                                    spacing: 8
+                            CTextField {
+                                Layout.fillWidth: true
+                                label: "Reason"
+                                placeholderText: "Describe the reason for this transfer"
+                                text: transferReason
+                                onTextChanged: transferReason = text
+                            }
 
-                                    Item { Layout.fillWidth: true }
-                                    CButton {
-                                        text: "Submit Transfer"
-                                        variant: "primary"
-                                        size: "sm"
-                                        onClicked: {
-                                            if (transferFrom && transferTo && transferReason) {
-                                                var newTransfer = {
-                                                    from: transferFrom,
-                                                    to: transferTo,
-                                                    reason: transferReason,
-                                                    expiry: transferExpiry || "No expiry",
-                                                    status: "pending"
-                                                };
-                                                var updated = pendingTransfers.slice();
-                                                updated.push(newTransfer);
-                                                pendingTransfers = updated;
-                                                transferFrom = "";
-                                                transferTo = "";
-                                                transferReason = "";
-                                                transferExpiry = "";
-                                                showTransferForm = false;
-                                            }
+                            CTextField {
+                                Layout.fillWidth: true
+                                label: "Expiry Date"
+                                placeholderText: "YYYY-MM-DD"
+                                text: transferExpiry
+                                onTextChanged: transferExpiry = text
+                            }
+
+                            FlexRow {
+                                Layout.fillWidth: true
+                                spacing: 8
+
+                                Item { Layout.fillWidth: true }
+                                CButton {
+                                    text: "Submit Transfer"
+                                    variant: "primary"
+                                    size: "sm"
+                                    onClicked: {
+                                        if (transferFrom && transferTo && transferReason) {
+                                            var newTransfer = {
+                                                from: transferFrom,
+                                                to: transferTo,
+                                                reason: transferReason,
+                                                expiry: transferExpiry || "No expiry",
+                                                status: "pending"
+                                            };
+                                            var updated = pendingTransfers.slice();
+                                            updated.push(newTransfer);
+                                            pendingTransfers = updated;
+                                            transferFrom = "";
+                                            transferTo = "";
+                                            transferReason = "";
+                                            transferExpiry = "";
+                                            showTransferForm = false;
                                         }
                                     }
                                 }
@@ -513,72 +494,66 @@ Rectangle {
                             delegate: CCard {
                                 Layout.fillWidth: true
 
-                                ColumnLayout {
-                                    anchors.fill: parent
-                                    anchors.margins: 16
+                                FlexRow {
+                                    Layout.fillWidth: true
                                     spacing: 10
 
-                                    FlexRow {
-                                        Layout.fillWidth: true
-                                        spacing: 10
+                                    CText { variant: "subtitle1"; text: modelData.from + " -> " + modelData.to }
+                                    CStatusBadge { status: "warning"; text: "Pending" }
+                                    Item { Layout.fillWidth: true }
+                                    CText { variant: "caption"; text: "Expires: " + modelData.expiry; color: Theme.textSecondary }
+                                }
 
-                                        CText { variant: "subtitle1"; text: modelData.from + " → " + modelData.to }
-                                        CStatusBadge { status: "warning"; text: "Pending" }
-                                        Item { Layout.fillWidth: true }
-                                        CText { variant: "caption"; text: "Expires: " + modelData.expiry; color: Theme.textSecondary }
-                                    }
+                                CText {
+                                    variant: "body2"
+                                    text: modelData.reason
+                                    wrapMode: Text.Wrap
+                                    Layout.fillWidth: true
+                                }
 
-                                    CText {
-                                        variant: "body2"
-                                        text: modelData.reason
-                                        wrapMode: Text.Wrap
-                                        Layout.fillWidth: true
-                                    }
+                                FlexRow {
+                                    Layout.fillWidth: true
+                                    spacing: 8
 
-                                    FlexRow {
-                                        Layout.fillWidth: true
-                                        spacing: 8
-
-                                        Item { Layout.fillWidth: true }
-                                        CButton {
-                                            text: "Approve"
-                                            variant: "primary"
-                                            size: "sm"
-                                            onClicked: {
-                                                var entry = {
-                                                    from: pendingTransfers[index].from,
-                                                    to: pendingTransfers[index].to,
-                                                    reason: pendingTransfers[index].reason,
-                                                    date: "2026-03-18 " + Qt.formatTime(new Date(), "hh:mm"),
-                                                    status: "approved"
-                                                };
-                                                var hist = transferHistory.slice();
-                                                hist.unshift(entry);
-                                                transferHistory = hist;
-                                                var pend = pendingTransfers.slice();
-                                                pend.splice(index, 1);
-                                                pendingTransfers = pend;
-                                            }
+                                    Item { Layout.fillWidth: true }
+                                    CButton {
+                                        text: "Approve"
+                                        variant: "primary"
+                                        size: "sm"
+                                        onClicked: {
+                                            var entry = {
+                                                from: pendingTransfers[index].from,
+                                                to: pendingTransfers[index].to,
+                                                reason: pendingTransfers[index].reason,
+                                                date: "2026-03-18 " + Qt.formatTime(new Date(), "hh:mm"),
+                                                status: "approved"
+                                            };
+                                            var hist = transferHistory.slice();
+                                            hist.unshift(entry);
+                                            transferHistory = hist;
+                                            var pend = pendingTransfers.slice();
+                                            pend.splice(index, 1);
+                                            pendingTransfers = pend;
                                         }
-                                        CButton {
-                                            text: "Deny"
-                                            variant: "danger"
-                                            size: "sm"
-                                            onClicked: {
-                                                var entry = {
-                                                    from: pendingTransfers[index].from,
-                                                    to: pendingTransfers[index].to,
-                                                    reason: pendingTransfers[index].reason,
-                                                    date: "2026-03-18 " + Qt.formatTime(new Date(), "hh:mm"),
-                                                    status: "denied"
-                                                };
-                                                var hist = transferHistory.slice();
-                                                hist.unshift(entry);
-                                                transferHistory = hist;
-                                                var pend = pendingTransfers.slice();
-                                                pend.splice(index, 1);
-                                                pendingTransfers = pend;
-                                            }
+                                    }
+                                    CButton {
+                                        text: "Deny"
+                                        variant: "danger"
+                                        size: "sm"
+                                        onClicked: {
+                                            var entry = {
+                                                from: pendingTransfers[index].from,
+                                                to: pendingTransfers[index].to,
+                                                reason: pendingTransfers[index].reason,
+                                                date: "2026-03-18 " + Qt.formatTime(new Date(), "hh:mm"),
+                                                status: "denied"
+                                            };
+                                            var hist = transferHistory.slice();
+                                            hist.unshift(entry);
+                                            transferHistory = hist;
+                                            var pend = pendingTransfers.slice();
+                                            pend.splice(index, 1);
+                                            pendingTransfers = pend;
                                         }
                                     }
                                 }
@@ -604,8 +579,7 @@ Rectangle {
                                 variant: "outlined"
 
                                 RowLayout {
-                                    anchors.fill: parent
-                                    anchors.margins: 14
+                                    Layout.fillWidth: true
                                     spacing: 16
 
                                     ColumnLayout {
@@ -614,7 +588,7 @@ Rectangle {
 
                                         FlexRow {
                                             spacing: 8
-                                            CText { variant: "subtitle1"; text: modelData.from + " → " + modelData.to }
+                                            CText { variant: "subtitle1"; text: modelData.from + " -> " + modelData.to }
                                             CStatusBadge {
                                                 status: modelData.status === "approved" ? "success" : "error"
                                                 text: modelData.status
@@ -662,26 +636,20 @@ Rectangle {
                                 delegate: CCard {
                                     Layout.fillWidth: true
 
-                                    ColumnLayout {
-                                        anchors.fill: parent
-                                        anchors.margins: 16
+                                    FlexRow {
+                                        Layout.fillWidth: true
                                         spacing: 10
 
-                                        FlexRow {
-                                            Layout.fillWidth: true
-                                            spacing: 10
-
-                                            CText { variant: "subtitle1"; text: modelData.name }
-                                            CStatusBadge {
-                                                status: modelData.status === "healthy" ? "success" : "warning"
-                                                text: modelData.status
-                                            }
-                                            Item { Layout.fillWidth: true }
-                                            CBadge { text: ":" + modelData.port }
+                                        CText { variant: "subtitle1"; text: modelData.name }
+                                        CStatusBadge {
+                                            status: modelData.status === "healthy" ? "success" : "warning"
+                                            text: modelData.status
                                         }
-
-                                        CText { variant: "caption"; text: "Uptime: " + modelData.uptime; color: Theme.textSecondary }
+                                        Item { Layout.fillWidth: true }
+                                        CBadge { text: ":" + modelData.port; badgeColor: Theme.info }
                                     }
+
+                                    CText { variant: "caption"; text: "Uptime: " + modelData.uptime; color: Theme.textSecondary }
                                 }
                             }
                         }
@@ -708,26 +676,30 @@ Rectangle {
                                 delegate: CCard {
                                     Layout.fillWidth: true
 
-                                    ColumnLayout {
-                                        anchors.fill: parent
-                                        anchors.margins: 16
-                                        spacing: 8
+                                    CText {
+                                        variant: "caption"
+                                        text: modelData.label
+                                        color: Theme.textSecondary
+                                        Layout.fillWidth: true
+                                    }
 
-                                        CText { variant: "caption"; text: modelData.label; color: Theme.textSecondary }
-                                        CText { variant: "h3"; text: modelData.value + "%" }
+                                    CText {
+                                        variant: "h3"
+                                        text: modelData.value + "%"
+                                        Layout.fillWidth: true
+                                    }
+
+                                    Rectangle {
+                                        Layout.fillWidth: true
+                                        height: 6
+                                        radius: 3
+                                        color: Theme.surfaceVariant
 
                                         Rectangle {
-                                            Layout.fillWidth: true
-                                            height: 6
+                                            width: parent.width * (modelData.value / 100)
+                                            height: parent.height
                                             radius: 3
-                                            color: Theme.border
-
-                                            Rectangle {
-                                                width: parent.width * (modelData.value / 100)
-                                                height: parent.height
-                                                radius: 3
-                                                color: modelData.value > 80 ? Theme.error : modelData.value > 60 ? Theme.warning : Theme.primary
-                                            }
+                                            color: modelData.value > 80 ? Theme.error : modelData.value > 60 ? Theme.warning : Theme.primary
                                         }
                                     }
                                 }
@@ -777,35 +749,29 @@ Rectangle {
                         CCard {
                             Layout.fillWidth: true
 
-                            ColumnLayout {
-                                anchors.fill: parent
-                                anchors.margins: 16
-                                spacing: 8
+                            RowLayout {
+                                Layout.fillWidth: true
+                                spacing: 24
 
-                                RowLayout {
-                                    Layout.fillWidth: true
-                                    spacing: 24
-
-                                    ColumnLayout {
-                                        spacing: 4
-                                        CText { variant: "caption"; text: "Version"; color: Theme.textSecondary }
-                                        CText { variant: "body1"; text: "2.5.0-rc1" }
-                                    }
-                                    ColumnLayout {
-                                        spacing: 4
-                                        CText { variant: "caption"; text: "Build Date"; color: Theme.textSecondary }
-                                        CText { variant: "body1"; text: "2026-03-15" }
-                                    }
-                                    ColumnLayout {
-                                        spacing: 4
-                                        CText { variant: "caption"; text: "Node Count"; color: Theme.textSecondary }
-                                        CText { variant: "body1"; text: "4 nodes" }
-                                    }
-                                    ColumnLayout {
-                                        spacing: 4
-                                        CText { variant: "caption"; text: "Platform"; color: Theme.textSecondary }
-                                        CText { variant: "body1"; text: "MetaBuilder Universal" }
-                                    }
+                                ColumnLayout {
+                                    spacing: 4
+                                    CText { variant: "caption"; text: "Version"; color: Theme.textSecondary }
+                                    CText { variant: "body1"; text: "2.5.0-rc1" }
+                                }
+                                ColumnLayout {
+                                    spacing: 4
+                                    CText { variant: "caption"; text: "Build Date"; color: Theme.textSecondary }
+                                    CText { variant: "body1"; text: "2026-03-15" }
+                                }
+                                ColumnLayout {
+                                    spacing: 4
+                                    CText { variant: "caption"; text: "Node Count"; color: Theme.textSecondary }
+                                    CText { variant: "body1"; text: "4 nodes" }
+                                }
+                                ColumnLayout {
+                                    spacing: 4
+                                    CText { variant: "caption"; text: "Platform"; color: Theme.textSecondary }
+                                    CText { variant: "body1"; text: "MetaBuilder Universal" }
                                 }
                             }
                         }

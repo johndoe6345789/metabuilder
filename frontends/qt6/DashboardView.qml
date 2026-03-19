@@ -6,13 +6,20 @@ import "qmllib/dbal"
 
 Rectangle {
     id: dashRoot
-    color: "transparent"
+    color: Theme.background
 
     // ── DBAL connection ──────────────────────────────────────────
     DBALProvider { id: dbal }
 
     property var healthData: ({})
     property bool dbalOnline: dbal.connected
+
+    // ── MD3 palette ──────────────────────────────────────────────
+    readonly property bool isDark: Theme.mode === "dark"
+    readonly property color surfaceContainer: isDark ? Qt.rgba(1, 1, 1, 0.05) : Qt.rgba(0.31, 0.31, 0.44, 0.06)
+    readonly property color surfaceContainerHigh: isDark ? Qt.rgba(1, 1, 1, 0.08) : Qt.rgba(0.31, 0.31, 0.44, 0.10)
+    readonly property color onSurface: Theme.text
+    readonly property color onSurfaceVariant: Theme.textSecondary
 
     function refreshDBAL() {
         dbal.ping(function(success, error) {
@@ -28,43 +35,55 @@ Rectangle {
 
     ScrollView {
         anchors.fill: parent
-        anchors.margins: 24
         clip: true
+        contentWidth: availableWidth
 
         ColumnLayout {
             width: parent.width
-            spacing: 20
+            spacing: 0
 
-            // Welcome header
+            Item { Layout.preferredHeight: 24 }
+
+            // ── Welcome header ───────────────────────────────────
             CCard {
                 Layout.fillWidth: true
-                ColumnLayout {
-                    anchors.fill: parent
-                    anchors.margins: 24
-                    spacing: 12
+                Layout.leftMargin: 24
+                Layout.rightMargin: 24
+                variant: "filled"
 
-                    CText {
-                        variant: "h3"
-                        text: "Welcome back, " + appWindow.currentUser
-                    }
-                    CText {
-                        variant: "body1"
-                        text: "Level " + appWindow.currentLevel + " \u00b7 " + appWindow.currentRole + " access"
-                    }
+                CText {
+                    Layout.fillWidth: true
+                    variant: "h3"
+                    text: "Welcome back, " + appWindow.currentUser
+                }
 
-                    CButton {
-                        text: dbal.loading ? "Refreshing..." : "Refresh"
-                        variant: "ghost"
-                        size: "sm"
-                        enabled: !dbal.loading
-                        onClicked: refreshDBAL()
-                    }
+                Item { Layout.preferredHeight: 4 }
+
+                CText {
+                    Layout.fillWidth: true
+                    variant: "body1"
+                    text: "Level " + appWindow.currentLevel + " \u00b7 " + appWindow.currentRole + " access"
+                    color: onSurfaceVariant
+                }
+
+                Item { Layout.preferredHeight: 12 }
+
+                CButton {
+                    text: dbal.loading ? "Refreshing..." : "Refresh"
+                    variant: "ghost"
+                    size: "sm"
+                    enabled: !dbal.loading
+                    onClicked: refreshDBAL()
                 }
             }
 
-            // Stats row
+            Item { Layout.preferredHeight: 16 }
+
+            // ── Stats row ────────────────────────────────────────
             FlexRow {
                 Layout.fillWidth: true
+                Layout.leftMargin: 24
+                Layout.rightMargin: 24
                 spacing: 16
 
                 Repeater {
@@ -76,67 +95,100 @@ Rectangle {
                     ]
                     delegate: CCard {
                         Layout.fillWidth: true
-                        ColumnLayout {
-                            anchors.fill: parent
-                            anchors.margins: 16
-                            spacing: 8
-                            CText { variant: "caption"; text: modelData.title }
-                            CText { variant: "h3"; text: modelData.value }
-                            CStatusBadge { status: modelData.status; text: modelData.status === "success" ? "Online" : "Active" }
-                        }
-                    }
-                }
-            }
+                        variant: "outlined"
 
-            // Recent activity
-            CCard {
-                Layout.fillWidth: true
-                title: "Recent Activity"
-
-                ColumnLayout {
-                    anchors.fill: parent
-                    anchors.margins: 16
-                    spacing: 8
-
-                    CText { variant: "h4"; text: "Recent Activity" }
-                    CDivider { Layout.fillWidth: true }
-
-                    Repeater {
-                        model: [
-                            { action: "Package installed", detail: "material_ui v2.1.0", time: "2 min ago" },
-                            { action: "User logged in",   detail: "admin",              time: "5 min ago" },
-                            { action: "Workflow executed", detail: "on_user_created",    time: "12 min ago" },
-                            { action: "Schema updated",   detail: "forum entity",       time: "1 hr ago" },
-                            { action: "Seed data loaded", detail: "5 namespaces",       time: "2 hr ago" }
-                        ]
-                        delegate: CListItem {
+                        CText {
                             Layout.fillWidth: true
-                            title: modelData.action
-                            subtitle: modelData.detail + " \u00b7 " + modelData.time
+                            variant: "caption"
+                            text: modelData.title
+                            color: onSurfaceVariant
+                        }
+
+                        Item { Layout.preferredHeight: 4 }
+
+                        CText {
+                            Layout.fillWidth: true
+                            variant: "h3"
+                            text: modelData.value
+                        }
+
+                        Item { Layout.preferredHeight: 8 }
+
+                        CStatusBadge {
+                            status: modelData.status
+                            text: modelData.status === "success" ? "Online" : "Active"
                         }
                     }
                 }
             }
 
-            // Quick actions
+            Item { Layout.preferredHeight: 16 }
+
+            // ── Recent activity ──────────────────────────────────
             CCard {
                 Layout.fillWidth: true
-                ColumnLayout {
-                    anchors.fill: parent
-                    anchors.margins: 16
-                    spacing: 12
-                    CText { variant: "h4"; text: "Quick Actions" }
-                    FlexRow {
+                Layout.leftMargin: 24
+                Layout.rightMargin: 24
+                variant: "filled"
+
+                CText {
+                    Layout.fillWidth: true
+                    variant: "h4"
+                    text: "Recent Activity"
+                }
+
+                Item { Layout.preferredHeight: 8 }
+
+                CDivider { Layout.fillWidth: true }
+
+                Item { Layout.preferredHeight: 8 }
+
+                Repeater {
+                    model: [
+                        { action: "Package installed", detail: "material_ui v2.1.0", time: "2 min ago" },
+                        { action: "User logged in",   detail: "admin",              time: "5 min ago" },
+                        { action: "Workflow executed", detail: "on_user_created",    time: "12 min ago" },
+                        { action: "Schema updated",   detail: "forum entity",       time: "1 hr ago" },
+                        { action: "Seed data loaded", detail: "5 namespaces",       time: "2 hr ago" }
+                    ]
+                    delegate: CListItem {
                         Layout.fillWidth: true
-                        spacing: 10
-                        CButton { text: "Forum";     variant: "default"; onClicked: appWindow.currentView = "forum" }
-                        CButton { text: "Gallery";    variant: "default"; onClicked: appWindow.currentView = "gallery" }
-                        CButton { text: "Guestbook";  variant: "default"; onClicked: appWindow.currentView = "guestbook" }
-                        CButton { text: "Blog";       variant: "default"; onClicked: appWindow.currentView = "blog" }
-                        CButton { text: "Profile";    variant: "ghost";   onClicked: appWindow.currentView = "profile" }
+                        title: modelData.action
+                        subtitle: modelData.detail + " \u00b7 " + modelData.time
                     }
                 }
             }
+
+            Item { Layout.preferredHeight: 16 }
+
+            // ── Quick actions ────────────────────────────────────
+            CCard {
+                Layout.fillWidth: true
+                Layout.leftMargin: 24
+                Layout.rightMargin: 24
+                variant: "filled"
+
+                CText {
+                    Layout.fillWidth: true
+                    variant: "h4"
+                    text: "Quick Actions"
+                }
+
+                Item { Layout.preferredHeight: 12 }
+
+                FlexRow {
+                    Layout.fillWidth: true
+                    spacing: 10
+                    CButton { text: "Forum";     variant: "default"; onClicked: appWindow.currentView = "forum" }
+                    CButton { text: "Gallery";   variant: "default"; onClicked: appWindow.currentView = "gallery" }
+                    CButton { text: "Guestbook"; variant: "default"; onClicked: appWindow.currentView = "guestbook" }
+                    CButton { text: "Blog";      variant: "default"; onClicked: appWindow.currentView = "blog" }
+                    CButton { text: "Profile";   variant: "ghost";   onClicked: appWindow.currentView = "profile" }
+                }
+            }
+
+            // Bottom spacer
+            Item { Layout.preferredHeight: 24 }
         }
     }
 }

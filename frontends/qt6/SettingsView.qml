@@ -180,85 +180,70 @@ Rectangle {
             CCard {
                 Layout.fillWidth: true
 
-                ColumnLayout {
-                    anchors.fill: parent
-                    anchors.margins: 20
+                CText { variant: "h4"; text: "Profile" }
+                CDivider { Layout.fillWidth: true }
+
+                FlexRow {
+                    Layout.fillWidth: true
+                    Layout.topMargin: 4
                     spacing: 16
 
-                    CText { variant: "h4"; text: "Profile" }
-                    CDivider { Layout.fillWidth: true }
-
-                    FlexRow {
-                        Layout.fillWidth: true
-                        spacing: 16
-
-                        // Avatar
-                        Rectangle {
-                            width: 64
-                            height: 64
-                            radius: 32
-                            color: Theme.primary
-                            Layout.alignment: Qt.AlignTop
-
-                            CText {
-                                anchors.centerIn: parent
-                                text: userInitials()
-                                variant: "h4"
-                                color: "#ffffff"
-                                font.bold: true
-                            }
-                        }
-
-                        ColumnLayout {
-                            Layout.fillWidth: true
-                            spacing: 4
-
-                            CText {
-                                variant: "subtitle1"
-                                text: appWindow.currentUser
-                                font.bold: true
-                            }
-                            CText {
-                                variant: "body2"
-                                text: appWindow.currentRole + " \u00b7 Level " + appWindow.currentLevel
-                                opacity: 0.7
-                            }
-                        }
+                    // Avatar
+                    CAvatar {
+                        size: "lg"
+                        initials: userInitials()
                     }
 
-                    CTextField {
+                    ColumnLayout {
                         Layout.fillWidth: true
-                        label: "Display Name"
-                        placeholderText: "Enter display name"
-                        text: displayName
-                        onTextChanged: displayName = text
+                        spacing: 4
+
+                        CText {
+                            variant: "subtitle1"
+                            text: appWindow.currentUser
+                            font.bold: true
+                        }
+                        CText {
+                            variant: "body2"
+                            text: appWindow.currentRole + " \u00b7 Level " + appWindow.currentLevel
+                            opacity: 0.7
+                        }
+                    }
+                }
+
+                CTextField {
+                    Layout.fillWidth: true
+                    Layout.topMargin: 8
+                    label: "Display Name"
+                    placeholderText: "Enter display name"
+                    text: displayName
+                    onTextChanged: displayName = text
+                }
+
+                CTextField {
+                    Layout.fillWidth: true
+                    label: "Email"
+                    placeholderText: "Enter email address"
+                    text: userEmail
+                    onTextChanged: userEmail = text
+                }
+
+                FlexRow {
+                    Layout.fillWidth: true
+                    spacing: 12
+
+                    Item { Layout.fillWidth: true }
+
+                    CAlert {
+                        visible: profileSaved
+                        severity: "success"
+                        text: "Profile saved successfully"
                     }
 
-                    CTextField {
-                        Layout.fillWidth: true
-                        label: "Email"
-                        placeholderText: "Enter email address"
-                        text: userEmail
-                        onTextChanged: userEmail = text
-                    }
-
-                    FlexRow {
-                        Layout.fillWidth: true
-                        spacing: 12
-
-                        Item { Layout.fillWidth: true }
-
-                        CAlert {
-                            visible: profileSaved
-                            severity: "success"
-                            text: "Profile saved successfully"
-                        }
-
-                        CButton {
-                            text: "Save Profile"
-                            variant: "primary"
-                            onClicked: saveProfile()
-                        }
+                    CButton {
+                        text: "Save Profile"
+                        variant: "primary"
+                        onClicked: saveProfile()
                     }
                 }
             }
@@ -267,67 +252,62 @@ Rectangle {
             CCard {
                 Layout.fillWidth: true
 
-                ColumnLayout {
-                    anchors.fill: parent
-                    anchors.margins: 20
-                    spacing: 16
+                CText { variant: "h4"; text: "Appearance" }
+                CDivider { Layout.fillWidth: true }
 
-                    CText { variant: "h4"; text: "Appearance" }
-                    CDivider { Layout.fillWidth: true }
+                // Theme selector
+                CText {
+                    variant: "subtitle2"
+                    text: "Theme"
+                    Layout.topMargin: 4
+                }
 
-                    // Theme selector
-                    CText {
-                        variant: "subtitle2"
-                        text: "Theme"
-                    }
+                Flow {
+                    Layout.fillWidth: true
+                    spacing: 8
 
-                    Flow {
-                        Layout.fillWidth: true
-                        spacing: 8
-
-                        Repeater {
-                            model: availableThemes
-                            delegate: CButton {
-                                text: modelData.label
-                                variant: selectedTheme === modelData.id ? "primary" : "default"
-                                size: "sm"
-                                onClicked: {
-                                    selectedTheme = modelData.id
-                                    appWindow.currentTheme = modelData.id
-                                    if (typeof Theme.setTheme === "function") {
-                                        Theme.setTheme(modelData.id)
-                                    }
-                                    savePreferences()
+                    Repeater {
+                        model: availableThemes
+                        delegate: CButton {
+                            text: modelData.label
+                            variant: selectedTheme === modelData.id ? "primary" : "default"
+                            size: "sm"
+                            onClicked: {
+                                selectedTheme = modelData.id
+                                appWindow.currentTheme = modelData.id
+                                if (typeof Theme.setTheme === "function") {
+                                    Theme.setTheme(modelData.id)
                                 }
+                                savePreferences()
                             }
                         }
                     }
+                }
 
-                    // Font size selector
-                    CText {
-                        variant: "subtitle2"
-                        text: "Font Size"
-                        Layout.topMargin: 8
-                    }
+                // Font size selector
+                CText {
+                    variant: "subtitle2"
+                    text: "Font Size"
+                    Layout.topMargin: 8
+                }
 
-                    FlexRow {
-                        Layout.fillWidth: true
-                        spacing: 8
+                FlexRow {
+                    Layout.fillWidth: true
+                    spacing: 8
 
-                        Repeater {
-                            model: [
-                                { id: "small",  label: "Small"  },
-                                { id: "medium", label: "Medium" },
-                                { id: "large",  label: "Large"  }
-                            ]
-                            delegate: CButton {
-                                text: modelData.label
-                                variant: fontSize === modelData.id ? "primary" : "default"
-                                size: "sm"
-                                onClicked: {
-                                    fontSize = modelData.id
-                                    savePreferences()
-                                }
+                    Repeater {
+                        model: [
+                            { id: "small",  label: "Small"  },
+                            { id: "medium", label: "Medium" },
+                            { id: "large",  label: "Large"  }
+                        ]
+                        delegate: CButton {
+                            text: modelData.label
+                            variant: fontSize === modelData.id ? "primary" : "default"
+                            size: "sm"
+                            onClicked: {
+                                fontSize = modelData.id
+                                savePreferences()
                             }
                         }
                     }
@@ -338,78 +318,73 @@ Rectangle {
             CCard {
                 Layout.fillWidth: true
 
-                ColumnLayout {
-                    anchors.fill: parent
-                    anchors.margins: 20
-                    spacing: 16
+                CText { variant: "h4"; text: "Notifications" }
+                CDivider { Layout.fillWidth: true }
 
-                    CText { variant: "h4"; text: "Notifications" }
-                    CDivider { Layout.fillWidth: true }
+                // Email notifications toggle
+                FlexRow {
+                    Layout.fillWidth: true
+                    Layout.topMargin: 4
+                    spacing: 12
 
-                    // Email notifications toggle
-                    FlexRow {
+                    ColumnLayout {
                         Layout.fillWidth: true
-                        spacing: 12
-
-                        ColumnLayout {
-                            Layout.fillWidth: true
-                            spacing: 2
-                            CText { variant: "subtitle2"; text: "Email Notifications" }
-                            CText { variant: "caption"; text: "Receive notification summaries via email"; opacity: 0.6 }
-                        }
-
-                        Switch {
-                            checked: emailNotifications
-                            onCheckedChanged: {
-                                emailNotifications = checked
-                                savePreferences()
-                            }
-                        }
+                        spacing: 2
+                        CText { variant: "subtitle2"; text: "Email Notifications" }
+                        CText { variant: "caption"; text: "Receive notification summaries via email"; opacity: 0.6 }
                     }
 
-                    CDivider { Layout.fillWidth: true }
-
-                    // Desktop notifications toggle
-                    FlexRow {
-                        Layout.fillWidth: true
-                        spacing: 12
-
-                        ColumnLayout {
-                            Layout.fillWidth: true
-                            spacing: 2
-                            CText { variant: "subtitle2"; text: "Desktop Notifications" }
-                            CText { variant: "caption"; text: "Show desktop push notifications for alerts"; opacity: 0.6 }
-                        }
-
-                        Switch {
-                            checked: desktopNotifications
-                            onCheckedChanged: {
-                                desktopNotifications = checked
-                                savePreferences()
-                            }
+                    CSwitch {
+                        checked: emailNotifications
+                        onToggled: function(value) {
+                            emailNotifications = value
+                            savePreferences()
                         }
                     }
+                }
 
-                    CDivider { Layout.fillWidth: true }
+                CDivider { Layout.fillWidth: true }
 
-                    // Sound alerts toggle
-                    FlexRow {
+                // Desktop notifications toggle
+                FlexRow {
+                    Layout.fillWidth: true
+                    spacing: 12
+
+                    ColumnLayout {
                         Layout.fillWidth: true
-                        spacing: 12
+                        spacing: 2
+                        CText { variant: "subtitle2"; text: "Desktop Notifications" }
+                        CText { variant: "caption"; text: "Show desktop push notifications for alerts"; opacity: 0.6 }
+                    }
 
-                        ColumnLayout {
-                            Layout.fillWidth: true
-                            spacing: 2
-                            CText { variant: "subtitle2"; text: "Sound Alerts" }
-                            CText { variant: "caption"; text: "Play a sound when new notifications arrive"; opacity: 0.6 }
+                    CSwitch {
+                        checked: desktopNotifications
+                        onToggled: function(value) {
+                            desktopNotifications = value
+                            savePreferences()
                         }
+                    }
+                }
 
-                        Switch {
-                            checked: soundAlerts
-                            onCheckedChanged: {
-                                soundAlerts = checked
-                                savePreferences()
-                            }
+                CDivider { Layout.fillWidth: true }
+
+                // Sound alerts toggle
+                FlexRow {
+                    Layout.fillWidth: true
+                    spacing: 12
+
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        spacing: 2
+                        CText { variant: "subtitle2"; text: "Sound Alerts" }
+                        CText { variant: "caption"; text: "Play a sound when new notifications arrive"; opacity: 0.6 }
+                    }
+
+                    CSwitch {
+                        checked: soundAlerts
+                        onToggled: function(value) {
+                            soundAlerts = value
+                            savePreferences()
                         }
                     }
                 }
@@ -419,81 +394,75 @@ Rectangle {
             CCard {
                 Layout.fillWidth: true
 
-                ColumnLayout {
-                    anchors.fill: parent
-                    anchors.margins: 20
-                    spacing: 16
+                CText { variant: "h4"; text: "Connection" }
+                CDivider { Layout.fillWidth: true }
 
-                    CText { variant: "h4"; text: "Connection" }
-                    CDivider { Layout.fillWidth: true }
+                // DBAL URL
+                CText { variant: "subtitle2"; text: "DBAL Server"; Layout.topMargin: 4 }
 
-                    // DBAL URL
-                    CText { variant: "subtitle2"; text: "DBAL Server" }
+                FlexRow {
+                    Layout.fillWidth: true
+                    spacing: 12
 
-                    FlexRow {
+                    CTextField {
                         Layout.fillWidth: true
-                        spacing: 12
-
-                        CTextField {
-                            Layout.fillWidth: true
-                            label: "DBAL URL"
-                            placeholderText: "http://localhost:8080"
-                            text: dbalUrl
-                            onTextChanged: dbalUrl = text
-                        }
-
-                        ColumnLayout {
-                            spacing: 4
-                            Layout.alignment: Qt.AlignBottom
-
-                            CButton {
-                                text: dbalConnectionStatus === "testing" ? "Testing..." : "Test Connection"
-                                variant: "default"
-                                size: "sm"
-                                enabled: dbalConnectionStatus !== "testing"
-                                onClicked: testDBALConnection()
-                            }
-
-                            CStatusBadge {
-                                status: connectionStatusColor(dbalConnectionStatus)
-                                text: connectionStatusLabel(dbalConnectionStatus)
-                            }
-                        }
+                        label: "DBAL URL"
+                        placeholderText: "http://localhost:8080"
+                        text: dbalUrl
+                        onTextChanged: dbalUrl = text
                     }
 
-                    CDivider { Layout.fillWidth: true }
+                    ColumnLayout {
+                        spacing: 4
+                        Layout.alignment: Qt.AlignBottom
 
-                    // Media Service URL
-                    CText { variant: "subtitle2"; text: "Media Service" }
-
-                    FlexRow {
-                        Layout.fillWidth: true
-                        spacing: 12
-
-                        CTextField {
-                            Layout.fillWidth: true
-                            label: "Media Service URL"
-                            placeholderText: "http://localhost:9090"
-                            text: mediaServiceUrl
-                            onTextChanged: mediaServiceUrl = text
+                        CButton {
+                            text: dbalConnectionStatus === "testing" ? "Testing..." : "Test Connection"
+                            variant: "default"
+                            size: "sm"
+                            enabled: dbalConnectionStatus !== "testing"
+                            onClicked: testDBALConnection()
                         }
 
-                        ColumnLayout {
-                            spacing: 4
-                            Layout.alignment: Qt.AlignBottom
+                        CStatusBadge {
+                            status: connectionStatusColor(dbalConnectionStatus)
+                            text: connectionStatusLabel(dbalConnectionStatus)
+                        }
+                    }
+                }
 
-                            CButton {
-                                text: mediaConnectionStatus === "testing" ? "Testing..." : "Test Connection"
-                                variant: "default"
-                                size: "sm"
-                                enabled: mediaConnectionStatus !== "testing"
-                                onClicked: testMediaConnection()
-                            }
+                CDivider { Layout.fillWidth: true }
 
-                            CStatusBadge {
-                                status: connectionStatusColor(mediaConnectionStatus)
-                                text: connectionStatusLabel(mediaConnectionStatus)
-                            }
+                // Media Service URL
+                CText { variant: "subtitle2"; text: "Media Service" }
+
+                FlexRow {
+                    Layout.fillWidth: true
+                    spacing: 12
+
+                    CTextField {
+                        Layout.fillWidth: true
+                        label: "Media Service URL"
+                        placeholderText: "http://localhost:9090"
+                        text: mediaServiceUrl
+                        onTextChanged: mediaServiceUrl = text
+                    }
+
+                    ColumnLayout {
+                        spacing: 4
+                        Layout.alignment: Qt.AlignBottom
+
+                        CButton {
+                            text: mediaConnectionStatus === "testing" ? "Testing..." : "Test Connection"
+                            variant: "default"
+                            size: "sm"
+                            enabled: mediaConnectionStatus !== "testing"
+                            onClicked: testMediaConnection()
+                        }
+
+                        CStatusBadge {
+                            status: connectionStatusColor(mediaConnectionStatus)
+                            text: connectionStatusLabel(mediaConnectionStatus)
                         }
                     }
                 }
@@ -503,60 +472,54 @@ Rectangle {
             CCard {
                 Layout.fillWidth: true
 
-                ColumnLayout {
-                    anchors.fill: parent
-                    anchors.margins: 20
-                    spacing: 12
+                CText { variant: "h4"; text: "About" }
+                CDivider { Layout.fillWidth: true }
 
-                    CText { variant: "h4"; text: "About" }
-                    CDivider { Layout.fillWidth: true }
+                Repeater {
+                    model: [
+                        { label: "Version",     value: "2.1.0" },
+                        { label: "Build Date",  value: "2026-03-19" },
+                        { label: "Qt Version",  value: "6.8.x" },
+                        { label: "Platform",    value: Qt.platform.os },
+                        { label: "DBAL Schema", value: "v1 REST API" }
+                    ]
 
-                    Repeater {
-                        model: [
-                            { label: "Version",     value: "2.1.0" },
-                            { label: "Build Date",  value: "2026-03-19" },
-                            { label: "Qt Version",  value: "6.8.x" },
-                            { label: "Platform",    value: Qt.platform.os },
-                            { label: "DBAL Schema", value: "v1 REST API" }
-                        ]
-
-                        delegate: FlexRow {
-                            Layout.fillWidth: true
-                            spacing: 12
-
-                            CText {
-                                variant: "body2"
-                                text: modelData.label
-                                opacity: 0.6
-                                Layout.preferredWidth: 120
-                            }
-
-                            CText {
-                                variant: "body1"
-                                text: modelData.value
-                            }
-                        }
-                    }
-
-                    CDivider { Layout.fillWidth: true }
-
-                    FlexRow {
+                    delegate: FlexRow {
                         Layout.fillWidth: true
                         spacing: 12
 
-                        CButton {
-                            text: "View Documentation"
-                            variant: "default"
-                            size: "sm"
-                            onClicked: Qt.openUrlExternally("https://github.com/nicholasgriffintn/metabuilder")
+                        CText {
+                            variant: "body2"
+                            text: modelData.label
+                            opacity: 0.6
+                            Layout.preferredWidth: 120
                         }
 
-                        CButton {
-                            text: "Report Issue"
-                            variant: "ghost"
-                            size: "sm"
-                            onClicked: Qt.openUrlExternally("https://github.com/nicholasgriffintn/metabuilder/issues")
+                        CText {
+                            variant: "body1"
+                            text: modelData.value
                         }
+                    }
+                }
+
+                CDivider { Layout.fillWidth: true }
+
+                FlexRow {
+                    Layout.fillWidth: true
+                    spacing: 12
+
+                    CButton {
+                        text: "View Documentation"
+                        variant: "default"
+                        size: "sm"
+                        onClicked: Qt.openUrlExternally("https://github.com/nicholasgriffintn/metabuilder")
+                    }
+
+                    CButton {
+                        text: "Report Issue"
+                        variant: "ghost"
+                        size: "sm"
+                        onClicked: Qt.openUrlExternally("https://github.com/nicholasgriffintn/metabuilder/issues")
                     }
                 }
             }

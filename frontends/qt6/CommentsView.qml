@@ -168,6 +168,7 @@ Rectangle {
 
                 CBadge {
                     text: commentsModel.count + " comments"
+                    badgeColor: Theme.info
                 }
 
                 Item { Layout.fillWidth: true }
@@ -186,32 +187,26 @@ Rectangle {
             CCard {
                 Layout.fillWidth: true
 
-                ColumnLayout {
-                    anchors.fill: parent
-                    anchors.margins: 20
-                    spacing: 12
+                CText { variant: "subtitle1"; text: "Post a Comment" }
 
-                    CText { variant: "subtitle1"; text: "Post a Comment" }
+                CTextField {
+                    Layout.fillWidth: true
+                    label: "Your comment"
+                    placeholderText: "Write your thoughts..."
+                    text: newCommentText
+                    onTextChanged: newCommentText = text
+                }
 
-                    CTextField {
-                        Layout.fillWidth: true
-                        label: "Your comment"
-                        placeholderText: "Write your thoughts..."
-                        text: newCommentText
-                        onTextChanged: newCommentText = text
-                    }
-
-                    FlexRow {
-                        Layout.fillWidth: true
-                        spacing: 8
-                        Item { Layout.fillWidth: true }
-                        CButton {
-                            text: "Post Comment"
-                            variant: "primary"
-                            size: "sm"
-                            enabled: newCommentText.trim().length > 0
-                            onClicked: addComment()
-                        }
+                FlexRow {
+                    Layout.fillWidth: true
+                    spacing: 8
+                    Item { Layout.fillWidth: true }
+                    CButton {
+                        text: "Post Comment"
+                        variant: "primary"
+                        size: "sm"
+                        enabled: newCommentText.trim().length > 0
+                        onClicked: addComment()
                     }
                 }
             }
@@ -223,88 +218,83 @@ Rectangle {
                 delegate: CCard {
                     Layout.fillWidth: true
 
-                    ColumnLayout {
-                        anchors.fill: parent
-                        anchors.margins: 20
-                        spacing: 10
+                    // Comment header: avatar, user, time
+                    FlexRow {
+                        Layout.fillWidth: true
+                        spacing: 12
 
-                        // Comment header: avatar, user, time
-                        FlexRow {
+                        CAvatar {
+                            initials: model.initials
+                        }
+
+                        ColumnLayout {
                             Layout.fillWidth: true
-                            spacing: 12
+                            spacing: 2
 
-                            CAvatar {
-                                initials: model.initials
-                            }
-
-                            ColumnLayout {
-                                Layout.fillWidth: true
-                                spacing: 2
-
-                                FlexRow {
-                                    spacing: 8
-                                    CText {
-                                        variant: "subtitle1"
-                                        text: model.username
-                                    }
-                                    CChip {
-                                        text: model.username === appWindow.currentUser ? "You" : ""
-                                        visible: model.username === appWindow.currentUser
-                                    }
-                                }
-
+                            FlexRow {
+                                spacing: 8
                                 CText {
-                                    variant: "caption"
-                                    text: model.timestamp
+                                    variant: "subtitle1"
+                                    text: model.username
                                 }
-                            }
-                        }
-
-                        // Comment body
-                        CText {
-                            Layout.fillWidth: true
-                            variant: "body1"
-                            text: model.body
-                            wrapMode: Text.WordWrap
-                        }
-
-                        CDivider { Layout.fillWidth: true }
-
-                        // Actions row
-                        FlexRow {
-                            Layout.fillWidth: true
-                            spacing: 8
-
-                            CButton {
-                                text: model.liked ? "Liked (" + model.likes + ")" : "Like (" + model.likes + ")"
-                                variant: model.liked ? "primary" : "ghost"
-                                size: "sm"
-                                onClicked: {
-                                    var newLikes;
-                                    if (model.liked) {
-                                        newLikes = model.likes - 1;
-                                        commentsModel.setProperty(index, "likes", newLikes)
-                                        commentsModel.setProperty(index, "liked", false)
-                                    } else {
-                                        newLikes = model.likes + 1;
-                                        commentsModel.setProperty(index, "likes", newLikes)
-                                        commentsModel.setProperty(index, "liked", true)
-                                    }
-                                    likeCommentOnDBAL(model.commentId, newLikes)
+                                CChip {
+                                    text: model.username === appWindow.currentUser ? "You" : ""
+                                    chipColor: Theme.primary
+                                    visible: model.username === appWindow.currentUser
                                 }
                             }
 
-                            Item { Layout.fillWidth: true }
+                            CText {
+                                variant: "caption"
+                                text: model.timestamp
+                            }
+                        }
+                    }
 
-                            CButton {
-                                text: "Delete"
-                                variant: "danger"
-                                size: "sm"
-                                visible: canDelete(model.username)
-                                onClicked: {
-                                    deleteCommentOnDBAL(model.commentId)
-                                    commentsModel.remove(index)
+                    // Comment body
+                    CText {
+                        Layout.fillWidth: true
+                        variant: "body1"
+                        text: model.body
+                        wrapMode: Text.WordWrap
+                    }
+
+                    CDivider { Layout.fillWidth: true }
+
+                    // Actions row
+                    FlexRow {
+                        Layout.fillWidth: true
+                        spacing: 8
+
+                        CButton {
+                            text: model.liked ? "Liked (" + model.likes + ")" : "Like (" + model.likes + ")"
+                            variant: model.liked ? "primary" : "ghost"
+                            size: "sm"
+                            onClicked: {
+                                var newLikes;
+                                if (model.liked) {
+                                    newLikes = model.likes - 1;
+                                    commentsModel.setProperty(index, "likes", newLikes)
+                                    commentsModel.setProperty(index, "liked", false)
+                                } else {
+                                    newLikes = model.likes + 1;
+                                    commentsModel.setProperty(index, "likes", newLikes)
+                                    commentsModel.setProperty(index, "liked", true)
                                 }
+                                likeCommentOnDBAL(model.commentId, newLikes)
+                            }
+                        }
+
+                        Item { Layout.fillWidth: true }
+
+                        CButton {
+                            text: "Delete"
+                            variant: "danger"
+                            size: "sm"
+                            visible: canDelete(model.username)
+                            onClicked: {
+                                deleteCommentOnDBAL(model.commentId)
+                                commentsModel.remove(index)
                             }
                         }
                     }
@@ -316,22 +306,22 @@ Rectangle {
                 Layout.fillWidth: true
                 visible: commentsModel.count === 0
 
-                ColumnLayout {
-                    anchors.fill: parent
-                    anchors.margins: 40
-                    spacing: 12
+                Item { Layout.preferredHeight: 24 }
 
-                    CText {
-                        Layout.alignment: Qt.AlignHCenter
-                        variant: "h4"
-                        text: "No comments yet"
-                    }
-                    CText {
-                        Layout.alignment: Qt.AlignHCenter
-                        variant: "body2"
-                        text: "Be the first to start the discussion!"
-                    }
+                CText {
+                    Layout.fillWidth: true
+                    variant: "h4"
+                    text: "No comments yet"
+                    horizontalAlignment: Text.AlignHCenter
                 }
+                CText {
+                    Layout.fillWidth: true
+                    variant: "body2"
+                    text: "Be the first to start the discussion!"
+                    horizontalAlignment: Text.AlignHCenter
+                }
+
+                Item { Layout.preferredHeight: 24 }
             }
 
             // Bottom spacer
