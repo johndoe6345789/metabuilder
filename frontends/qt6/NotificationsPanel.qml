@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QmlComponents 1.0
 import "qmllib/dbal"
+import "qmllib/MetaBuilder"
 
 Rectangle {
     id: root
@@ -10,16 +11,13 @@ Rectangle {
 
     // ── DBAL connection ──────────────────────────────────────────
     DBALProvider { id: dbal }
-
     property bool useLiveData: dbal.connected
 
     // ── State ────────────────────────────────────────────────────
     property string activeFilter: "All"
     property int unreadCount: countUnread()
-
     property var filters: ["All", "System", "Alerts", "Info"]
 
-    // ── Mock data (mirrors AdminView notification records) ───────
     property var notifications: [
         { id: "NTF-001", type: "system",  title: "Scheduled Maintenance",      message: "Maintenance window 03/20 from 02:00-04:00 UTC",  timestamp: "2026-03-18 06:00", read: false },
         { id: "NTF-002", type: "alert",   title: "High CPU Alert",             message: "High CPU on dbal-prod — 94% sustained for 10m",  timestamp: "2026-03-18 07:30", read: false },
@@ -36,9 +34,7 @@ Rectangle {
     // ── Helpers ──────────────────────────────────────────────────
     function countUnread() {
         var count = 0
-        for (var i = 0; i < notifications.length; i++) {
-            if (!notifications[i].read) count++
-        }
+        for (var i = 0; i < notifications.length; i++) if (!notifications[i].read) count++
         return count
     }
 
@@ -46,77 +42,34 @@ Rectangle {
         var result = []
         for (var i = 0; i < notifications.length; i++) {
             var n = notifications[i]
-            if (activeFilter === "All") {
-                result.push(n)
-            } else if (activeFilter === "System" && n.type === "system") {
-                result.push(n)
-            } else if (activeFilter === "Alerts" && (n.type === "alert" || n.type === "warning")) {
-                result.push(n)
-            } else if (activeFilter === "Info" && n.type === "info") {
-                result.push(n)
-            }
+            if (activeFilter === "All") result.push(n)
+            else if (activeFilter === "System" && n.type === "system") result.push(n)
+            else if (activeFilter === "Alerts" && (n.type === "alert" || n.type === "warning")) result.push(n)
+            else if (activeFilter === "Info" && n.type === "info") result.push(n)
         }
         return result
     }
 
-    function typeIcon(type) {
-        switch (type) {
-            case "system":  return "\u2699"   // gear
-            case "alert":   return "\u26A0"   // warning sign
-            case "warning": return "\u26A0"   // warning sign
-            case "info":    return "\u2139"   // info
-            default:        return "\u2709"   // envelope
-        }
-    }
-
-    function typeColor(type) {
-        switch (type) {
-            case "system":  return "#2196f3"
-            case "alert":   return "#f44336"
-            case "warning": return "#ff9800"
-            case "info":    return "#4caf50"
-            default:        return "#9e9e9e"
-        }
-    }
-
     function markAllRead() {
         var updated = []
-        for (var i = 0; i < notifications.length; i++) {
-            var n = Object.assign({}, notifications[i])
-            n.read = true
-            updated.push(n)
-        }
-        notifications = updated
-        unreadCount = 0
+        for (var i = 0; i < notifications.length; i++) { var n = Object.assign({}, notifications[i]); n.read = true; updated.push(n) }
+        notifications = updated; unreadCount = 0
     }
 
-    function markRead(index) {
+    function markReadById(notifId) {
         var updated = []
         for (var i = 0; i < notifications.length; i++) {
             var n = Object.assign({}, notifications[i])
-            if (i === index) n.read = true
+            if (n.id === notifId) n.read = true
             updated.push(n)
         }
-        notifications = updated
-        unreadCount = countUnread()
+        notifications = updated; unreadCount = countUnread()
     }
 
     function dismissNotification(notifId) {
         var updated = []
-        for (var i = 0; i < notifications.length; i++) {
-            if (notifications[i].id !== notifId) {
-                updated.push(notifications[i])
-            }
-        }
-        notifications = updated
-        unreadCount = countUnread()
-    }
-
-    function formatTimestamp(ts) {
-        // Show relative-style label for recent items
-        if (ts.indexOf("2026-03-18") === 0) return "Today " + ts.substring(11)
-        if (ts.indexOf("2026-03-17") === 0) return "Yesterday " + ts.substring(11)
-        return ts
+        for (var i = 0; i < notifications.length; i++) if (notifications[i].id !== notifId) updated.push(notifications[i])
+        notifications = updated; unreadCount = countUnread()
     }
 
     // ── DBAL integration ─────────────────────────────────────────
@@ -124,321 +77,86 @@ Rectangle {
         if (!useLiveData) return
         dbal.list("notification", { take: 50 }, function(result, error) {
             if (error || !result) return
-            var items = result.items || []
-            var liveNotifs = []
+            var items = result.items || []; var liveNotifs = []
             for (var i = 0; i < items.length; i++) {
                 var item = items[i]
-                liveNotifs.push({
-                    id:        item.id || ("NTF-LIVE-" + i),
-                    type:      item.type || "info",
-                    title:     item.title || item.message || "Notification",
-                    message:   item.message || "",
-                    timestamp: item.sent || item.created || "",
-                    read:      item.status === "Inactive"
-                })
+                liveNotifs.push({ id: item.id || ("NTF-LIVE-" + i), type: item.type || "info", title: item.title || item.message || "Notification",
+                                  message: item.message || "", timestamp: item.sent || item.created || "", read: item.status === "Inactive" })
             }
-            if (liveNotifs.length > 0) {
-                notifications = liveNotifs
-                unreadCount = countUnread()
-            }
+            if (liveNotifs.length > 0) { notifications = liveNotifs; unreadCount = countUnread() }
         })
     }
 
-    Component.onCompleted: {
-        if (useLiveData) loadFromDBAL()
-    }
-
-    onUseLiveDataChanged: {
-        if (useLiveData) loadFromDBAL()
-    }
+    Component.onCompleted: { if (useLiveData) loadFromDBAL() }
+    onUseLiveDataChanged: { if (useLiveData) loadFromDBAL() }
 
     // ── UI ───────────────────────────────────────────────────────
     ScrollView {
-        anchors.fill: parent
-        anchors.margins: 24
-        clip: true
+        anchors.fill: parent; anchors.margins: 24; clip: true
 
         ColumnLayout {
-            width: parent.width
-            spacing: 16
+            width: parent.width; spacing: 16
 
-            // ── Header ──────────────────────────────────────────
             CCard {
                 Layout.fillWidth: true
 
                 ColumnLayout {
-                    anchors.fill: parent
-                    anchors.margins: 20
-                    spacing: 12
+                    anchors.fill: parent; anchors.margins: 20; spacing: 12
 
                     FlexRow {
-                        Layout.fillWidth: true
-                        spacing: 12
-
-                        CText {
-                            variant: "h3"
-                            text: "Notifications"
-                        }
-
-                        CBadge {
-                            visible: unreadCount > 0
-                            text: unreadCount + " unread"
-                        }
-
+                        Layout.fillWidth: true; spacing: 12
+                        CText { variant: "h3"; text: "Notifications" }
+                        CBadge { visible: unreadCount > 0; text: unreadCount + " unread" }
                         Item { Layout.fillWidth: true }
-
-                        CButton {
-                            text: "Mark All Read"
-                            variant: "ghost"
-                            size: "sm"
-                            enabled: unreadCount > 0
-                            onClicked: markAllRead()
-                        }
-
-                        CButton {
-                            text: dbal.loading ? "Loading..." : "Refresh"
-                            variant: "ghost"
-                            size: "sm"
-                            enabled: !dbal.loading
-                            onClicked: loadFromDBAL()
-                        }
+                        CButton { text: "Mark All Read"; variant: "ghost"; size: "sm"; enabled: unreadCount > 0; onClicked: markAllRead() }
+                        CButton { text: dbal.loading ? "Loading..." : "Refresh"; variant: "ghost"; size: "sm"; enabled: !dbal.loading; onClicked: loadFromDBAL() }
                     }
 
                     CDivider { Layout.fillWidth: true }
 
-                    // ── Filter tabs ─────────────────────────────
                     FlexRow {
-                        Layout.fillWidth: true
-                        spacing: 8
-
+                        Layout.fillWidth: true; spacing: 8
                         Repeater {
                             model: filters
-                            delegate: CButton {
-                                text: modelData
-                                variant: activeFilter === modelData ? "primary" : "ghost"
-                                size: "sm"
-                                onClicked: activeFilter = modelData
-                            }
+                            delegate: CButton { text: modelData; variant: activeFilter === modelData ? "primary" : "ghost"; size: "sm"; onClicked: activeFilter = modelData }
                         }
                     }
                 }
             }
 
-            // ── Notification list ───────────────────────────────
             CCard {
                 Layout.fillWidth: true
                 visible: filteredNotifications().length > 0
 
                 ColumnLayout {
-                    anchors.fill: parent
-                    anchors.margins: 16
-                    spacing: 0
+                    anchors.fill: parent; anchors.margins: 16; spacing: 0
 
                     Repeater {
                         model: filteredNotifications()
 
-                        delegate: Rectangle {
-                            Layout.fillWidth: true
-                            height: notifContent.implicitHeight + 24
-                            color: modelData.read ? "transparent" : Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.04)
-                            radius: 6
-
-                            Rectangle {
-                                id: typeStripe
-                                width: 4
-                                height: parent.height - 8
-                                anchors.left: parent.left
-                                anchors.leftMargin: 4
-                                anchors.verticalCenter: parent.verticalCenter
-                                radius: 2
-                                color: typeColor(modelData.type)
-                            }
-
-                            RowLayout {
-                                id: notifContent
-                                anchors.fill: parent
-                                anchors.leftMargin: 16
-                                anchors.rightMargin: 12
-                                anchors.topMargin: 12
-                                anchors.bottomMargin: 12
-                                spacing: 12
-
-                                // Type icon circle
-                                Rectangle {
-                                    width: 36
-                                    height: 36
-                                    radius: 18
-                                    color: Qt.rgba(typeColor(modelData.type).r, typeColor(modelData.type).g, typeColor(modelData.type).b, 0.15)
-                                    Layout.alignment: Qt.AlignTop
-
-                                    CText {
-                                        anchors.centerIn: parent
-                                        text: typeIcon(modelData.type)
-                                        variant: "body1"
-                                    }
-                                }
-
-                                // Content
-                                ColumnLayout {
-                                    Layout.fillWidth: true
-                                    spacing: 4
-
-                                    FlexRow {
-                                        Layout.fillWidth: true
-                                        spacing: 8
-
-                                        CText {
-                                            variant: modelData.read ? "body1" : "subtitle1"
-                                            text: modelData.title
-                                            font.bold: !modelData.read
-                                        }
-
-                                        CBadge {
-                                            text: modelData.type
-                                            visible: true
-                                        }
-
-                                        Item { Layout.fillWidth: true }
-
-                                        CText {
-                                            variant: "caption"
-                                            text: formatTimestamp(modelData.timestamp)
-                                            opacity: 0.6
-                                        }
-                                    }
-
-                                    CText {
-                                        Layout.fillWidth: true
-                                        variant: "body2"
-                                        text: modelData.message
-                                        opacity: modelData.read ? 0.6 : 0.85
-                                        wrapMode: Text.WordWrap
-                                    }
-                                }
-
-                                // Actions
-                                ColumnLayout {
-                                    Layout.alignment: Qt.AlignTop
-                                    spacing: 4
-
-                                    CButton {
-                                        visible: !modelData.read
-                                        text: "Read"
-                                        variant: "ghost"
-                                        size: "sm"
-                                        onClicked: {
-                                            // Find original index
-                                            for (var i = 0; i < notifications.length; i++) {
-                                                if (notifications[i].id === modelData.id) {
-                                                    markRead(i)
-                                                    break
-                                                }
-                                            }
-                                        }
-                                    }
-
-                                    CButton {
-                                        text: "Dismiss"
-                                        variant: "ghost"
-                                        size: "sm"
-                                        onClicked: dismissNotification(modelData.id)
-                                    }
-                                }
-                            }
-
-                            // Bottom separator
-                            CDivider {
-                                anchors.bottom: parent.bottom
-                                anchors.left: parent.left
-                                anchors.right: parent.right
-                                anchors.leftMargin: 16
-                                anchors.rightMargin: 16
-                            }
-
-                            MouseArea {
-                                anchors.fill: parent
-                                z: -1
-                                onClicked: {
-                                    for (var i = 0; i < notifications.length; i++) {
-                                        if (notifications[i].id === modelData.id) {
-                                            markRead(i)
-                                            break
-                                        }
-                                    }
-                                }
-                                cursorShape: Qt.PointingHandCursor
-                            }
+                        delegate: CNotificationItem {
+                            notification: modelData
+                            onMarkRead: markReadById(modelData.id)
+                            onDismiss: dismissNotification(modelData.id)
                         }
                     }
                 }
             }
 
-            // ── Empty state ─────────────────────────────────────
-            CCard {
-                Layout.fillWidth: true
+            CNotificationEmptyState {
                 visible: filteredNotifications().length === 0
-
-                ColumnLayout {
-                    anchors.fill: parent
-                    anchors.margins: 40
-                    spacing: 16
-                    Layout.alignment: Qt.AlignHCenter
-
-                    CText {
-                        Layout.alignment: Qt.AlignHCenter
-                        variant: "h2"
-                        text: "\u{1F514}"
-                    }
-
-                    CText {
-                        Layout.alignment: Qt.AlignHCenter
-                        variant: "h4"
-                        text: activeFilter === "All" ? "No notifications" : "No " + activeFilter.toLowerCase() + " notifications"
-                    }
-
-                    CText {
-                        Layout.alignment: Qt.AlignHCenter
-                        variant: "body2"
-                        text: "When there are new notifications, they will appear here."
-                        opacity: 0.6
-                    }
-                }
+                filterLabel: activeFilter
             }
 
-            // ── Summary footer ──────────────────────────────────
             FlexRow {
-                Layout.fillWidth: true
-                spacing: 8
-                visible: notifications.length > 0
-
-                CText {
-                    variant: "caption"
-                    text: notifications.length + " total notifications"
-                    opacity: 0.5
-                }
-
-                CText {
-                    variant: "caption"
-                    text: " \u00b7 "
-                    opacity: 0.3
-                }
-
-                CText {
-                    variant: "caption"
-                    text: unreadCount + " unread"
-                    opacity: 0.5
-                }
-
+                Layout.fillWidth: true; spacing: 8; visible: notifications.length > 0
+                CText { variant: "caption"; text: notifications.length + " total notifications"; opacity: 0.5 }
+                CText { variant: "caption"; text: " \u00b7 "; opacity: 0.3 }
+                CText { variant: "caption"; text: unreadCount + " unread"; opacity: 0.5 }
                 Item { Layout.fillWidth: true }
-
-                CText {
-                    variant: "caption"
-                    text: useLiveData ? "Live data" : "Mock data"
-                    opacity: 0.4
-                }
+                CText { variant: "caption"; text: useLiveData ? "Live data" : "Mock data"; opacity: 0.4 }
             }
 
-            // Bottom spacer
             Item { Layout.preferredHeight: 20 }
         }
     }
