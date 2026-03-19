@@ -164,71 +164,23 @@ Rectangle {
                         Layout.topMargin: 20
                         spacing: 12
 
-                        // MD3 filled button
-                        Rectangle {
-                            width: getStartedText.implicitWidth + 40
-                            height: 44
-                            radius: 22
-                            color: accentBlue
-
-                            CText {
-                                id: getStartedText
-                                anchors.centerIn: parent
-                                text: "Get Started"
-                                font.pixelSize: 14
-                                font.weight: Font.DemiBold
-                                color: "#ffffff"
-                            }
-                            MouseArea {
-                                anchors.fill: parent
-                                cursorShape: Qt.PointingHandCursor
-                                onClicked: appWindow.currentView = "login"
-                            }
+                        CButton {
+                            text: "Get Started"
+                            variant: "primary"
+                            size: "lg"
+                            onClicked: appWindow.currentView = "login"
                         }
-
-                        // MD3 outlined button
-                        Rectangle {
-                            width: sbText.implicitWidth + 32
-                            height: 44
-                            radius: 22
-                            color: "transparent"
-                            border.color: outline
-                            border.width: 1
-
-                            CText {
-                                id: sbText
-                                anchors.centerIn: parent
-                                text: "Storybook"
-                                font.pixelSize: 14
-                                color: accentBlue
-                            }
-                            MouseArea {
-                                anchors.fill: parent
-                                cursorShape: Qt.PointingHandCursor
-                                onClicked: appWindow.currentView = "storybook"
-                            }
+                        CButton {
+                            text: "Storybook"
+                            variant: "ghost"
+                            size: "lg"
+                            onClicked: appWindow.currentView = "storybook"
                         }
-
-                        Rectangle {
-                            width: pkgText.implicitWidth + 32
-                            height: 44
-                            radius: 22
-                            color: "transparent"
-                            border.color: outline
-                            border.width: 1
-
-                            CText {
-                                id: pkgText
-                                anchors.centerIn: parent
-                                text: "Packages"
-                                font.pixelSize: 14
-                                color: accentBlue
-                            }
-                            MouseArea {
-                                anchors.fill: parent
-                                cursorShape: Qt.PointingHandCursor
-                                onClicked: appWindow.currentView = "marketplace"
-                            }
+                        CButton {
+                            text: "Packages"
+                            variant: "ghost"
+                            size: "lg"
+                            onClicked: appWindow.currentView = "marketplace"
                         }
                     }
                 }

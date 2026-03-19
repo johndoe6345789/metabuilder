@@ -151,37 +151,21 @@ ApplicationWindow {
                 color: Theme.textSecondary
             }
 
-            // Theme toggle — MD3 icon-style pill
-            Rectangle {
-                width: themeText.implicitWidth + 20
-                height: 28
-                radius: 14
-                color: surfaceContainer
-                border.color: outlineVariant
-                border.width: 1
-
-                CText {
-                    id: themeText
-                    anchors.centerIn: parent
-                    text: currentTheme === "dark" ? "\u263E Dark" : "\u2600 Light"
-                    font.pixelSize: 11
-                    color: Theme.textSecondary
-                }
-
-                MouseArea {
-                    anchors.fill: parent
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: {
-                        currentTheme = currentTheme === "dark" ? "light" : "dark"
-                        if (typeof Theme.setTheme === "function")
-                            Theme.setTheme(currentTheme)
-                    }
+            // Theme toggle
+            CButton {
+                text: currentTheme === "dark" ? "\u263E Dark" : "\u2600 Light"
+                variant: "ghost"
+                size: "sm"
+                onClicked: {
+                    currentTheme = currentTheme === "dark" ? "light" : "dark"
+                    if (typeof Theme.setTheme === "function")
+                        Theme.setTheme(currentTheme)
                 }
             }
 
             Item { Layout.fillWidth: true }
 
-            // Level navigation — MD3 segmented/pill buttons
+            // Level navigation
             Repeater {
                 model: [
                     { label: "Public",    level: 1, view: "frontpage" },
@@ -190,60 +174,24 @@ ApplicationWindow {
                     { label: "God",       level: 4, view: "god-panel" },
                     { label: "Super",     level: 5, view: "supergod" }
                 ]
-                delegate: Rectangle {
+                delegate: CButton {
                     visible: modelData.level <= currentLevel
-                    width: navLabel.implicitWidth + 20
-                    height: 30
-                    radius: 15
-                    color: currentView === modelData.view
-                        ? Qt.rgba(accentBlue.r, accentBlue.g, accentBlue.b, isDark ? 0.2 : 0.15)
-                        : navMA.containsMouse ? surfaceContainer : "transparent"
-
-                    Behavior on color { ColorAnimation { duration: 150 } }
-
-                    CText {
-                        id: navLabel
-                        anchors.centerIn: parent
-                        text: modelData.label
-                        font.pixelSize: 12
-                        font.weight: currentView === modelData.view ? Font.DemiBold : Font.Normal
-                        color: currentView === modelData.view ? accentBlue : Theme.textSecondary
-                    }
-
-                    MouseArea {
-                        id: navMA
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: currentView = modelData.view
-                    }
+                    text: modelData.label
+                    variant: currentView === modelData.view ? "default" : "text"
+                    size: "sm"
+                    onClicked: currentView = modelData.view
                 }
             }
 
             Item { width: 4 }
 
             // Login / user info
-            Rectangle {
+            CButton {
                 visible: !loggedIn
-                width: loginText.implicitWidth + 24
-                height: 30
-                radius: 15
-                color: accentBlue
-
-                CText {
-                    id: loginText
-                    anchors.centerIn: parent
-                    text: "Login"
-                    font.pixelSize: 12
-                    font.weight: Font.DemiBold
-                    color: "#ffffff"
-                }
-
-                MouseArea {
-                    anchors.fill: parent
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: currentView = "login"
-                }
+                text: "Login"
+                variant: "primary"
+                size: "sm"
+                onClicked: currentView = "login"
             }
 
             CText {
@@ -251,31 +199,14 @@ ApplicationWindow {
                 text: currentUser
                 font.pixelSize: 13
                 font.weight: Font.Medium
-                color: Theme.text
             }
 
-            Rectangle {
+            CButton {
                 visible: loggedIn
-                width: logoutText.implicitWidth + 20
-                height: 28
-                radius: 14
-                color: "transparent"
-                border.color: outlineVariant
-                border.width: 1
-
-                CText {
-                    id: logoutText
-                    anchors.centerIn: parent
-                    text: "Logout"
-                    font.pixelSize: 11
-                    color: Theme.textSecondary
-                }
-
-                MouseArea {
-                    anchors.fill: parent
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: logout()
-                }
+                text: "Logout"
+                variant: "ghost"
+                size: "sm"
+                onClicked: logout()
             }
         }
     }
