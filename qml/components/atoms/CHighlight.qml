@@ -2,48 +2,47 @@ import QtQuick
 import QmlComponents 1.0
 
 /**
- * CHighlight.qml - Text highlighting (mirrors _highlight.scss)
- * Highlight text with background color
+ * CHighlight.qml - Material Design 3 inline text highlight
+ * Highlight text with tonal background color
  */
 Rectangle {
     id: root
-    
+
     property alias text: label.text
     property string variant: "default"   // default, success, warning, error, info
-    
-    // Color mapping
+
+    // MD3 tonal color mapping
     readonly property color _bgColor: {
         switch (variant) {
-            case "success": return Theme.successContainer
-            case "warning": return Theme.warningContainer
-            case "error": return Theme.errorContainer
-            case "info": return Theme.infoContainer
-            default: return Theme.mode === "dark" 
-                ? Qt.rgba(255, 255, 0, 0.2) 
-                : Qt.rgba(255, 255, 0, 0.4)
+            case "success": return Qt.rgba(Theme.success.r, Theme.success.g, Theme.success.b, 0.15)
+            case "warning": return Qt.rgba(Theme.warning.r, Theme.warning.g, Theme.warning.b, 0.15)
+            case "error": return Qt.rgba(Theme.error.r, Theme.error.g, Theme.error.b, 0.15)
+            case "info": return Qt.rgba(Theme.info.r, Theme.info.g, Theme.info.b, 0.15)
+            default: return Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.15)
         }
     }
-    
+
     readonly property color _textColor: {
         switch (variant) {
             case "success": return Theme.success
             case "warning": return Theme.warning
             case "error": return Theme.error
             case "info": return Theme.info
-            default: return Theme.onSurface
+            default: return Theme.text
         }
     }
-    
+
     color: _bgColor
-    radius: StyleVariables.radiusSm / 2
-    
-    implicitWidth: label.implicitWidth + StyleVariables.spacingXs * 2
-    implicitHeight: label.implicitHeight + 2
-    
+    radius: 4
+
+    implicitWidth: label.implicitWidth + 8
+    implicitHeight: label.implicitHeight + 4
+
     Text {
         id: label
         anchors.centerIn: parent
         color: root._textColor
-        font.pixelSize: StyleVariables.fontSizeSm
+        font.pixelSize: 14
+        font.letterSpacing: 0.25
     }
 }

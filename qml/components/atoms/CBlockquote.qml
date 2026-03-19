@@ -3,53 +3,65 @@ import QtQuick.Layouts
 import QmlComponents 1.0
 
 /**
- * CBlockquote.qml - Blockquote (mirrors _blockquote.scss)
- * Styled quote block with left border
+ * CBlockquote.qml - Material Design 3 blockquote
+ * Styled quote block with primary left border and tonal background
  */
 Rectangle {
     id: root
-    
+
     property string text: ""
     property string cite: ""
-    
-    color: Theme.mode === "dark" ? Qt.rgba(255, 255, 255, 0.03) : Qt.rgba(0, 0, 0, 0.02)
-    radius: StyleVariables.radiusSm
-    
+
+    // MD3 tonal primary background
+    color: Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.04)
+
+    // MD3 rounded right side, squared left (border covers left rounding)
+    radius: 8
+
     implicitWidth: parent ? parent.width : 400
-    implicitHeight: contentCol.implicitHeight + StyleVariables.spacingMd * 2
-    
-    // Left accent border
+    implicitHeight: contentCol.implicitHeight + 32
+
+    // Left accent border - 4px primary with radius 2
     Rectangle {
+        id: leftBorder
         width: 4
-        height: parent.height
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
         color: Theme.primary
         radius: 2
     }
-    
+
     ColumnLayout {
         id: contentCol
-        anchors.fill: parent
-        anchors.leftMargin: StyleVariables.spacingMd + 4
-        anchors.rightMargin: StyleVariables.spacingMd
-        anchors.topMargin: StyleVariables.spacingMd
-        anchors.bottomMargin: StyleVariables.spacingMd
-        spacing: StyleVariables.spacingSm
-        
+        anchors.left: leftBorder.right
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.leftMargin: 16
+        anchors.rightMargin: 16
+        anchors.topMargin: 16
+        anchors.bottomMargin: 16
+        spacing: 8
+
         Text {
             Layout.fillWidth: true
             text: root.text
-            color: Theme.onSurface
-            font.pixelSize: StyleVariables.fontSizeMd
+            color: Theme.text
+            font.pixelSize: 16
             font.italic: true
+            font.letterSpacing: 0.5
             wrapMode: Text.Wrap
             lineHeight: 1.6
+            lineHeightMode: Text.ProportionalHeight
         }
-        
+
         Text {
             Layout.fillWidth: true
             text: "— " + root.cite
-            color: Theme.onSurfaceVariant
-            font.pixelSize: StyleVariables.fontSizeSm
+            color: Theme.textSecondary
+            font.pixelSize: 14
+            font.letterSpacing: 0.25
             visible: root.cite !== ""
         }
     }

@@ -3,19 +3,19 @@ import QtQuick.Layouts
 import QmlComponents 1.0
 
 /**
- * CProse.qml - Long-form text container (mirrors _prose.scss)
- * Optimized typography for reading
+ * CProse.qml - Material Design 3 long-form text container
+ * Rich text container with proper line-height and typography
  */
 ColumnLayout {
     id: root
-    
+
     property string size: "md"           // sm, md, lg
     property real maxWidth: 680          // Optimal reading width
-    
+
     default property alias content: contentItem.data
-    
-    spacing: StyleVariables.spacingMd
-    
+
+    spacing: 16
+
     // Content container with max-width
     Item {
         id: contentItem
@@ -23,8 +23,8 @@ ColumnLayout {
         Layout.maximumWidth: root.maxWidth
         Layout.alignment: Qt.AlignHCenter
         implicitHeight: childrenRect.height
-        
-        // Apply prose styles to child Text elements
+
+        // Apply MD3 prose styles to child Text elements
         Component.onCompleted: {
             for (var i = 0; i < children.length; i++) {
                 var child = children[i]
@@ -34,21 +34,23 @@ ColumnLayout {
             }
         }
     }
-    
+
     function applyProseStyle(textItem) {
-        textItem.color = Theme.onSurface
+        textItem.color = Theme.text
         textItem.wrapMode = Text.Wrap
-        textItem.lineHeight = 1.7
-        
+        textItem.lineHeight = 1.6
+        textItem.lineHeightMode = Text.ProportionalHeight
+        textItem.font.letterSpacing = 0.5
+
         switch (size) {
             case "sm":
-                textItem.font.pixelSize = StyleVariables.fontSizeSm
+                textItem.font.pixelSize = 14
                 break
             case "lg":
-                textItem.font.pixelSize = StyleVariables.fontSizeLg
+                textItem.font.pixelSize = 18
                 break
             default:
-                textItem.font.pixelSize = StyleVariables.fontSizeMd
+                textItem.font.pixelSize = 16
         }
     }
 }
