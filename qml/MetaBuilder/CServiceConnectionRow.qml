@@ -13,7 +13,7 @@ ColumnLayout {
     property string url: ""
     property string connectionStatus: "unknown"
 
-    signal urlChanged(string newUrl)
+    signal urlEdited(string newUrl)
     signal testRequested()
 
     function statusColor(status) {
@@ -45,7 +45,7 @@ ColumnLayout {
             label: root.fieldLabel
             placeholderText: root.placeholder
             text: root.url
-            onTextChanged: root.urlChanged(text)
+            onTextChanged: root.urlEdited(text)
         }
 
         ColumnLayout {

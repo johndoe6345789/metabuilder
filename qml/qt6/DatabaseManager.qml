@@ -4,7 +4,7 @@ import QtQuick.Layouts
 import QmlComponents 1.0
 import "qmllib/dbal"
 import "qmllib/MetaBuilder"
-import "../MetaBuilder/DatabaseLogic.js" as Logic
+import "qmllib/MetaBuilder/DatabaseLogic.js" as Logic
 
 Rectangle {
     id: root

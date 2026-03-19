@@ -3,7 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QmlComponents 1.0
 import "qmllib/MetaBuilder"
-import "../MetaBuilder/SmtpLogic.js" as Logic
+import "qmllib/MetaBuilder/SmtpLogic.js" as Logic
 
 Rectangle {
     id: smtpEditor

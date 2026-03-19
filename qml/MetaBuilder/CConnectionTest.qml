@@ -49,7 +49,7 @@ ColumnLayout {
         placeholder: "http://localhost:8080"
         url: root.dbalUrl
         connectionStatus: root.dbalConnectionStatus
-        onUrlChanged: function(newUrl) { root.dbalUrl = newUrl }
+        onUrlEdited: function(newUrl) { root.dbalUrl = newUrl }
         onTestRequested: root.testDBALConnection()
     }
 
@@ -62,7 +62,7 @@ ColumnLayout {
         placeholder: "http://localhost:9090"
         url: root.mediaServiceUrl
         connectionStatus: root.mediaConnectionStatus
-        onUrlChanged: function(newUrl) { root.mediaServiceUrl = newUrl }
+        onUrlEdited: function(newUrl) { root.mediaServiceUrl = newUrl }
         onTestRequested: root.testMediaConnection()
     }
 }

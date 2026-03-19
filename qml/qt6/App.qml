@@ -5,7 +5,7 @@ import Qt.labs.settings 1.0
 import QmlComponents 1.0
 import "qmllib/dbal"
 import "qmllib/MetaBuilder"
-import "../MetaBuilder/AppLogic.js" as Logic
+import "qmllib/MetaBuilder/AppLogic.js" as Logic
 
 ApplicationWindow {
     id: appWindow

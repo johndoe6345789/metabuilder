@@ -4,7 +4,7 @@ import QtQuick.Layouts
 import QmlComponents 1.0
 import "qmllib/dbal"
 import "qmllib/MetaBuilder"
-import "../../qml/MetaBuilder/DashboardDBAL.js" as DBAL
+import "qmllib/MetaBuilder/DashboardDBAL.js" as DBAL
 
 Rectangle {
     id: dashRoot

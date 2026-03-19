@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import QmlComponents 1.0
 import "qmllib/dbal"
-import "../MetaBuilder"
+import "qmllib/MetaBuilder"
 
 Rectangle {
     id: root; color: "transparent"
