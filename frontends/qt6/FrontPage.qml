@@ -175,7 +175,7 @@ Rectangle {
                         variant: "body1"
                         text: "The universal platform for building data-driven applications."
                         Layout.alignment: Qt.AlignHCenter
-                        opacity: 0.5
+                        opacity: isDark ? 0.5 : 0.7
                         font.pixelSize: 16
                     }
 
@@ -183,7 +183,7 @@ Rectangle {
                         variant: "body2"
                         text: "95% JSON config \u00B7 5% infrastructure \u00B7 Desktop + Web + CLI"
                         Layout.alignment: Qt.AlignHCenter
-                        opacity: 0.3
+                        opacity: isDark ? 0.3 : 0.5
                         font.family: "monospace"
                         font.pixelSize: 13
                     }
@@ -254,7 +254,7 @@ Rectangle {
                                     font.family: "monospace"
                                     font.pixelSize: 10
                                     font.letterSpacing: 1.5
-                                    opacity: 0.35
+                                    opacity: isDark ? 0.3 : 0.55
                                 }
                             }
 
@@ -365,7 +365,7 @@ Rectangle {
                                         visible: modelData.level > appWindow.currentLevel
                                         text: "\uD83D\uDD12"
                                         font.pixelSize: 12
-                                        opacity: 0.3
+                                        opacity: isDark ? 0.3 : 0.5
                                     }
                                 }
 
@@ -374,7 +374,7 @@ Rectangle {
                                     text: modelData.desc
                                     wrapMode: Text.Wrap
                                     Layout.fillWidth: true
-                                    opacity: 0.45
+                                    opacity: isDark ? 0.45 : 0.65
                                     lineHeight: 1.4
                                     font.pixelSize: 12
                                 }
@@ -483,7 +483,7 @@ Rectangle {
                                         text: modelData.desc
                                         variant: "caption"
                                         font.pixelSize: 11
-                                        opacity: 0.4
+                                        opacity: isDark ? 0.4 : 0.6
                                     }
                                 }
                             }
@@ -640,7 +640,7 @@ Rectangle {
                                         text: modelData.user + " / " + modelData.pass
                                         font.pixelSize: 10
                                         font.family: "monospace"
-                                        opacity: 0.3
+                                        opacity: isDark ? 0.3 : 0.5
                                     }
                                 }
 
