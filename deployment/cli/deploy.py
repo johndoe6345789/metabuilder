@@ -6,7 +6,7 @@ import sys
 import time
 from cli.helpers import (
     COMPOSE_FILE, GREEN, RED, YELLOW, BLUE, NC,
-    docker_compose, log_err, log_warn, resolve_services, run,
+    docker_compose, log_err, log_warn, resolve_services, run as run_proc,
 )
 
 
@@ -29,14 +29,14 @@ def run_cmd(args: argparse.Namespace, config: dict) -> int:
     # Step 1: Build
     print(f"{YELLOW}[1/3] Building...{NC}")
     build_args = ["--no-cache"] if args.no_cache else []
-    result = run(docker_compose("build", *build_args, *services))
+    result = run_proc(docker_compose("build", *build_args, *services))
     if result.returncode != 0:
         log_err("Build failed")
         return 1
 
     # Step 2: Deploy
     print(f"\n{YELLOW}[2/3] Deploying...{NC}")
-    result = run(docker_compose("up", "-d", "--force-recreate", *services))
+    result = run_proc(docker_compose("up", "-d", "--force-recreate", *services))
     if result.returncode != 0:
         log_err("Deploy failed")
         return 1
