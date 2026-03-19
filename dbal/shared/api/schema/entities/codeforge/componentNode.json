@@ -1,0 +1,57 @@
+{
+  "entity": "ComponentNode",
+  "version": "1.0",
+  "description": "Visual component definition with props and child hierarchy",
+  "tenantId": true,
+  "fields": {
+    "id": {
+      "type": "uuid",
+      "primary": true,
+      "generated": true,
+      "description": "Unique component node identifier"
+    },
+    "name": {
+      "type": "string",
+      "required": true,
+      "max_length": 255,
+      "description": "Component display name"
+    },
+    "type": {
+      "type": "enum",
+      "required": true,
+      "values": ["atom", "molecule", "organism"],
+      "description": "Component classification tier"
+    },
+    "code": {
+      "type": "text",
+      "required": true,
+      "description": "Component source code"
+    },
+    "props": {
+      "type": "json",
+      "description": "Array of prop definitions [{name, type, required, defaultValue, description}]"
+    },
+    "metadata": {
+      "type": "json",
+      "description": "Additional component metadata"
+    },
+    "updatedAt": {
+      "type": "bigint",
+      "generated": true
+    }
+  },
+  "indexes": [
+    {
+      "fields": ["tenantId"]
+    },
+    {
+      "fields": ["type"]
+    }
+  ],
+  "acl": {
+    "create": { "user": true },
+    "read": { "self": true, "admin": true },
+    "update": { "self": true },
+    "delete": { "self": true }
+  }
+}

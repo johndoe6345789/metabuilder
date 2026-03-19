@@ -1,0 +1,69 @@
+{
+  "entity": "Settings",
+  "version": "1.0",
+  "description": "Application settings for a CodeForge user session",
+  "tenantId": true,
+  "fields": {
+    "id": {
+      "type": "string",
+      "primary": true,
+      "description": "Settings key (e.g. 'app')"
+    },
+    "autoSave": {
+      "type": "boolean",
+      "default": true,
+      "description": "Enable automatic file saving"
+    },
+    "autoSync": {
+      "type": "boolean",
+      "default": true,
+      "description": "Enable automatic DBAL synchronization"
+    },
+    "syncInterval": {
+      "type": "integer",
+      "default": 30000,
+      "description": "Sync interval in milliseconds"
+    },
+    "dbalApiUrl": {
+      "type": "string",
+      "default": "http://localhost:8080",
+      "description": "DBAL daemon API URL"
+    },
+    "useIndexedDB": {
+      "type": "boolean",
+      "default": true,
+      "description": "Enable IndexedDB client-side persistence"
+    },
+    "theme": {
+      "type": "enum",
+      "values": ["light", "dark", "system"],
+      "default": "light",
+      "description": "UI theme preference"
+    },
+    "locale": {
+      "type": "string",
+      "default": "en",
+      "max_length": 10,
+      "description": "UI locale (e.g. en, es)"
+    },
+    "createdAt": {
+      "type": "bigint",
+      "generated": true
+    },
+    "updatedAt": {
+      "type": "bigint",
+      "generated": true
+    }
+  },
+  "indexes": [
+    {
+      "fields": ["tenantId"]
+    }
+  ],
+  "acl": {
+    "create": { "user": true },
+    "read": { "self": true, "admin": true },
+    "update": { "self": true },
+    "delete": { "self": true }
+  }
+}
