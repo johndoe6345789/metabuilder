@@ -68,7 +68,12 @@ Rectangle {
         ColumnLayout {
             spacing: 16; width: 380
             CAlert { Layout.fillWidth: true; severity: "error"; text: deleteIndex >= 0 && deleteIndex < users.length ? "Are you sure you want to delete \"" + users[deleteIndex].username + "\"? This action cannot be undone." : "Confirm deletion?" }
-            FlexRow { Layout.fillWidth: true; spacing: 8; Item { Layout.fillWidth: true }; CButton { text: "Cancel"; variant: "ghost"; onClicked: { deleteDialogOpen = false; deleteIndex = -1 } }; CButton { text: "Delete"; variant: "danger"; onClicked: confirmDelete() } }
+            FlexRow {
+                Layout.fillWidth: true; spacing: 8
+                Item { Layout.fillWidth: true }
+                CButton { text: "Cancel"; variant: "ghost"; onClicked: { deleteDialogOpen = false; deleteIndex = -1 } }
+                CButton { text: "Delete"; variant: "danger"; onClicked: confirmDelete() }
+            }
         }
     }
 }

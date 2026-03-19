@@ -167,9 +167,16 @@ MediaRadioPlaylist 1.0 MediaRadioPlaylist.qml
 CNotificationIconBadge 1.0 CNotificationIconBadge.qml
 CComponentPropsList 1.0 CComponentPropsList.qml
 MediaJobRow 1.0 MediaJobRow.qml
+CCanvasInteractionArea 1.0 CCanvasInteractionArea.qml
+CCanvasViewport 1.0 CCanvasViewport.qml
+CNotificationContent 1.0 CNotificationContent.qml
+CBackendConnectionSection 1.0 CBackendConnectionSection.qml
+CJobProgressBar 1.0 CJobProgressBar.qml
 CLevelTagFlow 1.0 CLevelTagFlow.qml
 CVersionPill 1.0 CVersionPill.qml
 CEncryptionSelector 1.0 CEncryptionSelector.qml
 CFrontPageFooter 1.0 CFrontPageFooter.qml
 CDatabaseEnvConfig 1.0 CDatabaseEnvConfig.qml
 CSettingsAbout 1.0 CSettingsAbout.qml
+CProfilePasswordCard 1.0 CProfilePasswordCard.qml
+CProfileConnectedAccounts 1.0 CProfileConnectedAccounts.qml

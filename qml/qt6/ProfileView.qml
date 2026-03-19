@@ -25,9 +25,7 @@ Rectangle {
         saving = true; saveStatus = ""
         var data = profileForm.getData()
         userDisplayName = data.displayName; userEmail = data.email; userBio = data.bio
-        PDBAL.saveProfile(dbal, appWindow.currentUser, data, function(ok, error) {
-            saving = false; saveStatus = ok ? "saved" : "error"
-        })
+        PDBAL.saveProfile(dbal, appWindow.currentUser, data, function(ok) { saving = false; saveStatus = ok ? "saved" : "error" })
     }
 
     Component.onCompleted: {
@@ -68,48 +66,14 @@ Rectangle {
             CProfileForm { id: profileForm; profile: ({ displayName: profileRoot.userDisplayName, email: profileRoot.userEmail, bio: profileRoot.userBio }); isDark: profileRoot.isDark }
             Item { Layout.preferredHeight: 16 }
 
-            CCard {
-                Layout.fillWidth: true; Layout.leftMargin: 24; Layout.rightMargin: 24; variant: "filled"
-                CText { Layout.fillWidth: true; variant: "h4"; text: "Change Password" }
-                Item { Layout.preferredHeight: 8 }
-                CDivider { Layout.fillWidth: true }
-                Item { Layout.preferredHeight: 14 }
-                Repeater {
-                    model: profileConfig ? profileConfig.passwordFields : []
-                    delegate: ColumnLayout {
-                        Layout.fillWidth: true; spacing: 0
-                        CTextField { Layout.fillWidth: true; label: modelData.label; placeholderText: modelData.placeholder; echoMode: TextInput.Password; text: passwords[modelData.key]; onTextChanged: { var p = passwords; p[modelData.key] = text; passwords = p } }
-                        Item { Layout.preferredHeight: 14 }
-                    }
-                }
-                CAlert { Layout.fillWidth: true; severity: "info"; text: "Passwords must be at least 8 characters with uppercase, lowercase, and a number."; visible: passwords["new"].length > 0 }
-                CAlert { Layout.fillWidth: true; severity: "error"; text: "Passwords do not match."; visible: passwords["confirm"].length > 0 && passwords["new"] !== passwords["confirm"] }
+            CProfilePasswordCard {
+                passwordFields: profileConfig ? profileConfig.passwordFields : []
+                passwords: profileRoot.passwords
+                onPasswordChanged: function(key, value) { var p = passwords; p[key] = value; passwords = p }
             }
             Item { Layout.preferredHeight: 16 }
 
-            CCard {
-                Layout.fillWidth: true; Layout.leftMargin: 24; Layout.rightMargin: 24; variant: "filled"
-                CText { Layout.fillWidth: true; variant: "h4"; text: "Connected Accounts" }
-                Item { Layout.preferredHeight: 8 }
-                CDivider { Layout.fillWidth: true }
-                Item { Layout.preferredHeight: 8 }
-                Repeater {
-                    model: profileConfig ? profileConfig.connectedAccounts : []
-                    delegate: ColumnLayout {
-                        Layout.fillWidth: true; spacing: 0
-                        CListItem { Layout.fillWidth: true; title: modelData.service; subtitle: modelData.linked ? "Linked as @" + appWindow.currentUser : "Not linked"; leadingIcon: modelData.icon }
-                        FlexRow {
-                            Layout.fillWidth: true; Layout.leftMargin: 12; spacing: 8
-                            CStatusBadge { status: modelData.statusType; text: modelData.statusText }
-                            Item { Layout.fillWidth: true }
-                            CButton { text: modelData.linked ? (modelData.unlinkLabel || "Unlink") : (modelData.linkLabel || "Link Account"); variant: modelData.linked ? "ghost" : "primary"; size: "sm" }
-                        }
-                        Item { Layout.preferredHeight: 8; visible: index < (profileConfig.connectedAccounts.length - 1) }
-                        CDivider { Layout.fillWidth: true; visible: index < (profileConfig.connectedAccounts.length - 1) }
-                        Item { Layout.preferredHeight: 8; visible: index < (profileConfig.connectedAccounts.length - 1) }
-                    }
-                }
-            }
+            CProfileConnectedAccounts { accounts: profileConfig ? profileConfig.connectedAccounts : []; currentUser: appWindow.currentUser }
             Item { Layout.preferredHeight: 16 }
 
             FlexRow {

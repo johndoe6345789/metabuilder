@@ -35,7 +35,12 @@ Rectangle {
         ColumnLayout {
             width: parent.width; spacing: 20
 
-            FlexRow { Layout.fillWidth: true; spacing: 12; CText { variant: "h3"; text: "Theme Editor" }; Item { Layout.fillWidth: true }; CBadge { text: hasUnsavedChanges ? "Unsaved changes" : "Synced" } }
+            FlexRow {
+                Layout.fillWidth: true; spacing: 12
+                CText { variant: "h3"; text: "Theme Editor" }
+                Item { Layout.fillWidth: true }
+                CBadge { text: hasUnsavedChanges ? "Unsaved changes" : "Synced" }
+            }
             CText { variant: "body2"; text: "Customize the look and feel of your MetaBuilder workspace. Select a preset theme or fine-tune individual color tokens."; Layout.fillWidth: true }
 
             ThemePresetGrid { selectedTheme: root.selectedTheme; radiusMedium: root.radiusMedium; themeDefinitions: root.themeDefinitions; onThemeSelected: function(name) { root.selectedTheme = name; hasUnsavedChanges = true } }
@@ -64,7 +69,12 @@ Rectangle {
                 fontFamily: root.fontFamily; baseFontSize: root.baseFontSize; radiusSmall: root.radiusSmall; radiusMedium: root.radiusMedium
             }
 
-            FlexRow { Layout.fillWidth: true; spacing: 12; CButton { text: "Reset to Default"; variant: "ghost"; onClicked: TELogic.resetToDefaults(root, Theme) }; Item { Layout.fillWidth: true }; CButton { text: "Apply Theme"; variant: "primary"; onClicked: { hasUnsavedChanges = false; feedbackAlert.visible = true; feedbackTimer.restart() } } }
+            FlexRow {
+                Layout.fillWidth: true; spacing: 12
+                CButton { text: "Reset to Default"; variant: "ghost"; onClicked: TELogic.resetToDefaults(root, Theme) }
+                Item { Layout.fillWidth: true }
+                CButton { text: "Apply Theme"; variant: "primary"; onClicked: { hasUnsavedChanges = false; feedbackAlert.visible = true; feedbackTimer.restart() } }
+            }
             CAlert { id: feedbackAlert; Layout.fillWidth: true; severity: "success"; text: "Theme applied successfully"; visible: false }
             Item { Layout.preferredHeight: 20 }
         }

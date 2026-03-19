@@ -62,7 +62,13 @@ Rectangle {
         }
 
         CDivider { Layout.fillWidth: true; Layout.topMargin: 16 }
-        FlexRow { Layout.fillWidth: true; Layout.topMargin: 12; spacing: 12; CButton { text: "Save Schema"; variant: "primary"; size: "md" }; CButton { text: "Export JSON"; variant: "secondary"; size: "md" }; Item { Layout.fillWidth: true }; CButton { text: "Delete Schema"; variant: "danger"; size: "md"; enabled: schemas.length > 1; onClicked: deleteSchema() } }
+        FlexRow {
+            Layout.fillWidth: true; Layout.topMargin: 12; spacing: 12
+            CButton { text: "Save Schema"; variant: "primary"; size: "md" }
+            CButton { text: "Export JSON"; variant: "secondary"; size: "md" }
+            Item { Layout.fillWidth: true }
+            CButton { text: "Delete Schema"; variant: "danger"; size: "md"; enabled: schemas.length > 1; onClicked: deleteSchema() }
+        }
     }
 
     CDialog {
@@ -71,7 +77,12 @@ Rectangle {
             spacing: 16; width: 360
             CTextField { label: "Schema Name"; placeholderText: "e.g. Invoice"; text: newSchemaName; Layout.fillWidth: true; onTextChanged: newSchemaName = text }
             CTextField { label: "Description"; placeholderText: "Brief description of this schema"; text: newSchemaDescription; Layout.fillWidth: true; onTextChanged: newSchemaDescription = text }
-            FlexRow { Layout.fillWidth: true; spacing: 12; Item { Layout.fillWidth: true }; CButton { text: "Cancel"; variant: "ghost"; onClicked: { newSchemaName = ""; newSchemaDescription = ""; createSchemaDialogOpen = false } }; CButton { text: "Create"; variant: "primary"; enabled: newSchemaName.trim() !== ""; onClicked: addSchema() } }
+            FlexRow {
+                Layout.fillWidth: true; spacing: 12
+                Item { Layout.fillWidth: true }
+                CButton { text: "Cancel"; variant: "ghost"; onClicked: { newSchemaName = ""; newSchemaDescription = ""; createSchemaDialogOpen = false } }
+                CButton { text: "Create"; variant: "primary"; enabled: newSchemaName.trim() !== ""; onClicked: addSchema() }
+            }
         }
     }
 
@@ -80,11 +91,20 @@ Rectangle {
         ColumnLayout {
             spacing: 14; width: 360
             CTextField { label: "Field Name"; placeholderText: "e.g. quantity"; text: newFieldName; Layout.fillWidth: true; onTextChanged: newFieldName = text }
-            ColumnLayout { Layout.fillWidth: true; spacing: 4; CText { variant: "caption"; text: "Type" }; CSelect { model: fieldTypes; currentIndex: fieldTypes.indexOf(newFieldType); Layout.fillWidth: true; onCurrentIndexChanged: newFieldType = fieldTypes[currentIndex] } }
+            ColumnLayout {
+                Layout.fillWidth: true; spacing: 4
+                CText { variant: "caption"; text: "Type" }
+                CSelect { model: fieldTypes; currentIndex: fieldTypes.indexOf(newFieldType); Layout.fillWidth: true; onCurrentIndexChanged: newFieldType = fieldTypes[currentIndex] }
+            }
             CSwitch { text: "Required"; checked: newFieldRequired; onCheckedChanged: newFieldRequired = checked }
             CTextField { label: "Default Value"; placeholderText: "Optional default"; text: newFieldDefault; Layout.fillWidth: true; onTextChanged: newFieldDefault = text }
             CTextField { label: "Description"; placeholderText: "What this field represents"; text: newFieldDescription; Layout.fillWidth: true; onTextChanged: newFieldDescription = text }
-            FlexRow { Layout.fillWidth: true; spacing: 12; Item { Layout.fillWidth: true }; CButton { text: "Cancel"; variant: "ghost"; onClicked: { newFieldName = ""; newFieldType = "string"; newFieldRequired = false; newFieldDefault = ""; newFieldDescription = ""; addFieldDialogOpen = false } }; CButton { text: "Add Field"; variant: "primary"; enabled: newFieldName.trim() !== ""; onClicked: addField() } }
+            FlexRow {
+                Layout.fillWidth: true; spacing: 12
+                Item { Layout.fillWidth: true }
+                CButton { text: "Cancel"; variant: "ghost"; onClicked: { newFieldName = ""; newFieldType = "string"; newFieldRequired = false; newFieldDefault = ""; newFieldDescription = ""; addFieldDialogOpen = false } }
+                CButton { text: "Add Field"; variant: "primary"; enabled: newFieldName.trim() !== ""; onClicked: addField() }
+            }
         }
     }
 }

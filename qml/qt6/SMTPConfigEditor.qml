@@ -9,34 +9,17 @@ Rectangle {
     id: smtpEditor
     color: "transparent"
 
-    property string smtpHost: "smtp.example.com"
-    property string smtpPort: "587"
-    property string smtpUsername: ""
-    property string smtpPassword: ""
-    property int encryptionIndex: 1
-    property var encryptionOptions: []
-    property string fromName: "MetaBuilder"
-    property string fromEmail: "noreply@example.com"
-    property string connectionStatus: "untested"
-    property string lastTestResult: ""
-    property string lastTestTime: ""
-    property string testRecipient: ""
-    property string testSubject: "MetaBuilder SMTP Test"
-    property string testBody: "This is a test email from MetaBuilder."
-    property bool sendingTest: false
-    property int selectedTemplateIndex: -1
-    property var emailTemplates: []
-    property string editTemplateName: ""
-    property string editTemplateSubject: ""
-    property string editTemplateBody: ""
+    property string smtpHost: "smtp.example.com"; property string smtpPort: "587"
+    property string smtpUsername: ""; property string smtpPassword: ""
+    property int encryptionIndex: 1; property var encryptionOptions: []
+    property string fromName: "MetaBuilder"; property string fromEmail: "noreply@example.com"
+    property string connectionStatus: "untested"; property string lastTestResult: ""; property string lastTestTime: ""
+    property string testRecipient: ""; property string testSubject: "MetaBuilder SMTP Test"
+    property string testBody: "This is a test email from MetaBuilder."; property bool sendingTest: false
+    property int selectedTemplateIndex: -1; property var emailTemplates: []
+    property string editTemplateName: ""; property string editTemplateSubject: ""; property string editTemplateBody: ""
     property bool isDirty: false
-
-    function loadSeedData() {
-        var xhr = new XMLHttpRequest()
-        xhr.open("GET", Qt.resolvedUrl("config/smtp-templates.json"), false); xhr.send()
-        if (xhr.status === 200) { var d = JSON.parse(xhr.responseText); emailTemplates = d.emailTemplates; encryptionOptions = d.encryptionOptions }
-    }
-
+    function loadSeedData() { var xhr = new XMLHttpRequest(); xhr.open("GET", Qt.resolvedUrl("config/smtp-templates.json"), false); xhr.send(); if (xhr.status === 200) { var d = JSON.parse(xhr.responseText); emailTemplates = d.emailTemplates; encryptionOptions = d.encryptionOptions } }
     Component.onCompleted: loadSeedData()
 
     Timer { id: connectionTimer; interval: 1500; repeat: false; onTriggered: Logic.onConnectionTestComplete(smtpEditor) }
