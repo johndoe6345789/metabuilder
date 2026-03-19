@@ -85,12 +85,15 @@ Rectangle {
             width: parent.width
             spacing: 0
 
+            // Top breathing room
+            Item { Layout.preferredHeight: 8 }
+
             // ════════════════════════════════════════════════════════
             // HERO
             // ════════════════════════════════════════════════════════
             Rectangle {
                 Layout.fillWidth: true
-                Layout.preferredHeight: 380
+                Layout.preferredHeight: 400
                 color: "transparent"
 
                 // Blue gradient wash
@@ -104,7 +107,9 @@ Rectangle {
                 }
 
                 ColumnLayout {
-                    anchors.centerIn: parent
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.verticalCenterOffset: 16
                     width: Math.min(parent.width - 80, 720)
                     spacing: 16
 

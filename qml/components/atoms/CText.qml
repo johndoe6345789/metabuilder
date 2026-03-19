@@ -73,9 +73,9 @@ Text {
 
     font.family: mono ? Theme.fontFamilyMono : Theme.fontFamily
 
-    // Only body1 gets expanded line height; everything else stays compact
+    // Only body1 gets expanded line height
     lineHeight: variant === "body1" ? 1.4 : 1.0
-    lineHeightMode: variant === "body1" ? Text.ProportionalHeight : Text.FixedHeight
+    lineHeightMode: Text.ProportionalHeight
 
     // Default to no wrap — callers opt in with wrapMode: Text.Wrap
     wrapMode: truncate ? Text.NoWrap : Text.NoWrap
