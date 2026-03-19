@@ -4,6 +4,9 @@
 Scans QML files, C++ sources, SVG/audio assets, and package metadata to produce
 a complete CMakeLists.txt for the Qt6 DBAL Observatory frontend.
 
+Supports extracted component layout where QML files live in ../../qml/ and are
+referenced via relative paths with QT_RESOURCE_ALIAS for correct QRC URIs.
+
 Usage:
     python3 generate_cmake.py                     # Write CMakeLists.txt
     python3 generate_cmake.py --dry-run            # Print without writing
@@ -12,11 +15,11 @@ Usage:
 """
 
 import argparse
-import glob
 import json
 import os
 import sys
 from pathlib import Path
+from typing import Optional
 
 
 def load_config(config_path: str) -> dict:
@@ -29,64 +32,83 @@ def load_config(config_path: str) -> dict:
         return json.load(f)
 
 
-def find_root_qml_files(root_dir: Path) -> list[tuple[str, str]]:
-    """Find all *.qml and *.js files in the project root and extracted qml/qt6/ directory.
+def _scan_dir(directory: str, extensions: tuple[str, ...]) -> list[str]:
+    """Walk a directory (following symlinks) and return matching files."""
+    result = []
+    for dirpath, _dirnames, filenames in os.walk(directory, followlinks=True):
+        for fn in filenames:
+            if fn.endswith(extensions):
+                result.append(os.path.join(dirpath, fn))
+    return sorted(result)
 
-    Returns list of (source_path, qrc_alias) tuples. Files in root_dir use just their
-    filename; files in ../../qml/qt6/ use relative paths with a QT_RESOURCE_ALIAS.
+
+def find_root_qml_files(root_dir: Path) -> list[tuple[str, Optional[str]]]:
+    """Find root QML/JS files. Returns (rel_path, alias_or_None) tuples.
+
+    Checks both the local directory and ../../qml/qt6/ for extracted files.
+    Extracted files get a QT_RESOURCE_ALIAS so their QRC path matches the original.
     """
     result = []
-    # Local root files
+    # Local files
     for fn in sorted(os.listdir(str(root_dir))):
-        if fn.endswith((".qml", ".js")):
+        if fn.endswith((".qml", ".js")) and os.path.isfile(root_dir / fn):
             result.append((fn, None))
 
     # Extracted files in ../../qml/qt6/
+    local_names = {t[0] for t in result}
     extracted_dir = root_dir.parent.parent / "qml" / "qt6"
     if extracted_dir.exists():
-        local_names = {t[0] for t in result}
         for fn in sorted(os.listdir(str(extracted_dir))):
             if fn.endswith((".qml", ".js")) and fn not in local_names:
-                rel_path = os.path.relpath(extracted_dir / fn, root_dir)
-                result.append((rel_path, fn))
+                rel = os.path.relpath(extracted_dir / fn, root_dir)
+                result.append((rel, fn))
     return result
 
 
-def find_qmllib_files(root_dir: Path) -> dict[str, list[str]]:
-    """Find all *.qml and *.js files and qmldir files in qmllib/ subdirectories.
+def find_qmllib_files(root_dir: Path) -> dict[str, list[tuple[str, Optional[str]]]]:
+    """Find qmllib QML/JS and qmldir files. Returns dict with 'qml' and 'resources'.
 
-    Follows symlinks so that extracted component directories (e.g., qmllib/MetaBuilder
-    symlinked to ../../qml/MetaBuilder) are included with qmllib-relative paths.
-
-    Returns a dict with 'qml' (list of QML/JS paths) and 'resources' (qmldir paths).
+    Searches local qmllib/ (following symlinks) and extracted ../../qml/{module}/
+    directories. Extracted files get QT_RESOURCE_ALIAS for correct QRC URIs.
     """
-    result = {"qml": [], "resources": []}
+    result: dict[str, list[tuple[str, Optional[str]]]] = {"qml": [], "resources": []}
 
-    # Search both local qmllib/ and extracted ../../qml/{MetaBuilder,Material,dbal}
-    search_dirs = []
+    # Mapping of (real_directory, qrc_prefix)
+    dirs_to_scan: list[tuple[Path, str]] = []
+
+    # Local qmllib/ with symlinks
     qmllib_dir = root_dir / "qmllib"
     if qmllib_dir.exists():
-        search_dirs.append((qmllib_dir, "qmllib"))
+        dirs_to_scan.append((qmllib_dir, "qmllib"))
 
+    # Extracted ../../qml/{MetaBuilder,Material,dbal}
     extracted_qml = root_dir.parent.parent / "qml"
     if extracted_qml.exists():
-        for subdir in ["MetaBuilder", "Material", "dbal"]:
-            candidate = extracted_qml / subdir
-            if candidate.exists():
-                search_dirs.append((candidate, f"qmllib/{subdir}"))
+        for module in ["MetaBuilder", "Material", "dbal"]:
+            candidate = extracted_qml / module
+            if candidate.exists() and not (qmllib_dir / module).exists():
+                dirs_to_scan.append((candidate, f"qmllib/{module}"))
 
-    for search_dir, prefix in search_dirs:
-        for dirpath, _dirnames, filenames in os.walk(str(search_dir), followlinks=True):
+    for scan_dir, prefix in dirs_to_scan:
+        for dirpath, _dirnames, filenames in os.walk(str(scan_dir), followlinks=True):
             for fn in filenames:
                 full = os.path.join(dirpath, fn)
-                # Compute path relative to search_dir, then prepend prefix
-                rel_to_search = os.path.relpath(full, str(search_dir))
-                aliased = f"{prefix}/{rel_to_search}" if prefix == f"qmllib/{search_dir.name}" else os.path.relpath(full, str(root_dir))
-                real_path = os.path.relpath(full, str(root_dir))
+                rel_to_root = os.path.relpath(full, str(root_dir))
+                # Compute the alias: prefix + path relative to scan_dir
+                rel_to_scan = os.path.relpath(full, str(scan_dir))
+                alias_path = f"{prefix}/{rel_to_scan}"
+
+                # Only need alias if real path differs from desired QRC path
+                needs_alias = rel_to_root != alias_path
+
                 if fn.endswith((".qml", ".js")):
-                    result["qml"].append((real_path, f"{prefix}/{rel_to_search}"))
+                    result["qml"].append((rel_to_root, alias_path if needs_alias else None))
                 elif fn == "qmldir":
-                    result["resources"].append((real_path, f"{prefix}/{rel_to_search}"))
+                    result["resources"].append((rel_to_root, alias_path if needs_alias else None))
+
+    # Sort by alias (or real path)
+    result["qml"].sort(key=lambda t: t[1] or t[0])
+    result["resources"].sort(key=lambda t: t[1] or t[0])
     return result
 
 
@@ -99,6 +121,19 @@ def find_package_qml_files(root_dir: Path) -> list[str]:
         list(packages_dir.rglob("*.qml")) + list(packages_dir.rglob("*.js"))
     )
     return [str(f.relative_to(root_dir)) for f in files]
+
+
+def find_config_files(root_dir: Path) -> dict[str, list[str]]:
+    """Find config/ files: JS goes into QML_FILES, JSON into RESOURCES."""
+    config_dir = root_dir / "config"
+    result = {"qml": [], "resources": []}
+    if not config_dir.exists():
+        return result
+    for f in sorted(config_dir.rglob("*.js")):
+        result["qml"].append(str(f.relative_to(root_dir)))
+    for f in sorted(config_dir.rglob("*.json")):
+        result["resources"].append(str(f.relative_to(root_dir)))
+    return result
 
 
 def load_package_metadata(root_dir: Path) -> list[dict]:
@@ -133,19 +168,6 @@ def find_audio_assets(root_dir: Path) -> list[str]:
     return [str(f.relative_to(root_dir)) for f in files if f.is_file()]
 
 
-def find_config_files(root_dir: Path) -> dict[str, list[str]]:
-    """Find config/ files: JS goes into QML_FILES, JSON into RESOURCES."""
-    config_dir = root_dir / "config"
-    result = {"qml": [], "resources": []}
-    if not config_dir.exists():
-        return result
-    for f in sorted(config_dir.rglob("*.js")):
-        result["qml"].append(str(f.relative_to(root_dir)))
-    for f in sorted(config_dir.rglob("*.json")):
-        result["resources"].append(str(f.relative_to(root_dir)))
-    return result
-
-
 def find_cpp_sources(root_dir: Path) -> dict[str, list[str]]:
     """Find all *.cpp and *.h files in src/."""
     src_dir = root_dir / "src"
@@ -159,12 +181,6 @@ def find_cpp_sources(root_dir: Path) -> dict[str, list[str]]:
         str(f.relative_to(root_dir)) for f in src_dir.rglob("*.h")
     )
     return result
-
-
-def indent_list(items: list[str], spaces: int = 8) -> str:
-    """Format a list of file paths as indented CMake entries."""
-    prefix = " " * spaces
-    return "\n".join(f"{prefix}{item}" for item in items)
 
 
 def generate_cmake(config: dict, root_dir: Path) -> str:
@@ -187,35 +203,44 @@ def generate_cmake(config: dict, root_dir: Path) -> str:
     packages_meta = load_package_metadata(root_dir)
 
     # Build Qt components string
-    qt_components = " ".join(qt["components"])
-
-    # Conditional components from features
     extra_components = []
     if features.get("qt_multimedia"):
         extra_components.append("Multimedia")
-
     all_components = qt["components"] + extra_components
     qt_components_str = " ".join(all_components)
 
-    # Build source files list (main.cpp + src/*.cpp)
-    source_files = ["main.cpp"]
-    source_files.extend(cpp_sources["cpp"])
+    # Build source files list
+    source_files = ["main.cpp"] + cpp_sources["cpp"]
 
-    # Build QML files list: root QML + qmllib QML + package QML + config JS
-    all_qml_files = root_qml + qmllib["qml"] + package_qml + config_files["qml"]
+    # Collect all QML files: (path, alias_or_None)
+    all_qml: list[tuple[str, Optional[str]]] = []
+    all_qml.extend(root_qml)
+    all_qml.extend(qmllib["qml"])
+    all_qml.extend((p, None) for p in package_qml)
+    all_qml.extend((p, None) for p in config_files["qml"])
 
-    # Build RESOURCES list: audio + config JSON + qmllib resources (qmldir files)
-    resource_files = audio_assets + config_files["resources"] + qmllib["resources"]
+    # Collect all resource files: (path, alias_or_None)
+    all_res: list[tuple[str, Optional[str]]] = []
+    all_res.extend((p, None) for p in audio_assets)
+    all_res.extend((p, None) for p in config_files["resources"])
+    all_res.extend(qmllib["resources"])
 
-    # Build compile definitions
-    defs_lines = []
-    for key, value in compile_defs.items():
-        defs_lines.append(f'target_compile_definitions({proj["executable"]} PRIVATE {key}="{value}")')
+    # Separate files needing aliases
+    aliased_files = [(path, alias) for path, alias in all_qml + all_res if alias]
 
-    # Build link libraries
+    # Total counts for header
+    total_qml = len(all_qml)
+
+    # Compile definitions
+    defs_lines = [
+        f'target_compile_definitions({proj["executable"]} PRIVATE {k}="{v}")'
+        for k, v in compile_defs.items()
+    ]
+
+    # Link libraries
     link_libs = " ".join(f"Qt6::{c}" for c in all_components)
 
-    # Optional feature blocks
+    # Feature blocks
     feature_blocks = []
     if features.get("libopenmpt"):
         feature_blocks.append(f"""
@@ -235,10 +260,10 @@ target_link_libraries({proj["executable"]} PRIVATE ${{OPENMPT_LIBRARIES}})""")
                 f'v{meta.get("version", "?")} - {meta.get("name", "")}'
             )
 
-    # Assemble the CMakeLists.txt
+    # ── Assemble CMakeLists.txt ───────────────────────────────────────
     lines = []
     lines.append("# AUTO-GENERATED by generate_cmake.py — do not edit manually")
-    lines.append(f"# Generated from cmake_config.json | {len(all_qml_files)} QML files, "
+    lines.append(f"# Generated from cmake_config.json | {total_qml} QML files, "
                  f"{len(source_files)} C++ sources, {len(svg_assets)} SVGs, "
                  f"{len(audio_assets)} audio assets")
     if pkg_comment_lines:
@@ -277,21 +302,28 @@ target_link_libraries({proj["executable"]} PRIVATE ${{OPENMPT_LIBRARIES}})""")
     if defs_lines:
         lines.append("")
 
+    # Set QT_RESOURCE_ALIAS for external files (before qt_add_qml_module)
+    if aliased_files:
+        lines.append("# Map extracted files to their original QRC paths")
+        for path, alias in aliased_files:
+            lines.append(f'set_source_files_properties({path} PROPERTIES QT_RESOURCE_ALIAS {alias})')
+        lines.append("")
+
     # qt_add_qml_module
     lines.append(f"qt_add_qml_module({proj['executable']}")
     lines.append(f"    URI {qml['uri']}")
     lines.append(f"    VERSION {qml['version']}")
     lines.append("    QML_FILES")
-    for qf in all_qml_files:
-        lines.append(f"        {qf}")
-    if resource_files:
+    for path, _alias in all_qml:
+        lines.append(f"        {path}")
+    if all_res:
         lines.append("    RESOURCES")
-        for rf in resource_files:
-            lines.append(f"        {rf}")
+        for path, _alias in all_res:
+            lines.append(f"        {path}")
     lines.append(")")
     lines.append("")
 
-    # SVG assets via file(GLOB) + qt_add_resources
+    # SVG assets
     if svg_assets:
         lines.append("# SVG assets")
         lines.append(f"file(GLOB SVG_ASSETS RELATIVE ${{CMAKE_CURRENT_SOURCE_DIR}} assets/svg/*.svg)")
@@ -379,7 +411,7 @@ def main():
     else:
         root_dir = Path(__file__).parent.resolve()
 
-    # Resolve config path relative to root if not absolute
+    # Resolve config path
     config_path = Path(args.config)
     if not config_path.is_absolute():
         config_path = root_dir / config_path
@@ -391,7 +423,7 @@ def main():
         print(content)
         return
 
-    # Resolve output path relative to root if not absolute
+    # Resolve output path
     output_path = Path(args.output)
     if not output_path.is_absolute():
         output_path = root_dir / output_path
@@ -409,7 +441,7 @@ def main():
     packages_meta = load_package_metadata(root_dir)
 
     total_qml = len(root_qml) + len(qmllib["qml"]) + len(package_qml)
-    total_cpp = len(cpp_sources["cpp"]) + 1  # +1 for main.cpp
+    total_cpp = len(cpp_sources["cpp"]) + 1
 
     print(f"Generated {output_path}")
     print(f"  QML files:    {total_qml} ({len(root_qml)} root, {len(qmllib['qml'])} qmllib, {len(package_qml)} packages)")
@@ -418,6 +450,10 @@ def main():
     print(f"  SVG assets:   {len(svg_assets)}")
     print(f"  Audio assets: {len(audio_assets)}")
     print(f"  Packages:     {len(packages_meta)} with metadata.json")
+    aliased = len(root_qml) + len(qmllib["qml"]) + len(qmllib["resources"])
+    aliased_count = sum(1 for _, a in root_qml if a) + sum(1 for _, a in qmllib["qml"] if a) + sum(1 for _, a in qmllib["resources"] if a)
+    if aliased_count:
+        print(f"  Aliased:      {aliased_count} files with QT_RESOURCE_ALIAS (extracted layout)")
 
 
 if __name__ == "__main__":
