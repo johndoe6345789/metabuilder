@@ -80,17 +80,15 @@ RUN GO_VERSION=1.22.6 && \
 # Set LIBGL_ALWAYS_SOFTWARE=1 to force software rendering at runtime.
 RUN for i in 1 2 3 4 5; do \
       apt-get update && apt-get install -y --no-install-recommends \
-        # Software OpenGL (Mesa llvmpipe)
-        libgl1-mesa-glx \
+        libgl1 \
+        libglx-mesa0 \
         libgl1-mesa-dri \
         mesa-utils \
-        # Software Vulkan (llvmpipe)
         mesa-vulkan-drivers \
         vulkan-tools \
-        # EGL / GLES software
-        libegl1-mesa \
-        libgles2-mesa \
-        # X virtual framebuffer (for headless window creation)
+        libegl1 \
+        libegl-mesa0 \
+        libgles2 \
         xvfb \
         x11-utils \
       && break \
