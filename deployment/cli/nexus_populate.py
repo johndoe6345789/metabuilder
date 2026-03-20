@@ -3,7 +3,7 @@
 import argparse
 from cli.helpers import (
     BLUE, GREEN, NC,
-    docker_image_exists, log_err, log_info, log_ok, log_warn, run,
+    docker_image_exists, log_err, log_info, log_ok, log_warn, run as run_proc,
 )
 
 
@@ -13,8 +13,8 @@ def run_cmd(args: argparse.Namespace, config: dict) -> int:
     nexus_user, nexus_pass = "admin", "nexus"
 
     log_info(f"Logging in to {nexus}...")
-    run(["docker", "login", nexus, "-u", nexus_user, "--password-stdin"],
-        input=nexus_pass.encode())
+    run_proc(["docker", "login", nexus, "-u", nexus_user, "--password-stdin"],
+             input=nexus_pass.encode())
 
     images_def = config["definitions"]["nexus_images"]
 
@@ -31,11 +31,11 @@ def run_cmd(args: argparse.Namespace, config: dict) -> int:
         dst_latest = f"{nexus}/{slug}/{name}:latest"
 
         log_info(f"Pushing {name} ({size})...")
-        run(["docker", "tag", src, dst_main])
-        run(["docker", "tag", src, dst_latest])
+        run_proc(["docker", "tag", src, dst_main])
+        run_proc(["docker", "tag", src, dst_latest])
 
-        r1 = run(["docker", "push", dst_main])
-        r2 = run(["docker", "push", dst_latest])
+        r1 = run_proc(["docker", "push", dst_main])
+        r2 = run_proc(["docker", "push", dst_latest])
         if r1.returncode == 0 and r2.returncode == 0:
             log_ok(f"  {name} -> :main + :latest")
             pushed += 1
