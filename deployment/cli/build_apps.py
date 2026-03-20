@@ -4,7 +4,7 @@ import argparse
 import time
 from cli.helpers import (
     BASE_DIR, PROJECT_ROOT, GREEN, YELLOW, NC,
-    docker_compose, docker_image_exists, log_err, log_info, log_ok, log_warn,
+    docker_compose, docker_image_exists, get_buildable_services, log_err, log_info, log_ok, log_warn,
     pull_with_retry, resolve_services, run as run_proc,
 )
 
@@ -37,8 +37,8 @@ def run_cmd(args: argparse.Namespace, config: dict) -> int:
             print(f"  - {img}")
         print(f"{YELLOW}Build with:{NC}  python3 deployment.py build base\n")
 
-    all_apps = defs["all_apps"]
-    targets = args.apps if args.apps else list(all_apps)
+    buildable = get_buildable_services()
+    targets = args.apps if args.apps else buildable
     services = resolve_services(targets, config)
     if services is None:
         return 1

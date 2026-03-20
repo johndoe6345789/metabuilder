@@ -1,10 +1,30 @@
 """Push all locally-built images to Nexus with :main + :latest tags."""
 
 import argparse
+import pathlib
+import yaml
+
 from cli.helpers import (
     BLUE, GREEN, NC,
     docker_image_exists, log_err, log_info, log_ok, log_warn, run as run_proc,
 )
+
+COMPOSE_FILE = pathlib.Path(__file__).parent.parent / "compose.yml"
+
+
+def _load_built_images() -> list[dict]:
+    """Return [{local, name}] for every service with a build: directive."""
+    with open(COMPOSE_FILE) as f:
+        dc = yaml.safe_load(f)
+    images = []
+    for svc_name, svc in dc.get("services", {}).items():
+        if "build" not in svc:
+            continue
+        local = svc.get("image", f"deployment-{svc_name}:latest")
+        # derive a short push name from the image tag (strip prefix/tag)
+        name = local.split("/")[-1].split(":")[0].removeprefix("deployment-")
+        images.append({"local": local, "name": name})
+    return images
 
 
 def run_cmd(args: argparse.Namespace, config: dict) -> int:
@@ -16,23 +36,23 @@ def run_cmd(args: argparse.Namespace, config: dict) -> int:
     run_proc(["docker", "login", nexus, "-u", nexus_user, "--password-stdin"],
              input=nexus_pass.encode())
 
-    images_def = config["definitions"]["nexus_images"]
+    images = _load_built_images()
 
     pushed = skipped = failed = 0
 
-    def push_image(src: str, name: str, size: str) -> None:
+    def push_image(local: str, name: str) -> None:
         nonlocal pushed, skipped, failed
-        if not docker_image_exists(src):
-            log_warn(f"SKIP {name} — {src} not found locally")
+        if not docker_image_exists(local):
+            log_warn(f"SKIP {name} — {local} not found locally")
             skipped += 1
             return
 
         dst_main = f"{nexus}/{slug}/{name}:main"
         dst_latest = f"{nexus}/{slug}/{name}:latest"
 
-        log_info(f"Pushing {name} ({size})...")
-        run_proc(["docker", "tag", src, dst_main])
-        run_proc(["docker", "tag", src, dst_latest])
+        log_info(f"Pushing {name}...")
+        run_proc(["docker", "tag", local, dst_main])
+        run_proc(["docker", "tag", local, dst_latest])
 
         r1 = run_proc(["docker", "push", dst_main])
         r2 = run_proc(["docker", "push", dst_latest])
@@ -43,21 +63,12 @@ def run_cmd(args: argparse.Namespace, config: dict) -> int:
             log_err(f"  {name} FAILED")
             failed += 1
 
-    print(f"\n{BLUE}Registry  : {nexus}{NC}")
-    print(f"{BLUE}Slug      : {slug}{NC}")
-    print(f"{BLUE}Skip heavy: {args.skip_heavy}{NC}\n")
+    print(f"\n{BLUE}Registry : {nexus}{NC}")
+    print(f"{BLUE}Slug     : {slug}{NC}")
+    print(f"{BLUE}Images   : {len(images)} (parsed from compose.yml){NC}\n")
 
-    for entry in images_def["base"] + images_def["apps"]:
-        push_image(entry["local"], entry["name"], entry["size"])
-
-    if args.skip_heavy:
-        log_warn("Skipping heavy images (--skip-heavy set):")
-        for entry in images_def["heavy"] + images_def["heavy_apps"]:
-            log_warn(f"  {entry['name']} ({entry['size']})")
-    else:
-        log_info("--- Heavy images (this will take a while) ---")
-        for entry in images_def["heavy_apps"] + images_def["heavy"]:
-            push_image(entry["local"], entry["name"], entry["size"])
+    for entry in images:
+        push_image(entry["local"], entry["name"])
 
     print(f"\n{GREEN}{'=' * 46}{NC}")
     print(f"{GREEN}  Done.  pushed={pushed}  skipped={skipped}  failed={failed}{NC}")

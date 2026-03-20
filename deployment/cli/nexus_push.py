@@ -11,7 +11,7 @@ from cli.helpers import (
     docker_image_exists, log_info, run as run_proc,
 )
 
-COMPOSE_FILE = pathlib.Path(__file__).parent.parent / "docker-compose.stack.yml"
+COMPOSE_FILE = pathlib.Path(__file__).parent.parent / "compose.yml"
 BASE_IMAGES_DIR = pathlib.Path(__file__).parent.parent / "base-images"
 
 # Dockerfile.apt -> base-apt, Dockerfile.node-deps -> base-node-deps, etc.
@@ -70,7 +70,7 @@ def run_cmd(args: argparse.Namespace, config: dict) -> int:
     print(f"{YELLOW}Registry:{NC} {local_registry}")
     print(f"{YELLOW}Slug:{NC}     {slug}")
     print(f"{YELLOW}Tag:{NC}      {tag}")
-    print(f"{YELLOW}Images:{NC}   {len(images)} (base-images/ + docker-compose.stack.yml)\n")
+    print(f"{YELLOW}Images:{NC}   {len(images)} (base-images/ + compose.yml)\n")
 
     log_info(f"Logging in to {local_registry}...")
     run_proc(["docker", "login", local_registry, "-u", nexus_user, "--password-stdin"],

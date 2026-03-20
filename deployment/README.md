@@ -105,7 +105,7 @@ deployment.py artifactory init
 | File | Purpose |
 |------|---------|
 | `docker-compose.nexus.yml` | Local registries (Nexus + Artifactory) |
-| `docker-compose.stack.yml` | Full application stack |
+| `compose.yml` | Full application stack |
 | `docker-compose.test.yml` | Integration test services |
 | `docker-compose.smoke.yml` | Smoke test environment |
 

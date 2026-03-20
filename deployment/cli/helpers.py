@@ -13,7 +13,7 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).resolve().parent.parent  # deployment/
 PROJECT_ROOT = SCRIPT_DIR.parent
 BASE_DIR = SCRIPT_DIR / "base-images"
-COMPOSE_FILE = SCRIPT_DIR / "docker-compose.stack.yml"
+COMPOSE_FILE = SCRIPT_DIR / "compose.yml"
 
 # ── Colors ───────────────────────────────────────────────────────────────────
 
@@ -121,17 +121,27 @@ def build_with_retry(tag: str, dockerfile: str, context: str, max_attempts: int 
     return False
 
 
+def get_buildable_services() -> list[str]:
+    """Return all service names that have a build: section in the compose file."""
+    import yaml
+    with open(COMPOSE_FILE) as f:
+        compose = yaml.safe_load(f)
+    return [
+        name for name, svc in compose.get("services", {}).items()
+        if isinstance(svc, dict) and "build" in svc
+    ]
+
+
 def resolve_services(targets: list[str], config: dict) -> list[str] | None:
-    """Map friendly app names to compose service names. Returns None on error."""
-    svc_map = config["definitions"]["service_map"]
+    """Validate compose service names against the compose file. Returns None on error."""
+    buildable = get_buildable_services()
     services = []
     for t in targets:
-        svc = svc_map.get(t)
-        if not svc:
-            log_err(f"Unknown app: {t}")
-            print(f"Available: {', '.join(config['definitions']['all_apps'])}")
+        if t not in buildable:
+            log_err(f"Unknown or non-buildable service: {t}")
+            print(f"Available: {', '.join(buildable)}")
             return None
-        services.append(svc)
+        services.append(t)
     return services
 
 

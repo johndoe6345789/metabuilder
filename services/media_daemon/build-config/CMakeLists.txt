@@ -9,13 +9,14 @@ find_package(nlohmann_json REQUIRED)
 find_package(yaml-cpp REQUIRED)
 find_package(spdlog REQUIRED)
 find_package(fmt REQUIRED)
+find_package(cpr REQUIRED)
 
 file(GLOB_RECURSE SOURCES "../src/*.cpp")
 file(GLOB_RECURSE HEADERS "../include/*.hpp" "../include/*.h")
 
 add_executable(media_daemon ${SOURCES} ${HEADERS})
 
-target_include_directories(media_daemon PRIVATE ../include)
+target_include_directories(media_daemon PRIVATE ../include ../src)
 
 target_link_libraries(media_daemon PRIVATE
     Drogon::Drogon
@@ -23,6 +24,7 @@ target_link_libraries(media_daemon PRIVATE
     yaml-cpp::yaml-cpp
     spdlog::spdlog
     fmt::fmt
+    cpr::cpr
 )
 
 install(TARGETS media_daemon DESTINATION bin)

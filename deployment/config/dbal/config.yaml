@@ -2,7 +2,7 @@
 #
 # Primary adapter is configured here. Additional backends (cache, search,
 # secondary databases) are configured via environment variables in
-# docker-compose.stack.yml:
+# compose.yml:
 #
 #   DBAL_ADAPTER       Primary adapter type (postgres, mysql, sqlite, etc.)
 #   DATABASE_URL       Primary database connection string

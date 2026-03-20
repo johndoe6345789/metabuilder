@@ -230,11 +230,11 @@ npm run build --workspaces
 cd deployment && python3 deployment.py build base  # Build Docker base images
 
 # Deploy full stack
-cd deployment && docker compose -f docker-compose.stack.yml up -d
+cd deployment && docker compose -f compose.yml up -d
 
 # Build & deploy specific apps
 python3 deployment.py build apps --force dbal pastebin  # Next.js frontend only
-docker compose -f docker-compose.stack.yml build pastebin-backend  # Flask backend
+docker compose -f compose.yml build pastebin-backend  # Flask backend
 
 # DBAL logs / seed verification
 docker logs -f metabuilder-dbal

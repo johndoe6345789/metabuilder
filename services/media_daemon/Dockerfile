@@ -24,7 +24,7 @@ RUN conan install ../build-config/conanfile.txt \
 RUN cmake ../build-config \
     -G Ninja \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_TOOLCHAIN_FILE=./build/Release/generators/conan_toolchain.cmake
+    -DCMAKE_TOOLCHAIN_FILE=./conan_toolchain.cmake
 
 RUN ninja
 

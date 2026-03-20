@@ -4,12 +4,12 @@
 #
 # Usage:
 #   Local dev: npx verdaccio --config deployment/verdaccio.yaml &
-#   Compose:   docker compose -f docker-compose.stack.yml up verdaccio
+#   Compose:   docker compose -f compose.yml up verdaccio
 #   CI:        uses inline config with /tmp/verdaccio-storage
 #   Then:      bash deployment/publish-npm-patches.sh --verdaccio
 #   .npmrc already points @esbuild-kit:registry to localhost:4873
 
-# Docker container path (volume-mounted in docker-compose.stack.yml).
+# Docker container path (volume-mounted in compose.yml).
 # For local dev, use the CI composite action or npx verdaccio (default config).
 storage: /verdaccio/storage
 uplinks:

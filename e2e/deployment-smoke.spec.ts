@@ -8,7 +8,7 @@ import { test, expect } from '@playwright/test'
  *     Playwright dev servers bind to 0.0.0.0 so nginx can proxy via host.docker.internal.
  *
  * Local:
- *   cd deployment && docker compose -f docker-compose.stack.yml up -d
+ *   cd deployment && docker compose -f compose.yml up -d
  *   PLAYWRIGHT_BASE_URL=http://localhost/workflowui/ npx playwright test deployment-smoke
  */
 

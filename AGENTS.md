@@ -50,7 +50,7 @@ POST /pastebin/pastebin/User
 | `dbal/production/src/daemon/server_routes.cpp` | Route registration + auto-seed startup |
 | `frontends/pastebin/backend/app.py` | Flask JWT auth + Python runner |
 | `frontends/pastebin/src/` | Next.js React app |
-| `deployment/docker-compose.stack.yml` | Full stack compose |
+| `deployment/compose.yml` | Full stack compose |
 | `deployment/deployment.py` | Python CLI for all build/deploy/stack commands |
 
 ---
@@ -80,15 +80,15 @@ cd deployment
 
 # Full rebuild + restart
 python3 deployment.py build apps --force dbal pastebin
-docker compose -f docker-compose.stack.yml up -d
+docker compose -f compose.yml up -d
 
 # Flask backend (separate from Next.js)
-docker compose -f docker-compose.stack.yml build pastebin-backend
-docker compose -f docker-compose.stack.yml up -d pastebin-backend
+docker compose -f compose.yml build pastebin-backend
+docker compose -f compose.yml up -d pastebin-backend
 
 # dbal-init volume (schema volume container — rebuild when entity JSON changes)
-docker compose -f docker-compose.stack.yml build dbal-init
-docker compose -f docker-compose.stack.yml up dbal-init
+docker compose -f compose.yml build dbal-init
+docker compose -f compose.yml up dbal-init
 ```
 
 ---

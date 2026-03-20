@@ -4,6 +4,7 @@ nlohmann_json/3.11.3
 yaml-cpp/0.8.0
 spdlog/1.16.0
 fmt/12.0.0
+cpr/1.10.5
 
 [generators]
 CMakeDeps

@@ -32,7 +32,7 @@ http://localhost:8080              # DBAL C++ REST API (entities)
 ```bash
 # Deploy full stack
 cd deployment
-docker compose -f docker-compose.stack.yml up -d
+docker compose -f compose.yml up -d
 
 # Build & deploy a specific app
 python3 deployment.py build apps --force dbal pastebin

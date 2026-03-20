@@ -6,16 +6,16 @@ import sys
 import time
 from cli.helpers import (
     COMPOSE_FILE, GREEN, RED, YELLOW, BLUE, NC,
-    docker_compose, log_err, log_warn, resolve_services, run as run_proc,
+    docker_compose, get_buildable_services, log_err, log_warn, resolve_services, run as run_proc,
 )
 
 
 def run_cmd(args: argparse.Namespace, config: dict) -> int:
-    all_apps = config["definitions"]["all_apps"]
-    targets = list(all_apps) if args.all else args.apps
+    buildable = get_buildable_services()
+    targets = buildable if args.all else args.apps
     if not targets:
         log_err("Specify app(s) to deploy, or use --all")
-        print(f"Available: {', '.join(all_apps)}")
+        print(f"Available: {', '.join(buildable)}")
         return 1
 
     services = resolve_services(targets, config)

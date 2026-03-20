@@ -9,21 +9,8 @@
   },
 
   "definitions": {
-    "all_apps": ["workflowui", "codegen", "pastebin", "postgres", "emailclient", "exploded-diagrams", "storybook", "frontend-app", "dbal"],
     "base_build_order": ["apt", "conan-deps", "android-sdk", "node-deps", "pip-deps", "devcontainer"],
     "stack_commands": ["up", "start", "down", "stop", "build", "restart", "logs", "ps", "status", "clean"],
-
-    "service_map": {
-      "workflowui": "workflowui",
-      "codegen": "codegen",
-      "pastebin": "pastebin",
-      "postgres": "postgres-dashboard",
-      "emailclient": "emailclient-app",
-      "exploded-diagrams": "exploded-diagrams",
-      "storybook": "storybook",
-      "frontend-app": "frontend-app",
-      "dbal": "dbal"
-    },
 
     "base_images": {
       "apt":          { "dockerfile": "Dockerfile.apt",          "tag": "metabuilder/base-apt:latest" },
