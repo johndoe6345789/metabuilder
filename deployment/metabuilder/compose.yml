@@ -295,7 +295,7 @@ services:
   # DBAL Daemon - C++ backend
   dbal:
     build:
-      context: .././dbal
+      context: ../../dbal
       dockerfile: production/build-config/Dockerfile
       args:
         BUILD_TYPE: Release
@@ -418,7 +418,7 @@ services:
   # Dovecot - IMAP/POP3 server with TLS
   dovecot:
     build:
-      context: .././frontends/emailclient/deployment/docker/dovecot
+      context: ../../frontends/emailclient/deployment/docker/dovecot
       dockerfile: Dockerfile
     container_name: metabuilder-dovecot
     restart: unless-stopped
@@ -441,7 +441,7 @@ services:
   # SMTP Relay - Twisted relay pointing at local Postfix
   smtp-relay:
     build:
-      context: .././services/smtprelay
+      context: ../../services/smtprelay
       dockerfile: Dockerfile
     container_name: metabuilder-smtp-relay
     restart: unless-stopped
@@ -476,7 +476,7 @@ services:
   # Email Service - Flask backend for IMAP/SMTP operations
   email-service:
     build:
-      context: .././frontends/emailclient
+      context: ../../frontends/emailclient
       dockerfile: deployment/docker/email-service/Dockerfile
     container_name: metabuilder-email-service
     restart: unless-stopped
@@ -777,7 +777,7 @@ services:
   # Docker Terminal - Container management UI + Flask backend
   dockerterminal-backend:
     build:
-      context: .././frontends/dockerterminal/backend
+      context: ../../frontends/dockerterminal/backend
       dockerfile: Dockerfile
     container_name: metabuilder-dockerterminal-backend
     restart: unless-stopped
@@ -796,7 +796,7 @@ services:
 
   dockerterminal:
     build:
-      context: .././frontends/dockerterminal/frontend
+      context: ../../frontends/dockerterminal/frontend
       dockerfile: Dockerfile
       args:
         NEXT_PUBLIC_API_URL: /terminal-api
@@ -822,7 +822,7 @@ services:
   # Package Repo - Package repository UI + Flask backend
   packagerepo-backend:
     build:
-      context: .././frontends/packagerepo
+      context: ../../frontends/packagerepo
       dockerfile: backend/Dockerfile
     container_name: metabuilder-packagerepo-backend
     restart: unless-stopped
@@ -842,7 +842,7 @@ services:
 
   packagerepo:
     build:
-      context: .././frontends/packagerepo/frontend
+      context: ../../frontends/packagerepo/frontend
       dockerfile: Dockerfile
       args:
         BACKEND_URL: http://packagerepo-backend:5000
@@ -868,7 +868,7 @@ services:
   # RepoForge - Android app download portal
   repoforge:
     build:
-      context: .././frontends/repoforge/portal
+      context: ../../frontends/repoforge/portal
       dockerfile: Dockerfile
     container_name: metabuilder-repoforge
     restart: unless-stopped
@@ -890,7 +890,7 @@ services:
   # CaproverForge - Android app download portal
   caproverforge:
     build:
-      context: .././frontends/caproverforge/portal
+      context: ../../frontends/caproverforge/portal
       dockerfile: Dockerfile
     container_name: metabuilder-caproverforge
     restart: unless-stopped
@@ -1200,7 +1200,7 @@ services:
   # Media Processing Daemon - FFmpeg, Radio, Retro Gaming
   media-daemon:
     build:
-      context: .././services/media_daemon
+      context: ../../services/media_daemon
       dockerfile: Dockerfile
     image: deployment-media-daemon:latest
     container_name: metabuilder-media-daemon
