@@ -1332,7 +1332,7 @@ services:
         condition: service_healthy
     volumes:
       - nexus-data:/nexus-data:ro
-      - ../nexus-init.py:/nexus-init.py:ro
+      - ./nexus-init.py:/nexus-init.py:ro
     entrypoint: ["/bin/sh", "-c", "pip install -q requests && python3 /nexus-init.py"]
     environment:
       NEXUS_URL: "http://nexus:8081"
@@ -1373,7 +1373,7 @@ services:
       artifactory:
         condition: service_healthy
     volumes:
-      - ../artifactory-init.py:/artifactory-init.py:ro
+      - ./artifactory-init.py:/artifactory-init.py:ro
     entrypoint: ["/bin/sh", "-c", "pip install -q requests && python3 /artifactory-init.py"]
     environment:
       ARTIFACTORY_URL: "http://artifactory:8081"

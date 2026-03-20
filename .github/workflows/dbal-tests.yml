@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - name: Install system deps
         run: |
@@ -32,7 +32,7 @@ jobs:
         run: conan profile detect --force
 
       - name: Cache Conan packages
-        uses: actions/cache@v6
+        uses: actions/cache@v4
         with:
           path: ~/.conan2/p
           key: conan-unit-${{ hashFiles('dbal/production/build-config/conanfile.tests.py') }}
@@ -67,7 +67,7 @@ jobs:
         run: ctest -R dbal_unit_tests --output-on-failure
 
       - name: Upload results
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: unit-test-results
@@ -82,7 +82,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - name: Install Go (for testcontainers-sidecar)
         uses: actions/setup-go@v5
@@ -124,7 +124,7 @@ jobs:
             -s build_type=Release -s compiler.cppstd=20
 
       - name: Cache Conan packages
-        uses: actions/cache@v6
+        uses: actions/cache@v4
         with:
           path: ~/.conan2/p
           key: conan-integration-${{ hashFiles('dbal/production/build-config/conanfile.tests.py') }}
@@ -162,7 +162,7 @@ jobs:
         run: ctest -R dbal_integration_tests --output-on-failure -V
 
       - name: Upload results
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: integration-test-results
