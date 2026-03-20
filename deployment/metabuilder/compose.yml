@@ -56,8 +56,8 @@ services:
     ports:
       - "4873:4873"
     volumes:
-      - ./verdaccio.yaml:/verdaccio/conf/config.yaml:ro
-      - ./npm-patches:/verdaccio/patches:ro
+      - ../verdaccio.yaml:/verdaccio/conf/config.yaml:ro
+      - ../npm-patches:/verdaccio/patches:ro
       - verdaccio-storage:/verdaccio/storage
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:4873/-/ping"]
@@ -283,7 +283,7 @@ services:
   # DBAL config seeder — copies schemas and SQL templates into named volumes
   dbal-init:
     build:
-      context: ..
+      context: ../..
       dockerfile: deployment/config/dbal/Dockerfile.init
     container_name: metabuilder-dbal-init
     volumes:
@@ -295,7 +295,7 @@ services:
   # DBAL Daemon - C++ backend
   dbal:
     build:
-      context: ../dbal
+      context: .././dbal
       dockerfile: production/build-config/Dockerfile
       args:
         BUILD_TYPE: Release
@@ -367,7 +367,7 @@ services:
   # WorkflowUI - Visual workflow editor (n8n-style)
   workflowui:
     build:
-      context: ..
+      context: ../..
       dockerfile: frontends/workflowui/Dockerfile
       args:
         NODE_ENV: production
@@ -418,7 +418,7 @@ services:
   # Dovecot - IMAP/POP3 server with TLS
   dovecot:
     build:
-      context: ../frontends/emailclient/deployment/docker/dovecot
+      context: .././frontends/emailclient/deployment/docker/dovecot
       dockerfile: Dockerfile
     container_name: metabuilder-dovecot
     restart: unless-stopped
@@ -441,7 +441,7 @@ services:
   # SMTP Relay - Twisted relay pointing at local Postfix
   smtp-relay:
     build:
-      context: ../services/smtprelay
+      context: .././services/smtprelay
       dockerfile: Dockerfile
     container_name: metabuilder-smtp-relay
     restart: unless-stopped
@@ -476,7 +476,7 @@ services:
   # Email Service - Flask backend for IMAP/SMTP operations
   email-service:
     build:
-      context: ../frontends/emailclient
+      context: .././frontends/emailclient
       dockerfile: deployment/docker/email-service/Dockerfile
     container_name: metabuilder-email-service
     restart: unless-stopped
@@ -524,7 +524,7 @@ services:
   # nginx - Reverse proxy + welcome portal (config baked into image)
   nginx:
     build:
-      context: ..
+      context: ../..
       dockerfile: deployment/config/nginx/Dockerfile
     container_name: metabuilder-nginx
     restart: unless-stopped
@@ -545,7 +545,7 @@ services:
   # CodeForge IDE - Next.js + Monaco code editor
   codegen:
     build:
-      context: ..
+      context: ../..
       dockerfile: frontends/codegen/Dockerfile
     container_name: metabuilder-codegen
     restart: unless-stopped
@@ -567,7 +567,7 @@ services:
   # Pastebin - Code snippet sharing (dev mode: Turbopack + hot reload)
   pastebin:
     build:
-      context: ..
+      context: ../..
       dockerfile: frontends/pastebin/Dockerfile.dev
     container_name: metabuilder-pastebin
     restart: unless-stopped
@@ -595,7 +595,7 @@ services:
   # Pastebin Flask Backend - REST API for snippet storage
   pastebin-backend:
     build:
-      context: ..
+      context: ../..
       dockerfile: frontends/pastebin/backend/Dockerfile
     container_name: metabuilder-pastebin-backend
     restart: unless-stopped
@@ -630,7 +630,7 @@ services:
   # Postgres Dashboard - Database admin
   postgres-dashboard:
     build:
-      context: ..
+      context: ../..
       dockerfile: frontends/postgres/Dockerfile
     container_name: metabuilder-postgres-dashboard
     restart: unless-stopped
@@ -656,7 +656,7 @@ services:
   # Email Client - Email management UI
   emailclient-app:
     build:
-      context: ..
+      context: ../..
       dockerfile: frontends/emailclient/Dockerfile
     container_name: metabuilder-emailclient-app
     restart: unless-stopped
@@ -681,7 +681,7 @@ services:
   # Exploded Diagrams - Interactive 3D viewer
   exploded-diagrams:
     build:
-      context: ..
+      context: ../..
       dockerfile: frontends/exploded-diagrams/Dockerfile
     container_name: metabuilder-exploded-diagrams
     restart: unless-stopped
@@ -704,7 +704,7 @@ services:
   storybook:
     profiles: ["storybook"]
     build:
-      context: ..
+      context: ../..
       dockerfile: storybook/Dockerfile
     container_name: metabuilder-storybook
     restart: unless-stopped
@@ -722,7 +722,7 @@ services:
   # Frontend App - Main Next.js application
   frontend-app:
     build:
-      context: ..
+      context: ../..
       dockerfile: frontends/nextjs/Dockerfile
     container_name: metabuilder-frontend-app
     restart: unless-stopped
@@ -749,7 +749,7 @@ services:
   # DBAL Frontend - Daemon overview + query console
   dbal-frontend:
     build:
-      context: ..
+      context: ../..
       dockerfile: frontends/dbal/Dockerfile
       args:
         DBAL_DAEMON_URL: http://dbal:8080
@@ -777,7 +777,7 @@ services:
   # Docker Terminal - Container management UI + Flask backend
   dockerterminal-backend:
     build:
-      context: ../frontends/dockerterminal/backend
+      context: .././frontends/dockerterminal/backend
       dockerfile: Dockerfile
     container_name: metabuilder-dockerterminal-backend
     restart: unless-stopped
@@ -796,7 +796,7 @@ services:
 
   dockerterminal:
     build:
-      context: ../frontends/dockerterminal/frontend
+      context: .././frontends/dockerterminal/frontend
       dockerfile: Dockerfile
       args:
         NEXT_PUBLIC_API_URL: /terminal-api
@@ -822,7 +822,7 @@ services:
   # Package Repo - Package repository UI + Flask backend
   packagerepo-backend:
     build:
-      context: ../frontends/packagerepo
+      context: .././frontends/packagerepo
       dockerfile: backend/Dockerfile
     container_name: metabuilder-packagerepo-backend
     restart: unless-stopped
@@ -842,7 +842,7 @@ services:
 
   packagerepo:
     build:
-      context: ../frontends/packagerepo/frontend
+      context: .././frontends/packagerepo/frontend
       dockerfile: Dockerfile
       args:
         BACKEND_URL: http://packagerepo-backend:5000
@@ -868,7 +868,7 @@ services:
   # RepoForge - Android app download portal
   repoforge:
     build:
-      context: ../frontends/repoforge/portal
+      context: .././frontends/repoforge/portal
       dockerfile: Dockerfile
     container_name: metabuilder-repoforge
     restart: unless-stopped
@@ -890,7 +890,7 @@ services:
   # CaproverForge - Android app download portal
   caproverforge:
     build:
-      context: ../frontends/caproverforge/portal
+      context: .././frontends/caproverforge/portal
       dockerfile: Dockerfile
     container_name: metabuilder-caproverforge
     restart: unless-stopped
@@ -916,7 +916,7 @@ services:
   # Prometheus - Metrics collection (config baked into image)
   prometheus:
     build:
-      context: ..
+      context: ../..
       dockerfile: deployment/config/prometheus/Dockerfile
     image: deployment-prometheus:latest
     container_name: metabuilder-prometheus
@@ -948,7 +948,7 @@ services:
   # Grafana - Metrics visualization (config baked into image)
   grafana:
     build:
-      context: ..
+      context: ../..
       dockerfile: deployment/config/grafana/Dockerfile
     image: deployment-grafana:latest
     container_name: metabuilder-grafana
@@ -984,7 +984,7 @@ services:
   # Loki - Log aggregation (config baked into image)
   loki:
     build:
-      context: ..
+      context: ../..
       dockerfile: deployment/config/loki/Dockerfile
     image: deployment-loki:latest
     container_name: metabuilder-loki
@@ -1009,7 +1009,7 @@ services:
   # Promtail - Log shipper (config baked into image; host log paths are system mounts)
   promtail:
     build:
-      context: ..
+      context: ../..
       dockerfile: deployment/config/promtail/Dockerfile
     image: deployment-promtail:latest
     container_name: metabuilder-promtail
@@ -1167,7 +1167,7 @@ services:
   # Alertmanager - Alert routing (config baked into image)
   alertmanager:
     build:
-      context: ..
+      context: ../..
       dockerfile: deployment/config/alertmanager/Dockerfile
     image: deployment-alertmanager:latest
     container_name: metabuilder-alertmanager
@@ -1200,7 +1200,7 @@ services:
   # Media Processing Daemon - FFmpeg, Radio, Retro Gaming
   media-daemon:
     build:
-      context: ../services/media_daemon
+      context: .././services/media_daemon
       dockerfile: Dockerfile
     image: deployment-media-daemon:latest
     container_name: metabuilder-media-daemon
@@ -1266,7 +1266,7 @@ services:
   # HLS/DASH Streaming Server (config baked into image)
   nginx-stream:
     build:
-      context: ..
+      context: ../..
       dockerfile: deployment/config/nginx/Dockerfile.stream
     image: deployment-nginx-stream:latest
     container_name: metabuilder-nginx-stream
@@ -1332,7 +1332,7 @@ services:
         condition: service_healthy
     volumes:
       - nexus-data:/nexus-data:ro
-      - ./nexus-init.py:/nexus-init.py:ro
+      - ../nexus-init.py:/nexus-init.py:ro
     entrypoint: ["/bin/sh", "-c", "pip install -q requests && python3 /nexus-init.py"]
     environment:
       NEXUS_URL: "http://nexus:8081"
@@ -1373,7 +1373,7 @@ services:
       artifactory:
         condition: service_healthy
     volumes:
-      - ./artifactory-init.py:/artifactory-init.py:ro
+      - ../artifactory-init.py:/artifactory-init.py:ro
     entrypoint: ["/bin/sh", "-c", "pip install -q requests && python3 /artifactory-init.py"]
     environment:
       ARTIFACTORY_URL: "http://artifactory:8081"

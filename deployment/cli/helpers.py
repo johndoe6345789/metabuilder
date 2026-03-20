@@ -13,7 +13,7 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).resolve().parent.parent  # deployment/
 PROJECT_ROOT = SCRIPT_DIR.parent
 BASE_DIR = SCRIPT_DIR / "base-images"
-COMPOSE_FILE = SCRIPT_DIR / "compose.yml"
+COMPOSE_FILE = SCRIPT_DIR / "metabuilder/compose.yml"
 
 # ── Colors ───────────────────────────────────────────────────────────────────
 

@@ -9,7 +9,7 @@ from cli.helpers import (
     docker_image_exists, log_err, log_info, log_ok, log_warn, run as run_proc,
 )
 
-COMPOSE_FILE = pathlib.Path(__file__).parent.parent / "compose.yml"
+COMPOSE_FILE = pathlib.Path(__file__).parent.parent / "metabuilder/compose.yml"
 
 
 def _load_built_images() -> list[dict]:

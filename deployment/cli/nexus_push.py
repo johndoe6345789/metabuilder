@@ -11,7 +11,7 @@ from cli.helpers import (
     docker_image_exists, log_info, run as run_proc,
 )
 
-COMPOSE_FILE = pathlib.Path(__file__).parent.parent / "compose.yml"
+COMPOSE_FILE = pathlib.Path(__file__).parent.parent / "metabuilder/compose.yml"
 BASE_IMAGES_DIR = pathlib.Path(__file__).parent.parent / "base-images"
 
 # Dockerfile.apt -> base-apt, Dockerfile.node-deps -> base-node-deps, etc.
