@@ -23,11 +23,11 @@ psycopg2-binary==2.9.9
 python-dotenv==1.0.0
 
 # Security & Encryption
-cryptography==46.0.5
+cryptography==46.0.6
 pyjwt==2.12.0
 
 # HTTP & Requests
-requests==2.32.4
+requests==2.33.0
 urllib3==2.6.3
 
 # Logging & Monitoring
