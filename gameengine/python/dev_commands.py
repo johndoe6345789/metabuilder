@@ -34,10 +34,26 @@ import argparse
 import os
 import platform
 import subprocess
+import sys
 from pathlib import Path
 from typing import Iterable, Sequence
 
 IS_WINDOWS = platform.system() == "Windows"
+
+
+def _conan_cmd() -> list[str]:
+    """Return the command prefix for invoking Conan.
+
+    Tries the bare ``conan`` executable first.  When it is not on PATH
+    (common with Windows Store Python), falls back to
+    ``sys.executable -m conans.client.command`` which works as long as
+    the ``conan`` package is installed in the current Python environment.
+    """
+    import shutil
+    if shutil.which("conan"):
+        return ["conan"]
+    return [sys.executable, "-m", "conans.conan"]
+
 
 DEFAULT_GENERATOR = "ninja-msvc" if IS_WINDOWS else "ninja"
 GENERATOR_DEFAULT_DIR = {
@@ -196,8 +212,9 @@ def _has_cmake_cache(build_dir: str) -> bool:
 
 def dependencies(args: argparse.Namespace) -> None:
     """Run Conan profile detection and install dependencies with C++20."""
-    cmd_detect = ["conan", "profile", "detect", "-f"]
-    cmd_install = ["conan", "install", ".", "-of", "build-ninja", "-b", "missing",
+    conan = _conan_cmd()
+    cmd_detect = [*conan, "profile", "detect", "-f"]
+    cmd_install = [*conan, "install", ".", "-of", "build-ninja", "-b", "missing",
                    "-s", "compiler.cppstd=20"]
     conan_install_args = _strip_leading_double_dash(args.conan_install_args)
     if conan_install_args:
