@@ -338,7 +338,14 @@ def generate(args: argparse.Namespace) -> None:
 
 
 def _fix_cmake_user_presets() -> None:
-    """Ensure CMakeUserPresets.json only includes existing preset files."""
+    """Ensure CMakeUserPresets.json only includes existing, non-conflicting preset files.
+
+    Conan regenerates preset files when the build layout changes (e.g.
+    ``build-ninja/build/generators/`` vs ``build-ninja/build/Release/generators/``).
+    If the old file still exists, CMake fails with "Duplicate preset".  This
+    function removes missing includes *and* detects preset name collisions,
+    keeping only the newest file when duplicates are found.
+    """
     import json as json_mod
     presets_path = Path("CMakeUserPresets.json")
     if not presets_path.exists():
@@ -346,11 +353,39 @@ def _fix_cmake_user_presets() -> None:
     try:
         data = json_mod.loads(presets_path.read_text())
         includes = data.get("include", [])
+
+        # Drop missing files
         valid = [p for p in includes if Path(p).exists()]
-        if len(valid) != len(includes):
-            data["include"] = valid
+
+        # Detect and resolve duplicate preset names across included files
+        seen_names: dict[str, str] = {}  # preset_name -> include_path
+        duplicates: set[str] = set()
+        for inc_path in valid:
+            try:
+                inc_data = json_mod.loads(Path(inc_path).read_text())
+            except (json_mod.JSONDecodeError, OSError):
+                continue
+            for key in ("configurePresets", "buildPresets", "testPresets"):
+                for preset in inc_data.get(key, []):
+                    name = preset.get("name", "")
+                    if name in seen_names and seen_names[name] != inc_path:
+                        # Keep the newer file, drop the older one
+                        older = seen_names[name]
+                        newer = inc_path
+                        if Path(older).stat().st_mtime > Path(newer).stat().st_mtime:
+                            older, newer = newer, older
+                        duplicates.add(older)
+                        seen_names[name] = newer
+                    else:
+                        seen_names[name] = inc_path
+
+        deduped = [p for p in valid if p not in duplicates]
+
+        if deduped != includes:
+            data["include"] = deduped
             presets_path.write_text(json_mod.dumps(data, indent=4) + "\n")
-            print(f"  Fixed CMakeUserPresets.json: kept {len(valid)}/{len(includes)} includes")
+            removed = len(includes) - len(deduped)
+            print(f"  Fixed CMakeUserPresets.json: removed {removed} stale/duplicate include(s)")
     except (json_mod.JSONDecodeError, OSError):
         pass
 
