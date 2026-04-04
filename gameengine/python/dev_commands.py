@@ -44,15 +44,69 @@ IS_WINDOWS = platform.system() == "Windows"
 def _conan_cmd() -> list[str]:
     """Return the command prefix for invoking Conan.
 
-    Tries the bare ``conan`` executable first.  When it is not on PATH
-    (common with Windows Store Python), falls back to
-    ``sys.executable -m conans.client.command`` which works as long as
-    the ``conan`` package is installed in the current Python environment.
+    Searches for the ``conan`` executable using several strategies so the
+    script works regardless of how Python and Conan were installed:
+
+    1. ``shutil.which`` — covers system-wide installs, Homebrew, pyenv,
+       conda, activated virtualenvs, and any case where ``conan`` is on PATH.
+    2. Python-adjacent Scripts/bin directories — handles Windows Store Python,
+       ``pip install --user``, and virtualenvs that haven't been activated.
+       Checks both the interpreter-level and user-level script dirs.
+    3. ``sys.executable -m conans.conan`` — last resort, works as long as
+       the ``conan`` package is importable by the running interpreter.
+
+    Raises ``FileNotFoundError`` with install instructions if nothing works.
     """
     import shutil
+    import sysconfig
+    import site
+
+    # 1. Already on PATH (system install, brew, pyenv, conda, activated venv)
     if shutil.which("conan"):
         return ["conan"]
-    return [sys.executable, "-m", "conans.conan"]
+
+    # 2. Search Scripts/bin dirs adjacent to the running interpreter
+    exe_name = "conan.exe" if IS_WINDOWS else "conan"
+    bin_dir = "Scripts" if IS_WINDOWS else "bin"
+    search_dirs: list[str] = []
+
+    # Interpreter-level scripts (e.g. venv/Scripts, /usr/local/bin)
+    interp_scripts = sysconfig.get_path("scripts")
+    if interp_scripts:
+        search_dirs.append(interp_scripts)
+
+    # User-level scripts (pip install --user — Windows Store Python, ~/.local/bin)
+    scheme = "nt_user" if IS_WINDOWS else "posix_user"
+    try:
+        user_scripts = sysconfig.get_path("scripts", scheme)
+        if user_scripts:
+            search_dirs.append(user_scripts)
+    except KeyError:
+        pass
+
+    # Site-packages sibling dirs (covers additional layouts)
+    try:
+        for sp in site.getsitepackages():
+            search_dirs.append(os.path.join(os.path.dirname(sp), bin_dir))
+    except AttributeError:
+        pass
+
+    for d in dict.fromkeys(search_dirs):  # dedupe, preserve order
+        candidate = os.path.join(d, exe_name)
+        if os.path.isfile(candidate):
+            return [candidate]
+
+    # 3. Module invocation (conan is importable but no script on disk)
+    try:
+        from importlib.metadata import distribution
+        distribution("conan")  # raises PackageNotFoundError if absent
+        return [sys.executable, "-m", "conans.conan"]
+    except Exception:
+        pass
+
+    raise FileNotFoundError(
+        "Could not find Conan. Install it with:  pip install conan"
+    )
 
 
 DEFAULT_GENERATOR = "ninja-msvc" if IS_WINDOWS else "ninja"
