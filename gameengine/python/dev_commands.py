@@ -45,15 +45,34 @@ def _conan_cmd() -> list[str]:
     """Return the command prefix for invoking Conan.
 
     Searches for the ``conan`` executable using several strategies so the
-    script works regardless of how Python and Conan were installed:
+    script works regardless of how Python/Conan were installed.
 
-    1. ``shutil.which`` — covers system-wide installs, Homebrew, pyenv,
-       conda, activated virtualenvs, and any case where ``conan`` is on PATH.
-    2. Python-adjacent Scripts/bin directories — handles Windows Store Python,
-       ``pip install --user``, and virtualenvs that haven't been activated.
-       Checks both the interpreter-level and user-level script dirs.
-    3. ``sys.executable -m conans.conan`` — last resort, works as long as
-       the ``conan`` package is importable by the running interpreter.
+    **Windows coverage**:
+
+    - Windows Store Python (``pip install --user``) — ``nt_user`` sysconfig
+    - python.org installer (global or per-user) — interpreter scripts dir
+    - python.org / Chocolatey ``pip install --user`` — ``%APPDATA%\\Python``
+    - Chocolatey (global) — typically on PATH or interpreter scripts dir
+
+    **macOS coverage**:
+
+    - Homebrew Python — on PATH (``/opt/homebrew/bin`` or ``/usr/local/bin``)
+    - System Python ``pip install --user`` — ``~/Library/Python/X.Y/bin``
+    - pyenv / conda / virtualenv — on PATH when activated, scripts dir otherwise
+
+    **Linux coverage**:
+
+    - apt / dnf system Python — on PATH (``/usr/bin`` or ``/usr/local/bin``)
+    - ``pip install --user`` — ``~/.local/bin``
+    - pyenv / conda / virtualenv — on PATH when activated, scripts dir otherwise
+
+    Strategy order:
+
+    1. ``shutil.which`` — anything already on PATH.
+    2. Python-adjacent Scripts/bin dirs — interpreter-level, user-level,
+       ``%APPDATA%\\Python`` (Windows), ``~/Library/Python`` (macOS),
+       ``~/.local/bin`` (Linux), and site-packages siblings.
+    3. ``sys.executable -m conans.conan`` — package importable but no script.
 
     Raises ``FileNotFoundError`` with install instructions if nothing works.
     """
@@ -61,7 +80,8 @@ def _conan_cmd() -> list[str]:
     import sysconfig
     import site
 
-    # 1. Already on PATH (system install, brew, pyenv, conda, activated venv)
+    # 1. Already on PATH (system install, brew, pyenv, conda, activated venv,
+    #    choco with PATH, apt/dnf)
     if shutil.which("conan"):
         return ["conan"]
 
@@ -70,12 +90,14 @@ def _conan_cmd() -> list[str]:
     bin_dir = "Scripts" if IS_WINDOWS else "bin"
     search_dirs: list[str] = []
 
-    # Interpreter-level scripts (e.g. venv/Scripts, /usr/local/bin)
+    # Interpreter-level scripts (venv/Scripts, C:\PythonXXX\Scripts,
+    # C:\Users\X\AppData\Local\Programs\Python\PythonXXX\Scripts,
+    # /usr/local/bin, /opt/homebrew/bin)
     interp_scripts = sysconfig.get_path("scripts")
     if interp_scripts:
         search_dirs.append(interp_scripts)
 
-    # User-level scripts (pip install --user — Windows Store Python, ~/.local/bin)
+    # User-level scripts via sysconfig (Windows Store Python, ~/.local/bin)
     scheme = "nt_user" if IS_WINDOWS else "posix_user"
     try:
         user_scripts = sysconfig.get_path("scripts", scheme)
@@ -83,6 +105,26 @@ def _conan_cmd() -> list[str]:
             search_dirs.append(user_scripts)
     except KeyError:
         pass
+
+    if IS_WINDOWS:
+        # python.org / Chocolatey "pip install --user" puts scripts under
+        # %APPDATA%\Python\PythonXYZ\Scripts — not covered by nt_user when
+        # running from Windows Store Python
+        appdata = os.environ.get("APPDATA", "")
+        if appdata:
+            ver = f"Python{sys.version_info.major}{sys.version_info.minor}"
+            search_dirs.append(os.path.join(appdata, "Python", ver, "Scripts"))
+            # Also check unversioned (older pip layouts)
+            search_dirs.append(os.path.join(appdata, "Python", "Scripts"))
+    else:
+        # macOS system Python: ~/Library/Python/X.Y/bin
+        if platform.system() == "Darwin":
+            ver = f"{sys.version_info.major}.{sys.version_info.minor}"
+            search_dirs.append(
+                os.path.expanduser(f"~/Library/Python/{ver}/bin")
+            )
+        # Linux/macOS: ~/.local/bin (pip install --user default)
+        search_dirs.append(os.path.expanduser("~/.local/bin"))
 
     # Site-packages sibling dirs (covers additional layouts)
     try:
