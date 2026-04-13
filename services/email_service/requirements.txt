@@ -8,7 +8,7 @@ kombu==5.4.2
 # Email Protocols
 imapclient==3.0.1
 python-dotenv==1.0.0
-cryptography==46.0.5
+cryptography==46.0.7
 
 # Web Framework (Flask API)
 flask==3.1.3
