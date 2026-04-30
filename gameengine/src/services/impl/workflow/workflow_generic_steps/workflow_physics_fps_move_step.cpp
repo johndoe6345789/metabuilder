@@ -42,6 +42,11 @@ void WorkflowPhysicsFpsMoveStep::Execute(
     const float standHeight = getNum("stand_height", 1.6f);
     const float airControl = getNum("air_control", 0.3f);
     const float gravityScale = getNum("gravity_scale", 1.0f);
+    // Acceleration model (CalcFriction-style). Velocity accelerates toward the
+    // target each frame instead of snapping. Equal accel/friction = modern feel.
+    const float groundAccel = getNum("ground_accel", 35.0f);
+    const float groundFriction = getNum("ground_friction", 30.0f);
+    const float dtMove = context.Get<float>("physics_dt", 1.0f / 60.0f);
 
     // Read input state from context (set by input.poll)
     bool keyW = context.GetBool("input_key_w", false);
@@ -100,8 +105,32 @@ void WorkflowPhysicsFpsMoveStep::Execute(
     }
 
     if (grounded) {
-        // Full ground control
-        body->setLinearVelocity(btVector3(moveX, currentVel.y(), moveZ));
+        // Inertia model: accelerate horizontal velocity toward target instead of
+        // snap-setting it. When input released, friction decelerates to zero.
+        float horizX = currentVel.x();
+        float horizZ = currentVel.z();
+        if (len > 0.001f) {
+            float diffX = moveX - horizX;
+            float diffZ = moveZ - horizZ;
+            float diffLen = std::sqrt(diffX * diffX + diffZ * diffZ);
+            float maxStep = groundAccel * dtMove;
+            if (diffLen > maxStep && diffLen > 0.0f) {
+                float k = maxStep / diffLen;
+                diffX *= k;
+                diffZ *= k;
+            }
+            horizX += diffX;
+            horizZ += diffZ;
+        } else {
+            float curSpeed = std::sqrt(horizX * horizX + horizZ * horizZ);
+            if (curSpeed > 0.001f) {
+                float drop = std::min(curSpeed, groundFriction * dtMove);
+                float k = (curSpeed - drop) / curSpeed;
+                horizX *= k;
+                horizZ *= k;
+            }
+        }
+        body->setLinearVelocity(btVector3(horizX, currentVel.y(), horizZ));
     } else {
         // Air control: blend input with current horizontal velocity (Quake-style)
         float curX = currentVel.x();
