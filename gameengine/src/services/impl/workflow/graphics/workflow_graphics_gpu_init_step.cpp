@@ -86,6 +86,46 @@ void WorkflowGraphicsGpuInitStep::Execute(const WorkflowStepDefinition& step, Wo
                                  std::string(SDL_GetError()));
     }
 
+    // Optional present-mode override. Default SDL claim is VSYNC (caps at
+    // monitor refresh, usually 60Hz). For high-refresh displays we expose:
+    //   "vsync"     — capped at refresh, no tearing (safe default)
+    //   "mailbox"   — uncapped, no tearing (triple-buffered)
+    //   "immediate" — uncapped, can tear (lowest input latency)
+    // Read from viewport_config first so this stays JSON-driven without
+    // needing a new step.
+    if (viewport_config->contains("present_mode")) {
+        std::string mode = (*viewport_config)["present_mode"];
+
+        if (mode == "auto") {
+            // Query actual monitor refresh rate and pick the best present mode.
+            // High-refresh displays (≥120 Hz) get VSYNC so frames are delivered
+            // right on the scanout boundary — smooth and GPU-efficient.
+            // Low-refresh displays (<120 Hz) get MAILBOX so we aren't capped at
+            // 60 fps and can stay responsive with a shallow frame queue.
+            int refresh_hz = 60;
+            SDL_DisplayID disp = SDL_GetDisplayForWindow(window);
+            if (disp) {
+                const SDL_DisplayMode* dm = SDL_GetCurrentDisplayMode(disp);
+                if (dm && dm->refresh_rate > 0.0f)
+                    refresh_hz = static_cast<int>(dm->refresh_rate);
+            }
+            mode = (refresh_hz >= 120) ? "vsync" : "mailbox";
+            if (logger_) logger_->Info("graphics.gpu.init: auto present_mode → " + mode +
+                                       " (display " + std::to_string(refresh_hz) + " Hz)");
+        }
+
+        SDL_GPUPresentMode pm = SDL_GPU_PRESENTMODE_VSYNC;
+        if (mode == "mailbox") pm = SDL_GPU_PRESENTMODE_MAILBOX;
+        else if (mode == "immediate") pm = SDL_GPU_PRESENTMODE_IMMEDIATE;
+
+        if (SDL_WindowSupportsGPUPresentMode(device, window, pm)) {
+            SDL_SetGPUSwapchainParameters(device, window, SDL_GPU_SWAPCHAINCOMPOSITION_SDR, pm);
+            if (logger_) logger_->Info("graphics.gpu.init: present_mode=" + mode);
+        } else if (logger_) {
+            logger_->Warn("graphics.gpu.init: present_mode '" + mode + "' unsupported, falling back to vsync");
+        }
+    }
+
     const char* device_driver = SDL_GetGPUDeviceDriver(device);
     if (logger_) {
         logger_->Trace("WorkflowGraphicsGpuInitStep", "Execute",

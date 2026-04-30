@@ -107,6 +107,7 @@ void WorkflowFrameBeginGpuStep::Execute(
     // Store for subsequent steps
     context.Set<SDL_GPUCommandBuffer*>("gpu_command_buffer", cmd);
     context.Set<SDL_GPURenderPass*>("gpu_render_pass", pass);
+    context.Set<SDL_GPUTexture*>("gpu_swapchain_texture", swapchainTex);
     context.Set<bool>("frame_skip", false);
     context.Set<uint32_t>("frame_width", sw);
     context.Set<uint32_t>("frame_height", sh);

@@ -60,6 +60,8 @@
 #include "services/interfaces/workflow/rendering/workflow_frame_begin_offscreen_step.hpp"
 #include "services/interfaces/workflow/rendering/workflow_frame_end_scene_step.hpp"
 #include "services/interfaces/workflow/rendering/workflow_postfx_composite_step.hpp"
+#include "services/interfaces/workflow/rendering/workflow_overlay_fps_step.hpp"
+#include "services/interfaces/workflow/rendering/workflow_debug_screenshot_step.hpp"
 #include "services/interfaces/workflow/rendering/workflow_postfx_ssao_step.hpp"
 #include "services/interfaces/workflow/rendering/workflow_postfx_bloom_extract_step.hpp"
 #include "services/interfaces/workflow/rendering/workflow_postfx_bloom_blur_step.hpp"
@@ -305,6 +307,8 @@ void WorkflowRegistrar::RegisterSteps(std::shared_ptr<IWorkflowStepRegistry> reg
     registry->RegisterStep(std::make_shared<WorkflowFrameBeginOffscreenStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowFrameEndSceneStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowPostfxCompositeStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowOverlayFpsStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowDebugScreenshotStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowPostfxSsaoStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowPostfxBloomExtractStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowPostfxBloomBlurStep>(logger_));

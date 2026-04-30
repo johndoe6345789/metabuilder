@@ -141,10 +141,111 @@ void WorkflowPhysicsFpsMoveStep::Execute(
 
     // Per-player gravity scaling (applies symmetrically in air, both rising
     // and falling). gravityScale > 1.0 = heavier; < 1.0 = floatier; 1.0 =
-    // Earth. Implemented as an additive force on top of the world's -9.81
-    // so the rest of the world keeps Earth gravity untouched.
+    // Earth. Implemented as an impulse (force * dt) rather than applyCentralForce
+    // so the integrated effect is identical regardless of framerate. Bullet
+    // accumulates forces across frames between substeps, so a per-frame force
+    // call at 240Hz would otherwise multiply 4×.
     if (!grounded && gravityScale != 1.0f) {
-        body->applyCentralForce(btVector3(0, -9.81f * body->getMass() * (gravityScale - 1.0f), 0));
+        const float gravImpulse = -9.81f * body->getMass() * (gravityScale - 1.0f) * dtMove;
+        body->applyCentralImpulse(btVector3(0, gravImpulse, 0));
+    }
+
+    // Step-up: capsule rigid bodies can't roll over Q3 stairs (~0.5m tall vs
+    // 0.3m capsule radius). Each frame, while grounded and trying to move
+    // forward, do three raycasts to detect a low obstacle with a walkable
+    // surface on top, then teleport the body up. This is the "step trace"
+    // pattern Q3's PM_StepSlideMove uses, simplified to rays.
+    const float stepHeight = getNum("step_height", 0.55f);
+    // Rate-limit step-up to ~60Hz. At 240Hz, calling step-up every frame would
+    // multi-teleport (forward nudge stacks, ditto vertical snap), making the
+    // player either rocket past stairs or stutter-stick on the last few steps.
+    // Accumulate dt and only attempt step-up once we've banked a 60Hz tick.
+    constexpr float kStepInterval = 1.0f / 60.0f;
+    step_accumulator_s_ += dtMove;
+    const bool stepReady = step_accumulator_s_ >= kStepInterval;
+
+    btVector3 dir(moveX, 0.0f, moveZ);
+    const float dirMag = dir.length();
+    if (stepReady && grounded && dirMag > 0.0001f && world && stepHeight > 0.0f) {
+        step_accumulator_s_ = 0.0f;
+        dir /= dirMag;
+        const float capsuleRadius = 0.3f;       // matches q3_game.json player shape
+        const float capsuleHalfH  = 0.5f;       // height/2
+        btTransform xform;
+        body->getMotionState()->getWorldTransform(xform);
+        const btVector3 origin = xform.getOrigin();
+        const float feetY = origin.y() - capsuleHalfH - capsuleRadius;
+
+        // Start probes just outside the capsule shell so they don't hit it.
+        // probeReach is the lookahead — bigger = detect stairs sooner so the
+        // snap-up happens before the capsule is fully wedged against a riser.
+        const float probeStart = capsuleRadius + 0.05f;
+        const float probeReach = 0.70f;
+
+        // 1. Low probe — is something blocking us at shin height?
+        const btVector3 lowFrom = origin + dir * probeStart - btVector3(0, capsuleHalfH + capsuleRadius - 0.10f, 0);
+        const btVector3 lowTo   = lowFrom + dir * probeReach;
+        btCollisionWorld::ClosestRayResultCallback lowHit(lowFrom, lowTo);
+        world->rayTest(lowFrom, lowTo, lowHit);
+
+        if (lowHit.hasHit()) {
+            // 2. High probe — is the path clear at step_height?
+            const btVector3 highFrom = lowFrom + btVector3(0, stepHeight + 0.05f, 0);
+            const btVector3 highTo   = highFrom + dir * probeReach;
+            btCollisionWorld::ClosestRayResultCallback highHit(highFrom, highTo);
+            world->rayTest(highFrom, highTo, highHit);
+
+            if (!highHit.hasHit()) {
+                // 3. Down probe — find the top surface to step onto.
+                const btVector3 downFrom = lowTo + btVector3(0, stepHeight, 0);
+                const btVector3 downTo   = btVector3(downFrom.x(), feetY - 0.05f, downFrom.z());
+                btCollisionWorld::ClosestRayResultCallback downHit(downFrom, downTo);
+                world->rayTest(downFrom, downTo, downHit);
+
+                if (downHit.hasHit()) {
+                    const float newFeetY = downHit.m_hitPointWorld.y();
+                    const float deltaY   = newFeetY - feetY;
+                    if (deltaY > 0.05f && deltaY < stepHeight) {
+                        // Snap up AND forward. The forward nudge places the
+                        // capsule fully onto the new tread so it doesn't
+                        // immediately snag the next riser. Without it, each
+                        // step costs a frame of solver-fighting and feels
+                        // staircase-shaped instead of ramp-shaped.
+                        const float forwardNudge = capsuleRadius + 0.05f;
+                        xform.setOrigin(origin
+                            + btVector3(0, deltaY + 0.02f, 0)
+                            + dir * forwardNudge);
+                        body->setWorldTransform(xform);
+                        body->getMotionState()->setWorldTransform(xform);
+                        // Preserve horizontal velocity so we keep moving up
+                        // the staircase smoothly instead of stalling each step.
+                    }
+                }
+            }
+        }
+    }
+
+    // Jam detection: if the player is pressing movement but the Bullet solver
+    // didn't actually move them (hVel << target), they're wedged against a
+    // stair riser that the step-up probe missed. After 100ms of being stuck,
+    // apply a small upward nudge to lift the capsule clear of the riser.
+    // currentVel reflects last frame's realized velocity — the right signal.
+    {
+        const float hVel = btVector3(currentVel.x(), 0.0f, currentVel.z()).length();
+        const bool wantsMove = len > 0.001f;
+        if (wantsMove && grounded && hVel < moveSpeed * 0.2f) {
+            jam_time_s_ += dtMove;
+            if (jam_time_s_ > 0.10f) {
+                btTransform xform;
+                body->getMotionState()->getWorldTransform(xform);
+                xform.setOrigin(xform.getOrigin() + btVector3(0, 0.10f, 0));
+                body->setWorldTransform(xform);
+                body->getMotionState()->setWorldTransform(xform);
+                jam_time_s_ = 0.0f;
+            }
+        } else {
+            jam_time_s_ = 0.0f;
+        }
     }
 
     // Quake-style impulse jump: set upward velocity once on press while

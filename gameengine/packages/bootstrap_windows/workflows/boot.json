@@ -16,7 +16,9 @@
       "type": "graphics.gpu.init_viewport",
       "typeVersion": 1,
       "position": [-390, 0],
-      "parameters": {}
+      "parameters": {
+        "present_mode": "auto"
+      }
     },
     {
       "id": "init_gpu_renderer",

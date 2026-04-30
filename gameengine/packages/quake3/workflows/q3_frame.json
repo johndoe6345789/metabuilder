@@ -14,14 +14,15 @@
       "typeVersion": 1,
       "position": [200, 0],
       "parameters": {
-        "move_speed": 4.5,
+        "move_speed": 6.5,
         "sprint_multiplier": 1.5,
         "crouch_multiplier": 0.45,
         "jump_velocity": 5.5,
         "air_control": 0.25,
-        "gravity_scale": 0.55,
+        "gravity_scale": 0.5,
         "ground_accel": 30.0,
         "ground_friction": 24.0,
+        "step_height": 0.6,
         "crouch_height": 0.5,
         "stand_height": 1.4
       }
@@ -87,6 +88,12 @@
       "position": [1200, 0]
     },
     {
+      "id": "overlay_fps",
+      "type": "overlay.fps",
+      "typeVersion": 1,
+      "position": [1225, 0]
+    },
+    {
       "id": "postfx_taa",
       "type": "postfx.taa",
       "typeVersion": 1,
@@ -126,6 +133,12 @@
     "camera_update": { "main": { "0": [{ "node": "render_prepare", "type": "main", "index": 0 }] } },
     "render_prepare": { "main": { "0": [{ "node": "frame_begin", "type": "main", "index": 0 }] } },
     "frame_begin": { "main": { "0": [{ "node": "draw_map", "type": "main", "index": 0 }] } },
-    "draw_map": { "main": { "0": [{ "node": "end_scene", "type": "main", "index": 0 }] } }
+    "draw_map": { "main": { "0": [{ "node": "end_scene", "type": "main", "index": 0 }] } },
+    "end_scene": { "main": { "0": [{ "node": "overlay_fps", "type": "main", "index": 0 }] } },
+    "overlay_fps": { "main": { "0": [{ "node": "postfx_taa", "type": "main", "index": 0 }] } },
+    "postfx_taa": { "main": { "0": [{ "node": "postfx_ssao", "type": "main", "index": 0 }] } },
+    "postfx_ssao": { "main": { "0": [{ "node": "bloom_extract", "type": "main", "index": 0 }] } },
+    "bloom_extract": { "main": { "0": [{ "node": "bloom_blur", "type": "main", "index": 0 }] } },
+    "bloom_blur": { "main": { "0": [{ "node": "postfx_composite", "type": "main", "index": 0 }] } }
   }
 }

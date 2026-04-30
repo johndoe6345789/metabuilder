@@ -305,6 +305,8 @@ if(BUILD_SDL3_APP)
         src/services/impl/workflow/rendering/workflow_model_load_step.cpp
         src/services/impl/workflow/rendering/workflow_postfx_bloom_blur_step.cpp
         src/services/impl/workflow/rendering/workflow_postfx_bloom_extract_step.cpp
+        src/services/impl/workflow/rendering/workflow_debug_screenshot_step.cpp
+        src/services/impl/workflow/rendering/workflow_overlay_fps_step.cpp
         src/services/impl/workflow/rendering/workflow_postfx_composite_step.cpp
         src/services/impl/workflow/rendering/workflow_postfx_setup_step.cpp
         src/services/impl/workflow/rendering/workflow_postfx_ssao_step.cpp

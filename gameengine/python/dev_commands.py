@@ -575,44 +575,22 @@ def msvc_quick(args: argparse.Namespace) -> None:
 
 def _sync_assets(build_dir: str, dry_run: bool) -> None:
     """
-    Sync asset files (scripts, shaders, models) from the project root to the
-    build directory before running the application.
+    Sync asset files (packages/, shaders, workflows, MaterialX) from the project
+    root to the build directory before running the application.  Uses copytree
+    so subdirectories and binary assets (*.spv, *.dxil, textures) are included.
     """
     import shutil
 
     build_path = Path(build_dir)
     project_root = Path(".")
 
-    # Define asset directories to sync
-    asset_dirs = [
-        ("packages", ["*.json"]),
-    ]
     asset_trees = [
+        "packages",
         "MaterialX/libraries",
         "MaterialX/resources",
     ]
 
     print("\n=== Syncing Assets ===")
-
-    for src_dir, patterns in asset_dirs:
-        src_path = project_root / src_dir
-        dst_path = build_path / src_dir
-
-        if not src_path.exists():
-            continue
-
-        # Create destination directory if needed
-        if not dry_run:
-            dst_path.mkdir(parents=True, exist_ok=True)
-
-        # Sync files matching patterns
-        for pattern in patterns:
-            for src_file in src_path.glob(pattern):
-                if src_file.is_file() and src_file.name != "dev_commands.py":
-                    dst_file = dst_path / src_file.name
-                    print(f"  {src_file} -> {dst_file}")
-                    if not dry_run:
-                        shutil.copy2(src_file, dst_file)
 
     for src_dir in asset_trees:
         src_path = project_root / src_dir
@@ -753,13 +731,54 @@ def gui(args: argparse.Namespace) -> None:
 
             self.init_ui()
 
+        def _project_root(self) -> "Path":
+            return Path(__file__).resolve().parent.parent
+
+        def _candidate_build_dirs(self) -> "list[Path]":
+            """All plausible build directories, ordered newest-configured first."""
+            root = self._project_root()
+            build_types = ["Release", "Debug", "RelWithDebInfo", "MinSizeRel"]
+            generator_dirs = list(GENERATOR_DEFAULT_DIR.values()) + ["build"]
+            candidates: list[tuple[float, Path]] = []
+            for gen_dir in dict.fromkeys(generator_dirs):
+                base = root / gen_dir
+                # Conan nested layout: <gen>/build/<type>/
+                for bt in build_types:
+                    nested = base / "build" / bt
+                    cache = nested / "CMakeCache.txt"
+                    if cache.is_file():
+                        candidates.append((cache.stat().st_mtime, nested))
+                # Flat layout: <gen>/
+                cache = base / "CMakeCache.txt"
+                if cache.is_file():
+                    candidates.append((cache.stat().st_mtime, base))
+            candidates.sort(key=lambda x: x[0], reverse=True)
+            return [p for _, p in candidates]
+
+        def _find_build_dir(self) -> "Path | None":
+            """Return the most recently configured build directory."""
+            candidates = self._candidate_build_dirs()
+            return candidates[0] if candidates else None
+
+        def _find_binary(self) -> "str | None":
+            """Return the path to the most recently built sdl3_app binary, or None."""
+            exe_name = "sdl3_app.exe" if IS_WINDOWS else "sdl3_app"
+            best: tuple[float, str] | None = None
+            for build_dir in self._candidate_build_dirs():
+                exe = build_dir / exe_name
+                if exe.is_file():
+                    mtime = exe.stat().st_mtime
+                    if best is None or mtime > best[0]:
+                        best = (mtime, str(exe))
+            return best[1] if best else None
+
         def load_bootloader_packages(self):
             """Load bootloader packages from packages/ directory"""
             import json
             from pathlib import Path
 
             bootloaders = []
-            packages_dir = Path("packages")
+            packages_dir = Path(__file__).resolve().parent.parent / "packages"
 
             if not packages_dir.exists():
                 return []
@@ -799,7 +818,7 @@ def gui(args: argparse.Namespace) -> None:
             from pathlib import Path
 
             games = []
-            packages_dir = Path("packages")
+            packages_dir = Path(__file__).resolve().parent.parent / "packages"
 
             if not packages_dir.exists():
                 return []
@@ -1262,28 +1281,20 @@ def gui(args: argparse.Namespace) -> None:
             if not self.current_game:
                 return
 
-            base_dir = GENERATOR_DEFAULT_DIR.get(self.generator, DEFAULT_BUILD_DIR)
-            # Check if using Conan nested layout
-            nested_dir = Path(base_dir) / "build" / self.build_type
-            if nested_dir.exists():
-                build_dir = str(nested_dir)
-            else:
-                build_dir = base_dir
+            binary = self._find_binary()
+            if not binary:
+                self.log("❌ Could not find sdl3_app binary. Build the project first (Developer → Build Project).")
+                return
 
-            exe_name = "sdl3_app.exe" if IS_WINDOWS else "sdl3_app"
-            binary = str(Path(build_dir) / exe_name)
-
+            self.log(f"Binary: {binary}")
             cmd = [binary]
-
-            # Add bootloader and game package parameters
             if self.current_bootloader:
                 cmd.extend(["--bootstrap", self.current_bootloader["id"]])
             if self.current_game:
                 cmd.extend(["--game", self.current_game["id"]])
 
-            self.log(f"Launching with bootloader: {self.current_bootloader.get('name', 'default') if self.current_bootloader else 'default'}")
-            self.log(f"Launching with game package: {self.current_game_package.get('name', 'default') if self.current_game_package else 'default'}")
-
+            self.log(f"Bootloader: {self.current_bootloader.get('name', 'default') if self.current_bootloader else 'default'}")
+            self.log(f"Game: {self.current_game_package.get('name', 'default') if self.current_game_package else 'default'}")
             self.run_command(cmd)
 
         def stop_process(self):
@@ -1382,54 +1393,41 @@ def gui(args: argparse.Namespace) -> None:
 
         def run_build(self):
             """Run build command"""
-            base_dir = GENERATOR_DEFAULT_DIR.get(self.generator, DEFAULT_BUILD_DIR)
-            # Check if using Conan nested layout (has build/<type>/ subdirectory)
-            nested_dir = Path(base_dir) / "build" / self.build_type
-            if nested_dir.exists() and (nested_dir / "CMakeCache.txt").exists():
-                build_dir = str(nested_dir)
-            elif (Path(base_dir) / "CMakeCache.txt").exists():
-                build_dir = base_dir
-            else:
-                # Default to nested layout (Conan 2.x standard)
-                build_dir = str(nested_dir)
+            build_dir = self._find_build_dir()
+            if not build_dir:
+                # No configured build found — default to Conan nested layout for chosen generator
+                root = self._project_root()
+                build_dir = root / GENERATOR_DEFAULT_DIR.get(self.generator, DEFAULT_BUILD_DIR) / "build" / self.build_type
             cmd = [
                 sys.executable, __file__, "build",
-                "--build-dir", build_dir,
-                "--target", self.target
+                "--build-dir", str(build_dir),
+                "--target", self.target,
             ]
             self.run_command(cmd)
 
         def run_tests(self):
-            """Build (optional) and run tests"""
-            base_dir = GENERATOR_DEFAULT_DIR.get(self.generator, DEFAULT_BUILD_DIR)
-            # Check if using Conan nested layout
-            nested_dir = Path(base_dir) / "build" / self.build_type
-            if nested_dir.exists() and (nested_dir / "CMakeCache.txt").exists():
-                build_dir = str(nested_dir)
-            elif (Path(base_dir) / "CMakeCache.txt").exists():
-                build_dir = base_dir
-            else:
-                build_dir = str(nested_dir)
+            """Build and run tests"""
+            build_dir = self._find_build_dir()
+            if not build_dir:
+                root = self._project_root()
+                build_dir = root / GENERATOR_DEFAULT_DIR.get(self.generator, DEFAULT_BUILD_DIR) / "build" / self.build_type
             cmd = [
                 sys.executable, __file__, "tests",
-                "--build-dir", build_dir,
+                "--build-dir", str(build_dir),
                 "--config", self.build_type,
-                "--target", "all"
+                "--target", "all",
             ]
             self.run_command(cmd)
 
         def sync_assets(self):
             """Sync assets into the active build directory"""
-            base_dir = GENERATOR_DEFAULT_DIR.get(self.generator, DEFAULT_BUILD_DIR)
-            # Check if using Conan nested layout
-            nested_dir = Path(base_dir) / "build" / self.build_type
-            if nested_dir.exists():
-                build_dir = str(nested_dir)
-            else:
-                build_dir = base_dir
+            build_dir = self._find_build_dir()
+            if not build_dir:
+                self.log("⚠️  No configured build directory found. Run Configure CMake first.")
+                return
             self.console.clear()
             self.log("=== Syncing Assets ===\n")
-            _sync_assets(build_dir, dry_run=False)
+            _sync_assets(str(build_dir), dry_run=False)
             self.log("\n✓ Asset sync completed")
 
     app = QApplication(sys.argv)

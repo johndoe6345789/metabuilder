@@ -1,5 +1,6 @@
 #include "services/interfaces/workflow/graphics/workflow_graphics_init_viewport_step.hpp"
 #include "services/interfaces/workflow/workflow_step_io_resolver.hpp"
+#include "services/interfaces/workflow/workflow_step_parameter_resolver.hpp"
 
 #include <nlohmann/json.hpp>
 #include <stdexcept>
@@ -22,6 +23,16 @@ void WorkflowGraphicsInitViewportStep::Execute(const WorkflowStepDefinition& ste
 
     const auto* width = context.TryGet<double>(widthKey);
     const auto* height = context.TryGet<double>(heightKey);
+
+    // Optional present_mode: check step parameters first, then context fallback.
+    std::string presentMode;
+    WorkflowStepParameterResolver paramResolver;
+    if (const auto* p = paramResolver.FindParameter(step, "present_mode")) {
+        if (p->type == WorkflowParameterValue::Type::String) presentMode = p->stringValue;
+    }
+    if (presentMode.empty()) {
+        if (const auto* p = context.TryGet<std::string>("present_mode")) presentMode = *p;
+    }
 
     if (!width || !height) {
         throw std::runtime_error("graphics.gpu.init_viewport requires width and height inputs");
@@ -47,6 +58,9 @@ void WorkflowGraphicsInitViewportStep::Execute(const WorkflowStepDefinition& ste
         {"height", h},
         {"aspect_ratio", static_cast<double>(w) / static_cast<double>(h)}
     };
+    if (!presentMode.empty()) {
+        viewport_config["present_mode"] = presentMode;
+    }
 
     context.Set(outputViewportKey, viewport_config);
 }
