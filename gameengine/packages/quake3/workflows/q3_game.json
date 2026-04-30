@@ -44,7 +44,7 @@
       "parameters": { "inputs": { "image_path": "tex_walls_path" }, "outputs": { "texture": "walls_texture" } } },
     { "id": "physics_world", "type": "physics.world.create", "typeVersion": 1, "position": [0, 200] },
     { "id": "load_bsp", "name": "Load Q3 BSP", "type": "bsp.load", "typeVersion": 1, "position": [200, 200],
-      "parameters": { "pk3_path": "C:/baseq3/pak0.pk3", "map_name": "q3dm7", "scale": 0.03125 } },
+      "parameters": { "pk3_path": "${env:QUAKE3_PAK0}", "map_name": "q3dm7", "scale": 0.03125 } },
     { "id": "bsp_lightmap", "name": "BSP Lightmap Atlas", "type": "bsp.lightmap_atlas", "typeVersion": 1, "position": [400, 200] },
     { "id": "bsp_geometry", "name": "BSP Build Geometry", "type": "bsp.build_geometry", "typeVersion": 1, "position": [600, 200],
       "parameters": { "patch_tess_level": 4 } },

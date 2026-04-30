@@ -640,6 +640,22 @@ def run_demo(args: argparse.Namespace) -> None:
     if not args.no_sync:
         _sync_assets(build_dir, args.dry_run)
 
+    # Detect Steam-owned game data and export as env vars for ${env:VAR}
+    # substitution in workflow JSON. Silent no-op if Steam isn't installed.
+    try:
+        from steam_detector import detect_and_export
+        detected = detect_and_export()
+        if detected:
+            print("=== Detected game data ===")
+            for k, v in detected.items():
+                print(f"  {k}={v}")
+                os.environ[k] = v
+            print()
+    except NotImplementedError as e:
+        print(f"[steam_detector] {e}")
+    except Exception as e:
+        print(f"[steam_detector] detection skipped: {e}")
+
     exe_name = args.target or ("sdl3_app.exe" if IS_WINDOWS else "sdl3_app")
     binary = str(Path(build_dir).resolve() / exe_name)
     run_args = _strip_leading_double_dash(args.args)
@@ -647,8 +663,12 @@ def run_demo(args: argparse.Namespace) -> None:
     if run_args:
         cmd.extend(run_args)
     _print_cmd(cmd)
-    import os
     os.chdir(build_dir)
+    if IS_WINDOWS:
+        # os.execv is buggy on Windows with paths containing spaces;
+        # use subprocess and propagate the exit code instead.
+        import subprocess
+        sys.exit(subprocess.call(cmd))
     os.execv(binary, cmd)
 
 

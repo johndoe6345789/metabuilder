@@ -1,10 +1,43 @@
 #include "services/interfaces/workflow/workflow_parameter_reader.hpp"
 
+#include <cstdlib>
 #include <stdexcept>
+#include <string>
 #include <utility>
 #include <vector>
 
 namespace sdl3cpp::services::impl {
+
+// Expand ${env:VAR_NAME} placeholders in workflow string parameters.
+// Resolved at JSON load time so every step reads already-substituted values.
+// Unset variables expand to empty string (the step's missing-value handling
+// then takes over with its own error message — keeps this layer policy-free).
+namespace {
+std::string ExpandEnvPlaceholders(const std::string& input) {
+    std::string out;
+    out.reserve(input.size());
+    size_t i = 0;
+    while (i < input.size()) {
+        const size_t open = input.find("${env:", i);
+        if (open == std::string::npos) {
+            out.append(input, i, std::string::npos);
+            break;
+        }
+        const size_t close = input.find('}', open);
+        if (close == std::string::npos) {
+            out.append(input, i, std::string::npos);
+            break;
+        }
+        out.append(input, i, open - i);
+        const std::string varName = input.substr(open + 6, close - (open + 6));
+        if (const char* envVal = std::getenv(varName.c_str())) {
+            out.append(envVal);
+        }
+        i = close + 1;
+    }
+    return out;
+}
+}  // namespace
 
 WorkflowParameterReader::WorkflowParameterReader(std::shared_ptr<ILogger> logger)
     : logger_(std::move(logger)) {
@@ -73,7 +106,7 @@ std::unordered_map<std::string, WorkflowParameterValue> WorkflowParameterReader:
         }
 
         if (value.IsString()) {
-            result.emplace(key, WorkflowParameterValue::FromString(value.GetString()));
+            result.emplace(key, WorkflowParameterValue::FromString(ExpandEnvPlaceholders(value.GetString())));
             continue;
         }
         if (value.IsBool()) {
@@ -90,7 +123,7 @@ std::unordered_map<std::string, WorkflowParameterValue> WorkflowParameterReader:
             for (rapidjson::SizeType i = 0; i < value.Size(); ++i) {
                 const auto& entry = value[i];
                 if (entry.IsString()) {
-                    stringItems.emplace_back(entry.GetString());
+                    stringItems.emplace_back(ExpandEnvPlaceholders(entry.GetString()));
                 } else if (entry.IsNumber()) {
                     numberItems.emplace_back(entry.GetDouble());
                 } else {
