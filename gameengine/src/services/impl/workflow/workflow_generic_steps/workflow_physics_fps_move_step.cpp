@@ -37,7 +37,6 @@ void WorkflowPhysicsFpsMoveStep::Execute(
     const float moveSpeed = getNum("move_speed", 6.0f);
     const float sprintMultiplier = getNum("sprint_multiplier", 1.8f);
     const float crouchMultiplier = getNum("crouch_multiplier", 0.4f);
-    const float jumpForce = getNum("jump_force", 5.0f);
     const float crouchHeight = getNum("crouch_height", 0.8f);
     const float standHeight = getNum("stand_height", 1.6f);
     const float airControl = getNum("air_control", 0.3f);
@@ -138,43 +137,28 @@ void WorkflowPhysicsFpsMoveStep::Execute(
         float newX = curX + (moveX - curX) * airControl;
         float newZ = curZ + (moveZ - curZ) * airControl;
         body->setLinearVelocity(btVector3(newX, currentVel.y(), newZ));
-
-        // Extra downward gravity for snappy Quake-style landing
-        if (currentVel.y() < 0.0f) {
-            body->applyCentralForce(btVector3(0, -9.81f * body->getMass() * (gravityScale - 1.0f), 0));
-        }
     }
 
-    // Jump - hold space for higher jump, release early for short hop
+    // Per-player gravity scaling (applies symmetrically in air, both rising
+    // and falling). gravityScale > 1.0 = heavier; < 1.0 = floatier; 1.0 =
+    // Earth. Implemented as an additive force on top of the world's -9.81
+    // so the rest of the world keeps Earth gravity untouched.
+    if (!grounded && gravityScale != 1.0f) {
+        body->applyCentralForce(btVector3(0, -9.81f * body->getMass() * (gravityScale - 1.0f), 0));
+    }
+
+    // Quake-style impulse jump: set upward velocity once on press while
+    // grounded; height is determined by gravity from there. No hold-to-extend.
+    // The latching `player_jumping` flag prevents auto-bunnyhop from a held key.
+    const float jumpVelocity = getNum("jump_velocity", 6.5f);
     bool wasJumping = context.GetBool("player_jumping", false);
-    float jumpTime = context.Get<float>("player_jump_time", 0.0f);
-    float jumpDuration = getNum("jump_duration", 1.2f);
-    float jumpHeight = getNum("jump_height", 3.5f);
 
     if (keySpace && !keyCtrl && grounded && !wasJumping) {
+        btVector3 vel = body->getLinearVelocity();
+        body->setLinearVelocity(btVector3(vel.x(), jumpVelocity, vel.z()));
         context.Set<bool>("player_jumping", true);
-        context.Set<float>("player_jump_time", 0.0f);
-        jumpTime = 0.0f;
     }
-
-    if (context.GetBool("player_jumping", false)) {
-        float dt = 1.0f / 60.0f;
-        jumpTime += dt;
-        context.Set<float>("player_jump_time", jumpTime);
-
-        // Keep rising while space is held and under max duration
-        if (keySpace && jumpTime < jumpDuration) {
-            float t = jumpTime / jumpDuration;
-            float upSpeed = (jumpHeight / jumpDuration) * (1.0f - t * t);
-            btVector3 vel = body->getLinearVelocity();
-            body->setLinearVelocity(btVector3(vel.x(), upSpeed, vel.z()));
-        } else {
-            // Released space or hit max duration - start falling
-            context.Set<bool>("player_jumping", false);
-        }
-    }
-
-    if (grounded && !keySpace) {
+    if (!keySpace && grounded) {
         context.Set<bool>("player_jumping", false);
     }
 
