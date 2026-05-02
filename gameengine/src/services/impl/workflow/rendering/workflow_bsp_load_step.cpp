@@ -38,7 +38,17 @@ void WorkflowBspLoadStep::Execute(const WorkflowStepDefinition& step, WorkflowCo
     };
 
     const std::string pk3_path = getStr("pk3_path", "");
-    std::string map_name = getStr("map_name", "q3dm17");
+
+    // Context key q3.pending_map (set by menu) takes precedence over the workflow parameter.
+    // This allows in-process map switching without modifying the workflow JSON.
+    std::string map_name;
+    const auto* pendingMap = context.TryGet<std::string>("q3.pending_map");
+    if (pendingMap && !pendingMap->empty()) {
+        map_name = *pendingMap;
+        context.Set<std::string>("q3.pending_map", "");
+    } else {
+        map_name = getStr("map_name", "q3dm7");
+    }
     if (map_name.empty()) map_name = "q3dm7";
     const float scale = getNum("scale", 1.0f / 32.0f);
 

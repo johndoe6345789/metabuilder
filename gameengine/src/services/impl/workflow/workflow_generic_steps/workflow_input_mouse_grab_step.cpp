@@ -24,18 +24,24 @@ void WorkflowInputMouseGrabStep::Execute(
         return;
     }
 
-    WorkflowStepParameterResolver paramResolver;
-    float enabled = 1.0f;
-    if (const auto* p = paramResolver.FindParameter(step, "enabled")) {
-        if (p->type == WorkflowParameterValue::Type::Number) {
-            enabled = static_cast<float>(p->numberValue);
+    // Prefer context key input over static parameter so the DAG can drive grab per-frame.
+    bool grab = true;
+    auto enabledIt = step.inputs.find("enabled");
+    if (enabledIt != step.inputs.end()) {
+        const auto* v = context.TryGet<bool>(enabledIt->second);
+        if (v) grab = *v;
+    } else {
+        WorkflowStepParameterResolver paramResolver;
+        if (const auto* p = paramResolver.FindParameter(step, "enabled")) {
+            if (p->type == WorkflowParameterValue::Type::Number)
+                grab = p->numberValue > 0.5;
+            else if (p->type == WorkflowParameterValue::Type::Bool)
+                grab = p->boolValue;
         }
     }
 
-    bool grab = enabled > 0.5f;
     SDL_SetWindowRelativeMouseMode(window, grab);
     context.Set<bool>("mouse_grabbed", grab);
-    context.Set<bool>("game_running", grab);
 
     if (logger_) {
         logger_->Info("input.mouse.grab: " + std::string(grab ? "enabled" : "disabled"));

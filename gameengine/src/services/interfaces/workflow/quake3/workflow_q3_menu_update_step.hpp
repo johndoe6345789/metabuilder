@@ -3,6 +3,7 @@
 #include "services/interfaces/i_workflow_step.hpp"
 #include "services/interfaces/i_logger.hpp"
 
+#include <nlohmann/json.hpp>
 #include <memory>
 
 namespace sdl3cpp::services::impl {
@@ -15,6 +16,8 @@ public:
 
 private:
     std::shared_ptr<ILogger> logger_;
+    nlohmann::json config_;
+    bool config_loaded_ = false;
 };
 
 }  // namespace sdl3cpp::services::impl

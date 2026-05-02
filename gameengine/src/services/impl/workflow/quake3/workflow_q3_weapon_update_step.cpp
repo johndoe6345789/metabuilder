@@ -63,7 +63,7 @@ void WorkflowQ3WeaponUpdateStep::Execute(const WorkflowStepDefinition& step, Wor
                               28u;
 
     bool wantsFire = firePressed || (fireHeld && current == "weapon_machinegun") || (fireHeld && current == "weapon_lightning");
-    if (!context.GetBool("q3.menu_open", false) && wantsFire && (lastFire == 0u || frame >= lastFire + interval)) {
+    if (context.GetBool("movement_active", true) && wantsFire && (lastFire == 0u || frame >= lastFire + interval)) {
         lastFire = frame == 0u ? 1u : frame;
         context.Set<uint32_t>("q3.weapon_last_fire_frame", lastFire);
         context.Set<uint32_t>("q3.weapon_flash_until_frame", lastFire + 4u);

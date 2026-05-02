@@ -26,7 +26,7 @@ void WorkflowPhysicsFpsMoveStep::Execute(
 
     auto* body = context.Get<btRigidBody*>("physics_body_" + playerName, nullptr);
     if (!body) return;
-    if (context.GetBool("q3.menu_open", false)) {
+    if (!context.GetBool("movement_active", true)) {
         btVector3 vel = body->getLinearVelocity();
         body->setLinearVelocity(btVector3(0, vel.y(), 0));
         return;

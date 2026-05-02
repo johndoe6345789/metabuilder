@@ -276,6 +276,7 @@ if(BUILD_SDL3_APP)
         src/services/impl/workflow/workflow_generic_steps/workflow_value_copy_step.cpp
         src/services/impl/workflow/workflow_generic_steps/workflow_value_default_step.cpp
         src/services/impl/workflow/workflow_generic_steps/workflow_value_literal_step.cpp
+        src/services/impl/workflow/workflow_generic_steps/workflow_value_set_if_step.cpp
         src/services/impl/workflow/workflow_generic_steps/workflow_variable_get_step.cpp
         src/services/impl/workflow/workflow_generic_steps/workflow_variable_set_step.cpp
         src/services/impl/workflow/workflow_generic_steps/workflow_vfx_destroy_step.cpp

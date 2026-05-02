@@ -23,13 +23,17 @@ void WorkflowInputPollStep::Execute(
     bool keyEnterPressed = false;
     bool keyUpPressed = false;
     bool keyDownPressed = false;
+    bool keyQPressed = false;
     bool mouseLeftPressed = false;
 
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
             case SDL_EVENT_QUIT:
-                context.Set<bool>("game_running", false);
+            case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
+                context.Set<bool>("game_running",    false);
+                context.Set<bool>("outer_running",   false);
+                context.Set<bool>("q3.quit_requested", true);
                 break;
             case SDL_EVENT_KEY_DOWN:
                 if (event.key.key == SDLK_ESCAPE) {
@@ -41,7 +45,7 @@ void WorkflowInputPollStep::Execute(
                 } else if (event.key.key == SDLK_DOWN) {
                     keyDownPressed = true;
                 } else if (event.key.key == SDLK_Q) {
-                    context.Set<bool>("game_running", false);
+                    keyQPressed = true;
                 }
                 break;
             case SDL_EVENT_MOUSE_BUTTON_DOWN:
@@ -61,6 +65,7 @@ void WorkflowInputPollStep::Execute(
     context.Set<bool>("input_key_enter_pressed", keyEnterPressed);
     context.Set<bool>("input_key_up_pressed", keyUpPressed);
     context.Set<bool>("input_key_down_pressed", keyDownPressed);
+    context.Set<bool>("input_key_q_pressed", keyQPressed);
     context.Set<bool>("input_mouse_left_pressed", mouseLeftPressed);
 
     // Read keyboard state (snapshot, not event-based)

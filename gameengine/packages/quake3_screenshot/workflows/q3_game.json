@@ -58,7 +58,7 @@
     { "id": "init_outer_running", "type": "value.literal",               "typeVersion": 1, "position": [1000, 200],
       "parameters": { "value": true,  "outputs": { "value": "outer_running" } } },
     { "id": "outer_loop",         "type": "control.loop.while",          "typeVersion": 1, "position": [1200, 200],
-      "parameters": { "condition_key": "outer_running", "package": "quake3", "workflow": "q3_map_session" } },
+      "parameters": { "condition_key": "outer_running", "package": "quake3_screenshot", "workflow": "q3_map_session" } },
 
     { "id": "exit",               "type": "system.exit",                 "typeVersion": 1, "position": [1400, 200] }
   ],

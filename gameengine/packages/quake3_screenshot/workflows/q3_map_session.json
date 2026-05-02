@@ -1,0 +1,97 @@
+{
+  "name": "Q3 Map Session",
+  "description": "Loads a BSP map and runs the frame loop. Repeated by the outer loop for each map change.",
+  "nodes": [
+    {
+      "id": "load_bsp",
+      "name": "Load Q3 BSP",
+      "type": "bsp.load",
+      "typeVersion": 1,
+      "position": [0, 0],
+      "parameters": { "pk3_path": "${env:QUAKE3_PAK0}", "map_name": "${env:QUAKE3_MAP}", "scale": 0.03125 }
+    },
+    {
+      "id": "bsp_lightmap",
+      "name": "BSP Lightmap Atlas",
+      "type": "bsp.lightmap_atlas",
+      "typeVersion": 1,
+      "position": [100, 0]
+    },
+    {
+      "id": "bsp_geometry",
+      "name": "BSP Build Geometry",
+      "type": "bsp.build_geometry",
+      "typeVersion": 1,
+      "position": [200, 0],
+      "parameters": { "patch_tess_level": 4 }
+    },
+    {
+      "id": "bsp_textures",
+      "name": "BSP Extract Textures",
+      "type": "bsp.extract_textures",
+      "typeVersion": 1,
+      "position": [300, 0]
+    },
+    {
+      "id": "bsp_upload",
+      "name": "BSP Upload Geometry",
+      "type": "bsp.upload_geometry",
+      "typeVersion": 1,
+      "position": [400, 0]
+    },
+    {
+      "id": "bsp_collision",
+      "name": "BSP Build Collision",
+      "type": "bsp.build_collision",
+      "typeVersion": 1,
+      "position": [500, 0]
+    },
+    {
+      "id": "bsp_spawn",
+      "name": "BSP Parse Spawn",
+      "type": "bsp.parse_spawn",
+      "typeVersion": 1,
+      "position": [600, 0]
+    },
+    {
+      "id": "spawn_apply",
+      "type": "spawn.apply",
+      "typeVersion": 1,
+      "position": [700, 0]
+    },
+    {
+      "id": "set_running",
+      "type": "value.literal",
+      "typeVersion": 1,
+      "position": [800, 0],
+      "parameters": { "value": true, "outputs": { "value": "game_running" } }
+    },
+    {
+      "id": "game_loop",
+      "type": "control.loop.while",
+      "typeVersion": 1,
+      "position": [900, 0],
+      "parameters": { "condition_key": "game_running", "package": "quake3_screenshot", "workflow": "q3_frame" }
+    },
+    {
+      "id": "check_quit",
+      "type": "bool.not",
+      "typeVersion": 1,
+      "position": [1000, 0],
+      "inputs": { "value": "q3.quit_requested" },
+      "outputs": { "value": "outer_running" }
+    }
+  ],
+  "connections": {
+    "load_bsp":     { "main": { "0": [{ "node": "bsp_lightmap",  "type": "main", "index": 0 }] } },
+    "bsp_lightmap": { "main": { "0": [{ "node": "bsp_geometry",  "type": "main", "index": 0 }] } },
+    "bsp_geometry": { "main": { "0": [{ "node": "bsp_textures",  "type": "main", "index": 0 }] } },
+    "bsp_textures": { "main": { "0": [{ "node": "bsp_upload",    "type": "main", "index": 0 }] } },
+    "bsp_upload":   { "main": { "0": [{ "node": "bsp_collision",  "type": "main", "index": 0 }] } },
+    "bsp_collision":{ "main": { "0": [{ "node": "bsp_spawn",     "type": "main", "index": 0 }] } },
+    "bsp_spawn":    { "main": { "0": [{ "node": "spawn_apply",   "type": "main", "index": 0 }] } },
+    "spawn_apply":  { "main": { "0": [{ "node": "set_running",   "type": "main", "index": 0 }] } },
+    "set_running":  { "main": { "0": [{ "node": "game_loop",     "type": "main", "index": 0 }] } },
+    "game_loop":    { "main": { "0": [{ "node": "check_quit",    "type": "main", "index": 0 }] } }
+  }
+}

@@ -84,6 +84,26 @@ void WorkflowBspBuildCollisionStep::Execute(const WorkflowStepDefinition& step, 
         return;
     }
 
+    // Remove previous BSP collision body to prevent ghost geometry on map reload
+    auto* prevBody = context.Get<btRigidBody*>("bsp_collision_body", nullptr);
+    if (prevBody) {
+        world->removeRigidBody(prevBody);
+        auto* shape = prevBody->getCollisionShape();
+        auto* ms = prevBody->getMotionState();
+        delete prevBody;
+        delete ms;
+        if (shape) {
+            auto* compound = dynamic_cast<btCompoundShape*>(shape);
+            if (compound) {
+                for (int i = compound->getNumChildShapes() - 1; i >= 0; --i) {
+                    delete compound->getChildShape(i);
+                }
+            }
+            delete shape;
+        }
+        context.Set<btRigidBody*>("bsp_collision_body", nullptr);
+    }
+
     const auto& bspData = *bspDataPtr;
     auto* lumps = reinterpret_cast<const BspLump*>(bspData.data() + sizeof(BspHeader));
 
@@ -160,7 +180,7 @@ void WorkflowBspBuildCollisionStep::Execute(const WorkflowStepDefinition& step, 
         auto* body = new btRigidBody(rbInfo);
         body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_STATIC_OBJECT);
         world->addRigidBody(body);
-        context.Set<btRigidBody*>("physics_body_bsp_" + map_name, body);
+        context.Set<btRigidBody*>("bsp_collision_body", body);
     }
 
     if (logger_) {

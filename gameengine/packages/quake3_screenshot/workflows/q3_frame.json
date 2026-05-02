@@ -200,6 +200,40 @@
       "type": "postfx.composite",
       "typeVersion": 1,
       "position": [1600, 0]
+    },
+    {
+      "id": "set_threshold",
+      "type": "value.literal",
+      "typeVersion": 1,
+      "position": [1650, 0],
+      "parameters": { "value": 240.0 },
+      "outputs": { "value": "screenshot_threshold" }
+    },
+    {
+      "id": "check_frame_240",
+      "type": "compare.gte",
+      "typeVersion": 1,
+      "position": [1700, 0],
+      "inputs":  { "left": "loop.iteration", "right": "screenshot_threshold" },
+      "outputs": { "value": "screenshot_due" }
+    },
+    {
+      "id": "set_screenshot_path",
+      "type": "value.set_if",
+      "typeVersion": 1,
+      "position": [1750, 0],
+      "inputs":  { "condition": "screenshot_due" },
+      "parameters": { "value": "/tmp/q3_screenshot.bmp" },
+      "outputs": { "value": "screenshot_output_path" }
+    },
+    {
+      "id": "stop_after_screenshot",
+      "type": "value.set_if",
+      "typeVersion": 1,
+      "position": [1800, 0],
+      "inputs":  { "condition": "screenshot_due" },
+      "parameters": { "value": false },
+      "outputs": { "value": "game_running" }
     }
   ],
   "connections": {
@@ -227,6 +261,10 @@
     "postfx_taa": { "main": { "0": [{ "node": "postfx_ssao", "type": "main", "index": 0 }] } },
     "postfx_ssao": { "main": { "0": [{ "node": "bloom_extract", "type": "main", "index": 0 }] } },
     "bloom_extract": { "main": { "0": [{ "node": "bloom_blur", "type": "main", "index": 0 }] } },
-    "bloom_blur": { "main": { "0": [{ "node": "postfx_composite", "type": "main", "index": 0 }] } }
+    "bloom_blur":           { "main": { "0": [{ "node": "postfx_composite",    "type": "main", "index": 0 }] } },
+    "postfx_composite":     { "main": { "0": [{ "node": "set_threshold",       "type": "main", "index": 0 }] } },
+    "set_threshold":        { "main": { "0": [{ "node": "check_frame_240",     "type": "main", "index": 0 }] } },
+    "check_frame_240":      { "main": { "0": [{ "node": "set_screenshot_path", "type": "main", "index": 0 }] } },
+    "set_screenshot_path":  { "main": { "0": [{ "node": "stop_after_screenshot", "type": "main", "index": 0 }] } }
   }
 }

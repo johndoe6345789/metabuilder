@@ -1,10 +1,10 @@
 {
-  "name": "Quake 3 Support",
+  "name": "Quake 3 Screenshot",
   "version": "1.0.0",
-  "id": "quake3",
+  "id": "quake3_screenshot",
   "type": "game",
   "category": "demo",
-  "description": "Quake 3 BSP map viewer with FPS controls",
+  "description": "Renders 240 frames then saves a screenshot and exits",
 
   "defaultWorkflow": "workflows/q3_game.json",
 

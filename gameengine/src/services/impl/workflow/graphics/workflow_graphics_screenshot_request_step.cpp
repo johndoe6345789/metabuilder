@@ -31,7 +31,9 @@ void WorkflowGraphicsScreenshotRequestStep::Execute(
 
     const auto* output_path = context.TryGet<std::string>(outputPathKey);
     if (!output_path || output_path->empty()) {
-        throw std::runtime_error("graphics.screenshot.request requires output_path input");
+        // No path set yet — skip silently (e.g. waiting for frame threshold)
+        context.Set(outputSuccessKey, false);
+        return;
     }
 
     // Resolve ~ in path

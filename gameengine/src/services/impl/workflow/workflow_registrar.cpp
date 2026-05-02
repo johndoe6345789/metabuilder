@@ -202,6 +202,7 @@
 
 // Value
 #include "services/interfaces/workflow/workflow_generic_steps/workflow_value_assert_exists_step.hpp"
+#include "services/interfaces/workflow/workflow_generic_steps/workflow_value_set_if_step.hpp"
 #include "services/interfaces/workflow/workflow_generic_steps/workflow_value_assert_type_step.hpp"
 #include "services/interfaces/workflow/workflow_generic_steps/workflow_value_clear_step.hpp"
 #include "services/interfaces/workflow/workflow_generic_steps/workflow_value_copy_step.hpp"
@@ -471,7 +472,8 @@ void WorkflowRegistrar::RegisterSteps(std::shared_ptr<IWorkflowStepRegistry> reg
     registry->RegisterStep(std::make_shared<WorkflowValueCopyStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowValueDefaultStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowValueLiteralStep>(logger_));
-    count += 6;
+    registry->RegisterStep(std::make_shared<WorkflowValueSetIfStep>(logger_));
+    count += 7;
 
     // ── VFX ────────────────────────────────────────────────────
     registry->RegisterStep(std::make_shared<WorkflowVfxSpawnStep>(logger_));
