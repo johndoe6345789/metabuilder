@@ -1,6 +1,6 @@
 {
   "name": "Q3 Frame Tick",
-  "description": "Per-frame: poll input, FPS move, render BSP map with post-FX.",
+  "description": "Per-frame: poll input, FPS move, render BSP map with player models, bots, and weapon.",
   "nodes": [
     {
       "id": "input_poll",
@@ -112,6 +112,18 @@
       "position": [690, 0]
     },
     {
+      "id": "q3_bots_update",
+      "type": "q3.bots.update",
+      "typeVersion": 1,
+      "position": [695, 0],
+      "parameters": {
+        "chase_range":    20.0,
+        "shoot_range":     6.0,
+        "move_speed":      3.5,
+        "shoot_interval": 30
+      }
+    },
+    {
       "id": "render_prepare",
       "type": "render.prepare",
       "typeVersion": 1,
@@ -151,6 +163,32 @@
       "type": "q3.pickups.draw",
       "typeVersion": 1,
       "position": [1100, 0]
+    },
+    {
+      "id": "draw_bots",
+      "type": "q3.bots.draw",
+      "typeVersion": 1,
+      "position": [1150, 0],
+      "parameters": {
+        "lower_prefix":  "lower",
+        "upper_prefix":  "upper",
+        "head_prefix":   "head",
+        "weapon_prefix": "weapon_mg"
+      }
+    },
+    {
+      "id": "draw_weapon_viewmodel",
+      "type": "q3.md3.draw",
+      "typeVersion": 1,
+      "position": [1160, 0],
+      "parameters": {
+        "prefix":    "weapon_mg",
+        "viewmodel": true,
+        "vm_right":  0.25,
+        "vm_down":  -0.22,
+        "vm_fwd":    0.45,
+        "fps":       15.0
+      }
     },
     {
       "id": "end_scene",
@@ -203,30 +241,33 @@
     }
   ],
   "connections": {
-    "input_poll":        { "main": { "0": [{ "node": "q3_menu",          "type": "main", "index": 0 }] } },
-    "q3_menu":           { "main": { "0": [{ "node": "should_stop",      "type": "main", "index": 0 }] } },
-    "should_stop":       { "main": { "0": [{ "node": "stop_game_loop",   "type": "main", "index": 0 }] } },
-    "stop_game_loop":    { "main": { "0": [{ "node": "set_quit_requested","type": "main", "index": 0 }] } },
-    "set_quit_requested":       { "main": { "0": [{ "node": "compute_movement_active", "type": "main", "index": 0 }] } },
-    "compute_movement_active":  { "main": { "0": [{ "node": "update_mouse_grab",       "type": "main", "index": 0 }] } },
-    "update_mouse_grab":        { "main": { "0": [{ "node": "physics_move",            "type": "main", "index": 0 }] } },
-    "physics_move": { "main": { "0": [{ "node": "physics_step", "type": "main", "index": 0 }] } },
-    "physics_step": { "main": { "0": [{ "node": "sync_transforms", "type": "main", "index": 0 }] } },
-    "sync_transforms": { "main": { "0": [{ "node": "bsp_entities_update", "type": "main", "index": 0 }] } },
-    "bsp_entities_update": { "main": { "0": [{ "node": "camera_update", "type": "main", "index": 0 }] } },
-    "camera_update": { "main": { "0": [{ "node": "q3_weapon", "type": "main", "index": 0 }] } },
-    "q3_weapon": { "main": { "0": [{ "node": "render_prepare", "type": "main", "index": 0 }] } },
-    "render_prepare": { "main": { "0": [{ "node": "portal_view", "type": "main", "index": 0 }] } },
-    "portal_view": { "main": { "0": [{ "node": "frame_begin", "type": "main", "index": 0 }] } },
-    "frame_begin": { "main": { "0": [{ "node": "draw_map", "type": "main", "index": 0 }] } },
-    "draw_map": { "main": { "0": [{ "node": "draw_pickups", "type": "main", "index": 0 }] } },
-    "draw_pickups": { "main": { "0": [{ "node": "end_scene", "type": "main", "index": 0 }] } },
-    "end_scene": { "main": { "0": [{ "node": "overlay_fps", "type": "main", "index": 0 }] } },
-    "overlay_fps": { "main": { "0": [{ "node": "q3_overlay", "type": "main", "index": 0 }] } },
-    "q3_overlay": { "main": { "0": [{ "node": "postfx_taa", "type": "main", "index": 0 }] } },
-    "postfx_taa": { "main": { "0": [{ "node": "postfx_ssao", "type": "main", "index": 0 }] } },
-    "postfx_ssao": { "main": { "0": [{ "node": "bloom_extract", "type": "main", "index": 0 }] } },
-    "bloom_extract": { "main": { "0": [{ "node": "bloom_blur", "type": "main", "index": 0 }] } },
-    "bloom_blur": { "main": { "0": [{ "node": "postfx_composite", "type": "main", "index": 0 }] } }
+    "input_poll":              { "main": { "0": [{ "node": "q3_menu",                 "type": "main", "index": 0 }] } },
+    "q3_menu":                 { "main": { "0": [{ "node": "should_stop",             "type": "main", "index": 0 }] } },
+    "should_stop":             { "main": { "0": [{ "node": "stop_game_loop",          "type": "main", "index": 0 }] } },
+    "stop_game_loop":          { "main": { "0": [{ "node": "set_quit_requested",      "type": "main", "index": 0 }] } },
+    "set_quit_requested":      { "main": { "0": [{ "node": "compute_movement_active", "type": "main", "index": 0 }] } },
+    "compute_movement_active": { "main": { "0": [{ "node": "update_mouse_grab",       "type": "main", "index": 0 }] } },
+    "update_mouse_grab":       { "main": { "0": [{ "node": "physics_move",            "type": "main", "index": 0 }] } },
+    "physics_move":            { "main": { "0": [{ "node": "physics_step",            "type": "main", "index": 0 }] } },
+    "physics_step":            { "main": { "0": [{ "node": "sync_transforms",         "type": "main", "index": 0 }] } },
+    "sync_transforms":         { "main": { "0": [{ "node": "bsp_entities_update",     "type": "main", "index": 0 }] } },
+    "bsp_entities_update":     { "main": { "0": [{ "node": "camera_update",           "type": "main", "index": 0 }] } },
+    "camera_update":           { "main": { "0": [{ "node": "q3_weapon",               "type": "main", "index": 0 }] } },
+    "q3_weapon":               { "main": { "0": [{ "node": "q3_bots_update",          "type": "main", "index": 0 }] } },
+    "q3_bots_update":          { "main": { "0": [{ "node": "render_prepare",          "type": "main", "index": 0 }] } },
+    "render_prepare":          { "main": { "0": [{ "node": "portal_view",             "type": "main", "index": 0 }] } },
+    "portal_view":             { "main": { "0": [{ "node": "frame_begin",             "type": "main", "index": 0 }] } },
+    "frame_begin":             { "main": { "0": [{ "node": "draw_map",                "type": "main", "index": 0 }] } },
+    "draw_map":                { "main": { "0": [{ "node": "draw_pickups",            "type": "main", "index": 0 }] } },
+    "draw_pickups":            { "main": { "0": [{ "node": "draw_bots",               "type": "main", "index": 0 }] } },
+    "draw_bots":               { "main": { "0": [{ "node": "draw_weapon_viewmodel",   "type": "main", "index": 0 }] } },
+    "draw_weapon_viewmodel":   { "main": { "0": [{ "node": "end_scene",               "type": "main", "index": 0 }] } },
+    "end_scene":               { "main": { "0": [{ "node": "overlay_fps",             "type": "main", "index": 0 }] } },
+    "overlay_fps":             { "main": { "0": [{ "node": "q3_overlay",              "type": "main", "index": 0 }] } },
+    "q3_overlay":              { "main": { "0": [{ "node": "postfx_taa",              "type": "main", "index": 0 }] } },
+    "postfx_taa":              { "main": { "0": [{ "node": "postfx_ssao",             "type": "main", "index": 0 }] } },
+    "postfx_ssao":             { "main": { "0": [{ "node": "bloom_extract",           "type": "main", "index": 0 }] } },
+    "bloom_extract":           { "main": { "0": [{ "node": "bloom_blur",              "type": "main", "index": 0 }] } },
+    "bloom_blur":              { "main": { "0": [{ "node": "postfx_composite",        "type": "main", "index": 0 }] } }
   }
 }

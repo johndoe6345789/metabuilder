@@ -1,6 +1,6 @@
 {
   "name": "Q3 Map Session",
-  "description": "Loads a BSP map and runs the frame loop. Repeated by the outer loop for each map change.",
+  "description": "Loads a BSP map, player/weapon MD3 models, spawns bots, then runs the frame loop.",
   "nodes": [
     {
       "id": "load_bsp",
@@ -12,14 +12,12 @@
     },
     {
       "id": "bsp_lightmap",
-      "name": "BSP Lightmap Atlas",
       "type": "bsp.lightmap_atlas",
       "typeVersion": 1,
       "position": [100, 0]
     },
     {
       "id": "bsp_geometry",
-      "name": "BSP Build Geometry",
       "type": "bsp.build_geometry",
       "typeVersion": 1,
       "position": [200, 0],
@@ -27,28 +25,24 @@
     },
     {
       "id": "bsp_textures",
-      "name": "BSP Extract Textures",
       "type": "bsp.extract_textures",
       "typeVersion": 1,
       "position": [300, 0]
     },
     {
       "id": "bsp_upload",
-      "name": "BSP Upload Geometry",
       "type": "bsp.upload_geometry",
       "typeVersion": 1,
       "position": [400, 0]
     },
     {
       "id": "bsp_collision",
-      "name": "BSP Build Collision",
       "type": "bsp.build_collision",
       "typeVersion": 1,
       "position": [500, 0]
     },
     {
       "id": "bsp_spawn",
-      "name": "BSP Parse Spawn",
       "type": "bsp.parse_spawn",
       "typeVersion": 1,
       "position": [600, 0]
@@ -58,6 +52,54 @@
       "type": "spawn.apply",
       "typeVersion": 1,
       "position": [700, 0]
+    },
+    {
+      "id": "load_lower",
+      "type": "q3.md3.load",
+      "typeVersion": 1,
+      "position": [720, 0],
+      "parameters": {
+        "prefix": "lower",
+        "path":   "models/players/keel/lower.md3",
+        "anim":   "models/players/keel/animation.cfg"
+      }
+    },
+    {
+      "id": "load_upper",
+      "type": "q3.md3.load",
+      "typeVersion": 1,
+      "position": [730, 0],
+      "parameters": {
+        "prefix": "upper",
+        "path":   "models/players/keel/upper.md3"
+      }
+    },
+    {
+      "id": "load_head",
+      "type": "q3.md3.load",
+      "typeVersion": 1,
+      "position": [740, 0],
+      "parameters": {
+        "prefix": "head",
+        "path":   "models/players/keel/head.md3"
+      }
+    },
+    {
+      "id": "load_weapon_mg",
+      "type": "q3.md3.load",
+      "typeVersion": 1,
+      "position": [750, 0],
+      "parameters": {
+        "prefix": "weapon_mg",
+        "path":   "models/weapons2/machinegun/machinegun.md3"
+      }
+    },
+    {
+      "id": "bots_spawn",
+      "type": "q3.bots.spawn",
+      "typeVersion": 1,
+      "position": [760, 0],
+      "parameters": { "count": 4 }
     },
     {
       "id": "set_running",
@@ -83,15 +125,20 @@
     }
   ],
   "connections": {
-    "load_bsp":     { "main": { "0": [{ "node": "bsp_lightmap",  "type": "main", "index": 0 }] } },
-    "bsp_lightmap": { "main": { "0": [{ "node": "bsp_geometry",  "type": "main", "index": 0 }] } },
-    "bsp_geometry": { "main": { "0": [{ "node": "bsp_textures",  "type": "main", "index": 0 }] } },
-    "bsp_textures": { "main": { "0": [{ "node": "bsp_upload",    "type": "main", "index": 0 }] } },
-    "bsp_upload":   { "main": { "0": [{ "node": "bsp_collision",  "type": "main", "index": 0 }] } },
-    "bsp_collision":{ "main": { "0": [{ "node": "bsp_spawn",     "type": "main", "index": 0 }] } },
-    "bsp_spawn":    { "main": { "0": [{ "node": "spawn_apply",   "type": "main", "index": 0 }] } },
-    "spawn_apply":  { "main": { "0": [{ "node": "set_running",   "type": "main", "index": 0 }] } },
-    "set_running":  { "main": { "0": [{ "node": "game_loop",     "type": "main", "index": 0 }] } },
-    "game_loop":    { "main": { "0": [{ "node": "check_quit",    "type": "main", "index": 0 }] } }
+    "load_bsp":      { "main": { "0": [{ "node": "bsp_lightmap",  "type": "main", "index": 0 }] } },
+    "bsp_lightmap":  { "main": { "0": [{ "node": "bsp_geometry",  "type": "main", "index": 0 }] } },
+    "bsp_geometry":  { "main": { "0": [{ "node": "bsp_textures",  "type": "main", "index": 0 }] } },
+    "bsp_textures":  { "main": { "0": [{ "node": "bsp_upload",    "type": "main", "index": 0 }] } },
+    "bsp_upload":    { "main": { "0": [{ "node": "bsp_collision",  "type": "main", "index": 0 }] } },
+    "bsp_collision": { "main": { "0": [{ "node": "bsp_spawn",     "type": "main", "index": 0 }] } },
+    "bsp_spawn":     { "main": { "0": [{ "node": "spawn_apply",   "type": "main", "index": 0 }] } },
+    "spawn_apply":   { "main": { "0": [{ "node": "load_lower",    "type": "main", "index": 0 }] } },
+    "load_lower":    { "main": { "0": [{ "node": "load_upper",    "type": "main", "index": 0 }] } },
+    "load_upper":    { "main": { "0": [{ "node": "load_head",     "type": "main", "index": 0 }] } },
+    "load_head":     { "main": { "0": [{ "node": "load_weapon_mg","type": "main", "index": 0 }] } },
+    "load_weapon_mg":{ "main": { "0": [{ "node": "bots_spawn",    "type": "main", "index": 0 }] } },
+    "bots_spawn":    { "main": { "0": [{ "node": "set_running",   "type": "main", "index": 0 }] } },
+    "set_running":   { "main": { "0": [{ "node": "game_loop",     "type": "main", "index": 0 }] } },
+    "game_loop":     { "main": { "0": [{ "node": "check_quit",    "type": "main", "index": 0 }] } }
   }
 }

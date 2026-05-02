@@ -118,6 +118,11 @@
 #include "services/interfaces/workflow/quake3/workflow_q3_weapon_update_step.hpp"
 #include "services/interfaces/workflow/quake3/workflow_q3_overlay_draw_step.hpp"
 #include "services/interfaces/workflow/quake3/workflow_q3_pickups_draw_step.hpp"
+#include "services/interfaces/workflow/quake3/workflow_q3_md3_load_step.hpp"
+#include "services/interfaces/workflow/quake3/workflow_q3_md3_draw_step.hpp"
+#include "services/interfaces/workflow/quake3/workflow_q3_bots_spawn_step.hpp"
+#include "services/interfaces/workflow/quake3/workflow_q3_bots_update_step.hpp"
+#include "services/interfaces/workflow/quake3/workflow_q3_bots_draw_step.hpp"
 
 // Audio (service-dependent, registered with nullptr)
 #include "services/interfaces/workflow/workflow_generic_steps/workflow_audio_pause_step.hpp"
@@ -327,7 +332,12 @@ void WorkflowRegistrar::RegisterSteps(std::shared_ptr<IWorkflowStepRegistry> reg
     registry->RegisterStep(std::make_shared<WorkflowQ3WeaponUpdateStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowQ3PickupsDrawStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowQ3OverlayDrawStep>(logger_));
-    count += 18;
+    registry->RegisterStep(std::make_shared<WorkflowQ3Md3LoadStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowQ3Md3DrawStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowQ3BotsSpawnStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowQ3BotsUpdateStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowQ3BotsDrawStep>(logger_));
+    count += 23;
 
     // ── Texture ───────────────────────────────────────────────
     registry->RegisterStep(std::make_shared<WorkflowTextureLoadStep>(logger_));

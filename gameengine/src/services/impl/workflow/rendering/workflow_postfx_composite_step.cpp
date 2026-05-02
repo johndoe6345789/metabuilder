@@ -329,6 +329,50 @@ void WorkflowPostfxCompositeStep::Execute(
     if (!cmd || !pipeline || !hdr_texture || !sampler || !swapchain_tex) {
         if (logger_) logger_->Warn("postfx.composite: Missing required resources");
         if (cmd) {
+            // GPU screenshot: before submitting, blit swapchain to a download buffer
+            // so the screenshot captures the full 3D scene (not just the CPU overlay).
+            auto* gswap = context.Get<SDL_GPUTexture*>("gpu_swapchain_texture", nullptr);
+            const auto* ssPath = context.TryGet<std::string>("screenshot_output_path");
+            if (device && gswap && ssPath && !ssPath->empty()) {
+                const uint32_t sw = context.Get<uint32_t>("frame_width",  1);
+                const uint32_t sh = context.Get<uint32_t>("frame_height", 1);
+                SDL_GPUTransferBufferCreateInfo tbci = {};
+                tbci.usage = SDL_GPU_TRANSFERBUFFERUSAGE_DOWNLOAD;
+                tbci.size  = sw * sh * 4;
+                auto* tbuf = SDL_CreateGPUTransferBuffer(device, &tbci);
+                if (tbuf) {
+                    auto* copy = SDL_BeginGPUCopyPass(cmd);
+                    if (copy) {
+                        SDL_GPUTextureRegion src = {};
+                        src.texture = gswap;
+                        src.w = sw; src.h = sh; src.d = 1;
+                        SDL_GPUTextureTransferInfo dst = {};
+                        dst.transfer_buffer  = tbuf;
+                        dst.pixels_per_row   = sw;
+                        dst.rows_per_layer   = sh;
+                        SDL_DownloadFromGPUTexture(copy, &src, &dst);
+                        SDL_EndGPUCopyPass(copy);
+                    }
+                    SDL_SubmitGPUCommandBuffer(cmd);
+                    SDL_WaitForGPUIdle(device);
+                    void* mapped = SDL_MapGPUTransferBuffer(device, tbuf, false);
+                    if (mapped) {
+                        SDL_Surface* surf = SDL_CreateSurfaceFrom(
+                            (int)sw, (int)sh, SDL_PIXELFORMAT_ABGR8888,
+                            mapped, (int)(sw * 4));
+                        if (surf) {
+                            SDL_SaveBMP(surf, ssPath->c_str());
+                            SDL_DestroySurface(surf);
+                            if (logger_) logger_->Info("postfx.composite: GPU screenshot saved to " + *ssPath);
+                        }
+                        SDL_UnmapGPUTransferBuffer(device, tbuf);
+                    }
+                    SDL_ReleaseGPUTransferBuffer(device, tbuf);
+                    context.Set<std::string>("screenshot_output_path", std::string(""));
+                    context.Remove("gpu_command_buffer");
+                    return;
+                }
+            }
             SDL_SubmitGPUCommandBuffer(cmd);
             context.Remove("gpu_command_buffer");
         }

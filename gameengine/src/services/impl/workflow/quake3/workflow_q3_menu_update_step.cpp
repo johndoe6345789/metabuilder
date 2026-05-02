@@ -53,7 +53,7 @@ void WorkflowQ3MenuUpdateStep::Execute(const WorkflowStepDefinition& step, Workf
     const std::string defaultScreen = config_.value("default_screen", std::string("main"));
 
     // --- toggle open/close ---
-    bool open = context.GetBool("q3.menu_open", true);
+    bool open = context.GetBool("q3.menu_open", false);
     const bool escPressed = context.GetBool("input_key_escape_pressed", false);
     if (escPressed) {
         if (open) {

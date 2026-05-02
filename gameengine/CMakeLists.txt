@@ -288,6 +288,11 @@ if(BUILD_SDL3_APP)
         src/services/impl/workflow/quake3/workflow_q3_overlay_draw_step.cpp
         src/services/impl/workflow/quake3/workflow_q3_pickups_draw_step.cpp
         src/services/impl/workflow/quake3/workflow_q3_weapon_update_step.cpp
+        src/services/impl/workflow/quake3/workflow_q3_md3_load_step.cpp
+        src/services/impl/workflow/quake3/workflow_q3_md3_draw_step.cpp
+        src/services/impl/workflow/quake3/workflow_q3_bots_spawn_step.cpp
+        src/services/impl/workflow/quake3/workflow_q3_bots_update_step.cpp
+        src/services/impl/workflow/quake3/workflow_q3_bots_draw_step.cpp
         src/services/impl/workflow/rendering/workflow_bsp_build_collision_step.cpp
         src/services/impl/workflow/rendering/workflow_bsp_build_geometry_step.cpp
         src/services/impl/workflow/rendering/workflow_bsp_entity_update_step.cpp
