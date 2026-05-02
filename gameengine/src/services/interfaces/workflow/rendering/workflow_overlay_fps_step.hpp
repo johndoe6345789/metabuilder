@@ -28,6 +28,7 @@ private:
     std::shared_ptr<ILogger> logger_;
 
     bool     ready_         = false;
+    bool     disabled_      = false;
     bool     vbuf_uploaded_ = false;
     SDL_GPUGraphicsPipeline* pipeline_ = nullptr;
     SDL_GPUTexture*          tex_      = nullptr;

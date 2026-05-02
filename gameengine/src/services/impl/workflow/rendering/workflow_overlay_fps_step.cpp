@@ -32,7 +32,16 @@ std::string WorkflowOverlayFpsStep::GetPluginId() const {
 }
 
 void WorkflowOverlayFpsStep::TryInit(SDL_GPUDevice* device, SDL_Window* window) {
+    if (disabled_) return;
     device_ = device;
+
+    const char* driver = SDL_GetGPUDeviceDriver(device);
+    const std::string driverName = driver ? driver : "";
+    if (driverName != "vulkan") {
+        if (logger_) logger_->Warn("overlay.fps: SPIR-V overlay only supported on Vulkan, disabled for " + driverName);
+        disabled_ = true;
+        return;
+    }
 
     auto loadSpv = [](const char* path) -> std::vector<uint8_t> {
         std::ifstream f(path, std::ios::binary | std::ios::ate);
