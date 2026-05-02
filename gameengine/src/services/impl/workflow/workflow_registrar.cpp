@@ -117,6 +117,7 @@
 #include "services/interfaces/workflow/quake3/workflow_q3_menu_update_step.hpp"
 #include "services/interfaces/workflow/quake3/workflow_q3_weapon_update_step.hpp"
 #include "services/interfaces/workflow/quake3/workflow_q3_overlay_draw_step.hpp"
+#include "services/interfaces/workflow/quake3/workflow_q3_pickups_draw_step.hpp"
 
 // Audio (service-dependent, registered with nullptr)
 #include "services/interfaces/workflow/workflow_generic_steps/workflow_audio_pause_step.hpp"
@@ -323,6 +324,7 @@ void WorkflowRegistrar::RegisterSteps(std::shared_ptr<IWorkflowStepRegistry> reg
     registry->RegisterStep(std::make_shared<WorkflowPostfxBloomBlurStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowQ3MenuUpdateStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowQ3WeaponUpdateStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowQ3PickupsDrawStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowQ3OverlayDrawStep>(logger_));
     count += 18;
 

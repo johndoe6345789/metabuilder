@@ -181,9 +181,44 @@ void WorkflowQ3OverlayDrawStep::DrawSurface(WorkflowContext& context, uint32_t f
 
     const std::string weapon = context.Get<std::string>("q3.current_weapon", "weapon_machinegun");
     const int shots = context.Get<int>("q3.shots_fired", 0);
-    std::string hud = "WEAPON " + weapon.substr(7) + "   SHOTS " + std::to_string(shots);
+    const int damage = context.Get<int>("q3.damage_done", 0);
+    std::string hud = "WEAPON " + weapon.substr(7) + "   SHOTS " + std::to_string(shots) +
+                      "   DAMAGE " + std::to_string(damage);
     Text(renderer_, 20, static_cast<float>(kH - 36), hud.c_str(), SDL_Color{255, 216, 64, 255});
     Text(renderer_, static_cast<float>(kW / 2 - 4), static_cast<float>(kH / 2 - 4), "+", SDL_Color{255, 255, 255, 220});
+
+    const uint32_t frame = static_cast<uint32_t>(context.GetDouble("loop.iteration", 0.0));
+    const bool flashing = frame < context.Get<uint32_t>("q3.weapon_flash_until_frame", 0u);
+    const bool hitMarker = frame < context.Get<uint32_t>("q3.hit_marker_until_frame", 0u);
+
+    SDL_SetRenderDrawColor(renderer_, 34, 34, 38, 235);
+    SDL_FRect gunBody{410, 278, 168, 46};
+    SDL_RenderFillRect(renderer_, &gunBody);
+    SDL_SetRenderDrawColor(renderer_, 92, 96, 110, 255);
+    SDL_RenderRect(renderer_, &gunBody);
+    SDL_SetRenderDrawColor(renderer_, 20, 20, 22, 255);
+    SDL_FRect grip{452, 318, 36, 30};
+    SDL_RenderFillRect(renderer_, &grip);
+    SDL_FRect barrel{568, 291, 54, 18};
+    SDL_RenderFillRect(renderer_, &barrel);
+    SDL_SetRenderDrawColor(renderer_, 255, 210, 70, 255);
+    SDL_RenderLine(renderer_, 424, 290, 550, 290);
+    Text(renderer_, 430, 300, weapon.substr(7).c_str(), SDL_Color{220, 235, 255, 255});
+    if (flashing) {
+        SDL_SetRenderDrawColor(renderer_, 255, 190, 50, 230);
+        SDL_FRect flash{616, 284, 18, 32};
+        SDL_RenderFillRect(renderer_, &flash);
+        SDL_RenderLine(renderer_, 615, 300, 638, 276);
+        SDL_RenderLine(renderer_, 615, 300, 638, 324);
+    }
+    if (hitMarker) {
+        SDL_SetRenderDrawColor(renderer_, 255, 80, 55, 255);
+        SDL_RenderLine(renderer_, 308, 172, 320, 160);
+        SDL_RenderLine(renderer_, 332, 172, 320, 160);
+        SDL_RenderLine(renderer_, 308, 188, 320, 200);
+        SDL_RenderLine(renderer_, 332, 188, 320, 200);
+        Text(renderer_, 300, 204, "HIT", SDL_Color{255, 92, 64, 255});
+    }
 
     if (context.GetBool("q3.menu_open", false)) {
         SDL_FRect panel{120, 42, 400, 250};

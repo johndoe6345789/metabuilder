@@ -68,6 +68,7 @@ void WorkflowQ3WeaponUpdateStep::Execute(const WorkflowStepDefinition& step, Wor
         context.Set<uint32_t>("q3.weapon_last_fire_frame", lastFire);
         context.Set<uint32_t>("q3.weapon_flash_until_frame", lastFire + 4u);
         context.Set<int>("q3.shots_fired", context.Get<int>("q3.shots_fired", 0) + 1);
+        context.Set<bool>("q3.last_shot_hit", false);
 
         auto* world = context.Get<btDiscreteDynamicsWorld*>("physics_world", nullptr);
         auto cameraState = context.Get<nlohmann::json>("camera.state", nlohmann::json::object());
@@ -81,6 +82,13 @@ void WorkflowQ3WeaponUpdateStep::Execute(const WorkflowStepDefinition& step, Wor
             world->rayTest(from, to, hit);
             context.Set<bool>("q3.last_shot_hit", hit.hasHit());
             if (hit.hasHit()) {
+                context.Set<uint32_t>("q3.hit_marker_until_frame", lastFire + 10u);
+                context.Set<int>("q3.damage_done", context.Get<int>("q3.damage_done", 0) + (
+                    current == "weapon_railgun" ? 100 :
+                    current == "weapon_rocketlauncher" ? 100 :
+                    current == "weapon_shotgun" ? 80 :
+                    current == "weapon_plasmagun" ? 20 :
+                    current == "weapon_machinegun" ? 7 : 15));
                 context.Set("q3.last_shot_position", nlohmann::json::array({
                     hit.m_hitPointWorld.x(), hit.m_hitPointWorld.y(), hit.m_hitPointWorld.z()
                 }));

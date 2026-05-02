@@ -106,6 +106,12 @@
       }
     },
     {
+      "id": "draw_pickups",
+      "type": "q3.pickups.draw",
+      "typeVersion": 1,
+      "position": [1100, 0]
+    },
+    {
       "id": "end_scene",
       "type": "frame.gpu.end_scene",
       "typeVersion": 1,
@@ -167,7 +173,8 @@
     "render_prepare": { "main": { "0": [{ "node": "portal_view", "type": "main", "index": 0 }] } },
     "portal_view": { "main": { "0": [{ "node": "frame_begin", "type": "main", "index": 0 }] } },
     "frame_begin": { "main": { "0": [{ "node": "draw_map", "type": "main", "index": 0 }] } },
-    "draw_map": { "main": { "0": [{ "node": "end_scene", "type": "main", "index": 0 }] } },
+    "draw_map": { "main": { "0": [{ "node": "draw_pickups", "type": "main", "index": 0 }] } },
+    "draw_pickups": { "main": { "0": [{ "node": "end_scene", "type": "main", "index": 0 }] } },
     "end_scene": { "main": { "0": [{ "node": "overlay_fps", "type": "main", "index": 0 }] } },
     "overlay_fps": { "main": { "0": [{ "node": "q3_overlay", "type": "main", "index": 0 }] } },
     "q3_overlay": { "main": { "0": [{ "node": "postfx_taa", "type": "main", "index": 0 }] } },
