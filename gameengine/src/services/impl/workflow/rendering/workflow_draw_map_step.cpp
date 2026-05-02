@@ -7,9 +7,28 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <nlohmann/json.hpp>
+#include <algorithm>
+#include <cctype>
 #include <cstring>
 
 namespace sdl3cpp::services::impl {
+
+namespace {
+
+std::string ToLower(std::string value) {
+    std::transform(value.begin(), value.end(), value.begin(), [](unsigned char c) {
+        return static_cast<char>(std::tolower(c));
+    });
+    return value;
+}
+
+bool IsPortalTexture(const std::string& textureName) {
+    const std::string lower = ToLower(textureName);
+    return lower.find("portal_sfx") != std::string::npos ||
+           lower.find("mapobjects/portal") != std::string::npos;
+}
+
+}  // namespace
 
 WorkflowDrawMapStep::WorkflowDrawMapStep(std::shared_ptr<ILogger> logger)
     : logger_(std::move(logger)) {}
@@ -89,6 +108,8 @@ void WorkflowDrawMapStep::Execute(const WorkflowStepDefinition& step, WorkflowCo
     // BSP lightmap atlas (shared across all groups)
     auto* lm_tex = context.Get<SDL_GPUTexture*>("bsp_lightmap_atlas_gpu", nullptr);
     auto* lm_samp = context.Get<SDL_GPUSampler*>("bsp_lightmap_atlas_sampler", nullptr);
+    auto* portal_tex = context.Get<SDL_GPUTexture*>("bsp_portal_view_texture", nullptr);
+    auto* portal_samp = context.Get<SDL_GPUSampler*>("bsp_portal_view_sampler", nullptr);
 
     if (isBsp) {
         // BSP mode: single VB + single IB, per-group draw calls
@@ -104,18 +125,19 @@ void WorkflowDrawMapStep::Execute(const WorkflowStepDefinition& step, WorkflowCo
         SDL_GPUBufferBinding ibBind = {}; ibBind.buffer = ib;
         SDL_BindGPUIndexBuffer(pass, &ibBind, SDL_GPU_INDEXELEMENTSIZE_32BIT);
 
-        // Push uniforms once (same for all groups)
+        // Vertex uniforms are shared by all BSP texture groups.
         SDL_PushGPUVertexUniformData(cmd, 0, &vu, sizeof(vu));
-        SDL_PushGPUFragmentUniformData(cmd, 0, &fu, sizeof(fu));
 
         // Default texture fallback
         auto* defaultTex = context.Get<SDL_GPUTexture*>(defaultTexture + "_gpu", nullptr);
         auto* defaultSamp = context.Get<SDL_GPUSampler*>(defaultTexture + "_sampler", nullptr);
+        const float elapsed = static_cast<float>(context.GetDouble("frame.elapsed", 0.0));
 
         for (const auto& node : *mapNodes) {
             uint32_t indexCount = node["index_count"];
             uint32_t indexOffset = node.value("index_offset", 0u);
             int texIdx = node.value("texture_index", -1);
+            std::string textureName = node.value("texture_name", std::string{});
 
             // Look up per-texture albedo
             SDL_GPUTexture* albedoTex = nullptr;
@@ -133,16 +155,22 @@ void WorkflowDrawMapStep::Execute(const WorkflowStepDefinition& step, WorkflowCo
             }
             if (!albedoTex || !albedoSamp) continue;
 
-            // Bind 3 samplers: albedo, shadow, lightmap
-            SDL_GPUTextureSamplerBinding bindings[3] = {};
+            // Bind 4 samplers: albedo, shadow, lightmap, portal destination.
+            SDL_GPUTextureSamplerBinding bindings[4] = {};
             bindings[0].texture = albedoTex;
             bindings[0].sampler = albedoSamp;
             bindings[1].texture = shadow_tex ? shadow_tex : albedoTex;
             bindings[1].sampler = shadow_samp ? shadow_samp : albedoSamp;
             bindings[2].texture = lm_tex ? lm_tex : albedoTex;
             bindings[2].sampler = lm_samp ? lm_samp : albedoSamp;
-            SDL_BindGPUFragmentSamplers(pass, 0, bindings, 3);
+            bindings[3].texture = portal_tex ? portal_tex : albedoTex;
+            bindings[3].sampler = portal_samp ? portal_samp : albedoSamp;
+            SDL_BindGPUFragmentSamplers(pass, 0, bindings, 4);
 
+            auto groupFu = fu;
+            groupFu.material[1] = elapsed;
+            groupFu.material[3] = IsPortalTexture(textureName) ? 1.0f : 0.0f;
+            SDL_PushGPUFragmentUniformData(cmd, 0, &groupFu, sizeof(groupFu));
             SDL_DrawGPUIndexedPrimitives(pass, indexCount, 1, indexOffset, 0, 0);
         }
     } else {

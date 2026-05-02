@@ -48,6 +48,7 @@
 #include "services/interfaces/workflow/rendering/workflow_bsp_lightmap_atlas_step.hpp"
 #include "services/interfaces/workflow/rendering/workflow_bsp_parse_spawn_step.hpp"
 #include "services/interfaces/workflow/rendering/workflow_bsp_entity_update_step.hpp"
+#include "services/interfaces/workflow/rendering/workflow_bsp_portal_view_step.hpp"
 #include "services/interfaces/workflow/rendering/workflow_bsp_build_geometry_step.hpp"
 #include "services/interfaces/workflow/rendering/workflow_bsp_extract_textures_step.hpp"
 #include "services/interfaces/workflow/rendering/workflow_bsp_upload_geometry_step.hpp"
@@ -111,6 +112,11 @@
 
 // Camera (service-dependent)
 #include "services/interfaces/workflow/workflow_generic_steps/workflow_camera_build_view_state_step.hpp"
+
+// Quake 3
+#include "services/interfaces/workflow/quake3/workflow_q3_menu_update_step.hpp"
+#include "services/interfaces/workflow/quake3/workflow_q3_weapon_update_step.hpp"
+#include "services/interfaces/workflow/quake3/workflow_q3_overlay_draw_step.hpp"
 
 // Audio (service-dependent, registered with nullptr)
 #include "services/interfaces/workflow/workflow_generic_steps/workflow_audio_pause_step.hpp"
@@ -297,6 +303,7 @@ void WorkflowRegistrar::RegisterSteps(std::shared_ptr<IWorkflowStepRegistry> reg
     registry->RegisterStep(std::make_shared<WorkflowBspLightmapAtlasStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowBspParseSpawnStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowBspEntityUpdateStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowBspPortalViewStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowBspBuildGeometryStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowBspExtractTexturesStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowBspUploadGeometryStep>(logger_));
@@ -314,6 +321,9 @@ void WorkflowRegistrar::RegisterSteps(std::shared_ptr<IWorkflowStepRegistry> reg
     registry->RegisterStep(std::make_shared<WorkflowPostfxSsaoStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowPostfxBloomExtractStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowPostfxBloomBlurStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowQ3MenuUpdateStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowQ3WeaponUpdateStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowQ3OverlayDrawStep>(logger_));
     count += 18;
 
     // ── Texture ───────────────────────────────────────────────

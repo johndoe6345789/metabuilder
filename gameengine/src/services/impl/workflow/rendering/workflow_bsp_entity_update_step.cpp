@@ -28,19 +28,27 @@ bool ReadVec3(const nlohmann::json& value, btVector3& out) {
     return true;
 }
 
-bool InBounds(const btVector3& p, const nlohmann::json& bounds, float pad) {
+bool ReadBounds(const nlohmann::json& bounds, btVector3& mn, btVector3& mx) {
     if (!bounds.is_object() || !bounds.contains("min") || !bounds.contains("max")) return false;
-    btVector3 mn, mx;
-    if (!ReadVec3(bounds["min"], mn) || !ReadVec3(bounds["max"], mx)) return false;
-    return p.x() >= mn.x() - pad && p.x() <= mx.x() + pad &&
-           p.y() >= mn.y() - pad && p.y() <= mx.y() + pad &&
-           p.z() >= mn.z() - pad && p.z() <= mx.z() + pad;
+    return ReadVec3(bounds["min"], mn) && ReadVec3(bounds["max"], mx);
+}
+
+bool AabbIntersectsBounds(const btVector3& bodyMin,
+                          const btVector3& bodyMax,
+                          const nlohmann::json& bounds,
+                          float pad) {
+    btVector3 triggerMin, triggerMax;
+    if (!ReadBounds(bounds, triggerMin, triggerMax)) return false;
+    return bodyMax.x() >= triggerMin.x() - pad && bodyMin.x() <= triggerMax.x() + pad &&
+           bodyMax.y() >= triggerMin.y() - pad && bodyMin.y() <= triggerMax.y() + pad &&
+           bodyMax.z() >= triggerMin.z() - pad && bodyMin.z() <= triggerMax.z() + pad;
 }
 
 void TeleportBody(btRigidBody* body, const btVector3& dest) {
     btTransform xform;
     xform.setIdentity();
     xform.setOrigin(dest);
+    body->setCenterOfMassTransform(xform);
     body->setWorldTransform(xform);
     if (body->getMotionState()) body->getMotionState()->setWorldTransform(xform);
     body->setLinearVelocity(btVector3(0, 0, 0));
@@ -81,6 +89,9 @@ void WorkflowBspEntityUpdateStep::Execute(const WorkflowStepDefinition& step, Wo
     btTransform xform;
     body->getMotionState()->getWorldTransform(xform);
     const btVector3 playerPos = xform.getOrigin();
+    btVector3 playerAabbMin;
+    btVector3 playerAabbMax;
+    body->getCollisionShape()->getAabb(xform, playerAabbMin, playerAabbMax);
     const uint32_t frame = static_cast<uint32_t>(context.GetDouble("loop.iteration", 0.0));
 
     auto collected = context.Get<nlohmann::json>("q3.collected", nlohmann::json::object());
@@ -111,7 +122,10 @@ void WorkflowBspEntityUpdateStep::Execute(const WorkflowStepDefinition& step, Wo
         }
 
         if (classname != "trigger_push" && classname != "trigger_teleport") continue;
-        if (!ent.contains("bounds") || !InBounds(playerPos, ent["bounds"], 0.15f)) continue;
+        if (!ent.contains("bounds") ||
+            !AabbIntersectsBounds(playerAabbMin, playerAabbMax, ent["bounds"], 0.15f)) {
+            continue;
+        }
 
         const uint32_t lastFrame = cooldowns.value(id, 0u);
         const uint32_t cooldownFrames = classname == "trigger_teleport" ? 45u : 15u;
@@ -124,6 +138,8 @@ void WorkflowBspEntityUpdateStep::Execute(const WorkflowStepDefinition& step, Wo
         if (classname == "trigger_teleport") {
             target += btVector3(0, 1.0f, 0);
             TeleportBody(body, target);
+            playerAabbMin = target - btVector3(0.3f, 0.8f, 0.3f);
+            playerAabbMax = target + btVector3(0.3f, 0.8f, 0.3f);
             if (logger_) logger_->Info("bsp.entities.update: teleported player via " + id);
         } else {
             body->setLinearVelocity(JumpPadVelocity(playerPos, target));

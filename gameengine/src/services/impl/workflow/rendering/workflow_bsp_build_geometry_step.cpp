@@ -316,6 +316,7 @@ void WorkflowBspBuildGeometryStep::Execute(const WorkflowStepDefinition& step, W
         mapNodes.push_back({
             {"name", "bsp_" + map_name},
             {"texture_index", texIdx},
+            {"texture_name", (texIdx >= 0 && texIdx < numTextures) ? std::string(bspTextures[texIdx].name) : std::string{}},
             {"index_offset", indexOffset},
             {"index_count", group.indices.size()}
         });

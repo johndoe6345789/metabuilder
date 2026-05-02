@@ -38,7 +38,8 @@ void WorkflowBspLoadStep::Execute(const WorkflowStepDefinition& step, WorkflowCo
     };
 
     const std::string pk3_path = getStr("pk3_path", "");
-    const std::string map_name = getStr("map_name", "q3dm17");
+    std::string map_name = getStr("map_name", "q3dm17");
+    if (map_name.empty()) map_name = "q3dm7";
     const float scale = getNum("scale", 1.0f / 32.0f);
 
     if (pk3_path.empty()) {
@@ -51,6 +52,18 @@ void WorkflowBspLoadStep::Execute(const WorkflowStepDefinition& step, WorkflowCo
     if (!archive) {
         throw std::runtime_error("bsp.load: Failed to open pk3: " + pk3_path);
     }
+
+    nlohmann::json maps = nlohmann::json::array();
+    const zip_int64_t entries = zip_get_num_entries(archive, 0);
+    for (zip_uint64_t i = 0; i < static_cast<zip_uint64_t>(entries); ++i) {
+        const char* name = zip_get_name(archive, i, 0);
+        if (!name) continue;
+        std::string entry(name);
+        if (entry.rfind("maps/", 0) != 0 || entry.size() <= 9) continue;
+        if (entry.substr(entry.size() - 4) != ".bsp") continue;
+        maps.push_back(entry.substr(5, entry.size() - 9));
+    }
+    context.Set("q3.maps", maps);
 
     std::string bsp_entry = "maps/" + map_name + ".bsp";
     zip_stat_t st;

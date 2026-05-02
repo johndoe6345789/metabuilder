@@ -26,6 +26,11 @@ void WorkflowPhysicsFpsMoveStep::Execute(
 
     auto* body = context.Get<btRigidBody*>("physics_body_" + playerName, nullptr);
     if (!body) return;
+    if (context.GetBool("q3.menu_open", false)) {
+        btVector3 vel = body->getLinearVelocity();
+        body->setLinearVelocity(btVector3(0, vel.y(), 0));
+        return;
+    }
 
     // Read parameters from workflow JSON
     WorkflowStepParameterResolver paramResolver;

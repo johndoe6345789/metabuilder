@@ -42,6 +42,7 @@ void WorkflowGpuPipelineCreateStep::Execute(const WorkflowStepDefinition& step, 
     const bool release_shaders = static_cast<int>(getNum("release_shaders", 1)) != 0;
     const std::string color_format_str = getStr("color_format", "swapchain");
     const bool has_depth = static_cast<int>(getNum("has_depth", 1)) != 0;
+    const bool alpha_blend = static_cast<int>(getNum("alpha_blend", 0)) != 0;
 
     // Get GPU device
     SDL_GPUDevice* device = context.Get<SDL_GPUDevice*>("gpu_device", nullptr);
@@ -154,6 +155,16 @@ void WorkflowGpuPipelineCreateStep::Execute(const WorkflowStepDefinition& step, 
             } else {
                 color_target.format = SDL_GPU_TEXTUREFORMAT_B8G8R8A8_UNORM;
             }
+        }
+
+        if (alpha_blend) {
+            color_target.blend_state.enable_blend = true;
+            color_target.blend_state.src_color_blendfactor = SDL_GPU_BLENDFACTOR_SRC_ALPHA;
+            color_target.blend_state.dst_color_blendfactor = SDL_GPU_BLENDFACTOR_ONE_MINUS_SRC_ALPHA;
+            color_target.blend_state.color_blend_op = SDL_GPU_BLENDOP_ADD;
+            color_target.blend_state.src_alpha_blendfactor = SDL_GPU_BLENDFACTOR_ONE;
+            color_target.blend_state.dst_alpha_blendfactor = SDL_GPU_BLENDFACTOR_ZERO;
+            color_target.blend_state.alpha_blend_op = SDL_GPU_BLENDOP_ADD;
         }
     }
 

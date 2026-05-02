@@ -283,6 +283,9 @@ if(BUILD_SDL3_APP)
         src/services/impl/workflow/geometry/workflow_geometry_create_cube_step.cpp
         src/services/impl/workflow/geometry/workflow_geometry_create_plane_step.cpp
         src/services/impl/workflow/geometry/workflow_geometry_cube_generate_step.cpp
+        src/services/impl/workflow/quake3/workflow_q3_menu_update_step.cpp
+        src/services/impl/workflow/quake3/workflow_q3_overlay_draw_step.cpp
+        src/services/impl/workflow/quake3/workflow_q3_weapon_update_step.cpp
         src/services/impl/workflow/rendering/workflow_bsp_build_collision_step.cpp
         src/services/impl/workflow/rendering/workflow_bsp_build_geometry_step.cpp
         src/services/impl/workflow/rendering/workflow_bsp_entity_update_step.cpp
@@ -290,6 +293,7 @@ if(BUILD_SDL3_APP)
         src/services/impl/workflow/rendering/workflow_bsp_lightmap_atlas_step.cpp
         src/services/impl/workflow/rendering/workflow_bsp_load_step.cpp
         src/services/impl/workflow/rendering/workflow_bsp_parse_spawn_step.cpp
+        src/services/impl/workflow/rendering/workflow_bsp_portal_view_step.cpp
         src/services/impl/workflow/rendering/workflow_bsp_upload_geometry_step.cpp
         src/services/impl/workflow/rendering/workflow_draw_map_step.cpp
         src/services/impl/workflow/rendering/workflow_draw_textured_box_step.cpp
