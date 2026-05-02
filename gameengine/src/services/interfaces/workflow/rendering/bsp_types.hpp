@@ -66,6 +66,15 @@ struct BspPlane {
     float dist;
 };
 
+struct BspModel {
+    float mins[3];
+    float maxs[3];
+    int32_t firstFace;
+    int32_t numFaces;
+    int32_t firstBrush;
+    int32_t numBrushes;
+};
+
 #pragma pack(pop)
 
 // Lump indices

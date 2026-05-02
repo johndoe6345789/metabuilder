@@ -285,6 +285,7 @@ if(BUILD_SDL3_APP)
         src/services/impl/workflow/geometry/workflow_geometry_cube_generate_step.cpp
         src/services/impl/workflow/rendering/workflow_bsp_build_collision_step.cpp
         src/services/impl/workflow/rendering/workflow_bsp_build_geometry_step.cpp
+        src/services/impl/workflow/rendering/workflow_bsp_entity_update_step.cpp
         src/services/impl/workflow/rendering/workflow_bsp_extract_textures_step.cpp
         src/services/impl/workflow/rendering/workflow_bsp_lightmap_atlas_step.cpp
         src/services/impl/workflow/rendering/workflow_bsp_load_step.cpp

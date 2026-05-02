@@ -40,6 +40,12 @@
       "position": [500, 0]
     },
     {
+      "id": "bsp_entities_update",
+      "type": "bsp.entities.update",
+      "typeVersion": 1,
+      "position": [550, 0]
+    },
+    {
       "id": "camera_update",
       "type": "camera.fps.update",
       "typeVersion": 1,
@@ -129,7 +135,8 @@
     "input_poll": { "main": { "0": [{ "node": "physics_move", "type": "main", "index": 0 }] } },
     "physics_move": { "main": { "0": [{ "node": "physics_step", "type": "main", "index": 0 }] } },
     "physics_step": { "main": { "0": [{ "node": "sync_transforms", "type": "main", "index": 0 }] } },
-    "sync_transforms": { "main": { "0": [{ "node": "camera_update", "type": "main", "index": 0 }] } },
+    "sync_transforms": { "main": { "0": [{ "node": "bsp_entities_update", "type": "main", "index": 0 }] } },
+    "bsp_entities_update": { "main": { "0": [{ "node": "camera_update", "type": "main", "index": 0 }] } },
     "camera_update": { "main": { "0": [{ "node": "render_prepare", "type": "main", "index": 0 }] } },
     "render_prepare": { "main": { "0": [{ "node": "frame_begin", "type": "main", "index": 0 }] } },
     "frame_begin": { "main": { "0": [{ "node": "draw_map", "type": "main", "index": 0 }] } },
