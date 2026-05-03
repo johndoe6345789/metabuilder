@@ -56,7 +56,7 @@ def _wait_for_healthy(profiles: list[str], args: argparse.Namespace) -> None:
         healthy = result.stdout.count('"healthy"')
         if healthy >= core_count:
             print(f"\n{GREEN}All {core_count} services healthy!{NC}")
-            print(f"\nPortal: {BLUE}http://localhost{NC}\n")
+            print(f"\nPortal: {BLUE}http://localhost:8900{NC}\n")
             print("Quick commands:")
             print("  python3 deployment.py stack logs")
             print("  python3 deployment.py stack down")

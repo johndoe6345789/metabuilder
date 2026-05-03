@@ -1,6 +1,6 @@
 # MetaBuilder Full Stack
 #
-# Gateway:    nginx on port 80 with welcome portal + subpath routing
+# Gateway:    nginx on port 8900 with welcome portal + subpath routing
 # Apps:       WorkflowUI, CodeForge, Pastebin, Postgres Dashboard,
 #             Email Client, Exploded Diagrams, Storybook, Frontend App,
 #             DBAL Frontend, Docker Terminal, Package Repo,
@@ -21,28 +21,28 @@
 #   docker compose -f compose.yml --profile monitoring --profile media up -d
 #
 # Access:
-#   http://localhost              Welcome portal
-#   http://localhost/workflowui   WorkflowUI
-#   http://localhost/codegen      CodeForge IDE
-#   http://localhost/pastebin     Pastebin
-#   http://localhost/postgres     Postgres Dashboard
-#   http://localhost/emailclient  Email Client
-#   http://localhost/diagrams     Exploded Diagrams
-#   http://localhost/storybook    Storybook
-#   http://localhost/app          Frontend App
-#   http://localhost/dbal          DBAL Frontend
-#   http://localhost/terminal      Docker Terminal
-#   http://localhost/packagerepo   Package Repo
-#   http://localhost/repoforge     RepoForge APK Portal
-#   http://localhost/caproverforge CaproverForge APK Portal
-#   http://localhost/grafana       Grafana (monitoring profile)
-#   http://localhost/prometheus     Prometheus (monitoring profile)
-#   http://localhost/api          DBAL API
-#   http://localhost/pastebin-api Pastebin Flask API
-#   http://localhost/phpmyadmin/  phpMyAdmin (MySQL admin)
-#   http://localhost/mongo-express/ Mongo Express (MongoDB admin)
-#   http://localhost/redis-insight/ RedisInsight (Redis admin)
-#   http://localhost/kibana/      Kibana (Elasticsearch admin)
+#   http://localhost:8900              Welcome portal
+#   http://localhost:8900/workflowui   WorkflowUI
+#   http://localhost:8900/codegen      CodeForge IDE
+#   http://localhost:8900/pastebin     Pastebin
+#   http://localhost:8900/postgres     Postgres Dashboard
+#   http://localhost:8900/emailclient  Email Client
+#   http://localhost:8900/diagrams     Exploded Diagrams
+#   http://localhost:8900/storybook    Storybook
+#   http://localhost:8900/app          Frontend App
+#   http://localhost:8900/dbal          DBAL Frontend
+#   http://localhost:8900/terminal      Docker Terminal
+#   http://localhost:8900/packagerepo   Package Repo
+#   http://localhost:8900/repoforge     RepoForge APK Portal
+#   http://localhost:8900/caproverforge CaproverForge APK Portal
+#   http://localhost:8900/grafana       Grafana (monitoring profile)
+#   http://localhost:8900/prometheus     Prometheus (monitoring profile)
+#   http://localhost:8900/api          DBAL API
+#   http://localhost:8900/pastebin-api Pastebin Flask API
+#   http://localhost:8900/phpmyadmin/  phpMyAdmin (MySQL admin)
+#   http://localhost:8900/mongo-express/ Mongo Express (MongoDB admin)
+#   http://localhost:8900/redis-insight/ RedisInsight (Redis admin)
+#   http://localhost:8900/kibana/      Kibana (Elasticsearch admin)
 
 services:
   # ============================================================================
@@ -529,7 +529,7 @@ services:
     container_name: metabuilder-nginx
     restart: unless-stopped
     ports:
-      - "80:80"
+      - "8900:80"
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1/health"]
       interval: 30s
