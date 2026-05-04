@@ -5,8 +5,11 @@
 #include <stb_image.h>
 #include <zip.h>
 
+#include <algorithm>
+#include <cctype>
 #include <cstring>
 #include <fstream>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -35,13 +38,25 @@ WorkflowQ3OverlayDrawStep::WorkflowQ3OverlayDrawStep(std::shared_ptr<ILogger> lo
 
 WorkflowQ3OverlayDrawStep::~WorkflowQ3OverlayDrawStep() {
     if (renderer_) {
-        if (bigchars_tex_)  SDL_DestroyTexture(bigchars_tex_);
-        if (prop_font_tex_) SDL_DestroyTexture(prop_font_tex_);
-        if (prop_glo_tex_)  SDL_DestroyTexture(prop_glo_tex_);
-        if (frame_bg_tex_)  SDL_DestroyTexture(frame_bg_tex_);
-        if (frame_l_tex_)   SDL_DestroyTexture(frame_l_tex_);
-        if (frame_r_tex_)   SDL_DestroyTexture(frame_r_tex_);
-        if (frame2_l_tex_)  SDL_DestroyTexture(frame2_l_tex_);
+        if (bigchars_tex_)    SDL_DestroyTexture(bigchars_tex_);
+        if (prop_font_tex_)   SDL_DestroyTexture(prop_font_tex_);
+        if (prop_glo_tex_)    SDL_DestroyTexture(prop_glo_tex_);
+        if (frame_bg_tex_)    SDL_DestroyTexture(frame_bg_tex_);
+        if (frame_l_tex_)     SDL_DestroyTexture(frame_l_tex_);
+        if (frame_r_tex_)     SDL_DestroyTexture(frame_r_tex_);
+        if (frame2_l_tex_)    SDL_DestroyTexture(frame2_l_tex_);
+        for (auto* t : num_digits_) if (t) SDL_DestroyTexture(t);
+        if (icon_armor_tex_)  SDL_DestroyTexture(icon_armor_tex_);
+        if (icon_health_tex_) SDL_DestroyTexture(icon_health_tex_);
+        if (icon_face_tex_)   SDL_DestroyTexture(icon_face_tex_);
+        if (icon_ammo_tex_)   SDL_DestroyTexture(icon_ammo_tex_);
+        if (icon_crosshair_)  SDL_DestroyTexture(icon_crosshair_);
+        if (btn_back_tex_)    SDL_DestroyTexture(btn_back_tex_);
+        if (btn_fight_tex_)   SDL_DestroyTexture(btn_fight_tex_);
+        if (btn_skirmish_tex_)SDL_DestroyTexture(btn_skirmish_tex_);
+        if (btn_arrow_l_tex_) SDL_DestroyTexture(btn_arrow_l_tex_);
+        if (btn_arrow_r_tex_) SDL_DestroyTexture(btn_arrow_r_tex_);
+        for (auto& [k, v] : levelshot_cache_) if (v) SDL_DestroyTexture(v);
         SDL_DestroyRenderer(renderer_);
     }
     if (surface_) SDL_DestroySurface(surface_);
@@ -212,36 +227,160 @@ SDL_Texture* WorkflowQ3OverlayDrawStep::LoadTextureFromPk3(
 
 void WorkflowQ3OverlayDrawStep::TryLoadMenuTextures(const std::string& pk3Path) {
     if (menu_tex_loaded_) return;
-    menu_tex_loaded_ = true;   // set early so we don't retry on failure
+    menu_tex_loaded_ = true;  // set early so we don't retry on failure
 
-    // HUD grid font (bigchars): 256×256, 16×16 cell grid
     bigchars_tex_  = LoadTextureFromPk3(pk3Path, "gfx/2d/bigchars.tga");
-
-    // Proportional font used for all in-game menu text
     prop_font_tex_ = LoadTextureFromPk3(pk3Path, "menu/art/font1_prop.tga");
-
-    // Glow/shadow version of the prop font — drawn behind text for the Q3A halo effect
     prop_glo_tex_  = LoadTextureFromPk3(pk3Path, "menu/art/font1_prop_glo.tga");
-
-    // Panel background — cut_frame (used for sub-menus only)
     frame_bg_tex_  = LoadTextureFromPk3(pk3Path, "menu/art/cut_frame.tga");
-
-    // Left and right ring halves — placed side-by-side at full width they form
-    // the iconic Q3A circular bull-horn emblem behind the menu items
     frame_l_tex_   = LoadTextureFromPk3(pk3Path, "menu/art/frame1_l.tga");
     frame_r_tex_   = LoadTextureFromPk3(pk3Path, "menu/art/frame1_r.tga");
-
-    // Selection highlight strip
     frame2_l_tex_  = LoadTextureFromPk3(pk3Path, "menu/art/frame2_l.tga");
 
+    // HUD large-number sprites (gfx/2d/numbers/*_32b.tga, each 32x32)
+    static const char* kDigitNames[11] = {
+        "gfx/2d/numbers/zero_32b.tga",  "gfx/2d/numbers/one_32b.tga",
+        "gfx/2d/numbers/two_32b.tga",   "gfx/2d/numbers/three_32b.tga",
+        "gfx/2d/numbers/four_32b.tga",  "gfx/2d/numbers/five_32b.tga",
+        "gfx/2d/numbers/six_32b.tga",   "gfx/2d/numbers/seven_32b.tga",
+        "gfx/2d/numbers/eight_32b.tga", "gfx/2d/numbers/nine_32b.tga",
+        "gfx/2d/numbers/minus_32b.tga"
+    };
+    for (int i = 0; i < 11; ++i)
+        num_digits_[i] = LoadTextureFromPk3(pk3Path, kDigitNames[i]);
+
+    // HUD icon sprites
+    icon_armor_tex_  = LoadTextureFromPk3(pk3Path, "icons/iconr_yellow.tga");
+    icon_health_tex_ = LoadTextureFromPk3(pk3Path, "icons/iconh_red.tga");
+    icon_face_tex_   = LoadTextureFromPk3(pk3Path, "models/players/keel/icon_default.tga");
+    icon_ammo_tex_   = LoadTextureFromPk3(pk3Path, "icons/icona_machinegun.tga");
+    icon_crosshair_  = LoadTextureFromPk3(pk3Path, "gfx/2d/crosshaira.tga");
+
+    // Map-select buttons and nav arrows
+    btn_back_tex_     = LoadTextureFromPk3(pk3Path, "menu/art/back_0.tga");
+    btn_fight_tex_    = LoadTextureFromPk3(pk3Path, "menu/art/fight_0.tga");
+    btn_skirmish_tex_ = LoadTextureFromPk3(pk3Path, "menu/art/skirmish_0.tga");
+    btn_arrow_l_tex_  = LoadTextureFromPk3(pk3Path, "menu/art/gs_arrows_l.tga");
+    btn_arrow_r_tex_  = LoadTextureFromPk3(pk3Path, "menu/art/gs_arrows_r.tga");
+
+    ParseArenas(pk3Path);
+
     if (logger_) {
-        logger_->Info(std::string("q3.overlay: menu textures — "
-            "prop:") + (prop_font_tex_ ? "ok" : "MISSING") +
-            " glo:" + (prop_glo_tex_ ? "ok" : "MISSING") +
-            " frame_l:" + (frame_l_tex_ ? "ok" : "MISSING") +
-            " frame_r:" + (frame_r_tex_ ? "ok" : "MISSING") +
-            " bigchars:" + (bigchars_tex_ ? "ok" : "MISSING"));
+        logger_->Info(std::string("q3.overlay: textures loaded — "
+            "nums:") + (num_digits_[0] ? "ok" : "MISS") +
+            " armor:" + (icon_armor_tex_ ? "ok" : "MISS") +
+            " face:"  + (icon_face_tex_  ? "ok" : "MISS") +
+            " fight:" + (btn_fight_tex_  ? "ok" : "MISS") +
+            " arenas:" + std::to_string(arena_data_.size()));
     }
+}
+
+// ---------------------------------------------------------------------------
+// Parse scripts/arenas.txt from the PK3 for map long-names and bot opponents
+// ---------------------------------------------------------------------------
+
+void WorkflowQ3OverlayDrawStep::ParseArenas(const std::string& pk3Path) {
+    if (arena_data_loaded_) return;
+    arena_data_loaded_ = true;
+
+    int err = 0;
+    zip_t* arc = zip_open(pk3Path.c_str(), ZIP_RDONLY, &err);
+    if (!arc) return;
+
+    zip_stat_t st;
+    if (zip_stat(arc, "scripts/arenas.txt", 0, &st) != 0) { zip_close(arc); return; }
+    std::vector<char> buf(st.size + 1, '\0');
+    zip_file_t* zf = zip_fopen(arc, "scripts/arenas.txt", 0);
+    if (zf) { zip_fread(zf, buf.data(), st.size); zip_fclose(zf); }
+    zip_close(arc);
+
+    // Simple tokenizer: split on '{' '}' and parse key/value pairs
+    std::string text(buf.data());
+    size_t pos = 0;
+    while ((pos = text.find('{', pos)) != std::string::npos) {
+        size_t end = text.find('}', pos);
+        if (end == std::string::npos) break;
+        std::string block = text.substr(pos + 1, end - pos - 1);
+        pos = end + 1;
+
+        // Extract key-value pairs (Q3 config format: key "value")
+        std::string mapName, longName, bots;
+        std::istringstream ss(block);
+        std::string tok;
+        while (ss >> tok) {
+            auto readVal = [&]() -> std::string {
+                std::string val;
+                ss >> std::ws;
+                if (ss.peek() == '"') {
+                    ss.get();
+                    std::getline(ss, val, '"');
+                } else { ss >> val; }
+                return val;
+            };
+            if (tok == "map")      mapName  = readVal();
+            else if (tok == "longname") longName = readVal();
+            else if (tok == "bots")     bots     = readVal();
+        }
+        if (!mapName.empty()) {
+            // Store under lowercase key
+            std::string key = mapName;
+            std::transform(key.begin(), key.end(), key.begin(), ::tolower);
+            // First bot only
+            std::string firstBot = bots.substr(0, bots.find(' '));
+            arena_data_[key] = { longName, firstBot };
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Load or retrieve a cached levelshot texture for a map name
+// ---------------------------------------------------------------------------
+
+SDL_Texture* WorkflowQ3OverlayDrawStep::LoadOrGetLevelshot(
+        const std::string& mapName, const std::string& pk3Path) {
+    // Levelshot paths use uppercase names (e.g. levelshots/Q3DM7.jpg)
+    std::string key = mapName;
+    std::transform(key.begin(), key.end(), key.begin(), ::toupper);
+
+    auto it = levelshot_cache_.find(key);
+    if (it != levelshot_cache_.end()) return it->second;
+
+    // Try uppercase then lowercase
+    std::string upperPath = "levelshots/" + key + ".jpg";
+    std::string lowerPath = "levelshots/" + mapName + ".jpg";
+    SDL_Texture* tex = LoadTextureFromPk3(pk3Path, upperPath.c_str());
+    if (!tex) tex = LoadTextureFromPk3(pk3Path, lowerPath.c_str());
+    levelshot_cache_[key] = tex;
+    return tex;
+}
+
+// ---------------------------------------------------------------------------
+// Draw an integer using the number sprites; returns x position after last digit
+// ---------------------------------------------------------------------------
+
+float WorkflowQ3OverlayDrawStep::DrawHudNumber(
+        float x, float y, int value, float scale) {
+    if (!renderer_) return x;
+    // Convert to string; use minus sprite for negative values
+    std::string s;
+    if (value < 0) { s = "-"; s += std::to_string(-value); }
+    else           { s = std::to_string(value); }
+
+    const float dw = 32.f * scale;
+    float cx = x;
+    for (char c : s) {
+        int idx = (c == '-') ? 10 : (c - '0');
+        if (idx < 0 || idx > 10) { cx += dw; continue; }
+        if (SDL_Texture* t = num_digits_[idx]) {
+            SDL_SetTextureColorMod(t, 255, 220, 60);  // Q3A gold tint
+            SDL_SetTextureAlphaMod(t, 255);
+            SDL_SetTextureBlendMode(t, SDL_BLENDMODE_BLEND);
+            SDL_FRect dst{cx, y, dw, dw};
+            SDL_RenderTexture(renderer_, t, nullptr, &dst);
+        }
+        cx += dw;
+    }
+    return cx;
 }
 
 // ---------------------------------------------------------------------------
@@ -364,6 +503,119 @@ void WorkflowQ3OverlayDrawStep::DrawPropText(
 }
 
 // ---------------------------------------------------------------------------
+// Q3A "Choose Level" / map-select screen
+// ---------------------------------------------------------------------------
+
+void WorkflowQ3OverlayDrawStep::DrawMapSelectScreen(
+        WorkflowContext& context, const std::string& pk3Path) {
+    constexpr float kCX = kW * 0.5f;
+
+    // ── "CHOOSE LEVEL" title ─────────────────────────────────────────────
+    // Q3A uses bigchars font at large scale for this heading.
+    DrawQ3Text(kCX - 96.f, 12.f, "CHOOSE LEVEL", {200, 50, 20, 255}, 1.0f);
+
+    // ── Determine which map is selected and load its levelshot ───────────
+    const auto maps  = context.Get<nlohmann::json>("q3.maps", nlohmann::json::array({"q3dm7"}));
+    const int  sel   = context.Get<int>("q3.menu_selected_item", 0);
+    const int  nMaps = static_cast<int>(maps.size());
+    const int  idx   = (nMaps > 0) ? std::max(0, std::min(sel, nMaps-1)) : 0;
+
+    std::string mapName;
+    if (nMaps > 0) mapName = maps[(size_t)idx].get<std::string>();
+
+    // Levelshot image — centred, bordered in Q3A orange-red
+    constexpr float kLW = 162.f, kLH = 162.f;
+    constexpr float kLX = (kW - kLW) * 0.5f;
+    constexpr float kLY = 58.f;
+
+    SDL_Texture* shot = (!mapName.empty() && !pk3Path.empty())
+        ? LoadOrGetLevelshot(mapName, pk3Path) : nullptr;
+
+    if (shot) {
+        SDL_FRect dst{kLX, kLY, kLW, kLH};
+        SDL_SetTextureAlphaMod(shot, 255);
+        SDL_SetTextureColorMod(shot, 255, 255, 255);
+        SDL_SetTextureBlendMode(shot, SDL_BLENDMODE_NONE);
+        SDL_RenderTexture(renderer_, shot, nullptr, &dst);
+    } else {
+        SDL_SetRenderDrawColor(renderer_, 30, 20, 15, 255);
+        SDL_FRect fbk{kLX, kLY, kLW, kLH};
+        SDL_RenderFillRect(renderer_, &fbk);
+    }
+    // Red border
+    SDL_SetRenderDrawColor(renderer_, 180, 50, 20, 255);
+    SDL_FRect border{kLX - 2.f, kLY - 2.f, kLW + 4.f, kLH + 4.f};
+    SDL_RenderRect(renderer_, &border);
+
+    // Map name label under image (e.g. "Q3DM7")
+    std::string mapUpper = mapName;
+    std::transform(mapUpper.begin(), mapUpper.end(), mapUpper.begin(), ::toupper);
+    DrawPropText(kCX, kLY + kLH + 6.f, mapUpper.c_str(), {255, 200, 50, 255}, 0.7f, true);
+
+    // Long name from arenas.txt (e.g. "TEMPLE OF RETRIBUTION")
+    std::string mapKey = mapName;
+    std::transform(mapKey.begin(), mapKey.end(), mapKey.begin(), ::tolower);
+    auto aIt = arena_data_.find(mapKey);
+    if (aIt != arena_data_.end() && !aIt->second.longname.empty()) {
+        std::string longUpper = mapUpper + ": " + aIt->second.longname;
+        std::transform(longUpper.begin(), longUpper.end(), longUpper.begin(), ::toupper);
+        DrawPropText(kCX, kLY + kLH + 34.f, longUpper.c_str(), {200, 130, 40, 255}, 0.75f, true);
+    }
+
+    // ── Opponent bot icon + name ─────────────────────────────────────────
+    float botY = kLY + kLH + 76.f;
+    if (aIt != arena_data_.end() && !aIt->second.bot.empty()) {
+        const std::string botName = aIt->second.bot;
+        std::string botKey = botName;
+        std::transform(botKey.begin(), botKey.end(), botKey.begin(), ::tolower);
+        const std::string iconPath = "models/players/" + botKey + "/icon_default.tga";
+        SDL_Texture* botIcon = LoadOrGetLevelshot("bot_" + botKey, pk3Path);
+        if (!botIcon) {
+            // Try loading from pk3 directly (not a levelshot — use raw loader)
+            botIcon = LoadTextureFromPk3(pk3Path, iconPath.c_str());
+            if (botIcon) levelshot_cache_["bot_" + botKey] = botIcon;
+        }
+        if (botIcon) {
+            SDL_FRect dst{kCX - 22.f, botY, 44.f, 44.f};
+            SDL_SetTextureAlphaMod(botIcon, 255);
+            SDL_SetTextureColorMod(botIcon, 255, 255, 255);
+            SDL_SetTextureBlendMode(botIcon, SDL_BLENDMODE_BLEND);
+            SDL_RenderTexture(renderer_, botIcon, nullptr, &dst);
+        }
+        std::string botUpper = botName;
+        std::transform(botUpper.begin(), botUpper.end(), botUpper.begin(), ::toupper);
+        DrawPropText(kCX, botY + 48.f, botUpper.c_str(), {180, 130, 50, 220}, 0.65f, true);
+        botY += 80.f;
+    }
+
+    // ── Navigation arrows (left / right) ─────────────────────────────────
+    constexpr float kArrowY = kLY + kLH * 0.5f - 16.f;
+    if (btn_arrow_l_tex_ && idx > 0) {
+        SDL_FRect dst{8.f, kArrowY, 64.f, 32.f};
+        SDL_RenderTexture(renderer_, btn_arrow_l_tex_, nullptr, &dst);
+    }
+    if (btn_arrow_r_tex_ && idx < nMaps - 1) {
+        SDL_FRect dst{kW - 72.f, kArrowY, 64.f, 32.f};
+        SDL_RenderTexture(renderer_, btn_arrow_r_tex_, nullptr, &dst);
+    }
+
+    // ── Bottom buttons: BACK  SKIRMISH  FIGHT ────────────────────────────
+    constexpr float kBtnY = static_cast<float>(kH) - 52.f;
+    constexpr float kBtnW = 128.f, kBtnH = 46.f;
+    auto drawBtn = [&](SDL_Texture* t, float x) {
+        if (!t) return;
+        SDL_SetTextureAlphaMod(t, 255);
+        SDL_SetTextureColorMod(t, 255, 255, 255);
+        SDL_SetTextureBlendMode(t, SDL_BLENDMODE_BLEND);
+        SDL_FRect dst{x, kBtnY, kBtnW, kBtnH};
+        SDL_RenderTexture(renderer_, t, nullptr, &dst);
+    };
+    drawBtn(btn_back_tex_,     kW * 0.12f - kBtnW * 0.5f);
+    drawBtn(btn_skirmish_tex_, kW * 0.50f - kBtnW * 0.5f);
+    drawBtn(btn_fight_tex_,    kW * 0.88f - kBtnW * 0.5f);
+}
+
+// ---------------------------------------------------------------------------
 // Software-render the overlay surface each frame
 // ---------------------------------------------------------------------------
 
@@ -373,148 +625,164 @@ void WorkflowQ3OverlayDrawStep::DrawSurface(
     SDL_RenderClear(renderer_);
     SDL_SetRenderDrawBlendMode(renderer_, SDL_BLENDMODE_BLEND);
 
-    // ---- HUD (always visible) ----------------------------------------
-    const std::string weapon = context.Get<std::string>("q3.current_weapon", "weapon_machinegun");
-    const int shots  = context.Get<int>("q3.shots_fired", 0);
-    const int damage = context.Get<int>("q3.damage_done", 0);
+    // ---- HUD (always visible unless menu is open) -----------------------
+    const bool menuOpen = context.GetBool("q3.menu_open", false);
 
-    SDL_FRect hudBg{12, static_cast<float>(kH - 44), 230, 28};
-    SDL_SetRenderDrawColor(renderer_, 0, 0, 0, 150);
-    SDL_RenderFillRect(renderer_, &hudBg);
+    if (!menuOpen) {
+        const auto bspCfg2 = context.Get<nlohmann::json>("bsp_config", nlohmann::json{});
+        const std::string pk3hud = bspCfg2.value("pk3_path", std::string(""));
+        if (!menu_tex_loaded_ && !pk3hud.empty()) TryLoadMenuTextures(pk3hud);
 
-    const std::string weapName = weapon.size() > 7 ? weapon.substr(7) : weapon;
-    const std::string hud = "WEAPON " + weapName +
-        "   SHOTS " + std::to_string(shots) + "   DAMAGE " + std::to_string(damage);
-    DrawQ3Text(20, static_cast<float>(kH - 36), hud.c_str(), {255, 216, 64, 255}, 0.5f);
+        const int health = context.Get<int>("q3.player_health", 100);
+        const int armor  = context.Get<int>("q3.player_armor",  0);
+        const int ammo   = context.Get<int>("q3.player_ammo",   50);
 
-    // Crosshair
-    DrawQ3Text(static_cast<float>(kW / 2 - 4), static_cast<float>(kH / 2 - 4),
-               "+", {255, 255, 255, 220}, 0.5f);
+        // ── Large number HUD — bottom-left (matches Q3A layout) ────────────
+        // Scale 1.75 → each digit 56×56 px.  Bottom edge at kH-6.
+        constexpr float kNS   = 1.75f;        // number sprite scale
+        constexpr float kNH   = 32.f * kNS;   // digit height = 56 px
+        constexpr float kHudY = kH - kNH - 6.f;
+        constexpr float kIS   = 1.25f;        // icon scale: 32×1.25 = 40 px
 
-    const uint32_t frame = static_cast<uint32_t>(context.GetDouble("loop.iteration", 0.0));
-    const bool flashing  = frame < context.Get<uint32_t>("q3.weapon_flash_until_frame", 0u);
-    const bool hitMarker = frame < context.Get<uint32_t>("q3.hit_marker_until_frame", 0u);
+        // Armor value (left)
+        float cx = 10.f;
+        cx = DrawHudNumber(cx, kHudY, armor, kNS);
+        // Armor icon immediately after digits
+        if (icon_armor_tex_) {
+            SDL_SetTextureAlphaMod(icon_armor_tex_, 255);
+            SDL_SetTextureColorMod(icon_armor_tex_, 255, 255, 255);
+            SDL_SetTextureBlendMode(icon_armor_tex_, SDL_BLENDMODE_BLEND);
+            SDL_FRect dst{cx + 4.f, kHudY + (kNH - 32.f*kIS)*0.5f, 32.f*kIS, 32.f*kIS};
+            SDL_RenderTexture(renderer_, icon_armor_tex_, nullptr, &dst);
+        }
+        cx += 4.f + 32.f*kIS + 14.f;
 
-    // Gun silhouette
-    SDL_SetRenderDrawColor(renderer_, 34, 34, 38, 235);
-    SDL_FRect gunBody{410, 278, 168, 46}; SDL_RenderFillRect(renderer_, &gunBody);
-    SDL_SetRenderDrawColor(renderer_, 92, 96, 110, 255);
-    SDL_RenderRect(renderer_, &gunBody);
-    SDL_SetRenderDrawColor(renderer_, 20, 20, 22, 255);
-    SDL_FRect grip{452, 318, 36, 30}; SDL_RenderFillRect(renderer_, &grip);
-    SDL_FRect barrel{568, 291, 54, 18}; SDL_RenderFillRect(renderer_, &barrel);
-    SDL_SetRenderDrawColor(renderer_, 255, 210, 70, 255);
-    SDL_RenderLine(renderer_, 424, 290, 550, 290);
-    DrawQ3Text(430, 300, weapName.c_str(), {220, 235, 255, 255}, 0.5f);
-    if (flashing) {
-        SDL_SetRenderDrawColor(renderer_, 255, 190, 50, 230);
-        SDL_FRect flash{616, 284, 18, 32}; SDL_RenderFillRect(renderer_, &flash);
-        SDL_RenderLine(renderer_, 615, 300, 638, 276);
-        SDL_RenderLine(renderer_, 615, 300, 638, 324);
+        // Health value
+        cx = DrawHudNumber(cx, kHudY, health, kNS);
+        // Face icon after health digits
+        if (icon_face_tex_) {
+            SDL_SetTextureAlphaMod(icon_face_tex_, 255);
+            SDL_SetTextureColorMod(icon_face_tex_, 255, 255, 255);
+            SDL_SetTextureBlendMode(icon_face_tex_, SDL_BLENDMODE_BLEND);
+            SDL_FRect dst{cx + 4.f, kHudY, kNH, kNH};  // face is 64×64 → scaled to digit height
+            SDL_RenderTexture(renderer_, icon_face_tex_, nullptr, &dst);
+        }
+
+        // ── Ammo / weapon — bottom-right ────────────────────────────────────
+        // Show ammo icon + ammo count right-aligned at kW-10
+        const float ammoNumW = (ammo >= 100 ? 3 : ammo >= 10 ? 2 : 1) * 32.f * kNS;
+        const float ammoIconW = icon_ammo_tex_ ? 32.f * kIS : 0.f;
+        const float ammoX = kW - 10.f - ammoNumW - ammoIconW - 8.f;
+        if (icon_ammo_tex_) {
+            SDL_SetTextureAlphaMod(icon_ammo_tex_, 255);
+            SDL_SetTextureColorMod(icon_ammo_tex_, 255, 255, 255);
+            SDL_SetTextureBlendMode(icon_ammo_tex_, SDL_BLENDMODE_BLEND);
+            SDL_FRect dst{ammoX, kHudY + (kNH - 32.f*kIS)*0.5f, 32.f*kIS, 32.f*kIS};
+            SDL_RenderTexture(renderer_, icon_ammo_tex_, nullptr, &dst);
+        }
+        DrawHudNumber(ammoX + ammoIconW + 6.f, kHudY, ammo, kNS);
+
+        // ── Crosshair ────────────────────────────────────────────────────────
+        constexpr float kCHSize = 24.f;
+        const float chx = (kW - kCHSize) * 0.5f;
+        const float chy = (kH - kCHSize) * 0.5f;
+        if (icon_crosshair_) {
+            SDL_SetTextureAlphaMod(icon_crosshair_, 200);
+            SDL_SetTextureColorMod(icon_crosshair_, 255, 255, 255);
+            SDL_SetTextureBlendMode(icon_crosshair_, SDL_BLENDMODE_BLEND);
+            SDL_FRect dst{chx, chy, kCHSize, kCHSize};
+            SDL_RenderTexture(renderer_, icon_crosshair_, nullptr, &dst);
+        } else {
+            // Fallback dot crosshair
+            SDL_SetRenderDrawColor(renderer_, 255, 255, 255, 200);
+            SDL_FRect dot{(kW - 4.f) * 0.5f, (kH - 4.f) * 0.5f, 4.f, 4.f};
+            SDL_RenderFillRect(renderer_, &dot);
+        }
+
+        // ── Hit marker ───────────────────────────────────────────────────────
+        const uint32_t frame2 = static_cast<uint32_t>(context.GetDouble("loop.iteration", 0.0));
+        if (frame2 < context.Get<uint32_t>("q3.hit_marker_until_frame", 0u)) {
+            SDL_SetRenderDrawColor(renderer_, 255, 80, 55, 255);
+            SDL_RenderLine(renderer_, 308, 172, 320, 160);
+            SDL_RenderLine(renderer_, 332, 172, 320, 160);
+            SDL_RenderLine(renderer_, 308, 188, 320, 200);
+            SDL_RenderLine(renderer_, 332, 188, 320, 200);
+        }
+
+        // ── Muzzle flash ─────────────────────────────────────────────────────
+        const uint32_t frame3 = static_cast<uint32_t>(context.GetDouble("loop.iteration", 0.0));
+        if (frame3 < context.Get<uint32_t>("q3.weapon_flash_until_frame", 0u)) {
+            SDL_SetRenderDrawColor(renderer_, 255, 200, 60, 180);
+            SDL_FRect flash{kW - 40.f, kH * 0.58f, 24.f, 40.f};
+            SDL_RenderFillRect(renderer_, &flash);
+        }
     }
-    if (hitMarker) {
-        SDL_SetRenderDrawColor(renderer_, 255, 80, 55, 255);
-        SDL_RenderLine(renderer_, 308, 172, 320, 160); SDL_RenderLine(renderer_, 332, 172, 320, 160);
-        SDL_RenderLine(renderer_, 308, 188, 320, 200); SDL_RenderLine(renderer_, 332, 188, 320, 200);
-        DrawQ3Text(300, 204, "HIT", {255, 92, 64, 255}, 0.5f);
-    }
 
-    // ---- Main menu (Q3A faithful full-screen style) -------------------------
-    if (context.GetBool("q3.menu_open", false)) {
+    // ---- Menu screens (full-screen overlays) --------------------------------
+    if (menuOpen) {
         const auto bspCfg = context.Get<nlohmann::json>("bsp_config", nlohmann::json{});
         const std::string pk3 = bspCfg.value("pk3_path", std::string(""));
-        if (!menu_tex_loaded_ && !pk3.empty())
-            TryLoadMenuTextures(pk3);
+        if (!menu_tex_loaded_ && !pk3.empty()) TryLoadMenuTextures(pk3);
 
-        // ── Full opaque black background ──────────────────────────────────
+        const std::string screen = context.Get<std::string>("q3.menu_screen", "main");
+
+        // Black background for all menu screens
         SDL_SetRenderDrawColor(renderer_, 0, 0, 0, 255);
-        SDL_FRect screen{0, 0, static_cast<float>(kW), static_cast<float>(kH)};
-        SDL_RenderFillRect(renderer_, &screen);
+        SDL_FRect bg{0, 0, static_cast<float>(kW), static_cast<float>(kH)};
+        SDL_RenderFillRect(renderer_, &bg);
 
-        // ── Ring / bull-horn emblem ───────────────────────────────────────
-        // frame1_l + frame1_r placed side-by-side at full screen width form
-        // the complete Q3A circular emblem (horns extend below centre ring).
-        // In Q3A 640×480 the ring occupies roughly y [170, 400].
-        // Scaled to 640×360 (×0.75): y [127, 300], h = 173.
-        constexpr float kRingY = 120.f;
-        constexpr float kRingH = 185.f;
-        constexpr float kHalf  = kW * 0.5f;
-        if (frame_l_tex_) {
-            SDL_SetTextureAlphaMod(frame_l_tex_, 255);
-            SDL_FRect dst{0.f, kRingY, kHalf, kRingH};
-            SDL_RenderTexture(renderer_, frame_l_tex_, nullptr, &dst);
-        }
-        if (frame_r_tex_) {
-            SDL_SetTextureAlphaMod(frame_r_tex_, 255);
-            SDL_FRect dst{kHalf, kRingY, kHalf, kRingH};
-            SDL_RenderTexture(renderer_, frame_r_tex_, nullptr, &dst);
-        }
-
-        // ── "QUAKE III ARENA" title ───────────────────────────────────────
-        // Q3A renders this at the top in the large prop font with a subtle
-        // orange glow layer drawn slightly offset behind it.
-        constexpr float kCX        = kW * 0.5f;
-        constexpr float kTitleY    = 20.f;
-        constexpr float kTitleScale= 1.5f;    // large — matches Q3A screen proportion
-        constexpr float kSubScale  = 1.1f;
-        const float     kSubY      = kTitleY + kPropHeight * kTitleScale + 2.f;
-
-        // Glow pass: same text in orange-red, shifted by 1-2 px, low alpha
-        if (prop_glo_tex_) {
-            SDL_Texture* saved = prop_font_tex_;
-            prop_font_tex_ = prop_glo_tex_;
-            DrawPropText(kCX + 2.f, kTitleY + 2.f, "QUAKE III",
-                         {255, 80, 0, 120}, kTitleScale, /*center=*/true);
-            DrawPropText(kCX + 2.f, kSubY   + 2.f, "ARENA",
-                         {255, 80, 0, 120}, kSubScale,  /*center=*/true);
-            prop_font_tex_ = saved;
-        }
-        // Main title pass
-        DrawPropText(kCX, kTitleY, "QUAKE III",
-                     {255, 200, 50, 255}, kTitleScale, /*center=*/true);
-        DrawPropText(kCX, kSubY,   "ARENA",
-                     {220, 100, 10, 255}, kSubScale,   /*center=*/true);
-
-        // ── Menu items ────────────────────────────────────────────────────
-        // Q3A main menu items start at ~y=250 in 640×480 → 187 in 640×360.
-        // Prop height 27 × scale 1.0 = 27 px; gap 8 px → step = 35 px.
-        const auto items = context.Get<nlohmann::json>("q3.menu_items", nlohmann::json::array());
-        const int  sel       = context.Get<int>("q3.menu_selected_item", 0);
-        const int  numItems  = static_cast<int>(items.size());
-
-        constexpr float kItemScale = 1.0f;
-        constexpr float kItemH     = kPropHeight * kItemScale;
-        constexpr float kItemStep  = kItemH + 8.f;
-        const float     kItemsTop  = 185.f;
-
-        for (int i = 0; i < numItems; ++i) {
-            const std::string label = items[i].value("label", "");
-            const float iy = kItemsTop + i * kItemStep;
-
-            if (i == sel) {
-                // Selected: bright yellow-white with glow halo (Q3A style)
-                if (prop_glo_tex_) {
-                    SDL_Texture* saved = prop_font_tex_;
-                    prop_font_tex_ = prop_glo_tex_;
-                    for (float ox : {-1.f, 1.f}) {
-                        DrawPropText(kCX + ox, iy, label.c_str(),
-                                     {255, 180, 0, 100}, kItemScale, /*center=*/true);
-                    }
-                    prop_font_tex_ = saved;
-                }
-                DrawPropText(kCX, iy, label.c_str(),
-                             {255, 220, 80, 255}, kItemScale, /*center=*/true);
-            } else {
-                // Unselected: medium red — matches Q3A default item colour
-                DrawPropText(kCX, iy, label.c_str(),
-                             {200, 55, 35, 210}, kItemScale, /*center=*/true);
+        if (screen == "map_select") {
+            DrawMapSelectScreen(context, pk3);
+        } else {
+            // ── Q3A main menu (ring + title + item list) ──────────────────
+            constexpr float kRingY = 120.f, kRingH = 185.f, kHalf = kW * 0.5f;
+            if (frame_l_tex_) {
+                SDL_SetTextureAlphaMod(frame_l_tex_, 255);
+                SDL_FRect d{0.f, kRingY, kHalf, kRingH};
+                SDL_RenderTexture(renderer_, frame_l_tex_, nullptr, &d);
             }
-        }
+            if (frame_r_tex_) {
+                SDL_SetTextureAlphaMod(frame_r_tex_, 255);
+                SDL_FRect d{kHalf, kRingY, kHalf, kRingH};
+                SDL_RenderTexture(renderer_, frame_r_tex_, nullptr, &d);
+            }
 
-        // ── Copyright footer ──────────────────────────────────────────────
-        DrawPropText(kCX, static_cast<float>(kH - 18),
-                     "Quake III Arena(c) 1999-2000, Id Software, Inc.",
-                     {180, 50, 30, 200}, 0.42f, /*center=*/true);
+            constexpr float kCX = kW * 0.5f;
+            constexpr float kTY = 20.f, kTS = 1.5f, kSS = 1.1f;
+            const float kSY = kTY + kPropHeight * kTS + 2.f;
+            if (prop_glo_tex_) {
+                SDL_Texture* sv = prop_font_tex_; prop_font_tex_ = prop_glo_tex_;
+                DrawPropText(kCX+2.f, kTY+2.f, "QUAKE III", {255,80,0,120}, kTS, true);
+                DrawPropText(kCX+2.f, kSY+2.f, "ARENA",     {255,80,0,120}, kSS, true);
+                prop_font_tex_ = sv;
+            }
+            DrawPropText(kCX, kTY, "QUAKE III", {255,200,50,255}, kTS, true);
+            DrawPropText(kCX, kSY, "ARENA",     {220,100,10,255}, kSS, true);
+
+            const auto items   = context.Get<nlohmann::json>("q3.menu_items", nlohmann::json::array());
+            const int  sel     = context.Get<int>("q3.menu_selected_item", 0);
+            const int  nItems  = static_cast<int>(items.size());
+            constexpr float kIS = 1.0f, kIStep = kPropHeight * kIS + 8.f, kITop = 185.f;
+
+            for (int i = 0; i < nItems; ++i) {
+                const std::string lbl = items[i].value("label", "");
+                const float iy = kITop + i * kIStep;
+                if (i == sel) {
+                    if (prop_glo_tex_) {
+                        SDL_Texture* sv = prop_font_tex_; prop_font_tex_ = prop_glo_tex_;
+                        for (float ox : {-1.f, 1.f})
+                            DrawPropText(kCX+ox, iy, lbl.c_str(), {255,180,0,100}, kIS, true);
+                        prop_font_tex_ = sv;
+                    }
+                    DrawPropText(kCX, iy, lbl.c_str(), {255,220,80,255}, kIS, true);
+                } else {
+                    DrawPropText(kCX, iy, lbl.c_str(), {200,55,35,210}, kIS, true);
+                }
+            }
+            DrawPropText(kCX, static_cast<float>(kH-18),
+                         "Quake III Arena(c) 1999-2000, Id Software, Inc.",
+                         {180,50,30,200}, 0.42f, true);
+        }
     }
 
     SDL_RenderPresent(renderer_);
