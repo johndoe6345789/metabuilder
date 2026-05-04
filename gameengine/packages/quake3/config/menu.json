@@ -4,10 +4,13 @@
     "main": {
       "title": "QUAKE III ARENA",
       "items": [
-        { "label": "RESUME GAME",  "action": "close"             },
-        { "label": "SETUP",        "action": "screen:setup"      },
-        { "label": "CHANGE MAP",   "action": "screen:map_select" },
-        { "label": "LEAVE ARENA",  "action": "quit"              }
+        { "label": "SINGLE PLAYER", "action": "screen:map_select" },
+        { "label": "MULTIPLAYER",   "action": "none"              },
+        { "label": "SETUP",         "action": "screen:setup"      },
+        { "label": "DEMOS",         "action": "none"              },
+        { "label": "CINEMATICS",    "action": "none"              },
+        { "label": "MODS",          "action": "none"              },
+        { "label": "EXIT",          "action": "quit"              }
       ]
     },
     "setup": {

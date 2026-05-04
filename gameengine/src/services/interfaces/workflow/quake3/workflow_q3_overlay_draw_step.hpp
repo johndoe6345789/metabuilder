@@ -58,12 +58,13 @@ private:
 
     // Menu textures loaded from PK3 (all 256×256 RGBA TGAs)
     bool          menu_tex_loaded_ = false;
-    SDL_Texture*  bigchars_tex_    = nullptr;  // gfx/2d/bigchars.tga       – HUD grid font
-    SDL_Texture*  prop_font_tex_   = nullptr;  // menu/art/font1_prop.tga   – proportional font
-    SDL_Texture*  frame_bg_tex_    = nullptr;  // menu/art/cut_frame.tga    – panel background
-    SDL_Texture*  frame_l_tex_     = nullptr;  // menu/art/frame1_l.tga     – left decoration
-    SDL_Texture*  frame_r_tex_     = nullptr;  // menu/art/frame1_r.tga     – right decoration
-    SDL_Texture*  frame2_l_tex_    = nullptr;  // menu/art/frame2_l.tga     – selection highlight
+    SDL_Texture*  bigchars_tex_    = nullptr;  // gfx/2d/bigchars.tga          – HUD grid font
+    SDL_Texture*  prop_font_tex_   = nullptr;  // menu/art/font1_prop.tga      – proportional font
+    SDL_Texture*  prop_glo_tex_    = nullptr;  // menu/art/font1_prop_glo.tga  – glow/shadow layer
+    SDL_Texture*  frame_bg_tex_    = nullptr;  // menu/art/cut_frame.tga       – panel background
+    SDL_Texture*  frame_l_tex_     = nullptr;  // menu/art/frame1_l.tga        – left ring half
+    SDL_Texture*  frame_r_tex_     = nullptr;  // menu/art/frame1_r.tga        – right ring half
+    SDL_Texture*  frame2_l_tex_    = nullptr;  // menu/art/frame2_l.tga        – selection highlight
 
     static constexpr int kW = 640;
     static constexpr int kH = 360;

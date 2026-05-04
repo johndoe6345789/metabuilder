@@ -37,6 +37,7 @@ WorkflowQ3OverlayDrawStep::~WorkflowQ3OverlayDrawStep() {
     if (renderer_) {
         if (bigchars_tex_)  SDL_DestroyTexture(bigchars_tex_);
         if (prop_font_tex_) SDL_DestroyTexture(prop_font_tex_);
+        if (prop_glo_tex_)  SDL_DestroyTexture(prop_glo_tex_);
         if (frame_bg_tex_)  SDL_DestroyTexture(frame_bg_tex_);
         if (frame_l_tex_)   SDL_DestroyTexture(frame_l_tex_);
         if (frame_r_tex_)   SDL_DestroyTexture(frame_r_tex_);
@@ -219,10 +220,14 @@ void WorkflowQ3OverlayDrawStep::TryLoadMenuTextures(const std::string& pk3Path) 
     // Proportional font used for all in-game menu text
     prop_font_tex_ = LoadTextureFromPk3(pk3Path, "menu/art/font1_prop.tga");
 
-    // Panel background — cut_frame has the distinctive Q3 diagonal-cut corners
+    // Glow/shadow version of the prop font — drawn behind text for the Q3A halo effect
+    prop_glo_tex_  = LoadTextureFromPk3(pk3Path, "menu/art/font1_prop_glo.tga");
+
+    // Panel background — cut_frame (used for sub-menus only)
     frame_bg_tex_  = LoadTextureFromPk3(pk3Path, "menu/art/cut_frame.tga");
 
-    // Left and right frame edge decorations
+    // Left and right ring halves — placed side-by-side at full width they form
+    // the iconic Q3A circular bull-horn emblem behind the menu items
     frame_l_tex_   = LoadTextureFromPk3(pk3Path, "menu/art/frame1_l.tga");
     frame_r_tex_   = LoadTextureFromPk3(pk3Path, "menu/art/frame1_r.tga");
 
@@ -232,10 +237,9 @@ void WorkflowQ3OverlayDrawStep::TryLoadMenuTextures(const std::string& pk3Path) 
     if (logger_) {
         logger_->Info(std::string("q3.overlay: menu textures — "
             "prop:") + (prop_font_tex_ ? "ok" : "MISSING") +
-            " cut_frame:" + (frame_bg_tex_ ? "ok" : "MISSING") +
+            " glo:" + (prop_glo_tex_ ? "ok" : "MISSING") +
             " frame_l:" + (frame_l_tex_ ? "ok" : "MISSING") +
             " frame_r:" + (frame_r_tex_ ? "ok" : "MISSING") +
-            " frame2_l:" + (frame2_l_tex_ ? "ok" : "MISSING") +
             " bigchars:" + (bigchars_tex_ ? "ok" : "MISSING"));
     }
 }
@@ -415,112 +419,102 @@ void WorkflowQ3OverlayDrawStep::DrawSurface(
         DrawQ3Text(300, 204, "HIT", {255, 92, 64, 255}, 0.5f);
     }
 
-    // ---- In-game menu (ioquake3 style, centered) -------------------------
+    // ---- Main menu (Q3A faithful full-screen style) -------------------------
     if (context.GetBool("q3.menu_open", false)) {
         const auto bspCfg = context.Get<nlohmann::json>("bsp_config", nlohmann::json{});
         const std::string pk3 = bspCfg.value("pk3_path", std::string(""));
         if (!menu_tex_loaded_ && !pk3.empty())
             TryLoadMenuTextures(pk3);
 
-        // Full-screen dark tint — same as Q3's colour 0 0 0 0.75
-        SDL_SetRenderDrawColor(renderer_, 0, 0, 0, 192);
-        SDL_FRect tint{0, 0, static_cast<float>(kW), static_cast<float>(kH)};
-        SDL_RenderFillRect(renderer_, &tint);
+        // ── Full opaque black background ──────────────────────────────────
+        SDL_SetRenderDrawColor(renderer_, 0, 0, 0, 255);
+        SDL_FRect screen{0, 0, static_cast<float>(kW), static_cast<float>(kH)};
+        SDL_RenderFillRect(renderer_, &screen);
 
-        // ---- Panel geometry (matches Q3 virtual 640×480 scaled to 640×360) ----
-        // Q3 in-game menu: cut_frame panel ~356×256 centred around x=320,y=240
-        // We scale y: 256*(360/480)=192 → round to 220 for comfort
-        constexpr float PW  = 340.f;
-        constexpr float PH  = 260.f;
-        constexpr float PX  = (kW - PW) / 2.f;   // centred horizontally
-        constexpr float PY  = (kH - PH) / 2.f;   // centred vertically
-        constexpr float DEC = 48.f;               // width of frame1_l / frame1_r decorations
-
-        // Panel background: cut_frame.tga (semi-transparent RGBA TGA)
-        if (frame_bg_tex_) {
-            SDL_FRect dst{PX, PY, PW, PH};
-            SDL_SetTextureAlphaMod(frame_bg_tex_, 245);
-            SDL_RenderTexture(renderer_, frame_bg_tex_, nullptr, &dst);
-        } else {
-            SDL_SetRenderDrawColor(renderer_, 16, 12, 8, 230);
-            SDL_FRect fb{PX, PY, PW, PH}; SDL_RenderFillRect(renderer_, &fb);
-        }
-
-        // Left decoration strip (frame1_l)
+        // ── Ring / bull-horn emblem ───────────────────────────────────────
+        // frame1_l + frame1_r placed side-by-side at full screen width form
+        // the complete Q3A circular emblem (horns extend below centre ring).
+        // In Q3A 640×480 the ring occupies roughly y [170, 400].
+        // Scaled to 640×360 (×0.75): y [127, 300], h = 173.
+        constexpr float kRingY = 120.f;
+        constexpr float kRingH = 185.f;
+        constexpr float kHalf  = kW * 0.5f;
         if (frame_l_tex_) {
-            SDL_FRect dst{PX - DEC, PY, DEC, PH};
+            SDL_SetTextureAlphaMod(frame_l_tex_, 255);
+            SDL_FRect dst{0.f, kRingY, kHalf, kRingH};
             SDL_RenderTexture(renderer_, frame_l_tex_, nullptr, &dst);
         }
-        // Right decoration strip (frame1_r)
         if (frame_r_tex_) {
-            SDL_FRect dst{PX + PW, PY, DEC, PH};
+            SDL_SetTextureAlphaMod(frame_r_tex_, 255);
+            SDL_FRect dst{kHalf, kRingY, kHalf, kRingH};
             SDL_RenderTexture(renderer_, frame_r_tex_, nullptr, &dst);
         }
 
-        // Title — prop font, large (scale 0.9), orange-yellow, centred
-        const std::string title = context.Get<std::string>("q3.menu_title", "QUAKE III ARENA");
-        constexpr float kTitleScale = 0.9f;
-        const float titleY = PY + 14.f;
-        DrawPropText(PX + PW * 0.5f, titleY, title.c_str(), {255, 210, 0, 255},
-                     kTitleScale, /*center=*/true);
+        // ── "QUAKE III ARENA" title ───────────────────────────────────────
+        // Q3A renders this at the top in the large prop font with a subtle
+        // orange glow layer drawn slightly offset behind it.
+        constexpr float kCX        = kW * 0.5f;
+        constexpr float kTitleY    = 20.f;
+        constexpr float kTitleScale= 1.5f;    // large — matches Q3A screen proportion
+        constexpr float kSubScale  = 1.1f;
+        const float     kSubY      = kTitleY + kPropHeight * kTitleScale + 2.f;
 
-        // Separator line below title
-        SDL_SetRenderDrawColor(renderer_, 200, 120, 20, 200);
-        const float sepY = titleY + kPropHeight * kTitleScale + 4.f;
-        SDL_RenderLine(renderer_,
-            static_cast<int>(PX + 12), static_cast<int>(sepY),
-            static_cast<int>(PX + PW - 12), static_cast<int>(sepY));
+        // Glow pass: same text in orange-red, shifted by 1-2 px, low alpha
+        if (prop_glo_tex_) {
+            SDL_Texture* saved = prop_font_tex_;
+            prop_font_tex_ = prop_glo_tex_;
+            DrawPropText(kCX + 2.f, kTitleY + 2.f, "QUAKE III",
+                         {255, 80, 0, 120}, kTitleScale, /*center=*/true);
+            DrawPropText(kCX + 2.f, kSubY   + 2.f, "ARENA",
+                         {255, 80, 0, 120}, kSubScale,  /*center=*/true);
+            prop_font_tex_ = saved;
+        }
+        // Main title pass
+        DrawPropText(kCX, kTitleY, "QUAKE III",
+                     {255, 200, 50, 255}, kTitleScale, /*center=*/true);
+        DrawPropText(kCX, kSubY,   "ARENA",
+                     {220, 100, 10, 255}, kSubScale,   /*center=*/true);
 
-        // ---- Menu items --------------------------------------------------
+        // ── Menu items ────────────────────────────────────────────────────
+        // Q3A main menu items start at ~y=250 in 640×480 → 187 in 640×360.
+        // Prop height 27 × scale 1.0 = 27 px; gap 8 px → step = 35 px.
         const auto items = context.Get<nlohmann::json>("q3.menu_items", nlohmann::json::array());
-        const int sel = context.Get<int>("q3.menu_selected_item", 0);
-        const int numItems = static_cast<int>(items.size());
+        const int  sel       = context.Get<int>("q3.menu_selected_item", 0);
+        const int  numItems  = static_cast<int>(items.size());
 
-        constexpr float kItemScale  = 0.75f;   // Q3 PROP_SMALL_SIZE_SCALE
-        constexpr float kItemStep   = static_cast<float>(kPropHeight) * kItemScale + 6.f;
-        const float     itemsTop    = sepY + 10.f;
-        constexpr int   kVisible    = 10;
-        const int       page        = sel / kVisible;
+        constexpr float kItemScale = 1.0f;
+        constexpr float kItemH     = kPropHeight * kItemScale;
+        constexpr float kItemStep  = kItemH + 8.f;
+        const float     kItemsTop  = 185.f;
 
-        for (int i = 0; i < kVisible; ++i) {
-            const int idx = page * kVisible + i;
-            if (idx >= numItems) break;
-            const std::string label = items[idx].value("label", "");
-            const float iy = itemsTop + i * kItemStep;
+        for (int i = 0; i < numItems; ++i) {
+            const std::string label = items[i].value("label", "");
+            const float iy = kItemsTop + i * kItemStep;
 
-            if (idx == sel) {
-                // Selection highlight: frame2_l.tga stretched as a strip, or fallback rect
-                if (frame2_l_tex_) {
-                    SDL_FRect gdst{PX + 8.f, iy - 2.f, PW - 16.f, kPropHeight * kItemScale + 4.f};
-                    SDL_SetTextureAlphaMod(frame2_l_tex_, 180);
-                    SDL_RenderTexture(renderer_, frame2_l_tex_, nullptr, &gdst);
-                } else {
-                    SDL_SetRenderDrawColor(renderer_, 80, 55, 10, 140);
-                    SDL_FRect hi{PX + 8.f, iy - 2.f, PW - 16.f, kPropHeight * kItemScale + 4.f};
-                    SDL_RenderFillRect(renderer_, &hi);
+            if (i == sel) {
+                // Selected: bright yellow-white with glow halo (Q3A style)
+                if (prop_glo_tex_) {
+                    SDL_Texture* saved = prop_font_tex_;
+                    prop_font_tex_ = prop_glo_tex_;
+                    for (float ox : {-1.f, 1.f}) {
+                        DrawPropText(kCX + ox, iy, label.c_str(),
+                                     {255, 180, 0, 100}, kItemScale, /*center=*/true);
+                    }
+                    prop_font_tex_ = saved;
                 }
-                // Selected: bright orange-white, centred
-                DrawPropText(PX + PW * 0.5f, iy, label.c_str(),
-                             {255, 210, 60, 255}, kItemScale, /*center=*/true);
+                DrawPropText(kCX, iy, label.c_str(),
+                             {255, 220, 80, 255}, kItemScale, /*center=*/true);
             } else {
-                // Unselected: muted olive-green, centred
-                DrawPropText(PX + PW * 0.5f, iy, label.c_str(),
-                             {160, 160, 100, 200}, kItemScale, /*center=*/true);
+                // Unselected: medium red — matches Q3A default item colour
+                DrawPropText(kCX, iy, label.c_str(),
+                             {200, 55, 35, 210}, kItemScale, /*center=*/true);
             }
         }
 
-        // Bottom divider + current map name
-        const float botY = PY + PH - 24.f;
-        SDL_SetRenderDrawColor(renderer_, 200, 120, 20, 120);
-        SDL_RenderLine(renderer_,
-            static_cast<int>(PX + 12), static_cast<int>(botY),
-            static_cast<int>(PX + PW - 12), static_cast<int>(botY));
-
-        const std::string curMap = bspCfg.value("map_name", std::string(""));
-        if (!curMap.empty()) {
-            DrawPropText(PX + PW * 0.5f, botY + 4.f, curMap.c_str(),
-                         {120, 200, 120, 200}, 0.55f, /*center=*/true);
-        }
+        // ── Copyright footer ──────────────────────────────────────────────
+        DrawPropText(kCX, static_cast<float>(kH - 18),
+                     "Quake III Arena(c) 1999-2000, Id Software, Inc.",
+                     {180, 50, 30, 200}, 0.42f, /*center=*/true);
     }
 
     SDL_RenderPresent(renderer_);
