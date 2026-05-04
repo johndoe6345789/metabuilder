@@ -17,6 +17,9 @@ private:
     void TryInit(SDL_GPUDevice* device, SDL_Window* window,
                  const std::string& vertPath, const std::string& fragPath);
     std::shared_ptr<ILogger> logger_;
+    void BlitHeadPortrait(SDL_GPUCommandBuffer* cmd, SDL_GPUTexture* swapchain,
+                          SDL_GPUTexture* headTex, WorkflowContext& context);
+
     bool ready_         = false;
     bool disabled_      = false;
     bool vbuf_uploaded_ = false;
@@ -26,6 +29,9 @@ private:
     SDL_GPUTransferBuffer*   transfer_ = nullptr;
     SDL_GPUBuffer*           vtx_buf_  = nullptr;
     SDL_GPUSampler*          sampler_  = nullptr;
+    // Head portrait blit resources (created lazily, same pipeline/sampler)
+    SDL_GPUBuffer*           head_vtx_buf_  = nullptr;
+    SDL_GPUSampler*          head_sampler_  = nullptr;
     static constexpr int kW = 640, kH = 360;
 };
 } // namespace sdl3cpp::services::impl

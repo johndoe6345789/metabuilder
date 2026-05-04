@@ -289,6 +289,7 @@ if(BUILD_SDL3_APP)
         src/services/impl/workflow/rendering/workflow_overlay_sw_begin_step.cpp
         src/services/impl/workflow/rendering/workflow_overlay_sw_end_step.cpp
         src/services/impl/workflow/quake3/workflow_q3_hud_step.cpp
+        src/services/impl/workflow/quake3/workflow_q3_hud_head_step.cpp
         src/services/impl/workflow/quake3/workflow_q3_crosshair_step.cpp
         src/services/impl/workflow/quake3/workflow_q3_hitmarker_step.cpp
         src/services/impl/workflow/quake3/workflow_q3_menu_frame_step.cpp

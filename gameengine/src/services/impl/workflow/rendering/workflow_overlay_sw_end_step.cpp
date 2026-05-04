@@ -22,6 +22,8 @@ WorkflowOverlaySwEndStep::WorkflowOverlaySwEndStep(std::shared_ptr<ILogger> l)
 
 WorkflowOverlaySwEndStep::~WorkflowOverlaySwEndStep() {
     if (device_) {
+        if (head_sampler_) SDL_ReleaseGPUSampler(device_, head_sampler_);
+        if (head_vtx_buf_) SDL_ReleaseGPUBuffer(device_, head_vtx_buf_);
         if (sampler_)  SDL_ReleaseGPUSampler(device_, sampler_);
         if (vtx_buf_)  SDL_ReleaseGPUBuffer(device_, vtx_buf_);
         if (transfer_) SDL_ReleaseGPUTransferBuffer(device_, transfer_);
@@ -107,6 +109,93 @@ void WorkflowOverlaySwEndStep::TryInit(
     ready_ = tex_ && transfer_ && vtx_buf_ && sampler_ && pipeline_;
 }
 
+// ---------------------------------------------------------------------------
+// Blit the 3D head portrait GPU texture into the face-rect position.
+// Uses the same pipeline as the overlay quad but with a small dynamic quad.
+// ---------------------------------------------------------------------------
+void WorkflowOverlaySwEndStep::BlitHeadPortrait(
+        SDL_GPUCommandBuffer* cmd, SDL_GPUTexture* swapchain,
+        SDL_GPUTexture* headTex, WorkflowContext& context) {
+    if (!pipeline_ || !headTex) return;
+
+    // Lazily create a nearest-neighbour sampler for the head portrait
+    if (!head_sampler_) {
+        SDL_GPUSamplerCreateInfo sci{};
+        sci.min_filter  = SDL_GPU_FILTER_LINEAR;
+        sci.mag_filter  = SDL_GPU_FILTER_LINEAR;
+        sci.mipmap_mode = SDL_GPU_SAMPLERMIPMAPMODE_LINEAR;
+        sci.address_mode_u = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE;
+        sci.address_mode_v = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE;
+        head_sampler_ = SDL_CreateGPUSampler(device_, &sci);
+        if (!head_sampler_) return;
+    }
+
+    // Build a 6-vertex quad from the face rect stored in context by q3.hud_head_render.
+    // Positions are in overlay NDC: x ∈ [-1,1], y ∈ [-1,1] (Y-up, same as the fullscreen quad).
+    const float fx = context.Get<float>("hud.face_rect_x", 354.f);
+    const float fy = context.Get<float>("hud.face_rect_y", 322.f);
+    const float fw = context.Get<float>("hud.face_rect_w",  32.f);
+    const float fh = context.Get<float>("hud.face_rect_h",  32.f);
+
+    // Pixel → NDC using the fixed overlay resolution (640×360)
+    const float x0 =  2.f * fx        / kW - 1.f;
+    const float x1 =  2.f * (fx + fw) / kW - 1.f;
+    const float y1 =  1.f - 2.f * fy        / kH;  // top edge (larger y in NDC)
+    const float y0 =  1.f - 2.f * (fy + fh) / kH;  // bottom edge
+
+    const float verts[6][5] = {
+        {x0, y1, 0.f, 0.f, 0.f},
+        {x1, y1, 0.f, 1.f, 0.f},
+        {x1, y0, 0.f, 1.f, 1.f},
+        {x0, y1, 0.f, 0.f, 0.f},
+        {x1, y0, 0.f, 1.f, 1.f},
+        {x0, y0, 0.f, 0.f, 1.f},
+    };
+    const uint32_t sz = sizeof(verts);
+
+    // Lazily create / reallocate head vertex buffer (created once — rect is stable)
+    if (!head_vtx_buf_) {
+        SDL_GPUBufferCreateInfo bci{};
+        bci.usage = SDL_GPU_BUFFERUSAGE_VERTEX;
+        bci.size  = sz;
+        head_vtx_buf_ = SDL_CreateGPUBuffer(device_, &bci);
+        if (!head_vtx_buf_) return;
+    }
+
+    // Upload quad vertices via a transient transfer buffer
+    SDL_GPUTransferBufferCreateInfo tbci{};
+    tbci.usage = SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD;
+    tbci.size  = sz;
+    auto* tmp = SDL_CreateGPUTransferBuffer(device_, &tbci);
+    if (!tmp) return;
+    void* ptr = SDL_MapGPUTransferBuffer(device_, tmp, false);
+    if (ptr) { std::memcpy(ptr, verts, sz); SDL_UnmapGPUTransferBuffer(device_, tmp); }
+    auto* cp = SDL_BeginGPUCopyPass(cmd);
+    if (cp) {
+        SDL_GPUTransferBufferLocation src{tmp, 0};
+        SDL_GPUBufferRegion dst{head_vtx_buf_, 0, sz};
+        SDL_UploadToGPUBuffer(cp, &src, &dst, false);
+        SDL_EndGPUCopyPass(cp);
+    }
+    SDL_ReleaseGPUTransferBuffer(device_, tmp);
+
+    // Render pass on swapchain (LOADOP_LOAD preserves previous content)
+    SDL_GPUColorTargetInfo target{};
+    target.texture  = swapchain;
+    target.load_op  = SDL_GPU_LOADOP_LOAD;
+    target.store_op = SDL_GPU_STOREOP_STORE;
+    auto* pass = SDL_BeginGPURenderPass(cmd, &target, 1, nullptr);
+    if (!pass) return;
+
+    SDL_BindGPUGraphicsPipeline(pass, pipeline_);
+    SDL_GPUBufferBinding vb{head_vtx_buf_, 0};
+    SDL_BindGPUVertexBuffers(pass, 0, &vb, 1);
+    SDL_GPUTextureSamplerBinding ts{headTex, head_sampler_};
+    SDL_BindGPUFragmentSamplers(pass, 0, &ts, 1);
+    SDL_DrawGPUPrimitives(pass, 6, 1, 0, 0);
+    SDL_EndGPURenderPass(pass);
+}
+
 void WorkflowOverlaySwEndStep::Execute(
         const WorkflowStepDefinition& step, WorkflowContext& context) {
     if (context.GetBool("frame_skip", false)) return;
@@ -190,6 +279,10 @@ void WorkflowOverlaySwEndStep::Execute(
     SDL_GPUTextureSamplerBinding ts{tex_,sampler_}; SDL_BindGPUFragmentSamplers(pass,0,&ts,1);
     SDL_DrawGPUPrimitives(pass,6,1,0,0);
     SDL_EndGPURenderPass(pass);
+
+    // Blit 3D head portrait (rendered by q3.hud_head_render) over the HUD face rect
+    auto* headTex = context.Get<SDL_GPUTexture*>("overlay.head_gpu_tex", nullptr);
+    if (headTex) BlitHeadPortrait(cmd, swapchain, headTex, context);
 
     // Screenshot
     const auto* ssPath = context.TryGet<std::string>("screenshot_output_path");

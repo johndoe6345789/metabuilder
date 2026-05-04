@@ -1,6 +1,7 @@
 #include "services/interfaces/workflow/quake3/workflow_q3_hud_step.hpp"
 #include "services/interfaces/workflow/quake3/q3_overlay_utils.hpp"
 #include <SDL3/SDL_render.h>
+#include <SDL3/SDL_gpu.h>
 namespace sdl3cpp::services::impl {
 using namespace q3overlay;
 
@@ -48,14 +49,18 @@ void WorkflowQ3HudStep::Execute(
     cx = DrawHudNumber(r, digits, cx, kHudY, armor, kNS);
     drawIcon(iArmor, cx + 4.f, kHudY, kNH, kNH);
 
-    // ── Center cluster: [health#] [face icon] ───────────────────────────────
+    // ── Center cluster: [health#] [face placeholder] ────────────────────────
     // Real Q3A: health number + mugshot centered on screen.
+    // The actual face is rendered as a live 3D head by q3.hud_head_render and
+    // blitted on the GPU by overlay.sw.end — we only draw the number here.
     {
         const float hNumW   = digitWidth(health);
         const float cluster = hNumW + 4.f + kNH;
         const float hx      = kW * 0.5f - cluster * 0.5f;
         DrawHudNumber(r, digits, hx, kHudY, health, kNS);
-        drawIcon(iFace, hx + hNumW + 4.f, kHudY, kNH, kNH);
+        // Face icon drawn as fallback if head render is unavailable
+        if (!context.Get<SDL_GPUTexture*>("overlay.head_gpu_tex", nullptr))
+            drawIcon(iFace, hx + hNumW + 4.f, kHudY, kNH, kNH);
     }
 
     // ── Right cluster: [ammo#] [weapon icon] ─────────────────────────────────

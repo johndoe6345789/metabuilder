@@ -117,6 +117,7 @@
 #include "services/interfaces/workflow/quake3/workflow_q3_menu_update_step.hpp"
 #include "services/interfaces/workflow/quake3/workflow_q3_weapon_update_step.hpp"
 #include "services/interfaces/workflow/quake3/workflow_q3_hud_step.hpp"
+#include "services/interfaces/workflow/quake3/workflow_q3_hud_head_step.hpp"
 #include "services/interfaces/workflow/quake3/workflow_q3_crosshair_step.hpp"
 #include "services/interfaces/workflow/quake3/workflow_q3_hitmarker_step.hpp"
 #include "services/interfaces/workflow/quake3/workflow_q3_menu_frame_step.hpp"
@@ -339,6 +340,7 @@ void WorkflowRegistrar::RegisterSteps(std::shared_ptr<IWorkflowStepRegistry> reg
     registry->RegisterStep(std::make_shared<WorkflowQ3PickupsDrawStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowOverlaySwBeginStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowQ3HudStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowQ3HudHeadStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowQ3CrosshairStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowQ3HitmarkerStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowQ3MenuFrameStep>(logger_));
