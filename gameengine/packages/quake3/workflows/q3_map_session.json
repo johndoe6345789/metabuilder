@@ -102,6 +102,18 @@
       "parameters": { "count": 4 }
     },
     {
+      "id": "ammo_init",
+      "type": "q3.ammo.init",
+      "typeVersion": 1,
+      "position": [770, 0]
+    },
+    {
+      "id": "nav_build",
+      "type": "q3.nav.build",
+      "typeVersion": 1,
+      "position": [780, 0]
+    },
+    {
       "id": "set_running",
       "type": "value.literal",
       "typeVersion": 1,
@@ -137,7 +149,9 @@
     "load_upper":    { "main": { "0": [{ "node": "load_head",     "type": "main", "index": 0 }] } },
     "load_head":     { "main": { "0": [{ "node": "load_weapon_mg","type": "main", "index": 0 }] } },
     "load_weapon_mg":{ "main": { "0": [{ "node": "bots_spawn",    "type": "main", "index": 0 }] } },
-    "bots_spawn":    { "main": { "0": [{ "node": "set_running",   "type": "main", "index": 0 }] } },
+    "bots_spawn":    { "main": { "0": [{ "node": "ammo_init",     "type": "main", "index": 0 }] } },
+    "ammo_init":     { "main": { "0": [{ "node": "nav_build",     "type": "main", "index": 0 }] } },
+    "nav_build":     { "main": { "0": [{ "node": "set_running",   "type": "main", "index": 0 }] } },
     "set_running":   { "main": { "0": [{ "node": "game_loop",     "type": "main", "index": 0 }] } },
     "game_loop":     { "main": { "0": [{ "node": "check_quit",    "type": "main", "index": 0 }] } }
   }

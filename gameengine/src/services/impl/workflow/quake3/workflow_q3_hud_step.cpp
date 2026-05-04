@@ -2,6 +2,25 @@
 #include "services/interfaces/workflow/quake3/q3_overlay_utils.hpp"
 #include <SDL3/SDL_render.h>
 #include <SDL3/SDL_gpu.h>
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Real Q3A status-bar layout (from ioq3 cg_draw.c), adapted to 640×360:
+//
+//  Source constants (640×480):
+//    CHAR_WIDTH=32  CHAR_HEIGHT=48  ICON_SIZE=48  TEXT_ICON_SPACE=4
+//    ammo    x=0,   y=432  (field width 3)
+//    ammo icon  x=CHAR_WIDTH*3+TEXT_ICON_SPACE = 100
+//    health  x=185, y=432  (field width 3)
+//    head    x=185+100=285, y=480-ICON_SIZE*1.25=420, size=60
+//    armor   x=370, y=432  (field width 3)
+//    armor icon x=370+100 = 470
+//
+//  Scale to 640×360: Y *= 360/480 = 0.75; X unchanged.
+//    kCharW=32  kIconSz=36  kHeadSz=45
+//    HUD bar bottom = 360; digits 32px tall → kHudY = 360-32-2 = 326
+//    head y = 360 - 45 - 2 = 313
+// ─────────────────────────────────────────────────────────────────────────────
+
 namespace sdl3cpp::services::impl {
 using namespace q3overlay;
 
@@ -21,16 +40,19 @@ void WorkflowQ3HudStep::Execute(
         digits[i] = context.Get<SDL_Texture*>("overlay.tex.num." + std::to_string(i), nullptr);
 
     auto* iArmor  = context.Get<SDL_Texture*>("overlay.tex.icon_armor",  nullptr);
-    auto* iFace   = context.Get<SDL_Texture*>("overlay.tex.icon_face",   nullptr);
     auto* iWeapon = context.Get<SDL_Texture*>("overlay.tex.icon_weapon", nullptr);
 
     const int health = context.Get<int>("q3.player_health", 100);
     const int armor  = context.Get<int>("q3.player_armor",  0);
     const int ammo   = context.Get<int>("q3.player_ammo",   50);
 
-    constexpr float kNS  = 1.0f;           // digit sprite scale  → 32×32 px (Q3A native)
-    constexpr float kNH  = 32.f * kNS;    // digit height = 32 px
-    constexpr float kHudY = kH - kNH - 6.f;
+    // ── Layout constants (match Q3A source, scaled to 640×360) ──────────────
+    constexpr float kScale   = static_cast<float>(kH) / 480.f;  // 0.75
+    constexpr float kCharW   = 32.f;          // digit sprite width (native 32b)
+    constexpr float kCharH   = 32.f;          // drawn at native height
+    constexpr float kIconSz  = 48.f * kScale; // 36px
+    constexpr float kIconOff = kCharW * 3.f + 4.f; // 100px (TEXT_ICON_SPACE=4)
+    constexpr float kHudY    = kH - kCharH - 2.f;   // 326px — digit baseline
 
     auto drawIcon = [&](SDL_Texture* t, float x, float y, float w, float h) {
         if (!t) return;
@@ -39,38 +61,36 @@ void WorkflowQ3HudStep::Execute(
         SDL_FRect dst{x, y, w, h}; SDL_RenderTexture(r, t, nullptr, &dst);
     };
 
-    auto digitWidth = [&](int val) -> float {
-        return (val >= 100 ? 3 : val >= 10 ? 2 : 1) * 32.f * kNS;
-    };
+    const float iconY = kH - kIconSz - 2.f;  // icon baseline (taller than digits)
 
-    // ── Left cluster: [armor#] [armor icon] ─────────────────────────────────
-    // Real Q3A: armor sits at far left, icon to its right.
-    float cx = 10.f;
-    cx = DrawHudNumber(r, digits, cx, kHudY, armor, kNS);
-    drawIcon(iArmor, cx + 4.f, kHudY, kNH, kNH);
+    // ── Left cluster: ammo# + ammo/weapon icon ── x=0 ───────────────────────
+    DrawHudNumber(r, digits, 0.f, kHudY, ammo, 1.0f);
+    drawIcon(iWeapon, kIconOff, iconY, kIconSz, kIconSz);
 
-    // ── Center cluster: [health#] [face placeholder] ────────────────────────
-    // Real Q3A: health number + mugshot centered on screen.
-    // The actual face is rendered as a live 3D head by q3.hud_head_render and
-    // blitted on the GPU by overlay.sw.end — we only draw the number here.
-    {
-        const float hNumW   = digitWidth(health);
-        const float cluster = hNumW + 4.f + kNH;
-        const float hx      = kW * 0.5f - cluster * 0.5f;
-        DrawHudNumber(r, digits, hx, kHudY, health, kNS);
-        // Face icon drawn as fallback if head render is unavailable
-        if (!context.Get<SDL_GPUTexture*>("overlay.head_gpu_tex", nullptr))
-            drawIcon(iFace, hx + hNumW + 4.f, kHudY, kNH, kNH);
+    // ── Center cluster: health# + head portrait ── x=185 ────────────────────
+    DrawHudNumber(r, digits, 185.f, kHudY, health, 1.0f);
+    // Head portrait drawn by q3.hud_head_render on GPU and blitted by overlay.sw.end.
+    // Fall back to flat face icon if GPU head is unavailable.
+    if (!context.Get<SDL_GPUTexture*>("overlay.head_gpu_tex", nullptr)) {
+        auto* iFace = context.Get<SDL_Texture*>("overlay.tex.icon_face", nullptr);
+        constexpr float kHeadSz = 48.f * kScale * 1.25f; // 45px — matches Q3A ICON_SIZE*1.25
+        constexpr float kHeadY  = kH - kHeadSz - 2.f;
+        drawIcon(iFace, 185.f + kIconOff, kHeadY, kHeadSz, kHeadSz);
     }
 
-    // ── Right cluster: [ammo#] [weapon icon] ─────────────────────────────────
-    // Real Q3A: ammo number then weapon icon at far-right edge.
-    {
-        const float wIconW = iWeapon ? kNH : 0.f;
-        const float aNumW  = digitWidth(ammo);
-        const float rx     = kW - 10.f - wIconW - (wIconW > 0 ? 6.f : 0.f) - aNumW;
-        DrawHudNumber(r, digits, rx, kHudY, ammo, kNS);
-        drawIcon(iWeapon, rx + aNumW + 6.f, kHudY, wIconW, wIconW);
+    // ── Right cluster: armor# + armor icon ── x=370 ─────────────────────────
+    if (armor > 0) {
+        DrawHudNumber(r, digits, 370.f, kHudY, armor, 1.0f);
+        drawIcon(iArmor, 370.f + kIconOff, iconY, kIconSz, kIconSz);
     }
+
+    // ── Store head portrait position for the GPU blit step ───────────────────
+    // q3.hud_head_render reads these to position its quad on the swapchain.
+    constexpr float kHeadSz = 48.f * kScale * 1.25f;
+    constexpr float kHeadY  = kH - kHeadSz - 2.f;
+    context.Set<float>("hud.face_rect_x", 185.f + kIconOff);
+    context.Set<float>("hud.face_rect_y", kHeadY);
+    context.Set<float>("hud.face_rect_w", kHeadSz);
+    context.Set<float>("hud.face_rect_h", kHeadSz);
 }
 } // namespace sdl3cpp::services::impl

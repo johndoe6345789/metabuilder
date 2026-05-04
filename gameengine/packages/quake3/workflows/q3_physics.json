@@ -3,22 +3,27 @@
   "description": "FPS movement, physics step, transform sync, BSP entity update, camera.",
   "steps": [
     {
-      "id": "physics_move",
-      "plugin": "physics.fps.move",
-      "parameters": {
-        "move_speed":        6.5,
-        "sprint_multiplier": 1.5,
-        "crouch_multiplier": 0.45,
-        "jump_velocity":     5.5,
-        "air_control":       0.25,
-        "gravity_scale":     0.5,
-        "ground_accel":      30.0,
-        "ground_friction":   24.0,
-        "step_height":       0.6,
-        "crouch_height":     0.5,
-        "stand_height":      1.4
-      }
+      "id": "movers_init",
+      "plugin": "q3.movers.init"
     },
+    {
+      "id": "movers_update",
+      "plugin": "q3.movers.update"
+    },
+    {
+      "id": "triggers_check",
+      "plugin": "q3.triggers.check"
+    },
+    {
+      "id": "triggers_apply",
+      "plugin": "q3.triggers.apply"
+    },
+    { "id": "pm_crouch",     "plugin": "q3.pm.crouch" },
+    { "id": "pm_ground",     "plugin": "q3.pm.ground" },
+    { "id": "pm_friction",   "plugin": "q3.pm.friction" },
+    { "id": "pm_accelerate", "plugin": "q3.pm.accelerate" },
+    { "id": "pm_jump",       "plugin": "q3.pm.jump" },
+    { "id": "pm_slide",      "plugin": "q3.pm.slide_move" },
     {
       "id": "physics_step",
       "plugin": "physics.step"

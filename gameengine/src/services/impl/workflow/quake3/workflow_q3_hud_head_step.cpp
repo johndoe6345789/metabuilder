@@ -3,12 +3,14 @@
 #include "services/interfaces/workflow/quake3/q3_overlay_utils.hpp"
 #include "services/interfaces/workflow_context.hpp"
 
+#include <SDL3/SDL.h>
 #include <SDL3/SDL_gpu.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <nlohmann/json.hpp>
 
+#include <algorithm>
 #include <cmath>
 #include <cstring>
 #include <string>
@@ -29,7 +31,7 @@ WorkflowQ3HudHeadStep::~WorkflowQ3HudHeadStep() {
 
 std::string WorkflowQ3HudHeadStep::GetPluginId() const { return "q3.hud_head_render"; }
 
-bool WorkflowQ3HudHeadStep::TryInitRT(SDL_GPUDevice* device) {
+bool WorkflowQ3HudHeadStep::TryInitRT(SDL_GPUDevice* device, SDL_Window* window) {
     device_ = device;
 
     SDL_GPUTextureCreateInfo ci{};
@@ -39,7 +41,13 @@ bool WorkflowQ3HudHeadStep::TryInitRT(SDL_GPUDevice* device) {
     ci.layer_count_or_depth = 1;
     ci.num_levels         = 1;
 
-    ci.format = SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM;
+    // Must match the swapchain format so gpu_pipeline_textured (compiled for the
+    // swapchain) can render into this target without a format-mismatch error.
+    const SDL_GPUTextureFormat scFmt = window
+        ? SDL_GetGPUSwapchainTextureFormat(device, window)
+        : SDL_GPU_TEXTUREFORMAT_B8G8R8A8_UNORM;
+
+    ci.format = scFmt;
     ci.usage  = SDL_GPU_TEXTUREUSAGE_COLOR_TARGET | SDL_GPU_TEXTUREUSAGE_SAMPLER;
     color_rt_ = SDL_CreateGPUTexture(device, &ci);
 
@@ -100,6 +108,10 @@ static void DrawHeadMd3(const std::string& prefix,
 // ---------------------------------------------------------------------------
 void WorkflowQ3HudHeadStep::Execute(
         const WorkflowStepDefinition&, WorkflowContext& context) {
+    // Always clear the tex from last frame so overlay.sw.end never blits a
+    // stale portrait (e.g. when the menu is open or the head model isn't loaded).
+    context.Set<SDL_GPUTexture*>("overlay.head_gpu_tex", nullptr);
+
     if (context.GetBool("frame_skip", false)) return;
     if (context.GetBool("q3.menu_open", false)) return;
 
@@ -113,25 +125,52 @@ void WorkflowQ3HudHeadStep::Execute(
     auto* pipeline = context.Get<SDL_GPUGraphicsPipeline*>("gpu_pipeline_textured", nullptr);
     if (!pipeline) return;
 
-    if (!ready_ && !TryInitRT(device)) return;
+    auto* window = context.Get<SDL_Window*>("sdl_window", nullptr);
+    if (!ready_ && !TryInitRT(device, window)) return;
 
-    // ── Build portrait camera ────────────────────────────────────────────────
-    // Slow Y-axis rotation so the head gently spins — a quarter turn per ~300 frames.
-    yaw_ += 0.021f;
+    // ── Q3A-style idle sway ───────────────────────────────────────────────────
+    // Mirrors ioq3 CG_DrawStatusBarHead: every 100–2100 ms pick a new target
+    // yaw (180° ± 20°) and pitch (±5°), smoothstep-interpolate to it.
+    // Base yaw 180° = head faces directly toward the camera.
+    const uint64_t nowMs = SDL_GetTicks();
+    if (nowMs >= swayEndMs_) {
+        // Pick new random target angles
+        swayStartYaw_   = swayEndYaw_;
+        swayStartPitch_ = swayEndPitch_;
+        swayStartMs_    = swayEndMs_;
+        swayEndMs_      = nowMs + 100 + static_cast<uint64_t>(SDL_rand(2000));
 
-    // The head model is centred near the origin.  Place a close-up camera
-    // slightly above and in front; the head radius is ~0.15 world units.
+        const float ryaw   = (static_cast<float>(SDL_rand(1000)) / 1000.f - 0.5f) * 2.f;
+        const float rpitch = (static_cast<float>(SDL_rand(1000)) / 1000.f - 0.5f) * 2.f;
+        swayEndYaw_   = glm::radians(180.f + 20.f * ryaw);
+        swayEndPitch_ = glm::radians(5.f   * rpitch);
+    }
+    if (swayStartMs_ == 0) swayStartMs_ = nowMs;
+
+    float frac = 0.f;
+    if (swayEndMs_ > swayStartMs_) {
+        frac = static_cast<float>(nowMs - swayStartMs_) /
+               static_cast<float>(swayEndMs_ - swayStartMs_);
+        frac = std::min(1.f, std::max(0.f, frac));
+        frac = frac * frac * (3.f - 2.f * frac);  // smoothstep
+    }
+    const float curYaw   = swayStartYaw_   + (swayEndYaw_   - swayStartYaw_)   * frac;
+    const float curPitch = swayStartPitch_ + (swayEndPitch_ - swayStartPitch_) * frac;
+
+    // Camera orbit around the head using current yaw/pitch angles.
+    // Q3A places origin at (len/tan(15°), 0, 0) in model space; we approximate.
     const float camDist = 0.45f;
     const glm::vec3 camPos(
-        std::sin(yaw_) * camDist,
-        0.06f,
-        std::cos(yaw_) * camDist);
+        std::sin(curYaw)   * std::cos(curPitch) * camDist,
+        -std::sin(curPitch) * camDist,
+        std::cos(curYaw)   * std::cos(curPitch) * camDist);
 
     const glm::mat4 view = glm::lookAt(camPos,
                                        glm::vec3(0.0f, 0.04f, 0.0f),
                                        glm::vec3(0.0f, 1.0f,  0.0f));
+    // Q3A uses FOV=30° for head (tan(15°)=0.268); keep 30° here too.
     const glm::mat4 proj = glm::perspective(
-        glm::radians(55.0f), 1.0f /*square aspect*/, 0.01f, 10.0f);
+        glm::radians(30.0f), 1.0f /*square aspect*/, 0.01f, 10.0f);
     const glm::mat4 model(1.0f);  // head at world origin
     const glm::mat4 mvp = proj * view * model;
 
@@ -171,21 +210,8 @@ void WorkflowQ3HudHeadStep::Execute(
     SDL_EndGPURenderPass(pass);
 
     // ── Expose the render target so overlay.sw.end can blit it ──────────────
+    // Face rect coords are set by q3.hud (which runs after this step).
     context.Set<SDL_GPUTexture*>("overlay.head_gpu_tex", color_rt_);
-
-    // ── Face rect in overlay-space (matches q3.hud layout) ──────────────────
-    constexpr float kNS = 1.0f;
-    constexpr float kNH = 32.f * kNS;
-
-    const int health   = context.Get<int>("q3.player_health", 100);
-    const float hNumW  = (health >= 100 ? 3 : health >= 10 ? 2 : 1) * 32.f * kNS;
-    const float cluster = hNumW + 4.f + kNH;
-    const float hx     = kW * 0.5f - cluster * 0.5f;
-
-    context.Set<float>("hud.face_rect_x", hx + hNumW + 4.f);
-    context.Set<float>("hud.face_rect_y", kH - kNH - 6.f);
-    context.Set<float>("hud.face_rect_w", kNH);
-    context.Set<float>("hud.face_rect_h", kNH);
 }
 
 }  // namespace sdl3cpp::services::impl

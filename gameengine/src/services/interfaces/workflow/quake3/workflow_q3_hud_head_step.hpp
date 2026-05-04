@@ -3,6 +3,7 @@
 #include "services/interfaces/i_logger.hpp"
 #include "services/interfaces/workflow_context.hpp"
 #include <SDL3/SDL_gpu.h>
+#include <glm/glm.hpp>
 #include <memory>
 #include <string>
 
@@ -21,14 +22,21 @@ public:
     static constexpr int kHeadSz = 64;  // square render target size
 
 private:
-    bool TryInitRT(SDL_GPUDevice* device);
+    bool TryInitRT(SDL_GPUDevice* device, SDL_Window* window);
 
     std::shared_ptr<ILogger> logger_;
     SDL_GPUDevice*  device_   = nullptr;
     SDL_GPUTexture* color_rt_ = nullptr;
     SDL_GPUTexture* depth_rt_ = nullptr;
     bool            ready_    = false;
-    float           yaw_      = 0.0f;   // slow portrait rotation (radians)
+
+    // Q3A-style idle sway state (mirrors cg.headStart/EndYaw/Pitch/Time)
+    float  swayStartYaw_   = glm::radians(180.f);
+    float  swayStartPitch_ = 0.f;
+    float  swayEndYaw_     = glm::radians(180.f);
+    float  swayEndPitch_   = 0.f;
+    uint64_t swayStartMs_  = 0;
+    uint64_t swayEndMs_    = 0;
 };
 
 }  // namespace sdl3cpp::services::impl

@@ -130,6 +130,32 @@
 #include "services/interfaces/workflow/quake3/workflow_q3_bots_spawn_step.hpp"
 #include "services/interfaces/workflow/quake3/workflow_q3_bots_update_step.hpp"
 #include "services/interfaces/workflow/quake3/workflow_q3_bots_draw_step.hpp"
+// Q3 pmove
+#include "services/interfaces/workflow/quake3/workflow_q3_pm_crouch_step.hpp"
+#include "services/interfaces/workflow/quake3/workflow_q3_pm_ground_step.hpp"
+#include "services/interfaces/workflow/quake3/workflow_q3_pm_friction_step.hpp"
+#include "services/interfaces/workflow/quake3/workflow_q3_pm_accelerate_step.hpp"
+#include "services/interfaces/workflow/quake3/workflow_q3_pm_jump_step.hpp"
+#include "services/interfaces/workflow/quake3/workflow_q3_pm_slide_move_step.hpp"
+// Q3 weapons + missiles
+#include "services/interfaces/workflow/quake3/workflow_q3_weapon_select_step.hpp"
+#include "services/interfaces/workflow/quake3/workflow_q3_weapon_fire_step.hpp"
+#include "services/interfaces/workflow/quake3/workflow_q3_missiles_move_step.hpp"
+#include "services/interfaces/workflow/quake3/workflow_q3_missiles_impact_step.hpp"
+// Q3 damage + pickups + ammo
+#include "services/interfaces/workflow/quake3/workflow_q3_ammo_init_step.hpp"
+#include "services/interfaces/workflow/quake3/workflow_q3_damage_apply_step.hpp"
+#include "services/interfaces/workflow/quake3/workflow_q3_bots_damage_step.hpp"
+#include "services/interfaces/workflow/quake3/workflow_q3_player_death_check_step.hpp"
+#include "services/interfaces/workflow/quake3/workflow_q3_player_respawn_step.hpp"
+#include "services/interfaces/workflow/quake3/workflow_q3_pickups_touch_step.hpp"
+#include "services/interfaces/workflow/quake3/workflow_q3_pickups_respawn_step.hpp"
+// Q3 movers + triggers + nav
+#include "services/interfaces/workflow/quake3/workflow_q3_movers_init_step.hpp"
+#include "services/interfaces/workflow/quake3/workflow_q3_movers_update_step.hpp"
+#include "services/interfaces/workflow/quake3/workflow_q3_triggers_check_step.hpp"
+#include "services/interfaces/workflow/quake3/workflow_q3_triggers_apply_step.hpp"
+#include "services/interfaces/workflow/quake3/workflow_q3_nav_build_step.hpp"
 
 // Audio (service-dependent, registered with nullptr)
 #include "services/interfaces/workflow/workflow_generic_steps/workflow_audio_pause_step.hpp"
@@ -351,7 +377,33 @@ void WorkflowRegistrar::RegisterSteps(std::shared_ptr<IWorkflowStepRegistry> reg
     registry->RegisterStep(std::make_shared<WorkflowQ3BotsSpawnStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowQ3BotsUpdateStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowQ3BotsDrawStep>(logger_));
-    count += 29;
+    // Q3 pmove
+    registry->RegisterStep(std::make_shared<WorkflowQ3PmCrouchStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowQ3PmGroundStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowQ3PmFrictionStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowQ3PmAccelerateStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowQ3PmJumpStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowQ3PmSlideMoveStep>(logger_));
+    // Q3 weapons + missiles
+    registry->RegisterStep(std::make_shared<WorkflowQ3WeaponSelectStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowQ3WeaponFireStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowQ3MissilesMoveStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowQ3MissilesImpactStep>(logger_));
+    // Q3 damage + pickups + ammo
+    registry->RegisterStep(std::make_shared<WorkflowQ3AmmoInitStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowQ3DamageApplyStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowQ3BotsDamageStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowQ3PlayerDeathCheckStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowQ3PlayerRespawnStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowQ3PickupsTouchStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowQ3PickupsRespawnStep>(logger_));
+    // Q3 movers + triggers + nav
+    registry->RegisterStep(std::make_shared<WorkflowQ3MoversInitStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowQ3MoversUpdateStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowQ3TriggersCheckStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowQ3TriggersApplyStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowQ3NavBuildStep>(logger_));
+    count += 55;
 
     // ── Texture ───────────────────────────────────────────────
     registry->RegisterStep(std::make_shared<WorkflowTextureLoadStep>(logger_));

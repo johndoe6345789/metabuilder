@@ -301,6 +301,32 @@ if(BUILD_SDL3_APP)
         src/services/impl/workflow/quake3/workflow_q3_bots_spawn_step.cpp
         src/services/impl/workflow/quake3/workflow_q3_bots_update_step.cpp
         src/services/impl/workflow/quake3/workflow_q3_bots_draw_step.cpp
+        # Q3 pmove
+        src/services/impl/workflow/quake3/workflow_q3_pm_crouch_step.cpp
+        src/services/impl/workflow/quake3/workflow_q3_pm_ground_step.cpp
+        src/services/impl/workflow/quake3/workflow_q3_pm_friction_step.cpp
+        src/services/impl/workflow/quake3/workflow_q3_pm_accelerate_step.cpp
+        src/services/impl/workflow/quake3/workflow_q3_pm_jump_step.cpp
+        src/services/impl/workflow/quake3/workflow_q3_pm_slide_move_step.cpp
+        # Q3 weapons + missiles
+        src/services/impl/workflow/quake3/workflow_q3_weapon_select_step.cpp
+        src/services/impl/workflow/quake3/workflow_q3_weapon_fire_step.cpp
+        src/services/impl/workflow/quake3/workflow_q3_missiles_move_step.cpp
+        src/services/impl/workflow/quake3/workflow_q3_missiles_impact_step.cpp
+        # Q3 damage + pickups + ammo
+        src/services/impl/workflow/quake3/workflow_q3_ammo_init_step.cpp
+        src/services/impl/workflow/quake3/workflow_q3_damage_apply_step.cpp
+        src/services/impl/workflow/quake3/workflow_q3_bots_damage_step.cpp
+        src/services/impl/workflow/quake3/workflow_q3_player_death_check_step.cpp
+        src/services/impl/workflow/quake3/workflow_q3_player_respawn_step.cpp
+        src/services/impl/workflow/quake3/workflow_q3_pickups_touch_step.cpp
+        src/services/impl/workflow/quake3/workflow_q3_pickups_respawn_step.cpp
+        # Q3 movers + triggers + nav
+        src/services/impl/workflow/quake3/workflow_q3_movers_init_step.cpp
+        src/services/impl/workflow/quake3/workflow_q3_movers_update_step.cpp
+        src/services/impl/workflow/quake3/workflow_q3_triggers_check_step.cpp
+        src/services/impl/workflow/quake3/workflow_q3_triggers_apply_step.cpp
+        src/services/impl/workflow/quake3/workflow_q3_nav_build_step.cpp
         src/services/impl/workflow/rendering/workflow_bsp_build_collision_step.cpp
         src/services/impl/workflow/rendering/workflow_bsp_build_geometry_step.cpp
         src/services/impl/workflow/rendering/workflow_bsp_entity_update_step.cpp
