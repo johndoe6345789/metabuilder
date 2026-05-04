@@ -7,6 +7,8 @@
 
 #include <filesystem>
 #include <memory>
+#include <unordered_set>
+#include <vector>
 
 namespace sdl3cpp::services::impl {
 
@@ -22,6 +24,13 @@ private:
 
     std::vector<WorkflowStepDefinition> ParseNodes(
         const rapidjson::Document& document) const;
+
+    // Expand any workflow.include steps in-place (parse-time composition).
+    // baseDir  — directory of the including file, for relative path resolution.
+    // visited  — canonical paths already on the include stack (cycle detection).
+    void ResolveIncludes(std::vector<WorkflowStepDefinition>& steps,
+                         const std::filesystem::path& baseDir,
+                         std::unordered_set<std::string>& visited) const;
 
     std::shared_ptr<ILogger> logger_;
 };

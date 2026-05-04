@@ -1,0 +1,20 @@
+{
+  "name": "Q3 Combat",
+  "description": "Weapon fire + bot AI update.",
+  "steps": [
+    {
+      "id": "q3_weapon",
+      "plugin": "q3.weapon.update"
+    },
+    {
+      "id": "q3_bots_update",
+      "plugin": "q3.bots.update",
+      "parameters": {
+        "chase_range":    20.0,
+        "shoot_range":     6.0,
+        "move_speed":      3.5,
+        "shoot_interval": 30
+      }
+    }
+  ]
+}

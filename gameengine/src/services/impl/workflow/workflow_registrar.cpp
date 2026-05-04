@@ -116,7 +116,13 @@
 // Quake 3
 #include "services/interfaces/workflow/quake3/workflow_q3_menu_update_step.hpp"
 #include "services/interfaces/workflow/quake3/workflow_q3_weapon_update_step.hpp"
-#include "services/interfaces/workflow/quake3/workflow_q3_overlay_draw_step.hpp"
+#include "services/interfaces/workflow/quake3/workflow_q3_hud_step.hpp"
+#include "services/interfaces/workflow/quake3/workflow_q3_crosshair_step.hpp"
+#include "services/interfaces/workflow/quake3/workflow_q3_hitmarker_step.hpp"
+#include "services/interfaces/workflow/quake3/workflow_q3_menu_frame_step.hpp"
+#include "services/interfaces/workflow/quake3/workflow_q3_mapselect_step.hpp"
+#include "services/interfaces/workflow/rendering/workflow_overlay_sw_begin_step.hpp"
+#include "services/interfaces/workflow/rendering/workflow_overlay_sw_end_step.hpp"
 #include "services/interfaces/workflow/quake3/workflow_q3_pickups_draw_step.hpp"
 #include "services/interfaces/workflow/quake3/workflow_q3_md3_load_step.hpp"
 #include "services/interfaces/workflow/quake3/workflow_q3_md3_draw_step.hpp"
@@ -331,13 +337,19 @@ void WorkflowRegistrar::RegisterSteps(std::shared_ptr<IWorkflowStepRegistry> reg
     registry->RegisterStep(std::make_shared<WorkflowQ3MenuUpdateStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowQ3WeaponUpdateStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowQ3PickupsDrawStep>(logger_));
-    registry->RegisterStep(std::make_shared<WorkflowQ3OverlayDrawStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowOverlaySwBeginStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowQ3HudStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowQ3CrosshairStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowQ3HitmarkerStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowQ3MenuFrameStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowQ3MapSelectStep>(logger_));
+    registry->RegisterStep(std::make_shared<WorkflowOverlaySwEndStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowQ3Md3LoadStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowQ3Md3DrawStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowQ3BotsSpawnStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowQ3BotsUpdateStep>(logger_));
     registry->RegisterStep(std::make_shared<WorkflowQ3BotsDrawStep>(logger_));
-    count += 23;
+    count += 29;
 
     // ── Texture ───────────────────────────────────────────────
     registry->RegisterStep(std::make_shared<WorkflowTextureLoadStep>(logger_));

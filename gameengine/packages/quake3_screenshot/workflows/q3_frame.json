@@ -1,311 +1,41 @@
 {
-  "name": "Q3 Frame Tick",
-  "description": "Per-frame: poll input, FPS move, render BSP map with bots and weapon. Screenshots after 240 frames then exits.",
-  "nodes": [
+  "name": "Q3 Frame Tick (Screenshot)",
+  "description": "Per-frame composition: shared Q3 sub-workflows + screenshot-check component. Exits after frame 240.",
+  "steps": [
     {
-      "id": "input_poll",
-      "type": "input.poll",
-      "typeVersion": 1,
-      "position": [0, 0]
+      "id": "input_group",
+      "plugin": "workflow.include",
+      "parameters": { "path": "packages/quake3/workflows/q3_input.json" }
     },
     {
-      "id": "q3_menu",
-      "type": "q3.menu.update",
-      "typeVersion": 1,
-      "position": [100, 0]
+      "id": "physics_group",
+      "plugin": "workflow.include",
+      "parameters": { "path": "packages/quake3/workflows/q3_physics.json" }
     },
     {
-      "id": "should_stop",
-      "type": "bool.or",
-      "typeVersion": 1,
-      "position": [140, 0],
-      "inputs": { "left": "q3.menu_quit_pressed", "right": "q3.menu_map_selected" },
-      "outputs": { "value": "q3.stop_game" }
+      "id": "combat_group",
+      "plugin": "workflow.include",
+      "parameters": { "path": "packages/quake3/workflows/q3_combat.json" }
     },
     {
-      "id": "stop_game_loop",
-      "type": "value.set_if",
-      "typeVersion": 1,
-      "position": [160, 0],
-      "inputs": { "condition": "q3.stop_game" },
-      "parameters": { "value": false },
-      "outputs": { "value": "game_running" }
+      "id": "render_group",
+      "plugin": "workflow.include",
+      "parameters": { "path": "packages/quake3/workflows/q3_render.json" }
     },
     {
-      "id": "set_quit_requested",
-      "type": "value.set_if",
-      "typeVersion": 1,
-      "position": [170, 0],
-      "inputs": { "condition": "q3.menu_quit_pressed" },
-      "parameters": { "value": true },
-      "outputs": { "value": "q3.quit_requested" }
+      "id": "screenshot_group",
+      "plugin": "workflow.include",
+      "parameters": { "path": "packages/quake3_screenshot/workflows/q3_screenshot_check.json" }
     },
     {
-      "id": "compute_movement_active",
-      "type": "bool.not",
-      "typeVersion": 1,
-      "position": [190, 0],
-      "inputs":  { "value": "q3.menu_open" },
-      "outputs": { "value": "movement_active" }
+      "id": "overlay_group",
+      "plugin": "workflow.include",
+      "parameters": { "path": "packages/quake3/workflows/q3_overlay.json" }
     },
     {
-      "id": "update_mouse_grab",
-      "type": "input.mouse.grab",
-      "typeVersion": 1,
-      "position": [195, 0],
-      "inputs": { "enabled": "movement_active" }
-    },
-    {
-      "id": "physics_move",
-      "type": "physics.fps.move",
-      "typeVersion": 1,
-      "position": [200, 0],
-      "parameters": {
-        "move_speed": 6.5,
-        "sprint_multiplier": 1.5,
-        "crouch_multiplier": 0.45,
-        "jump_velocity": 5.5,
-        "air_control": 0.25,
-        "gravity_scale": 0.5,
-        "ground_accel": 30.0,
-        "ground_friction": 24.0,
-        "step_height": 0.6,
-        "crouch_height": 0.5,
-        "stand_height": 1.4
-      }
-    },
-    {
-      "id": "physics_step",
-      "type": "physics.step",
-      "typeVersion": 1,
-      "position": [400, 0]
-    },
-    {
-      "id": "sync_transforms",
-      "type": "physics.sync_transforms",
-      "typeVersion": 1,
-      "position": [500, 0]
-    },
-    {
-      "id": "bsp_entities_update",
-      "type": "bsp.entities.update",
-      "typeVersion": 1,
-      "position": [550, 0]
-    },
-    {
-      "id": "camera_update",
-      "type": "camera.fps.update",
-      "typeVersion": 1,
-      "position": [600, 0],
-      "parameters": {
-        "sensitivity": 0.003,
-        "eye_height": 1.4,
-        "fov": 90.0,
-        "near": 0.1,
-        "far": 500.0
-      }
-    },
-    {
-      "id": "q3_weapon",
-      "type": "q3.weapon.update",
-      "typeVersion": 1,
-      "position": [690, 0]
-    },
-    {
-      "id": "q3_bots_update",
-      "type": "q3.bots.update",
-      "typeVersion": 1,
-      "position": [695, 0],
-      "parameters": {
-        "chase_range":    20.0,
-        "shoot_range":     6.0,
-        "move_speed":      3.5,
-        "shoot_interval": 30
-      }
-    },
-    {
-      "id": "render_prepare",
-      "type": "render.prepare",
-      "typeVersion": 1,
-      "position": [750, 0]
-    },
-    {
-      "id": "portal_view",
-      "type": "bsp.portal_view",
-      "typeVersion": 1,
-      "position": [775, 0]
-    },
-    {
-      "id": "frame_begin",
-      "type": "frame.gpu.begin",
-      "typeVersion": 1,
-      "position": [800, 0],
-      "parameters": {
-        "clear_r": 0.3,
-        "clear_g": 0.5,
-        "clear_b": 0.8
-      }
-    },
-    {
-      "id": "draw_map",
-      "type": "draw.map",
-      "typeVersion": 1,
-      "position": [1000, 0],
-      "parameters": {
-        "default_texture": "walls_texture",
-        "pipeline_key": "gpu_pipeline_bsp",
-        "roughness": 0.7,
-        "metallic": 0.0
-      }
-    },
-    {
-      "id": "draw_pickups",
-      "type": "q3.pickups.draw",
-      "typeVersion": 1,
-      "position": [1100, 0]
-    },
-    {
-      "id": "draw_bots",
-      "type": "q3.bots.draw",
-      "typeVersion": 1,
-      "position": [1150, 0],
-      "parameters": {
-        "lower_prefix":  "lower",
-        "upper_prefix":  "upper",
-        "head_prefix":   "head",
-        "weapon_prefix": "weapon_mg"
-      }
-    },
-    {
-      "id": "draw_weapon_viewmodel",
-      "type": "q3.md3.draw",
-      "typeVersion": 1,
-      "position": [1160, 0],
-      "parameters": {
-        "prefix":    "weapon_mg",
-        "viewmodel": true,
-        "vm_right":  0.25,
-        "vm_down":  -0.22,
-        "vm_fwd":    0.45,
-        "fps":       15.0
-      }
-    },
-    {
-      "id": "end_scene",
-      "type": "frame.gpu.end_scene",
-      "typeVersion": 1,
-      "position": [1200, 0]
-    },
-    {
-      "id": "overlay_fps",
-      "type": "overlay.fps",
-      "typeVersion": 1,
-      "position": [1225, 0]
-    },
-    {
-      "id": "q3_overlay",
-      "type": "q3.overlay.draw",
-      "typeVersion": 1,
-      "position": [1235, 0]
-    },
-    {
-      "id": "postfx_taa",
-      "type": "postfx.taa",
-      "typeVersion": 1,
-      "position": [1250, 0],
-      "parameters": { "blend_factor": 0.05 }
-    },
-    {
-      "id": "postfx_ssao",
-      "type": "postfx.ssao",
-      "typeVersion": 1,
-      "position": [1300, 0]
-    },
-    {
-      "id": "bloom_extract",
-      "type": "postfx.bloom_extract",
-      "typeVersion": 1,
-      "position": [1400, 0]
-    },
-    {
-      "id": "bloom_blur",
-      "type": "postfx.bloom_blur",
-      "typeVersion": 1,
-      "position": [1500, 0]
-    },
-    {
-      "id": "postfx_composite",
-      "type": "postfx.composite",
-      "typeVersion": 1,
-      "position": [1600, 0]
-    },
-    {
-      "id": "set_threshold",
-      "type": "value.literal",
-      "typeVersion": 1,
-      "position": [1650, 0],
-      "parameters": { "value": 240.0 },
-      "outputs": { "value": "screenshot_threshold" }
-    },
-    {
-      "id": "check_frame_240",
-      "type": "compare.gte",
-      "typeVersion": 1,
-      "position": [1700, 0],
-      "inputs":  { "left": "loop.iteration", "right": "screenshot_threshold" },
-      "outputs": { "value": "screenshot_due" }
-    },
-    {
-      "id": "set_screenshot_path",
-      "type": "value.set_if",
-      "typeVersion": 1,
-      "position": [1750, 0],
-      "inputs":  { "condition": "screenshot_due" },
-      "parameters": { "value": "/tmp/q3_screenshot.bmp" },
-      "outputs": { "value": "screenshot_output_path" }
-    },
-    {
-      "id": "stop_after_screenshot",
-      "type": "value.set_if",
-      "typeVersion": 1,
-      "position": [1800, 0],
-      "inputs":  { "condition": "screenshot_due" },
-      "parameters": { "value": false },
-      "outputs": { "value": "game_running" }
+      "id": "postfx_group",
+      "plugin": "workflow.include",
+      "parameters": { "path": "packages/quake3/workflows/q3_postfx.json" }
     }
-  ],
-  "connections": {
-    "input_poll":              { "main": { "0": [{ "node": "q3_menu",                 "type": "main", "index": 0 }] } },
-    "q3_menu":                 { "main": { "0": [{ "node": "should_stop",             "type": "main", "index": 0 }] } },
-    "should_stop":             { "main": { "0": [{ "node": "stop_game_loop",          "type": "main", "index": 0 }] } },
-    "stop_game_loop":          { "main": { "0": [{ "node": "set_quit_requested",      "type": "main", "index": 0 }] } },
-    "set_quit_requested":      { "main": { "0": [{ "node": "compute_movement_active", "type": "main", "index": 0 }] } },
-    "compute_movement_active": { "main": { "0": [{ "node": "update_mouse_grab",       "type": "main", "index": 0 }] } },
-    "update_mouse_grab":       { "main": { "0": [{ "node": "physics_move",            "type": "main", "index": 0 }] } },
-    "physics_move":            { "main": { "0": [{ "node": "physics_step",            "type": "main", "index": 0 }] } },
-    "physics_step":            { "main": { "0": [{ "node": "sync_transforms",         "type": "main", "index": 0 }] } },
-    "sync_transforms":         { "main": { "0": [{ "node": "bsp_entities_update",     "type": "main", "index": 0 }] } },
-    "bsp_entities_update":     { "main": { "0": [{ "node": "camera_update",           "type": "main", "index": 0 }] } },
-    "camera_update":           { "main": { "0": [{ "node": "q3_weapon",               "type": "main", "index": 0 }] } },
-    "q3_weapon":               { "main": { "0": [{ "node": "q3_bots_update",          "type": "main", "index": 0 }] } },
-    "q3_bots_update":          { "main": { "0": [{ "node": "render_prepare",          "type": "main", "index": 0 }] } },
-    "render_prepare":          { "main": { "0": [{ "node": "portal_view",             "type": "main", "index": 0 }] } },
-    "portal_view":             { "main": { "0": [{ "node": "frame_begin",             "type": "main", "index": 0 }] } },
-    "frame_begin":             { "main": { "0": [{ "node": "draw_map",                "type": "main", "index": 0 }] } },
-    "draw_map":                { "main": { "0": [{ "node": "draw_pickups",            "type": "main", "index": 0 }] } },
-    "draw_pickups":            { "main": { "0": [{ "node": "draw_bots",               "type": "main", "index": 0 }] } },
-    "draw_bots":               { "main": { "0": [{ "node": "draw_weapon_viewmodel",   "type": "main", "index": 0 }] } },
-    "draw_weapon_viewmodel":   { "main": { "0": [{ "node": "end_scene",               "type": "main", "index": 0 }] } },
-    "end_scene":               { "main": { "0": [{ "node": "overlay_fps",             "type": "main", "index": 0 }] } },
-    "overlay_fps":             { "main": { "0": [{ "node": "q3_overlay",              "type": "main", "index": 0 }] } },
-    "q3_overlay":              { "main": { "0": [{ "node": "set_threshold",           "type": "main", "index": 0 }] } },
-    "set_threshold":           { "main": { "0": [{ "node": "check_frame_240",         "type": "main", "index": 0 }] } },
-    "check_frame_240":         { "main": { "0": [{ "node": "set_screenshot_path",     "type": "main", "index": 0 }] } },
-    "set_screenshot_path":     { "main": { "0": [{ "node": "stop_after_screenshot",   "type": "main", "index": 0 }] } },
-    "stop_after_screenshot":   { "main": { "0": [{ "node": "postfx_taa",              "type": "main", "index": 0 }] } },
-    "postfx_taa":              { "main": { "0": [{ "node": "postfx_ssao",             "type": "main", "index": 0 }] } },
-    "postfx_ssao":             { "main": { "0": [{ "node": "bloom_extract",           "type": "main", "index": 0 }] } },
-    "bloom_extract":           { "main": { "0": [{ "node": "bloom_blur",              "type": "main", "index": 0 }] } },
-    "bloom_blur":              { "main": { "0": [{ "node": "postfx_composite",        "type": "main", "index": 0 }] } }
-  }
+  ]
 }

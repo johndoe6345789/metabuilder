@@ -189,6 +189,7 @@ if(BUILD_SDL3_APP)
         src/services/impl/workflow/workflow_definition_parser.cpp
         src/services/impl/workflow/workflow_definition_parser_nodes.cpp
         src/services/impl/workflow/workflow_definition_parser_variables.cpp
+        src/services/impl/workflow/workflow_definition_parser_includes.cpp
         src/services/impl/workflow/workflow_connection_resolver.cpp
         src/services/impl/workflow/workflow_execute_step.cpp
         src/stb_image.cpp
@@ -285,7 +286,13 @@ if(BUILD_SDL3_APP)
         src/services/impl/workflow/geometry/workflow_geometry_create_plane_step.cpp
         src/services/impl/workflow/geometry/workflow_geometry_cube_generate_step.cpp
         src/services/impl/workflow/quake3/workflow_q3_menu_update_step.cpp
-        src/services/impl/workflow/quake3/workflow_q3_overlay_draw_step.cpp
+        src/services/impl/workflow/rendering/workflow_overlay_sw_begin_step.cpp
+        src/services/impl/workflow/rendering/workflow_overlay_sw_end_step.cpp
+        src/services/impl/workflow/quake3/workflow_q3_hud_step.cpp
+        src/services/impl/workflow/quake3/workflow_q3_crosshair_step.cpp
+        src/services/impl/workflow/quake3/workflow_q3_hitmarker_step.cpp
+        src/services/impl/workflow/quake3/workflow_q3_menu_frame_step.cpp
+        src/services/impl/workflow/quake3/workflow_q3_mapselect_step.cpp
         src/services/impl/workflow/quake3/workflow_q3_pickups_draw_step.cpp
         src/services/impl/workflow/quake3/workflow_q3_weapon_update_step.cpp
         src/services/impl/workflow/quake3/workflow_q3_md3_load_step.cpp

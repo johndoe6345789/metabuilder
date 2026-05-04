@@ -4,7 +4,9 @@
 
 #include <rapidjson/document.h>
 
+#include <filesystem>
 #include <stdexcept>
+#include <unordered_set>
 #include <utility>
 
 namespace sdl3cpp::services::impl {
@@ -45,6 +47,15 @@ WorkflowDefinition WorkflowDefinitionParser::ParseFile(const std::filesystem::pa
     // Read workflow variables (n8n-style)
     ParseVariables(document, workflow);
 
+    // Build include-cycle detection set (canonical path of THIS file)
+    std::unordered_set<std::string> visited;
+    try {
+        visited.insert(std::filesystem::canonical(path).string());
+    } catch (...) {
+        visited.insert(path.string());
+    }
+    const std::filesystem::path baseDir = path.parent_path();
+
     // Handle "steps" format (simple sequential)
     if (hasSteps) {
         if (!document["steps"].IsArray()) {
@@ -62,11 +73,16 @@ WorkflowDefinition WorkflowDefinitionParser::ParseFile(const std::filesystem::pa
             step.parameters = paramReader.ReadParameterMap(entry, "parameters");
             workflow.steps.push_back(std::move(step));
         }
+        // Expand workflow.include nodes (parse-time composition, like React imports)
+        ResolveIncludes(workflow.steps, baseDir, visited);
         return workflow;
     }
 
     // Handle "nodes" format (n8n with connections)
     workflow.steps = ParseNodes(document);
+
+    // Expand workflow.include nodes (parse-time composition, like React imports)
+    ResolveIncludes(workflow.steps, baseDir, visited);
 
     return workflow;
 }
