@@ -29,7 +29,8 @@ class SDL3CppConan(ConanFile):
         "cairo/1.18.0",
         "libzip/1.10.1",
         "stb/cci.20230920",
-        "gtest/1.17.0"
+        "gtest/1.17.0",
+        "spdlog/1.15.1"
     )
     RENDER_STACK_REQUIRES = (
         "entt/3.16.0",

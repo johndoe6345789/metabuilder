@@ -106,6 +106,8 @@ find_package(assimp CONFIG REQUIRED)
 
 find_package(libzip CONFIG REQUIRED)
 
+find_package(spdlog CONFIG REQUIRED)
+
 
 # Build render stack library group
 set(SDL3CPP_RENDER_STACK_LIBS EnTT::EnTT)
@@ -430,6 +432,7 @@ if(BUILD_SDL3_APP)
         EnTT::EnTT
         libzip::zip
         assimp::assimp
+        spdlog::spdlog
     )
 endif()
 

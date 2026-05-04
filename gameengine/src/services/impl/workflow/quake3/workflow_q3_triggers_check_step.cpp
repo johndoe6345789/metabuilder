@@ -4,12 +4,22 @@
 #include <nlohmann/json.hpp>
 #include <glm/glm.hpp>
 #include <cmath>
+#include <cstdlib>
 #include <string>
 #include <vector>
 
 namespace sdl3cpp::services::impl {
 
 namespace {
+
+// BSP entity numeric fields are stored as JSON strings.
+float EntFloat(const nlohmann::json& ent, const char* key, float def) {
+    if (!ent.contains(key)) return def;
+    const auto& v = ent[key];
+    if (v.is_number()) return v.get<float>();
+    if (v.is_string()) { try { return std::stof(v.get<std::string>()); } catch (...) {} }
+    return def;
+}
 
 // Parsed representation of a trigger entity
 struct TriggerEnt {
@@ -74,7 +84,7 @@ void WorkflowQ3TriggersCheckStep::Execute(const WorkflowStepDefinition& /*step*/
             t["classname"] = cls;
             t["origin"]    = nlohmann::json::array({origin.x, origin.y, origin.z});
             t["target"]    = ent.value("target", std::string{});
-            t["dmg"]       = ent.value("dmg",    5.f);
+            t["dmg"]       = EntFloat(ent, "dmg", 5.f);
 
             triggerList.push_back(t);
         }

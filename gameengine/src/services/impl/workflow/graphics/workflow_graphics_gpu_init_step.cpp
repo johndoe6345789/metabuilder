@@ -4,6 +4,7 @@
 #include <SDL3/SDL_gpu.h>
 #include <SDL3/SDL.h>
 #include <nlohmann/json.hpp>
+#include <cstdlib>
 #include <stdexcept>
 
 namespace sdl3cpp::services::impl {
@@ -54,8 +55,13 @@ void WorkflowGraphicsGpuInitStep::Execute(const WorkflowStepDefinition& step, Wo
             SDL_GPU_SHADERFORMAT_SPIRV | SDL_GPU_SHADERFORMAT_MSL | SDL_GPU_SHADERFORMAT_DXIL);
     }
 
+    // Debug mode: SDL sets MTL_DEBUG_LAYER=1 which triggers a macOS 26 Metal
+    // validation bug where newLibraryWithSource receives nil source. Default off;
+    // enable with SDL_GPU_DEBUG=1 env var for explicit GPU validation.
+    const bool debugMode = std::getenv("SDL_GPU_DEBUG") != nullptr;
+
     // Create GPU device with preferred shader format
-    SDL_GPUDevice* device = SDL_CreateGPUDevice(shader_format, true, driver_name);
+    SDL_GPUDevice* device = SDL_CreateGPUDevice(shader_format, debugMode, driver_name);
 
     if (!device) {
         if (logger_) {
@@ -65,7 +71,7 @@ void WorkflowGraphicsGpuInitStep::Execute(const WorkflowStepDefinition& step, Wo
         // Fallback: let SDL auto-select
         device = SDL_CreateGPUDevice(
             SDL_GPU_SHADERFORMAT_SPIRV | SDL_GPU_SHADERFORMAT_MSL | SDL_GPU_SHADERFORMAT_DXIL,
-            true, nullptr);
+            debugMode, nullptr);
 
         if (!device) {
             throw std::runtime_error("graphics.gpu.init: SDL_CreateGPUDevice failed even with fallback: " +

@@ -119,7 +119,7 @@
     "postfx_taa_frag_path": {
       "name": "postfx_taa_frag_path",
       "type": "string",
-      "defaultValue": "packages/seed/shaders/spirv/postfx_taa.frag.spv"
+      "defaultValue": "packages/seed/shaders/msl/postfx_taa.frag.metal"
     }
   },
   "nodes": [

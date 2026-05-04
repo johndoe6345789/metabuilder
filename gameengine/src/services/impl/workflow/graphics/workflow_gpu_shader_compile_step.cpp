@@ -107,17 +107,25 @@ void WorkflowGpuShaderCompileStep::Execute(const WorkflowStepDefinition& step, W
     // Load shader binary
     auto shader_data = LoadBinary(shader_path);
 
+    // For MSL shaders: ensure null terminator so NSString initWithBytes succeeds
+    // on all Metal runtime versions (macOS 26 Metal debug layer can fail otherwise)
+    if (format == SDL_GPU_SHADERFORMAT_MSL) {
+        shader_data.push_back(0);
+    }
+
     if (logger_) {
-        logger_->Trace("WorkflowGpuShaderCompileStep", "Execute",
-                       "path=" + shader_path + ", stage=" + stage_str +
-                       ", format=" + format_name + ", size=" + std::to_string(shader_data.size()),
-                       "Loading shader");
+        logger_->Info("graphics.gpu.shader.compile: loading " + stage_str +
+                      " shader from " + shader_path + " (" +
+                      std::to_string(shader_data.size()) + " bytes, format=" + format_name + ")");
     }
 
     // Create shader
     SDL_GPUShaderCreateInfo shader_info = {};
     shader_info.code = shader_data.data();
-    shader_info.code_size = shader_data.size();
+    // Pass size WITHOUT the null terminator for SPIRV/METALLIB; for MSL the extra null is harmless
+    shader_info.code_size = (format == SDL_GPU_SHADERFORMAT_MSL)
+                            ? shader_data.size() - 1   // exclude the appended null
+                            : shader_data.size();
     shader_info.entrypoint = entrypoint;
     shader_info.format = format;
     shader_info.stage = stage;

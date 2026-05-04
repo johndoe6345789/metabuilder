@@ -13,7 +13,7 @@ struct ArenaInfo { std::string longname; std::string bot; };
 using ArenaMap       = std::unordered_map<std::string, ArenaInfo>;
 using LevelshotCache = std::unordered_map<std::string, SDL_Texture*>;
 
-static constexpr int kW = 640, kH = 360;
+static constexpr int kW = 640, kH = 480;  // ioq3 native virtual resolution
 static constexpr int kGlyphSrc   = 16;
 static constexpr int kPropHeight = 27;
 static constexpr int kPropGap    = 3;

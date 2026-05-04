@@ -5,7 +5,19 @@
 #include <nlohmann/json.hpp>
 #include <glm/glm.hpp>
 #include <cmath>
+#include <cstdlib>
 #include <string>
+
+namespace {
+// BSP entity fields are always JSON strings — helper to safely read as float.
+float EntFloat(const nlohmann::json& ent, const char* key, float def) {
+    if (!ent.contains(key)) return def;
+    const auto& v = ent[key];
+    if (v.is_number()) return v.get<float>();
+    if (v.is_string()) { try { return std::stof(v.get<std::string>()); } catch (...) {} }
+    return def;
+}
+}
 
 namespace sdl3cpp::services::impl {
 
@@ -39,18 +51,17 @@ void WorkflowQ3MoversInitStep::Execute(const WorkflowStepDefinition& /*step*/, W
             }
 
             // Parse angle (degrees, Q3 convention: 0=+X, 90=-Z in XZ plane)
-            const float angleDeg = ent.value("angle", 0.f);
+            const float angleDeg = EntFloat(ent, "angle", 0.f);
             const float angleRad = angleDeg * (3.14159265f / 180.f);
-            // angle 0 → +X, 90 → -Z  (right-hand Y-up)
             const glm::vec3 moveDir(std::cos(angleRad), 0.f, -std::sin(angleRad));
 
-            // Parse speed and distance
-            const float speed    = ent.value("speed",    100.f);
-            const float distRaw  = ent.value("distance", 128.f);
+            // Parse speed and distance — all stored as strings in BSP entity lump
+            const float speed    = EntFloat(ent, "speed",    100.f);
+            const float distRaw  = EntFloat(ent, "distance", 128.f);
             constexpr float kScale = 0.03125f;
             const float dist     = distRaw * kScale;
 
-            const float wait       = ent.value("wait", 2.f);
+            const float wait       = EntFloat(ent, "wait", 2.f);
             const float travelTime = (speed > 0.f) ? dist / (speed * kScale) : 1.f;
 
             sdl3cpp::q3::Q3Mover m;

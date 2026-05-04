@@ -4,21 +4,17 @@
 #include <SDL3/SDL_gpu.h>
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Real Q3A status-bar layout (from ioq3 cg_draw.c), adapted to 640×360:
+// Real Q3A status-bar layout (from ioq3 cg_draw.c) at native 640×480.
 //
-//  Source constants (640×480):
-//    CHAR_WIDTH=32  CHAR_HEIGHT=48  ICON_SIZE=48  TEXT_ICON_SPACE=4
-//    ammo    x=0,   y=432  (field width 3)
-//    ammo icon  x=CHAR_WIDTH*3+TEXT_ICON_SPACE = 100
-//    health  x=185, y=432  (field width 3)
-//    head    x=185+100=285, y=480-ICON_SIZE*1.25=420, size=60
-//    armor   x=370, y=432  (field width 3)
-//    armor icon x=370+100 = 470
+//  CHAR_WIDTH=32  CHAR_HEIGHT=48  ICON_SIZE=48  TEXT_ICON_SPACE=4
+//  ammo    x=0,   y=432  (field width 3)
+//  ammo icon  x=CHAR_WIDTH*3+TEXT_ICON_SPACE = 100
+//  health  x=185, y=432  (field width 3)
+//  head    x=285, y=420, size=60  (480-ICON_SIZE*1.25)
+//  armor   x=370, y=432  (field width 3)
+//  armor icon x=370+100 = 470
 //
-//  Scale to 640×360: Y *= 360/480 = 0.75; X unchanged.
-//    kCharW=32  kIconSz=36  kHeadSz=45
-//    HUD bar bottom = 360; digits 32px tall → kHudY = 360-32-2 = 326
-//    head y = 360 - 45 - 2 = 313
+//  kScale = kH/480 = 1.0 — all sizes are exact ioq3 pixels.
 // ─────────────────────────────────────────────────────────────────────────────
 
 namespace sdl3cpp::services::impl {
