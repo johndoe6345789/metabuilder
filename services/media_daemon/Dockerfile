@@ -1,12 +1,12 @@
 # Multi-stage build for Media Daemon
-# Uses metabuilder/base-conan-deps — all apt packages and Conan C++ packages
-# pre-installed. Build = compile only, zero downloads.
+# Uses metabuilder/base-conan-media - apt packages and the media-daemon Conan
+# C++ packages pre-installed. Build = compile only, zero downloads.
 #
 # Prerequisites: run python3 deployment/deployment.py build base first.
 
 # Stage 1: Build environment
 ARG BASE_REGISTRY=metabuilder
-FROM ${BASE_REGISTRY}/base-conan-deps:latest AS builder
+FROM ${BASE_REGISTRY}/base-conan-media:latest AS builder
 
 # Copy source code
 WORKDIR /app

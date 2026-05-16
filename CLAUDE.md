@@ -344,6 +344,9 @@ Multi-version peer deps. React 18/19, TypeScript 5.9.3, Next.js 14-16, @reduxjs/
 | New DBAL entity missing from frontend | Add JSON schema in `dbal/shared/api/schema/entities/{package}/`, seed in `dbal/shared/seeds/database/`, rebuild `dbal-init` + DBAL image |
 | ComponentNode schema vs C++ struct | JSON schema must match C++ struct in `types.generated.hpp` (pageId, parentId, childIds, order), NOT the Redux slice shape |
 | GitHub Actions version assumptions | NEVER assume an action version is invalid — use `WebFetch` on `https://github.com/actions/{name}/releases` to verify before changing |
+| Monolithic `base-conan-deps` removed | Split into per-target `base-conan-{cli,media,dbal,qt6,gameengine}`. App images FROM `base-conan-cli` (cli/dbal) or `base-conan-media`. Only cli+media are on the app pipeline; dbal/qt6/gameengine are heavy/dev-only. `Dockerfile.conan-deps` is deleted |
+| Merging Conan caches across images | A raw `COPY /root/.conan2` from multiple images clobbers the Conan 2 sqlite index. Use `conan cache save`/`conan cache restore` (Conan >= 2.1) — see `Dockerfile.devcontainer` |
+| `.github/workflows/gated-pipeline.yml` still references conan-deps | The GitHub Actions pipeline (separate from the Jenkins stack) still builds `base-conan-deps`/`Dockerfile.conan-deps`; update its Tier-2 matrix + verify loop to the split images before relying on GH CI |
 
 ### Critical Folders to Check Before Any Task
 

@@ -1,6 +1,6 @@
 # Stage 1: Build the C++ CLI binary
 ARG BASE_REGISTRY=metabuilder
-FROM ${BASE_REGISTRY}/base-conan-deps:latest AS cli-builder
+FROM ${BASE_REGISTRY}/base-conan-cli:latest AS cli-builder
 
 COPY frontends/cli/ /app/cli/
 WORKDIR /app/cli
@@ -31,7 +31,7 @@ ENV DBAL_DAEMON_URL=$DBAL_DAEMON_URL
 
 RUN mkdir -p public && npm run build
 
-# Stage 3: Runtime — Ubuntu 24.04 (glibc 2.38 matches conan-deps build)
+# Stage 3: Runtime - Ubuntu 24.04 (glibc 2.38 matches base-conan-cli build)
 FROM node:24-bookworm-slim AS node-bin
 FROM ubuntu:24.04 AS runner
 WORKDIR /app

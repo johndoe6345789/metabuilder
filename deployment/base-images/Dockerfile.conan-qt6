@@ -1,0 +1,54 @@
+# metabuilder/base-conan-qt6
+#
+# Conan C++ packages for the Qt6 frontend only (qt/6.7.3, ninja). Split out
+# of the former monolithic base-conan-deps. Consumed by the devcontainer and
+# direct Qt6 builds; not on the app image pipeline path. This is the slowest
+# conan base (Qt source build), hence its own disk-gated image.
+#
+# Build:  docker build -f Dockerfile.conan-qt6 -t metabuilder/base-conan-qt6:latest ../../
+
+ARG BASE_REGISTRY=metabuilder
+FROM ${BASE_REGISTRY}/base-apt:latest
+
+# Install Conan 2 with retry
+RUN for i in 1 2 3 4 5; do \
+      pip3 install --break-system-packages conan==2.* \
+      && break \
+      || (echo "pip install failed (attempt $i/5), retrying in $((i*10))s..." && sleep $((i*10))); \
+    done
+
+# Detect Conan profile (must run inside the container, not from host cache)
+RUN conan profile detect --force
+
+# ---- Qt6 frontend ----
+COPY frontends/qt6/conanfile.txt /deps/qt6/conanfile.txt
+
+# Pre-fetch Qt recipe into Conan cache, then rewrite the Qt source host to
+# QT_MIRROR. Default is the canonical download.qt.io: from a central-EU host it
+# geo-redirects to a nearby mirror at 20-30 MB/s. Override QT_MIRROR only for
+# hosts where a geographically closer mirror is measurably faster (pick one
+# carrying the full /archive tree from https://download.qt.io/static/mirrorlist/;
+# the previous ukfast mirror 404s on /archive and must not be used).
+ARG QT_MIRROR=https://download.qt.io
+RUN conan graph info /deps/qt6/ -s build_type=Release 2>/dev/null || true && \
+    if [ "${QT_MIRROR}" != "https://download.qt.io" ]; then \
+      find /root/.conan2 -name "conandata.yml" -exec grep -l "download.qt.io" {} \; | \
+        xargs -r sed -i "s|https://download.qt.io|${QT_MIRROR}|g"; \
+    fi
+
+RUN mkdir -p /tmp/qt6-build && \
+    for i in 1 2 3 4 5; do \
+      conan install /deps/qt6/ \
+        --output-folder=/tmp/qt6-build \
+        --build=missing \
+        -s build_type=Release \
+        -c tools.system.package_manager:mode=install \
+      && break \
+      || (echo "conan install (qt6) failed attempt $i/5, retrying in $((i*10))s..." && sleep $((i*10))); \
+    done
+
+# Keep only the Conan package cache in /root/.conan2
+RUN rm -rf /tmp/qt6-build
+
+LABEL org.metabuilder.image="base-conan-qt6" \
+      org.metabuilder.description="Pre-built Conan C++ packages (Qt6 frontend)"

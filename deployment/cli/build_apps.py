@@ -29,7 +29,7 @@ def run_cmd(args: argparse.Namespace, config: dict) -> int:
         log_ok(f"Base image {node_tag} exists")
 
     # Warn about optional bases
-    optional = ["apt", "conan-deps", "pip-deps", "android-sdk"]
+    optional = ["apt", "conan-cli", "conan-media", "conan-dbal", "conan-qt6", "conan-gameengine", "pip-deps", "android-sdk"]
     missing = [base_images[k]["tag"] for k in optional if not docker_image_exists(base_images[k]["tag"])]
     if missing:
         log_warn("Optional base images not built (C++ daemons, dev container):")

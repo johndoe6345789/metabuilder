@@ -1,4 +1,4 @@
-"""Build base Docker images (apt, node-deps, pip-deps, conan-deps, android-sdk, devcontainer)."""
+"""Build base Docker images (apt, node-deps, pip-deps, conan-{cli,media,dbal,qt6,gameengine}, android-sdk, devcontainer)."""
 
 import argparse
 from cli.helpers import (
