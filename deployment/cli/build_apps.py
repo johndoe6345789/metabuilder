@@ -1,6 +1,7 @@
 """Build application Docker images via docker compose."""
 
 import argparse
+import os
 import time
 from cli.helpers import (
     BASE_DIR, PROJECT_ROOT, GREEN, YELLOW, NC,
@@ -74,11 +75,18 @@ def run_cmd(args: argparse.Namespace, config: dict) -> int:
         if attempt > 1:
             log_warn(f"Build attempt {attempt}/{max_attempts}...")
 
+        # When BASE_REGISTRY is set (CI on a host whose Docker builders do not
+        # use the local image store), pass it through so app Dockerfiles
+        # resolve `FROM ${BASE_REGISTRY}/base-*:latest` from the registry
+        # (Nexus). Unset -> Dockerfile ARG default ("metabuilder").
+        br = os.environ.get("BASE_REGISTRY")
+        br_args = ["--build-arg", f"BASE_REGISTRY={br}"] if br else []
+
         if args.sequential:
             all_ok = True
             for svc in services:
                 log_info(f"Building {svc}...")
-                result = run_proc(docker_compose("build", svc))
+                result = run_proc(docker_compose("build", *br_args, svc))
                 if result.returncode != 0:
                     log_err(f"Failed: {svc}")
                     all_ok = False
@@ -89,7 +97,7 @@ def run_cmd(args: argparse.Namespace, config: dict) -> int:
                 break
         else:
             log_info("Parallel build (uses more RAM)...")
-            result = run_proc(docker_compose("build", "--parallel", *services))
+            result = run_proc(docker_compose("build", "--parallel", *br_args, *services))
             if result.returncode == 0:
                 build_ok = True
                 break
