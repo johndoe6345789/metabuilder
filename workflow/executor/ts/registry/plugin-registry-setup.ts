@@ -384,6 +384,16 @@ export function getPluginRegistryStats(registry?: NodeExecutorRegistry) {
 }
 
 /**
+ * Ambient declaration for the optional browser `window` global.
+ *
+ * This package is a Node-side workflow plugin registry, so we deliberately do
+ * NOT pull the full DOM lib into tsconfig (that would add browser globals to a
+ * Node target and could mask real type errors). We only need `window` to exist
+ * as a name so the isomorphic `typeof window` runtime guard below type-checks.
+ */
+declare const window: unknown | undefined;
+
+/**
  * Auto-initialize plugins on import
  * This ensures Playwright and Storybook plugins are available immediately
  */

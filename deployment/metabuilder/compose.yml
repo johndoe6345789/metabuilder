@@ -44,6 +44,14 @@
 #   http://localhost:8900/redis-insight/ RedisInsight (Redis admin)
 #   http://localhost:8900/kibana/      Kibana (Elasticsearch admin)
 
+# Pin the Compose project name so built images are deterministically named
+# `deployment-<service>:latest` regardless of the compose file's parent
+# directory (which would otherwise default the project name to "metabuilder").
+# All deployment tooling (cli/build_apps.py, cli/commands.json,
+# cli/nexus_push.py, cli/nexus_populate.py) and the explicit `image:` fields
+# below expect the `deployment-` prefix — this is the single source of truth.
+name: deployment
+
 services:
   # ============================================================================
   # NPM Registry (Verdaccio) — serves patched @esbuild-kit packages

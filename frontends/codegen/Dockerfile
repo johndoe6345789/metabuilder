@@ -54,11 +54,18 @@ COPY redux/timing-utils/ ./redux/timing-utils/
 # ── CodeForge IDE (the app itself) ──────────────────────────────────────────
 COPY frontends/codegen/ ./frontends/codegen/
 
+# ── Re-link workspaces so every copied workspace can resolve local deps ──────
+# The base image installed deps from manifests only; now that real workspace
+# source has been COPYed in, re-run the full workspace install so npm rebuilds
+# the complete node_modules/@metabuilder/* symlink tree (e.g. @metabuilder/types
+# for redux/slices, redux/adapters, redux/hooks-async, api-clients, persist).
+RUN npm install --ignore-scripts --legacy-peer-deps
+
 # ── Pre-build workspace packages (some need tsc before Turbopack can use) ───
 RUN for ws in redux/core redux/slices redux/hooks redux/adapters \
     redux/hooks-async redux/api-clients redux/persist \
     components workflow; do \
-    npm run build -w "$ws" --if-present 2>&1 || echo "WARN: $ws build failed (non-critical)"; \
+    npm run build -w "$ws" --if-present 2>&1 || { echo "ERROR: $ws build failed"; exit 1; }; \
 done
 
 # Clean any stale Turbopack cache so dev server compiles from fresh source

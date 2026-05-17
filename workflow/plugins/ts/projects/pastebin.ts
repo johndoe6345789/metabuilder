@@ -40,6 +40,30 @@ export interface PasteGetOutput {
 }
 
 /**
+ * Shape of the JSON returned by `POST /api/pastes` on the pastebin backend.
+ */
+interface PasteCreateApiResponse {
+  id: string;
+}
+
+/**
+ * Shape of the JSON returned by `GET /api/pastes/:id` on the pastebin backend.
+ */
+interface PasteGetApiResponse {
+  content?: string;
+  language?: string;
+  title?: string;
+  createdAt?: string;
+}
+
+/**
+ * Shape of the JSON returned by `GET /api/pastes?limit=N` on the pastebin backend.
+ */
+interface PasteListApiResponse {
+  pastes: Array<{ id: string; title?: string; language: string }>;
+}
+
+/**
  * Create a new paste/snippet
  */
 export async function pasteCreate(input: PasteCreateInput): Promise<PasteCreateOutput> {
@@ -62,7 +86,7 @@ export async function pasteCreate(input: PasteCreateInput): Promise<PasteCreateO
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
 
-    const data = await response.json();
+    const data = (await response.json()) as PasteCreateApiResponse;
     return {
       success: true,
       id: data.id,
@@ -89,7 +113,7 @@ export async function pasteGet(input: PasteGetInput): Promise<PasteGetOutput> {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
 
-    const data = await response.json();
+    const data = (await response.json()) as PasteGetApiResponse;
     return {
       success: true,
       content: data.content,
@@ -121,7 +145,7 @@ export async function pasteList(input: {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
 
-    const data = await response.json();
+    const data = (await response.json()) as PasteListApiResponse;
     return {
       success: true,
       pastes: data.pastes,

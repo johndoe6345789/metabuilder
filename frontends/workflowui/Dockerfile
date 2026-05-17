@@ -54,11 +54,18 @@ COPY workflow/ ./workflow/
 # ── WorkflowUI (the app itself) ─────────────────────────────────────────────
 COPY frontends/workflowui/ ./frontends/workflowui/
 
+# Re-link workspaces so every copied workspace can resolve local deps.
+# The base image installed deps from manifests only; now that real workspace
+# source has been COPYed in, re-run the full workspace install so npm rebuilds
+# the complete node_modules/@metabuilder/* symlink tree (e.g. @metabuilder/types
+# for redux/slices, redux/adapters, redux/hooks-async, api-clients, persist).
+RUN npm install --ignore-scripts --legacy-peer-deps
+
 # Build workspace library packages
 RUN for ws in redux/core redux/slices redux/hooks redux/adapters \
     redux/hooks-async redux/api-clients redux/persist \
     components workflow; do \
-    npm run build -w "$ws" --if-present 2>&1 || echo "WARN: $ws build failed (non-critical)"; \
+    npm run build -w "$ws" --if-present 2>&1 || { echo "ERROR: $ws build failed"; exit 1; }; \
 done
 
 # Build the app

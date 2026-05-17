@@ -45,15 +45,21 @@ RUN npm config set fetch-retries 5 \
 FROM deps AS builder
 COPY . .
 
-# Ensure workspace-local bins are accessible (tsup may not be hoisted to root)
-RUN npm install --ignore-scripts -w components -w components/fakemui -w config \
-    -w types -w interfaces -w translations 2>/dev/null || true
+# Re-link ALL workspaces so every dependent workspace can resolve local deps.
+# A partial `-w` install only re-links the named workspaces and leaves
+# @metabuilder/types (and other prebuilt local packages) unresolvable for the
+# other workspaces this image builds (redux/slices, redux/adapters,
+# redux/hooks-async, api-clients, persist, ...). A full workspace install
+# rebuilds the complete node_modules/@metabuilder/* symlink tree and hoists
+# workspace-local bins. No `2>/dev/null || true` — install failures must fail
+# the build instead of being silently swallowed.
+RUN npm install --ignore-scripts --legacy-peer-deps
 
 # Build only core workspace libs needed by storybook components
 RUN for ws in redux/core redux/slices redux/hooks redux/adapters \
     redux/hooks-async redux/api-clients redux/persist \
     components workflow; do \
-    npm run build -w "$ws" --if-present 2>&1 || echo "WARN: $ws build failed (non-critical)"; \
+    npm run build -w "$ws" --if-present 2>&1 || { echo "ERROR: $ws build failed"; exit 1; }; \
 done
 
 # Fix npm bug with optional platform-specific deps on arm64
