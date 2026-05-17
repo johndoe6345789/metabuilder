@@ -101,11 +101,22 @@ def build_with_retry(tag: str, dockerfile: str, context: str, max_attempts: int 
     from datetime import datetime
     date_tag = f"{tag.rsplit(':', 1)[0]}:{datetime.now().strftime('%Y%m%d')}"
 
+    # When BASE_REGISTRY is set (CI on a host whose Docker builders do not
+    # consult the local image store), pass it through so a Dockerfile's
+    # `FROM ${BASE_REGISTRY}/<parent>:latest` resolves from the registry
+    # (Nexus) instead of an unresolvable local-only tag. Unset -> Dockerfile
+    # ARG default ("metabuilder"), preserving local/dev behaviour.
+    extra_args: list[str] = []
+    base_registry = os.environ.get("BASE_REGISTRY")
+    if base_registry:
+        extra_args = ["--build-arg", f"BASE_REGISTRY={base_registry}"]
+
     log_info(f"Building {tag} ...")
     for attempt in range(1, max_attempts + 1):
         result = run([
             "docker", "build", "--network=host",
             "--file", dockerfile,
+            *extra_args,
             "--tag", tag, "--tag", date_tag,
             context,
         ])
