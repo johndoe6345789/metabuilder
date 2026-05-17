@@ -25,6 +25,13 @@ COPY components/ ./components/
 # workflow (DAG engine — type imports + components package)
 COPY workflow/ ./workflow/
 
+# types + its cross-workspace deps. @metabuilder/types is imported by
+# redux/slices et al., and types/project.ts imports ../interfaces/requests.
+# Mirrors the COPY set of the passing codegen/workflowui Dockerfiles.
+COPY types/ ./types/
+COPY interfaces/ ./interfaces/
+COPY translations/ ./translations/
+
 # DBAL shared UI (imported via @dbal-ui alias in next.config.ts)
 COPY dbal/shared/ui/ ./dbal/shared/ui/
 

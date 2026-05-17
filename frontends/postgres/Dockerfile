@@ -44,6 +44,11 @@ COPY redux/timing-utils/ ./redux/timing-utils/
 # types (transitive dependency via hooks)
 COPY types/ ./types/
 
+# types/project.ts imports ../interfaces/requests; redux/slices et al. also
+# resolve interfaces/translations. Mirrors passing codegen/workflowui.
+COPY interfaces/ ./interfaces/
+COPY translations/ ./translations/
+
 # workflow (DAG engine — imported by components package)
 COPY workflow/ ./workflow/
 

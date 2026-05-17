@@ -40,7 +40,7 @@
         { "local": "deployment-nginx:latest",              "name": "nginx",              "size": "92MB" },
         { "local": "deployment-nginx-stream:latest",       "name": "nginx-stream",       "size": "92MB" },
         { "local": "deployment-pastebin-backend:latest",   "name": "pastebin-backend",   "size": "236MB" },
-        { "local": "deployment-emailclient-app:latest",    "name": "emailclient",        "size": "350MB" },
+        { "local": "deployment-emailclient-app:latest",    "name": "emailclient-app",    "size": "350MB" },
         { "local": "deployment-email-service:latest",      "name": "email-service",      "size": "388MB" },
         { "local": "deployment-exploded-diagrams:latest",  "name": "exploded-diagrams",  "size": "315MB" },
         { "local": "deployment-pastebin:latest",           "name": "pastebin",           "size": "382MB" },
