@@ -25,6 +25,11 @@ COPY components/ ./components/
 # types (TypeScript type definitions — transitive dep via hooks)
 COPY types/ ./types/
 
+# types/project.ts imports ../interfaces/requests; redux/slices et al. also
+# resolve interfaces/translations. Mirrors passing codegen/workflowui/postgres.
+COPY interfaces/ ./interfaces/
+COPY translations/ ./translations/
+
 # ── Redux packages (all — small TS source, avoids transitive dep breakage) ───
 COPY redux/core/ ./redux/core/
 COPY redux/slices/ ./redux/slices/
