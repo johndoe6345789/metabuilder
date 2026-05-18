@@ -178,6 +178,17 @@
           "arguments": [
             { "name": "--skip-heavy", "action": "store_true", "help": "Skip the heavy conan bases, devcontainer, media-daemon" }
           ]
+        },
+        "pull": {
+          "help": "Pull app images from Nexus and retag to local deployment-<svc> names (hydrate for stack up)",
+          "module": "cli.nexus_pull",
+          "arguments": [
+            { "name": "--registry", "default": "localhost:5001", "help": "Nexus docker registry (default: localhost:5001)" },
+            { "name": "--tag", "default": "latest", "help": "Image tag to pull (default: latest)" },
+            { "name": "--apps", "nargs": "*", "help": "Only hydrate these app names (default: all)" },
+            { "name": "--include-base", "action": "store_true", "help": "Also hydrate base images" },
+            { "name": "--skip-heavy", "action": "store_true", "help": "Skip heavy_apps (and heavy bases)" }
+          ]
         }
       }
     },
