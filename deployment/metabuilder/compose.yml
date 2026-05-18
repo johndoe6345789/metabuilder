@@ -61,8 +61,6 @@ services:
     image: verdaccio/verdaccio:6
     container_name: metabuilder-verdaccio
     restart: unless-stopped
-    ports:
-      - "4873:4873"
     volumes:
       - ../verdaccio.yaml:/verdaccio/conf/config.yaml:ro
       - ../npm-patches:/verdaccio/patches:ro
@@ -85,8 +83,6 @@ services:
     image: postgres:15-alpine
     container_name: metabuilder-postgres
     restart: unless-stopped
-    ports:
-      - "5432:5432"
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-metabuilder}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-metabuilder}
@@ -107,8 +103,6 @@ services:
     image: redis:7-alpine
     container_name: metabuilder-redis
     restart: unless-stopped
-    ports:
-      - "6379:6379"
     command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
     volumes:
       - redis-data:/data
@@ -125,9 +119,6 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
     container_name: metabuilder-elasticsearch
     restart: unless-stopped
-    ports:
-      - "9200:9200"
-      - "9300:9300"
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
@@ -149,8 +140,6 @@ services:
     image: mysql:8.0
     container_name: metabuilder-mysql
     restart: unless-stopped
-    ports:
-      - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-metabuilder}
       MYSQL_USER: ${MYSQL_USER:-metabuilder}
@@ -173,8 +162,6 @@ services:
     image: mongo:7.0
     container_name: metabuilder-mongodb
     restart: unless-stopped
-    ports:
-      - "27017:27017"
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER:-metabuilder}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:-metabuilder}
@@ -194,8 +181,6 @@ services:
     image: phpmyadmin:latest
     container_name: metabuilder-phpmyadmin
     restart: unless-stopped
-    ports:
-      - "8081:80"
     environment:
       PMA_HOST: mysql
       PMA_PORT: 3306
@@ -220,8 +205,6 @@ services:
     image: mongo-express:latest
     container_name: metabuilder-mongo-express
     restart: unless-stopped
-    ports:
-      - "8082:8081"
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_USER:-metabuilder}
       ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_PASSWORD:-metabuilder}
@@ -245,8 +228,6 @@ services:
     image: redis/redisinsight:latest
     container_name: metabuilder-redisinsight
     restart: unless-stopped
-    ports:
-      - "8083:5540"
     environment:
       RI_PROXY_PATH: /redis-insight
     volumes:
@@ -268,8 +249,6 @@ services:
     image: docker.elastic.co/kibana/kibana:8.11.0
     container_name: metabuilder-kibana
     restart: unless-stopped
-    ports:
-      - "5601:5601"
     environment:
       ELASTICSEARCH_HOSTS: '["http://elasticsearch:9200"]'
       SERVER_BASEPATH: /kibana
@@ -310,8 +289,6 @@ services:
         BUILDKIT_INLINE_CACHE: 1
     container_name: metabuilder-dbal
     restart: unless-stopped
-    ports:
-      - "8080:8080"
     environment:
       DBAL_ADAPTER: postgres
       DATABASE_URL: postgresql://${POSTGRES_USER:-metabuilder}:${POSTGRES_PASSWORD:-metabuilder}@postgres:5432/${POSTGRES_DB:-metabuilder}
@@ -381,8 +358,6 @@ services:
         NODE_ENV: production
     container_name: metabuilder-workflowui
     restart: unless-stopped
-    ports:
-      - "3001:3000"
     environment:
       NEXT_PUBLIC_DBAL_API_URL: http://dbal:8080
       NEXT_PUBLIC_API_BASE_URL: http://localhost:8080
@@ -406,9 +381,6 @@ services:
     image: boky/postfix:latest
     container_name: metabuilder-postfix
     restart: unless-stopped
-    ports:
-      - "1025:25"
-      - "1587:587"
     environment:
       ALLOWED_SENDER_DOMAINS: "localhost emailclient.local metabuilder.local"
       POSTFIX_myhostname: "metabuilder.local"
@@ -430,11 +402,6 @@ services:
       dockerfile: Dockerfile
     container_name: metabuilder-dovecot
     restart: unless-stopped
-    ports:
-      - "1143:143"
-      - "1993:993"
-      - "1110:110"
-      - "1995:995"
     volumes:
       - dovecot-data:/var/mail
     healthcheck:
@@ -453,9 +420,6 @@ services:
       dockerfile: Dockerfile
     container_name: metabuilder-smtp-relay
     restart: unless-stopped
-    ports:
-      - "2525:2525"
-      - "8025:8080"
     environment:
       SMTP_LISTEN_HOST: "0.0.0.0"
       SMTP_LISTEN_PORT: "2525"
@@ -488,8 +452,6 @@ services:
       dockerfile: deployment/docker/email-service/Dockerfile
     container_name: metabuilder-email-service
     restart: unless-stopped
-    ports:
-      - "8500:5000"
     environment:
       POSTFIX_HOST: "postfix"
       POSTFIX_PORT: "25"
@@ -557,8 +519,6 @@ services:
       dockerfile: frontends/codegen/Dockerfile
     container_name: metabuilder-codegen
     restart: unless-stopped
-    ports:
-      - "3002:3000"
     environment:
       NODE_ENV: production
       PORT: 3000
@@ -579,8 +539,6 @@ services:
       dockerfile: frontends/pastebin/Dockerfile.dev
     container_name: metabuilder-pastebin
     restart: unless-stopped
-    ports:
-      - "3003:3000"
     environment:
       NODE_ENV: development
       PORT: 3000
@@ -642,8 +600,6 @@ services:
       dockerfile: frontends/postgres/Dockerfile
     container_name: metabuilder-postgres-dashboard
     restart: unless-stopped
-    ports:
-      - "3004:3000"
     environment:
       NODE_ENV: production
       PORT: 3000
@@ -668,8 +624,6 @@ services:
       dockerfile: frontends/emailclient/Dockerfile
     container_name: metabuilder-emailclient-app
     restart: unless-stopped
-    ports:
-      - "3005:3000"
     environment:
       NODE_ENV: production
       PORT: 3000
@@ -693,8 +647,6 @@ services:
       dockerfile: frontends/exploded-diagrams/Dockerfile
     container_name: metabuilder-exploded-diagrams
     restart: unless-stopped
-    ports:
-      - "3006:3000"
     environment:
       NODE_ENV: production
       PORT: 3000
@@ -716,8 +668,6 @@ services:
       dockerfile: storybook/Dockerfile
     container_name: metabuilder-storybook
     restart: unless-stopped
-    ports:
-      - "3007:3000"
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:3000/storybook/"]
       interval: 15s
@@ -734,8 +684,6 @@ services:
       dockerfile: frontends/nextjs/Dockerfile
     container_name: metabuilder-frontend-app
     restart: unless-stopped
-    ports:
-      - "3008:3000"
     environment:
       NODE_ENV: production
       PORT: 3000
@@ -763,8 +711,6 @@ services:
         DBAL_DAEMON_URL: http://dbal:8080
     container_name: metabuilder-dbal-frontend
     restart: unless-stopped
-    ports:
-      - "3015:3000"
     environment:
       NODE_ENV: production
       PORT: 3000
@@ -810,8 +756,6 @@ services:
         NEXT_PUBLIC_API_URL: /terminal-api
     container_name: metabuilder-dockerterminal
     restart: unless-stopped
-    ports:
-      - "3010:3000"
     environment:
       NODE_ENV: production
       PORT: 3000
@@ -856,8 +800,6 @@ services:
         BACKEND_URL: http://packagerepo-backend:5000
     container_name: metabuilder-packagerepo
     restart: unless-stopped
-    ports:
-      - "3011:3000"
     environment:
       NODE_ENV: production
       PORT: 3000
@@ -880,8 +822,6 @@ services:
       dockerfile: Dockerfile
     container_name: metabuilder-repoforge
     restart: unless-stopped
-    ports:
-      - "3012:3000"
     environment:
       NODE_ENV: production
       PORT: 3000
@@ -902,8 +842,6 @@ services:
       dockerfile: Dockerfile
     container_name: metabuilder-caproverforge
     restart: unless-stopped
-    ports:
-      - "3013:3000"
     environment:
       NODE_ENV: production
       PORT: 3000
@@ -930,8 +868,6 @@ services:
     container_name: metabuilder-prometheus
     restart: unless-stopped
     profiles: [monitoring]
-    ports:
-      - "9090:9090"
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
@@ -962,8 +898,6 @@ services:
     container_name: metabuilder-grafana
     restart: unless-stopped
     profiles: [monitoring]
-    ports:
-      - "3014:3000"
     environment:
       GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
       GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
@@ -998,8 +932,6 @@ services:
     container_name: metabuilder-loki
     restart: unless-stopped
     profiles: [monitoring]
-    ports:
-      - "3100:3100"
     command: -config.file=/etc/loki/local-config.yaml
     volumes:
       - loki-data:/loki
@@ -1045,8 +977,6 @@ services:
     container_name: metabuilder-node-exporter
     restart: unless-stopped
     profiles: [monitoring]
-    ports:
-      - "9100:9100"
     command:
       - '--path.procfs=/host/proc'
       - '--path.sysfs=/host/sys'
@@ -1073,8 +1003,6 @@ services:
     container_name: metabuilder-postgres-exporter
     restart: unless-stopped
     profiles: [monitoring]
-    ports:
-      - "9187:9187"
     environment:
       DATA_SOURCE_NAME: "postgresql://${POSTGRES_USER:-metabuilder}:${POSTGRES_PASSWORD:-metabuilder}@postgres:5432/${POSTGRES_DB:-metabuilder}?sslmode=disable"
     depends_on:
@@ -1100,8 +1028,6 @@ services:
     container_name: metabuilder-redis-exporter
     restart: unless-stopped
     profiles: [monitoring]
-    ports:
-      - "9121:9121"
     environment:
       REDIS_ADDR: redis:6379
     depends_on:
@@ -1127,8 +1053,6 @@ services:
     container_name: metabuilder-starlink-exporter
     restart: unless-stopped
     profiles: [monitoring]
-    ports:
-      - "9817:9817"
     healthcheck:
       test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://127.0.0.1:9817/metrics || exit 1"]
       interval: 30s
@@ -1150,8 +1074,6 @@ services:
     restart: unless-stopped
     profiles: [monitoring]
     privileged: true
-    ports:
-      - "8084:8080"
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:ro
@@ -1181,8 +1103,6 @@ services:
     container_name: metabuilder-alertmanager
     restart: unless-stopped
     profiles: [monitoring]
-    ports:
-      - "9093:9093"
     command:
       - '--config.file=/etc/alertmanager/config.yml'
       - '--storage.path=/alertmanager'
@@ -1214,9 +1134,6 @@ services:
     container_name: metabuilder-media-daemon
     restart: unless-stopped
     profiles: [media]
-    ports:
-      - "8090:8090"
-      - "8000:8000"
     environment:
       MEDIA_BIND_ADDRESS: 0.0.0.0
       MEDIA_PORT: 8090
@@ -1280,8 +1197,6 @@ services:
     container_name: metabuilder-nginx-stream
     restart: unless-stopped
     profiles: [media]
-    ports:
-      - "8088:80"
     volumes:
       - hls-output:/data/hls:ro
     depends_on:
@@ -1315,9 +1230,6 @@ services:
     profiles: [registry]
     container_name: nexus-registry
     restart: unless-stopped
-    ports:
-      - "8091:8081"
-      - "5050:5050"
     volumes:
       - nexus-data:/nexus-data
     environment:
@@ -1355,9 +1267,6 @@ services:
     profiles: [registry]
     container_name: artifactory-ce
     restart: unless-stopped
-    ports:
-      - "8092:8081"
-      - "8093:8082"
     volumes:
       - artifactory-data:/var/opt/jfrog/artifactory
     environment:
