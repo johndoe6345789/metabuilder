@@ -45,12 +45,12 @@
 #   http://localhost:8900/kibana/      Kibana (Elasticsearch admin)
 
 # Pin the Compose project name so built images are deterministically named
-# `deployment-<service>:latest` regardless of the compose file's parent
+# `metabuilder-deploy-<service>:latest` regardless of the compose file's parent
 # directory (which would otherwise default the project name to "metabuilder").
 # All deployment tooling (cli/build_apps.py, cli/commands.json,
 # cli/nexus_push.py, cli/nexus_populate.py) and the explicit `image:` fields
-# below expect the `deployment-` prefix — this is the single source of truth.
-name: deployment
+# below expect the `metabuilder-deploy-` prefix — this is the single source of truth.
+name: metabuilder-deploy
 
 services:
   # ============================================================================
@@ -864,7 +864,7 @@ services:
     build:
       context: ../..
       dockerfile: deployment/config/prometheus/Dockerfile
-    image: deployment-prometheus:latest
+    image: metabuilder-deploy-prometheus:latest
     container_name: metabuilder-prometheus
     restart: unless-stopped
     profiles: [monitoring]
@@ -894,7 +894,7 @@ services:
     build:
       context: ../..
       dockerfile: deployment/config/grafana/Dockerfile
-    image: deployment-grafana:latest
+    image: metabuilder-deploy-grafana:latest
     container_name: metabuilder-grafana
     restart: unless-stopped
     profiles: [monitoring]
@@ -928,7 +928,7 @@ services:
     build:
       context: ../..
       dockerfile: deployment/config/loki/Dockerfile
-    image: deployment-loki:latest
+    image: metabuilder-deploy-loki:latest
     container_name: metabuilder-loki
     restart: unless-stopped
     profiles: [monitoring]
@@ -951,7 +951,7 @@ services:
     build:
       context: ../..
       dockerfile: deployment/config/promtail/Dockerfile
-    image: deployment-promtail:latest
+    image: metabuilder-deploy-promtail:latest
     container_name: metabuilder-promtail
     restart: unless-stopped
     profiles: [monitoring]
@@ -1099,7 +1099,7 @@ services:
     build:
       context: ../..
       dockerfile: deployment/config/alertmanager/Dockerfile
-    image: deployment-alertmanager:latest
+    image: metabuilder-deploy-alertmanager:latest
     container_name: metabuilder-alertmanager
     restart: unless-stopped
     profiles: [monitoring]
@@ -1130,7 +1130,7 @@ services:
     build:
       context: ../../services/media_daemon
       dockerfile: Dockerfile
-    image: deployment-media-daemon:latest
+    image: metabuilder-deploy-media-daemon:latest
     container_name: metabuilder-media-daemon
     restart: unless-stopped
     profiles: [media]
@@ -1193,7 +1193,7 @@ services:
     build:
       context: ../..
       dockerfile: deployment/config/nginx/Dockerfile.stream
-    image: deployment-nginx-stream:latest
+    image: metabuilder-deploy-nginx-stream:latest
     container_name: metabuilder-nginx-stream
     restart: unless-stopped
     profiles: [media]

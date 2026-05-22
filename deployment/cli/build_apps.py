@@ -48,7 +48,7 @@ def run_cmd(args: argparse.Namespace, config: dict) -> int:
     if not args.force:
         needs_build, needs_names = [], []
         for t, svc in zip(targets, services):
-            img = f"deployment-{svc}"
+            img = f"metabuilder-deploy-{svc}"
             if docker_image_exists(img):
                 log_ok(f"Skipping {t} — image {img} already exists (use --force to rebuild)")
             else:

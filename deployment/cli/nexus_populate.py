@@ -20,9 +20,9 @@ def _load_built_images() -> list[dict]:
     for svc_name, svc in dc.get("services", {}).items():
         if "build" not in svc:
             continue
-        local = svc.get("image", f"deployment-{svc_name}:latest")
+        local = svc.get("image", f"metabuilder-deploy-{svc_name}:latest")
         # derive a short push name from the image tag (strip prefix/tag)
-        name = local.split("/")[-1].split(":")[0].removeprefix("deployment-")
+        name = local.split("/")[-1].split(":")[0].removeprefix("metabuilder-deploy-")
         images.append({"local": local, "name": name})
     return images
 

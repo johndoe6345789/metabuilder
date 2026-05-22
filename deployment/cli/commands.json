@@ -35,21 +35,21 @@
         { "local": "metabuilder/base-conan-media:latest", "name": "base-conan-media", "size": "5GB" }
       ],
       "apps": [
-        { "local": "deployment-dbal-init:latest",          "name": "dbal-init",          "size": "12MB" },
-        { "local": "deployment-storybook:latest",          "name": "storybook",          "size": "112MB" },
-        { "local": "deployment-nginx:latest",              "name": "nginx",              "size": "92MB" },
-        { "local": "deployment-nginx-stream:latest",       "name": "nginx-stream",       "size": "92MB" },
-        { "local": "deployment-pastebin-backend:latest",   "name": "pastebin-backend",   "size": "236MB" },
-        { "local": "deployment-emailclient-app:latest",    "name": "emailclient-app",    "size": "350MB" },
-        { "local": "deployment-email-service:latest",      "name": "email-service",      "size": "388MB" },
-        { "local": "deployment-exploded-diagrams:latest",  "name": "exploded-diagrams",  "size": "315MB" },
-        { "local": "deployment-pastebin:latest",           "name": "pastebin",           "size": "382MB" },
-        { "local": "deployment-frontend-app:latest",       "name": "frontend-app",       "size": "361MB" },
-        { "local": "deployment-workflowui:latest",         "name": "workflowui",         "size": "542MB" },
-        { "local": "deployment-postgres-dashboard:latest", "name": "postgres-dashboard", "size": "508MB" },
-        { "local": "deployment-smtp-relay:latest",         "name": "smtp-relay",         "size": "302MB" },
-        { "local": "deployment-dbal:latest",               "name": "dbal",               "size": "3.0GB" },
-        { "local": "deployment-codegen:latest",            "name": "codegen",            "size": "5.6GB" }
+        { "local": "metabuilder-deploy-dbal-init:latest",          "name": "dbal-init",          "size": "12MB" },
+        { "local": "metabuilder-deploy-storybook:latest",          "name": "storybook",          "size": "112MB" },
+        { "local": "metabuilder-deploy-nginx:latest",              "name": "nginx",              "size": "92MB" },
+        { "local": "metabuilder-deploy-nginx-stream:latest",       "name": "nginx-stream",       "size": "92MB" },
+        { "local": "metabuilder-deploy-pastebin-backend:latest",   "name": "pastebin-backend",   "size": "236MB" },
+        { "local": "metabuilder-deploy-emailclient-app:latest",    "name": "emailclient-app",    "size": "350MB" },
+        { "local": "metabuilder-deploy-email-service:latest",      "name": "email-service",      "size": "388MB" },
+        { "local": "metabuilder-deploy-exploded-diagrams:latest",  "name": "exploded-diagrams",  "size": "315MB" },
+        { "local": "metabuilder-deploy-pastebin:latest",           "name": "pastebin",           "size": "382MB" },
+        { "local": "metabuilder-deploy-frontend-app:latest",       "name": "frontend-app",       "size": "361MB" },
+        { "local": "metabuilder-deploy-workflowui:latest",         "name": "workflowui",         "size": "542MB" },
+        { "local": "metabuilder-deploy-postgres-dashboard:latest", "name": "postgres-dashboard", "size": "508MB" },
+        { "local": "metabuilder-deploy-smtp-relay:latest",         "name": "smtp-relay",         "size": "302MB" },
+        { "local": "metabuilder-deploy-dbal:latest",               "name": "dbal",               "size": "3.0GB" },
+        { "local": "metabuilder-deploy-codegen:latest",            "name": "codegen",            "size": "5.6GB" }
       ],
       "heavy": [
         { "local": "metabuilder/base-conan-dbal:latest",       "name": "base-conan-dbal",       "size": "8GB" },
@@ -58,7 +58,7 @@
         { "local": "metabuilder/devcontainer:latest",          "name": "devcontainer",          "size": "41GB" }
       ],
       "heavy_apps": [
-        { "local": "deployment-media-daemon:latest", "name": "media-daemon", "size": "3.5GB" }
+        { "local": "metabuilder-deploy-media-daemon:latest", "name": "media-daemon", "size": "3.5GB" }
       ]
     },
 
