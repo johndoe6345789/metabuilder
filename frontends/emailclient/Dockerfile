@@ -70,7 +70,7 @@ RUN for ws in redux/core redux/slices redux/hooks redux/adapters \
 done
 
 # Build the app
-RUN cd frontends/emailclient && npx next build --webpack
+RUN cd frontends/emailclient && npx next build --turbopack
 
 # --- Runtime stage ---
 FROM node:24-alpine

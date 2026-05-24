@@ -72,7 +72,7 @@ RUN for ws in redux/core redux/slices redux/hooks redux/adapters \
 done
 
 # Build the app
-RUN cd frontends/nextjs && npx next build --webpack
+RUN cd frontends/nextjs && npx next build --turbopack
 
 # --- Runtime stage ---
 FROM node:24-alpine

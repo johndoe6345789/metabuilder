@@ -14,7 +14,7 @@ FROM deps AS builder
 WORKDIR /app
 COPY frontends/exploded-diagrams/ ./frontends/exploded-diagrams/
 
-RUN cd frontends/exploded-diagrams && npx next build --webpack
+RUN cd frontends/exploded-diagrams && npx next build --turbopack
 
 # --- Runtime stage ---
 FROM node:24-alpine
