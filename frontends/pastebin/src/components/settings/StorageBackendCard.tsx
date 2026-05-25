@@ -44,14 +44,19 @@ export function StorageBackendCard({
             </Alert>
           )}
 
-          <RadioGroup
-            value={storageBackend}
-            onChange={(e) => onStorageBackendChange(e.target.value as StorageBackend)}
-          >
+          <RadioGroup value={storageBackend}>
             <div className={styles.radioOptionRow} data-testid="storage-option-indexeddb">
               <FormControlLabel
                 value="indexeddb"
-                control={<Radio id="storage-indexeddb" disabled={envVarSet} />}
+                control={
+                  <Radio
+                    id="storage-indexeddb"
+                    value="indexeddb"
+                    checked={storageBackend === 'indexeddb'}
+                    onChange={() => onStorageBackendChange('indexeddb')}
+                    disabled={envVarSet}
+                  />
+                }
                 label={
                   <div className={styles.radioOptionContent}>
                     <FormLabel
@@ -71,7 +76,15 @@ export function StorageBackendCard({
             <div className={styles.radioOptionRowMarginTop} data-testid="storage-option-dbal">
               <FormControlLabel
                 value="dbal"
-                control={<Radio id="storage-dbal" disabled={envVarSet} />}
+                control={
+                  <Radio
+                    id="storage-dbal"
+                    value="dbal"
+                    checked={storageBackend === 'dbal'}
+                    onChange={() => onStorageBackendChange('dbal')}
+                    disabled={envVarSet}
+                  />
+                }
                 label={
                   <div className={styles.radioOptionContent}>
                     <FormLabel
