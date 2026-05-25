@@ -246,7 +246,7 @@ input, textarea, select {
 .mailbox-header {
   background-color: var(--mat-sys-surface) !important;
   color: var(--mat-sys-on-surface) !important;
-  box-shadow: none !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12) !important;
   border-bottom: 1px solid var(--mat-sys-outline-variant);
 }
 
@@ -266,7 +266,7 @@ input, textarea, select {
   overflow-y: auto;
   background-color: var(--mat-sys-surface);
   flex-shrink: 0;
-  border-right: none;
+  border-right: 1px solid var(--mat-sys-outline-variant);
   padding-top: 8px;
 }
 
@@ -629,7 +629,7 @@ input, textarea, select {
 }
 
 .email-card--unread {
-  background-color: var(--mat-sys-surface-container-low);
+  background-color: var(--mat-sys-surface-container);
   border-left: 3px solid var(--mat-sys-primary);
   padding-left: 13px;
 }
@@ -651,13 +651,18 @@ input, textarea, select {
 }
 
 .email-from {
-  font-size: 0.875rem;
-  font-weight: 500;
+  font-size: 0.9375rem;
+  font-weight: 600;
   color: var(--mat-sys-on-surface);
   flex: 1;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.email-card--read .email-from {
+  font-weight: 400;
+  color: var(--mat-sys-on-surface-variant);
 }
 
 .email-card-actions {
@@ -671,10 +676,15 @@ input, textarea, select {
   font-size: 0.875rem;
   font-weight: 500;
   color: var(--mat-sys-on-surface);
-  margin: 0;
+  margin: 4px 0 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.email-card--read .email-subject {
+  font-weight: 400;
+  color: var(--mat-sys-on-surface-variant);
 }
 
 .email-preview {
