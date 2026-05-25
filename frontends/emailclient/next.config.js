@@ -14,10 +14,16 @@ const nextConfig = {
 
   // Resolve SCSS @use 'cdk' from fakemui components
   sassOptions: {
-    includePaths: [
-      path.join(monorepoRoot, 'scss'),
+    // loadPaths = Turbopack, includePaths = webpack — both needed
+    loadPaths: [
       path.join(monorepoRoot, 'scss/m3-scss'),
+      path.join(monorepoRoot, 'scss'),
     ],
+    includePaths: [
+      path.join(monorepoRoot, 'scss/m3-scss'),
+      path.join(monorepoRoot, 'scss'),
+    ],
+    silenceDeprecations: ['legacy-js-api', 'import'],
   },
 
   transpilePackages: ['@metabuilder/fakemui', '@metabuilder/redux-core', '@metabuilder/hooks'],
