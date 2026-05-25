@@ -399,6 +399,16 @@ input, textarea, select {
   white-space: nowrap;
 }
 
+.mailbox-header-version {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: var(--mat-sys-on-surface-variant);
+  opacity: 0.7;
+  letter-spacing: 0.02em;
+  align-self: flex-end;
+  margin-bottom: 2px;
+}
+
 .mailbox-header-search {
   flex: 1;
   max-width: 680px;

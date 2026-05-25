@@ -5,6 +5,7 @@ import { useAccessible } from '../../../../hooks/useAccessible'
 
 export interface MailboxHeaderProps extends BoxProps {
   appName?: string
+  version?: string
   searchQuery?: string
   onSearchChange?: (query: string) => void
   searchPlaceholder?: string
@@ -22,6 +23,7 @@ export interface MailboxHeaderProps extends BoxProps {
 
 export const MailboxHeader = ({
   appName = 'MetaMail',
+  version,
   searchQuery = '',
   onSearchChange,
   searchPlaceholder = 'Search mail',
@@ -54,6 +56,7 @@ export const MailboxHeader = ({
         <Box className="mailbox-header-brand">
           <MaterialIcon name="mail" size={26} className="mailbox-header-logo" />
           <span className="mailbox-header-title">{appName}</span>
+          {version && <span className="mailbox-header-version">v{version}</span>}
         </Box>
       </Box>
 

@@ -1,8 +1,11 @@
 import path from 'path'
 import { fileURLToPath } from 'url'
+import { createRequire } from 'module'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const monorepoRoot = path.resolve(__dirname, '../..')
+const require = createRequire(import.meta.url)
+const { version } = require('./package.json')
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -56,7 +59,8 @@ const nextConfig = {
 
   // Environment variables
   env: {
-    NEXT_PUBLIC_API_URL: process.env.API_BASE_URL || 'http://localhost:3000'
+    NEXT_PUBLIC_API_URL: process.env.API_BASE_URL || 'http://localhost:3000',
+    NEXT_PUBLIC_APP_VERSION: version,
   },
 
   // Headers for security and caching

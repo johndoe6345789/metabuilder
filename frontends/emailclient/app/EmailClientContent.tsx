@@ -24,6 +24,7 @@ export default function EmailClientContent() {
 
   const header = (
     <MailboxHeader
+      version={process.env.NEXT_PUBLIC_APP_VERSION}
       searchQuery={state.searchQuery}
       onSearchChange={actions.setSearchQuery}
       isDarkMode={state.isDarkMode}
