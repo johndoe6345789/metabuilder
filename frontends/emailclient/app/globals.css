@@ -295,7 +295,7 @@ input, textarea, select {
 .folder-nav-list {
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  gap: 2px;
 }
 
 .folder-nav-item {
@@ -303,8 +303,8 @@ input, textarea, select {
   align-items: center;
   gap: 16px;
   padding: 0 24px 0 12px !important;
-  height: 32px;
-  min-height: 32px !important;
+  height: 40px;
+  min-height: 40px !important;
   border-radius: 0 var(--mat-sys-corner-full) var(--mat-sys-corner-full) 0 !important;
   text-align: left !important;
   justify-content: flex-start !important;
@@ -312,7 +312,7 @@ input, textarea, select {
   font-weight: 500 !important;
   text-transform: none !important;
   color: var(--mat-sys-on-surface-variant) !important;
-  line-height: 32px;
+  line-height: 40px;
   background: none !important;
   transition: background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
 }
@@ -605,11 +605,11 @@ input, textarea, select {
 .email-card {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding: 8px 16px;
+  gap: 2px;
+  padding: 12px 16px;
   cursor: pointer;
   border: none;
-  border-bottom: 1px solid var(--mat-sys-surface-variant);
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
   border-radius: 0;
   background-color: transparent;
   transition: background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
@@ -629,7 +629,7 @@ input, textarea, select {
 }
 
 .email-card--unread {
-  background-color: var(--mat-sys-surface-container-lowest);
+  background-color: var(--mat-sys-surface-container-low);
   border-left: 3px solid var(--mat-sys-primary);
   padding-left: 13px;
 }
@@ -669,7 +669,7 @@ input, textarea, select {
 
 .email-subject {
   font-size: 0.875rem;
-  font-weight: 400;
+  font-weight: 500;
   color: var(--mat-sys-on-surface);
   margin: 0;
   white-space: nowrap;
@@ -680,10 +680,11 @@ input, textarea, select {
 .email-preview {
   font-size: 0.8125rem;
   color: var(--mat-sys-on-surface-variant);
-  margin-top: 0;
+  margin-top: 2px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  opacity: 0.8;
 }
 
 .email-date {
@@ -762,7 +763,7 @@ input, textarea, select {
 }
 
 .mailbox-thread-toolbar {
-  padding: 8px 16px;
+  padding: 10px 16px;
   border-bottom: 1px solid var(--mat-sys-outline-variant);
   display: flex;
   align-items: center;
