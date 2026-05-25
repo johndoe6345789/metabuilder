@@ -22,8 +22,12 @@ export function useStorageConfig() {
   }, [])
 
   const handleSaveStorageConfig = useCallback(async (onSuccess?: () => Promise<void>) => {
+    const existing = loadStorageConfig()
     saveStorageConfig({
       backend: storageBackend,
+      dbalUrl: storageBackend === 'dbal'
+        ? (existing.dbalUrl || process.env.NEXT_PUBLIC_DBAL_API_URL || '/api/dbal')
+        : undefined,
     })
 
     toast.success(t.settings.storage.backendUpdated)

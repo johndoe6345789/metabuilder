@@ -10,8 +10,9 @@ import * as IndexedDBStorage from './indexeddb-storage';
 function getActiveStorage() {
   const config = getStorageConfig();
 
-  if (config.backend === 'dbal' && config.dbalUrl) {
-    return new DBALStorageAdapter(config.dbalUrl);
+  if (config.backend === 'dbal') {
+    const url = config.dbalUrl || process.env.NEXT_PUBLIC_DBAL_API_URL || '/api/dbal'
+    return new DBALStorageAdapter(url);
   }
 
   return null; // Use IndexedDB
