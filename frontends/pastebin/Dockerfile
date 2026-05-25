@@ -13,6 +13,11 @@ ENV NEXT_PUBLIC_FLASK_BACKEND_URL=${NEXT_PUBLIC_FLASK_BACKEND_URL}
 # ── Shared packages (resolved by transpilePackages + webpack aliases) ────────
 # Each COPY targets only the source tree that pastebin actually imports.
 #
+# types + interfaces (transitive dep of redux/slices et al.)
+COPY types/ ./types/
+COPY interfaces/ ./interfaces/
+COPY translations/ ./translations/
+
 # hooks (shared React hooks)
 COPY hooks/ ./hooks/
 

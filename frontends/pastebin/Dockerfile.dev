@@ -15,6 +15,9 @@ COPY frontends/pastebin/tsconfig.json        ./frontends/pastebin/
 COPY frontends/pastebin/postcss.config.mjs   ./frontends/pastebin/
 
 # Shared source packages (baked in — no bind mount needed)
+COPY types/       ./types/
+COPY interfaces/  ./interfaces/
+COPY translations/ ./translations/
 COPY hooks/       ./hooks/
 COPY icons/       ./icons/
 COPY scss/        ./scss/
