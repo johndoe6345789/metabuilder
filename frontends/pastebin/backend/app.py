@@ -764,6 +764,74 @@ def health():
     return jsonify({'status': 'healthy', 'timestamp': datetime.utcnow().isoformat()})
 
 
+def _seed_new_user(user_id: str, now: int) -> None:
+    """Create Default + Examples namespaces and 5 starter snippets for a new user."""
+    ns_default_id = str(uuid.uuid4())
+    ns_examples_id = str(uuid.uuid4())
+
+    dbal_request('POST', f'/{DBAL_TENANT_ID}/pastebin/Namespace', {
+        'id': ns_default_id, 'name': 'Default', 'isDefault': True,
+        'createdAt': now, 'userId': user_id, 'tenantId': DBAL_TENANT_ID,
+    })
+    dbal_request('POST', f'/{DBAL_TENANT_ID}/pastebin/Namespace', {
+        'id': ns_examples_id, 'name': 'Examples', 'isDefault': False,
+        'createdAt': now, 'userId': user_id, 'tenantId': DBAL_TENANT_ID,
+    })
+
+    seeds = [
+        {
+            'title': 'Hello, Python!',
+            'description': 'A simple Python function — run it with the Python runner.',
+            'language': 'python', 'category': 'example',
+            'functionName': 'greet', 'entryPoint': 'greet',
+            'code': 'def greet(name: str = "World") -> str:\n    """Return a personalised greeting."""\n    return f"Hello, {name}!"\n\nprint(greet())\n',
+            'inputParameters': '[{"name":"name","type":"string","default":"World","label":"Your name"}]',
+            'hasPreview': False, 'isTemplate': False,
+        },
+        {
+            'title': 'Fibonacci',
+            'description': 'Classic recursive Fibonacci — supports up to n=30.',
+            'language': 'python', 'category': 'example',
+            'functionName': 'fibonacci', 'entryPoint': 'fibonacci',
+            'code': 'def fibonacci(n: int = 10) -> list[int]:\n    """Return the first n Fibonacci numbers."""\n    seq = [0, 1]\n    for _ in range(n - 2):\n        seq.append(seq[-1] + seq[-2])\n    return seq[:n]\n\nprint(fibonacci())\n',
+            'inputParameters': '[{"name":"n","type":"number","default":10,"label":"n"}]',
+            'hasPreview': False, 'isTemplate': False,
+        },
+        {
+            'title': 'TypeScript — Binary Search',
+            'description': 'O(log n) binary search on a sorted array. Returns the index or -1.',
+            'language': 'typescript', 'category': 'example',
+            'code': 'function binarySearch(arr: number[], target: number): number {\n  let lo = 0, hi = arr.length - 1;\n  while (lo <= hi) {\n    const mid = (lo + hi) >>> 1;\n    if (arr[mid] === target) return mid;\n    if (arr[mid] < target) lo = mid + 1;\n    else hi = mid - 1;\n  }\n  return -1;\n}\n\nconst sorted = [1, 3, 5, 7, 9, 11, 13];\nconsole.log(binarySearch(sorted, 7));  // 3\nconsole.log(binarySearch(sorted, 6));  // -1\n',
+            'hasPreview': False, 'isTemplate': False,
+        },
+        {
+            'title': 'React Counter',
+            'description': 'A minimal stateful counter — toggle Preview to see it live.',
+            'language': 'tsx', 'category': 'example',
+            'code': 'import { useState } from "react";\n\nexport default function Counter() {\n  const [count, setCount] = useState(0);\n  return (\n    <div style={{ fontFamily: "sans-serif", textAlign: "center", padding: 32 }}>\n      <h2>Count: {count}</h2>\n      <button onClick={() => setCount(prev => prev - 1)}>-</button>\n      {" "}\n      <button onClick={() => setCount(prev => prev + 1)}>+</button>\n      <br />\n      <button style={{ marginTop: 12 }} onClick={() => setCount(0)}>Reset</button>\n    </div>\n  );\n}\n',
+            'hasPreview': True, 'isTemplate': False,
+        },
+        {
+            'title': 'React Dark Card',
+            'description': 'A styled dark-theme card — good starting point for UI snippets.',
+            'language': 'tsx', 'category': 'example',
+            'code': 'export default function DarkCard({ title = "Card Title", body = "Card body text goes here." }) {\n  return (\n    <div style={{\n      background: "#1e1e2e", color: "#cdd6f4",\n      borderRadius: 12, padding: "24px 28px",\n      maxWidth: 360, fontFamily: "sans-serif",\n      boxShadow: "0 4px 24px rgba(0,0,0,0.4)"\n    }}>\n      <h3 style={{ margin: "0 0 8px", color: "#89b4fa" }}>{title}</h3>\n      <p style={{ margin: 0, lineHeight: 1.6 }}>{body}</p>\n    </div>\n  );\n}\n',
+            'hasPreview': True, 'isTemplate': True,
+        },
+    ]
+
+    for seed in seeds:
+        dbal_request('POST', f'/{DBAL_TENANT_ID}/pastebin/Snippet', {
+            'id': str(uuid.uuid4()),
+            'namespaceId': ns_examples_id,
+            'userId': user_id,
+            'tenantId': DBAL_TENANT_ID,
+            'createdAt': now,
+            'updatedAt': now,
+            **seed,
+        })
+
+
 # ---------------------------------------------------------------------------
 # Auth endpoints
 # ---------------------------------------------------------------------------
@@ -803,8 +871,8 @@ def register():
         'tenantId': DBAL_TENANT_ID,
     })
 
-    # Namespaces + seed snippets are created by the DBAL workflow engine
-    # (pastebin.User.created event → on_user_created.json workflow)
+    # Seed Default + Examples namespaces and starter snippets (mirrors on_user_created.json)
+    _seed_new_user(user_id, now)
 
     token = jwt.encode(
         {'sub': user_id, 'username': username, 'exp': int(time.time()) + 7 * 86400},

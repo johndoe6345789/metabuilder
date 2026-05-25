@@ -19,15 +19,8 @@ const logErrorToConsole = (error: Error, info: { componentStack?: string }) => {
 
 function PersistGate({ children }: { children: React.ReactNode }) {
   const isRehydrated = usePersistGate(persistor);
-
-  if (!isRehydrated) {
-    return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
-        Loading...
-      </div>
-    );
-  }
-
+  // Render immediately — don't block on IndexedDB rehydration
+  if (!isRehydrated) return null;
   return <>{children}</>;
 }
 

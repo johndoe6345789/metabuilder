@@ -1,44 +1,25 @@
-# Multi-stage prod build for codegen — next build + standalone node server.
+# Dev-mode Dockerfile for workflowui — source baked in, runs next dev --turbopack.
 # Context: monorepo root (..)
 # Requires: docker build -f deployment/base-images/Dockerfile.node-deps \
 #           -t metabuilder/base-node-deps:latest .
-
-# --- Build stage ---
 ARG BASE_REGISTRY=metabuilder
-ARG NEXT_PUBLIC_AI_ENABLED=true
-FROM ${BASE_REGISTRY}/base-node-deps:latest AS builder
-ARG NEXT_PUBLIC_AI_ENABLED
-ENV NEXT_PUBLIC_AI_ENABLED=${NEXT_PUBLIC_AI_ENABLED}
+FROM ${BASE_REGISTRY}/base-node-deps:latest
 
-# types + interfaces (TS type definitions)
 COPY types/ ./types/
 COPY interfaces/ ./interfaces/
-
-# hooks (shared React hooks)
 COPY hooks/ ./hooks/
-
-# icons (Material Symbols SCSS + React icon components)
 COPY icons/ ./icons/
-
-# scss (Material 3 SCSS, theme, atoms)
 COPY scss/ ./scss/
-
-# translations (i18n strings)
 COPY translations/ ./translations/
-
-# components + FakeMUI
 COPY components/ ./components/
 
-# workflow (DAG workflow engine)
-COPY workflow/ ./workflow/
-
-# Redux packages
 COPY redux/core/ ./redux/core/
 COPY redux/slices/ ./redux/slices/
 COPY redux/hooks/ ./redux/hooks/
 COPY redux/adapters/ ./redux/adapters/
 COPY redux/api-clients/ ./redux/api-clients/
 COPY redux/core-hooks/ ./redux/core-hooks/
+COPY redux/email/ ./redux/email/
 COPY redux/hooks-async/ ./redux/hooks-async/
 COPY redux/hooks-auth/ ./redux/hooks-auth/
 COPY redux/hooks-canvas/ ./redux/hooks-canvas/
@@ -50,8 +31,8 @@ COPY redux/persist/ ./redux/persist/
 COPY redux/services/ ./redux/services/
 COPY redux/timing-utils/ ./redux/timing-utils/
 
-# CodeForge IDE
-COPY frontends/codegen/ ./frontends/codegen/
+COPY workflow/ ./workflow/
+COPY frontends/workflowui/ ./frontends/workflowui/
 
 RUN npm install --ignore-scripts --legacy-peer-deps
 
@@ -61,25 +42,17 @@ RUN for ws in redux/core redux/slices redux/hooks redux/adapters \
     npm run build -w "$ws" --if-present 2>&1 || { echo "ERROR: $ws build failed"; exit 1; }; \
 done
 
-RUN cd frontends/codegen && npx next build --turbopack
+RUN rm -rf frontends/workflowui/.next
 
-# --- Runtime stage ---
-FROM node:24-alpine
-WORKDIR /app
-
-COPY --from=builder /app/frontends/codegen/.next/standalone ./
-COPY --from=builder /app/frontends/codegen/.next/static ./frontends/codegen/.next/static
-COPY --from=builder /app/frontends/codegen/public ./frontends/codegen/public
-
-ENV NODE_ENV=production
+ENV NODE_ENV=development
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 ENV NEXT_TELEMETRY_DISABLED=1
 
 EXPOSE 3000
 
-HEALTHCHECK --interval=15s --timeout=5s --start-period=30s --retries=3 \
-    CMD wget --quiet --tries=1 --spider http://127.0.0.1:3000/codegen || exit 1
+HEALTHCHECK --interval=15s --timeout=5s --start-period=120s --retries=5 \
+    CMD wget --quiet --tries=1 --spider http://127.0.0.1:3000/workflowui || exit 1
 
-WORKDIR /app/frontends/codegen
-CMD ["node", "server.js"]
+WORKDIR /app/frontends/workflowui
+CMD ["npx", "next", "dev", "--turbopack", "-p", "3000"]

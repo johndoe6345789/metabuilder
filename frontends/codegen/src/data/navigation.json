@@ -6,7 +6,8 @@
         { "href": "/", "label": "Dashboard", "icon": "dashboard" },
         { "href": "/code", "label": "Code Editor", "icon": "code" },
         { "href": "/components", "label": "Components", "icon": "widgets" },
-        { "href": "/models", "label": "Models", "icon": "schema" }
+        { "href": "/models", "label": "Models", "icon": "schema" },
+        { "href": "/site-generator", "label": "Site Generator", "icon": "auto_awesome" }
       ]
     },
     {

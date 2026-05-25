@@ -142,7 +142,8 @@
         { "name": "command",      "nargs": "?", "default": "up", "help": "Stack command (default: up)" },
         { "name": "--monitoring", "action": "store_true",         "help": "Include monitoring services" },
         { "name": "--media",      "action": "store_true",         "help": "Include media services" },
-        { "name": "--all",        "action": "store_true", "dest": "all_profiles", "help": "Include all profiles" }
+        { "name": "--all",        "action": "store_true", "dest": "all_profiles", "help": "Include all profiles" },
+        { "name": "--dev",        "action": "store_true",         "help": "Use dev mode (next dev --turbopack) for all frontends" }
       ]
     },
     "release": {

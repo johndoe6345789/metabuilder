@@ -10,7 +10,7 @@ Usage:
     python3 deployment.py build apps [--force] [--sequential] [codegen] ...
     python3 deployment.py build testcontainers [--skip-native] [--skip-sidecar]
     python3 deployment.py deploy <app> [--all] [--no-cache]
-    python3 deployment.py stack up|down|build|logs|ps|clean [--monitoring] [--media]
+    python3 deployment.py stack up|down|build|logs|ps|clean [--monitoring] [--media] [--dev]
     python3 deployment.py release <app> [patch|minor|major|x.y.z]
     python3 deployment.py nexus init|push|populate
     python3 deployment.py npm publish-patches [--nexus] [--verdaccio]

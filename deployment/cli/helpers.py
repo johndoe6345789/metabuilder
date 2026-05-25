@@ -14,6 +14,7 @@ SCRIPT_DIR = Path(__file__).resolve().parent.parent  # deployment/
 PROJECT_ROOT = SCRIPT_DIR.parent
 BASE_DIR = SCRIPT_DIR / "base-images"
 COMPOSE_FILE = SCRIPT_DIR / "metabuilder/compose.yml"
+COMPOSE_FILE_DEV = SCRIPT_DIR / "metabuilder/compose.dev.yml"
 
 # ── Colors ───────────────────────────────────────────────────────────────────
 
@@ -64,8 +65,11 @@ def docker_image_exists(tag: str) -> bool:
     ).returncode == 0
 
 
-def docker_compose(*args: str) -> list[str]:
-    return ["docker", "compose", "-f", str(COMPOSE_FILE), *args]
+def docker_compose(*args: str, dev: bool = False) -> list[str]:
+    files = ["-f", str(COMPOSE_FILE)]
+    if dev:
+        files += ["-f", str(COMPOSE_FILE_DEV)]
+    return ["docker", "compose", *files, *args]
 
 
 def curl_status(url: str, auth: str | None = None, timeout: int = 5) -> int:

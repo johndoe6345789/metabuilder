@@ -9,6 +9,7 @@ const nextConfig = {
   basePath: '/codegen',
   output: 'standalone',
   reactStrictMode: true,
+  allowedDevOrigins: ['metabuilder.wardcrew.com', 'wardcrew.com'],
   typescript: {
     // Pre-existing type errors from Vite migration — Vite used tsc --noCheck
     ignoreBuildErrors: true,

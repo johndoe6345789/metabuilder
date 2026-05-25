@@ -1,19 +1,26 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { Provider } from 'react-redux'
-import { usePersistGate } from '@metabuilder/redux-persist'
 import { store, persistor } from '@/store'
 
 function PersistGate({ children }: { children: React.ReactNode }) {
-  const isRehydrated = usePersistGate(persistor)
+  const [ready, setReady] = useState(false)
 
-  if (!isRehydrated) {
-    return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
-        Loading...
-      </div>
-    )
-  }
+  useEffect(() => {
+    // Render immediately — don't block on IndexedDB rehydration
+    setReady(true)
+
+    // Let redux-persist finish rehydrating in the background
+    const { bootstrapped } = persistor.getState()
+    if (!bootstrapped) {
+      const unsub = persistor.subscribe(() => {
+        if (persistor.getState().bootstrapped) unsub()
+      })
+    }
+  }, [])
+
+  if (!ready) return null
 
   return <>{children}</>
 }

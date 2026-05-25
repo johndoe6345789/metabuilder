@@ -41,6 +41,7 @@ export function useSnippetManager(templates: SnippetTemplate[]) {
   const dispatch = useAppDispatch()
   const router = useRouter()
 
+  const isAuthenticated = useAppSelector((s: any) => s.auth?.isAuthenticated ?? false)
   const snippets = useAppSelector(selectSnippets)
   const filteredSnippets = useAppSelector(selectFilteredSnippets)
   const loading = useAppSelector(selectSnippetsLoading)
@@ -53,6 +54,7 @@ export function useSnippetManager(templates: SnippetTemplate[]) {
   const searchQuery = useAppSelector(selectSearchQuery)
 
   useEffect(() => {
+    if (!isAuthenticated) return
     const loadData = async () => {
       try {
         await syncTemplatesFromJSON(templates)
@@ -64,7 +66,7 @@ export function useSnippetManager(templates: SnippetTemplate[]) {
     }
 
     loadData()
-  }, [dispatch, templates])
+  }, [dispatch, templates, isAuthenticated])
 
   useEffect(() => {
     if (selectedNamespaceId) {

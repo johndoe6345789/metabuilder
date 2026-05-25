@@ -10,6 +10,7 @@ const m3ScssPath = resolve(__dirname, '../../scss/m3-scss');
 const nextConfig = {
   basePath: '/workflowui',
   output: 'standalone',
+  allowedDevOrigins: ['metabuilder.wardcrew.com', 'wardcrew.com'],
   reactStrictMode: true,
   // typedRoutes moved from experimental to top-level in Next.js 16
   typedRoutes: true,

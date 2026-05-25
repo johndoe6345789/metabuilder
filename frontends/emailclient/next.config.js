@@ -8,6 +8,7 @@ const monorepoRoot = path.resolve(__dirname, '../..')
 const nextConfig = {
   basePath: '/emailclient',
   output: 'standalone',
+  allowedDevOrigins: ['metabuilder.wardcrew.com', 'wardcrew.com'],
   reactStrictMode: true,
   productionBrowserSourceMaps: false,
 

@@ -7,6 +7,7 @@ const componentsPath = resolve(__dirname, '../../components');
 const nextConfig = {
   basePath: '/pastebin',
   output: 'standalone',
+  allowedDevOrigins: ['metabuilder.wardcrew.com', 'wardcrew.com'],
   async rewrites() {
     // Proxy /pastebin-api/* → Flask backend (for direct port-3003 dev access).
     // In production, nginx handles this routing instead.

@@ -517,30 +517,34 @@ services:
     build:
       context: ../..
       dockerfile: frontends/codegen/Dockerfile
+      args:
+        NEXT_PUBLIC_AI_ENABLED: ${NEXT_PUBLIC_AI_ENABLED:-true}
     container_name: metabuilder-codegen
     restart: unless-stopped
     environment:
       NODE_ENV: production
       PORT: 3000
       HOSTNAME: "0.0.0.0"
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      NEXT_PUBLIC_AI_ENABLED: ${NEXT_PUBLIC_AI_ENABLED:-true}
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:3000/codegen"]
       interval: 15s
       timeout: 5s
       retries: 3
-      start_period: 20s
+      start_period: 30s
     networks:
       - metabuilder
 
-  # Pastebin - Code snippet sharing (dev mode: Turbopack + hot reload)
+  # Pastebin - Code snippet sharing
   pastebin:
     build:
       context: ../..
-      dockerfile: frontends/pastebin/Dockerfile.dev
+      dockerfile: frontends/pastebin/Dockerfile
     container_name: metabuilder-pastebin
     restart: unless-stopped
     environment:
-      NODE_ENV: development
+      NODE_ENV: production
       PORT: 3000
       HOSTNAME: "0.0.0.0"
       NEXT_PUBLIC_DBAL_API_URL: /api/dbal
@@ -552,9 +556,9 @@ services:
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:3000/pastebin"]
       interval: 15s
-      timeout: 10s
-      retries: 5
-      start_period: 120s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
     networks:
       - metabuilder
 
