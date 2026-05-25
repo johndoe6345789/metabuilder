@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { PersistenceSettings } from '@/components/demo/PersistenceSettings';
 import { SchemaHealthCard } from '@/components/settings/SchemaHealthCard';
@@ -23,9 +23,15 @@ type Tab = 'profile' | 'ai' | 'storage' | 'database';
 
 export default function SettingsPage() {
   const t = useTranslation();
+  const router = useRouter();
   const searchParams = useSearchParams();
   const initialTab = (searchParams.get('tab') as Tab) ?? 'ai';
   const [activeTab, setActiveTab] = useState<Tab>(initialTab);
+
+  const handleTabChange = (tab: Tab) => {
+    setActiveTab(tab);
+    router.replace(`?tab=${tab}`, { scroll: false });
+  };
   const {
     stats,
     loading,
@@ -66,7 +72,7 @@ export default function SettingsPage() {
               aria-selected={activeTab === tab}
               aria-controls={`tabpanel-${tab}`}
               id={`tab-${tab}`}
-              onClick={() => setActiveTab(tab)}
+              onClick={() => handleTabChange(tab)}
               className={`${styles.tabBtn} ${activeTab === tab ? styles.tabBtnActive : ''}`}
             >
               {tabs?.[tab] ?? tab}
