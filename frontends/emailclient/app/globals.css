@@ -814,6 +814,11 @@ input, textarea, select {
 .thread-list {
   display: flex;
   flex-direction: column;
+  list-style: none;
+}
+
+.thread-list > div {
+  list-style: none;
 }
 
 .no-emails {
@@ -949,6 +954,12 @@ input, textarea, select {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--mat-sys-outline);
+}
+
+::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
 }
 
 /* ============================================ */
