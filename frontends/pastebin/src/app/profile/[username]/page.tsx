@@ -1,6 +1,5 @@
 'use client'
 
-import { useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { MaterialIcon } from '@metabuilder/components/fakemui'
@@ -8,26 +7,20 @@ import { PageLayout } from '@/app/PageLayout'
 import { UserAvatar } from '@/components/layout/UserAvatar'
 import { MarkdownRenderer } from '@/components/error/MarkdownRenderer'
 import { ProfileComments } from '@/components/features/comments/ProfileComments'
-import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import { fetchUserProfile } from '@/store/slices/profilesSlice'
-import { selectUserProfile, selectProfilesLoading } from '@/store/selectors'
+import { useProfilePage } from './hooks/useProfilePage'
 import styles from './profile-page.module.scss'
 
 function joinedDate(ms: number): string {
   if (!ms) return 'Unknown'
-  return new Date(ms).toLocaleDateString(undefined, { year: 'numeric', month: 'long' })
+  return new Date(ms).toLocaleDateString(
+    undefined, { year: 'numeric', month: 'long' }
+  )
 }
 
 export default function ProfilePage() {
   const { username } = useParams<{ username: string }>()
-  const dispatch = useAppDispatch()
   const router = useRouter()
-  const user = useAppSelector(state => selectUserProfile(state, username))
-  const loading = useAppSelector(selectProfilesLoading)
-
-  useEffect(() => {
-    if (username) dispatch(fetchUserProfile(username))
-  }, [username, dispatch])
+  const { user, loading } = useProfilePage(username)
 
   if (loading && !user) {
     return (

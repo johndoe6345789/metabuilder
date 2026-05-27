@@ -57,22 +57,26 @@ export default function EmailClientContent() {
   const main = (
     <Box className="mailbox-thread-panel">
       <Box className="mailbox-thread-toolbar">
-        <Typography
-          variant="body2"
-          className="mailbox-thread-folder-label"
-        >
-          {state.activeFolder
-            .replace(/_/g, ' ')
-            .replace(/^\w/, c => c.toUpperCase())}
-          {state.filteredEmails.length > 0 &&
-            ` (${state.filteredEmails.length})`}
-        </Typography>
-        <Typography
-          variant="caption"
-          className="mailbox-thread-unread-label"
-        >
-          {state.unreadCount} unread
-        </Typography>
+        <nav className="mailbox-breadcrumb" aria-label="breadcrumb">
+          <span className="mailbox-breadcrumb-home">MetaMail</span>
+          <span className="mailbox-breadcrumb-sep" aria-hidden="true">/</span>
+          <span className="mailbox-breadcrumb-current">
+            {state.activeFolder.replace(/_/g, ' ').replace(/^\w/, c => c.toUpperCase())}
+          </span>
+          {state.filteredEmails.length > 0 && (
+            <span className="mailbox-breadcrumb-count">
+              {state.filteredEmails.length}
+            </span>
+          )}
+        </nav>
+        {state.unreadCount > 0 && (
+          <Typography
+            variant="caption"
+            className="mailbox-thread-unread-label"
+          >
+            {state.unreadCount} unread
+          </Typography>
+        )}
       </Box>
       {state.filteredEmails.length === 0 ? (
         <Box className="mailbox-empty-state">

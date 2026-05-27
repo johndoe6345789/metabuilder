@@ -49,8 +49,8 @@ export function TablesTab({
         </Typography>
       )}
 
-      <Paper sx={{ mt: 2, mb: 2 }}>
-        <List>
+      <Paper sx={{ mt: 1, mb: 1 }}>
+        <List dense>
           {tables.map((table) => (
             <ListItem key={table.table_name} disablePadding>
               <ListItemButton

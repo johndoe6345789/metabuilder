@@ -1,6 +1,6 @@
 {
   "name": "emailclient",
-  "version": "1.0.4",
+  "version": "1.0.16",
   "type": "module",
   "private": true,
   "scripts": {

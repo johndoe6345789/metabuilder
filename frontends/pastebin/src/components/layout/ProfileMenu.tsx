@@ -1,11 +1,11 @@
 'use client'
 
-import { useRef, useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { MaterialIcon } from '@metabuilder/components/fakemui'
 import { useAppDispatch } from '@/store/hooks'
 import { logout } from '@/store/slices/authSlice'
 import { UserAvatar } from './UserAvatar'
+import { useDropdown } from './hooks/useDropdown'
 import styles from './ProfileMenu.module.scss'
 
 interface ProfileMenuProps {
@@ -13,21 +13,9 @@ interface ProfileMenuProps {
 }
 
 export function ProfileMenu({ username }: ProfileMenuProps) {
-  const [open, setOpen] = useState(false)
-  const ref = useRef<HTMLDivElement>(null)
+  const { open, ref, setOpen } = useDropdown()
   const dispatch = useAppDispatch()
   const router = useRouter()
-
-  useEffect(() => {
-    if (!open) return
-    function handleClick(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setOpen(false)
-      }
-    }
-    document.addEventListener('mousedown', handleClick)
-    return () => document.removeEventListener('mousedown', handleClick)
-  }, [open])
 
   function go(path: string) {
     setOpen(false)
@@ -53,11 +41,19 @@ export function ProfileMenu({ username }: ProfileMenuProps) {
             <span className={styles.menuUsername}>@{username}</span>
           </div>
           <div className={styles.divider} />
-          <button className={styles.item} role="menuitem" onClick={() => go(`/profile/${username}`)}>
+          <button
+            className={styles.item}
+            role="menuitem"
+            onClick={() => go(`/profile/${username}`)}
+          >
             <MaterialIcon name="account_circle" size={18} aria-hidden="true" />
             View Profile
           </button>
-          <button className={styles.item} role="menuitem" onClick={() => go('/settings?tab=profile')}>
+          <button
+            className={styles.item}
+            role="menuitem"
+            onClick={() => go('/settings?tab=profile')}
+          >
             <MaterialIcon name="manage_accounts" size={18} aria-hidden="true" />
             Profile Settings
           </button>

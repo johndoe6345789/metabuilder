@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
 import { MarkdownRenderer } from '@/components/error/MarkdownRenderer'
+import { useCommentForm } from './hooks/useCommentForm'
 import styles from './comments.module.scss'
 
 interface CommentFormProps {
@@ -9,23 +9,18 @@ interface CommentFormProps {
   placeholder?: string
 }
 
-export function CommentForm({ onSubmit, placeholder = 'Leave a comment… (markdown supported)' }: CommentFormProps) {
-  const [content, setContent] = useState('')
-  const [preview, setPreview] = useState(false)
-  const [submitting, setSubmitting] = useState(false)
-
-  async function handleSubmit() {
-    const trimmed = content.trim()
-    if (!trimmed || submitting) return
-    setSubmitting(true)
-    try {
-      await onSubmit(trimmed)
-      setContent('')
-      setPreview(false)
-    } finally {
-      setSubmitting(false)
-    }
-  }
+export function CommentForm({
+  onSubmit,
+  placeholder = 'Leave a comment… (markdown supported)',
+}: CommentFormProps) {
+  const {
+    content,
+    preview,
+    submitting,
+    setContent,
+    setPreview,
+    handleSubmit,
+  } = useCommentForm(onSubmit)
 
   return (
     <div className={styles.form}>
@@ -48,10 +43,16 @@ export function CommentForm({ onSubmit, placeholder = 'Leave a comment… (markd
 
       {preview ? (
         <div className={styles.preview}>
-          {content.trim()
-            ? <MarkdownRenderer content={content} animate={false} />
-            : <span style={{ color: 'var(--mat-sys-on-surface-variant)', fontSize: '0.875rem' }}>Nothing to preview</span>
-          }
+          {content.trim() ? (
+            <MarkdownRenderer content={content} animate={false} />
+          ) : (
+            <span style={{
+              color: 'var(--mat-sys-on-surface-variant)',
+              fontSize: '0.875rem',
+            }}>
+              Nothing to preview
+            </span>
+          )}
         </div>
       ) : (
         <textarea

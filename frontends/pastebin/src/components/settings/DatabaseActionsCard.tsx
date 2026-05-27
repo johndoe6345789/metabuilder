@@ -1,8 +1,8 @@
 'use client'
 
-import { useRef } from 'react'
 import { Card, CardHeader, CardContent, Button, MaterialIcon } from '@metabuilder/components/fakemui'
 import { useTranslation } from '@/hooks/useTranslation'
+import { useFileInputRef } from './hooks/useFileInputRef'
 import styles from './settings-card.module.scss'
 
 interface DatabaseActionsCardProps {
@@ -20,7 +20,7 @@ export function DatabaseActionsCard({
 }: DatabaseActionsCardProps) {
   const t = useTranslation()
   const s = t.settingsCards.actions
-  const fileInputRef = useRef<HTMLInputElement>(null)
+  const { fileInputRef, triggerClick } = useFileInputRef()
 
   return (
     <Card data-testid="database-actions-card">
@@ -60,7 +60,7 @@ export function DatabaseActionsCard({
               variant="outlined"
               className={styles.btnWithIcon}
               data-testid="import-db-btn"
-              onClick={() => fileInputRef.current?.click()}
+              onClick={triggerClick}
               aria-label="Import database file"
             >
               <MaterialIcon name="upload" size={16} aria-hidden="true" />

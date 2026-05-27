@@ -1,10 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Button, Card, MaterialIcon } from '@metabuilder/components/fakemui'
-import { runPythonViaFlask } from '@/lib/flask-runner'
-import { PythonTerminal } from '@/components/features/python-runner/PythonTerminal'
+import { PythonTerminal } from './PythonTerminal'
+import { usePythonOutput } from './hooks/usePythonOutput'
 import styles from './PythonOutput.module.scss'
 
 interface PythonOutputProps {
@@ -12,65 +11,32 @@ interface PythonOutputProps {
 }
 
 export function PythonOutput({ code }: PythonOutputProps) {
-  const [output, setOutput] = useState<string>('')
-  const [error, setError] = useState<string>('')
-  const [isRunning, setIsRunning] = useState(false)
-  const [hasInput, setHasInput] = useState(false)
+  const vm = usePythonOutput(code)
 
-  useEffect(() => {
-    setHasInput(/\binput\s*\(/i.test(code))
-  }, [code])
-
-  const handleRun = async () => {
-    setIsRunning(true)
-    setOutput('')
-    setError('')
-
-    try {
-      const result = await runPythonViaFlask(code)
-      setOutput(result.output)
-      if (result.error) {
-        setError(result.error)
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : String(err))
-    } finally {
-      setIsRunning(false)
-    }
-  }
-
-  if (hasInput) {
-    return <PythonTerminal code={code} />
-  }
+  if (vm.hasInput) return <PythonTerminal code={code} />
 
   return (
     <div className={styles.container} data-testid="python-output">
       <div className={styles.header}>
         <h3 className={styles.headerTitle}>Python Output</h3>
         <Button
-          onClick={handleRun}
-          disabled={isRunning}
+          onClick={vm.handleRun}
+          disabled={vm.isRunning}
           size="sm"
           data-testid="run-python-code-btn"
-          aria-label={isRunning ? 'Running code' : 'Run Python code'}
-          aria-busy={isRunning}
+          aria-label={vm.isRunning ? 'Running code' : 'Run Python code'}
+          aria-busy={vm.isRunning}
         >
-          {isRunning ? (
-            <>
-              <MaterialIcon name="progress_activity" className={styles.spinIcon} size={16} aria-hidden="true" />
-              Running...
-            </>
+          {vm.isRunning ? (
+            <><MaterialIcon name="progress_activity" className={styles.spinIcon} size={16} aria-hidden="true" /> Running...</>
           ) : (
-            <>
-              <MaterialIcon name="play_arrow" size={16} aria-hidden="true" />
-              Run
-            </>
+            <><MaterialIcon name="play_arrow" size={16} aria-hidden="true" /> Run</>
           )}
         </Button>
       </div>
 
       <div className={styles.body} role="region" aria-label="Output content">
-        {!isRunning && !output && !error && (
+        {!vm.isRunning && !vm.output && !vm.error && (
           <div
             className={styles.emptyState}
             data-testid="empty-output"
@@ -80,7 +46,7 @@ export function PythonOutput({ code }: PythonOutputProps) {
           </div>
         )}
 
-        {output && (
+        {vm.output && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -91,13 +57,13 @@ export function PythonOutput({ code }: PythonOutputProps) {
           >
             <Card className={styles.outputCard}>
               <pre className={styles.outputPre}>
-                {output || '(no output)'}
+                {vm.output || '(no output)'}
               </pre>
             </Card>
           </motion.div>
         )}
 
-        {error && (
+        {vm.error && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -107,10 +73,13 @@ export function PythonOutput({ code }: PythonOutputProps) {
           >
             <Card className={styles.errorCard}>
               <div className={styles.errorRow}>
-                <MaterialIcon name="warning" size={16} className={styles.errorIcon} aria-hidden="true" />
-                <pre className={styles.errorPre}>
-                  {error}
-                </pre>
+                <MaterialIcon
+                  name="warning"
+                  size={16}
+                  className={styles.errorIcon}
+                  aria-hidden="true"
+                />
+                <pre className={styles.errorPre}>{vm.error}</pre>
               </div>
             </Card>
           </motion.div>

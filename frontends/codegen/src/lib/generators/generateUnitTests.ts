@@ -11,21 +11,31 @@ export function generateUnitTests(tests: UnitTest[]): Record<string, string> {
     let code = ''
 
     if (testSuite.testType === 'component') {
-      code += `import { render, screen } from '@testing-library/react'\nimport { describe, it, expect } from 'vitest'\n`
+      code += `import { render, screen } from '@testing-library/react'\n`
+        + `import { describe, it, expect } from 'vitest'\n`
       if (testSuite.targetFile) {
-        const componentName = testSuite.targetFile.split('/').pop()?.replace(/\.(tsx|ts|jsx|js)$/, '')
-        code += `import { ${componentName} } from '${testSuite.targetFile.replace('.tsx', '').replace('.ts', '')}'\n\n`
+        const componentName = testSuite.targetFile.split('/').pop()
+          ?.replace(/\.(tsx|ts|jsx|js)$/, '')
+        const importPath = testSuite.targetFile
+          .replace('.tsx', '').replace('.ts', '')
+        code += `import { ${componentName} } from '${importPath}'\n\n`
       }
     } else if (testSuite.testType === 'hook') {
-      code += `import { renderHook } from '@testing-library/react'\nimport { describe, it, expect } from 'vitest'\n`
+      code += `import { renderHook } from '@testing-library/react'\n`
+        + `import { describe, it, expect } from 'vitest'\n`
       if (testSuite.targetFile) {
-        const hookName = testSuite.targetFile.split('/').pop()?.replace(/\.(tsx|ts|jsx|js)$/, '')
-        code += `import { ${hookName} } from '${testSuite.targetFile.replace('.tsx', '').replace('.ts', '')}'\n\n`
+        const hookName = testSuite.targetFile.split('/').pop()
+          ?.replace(/\.(tsx|ts|jsx|js)$/, '')
+        const importPath = testSuite.targetFile
+          .replace('.tsx', '').replace('.ts', '')
+        code += `import { ${hookName} } from '${importPath}'\n\n`
       }
     } else {
       code += `import { describe, it, expect } from 'vitest'\n`
       if (testSuite.targetFile) {
-        code += `import * as module from '${testSuite.targetFile.replace('.tsx', '').replace('.ts', '')}'\n\n`
+        const importPath = testSuite.targetFile
+          .replace('.tsx', '').replace('.ts', '')
+        code += `import * as module from '${importPath}'\n\n`
       }
     }
 

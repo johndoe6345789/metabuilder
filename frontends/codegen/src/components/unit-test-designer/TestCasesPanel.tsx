@@ -1,7 +1,11 @@
 import { TestCase } from '@/types/project'
 import { Badge } from '@metabuilder/fakemui/data-display'
-import { Button, IconButton, Input, Textarea } from '@metabuilder/fakemui/inputs'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@metabuilder/fakemui/surfaces'
+import {
+  Button, IconButton, Input, Textarea,
+} from '@metabuilder/fakemui/inputs'
+import {
+  Card, CardContent, CardDescription, CardHeader, CardTitle,
+} from '@metabuilder/fakemui/surfaces'
 import { Label } from '@metabuilder/fakemui/atoms'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Plus, Trash } from '@metabuilder/fakemui/icons'
@@ -32,7 +36,9 @@ export function TestCasesPanel({
         <div className="test-cases-panel__header">
           <div>
             <CardTitle>{unitTestDesignerCopy.labels.testCases}</CardTitle>
-            <CardDescription>{unitTestDesignerCopy.labels.testCasesDescription}</CardDescription>
+            <CardDescription>
+              {unitTestDesignerCopy.labels.testCasesDescription}
+            </CardDescription>
           </div>
           <Button size="small" onClick={onAddTestCase}>
             <Plus size={14} />
@@ -61,15 +67,25 @@ export function TestCasesPanel({
                     <Label>{unitTestDesignerCopy.labels.caseDescription}</Label>
                     <Input
                       value={testCase.description}
-                      onChange={event => onUpdateTestCase(testCase.id, { description: event.target.value })}
-                      placeholder={unitTestDesignerCopy.placeholders.caseDescription}
+                      onChange={event =>
+                        onUpdateTestCase(testCase.id, {
+                          description: event.target.value,
+                        })
+                      }
+                      placeholder={
+                        unitTestDesignerCopy.placeholders.caseDescription
+                      }
                     />
                   </div>
                   <div className="test-case-card__field">
                     <Label>{unitTestDesignerCopy.labels.setupCode}</Label>
                     <Textarea
                       value={testCase.setup || ''}
-                      onChange={event => onUpdateTestCase(testCase.id, { setup: event.target.value })}
+                      onChange={event =>
+                        onUpdateTestCase(testCase.id, {
+                          setup: event.target.value,
+                        })
+                      }
                       placeholder={unitTestDesignerCopy.placeholders.setupCode}
                       rows={2}
                     />
@@ -77,23 +93,37 @@ export function TestCasesPanel({
                   <div className="test-case-card__assertions">
                     <div className="test-case-card__assertions-header">
                       <Label>{unitTestDesignerCopy.labels.assertions}</Label>
-                      <IconButton size="small" onClick={() => onAddAssertion(testCase.id)}>
+                      <IconButton
+                        size="small"
+                        onClick={() => onAddAssertion(testCase.id)}
+                      >
                         <Plus size={12} />
                       </IconButton>
                     </div>
                     <div className="test-case-card__assertion-list">
                       {testCase.assertions.map((assertion, assertionIndex) => (
-                        <div key={assertionIndex} className="test-case-card__assertion-row">
+                        <div
+                          key={assertionIndex}
+                          className="test-case-card__assertion-row"
+                        >
                           <Input
                             value={assertion}
                             onChange={event =>
-                              onUpdateAssertion(testCase.id, assertionIndex, event.target.value)
+                              onUpdateAssertion(
+                                testCase.id,
+                                assertionIndex,
+                                event.target.value,
+                              )
                             }
-                            placeholder={unitTestDesignerCopy.placeholders.assertion}
+                            placeholder={
+                              unitTestDesignerCopy.placeholders.assertion
+                            }
                           />
                           <IconButton
                             size="small"
-                            onClick={() => onDeleteAssertion(testCase.id, assertionIndex)}
+                            onClick={() =>
+                              onDeleteAssertion(testCase.id, assertionIndex)
+                            }
                           >
                             <Trash size={12} />
                           </IconButton>
@@ -105,8 +135,14 @@ export function TestCasesPanel({
                     <Label>{unitTestDesignerCopy.labels.teardownCode}</Label>
                     <Textarea
                       value={testCase.teardown || ''}
-                      onChange={event => onUpdateTestCase(testCase.id, { teardown: event.target.value })}
-                      placeholder={unitTestDesignerCopy.placeholders.teardownCode}
+                      onChange={event =>
+                        onUpdateTestCase(testCase.id, {
+                          teardown: event.target.value,
+                        })
+                      }
+                      placeholder={
+                        unitTestDesignerCopy.placeholders.teardownCode
+                      }
                       rows={2}
                     />
                   </div>

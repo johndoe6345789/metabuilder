@@ -74,7 +74,7 @@ ENV SKIP_ENV_VALIDATION=true
 ENV JWT_SECRET=build-placeholder
 ENV NEXT_PUBLIC_SENTRY_DISABLED=true
 ENV NODE_OPTIONS="--max-old-space-size=3072"
-RUN cd frontends/postgres && npx next build --turbopack
+RUN cd frontends/postgres && npx next build --webpack
 
 # --- Runtime stage ---
 FROM node:24-alpine

@@ -7,8 +7,7 @@ import { Toaster } from '@metabuilder/components/fakemui';
 import { store, persistor } from '@/store';
 import { ErrorFallback } from '@/components/error/ErrorFallback';
 import { NavigationProvider } from '@/components/layout/navigation/NavigationProvider';
-import { useEffect } from 'react';
-import { loadStorageConfig } from '@/lib/storage';
+import { useStorageInit } from './hooks/useStorageInit';
 
 const logErrorToConsole = (error: Error, info: { componentStack?: string }) => {
   console.error('Application Error:', error);
@@ -25,9 +24,7 @@ function PersistGate({ children }: { children: React.ReactNode }) {
 }
 
 function StorageInitializer() {
-  useEffect(() => {
-    loadStorageConfig();
-  }, []);
+  useStorageInit();
   return null;
 }
 

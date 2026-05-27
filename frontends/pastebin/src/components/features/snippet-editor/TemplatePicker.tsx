@@ -1,9 +1,9 @@
 'use client'
 
-import { useEffect } from 'react'
 import { Menu, MenuItem, Divider, MaterialIcon } from '@metabuilder/components/fakemui'
 import { SnippetTemplate } from '@/lib/types'
 import { useTranslation } from '@/hooks/useTranslation'
+import { useTemplatePickerClose } from './hooks/useTemplatePickerClose'
 import styles from './template-picker.module.scss'
 
 export interface TemplateSection {
@@ -29,13 +29,7 @@ export function TemplatePicker({
   'data-testid': testId,
 }: TemplatePickerProps) {
   const t = useTranslation()
-  // Menu position is calculated once at open-time; close on resize so it re-anchors correctly
-  useEffect(() => {
-    if (!anchor) return
-    const handleResize = () => onClose()
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [anchor, onClose])
+  useTemplatePickerClose(anchor, onClose)
 
   return (
     <Menu

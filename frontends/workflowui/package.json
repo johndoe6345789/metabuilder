@@ -15,6 +15,7 @@
     "backend": "python backend/server.py",
     "dev:all": "concurrently \"npm run dev\" \"npm run backend\"",
     "test": "jest",
+    "test:coverage": "jest --coverage",
     "test:watch": "jest --watch",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build"

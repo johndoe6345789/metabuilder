@@ -1,0 +1,50 @@
+[
+  {
+    "id": "1",
+    "question": "How do I create my first workflow?",
+    "answer": "To create your first workflow, navigate to the Workspaces page and click \"New Workspace\". Once inside a workspace, click the \"New Workflow\" button. You can then drag and drop nodes from the palette onto the canvas and connect them to build your automation.",
+    "category": "Getting Started"
+  },
+  {
+    "id": "2",
+    "question": "What programming languages are supported?",
+    "answer": "MetaBuilder supports multiple programming languages for workflow nodes: TypeScript, Python, Go, Rust, and Mojo. You can mix different languages in a single workflow, and the executor will handle the execution seamlessly.",
+    "category": "Workflows"
+  },
+  {
+    "id": "3",
+    "question": "How do I connect nodes in a workflow?",
+    "answer": "To connect nodes, click and drag from the output port of one node to the input port of another node. The connection will be created automatically. You can delete connections by selecting them and pressing the Delete key.",
+    "category": "Workflows"
+  },
+  {
+    "id": "4",
+    "question": "Can I share workflows with my team?",
+    "answer": "Yes! Workspaces and workflows support multi-tenant access. You can invite team members to your workspace and collaborate on workflows together. Use the sharing settings in the workspace menu to manage access.",
+    "category": "Collaboration"
+  },
+  {
+    "id": "5",
+    "question": "How do I debug a failing workflow?",
+    "answer": "When a workflow fails, click on the failed node to view its execution logs and error messages. You can also use the step-through debugger to execute nodes one at a time and inspect intermediate results.",
+    "category": "Troubleshooting"
+  },
+  {
+    "id": "6",
+    "question": "What are templates and how do I use them?",
+    "answer": "Templates are pre-built workflows that you can use as starting points for common automation tasks. Browse the Templates page to find workflows for data processing, API integration, AI automation, and more. Click \"Use Template\" to create a copy in your workspace.",
+    "category": "Getting Started"
+  },
+  {
+    "id": "7",
+    "question": "How do I set up environment variables?",
+    "answer": "Environment variables can be configured in the Workspace settings. Navigate to your workspace, click the settings icon, and go to the \"Environment\" tab. Add your key-value pairs there, and they will be available to all workflows in that workspace.",
+    "category": "Configuration"
+  },
+  {
+    "id": "8",
+    "question": "Can workflows run on a schedule?",
+    "answer": "Yes! Workflows support scheduled execution using cron expressions. In the workflow settings, enable \"Scheduled Execution\" and enter your cron schedule. The workflow will run automatically at the specified times.",
+    "category": "Workflows"
+  }
+]

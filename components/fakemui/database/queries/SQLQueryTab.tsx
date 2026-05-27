@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Box } from '../../layout';
 import { Paper } from '../../surfaces';
 import { Typography } from '../../data-display';
-import { Button, TextField } from '../../inputs';
+import { Button } from '../../inputs';
 import { CircularProgress } from '../../feedback';
 
 export type SQLQueryTabProps = {
@@ -54,15 +54,19 @@ export function SQLQueryTab({
         </Typography>
       )}
 
-      <Paper sx={{ p: 2, mt: 2 }}>
-        <TextField
-          fullWidth
-          label="SQL Query (SELECT only)"
-          value={queryText}
-          onChange={(e) => setQueryText(e.target.value)}
-          placeholder={placeholder}
-          sx={{ mb: 2 }}
-        />
+      <Paper sx={{ p: 2, mt: 1 }}>
+        <Box sx={{ mb: 2 }}>
+          <label style={{ display: 'block', marginBottom: 6, fontSize: '0.75rem', fontWeight: 500 }}>
+            SQL Query (SELECT only)
+          </label>
+          <textarea
+            value={queryText}
+            onChange={(e) => setQueryText(e.target.value)}
+            placeholder={placeholder}
+            rows={8}
+            style={{ width: '100%', boxSizing: 'border-box' }}
+          />
+        </Box>
         <Button
           variant="contained"
           onClick={handleExecute}

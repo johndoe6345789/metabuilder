@@ -1,0 +1,15 @@
+{
+  "tabs": [
+    { "id": "all", "label": "All Plugins" },
+    { "id": "installed", "label": "Installed" },
+    { "id": "available", "label": "Available" }
+  ],
+  "categoryFilters": [
+    { "id": "integrations", "label": "Integrations" },
+    { "id": "ai", "label": "AI" },
+    { "id": "payments", "label": "Payments" },
+    { "id": "communication", "label": "Communication" },
+    { "id": "databases", "label": "Databases" },
+    { "id": "storage", "label": "Storage" }
+  ]
+}

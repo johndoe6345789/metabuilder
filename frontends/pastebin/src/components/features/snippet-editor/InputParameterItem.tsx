@@ -1,6 +1,11 @@
-import { Button, Card, CardContent, Input, FormLabel, Select, MenuItem, MaterialIcon } from '@metabuilder/components/fakemui'
+import {
+  Button, Card, CardContent,
+  Input, FormLabel, Select, MenuItem, MaterialIcon,
+} from '@metabuilder/components/fakemui'
 import type { SelectChangeEvent } from '@metabuilder/components/fakemui'
 import { InputParameter } from '@/lib/types'
+import placeholders from '@/data/paramTypePlaceholders.json'
+import { InputParamFields } from './InputParamFields'
 import styles from './input-parameter-item.module.scss'
 
 interface InputParameterItemProps {
@@ -10,38 +15,33 @@ interface InputParameterItemProps {
   onRemove: (index: number) => void
 }
 
-export function InputParameterItem({ param, index, onUpdate, onRemove }: InputParameterItemProps) {
-  const getPlaceholder = (type: string) => {
-    switch (type) {
-      case 'string':
-        return '"Hello World"'
-      case 'number':
-        return '42'
-      case 'boolean':
-        return 'true'
-      case 'array':
-        return '["item1", "item2"]'
-      case 'object':
-        return '{"key": "value"}'
-      default:
-        return ''
-    }
-  }
+const TYPE_OPTIONS = ['string', 'number', 'boolean', 'array', 'object']
+
+function ParamLabel({ htmlFor, text }: { htmlFor: string; text: string }) {
+  return <FormLabel htmlFor={htmlFor} className={styles.labelXs}>{text}</FormLabel>
+}
+
+export function InputParameterItem({
+  param, index, onUpdate, onRemove,
+}: InputParameterItemProps) {
+  const placeholder =
+    (placeholders as Record<string, string>)[param.type] ?? ''
 
   return (
-    <Card className={styles.cardRoot} data-testid={`param-item-${index}`}>
+    <Card
+      className={styles.cardRoot}
+      data-testid={`param-item-${index}`}
+    >
       <CardContent className={styles.cardContent}>
         <div className={styles.topRow}>
           <div className={styles.fieldsGrid}>
             <div className={styles.fieldGroup}>
-              <FormLabel htmlFor={`param-name-${index}`} className={styles.labelXs}>
-                Name *
-              </FormLabel>
+              <ParamLabel htmlFor={`param-name-${index}`} text="Name *" />
               <Input
                 id={`param-name-${index}`}
                 placeholder="paramName"
                 value={param.name}
-                onChange={(e) => onUpdate(index, 'name', e.target.value)}
+                onChange={e => onUpdate(index, 'name', e.target.value)}
                 className={styles.inputSm}
                 data-testid={`param-name-input-${index}`}
                 aria-label={`Parameter ${index + 1} name`}
@@ -50,12 +50,12 @@ export function InputParameterItem({ param, index, onUpdate, onRemove }: InputPa
               />
             </div>
             <div className={styles.fieldGroup}>
-              <FormLabel htmlFor={`param-type-${index}`} className={styles.labelXs}>
-                Type
-              </FormLabel>
+              <ParamLabel htmlFor={`param-type-${index}`} text="Type" />
               <Select
                 value={param.type}
-                onChange={(e: SelectChangeEvent) => onUpdate(index, 'type', e.target.value as string)}
+                onChange={(e: SelectChangeEvent) =>
+                  onUpdate(index, 'type', e.target.value as string)
+                }
                 inputProps={{
                   id: `param-type-${index}`,
                   className: styles.inputSm,
@@ -63,55 +63,23 @@ export function InputParameterItem({ param, index, onUpdate, onRemove }: InputPa
                 data-testid={`param-type-select-${index}`}
                 aria-label={`Parameter ${index + 1} type`}
               >
-                <MenuItem value="string" data-testid="type-string">string</MenuItem>
-                <MenuItem value="number" data-testid="type-number">number</MenuItem>
-                <MenuItem value="boolean" data-testid="type-boolean">boolean</MenuItem>
-                <MenuItem value="array" data-testid="type-array">array</MenuItem>
-                <MenuItem value="object" data-testid="type-object">object</MenuItem>
+                {TYPE_OPTIONS.map(t => (
+                  <MenuItem key={t} value={t} data-testid={`type-${t}`}>
+                    {t}
+                  </MenuItem>
+                ))}
               </Select>
             </div>
           </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onRemove(index)}
+          <Button variant="ghost" size="sm" onClick={() => onRemove(index)}
             className={`${styles.removeBtn} h-8 w-8 p-0 text-destructive`}
             data-testid={`remove-parameter-btn-${index}`}
-            aria-label={`Remove parameter ${index + 1}`}
-          >
+            aria-label={`Remove parameter ${index + 1}`}>
             <MaterialIcon name="delete" className={styles.removeIcon} aria-hidden="true" />
           </Button>
         </div>
-        <div className={styles.fieldGroup}>
-          <FormLabel htmlFor={`param-default-${index}`} className={styles.labelXs}>
-            Default Value *
-          </FormLabel>
-          <Input
-            id={`param-default-${index}`}
-            placeholder={getPlaceholder(param.type)}
-            value={param.defaultValue}
-            onChange={(e) => onUpdate(index, 'defaultValue', e.target.value)}
-            className={`${styles.inputSmMono} font-mono`}
-            data-testid={`param-default-input-${index}`}
-            aria-label={`Parameter ${index + 1} default value`}
-            required
-            aria-required="true"
-          />
-        </div>
-        <div className={styles.fieldGroup}>
-          <FormLabel htmlFor={`param-desc-${index}`} className={styles.labelXs}>
-            Description (Optional)
-          </FormLabel>
-          <Input
-            id={`param-desc-${index}`}
-            placeholder="What does this parameter do?"
-            value={param.description || ''}
-            onChange={(e) => onUpdate(index, 'description', e.target.value)}
-            className={styles.inputSm}
-            data-testid={`param-description-input-${index}`}
-            aria-label={`Parameter ${index + 1} description`}
-          />
-        </div>
+
+        <InputParamFields param={param} index={index} placeholder={placeholder} onUpdate={onUpdate} />
       </CardContent>
     </Card>
   )

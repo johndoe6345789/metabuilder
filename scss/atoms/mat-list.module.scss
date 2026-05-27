@@ -10,7 +10,9 @@
 
 // Local class for CSS modules purity - apply to list container
 .matList {
-  // Inherits Angular Material styles via global theme
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 // Alias classes

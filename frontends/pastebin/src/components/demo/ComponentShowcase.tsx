@@ -1,8 +1,8 @@
-import { useState } from 'react'
 import { FloppyDisk } from '@phosphor-icons/react'
 import { Card, Button } from '@metabuilder/components/fakemui'
 import { Snippet } from '@/lib/types'
 import { SnippetDialog } from '@/components/features/snippet-editor/SnippetDialog'
+import { useComponentShowcase } from './hooks/useComponentShowcase'
 
 interface ComponentShowcaseProps {
   children: React.ReactNode
@@ -11,7 +11,9 @@ interface ComponentShowcaseProps {
   description?: string
   language?: string
   category: string
-  onSaveSnippet: (snippet: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'>) => void
+  onSaveSnippet: (
+    snippet: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'>
+  ) => void
 }
 
 export function ComponentShowcase({
@@ -23,42 +25,34 @@ export function ComponentShowcase({
   category,
   onSaveSnippet,
 }: ComponentShowcaseProps) {
-  const [dialogOpen, setDialogOpen] = useState(false)
-  const [prefilledData, setPrefilledData] = useState<{
-    title: string
-    description: string
-    code: string
-    language: string
-    category: string
-  } | null>(null)
+  const {
+    dialogOpen,
+    prefilledData,
+    handleSaveClick,
+    handleSave,
+  } = useComponentShowcase(
+    title, description, code, language, category, onSaveSnippet
+  )
 
-  const handleSaveClick = () => {
-    setPrefilledData({
-      title,
-      description,
-      code,
-      language,
-      category,
-    })
-    setDialogOpen(true)
-  }
-
-  const handleSave = (snippetData: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'>) => {
-    onSaveSnippet(snippetData)
-    setDialogOpen(false)
-    setPrefilledData(null)
-  }
+  const testId = `showcase-${category}-${
+    title.toLowerCase().replace(/\s+/g, '-')
+  }`
 
   return (
     <>
       <Card
         className="relative group rounded-lg"
         style={{ position: 'relative' }}
-        data-testid={`showcase-${category}-${title.toLowerCase().replace(/\s+/g, '-')}`}
+        data-testid={testId}
       >
         <div
           className="opacity-0 group-hover:opacity-100 transition-opacity"
-          style={{ position: 'absolute', top: '16px', right: '16px', zIndex: 10 }}
+          style={{
+            position: 'absolute',
+            top: '16px',
+            right: '16px',
+            zIndex: 10,
+          }}
           data-testid="showcase-save-btn-container"
         >
           <Button
@@ -78,7 +72,12 @@ export function ComponentShowcase({
       {prefilledData && (
         <SnippetDialog
           open={dialogOpen}
-          onOpenChange={setDialogOpen}
+          onOpenChange={(v) => {
+            if (!v) handleSave({ ...prefilledData } as Omit<
+              Snippet,
+              'id' | 'createdAt' | 'updatedAt'
+            >)
+          }}
           onSave={handleSave}
           editingSnippet={{
             id: '',

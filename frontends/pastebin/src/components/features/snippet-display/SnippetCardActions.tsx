@@ -1,7 +1,8 @@
-import { useState } from 'react'
-import { Button, Menu, MenuItem, Divider, MaterialIcon } from '@metabuilder/components/fakemui'
+import { Button, MaterialIcon } from '@metabuilder/components/fakemui'
 import { Namespace } from '@/lib/types'
 import { useTranslation } from '@/hooks/useTranslation'
+import { useSnippetCardActions } from './hooks/useSnippetCardActions'
+import { MoveToMenu } from './MoveToMenu'
 import styles from './snippet-card-actions.module.scss'
 
 interface SnippetCardActionsProps {
@@ -16,20 +17,15 @@ interface SnippetCardActionsProps {
 }
 
 export function SnippetCardActions({
-  isCopied,
-  isMoving,
-  availableNamespaces,
-  onView,
-  onCopy,
-  onEdit,
-  onDelete,
-  onMoveToNamespace,
+  isCopied, isMoving, availableNamespaces,
+  onView, onCopy, onEdit, onDelete, onMoveToNamespace,
 }: SnippetCardActionsProps) {
-  const t = useTranslation()
-  const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null)
+  const t = useTranslation(); const vm = useSnippetCardActions()
 
   return (
-    <div className={`${styles.actionsRow} flex items-center justify-between gap-2`} data-testid="snippet-card-actions" role="group" aria-label="Snippet actions">
+    <div className={`${styles.actionsRow} flex items-center justify-between gap-2`}
+      data-testid="snippet-card-actions" role="group" aria-label="Snippet actions"
+    >
       <div className={styles.actionsLeft}>
         <Button
           variant="ghost"
@@ -40,9 +36,12 @@ export function SnippetCardActions({
           aria-label="View snippet"
         >
           <MaterialIcon name="visibility" size={16} aria-hidden="true" />
-          <span className={styles.btnLabelInline}>{t.snippetCard.viewButton}</span>
+          <span className={styles.btnLabelInline}>
+            {t.snippetCard.viewButton}
+          </span>
         </Button>
       </div>
+
       <div className={styles.actionsRight}>
         <Button
           variant="ghost"
@@ -53,8 +52,13 @@ export function SnippetCardActions({
           aria-label={t.snippetCard.ariaLabels.copy}
         >
           <MaterialIcon name="content_copy" size={16} aria-hidden="true" />
-          <span className={styles.btnLabelInline}>{isCopied ? t.snippetCard.copiedButton : t.snippetCard.copyButton}</span>
+          <span className={styles.btnLabelInline}>
+            {isCopied
+              ? t.snippetCard.copiedButton
+              : t.snippetCard.copyButton}
+          </span>
         </Button>
+
         <Button
           variant="ghost"
           size="sm"
@@ -69,7 +73,10 @@ export function SnippetCardActions({
         <Button
           variant="ghost"
           size="sm"
-          onClick={(e) => { e.stopPropagation(); setMenuAnchor(e.currentTarget) }}
+          onClick={e => {
+            e.stopPropagation()
+            vm.openMenu(e.currentTarget)
+          }}
           className={styles.btnSquare}
           data-testid="snippet-card-actions-menu"
           aria-label="More options"
@@ -78,63 +85,15 @@ export function SnippetCardActions({
           <MaterialIcon name="more_horiz" size={16} aria-hidden="true" />
         </Button>
 
-        <Menu
-          open={Boolean(menuAnchor)}
-          anchorEl={menuAnchor}
-          onClose={() => setMenuAnchor(null)}
-          data-testid="snippet-actions-menu-content"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div
-            data-testid="snippet-card-move-submenu"
-            aria-label="Move snippet to another namespace"
-            {...((availableNamespaces.length === 0 || isMoving) ? { disabled: true } : {})}
-          >
-            <MenuItem
-              disabled
-              className={styles.menuLabel}
-              aria-hidden="true"
-            >
-              <MaterialIcon name="folder_open" size={16} style={{ marginRight: 8 }} aria-hidden="true" />
-              {t.snippetCard.moveTo}
-            </MenuItem>
-            <div data-testid="move-to-namespaces-list">
-              {availableNamespaces.length === 0 ? (
-                <MenuItem
-                  disabled
-                  data-testid="no-namespaces-item"
-                >
-                  {t.snippetCard.noOtherNamespaces}
-                </MenuItem>
-              ) : (
-                availableNamespaces.map((namespace) => (
-                  <MenuItem
-                    key={namespace.id}
-                    onClick={() => { onMoveToNamespace(namespace.id); setMenuAnchor(null) }}
-                    data-testid={`move-to-namespace-${namespace.id}`}
-                    disabled={isMoving}
-                    aria-label={`Move to ${namespace.name}${namespace.isDefault ? ' (Default)' : ''}`}
-                  >
-                    {namespace.name}
-                    {namespace.isDefault && (
-                      <span className={styles.defaultBadge}>{t.common.default}</span>
-                    )}
-                  </MenuItem>
-                ))
-              )}
-            </div>
-          </div>
-          <Divider />
-          <MenuItem
-            onClick={(e) => { e.stopPropagation(); onDelete(e); setMenuAnchor(null) }}
-            className={`${styles.deleteItem} text-destructive`}
-            data-testid="snippet-card-delete-btn"
-            aria-label={t.snippetCard.ariaLabels.delete}
-          >
-            <MaterialIcon name="delete" size={16} style={{ marginRight: 8 }} aria-hidden="true" />
-            {t.common.delete}
-          </MenuItem>
-        </Menu>
+        <MoveToMenu
+          open={Boolean(vm.menuAnchor)}
+          anchorEl={vm.menuAnchor}
+          isMoving={isMoving}
+          availableNamespaces={availableNamespaces}
+          onClose={vm.closeMenu}
+          onMove={onMoveToNamespace}
+          onDelete={onDelete}
+        />
       </div>
     </div>
   )

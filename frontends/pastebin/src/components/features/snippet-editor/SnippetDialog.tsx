@@ -1,12 +1,13 @@
 "use client"
 
-import { useState, useEffect } from 'react'
-import { Dialog, DialogTitle, DialogContent, DialogActions, DialogClose, Button, MaterialIcon } from '@metabuilder/components/fakemui'
+import {
+  Dialog, DialogTitle, DialogContent,
+  DialogActions, DialogClose, Button, MaterialIcon,
+} from '@metabuilder/components/fakemui'
 import { Snippet } from '@/lib/types'
-import { appConfig } from '@/lib/config'
 import { useTranslation } from '@/hooks/useTranslation'
-import { useSnippetForm } from '@/hooks/useSnippetForm'
 import { SnippetDialogTabs } from './SnippetDialogTabs'
+import { useSnippetDialog } from './hooks/useSnippetDialog'
 import styles from './snippet-dialog.module.scss'
 
 interface SnippetDialogProps {
@@ -14,94 +15,83 @@ interface SnippetDialogProps {
   onOpenChange: (open: boolean) => void
   onSave: (snippet: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'>) => void
   editingSnippet?: Snippet | null
-  /** When true, only the Details tab is shown (no Code/Preview tabs) */
   metadataOnly?: boolean
 }
 
-export function SnippetDialog({ open, onOpenChange, onSave, editingSnippet, metadataOnly = false }: SnippetDialogProps) {
+export function SnippetDialog({
+  open,
+  onOpenChange,
+  onSave,
+  editingSnippet,
+  metadataOnly = false,
+}: SnippetDialogProps) {
   const t = useTranslation()
-  const [activeTab, setActiveTab] = useState(0)
-
-  useEffect(() => {
-    if (open) setActiveTab(0)
-  }, [open])
-
-  const {
-    title, description, language, code, hasPreview,
-    functionName, inputParameters, errors,
-    files, activeFile,
-    setTitle, setDescription, setLanguage, setHasPreview,
-    setFunctionName, setActiveFile,
-    addFile, deleteFile, updateFileContent, renameFile, uploadFile,
-    handleAddParameter, handleRemoveParameter,
-    handleUpdateParameter, validate, getFormData, resetForm,
-  } = useSnippetForm(editingSnippet, open)
-
-  const isPreviewSupported = appConfig.previewEnabledLanguages.includes(language)
-  const showPreviewTab = !metadataOnly && isPreviewSupported && hasPreview
-  const tabCount = metadataOnly ? 1 : (showPreviewTab ? 3 : 2)
-
-  const handleCodeChange = (value: string) => {
-    updateFileContent(activeFile, value)
-  }
-
-  const handleSave = () => {
-    if (!validate()) {
-      if (errors.code) setActiveTab(1)
-      return
-    }
-    onSave(getFormData())
-    resetForm()
-    onOpenChange(false)
-  }
+  const vm = useSnippetDialog({
+    open, editingSnippet, metadataOnly, onSave, onOpenChange,
+  })
+  const { form } = vm
 
   return (
-    <Dialog open={open} onClose={() => onOpenChange(false)} maxWidth="lg" fullWidth>
-      <DialogClose onClick={() => onOpenChange(false)} aria-label="Close dialog">
+    <Dialog
+      open={open}
+      onClose={() => onOpenChange(false)}
+      maxWidth="lg"
+      fullWidth
+    >
+      <DialogClose
+        onClick={() => onOpenChange(false)}
+        aria-label="Close dialog"
+      >
         <MaterialIcon name="close" size={20} />
       </DialogClose>
 
       <DialogTitle>
-        {editingSnippet?.id ? t.snippetDialog.edit.title : t.snippetDialog.create.title}
+        {editingSnippet?.id
+          ? t.snippetDialog.edit.title
+          : t.snippetDialog.create.title}
       </DialogTitle>
 
-      <DialogContent dividers data-testid="snippet-dialog" className={styles.dialogContent}>
+      <DialogContent
+        dividers
+        data-testid="snippet-dialog"
+        className={styles.dialogContent}
+      >
         <SnippetDialogTabs
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
+          activeTab={vm.activeTab}
+          onTabChange={vm.setActiveTab}
           metadataOnly={metadataOnly}
-          title={title}
-          description={description}
-          language={language}
-          code={code}
-          hasPreview={hasPreview}
-          functionName={functionName}
-          inputParameters={inputParameters}
-          errors={errors}
-          onTitleChange={setTitle}
-          onDescriptionChange={setDescription}
-          onLanguageChange={setLanguage}
-          onCodeChange={handleCodeChange}
-          onPreviewChange={setHasPreview}
-          onFunctionNameChange={setFunctionName}
-          onAddParameter={handleAddParameter}
-          onRemoveParameter={handleRemoveParameter}
-          onUpdateParameter={handleUpdateParameter}
-          files={files}
-          activeFile={activeFile}
-          onActiveFileSelect={setActiveFile}
-          onFileAdd={addFile}
-          onFileDelete={deleteFile}
-          onFileRename={renameFile}
-          onFileUpload={uploadFile}
+          title={form.title}
+          description={form.description}
+          language={form.language}
+          code={form.code}
+          hasPreview={form.hasPreview}
+          functionName={form.functionName}
+          inputParameters={form.inputParameters}
+          errors={form.errors}
+          onTitleChange={form.setTitle}
+          onDescriptionChange={form.setDescription}
+          onLanguageChange={form.setLanguage}
+          onCodeChange={vm.handleCodeChange}
+          onPreviewChange={form.setHasPreview}
+          onFunctionNameChange={form.setFunctionName}
+          onAddParameter={form.handleAddParameter}
+          onRemoveParameter={form.handleRemoveParameter}
+          onUpdateParameter={form.handleUpdateParameter}
+          files={form.files}
+          activeFile={form.activeFile}
+          onActiveFileSelect={form.setActiveFile}
+          onFileAdd={form.addFile}
+          onFileDelete={form.deleteFile}
+          onFileRename={form.renameFile}
+          onFileUpload={form.uploadFile}
         />
       </DialogContent>
 
       <DialogActions>
-        {activeTab > 0 && (
+        {vm.activeTab > 0 && (
           <Button
             variant="outlined"
-            onClick={() => setActiveTab(prev => prev - 1)}
+            onClick={() => vm.setActiveTab(p => p - 1)}
             aria-label="Go to previous tab"
             className={styles.backButton}
           >
@@ -116,18 +106,28 @@ export function SnippetDialog({ open, onOpenChange, onSave, editingSnippet, meta
         >
           {t.snippetDialog.buttons.cancel}
         </Button>
-        {activeTab < tabCount - 1 ? (
-          <Button variant="filled" onClick={() => setActiveTab(prev => prev + 1)} aria-label="Go to next tab">
+        {vm.activeTab < vm.tabCount - 1 ? (
+          <Button
+            variant="filled"
+            onClick={() => vm.setActiveTab(p => p + 1)}
+            aria-label="Go to next tab"
+          >
             {t.snippetDialog.buttons.next}
           </Button>
         ) : (
           <Button
             variant="filled"
-            onClick={handleSave}
+            onClick={vm.handleSave}
             data-testid="snippet-dialog-save-btn"
-            aria-label={editingSnippet ? "Update snippet" : "Create new snippet"}
+            aria-label={
+              editingSnippet
+                ? 'Update snippet'
+                : 'Create new snippet'
+            }
           >
-            {editingSnippet ? t.snippetDialog.buttons.update : t.snippetDialog.buttons.create}
+            {editingSnippet
+              ? t.snippetDialog.buttons.update
+              : t.snippetDialog.buttons.create}
           </Button>
         )}
       </DialogActions>

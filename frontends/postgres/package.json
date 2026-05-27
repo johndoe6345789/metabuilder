@@ -1,6 +1,6 @@
 {
   "name": "next-js-boilerplate",
-  "version": "1.0.0",
+  "version": "1.0.23",
   "author": "Ixartz (https://github.com/ixartz)",
   "engines": {
     "node": ">=20"
@@ -22,6 +22,7 @@
     "check:i18n": "i18n-check -l src/locales -s en -u src -f next-intl",
     "commit": "commit",
     "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
     "db-remote:neon": "npx get-db --yes --env .env.local --ref nextjs-boilerplate",
     "neon:claim": "npx get-db claim --env .env.local --ref nextjs-boilerplate",
@@ -115,6 +116,7 @@
     "@vitejs/plugin-react": "^5.1.4",
     "@vitest/browser": "^4.0.18",
     "@vitest/browser-playwright": "^4.0.18",
+    "@vitest/coverage-istanbul": "^4.1.7",
     "@vitest/coverage-v8": "^4.0.18",
     "babel-plugin-react-compiler": "^1.0.0",
     "checkly": "^7.1.0",

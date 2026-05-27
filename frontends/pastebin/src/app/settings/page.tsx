@@ -1,7 +1,5 @@
 'use client';
 
-import { useState } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { PersistenceSettings } from '@/components/demo/PersistenceSettings';
 import { SchemaHealthCard } from '@/components/settings/SchemaHealthCard';
@@ -12,43 +10,18 @@ import { StorageInfoCard } from '@/components/settings/StorageInfoCard';
 import { DatabaseActionsCard } from '@/components/settings/DatabaseActionsCard';
 import { OpenAISettingsCard } from '@/components/settings/OpenAISettingsCard';
 import { ProfileSettingsCard } from '@/components/settings/ProfileSettingsCard';
-import { useSettingsState } from '@/hooks/useSettingsState';
 import { useTranslation } from '@/hooks/useTranslation';
 import { PageLayout } from '../PageLayout';
+import { useSettingsPage, type Tab } from './hooks/useSettingsPage';
 import styles from './settings-page.module.scss';
 
 export const dynamic = 'force-dynamic'
 
-type Tab = 'profile' | 'ai' | 'storage' | 'database';
+const ALL_TABS: Tab[] = ['profile', 'ai', 'storage', 'database']
 
 export default function SettingsPage() {
   const t = useTranslation();
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const initialTab = (searchParams.get('tab') as Tab) ?? 'ai';
-  const [activeTab, setActiveTab] = useState<Tab>(initialTab);
-
-  const handleTabChange = (tab: Tab) => {
-    setActiveTab(tab);
-    router.replace(`?tab=${tab}`, { scroll: false });
-  };
-  const {
-    stats,
-    loading,
-    storageBackend,
-    setStorageBackend,
-    envVarSet,
-    schemaHealth,
-    checkingSchema,
-    handleExport,
-    handleImport,
-    handleClear,
-    handleSeed,
-    formatBytes,
-    handleSaveStorageConfig,
-    checkSchemaHealth,
-  } = useSettingsState();
-
+  const { activeTab, handleTabChange, settings } = useSettingsPage();
   const tabs = t.settingsPage.tabs;
 
   return (
@@ -60,12 +33,20 @@ export default function SettingsPage() {
         transition={{ duration: 0.4 }}
       >
         <div className={styles.pageHeader}>
-          <h2 className={styles.pageHeading}>{t.settingsPage.heading}</h2>
-          <p className={styles.pageSubtitle}>{t.settingsPage.subtitle}</p>
+          <h2 className={styles.pageHeading}>
+            {t.settingsPage.heading}
+          </h2>
+          <p className={styles.pageSubtitle}>
+            {t.settingsPage.subtitle}
+          </p>
         </div>
 
-        <div className={styles.tabBar} role="tablist" aria-label="Settings sections">
-          {(['profile', 'ai', 'storage', 'database'] as Tab[]).map(tab => (
+        <div
+          className={styles.tabBar}
+          role="tablist"
+          aria-label="Settings sections"
+        >
+          {ALL_TABS.map(tab => (
             <button
               key={tab}
               role="tab"
@@ -73,7 +54,9 @@ export default function SettingsPage() {
               aria-controls={`tabpanel-${tab}`}
               id={`tab-${tab}`}
               onClick={() => handleTabChange(tab)}
-              className={`${styles.tabBtn} ${activeTab === tab ? styles.tabBtnActive : ''}`}
+              className={`${styles.tabBtn} ${
+                activeTab === tab ? styles.tabBtnActive : ''
+              }`}
             >
               {tabs?.[tab] ?? tab}
             </button>
@@ -86,26 +69,24 @@ export default function SettingsPage() {
           id={`tabpanel-${activeTab}`}
           aria-labelledby={`tab-${activeTab}`}
         >
-          {activeTab === 'profile' && (
-            <ProfileSettingsCard />
-          )}
+          {activeTab === 'profile' && <ProfileSettingsCard />}
 
-          {activeTab === 'ai' && (
-            <OpenAISettingsCard />
-          )}
+          {activeTab === 'ai' && <OpenAISettingsCard />}
 
           {activeTab === 'storage' && (
             <>
               <BackendAutoConfigCard
-                envVarSet={envVarSet}
+                envVarSet={settings.envVarSet}
               />
               <StorageBackendCard
-                storageBackend={storageBackend}
-                envVarSet={envVarSet}
-                onStorageBackendChange={setStorageBackend}
-                onSaveConfig={handleSaveStorageConfig}
+                storageBackend={settings.storageBackend}
+                envVarSet={settings.envVarSet}
+                onStorageBackendChange={settings.setStorageBackend}
+                onSaveConfig={settings.handleSaveStorageConfig}
               />
-              <StorageInfoCard storageType={stats?.storageType} />
+              <StorageInfoCard
+                storageType={settings.stats?.storageType}
+              />
               <PersistenceSettings />
             </>
           )}
@@ -113,21 +94,21 @@ export default function SettingsPage() {
           {activeTab === 'database' && (
             <>
               <SchemaHealthCard
-                schemaHealth={schemaHealth}
-                checkingSchema={checkingSchema}
-                onClear={handleClear}
-                onCheckSchema={checkSchemaHealth}
+                schemaHealth={settings.schemaHealth}
+                checkingSchema={settings.checkingSchema}
+                onClear={settings.handleClear}
+                onCheckSchema={settings.checkSchemaHealth}
               />
               <DatabaseStatsCard
-                loading={loading}
-                stats={stats}
-                formatBytes={formatBytes}
+                loading={settings.loading}
+                stats={settings.stats}
+                formatBytes={settings.formatBytes}
               />
               <DatabaseActionsCard
-                onExport={handleExport}
-                onImport={handleImport}
-                onSeed={handleSeed}
-                onClear={handleClear}
+                onExport={settings.handleExport}
+                onImport={settings.handleImport}
+                onSeed={settings.handleSeed}
+                onClear={settings.handleClear}
               />
             </>
           )}

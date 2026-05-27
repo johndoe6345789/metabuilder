@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
 import { MaterialIcon } from '@metabuilder/components/fakemui'
+import { useFileMenuDismiss } from './hooks/useFileMenuDismiss'
 import styles from './file-menu.module.scss'
 
 interface FileMenuProps {
@@ -15,23 +15,11 @@ interface FileMenuProps {
   onOpenInNewTab: () => void
 }
 
-export function FileMenu({ anchorRect, canDelete, onClose, onRename, onDuplicate, onDelete, onCopyPath, onOpenInNewTab }: FileMenuProps) {
-  const ref = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const handleDown = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) onClose()
-    }
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
-    }
-    document.addEventListener('mousedown', handleDown)
-    document.addEventListener('keydown', handleKey)
-    return () => {
-      document.removeEventListener('mousedown', handleDown)
-      document.removeEventListener('keydown', handleKey)
-    }
-  }, [onClose])
+export function FileMenu({
+  anchorRect, canDelete, onClose, onRename,
+  onDuplicate, onDelete, onCopyPath, onOpenInNewTab,
+}: FileMenuProps) {
+  const ref = useFileMenuDismiss(onClose)
 
   // Prefer opening below the button; flip up if near the bottom of viewport
   const spaceBelow = window.innerHeight - anchorRect.bottom

@@ -1,8 +1,6 @@
-import { useCallback, useMemo } from 'react'
-import { Action, PageSchema } from '@/types/json-ui'
-import { useDataSources } from '@/hooks/data/use-data-sources'
-import { useActionExecutor } from '@/hooks/ui/use-action-executor'
+import { PageSchema } from '@/types/json-ui'
 import { JSONUIRenderer } from './renderer'
+import { usePageRenderer } from './hooks/usePageRenderer'
 
 interface PageRendererProps {
   schema: PageSchema
@@ -11,34 +9,15 @@ interface PageRendererProps {
   functions?: Record<string, any>
 }
 
-export function PageRenderer({ schema, onCustomAction, data: externalData, functions }: PageRendererProps) {
-  const { data: sourceData, updateData, updatePath } = useDataSources(schema.dataSources)
-  const mergedData = useMemo(() => ({ ...sourceData, ...externalData }), [externalData, sourceData])
-  const executeCustomAction = useCallback(async (action: Action, event?: any) => {
-    if (onCustomAction) {
-      await onCustomAction(action, event)
-      return
-    }
-
-    const handler = functions?.[action.id]
-    if (typeof handler === 'function') {
-      await handler(action, event)
-    }
-  }, [functions, onCustomAction])
-
-  const actionContext = {
-    data: mergedData,
-    updateData,
-    updatePath,
-    executeAction: executeCustomAction,
-  }
-
-  const { executeActions } = useActionExecutor(actionContext)
-
-  const handleAction = useCallback((actions: Action[], eventData?: unknown) => {
-    if (!actions?.length) return
-    executeActions(actions, eventData)
-  }, [executeActions])
+export function PageRenderer(
+  { schema, onCustomAction, data, functions }: PageRendererProps,
+) {
+  const { mergedData, handleAction } = usePageRenderer({
+    schema,
+    onCustomAction,
+    data,
+    functions,
+  })
 
   return (
     <div className="h-full w-full">

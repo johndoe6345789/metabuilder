@@ -1,15 +1,23 @@
-import { Avatar, AvatarGroup, Flex, Heading, Section, Separator, Stack, Text } from '@/components/atoms'
+import {
+  Avatar, AvatarGroup, Flex, Heading,
+  Section, Separator, Stack, Text,
+} from '@/components/atoms'
 
 type AvatarsUserElementsSectionContent =
-  (typeof import('@/data/atomic-library-showcase.json'))['sections']['avatarsUserElements']
+  (typeof import(
+    '@/data/atomic-library-showcase.json'
+  ))['sections']['avatarsUserElements']
 
 interface AvatarsUserElementsSectionProps {
   content: AvatarsUserElementsSectionContent
 }
 
-const avatarSizes: Array<'xs' | 'sm' | 'md' | 'lg' | 'xl'> = ['xs', 'sm', 'md', 'lg', 'xl']
+const avatarSizes: Array<'xs' | 'sm' | 'md' | 'lg' | 'xl'> =
+  ['xs', 'sm', 'md', 'lg', 'xl']
 
-export function AvatarsUserElementsSection({ content }: AvatarsUserElementsSectionProps) {
+export function AvatarsUserElementsSection({
+  content,
+}: AvatarsUserElementsSectionProps) {
   return (
     <Section spacing="lg">
       <Heading level={2}>{content.title}</Heading>
@@ -21,7 +29,11 @@ export function AvatarsUserElementsSection({ content }: AvatarsUserElementsSecti
           </Text>
           <Flex gap="md" align="center">
             {content.avatarFallbacks.map((fallback, index) => (
-              <Avatar key={fallback} fallback={fallback} size={avatarSizes[index]} />
+              <Avatar
+                key={fallback}
+                fallback={fallback}
+                size={avatarSizes[index]}
+              />
             ))}
           </Flex>
         </div>

@@ -1,8 +1,13 @@
 'use client'
 
-import { Card, CardHeader, CardContent, Button, FormLabel, Alert, AlertDescription, RadioGroup, Radio, FormControlLabel, MaterialIcon } from '@metabuilder/components/fakemui'
+import {
+  Card, CardHeader, CardContent,
+  Button, Alert, AlertDescription,
+  RadioGroup, MaterialIcon,
+} from '@metabuilder/components/fakemui'
 import { type StorageBackend } from '@/lib/storage'
 import { useTranslation } from '@/hooks/useTranslation'
+import { StorageOption } from './StorageOption'
 import styles from './settings-card.module.scss'
 
 interface StorageBackendCardProps {
@@ -20,84 +25,94 @@ export function StorageBackendCard({
 }: StorageBackendCardProps) {
   const t = useTranslation()
   const s = t.settingsCards.storage
+  const labelClass = envVarSet
+    ? styles.radioOptionLabelDisabled
+    : styles.radioOptionLabel
+
   return (
     <Card data-testid="storage-backend-card">
       <CardHeader
         title={
           <h3 className={styles.cardTitleWithIcon}>
-            <MaterialIcon name="cloud_upload" size={24} aria-hidden="true" />
+            <MaterialIcon
+              name="cloud_upload"
+              size={24}
+              aria-hidden="true"
+            />
             {s.title}
           </h3>
         }
-        subheader={<p className={styles.cardDescription}>{s.description}</p>}
+        subheader={
+          <p className={styles.cardDescription}>{s.description}</p>
+        }
       />
       <CardContent>
         <div className={styles.contentStack}>
           {envVarSet && (
-            <Alert severity="info" className={styles.alertAccent} data-testid="env-var-alert" role="status">
-              <AlertDescription className={styles.alertAccentDescription}>
-                <MaterialIcon name="cloud_done" size={16} aria-hidden="true" />
+            <Alert
+              severity="info"
+              className={styles.alertAccent}
+              data-testid="env-var-alert"
+              role="status"
+            >
+              <AlertDescription
+                className={styles.alertAccentDescription}
+              >
+                <MaterialIcon
+                  name="cloud_done"
+                  size={16}
+                  aria-hidden="true"
+                />
                 <span>
-                  {s.envVarAlertBefore} <code className={styles.envVarCode}>NEXT_PUBLIC_DBAL_API_URL</code> {s.envVarAlertAfter}
+                  {s.envVarAlertBefore}{' '}
+                  <code className={styles.envVarCode}>
+                    NEXT_PUBLIC_DBAL_API_URL
+                  </code>{' '}
+                  {s.envVarAlertAfter}
                 </span>
               </AlertDescription>
             </Alert>
           )}
 
           <RadioGroup value={storageBackend}>
-            <div className={styles.radioOptionRow} data-testid="storage-option-indexeddb">
-              <FormControlLabel
+            <div
+              className={styles.radioOptionRow}
+              data-testid="storage-option-indexeddb"
+              onClick={() =>
+                !envVarSet && onStorageBackendChange('indexeddb')
+              }
+            >
+              <StorageOption
+                id="storage-indexeddb"
                 value="indexeddb"
-                control={
-                  <Radio
-                    id="storage-indexeddb"
-                    value="indexeddb"
-                    checked={storageBackend === 'indexeddb'}
-                    onChange={() => onStorageBackendChange('indexeddb')}
-                    disabled={envVarSet}
-                  />
-                }
-                label={
-                  <div className={styles.radioOptionContent}>
-                    <FormLabel
-                      htmlFor="storage-indexeddb"
-                      className={envVarSet ? styles.radioOptionLabelDisabled : styles.radioOptionLabel}
-                    >
-                      {s.indexedDBLabel}
-                    </FormLabel>
-                    <p className={styles.radioOptionDesc}>
-                      {s.indexedDBDesc}
-                    </p>
-                  </div>
-                }
+                checked={storageBackend === 'indexeddb'}
+                disabled={envVarSet}
+                label={s.indexedDBLabel}
+                desc={s.indexedDBDesc}
+                labelClass={labelClass}
               />
             </div>
 
-            <div className={styles.radioOptionRowMarginTop} data-testid="storage-option-dbal">
-              <FormControlLabel
+            <div
+              className={styles.radioOptionRowMarginTop}
+              data-testid="storage-option-dbal"
+              onClick={() =>
+                !envVarSet && onStorageBackendChange('dbal')
+              }
+            >
+              <StorageOption
+                id="storage-dbal"
                 value="dbal"
-                control={
-                  <Radio
-                    id="storage-dbal"
-                    value="dbal"
-                    checked={storageBackend === 'dbal'}
-                    onChange={() => onStorageBackendChange('dbal')}
-                    disabled={envVarSet}
-                  />
-                }
+                checked={storageBackend === 'dbal'}
+                disabled={envVarSet}
                 label={
-                  <div className={styles.radioOptionContent}>
-                    <FormLabel
-                      htmlFor="storage-dbal"
-                      className={envVarSet ? styles.radioOptionLabelDisabled : styles.radioOptionLabel}
-                    >
-                      {s.dbalLabel ?? 'DBAL Backend (Remote Server)'}
-                    </FormLabel>
-                    <p className={styles.radioOptionDesc}>
-                      {s.dbalDesc ?? 'Store snippets on a DBAL backend server. Requires NEXT_PUBLIC_DBAL_API_URL to be set.'}
-                    </p>
-                  </div>
+                  s.dbalLabel ?? 'DBAL Backend (Remote Server)'
                 }
+                desc={
+                  s.dbalDesc ??
+                  'Store snippets on a DBAL backend server.'
+                }
+                labelClass={labelClass}
               />
             </div>
           </RadioGroup>
@@ -110,7 +125,11 @@ export function StorageBackendCard({
               data-testid="save-storage-settings-btn"
               aria-label="Save storage configuration"
             >
-              <MaterialIcon name="storage" size={16} aria-hidden="true" />
+              <MaterialIcon
+                name="storage"
+                size={16}
+                aria-hidden="true"
+              />
               {s.save}
             </Button>
           </div>

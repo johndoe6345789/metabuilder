@@ -17,11 +17,9 @@ interface ReactPreviewProps {
 
 export function ReactPreview({ code, language, functionName, inputParameters }: ReactPreviewProps) {
   const { Component, error } = useMemo(() => {
-    const isReactCode = ['JSX', 'TSX', 'JavaScript', 'TypeScript'].includes(language)
-    if (!isReactCode) {
+    if (!['JSX', 'TSX', 'JavaScript', 'TypeScript'].includes(language)) {
       return { Component: null, error: null }
     }
-
     try {
       const transformedComponent = transformReactCode(code, functionName)
       return { Component: transformedComponent, error: null }

@@ -5,41 +5,37 @@
 
 'use client';
 
-import React, { useState, useMemo } from 'react';
-import Link from 'next/link';
-import { Breadcrumbs, Button, Box, Typography } from '@metabuilder/fakemui';
-import { templateService, type TemplateCategory, type TemplateFilters } from '@metabuilder/services';
-import { TemplateCard, TemplateListItem } from '@metabuilder/components/cards';
-import { TemplateFilters as Filters, TemplateSidebar } from '@metabuilder/components/navigation';
+import React from 'react';
+import {
+  Breadcrumbs,
+  Box,
+  Typography,
+} from '@metabuilder/fakemui';
+import {
+  TemplateFilters as Filters,
+  TemplateSidebar,
+} from '@metabuilder/components/navigation';
 import styles from '@/../../../scss/atoms/templates.module.scss';
+import { useTemplatesPage } from './hooks/useTemplatesPage';
+import TemplatesStats from './TemplatesStats';
+import TemplatesContent from './TemplatesContent';
 
 export default function TemplatesPage() {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<TemplateCategory | 'all'>('all');
-  const [selectedDifficulty, setSelectedDifficulty] = useState<'beginner' | 'intermediate' | 'advanced' | 'all'>('all');
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-
-  // Get all templates
-  const allTemplates = templateService.getAllTemplates();
-  const categories = templateService.getCategories();
-  const stats = templateService.getStats();
-
-  // Filter templates
-  const filteredTemplates = useMemo(() => {
-    const filters: TemplateFilters = {
-      searchQuery: searchQuery.length > 0 ? searchQuery : undefined,
-    };
-
-    if (selectedCategory !== 'all') {
-      filters.category = selectedCategory;
-    }
-
-    if (selectedDifficulty !== 'all') {
-      filters.difficulty = selectedDifficulty as any;
-    }
-
-    return templateService.searchTemplates(filters);
-  }, [searchQuery, selectedCategory, selectedDifficulty]);
+  const {
+    searchQuery,
+    setSearchQuery,
+    selectedCategory,
+    setSelectedCategory,
+    selectedDifficulty,
+    setSelectedDifficulty,
+    viewMode,
+    setViewMode,
+    allTemplates,
+    categories,
+    stats,
+    filteredTemplates,
+    resetFilters,
+  } = useTemplatesPage();
 
   return (
     <Box className={styles.templatesPage}>
@@ -50,31 +46,26 @@ export default function TemplatesPage() {
         ]}
       />
 
-      {/* Header */}
       <Box className={styles.header}>
         <Box className={styles.headerContent}>
-          <Typography variant="h3">Project Templates</Typography>
-          <Typography variant="body1" color="text.secondary">
-            Start with pre-built workflows and accelerate your projects
+          <Typography variant="h3">
+            Project Templates
           </Typography>
-          <Box className={styles.stats}>
-            <Box className={styles.statItem}>
-              <Typography variant="caption">Templates</Typography>
-              <Typography variant="h5">{stats.totalTemplates}</Typography>
-            </Box>
-            <Box className={styles.statItem}>
-              <Typography variant="caption">Downloads</Typography>
-              <Typography variant="h5">{stats.totalDownloads.toLocaleString()}</Typography>
-            </Box>
-            <Box className={styles.statItem}>
-              <Typography variant="caption">Avg Rating</Typography>
-              <Typography variant="h5">⭐ {stats.averageRating.toFixed(1)}</Typography>
-            </Box>
-          </Box>
+          <Typography
+            variant="body1"
+            color="text.secondary"
+          >
+            Start with pre-built workflows and accelerate
+            your projects
+          </Typography>
+          <TemplatesStats
+            totalTemplates={stats.totalTemplates}
+            totalDownloads={stats.totalDownloads}
+            averageRating={stats.averageRating}
+          />
         </Box>
       </Box>
 
-      {/* Filters */}
       <Filters
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
@@ -85,7 +76,6 @@ export default function TemplatesPage() {
       />
 
       <Box className={styles.mainLayout}>
-        {/* Sidebar */}
         <TemplateSidebar
           categories={categories}
           selectedCategory={selectedCategory}
@@ -93,53 +83,12 @@ export default function TemplatesPage() {
           totalTemplates={allTemplates.length}
         />
 
-        {/* Main Content */}
-        <Box component="main" role="main" className={styles.mainContent}>
-          <Typography variant="body2" color="text.secondary" className={styles.resultsCount}>
-            Showing {filteredTemplates.length} of {allTemplates.length} templates
-          </Typography>
-
-          {/* Empty State */}
-          {filteredTemplates.length === 0 ? (
-            <Box className={styles.emptyState}>
-              <Typography variant="h1" className={styles.emptyIcon}>🔍</Typography>
-              <Typography variant="h5">No templates found</Typography>
-              <Typography variant="body1" color="text.secondary">
-                Try adjusting your filters or search query
-              </Typography>
-              <Button
-                variant="contained"
-                onClick={() => {
-                  setSearchQuery('');
-                  setSelectedCategory('all');
-                  setSelectedDifficulty('all');
-                }}
-              >
-                Reset Filters
-              </Button>
-            </Box>
-          ) : (
-            <>
-              {/* Grid View */}
-              {viewMode === 'grid' && (
-                <Box className={styles.gridView} role="list">
-                  {filteredTemplates.map((template) => (
-                    <TemplateCard key={template.id} template={template} />
-                  ))}
-                </Box>
-              )}
-
-              {/* List View */}
-              {viewMode === 'list' && (
-                <Box className={styles.listView} role="list">
-                  {filteredTemplates.map((template) => (
-                    <TemplateListItem key={template.id} template={template} />
-                  ))}
-                </Box>
-              )}
-            </>
-          )}
-        </Box>
+        <TemplatesContent
+          filteredTemplates={filteredTemplates}
+          allTemplatesCount={allTemplates.length}
+          viewMode={viewMode}
+          onResetFilters={resetFilters}
+        />
       </Box>
     </Box>
   );

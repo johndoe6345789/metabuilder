@@ -1,10 +1,14 @@
 'use client';
 
-import { useState } from 'react';
-import { getComponentTree, getDataTypes, getFeatureById } from '@/utils/featureConfig';
+import {
+  getComponentTree,
+  getDataTypes,
+  getFeatureById,
+} from '@/utils/featureConfig';
 import ComponentTreeRenderer from '@/utils/componentTreeRenderer';
 import CreateTableDialog from './CreateTableDialog';
 import DropTableDialog from './DropTableDialog';
+import { useTableManager } from './hooks/useTableManager';
 
 type TableManagerTabProps = {
   tables: Array<{ table_name: string }>;
@@ -17,41 +21,35 @@ export default function TableManagerTab({
   onCreateTable,
   onDropTable,
 }: TableManagerTabProps) {
-  const [openCreateDialog, setOpenCreateDialog] = useState(false);
-  const [openDropDialog, setOpenDropDialog] = useState(false);
-
-  // Get feature configuration from JSON
   const feature = getFeatureById('table-management');
   const dataTypes = getDataTypes().map(dt => dt.name);
-
-  // Check if actions are enabled
   const canCreate = feature?.ui.actions.includes('create');
   const canDelete = feature?.ui.actions.includes('delete');
-
-  // Get component tree from features.json
   const tree = getComponentTree('TableManagerTab');
 
-  // Prepare data for the component tree
-  const data = {
-    feature,
-    tables,
-    canCreate,
-    canDelete,
-  };
+  const {
+    openCreateDialog,
+    setOpenCreateDialog,
+    openDropDialog,
+    setOpenDropDialog,
+    handlers,
+  } = useTableManager();
 
-  // Define handlers for the component tree
-  const handlers = {
-    openCreateDialog: () => setOpenCreateDialog(true),
-    openDropDialog: () => setOpenDropDialog(true),
-  };
+  const data = { feature, tables, canCreate, canDelete };
 
   return (
     <>
-      {tree ? (
-        <ComponentTreeRenderer tree={tree} data={data} handlers={handlers} />
-      ) : (
-        <div>Error: Component tree not found</div>
-      )}
+      {tree
+        ? (
+            <ComponentTreeRenderer
+              tree={tree}
+              data={data}
+              handlers={handlers}
+            />
+          )
+        : (
+            <div>Error: Component tree not found</div>
+          )}
 
       <CreateTableDialog
         open={openCreateDialog}

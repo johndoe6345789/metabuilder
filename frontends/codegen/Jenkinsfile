@@ -80,11 +80,11 @@ pipeline {
             }
         }
 
-        stage('Test') {
+        stage('Test Coverage') {
             steps {
                 script {
                     nodejs(nodeJSInstallationName: "Node ${NODE_VERSION}") {
-                        sh 'npm test || echo "No test script found"'
+                        sh 'npm run test:coverage'
                     }
                 }
             }
@@ -92,13 +92,52 @@ pipeline {
                 always {
                     junit testResults: '**/junit.xml', allowEmptyResults: true
                     publishHTML([
-                        allowMissing: true,
+                        allowMissing: false,
                         alwaysLinkToLastBuild: true,
                         keepAll: true,
                         reportDir: 'coverage',
                         reportFiles: 'index.html',
                         reportName: 'Coverage Report'
                     ])
+                    archiveArtifacts(
+                        artifacts: 'coverage/coverage-summary.json',
+                        allowEmptyArchive: true,
+                        fingerprint: true
+                    )
+                }
+            }
+        }
+
+        stage('Check Coverage Threshold') {
+            steps {
+                script {
+                    nodejs(nodeJSInstallationName: "Node ${NODE_VERSION}") {
+                        sh '''
+                            node -e "
+                            const fs = require('fs');
+                            const summary = 'coverage/coverage-summary.json';
+                            if (!fs.existsSync(summary)) {
+                                console.error('ERROR: coverage-summary.json not found');
+                                process.exit(1);
+                            }
+                            const data = JSON.parse(fs.readFileSync(summary));
+                            const total = data.total;
+                            const threshold = 80;
+                            const metrics = ['lines', 'functions', 'branches', 'statements'];
+                            const failed = [];
+                            metrics.forEach(m => {
+                                const pct = total[m].pct;
+                                console.log(m + ': ' + pct + '%');
+                                if (pct < threshold) failed.push(m + ' (' + pct + '% < ' + threshold + '%)');
+                            });
+                            if (failed.length > 0) {
+                                console.error('COVERAGE BELOW 80% THRESHOLD: ' + failed.join(', '));
+                                process.exit(1);
+                            }
+                            console.log('All coverage metrics >= 80% — PASSED');
+                            "
+                        '''
+                    }
                 }
             }
         }

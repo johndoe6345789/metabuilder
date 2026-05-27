@@ -1,7 +1,7 @@
-import { useState } from 'react'
 import { Button, Menu, MenuItem, MaterialIcon } from '@metabuilder/components/fakemui'
 import { Namespace } from '@/lib/types'
 import { useTranslation } from '@/hooks/useTranslation'
+import { useMenuAnchor } from './hooks/useMenuAnchor'
 import styles from './selection-controls.module.scss'
 
 interface SelectionControlsProps {
@@ -22,7 +22,7 @@ export function SelectionControls({
   onBulkMove,
 }: SelectionControlsProps) {
   const t = useTranslation()
-  const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null)
+  const { menuAnchor, openMenu, closeMenu } = useMenuAnchor()
   const isAllSelected = selectedIds.length === totalFilteredCount
 
   return (
@@ -45,7 +45,7 @@ export function SelectionControls({
             variant="outlined"
             size="sm"
             className={styles.moveBtn}
-            onClick={(e) => setMenuAnchor(e.currentTarget)}
+            onClick={(e) => openMenu(e.currentTarget)}
             data-testid="bulk-move-menu-trigger"
             aria-label={t.selectionControls.moveToAria}
             aria-haspopup="menu"
@@ -56,13 +56,13 @@ export function SelectionControls({
           <Menu
             open={Boolean(menuAnchor)}
             anchorEl={menuAnchor}
-            onClose={() => setMenuAnchor(null)}
+            onClose={closeMenu}
             data-testid="bulk-move-menu"
           >
             {namespaces.map((namespace) => (
               <MenuItem
                 key={namespace.id}
-                onClick={() => { onBulkMove(namespace.id); setMenuAnchor(null) }}
+                onClick={() => { onBulkMove(namespace.id); closeMenu() }}
                 disabled={namespace.id === currentNamespaceId}
                 data-testid={`bulk-move-to-namespace-${namespace.id}`}
               >

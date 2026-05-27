@@ -79,35 +79,3 @@ export interface ProfileComment extends Comment {
   profileUserId: string
   tenantId?: string
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

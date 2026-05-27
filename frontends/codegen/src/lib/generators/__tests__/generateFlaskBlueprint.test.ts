@@ -71,3 +71,137 @@ describe('generateFlaskBlueprint identifier sanitization', () => {
     })
   })
 })
+
+describe('generateFlaskBlueprint additional coverage', () => {
+  it('generates correct imports', () => {
+    const bp: FlaskBlueprint = {
+      id: 'b1',
+      name: 'Posts',
+      urlPrefix: '/posts',
+      description: 'Post management',
+      endpoints: [],
+    }
+    const code = generateFlaskBlueprint(bp)
+    expect(code).toContain('from flask import Blueprint, request, jsonify')
+    expect(code).toContain('from typing import Dict, Any')
+  })
+
+  it('includes authentication comment for endpoints with authentication', () => {
+    const bp: FlaskBlueprint = {
+      id: 'b1',
+      name: 'Secure',
+      urlPrefix: '/secure',
+      description: 'Secured',
+      endpoints: [
+        {
+          id: 'e1',
+          name: 'protected',
+          description: 'Protected endpoint',
+          method: 'GET',
+          path: '/data',
+          authentication: true,
+        },
+      ],
+    }
+    const code = generateFlaskBlueprint(bp)
+    expect(code).toContain('# TODO: Add authentication check')
+  })
+
+  it('generates request.get_json() for POST endpoints', () => {
+    const bp: FlaskBlueprint = {
+      id: 'b1',
+      name: 'Create',
+      urlPrefix: '/items',
+      description: 'Create items',
+      endpoints: [
+        {
+          id: 'e1',
+          name: 'create item',
+          description: 'Create an item',
+          method: 'POST',
+          path: '/create',
+        },
+      ],
+    }
+    const code = generateFlaskBlueprint(bp)
+    expect(code).toContain('data = request.get_json()')
+    expect(code).toContain("return jsonify({'error': 'No data provided'}), 400")
+  })
+
+  it('generates request.get_json() for PUT and PATCH endpoints', () => {
+    const bp: FlaskBlueprint = {
+      id: 'b1',
+      name: 'Update',
+      urlPrefix: '/items',
+      description: 'Update items',
+      endpoints: [
+        { id: 'e1', name: 'update', description: '', method: 'PUT', path: '/update' },
+        { id: 'e2', name: 'patch', description: '', method: 'PATCH', path: '/patch' },
+      ],
+    }
+    const code = generateFlaskBlueprint(bp)
+    expect(code).toContain('data = request.get_json()')
+  })
+
+  it('handles required query params', () => {
+    const bp: FlaskBlueprint = {
+      id: 'b1',
+      name: 'Search',
+      urlPrefix: '/search',
+      description: 'Search',
+      endpoints: [
+        {
+          id: 'e1',
+          name: 'search items',
+          description: 'Search items by query',
+          method: 'GET',
+          path: '/items',
+          queryParams: [
+            { id: 'p1', name: 'query', type: 'string', required: true },
+          ],
+        },
+      ],
+    }
+    const code = generateFlaskBlueprint(bp)
+    expect(code).toContain("query = request.args.get('query')")
+    expect(code).toContain("if query is None:")
+    expect(code).toContain("return jsonify({'error': 'query is required'}), 400")
+  })
+
+  it('handles optional query params with defaults', () => {
+    const bp: FlaskBlueprint = {
+      id: 'b1',
+      name: 'List',
+      urlPrefix: '/list',
+      description: 'List',
+      endpoints: [
+        {
+          id: 'e1',
+          name: 'list items',
+          description: 'List items',
+          method: 'GET',
+          path: '/items',
+          queryParams: [
+            { id: 'p1', name: 'page', type: 'number', required: false, defaultValue: '1' },
+          ],
+        },
+      ],
+    }
+    const code = generateFlaskBlueprint(bp)
+    expect(code).toContain("page = request.args.get('page', 1)")
+  })
+
+  it('returns 200 JSON response for each endpoint', () => {
+    const bp: FlaskBlueprint = {
+      id: 'b1',
+      name: 'Health',
+      urlPrefix: '/health',
+      description: 'Health check',
+      endpoints: [
+        { id: 'e1', name: 'healthcheck', description: 'Check health', method: 'GET', path: '/check' },
+      ],
+    }
+    const code = generateFlaskBlueprint(bp)
+    expect(code).toContain('return jsonify(result), 200')
+  })
+})

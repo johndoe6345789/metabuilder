@@ -1,0 +1,28 @@
+{
+  "colors": {
+    "aluminum": "#d0d0d0",
+    "castAluminum": "#a0a0a0",
+    "steel": "#6a6a6a",
+    "blueAnodized": "#4a90d9",
+    "redAnodized": "#d94a4a",
+    "blackPlastic": "#2a2a2a",
+    "copper": "#b87333",
+    "titanium": "#8a8a8a",
+    "brass": "#d4a84a",
+    "spring": "#d94a4a",
+    "greenSpring": "#4ad94a"
+  },
+  "names": {
+    "aluminum": "Aluminum",
+    "castAluminum": "Cast Aluminum",
+    "steel": "Steel",
+    "blueAnodized": "Anodized (Blue)",
+    "redAnodized": "Anodized (Red)",
+    "blackPlastic": "Composite",
+    "copper": "Copper",
+    "titanium": "Titanium",
+    "brass": "Brass",
+    "spring": "Spring Steel",
+    "greenSpring": "Spring (Soft)"
+  }
+}

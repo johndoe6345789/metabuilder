@@ -24,7 +24,6 @@ export function usePythonTerminal() {
   const [isRunning, setIsRunning] = useState(false)
   const [inputValue, setInputValue] = useState('')
   const [waitingForInput, setWaitingForInput] = useState(false)
-
   const sessionIdRef = useRef<string | null>(null)
   const offsetRef = useRef(0)
   const pollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -32,12 +31,8 @@ export function usePythonTerminal() {
   function addLine(type: TerminalLine['type'], content: string) {
     setLines((prev) => [...prev, { type, content, id: `${Date.now()}-${Math.random()}` }])
   }
-
   function stopPolling() {
-    if (pollTimerRef.current) {
-      clearTimeout(pollTimerRef.current)
-      pollTimerRef.current = null
-    }
+    if (pollTimerRef.current) { clearTimeout(pollTimerRef.current); pollTimerRef.current = null }
   }
 
   async function poll() {
@@ -67,13 +62,8 @@ export function usePythonTerminal() {
   }
 
   const handleRun = async (code: string) => {
-    stopPolling()
-    setLines([])
-    setWaitingForInput(false)
-    setInputValue('')
-    offsetRef.current = 0
-    sessionIdRef.current = null
-    setIsRunning(true)
+    stopPolling(); setLines([]); setWaitingForInput(false); setInputValue('')
+    offsetRef.current = 0; sessionIdRef.current = null; setIsRunning(true)
 
     try {
       const sid = await startInteractiveSession({ language: 'python', files: [{ name: 'main.py', content: code }] })
@@ -90,9 +80,7 @@ export function usePythonTerminal() {
     const sid = sessionIdRef.current
     if (!waitingForInput || !sid) return
 
-    const value = inputValue
-    setInputValue('')
-    setWaitingForInput(false)
+    const value = inputValue; setInputValue(''); setWaitingForInput(false)
 
     try {
       await sendSessionInput(sid, value)
@@ -101,14 +89,5 @@ export function usePythonTerminal() {
     }
   }
 
-  return {
-    lines,
-    isRunning,
-    isInitializing: false,
-    inputValue,
-    waitingForInput,
-    setInputValue,
-    handleInputSubmit,
-    handleRun,
-  }
+  return { lines, isRunning, isInitializing: false, inputValue, waitingForInput, setInputValue, handleInputSubmit, handleRun }
 }

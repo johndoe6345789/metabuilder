@@ -15,7 +15,9 @@ interface DatabaseStatsCardProps {
   formatBytes: (bytes: number) => string
 }
 
-export function DatabaseStatsCard({ loading, stats, formatBytes }: DatabaseStatsCardProps) {
+export function DatabaseStatsCard({
+  loading, stats, formatBytes,
+}: DatabaseStatsCardProps) {
   const t = useTranslation()
   const s = t.settingsCards.stats
   return (
@@ -27,13 +29,24 @@ export function DatabaseStatsCard({ loading, stats, formatBytes }: DatabaseStats
             {s.title}
           </h3>
         }
-        subheader={<p className={styles.cardDescription}>{s.description}</p>}
+        subheader={
+          <p className={styles.cardDescription}>{s.description}</p>
+        }
       />
       <CardContent>
         {loading ? (
-          <p className={styles.textMuted} data-testid="stats-loading" role="status" aria-busy="true">{s.loading}</p>
+          <p
+            className={styles.textMuted}
+            data-testid="stats-loading"
+            role="status"
+            aria-busy="true"
+          >{s.loading}</p>
         ) : stats ? (
-          <div className={styles.statsContainer} role="region" aria-label="Database statistics">
+          <div
+            className={styles.statsContainer}
+            role="region"
+            aria-label="Database statistics"
+          >
             <div className={styles.statRow} data-testid="stat-snippets">
               <span className={styles.statLabel}>{s.snippets}</span>
               <span className={styles.statValue}>{stats.snippetCount}</span>
@@ -46,13 +59,22 @@ export function DatabaseStatsCard({ loading, stats, formatBytes }: DatabaseStats
               <span className={styles.statLabel}>{s.storageType}</span>
               <span className={styles.statValue}>{stats.storageType}</span>
             </div>
-            <div className={styles.statRowLast} data-testid="stat-database-size">
+            <div
+              className={styles.statRowLast}
+              data-testid="stat-database-size"
+            >
               <span className={styles.statLabel}>{s.databaseSize}</span>
-              <span className={styles.statValue}>{formatBytes(stats.databaseSize)}</span>
+              <span className={styles.statValue}>
+                {formatBytes(stats.databaseSize)}
+              </span>
             </div>
           </div>
         ) : (
-          <p className={styles.textDestructive} data-testid="stats-error" role="alert">{s.error}</p>
+          <p
+            className={styles.textDestructive}
+            data-testid="stats-error"
+            role="alert"
+          >{s.error}</p>
         )}
       </CardContent>
     </Card>

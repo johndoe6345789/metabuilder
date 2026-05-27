@@ -81,10 +81,9 @@ function renderBlock(block: Block, idx: number): ReactNode {
 }
 
 export function MarkdownRenderer({ content, animate = true }: MarkdownRendererProps) {
-  const blocks = parseBlocks(content)
   const inner = (
     <div className={styles.card} data-testid="markdown-renderer" role="region" aria-label="Markdown content">
-      {blocks.map((b, i) => renderBlock(b, i))}
+      {parseBlocks(content).map((b, i) => renderBlock(b, i))}
     </div>
   )
   if (!animate) return inner

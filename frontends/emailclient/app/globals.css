@@ -101,6 +101,11 @@
   --mat-sys-motion-duration-medium2: 300ms;
   --mat-sys-motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
   --mat-sys-motion-easing-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
+
+  /* State layer opacities (M3 spec) */
+  --mat-sys-hover-state-layer-opacity: 0.08;
+  --mat-sys-focus-state-layer-opacity: 0.12;
+  --mat-sys-pressed-state-layer-opacity: 0.12;
 }
 
 /* ============================================ */
@@ -115,6 +120,7 @@
     --mat-sys-secondary: #ccc2dc;
     --mat-sys-on-secondary: #332d41;
     --mat-sys-secondary-container: #4a4458;
+    --mat-sys-on-secondary-container: #ccc2dc;
     --mat-sys-error: #f2b8b5;
     --mat-sys-on-error: #601410;
     --mat-sys-surface: #1e1e2e;
@@ -147,6 +153,7 @@
   --mat-sys-secondary: #ccc2dc;
   --mat-sys-on-secondary: #332d41;
   --mat-sys-secondary-container: #4a4458;
+  --mat-sys-on-secondary-container: #ccc2dc;
   --mat-sys-error: #f2b8b5;
   --mat-sys-on-error: #601410;
   --mat-sys-surface: #1e1e2e;
@@ -267,7 +274,7 @@ input, textarea, select {
   background-color: var(--mat-sys-surface);
   flex-shrink: 0;
   border-right: 1px solid var(--mat-sys-outline-variant);
-  padding-top: 8px;
+  padding-top: 4px;
 }
 
 .mailbox-main {
@@ -289,23 +296,23 @@ input, textarea, select {
 /* Folder Navigation (Gmail sidebar)            */
 /* ============================================ */
 .folder-navigation {
-  padding: 0 12px;
+  padding: 0 8px;
 }
 
 .folder-nav-list {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
 }
 
 .folder-nav-item {
   display: flex !important;
   align-items: center;
   gap: 16px;
-  padding: 0 24px 0 12px !important;
+  padding: 0 16px 0 16px !important;
   height: 40px;
   min-height: 40px !important;
-  border-radius: 0 var(--mat-sys-corner-full) var(--mat-sys-corner-full) 0 !important;
+  border-radius: var(--mat-sys-corner-full) !important;
   text-align: left !important;
   justify-content: flex-start !important;
   font-size: 0.875rem !important;
@@ -317,8 +324,25 @@ input, textarea, select {
   transition: background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
 }
 
-.folder-nav-item:hover {
-  background-color: var(--mat-sys-surface-container-high) !important;
+.folder-nav-list .folder-nav-item:hover {
+  background-color: var(--mat-sys-secondary-container) !important;
+  color: var(--mat-sys-on-secondary-container) !important;
+}
+
+.folder-nav-list .folder-nav-item:hover .folder-label,
+.folder-nav-list .folder-nav-item:hover .folder-icon,
+.folder-nav-list .folder-nav-item:hover .unread-count {
+  color: var(--mat-sys-on-secondary-container) !important;
+}
+
+.folder-nav-list .folder-nav-item[class*="unelevated"]:hover {
+  background-color: var(--mat-sys-primary-container) !important;
+  color: var(--mat-sys-on-primary-container) !important;
+}
+
+.folder-nav-list .folder-nav-item[class*="unelevated"]:hover .folder-label,
+.folder-nav-list .folder-nav-item[class*="unelevated"]:hover .folder-icon {
+  color: var(--mat-sys-on-primary-container) !important;
 }
 
 .folder-nav-item .folder-icon {
@@ -350,16 +374,17 @@ input, textarea, select {
   margin-left: auto;
 }
 
-/* Active folder — filled tonal */
-.folder-nav-item[class*="primary"],
+/* Active folder — unelevated variant = selected */
+.folder-nav-item[class*="unelevated"],
 .folder-nav-item.active {
-  background-color: var(--mat-sys-secondary-container) !important;
-  color: var(--mat-sys-on-secondary-container) !important;
+  background-color: var(--mat-sys-primary-container) !important;
+  color: var(--mat-sys-on-primary-container) !important;
   font-weight: 700 !important;
 }
 
-.folder-nav-item[class*="primary"] .unread-count {
-  color: var(--mat-sys-on-secondary-container);
+.folder-nav-item[class*="unelevated"] .unread-count {
+  background-color: var(--mat-sys-on-primary-container);
+  color: var(--mat-sys-primary-container);
 }
 
 /* ============================================ */
@@ -368,15 +393,16 @@ input, textarea, select {
 .mailbox-header-bar {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 16px;
   width: 100%;
-  padding: 0 8px;
+  padding: 0 16px;
+  min-height: 64px;
 }
 
 .mailbox-header-left {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
   flex-shrink: 0;
   min-width: 200px;
 }
@@ -427,7 +453,7 @@ input, textarea, select {
 
 .mailbox-search-input {
   width: 100%;
-  padding: 8px 16px 8px 44px;
+  padding: 10px 16px 10px 44px;
   border-radius: var(--mat-sys-corner-extra-large);
   border: none;
   background-color: var(--mat-sys-surface-container-high);
@@ -450,14 +476,14 @@ input, textarea, select {
 .mailbox-header-actions {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 4px;
   flex-shrink: 0;
 }
 
 .mailbox-header-icon-btn {
   color: var(--mat-sys-on-surface-variant) !important;
-  width: 36px !important;
-  height: 36px !important;
+  width: 40px !important;
+  height: 40px !important;
   border-radius: var(--mat-sys-corner-full) !important;
   transition: background-color var(--mat-sys-motion-duration-short4) !important;
 }
@@ -534,7 +560,7 @@ input, textarea, select {
 }
 
 .mailbox-sidebar-compose {
-  padding: 16px 12px;
+  padding: 12px 16px 16px;
 }
 
 /* ============================================ */
@@ -543,14 +569,14 @@ input, textarea, select {
 .email-detail {
   height: 100%;
   overflow-y: auto;
-  padding: 24px;
+  padding: 28px 32px;
 }
 
 .email-detail-toolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .email-detail-back {
@@ -564,10 +590,11 @@ input, textarea, select {
 
 .email-detail-body {
   margin-top: 24px;
-  font-size: 0.875rem;
-  line-height: 1.8;
+  font-size: 0.9375rem;
+  line-height: 1.75;
   white-space: pre-wrap;
   color: var(--mat-sys-on-surface);
+  max-width: 72ch;
 }
 
 .email-detail-reply-bar {
@@ -584,29 +611,38 @@ input, textarea, select {
 }
 
 /* ============================================ */
-/* Compose Button                               */
+/* Compose Button (M3 Extended FAB)             */
 /* ============================================ */
 .compose-btn {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  padding: 16px 24px;
+  gap: 10px;
+  padding: 14px 20px;
   border-radius: var(--mat-sys-corner-large);
   background-color: var(--mat-sys-primary-container);
   color: var(--mat-sys-on-primary-container);
   font-size: 0.875rem;
-  font-weight: 500;
-  letter-spacing: 0.01em;
+  font-weight: 600;
+  letter-spacing: 0.02em;
   box-shadow: var(--mat-sys-level2);
   transition: box-shadow var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard),
-              background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+              background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard),
+              transform var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
   cursor: pointer;
   border: none;
+  width: 100%;
+  justify-content: flex-start;
 }
 
 .compose-btn:hover {
   box-shadow: var(--mat-sys-level3);
-  background-color: color-mix(in srgb, var(--mat-sys-primary-container) 92%, var(--mat-sys-on-primary-container));
+  background-color: color-mix(in srgb, var(--mat-sys-primary-container) 88%, var(--mat-sys-on-primary-container));
+  transform: translateY(-1px);
+}
+
+.compose-btn:active {
+  transform: translateY(0);
+  box-shadow: var(--mat-sys-level1);
 }
 
 /* ============================================ */
@@ -615,33 +651,26 @@ input, textarea, select {
 .email-card {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  padding: 12px 16px;
+  gap: 4px;
+  padding: 16px 20px 16px 16px;
   cursor: pointer;
   border: none;
-  border-bottom: 1px solid var(--mat-sys-outline-variant);
-  border-radius: 0;
-  background-color: transparent;
-  transition: background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
-  box-shadow: none;
+  border-radius: var(--mat-sys-corner-medium);
+  background-color: var(--mat-sys-surface-container-low);
+  transition: background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard),
+              box-shadow var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
 }
 
 .email-card:hover {
-  background-color: var(--mat-sys-surface-container);
-  border-color: var(--mat-sys-surface-variant);
+  background-color: var(--mat-sys-surface-container-high);
 }
 
-/* Issue 1 — selected card distinct highlight */
 .email-card[aria-current="true"] {
   background-color: var(--mat-sys-secondary-container) !important;
-  border-left: 3px solid var(--mat-sys-primary);
-  padding-left: 13px;
 }
 
 .email-card--unread {
   background-color: var(--mat-sys-surface-container);
-  border-left: 3px solid var(--mat-sys-primary);
-  padding-left: 13px;
 }
 
 .email-card--unread .email-from,
@@ -649,15 +678,19 @@ input, textarea, select {
   font-weight: 700;
 }
 
+.email-card[aria-current="true"] .email-from,
+.email-card[aria-current="true"] .email-subject {
+  color: var(--mat-sys-on-secondary-container);
+}
+
 .email-card--read {
-  background-color: transparent;
-  opacity: 1;
+  background-color: var(--mat-sys-surface-container-low);
 }
 
 .email-card-header {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .email-from {
@@ -686,7 +719,8 @@ input, textarea, select {
   font-size: 0.875rem;
   font-weight: 500;
   color: var(--mat-sys-on-surface);
-  margin: 4px 0 0;
+  margin: 0;
+  padding-left: 28px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -700,11 +734,11 @@ input, textarea, select {
 .email-preview {
   font-size: 0.8125rem;
   color: var(--mat-sys-on-surface-variant);
-  margin-top: 2px;
+  margin-top: 0;
+  padding-left: 28px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  opacity: 0.8;
 }
 
 .email-date {
@@ -751,11 +785,12 @@ input, textarea, select {
 }
 
 .email-header h5 {
-  font-size: 1.375rem;
+  font-size: 1.5rem;
   font-weight: 400;
   color: var(--mat-sys-on-surface);
   margin-bottom: 16px;
-  line-height: 1.3;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
 }
 
 /* Issue 9 — email header metadata layout */
@@ -783,8 +818,9 @@ input, textarea, select {
 }
 
 .mailbox-thread-toolbar {
-  padding: 10px 16px;
-  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  padding: 12px 20px;
+  min-height: 48px;
+  border-bottom: none;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -800,6 +836,47 @@ input, textarea, select {
 .mailbox-thread-unread-label {
   font-size: 0.75rem !important;
   color: var(--mat-sys-on-surface-variant) !important;
+}
+
+/* ============================================ */
+/* Breadcrumb                                   */
+/* ============================================ */
+.mailbox-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mailbox-breadcrumb-home {
+  font-size: 0.8125rem;
+  color: var(--mat-sys-on-surface-variant);
+  font-weight: 400;
+}
+
+.mailbox-breadcrumb-sep {
+  font-size: 0.75rem;
+  color: var(--mat-sys-outline);
+  user-select: none;
+}
+
+.mailbox-breadcrumb-current {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--mat-sys-on-surface);
+  text-transform: capitalize;
+}
+
+.mailbox-breadcrumb-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--mat-sys-surface-container-high);
+  color: var(--mat-sys-on-surface-variant);
+  border-radius: var(--mat-sys-corner-full);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  padding: 1px 7px;
+  min-width: 20px;
 }
 
 .mailbox-empty-state {
@@ -825,10 +902,53 @@ input, textarea, select {
   display: flex;
   flex-direction: column;
   list-style: none;
+  gap: 8px;
+  padding: 10px;
 }
 
 .thread-list > div {
   list-style: none;
+}
+
+/* ============================================ */
+/* Read Checkbox (M3 styled)                    */
+/* ============================================ */
+.read-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--mat-sys-outline);
+  border-radius: 2px;
+  flex-shrink: 0;
+  cursor: pointer;
+  position: relative;
+  background: transparent;
+  align-self: center;
+  transition: background-color var(--mat-sys-motion-duration-short4),
+              border-color var(--mat-sys-motion-duration-short4);
+}
+
+.read-checkbox:hover {
+  border-color: var(--mat-sys-on-surface-variant);
+}
+
+.read-checkbox:checked {
+  background-color: var(--mat-sys-primary);
+  border-color: var(--mat-sys-primary);
+}
+
+.read-checkbox:checked::after {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 0px;
+  width: 5px;
+  height: 9px;
+  border: 2px solid var(--mat-sys-on-primary);
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg);
 }
 
 .no-emails {

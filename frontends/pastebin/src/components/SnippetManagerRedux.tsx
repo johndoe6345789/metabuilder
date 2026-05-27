@@ -11,107 +11,113 @@ import styles from '@/components/snippet-manager/snippet-manager.module.scss'
 const templates = templatesData as SnippetTemplate[]
 
 export function SnippetManagerRedux() {
-  const {
-    snippets,
-    filteredSnippets,
-    loading,
-    selectionMode,
-    selectedIds,
-    namespaces,
-    selectedNamespaceId,
-    searchQuery,
-    handleEditSnippet,
-    handleDeleteSnippet,
-    handleCopyCode,
-    handleViewSnippet,
-    handleMoveSnippet,
-    handleCreateNew,
-    handleCreateFromTemplate,
-    handleToggleSelectionMode,
-    handleToggleSnippetSelection,
-    handleSelectAll,
-    handleBulkMove,
-    handleNamespaceChange,
-    handleSearchChange,
-  } = useSnippetManager(templates)
-
-  const isInitialLoad = loading && snippets.length === 0
+  const vm = useSnippetManager(templates)
+  const isInitialLoad = vm.loading && vm.snippets.length === 0
 
   if (isInitialLoad) {
     return (
-      <div className={styles.loadingContainer} data-testid="snippet-manager-loading" role="status" aria-busy="true" aria-label="Loading snippets">
+      <div
+        className={styles.loadingContainer}
+        data-testid="snippet-manager-loading"
+        role="status"
+        aria-busy="true"
+        aria-label="Loading snippets"
+      >
         <p className={styles.loadingText}>Loading snippets...</p>
       </div>
     )
   }
 
-  if (!loading && snippets.length === 0) {
+  if (!vm.loading && vm.snippets.length === 0) {
     return (
       <>
-        <div className={styles.namespaceWrapper} data-testid="empty-state-namespace-selector">
+        <div
+          className={styles.namespaceWrapper}
+          data-testid="empty-state-namespace-selector"
+        >
           <NamespaceSelector
-            selectedNamespaceId={selectedNamespaceId}
-            onNamespaceChange={handleNamespaceChange}
+            selectedNamespaceId={vm.selectedNamespaceId}
+            onNamespaceChange={vm.handleNamespaceChange}
           />
         </div>
         <EmptyState
-          onCreateClick={handleCreateNew}
-          onCreateFromTemplate={handleCreateFromTemplate}
+          onCreateClick={vm.handleCreateNew}
+          onCreateFromTemplate={vm.handleCreateFromTemplate}
         />
       </>
     )
   }
 
   return (
-    <div className={styles.root} data-testid="snippet-manager-redux" aria-label="Snippet manager">
+    <div
+      className={styles.root}
+      data-testid="snippet-manager-redux"
+      aria-label="Snippet manager"
+    >
       <div className={styles.controlBar}>
         <NamespaceSelector
-          selectedNamespaceId={selectedNamespaceId}
-          onNamespaceChange={handleNamespaceChange}
+          selectedNamespaceId={vm.selectedNamespaceId}
+          onNamespaceChange={vm.handleNamespaceChange}
         />
-        {loading && <span className={styles.gridLoadingIndicator} role="status" aria-label="Loading snippets">Loading...</span>}
+        {vm.loading && (
+          <span
+            className={styles.gridLoadingIndicator}
+            role="status"
+            aria-label="Loading snippets"
+          >
+            Loading...
+          </span>
+        )}
         <SnippetToolbar
-          searchQuery={searchQuery}
-          onSearchChange={handleSearchChange}
-          selectionMode={selectionMode}
-          onToggleSelectionMode={handleToggleSelectionMode}
-          onCreateNew={handleCreateNew}
-          onCreateFromTemplate={handleCreateFromTemplate}
+          searchQuery={vm.searchQuery}
+          onSearchChange={vm.handleSearchChange}
+          selectionMode={vm.selectionMode}
+          onToggleSelectionMode={vm.handleToggleSelectionMode}
+          onCreateNew={vm.handleCreateNew}
+          onCreateFromTemplate={vm.handleCreateFromTemplate}
           templates={templates}
         />
       </div>
 
-      {selectionMode && (
+      {vm.selectionMode && (
         <SelectionControls
-          selectedIds={selectedIds}
-          totalFilteredCount={filteredSnippets.length}
-          namespaces={namespaces}
-          currentNamespaceId={selectedNamespaceId}
-          onSelectAll={handleSelectAll}
-          onBulkMove={handleBulkMove}
+          selectedIds={vm.selectedIds}
+          totalFilteredCount={vm.filteredSnippets.length}
+          namespaces={vm.namespaces}
+          currentNamespaceId={vm.selectedNamespaceId}
+          onSelectAll={vm.handleSelectAll}
+          onBulkMove={vm.handleBulkMove}
         />
       )}
 
-      {filteredSnippets.length === 0 && searchQuery && (
-        <div className={styles.noResultsContainer} data-testid="no-results-message" role="status">
-          <p className={styles.noResultsText}>No snippets found matching &ldquo;{searchQuery}&rdquo;</p>
+      {vm.filteredSnippets.length === 0 && vm.searchQuery && (
+        <div
+          className={styles.noResultsContainer}
+          data-testid="no-results-message"
+          role="status"
+        >
+          <p className={styles.noResultsText}>
+            No snippets found matching &ldquo;{vm.searchQuery}&rdquo;
+          </p>
         </div>
       )}
 
-      <div className={`${styles.gridWrapper}${loading ? ` ${styles.gridFading}` : ''}`} aria-busy={loading}>
+      <div
+        className={`${styles.gridWrapper}${vm.loading ? ` ${styles.gridFading}` : ''}`}
+        aria-busy={vm.loading}
+      >
         <SnippetGrid
-          snippets={filteredSnippets}
-          onView={handleViewSnippet}
-          onEdit={handleEditSnippet}
-          onDelete={handleDeleteSnippet}
-          onCopy={handleCopyCode}
-          onMove={handleMoveSnippet}
-          selectionMode={selectionMode}
-          selectedIds={selectedIds}
-          onToggleSelect={handleToggleSnippetSelection}
+          snippets={vm.filteredSnippets}
+          onView={vm.handleViewSnippet}
+          onEdit={vm.handleEditSnippet}
+          onDelete={vm.handleDeleteSnippet}
+          onCopy={vm.handleCopyCode}
+          onMove={vm.handleMoveSnippet}
+          selectionMode={vm.selectionMode}
+          selectedIds={vm.selectedIds}
+          onToggleSelect={vm.handleToggleSnippetSelection}
         />
       </div>
-
     </div>
   )
 }

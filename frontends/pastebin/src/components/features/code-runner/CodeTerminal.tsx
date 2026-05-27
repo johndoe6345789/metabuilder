@@ -1,16 +1,22 @@
 'use client'
 
-import { useRef, useEffect } from 'react'
 import { TerminalOutput } from '@/components/features/python-runner/TerminalOutput'
 import { TerminalInput } from '@/components/features/python-runner/TerminalInput'
 import { type SnippetFile } from '@/lib/types'
 import { type UseCodeTerminalReturn } from '@/hooks/useCodeTerminal'
 import { appConfig } from '@/lib/config'
+import { useTerminalScroll } from './hooks/useTerminalScroll'
 import styles from './CodeTerminal.module.scss'
 
 const INTERACTIVE_RUNNER_KEYS = new Set(['python'])
-const languageRunnerMap: Record<string, string> = (appConfig as unknown as { languageRunnerMap: Record<string, string> }).languageRunnerMap ?? {}
-const getRunnerKey = (lang: string) => languageRunnerMap[lang] ?? lang.toLowerCase().replace(/[^a-z0-9]+/g, '-')
+const languageRunnerMap: Record<string, string> = (
+  appConfig as unknown as {
+    languageRunnerMap: Record<string, string>
+  }
+).languageRunnerMap ?? {}
+const getRunnerKey = (lang: string) =>
+  languageRunnerMap[lang] ??
+  lang.toLowerCase().replace(/[^a-z0-9]+/g, '-')
 
 interface CodeTerminalProps {
   language: string
@@ -19,7 +25,9 @@ interface CodeTerminalProps {
   controller: UseCodeTerminalReturn
 }
 
-export function CodeTerminal({ language, files, entryPoint, controller }: CodeTerminalProps) {
+export function CodeTerminal({
+  language, files, entryPoint, controller,
+}: CodeTerminalProps) {
   const {
     lines,
     isRunning,
@@ -29,17 +37,7 @@ export function CodeTerminal({ language, files, entryPoint, controller }: CodeTe
     handleInputSubmit,
   } = controller
 
-  const terminalEndRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const el = terminalEndRef.current
-    if (el) {
-      const container = el.closest('[data-testid="terminal-output-area"]')
-      if (container) {
-        container.scrollTop = container.scrollHeight
-      }
-    }
-  }, [lines])
+  const terminalEndRef = useTerminalScroll(lines)
 
   const hasErrors = lines.some((line) => line.type === 'error')
   const supportsInteractive = INTERACTIVE_RUNNER_KEYS.has(getRunnerKey(language))

@@ -35,7 +35,9 @@ COPY redux/middleware/package.json ./redux/middleware/
 COPY redux/services/package.json ./redux/services/
 COPY redux/persist/package.json ./redux/persist/
 
-RUN npm config set fetch-retries 5 \
+# Strip localhost Verdaccio registry — unreachable inside Docker; fall back to public npm
+RUN sed -i '/@esbuild-kit:registry/d; /localhost:4873/d' .npmrc \
+    && npm config set fetch-retries 5 \
     && npm config set fetch-retry-mintimeout 20000 \
     && npm config set maxsockets 5 \
     && npm install --ignore-scripts --legacy-peer-deps
@@ -44,6 +46,9 @@ RUN npm config set fetch-retries 5 \
 # --- Build stage ---
 FROM deps AS builder
 COPY . .
+
+# COPY . . restores the original .npmrc — strip localhost registry again
+RUN sed -i '/@esbuild-kit:registry/d; /localhost:4873/d' .npmrc
 
 # Re-link ALL workspaces so every dependent workspace can resolve local deps.
 # A partial `-w` install only re-links the named workspaces and leaves

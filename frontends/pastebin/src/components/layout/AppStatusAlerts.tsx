@@ -4,6 +4,16 @@ import { Alert, AlertTitle, MaterialIcon } from '@metabuilder/components/fakemui
 import { getStorageConfig } from '@/lib/storage'
 import { useTranslation } from '@/hooks/useTranslation'
 
+const iconSuccessStyle = {
+  gridColumnStart: 1,
+  marginTop: '0.125rem',
+  color: 'var(--mat-sys-tertiary)',
+}
+const iconErrorStyle = {
+  gridColumnStart: 1,
+  marginTop: '0.125rem',
+}
+
 /**
  * Small stack of status alerts to keep tests and users informed about
  * the current storage mode and backend connectivity.
@@ -14,17 +24,30 @@ export function AppStatusAlerts() {
   const usingLocal = backend === 'indexeddb'
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }} data-testid="status-alerts" role="region" aria-label="Application status alerts">
+    <div
+      style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}
+      data-testid="status-alerts"
+      role="region"
+      aria-label="Application status alerts"
+    >
       <Alert
         data-testid="alert-success"
         className="alert-m3-success"
         role="status"
         aria-live="polite"
         severity="success"
-        icon={<MaterialIcon name="check_circle" style={{ gridColumnStart: 1, marginTop: '0.125rem', color: 'var(--mat-sys-tertiary)' }} aria-hidden="true" />}
+        icon={
+          <MaterialIcon
+            name="check_circle"
+            style={iconSuccessStyle}
+            aria-hidden="true"
+          />
+        }
       >
         <AlertTitle>{t.statusAlerts.workspaceReady}</AlertTitle>
-        {usingLocal ? t.statusAlerts.localModeDesc : t.statusAlerts.connectedDesc}
+        {usingLocal
+          ? t.statusAlerts.localModeDesc
+          : t.statusAlerts.connectedDesc}
       </Alert>
 
       {usingLocal && (
@@ -34,7 +57,13 @@ export function AppStatusAlerts() {
           role="alert"
           aria-live="assertive"
           severity="error"
-          icon={<MaterialIcon name="error" style={{ gridColumnStart: 1, marginTop: '0.125rem' }} aria-hidden="true" />}
+          icon={
+            <MaterialIcon
+              name="error"
+              style={iconErrorStyle}
+              aria-hidden="true"
+            />
+          }
         >
           <AlertTitle>{t.statusAlerts.cloudUnavailable}</AlertTitle>
           {t.statusAlerts.cloudUnavailableDesc}

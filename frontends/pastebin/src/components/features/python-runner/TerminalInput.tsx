@@ -1,7 +1,7 @@
-import { useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { Input } from '@metabuilder/components/fakemui'
 import { useTranslation } from '@/hooks/useTranslation'
+import { useTerminalInputFocus } from './hooks/useTerminalInputFocus'
 
 interface TerminalInputProps {
   waitingForInput: boolean
@@ -14,16 +14,10 @@ export function TerminalInput({
   waitingForInput,
   inputValue,
   onInputChange,
-  onSubmit
+  onSubmit,
 }: TerminalInputProps) {
   const t = useTranslation()
-  const inputRef = useRef<HTMLInputElement>(null)
-
-  useEffect(() => {
-    if (waitingForInput && inputRef.current) {
-      inputRef.current.focus()
-    }
-  }, [waitingForInput])
+  const inputRef = useTerminalInputFocus(waitingForInput)
 
   if (!waitingForInput) {
     return null

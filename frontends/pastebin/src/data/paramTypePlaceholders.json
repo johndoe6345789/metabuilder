@@ -1,0 +1,7 @@
+{
+  "string": "\"Hello World\"",
+  "number": "42",
+  "boolean": "true",
+  "array": "[\"item1\", \"item2\"]",
+  "object": "{\"key\": \"value\"}"
+}

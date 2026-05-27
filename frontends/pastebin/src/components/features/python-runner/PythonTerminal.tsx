@@ -1,10 +1,10 @@
 'use client'
 
-import { useRef, useEffect } from 'react'
 import { usePythonTerminal } from '@/hooks/usePythonTerminal'
 import { TerminalHeader } from '@/components/features/python-runner/TerminalHeader'
 import { TerminalOutput } from '@/components/features/python-runner/TerminalOutput'
 import { TerminalInput } from '@/components/features/python-runner/TerminalInput'
+import { usePythonTerminalScroll } from './hooks/usePythonTerminalScroll'
 import styles from './PythonTerminal.module.scss'
 
 interface PythonTerminalProps {
@@ -23,19 +23,7 @@ export function PythonTerminal({ code }: PythonTerminalProps) {
     handleRun,
   } = usePythonTerminal()
 
-  const terminalEndRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const el = terminalEndRef.current
-    if (el) {
-      const container = el.closest('[data-testid="terminal-output-area"]')
-      if (container) {
-        container.scrollTop = container.scrollHeight
-      }
-    }
-  }, [lines])
-
-  // Determine if there are any errors in the output
+  const terminalEndRef = usePythonTerminalScroll(lines)
   const hasErrors = lines.some((line) => line.type === 'error')
 
   return (

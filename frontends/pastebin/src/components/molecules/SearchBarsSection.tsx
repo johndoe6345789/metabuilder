@@ -3,15 +3,33 @@ import { ComponentShowcase } from '@/components/demo/ComponentShowcase'
 import { moleculesCodeSnippets } from '@/lib/component-code-snippets'
 import { Snippet } from '@/lib/types'
 
+const iconStyle = {
+  position: 'absolute' as const,
+  left: '12px',
+  top: '50%',
+  transform: 'translateY(-50%)',
+  color: 'var(--mat-sys-on-surface-variant)',
+}
+
 interface SearchBarsSectionProps {
-  onSaveSnippet: (snippet: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'>) => void
+  onSaveSnippet: (
+    snippet: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'>
+  ) => void
 }
 
 export function SearchBarsSection({ onSaveSnippet }: SearchBarsSectionProps) {
   return (
-    <section style={{ display: 'flex', flexDirection: 'column', gap: '24px' }} data-testid="search-bars-section" role="region" aria-label="Search bar components">
+    <section
+      style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}
+      data-testid="search-bars-section"
+      role="region"
+      aria-label="Search bar components"
+    >
       <div>
-        <h2 style={{ fontSize: '1.875rem', lineHeight: '2.25rem', fontWeight: 700, marginBottom: '8px' }}>Search Bars</h2>
+        <h2 style={{
+          fontSize: '1.875rem', lineHeight: '2.25rem',
+          fontWeight: 700, marginBottom: '8px',
+        }}>Search Bars</h2>
         <p style={{ color: 'var(--mat-sys-on-surface-variant)' }}>
           Combined search input with actions
         </p>
@@ -27,7 +45,12 @@ export function SearchBarsSection({ onSaveSnippet }: SearchBarsSectionProps) {
         <Card className="p-6">
           <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             <div style={{ position: 'relative', maxWidth: '448px' }}>
-              <MaterialIcon name="search" size={20} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--mat-sys-on-surface-variant)' }} aria-hidden="true" />
+              <MaterialIcon
+                name="search"
+                size={20}
+                style={iconStyle}
+                aria-hidden="true"
+              />
               <Input placeholder="Search..." className="pl-10" />
             </div>
 
@@ -35,7 +58,12 @@ export function SearchBarsSection({ onSaveSnippet }: SearchBarsSectionProps) {
 
             <div style={{ display: 'flex', gap: '8px', maxWidth: '448px' }}>
               <div style={{ position: 'relative', flex: 1 }}>
-                <MaterialIcon name="search" size={20} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--mat-sys-on-surface-variant)' }} aria-hidden="true" />
+                <MaterialIcon
+                  name="search"
+                  size={20}
+                  style={iconStyle}
+                  aria-hidden="true"
+                />
                 <Input placeholder="Search..." className="pl-10" />
               </div>
               <Button>Search</Button>
@@ -44,8 +72,16 @@ export function SearchBarsSection({ onSaveSnippet }: SearchBarsSectionProps) {
             <Divider />
 
             <div style={{ position: 'relative', maxWidth: '448px' }}>
-              <MaterialIcon name="search" size={20} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--mat-sys-on-surface-variant)' }} aria-hidden="true" />
-              <Input placeholder="Search products, articles, documentation..." className="pl-10 h-12" />
+              <MaterialIcon
+                name="search"
+                size={20}
+                style={iconStyle}
+                aria-hidden="true"
+              />
+              <Input
+                placeholder="Search products, articles, documentation..."
+                className="pl-10 h-12"
+              />
             </div>
           </div>
         </Card>
