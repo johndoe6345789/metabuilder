@@ -7,6 +7,7 @@ import {
   CircularProgress,
   TextField,
 } from '@mui/material';
+import PasswordField from './PasswordField';
 
 type LoginFormProps = {
   username: string;
@@ -51,17 +52,9 @@ export default function LoginForm({
           onChange={e => onUsernameChange(e.target.value)}
           disabled={loading}
         />
-        <TextField
-          margin="normal"
-          required
-          fullWidth
-          name="password"
-          label="Password"
-          type="password"
-          id="password"
-          autoComplete="current-password"
+        <PasswordField
           value={password}
-          onChange={e => onPasswordChange(e.target.value)}
+          onChange={onPasswordChange}
           disabled={loading}
         />
         <Button
