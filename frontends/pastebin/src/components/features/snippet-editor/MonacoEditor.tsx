@@ -5,7 +5,7 @@ import {
   getMonacoLanguage,
 } from '@/lib/monaco-config'
 import type { Monaco } from '@monaco-editor/react'
-import type { editor as MonacoEditor } from 'monaco-editor'
+import type { editor as MonacoEditorNS } from 'monaco-editor'
 import { useAppSelector } from '@/store/hooks'
 import { selectTheme } from '@/store/selectors'
 
@@ -70,20 +70,40 @@ export function MonacoEditor({
   const theme = useAppSelector(selectTheme)
   const monacoTheme = theme === 'dark' ? 'vs-dark' : 'vs'
 
-  const editorRef = useRef<MonacoEditor.IStandaloneCodeEditor | null>(null)
+  const editorRef = useRef<MonacoEditorNS.IStandaloneCodeEditor | null>(null)
   const monacoRef = useRef<Monaco | null>(null)
-  const bpDeclIds = useRef<string[]>([])
-  const currDeclId = useRef<string[]>([])
+  const bpCollection =
+    useRef<MonacoEditorNS.IEditorDecorationsCollection | null>(null)
+  const currCollection =
+    useRef<MonacoEditorNS.IEditorDecorationsCollection | null>(null)
 
-  // Re-render breakpoint and current-line decorations whenever they change
-  useEffect(() => {
-    const editor = editorRef.current
-    const monaco = monacoRef.current
-    if (!editor || !monaco) return
+  // Refs give the stable onMouseDown handler access to the latest prop values
+  // without stale closures — @monaco-editor/react only calls onMount once.
+  const onToggleRef = useRef(onToggleBreakpoint)
+  // eslint-disable-next-line react-hooks/refs
+  onToggleRef.current = onToggleBreakpoint
+  const breakpointsRef = useRef(breakpoints)
+  // eslint-disable-next-line react-hooks/refs
+  breakpointsRef.current = breakpoints
+  const currentDebugLineRef = useRef(currentDebugLine)
+  // eslint-disable-next-line react-hooks/refs
+  currentDebugLineRef.current = currentDebugLine
 
-    bpDeclIds.current = editor.deltaDecorations(
-      bpDeclIds.current,
-      (breakpoints ?? []).map(line => ({
+  function applyDecorations(
+    editor: MonacoEditorNS.IStandaloneCodeEditor,
+    monaco: Monaco,
+    bps: number[],
+    curLine: number | null | undefined,
+  ) {
+    if (!bpCollection.current) {
+      bpCollection.current = editor.createDecorationsCollection()
+    }
+    if (!currCollection.current) {
+      currCollection.current = editor.createDecorationsCollection()
+    }
+
+    bpCollection.current.set(
+      bps.map(line => ({
         range: new monaco.Range(line, 1, line, 1),
         options: {
           isWholeLine: true,
@@ -94,12 +114,11 @@ export function MonacoEditor({
       })),
     )
 
-    currDeclId.current = editor.deltaDecorations(
-      currDeclId.current,
-      currentDebugLine
+    currCollection.current.set(
+      curLine
         ? [
             {
-              range: new monaco.Range(currentDebugLine, 1, currentDebugLine, 1),
+              range: new monaco.Range(curLine, 1, curLine, 1),
               options: {
                 isWholeLine: true,
                 className: 'dbg-current-line',
@@ -110,21 +129,38 @@ export function MonacoEditor({
           ]
         : [],
     )
+  }
+
+  // Re-render breakpoint and current-line decorations whenever they change
+  useEffect(() => {
+    const editor = editorRef.current
+    const monaco = monacoRef.current
+    if (!editor || !monaco) return
+    applyDecorations(editor, monaco, breakpoints ?? [], currentDebugLine)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [breakpoints, currentDebugLine])
 
   const handleMount = (
-    editor: MonacoEditor.IStandaloneCodeEditor,
+    editor: MonacoEditorNS.IStandaloneCodeEditor,
     monaco: Monaco,
   ) => {
     editorRef.current = editor
     monacoRef.current = monaco
 
+    // Apply any decorations that were set before the editor mounted
+    applyDecorations(
+      editor,
+      monaco,
+      breakpointsRef.current ?? [],
+      currentDebugLineRef.current,
+    )
+
     editor.onMouseDown(e => {
-      if (!onToggleBreakpoint) return
+      if (!onToggleRef.current) return
       const { type, position } = e.target
       // GUTTER_GLYPH_MARGIN = 2, GUTTER_LINE_NUMBERS = 3
       if ((type === 2 || type === 3) && position) {
-        onToggleBreakpoint(position.lineNumber)
+        onToggleRef.current(position.lineNumber)
       }
     })
   }
@@ -136,9 +172,9 @@ export function MonacoEditor({
   return (
     <Suspense fallback={<EditorLoadingSkeleton height={height} />}>
       <style>{`
-        .dbg-breakpoint       { background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><circle cx='8' cy='8' r='6' fill='%23e51400'/></svg>") center/12px no-repeat; }
-        .dbg-current-arrow    { background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><polygon points='2,4 12,8 2,12' fill='%23ffcc00'/></svg>") center/12px no-repeat; }
-        .dbg-current-line     { background: rgba(255,204,0,0.12) !important; }
+        .dbg-breakpoint    { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='%23e51400'/%3E%3C/svg%3E") center/12px no-repeat; }
+        .dbg-current-arrow { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpolygon points='2,4 12,8 2,12' fill='%23ffcc00'/%3E%3C/svg%3E") center/12px no-repeat; }
+        .dbg-current-line  { background: rgba(255,204,0,0.12) !important; }
       `}</style>
       <div
         data-testid="monaco-editor-container"
