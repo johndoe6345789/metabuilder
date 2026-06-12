@@ -7,7 +7,7 @@ import {
   openDB,
   SNIPPET_COMMENTS_STORE,
   PROFILE_COMMENTS_STORE,
-} from './indexeddb-core.js'
+} from './indexeddb-core'
 
 export async function getSnippetComments(
   snippetId: string,

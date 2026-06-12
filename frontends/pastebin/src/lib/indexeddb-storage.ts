@@ -10,7 +10,7 @@ export {
   SNIPPET_COMMENTS_STORE,
   PROFILE_COMMENTS_STORE,
   openDB,
-} from './indexeddb-core.js'
+} from './indexeddb-core'
 
 export {
   getAllSnippets,
@@ -19,7 +19,7 @@ export {
   updateSnippet,
   deleteSnippet,
   getSnippetsByNamespace,
-} from './indexeddb-snippets.js'
+} from './indexeddb-snippets'
 
 export {
   getAllNamespaces,
@@ -27,18 +27,18 @@ export {
   createNamespace,
   updateNamespace,
   deleteNamespace,
-} from './indexeddb-namespaces.js'
+} from './indexeddb-namespaces'
 
 export {
   getSnippetComments,
   createSnippetComment,
   getProfileComments,
   createProfileComment,
-} from './indexeddb-comments.js'
+} from './indexeddb-comments'
 
 export {
   clearDatabase,
   getDatabaseStats,
   exportDatabase,
   importDatabase,
-} from './indexeddb-db-ops.js'
+} from './indexeddb-db-ops'

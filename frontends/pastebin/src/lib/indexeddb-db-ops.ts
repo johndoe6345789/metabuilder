@@ -3,9 +3,9 @@
  */
 
 import type { Snippet, Namespace } from './types'
-import { openDB, SNIPPETS_STORE, NAMESPACES_STORE } from './indexeddb-core.js'
-import { getAllSnippets } from './indexeddb-snippets.js'
-import { getAllNamespaces } from './indexeddb-namespaces.js'
+import { openDB, SNIPPETS_STORE, NAMESPACES_STORE } from './indexeddb-core'
+import { getAllSnippets } from './indexeddb-snippets'
+import { getAllNamespaces } from './indexeddb-namespaces'
 
 export async function clearDatabase(): Promise<void> {
   const db = await openDB()

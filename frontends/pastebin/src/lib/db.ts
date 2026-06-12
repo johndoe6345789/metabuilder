@@ -19,7 +19,7 @@ export {
   updateNamespace,
   deleteNamespace,
   ensureDefaultNamespace,
-} from './db-snippets.js'
+} from './db-snippets'
 
 export {
   initDB,
@@ -35,4 +35,4 @@ export {
   getProfileComments,
   createProfileComment,
   saveDB,
-} from './db-ops.js'
+} from './db-ops'
